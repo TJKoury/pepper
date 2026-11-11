@@ -424,8 +424,8 @@ contains
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: nattr = 6
       character(wdsize), parameter :: defrpy = '<UNAVAILABLE>'
-      character(kysize)     keycpy
-      integer(ip)           index
+      character(kysize) :: keycpy
+      integer(ip) :: index
       if ( .not. allocated ( ctx%zzplatfm ) ) allocate ( ctx%zzplatfm )
       associate ( first => ctx%zzplatfm%first, &
                   attcpy => ctx%zzplatfm%attcpy, &
@@ -576,11 +576,11 @@ contains
 
       integer(ip), parameter :: wdsize = 32
 
-      character(wdsize)     strbff
-      character(wdsize)     value
-      character(wdsize)     rtebff
+      character(wdsize) :: strbff
+      character(wdsize) :: value
+      character(wdsize) :: rtebff
 
-      integer(ip)           bff
+      integer(ip) :: bff
 
 !
 !     Standard SPICE error handling
@@ -850,14 +850,14 @@ contains
       integer(ip), parameter :: int016 = 16
       integer(ip), parameter :: int129 = 129
       integer(ip), parameter :: int206 = 206
-      character(siztsq)     testsq ( numtst )
-      character(1)          asc000
-      character(1)          asc010
-      character(1)          asc013
-      character(1)          asc016
-      character(1)          asc129
-      character(1)          asc206
-      integer(ip)           i
+      character(siztsq) :: testsq ( numtst )
+      character(1) :: asc000
+      character(1) :: asc010
+      character(1) :: asc013
+      character(1) :: asc016
+      character(1) :: asc129
+      character(1) :: asc206
+      integer(ip) :: i
       if ( .not. allocated ( ctx%zzftpstr ) ) allocate ( ctx%zzftpstr )
       associate ( first => ctx%zzftpstr%first, &
                   locdlm => ctx%zzftpstr%locdlm, &
@@ -1139,12 +1139,12 @@ contains
       use pepper_strings, only: pos, rtrim
       use pepper_inc_zzftprms
       implicit none
-      character(sizdlm)     delim
-      character(sizexp)     filstr
-      integer(ip)           fsmidx
-      integer(ip)           length
-      integer(ip)           msfidx
-      logical               isther
+      character(sizdlm) :: delim
+      character(sizexp) :: filstr
+      integer(ip) :: fsmidx
+      integer(ip) :: length
+      integer(ip) :: msfidx
+      logical :: isther
       if ( .not. allocated ( ctx%zzftpchk ) ) allocate ( ctx%zzftpchk )
       associate ( first => ctx%zzftpchk%first, &
                   lftbkt => ctx%zzftpchk%lftbkt, &
@@ -1351,11 +1351,11 @@ contains
       use pepper_strings, only: posr
       implicit none
 
-      integer(ip)           bsize
-      integer(ip)           lindex
-      integer(ip)           lsize
-      integer(ip)           rindex
-      integer(ip)           rsize
+      integer(ip) :: bsize
+      integer(ip) :: lindex
+      integer(ip) :: lsize
+      integer(ip) :: rindex
+      integer(ip) :: rsize
 
 !
 !     Compute the sizes of the bracketing substrings and the text
@@ -1525,12 +1525,12 @@ contains
 !
 !     Local Variables.
 !
-      character(strlen)     linstr
-      character(strsiz)     tmpstr
+      character(strlen) :: linstr
+      character(strsiz) :: tmpstr
 
-      integer(ip)           i
+      integer(ip) :: i
 
-      logical               done
+      logical :: done
 
 !
 !     Standard SPICE error handling with discovery check in/out.
@@ -1755,13 +1755,13 @@ contains
       use pepper_inc_zzddhman
       implicit none
       real(wp), parameter :: dpvalu = 7.0_wp
-      integer(ip)           i
-      real(wp)              dequiv
-      integer(ip)           iequiv ( 2 )
+      integer(ip) :: i
+      real(wp) :: dequiv
+      integer(ip) :: iequiv ( 2 )
       equivalence         ( dequiv, iequiv )
 
-      integer(ip)           int1st ( numbff )
-      integer(ip)           int2nd ( numbff )
+      integer(ip) :: int1st ( numbff )
+      integer(ip) :: int2nd ( numbff )
 
       data                  int1st(bigi3e)  / 1075576832 /
       data                  int2nd(bigi3e)  / 0          /
@@ -1903,8 +1903,8 @@ contains
       integer(ip), parameter :: method = 1
       integer(ip), parameter :: arch = method + 1
       integer(ip), parameter :: bff = arch   + 1
-      character(locsiz)     tmpstr
-      integer(ip)           clsid
+      character(locsiz) :: tmpstr
+      integer(ip) :: clsid
       if ( .not. allocated ( ctx%zzddhgsd ) ) allocate ( ctx%zzddhgsd )
       associate ( clslst => ctx%zzddhgsd%clslst, &
                   stramh => ctx%zzddhgsd%stramh, &
@@ -2079,19 +2079,19 @@ contains
       integer(ip), parameter :: nchars = nints * 4
       integer(ip), parameter :: minpch = 32
       integer(ip), parameter :: maxpch = 126
-      character(idlen)      arch
-      character(idlen)      idword
-      character(idlen)      type
-      character(nchars)     strbuf
-      character(strsiz)     stramh ( numamh )
-      character(strsiz)     strarc ( numarc )
-      character(strsiz)     strbff ( numbff )
-      real(wp)              mnm
-      integer(ip)           bff
-      integer(ip)           i
-      integer(ip)           intarr ( nints )
-      integer(ip)           iostat
-      integer(ip)           supidx
+      character(idlen) :: arch
+      character(idlen) :: idword
+      character(idlen) :: type
+      character(nchars) :: strbuf
+      character(strsiz) :: stramh ( numamh )
+      character(strsiz) :: strarc ( numarc )
+      character(strsiz) :: strbff ( numbff )
+      real(wp) :: mnm
+      integer(ip) :: bff
+      integer(ip) :: i
+      integer(ip) :: intarr ( nints )
+      integer(ip) :: iostat
+      integer(ip) :: supidx
       if ( .not. allocated ( ctx%zzddhmnm ) ) allocate ( ctx%zzddhmnm )
       associate ( first => ctx%zzddhmnm%first, &
                   natbff => ctx%zzddhmnm%natbff, &
@@ -2596,19 +2596,19 @@ contains
       integer(ip), parameter :: intnul = 0
       integer(ip), parameter :: idwlen = 4
       integer(ip), parameter :: nullid = numbff+1
-      character(1)          carg
-      character(numchr)     chrrec
-      character(bffsiz)     bffidw
-      character(idwlen)     filarc
-      character(idwlen)     filtyp
-      integer(ip)           fdrec
-      integer(ip)           ftppos
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           tstarc
-      logical               found
-      logical               ftperr
-      integer(ip)           zzichr
+      character(1) :: carg
+      character(numchr) :: chrrec
+      character(bffsiz) :: bffidw
+      character(idwlen) :: filarc
+      character(idwlen) :: filtyp
+      integer(ip) :: fdrec
+      integer(ip) :: ftppos
+      integer(ip) :: i
+      integer(ip) :: iostat
+      integer(ip) :: tstarc
+      logical :: found
+      logical :: ftperr
+      integer(ip) :: zzichr
 !     PEPPER: one portable form (ICHAR is 0:255 with current compilers; the
 !     MODULO also maps a signed ICHAR, as SPICELIB's g77 branch did).
       zzichr(carg) = modulo ( ichar(carg), 256 )
@@ -3169,10 +3169,10 @@ contains
 !     Set the length of a SPICE file ID word.
 !
       integer(ip), parameter :: idwlen = 8
-      character(idwlen)      part1
-      character(idwlen)      part2
+      character(idwlen) :: part1
+      character(idwlen) :: part2
 
-      integer(ip)           slash
+      integer(ip) :: slash
 !
 !     Standard obligatory error handling stuff.
 !
@@ -3584,15 +3584,15 @@ contains
       integer(ip), parameter :: shft8 = 2**8
       integer(ip), parameter :: shft16 = 2**16
       integer(ip), parameter :: shft24 = 2**24
-      character(1)          carg
-      character(strsiz)     tmpstr
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           lenipt
-      integer(ip)           numint
-      integer(ip)           osign
-      integer(ip)           value
-      integer(ip)           zzichr
+      character(1) :: carg
+      character(strsiz) :: tmpstr
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: lenipt
+      integer(ip) :: numint
+      integer(ip) :: osign
+      integer(ip) :: value
+      integer(ip) :: zzichr
 !     PEPPER: one portable form (ICHAR is 0:255 with current compilers; the
 !     MODULO also maps a signed ICHAR, as SPICELIB's g77 branch did).
       zzichr(carg) = modulo ( ichar(carg), 256 )
@@ -4254,15 +4254,15 @@ contains
       use pepper_inc_zzddhman
       implicit none
 
-      character(1)          carg
+      character(1) :: carg
 
-      integer(ip)           leader
-      integer(ip)           trailr
+      integer(ip) :: leader
+      integer(ip) :: trailr
 
 !
 !     Statement Functions
 !
-      integer(ip)           zzichr
+      integer(ip) :: zzichr
 
 !
 !     Statement Function Definitions
@@ -4634,14 +4634,14 @@ contains
       use pepper_inc_zzddhman
       implicit none
 
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           rchar
-      integer(ip)           uindex
-      integer(ip)           unit
+      integer(ip) :: i
+      integer(ip) :: iostat
+      integer(ip) :: rchar
+      integer(ip) :: uindex
+      integer(ip) :: unit
 
-      logical               locexs
-      logical               locopn
+      logical :: locexs
+      logical :: locopn
 
 !
 !     Standard SPICE error handling.
@@ -5029,7 +5029,7 @@ contains
       use pepper_constants, only: intmax
       implicit none
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     Check to see if REQCNT is INTMAX, otherwise just increment
@@ -5140,10 +5140,10 @@ contains
       use pepper_inc_zzddhman
       implicit none
 
-      integer(ip)           i
+      integer(ip) :: i
       integer(ip), allocatable :: orderv ( : )
 
-      logical               done
+      logical :: done
 
 !
 !     Standard SPICE discovery error handling.
@@ -5416,7 +5416,7 @@ contains
       use pepper_inc_zzddhman
       implicit none
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     First check to see if NUT is 0.  If so, just return, as there
@@ -5545,7 +5545,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     Loop through UTLCK counting the number of TRUE values.
@@ -5628,8 +5628,8 @@ contains
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
-      character(strsiz)     tmpstr
-      integer(ip)           i
+      character(strsiz) :: tmpstr
+      integer(ip) :: i
       if ( .not. allocated ( ctx%zzddhnfc ) ) allocate ( ctx%zzddhnfc )
       associate ( first => ctx%zzddhnfc%first, &
                   savbff => ctx%zzddhnfc%savbff, &
@@ -5850,25 +5850,25 @@ contains
       implicit none
       integer(ip), parameter :: scrlen = 4096  !! PEPPER: room for the OS's name of a scratch file
       character(:), allocatable :: locfnm
-      character(scrlen)     scrnam
-      character(strsiz)     tmpstr
-      real(wp)              mnm
-      integer(ip)           accmet
-      integer(ip)           bff
-      integer(ip)           filarc
-      integer(ip)           i
-      integer(ip)           inqhan
-      integer(ip)           iostat
-      integer(ip)           locked
-      integer(ip)           loclun
-      integer(ip)           supidx
-      logical               error
-      logical               inqext
-      logical               inqopn
-      logical               locfnd
-      logical               platok
-      integer(ip)           findex
-      integer(ip)           uindex
+      character(scrlen) :: scrnam
+      character(strsiz) :: tmpstr
+      real(wp) :: mnm
+      integer(ip) :: accmet
+      integer(ip) :: bff
+      integer(ip) :: filarc
+      integer(ip) :: i
+      integer(ip) :: inqhan
+      integer(ip) :: iostat
+      integer(ip) :: locked
+      integer(ip) :: loclun
+      integer(ip) :: supidx
+      logical :: error
+      logical :: inqext
+      logical :: inqopn
+      logical :: locfnd
+      logical :: platok
+      integer(ip) :: findex
+      integer(ip) :: uindex
       if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       call units_ready ( ctx )
       call units_check ( ctx )
@@ -6707,25 +6707,25 @@ contains
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
-      character(strsiz)     tmpstr
-      real(wp)              mnm
-      integer(ip)           accmet
-      integer(ip)           bff
-      integer(ip)           filarc
-      integer(ip)           i
-      integer(ip)           inqhan
-      integer(ip)           iostat
-      integer(ip)           lchar
-      integer(ip)           locked
-      integer(ip)           loclun
-      integer(ip)           supidx
-      logical               error
-      logical               inqext
-      logical               inqopn
-      logical               locfnd
-      logical               platok
-      integer(ip)           findex
-      integer(ip)           uindex
+      character(strsiz) :: tmpstr
+      real(wp) :: mnm
+      integer(ip) :: accmet
+      integer(ip) :: bff
+      integer(ip) :: filarc
+      integer(ip) :: i
+      integer(ip) :: inqhan
+      integer(ip) :: iostat
+      integer(ip) :: lchar
+      integer(ip) :: locked
+      integer(ip) :: loclun
+      integer(ip) :: supidx
+      logical :: error
+      logical :: inqext
+      logical :: inqopn
+      logical :: locfnd
+      logical :: platok
+      integer(ip) :: findex
+      integer(ip) :: uindex
       if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       call units_ready ( ctx )
       call units_check ( ctx )
@@ -7024,25 +7024,25 @@ contains
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
-      character(strsiz)     tmpstr
-      real(wp)              mnm
-      integer(ip)           accmet
-      integer(ip)           bff
-      integer(ip)           filarc
-      integer(ip)           i
-      integer(ip)           inqhan
-      integer(ip)           iostat
-      integer(ip)           lchar
-      integer(ip)           locked
-      integer(ip)           loclun
-      integer(ip)           supidx
-      logical               error
-      logical               inqext
-      logical               inqopn
-      logical               locfnd
-      logical               platok
-      integer(ip)           findex
-      integer(ip)           uindex
+      character(strsiz) :: tmpstr
+      real(wp) :: mnm
+      integer(ip) :: accmet
+      integer(ip) :: bff
+      integer(ip) :: filarc
+      integer(ip) :: i
+      integer(ip) :: inqhan
+      integer(ip) :: iostat
+      integer(ip) :: lchar
+      integer(ip) :: locked
+      integer(ip) :: loclun
+      integer(ip) :: supidx
+      logical :: error
+      logical :: inqext
+      logical :: inqopn
+      logical :: locfnd
+      logical :: platok
+      integer(ip) :: findex
+      integer(ip) :: uindex
       if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       call units_ready ( ctx )
       call units_check ( ctx )
@@ -7369,25 +7369,25 @@ contains
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
-      character(strsiz)     tmpstr
-      real(wp)              mnm
-      integer(ip)           accmet
-      integer(ip)           bff
-      integer(ip)           filarc
-      integer(ip)           i
-      integer(ip)           inqhan
-      integer(ip)           iostat
-      integer(ip)           lchar
-      integer(ip)           locked
-      integer(ip)           loclun
-      integer(ip)           supidx
-      logical               error
-      logical               inqext
-      logical               inqopn
-      logical               locfnd
-      logical               platok
-      integer(ip)           findex
-      integer(ip)           uindex
+      character(strsiz) :: tmpstr
+      real(wp) :: mnm
+      integer(ip) :: accmet
+      integer(ip) :: bff
+      integer(ip) :: filarc
+      integer(ip) :: i
+      integer(ip) :: inqhan
+      integer(ip) :: iostat
+      integer(ip) :: lchar
+      integer(ip) :: locked
+      integer(ip) :: loclun
+      integer(ip) :: supidx
+      logical :: error
+      logical :: inqext
+      logical :: inqopn
+      logical :: locfnd
+      logical :: platok
+      integer(ip) :: findex
+      integer(ip) :: uindex
       if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       call units_ready ( ctx )
       call units_check ( ctx )
@@ -7610,26 +7610,26 @@ contains
       use pepper_arrays, only: bsrchi
       use pepper_inc_zzddhman
       implicit none
-      logical               return
-      character(strsiz)     tmpstr
-      real(wp)              mnm
-      integer(ip)           accmet
-      integer(ip)           bff
-      integer(ip)           filarc
-      integer(ip)           i
-      integer(ip)           inqhan
-      integer(ip)           iostat
-      integer(ip)           lchar
-      integer(ip)           locked
-      integer(ip)           loclun
-      integer(ip)           supidx
-      logical               error
-      logical               inqext
-      logical               inqopn
-      logical               locfnd
-      logical               platok
-      integer(ip)           findex
-      integer(ip)           uindex
+      logical :: return
+      character(strsiz) :: tmpstr
+      real(wp) :: mnm
+      integer(ip) :: accmet
+      integer(ip) :: bff
+      integer(ip) :: filarc
+      integer(ip) :: i
+      integer(ip) :: inqhan
+      integer(ip) :: iostat
+      integer(ip) :: lchar
+      integer(ip) :: locked
+      integer(ip) :: loclun
+      integer(ip) :: supidx
+      logical :: error
+      logical :: inqext
+      logical :: inqopn
+      logical :: locfnd
+      logical :: platok
+      integer(ip) :: findex
+      integer(ip) :: uindex
       if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       call units_ready ( ctx )
       call units_check ( ctx )
@@ -7772,26 +7772,26 @@ contains
       use pepper_arrays, only: bsrchi
       use pepper_inc_zzddhman
       implicit none
-      logical               return
-      character(strsiz)     tmpstr
-      real(wp)              mnm
-      integer(ip)           accmet
-      integer(ip)           bff
-      integer(ip)           filarc
-      integer(ip)           i
-      integer(ip)           inqhan
-      integer(ip)           iostat
-      integer(ip)           lchar
-      integer(ip)           locked
-      integer(ip)           loclun
-      integer(ip)           supidx
-      logical               error
-      logical               inqext
-      logical               inqopn
-      logical               locfnd
-      logical               platok
-      integer(ip)           findex
-      integer(ip)           uindex
+      logical :: return
+      character(strsiz) :: tmpstr
+      real(wp) :: mnm
+      integer(ip) :: accmet
+      integer(ip) :: bff
+      integer(ip) :: filarc
+      integer(ip) :: i
+      integer(ip) :: inqhan
+      integer(ip) :: iostat
+      integer(ip) :: lchar
+      integer(ip) :: locked
+      integer(ip) :: loclun
+      integer(ip) :: supidx
+      logical :: error
+      logical :: inqext
+      logical :: inqopn
+      logical :: locfnd
+      logical :: platok
+      integer(ip) :: findex
+      integer(ip) :: uindex
       if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       call units_ready ( ctx )
       call units_check ( ctx )
@@ -7922,25 +7922,25 @@ contains
       use pepper_inc_zzddhman
       implicit none
       character(:), allocatable :: locfnm
-      character(strsiz)     tmpstr
-      real(wp)              mnm
-      integer(ip)           accmet
-      integer(ip)           bff
-      integer(ip)           filarc
-      integer(ip)           i
-      integer(ip)           inqhan
-      integer(ip)           iostat
-      integer(ip)           lchar
-      integer(ip)           locked
-      integer(ip)           loclun
-      integer(ip)           supidx
-      logical               error
-      logical               inqext
-      logical               inqopn
-      logical               locfnd
-      logical               platok
-      integer(ip)           findex
-      integer(ip)           uindex
+      character(strsiz) :: tmpstr
+      real(wp) :: mnm
+      integer(ip) :: accmet
+      integer(ip) :: bff
+      integer(ip) :: filarc
+      integer(ip) :: i
+      integer(ip) :: inqhan
+      integer(ip) :: iostat
+      integer(ip) :: lchar
+      integer(ip) :: locked
+      integer(ip) :: loclun
+      integer(ip) :: supidx
+      logical :: error
+      logical :: inqext
+      logical :: inqopn
+      logical :: locfnd
+      logical :: platok
+      integer(ip) :: findex
+      integer(ip) :: uindex
       if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       call units_ready ( ctx )
       call units_check ( ctx )
@@ -8082,26 +8082,26 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      logical               return
-      character(strsiz)     tmpstr
-      real(wp)              mnm
-      integer(ip)           accmet
-      integer(ip)           bff
-      integer(ip)           filarc
-      integer(ip)           i
-      integer(ip)           inqhan
-      integer(ip)           iostat
-      integer(ip)           lchar
-      integer(ip)           locked
-      integer(ip)           loclun
-      integer(ip)           supidx
-      logical               error
-      logical               inqext
-      logical               inqopn
-      logical               locfnd
-      logical               platok
-      integer(ip)           findex
-      integer(ip)           uindex
+      logical :: return
+      character(strsiz) :: tmpstr
+      real(wp) :: mnm
+      integer(ip) :: accmet
+      integer(ip) :: bff
+      integer(ip) :: filarc
+      integer(ip) :: i
+      integer(ip) :: inqhan
+      integer(ip) :: iostat
+      integer(ip) :: lchar
+      integer(ip) :: locked
+      integer(ip) :: loclun
+      integer(ip) :: supidx
+      logical :: error
+      logical :: inqext
+      logical :: inqopn
+      logical :: locfnd
+      logical :: platok
+      integer(ip) :: findex
+      integer(ip) :: uindex
       call units_ready ( ctx )
       call units_check ( ctx )
       associate ( first => ctx%zzddhman_units%first, &

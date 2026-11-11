@@ -285,9 +285,9 @@ contains
       implicit none
 
       integer(ip), parameter :: acclen = 5
-      character(acclen)     access
+      character(acclen) :: access
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICELIB error handling.
@@ -595,14 +595,14 @@ contains
 
       integer(ip), parameter :: qavsiz = 7
 
-      integer(ip)           icd    ( nic )
-      integer(ip)           nrec
-      integer(ip)           beg
-      integer(ip)           addr
-      integer(ip)           psiz
+      integer(ip) :: icd    ( nic )
+      integer(ip) :: nrec
+      integer(ip) :: beg
+      integer(ip) :: addr
+      integer(ip) :: psiz
 
-      real(wp)              dcd    ( ndc )
-      real(wp)              n
+      real(wp) :: dcd    ( ndc )
+      real(wp) :: n
 
 !
 !     Standard SPICE error handling.
@@ -1023,15 +1023,15 @@ contains
 
       integer(ip), parameter :: dtype = 3
 
-      integer(ip)           icd    ( nic )
-      integer(ip)           nrec
-      integer(ip)           beg
-      integer(ip)           end
-      integer(ip)           addr
-      integer(ip)           psiz
+      integer(ip) :: icd    ( nic )
+      integer(ip) :: nrec
+      integer(ip) :: beg
+      integer(ip) :: end
+      integer(ip) :: addr
+      integer(ip) :: psiz
 
-      real(wp)              dcd    ( ndc )
-      real(wp)              npoint
+      real(wp) :: dcd    ( ndc )
+      real(wp) :: npoint
 
 !
 !     Standard SPICE error handling.
@@ -1344,14 +1344,14 @@ contains
 !
       integer(ip), parameter :: shftad = ck4sft - 1
 
-      real(wp)              dcd    ( ndc )
+      real(wp) :: dcd    ( ndc )
 
-      integer(ip)           ends   ( 1 )
-      integer(ip)           icd    ( nic )
-      integer(ip)           k
-      integer(ip)           nrec
-      integer(ip)           numall
-      integer(ip)           numcft ( qavsiz )
+      integer(ip) :: ends   ( 1 )
+      integer(ip) :: icd    ( nic )
+      integer(ip) :: k
+      integer(ip) :: nrec
+      integer(ip) :: numall
+      integer(ip) :: numcft ( qavsiz )
 
 !
 !     Standard SPICE error handling.
@@ -1678,16 +1678,16 @@ contains
 
       integer(ip), parameter :: dtype = 5
 
-      integer(ip)           icd    ( nic )
-      integer(ip)           nrec
-      integer(ip)           beg
-      integer(ip)           end
-      integer(ip)           addr
-      integer(ip)           packsz
-      integer(ip)           subtyp
+      integer(ip) :: icd    ( nic )
+      integer(ip) :: nrec
+      integer(ip) :: beg
+      integer(ip) :: end
+      integer(ip) :: addr
+      integer(ip) :: packsz
+      integer(ip) :: subtyp
 
-      real(wp)              dcd    ( ndc )
-      real(wp)              npoint
+      real(wp) :: dcd    ( ndc )
+      real(wp) :: npoint
 
 !
 !     Standard SPICE error handling.
@@ -2316,27 +2316,27 @@ contains
 
       integer(ip), parameter :: dirsiz = 100
 
-      real(wp)              buffer ( bufsiz )
-      real(wp)              dc     ( nd )
-      real(wp)              dpdata ( 1  )
-      real(wp)              rate
+      real(wp) :: buffer ( bufsiz )
+      real(wp) :: dc     ( nd )
+      real(wp) :: dpdata ( 1  )
+      real(wp) :: rate
 
-      integer(ip)           baddr
-      integer(ip)           bufbas
-      integer(ip)           eaddr
-      integer(ip)           epaddr
-      integer(ip)           epcbas
-      integer(ip)           ic     ( ni )
-      integer(ip)           minib
-      integer(ip)           minie
-      integer(ip)           nepdir
-      integer(ip)           nintvl
-      integer(ip)           nrec
-      integer(ip)           pktsiz
+      integer(ip) :: baddr
+      integer(ip) :: bufbas
+      integer(ip) :: eaddr
+      integer(ip) :: epaddr
+      integer(ip) :: epcbas
+      integer(ip) :: ic     ( ni )
+      integer(ip) :: minib
+      integer(ip) :: minie
+      integer(ip) :: nepdir
+      integer(ip) :: nintvl
+      integer(ip) :: nrec
+      integer(ip) :: pktsiz
       integer(ip), parameter :: pktszs ( 0 : 3 ) = &
          [ c06ps0, c06ps1, c06ps2, c06ps3 ]
-      integer(ip)           ptrbas
-      integer(ip)           subtyp
+      integer(ip) :: ptrbas
+      integer(ip) :: subtyp
 
 !
 !     Standard SPICE error handling.
@@ -2959,20 +2959,20 @@ contains
 
       integer(ip), parameter :: dirsiz = 100
 
-      real(wp)              buffer ( bufsiz )
-      real(wp)              dc     ( nd )
-      real(wp)              dpdata ( 1  )
+      real(wp) :: buffer ( bufsiz )
+      real(wp) :: dc     ( nd )
+      real(wp) :: dpdata ( 1  )
 
-      integer(ip)           baddr
-      integer(ip)           eaddr
-      integer(ip)           epaddr
-      integer(ip)           ic     ( ni )
-      integer(ip)           minie
-      integer(ip)           ndir
-      integer(ip)           nepdir
-      integer(ip)           nintvl
-      integer(ip)           ivlbas
-      integer(ip)           ptrbas
+      integer(ip) :: baddr
+      integer(ip) :: eaddr
+      integer(ip) :: epaddr
+      integer(ip) :: ic     ( ni )
+      integer(ip) :: minie
+      integer(ip) :: ndir
+      integer(ip) :: nepdir
+      integer(ip) :: nintvl
+      integer(ip) :: ivlbas
+      integer(ip) :: ptrbas
 
 !
 !     Standard SPICE error handling.
@@ -3507,10 +3507,10 @@ contains
 
       integer(ip), parameter :: dtype = 6
 
-      real(wp)              dc     ( nd )
-      real(wp)              dpdata ( 1  )
+      real(wp) :: dc     ( nd )
+      real(wp) :: dpdata ( 1  )
 
-      integer(ip)           ic     ( ni )
+      integer(ip) :: ic     ( ni )
 
 !
 !     Standard SPICE error handling.
@@ -3762,10 +3762,10 @@ contains
 
       integer(ip), parameter :: nic = 6
 
-      integer(ip)           icd  ( nic )
+      integer(ip) :: icd  ( nic )
 
-      real(wp)              dcd  ( ndc )
-      real(wp)              n
+      real(wp) :: dcd  ( ndc )
+      real(wp) :: n
 
 !
 !     Standard SPICE error handling.
@@ -4140,12 +4140,12 @@ contains
 
       integer(ip), parameter :: dtype = 2
 
-      integer(ip)           beg
-      integer(ip)           end
-      integer(ip)           arrsiz
-      integer(ip)           icd    ( nic )
+      integer(ip) :: beg
+      integer(ip) :: end
+      integer(ip) :: arrsiz
+      integer(ip) :: icd    ( nic )
 
-      real(wp)              dcd    ( ndc )
+      real(wp) :: dcd    ( ndc )
 
 !
 !     Standard SPICE error handling.
@@ -4525,10 +4525,10 @@ contains
 
       integer(ip), parameter :: dtype = 3
 
-      integer(ip)           icd    ( nic )
+      integer(ip) :: icd    ( nic )
 
-      real(wp)              dcd    ( ndc )
-      real(wp)              npoint
+      real(wp) :: dcd    ( ndc )
+      real(wp) :: npoint
 
 !
 !     Standard SPICE error handling.
@@ -4756,10 +4756,10 @@ contains
 
       integer(ip), parameter :: dtype = 5
 
-      integer(ip)           icd    ( nic )
+      integer(ip) :: icd    ( nic )
 
-      real(wp)              dcd    ( ndc )
-      real(wp)              npoint
+      real(wp) :: dcd    ( ndc )
+      real(wp) :: npoint
 
 !
 !     Standard SPICE error handling.
@@ -5115,7 +5115,7 @@ contains
 !
       integer(ip), parameter :: mxcrec = 1000
 
-      integer(ip)           ncomr
+      integer(ip) :: ncomr
 
 !
 !     Standard SPICE error handling.
@@ -5737,16 +5737,16 @@ contains
 
       integer(ip), parameter :: lprint = 126
 
-      real(wp)              dcd    ( nd    )
-      real(wp)              dirent
-      real(wp)              descr  ( ndc   )
+      real(wp) :: dcd    ( nd    )
+      real(wp) :: dirent
+      real(wp) :: descr  ( ndc   )
 
-      integer(ip)           i
-      integer(ip)           icd    ( ni    )
-      integer(ip)           index
-      integer(ip)           ndir
-      integer(ip)           refcod
-      integer(ip)           value
+      integer(ip) :: i
+      integer(ip) :: icd    ( ni    )
+      integer(ip) :: index
+      integer(ip) :: ndir
+      integer(ip) :: refcod
+      integer(ip) :: value
 
 !
 !     Standard SPICE error handling.
@@ -6630,16 +6630,16 @@ contains
 
       integer(ip), parameter :: lprint = 126
 
-      real(wp)              dcd    ( nd    )
-      real(wp)              dirent
-      real(wp)              descr  ( ndc   )
+      real(wp) :: dcd    ( nd    )
+      real(wp) :: dirent
+      real(wp) :: descr  ( ndc   )
 
-      integer(ip)           i
-      integer(ip)           icd    ( ni    )
-      integer(ip)           index
-      integer(ip)           ndir
-      integer(ip)           refcod
-      integer(ip)           value
+      integer(ip) :: i
+      integer(ip) :: icd    ( ni    )
+      integer(ip) :: index
+      integer(ip) :: ndir
+      integer(ip) :: refcod
+      integer(ip) :: value
 
 !
 !     Standard SPICE error handling.
@@ -7599,18 +7599,18 @@ contains
 
       integer(ip), parameter :: lprint = 126
 
-      real(wp)              dcd    ( nd    )
-      real(wp)              descr  ( ndc   )
+      real(wp) :: dcd    ( nd    )
+      real(wp) :: descr  ( ndc   )
 
-      integer(ip)           i
-      integer(ip)           icd    ( ni    )
-      integer(ip)           index
-      integer(ip)           nrdir
-      integer(ip)           nidir
-      integer(ip)           refcod
-      integer(ip)           value
+      integer(ip) :: i
+      integer(ip) :: icd    ( ni    )
+      integer(ip) :: index
+      integer(ip) :: nrdir
+      integer(ip) :: nidir
+      integer(ip) :: refcod
+      integer(ip) :: value
 
-      logical               match
+      logical :: match
 
 !
 !     Standard SPICE error handling.
@@ -8206,14 +8206,14 @@ contains
 !
       integer(ip), parameter :: sidlen = 40
 
-      real(wp)              dcd    ( nd )
-      real(wp)              dcoeff
-      real(wp)              descr  ( ndescr )
+      real(wp) :: dcd    ( nd )
+      real(wp) :: dcoeff
+      real(wp) :: descr  ( ndescr )
 
-      integer(ip)           i
-      integer(ip)           icd    ( ni )
-      integer(ip)           refcod
-      integer(ip)           value
+      integer(ip) :: i
+      integer(ip) :: icd    ( ni )
+      integer(ip) :: refcod
+      integer(ip) :: value
 
 !
 !     Standard SPICELIB error handling.
@@ -8527,12 +8527,12 @@ contains
 !
 !     Local variables.
 !
-      real(wp)              dcd    ( nd )
-      real(wp)              descr  ( ndescr )
+      real(wp) :: dcd    ( nd )
+      real(wp) :: descr  ( ndescr )
 
-      integer(ip)           icd    ( ni )
+      integer(ip) :: icd    ( ni )
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICELIB error handling.
@@ -9126,16 +9126,16 @@ contains
 !
       integer(ip), parameter :: qidx = 1
 
-      real(wp)              dc     ( nd )
-      real(wp)              descr  ( dscsiz )
+      real(wp) :: dc     ( nd )
+      real(wp) :: descr  ( dscsiz )
 
-      integer(ip)           addr
-      integer(ip)           chrcod
-      integer(ip)           i
-      integer(ip)           ic     ( ni )
-      integer(ip)           packsz
-      integer(ip)           refcod
-      integer(ip)           winsiz
+      integer(ip) :: addr
+      integer(ip) :: chrcod
+      integer(ip) :: i
+      integer(ip) :: ic     ( ni )
+      integer(ip) :: packsz
+      integer(ip) :: refcod
+      integer(ip) :: winsiz
 
 !
 !     Standard SPICE error handling.
@@ -10193,34 +10193,34 @@ contains
 !
       integer(ip), parameter :: qidx = 1
 
-      real(wp)              dc     ( nd )
-      real(wp)              descr  ( dscsiz )
-      real(wp)              prevq  ( 0 : 3 )
-      real(wp)              q      ( 0 : 3 )
-      real(wp)              qneg   ( 0 : 3 )
+      real(wp) :: dc     ( nd )
+      real(wp) :: descr  ( dscsiz )
+      real(wp) :: prevq  ( 0 : 3 )
+      real(wp) :: q      ( 0 : 3 )
+      real(wp) :: qneg   ( 0 : 3 )
 
-      integer(ip)           addr
-      integer(ip)           bepix
-      integer(ip)           chrcod
-      integer(ip)           eepix
-      integer(ip)           i
-      integer(ip)           ic     ( ni )
-      integer(ip)           isel
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           minisz
-      integer(ip)           ndir
-      integer(ip)           pktbeg
-      integer(ip)           pktdsz
-      integer(ip)           pktend
-      integer(ip)           pktsiz
+      integer(ip) :: addr
+      integer(ip) :: bepix
+      integer(ip) :: chrcod
+      integer(ip) :: eepix
+      integer(ip) :: i
+      integer(ip) :: ic     ( ni )
+      integer(ip) :: isel
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: minisz
+      integer(ip) :: ndir
+      integer(ip) :: pktbeg
+      integer(ip) :: pktdsz
+      integer(ip) :: pktend
+      integer(ip) :: pktsiz
       integer(ip), parameter :: pktszs ( 0 : c06nst-1 ) = &
          [ c06ps0, c06ps1, c06ps2, c06ps3 ]
-      integer(ip)           refcod
-      integer(ip)           segbeg
-      integer(ip)           segend
-      integer(ip)           subtyp
-      integer(ip)           winsiz
+      integer(ip) :: refcod
+      integer(ip) :: segbeg
+      integer(ip) :: segend
+      integer(ip) :: subtyp
+      integer(ip) :: winsiz
 
 !
 !     Saved values
@@ -11733,9 +11733,9 @@ contains
 
       integer(ip), parameter :: acclen = 5
 
-      character(acclen)     access
+      character(acclen) :: access
 
-      logical               found
+      logical :: found
 !
 !     Standard SPICELIB error handling.
 !
@@ -12034,7 +12034,7 @@ contains
 !
       integer(ip), parameter :: mxcrec = 1000
 
-      integer(ip)           ncomr
+      integer(ip) :: ncomr
 
 !
 !     Standard SPICE error handling.
@@ -12177,13 +12177,13 @@ contains
 !     Length of a calender string.
 !
       integer(ip), parameter :: calsiz = 40
-      character(calsiz)     calfst
-      character(calsiz)     callst
+      character(calsiz) :: calfst
+      character(calsiz) :: callst
 
-      real(wp)              dppart ( nd )
+      real(wp) :: dppart ( nd )
 
-      integer(ip)           ipart  ( ni )
-      integer(ip)           refcod
+      integer(ip) :: ipart  ( ni )
+      integer(ip) :: refcod
 
 !
 !     Standard SPICELIB error handling.
@@ -12369,9 +12369,9 @@ contains
 
       integer(ip), parameter :: ni = 5
 
-      real(wp)              dppart ( nd )
+      real(wp) :: dppart ( nd )
 
-      integer(ip)           ipart  ( ni )
+      integer(ip) :: ipart  ( ni )
 
 !
 !     Standard SPICELIB error handling.
@@ -12709,22 +12709,22 @@ contains
 !
       integer(ip), parameter :: sidlen = 40
 
-      character(sidlen)     etstr
-      character(sidlen)     netstr
+      character(sidlen) :: etstr
+      character(sidlen) :: netstr
 
-      real(wp)              dcd   ( nd )
-      real(wp)              descr ( ns )
-      real(wp)              ltime
-      real(wp)              mid
-      real(wp)              numrec
-      real(wp)              radius
-      real(wp)              rsize
+      real(wp) :: dcd   ( nd )
+      real(wp) :: descr ( ns )
+      real(wp) :: ltime
+      real(wp) :: mid
+      real(wp) :: numrec
+      real(wp) :: radius
+      real(wp) :: rsize
 
-      integer(ip)           i
-      integer(ip)           icd   ( ni )
-      integer(ip)           k
-      integer(ip)           ninrec
-      integer(ip)           refcod
+      integer(ip) :: i
+      integer(ip) :: icd   ( ni )
+      integer(ip) :: k
+      integer(ip) :: ninrec
+      integer(ip) :: refcod
 
 !
 !     Standard SPICE error handling.
@@ -13295,19 +13295,19 @@ contains
 !
       integer(ip), parameter :: sidlen = 40
 
-      character(sidlen)     etstr
-      character(sidlen)     netstr
+      character(sidlen) :: etstr
+      character(sidlen) :: netstr
 
-      real(wp)              btime
-      real(wp)              dcd   ( nd )
-      real(wp)              descr ( ns )
-      real(wp)              ltime
-      real(wp)              numrec
-      real(wp)              tol
+      real(wp) :: btime
+      real(wp) :: dcd   ( nd )
+      real(wp) :: descr ( ns )
+      real(wp) :: ltime
+      real(wp) :: numrec
+      real(wp) :: tol
 
-      integer(ip)           icd   ( ni )
-      integer(ip)           ninrec
-      integer(ip)           refcod
+      integer(ip) :: icd   ( ni )
+      integer(ip) :: ninrec
+      integer(ip) :: refcod
 
 !
 !     Standard SPICE error handling.
@@ -13844,37 +13844,37 @@ contains
       implicit none
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: maxcpr = 1000
-      character(maxcpr+2)   data
-      character(1)          eot
-      character(ifnlen)     ifname
-      character(maxcpr)     line
-      character(1)          null
-      character(maxcpr)     record
-      integer(ip)           bline
-      integer(ip)           bward
-      integer(ip)           c
-      integer(ip)           chars
-      integer(ip)           dafu
-      integer(ip)           eol
-      integer(ip)           eline
-      integer(ip)           free
-      integer(ip)           fward
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           l
-      integer(ip)           lastrr
-      integer(ip)           lines
-      integer(ip)           nd
-      integer(ip)           ni
-      integer(ip)           nr
-      integer(ip)           nrr
-      integer(ip)           pos
-      integer(ip)           poseot
-      integer(ip)           rec
-      integer(ip)           space
-      integer(ip)           start
-      integer(ip)           total
-      logical               found
+      character(maxcpr+2) :: data
+      character(1) :: eot
+      character(ifnlen) :: ifname
+      character(maxcpr) :: line
+      character(1) :: null
+      character(maxcpr) :: record
+      integer(ip) :: bline
+      integer(ip) :: bward
+      integer(ip) :: c
+      integer(ip) :: chars
+      integer(ip) :: dafu
+      integer(ip) :: eol
+      integer(ip) :: eline
+      integer(ip) :: free
+      integer(ip) :: fward
+      integer(ip) :: i
+      integer(ip) :: iostat
+      integer(ip) :: l
+      integer(ip) :: lastrr
+      integer(ip) :: lines
+      integer(ip) :: nd
+      integer(ip) :: ni
+      integer(ip) :: nr
+      integer(ip) :: nrr
+      integer(ip) :: pos
+      integer(ip) :: poseot
+      integer(ip) :: rec
+      integer(ip) :: space
+      integer(ip) :: start
+      integer(ip) :: total
+      logical :: found
       if ( ctx%failed() ) return
 
 !
@@ -14330,14 +14330,14 @@ contains
 !
       integer(ip), parameter :: ifnlen = 60
 
-      character(ifnlen)     ifname
+      character(ifnlen) :: ifname
 
-      integer(ip)           bward
-      integer(ip)           free
-      integer(ip)           fward
-      integer(ip)           nd
-      integer(ip)           ni
-      integer(ip)           nrr
+      integer(ip) :: bward
+      integer(ip) :: free
+      integer(ip) :: fward
+      integer(ip) :: nd
+      integer(ip) :: ni
+      integer(ip) :: nrr
 
 !
 !     Standard SPICE error handling.
@@ -14522,23 +14522,23 @@ contains
 
       integer(ip), parameter :: maxcpr = 1000
 
-      character(ifnlen)     ifname
-      character(maxcpr)     line
-      character(maxcpr)     record
-      character(1)          eot
-      character(1)          null
+      character(ifnlen) :: ifname
+      character(maxcpr) :: line
+      character(maxcpr) :: record
+      character(1) :: eot
+      character(1) :: null
 
-      integer(ip)           bward
-      integer(ip)           c
-      integer(ip)           dafu
-      integer(ip)           free
-      integer(ip)           fward
-      integer(ip)           iostat
-      integer(ip)           nd
-      integer(ip)           ni
-      integer(ip)           nrr
-      integer(ip)           pos
-      integer(ip)           rec
+      integer(ip) :: bward
+      integer(ip) :: c
+      integer(ip) :: dafu
+      integer(ip) :: free
+      integer(ip) :: fward
+      integer(ip) :: iostat
+      integer(ip) :: nd
+      integer(ip) :: ni
+      integer(ip) :: nrr
+      integer(ip) :: pos
+      integer(ip) :: rec
 
 !
 !     Standard SPICE error handling.
@@ -15690,9 +15690,9 @@ contains
       implicit none
 
       integer(ip), parameter :: acclen = 5
-      character(acclen)     access
+      character(acclen) :: access
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICELIB error handling.
@@ -16001,8 +16001,8 @@ contains
 
       integer(ip), parameter :: smwdsz = 8
 
-      character(smwdsz)     arch
-      character(smwdsz)     type
+      character(smwdsz) :: arch
+      character(smwdsz) :: type
 
 !
 !     Standard SPICE error handling.
@@ -16288,7 +16288,7 @@ contains
 !
       integer(ip), parameter :: mxcrec = 1000
 
-      integer(ip)           ncomr
+      integer(ip) :: ncomr
 
 !
 !     Standard SPICE error handling.
@@ -16514,12 +16514,12 @@ contains
 
       integer(ip), parameter :: dirsiz = 100
 
-      real(wp)              descr  ( dscsiz )
-      real(wp)              maxtim
+      real(wp) :: descr  ( dscsiz )
+      real(wp) :: maxtim
 
-      integer(ip)           chrcod
-      integer(ip)           i
-      integer(ip)           refcod
+      integer(ip) :: chrcod
+      integer(ip) :: i
+      integer(ip) :: refcod
 
 !
 !     Standard SPICE error handling.
@@ -17070,23 +17070,23 @@ contains
 !
       integer(ip), parameter :: sidlen = 40
 
-      character(sidlen)     etstr
-      character(sidlen)     netstr
+      character(sidlen) :: etstr
+      character(sidlen) :: netstr
 
-      real(wp)              dcd   ( nd )
-      real(wp)              descr ( ns )
-      real(wp)              ltime
-      real(wp)              mid
-      real(wp)              numrec
-      real(wp)              radius
-      real(wp)              rsize
-      real(wp)              tol
+      real(wp) :: dcd   ( nd )
+      real(wp) :: descr ( ns )
+      real(wp) :: ltime
+      real(wp) :: mid
+      real(wp) :: numrec
+      real(wp) :: radius
+      real(wp) :: rsize
+      real(wp) :: tol
 
-      integer(ip)           i
-      integer(ip)           icd   ( ni )
-      integer(ip)           k
-      integer(ip)           ninrec
-      integer(ip)           refcod
+      integer(ip) :: i
+      integer(ip) :: icd   ( ni )
+      integer(ip) :: k
+      integer(ip) :: ninrec
+      integer(ip) :: refcod
 
 !
 !     Standard SPICE error handling.
@@ -17712,23 +17712,23 @@ contains
 !
       integer(ip), parameter :: sidlen = 40
 
-      character(sidlen)     etstr
-      character(sidlen)     netstr
+      character(sidlen) :: etstr
+      character(sidlen) :: netstr
 
-      real(wp)              dcd   ( nd )
-      real(wp)              descr ( ns )
-      real(wp)              ltime
-      real(wp)              mid
-      real(wp)              numrec
-      real(wp)              radius
-      real(wp)              rsize
-      real(wp)              tol
+      real(wp) :: dcd   ( nd )
+      real(wp) :: descr ( ns )
+      real(wp) :: ltime
+      real(wp) :: mid
+      real(wp) :: numrec
+      real(wp) :: radius
+      real(wp) :: rsize
+      real(wp) :: tol
 
-      integer(ip)           i
-      integer(ip)           icd   ( ni )
-      integer(ip)           k
-      integer(ip)           ninrec
-      integer(ip)           refcod
+      integer(ip) :: i
+      integer(ip) :: icd   ( ni )
+      integer(ip) :: k
+      integer(ip) :: ninrec
+      integer(ip) :: refcod
 
 !
 !     Standard SPICE error handling.
@@ -18245,13 +18245,13 @@ contains
 
       integer(ip), parameter :: lprint = 126
 
-      real(wp)              dcd      ( nd     )
-      real(wp)              descr    ( ns     )
+      real(wp) :: dcd      ( nd     )
+      real(wp) :: descr    ( ns     )
 
-      integer(ip)           i
-      integer(ip)           refcod
-      integer(ip)           value
-      integer(ip)           icd      ( ni )
+      integer(ip) :: i
+      integer(ip) :: refcod
+      integer(ip) :: value
+      integer(ip) :: icd      ( ni )
 
 !
 !     Standard SPICE error handling.
@@ -18758,17 +18758,17 @@ contains
 
       integer(ip), parameter :: timlen = 40
 
-      character(timlen)     etstr
+      character(timlen) :: etstr
 
-      real(wp)              dcd    ( nd )
-      real(wp)              descr  ( ns )
-      real(wp)              ltime
-      real(wp)              tol
+      real(wp) :: dcd    ( nd )
+      real(wp) :: descr  ( ns )
+      real(wp) :: ltime
+      real(wp) :: tol
 
-      integer(ip)           chrcod
-      integer(ip)           i
-      integer(ip)           icd    ( ni )
-      integer(ip)           refcod
+      integer(ip) :: chrcod
+      integer(ip) :: i
+      integer(ip) :: icd    ( ni )
+      integer(ip) :: refcod
 
 !
 !     Standard SPICE error handling.
@@ -19388,14 +19388,14 @@ contains
 
       integer(ip), parameter :: dirsiz = 100
 
-      real(wp)              dcd    ( nd )
-      real(wp)              descr  ( ns )
-      real(wp)              maxtim
+      real(wp) :: dcd    ( nd )
+      real(wp) :: descr  ( ns )
+      real(wp) :: maxtim
 
-      integer(ip)           chrcod
-      integer(ip)           i
-      integer(ip)           icd    ( ni )
-      integer(ip)           refcod
+      integer(ip) :: chrcod
+      integer(ip) :: i
+      integer(ip) :: icd    ( ni )
+      integer(ip) :: refcod
 
 !
 !     Standard SPICE error handling.
@@ -20105,14 +20105,14 @@ contains
 
       integer(ip), parameter :: pktsiz = dnulon
 
-      real(wp)              descr ( 6 )
-      real(wp)              packet( pktsiz )
-      real(wp)              dnut  ( 4 )
+      real(wp) :: descr ( 6 )
+      real(wp) :: packet( pktsiz )
+      real(wp) :: dnut  ( 4 )
 
-      integer(ip)           base
-      integer(ip)           i
-      integer(ip)           npkts
-      integer(ip)           nepoch
+      integer(ip) :: base
+      integer(ip) :: i
+      integer(ip) :: npkts
+      integer(ip) :: nepoch
 
 !
 !     Standard SPICELIB error handling.
@@ -20489,16 +20489,16 @@ contains
 
       integer(ip), parameter :: timlen = 40
 
-      character(timlen)     etstr
+      character(timlen) :: etstr
 
-      real(wp)              descr  ( ns )
-      real(wp)              ltime
-      real(wp)              tol
+      real(wp) :: descr  ( ns )
+      real(wp) :: ltime
+      real(wp) :: tol
 
-      integer(ip)           chrcod
-      integer(ip)           i
-      integer(ip)           refcod
-      integer(ip)           winsiz
+      integer(ip) :: chrcod
+      integer(ip) :: i
+      integer(ip) :: refcod
+      integer(ip) :: winsiz
 
 !
 !     Standard SPICE error handling.
@@ -21082,13 +21082,13 @@ contains
 
       integer(ip), parameter :: statsz = 6
 
-      real(wp)              descr  ( dscsiz )
-      real(wp)              maxtim
+      real(wp) :: descr  ( dscsiz )
+      real(wp) :: maxtim
 
-      integer(ip)           chrcod
-      integer(ip)           i
-      integer(ip)           refcod
-      integer(ip)           winsiz
+      integer(ip) :: chrcod
+      integer(ip) :: i
+      integer(ip) :: refcod
+      integer(ip) :: winsiz
 
 !
 !     Standard SPICE error handling.
@@ -21569,16 +21569,16 @@ contains
 !
       integer(ip), parameter :: datsiz = 16
 
-      real(wp)              angle
-      real(wp)              dot
-      real(wp)              descr ( ns )
-      real(wp)              mytp  ( 3 )
-      real(wp)              mypa  ( 3 )
+      real(wp) :: angle
+      real(wp) :: dot
+      real(wp) :: descr ( ns )
+      real(wp) :: mytp  ( 3 )
+      real(wp) :: mypa  ( 3 )
 
-      real(wp)              record ( datsiz )
+      real(wp) :: record ( datsiz )
 
-      integer(ip)           i
-      integer(ip)           value
+      integer(ip) :: i
+      integer(ip) :: value
 
 !
 !     Standard SPICE error handling.
@@ -22153,15 +22153,15 @@ contains
 !
       integer(ip), parameter :: datsiz = 12
 
-      real(wp)              a
-      real(wp)              descr  ( ns )
-      real(wp)              h
-      real(wp)              k
-      real(wp)              ecc
-      real(wp)              record ( datsiz )
+      real(wp) :: a
+      real(wp) :: descr  ( ns )
+      real(wp) :: h
+      real(wp) :: k
+      real(wp) :: ecc
+      real(wp) :: record ( datsiz )
 
-      integer(ip)           i
-      integer(ip)           value
+      integer(ip) :: i
+      integer(ip) :: value
 
 !
 !     Standard SPICE error handling.
@@ -22488,16 +22488,16 @@ contains
 
       integer(ip), parameter :: statsz = 6
 
-      real(wp)              dc     ( nd )
-      real(wp)              descr  ( dscsiz )
-      real(wp)              maxtim
+      real(wp) :: dc     ( nd )
+      real(wp) :: descr  ( dscsiz )
+      real(wp) :: maxtim
 
-      integer(ip)           chrcod
-      integer(ip)           i
-      integer(ip)           ic     ( ni )
-      integer(ip)           packsz
-      integer(ip)           refcod
-      integer(ip)           winsiz
+      integer(ip) :: chrcod
+      integer(ip) :: i
+      integer(ip) :: ic     ( ni )
+      integer(ip) :: packsz
+      integer(ip) :: refcod
+      integer(ip) :: winsiz
 
 !
 !     Standard SPICE error handling.
@@ -23102,30 +23102,30 @@ contains
 
       integer(ip), parameter :: dirsiz = 100
 
-      real(wp)              dc     ( nd )
-      real(wp)              descr  ( dscsiz )
+      real(wp) :: dc     ( nd )
+      real(wp) :: descr  ( dscsiz )
 
-      integer(ip)           bepix
-      integer(ip)           chrcod
-      integer(ip)           eepix
-      integer(ip)           i
-      integer(ip)           ic     ( ni )
-      integer(ip)           isel
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           minisz
-      integer(ip)           ndir
-      integer(ip)           pktbeg
-      integer(ip)           pktdsz
-      integer(ip)           pktend
-      integer(ip)           pktsiz
+      integer(ip) :: bepix
+      integer(ip) :: chrcod
+      integer(ip) :: eepix
+      integer(ip) :: i
+      integer(ip) :: ic     ( ni )
+      integer(ip) :: isel
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: minisz
+      integer(ip) :: ndir
+      integer(ip) :: pktbeg
+      integer(ip) :: pktdsz
+      integer(ip) :: pktend
+      integer(ip) :: pktsiz
       integer(ip), parameter :: pktszs ( 0 : s19nst-1 ) = &
          [ s19ps0, s19ps1, s19ps2 ]
-      integer(ip)           refcod
-      integer(ip)           segbeg
-      integer(ip)           segend
-      integer(ip)           subtyp
-      integer(ip)           winsiz
+      integer(ip) :: refcod
+      integer(ip) :: segbeg
+      integer(ip) :: segend
+      integer(ip) :: subtyp
+      integer(ip) :: winsiz
 
 !
 !     Saved values
@@ -24068,19 +24068,19 @@ contains
 !
       integer(ip), parameter :: sidlen = 40
 
-      character(sidlen)     etstr
-      character(sidlen)     netstr
+      character(sidlen) :: etstr
+      character(sidlen) :: netstr
 
-      real(wp)              btime
-      real(wp)              dcd   ( nd )
-      real(wp)              descr ( ns )
-      real(wp)              ltime
-      real(wp)              numrec
-      real(wp)              tol
+      real(wp) :: btime
+      real(wp) :: dcd   ( nd )
+      real(wp) :: descr ( ns )
+      real(wp) :: ltime
+      real(wp) :: numrec
+      real(wp) :: tol
 
-      integer(ip)           icd   ( ni )
-      integer(ip)           ninrec
-      integer(ip)           refcod
+      integer(ip) :: icd   ( ni )
+      integer(ip) :: ninrec
+      integer(ip) :: refcod
 
 !
 !     Standard SPICE error handling.
@@ -24568,17 +24568,17 @@ contains
 
       integer(ip), parameter :: dirsiz = 100
 
-      real(wp)              descr  ( dscsiz )
-      real(wp)              prvepc
+      real(wp) :: descr  ( dscsiz )
+      real(wp) :: prvepc
 
-      integer(ip)           chrcod
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           kqmax1
-      integer(ip)           kqmloc
-      integer(ip)           maxdim
-      integer(ip)           maxdsz
-      integer(ip)           refcod
+      integer(ip) :: chrcod
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: kqmax1
+      integer(ip) :: kqmloc
+      integer(ip) :: maxdim
+      integer(ip) :: maxdsz
+      integer(ip) :: refcod
 
 !
 !     Standard SPICE error handling.
@@ -24915,8 +24915,8 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)                x
-      integer(ip)             k
+      real(wp) :: x
+      integer(ip) :: k
 
 !
 !     Let's pack it!
@@ -25306,13 +25306,13 @@ contains
 
       integer(ip), parameter :: dtype = 2
 
-      integer(ip)           icd    ( nic )
-      integer(ip)           nrec
-      integer(ip)           beg
-      integer(ip)           addr
+      integer(ip) :: icd    ( nic )
+      integer(ip) :: nrec
+      integer(ip) :: beg
+      integer(ip) :: addr
 
-      real(wp)              dcd    ( ndc  )
-      real(wp)              prec   ( psiz )
+      real(wp) :: dcd    ( ndc  )
+      real(wp) :: prec   ( psiz )
 
 !
 !     Standard SPICE error handling.
@@ -25831,11 +25831,11 @@ contains
 !
 !     Local Variables.
 !
-      integer(ip)           k
-      integer(ip)           kk
-      integer(ip)           numcft ( qavsiz )
-      integer(ip)           displm
-      integer(ip)           dispm
+      integer(ip) :: k
+      integer(ip) :: kk
+      integer(ip) :: numcft ( qavsiz )
+      integer(ip) :: displm
+      integer(ip) :: dispm
 
 !
 !     Standard SPICELIB error handling.
@@ -26268,11 +26268,11 @@ contains
 !     The number of constants.
 !
       integer(ip), parameter :: nconst = 1
-      real(wp)              descr ( ndescr )
-      real(wp)              dcoeff
+      real(wp) :: descr ( ndescr )
+      real(wp) :: dcoeff
 
-      integer(ip)           ncoeff
-      integer(ip)           pktsiz
+      integer(ip) :: ncoeff
+      integer(ip) :: pktsiz
 !
 !     Standard SPICELIB error handling.
 !
@@ -26462,8 +26462,8 @@ contains
 
       character(*), parameter :: emark = '~NAIF/SPC END COMMENTS~'
 
-      integer(ip)           handle
-      integer(ip)           iostat
+      integer(ip) :: handle
+      integer(ip) :: iostat
 
 !
 !     Standard SPICE error handling.
@@ -26706,11 +26706,11 @@ contains
       character(*), parameter :: emark = '~NAIF/SPC END COMMENTS~'
 
       integer(ip), parameter :: maxcpr = 1000
-      character(maxcpr)     line
+      character(maxcpr) :: line
 
-      integer(ip)           handle
-      integer(ip)           iostat
-      integer(ip)           scrtch
+      integer(ip) :: handle
+      integer(ip) :: iostat
+      integer(ip) :: scrtch
 
 !
 !     Standard SPICE error handling.
@@ -26967,7 +26967,7 @@ contains
 
 !     Local variables
 !
-      integer(ip)           unit
+      integer(ip) :: unit
 
 !
 !     Standard SPICE error handling.
@@ -27111,7 +27111,7 @@ contains
 
       character(*), parameter :: emark = '~NAIF/SPC END COMMENTS~'
 
-      integer(ip)           unit
+      integer(ip) :: unit
 
 !
 !     Standard SPICE error handling.

@@ -957,12 +957,12 @@ contains
       use pepper_math, only: axisar, mxmt, q2m, vnorm
       implicit none
 
-      real(wp)              quat   ( 4    )
-      real(wp)              cbase  ( 3, 3 )
-      real(wp)              rot    ( 3, 3 )
-      real(wp)              avtemp (    3 )
-      real(wp)              angle
-      real(wp)              time
+      real(wp) :: quat   ( 4    )
+      real(wp) :: cbase  ( 3, 3 )
+      real(wp) :: rot    ( 3, 3 )
+      real(wp) :: avtemp (    3 )
+      real(wp) :: angle
+      real(wp) :: time
 
 !
 !     Standard SPICE error handling.
@@ -1393,20 +1393,20 @@ contains
       use pepper_math, only: axisar, mtxm, mxmt, q2m
       implicit none
 
-      real(wp)              t
-      real(wp)              t1
-      real(wp)              t2
-      real(wp)              q1    (    4 )
-      real(wp)              q2    (    4 )
-      real(wp)              cmat1 ( 3, 3 )
-      real(wp)              cmat2 ( 3, 3 )
-      real(wp)              av1   (    3 )
-      real(wp)              av2   (    3 )
-      real(wp)              axis  (    3 )
-      real(wp)              rot   ( 3, 3 )
-      real(wp)              delta ( 3, 3 )
-      real(wp)              frac
-      real(wp)              angle
+      real(wp) :: t
+      real(wp) :: t1
+      real(wp) :: t2
+      real(wp) :: q1    (    4 )
+      real(wp) :: q2    (    4 )
+      real(wp) :: cmat1 ( 3, 3 )
+      real(wp) :: cmat2 ( 3, 3 )
+      real(wp) :: av1   (    3 )
+      real(wp) :: av2   (    3 )
+      real(wp) :: axis  (    3 )
+      real(wp) :: rot   ( 3, 3 )
+      real(wp) :: delta ( 3, 3 )
+      real(wp) :: frac
+      real(wp) :: angle
 
 !
 !     Standard SPICE error handling.
@@ -1802,12 +1802,12 @@ contains
       use pepper_inc_ckparam
       implicit none
 
-      real(wp)                q      ( 4 )
-      real(wp)                qout   ( 4 )
+      real(wp) :: q      ( 4 )
+      real(wp) :: qout   ( 4 )
 
-      integer(ip)             basadd
-      integer(ip)             i
-      integer(ip)             ideg   ( qavsiz )
+      integer(ip) :: basadd
+      integer(ip) :: i
+      integer(ip) :: ideg   ( qavsiz )
 
 !
 !     Initial values.
@@ -2225,32 +2225,32 @@ contains
 
       integer(ip), parameter :: pktbas = pktidx - 1
 
-      real(wp)              dq     ( 0 : 3 )
-      real(wp)              ds     ( 0 : 3 )
-      real(wp)              locrec ( ckmrsz )
-      real(wp)              mags
-      real(wp)              q      ( 0 : 3 )
-      real(wp)              qneg   ( 0 : 3 )
-      real(wp)              radtrm ( 0 : 3 )
-      real(wp)              rate
-      real(wp)              sclddq ( 0 : 3 )
-      real(wp)              sclkdp
-      real(wp)              state  ( 8 )
-      real(wp)              vbuff  ( 6 )
-      real(wp)              work   ( ckmrsz * 2,  2 )
+      real(wp) :: dq     ( 0 : 3 )
+      real(wp) :: ds     ( 0 : 3 )
+      real(wp) :: locrec ( ckmrsz )
+      real(wp) :: mags
+      real(wp) :: q      ( 0 : 3 )
+      real(wp) :: qneg   ( 0 : 3 )
+      real(wp) :: radtrm ( 0 : 3 )
+      real(wp) :: rate
+      real(wp) :: sclddq ( 0 : 3 )
+      real(wp) :: sclkdp
+      real(wp) :: state  ( 8 )
+      real(wp) :: vbuff  ( 6 )
+      real(wp) :: work   ( ckmrsz * 2,  2 )
 
-      integer(ip)           from
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           n
-      integer(ip)           newptr
-      integer(ip)           packsz
-      integer(ip)           prvptr
-      integer(ip)           subtyp
-      integer(ip)           to
-      integer(ip)           ub
-      integer(ip)           xstart
-      integer(ip)           ystart
+      integer(ip) :: from
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: n
+      integer(ip) :: newptr
+      integer(ip) :: packsz
+      integer(ip) :: prvptr
+      integer(ip) :: subtyp
+      integer(ip) :: to
+      integer(ip) :: ub
+      integer(ip) :: xstart
+      integer(ip) :: ystart
 
 !
 !     Standard SPICE error handling.
@@ -3037,24 +3037,24 @@ contains
 
       integer(ip), parameter :: dtype = 1
 
-      integer(ip)           icd    ( nic )
-      integer(ip)           beg
-      integer(ip)           end
-      integer(ip)           nrec
-      integer(ip)           ndir
-      integer(ip)           psiz
-      integer(ip)           group
-      integer(ip)           dirloc
-      integer(ip)           remain
-      integer(ip)           skip
-      integer(ip)           grpndx
-      integer(ip)           i
-      integer(ip)           n
+      integer(ip) :: icd    ( nic )
+      integer(ip) :: beg
+      integer(ip) :: end
+      integer(ip) :: nrec
+      integer(ip) :: ndir
+      integer(ip) :: psiz
+      integer(ip) :: group
+      integer(ip) :: dirloc
+      integer(ip) :: remain
+      integer(ip) :: skip
+      integer(ip) :: grpndx
+      integer(ip) :: i
+      integer(ip) :: n
 
-      real(wp)              dcd    ( ndc )
-      real(wp)              buffer ( dirsiz )
+      real(wp) :: dcd    ( ndc )
+      real(wp) :: buffer ( dirsiz )
 
-      logical               fnd
+      logical :: fnd
 
 !
 !     Standard SPICE error handling.
@@ -3521,32 +3521,32 @@ contains
 
       integer(ip), parameter :: dtype = 2
 
-      integer(ip)           icd    ( nic )
-      integer(ip)           beg
-      integer(ip)           end
-      integer(ip)           nrec
-      integer(ip)           ndir
-      integer(ip)           group
-      integer(ip)           dirloc
-      integer(ip)           remain
-      integer(ip)           skip
-      integer(ip)           grpndx
-      integer(ip)           index
-      integer(ip)           stploc
-      integer(ip)           arrsiz
-      integer(ip)           i
-      integer(ip)           n
+      integer(ip) :: icd    ( nic )
+      integer(ip) :: beg
+      integer(ip) :: end
+      integer(ip) :: nrec
+      integer(ip) :: ndir
+      integer(ip) :: group
+      integer(ip) :: dirloc
+      integer(ip) :: remain
+      integer(ip) :: skip
+      integer(ip) :: grpndx
+      integer(ip) :: index
+      integer(ip) :: stploc
+      integer(ip) :: arrsiz
+      integer(ip) :: i
+      integer(ip) :: n
 
-      real(wp)              dcd    ( ndc    )
-      real(wp)              buffer ( dirsiz )
-      real(wp)              prec   ( psiz   )
-      real(wp)              start
-      real(wp)              clkout
-      real(wp)              stopi
-      real(wp)              diff1
-      real(wp)              diff2
+      real(wp) :: dcd    ( ndc    )
+      real(wp) :: buffer ( dirsiz )
+      real(wp) :: prec   ( psiz   )
+      real(wp) :: start
+      real(wp) :: clkout
+      real(wp) :: stopi
+      real(wp) :: diff1
+      real(wp) :: diff2
 
-      logical               fnd
+      logical :: fnd
 
 !
 !     Standard SPICE error handling.
@@ -4214,33 +4214,33 @@ contains
       integer(ip), parameter :: qsiz = 4
       integer(ip), parameter :: qavsiz = 7
       integer(ip), parameter :: dtype = 3
-      integer(ip)           icd    ( ni )
-      integer(ip)           beg
-      integer(ip)           end
-      integer(ip)           numrec
-      integer(ip)           numint
-      integer(ip)           nrdir
-      integer(ip)           nidir
-      integer(ip)           group
-      integer(ip)           dirloc
-      integer(ip)           remain
-      integer(ip)           skip
-      integer(ip)           grpadd
-      integer(ip)           addr
-      integer(ip)           laddr
-      integer(ip)           raddr
-      integer(ip)           psiz
-      integer(ip)           i
-      integer(ip)           n
-      real(wp)              dcd    ( nd     )
-      real(wp)              buffer ( bufsiz )
-      real(wp)              lsclk
-      real(wp)              rsclk
-      real(wp)              rdiff
-      real(wp)              ldiff
-      real(wp)              start
-      real(wp)              nstart
-      logical               fnd
+      integer(ip) :: icd    ( ni )
+      integer(ip) :: beg
+      integer(ip) :: end
+      integer(ip) :: numrec
+      integer(ip) :: numint
+      integer(ip) :: nrdir
+      integer(ip) :: nidir
+      integer(ip) :: group
+      integer(ip) :: dirloc
+      integer(ip) :: remain
+      integer(ip) :: skip
+      integer(ip) :: grpadd
+      integer(ip) :: addr
+      integer(ip) :: laddr
+      integer(ip) :: raddr
+      integer(ip) :: psiz
+      integer(ip) :: i
+      integer(ip) :: n
+      real(wp) :: dcd    ( nd     )
+      real(wp) :: buffer ( bufsiz )
+      real(wp) :: lsclk
+      real(wp) :: rsclk
+      real(wp) :: rdiff
+      real(wp) :: ldiff
+      real(wp) :: start
+      real(wp) :: nstart
+      logical :: fnd
       if ( .not. allocated ( ctx%ckr03_state ) ) allocate ( ctx%ckr03_state )
       associate ( prevs => ctx%ckr03_state%prevs, &
                   prevn => ctx%ckr03_state%prevn, &
@@ -5090,51 +5090,51 @@ contains
       integer(ip), parameter :: parsiz = 4
       integer(ip), parameter :: sbufsz = dirsiz + 3
       integer(ip), parameter :: maxdeg = 23
-      real(wp)              contrl ( ctrlsz )
-      real(wp)              dc     ( nd )
-      real(wp)              hepoch
-      real(wp)              lepoch
-      real(wp)              nstart
-      real(wp)              nnstrt
-      real(wp)              pbuffr ( pbufsz )
-      real(wp)              rate
-      real(wp)              sbuffr ( sbufsz )
-      real(wp)              start
-      real(wp)              t
-      integer(ip)           pbegix
-      integer(ip)           begin
-      integer(ip)           bufbas
-      integer(ip)           dirbas
-      integer(ip)           end
-      integer(ip)           pendix
-      integer(ip)           first
-      integer(ip)           high
-      integer(ip)           i
-      integer(ip)           ic     ( ni )
-      integer(ip)           j
-      integer(ip)           last
-      integer(ip)           lsize
-      integer(ip)           low
-      integer(ip)           maxwnd
-      integer(ip)           n
-      integer(ip)           nidir
-      integer(ip)           npdir
-      integer(ip)           nints
-      integer(ip)           npread
-      integer(ip)           nsrch
-      integer(ip)           nsread
-      integer(ip)           packsz
-      integer(ip)           pgroup
-      integer(ip)           remain
-      integer(ip)           rsize
-      integer(ip)           sbegix
-      integer(ip)           sendix
-      integer(ip)           sgroup
-      integer(ip)           subtyp
-      integer(ip)           timbas
-      integer(ip)           type
-      integer(ip)           wndsiz
-      integer(ip)           wstart
+      real(wp) :: contrl ( ctrlsz )
+      real(wp) :: dc     ( nd )
+      real(wp) :: hepoch
+      real(wp) :: lepoch
+      real(wp) :: nstart
+      real(wp) :: nnstrt
+      real(wp) :: pbuffr ( pbufsz )
+      real(wp) :: rate
+      real(wp) :: sbuffr ( sbufsz )
+      real(wp) :: start
+      real(wp) :: t
+      integer(ip) :: pbegix
+      integer(ip) :: begin
+      integer(ip) :: bufbas
+      integer(ip) :: dirbas
+      integer(ip) :: end
+      integer(ip) :: pendix
+      integer(ip) :: first
+      integer(ip) :: high
+      integer(ip) :: i
+      integer(ip) :: ic     ( ni )
+      integer(ip) :: j
+      integer(ip) :: last
+      integer(ip) :: lsize
+      integer(ip) :: low
+      integer(ip) :: maxwnd
+      integer(ip) :: n
+      integer(ip) :: nidir
+      integer(ip) :: npdir
+      integer(ip) :: nints
+      integer(ip) :: npread
+      integer(ip) :: nsrch
+      integer(ip) :: nsread
+      integer(ip) :: packsz
+      integer(ip) :: pgroup
+      integer(ip) :: remain
+      integer(ip) :: rsize
+      integer(ip) :: sbegix
+      integer(ip) :: sendix
+      integer(ip) :: sgroup
+      integer(ip) :: subtyp
+      integer(ip) :: timbas
+      integer(ip) :: type
+      integer(ip) :: wndsiz
+      integer(ip) :: wstart
       if ( .not. allocated ( ctx%ckr05_state ) ) allocate ( ctx%ckr05_state )
       associate ( prevs => ctx%ckr05_state%prevs, &
                   prevn => ctx%ckr05_state%prevn, &
@@ -6142,60 +6142,60 @@ contains
       integer(ip), parameter :: c06mw1 = ( maxdeg + 1 )
       integer(ip), parameter :: c06mw2 = ( maxdeg + 1 )/2
       integer(ip), parameter :: c06mw3 = ( maxdeg + 1 )
-      real(wp)              buffer ( bufsiz )
-      real(wp)              contrl ( ctrlsz )
-      real(wp)              dc     ( nd )
-      real(wp)              gap
-      real(wp)              lstepc
-      real(wp)              mintim ( 2 )
-      real(wp)              rate
-      real(wp)              t
-      integer(ip)           baddr
-      integer(ip)           begidx
-      integer(ip)           bufbas
-      integer(ip)           dirbas
-      integer(ip)           eaddr
-      integer(ip)           endidx
-      integer(ip)           first
-      integer(ip)           group
-      integer(ip)           high
-      integer(ip)           i
-      integer(ip)           ic     ( ni )
-      integer(ip)           isel
-      integer(ip)           ivbas
-      integer(ip)           ivbix
-      integer(ip)           iveix
-      integer(ip)           last
-      integer(ip)           low
-      integer(ip)           lsize
-      integer(ip)           maxwnd
-      integer(ip)           minib
-      integer(ip)           minie
-      integer(ip)           miniix
+      real(wp) :: buffer ( bufsiz )
+      real(wp) :: contrl ( ctrlsz )
+      real(wp) :: dc     ( nd )
+      real(wp) :: gap
+      real(wp) :: lstepc
+      real(wp) :: mintim ( 2 )
+      real(wp) :: rate
+      real(wp) :: t
+      integer(ip) :: baddr
+      integer(ip) :: begidx
+      integer(ip) :: bufbas
+      integer(ip) :: dirbas
+      integer(ip) :: eaddr
+      integer(ip) :: endidx
+      integer(ip) :: first
+      integer(ip) :: group
+      integer(ip) :: high
+      integer(ip) :: i
+      integer(ip) :: ic     ( ni )
+      integer(ip) :: isel
+      integer(ip) :: ivbas
+      integer(ip) :: ivbix
+      integer(ip) :: iveix
+      integer(ip) :: last
+      integer(ip) :: low
+      integer(ip) :: lsize
+      integer(ip) :: maxwnd
+      integer(ip) :: minib
+      integer(ip) :: minie
+      integer(ip) :: miniix
       integer(ip), parameter :: mxwnsz ( 0 : c06nst-1 ) = &
          [ c06mw0, c06mw1, c06mw2, c06mw3 ]
-      integer(ip)           n
-      integer(ip)           ndir
-      integer(ip)           npkdir
-      integer(ip)           npkt
-      integer(ip)           nrcpkt
-      integer(ip)           nread
-      integer(ip)           pkdbas
-      integer(ip)           pktsiz
+      integer(ip) :: n
+      integer(ip) :: ndir
+      integer(ip) :: npkdir
+      integer(ip) :: npkt
+      integer(ip) :: nrcpkt
+      integer(ip) :: nread
+      integer(ip) :: pkdbas
+      integer(ip) :: pktsiz
       integer(ip), parameter :: pktszs ( 0 : c06nst-1 ) = &
          [ c06ps0, c06ps1, c06ps2, c06ps3 ]
-      integer(ip)           remain
-      integer(ip)           rsize
-      integer(ip)           subtyp
-      integer(ip)           timbas
-      integer(ip)           type
-      integer(ip)           wndsiz
-      logical               avflag
-      logical               ivlsel
-      logical               lval
-      logical               prvfnd
-      logical               samivl
-      logical               samseg
+      integer(ip) :: remain
+      integer(ip) :: rsize
+      integer(ip) :: subtyp
+      integer(ip) :: timbas
+      integer(ip) :: type
+      integer(ip) :: wndsiz
+      logical :: avflag
+      logical :: ivlsel
+      logical :: lval
+      logical :: prvfnd
+      logical :: samivl
+      logical :: samseg
       if ( .not. allocated ( ctx%ckr06_state ) ) allocate ( ctx%ckr06_state )
       associate ( pass1 => ctx%ckr06_state%pass1, &
                   svbeg => ctx%ckr06_state%svbeg, &
@@ -7722,17 +7722,17 @@ contains
 
       integer(ip), parameter :: ni = 5
 
-      real(wp)              dc       (   nd )
-      real(wp)              init
-      real(wp)              intlen
+      real(wp) :: dc       (   nd )
+      real(wp) :: init
+      real(wp) :: intlen
 
-      integer(ip)           begin
-      integer(ip)           end
-      integer(ip)           ic       (   ni )
-      integer(ip)           nrec
-      integer(ip)           recadr
-      integer(ip)           recno
-      integer(ip)           recsiz
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: ic       (   ni )
+      integer(ip) :: nrec
+      integer(ip) :: recadr
+      integer(ip) :: recno
+      integer(ip) :: recsiz
 
 !
 !     Standard SPICE error handling.
@@ -7905,30 +7905,30 @@ contains
       use pepper_constants, only: j2000, spd
       implicit none
 
-      real(wp)              dc       ( 2 )
-      real(wp)              dscale
-      real(wp)              init
-      real(wp)              initfr
-      real(wp)              initjd
-      real(wp)              intlen
-      real(wp)              intrvl
-      real(wp)              mid
-      real(wp)              pos      ( 3 )
-      real(wp)              radius
-      real(wp)              recbeg
-      real(wp)              tscale
+      real(wp) :: dc       ( 2 )
+      real(wp) :: dscale
+      real(wp) :: init
+      real(wp) :: initfr
+      real(wp) :: initjd
+      real(wp) :: intlen
+      real(wp) :: intrvl
+      real(wp) :: mid
+      real(wp) :: pos      ( 3 )
+      real(wp) :: radius
+      real(wp) :: recbeg
+      real(wp) :: tscale
 
-      integer(ip)           begin
-      integer(ip)           end
-      integer(ip)           i
-      integer(ip)           ic       ( 6 )
-      integer(ip)           loc
-      integer(ip)           nrec
-      integer(ip)           nterms
-      integer(ip)           recadr
-      integer(ip)           recno
-      integer(ip)           recsiz
-      integer(ip)           size
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: i
+      integer(ip) :: ic       ( 6 )
+      integer(ip) :: loc
+      integer(ip) :: nrec
+      integer(ip) :: nterms
+      integer(ip) :: recadr
+      integer(ip) :: recno
+      integer(ip) :: recsiz
+      integer(ip) :: size
 
 !
 !     Standard SPICE error handling.
@@ -8262,20 +8262,20 @@ contains
       use pepper_inc_sgparam
       implicit none
       real(wp) :: dmtasz_1(1)  !! one-element copy of dmtasz (array argument)
-      integer(ip)           ametas
-      integer(ip)           begin
-      integer(ip)           begmta
-      integer(ip)           begm1
-      integer(ip)           end
-      integer(ip)           endmta
-      integer(ip)           i
-      integer(ip)           nd
-      integer(ip)           ni
-      integer(ip)           niovr2
-      real(wp)              dmtasz
-      real(wp)              xmeta  ( mxmeta )
-      real(wp)              dtemp  (      2 )
-      integer(ip)           itemp  (      4 )
+      integer(ip) :: ametas
+      integer(ip) :: begin
+      integer(ip) :: begmta
+      integer(ip) :: begm1
+      integer(ip) :: end
+      integer(ip) :: endmta
+      integer(ip) :: i
+      integer(ip) :: nd
+      integer(ip) :: ni
+      integer(ip) :: niovr2
+      real(wp) :: dmtasz
+      real(wp) :: xmeta  ( mxmeta )
+      real(wp) :: dtemp  (      2 )
+      integer(ip) :: itemp  (      4 )
       equivalence         ( dtemp, itemp )
       if ( .not. allocated ( ctx%sgmeta_state ) ) allocate ( ctx%sgmeta_state )
       associate ( lstbeg => ctx%sgmeta_state%lstbeg, &
@@ -8959,10 +8959,10 @@ contains
       module procedure spke02
       use pepper_kinds, only: ip, wp
       use pepper_math, only: chbint
-      integer(ip)           cofloc
-      integer(ip)           degp
-      integer(ip)           i
-      integer(ip)           ncof
+      integer(ip) :: cofloc
+      integer(ip) :: degp
+      integer(ip) :: i
+      integer(ip) :: ncof
 
       if ( ctx%failed() ) return
 
@@ -9196,10 +9196,10 @@ contains
       use pepper_math, only: chbval
       implicit none
 
-      integer(ip)           ncof
-      integer(ip)           degp
-      integer(ip)           cofloc
-      integer(ip)           i
+      integer(ip) :: ncof
+      integer(ip) :: degp
+      integer(ip) :: cofloc
+      integer(ip) :: i
 
       if ( ctx%failed() ) return
 
@@ -9432,9 +9432,9 @@ contains
       integer(ip), parameter :: begidx = 2
       integer(ip), parameter :: stpidx = 3
       integer(ip), parameter :: staidx = 4
-      integer(ip)           i
-      integer(ip)           n
-      integer(ip)           ystart
+      integer(ip) :: i
+      integer(ip) :: n
+      integer(ip) :: ystart
       real(wp) :: locrec ( maxrec )
       real(wp) :: work   ( maxrec )
       if ( ctx%failed() ) return
@@ -9617,12 +9617,12 @@ contains
 
       integer(ip), parameter :: staidx = 2
 
-      real(wp)              locrec ( maxrec )
+      real(wp) :: locrec ( maxrec )
 
-      integer(ip)           i
-      integer(ip)           n
-      integer(ip)           xstart
-      integer(ip)           ystart
+      integer(ip) :: i
+      integer(ip) :: n
+      integer(ip) :: xstart
+      integer(ip) :: ystart
 
       if ( ctx%failed() ) return
 
@@ -9795,15 +9795,15 @@ contains
 
       integer(ip), parameter :: staidx = stpidx + 1
 
-      real(wp)              locrec ( maxrec )
-      real(wp)              work   ( maxrec * 2,  2 )
+      real(wp) :: locrec ( maxrec )
+      real(wp) :: work   ( maxrec * 2,  2 )
 
-      integer(ip)           from
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           n
-      integer(ip)           to
-      integer(ip)           xstart
+      integer(ip) :: from
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: n
+      integer(ip) :: to
+      integer(ip) :: xstart
 
 !
 !     Standard SPICE error handling.
@@ -9976,15 +9976,15 @@ contains
 
       integer(ip), parameter :: sizidx = 1
 
-      real(wp)              locrec ( maxrec )
-      real(wp)              work   ( maxrec * 2,  2 )
+      real(wp) :: locrec ( maxrec )
+      real(wp) :: work   ( maxrec * 2,  2 )
 
-      integer(ip)           from
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           n
-      integer(ip)           to
-      integer(ip)           xstart
+      integer(ip) :: from
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: n
+      integer(ip) :: to
+      integer(ip) :: xstart
 
 !
 !     Standard SPICE error handling.
@@ -10134,10 +10134,10 @@ contains
       use pepper_math, only: chbval
       implicit none
 
-      integer(ip)           cofloc
-      integer(ip)           degree
-      integer(ip)           i
-      integer(ip)           ncoeff
+      integer(ip) :: cofloc
+      integer(ip) :: degree
+      integer(ip) :: i
+      integer(ip) :: ncoeff
 
 !
 !     Standard SPICE error handling.
@@ -10334,13 +10334,13 @@ contains
       use pepper_kinds, only: wp
       implicit none
 
-      real(wp)              a
-      real(wp)              rapole
-      real(wp)              decpol
-      real(wp)              h
-      real(wp)              k
-      real(wp)              ecc
-      real(wp)              epoch
+      real(wp) :: a
+      real(wp) :: rapole
+      real(wp) :: decpol
+      real(wp) :: h
+      real(wp) :: k
+      real(wp) :: ecc
+      real(wp) :: epoch
 
 !
 !     Standard SPICE error handling.
@@ -10548,19 +10548,19 @@ contains
 !
       integer(ip), parameter :: maxdeg = 15
 
-      real(wp)              locrec ( maxrec )
-      real(wp)              work   ( maxrec * 2,  2 )
-      real(wp)              vbuff  ( 6 )
+      real(wp) :: locrec ( maxrec )
+      real(wp) :: work   ( maxrec * 2,  2 )
+      real(wp) :: vbuff  ( 6 )
 
-      integer(ip)           from
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           n
-      integer(ip)           packsz
-      integer(ip)           subtyp
-      integer(ip)           to
-      integer(ip)           xstart
-      integer(ip)           ystart
+      integer(ip) :: from
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: n
+      integer(ip) :: packsz
+      integer(ip) :: subtyp
+      integer(ip) :: to
+      integer(ip) :: xstart
+      integer(ip) :: ystart
 
 !
 !     Standard SPICE error handling.
@@ -10864,19 +10864,19 @@ contains
 !
       integer(ip), parameter :: pktidx = 3
 
-      real(wp)              locrec ( maxrec )
-      real(wp)              work   ( maxrec * 2,  2 )
-      real(wp)              vbuff  ( 6 )
+      real(wp) :: locrec ( maxrec )
+      real(wp) :: work   ( maxrec * 2,  2 )
+      real(wp) :: vbuff  ( 6 )
 
-      integer(ip)           from
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           n
-      integer(ip)           packsz
-      integer(ip)           subtyp
-      integer(ip)           to
-      integer(ip)           xstart
-      integer(ip)           ystart
+      integer(ip) :: from
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: n
+      integer(ip) :: packsz
+      integer(ip) :: subtyp
+      integer(ip) :: to
+      integer(ip) :: xstart
+      integer(ip) :: ystart
 
 !
 !     Standard SPICE error handling.
@@ -11215,13 +11215,13 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              intgrl ( 3 )
+      real(wp) :: intgrl ( 3 )
 
-      integer(ip)           degp
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           ncof
-      integer(ip)           posloc
+      integer(ip) :: degp
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: ncof
+      integer(ip) :: posloc
 
 !
 !     Standard SPICE error handling.
@@ -11711,21 +11711,21 @@ contains
       use pepper_arrays, only: lstltd
       implicit none
 
-      real(wp)              dc       (   2 )
-      integer(ip)           ic       (   6 )
-      integer(ip)           begin
-      integer(ip)           end
+      real(wp) :: dc       (   2 )
+      integer(ip) :: ic       (   6 )
+      integer(ip) :: begin
+      integer(ip) :: end
 
-      real(wp)              data     ( 100 )
-      integer(ip)           nrec
-      integer(ip)           ndir
-      integer(ip)           offd
-      integer(ip)           offe
-      integer(ip)           off
+      real(wp) :: data     ( 100 )
+      integer(ip) :: nrec
+      integer(ip) :: ndir
+      integer(ip) :: offd
+      integer(ip) :: offe
+      integer(ip) :: off
 
-      integer(ip)           recno
-      integer(ip)           offr
-      integer(ip)           i
+      integer(ip) :: recno
+      integer(ip) :: offr
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -11964,17 +11964,17 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              dc       (   2 )
-      real(wp)              init
-      real(wp)              intlen
+      real(wp) :: dc       (   2 )
+      real(wp) :: init
+      real(wp) :: intlen
 
-      integer(ip)           ic       (   6 )
-      integer(ip)           begin
-      integer(ip)           end
-      integer(ip)           recsiz
-      integer(ip)           nrec
-      integer(ip)           recno
-      integer(ip)           recadr
+      integer(ip) :: ic       (   6 )
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: recsiz
+      integer(ip) :: nrec
+      integer(ip) :: recno
+      integer(ip) :: recadr
 
 !
 !     Standard SPICE error handling.
@@ -12181,17 +12181,17 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              dc       (   2 )
-      real(wp)              init
-      real(wp)              intlen
+      real(wp) :: dc       (   2 )
+      real(wp) :: init
+      real(wp) :: intlen
 
-      integer(ip)           ic       (   6 )
-      integer(ip)           begin
-      integer(ip)           end
-      integer(ip)           recsiz
-      integer(ip)           nrec
-      integer(ip)           recno
-      integer(ip)           recadr
+      integer(ip) :: ic       (   6 )
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: recsiz
+      integer(ip) :: nrec
+      integer(ip) :: recno
+      integer(ip) :: recadr
 
 !
 !     Standard SPICE error handling.
@@ -12388,25 +12388,25 @@ contains
 
       integer(ip), parameter :: ni = 6
 
-      real(wp)              dc       (   nd )
-      real(wp)              data     ( size )
+      real(wp) :: dc       (   nd )
+      real(wp) :: data     ( size )
 
-      integer(ip)           ic       (   ni )
-      integer(ip)           begin
-      integer(ip)           end
-      integer(ip)           type
-      integer(ip)           nrec
-      integer(ip)           ndir
-      integer(ip)           group
-      integer(ip)           dirloc
-      integer(ip)           remain
-      integer(ip)           skip
-      integer(ip)           grpadd
-      integer(ip)           addrss
-      integer(ip)           i
-      integer(ip)           n
+      integer(ip) :: ic       (   ni )
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: type
+      integer(ip) :: nrec
+      integer(ip) :: ndir
+      integer(ip) :: group
+      integer(ip) :: dirloc
+      integer(ip) :: remain
+      integer(ip) :: skip
+      integer(ip) :: grpadd
+      integer(ip) :: addrss
+      integer(ip) :: i
+      integer(ip) :: n
 
-      logical               fnd
+      logical :: fnd
 
 !
 !     Standard SPICE error handling.
@@ -12830,22 +12830,22 @@ contains
 
       integer(ip), parameter :: staidx = 4
 
-      real(wp)              contrl ( ctrlsz  )
-      real(wp)              dc     ( nd )
-      real(wp)              start
-      real(wp)              step
+      real(wp) :: contrl ( ctrlsz  )
+      real(wp) :: dc     ( nd )
+      real(wp) :: start
+      real(wp) :: step
 
-      integer(ip)           begin
-      integer(ip)           degree
-      integer(ip)           end
-      integer(ip)           first
-      integer(ip)           grpsiz
-      integer(ip)           ic     ( ni )
-      integer(ip)           last
-      integer(ip)           low
-      integer(ip)           n
-      integer(ip)           near
-      integer(ip)           type
+      integer(ip) :: begin
+      integer(ip) :: degree
+      integer(ip) :: end
+      integer(ip) :: first
+      integer(ip) :: grpsiz
+      integer(ip) :: ic     ( ni )
+      integer(ip) :: last
+      integer(ip) :: low
+      integer(ip) :: n
+      integer(ip) :: near
+      integer(ip) :: type
 
       if ( ctx%failed() ) return
 
@@ -13117,33 +13117,33 @@ contains
 
       integer(ip), parameter :: bufsiz = dirsiz + 1
 
-      real(wp)              buffer ( bufsiz )
-      real(wp)              contrl ( 2  )
-      real(wp)              dc     ( nd )
+      real(wp) :: buffer ( bufsiz )
+      real(wp) :: contrl ( 2  )
+      real(wp) :: dc     ( nd )
 
-      integer(ip)           begidx
-      integer(ip)           begin
-      integer(ip)           bufbas
-      integer(ip)           degree
-      integer(ip)           dirbas
-      integer(ip)           end
-      integer(ip)           endidx
-      integer(ip)           first
-      integer(ip)           group
-      integer(ip)           high
-      integer(ip)           i
-      integer(ip)           ic     ( ni )
-      integer(ip)           last
-      integer(ip)           low
-      integer(ip)           n
-      integer(ip)           ndir
-      integer(ip)           near
-      integer(ip)           nread
-      integer(ip)           remain
-      integer(ip)           start
-      integer(ip)           timbas
-      integer(ip)           type
-      integer(ip)           wndsiz
+      integer(ip) :: begidx
+      integer(ip) :: begin
+      integer(ip) :: bufbas
+      integer(ip) :: degree
+      integer(ip) :: dirbas
+      integer(ip) :: end
+      integer(ip) :: endidx
+      integer(ip) :: first
+      integer(ip) :: group
+      integer(ip) :: high
+      integer(ip) :: i
+      integer(ip) :: ic     ( ni )
+      integer(ip) :: last
+      integer(ip) :: low
+      integer(ip) :: n
+      integer(ip) :: ndir
+      integer(ip) :: near
+      integer(ip) :: nread
+      integer(ip) :: remain
+      integer(ip) :: start
+      integer(ip) :: timbas
+      integer(ip) :: type
+      integer(ip) :: wndsiz
 
       if ( ctx%failed() ) return
 
@@ -13542,12 +13542,12 @@ contains
 !
       integer(ip), parameter :: diff = 15
 
-      real(wp)              dc  ( nd )
-      integer(ip)           ic  ( ni )
+      real(wp) :: dc  ( nd )
+      integer(ip) :: ic  ( ni )
 
-      integer(ip)           begin
-      integer(ip)           end
-      integer(ip)           type
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: type
 
 !
 !     Standard Spice Error Handling.
@@ -13751,12 +13751,12 @@ contains
 !
       integer(ip), parameter :: diff = 11
 
-      real(wp)              dc  ( nd )
-      integer(ip)           ic  ( ni )
+      real(wp) :: dc  ( nd )
+      integer(ip) :: ic  ( ni )
 
-      integer(ip)           begin
-      integer(ip)           end
-      integer(ip)           type
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: type
 
 !
 !     Standard Spice Error Handling.
@@ -13976,36 +13976,36 @@ contains
 !
       integer(ip), parameter :: maxdeg = 15
 
-      real(wp)              buffer ( bufsiz )
-      real(wp)              contrl ( ctrlsz )
-      real(wp)              dc     ( nd )
+      real(wp) :: buffer ( bufsiz )
+      real(wp) :: contrl ( ctrlsz )
+      real(wp) :: dc     ( nd )
 
-      integer(ip)           begidx
-      integer(ip)           begin
-      integer(ip)           bufbas
-      integer(ip)           dirbas
-      integer(ip)           end
-      integer(ip)           endidx
-      integer(ip)           first
-      integer(ip)           group
-      integer(ip)           high
-      integer(ip)           i
-      integer(ip)           ic     ( ni )
-      integer(ip)           last
-      integer(ip)           lsize
-      integer(ip)           low
-      integer(ip)           maxwnd
-      integer(ip)           n
-      integer(ip)           ndir
-      integer(ip)           nread
-      integer(ip)           packsz
-      integer(ip)           remain
-      integer(ip)           rsize
-      integer(ip)           start
-      integer(ip)           subtyp
-      integer(ip)           timbas
-      integer(ip)           type
-      integer(ip)           wndsiz
+      integer(ip) :: begidx
+      integer(ip) :: begin
+      integer(ip) :: bufbas
+      integer(ip) :: dirbas
+      integer(ip) :: end
+      integer(ip) :: endidx
+      integer(ip) :: first
+      integer(ip) :: group
+      integer(ip) :: high
+      integer(ip) :: i
+      integer(ip) :: ic     ( ni )
+      integer(ip) :: last
+      integer(ip) :: lsize
+      integer(ip) :: low
+      integer(ip) :: maxwnd
+      integer(ip) :: n
+      integer(ip) :: ndir
+      integer(ip) :: nread
+      integer(ip) :: packsz
+      integer(ip) :: remain
+      integer(ip) :: rsize
+      integer(ip) :: start
+      integer(ip) :: subtyp
+      integer(ip) :: timbas
+      integer(ip) :: type
+      integer(ip) :: wndsiz
 
       if ( ctx%failed() ) return
 
@@ -14523,54 +14523,54 @@ contains
       integer(ip), parameter :: s19mw0 = ( maxdeg + 1 )/2
       integer(ip), parameter :: s19mw1 = ( maxdeg + 1 )
       integer(ip), parameter :: s19mw2 = ( maxdeg + 1 )
-      real(wp)              buffer ( bufsiz )
-      real(wp)              contrl ( ctrlsz )
-      real(wp)              dc     ( nd )
-      real(wp)              mintim ( nd )
-      integer(ip)           baddr
-      integer(ip)           begidx
-      integer(ip)           bufbas
-      integer(ip)           dirbas
-      integer(ip)           eaddr
-      integer(ip)           endidx
-      integer(ip)           first
-      integer(ip)           group
-      integer(ip)           high
-      integer(ip)           i
-      integer(ip)           ic     ( ni )
-      integer(ip)           isel
-      integer(ip)           ivbas
-      integer(ip)           ivbix
-      integer(ip)           iveix
-      integer(ip)           last
-      integer(ip)           low
-      integer(ip)           lsize
-      integer(ip)           maxwnd
-      integer(ip)           minib
-      integer(ip)           minie
-      integer(ip)           miniix
+      real(wp) :: buffer ( bufsiz )
+      real(wp) :: contrl ( ctrlsz )
+      real(wp) :: dc     ( nd )
+      real(wp) :: mintim ( nd )
+      integer(ip) :: baddr
+      integer(ip) :: begidx
+      integer(ip) :: bufbas
+      integer(ip) :: dirbas
+      integer(ip) :: eaddr
+      integer(ip) :: endidx
+      integer(ip) :: first
+      integer(ip) :: group
+      integer(ip) :: high
+      integer(ip) :: i
+      integer(ip) :: ic     ( ni )
+      integer(ip) :: isel
+      integer(ip) :: ivbas
+      integer(ip) :: ivbix
+      integer(ip) :: iveix
+      integer(ip) :: last
+      integer(ip) :: low
+      integer(ip) :: lsize
+      integer(ip) :: maxwnd
+      integer(ip) :: minib
+      integer(ip) :: minie
+      integer(ip) :: miniix
       integer(ip), parameter :: mxwnsz ( 0 : s19nst-1 ) = &
          [ s19mw0, s19mw1, s19mw2 ]
-      integer(ip)           n
-      integer(ip)           ndir
-      integer(ip)           npkdir
-      integer(ip)           npkt
-      integer(ip)           nrcpkt
-      integer(ip)           nread
-      integer(ip)           pkdbas
-      integer(ip)           pktsiz
+      integer(ip) :: n
+      integer(ip) :: ndir
+      integer(ip) :: npkdir
+      integer(ip) :: npkt
+      integer(ip) :: nrcpkt
+      integer(ip) :: nread
+      integer(ip) :: pkdbas
+      integer(ip) :: pktsiz
       integer(ip), parameter :: pktszs ( 0 : s19nst-1 ) = &
          [ s19ps0, s19ps1, s19ps2 ]
-      integer(ip)           remain
-      integer(ip)           rsize
-      integer(ip)           subtyp
-      integer(ip)           timbas
-      integer(ip)           type
-      integer(ip)           wndsiz
-      logical               ivlsel
-      logical               prvok
-      logical               samivl
-      logical               samseg
+      integer(ip) :: remain
+      integer(ip) :: rsize
+      integer(ip) :: subtyp
+      integer(ip) :: timbas
+      integer(ip) :: type
+      integer(ip) :: wndsiz
+      logical :: ivlsel
+      logical :: prvok
+      logical :: samivl
+      logical :: samseg
       if ( .not. allocated ( ctx%spkr19_state ) ) allocate ( ctx%spkr19_state )
       associate ( pass1 => ctx%spkr19_state%pass1, &
                   svbeg => ctx%spkr19_state%svbeg, &
@@ -15645,30 +15645,30 @@ contains
       use pepper_constants, only: j2000, spd
       implicit none
 
-      real(wp)              dc       ( 2 )
-      real(wp)              dscale
-      real(wp)              init
-      real(wp)              initfr
-      real(wp)              initjd
-      real(wp)              intlen
-      real(wp)              intrvl
-      real(wp)              mid
-      real(wp)              pos      ( 3 )
-      real(wp)              radius
-      real(wp)              recbeg
-      real(wp)              tscale
+      real(wp) :: dc       ( 2 )
+      real(wp) :: dscale
+      real(wp) :: init
+      real(wp) :: initfr
+      real(wp) :: initjd
+      real(wp) :: intlen
+      real(wp) :: intrvl
+      real(wp) :: mid
+      real(wp) :: pos      ( 3 )
+      real(wp) :: radius
+      real(wp) :: recbeg
+      real(wp) :: tscale
 
-      integer(ip)           begin
-      integer(ip)           end
-      integer(ip)           i
-      integer(ip)           ic       ( 6 )
-      integer(ip)           loc
-      integer(ip)           nrec
-      integer(ip)           nterms
-      integer(ip)           recadr
-      integer(ip)           recno
-      integer(ip)           recsiz
-      integer(ip)           size
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: i
+      integer(ip) :: ic       ( 6 )
+      integer(ip) :: loc
+      integer(ip) :: nrec
+      integer(ip) :: nterms
+      integer(ip) :: recadr
+      integer(ip) :: recno
+      integer(ip) :: recsiz
+      integer(ip) :: size
 
 !
 !     Standard SPICE error handling.
@@ -15938,22 +15938,22 @@ contains
 
       integer(ip), parameter :: bufsiz = 100
 
-      real(wp)              data   ( bufsiz )
-      real(wp)              dc     ( 2 )
+      real(wp) :: data   ( bufsiz )
+      real(wp) :: dc     ( 2 )
 
-      integer(ip)           begin
-      integer(ip)           dflsiz
-      integer(ip)           end
-      integer(ip)           i
-      integer(ip)           ic     ( 6 )
-      integer(ip)           maxdim
-      integer(ip)           ndir
-      integer(ip)           nrec
-      integer(ip)           off
-      integer(ip)           offd
-      integer(ip)           offe
-      integer(ip)           offr
-      integer(ip)           recno
+      integer(ip) :: begin
+      integer(ip) :: dflsiz
+      integer(ip) :: end
+      integer(ip) :: i
+      integer(ip) :: ic     ( 6 )
+      integer(ip) :: maxdim
+      integer(ip) :: ndir
+      integer(ip) :: nrec
+      integer(ip) :: off
+      integer(ip) :: offd
+      integer(ip) :: offe
+      integer(ip) :: offr
+      integer(ip) :: recno
 
 !
 !     Standard SPICE error handling.
@@ -16557,9 +16557,9 @@ contains
       integer(ip), parameter :: npairs = 2*trunc - 2
       integer(ip), parameter :: lpair3 = npairs
       integer(ip), parameter :: lpair2 = npairs - 1
-      real(wp)              y
-      real(wp)              z
-      integer(ip)           i
+      real(wp) :: y
+      real(wp) :: z
+      integer(ip) :: i
       if ( .not. allocated ( ctx%stmp03_state ) ) allocate ( ctx%stmp03_state )
       associate ( first => ctx%stmp03_state%first, &
                   lbound => ctx%stmp03_state%lbound, &
@@ -16999,8 +16999,8 @@ contains
 !
 !     Local variables.
 !
-      real(wp)                x
-      integer(ip)             k
+      real(wp) :: x
+      integer(ip) :: k
 
 !
 !     Let's unpack it!
@@ -17283,54 +17283,54 @@ contains
       use pepper_constants, only: twopi
       implicit none
 
-      real(wp)                 zes
-      real(wp)                 a1
-      real(wp)                 a10
-      real(wp)                 a2
-      real(wp)                 a3
-      real(wp)                 a4
-      real(wp)                 a5
-      real(wp)                 a6
-      real(wp)                 a7
-      real(wp)                 a8
-      real(wp)                 a9
-      real(wp)                 betasq
-      real(wp)                 c1l
-      real(wp)                 c1ss
-      real(wp)                 cc
-      real(wp)                 ctem
-      real(wp)                 stem
-      real(wp)                 x1
-      real(wp)                 x2
-      real(wp)                 x3
-      real(wp)                 x4
-      real(wp)                 x5
-      real(wp)                 x6
-      real(wp)                 x7
-      real(wp)                 x8
-      real(wp)                 xnodce
-      real(wp)                 xnoi
-      real(wp)                 zcosg
-      real(wp)                 zcosgl
-      real(wp)                 zcosgs
-      real(wp)                 zcosh
-      real(wp)                 zcoshl
-      real(wp)                 zcosi
-      real(wp)                 zcosil
-      real(wp)                 zcosis
-      real(wp)                 zel
-      real(wp)                 zsing
-      real(wp)                 zsingl
-      real(wp)                 zsings
-      real(wp)                 zsinh
-      real(wp)                 zsinhl
-      real(wp)                 zsini
-      real(wp)                 zsinil
-      real(wp)                 zsinis
-      real(wp)                 zx
-      real(wp)                 zy
+      real(wp) :: zes
+      real(wp) :: a1
+      real(wp) :: a10
+      real(wp) :: a2
+      real(wp) :: a3
+      real(wp) :: a4
+      real(wp) :: a5
+      real(wp) :: a6
+      real(wp) :: a7
+      real(wp) :: a8
+      real(wp) :: a9
+      real(wp) :: betasq
+      real(wp) :: c1l
+      real(wp) :: c1ss
+      real(wp) :: cc
+      real(wp) :: ctem
+      real(wp) :: stem
+      real(wp) :: x1
+      real(wp) :: x2
+      real(wp) :: x3
+      real(wp) :: x4
+      real(wp) :: x5
+      real(wp) :: x6
+      real(wp) :: x7
+      real(wp) :: x8
+      real(wp) :: xnodce
+      real(wp) :: xnoi
+      real(wp) :: zcosg
+      real(wp) :: zcosgl
+      real(wp) :: zcosgs
+      real(wp) :: zcosh
+      real(wp) :: zcoshl
+      real(wp) :: zcosi
+      real(wp) :: zcosil
+      real(wp) :: zcosis
+      real(wp) :: zel
+      real(wp) :: zsing
+      real(wp) :: zsingl
+      real(wp) :: zsings
+      real(wp) :: zsinh
+      real(wp) :: zsinhl
+      real(wp) :: zsini
+      real(wp) :: zsinil
+      real(wp) :: zsinis
+      real(wp) :: zx
+      real(wp) :: zy
 
-      integer(ip)              lsflg
+      integer(ip) :: lsflg
 
 !
 !     SPICELIB routines.
@@ -17775,62 +17775,62 @@ contains
       use pepper_inc_zzsgp4
       implicit none
 
-      real(wp)                 ainv2
-      real(wp)                 aonv
-      real(wp)                 cosisq
-      real(wp)                 emo
-      real(wp)                 emsqo
-      real(wp)                 eoc
-      real(wp)                 f220
-      real(wp)                 f221
-      real(wp)                 f311
-      real(wp)                 f321
-      real(wp)                 f322
-      real(wp)                 f330
-      real(wp)                 f441
-      real(wp)                 f442
-      real(wp)                 f522
-      real(wp)                 f523
-      real(wp)                 f542
-      real(wp)                 f543
-      real(wp)                 g200
-      real(wp)                 g201
-      real(wp)                 g211
-      real(wp)                 g300
-      real(wp)                 g310
-      real(wp)                 g322
-      real(wp)                 g410
-      real(wp)                 g422
-      real(wp)                 g520
-      real(wp)                 g521
-      real(wp)                 g532
-      real(wp)                 g533
-      real(wp)                 q22
-      real(wp)                 q31
-      real(wp)                 q33
-      real(wp)                 root22
-      real(wp)                 root32
-      real(wp)                 root44
-      real(wp)                 root52
-      real(wp)                 root54
-      real(wp)                 rptim
-      real(wp)                 ses
-      real(wp)                 sghl
-      real(wp)                 sghs
-      real(wp)                 sgs
-      real(wp)                 shl
-      real(wp)                 shs
-      real(wp)                 sini2
-      real(wp)                 sis
-      real(wp)                 sls
-      real(wp)                 temp
-      real(wp)                 temp1
-      real(wp)                 theta
-      real(wp)                 x2o3
-      real(wp)                 xke
-      real(wp)                 xno2
-      real(wp)                 znl
-      real(wp)                 zns
+      real(wp) :: ainv2
+      real(wp) :: aonv
+      real(wp) :: cosisq
+      real(wp) :: emo
+      real(wp) :: emsqo
+      real(wp) :: eoc
+      real(wp) :: f220
+      real(wp) :: f221
+      real(wp) :: f311
+      real(wp) :: f321
+      real(wp) :: f322
+      real(wp) :: f330
+      real(wp) :: f441
+      real(wp) :: f442
+      real(wp) :: f522
+      real(wp) :: f523
+      real(wp) :: f542
+      real(wp) :: f543
+      real(wp) :: g200
+      real(wp) :: g201
+      real(wp) :: g211
+      real(wp) :: g300
+      real(wp) :: g310
+      real(wp) :: g322
+      real(wp) :: g410
+      real(wp) :: g422
+      real(wp) :: g520
+      real(wp) :: g521
+      real(wp) :: g532
+      real(wp) :: g533
+      real(wp) :: q22
+      real(wp) :: q31
+      real(wp) :: q33
+      real(wp) :: root22
+      real(wp) :: root32
+      real(wp) :: root44
+      real(wp) :: root52
+      real(wp) :: root54
+      real(wp) :: rptim
+      real(wp) :: ses
+      real(wp) :: sghl
+      real(wp) :: sghs
+      real(wp) :: sgs
+      real(wp) :: shl
+      real(wp) :: shs
+      real(wp) :: sini2
+      real(wp) :: sis
+      real(wp) :: sls
+      real(wp) :: temp
+      real(wp) :: temp1
+      real(wp) :: theta
+      real(wp) :: x2o3
+      real(wp) :: xke
+      real(wp) :: xno2
+      real(wp) :: znl
+      real(wp) :: zns
 
 !
 !     SPICELIB routines.
@@ -18290,31 +18290,31 @@ contains
       use pepper_constants, only: twopi
       implicit none
 
-      real(wp)                 delt
-      real(wp)                 fasx2
-      real(wp)                 fasx4
-      real(wp)                 fasx6
-      real(wp)                 ft
-      real(wp)                 g22
-      real(wp)                 g32
-      real(wp)                 g44
-      real(wp)                 g52
-      real(wp)                 g54
-      real(wp)                 rptim
-      real(wp)                 step2
-      real(wp)                 stepn
-      real(wp)                 stepp
-      real(wp)                 theta
-      real(wp)                 x2li
-      real(wp)                 x2omi
-      real(wp)                 xl
-      real(wp)                 xldot
-      real(wp)                 xnddt
-      real(wp)                 xndt
-      real(wp)                 xomi
+      real(wp) :: delt
+      real(wp) :: fasx2
+      real(wp) :: fasx4
+      real(wp) :: fasx6
+      real(wp) :: ft
+      real(wp) :: g22
+      real(wp) :: g32
+      real(wp) :: g44
+      real(wp) :: g52
+      real(wp) :: g54
+      real(wp) :: rptim
+      real(wp) :: step2
+      real(wp) :: stepn
+      real(wp) :: stepp
+      real(wp) :: theta
+      real(wp) :: x2li
+      real(wp) :: x2omi
+      real(wp) :: xl
+      real(wp) :: xldot
+      real(wp) :: xnddt
+      real(wp) :: xndt
+      real(wp) :: xomi
 
-      integer(ip)              iret
-      integer(ip)              iretn
+      integer(ip) :: iret
+      integer(ip) :: iretn
 
 !
 !     SPICELIB routines.
@@ -18680,41 +18680,41 @@ contains
       use pepper_inc_zzsgp4
       implicit none
 
-      real(wp)              alfdp
-      real(wp)              betdp
-      real(wp)              cosip
-      real(wp)              cosop
-      real(wp)              dalf
-      real(wp)              dbet
-      real(wp)              dls
-      real(wp)              f2
-      real(wp)              f3
-      real(wp)              pe
-      real(wp)              pgh
-      real(wp)              ph
-      real(wp)              pinc
-      real(wp)              pl
-      real(wp)              sel
-      real(wp)              ses
-      real(wp)              sghl
-      real(wp)              sghs
-      real(wp)              shl
-      real(wp)              shs
-      real(wp)              sil
-      real(wp)              sinip
-      real(wp)              sinop
-      real(wp)              sinzf
-      real(wp)              sis
-      real(wp)              sll
-      real(wp)              sls
-      real(wp)              xls
-      real(wp)              xnoh
-      real(wp)              zel
-      real(wp)              zes
-      real(wp)              zf
-      real(wp)              zm
-      real(wp)              znl
-      real(wp)              zns
+      real(wp) :: alfdp
+      real(wp) :: betdp
+      real(wp) :: cosip
+      real(wp) :: cosop
+      real(wp) :: dalf
+      real(wp) :: dbet
+      real(wp) :: dls
+      real(wp) :: f2
+      real(wp) :: f3
+      real(wp) :: pe
+      real(wp) :: pgh
+      real(wp) :: ph
+      real(wp) :: pinc
+      real(wp) :: pl
+      real(wp) :: sel
+      real(wp) :: ses
+      real(wp) :: sghl
+      real(wp) :: sghs
+      real(wp) :: shl
+      real(wp) :: shs
+      real(wp) :: sil
+      real(wp) :: sinip
+      real(wp) :: sinop
+      real(wp) :: sinzf
+      real(wp) :: sis
+      real(wp) :: sll
+      real(wp) :: sls
+      real(wp) :: xls
+      real(wp) :: xnoh
+      real(wp) :: zel
+      real(wp) :: zes
+      real(wp) :: zf
+      real(wp) :: zm
+      real(wp) :: znl
+      real(wp) :: zns
 
 !
 !     SPICELIB routines.
@@ -18995,25 +18995,25 @@ contains
       use pepper_inc_zzsgp4
       implicit none
 
-      real(wp)                 adel
-      real(wp)                 ak
-      real(wp)                 c1
-      real(wp)                 c1p2p
-      real(wp)                 d1
-      real(wp)                 del
-      real(wp)                 fk5r
-      real(wp)                 j2
-      real(wp)                 po
-      real(wp)                 radday
-      real(wp)                 temp
-      real(wp)                 tfrac
-      real(wp)                 thgr70
-      real(wp)                 ts70
-      real(wp)                 tut1
-      real(wp)                 x2o3
-      real(wp)                 xke
+      real(wp) :: adel
+      real(wp) :: ak
+      real(wp) :: c1
+      real(wp) :: c1p2p
+      real(wp) :: d1
+      real(wp) :: del
+      real(wp) :: fk5r
+      real(wp) :: j2
+      real(wp) :: po
+      real(wp) :: radday
+      real(wp) :: temp
+      real(wp) :: tfrac
+      real(wp) :: thgr70
+      real(wp) :: ts70
+      real(wp) :: tut1
+      real(wp) :: x2o3
+      real(wp) :: xke
 
-      integer(ip)              ids70
+      integer(ip) :: ids70
 
 !
 !     SPICELIB routines.
@@ -20089,9 +20089,9 @@ contains
 
       integer(ip), parameter :: nic = 6
 
-      real(wp)              dcd    ( ndc )
+      real(wp) :: dcd    ( ndc )
 
-      integer(ip)           icd    ( nic )
+      integer(ip) :: icd    ( nic )
 
 !
 !     Standard SPICE error handling.
@@ -20718,7 +20718,7 @@ contains
       implicit none
       integer(ip), parameter :: bufsiz = 3
       integer(ip), parameter :: maxbit = 64
-      real(wp)              pos    ( 3 )
+      real(wp) :: pos    ( 3 )
       real(wp) :: kfun
       real(wp) :: f
       real(wp) :: bq
@@ -21649,10 +21649,10 @@ contains
 !     Include the mnemonic values for the generic segment declarations.
 !
 
-      integer(ip)           b
-      integer(ip)           base
-      integer(ip)           e
-      integer(ip)           myncon
+      integer(ip) :: b
+      integer(ip) :: base
+      integer(ip) :: e
+      integer(ip) :: myncon
 !
 !     Standard SPICE error handling.
 !
@@ -21857,23 +21857,23 @@ contains
 !     Include the mnemonic values.
 !
 
-      real(wp)              dtemp(2)
+      real(wp) :: dtemp(2)
 
-      integer(ip)           b
-      integer(ip)           begin1
-      integer(ip)           begin2
-      integer(ip)           e
-      integer(ip)           i
-      integer(ip)           mynpdr
-      integer(ip)           mynpkt
-      integer(ip)           mypdrb
-      integer(ip)           mypdrt
-      integer(ip)           mypksz
-      integer(ip)           mypktb
-      integer(ip)           mypkto
-      integer(ip)           size
-      integer(ip)           soffst
-      integer(ip)           voffst
+      integer(ip) :: b
+      integer(ip) :: begin1
+      integer(ip) :: begin2
+      integer(ip) :: e
+      integer(ip) :: i
+      integer(ip) :: mynpdr
+      integer(ip) :: mynpkt
+      integer(ip) :: mypdrb
+      integer(ip) :: mypdrt
+      integer(ip) :: mypksz
+      integer(ip) :: mypktb
+      integer(ip) :: mypkto
+      integer(ip) :: size
+      integer(ip) :: soffst
+      integer(ip) :: voffst
 !
 !     Standard SPICE error handling.
 !
@@ -22186,30 +22186,30 @@ contains
       integer(ip), parameter :: dirsiz = 100
 
       integer(ip), parameter :: bufsiz = dirsiz + 1
-      real(wp)              buffer ( bufsiz )
-      real(wp)              dptemp
-      real(wp)              endref
-      real(wp)              myvalu
+      real(wp) :: buffer ( bufsiz )
+      real(wp) :: dptemp
+      real(wp) :: endref
+      real(wp) :: myvalu
 
-      integer(ip)           begin
-      integer(ip)           bfindx
-      integer(ip)           fullrd
-      integer(ip)           end
-      integer(ip)           i
-      integer(ip)           myindx
-      integer(ip)           nfetch
-      integer(ip)           mynpkt
-      integer(ip)           mynrdr
-      integer(ip)           mynref
-      integer(ip)           myrdrb
-      integer(ip)           myrdrt
-      integer(ip)           myrefb
-      integer(ip)           rdridx
-      integer(ip)           remain
+      integer(ip) :: begin
+      integer(ip) :: bfindx
+      integer(ip) :: fullrd
+      integer(ip) :: end
+      integer(ip) :: i
+      integer(ip) :: myindx
+      integer(ip) :: nfetch
+      integer(ip) :: mynpkt
+      integer(ip) :: mynrdr
+      integer(ip) :: mynref
+      integer(ip) :: myrdrb
+      integer(ip) :: myrdrt
+      integer(ip) :: myrefb
+      integer(ip) :: rdridx
+      integer(ip) :: remain
 
-      logical               done
-      logical               isdirv
-      logical               myfnd
+      logical :: done
+      logical :: isdirv
+      logical :: myfnd
 !     Initial Values
 !
 !     Constants (SPICELIB computed them on the first call).
@@ -23484,26 +23484,26 @@ contains
       implicit none
       integer(ip) :: ends_1(1)  !! one-element copy of ends (array argument)
 
-      real(wp)              value
-      real(wp)              midpt1
-      real(wp)              midpt2
-      real(wp)              rad1
-      real(wp)              rad2
-      real(wp)              lbnd1
-      real(wp)              lbnd2
-      real(wp)              rbnd1
-      real(wp)              dcd    ( 2 )
-      real(wp)              clkout
+      real(wp) :: value
+      real(wp) :: midpt1
+      real(wp) :: midpt2
+      real(wp) :: rad1
+      real(wp) :: rad2
+      real(wp) :: lbnd1
+      real(wp) :: lbnd2
+      real(wp) :: rbnd1
+      real(wp) :: dcd    ( 2 )
+      real(wp) :: clkout
 
-      integer(ip)           numall
-      integer(ip)           numcft ( qavsiz )
-      integer(ip)           icd    ( 6 )
-      integer(ip)           ends
-      integer(ip)           indx
-      integer(ip)           k
-      integer(ip)           nrec
+      integer(ip) :: numall
+      integer(ip) :: numcft ( qavsiz )
+      integer(ip) :: icd    ( 6 )
+      integer(ip) :: ends
+      integer(ip) :: indx
+      integer(ip) :: k
+      integer(ip) :: nrec
 
-      logical               exist
+      logical :: exist
 
 !
 !     Standard SPICE error handling.
@@ -23929,16 +23929,16 @@ contains
       use pepper_math, only: chbval, vcrss
       implicit none
 
-      real(wp)              eulang ( 6    )
-      real(wp)              mav    ( 3    )
-      real(wp)              rot    ( 3, 3 )
-      real(wp)              drotdt ( 3, 3 )
+      real(wp) :: eulang ( 6    )
+      real(wp) :: mav    ( 3    )
+      real(wp) :: rot    ( 3, 3 )
+      real(wp) :: drotdt ( 3, 3 )
 
-      integer(ip)           ncoeff
-      integer(ip)           degree
-      integer(ip)           cofloc
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: ncoeff
+      integer(ip) :: degree
+      integer(ip) :: cofloc
+      integer(ip) :: i
+      integer(ip) :: j
 !
 !     Standard SPICE error handling.
 !
@@ -24215,12 +24215,12 @@ contains
 !
       integer(ip), parameter :: begel1 = nconst + 1
 
-      real(wp)              value
+      real(wp) :: value
 
-      integer(ip)           ends
-      integer(ip)           indx
+      integer(ip) :: ends
+      integer(ip) :: indx
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -24429,20 +24429,20 @@ contains
       use pepper_constants, only: pi
       implicit none
 
-      real(wp)              arg
-      real(wp)              dargdt
-      real(wp)              denom
-      real(wp)              dwdt
-      real(wp)              gm
-      real(wp)              numer
-      real(wp)              pv       ( 6, 2 )
-      real(wp)              s1       ( 6 )
-      real(wp)              s2       ( 6 )
-      real(wp)              t1
-      real(wp)              t2
-      real(wp)              vcomp    ( 3 )
-      real(wp)              vel      ( 3 )
-      real(wp)              w
+      real(wp) :: arg
+      real(wp) :: dargdt
+      real(wp) :: denom
+      real(wp) :: dwdt
+      real(wp) :: gm
+      real(wp) :: numer
+      real(wp) :: pv       ( 6, 2 )
+      real(wp) :: s1       ( 6 )
+      real(wp) :: s2       ( 6 )
+      real(wp) :: t1
+      real(wp) :: t2
+      real(wp) :: vcomp    ( 3 )
+      real(wp) :: vel      ( 3 )
+      real(wp) :: w
 
 !
 !     Standard SPICE error handling.
@@ -24735,34 +24735,34 @@ contains
       use pepper_math, only: vcrss, vdot, vhatip, vrotv, vsep
       implicit none
 
-      real(wp)              angle
-      real(wp)              cosinc
-      real(wp)              dmdt
-      real(wp)              dnode
-      real(wp)              dot
-      real(wp)              dperi
-      real(wp)              dt
-      real(wp)              ecc
-      real(wp)              epoch
-      real(wp)              gm
-      real(wp)              k2pi
-      real(wp)              manom
-      real(wp)              near
-      real(wp)              oj2
-      real(wp)              oneme2
-      real(wp)              p
-      real(wp)              pa     ( 3 )
-      real(wp)              pv     ( 3 )
-      real(wp)              rpl
-      real(wp)              speed
-      real(wp)              state0 ( 6 )
-      real(wp)              ta
-      real(wp)              theta
-      real(wp)              tmpsta ( 6 )
-      real(wp)              tp     ( 3 )
-      real(wp)              z
+      real(wp) :: angle
+      real(wp) :: cosinc
+      real(wp) :: dmdt
+      real(wp) :: dnode
+      real(wp) :: dot
+      real(wp) :: dperi
+      real(wp) :: dt
+      real(wp) :: ecc
+      real(wp) :: epoch
+      real(wp) :: gm
+      real(wp) :: k2pi
+      real(wp) :: manom
+      real(wp) :: near
+      real(wp) :: oj2
+      real(wp) :: oneme2
+      real(wp) :: p
+      real(wp) :: pa     ( 3 )
+      real(wp) :: pv     ( 3 )
+      real(wp) :: rpl
+      real(wp) :: speed
+      real(wp) :: state0 ( 6 )
+      real(wp) :: ta
+      real(wp) :: theta
+      real(wp) :: tmpsta ( 6 )
+      real(wp) :: tp     ( 3 )
+      real(wp) :: z
 
-      integer(ip)           j2flg
+      integer(ip) :: j2flg
 
 !
 !     Standard SPICE error handling.
@@ -25362,12 +25362,12 @@ contains
 !
       integer(ip), parameter :: begel1 = nconst + 1
 
-      real(wp)              value
+      real(wp) :: value
 
-      integer(ip)           ends
-      integer(ip)           indx
+      integer(ip) :: ends
+      integer(ip) :: indx
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -25733,11 +25733,11 @@ contains
 
       integer(ip), parameter :: nic = 6
 
-      integer(ip)           icd    ( nic    )
-      integer(ip)           type
+      integer(ip) :: icd    ( nic    )
+      integer(ip) :: type
 
-      real(wp)              dcd    ( ndc    )
-      real(wp)              record ( ckmrsz )
+      real(wp) :: dcd    ( ndc    )
+      real(wp) :: record ( ckmrsz )
 
 !
 !     Standard SPICE error handling.
@@ -26039,18 +26039,18 @@ contains
 !
       integer(ip), parameter :: nstate = 6
 
-      character(40)         ident
+      character(40) :: ident
 
-      real(wp)              dcd    (     nd )
-      real(wp)              descr  (     ns )
-      real(wp)              estate ( nstate )
-      real(wp)              eulang ( nstate )
-      real(wp)              record ( maxrec )
+      real(wp) :: dcd    (     nd )
+      real(wp) :: descr  (     ns )
+      real(wp) :: estate ( nstate )
+      real(wp) :: eulang ( nstate )
+      real(wp) :: record ( maxrec )
 
-      integer(ip)           handle
-      integer(ip)           icd    (     ni )
-      integer(ip)           recsiz
-      integer(ip)           type
+      integer(ip) :: handle
+      integer(ip) :: icd    (     ni )
+      integer(ip) :: recsiz
+      integer(ip) :: type
 
 !
 !     Standard SPICE Error handling.
@@ -26392,168 +26392,168 @@ contains
       use pepper_constants, only: twopi
       use pepper_inc_zzsgp4
       implicit none
-      real(wp)                 ainv
-      real(wp)                 am
-      real(wp)                 ao
-      real(wp)                 argpm
-      real(wp)                 argpp
-      real(wp)                 axnl
-      real(wp)                 aynl
-      real(wp)                 betal
-      real(wp)                 cc1sq
-      real(wp)                 cc2
-      real(wp)                 cc3
-      real(wp)                 cnod
-      real(wp)                 cnodm
-      real(wp)                 coef
-      real(wp)                 coef1
-      real(wp)                 con42
-      real(wp)                 cos2u
-      real(wp)                 coseo1
-      real(wp)                 cosi
-      real(wp)                 cosim
-      real(wp)                 cosio
-      real(wp)                 cosio2
-      real(wp)                 cosio4
-      real(wp)                 cosip
-      real(wp)                 cosisq
-      real(wp)                 cosomm
-      real(wp)                 cossu
-      real(wp)                 cosu
-      real(wp)                 day
-      real(wp)                 delm
-      real(wp)                 delomg
-      real(wp)                 dndt
-      real(wp)                 eccm
-      real(wp)                 eccp
-      real(wp)                 eccsq
-      real(wp)                 ecose
-      real(wp)                 eeta
-      real(wp)                 el2
-      real(wp)                 emsq
-      real(wp)                 eo1
-      real(wp)                 epoch
-      real(wp)                 esine
-      real(wp)                 etasq
-      real(wp)                 gam
-      real(wp)                 inclm
-      real(wp)                 j3
-      real(wp)                 j4
-      real(wp)                 kps
-      real(wp)                 mm
-      real(wp)                 mp
-      real(wp)                 mr
-      real(wp)                 mv
-      real(wp)                 nodem
-      real(wp)                 nodep
-      real(wp)                 omeosq
-      real(wp)                 omgadf
-      real(wp)                 perige
-      real(wp)                 pinvsq
-      real(wp)                 pl
-      real(wp)                 posq
-      real(wp)                 psisq
-      real(wp)                 qzms24
-      real(wp)                 qzms2t
-      real(wp)                 rdotl
-      real(wp)                 rl
-      real(wp)                 rp
-      real(wp)                 rtemsq
-      real(wp)                 rteosq
-      real(wp)                 rvdot
-      real(wp)                 rvdotl
-      real(wp)                 s1
-      real(wp)                 s2
-      real(wp)                 s3
-      real(wp)                 s4
-      real(wp)                 s5
-      real(wp)                 s6
-      real(wp)                 s7
-      real(wp)                 sfour
-      real(wp)                 sin2u
-      real(wp)                 sineo1
-      real(wp)                 sini
-      real(wp)                 sinim
-      real(wp)                 sinio
-      real(wp)                 sinip
-      real(wp)                 sinomm
-      real(wp)                 sinsu
-      real(wp)                 sinu
-      real(wp)                 snod
-      real(wp)                 snodm
-      real(wp)                 ss
-      real(wp)                 ss1
-      real(wp)                 ss2
-      real(wp)                 ss3
-      real(wp)                 ss4
-      real(wp)                 ss5
-      real(wp)                 ss6
-      real(wp)                 ss7
-      real(wp)                 su
-      real(wp)                 sz1
-      real(wp)                 sz11
-      real(wp)                 sz12
-      real(wp)                 sz13
-      real(wp)                 sz2
-      real(wp)                 sz21
-      real(wp)                 sz22
-      real(wp)                 sz23
-      real(wp)                 sz3
-      real(wp)                 sz31
-      real(wp)                 sz32
-      real(wp)                 sz33
-      real(wp)                 t2
-      real(wp)                 t3
-      real(wp)                 t4
-      real(wp)                 tc
-      real(wp)                 tem5
-      real(wp)                 temp
-      real(wp)                 temp1
-      real(wp)                 temp2
-      real(wp)                 temp3
-      real(wp)                 temp4
-      real(wp)                 tempa
-      real(wp)                 tempe
-      real(wp)                 templ
-      real(wp)                 tsi
-      real(wp)                 tumin
+      real(wp) :: ainv
+      real(wp) :: am
+      real(wp) :: ao
+      real(wp) :: argpm
+      real(wp) :: argpp
+      real(wp) :: axnl
+      real(wp) :: aynl
+      real(wp) :: betal
+      real(wp) :: cc1sq
+      real(wp) :: cc2
+      real(wp) :: cc3
+      real(wp) :: cnod
+      real(wp) :: cnodm
+      real(wp) :: coef
+      real(wp) :: coef1
+      real(wp) :: con42
+      real(wp) :: cos2u
+      real(wp) :: coseo1
+      real(wp) :: cosi
+      real(wp) :: cosim
+      real(wp) :: cosio
+      real(wp) :: cosio2
+      real(wp) :: cosio4
+      real(wp) :: cosip
+      real(wp) :: cosisq
+      real(wp) :: cosomm
+      real(wp) :: cossu
+      real(wp) :: cosu
+      real(wp) :: day
+      real(wp) :: delm
+      real(wp) :: delomg
+      real(wp) :: dndt
+      real(wp) :: eccm
+      real(wp) :: eccp
+      real(wp) :: eccsq
+      real(wp) :: ecose
+      real(wp) :: eeta
+      real(wp) :: el2
+      real(wp) :: emsq
+      real(wp) :: eo1
+      real(wp) :: epoch
+      real(wp) :: esine
+      real(wp) :: etasq
+      real(wp) :: gam
+      real(wp) :: inclm
+      real(wp) :: j3
+      real(wp) :: j4
+      real(wp) :: kps
+      real(wp) :: mm
+      real(wp) :: mp
+      real(wp) :: mr
+      real(wp) :: mv
+      real(wp) :: nodem
+      real(wp) :: nodep
+      real(wp) :: omeosq
+      real(wp) :: omgadf
+      real(wp) :: perige
+      real(wp) :: pinvsq
+      real(wp) :: pl
+      real(wp) :: posq
+      real(wp) :: psisq
+      real(wp) :: qzms24
+      real(wp) :: qzms2t
+      real(wp) :: rdotl
+      real(wp) :: rl
+      real(wp) :: rp
+      real(wp) :: rtemsq
+      real(wp) :: rteosq
+      real(wp) :: rvdot
+      real(wp) :: rvdotl
+      real(wp) :: s1
+      real(wp) :: s2
+      real(wp) :: s3
+      real(wp) :: s4
+      real(wp) :: s5
+      real(wp) :: s6
+      real(wp) :: s7
+      real(wp) :: sfour
+      real(wp) :: sin2u
+      real(wp) :: sineo1
+      real(wp) :: sini
+      real(wp) :: sinim
+      real(wp) :: sinio
+      real(wp) :: sinip
+      real(wp) :: sinomm
+      real(wp) :: sinsu
+      real(wp) :: sinu
+      real(wp) :: snod
+      real(wp) :: snodm
+      real(wp) :: ss
+      real(wp) :: ss1
+      real(wp) :: ss2
+      real(wp) :: ss3
+      real(wp) :: ss4
+      real(wp) :: ss5
+      real(wp) :: ss6
+      real(wp) :: ss7
+      real(wp) :: su
+      real(wp) :: sz1
+      real(wp) :: sz11
+      real(wp) :: sz12
+      real(wp) :: sz13
+      real(wp) :: sz2
+      real(wp) :: sz21
+      real(wp) :: sz22
+      real(wp) :: sz23
+      real(wp) :: sz3
+      real(wp) :: sz31
+      real(wp) :: sz32
+      real(wp) :: sz33
+      real(wp) :: t2
+      real(wp) :: t3
+      real(wp) :: t4
+      real(wp) :: tc
+      real(wp) :: tem5
+      real(wp) :: temp
+      real(wp) :: temp1
+      real(wp) :: temp2
+      real(wp) :: temp3
+      real(wp) :: temp4
+      real(wp) :: tempa
+      real(wp) :: tempe
+      real(wp) :: templ
+      real(wp) :: tsi
+      real(wp) :: tumin
 !     PEPPER: TTRANS declares its time vector with 10 elements.
-      real(wp)                 tvec   ( 10 )
-      real(wp)                 tzero
-      real(wp)                 u
-      real(wp)                 ux
-      real(wp)                 uy
-      real(wp)                 uz
-      real(wp)                 vx
-      real(wp)                 vy
-      real(wp)                 vz
-      real(wp)                 x2o3
-      real(wp)                 xhdot1
-      real(wp)                 xinc
-      real(wp)                 xincp
-      real(wp)                 xl
-      real(wp)                 xlm
-      real(wp)                 xmdf
-      real(wp)                 xmx
-      real(wp)                 xmy
-      real(wp)                 xn
-      real(wp)                 xnoddf
-      real(wp)                 xnode
-      real(wp)                 xpidot
-      real(wp)                 z1
-      real(wp)                 z11
-      real(wp)                 z12
-      real(wp)                 z13
-      real(wp)                 z2
-      real(wp)                 z21
-      real(wp)                 z22
-      real(wp)                 z23
-      real(wp)                 z3
-      real(wp)                 z31
-      real(wp)                 z32
-      real(wp)                 z33
-      integer(ip)              iter
-      logical                  doinit
+      real(wp) :: tvec   ( 10 )
+      real(wp) :: tzero
+      real(wp) :: u
+      real(wp) :: ux
+      real(wp) :: uy
+      real(wp) :: uz
+      real(wp) :: vx
+      real(wp) :: vy
+      real(wp) :: vz
+      real(wp) :: x2o3
+      real(wp) :: xhdot1
+      real(wp) :: xinc
+      real(wp) :: xincp
+      real(wp) :: xl
+      real(wp) :: xlm
+      real(wp) :: xmdf
+      real(wp) :: xmx
+      real(wp) :: xmy
+      real(wp) :: xn
+      real(wp) :: xnoddf
+      real(wp) :: xnode
+      real(wp) :: xpidot
+      real(wp) :: z1
+      real(wp) :: z11
+      real(wp) :: z12
+      real(wp) :: z13
+      real(wp) :: z2
+      real(wp) :: z21
+      real(wp) :: z22
+      real(wp) :: z23
+      real(wp) :: z3
+      real(wp) :: z31
+      real(wp) :: z32
+      real(wp) :: z33
+      integer(ip) :: iter
+      logical :: doinit
       if ( .not. allocated ( ctx%zzsgp4_state ) ) allocate ( ctx%zzsgp4_state )
       associate ( a => ctx%zzsgp4_state%a, &
                   alta => ctx%zzsgp4_state%alta, &
@@ -27077,168 +27077,168 @@ contains
       use pepper_constants, only: pi, twopi
       use pepper_inc_zzsgp4
       implicit none
-      real(wp)                 ainv
-      real(wp)                 am
-      real(wp)                 ao
-      real(wp)                 argpm
-      real(wp)                 argpp
-      real(wp)                 axnl
-      real(wp)                 aynl
-      real(wp)                 betal
-      real(wp)                 cc1sq
-      real(wp)                 cc2
-      real(wp)                 cc3
-      real(wp)                 cnod
-      real(wp)                 cnodm
-      real(wp)                 coef
-      real(wp)                 coef1
-      real(wp)                 con42
-      real(wp)                 cos2u
-      real(wp)                 coseo1
-      real(wp)                 cosi
-      real(wp)                 cosim
-      real(wp)                 cosio
-      real(wp)                 cosio2
-      real(wp)                 cosio4
-      real(wp)                 cosip
-      real(wp)                 cosisq
-      real(wp)                 cosomm
-      real(wp)                 cossu
-      real(wp)                 cosu
-      real(wp)                 day
-      real(wp)                 delm
-      real(wp)                 delomg
-      real(wp)                 dndt
-      real(wp)                 eccm
-      real(wp)                 eccp
-      real(wp)                 eccsq
-      real(wp)                 ecose
-      real(wp)                 eeta
-      real(wp)                 el2
-      real(wp)                 emsq
-      real(wp)                 eo1
-      real(wp)                 epoch
-      real(wp)                 esine
-      real(wp)                 etasq
-      real(wp)                 gam
-      real(wp)                 inclm
-      real(wp)                 j3
-      real(wp)                 j4
-      real(wp)                 kps
-      real(wp)                 mm
-      real(wp)                 mp
-      real(wp)                 mr
-      real(wp)                 mv
-      real(wp)                 nodem
-      real(wp)                 nodep
-      real(wp)                 omeosq
-      real(wp)                 omgadf
-      real(wp)                 perige
-      real(wp)                 pinvsq
-      real(wp)                 pl
-      real(wp)                 posq
-      real(wp)                 psisq
-      real(wp)                 qzms24
-      real(wp)                 qzms2t
-      real(wp)                 rdotl
-      real(wp)                 rl
-      real(wp)                 rp
-      real(wp)                 rtemsq
-      real(wp)                 rteosq
-      real(wp)                 rvdot
-      real(wp)                 rvdotl
-      real(wp)                 s1
-      real(wp)                 s2
-      real(wp)                 s3
-      real(wp)                 s4
-      real(wp)                 s5
-      real(wp)                 s6
-      real(wp)                 s7
-      real(wp)                 sfour
-      real(wp)                 sin2u
-      real(wp)                 sineo1
-      real(wp)                 sini
-      real(wp)                 sinim
-      real(wp)                 sinio
-      real(wp)                 sinip
-      real(wp)                 sinomm
-      real(wp)                 sinsu
-      real(wp)                 sinu
-      real(wp)                 snod
-      real(wp)                 snodm
-      real(wp)                 ss
-      real(wp)                 ss1
-      real(wp)                 ss2
-      real(wp)                 ss3
-      real(wp)                 ss4
-      real(wp)                 ss5
-      real(wp)                 ss6
-      real(wp)                 ss7
-      real(wp)                 su
-      real(wp)                 sz1
-      real(wp)                 sz11
-      real(wp)                 sz12
-      real(wp)                 sz13
-      real(wp)                 sz2
-      real(wp)                 sz21
-      real(wp)                 sz22
-      real(wp)                 sz23
-      real(wp)                 sz3
-      real(wp)                 sz31
-      real(wp)                 sz32
-      real(wp)                 sz33
-      real(wp)                 t2
-      real(wp)                 t3
-      real(wp)                 t4
-      real(wp)                 tc
-      real(wp)                 tem5
-      real(wp)                 temp
-      real(wp)                 temp1
-      real(wp)                 temp2
-      real(wp)                 temp3
-      real(wp)                 temp4
-      real(wp)                 tempa
-      real(wp)                 tempe
-      real(wp)                 templ
-      real(wp)                 tsi
-      real(wp)                 tumin
+      real(wp) :: ainv
+      real(wp) :: am
+      real(wp) :: ao
+      real(wp) :: argpm
+      real(wp) :: argpp
+      real(wp) :: axnl
+      real(wp) :: aynl
+      real(wp) :: betal
+      real(wp) :: cc1sq
+      real(wp) :: cc2
+      real(wp) :: cc3
+      real(wp) :: cnod
+      real(wp) :: cnodm
+      real(wp) :: coef
+      real(wp) :: coef1
+      real(wp) :: con42
+      real(wp) :: cos2u
+      real(wp) :: coseo1
+      real(wp) :: cosi
+      real(wp) :: cosim
+      real(wp) :: cosio
+      real(wp) :: cosio2
+      real(wp) :: cosio4
+      real(wp) :: cosip
+      real(wp) :: cosisq
+      real(wp) :: cosomm
+      real(wp) :: cossu
+      real(wp) :: cosu
+      real(wp) :: day
+      real(wp) :: delm
+      real(wp) :: delomg
+      real(wp) :: dndt
+      real(wp) :: eccm
+      real(wp) :: eccp
+      real(wp) :: eccsq
+      real(wp) :: ecose
+      real(wp) :: eeta
+      real(wp) :: el2
+      real(wp) :: emsq
+      real(wp) :: eo1
+      real(wp) :: epoch
+      real(wp) :: esine
+      real(wp) :: etasq
+      real(wp) :: gam
+      real(wp) :: inclm
+      real(wp) :: j3
+      real(wp) :: j4
+      real(wp) :: kps
+      real(wp) :: mm
+      real(wp) :: mp
+      real(wp) :: mr
+      real(wp) :: mv
+      real(wp) :: nodem
+      real(wp) :: nodep
+      real(wp) :: omeosq
+      real(wp) :: omgadf
+      real(wp) :: perige
+      real(wp) :: pinvsq
+      real(wp) :: pl
+      real(wp) :: posq
+      real(wp) :: psisq
+      real(wp) :: qzms24
+      real(wp) :: qzms2t
+      real(wp) :: rdotl
+      real(wp) :: rl
+      real(wp) :: rp
+      real(wp) :: rtemsq
+      real(wp) :: rteosq
+      real(wp) :: rvdot
+      real(wp) :: rvdotl
+      real(wp) :: s1
+      real(wp) :: s2
+      real(wp) :: s3
+      real(wp) :: s4
+      real(wp) :: s5
+      real(wp) :: s6
+      real(wp) :: s7
+      real(wp) :: sfour
+      real(wp) :: sin2u
+      real(wp) :: sineo1
+      real(wp) :: sini
+      real(wp) :: sinim
+      real(wp) :: sinio
+      real(wp) :: sinip
+      real(wp) :: sinomm
+      real(wp) :: sinsu
+      real(wp) :: sinu
+      real(wp) :: snod
+      real(wp) :: snodm
+      real(wp) :: ss
+      real(wp) :: ss1
+      real(wp) :: ss2
+      real(wp) :: ss3
+      real(wp) :: ss4
+      real(wp) :: ss5
+      real(wp) :: ss6
+      real(wp) :: ss7
+      real(wp) :: su
+      real(wp) :: sz1
+      real(wp) :: sz11
+      real(wp) :: sz12
+      real(wp) :: sz13
+      real(wp) :: sz2
+      real(wp) :: sz21
+      real(wp) :: sz22
+      real(wp) :: sz23
+      real(wp) :: sz3
+      real(wp) :: sz31
+      real(wp) :: sz32
+      real(wp) :: sz33
+      real(wp) :: t2
+      real(wp) :: t3
+      real(wp) :: t4
+      real(wp) :: tc
+      real(wp) :: tem5
+      real(wp) :: temp
+      real(wp) :: temp1
+      real(wp) :: temp2
+      real(wp) :: temp3
+      real(wp) :: temp4
+      real(wp) :: tempa
+      real(wp) :: tempe
+      real(wp) :: templ
+      real(wp) :: tsi
+      real(wp) :: tumin
 !     PEPPER: TTRANS declares its time vector with 10 elements.
-      real(wp)                 tvec   ( 10 )
-      real(wp)                 tzero
-      real(wp)                 u
-      real(wp)                 ux
-      real(wp)                 uy
-      real(wp)                 uz
-      real(wp)                 vx
-      real(wp)                 vy
-      real(wp)                 vz
-      real(wp)                 x2o3
-      real(wp)                 xhdot1
-      real(wp)                 xinc
-      real(wp)                 xincp
-      real(wp)                 xl
-      real(wp)                 xlm
-      real(wp)                 xmdf
-      real(wp)                 xmx
-      real(wp)                 xmy
-      real(wp)                 xn
-      real(wp)                 xnoddf
-      real(wp)                 xnode
-      real(wp)                 xpidot
-      real(wp)                 z1
-      real(wp)                 z11
-      real(wp)                 z12
-      real(wp)                 z13
-      real(wp)                 z2
-      real(wp)                 z21
-      real(wp)                 z22
-      real(wp)                 z23
-      real(wp)                 z3
-      real(wp)                 z31
-      real(wp)                 z32
-      real(wp)                 z33
-      integer(ip)              iter
-      logical                  doinit
+      real(wp) :: tvec   ( 10 )
+      real(wp) :: tzero
+      real(wp) :: u
+      real(wp) :: ux
+      real(wp) :: uy
+      real(wp) :: uz
+      real(wp) :: vx
+      real(wp) :: vy
+      real(wp) :: vz
+      real(wp) :: x2o3
+      real(wp) :: xhdot1
+      real(wp) :: xinc
+      real(wp) :: xincp
+      real(wp) :: xl
+      real(wp) :: xlm
+      real(wp) :: xmdf
+      real(wp) :: xmx
+      real(wp) :: xmy
+      real(wp) :: xn
+      real(wp) :: xnoddf
+      real(wp) :: xnode
+      real(wp) :: xpidot
+      real(wp) :: z1
+      real(wp) :: z11
+      real(wp) :: z12
+      real(wp) :: z13
+      real(wp) :: z2
+      real(wp) :: z21
+      real(wp) :: z22
+      real(wp) :: z23
+      real(wp) :: z3
+      real(wp) :: z31
+      real(wp) :: z32
+      real(wp) :: z33
+      integer(ip) :: iter
+      logical :: doinit
       if ( .not. allocated ( ctx%zzsgp4_state ) ) allocate ( ctx%zzsgp4_state )
       associate ( argpdot => ctx%zzsgp4_state%argpdot, &
                   argpo => ctx%zzsgp4_state%argpo, &

@@ -2865,12 +2865,12 @@ contains
 !
 
       character(:), allocatable :: outnam
-      character(1)          dtype
+      character(1) :: dtype
       character(:), allocatable :: kvname
 
-      integer(ip)           n
+      integer(ip) :: n
 
-      logical               found
+      logical :: found
 
       if ( ctx%failed() ) return
 
@@ -3200,7 +3200,7 @@ contains
 !
 !     Local variables.
 !
-      logical               update
+      logical :: update
 
 !
 !     Standard SPICE error handling.
@@ -3493,21 +3493,21 @@ contains
       type(string) :: bname ( 2 )
       logical :: namfnd
       type(string) :: name  ( 2 )
-      character(phrsln)     phrase
-      character(timlen)     timstr
+      character(phrsln) :: phrase
+      character(timlen) :: timstr
 
-      integer(ip)           endps  ( 2 )
-      integer(ip)           center
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           frames ( 2 )
-      integer(ip)           i
-      integer(ip)           sclkid
+      integer(ip) :: endps  ( 2 )
+      integer(ip) :: center
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: frames ( 2 )
+      integer(ip) :: i
+      integer(ip) :: sclkid
 
-      logical               ckmiss
-      logical               found
-      logical               havnam ( 2 )
-      logical               scmiss
+      logical :: ckmiss
+      logical :: found
+      logical :: havnam ( 2 )
+      logical :: scmiss
 
 !
 !     Because this routine might cause a SPICE error to be
@@ -4077,7 +4077,7 @@ contains
       use pepper_strings, only: repmc
       use pepper_inc_zzswtchf
       implicit none
-      integer(ip)           cap
+      integer(ip) :: cap
       integer(ip) :: fid_1(1)  !! one-element copy of fid (array argument)
       integer(ip) :: frclid_1(1)  !! one-element copy of frclid (array argument)
       integer(ip) :: frclas_1(1)  !! one-element copy of frclas (array argument)
@@ -4131,45 +4131,45 @@ contains
       integer(ip), parameter :: nkv = 8
 
       character(:), allocatable :: basnam
-      character(1)          bastyp
+      character(1) :: bastyp
       character(:), allocatable :: frname
-      character(kvnmln)     kvalgn
-      character(kvnmln)     kvclid
-      character(kvnmln)     kvcent
-      character(kvnmln)     kvclas
+      character(kvnmln) :: kvalgn
+      character(kvnmln) :: kvclid
+      character(kvnmln) :: kvcent
+      character(kvnmln) :: kvclas
       character(:), allocatable :: kvid
-      character(kvnmln)     kvfnam
+      character(kvnmln) :: kvfnam
       type(string) :: kvnams ( nkv )
-      character(kvnmln)     kvstrt
-      character(kvnmln)     kvstop
-      character(1)          stptyp
-      character(1)          strtyp
-      character(timlen)     timstr
+      character(kvnmln) :: kvstrt
+      character(kvnmln) :: kvstop
+      character(1) :: stptyp
+      character(1) :: strtyp
+      character(timlen) :: timstr
 
-      integer(ip)           center
-      integer(ip)           fid
-      integer(ip)           frcent
-      integer(ip)           frclas
-      integer(ip)           frclid
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           n
-      integer(ip)           nbases
-      integer(ip)           nfravl
-      integer(ip)           nstart
-      integer(ip)           nstop
-      integer(ip)           room
+      integer(ip) :: center
+      integer(ip) :: fid
+      integer(ip) :: frcent
+      integer(ip) :: frclas
+      integer(ip) :: frclid
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: n
+      integer(ip) :: nbases
+      integer(ip) :: nfravl
+      integer(ip) :: nstart
+      integer(ip) :: nstop
+      integer(ip) :: room
 
 !
 !     KVFND(*) indicates whether a specified kernel variable was found.
 !
-      logical               havtim
-      logical               inffnd
-      logical               kvfnd ( nkv )
-      logical               new
+      logical :: havtim
+      logical :: inffnd
+      logical :: kvfnd ( nkv )
+      logical :: new
 
-      logical               strxst
-      logical               stpxst
+      logical :: strxst
+      logical :: stpxst
 
 !
 !     Standard SPICE error handling.
@@ -4904,13 +4904,13 @@ contains
       use pepper_math, only: mxvg
       implicit none
 
-      real(wp)              m1     ( 6, 6 )
-      real(wp)              m1inv  ( 6, 6 )
-      real(wp)              m2     ( 6, 6 )
-      real(wp)              m2inv  ( 6, 6 )
-      real(wp)              xj2000 ( 6 )
-      real(wp)              z      ( 6 )
-      real(wp)              zj2000 ( 6 )
+      real(wp) :: m1     ( 6, 6 )
+      real(wp) :: m1inv  ( 6, 6 )
+      real(wp) :: m2     ( 6, 6 )
+      real(wp) :: m2inv  ( 6, 6 )
+      real(wp) :: xj2000 ( 6 )
+      real(wp) :: z      ( 6 )
+      real(wp) :: zj2000 ( 6 )
 
       if ( ctx%failed() ) return
 
@@ -5858,10 +5858,10 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              tsipm   ( 6, 6 )
+      real(wp) :: tsipm   ( 6, 6 )
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
 !
 !     Standard SPICE Error handling.
@@ -6196,24 +6196,24 @@ contains
 
       integer(ip), parameter :: idlen = nc * 8
 
-      integer(ip)           handle
-      integer(ip)           icd      ( nic  )
-      integer(ip)           sclkid
+      integer(ip) :: handle
+      integer(ip) :: icd      ( nic  )
+      integer(ip) :: sclkid
 
-      real(wp)              av       ( 3    )
-      real(wp)              clkout
-      real(wp)              descr    ( nc   )
-      real(wp)              dcd      ( ndc  )
-      real(wp)              rot      ( 3, 3 )
-      real(wp)              time
-      real(wp)              tol
+      real(wp) :: av       ( 3    )
+      real(wp) :: clkout
+      real(wp) :: descr    ( nc   )
+      real(wp) :: dcd      ( ndc  )
+      real(wp) :: rot      ( 3, 3 )
+      real(wp) :: time
+      real(wp) :: tol
 
-      character(idlen)      segid
+      character(idlen) :: segid
 
-      logical               needav
-      logical               sfnd
-      logical               pfnd
-      logical               have
+      logical :: needav
+      logical :: sfnd
+      logical :: pfnd
+      logical :: have
 
 !
 !     Set FOUND to .FALSE. right now in case we end up
@@ -6590,25 +6590,25 @@ contains
 
       integer(ip), parameter :: idlen = nc * 8
 
-      integer(ip)           handle
-      integer(ip)           icd      ( nic  )
-      integer(ip)           sclkid
+      integer(ip) :: handle
+      integer(ip) :: icd      ( nic  )
+      integer(ip) :: sclkid
 
-      real(wp)              av       ( 3    )
-      real(wp)              clkout
-      real(wp)              descr    ( nc   )
-      real(wp)              dcd      ( ndc  )
-      real(wp)              rot      ( 3, 3 )
-      real(wp)              ref2in   ( 6, 6 )
-      real(wp)              time
-      real(wp)              tol
+      real(wp) :: av       ( 3    )
+      real(wp) :: clkout
+      real(wp) :: descr    ( nc   )
+      real(wp) :: dcd      ( ndc  )
+      real(wp) :: rot      ( 3, 3 )
+      real(wp) :: ref2in   ( 6, 6 )
+      real(wp) :: time
+      real(wp) :: tol
 
-      character(idlen)      segid
+      character(idlen) :: segid
 
-      logical               needav
-      logical               sfnd
-      logical               pfnd
-      logical               have
+      logical :: needav
+      logical :: sfnd
+      logical :: pfnd
+      logical :: have
 
 !
 !     Set FOUND to .FALSE. right now in case we end up
@@ -6895,12 +6895,12 @@ contains
 !     into which to unpack the segment descriptor.
 !
 
-      real(wp)              record   ( maxrec )
+      real(wp) :: record   ( maxrec )
 
-      real(wp)              dc       (      2 )
-      integer(ip)           ic       (      6 )
-      integer(ip)           recsiz
-      integer(ip)           type
+      real(wp) :: dc       (      2 )
+      integer(ip) :: ic       (      6 )
+      integer(ip) :: recsiz
+      integer(ip) :: type
 
       integer(ip), parameter :: nstate = 6
 
@@ -7268,18 +7268,18 @@ contains
       integer(ip), parameter :: d6 = 6
       integer(ip), parameter :: size33 = 9
       integer(ip), parameter :: size66 = 36
-      real(wp)              rmat   ( 3, 3 )
-      real(wp)              tsipm  ( 6, 6 )
-      integer(ip)           basidx
-      integer(ip)           framat
-      integer(ip)           head
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           lb
-      integer(ip)           lstbeg
-      logical               samfrm
-      logical               timeok
-      logical               update
+      real(wp) :: rmat   ( 3, 3 )
+      real(wp) :: tsipm  ( 6, 6 )
+      integer(ip) :: basidx
+      integer(ip) :: framat
+      integer(ip) :: head
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: lb
+      integer(ip) :: lstbeg
+      logical :: samfrm
+      logical :: timeok
+      logical :: update
       if ( .not. allocated ( ctx%zzswfxfm_state ) ) then
          allocate ( ctx%zzswfxfm_state )
          call init_zzswfxfm_state ( ctx%zzswfxfm_state )

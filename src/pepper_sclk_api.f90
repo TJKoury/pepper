@@ -573,7 +573,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip)           type
+      integer(ip) :: type
 
 !
 !     Standard SPICE error handling.
@@ -1378,7 +1378,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip)           type
+      integer(ip) :: type
 
 !
 !     Standard SPICE error handling.
@@ -1848,14 +1848,14 @@ contains
       use pepper_inc_sclk
       implicit none
       real(wp), allocatable :: pstart(:), pstop(:), ptotls(:)
-      integer(ip)           npmax
-      character(12)         prtstr  ! PEPPER: any partition number and the slash (SPICELIB: PARTLN, 5)
-      integer(ip)           nparts
-      integer(ip)           part
-      integer(ip)           prelen
-      integer(ip)           suflen
-      integer(ip)           i
-      real(wp)              ticks
+      integer(ip) :: npmax
+      character(12) :: prtstr  ! PEPPER: any partition number and the slash (SPICELIB: PARTLN, 5)
+      integer(ip) :: nparts
+      integer(ip) :: part
+      integer(ip) :: prelen
+      integer(ip) :: suflen
+      integer(ip) :: i
+      real(wp) :: ticks
       if ( ctx%failed() ) return
 
 !
@@ -2407,14 +2407,14 @@ contains
       use pepper_inc_sclk
       implicit none
       real(wp), allocatable :: pstart(:), pstop(:), ptotls(:)
-      integer(ip)           npmax
-      integer(ip)           pos
-      integer(ip)           nparts
-      integer(ip)           pnter
-      integer(ip)           part
-      integer(ip)           i
-      real(wp)              ticks
-      character(25)         error
+      integer(ip) :: npmax
+      integer(ip) :: pos
+      integer(ip) :: nparts
+      integer(ip) :: pnter
+      integer(ip) :: part
+      integer(ip) :: i
+      real(wp) :: ticks
+      character(25) :: error
       if ( ctx%failed() ) return
 
 !
@@ -2827,7 +2827,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              sclkdp
+      real(wp) :: sclkdp
 
 !
 !     Standard SPICE error handling.
@@ -3043,7 +3043,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              sclkdp
+      real(wp) :: sclkdp
 
 !
 !     Standard SPICE error handling.

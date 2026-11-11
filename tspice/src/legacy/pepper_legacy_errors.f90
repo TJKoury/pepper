@@ -11,7 +11,7 @@
        subroutine expln ( msg, expl )
       use pepper_errors, only: pepper_expln => expln
       implicit none
-      character(*)                  msg  !! A short error message.
-      character(*)                  expl  !! The explanation of the short error message.
+      character(*) :: msg  !! A short error message.
+      character(*) :: expl  !! The explanation of the short error message.
       call pepper_expln ( msg, expl )
       end subroutine expln

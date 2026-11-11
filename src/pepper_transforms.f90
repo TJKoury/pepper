@@ -122,13 +122,13 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       implicit none
-      integer(ip)           center
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           type
-      integer(ip)           typeid
-      real(wp)              tsipm  ( 6, 6 )
-      real(wp)              rotate ( 3, 3 )
+      integer(ip) :: center
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: type
+      integer(ip) :: typeid
+      real(wp) :: tsipm  ( 6, 6 )
+      real(wp) :: rotate ( 3, 3 )
       if ( .not. allocated ( ctx%frmget_state ) ) allocate ( ctx%frmget_state )
       associate ( idnt66 => ctx%frmget_state%idnt66, &
                   pass1 => ctx%frmget_state%pass1, &
@@ -391,10 +391,10 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       implicit none
-      integer(ip)           center
-      integer(ip)           type
-      integer(ip)           typeid
-      real(wp)              tipm  ( 3, 3 )
+      integer(ip) :: center
+      integer(ip) :: type
+      integer(ip) :: typeid
+      real(wp) :: tipm  ( 3, 3 )
       if ( .not. allocated ( ctx%rotget_state ) ) allocate ( ctx%rotget_state )
       associate ( versn => ctx%rotget_state%versn )
       found = .false.
@@ -739,9 +739,9 @@ contains
 !
       integer(ip), parameter :: rootf = 1
 
-      character(lmsgln)     errmsg
+      character(lmsgln) :: errmsg
 
-      real(wp)              tempxf( 6, 6 )
+      real(wp) :: tempxf( 6, 6 )
 !
 !     TRANS contains the transformations from FRAME1 to FRAME2
 !     TRANS(1...6,1...6,I) has the transformation from FRAME(I)
@@ -749,44 +749,44 @@ contains
 !     plan to add transformations beyond the obvious chain from
 !     FRAME1 to a root node.
 !
-      real(wp)              trans ( 6, 6, maxxfm )
+      real(wp) :: trans ( 6, 6, maxxfm )
 
 !
 !     TRANS2 is used to store intermediate transformations from
 !     FRAME2 to some node in the chain from FRAME1 to PCK or
 !     INERTL frames.
 !
-      real(wp)              trans2( 6, 6, 2      )
+      real(wp) :: trans2( 6, 6, 2      )
 
-      integer(ip)           cent
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           cmnode
+      integer(ip) :: cent
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: cmnode
 !
 !     FRAME contains the frames we transform from in going from
 !     FRAME1 to FRAME2.  FRAME(1) = FRAME1 by  construction.
 !
-      integer(ip)           frame ( maxnod )
-      integer(ip)           get
-      integer(ip)           i
-      integer(ip)           inc
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           l
+      integer(ip) :: frame ( maxnod )
+      integer(ip) :: get
+      integer(ip) :: i
+      integer(ip) :: inc
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: l
 
 !
 !     NODE counts the number of transformations needed to go
 !     from FRAME1 to FRAME2.
 !
-      integer(ip)           node
+      integer(ip) :: node
 
-      integer(ip)           put
-      integer(ip)           relto
-      integer(ip)           this
+      integer(ip) :: put
+      integer(ip) :: relto
+      integer(ip) :: this
 
-      logical               done
-      logical               found
-      logical               gotone
+      logical :: done
+      logical :: found
+      logical :: gotone
 
 !
 !     Standard SPICE error handling.
@@ -1282,7 +1282,7 @@ contains
 !
       integer(ip), parameter :: rootf = 1
 
-      character(lmsgln)     errmsg
+      character(lmsgln) :: errmsg
 
 !
 !     ROT contains the rotations from FRAME1 to FRAME2
@@ -1291,41 +1291,41 @@ contains
 !     plan to add rotations beyond the obvious chain from
 !     FRAME1 to a root node.
 !
-      real(wp)              rot ( 3, 3, maxxfm )
+      real(wp) :: rot ( 3, 3, maxxfm )
 
 !
 !     ROT2 is used to store intermediate rotation from
 !     FRAME2 to some node in the chain from FRAME1 to PCK or
 !     INERTL frames.
 !
-      real(wp)              rot2  ( 3, 3, 2     )
-      real(wp)              tmprot( 3, 3        )
+      real(wp) :: rot2  ( 3, 3, 2     )
+      real(wp) :: tmprot( 3, 3        )
 
-      integer(ip)           cent
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           cmnode
-      integer(ip)           get
+      integer(ip) :: cent
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: cmnode
+      integer(ip) :: get
 !
 !     FRAME contains the frames we transform from in going from
 !     FRAME1 to FRAME2.  FRAME(1) = FRAME1 by  construction.
 !
-      integer(ip)           frame ( maxnod )
-      integer(ip)           i
-      integer(ip)           inc
-      integer(ip)           j
+      integer(ip) :: frame ( maxnod )
+      integer(ip) :: i
+      integer(ip) :: inc
+      integer(ip) :: j
 !
 !     NODE counts the number of rotations needed to go
 !     from FRAME1 to FRAME2.
 !
-      integer(ip)           node
-      integer(ip)           put
-      integer(ip)           relto
-      integer(ip)           this
+      integer(ip) :: node
+      integer(ip) :: put
+      integer(ip) :: relto
+      integer(ip) :: this
 
-      logical               done
-      logical               found
-      logical               gotone
+      logical :: done
+      logical :: found
+      logical :: gotone
 
 !
 !     Standard SPICE error handling.
@@ -1794,8 +1794,8 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           fcode
-      integer(ip)           tcode
+      integer(ip) :: fcode
+      integer(ip) :: tcode
       if ( .not. allocated ( ctx%pxform_state ) ) allocate ( ctx%pxform_state )
       associate ( svctr1 => ctx%pxform_state%svctr1, &
                   svfrom => ctx%pxform_state%svfrom, &
@@ -1991,8 +1991,8 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           fcode
-      integer(ip)           tcode
+      integer(ip) :: fcode
+      integer(ip) :: tcode
       if ( .not. allocated ( ctx%sxform_state ) ) allocate ( ctx%sxform_state )
       associate ( svctr1 => ctx%sxform_state%svctr1, &
                   svfrom => ctx%sxform_state%svfrom, &

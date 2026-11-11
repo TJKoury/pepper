@@ -108,7 +108,7 @@ contains
       logical, intent(in) :: logcls ( * )  !! An array of logicals.
       integer(ip), intent(in) :: n  !! Number of elements in the array LOGCLS.
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     Just do it.
@@ -320,9 +320,9 @@ contains
       character(*), intent(in) :: array ( * )  !! Character string array to search.
       integer(ip), intent(in) :: order ( * )  !! Order vector.
 
-      integer(ip)      left
-      integer(ip)      right
-      integer(ip)      i
+      integer(ip) :: left
+      integer(ip) :: right
+      integer(ip) :: i
 
 !
 !     Set the initial bounds for the search area.
@@ -474,9 +474,9 @@ contains
       integer(ip), intent(in) :: array ( * )  !! Array to be searched.
       integer(ip), intent(in) :: order ( * )  !! Order vector.
 
-      integer(ip)      left
-      integer(ip)      right
-      integer(ip)      i
+      integer(ip) :: left
+      integer(ip) :: right
+      integer(ip) :: i
 
 !
 !     Set the initial bounds for the search area.
@@ -631,9 +631,9 @@ contains
       integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
       character(*), intent(in) :: array ( * )  !! Character string array to search.
 
-      integer(ip)      left
-      integer(ip)      right
-      integer(ip)      i
+      integer(ip) :: left
+      integer(ip) :: right
+      integer(ip) :: i
 
 !
 !     Set the initial bounds for the search area.
@@ -779,9 +779,9 @@ contains
       integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
       real(wp), intent(in) :: array ( * )  !! Array to be searched.
 
-      integer(ip)      left
-      integer(ip)      right
-      integer(ip)      i
+      integer(ip) :: left
+      integer(ip) :: right
+      integer(ip) :: i
 
 !
 !     Set the initial bounds for the search area.
@@ -925,9 +925,9 @@ contains
       integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
       integer(ip), intent(in) :: array ( * )  !! Array to be searched.
 
-      integer(ip)      left
-      integer(ip)      right
-      integer(ip)      i
+      integer(ip) :: left
+      integer(ip) :: right
+      integer(ip) :: i
 
 !
 !     Set the initial bounds for the search area.
@@ -1836,8 +1836,8 @@ contains
       integer(ip), intent(inout) :: array (*)  !! Array of integers.
       integer(ip), intent(in) :: n  !! Number of integers in ARRAY.
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
 !
 !     Let's take care of the goofy case first.
@@ -2142,7 +2142,7 @@ contains
       integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
       real(wp), intent(in) :: array ( * )  !! Double precision array to search.
 
-      integer(ip) i
+      integer(ip) :: i
 
       isrchd = 0
 
@@ -2380,12 +2380,12 @@ contains
       integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
       real(wp), intent(in) :: array ( * )  !! Array to be searched.
 
-      integer(ip)      j
+      integer(ip) :: j
 
-      integer(ip)      begin
-      integer(ip)      end
-      integer(ip)      middle
-      integer(ip)      items
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: middle
+      integer(ip) :: items
 
 !
 !     Save the size of the array and point to the beginning and ending
@@ -2583,12 +2583,12 @@ contains
       integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
       integer(ip), intent(in) :: array ( * )  !! Array to be searched.
 
-      integer(ip)      j
+      integer(ip) :: j
 
-      integer(ip)      begin
-      integer(ip)      end
-      integer(ip)      middle
-      integer(ip)      items
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: middle
+      integer(ip) :: items
 
 !
 !     Save the size of the array and point to the beginning and ending
@@ -2830,12 +2830,12 @@ contains
       integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
       character(*), intent(in) :: array ( * )  !! Array of possible lower bounds.
 
-      integer(ip)      j
+      integer(ip) :: j
 
-      integer(ip)      begin
-      integer(ip)      end
-      integer(ip)      middle
-      integer(ip)      items
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: middle
+      integer(ip) :: items
 
       items = n
 
@@ -3029,12 +3029,12 @@ contains
       integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
       real(wp), intent(in) :: array ( * )  !! Array of possible lower bounds.
 
-      integer(ip)      j
+      integer(ip) :: j
 
-      integer(ip)      begin
-      integer(ip)      end
-      integer(ip)      middle
-      integer(ip)      items
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: middle
+      integer(ip) :: items
 
       items = n
 
@@ -3299,12 +3299,12 @@ contains
       integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
       integer(ip), intent(in) :: array ( * )  !! Array of possible lower bounds.
 
-      integer(ip)      j
+      integer(ip) :: j
 
-      integer(ip)      begin
-      integer(ip)      end
-      integer(ip)      middle
-      integer(ip)      items
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: middle
+      integer(ip) :: items
 
       items = n
 
@@ -3523,12 +3523,12 @@ contains
       integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
       character(*), intent(in) :: array ( * )  !! Array of possible lower bounds.
 
-      integer(ip)      j
+      integer(ip) :: j
 
-      integer(ip)      begin
-      integer(ip)      end
-      integer(ip)      middle
-      integer(ip)      items
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: middle
+      integer(ip) :: items
 
       items = n
 
@@ -3725,12 +3725,12 @@ contains
       integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
       real(wp), intent(in) :: array ( * )  !! Array of possible lower bounds.
 
-      integer(ip)      j
+      integer(ip) :: j
 
-      integer(ip)      begin
-      integer(ip)      end
-      integer(ip)      middle
-      integer(ip)      items
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: middle
+      integer(ip) :: items
 
       items = n
 
@@ -3994,12 +3994,12 @@ contains
       integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
       integer(ip), intent(in) :: array ( * )  !! Array of possible lower bounds.
 
-      integer(ip)      j
+      integer(ip) :: j
 
-      integer(ip)      begin
-      integer(ip)      end
-      integer(ip)      middle
-      integer(ip)      items
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: middle
+      integer(ip) :: items
 
       items = n
 
@@ -4155,7 +4155,7 @@ contains
       character(*), intent(out) :: maxval  !! Maximum value in ARRAY.
       integer(ip), intent(out) :: loc  !! Location of MAXVAL in ARRAY.
 
-      integer(ip) i
+      integer(ip) :: i
 
       if (ndim <= 0) then
          loc = 0
@@ -4486,7 +4486,7 @@ contains
       character(*), intent(out) :: minval  !! Minimum value in ARRAY.
       integer(ip), intent(out) :: loc  !! Location of MINVAL in ARRAY.
 
-      integer(ip) i
+      integer(ip) :: i
 
       if (ndim <= 0) then
          loc = 0
@@ -5228,7 +5228,7 @@ contains
       logical, intent(in) :: logcls ( * )  !! An array of logicals.
       integer(ip), intent(in) :: n  !! Number of elements in the array LOGCLS.
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     Just do it.
@@ -5425,10 +5425,10 @@ contains
       integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
       integer(ip), intent(out) :: iorder ( * )  !! Order vector for ARRAY.
 
-      integer(ip)      gap
-      integer(ip)      i
-      integer(ip)      j
-      integer(ip)      jg
+      integer(ip) :: gap
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: jg
 
 !
 !     Begin with the initial ordering.
@@ -5569,10 +5569,10 @@ contains
       integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
       integer(ip), intent(out) :: iorder ( * )  !! Order vector for ARRAY.
 
-      integer(ip)      gap
-      integer(ip)      i
-      integer(ip)      j
-      integer(ip)      jg
+      integer(ip) :: gap
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: jg
 
 !
 !     Begin with the initial ordering.
@@ -5713,10 +5713,10 @@ contains
       integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
       integer(ip), intent(out) :: iorder ( * )  !! Order vector for ARRAY.
 
-      integer(ip)      gap
-      integer(ip)      i
-      integer(ip)      j
-      integer(ip)      jg
+      integer(ip) :: gap
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: jg
 
 !
 !     Begin with the initial ordering.
@@ -5849,8 +5849,8 @@ contains
       real(wp), intent(in) :: array ( * )  !! Input array.
       integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
 
-      real(wp) prod
-      integer(ip)      i
+      real(wp) :: prod
+      integer(ip) :: i
 
 !
 !     Begin at one.
@@ -5964,8 +5964,8 @@ contains
       integer(ip), intent(in) :: array  ( * )  !! Input array.
       integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
 
-      integer(ip)      prod
-      integer(ip)      i
+      integer(ip) :: prod
+      integer(ip) :: i
 
 !
 !     Begin at one.
@@ -6178,12 +6178,12 @@ contains
       integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
       character(*), intent(inout) :: array  ( * )  !! Array to be re-ordered.
 
-      integer(ip)      start
-      integer(ip)      index
-      integer(ip)      hold
+      integer(ip) :: start
+      integer(ip) :: index
+      integer(ip) :: hold
 
-      integer(ip)      c
-      character(1)     temp
+      integer(ip) :: c
+      character(1) :: temp
 
 !
 !     If the array doesn't have at least two elements, don't bother.
@@ -6465,11 +6465,11 @@ contains
       integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
       real(wp), intent(inout) :: array  ( * )  !! Array to be re-ordered.
 
-      integer(ip)      start
-      integer(ip)      index
-      integer(ip)      hold
+      integer(ip) :: start
+      integer(ip) :: index
+      integer(ip) :: hold
 
-      real(wp) temp
+      real(wp) :: temp
 
 !
 !     If the array doesn't have at least two elements, don't bother.
@@ -6736,11 +6736,11 @@ contains
       integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
       integer(ip), intent(inout) :: array  ( * )  !! Array to be re-ordered.
 
-      integer(ip)      start
-      integer(ip)      index
-      integer(ip)      hold
+      integer(ip) :: start
+      integer(ip) :: index
+      integer(ip) :: hold
 
-      integer(ip)      temp
+      integer(ip) :: temp
 
 !
 !     If the array doesn't have at least two elements, don't bother.
@@ -7002,11 +7002,11 @@ contains
       integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
       logical, intent(inout) :: array  ( * )  !! Array to be re-ordered.
 
-      integer(ip)           start
-      integer(ip)           index
-      integer(ip)           hold
+      integer(ip) :: start
+      integer(ip) :: index
+      integer(ip) :: hold
 
-      logical               temp
+      logical :: temp
 
 !
 !     If the array doesn't have at least two elements, don't bother.
@@ -7180,8 +7180,8 @@ contains
       integer(ip), intent(inout) :: nelt  !! Number of elements in the array.
       character(*), intent(inout) :: array   (*)  !! Input/output array.
 
-      integer(ip)      i
-      integer(ip)      j
+      integer(ip) :: i
+      integer(ip) :: j
 
 !
 !     Proceed only if the array actually contains more than one element.
@@ -7314,8 +7314,8 @@ contains
       integer(ip), intent(inout) :: nelt  !! Number of elements in the array.
       real(wp), intent(inout) :: array   (*)  !! Input/output array.
 
-      integer(ip)      i
-      integer(ip)      j
+      integer(ip) :: i
+      integer(ip) :: j
 
 !
 !     Proceed only if the array actually contains more than one element.
@@ -7448,8 +7448,8 @@ contains
       integer(ip), intent(inout) :: nelt  !! Number of elements in the array.
       integer(ip), intent(inout) :: array   (*)  !! Input/output array.
 
-      integer(ip)      i
-      integer(ip)      j
+      integer(ip) :: i
+      integer(ip) :: j
 
 !
 !     Proceed only if the array actually contains more than one element.
@@ -7730,10 +7730,10 @@ contains
       integer(ip), intent(in) :: ndim  !! Dimension of the array.
       character(*), intent(inout) :: array ( * )  !! The array.
 
-      integer(ip)      gap
-      integer(ip)      i
-      integer(ip)      j
-      integer(ip)      jg
+      integer(ip) :: gap
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: jg
 
 !
 !     This is a straightforward implementation of the Shell Sort
@@ -7857,10 +7857,10 @@ contains
       integer(ip), intent(in) :: ndim  !! Dimension of the array.
       real(wp), intent(inout) :: array ( * )  !! The array.
 
-      integer(ip)      gap
-      integer(ip)      i
-      integer(ip)      j
-      integer(ip)      jg
+      integer(ip) :: gap
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: jg
 
 !
 !     This is a straightforward implementation of the Shell Sort
@@ -7984,10 +7984,10 @@ contains
       integer(ip), intent(in) :: ndim  !! Dimension of the array.
       integer(ip), intent(inout) :: array ( * )  !! The array.
 
-      integer(ip)      gap
-      integer(ip)      i
-      integer(ip)      j
-      integer(ip)      jg
+      integer(ip) :: gap
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: jg
 
 !
 !     This is a straightforward implementation of the Shell Sort
@@ -8206,7 +8206,7 @@ contains
       logical, intent(in) :: logcls ( * )  !! An array of logicals.
       integer(ip), intent(in) :: n  !! Number of elements in the array LOGCLS.
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     Just do it.
@@ -8318,8 +8318,8 @@ contains
       real(wp), intent(in) :: array  ( * )  !! Input array.
       integer(ip), intent(in) :: n  !! Number of elements in ARRAY.
 
-      real(wp) sum
-      integer(ip)      i
+      real(wp) :: sum
+      integer(ip) :: i
 
 !
 !     Begin at zero.
@@ -8525,12 +8525,12 @@ contains
       character(*), intent(inout) :: a  !! First string.
       character(*), intent(inout) :: b  !! Second string.
 
-      integer(ip)      alen
-      integer(ip)      blen
-      integer(ip)      short
+      integer(ip) :: alen
+      integer(ip) :: blen
+      integer(ip) :: short
 
-      character(1)     temp
-      integer(ip)      i
+      character(1) :: temp
+      integer(ip) :: i
 
 !
 !     Get the lengths of the strings.
@@ -8644,7 +8644,7 @@ contains
       real(wp), intent(inout) :: a  !! First variable.
       real(wp), intent(inout) :: b  !! Second variable.
 
-      real(wp) temp
+      real(wp) :: temp
 
 !
 !     What is there to say?
@@ -8736,7 +8736,7 @@ contains
       integer(ip), intent(inout) :: a  !! First variable.
       integer(ip), intent(inout) :: b  !! Second variable.
 
-      integer(ip)      temp
+      integer(ip) :: temp
 
 !
 !     What is there to say?

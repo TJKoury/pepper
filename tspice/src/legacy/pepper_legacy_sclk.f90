@@ -215,37 +215,37 @@
       integer(ip), parameter :: nkitem = sysidx
       integer(ip), parameter :: ndp = modidx
       integer(ip), parameter :: mxcfsz = 3 * mxcoef
-      character(1)          kvtype ( nkitem )
-      character(namlen)     kvname ( nkitem )
+      character(1) :: kvtype ( nkitem )
+      character(namlen) :: kvname ( nkitem )
       character(namlen), parameter :: namlst ( nkitem ) = [ character(namlen) :: &
          'SCLK01_COEFFICIENTS', 'SCLK_PARTITION_START', 'SCLK_PARTITION_END', 'SCLK01_OFFSETS',&
          'SCLK01_MODULI', 'SCLK01_N_FIELDS', 'SCLK01_OUTPUT_DELIM', 'SCLK01_TIME_SYSTEM' ]
-      character(smsgln)     shrtms
-      integer(ip)           dpbase
-      integer(ip)           dproom
-      integer(ip)           i
-      integer(ip)           ibase
+      character(smsgln) :: shrtms
+      integer(ip) :: dpbase
+      integer(ip) :: dproom
+      integer(ip) :: i
+      integer(ip) :: ibase
       integer(ip), parameter :: ibix ( nkitem ) = [ &
          ixbcof, ixbstr, ixbend, ixboff,&
          ixbmod, 0, 0, 0 ]
-      integer(ip)           iroom
+      integer(ip) :: iroom
       integer(ip), parameter :: kvmaxn ( nkitem ) = [ &
          mxcfsz, mxpart, mxpart, mxnfld,&
          mxnfld, 1, 1, 1 ]
-      integer(ip)           kvsize ( nkitem )
-      integer(ip)           n
-      integer(ip)           ncoeff
-      integer(ip)           ndpval
-      integer(ip)           nmod
-      integer(ip)           noff
-      integer(ip)           npart
-      integer(ip)           npartb
-      integer(ip)           nparte
-      integer(ip)           nscavl
-      integer(ip)           nsys
-      integer(ip)           prvsc
-      logical               found
-      logical               new
+      integer(ip) :: kvsize ( nkitem )
+      integer(ip) :: n
+      integer(ip) :: ncoeff
+      integer(ip) :: ndpval
+      integer(ip) :: nmod
+      integer(ip) :: noff
+      integer(ip) :: npart
+      integer(ip) :: npartb
+      integer(ip) :: nparte
+      integer(ip) :: nscavl
+      integer(ip) :: nsys
+      integer(ip) :: prvsc
+      logical :: found
+      logical :: new
       ctx => legacy_context()
       if ( ctx%failed() ) return
 
@@ -935,11 +935,11 @@
 !
 !     Local variables
 !
-      integer(ip)           ibase
-      integer(ip)           sclkat
+      integer(ip) :: ibase
+      integer(ip) :: sclkat
 
-      logical               samclk
-      logical               update
+      logical :: samclk
+      logical :: update
 
       ctx => legacy_context()
       if ( ctx%failed() ) return

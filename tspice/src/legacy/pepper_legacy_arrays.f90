@@ -12,8 +12,8 @@
       use pepper_arrays, only: pepper_alltru => alltru
       use pepper_kinds, only: ip
       implicit none
-      logical               logcls ( * )  !! An array of logicals.
-      integer(ip)           n  !! Number of elements in the array LOGCLS.
+      logical :: logcls ( * )  !! An array of logicals.
+      integer(ip) :: n  !! Number of elements in the array LOGCLS.
       alltru = pepper_alltru ( logcls, n )
       end function alltru
 
@@ -26,10 +26,10 @@
       use pepper_arrays, only: pepper_bschoc => bschoc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     value  !! Key value to be found in ARRAY.
-      integer(ip)      ndim  !! Dimension of ARRAY.
-      character(*)     array ( * )  !! Character string array to search.
-      integer(ip)      order ( * )  !! Order vector.
+      character(*) :: value  !! Key value to be found in ARRAY.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      character(*) :: array ( * )  !! Character string array to search.
+      integer(ip) :: order ( * )  !! Order vector.
       bschoc = pepper_bschoc ( value, ndim, array, order )
       end function bschoc
 
@@ -42,10 +42,10 @@
       use pepper_arrays, only: pepper_bschoi => bschoi
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      value  !! Value to find in ARRAY.
-      integer(ip)      ndim  !! Dimension of ARRAY.
-      integer(ip)      array ( * )  !! Array to be searched.
-      integer(ip)      order ( * )  !! Order vector.
+      integer(ip) :: value  !! Value to find in ARRAY.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      integer(ip) :: array ( * )  !! Array to be searched.
+      integer(ip) :: order ( * )  !! Order vector.
       bschoi = pepper_bschoi ( value, ndim, array, order )
       end function bschoi
 
@@ -58,9 +58,9 @@
       use pepper_arrays, only: pepper_bsrchc => bsrchc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     value  !! Key value to be found in ARRAY.
-      integer(ip)      ndim  !! Dimension of ARRAY.
-      character(*)     array ( * )  !! Character string array to search.
+      character(*) :: value  !! Key value to be found in ARRAY.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      character(*) :: array ( * )  !! Character string array to search.
       bsrchc = pepper_bsrchc ( value, ndim, array )
       end function bsrchc
 
@@ -73,9 +73,9 @@
       use pepper_arrays, only: pepper_bsrchd => bsrchd
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           value  !! Value to find in ARRAY.
-      integer(ip)        ndim  !! Dimension of ARRAY.
-      real(wp)           array ( * )  !! Array to be searched.
+      real(wp) :: value  !! Value to find in ARRAY.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      real(wp) :: array ( * )  !! Array to be searched.
       bsrchd = pepper_bsrchd ( value, ndim, array )
       end function bsrchd
 
@@ -88,9 +88,9 @@
       use pepper_arrays, only: pepper_bsrchi => bsrchi
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      value  !! Value to find in ARRAY.
-      integer(ip)      ndim  !! Dimension of ARRAY.
-      integer(ip)      array ( * )  !! Array to be searched.
+      integer(ip) :: value  !! Value to find in ARRAY.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      integer(ip) :: array ( * )  !! Array to be searched.
       bsrchi = pepper_bsrchi ( value, ndim, array )
       end function bsrchi
 
@@ -101,8 +101,8 @@
       use pepper_arrays, only: pepper_clearc => clearc
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)         ndim  !! Number of elements of ARRAY to be set to blank.
-      character(*)        array ( * )  !! Array of strings to be filled with blank strings.
+      integer(ip) :: ndim  !! Number of elements of ARRAY to be set to blank.
+      character(*) :: array ( * )  !! Array of strings to be filled with blank strings.
       call pepper_clearc ( ndim, array )
       end subroutine clearc
 
@@ -113,8 +113,8 @@
       use pepper_arrays, only: pepper_cleard => cleard
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        ndim  !! The number of elements of ARRAY which are to be set to zero.
-      real(wp)           array ( * )  !! Double precision array to be filled.
+      integer(ip) :: ndim  !! The number of elements of ARRAY which are to be set to zero.
+      real(wp) :: array ( * )  !! Double precision array to be filled.
       call pepper_cleard ( ndim, array )
       end subroutine cleard
 
@@ -125,8 +125,8 @@
       use pepper_arrays, only: pepper_cleari => cleari
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)   ndim  !! The number of elements of ARRAY which are to be set to zero.
-      integer(ip)   array ( * )  !! Integer array to be filled.
+      integer(ip) :: ndim  !! The number of elements of ARRAY which are to be set to zero.
+      integer(ip) :: array ( * )  !! Integer array to be filled.
       call pepper_cleari ( ndim, array )
       end subroutine cleari
 
@@ -137,9 +137,9 @@
       use pepper_arrays, only: pepper_fillc => fillc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     value  !! Character string value to be placed in ARRAY.
-      integer(ip)      ndim  !! The number of elements in ARRAY.
-      character(*)     array ( * )  !! Character string array which is to be filled.
+      character(*) :: value  !! Character string value to be placed in ARRAY.
+      integer(ip) :: ndim  !! The number of elements in ARRAY.
+      character(*) :: array ( * )  !! Character string array which is to be filled.
       call pepper_fillc ( value, ndim, array )
       end subroutine fillc
 
@@ -150,10 +150,10 @@
       use pepper_arrays, only: pepper_filld => filld
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              value  !! Double precision value to be placed in all the elements of
+      real(wp) :: value  !! Double precision value to be placed in all the elements of
                                    !! ARRAY.
-      integer(ip)           ndim  !! The number of elements in ARRAY.
-      real(wp)              array ( * )  !! Double precision array which is to be filled.
+      integer(ip) :: ndim  !! The number of elements in ARRAY.
+      real(wp) :: array ( * )  !! Double precision array which is to be filled.
       call pepper_filld ( value, ndim, array )
       end subroutine filld
 
@@ -164,9 +164,9 @@
       use pepper_arrays, only: pepper_filli => filli
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           value  !! Integer value to be placed in all the elements of ARRAY.
-      integer(ip)           ndim  !! The number of elements in ARRAY.
-      integer(ip)           array ( * )  !! Integer array which is to be filled.
+      integer(ip) :: value  !! Integer value to be placed in all the elements of ARRAY.
+      integer(ip) :: ndim  !! The number of elements in ARRAY.
+      integer(ip) :: array ( * )  !! Integer array which is to be filled.
       call pepper_filli ( value, ndim, array )
       end subroutine filli
 
@@ -178,8 +178,8 @@
       use pepper_arrays, only: pepper_isordv => isordv
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           array (*)  !! Array of integers.
-      integer(ip)           n  !! Number of integers in ARRAY.
+      integer(ip) :: array (*)  !! Array of integers.
+      integer(ip) :: n  !! Number of integers in ARRAY.
       isordv = pepper_isordv ( array, n )
       end function isordv
 
@@ -192,9 +192,9 @@
       use pepper_arrays, only: pepper_isrchc => isrchc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     value  !! Key value to be found in ARRAY.
-      integer(ip)      ndim  !! Dimension of ARRAY.
-      character(*)     array ( * )  !! Character string array to search.
+      character(*) :: value  !! Key value to be found in ARRAY.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      character(*) :: array ( * )  !! Character string array to search.
       isrchc = pepper_isrchc ( value, ndim, array )
       end function isrchc
 
@@ -207,9 +207,9 @@
       use pepper_arrays, only: pepper_isrchd => isrchd
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           value  !! Key value to be found in ARRAY.
-      integer(ip)        ndim  !! Dimension of ARRAY.
-      real(wp)           array ( * )  !! Double precision array to search.
+      real(wp) :: value  !! Key value to be found in ARRAY.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      real(wp) :: array ( * )  !! Double precision array to search.
       isrchd = pepper_isrchd ( value, ndim, array )
       end function isrchd
 
@@ -222,9 +222,9 @@
       use pepper_arrays, only: pepper_isrchi => isrchi
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) value  !! Key value to be found in ARRAY.
-      integer(ip) ndim  !! Dimension of ARRAY.
-      integer(ip) array ( * )  !! Integer array to search.
+      integer(ip) :: value  !! Key value to be found in ARRAY.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      integer(ip) :: array ( * )  !! Integer array to search.
       isrchi = pepper_isrchi ( value, ndim, array )
       end function isrchi
 
@@ -236,9 +236,9 @@
       use pepper_arrays, only: pepper_lstcld => lstcld
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           x  !! Search value.
-      integer(ip)        n  !! Number of elements in ARRAY.
-      real(wp)           array ( * )  !! Array to be searched.
+      real(wp) :: x  !! Search value.
+      integer(ip) :: n  !! Number of elements in ARRAY.
+      real(wp) :: array ( * )  !! Array to be searched.
       lstcld = pepper_lstcld ( x, n, array )
       end function lstcld
 
@@ -250,9 +250,9 @@
       use pepper_arrays, only: pepper_lstcli => lstcli
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           x  !! Search value.
-      integer(ip)           n  !! Number of elements in ARRAY.
-      integer(ip)           array ( * )  !! Array to be searched.
+      integer(ip) :: x  !! Search value.
+      integer(ip) :: n  !! Number of elements in ARRAY.
+      integer(ip) :: array ( * )  !! Array to be searched.
       lstcli = pepper_lstcli ( x, n, array )
       end function lstcli
 
@@ -264,9 +264,9 @@
       use pepper_arrays, only: pepper_lstlec => lstlec
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string  !! Upper bound value to search against.
-      integer(ip)      n  !! Number of elements in ARRAY.
-      character(*)     array ( * )  !! Array of possible lower bounds.
+      character(*) :: string  !! Upper bound value to search against.
+      integer(ip) :: n  !! Number of elements in ARRAY.
+      character(*) :: array ( * )  !! Array of possible lower bounds.
       lstlec = pepper_lstlec ( string, n, array )
       end function lstlec
 
@@ -278,9 +278,9 @@
       use pepper_arrays, only: pepper_lstled => lstled
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           x  !! Upper bound value to search against.
-      integer(ip)        n  !! Number of elements in ARRAY.
-      real(wp)           array ( * )  !! Array of possible lower bounds.
+      real(wp) :: x  !! Upper bound value to search against.
+      integer(ip) :: n  !! Number of elements in ARRAY.
+      real(wp) :: array ( * )  !! Array of possible lower bounds.
       lstled = pepper_lstled ( x, n, array )
       end function lstled
 
@@ -292,9 +292,9 @@
       use pepper_arrays, only: pepper_lstlei => lstlei
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      x  !! Upper bound value to search against.
-      integer(ip)      n  !! Number of elements in ARRAY.
-      integer(ip)      array ( * )  !! Array of possible lower bounds.
+      integer(ip) :: x  !! Upper bound value to search against.
+      integer(ip) :: n  !! Number of elements in ARRAY.
+      integer(ip) :: array ( * )  !! Array of possible lower bounds.
       lstlei = pepper_lstlei ( x, n, array )
       end function lstlei
 
@@ -306,9 +306,9 @@
       use pepper_arrays, only: pepper_lstltc => lstltc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string  !! Upper bound value to search against.
-      integer(ip)      n  !! Number of elements in ARRAY.
-      character(*)     array ( * )  !! Array of possible lower bounds.
+      character(*) :: string  !! Upper bound value to search against.
+      integer(ip) :: n  !! Number of elements in ARRAY.
+      character(*) :: array ( * )  !! Array of possible lower bounds.
       lstltc = pepper_lstltc ( string, n, array )
       end function lstltc
 
@@ -320,9 +320,9 @@
       use pepper_arrays, only: pepper_lstltd => lstltd
        use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           x  !! Upper bound value to search against.
-      integer(ip)        n  !! Number of elements in ARRAY.
-      real(wp)           array ( * )  !! Array of possible lower bounds.
+      real(wp) :: x  !! Upper bound value to search against.
+      integer(ip) :: n  !! Number of elements in ARRAY.
+      real(wp) :: array ( * )  !! Array of possible lower bounds.
       lstltd = pepper_lstltd ( x, n, array )
       end function lstltd
 
@@ -334,9 +334,9 @@
       use pepper_arrays, only: pepper_lstlti => lstlti
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      x  !! Upper bound value to search against.
-      integer(ip)      n  !! Number of elements in ARRAY.
-      integer(ip)      array ( * )  !! Array of possible lower bounds.
+      integer(ip) :: x  !! Upper bound value to search against.
+      integer(ip) :: n  !! Number of elements in ARRAY.
+      integer(ip) :: array ( * )  !! Array of possible lower bounds.
       lstlti = pepper_lstlti ( x, n, array )
       end function lstlti
 
@@ -347,10 +347,10 @@
       use pepper_arrays, only: pepper_maxac => maxac
       use pepper_kinds, only: ip
       implicit none
-      character(*)    array ( * )  !! Array.
-      integer(ip)     ndim  !! Number of elements in ARRAY.
-      character(*)    maxval  !! Maximum value in ARRAY.
-      integer(ip)     loc  !! Location of MAXVAL in ARRAY.
+      character(*) :: array ( * )  !! Array.
+      integer(ip) :: ndim  !! Number of elements in ARRAY.
+      character(*) :: maxval  !! Maximum value in ARRAY.
+      integer(ip) :: loc  !! Location of MAXVAL in ARRAY.
       call pepper_maxac ( array, ndim, maxval, loc )
       end subroutine maxac
 
@@ -361,10 +361,10 @@
       use pepper_arrays, only: pepper_maxad => maxad
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              array ( * )  !! Array.
-      integer(ip)           ndim  !! Number of elements in ARRAY.
-      real(wp)              maxval  !! Maximum value in ARRAY.
-      integer(ip)           loc  !! Location of MAXVAL in ARRAY.
+      real(wp) :: array ( * )  !! Array.
+      integer(ip) :: ndim  !! Number of elements in ARRAY.
+      real(wp) :: maxval  !! Maximum value in ARRAY.
+      integer(ip) :: loc  !! Location of MAXVAL in ARRAY.
       call pepper_maxad ( array, ndim, maxval, loc )
       end subroutine maxad
 
@@ -375,10 +375,10 @@
       use pepper_arrays, only: pepper_maxai => maxai
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           array ( * )  !! Array.
-      integer(ip)           ndim  !! Number of elements in ARRAY.
-      integer(ip)           maxval  !! Maximum value in ARRAY.
-      integer(ip)           loc  !! Location of MAXVAL in ARRAY.
+      integer(ip) :: array ( * )  !! Array.
+      integer(ip) :: ndim  !! Number of elements in ARRAY.
+      integer(ip) :: maxval  !! Maximum value in ARRAY.
+      integer(ip) :: loc  !! Location of MAXVAL in ARRAY.
       call pepper_maxai ( array, ndim, maxval, loc )
       end subroutine maxai
 
@@ -389,10 +389,10 @@
       use pepper_arrays, only: pepper_minac => minac
       use pepper_kinds, only: ip
       implicit none
-      character(*)    array ( * )  !! Array.
-      integer(ip)     ndim  !! Number of elements in ARRAY.
-      character(*)    minval  !! Minimum value in ARRAY.
-      integer(ip)     loc  !! Location of MINVAL in ARRAY.
+      character(*) :: array ( * )  !! Array.
+      integer(ip) :: ndim  !! Number of elements in ARRAY.
+      character(*) :: minval  !! Minimum value in ARRAY.
+      integer(ip) :: loc  !! Location of MINVAL in ARRAY.
       call pepper_minac ( array, ndim, minval, loc )
       end subroutine minac
 
@@ -403,10 +403,10 @@
       use pepper_arrays, only: pepper_minad => minad
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              array ( * )  !! Array.
-      integer(ip)           ndim  !! Number of elements in ARRAY.
-      real(wp)              minval  !! Minimum value in ARRAY.
-      integer(ip)           loc  !! Location of MINVAL in ARRAY.
+      real(wp) :: array ( * )  !! Array.
+      integer(ip) :: ndim  !! Number of elements in ARRAY.
+      real(wp) :: minval  !! Minimum value in ARRAY.
+      integer(ip) :: loc  !! Location of MINVAL in ARRAY.
       call pepper_minad ( array, ndim, minval, loc )
       end subroutine minad
 
@@ -417,10 +417,10 @@
       use pepper_arrays, only: pepper_minai => minai
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           array ( * )  !! Array.
-      integer(ip)           ndim  !! Number of elements in ARRAY.
-      integer(ip)           minval  !! Minimum value in ARRAY.
-      integer(ip)           loc  !! Location of MINVAL in ARRAY.
+      integer(ip) :: array ( * )  !! Array.
+      integer(ip) :: ndim  !! Number of elements in ARRAY.
+      integer(ip) :: minval  !! Minimum value in ARRAY.
+      integer(ip) :: loc  !! Location of MINVAL in ARRAY.
       call pepper_minai ( array, ndim, minval, loc )
       end subroutine minai
 
@@ -432,9 +432,9 @@
       use pepper_arrays, only: pepper_movec => movec
       use pepper_kinds, only: ip
       implicit none
-      character(*)    arrfrm ( * )  !! Character array to be moved.
-      integer(ip)     ndim  !! Number of elements to copy, i.e. the dimension of ARRFRM and ARRTO.
-      character(*)    arrto  ( * )  !! Destination array.
+      character(*) :: arrfrm ( * )  !! Character array to be moved.
+      integer(ip) :: ndim  !! Number of elements to copy, i.e. the dimension of ARRFRM and ARRTO.
+      character(*) :: arrto  ( * )  !! Destination array.
       call pepper_movec ( arrfrm, ndim, arrto )
       end subroutine movec
 
@@ -446,9 +446,9 @@
       use pepper_arrays, only: pepper_moved => moved
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              arrfrm ( * )  !! Double precision array to be moved.
-      integer(ip)           ndim  !! Number of elements to copy.
-      real(wp)              arrto  ( * )  !! Destination array.
+      real(wp) :: arrfrm ( * )  !! Double precision array to be moved.
+      integer(ip) :: ndim  !! Number of elements to copy.
+      real(wp) :: arrto  ( * )  !! Destination array.
       call pepper_moved ( arrfrm, ndim, arrto )
       end subroutine moved
 
@@ -460,9 +460,9 @@
       use pepper_arrays, only: pepper_movei => movei
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)     arrfrm ( * )  !! Integer array to be moved.
-      integer(ip)     ndim  !! Number of elements to copy, i.e. the dimension of ARRFRM and ARRTO.
-      integer(ip)     arrto  ( * )  !! Destination array.
+      integer(ip) :: arrfrm ( * )  !! Integer array to be moved.
+      integer(ip) :: ndim  !! Number of elements to copy, i.e. the dimension of ARRFRM and ARRTO.
+      integer(ip) :: arrto  ( * )  !! Destination array.
       call pepper_movei ( arrfrm, ndim, arrto )
       end subroutine movei
 
@@ -473,8 +473,8 @@
       use pepper_arrays, only: pepper_notru => notru
       use pepper_kinds, only: ip
       implicit none
-      logical               logcls ( * )  !! An array of logicals.
-      integer(ip)           n  !! Number of elements in the array LOGCLS.
+      logical :: logcls ( * )  !! An array of logicals.
+      integer(ip) :: n  !! Number of elements in the array LOGCLS.
       notru = pepper_notru ( logcls, n )
       end function notru
 
@@ -485,9 +485,9 @@
       use pepper_arrays, only: pepper_orderc => orderc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     array  ( * )  !! Input array.
-      integer(ip)      ndim  !! Dimension of ARRAY.
-      integer(ip)      iorder ( * )  !! Order vector for ARRAY.
+      character(*) :: array  ( * )  !! Input array.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      integer(ip) :: iorder ( * )  !! Order vector for ARRAY.
       call pepper_orderc ( array, ndim, iorder )
       end subroutine orderc
 
@@ -498,9 +498,9 @@
       use pepper_arrays, only: pepper_orderd => orderd
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           array  ( * )  !! Input array.
-      integer(ip)        ndim  !! Dimension of ARRAY.
-      integer(ip)        iorder ( * )  !! Order vector for ARRAY.
+      real(wp) :: array  ( * )  !! Input array.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      integer(ip) :: iorder ( * )  !! Order vector for ARRAY.
       call pepper_orderd ( array, ndim, iorder )
       end subroutine orderd
 
@@ -511,9 +511,9 @@
       use pepper_arrays, only: pepper_orderi => orderi
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      array  ( * )  !! Input array.
-      integer(ip)      ndim  !! Dimension of ARRAY.
-      integer(ip)      iorder ( * )  !! Order vector for ARRAY.
+      integer(ip) :: array  ( * )  !! Input array.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      integer(ip) :: iorder ( * )  !! Order vector for ARRAY.
       call pepper_orderi ( array, ndim, iorder )
       end subroutine orderi
 
@@ -524,8 +524,8 @@
       use pepper_arrays, only: pepper_prodad => prodad
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           array ( * )  !! Input array.
-      integer(ip)        n  !! Number of elements in ARRAY.
+      real(wp) :: array ( * )  !! Input array.
+      integer(ip) :: n  !! Number of elements in ARRAY.
       prodad = pepper_prodad ( array, n )
       end function prodad
 
@@ -536,8 +536,8 @@
       use pepper_arrays, only: pepper_prodai => prodai
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      array  ( * )  !! Input array.
-      integer(ip)      n  !! Number of elements in ARRAY.
+      integer(ip) :: array  ( * )  !! Input array.
+      integer(ip) :: n  !! Number of elements in ARRAY.
       prodai = pepper_prodai ( array, n )
       end function prodai
 
@@ -549,9 +549,9 @@
       use pepper_arrays, only: pepper_reordc => reordc
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      iorder ( * )  !! Order vector to be used to re-order ARRAY.
-      integer(ip)      ndim  !! Dimension of ARRAY.
-      character(*)     array  ( * )  !! Array to be re-ordered.
+      integer(ip) :: iorder ( * )  !! Order vector to be used to re-order ARRAY.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      character(*) :: array  ( * )  !! Array to be re-ordered.
       call pepper_reordc ( iorder, ndim, array )
       end subroutine reordc
 
@@ -563,9 +563,9 @@
       use pepper_arrays, only: pepper_reordd => reordd
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        iorder ( * )  !! Order vector to be used to re-order ARRAY.
-      integer(ip)        ndim  !! Dimension of ARRAY.
-      real(wp)           array  ( * )  !! Array to be re-ordered.
+      integer(ip) :: iorder ( * )  !! Order vector to be used to re-order ARRAY.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      real(wp) :: array  ( * )  !! Array to be re-ordered.
       call pepper_reordd ( iorder, ndim, array )
       end subroutine reordd
 
@@ -577,9 +577,9 @@
       use pepper_arrays, only: pepper_reordi => reordi
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      iorder ( * )  !! Order vector to be used to re-order ARRAY.
-      integer(ip)      ndim  !! Dimension of ARRAY.
-      integer(ip)      array  ( * )  !! Array to be re-ordered.
+      integer(ip) :: iorder ( * )  !! Order vector to be used to re-order ARRAY.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      integer(ip) :: array  ( * )  !! Array to be re-ordered.
       call pepper_reordi ( iorder, ndim, array )
       end subroutine reordi
 
@@ -591,9 +591,9 @@
       use pepper_arrays, only: pepper_reordl => reordl
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           iorder ( * )  !! Order vector to be used to re-order ARRAY.
-      integer(ip)           ndim  !! Dimension of ARRAY.
-      logical               array  ( * )  !! Array to be re-ordered.
+      integer(ip) :: iorder ( * )  !! Order vector to be used to re-order ARRAY.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      logical :: array  ( * )  !! Array to be re-ordered.
       call pepper_reordl ( iorder, ndim, array )
       end subroutine reordl
 
@@ -604,8 +604,8 @@
       use pepper_arrays, only: pepper_rmdupc => rmdupc
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      nelt  !! Number of elements in the array.
-      character(*)     array   (*)  !! Input/output array.
+      integer(ip) :: nelt  !! Number of elements in the array.
+      character(*) :: array   (*)  !! Input/output array.
       call pepper_rmdupc ( nelt, array )
       end subroutine rmdupc
 
@@ -616,8 +616,8 @@
       use pepper_arrays, only: pepper_rmdupd => rmdupd
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)      nelt  !! Number of elements in the array.
-      real(wp) array   (*)  !! Input/output array.
+      integer(ip) :: nelt  !! Number of elements in the array.
+      real(wp) :: array   (*)  !! Input/output array.
       call pepper_rmdupd ( nelt, array )
       end subroutine rmdupd
 
@@ -628,8 +628,8 @@
       use pepper_arrays, only: pepper_rmdupi => rmdupi
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      nelt  !! Number of elements in the array.
-      integer(ip)      array   (*)  !! Input/output array.
+      integer(ip) :: nelt  !! Number of elements in the array.
+      integer(ip) :: array   (*)  !! Input/output array.
       call pepper_rmdupi ( nelt, array )
       end subroutine rmdupi
 
@@ -640,9 +640,9 @@
       use pepper_arrays, only: pepper_sameai => sameai
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           a1 ( * )  !! First array to be compared.
-      integer(ip)           a2 ( * )  !! Second array to be compared.
-      integer(ip)           ndim  !! Dimension of A1 and A2.
+      integer(ip) :: a1 ( * )  !! First array to be compared.
+      integer(ip) :: a2 ( * )  !! Second array to be compared.
+      integer(ip) :: ndim  !! Dimension of A1 and A2.
       sameai = pepper_sameai ( a1, a2, ndim )
       end function sameai
 
@@ -654,8 +654,8 @@
       use pepper_arrays, only: pepper_shellc => shellc
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      ndim  !! Dimension of the array.
-      character(*)     array ( * )  !! The array.
+      integer(ip) :: ndim  !! Dimension of the array.
+      character(*) :: array ( * )  !! The array.
       call pepper_shellc ( ndim, array )
       end subroutine shellc
 
@@ -666,8 +666,8 @@
       use pepper_arrays, only: pepper_shelld => shelld
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        ndim  !! Dimension of the array.
-      real(wp)           array ( * )  !! The array.
+      integer(ip) :: ndim  !! Dimension of the array.
+      real(wp) :: array ( * )  !! The array.
       call pepper_shelld ( ndim, array )
       end subroutine shelld
 
@@ -678,8 +678,8 @@
       use pepper_arrays, only: pepper_shelli => shelli
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      ndim  !! Dimension of the array.
-      integer(ip)      array ( * )  !! The array.
+      integer(ip) :: ndim  !! Dimension of the array.
+      integer(ip) :: array ( * )  !! The array.
       call pepper_shelli ( ndim, array )
       end subroutine shelli
 
@@ -691,8 +691,8 @@
       use pepper_arrays, only: pepper_somfls => somfls
       use pepper_kinds, only: ip
       implicit none
-      logical               logcls ( * )  !! An array of logicals.
-      integer(ip)           n  !! Number of elements in the array LOGCLS.
+      logical :: logcls ( * )  !! An array of logicals.
+      integer(ip) :: n  !! Number of elements in the array LOGCLS.
       somfls = pepper_somfls ( logcls, n )
       end function somfls
 
@@ -704,8 +704,8 @@
       use pepper_arrays, only: pepper_somtru => somtru
       use pepper_kinds, only: ip
       implicit none
-      logical               logcls ( * )  !! An array of logicals.
-      integer(ip)           n  !! Number of elements in the array LOGCLS.
+      logical :: logcls ( * )  !! An array of logicals.
+      integer(ip) :: n  !! Number of elements in the array LOGCLS.
       somtru = pepper_somtru ( logcls, n )
       end function somtru
 
@@ -716,8 +716,8 @@
       use pepper_arrays, only: pepper_sumad => sumad
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           array  ( * )  !! Input array.
-      integer(ip)        n  !! Number of elements in ARRAY.
+      real(wp) :: array  ( * )  !! Input array.
+      integer(ip) :: n  !! Number of elements in ARRAY.
       sumad = pepper_sumad ( array, n )
       end function sumad
 
@@ -728,8 +728,8 @@
       use pepper_arrays, only: pepper_sumai => sumai
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      array  ( * )  !! Input array.
-      integer(ip)      n  !! Number of elements in ARRAY.
+      integer(ip) :: array  ( * )  !! Input array.
+      integer(ip) :: n  !! Number of elements in ARRAY.
       sumai = pepper_sumai ( array, n )
       end function sumai
 
@@ -740,8 +740,8 @@
       use pepper_arrays, only: pepper_swapc => swapc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     a  !! First string.
-      character(*)     b  !! Second string.
+      character(*) :: a  !! First string.
+      character(*) :: b  !! Second string.
       call pepper_swapc ( a, b )
       end subroutine swapc
 
@@ -752,8 +752,8 @@
       use pepper_arrays, only: pepper_swapd => swapd
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           a  !! First variable.
-      real(wp)           b  !! Second variable.
+      real(wp) :: a  !! First variable.
+      real(wp) :: b  !! Second variable.
       call pepper_swapd ( a, b )
       end subroutine swapd
 
@@ -764,8 +764,8 @@
       use pepper_arrays, only: pepper_swapi => swapi
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      a  !! First variable.
-      integer(ip)      b  !! Second variable.
+      integer(ip) :: a  !! First variable.
+      integer(ip) :: b  !! Second variable.
       call pepper_swapi ( a, b )
       end subroutine swapi
 
@@ -775,7 +775,7 @@
       character function touchc ( string )
       use pepper_arrays, only: pepper_touchc => touchc
       implicit none
-      character(*)          string  !! any character string
+      character(*) :: string  !! any character string
       touchc = pepper_touchc ( string )
       end function touchc
 
@@ -786,7 +786,7 @@
       use pepper_arrays, only: pepper_touchd => touchd
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              dp  !! any double precision number
+      real(wp) :: dp  !! any double precision number
       touchd = pepper_touchd ( dp )
       end function touchd
 
@@ -797,7 +797,7 @@
       use pepper_arrays, only: pepper_touchi => touchi
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           int  !! any integer
+      integer(ip) :: int  !! any integer
       touchi = pepper_touchi ( int )
       end function touchi
 
@@ -807,6 +807,6 @@
       logical function touchl ( log )
       use pepper_arrays, only: pepper_touchl => touchl
       implicit none
-      logical               log  !! any logical
+      logical :: log  !! any logical
       touchl = pepper_touchl ( log )
       end function touchl

@@ -712,28 +712,28 @@ contains
       integer(ip), parameter :: delidx = 7
       integer(ip), parameter :: sysidx = 9
       character(msglen), parameter :: bvlmsg = 'Invalid value found for #:  #.'
-      character(msglen)     errmsg
-      character(kvnmln)     kvname
+      character(msglen) :: errmsg
+      character(kvnmln) :: kvname
       character(msglen), parameter :: nfdmsg = '# not found. Did you load the SCLK kernel?'
       character(msglen), parameter :: nummsg = '# values found for #: valid range is #:#.'
       character(namlen), parameter :: namlst ( nkitem ) = [ character(namlen) :: &
          'SCLK01_COEFFICIENTS', 'SCLK_PARTITION_START', 'SCLK_PARTITION_END', 'SCLK01_N_FIELDS',&
          'SCLK01_OFFSETS', 'SCLK01_MODULI', 'SCLK01_OUTPUT_DELIM', 'SCLK01_KERNEL_ID',&
          'SCLK01_TIME_SYSTEM' ]
-      character(namlen)     tmpnam
-      character(1)          type
-      integer(ip)           i
+      character(namlen) :: tmpnam
+      character(1) :: type
+      integer(ip) :: i
       integer(ip), parameter :: lb ( nkitem ) = [ &
          3, 1, 1, 1,&
          1, 1, 1, 1,&
          0 ]
-      integer(ip)           nf
-      integer(ip)           nfield
+      integer(ip) :: nf
+      integer(ip) :: nfield
       integer(ip), parameter :: ub ( nkitem ) = [ &
          mxcofa, mxpart, mxpart, 1,&
          mxnfld, mxnfld, 1, 1,&
          1 ]
-      logical               found
+      logical :: found
       if ( ctx%failed() ) return
 
 !
@@ -1161,23 +1161,23 @@ contains
       integer(ip), parameter :: delidx = 7
       integer(ip), parameter :: sysidx = 9
       character(msglen), parameter :: bvlmsg = 'Invalid value found for #:  #.'
-      character(msglen)     errmsg
-      character(kvnmln)     kvname
+      character(msglen) :: errmsg
+      character(kvnmln) :: kvname
       character(msglen), parameter :: nfdmsg = '# not found. Did you load the SCLK kernel?'
       character(msglen), parameter :: nummsg = '# values found for #: valid range is #:#.'
       character(namlen), parameter :: namlst ( nkitem ) = [ character(namlen) :: &
          'SCLK01_COEFFICIENTS', 'SCLK_PARTITION_START', 'SCLK_PARTITION_END', 'SCLK01_N_FIELDS',&
          'SCLK01_OFFSETS', 'SCLK01_MODULI', 'SCLK01_OUTPUT_DELIM', 'SCLK01_KERNEL_ID',&
          'SCLK01_TIME_SYSTEM' ]
-      character(namlen)     tmpnam
-      character(1)          type
-      integer(ip)           i
+      character(namlen) :: tmpnam
+      character(1) :: type
+      integer(ip) :: i
       integer(ip), parameter :: lb ( nkitem ) = [ &
          3, 1, 1, 1,&
          1, 1, 1, 1,&
          0 ]
-      integer(ip)           nf
-      integer(ip)           nfield
+      integer(ip) :: nf
+      integer(ip) :: nfield
 !
 !     PEPPER: no maximum number of coefficients or partitions (SPICELIB:
 !     3*MXCOEF and MXPART); the field counts keep MXNFLD (the format).
@@ -1186,7 +1186,7 @@ contains
          huge(1_ip), huge(1_ip), huge(1_ip), 1,&
          mxnfld, mxnfld, 1, 1,&
          1 ]
-      logical               found
+      logical :: found
       if ( ctx%failed() ) return
 
 !
@@ -1611,28 +1611,28 @@ contains
       integer(ip), parameter :: sysidx = delidx + 1
       integer(ip), parameter :: nkitem = sysidx
       integer(ip), parameter :: ndp = modidx
-      character(1)          kvtype ( nkitem )
-      character(namlen)     kvname ( nkitem )
+      character(1) :: kvtype ( nkitem )
+      character(namlen) :: kvname ( nkitem )
       character(namlen), parameter :: namlst ( nkitem ) = [ character(namlen) :: &
          'SCLK01_COEFFICIENTS', 'SCLK_PARTITION_START', 'SCLK_PARTITION_END', 'SCLK01_OFFSETS',&
          'SCLK01_MODULI', 'SCLK01_N_FIELDS', 'SCLK01_OUTPUT_DELIM', 'SCLK01_TIME_SYSTEM' ]
-      integer(ip)           dpbase
-      integer(ip)           i
-      integer(ip)           ibase
+      integer(ip) :: dpbase
+      integer(ip) :: i
+      integer(ip) :: ibase
       integer(ip), parameter :: ibix ( nkitem ) = [ &
          ixbcof, ixbstr, ixbend, ixboff,&
          ixbmod, 0, 0, 0 ]
-      integer(ip)           kvsize ( nkitem )
-      integer(ip)           n
-      integer(ip)           ncoeff
-      integer(ip)           ndpval
-      integer(ip)           nmod
-      integer(ip)           noff
-      integer(ip)           npart
-      integer(ip)           npartb
-      integer(ip)           nparte
-      integer(ip)           nsys
-      logical               found
+      integer(ip) :: kvsize ( nkitem )
+      integer(ip) :: n
+      integer(ip) :: ncoeff
+      integer(ip) :: ndpval
+      integer(ip) :: nmod
+      integer(ip) :: noff
+      integer(ip) :: npart
+      integer(ip) :: npartb
+      integer(ip) :: nparte
+      integer(ip) :: nsys
+      logical :: found
 !
 !     PEPPER: works on the context's sc01_state, whose arrays grow: there
 !     is no limit on the number of clocks (SPICELIB: MXNCLK, 100, then the
@@ -1750,11 +1750,11 @@ contains
       use pepper_inc_zzsc01
       use pepper_inc_zzctr
       implicit none
-      integer(ip)           ibase
-      integer(ip)           sclkat
-      logical               found
-      logical               samclk
-      logical               update
+      integer(ip) :: ibase
+      integer(ip) :: sclkat
+      logical :: found
+      logical :: samclk
+      logical :: update
 !
 !     PEPPER: works on the context's sc01_state (it may grow the
 !     database: callers do not hold ASSOCIATE names of its arrays).
@@ -1872,16 +1872,16 @@ contains
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: maxids = 10
-      character(wdsize)     sclk
-      character(wdsize)     sclkvr ( 7 )
-      character(wdsize)     type
-      character(wdsize)     agent
-      integer(ip)           i
-      integer(ip)           n
-      logical               keepid
-      logical               update
-      logical               watch
-      logical               found
+      character(wdsize) :: sclk
+      character(wdsize) :: sclkvr ( 7 )
+      character(wdsize) :: type
+      character(wdsize) :: agent
+      integer(ip) :: i
+      integer(ip) :: n
+      logical :: keepid
+      logical :: update
+      logical :: watch
+      logical :: found
       if ( .not. allocated ( ctx%zzsclk_state ) ) allocate ( ctx%zzsclk_state )
       associate ( known => ctx%zzsclk_state%known, &
                   passed => ctx%zzsclk_state%passed, &

@@ -2938,15 +2938,15 @@ contains
       integer(ip), parameter :: maxenc = 64
 
       integer(ip), parameter :: wrksiz = 64
-      character(errlen)     errmsg
-      character(maxenc)     work(wrksiz)
+      character(errlen) :: errmsg
+      character(maxenc) :: work(wrksiz)
 
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           itmbeg
-      integer(ip)           nitms
+      integer(ip) :: i
+      integer(ip) :: iostat
+      integer(ip) :: itmbeg
+      integer(ip) :: nitms
 
-      logical               error
+      logical :: error
 
 !
 !     Standard SPICE error handling.
@@ -3395,18 +3395,18 @@ contains
          [ 0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, 6.0_wp, &
            7.0_wp, 8.0_wp, 9.0_wp, 10.0_wp, 11.0_wp, 12.0_wp, 13.0_wp, &
            14.0_wp, 15.0_wp ]
-      real(wp)              tmpnum
-      integer(ip)           i
-      integer(ip)           iexpon
-      integer(ip)           ival(maxman+1)
-      integer(ip)           letter
-      integer(ip)           ndigit
-      integer(ip)           positn
-      integer(ip)           strbeg
-      integer(ip)           strend
-      logical               more
-      logical               negtiv
-      logical               fndexp
+      real(wp) :: tmpnum
+      integer(ip) :: i
+      integer(ip) :: iexpon
+      integer(ip) :: ival(maxman+1)
+      integer(ip) :: letter
+      integer(ip) :: ndigit
+      integer(ip) :: positn
+      integer(ip) :: strbeg
+      integer(ip) :: strend
+      logical :: more
+      logical :: negtiv
+      logical :: fndexp
       if ( .not. allocated ( ctx%hx2dp_state ) ) allocate ( ctx%hx2dp_state )
       associate ( maxdp => ctx%hx2dp_state%maxdp, &
                   mindp => ctx%hx2dp_state%mindp, &
@@ -3913,15 +3913,15 @@ contains
       integer(ip), parameter :: maxenc = 64
 
       integer(ip), parameter :: wrksiz = 64
-      character(errlen)     errmsg
-      character(maxenc)     work(wrksiz)
+      character(errlen) :: errmsg
+      character(maxenc) :: work(wrksiz)
 
-      integer(ip)           i
-      integer(ip)           itmbeg
-      integer(ip)           nitms
-      integer(ip)           iostat
+      integer(ip) :: i
+      integer(ip) :: itmbeg
+      integer(ip) :: nitms
+      integer(ip) :: iostat
 
-      logical               error
+      logical :: error
 
 !
 !     Standard SPICE error handling.
@@ -4287,7 +4287,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           iostat
+      integer(ip) :: iostat
 
 !
 !     Standard SPICE error handling.
@@ -4611,7 +4611,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           iostat
+      integer(ip) :: iostat
 
 !
 !     Standard SPICE error handling.
@@ -4839,13 +4839,13 @@ contains
       integer(ip), parameter :: maxenc = 64
 
       integer(ip), parameter :: wrksiz = 64
-      character(maxenc)     work(wrksiz)
+      character(maxenc) :: work(wrksiz)
 
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           itmbeg
-      integer(ip)           length(wrksiz)
-      integer(ip)           nitms
+      integer(ip) :: i
+      integer(ip) :: iostat
+      integer(ip) :: itmbeg
+      integer(ip) :: length(wrksiz)
+      integer(ip) :: nitms
 
 !
 !     Standard SPICE error handling.
@@ -5096,12 +5096,12 @@ contains
       character(1), parameter :: digits(0:maxdig-1) = &
          [ character(1) :: '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', &
            'C', 'D', 'E', 'F' ]
-      character(strlen)     tmpstr
+      character(strlen) :: tmpstr
 
-      integer(ip)           begin
-      integer(ip)           itemp
-      integer(ip)           remndr
-      integer(ip)           result
+      integer(ip) :: begin
+      integer(ip) :: itemp
+      integer(ip) :: remndr
+      integer(ip) :: result
 !     Local variables
 !
 
@@ -5487,19 +5487,19 @@ contains
       character(1), parameter :: digits(0:maxdig-1) = &
          [ character(1) :: '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', &
            'C', 'D', 'E', 'F' ]
-      character(strlen)     expstr
-      character(strlen)     tmpstr
+      character(strlen) :: expstr
+      character(strlen) :: tmpstr
 
-      real(wp)              remndr
-      real(wp)              tmpnum
+      real(wp) :: remndr
+      real(wp) :: tmpnum
 
-      integer(ip)           explen
-      integer(ip)           intexp
-      integer(ip)           positn
-      integer(ip)           result
+      integer(ip) :: explen
+      integer(ip) :: intexp
+      integer(ip) :: positn
+      integer(ip) :: result
 
-      logical               negtiv
-      logical               postiv
+      logical :: negtiv
+      logical :: postiv
 !     Initial values
 !
 
@@ -5984,13 +5984,13 @@ contains
       integer(ip), parameter :: maxenc = 64
 
       integer(ip), parameter :: wrksiz = 64
-      character(maxenc)     work(wrksiz)
+      character(maxenc) :: work(wrksiz)
 
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           itmbeg
-      integer(ip)           nitms
-      integer(ip)           length(wrksiz)
+      integer(ip) :: i
+      integer(ip) :: iostat
+      integer(ip) :: itmbeg
+      integer(ip) :: nitms
+      integer(ip) :: length(wrksiz)
 
 !
 !     Standard SPICE error handling.
@@ -6218,25 +6218,25 @@ contains
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: ifnstr = 17
       integer(ip), parameter :: inlen = 4
-      character(cbfsiz)     chrbuf
-      character(1)      fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
-      character(idwlen)     locidw
-      character(ifnlen)     locifn
-      character(strsiz)     tmpstr
-      integer(ip)           cindex
-      integer(ip)           i
-      integer(ip)           iamh
-      integer(ip)           iarch
-      integer(ip)           ibff
-      integer(ip)           iostat
-      integer(ip)           locbwd
-      integer(ip)           locfre
-      integer(ip)           locfwd
-      integer(ip)           locnd
-      integer(ip)           ival ( 1 )
-      integer(ip)           locni
-      integer(ip)           lun
-      logical               locfnd
+      character(cbfsiz) :: chrbuf
+      character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
+      character(idwlen) :: locidw
+      character(ifnlen) :: locifn
+      character(strsiz) :: tmpstr
+      integer(ip) :: cindex
+      integer(ip) :: i
+      integer(ip) :: iamh
+      integer(ip) :: iarch
+      integer(ip) :: ibff
+      integer(ip) :: iostat
+      integer(ip) :: locbwd
+      integer(ip) :: locfre
+      integer(ip) :: locfwd
+      integer(ip) :: locnd
+      integer(ip) :: ival ( 1 )
+      integer(ip) :: locni
+      integer(ip) :: lun
+      logical :: locfnd
       if ( .not. allocated ( ctx%zzdafgfr_state ) ) allocate ( ctx%zzdafgfr_state )
       associate ( first => ctx%zzdafgfr_state%first, &
                   natbff => ctx%zzdafgfr_state%natbff, &
@@ -6537,16 +6537,16 @@ contains
       integer(ip), parameter :: fmtlen = 8
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
-      character(1)          nullch
-      character(fmtlen)     locfmt
-      character(idwlen)     locidw
-      character(ifnlen)     locifn
-      character(sizdlm)     delim
-      character(sizend)     lftbkt
-      character(sizend)     rgtbkt
-      character(sizstr)     tststr
-      integer(ip)           i
-      integer(ip)           iostat
+      character(1) :: nullch
+      character(fmtlen) :: locfmt
+      character(idwlen) :: locidw
+      character(ifnlen) :: locifn
+      character(sizdlm) :: delim
+      character(sizend) :: lftbkt
+      character(sizend) :: rgtbkt
+      character(sizstr) :: tststr
+      integer(ip) :: i
+      integer(ip) :: iostat
       if ( .not. allocated ( ctx%zzdafnfr_state ) ) allocate ( ctx%zzdafnfr_state )
       associate ( first => ctx%zzdafnfr_state%first, &
                   ftpstr => ctx%zzdafnfr_state%ftpstr, &
@@ -6762,17 +6762,17 @@ contains
       use pepper_strings, only: ucase
       use pepper_inc_zzddhman
       implicit none
-      character(cbfsiz)     chrbuf
-      character(1)      fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
-      character(strsiz)     tmpstr
-      real(wp)              dpbuf  ( 128 )
-      integer(ip)           i
-      integer(ip)           iamh
-      integer(ip)           iarch
-      integer(ip)           ibff
-      integer(ip)           iostat
-      integer(ip)           lun
-      logical               locfnd
+      character(cbfsiz) :: chrbuf
+      character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
+      character(strsiz) :: tmpstr
+      real(wp) :: dpbuf  ( 128 )
+      integer(ip) :: i
+      integer(ip) :: iamh
+      integer(ip) :: iarch
+      integer(ip) :: ibff
+      integer(ip) :: iostat
+      integer(ip) :: lun
+      logical :: locfnd
       if ( .not. allocated ( ctx%zzdafgdr_state ) ) allocate ( ctx%zzdafgdr_state )
       associate ( first => ctx%zzdafgdr_state%first, &
                   natbff => ctx%zzdafgdr_state%natbff, &
@@ -7044,23 +7044,23 @@ contains
       implicit none
       integer(ip), parameter :: dplen = 8
       integer(ip), parameter :: inlen = dplen/2
-      character(cbfsiz)     chrbuf
-      character(1)      fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
-      character(strsiz)     tmpstr
-      real(wp)              dpbuf  ( 128 )
-      integer(ip)           cindex
-      integer(ip)           dindex
-      integer(ip)           i
-      integer(ip)           iamh
-      integer(ip)           iarch
-      integer(ip)           ibff
-      integer(ip)           inbuf  ( 256 )
-      integer(ip)           iostat
-      integer(ip)           left
-      integer(ip)           lun
-      integer(ip)           nsum
-      integer(ip)           sumsiz
-      logical               locfnd
+      character(cbfsiz) :: chrbuf
+      character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
+      character(strsiz) :: tmpstr
+      real(wp) :: dpbuf  ( 128 )
+      integer(ip) :: cindex
+      integer(ip) :: dindex
+      integer(ip) :: i
+      integer(ip) :: iamh
+      integer(ip) :: iarch
+      integer(ip) :: ibff
+      integer(ip) :: inbuf  ( 256 )
+      integer(ip) :: iostat
+      integer(ip) :: left
+      integer(ip) :: lun
+      integer(ip) :: nsum
+      integer(ip) :: sumsiz
+      logical :: locfnd
       equivalence         ( dpbuf, inbuf )
       if ( .not. allocated ( ctx%zzdafgsr_state ) ) allocate ( ctx%zzdafgsr_state )
       associate ( first => ctx%zzdafgsr_state%first, &
@@ -7712,27 +7712,27 @@ contains
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip), parameter :: typlen = 4
-      integer(ip)           findex
-      character(acclen)     acc
-      character(crlen)      crec
-      character(fmtlen)     format
-      character(idlen)      idword
-      character(ifnlen)     ifn
-      character(typlen)     ttype
-      real(wp)              drec   ( dprsiz )
-      integer(ip)           bward
-      integer(ip)           fnd
-      integer(ip)           fni
-      integer(ip)           free
-      integer(ip)           fnb
-      integer(ip)           fward
-      integer(ip)           i
-      integer(ip)           iarc
-      integer(ip)           ibff
-      integer(ip)           iamh
-      integer(ip)           iostat
-      integer(ip)           lun
-      logical               found
+      integer(ip) :: findex
+      character(acclen) :: acc
+      character(crlen) :: crec
+      character(fmtlen) :: format
+      character(idlen) :: idword
+      character(ifnlen) :: ifn
+      character(typlen) :: ttype
+      real(wp) :: drec   ( dprsiz )
+      integer(ip) :: bward
+      integer(ip) :: fnd
+      integer(ip) :: fni
+      integer(ip) :: free
+      integer(ip) :: fnb
+      integer(ip) :: fward
+      integer(ip) :: i
+      integer(ip) :: iarc
+      integer(ip) :: ibff
+      integer(ip) :: iamh
+      integer(ip) :: iostat
+      integer(ip) :: lun
+      logical :: found
       if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
@@ -8190,27 +8190,27 @@ contains
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip), parameter :: typlen = 4
-      integer(ip)           findex
-      character(acclen)     acc
-      character(crlen)      crec
-      character(fmtlen)     format
-      character(idlen)      idword
-      character(ifnlen)     ifn
-      character(typlen)     ttype
-      real(wp)              drec   ( dprsiz )
-      integer(ip)           bward
-      integer(ip)           fnd
-      integer(ip)           fni
-      integer(ip)           free
-      integer(ip)           fnb
-      integer(ip)           fward
-      integer(ip)           i
-      integer(ip)           iarc
-      integer(ip)           ibff
-      integer(ip)           iamh
-      integer(ip)           iostat
-      integer(ip)           lun
-      logical               found
+      integer(ip) :: findex
+      character(acclen) :: acc
+      character(crlen) :: crec
+      character(fmtlen) :: format
+      character(idlen) :: idword
+      character(ifnlen) :: ifn
+      character(typlen) :: ttype
+      real(wp) :: drec   ( dprsiz )
+      integer(ip) :: bward
+      integer(ip) :: fnd
+      integer(ip) :: fni
+      integer(ip) :: free
+      integer(ip) :: fnb
+      integer(ip) :: fward
+      integer(ip) :: i
+      integer(ip) :: iarc
+      integer(ip) :: ibff
+      integer(ip) :: iamh
+      integer(ip) :: iostat
+      integer(ip) :: lun
+      logical :: found
       if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
@@ -8580,27 +8580,27 @@ contains
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip), parameter :: typlen = 4
-      integer(ip)           findex
-      character(acclen)     acc
-      character(crlen)      crec
-      character(fmtlen)     format
-      character(idlen)      idword
-      character(ifnlen)     ifn
-      character(typlen)     ttype
-      real(wp)              drec   ( dprsiz )
-      integer(ip)           bward
-      integer(ip)           fnd
-      integer(ip)           fni
-      integer(ip)           free
-      integer(ip)           fnb
-      integer(ip)           fward
-      integer(ip)           i
-      integer(ip)           iarc
-      integer(ip)           ibff
-      integer(ip)           iamh
-      integer(ip)           iostat
-      integer(ip)           lun
-      logical               found
+      integer(ip) :: findex
+      character(acclen) :: acc
+      character(crlen) :: crec
+      character(fmtlen) :: format
+      character(idlen) :: idword
+      character(ifnlen) :: ifn
+      character(typlen) :: ttype
+      real(wp) :: drec   ( dprsiz )
+      integer(ip) :: bward
+      integer(ip) :: fnd
+      integer(ip) :: fni
+      integer(ip) :: free
+      integer(ip) :: fnb
+      integer(ip) :: fward
+      integer(ip) :: i
+      integer(ip) :: iarc
+      integer(ip) :: ibff
+      integer(ip) :: iamh
+      integer(ip) :: iostat
+      integer(ip) :: lun
+      logical :: found
       if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
@@ -9118,27 +9118,27 @@ contains
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip), parameter :: typlen = 4
-      integer(ip)           findex
-      character(acclen)     acc
-      character(crlen)      crec
-      character(fmtlen)     format
-      character(idlen)      idword
-      character(ifnlen)     ifn
-      character(typlen)     ttype
-      real(wp)              drec   ( dprsiz )
-      integer(ip)           bward
-      integer(ip)           fnd
-      integer(ip)           fni
-      integer(ip)           free
-      integer(ip)           fnb
-      integer(ip)           fward
-      integer(ip)           i
-      integer(ip)           iarc
-      integer(ip)           ibff
-      integer(ip)           iamh
-      integer(ip)           iostat
-      integer(ip)           lun
-      logical               found
+      integer(ip) :: findex
+      character(acclen) :: acc
+      character(crlen) :: crec
+      character(fmtlen) :: format
+      character(idlen) :: idword
+      character(ifnlen) :: ifn
+      character(typlen) :: ttype
+      real(wp) :: drec   ( dprsiz )
+      integer(ip) :: bward
+      integer(ip) :: fnd
+      integer(ip) :: fni
+      integer(ip) :: free
+      integer(ip) :: fnb
+      integer(ip) :: fward
+      integer(ip) :: i
+      integer(ip) :: iarc
+      integer(ip) :: ibff
+      integer(ip) :: iamh
+      integer(ip) :: iostat
+      integer(ip) :: lun
+      logical :: found
       if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
@@ -9654,27 +9654,27 @@ contains
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip), parameter :: typlen = 4
-      integer(ip)           findex
-      character(acclen)     acc
-      character(crlen)      crec
-      character(fmtlen)     format
-      character(idlen)      idword
-      character(ifnlen)     ifn
-      character(typlen)     ttype
-      real(wp)              drec   ( dprsiz )
-      integer(ip)           bward
-      integer(ip)           fnd
-      integer(ip)           fni
-      integer(ip)           free
-      integer(ip)           fnb
-      integer(ip)           fward
-      integer(ip)           i
-      integer(ip)           iarc
-      integer(ip)           ibff
-      integer(ip)           iamh
-      integer(ip)           iostat
-      integer(ip)           lun
-      logical               found
+      integer(ip) :: findex
+      character(acclen) :: acc
+      character(crlen) :: crec
+      character(fmtlen) :: format
+      character(idlen) :: idword
+      character(ifnlen) :: ifn
+      character(typlen) :: ttype
+      real(wp) :: drec   ( dprsiz )
+      integer(ip) :: bward
+      integer(ip) :: fnd
+      integer(ip) :: fni
+      integer(ip) :: free
+      integer(ip) :: fnb
+      integer(ip) :: fward
+      integer(ip) :: i
+      integer(ip) :: iarc
+      integer(ip) :: ibff
+      integer(ip) :: iamh
+      integer(ip) :: iostat
+      integer(ip) :: lun
+      logical :: found
       if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
@@ -9942,27 +9942,27 @@ contains
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip), parameter :: typlen = 4
-      integer(ip)           findex
-      character(acclen)     acc
-      character(crlen)      crec
-      character(fmtlen)     format
-      character(idlen)      idword
-      character(ifnlen)     ifn
-      character(typlen)     ttype
-      real(wp)              drec   ( dprsiz )
-      integer(ip)           bward
-      integer(ip)           fnd
-      integer(ip)           fni
-      integer(ip)           free
-      integer(ip)           fnb
-      integer(ip)           fward
-      integer(ip)           i
-      integer(ip)           iarc
-      integer(ip)           ibff
-      integer(ip)           iamh
-      integer(ip)           iostat
-      integer(ip)           lun
-      logical               found
+      integer(ip) :: findex
+      character(acclen) :: acc
+      character(crlen) :: crec
+      character(fmtlen) :: format
+      character(idlen) :: idword
+      character(ifnlen) :: ifn
+      character(typlen) :: ttype
+      real(wp) :: drec   ( dprsiz )
+      integer(ip) :: bward
+      integer(ip) :: fnd
+      integer(ip) :: fni
+      integer(ip) :: free
+      integer(ip) :: fnb
+      integer(ip) :: fward
+      integer(ip) :: i
+      integer(ip) :: iarc
+      integer(ip) :: ibff
+      integer(ip) :: iamh
+      integer(ip) :: iostat
+      integer(ip) :: lun
+      logical :: found
       if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
@@ -10165,27 +10165,27 @@ contains
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip), parameter :: typlen = 4
-      integer(ip)           findex
-      character(acclen)     acc
-      character(crlen)      crec
-      character(fmtlen)     format
-      character(idlen)      idword
-      character(ifnlen)     ifn
-      character(typlen)     ttype
-      real(wp)              drec   ( dprsiz )
-      integer(ip)           bward
-      integer(ip)           fnd
-      integer(ip)           fni
-      integer(ip)           free
-      integer(ip)           fnb
-      integer(ip)           fward
-      integer(ip)           i
-      integer(ip)           iarc
-      integer(ip)           ibff
-      integer(ip)           iamh
-      integer(ip)           iostat
-      integer(ip)           lun
-      logical               found
+      integer(ip) :: findex
+      character(acclen) :: acc
+      character(crlen) :: crec
+      character(fmtlen) :: format
+      character(idlen) :: idword
+      character(ifnlen) :: ifn
+      character(typlen) :: ttype
+      real(wp) :: drec   ( dprsiz )
+      integer(ip) :: bward
+      integer(ip) :: fnd
+      integer(ip) :: fni
+      integer(ip) :: free
+      integer(ip) :: fnb
+      integer(ip) :: fward
+      integer(ip) :: i
+      integer(ip) :: iarc
+      integer(ip) :: ibff
+      integer(ip) :: iamh
+      integer(ip) :: iostat
+      integer(ip) :: lun
+      logical :: found
       if ( ctx%failed() ) return
 
       call zzddhhlu ( ctx, handle, 'DAF', .true., unit )
@@ -10335,28 +10335,28 @@ contains
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip), parameter :: typlen = 4
-      integer(ip)           findex
-      character(acclen)     acc
-      character(crlen)      crec
-      character(1)      dafnam  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
-      character(fmtlen)     format
-      character(idlen)      idword
-      character(ifnlen)     ifn
-      character(typlen)     ttype
-      real(wp)              drec   ( dprsiz )
-      integer(ip)           bward
-      integer(ip)           fnd
-      integer(ip)           fni
-      integer(ip)           free
-      integer(ip)           fnb
-      integer(ip)           fward
-      integer(ip)           i
-      integer(ip)           iarc
-      integer(ip)           ibff
-      integer(ip)           iamh
-      integer(ip)           iostat
-      integer(ip)           lun
-      logical               found
+      integer(ip) :: findex
+      character(acclen) :: acc
+      character(crlen) :: crec
+      character(1) :: dafnam  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
+      character(fmtlen) :: format
+      character(idlen) :: idword
+      character(ifnlen) :: ifn
+      character(typlen) :: ttype
+      real(wp) :: drec   ( dprsiz )
+      integer(ip) :: bward
+      integer(ip) :: fnd
+      integer(ip) :: fni
+      integer(ip) :: free
+      integer(ip) :: fnb
+      integer(ip) :: fward
+      integer(ip) :: i
+      integer(ip) :: iarc
+      integer(ip) :: ibff
+      integer(ip) :: iamh
+      integer(ip) :: iostat
+      integer(ip) :: lun
+      logical :: found
       if ( ctx%failed() ) return
 
       call zzddhluh ( ctx, unit, handle, found )
@@ -10548,28 +10548,28 @@ contains
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip), parameter :: typlen = 4
-      integer(ip)           findex
-      character(acclen)     acc
-      character(crlen)      crec
-      character(fmtlen)     format
-      character(idlen)      idword
-      character(ifnlen)     ifn
-      character(typlen)     ttype
-      real(wp)              drec   ( dprsiz )
-      integer(ip)           bward
-      integer(ip)           fnd
-      integer(ip)           fni
-      integer(ip)           free
-      integer(ip)           fnb
-      integer(ip)           fward
-      integer(ip)           i
-      integer(ip)           iarc
-      integer(ip)           ibff
-      integer(ip)           iamh
-      integer(ip)           iostat
-      integer(ip)           lun
-      character(1)          dafnam  ! PEPPER: the name is taken whole below
-      logical               found
+      integer(ip) :: findex
+      character(acclen) :: acc
+      character(crlen) :: crec
+      character(fmtlen) :: format
+      character(idlen) :: idword
+      character(ifnlen) :: ifn
+      character(typlen) :: ttype
+      real(wp) :: drec   ( dprsiz )
+      integer(ip) :: bward
+      integer(ip) :: fnd
+      integer(ip) :: fni
+      integer(ip) :: free
+      integer(ip) :: fnb
+      integer(ip) :: fward
+      integer(ip) :: i
+      integer(ip) :: iarc
+      integer(ip) :: ibff
+      integer(ip) :: iamh
+      integer(ip) :: iostat
+      integer(ip) :: lun
+      character(1) :: dafnam  ! PEPPER: the name is taken whole below
+      logical :: found
       if ( ctx%failed() ) return
 
       call zzddhnfo ( ctx, handle, dafnam, iarc, ibff, iamh, found )
@@ -10777,28 +10777,28 @@ contains
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip), parameter :: typlen = 4
-      integer(ip)           findex
-      character(acclen)     acc
-      character(crlen)      crec
-      character(1)      dafnam  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
-      character(fmtlen)     format
-      character(idlen)      idword
-      character(ifnlen)     ifn
-      character(typlen)     ttype
-      real(wp)              drec   ( dprsiz )
-      integer(ip)           bward
-      integer(ip)           fnd
-      integer(ip)           fni
-      integer(ip)           free
-      integer(ip)           fnb
-      integer(ip)           fward
-      integer(ip)           i
-      integer(ip)           iarc
-      integer(ip)           ibff
-      integer(ip)           iamh
-      integer(ip)           iostat
-      integer(ip)           lun
-      logical               found
+      integer(ip) :: findex
+      character(acclen) :: acc
+      character(crlen) :: crec
+      character(1) :: dafnam  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
+      character(fmtlen) :: format
+      character(idlen) :: idword
+      character(ifnlen) :: ifn
+      character(typlen) :: ttype
+      real(wp) :: drec   ( dprsiz )
+      integer(ip) :: bward
+      integer(ip) :: fnd
+      integer(ip) :: fni
+      integer(ip) :: free
+      integer(ip) :: fnb
+      integer(ip) :: fward
+      integer(ip) :: i
+      integer(ip) :: iarc
+      integer(ip) :: ibff
+      integer(ip) :: iamh
+      integer(ip) :: iostat
+      integer(ip) :: lun
+      logical :: found
       if ( ctx%failed() ) return
 
       call zzddhfnh ( ctx, fname, handle, found )
@@ -10966,27 +10966,27 @@ contains
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip), parameter :: typlen = 4
-      integer(ip)           findex
-      character(acclen)     acc
-      character(crlen)      crec
-      character(fmtlen)     format
-      character(idlen)      idword
-      character(ifnlen)     ifn
-      character(typlen)     ttype
-      real(wp)              drec   ( dprsiz )
-      integer(ip)           bward
-      integer(ip)           fnd
-      integer(ip)           fni
-      integer(ip)           free
-      integer(ip)           fnb
-      integer(ip)           fward
-      integer(ip)           i
-      integer(ip)           iarc
-      integer(ip)           ibff
-      integer(ip)           iamh
-      integer(ip)           iostat
-      integer(ip)           lun
-      logical               found
+      integer(ip) :: findex
+      character(acclen) :: acc
+      character(crlen) :: crec
+      character(fmtlen) :: format
+      character(idlen) :: idword
+      character(ifnlen) :: ifn
+      character(typlen) :: ttype
+      real(wp) :: drec   ( dprsiz )
+      integer(ip) :: bward
+      integer(ip) :: fnd
+      integer(ip) :: fni
+      integer(ip) :: free
+      integer(ip) :: fnb
+      integer(ip) :: fward
+      integer(ip) :: i
+      integer(ip) :: iarc
+      integer(ip) :: ibff
+      integer(ip) :: iamh
+      integer(ip) :: iostat
+      integer(ip) :: lun
+      logical :: found
       if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah )
       if ( ctx%failed() ) return
@@ -11232,28 +11232,28 @@ contains
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip), parameter :: typlen = 4
-      integer(ip)           findex
-      character(acclen)     acc
-      character(crlen)      crec
-      character(1)      dafnam  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
-      character(fmtlen)     format
-      character(idlen)      idword
-      character(ifnlen)     ifn
-      character(typlen)     ttype
-      real(wp)              drec   ( dprsiz )
-      integer(ip)           bward
-      integer(ip)           fnd
-      integer(ip)           fni
-      integer(ip)           free
-      integer(ip)           fnb
-      integer(ip)           fward
-      integer(ip)           i
-      integer(ip)           iarc
-      integer(ip)           ibff
-      integer(ip)           iamh
-      integer(ip)           iostat
-      integer(ip)           lun
-      logical               found
+      integer(ip) :: findex
+      character(acclen) :: acc
+      character(crlen) :: crec
+      character(1) :: dafnam  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
+      character(fmtlen) :: format
+      character(idlen) :: idword
+      character(ifnlen) :: ifn
+      character(typlen) :: ttype
+      real(wp) :: drec   ( dprsiz )
+      integer(ip) :: bward
+      integer(ip) :: fnd
+      integer(ip) :: fni
+      integer(ip) :: free
+      integer(ip) :: fnb
+      integer(ip) :: fward
+      integer(ip) :: i
+      integer(ip) :: iarc
+      integer(ip) :: ibff
+      integer(ip) :: iamh
+      integer(ip) :: iostat
+      integer(ip) :: lun
+      logical :: found
       if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah )
       if ( ctx%failed() ) return
@@ -11751,10 +11751,10 @@ contains
       module procedure dafps
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              dequiv   ( 125 )
-      integer(ip)           iequiv   ( 250 )
-      integer(ip)           n
-      integer(ip)           m
+      real(wp) :: dequiv   ( 125 )
+      integer(ip) :: iequiv   ( 250 )
+      integer(ip) :: n
+      integer(ip) :: m
       equivalence         ( dequiv, iequiv )
       n = min ( 125, max ( 0, nd ) )
 
@@ -12006,10 +12006,10 @@ contains
       module procedure dafus
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              dequiv   ( 125 )
-      integer(ip)           iequiv   ( 250 )
-      integer(ip)           n
-      integer(ip)           m
+      real(wp) :: dequiv   ( 125 )
+      integer(ip) :: iequiv   ( 250 )
+      integer(ip) :: n
+      integer(ip) :: m
       equivalence         ( dequiv, iequiv )
       n = min ( 125, max ( 0, nd ) )
 
@@ -12142,19 +12142,19 @@ contains
       implicit none
       integer(ip), parameter :: rbsize = 100
       integer(ip), parameter :: rdsize = 128 * rbsize
-      integer(ip)           unit
-      integer(ip)           iostat
-      integer(ip)           bufloc
-      logical               done
-      logical               stored
-      integer(ip)           b
-      integer(ip)           count
-      integer(ip)           e
-      integer(ip)           minval
-      integer(ip)           nd
-      integer(ip)           ni
-      logical               locfnd
-      logical               native
+      integer(ip) :: unit
+      integer(ip) :: iostat
+      integer(ip) :: bufloc
+      logical :: done
+      logical :: stored
+      integer(ip) :: b
+      integer(ip) :: count
+      integer(ip) :: e
+      integer(ip) :: minval
+      integer(ip) :: nd
+      integer(ip) :: ni
+      logical :: locfnd
+      logical :: native
       call files_check ( ctx )
       if ( .not. allocated ( ctx%dafrwd ) ) then
          allocate ( ctx%dafrwd )
@@ -12399,19 +12399,19 @@ contains
       implicit none
       integer(ip), parameter :: rbsize = 100
       integer(ip), parameter :: rdsize = 128 * rbsize
-      integer(ip)           unit
-      integer(ip)           iostat
-      integer(ip)           bufloc
-      logical               done
-      logical               stored
-      integer(ip)           b
-      integer(ip)           count
-      integer(ip)           e
-      integer(ip)           minval
-      integer(ip)           nd
-      integer(ip)           ni
-      logical               locfnd
-      logical               native
+      integer(ip) :: unit
+      integer(ip) :: iostat
+      integer(ip) :: bufloc
+      logical :: done
+      logical :: stored
+      integer(ip) :: b
+      integer(ip) :: count
+      integer(ip) :: e
+      integer(ip) :: minval
+      integer(ip) :: nd
+      integer(ip) :: ni
+      logical :: locfnd
+      logical :: native
       call files_check ( ctx )
       if ( .not. allocated ( ctx%dafrwd ) ) then
          allocate ( ctx%dafrwd )
@@ -12764,19 +12764,19 @@ contains
       implicit none
       integer(ip), parameter :: rbsize = 100
       integer(ip), parameter :: rdsize = 128 * rbsize
-      integer(ip)           unit
-      integer(ip)           iostat
-      integer(ip)           bufloc
-      logical               done
-      logical               stored
-      integer(ip)           b
-      integer(ip)           count
-      integer(ip)           e
-      integer(ip)           minval
-      integer(ip)           nd
-      integer(ip)           ni
-      logical               locfnd
-      logical               native
+      integer(ip) :: unit
+      integer(ip) :: iostat
+      integer(ip) :: bufloc
+      logical :: done
+      logical :: stored
+      integer(ip) :: b
+      integer(ip) :: count
+      integer(ip) :: e
+      integer(ip) :: minval
+      integer(ip) :: nd
+      integer(ip) :: ni
+      logical :: locfnd
+      logical :: native
       call files_check ( ctx )
       if ( .not. allocated ( ctx%dafrwd ) ) then
          allocate ( ctx%dafrwd )
@@ -13022,19 +13022,19 @@ contains
       implicit none
       integer(ip), parameter :: rbsize = 100
       integer(ip), parameter :: rdsize = 128 * rbsize
-      integer(ip)           unit
-      integer(ip)           iostat
-      integer(ip)           bufloc
-      logical               done
-      logical               stored
-      integer(ip)           b
-      integer(ip)           count
-      integer(ip)           e
-      integer(ip)           minval
-      integer(ip)           nd
-      integer(ip)           ni
-      logical               locfnd
-      logical               native
+      integer(ip) :: unit
+      integer(ip) :: iostat
+      integer(ip) :: bufloc
+      logical :: done
+      logical :: stored
+      integer(ip) :: b
+      integer(ip) :: count
+      integer(ip) :: e
+      integer(ip) :: minval
+      integer(ip) :: nd
+      integer(ip) :: ni
+      logical :: locfnd
+      logical :: native
       call files_check ( ctx )
       if ( .not. allocated ( ctx%dafrwd ) ) then
          allocate ( ctx%dafrwd )
@@ -13215,21 +13215,21 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip), parameter :: rbsize = 100
-      logical               return
+      logical :: return
       integer(ip), parameter :: rdsize = 128 * rbsize
-      integer(ip)           unit
-      integer(ip)           iostat
-      integer(ip)           bufloc
-      logical               done
-      logical               stored
-      integer(ip)           b
-      integer(ip)           count
-      integer(ip)           e
-      integer(ip)           minval
-      integer(ip)           nd
-      integer(ip)           ni
-      logical               locfnd
-      logical               native
+      integer(ip) :: unit
+      integer(ip) :: iostat
+      integer(ip) :: bufloc
+      logical :: done
+      logical :: stored
+      integer(ip) :: b
+      integer(ip) :: count
+      integer(ip) :: e
+      integer(ip) :: minval
+      integer(ip) :: nd
+      integer(ip) :: ni
+      logical :: locfnd
+      logical :: native
       call files_check ( ctx )
       if ( .not. allocated ( ctx%dafrwd ) ) then
          allocate ( ctx%dafrwd )
@@ -13446,18 +13446,18 @@ contains
 
       integer(ip), parameter :: bsize = 128
 
-      integer(ip)           begr
-      integer(ip)           begw
-      integer(ip)           endr
-      integer(ip)           endw
+      integer(ip) :: begr
+      integer(ip) :: begw
+      integer(ip) :: endr
+      integer(ip) :: endw
 
-      integer(ip)           recno
-      integer(ip)           first
-      integer(ip)           last
-      integer(ip)           next
+      integer(ip) :: recno
+      integer(ip) :: first
+      integer(ip) :: last
+      integer(ip) :: next
 
-      integer(ip)           k
-      logical               found
+      integer(ip) :: k
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -13799,20 +13799,20 @@ contains
       integer(ip), parameter :: shft8 = 2**8
       integer(ip), parameter :: shft16 = 2**16
       integer(ip), parameter :: shft24 = 2**24
-      character(1)          carg
-      character(strsiz)     tmpstr
-      real(wp)              dpbufr ( dpblen )
-      integer(ip)           i
-      integer(ip)           inbufr ( inblen )
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           lenipt
-      integer(ip)           numdp
-      integer(ip)           osign
-      integer(ip)           outpos
-      integer(ip)           value
+      character(1) :: carg
+      character(strsiz) :: tmpstr
+      real(wp) :: dpbufr ( dpblen )
+      integer(ip) :: i
+      integer(ip) :: inbufr ( inblen )
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: lenipt
+      integer(ip) :: numdp
+      integer(ip) :: osign
+      integer(ip) :: outpos
+      integer(ip) :: value
       equivalence         ( dpbufr, inbufr )
-      integer(ip)           zzichr
+      integer(ip) :: zzichr
 !     PEPPER: one portable form (ICHAR is 0:255 with current compilers; the
 !     MODULO also maps a signed ICHAR, as SPICELIB's g77 branch did).
       zzichr(carg) = modulo ( ichar(carg), 256 )
@@ -14655,18 +14655,18 @@ contains
 
       integer(ip), parameter :: bsize = 128
 
-      integer(ip)           begr
-      integer(ip)           begw
-      integer(ip)           endr
-      integer(ip)           endw
+      integer(ip) :: begr
+      integer(ip) :: begw
+      integer(ip) :: endr
+      integer(ip) :: endw
 
-      integer(ip)           recno
-      integer(ip)           first
-      integer(ip)           last
-      integer(ip)           next
+      integer(ip) :: recno
+      integer(ip) :: first
+      integer(ip) :: last
+      integer(ip) :: next
 
-      logical               found
-      logical               native
+      logical :: found
+      logical :: native
 
 !
 !     Standard SPICE error handling.
@@ -14920,9 +14920,9 @@ contains
 
       integer(ip), parameter :: ifnlen = 60
 
-      character(idwlen)     idword
+      character(idwlen) :: idword
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -15203,19 +15203,19 @@ contains
 !
       integer(ip), parameter :: tailen = 928
 
-      character(fmtlen)     format
-      character(idwlen)     idword
-      character(ifnlen)     ifn
-      character(ifnlen)     locifn
-      character(tailen)     tail
+      character(fmtlen) :: format
+      character(idwlen) :: idword
+      character(ifnlen) :: ifn
+      character(ifnlen) :: locifn
+      character(tailen) :: tail
 
-      integer(ip)           iostat
-      integer(ip)           locfdr
-      integer(ip)           locffa
-      integer(ip)           locldr
-      integer(ip)           locnd
-      integer(ip)           locni
-      integer(ip)           unit
+      integer(ip) :: iostat
+      integer(ip) :: locfdr
+      integer(ip) :: locffa
+      integer(ip) :: locldr
+      integer(ip) :: locnd
+      integer(ip) :: locni
+      integer(ip) :: unit
 
 !
 !     Standard SPICE error handling.
@@ -15416,15 +15416,15 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip), parameter :: bsize = 128
-      integer(ip)           begr
-      integer(ip)           begw
-      integer(ip)           endr
-      integer(ip)           endw
-      integer(ip)           recno
-      integer(ip)           first
-      integer(ip)           n
-      integer(ip)           next
-      logical               found
+      integer(ip) :: begr
+      integer(ip) :: begw
+      integer(ip) :: endr
+      integer(ip) :: endw
+      integer(ip) :: recno
+      integer(ip) :: first
+      integer(ip) :: n
+      integer(ip) :: next
+      logical :: found
       if ( .not. allocated ( ctx%dafwda_state ) ) allocate ( ctx%dafwda_state )
       associate ( buffer => ctx%dafwda_state%buffer )
       if ( ctx%failed() ) return
@@ -15712,28 +15712,28 @@ contains
 
       integer(ip), parameter :: maxc = maxd * 8
 
-      character(maxc)       crec
-      character(ifnlen)     ifname
+      character(maxc) :: crec
+      character(ifnlen) :: ifname
 
-      real(wp)              dc      ( maxd )
-      real(wp)              drec    ( wpr  )
-      real(wp)              sum     ( maxd )
+      real(wp) :: dc      ( maxd )
+      real(wp) :: drec    ( wpr  )
+      real(wp) :: sum     ( maxd )
 
-      integer(ip)           begblk
-      integer(ip)           bward
-      integer(ip)           endblk
-      integer(ip)           free
-      integer(ip)           fward
-      integer(ip)           i
-      integer(ip)           incr
-      integer(ip)           ic      ( maxi )
-      integer(ip)           nd
-      integer(ip)           next
-      integer(ip)           ni
-      integer(ip)           recno
-      integer(ip)           word
+      integer(ip) :: begblk
+      integer(ip) :: bward
+      integer(ip) :: endblk
+      integer(ip) :: free
+      integer(ip) :: fward
+      integer(ip) :: i
+      integer(ip) :: incr
+      integer(ip) :: ic      ( maxi )
+      integer(ip) :: nd
+      integer(ip) :: next
+      integer(ip) :: ni
+      integer(ip) :: recno
+      integer(ip) :: word
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -16017,8 +16017,8 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           unit
-      integer(ip)           iostat
+      integer(ip) :: unit
+      integer(ip) :: iostat
 
 !
 !     Standard SPICE error handling.
@@ -16177,8 +16177,8 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           unit
-      integer(ip)           iostat
+      integer(ip) :: unit
+      integer(ip) :: iostat
 
 !
 !     Standard SPICE error handling.
@@ -16361,19 +16361,19 @@ contains
 
       integer(ip), parameter :: sumlen = 128
 
-      character(namlen)     holdn
-      character(namlen)     tempn
+      character(namlen) :: holdn
+      character(namlen) :: tempn
 
-      real(wp)              holds    ( sumlen )
-      real(wp)              temps    ( sumlen )
+      real(wp) :: holds    ( sumlen )
+      real(wp) :: temps    ( sumlen )
 
-      integer(ip)           hold
-      integer(ip)           i
-      integer(ip)           index
-      integer(ip)           start
-      integer(ip)           total
+      integer(ip) :: hold
+      integer(ip) :: i
+      integer(ip) :: index
+      integer(ip) :: start
+      integer(ip) :: total
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -16686,28 +16686,28 @@ contains
 
       integer(ip), parameter :: maxc = maxd * 8
 
-      character(maxc)       crec
-      character(ifnlen)     ifname
+      character(maxc) :: crec
+      character(ifnlen) :: ifname
 
-      real(wp)              dc      ( maxd )
-      real(wp)              drec    ( wpr  )
-      real(wp)              sum     ( maxd )
+      real(wp) :: dc      ( maxd )
+      real(wp) :: drec    ( wpr  )
+      real(wp) :: sum     ( maxd )
 
-      integer(ip)           begblk
-      integer(ip)           bward
-      integer(ip)           decr
-      integer(ip)           endblk
-      integer(ip)           free
-      integer(ip)           fward
-      integer(ip)           ic      ( maxi )
-      integer(ip)           nd
-      integer(ip)           next
-      integer(ip)           ni
-      integer(ip)           recno
-      integer(ip)           remove
-      integer(ip)           word
+      integer(ip) :: begblk
+      integer(ip) :: bward
+      integer(ip) :: decr
+      integer(ip) :: endblk
+      integer(ip) :: free
+      integer(ip) :: fward
+      integer(ip) :: ic      ( maxi )
+      integer(ip) :: nd
+      integer(ip) :: next
+      integer(ip) :: ni
+      integer(ip) :: recno
+      integer(ip) :: remove
+      integer(ip) :: word
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -17178,34 +17178,34 @@ contains
       integer(ip), parameter :: maxpch = 126
 
       integer(ip), parameter :: minpch = 32
-      character(mxcrec)     crecrd
-      character(ifnlen)     ifname
+      character(mxcrec) :: crecrd
+      character(ifnlen) :: ifname
 
-      integer(ip)           curpos
-      integer(ip)           daflun
-      integer(ip)           eocpos
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           length
-      integer(ip)           nchars
-      integer(ip)           ncomc
-      integer(ip)           ncomr
-      integer(ip)           nelpos
-      integer(ip)           newrec
-      integer(ip)           notusd
-      integer(ip)           recno
-      integer(ip)           rinuse
-      integer(ip)           space
+      integer(ip) :: curpos
+      integer(ip) :: daflun
+      integer(ip) :: eocpos
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: length
+      integer(ip) :: nchars
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: nelpos
+      integer(ip) :: newrec
+      integer(ip) :: notusd
+      integer(ip) :: recno
+      integer(ip) :: rinuse
+      integer(ip) :: space
 
-      integer(ip)           iostat
-      integer(ip)           bward
-      integer(ip)           fward
-      integer(ip)           free
-      integer(ip)           nd
-      integer(ip)           ni
+      integer(ip) :: iostat
+      integer(ip) :: bward
+      integer(ip) :: fward
+      integer(ip) :: free
+      integer(ip) :: nd
+      integer(ip) :: ni
 
-      logical               empty
-      logical               found
+      logical :: empty
+      logical :: found
 !     Initial values
 !
 !     Constants (SPICELIB computed them on the first call).
@@ -17854,14 +17854,14 @@ contains
 !     Length of a DAF file internal filename.
 !
       integer(ip), parameter :: ifnlen = 60
-      character(ifnlen)     ifname
+      character(ifnlen) :: ifname
 
-      integer(ip)           bward
-      integer(ip)           free
-      integer(ip)           fward
-      integer(ip)           ncomr
-      integer(ip)           nd
-      integer(ip)           ni
+      integer(ip) :: bward
+      integer(ip) :: free
+      integer(ip) :: fward
+      integer(ip) :: ncomr
+      integer(ip) :: nd
+      integer(ip) :: ni
 
 !
 !     Standard SPICE error handling.
@@ -18434,31 +18434,31 @@ contains
       integer(ip), parameter :: inteoc = 4
       integer(ip), parameter :: inteol = 0
       integer(ip), parameter :: mxcrec = 1000
-      character(1)          ch
-      character(ifnlen)     ifname
-      integer(ip)           curpos
-      integer(ip)           daflun
-      integer(ip)           eocpos
-      integer(ip)           i
-      integer(ip)           index
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linlen
-      integer(ip)           nchars
-      integer(ip)           ncomc
-      integer(ip)           ncomr
-      integer(ip)           nelpos
-      integer(ip)           numcom
-      integer(ip)           recno
-      integer(ip)           iostat
-      integer(ip)           bward
-      integer(ip)           fward
-      integer(ip)           free
-      integer(ip)           nd
-      integer(ip)           ni
-      logical               empty
-      logical               eol
-      logical               found
+      character(1) :: ch
+      character(ifnlen) :: ifname
+      integer(ip) :: curpos
+      integer(ip) :: daflun
+      integer(ip) :: eocpos
+      integer(ip) :: i
+      integer(ip) :: index
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: linlen
+      integer(ip) :: nchars
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: nelpos
+      integer(ip) :: numcom
+      integer(ip) :: recno
+      integer(ip) :: iostat
+      integer(ip) :: bward
+      integer(ip) :: fward
+      integer(ip) :: free
+      integer(ip) :: nd
+      integer(ip) :: ni
+      logical :: empty
+      logical :: eol
+      logical :: found
       if ( .not. allocated ( ctx%dafec_state ) ) then
          allocate ( ctx%dafec_state )
          call init_dafec_state ( ctx%dafec_state )
@@ -23546,32 +23546,32 @@ contains
       integer(ip), parameter :: ifnlen = 60
 
       integer(ip), parameter :: linlen = 80
-      character(idwlen)     idword
-      character(ifnlen)     ifname
-      character(linlen)     line
-      character(crecl)      name
+      character(idwlen) :: idword
+      character(ifnlen) :: ifname
+      character(linlen) :: line
+      character(crecl) :: name
 
-      real(wp)              buffer( bufsiz )
-      real(wp)              dsumry( 125    )
-      real(wp)              summry( 125    )
+      real(wp) :: buffer( bufsiz )
+      real(wp) :: dsumry( 125    )
+      real(wp) :: summry( 125    )
 
-      integer(ip)           binhdl
-      integer(ip)           binlun
-      integer(ip)           bward
-      integer(ip)           dtabeg
-      integer(ip)           dtacnt
-      integer(ip)           free
-      integer(ip)           fward
-      integer(ip)           iostat
-      integer(ip)           isumry( 250    )
-      integer(ip)           nd
-      integer(ip)           ni
-      integer(ip)           numarr
-      integer(ip)           numdta
-      integer(ip)           numlft
-      integer(ip)           snmlen
+      integer(ip) :: binhdl
+      integer(ip) :: binlun
+      integer(ip) :: bward
+      integer(ip) :: dtabeg
+      integer(ip) :: dtacnt
+      integer(ip) :: free
+      integer(ip) :: fward
+      integer(ip) :: iostat
+      integer(ip) :: isumry( 250    )
+      integer(ip) :: nd
+      integer(ip) :: ni
+      integer(ip) :: numarr
+      integer(ip) :: numdta
+      integer(ip) :: numlft
+      integer(ip) :: snmlen
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -24192,7 +24192,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           unit
+      integer(ip) :: unit
 
 !
 !     Standard SPICE error handling.
@@ -24374,7 +24374,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           unit
+      integer(ip) :: unit
 
 !
 !     Standard SPICE error handling.
@@ -24655,32 +24655,32 @@ contains
 
       character(*), parameter :: quote = ''''
 
-      character(idwlen)     idword
-      character(60)         ifname
-      character(1000)       name
+      character(idwlen) :: idword
+      character(60) :: ifname
+      character(1000) :: name
 
-      real(wp)              buffer   ( bsize )
-      real(wp)              dc       ( 125 )
-      real(wp)              sum      ( 125 )
+      real(wp) :: buffer   ( bsize )
+      real(wp) :: dc       ( 125 )
+      real(wp) :: sum      ( 125 )
 
-      integer(ip)           begin
-      integer(ip)           bward
-      integer(ip)           chunk
-      integer(ip)           csize
-      integer(ip)           daflun
-      integer(ip)           end
-      integer(ip)           free
-      integer(ip)           fward
-      integer(ip)           handle
-      integer(ip)           i
-      integer(ip)           ic       ( 250 )
-      integer(ip)           iostat
-      integer(ip)           isize
-      integer(ip)           lsize
-      integer(ip)           nd
-      integer(ip)           ni
+      integer(ip) :: begin
+      integer(ip) :: bward
+      integer(ip) :: chunk
+      integer(ip) :: csize
+      integer(ip) :: daflun
+      integer(ip) :: end
+      integer(ip) :: free
+      integer(ip) :: fward
+      integer(ip) :: handle
+      integer(ip) :: i
+      integer(ip) :: ic       ( 250 )
+      integer(ip) :: iostat
+      integer(ip) :: isize
+      integer(ip) :: lsize
+      integer(ip) :: nd
+      integer(ip) :: ni
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -25250,26 +25250,26 @@ contains
 
       integer(ip), parameter :: idwlen = 8
 
-      character(1000)       name     ( 2 )
-      character(idwlen)     idword
-      character(60)         ifname   ( 2 )
-      character(idwlen)     tarch
-      character(idwlen)     ttype
+      character(1000) :: name     ( 2 )
+      character(idwlen) :: idword
+      character(60) :: ifname   ( 2 )
+      character(idwlen) :: tarch
+      character(idwlen) :: ttype
 
-      real(wp)              buffer   ( bsize )
-      real(wp)              dc       ( 125 )
-      real(wp)              sum      ( 125 )
+      real(wp) :: buffer   ( bsize )
+      real(wp) :: dc       ( 125 )
+      real(wp) :: sum      ( 125 )
 
-      integer(ip)           chunk
-      integer(ip)           handle
-      integer(ip)           i
-      integer(ip)           ic       ( 250 )
-      integer(ip)           iostat
-      integer(ip)           isize
-      integer(ip)           lsize
-      integer(ip)           more
-      integer(ip)           nd
-      integer(ip)           ni
+      integer(ip) :: chunk
+      integer(ip) :: handle
+      integer(ip) :: i
+      integer(ip) :: ic       ( 250 )
+      integer(ip) :: iostat
+      integer(ip) :: isize
+      integer(ip) :: lsize
+      integer(ip) :: more
+      integer(ip) :: nd
+      integer(ip) :: ni
 
 !
 !     Standard SPICE error handling.
@@ -25770,40 +25770,40 @@ contains
       integer(ip), parameter :: crecl = 1000
 
       integer(ip), parameter :: resrec = 0
-      character(idwlen)     idword
-      character(ifnlen)     ifname
-      character(errlen)     errmsg
-      character(linlen)     line
-      character(crecl)      name
-      character(linlen)     rest
-      character(idwlen)     tarch
-      character(idwlen)     ttype
-      character(linlen)     word
+      character(idwlen) :: idword
+      character(ifnlen) :: ifname
+      character(errlen) :: errmsg
+      character(linlen) :: line
+      character(crecl) :: name
+      character(linlen) :: rest
+      character(idwlen) :: tarch
+      character(idwlen) :: ttype
+      character(linlen) :: word
 
-      real(wp)              buffer( bufsiz )
-      real(wp)              dsumry( 125    )
-      real(wp)              summry( 125    )
+      real(wp) :: buffer( bufsiz )
+      real(wp) :: dsumry( 125    )
+      real(wp) :: summry( 125    )
 
-      integer(ip)           arrcnt
-      integer(ip)           barr
-      integer(ip)           bcnt
-      integer(ip)           binhdl
-      integer(ip)           dtacnt
-      integer(ip)           earr
-      integer(ip)           ecnt
-      integer(ip)           errptr
-      integer(ip)           iostat
-      integer(ip)           isumry( 250    )
-      integer(ip)           lftovr
-      integer(ip)           nd
-      integer(ip)           ni
-      integer(ip)           numarr
-      integer(ip)           numdta
-      integer(ip)           numlft
-      integer(ip)           snmlen
+      integer(ip) :: arrcnt
+      integer(ip) :: barr
+      integer(ip) :: bcnt
+      integer(ip) :: binhdl
+      integer(ip) :: dtacnt
+      integer(ip) :: earr
+      integer(ip) :: ecnt
+      integer(ip) :: errptr
+      integer(ip) :: iostat
+      integer(ip) :: isumry( 250    )
+      integer(ip) :: lftovr
+      integer(ip) :: nd
+      integer(ip) :: ni
+      integer(ip) :: numarr
+      integer(ip) :: numdta
+      integer(ip) :: numlft
+      integer(ip) :: snmlen
 
-      logical               inarr
-      logical               more
+      logical :: inarr
+      logical :: more
 !
 !     Standard/ SPICE error handling.
 !

@@ -119,17 +119,17 @@ contains
       use pepper_math, only: gcd
       implicit none
 
-      character(1)     last
-      character(1)     temp
+      character(1) :: last
+      character(1) :: temp
 
-      integer(ip)      g
-      integer(ip)      i
-      integer(ip)      j
-      integer(ip)      k
-      integer(ip)      l
-      integer(ip)      m
-      integer(ip)      n
-      integer(ip)      limit
+      integer(ip) :: g
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: l
+      integer(ip) :: m
+      integer(ip) :: n
+      integer(ip) :: limit
 
       if ( ctx%failed() ) return
 !
@@ -523,16 +523,16 @@ contains
 
       integer(ip), parameter :: maxldp = 23
 
-      character(maxldp)     substr
+      character(maxldp) :: substr
 
-      integer(ip)           mrknbf
-      integer(ip)           mrknbl
+      integer(ip) :: mrknbf
+      integer(ip) :: mrknbl
 
-      integer(ip)           mrkpsb
-      integer(ip)           mrkpse
+      integer(ip) :: mrkpsb
+      integer(ip) :: mrkpse
 
-      integer(ip)           subnbf
-      integer(ip)           subnbl
+      integer(ip) :: subnbf
+      integer(ip) :: subnbl
 
 !
 !     If MARKER is blank, no substitution is possible.
@@ -781,13 +781,13 @@ contains
 
       integer(ip), parameter :: maxli = 11
 
-      character(maxli)      substr
+      character(maxli) :: substr
 
-      integer(ip)           mrknbf
-      integer(ip)           mrknbl
+      integer(ip) :: mrknbf
+      integer(ip) :: mrknbl
 
-      integer(ip)           mrkpsb
-      integer(ip)           mrkpse
+      integer(ip) :: mrkpsb
+      integer(ip) :: mrkpse
 
 !
 !     If MARKER is blank, no substitution is possible.
@@ -960,16 +960,16 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           inlen
-      integer(ip)           strlen
-      integer(ip)           outlen
+      integer(ip) :: inlen
+      integer(ip) :: strlen
+      integer(ip) :: outlen
 
-      integer(ip)           remain
-      integer(ip)           use         ( 3 )
+      integer(ip) :: remain
+      integer(ip) :: use         ( 3 )
 
-      integer(ip)           end
-      integer(ip)           next
-      integer(ip)           i
+      integer(ip) :: end
+      integer(ip) :: next
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -1191,16 +1191,16 @@ contains
 !
 !     Other functions
 !
-      integer(ip)      len
+      integer(ip) :: len
 
-      integer(ip)      inlen
-      integer(ip)      outlen
+      integer(ip) :: inlen
+      integer(ip) :: outlen
 
-      integer(ip)      l
-      integer(ip)      r
+      integer(ip) :: l
+      integer(ip) :: r
 
-      integer(ip)      i
-      integer(ip)      j
+      integer(ip) :: i
+      integer(ip) :: j
 
 !
 !     Standard SPICE error handling.
@@ -1452,18 +1452,18 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      character(1)          chr
+      character(1) :: chr
 
-      integer(ip)           from
-      integer(ip)           i
-      integer(ip)           inlen
-      integer(ip)           nmove
-      integer(ip)           outlen
-      integer(ip)           subend
-      integer(ip)           sublen
-      integer(ip)           to
+      integer(ip) :: from
+      integer(ip) :: i
+      integer(ip) :: inlen
+      integer(ip) :: nmove
+      integer(ip) :: outlen
+      integer(ip) :: subend
+      integer(ip) :: sublen
+      integer(ip) :: to
 
-      logical               same
+      logical :: same
 
 !
 !     Discovery check-in is used in this routine.
@@ -1843,9 +1843,9 @@ contains
       use pepper_strings, only: frstnp
       implicit none
 
-      integer(ip)           chrcod
-      integer(ip)           i
-      integer(ip)           l
+      integer(ip) :: chrcod
+      integer(ip) :: i
+      integer(ip) :: l
 
 !
 !     Standard SPICE error handling.
@@ -2057,11 +2057,11 @@ contains
       use pepper_strings, only: astrip
       implicit none
 
-      integer(ip)           chars
-      integer(ip)           iostat
-      integer(ip)           linect
+      integer(ip) :: chars
+      integer(ip) :: iostat
+      integer(ip) :: linect
 
-      logical               done
+      logical :: done
 
 !
 !     Standard SPICE error handling.
@@ -2447,15 +2447,15 @@ contains
       integer(ip), parameter :: minmod = base * mini - intmin
       integer(ip), parameter :: maxi   = intmax / base
       integer(ip), parameter :: maxmod = intmax - base * maxi
-      integer(ip)           idigit
-      integer(ip)           letter
-      integer(ip)           pos
-      integer(ip)           strbeg
-      integer(ip)           strend
-      integer(ip)           tmpnum
+      integer(ip) :: idigit
+      integer(ip) :: letter
+      integer(ip) :: pos
+      integer(ip) :: strbeg
+      integer(ip) :: strend
+      integer(ip) :: tmpnum
 
-      logical               more
-      logical               negtiv
+      logical :: more
+      logical :: negtiv
 
 !
 !     The input hexadecimal string is scanned from left to right, and
@@ -2934,7 +2934,7 @@ contains
 !
 !     Linked list parameters
 !
-      integer(ip)           next
+      integer(ip) :: next
       parameter           ( next = 1 )
 
       integer(ip), parameter :: prev = 2
@@ -2943,15 +2943,15 @@ contains
 !     Local Variables.
 !
 
-      integer(ip)           last
-      integer(ip)           nfree
-      integer(ip)           psize
-      integer(ip)           i
-      integer(ip)           head
-      integer(ip)           new
+      integer(ip) :: last
+      integer(ip) :: nfree
+      integer(ip) :: psize
+      integer(ip) :: i
+      integer(ip) :: head
+      integer(ip) :: new
 
-      logical               more
-      logical               same
+      logical :: more
+      logical :: same
 
 !
 !     We begin by looking through the list of items at our disposal.
@@ -3513,13 +3513,13 @@ contains
       use pepper_strings, only: ltrim
       implicit none
 
-      integer(ip)           bltemp
-      integer(ip)           eltemp
-      integer(ip)           iostat
+      integer(ip) :: bltemp
+      integer(ip) :: eltemp
+      integer(ip) :: iostat
 
-      logical               bfound
-      logical               efound
-      logical               eof
+      logical :: bfound
+      logical :: efound
+      logical :: eof
 
 !
 !     Standard SPICE error handling.

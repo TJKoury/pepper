@@ -1233,22 +1233,22 @@ contains
       integer(ip), parameter :: maxenc = 64
 
       integer(ip), parameter :: errlen = 80
-      character(1)          ch
-      character(maxenc)     encchr
-      character(errlen)     errmsg
-      character(mxescd)     hexnum
+      character(1) :: ch
+      character(maxenc) :: encchr
+      character(errlen) :: errmsg
+      character(mxescd) :: hexnum
 
-      integer(ip)           dtalen
-      integer(ip)           dtalin
-      integer(ip)           dtapos
-      integer(ip)           encpos
-      integer(ip)           intch
-      integer(ip)           iostat
-      integer(ip)           nchars
-      integer(ip)           nescd
+      integer(ip) :: dtalen
+      integer(ip) :: dtalin
+      integer(ip) :: dtapos
+      integer(ip) :: encpos
+      integer(ip) :: intch
+      integer(ip) :: iostat
+      integer(ip) :: nchars
+      integer(ip) :: nescd
 
-      logical               error
-      logical               escape
+      logical :: error
+      logical :: escape
 
 !
 !     Standard SPICE error handling.
@@ -1887,25 +1887,25 @@ contains
       character(1), parameter :: chrlpc = '~'
       integer(ip), parameter :: maxenc = 64
       integer(ip), parameter :: hexbas = 16
-      character(1)          carg
-      character(1)          ch
-      character(maxenc)     encchr
+      character(1) :: carg
+      character(1) :: ch
+      character(maxenc) :: encchr
       character(1), parameter :: hexdig(0:15) = &
          [ character(1) :: '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', &
            'C', 'D', 'E', 'F' ]
-      character(2)          lftovr
-      integer(ip)           dtalen
-      integer(ip)           dtalin
-      integer(ip)           dtapos
-      integer(ip)           encpos
-      integer(ip)           hibits
-      integer(ip)           intch
-      integer(ip)           iostat
-      integer(ip)           lobits
-      integer(ip)           nchars
-      integer(ip)           nchout
-      integer(ip)           room
-      integer(ip)           zzichr
+      character(2) :: lftovr
+      integer(ip) :: dtalen
+      integer(ip) :: dtalin
+      integer(ip) :: dtapos
+      integer(ip) :: encpos
+      integer(ip) :: hibits
+      integer(ip) :: intch
+      integer(ip) :: iostat
+      integer(ip) :: lobits
+      integer(ip) :: nchars
+      integer(ip) :: nchout
+      integer(ip) :: room
+      integer(ip) :: zzichr
       zzichr(carg) = ichar(carg) - max( -1, min(0,ichar(carg)) )*256
       if ( .not. allocated ( ctx%wrencc_state ) ) allocate ( ctx%wrencc_state )
       associate ( intesc => ctx%wrencc_state%intesc, &
@@ -2423,13 +2423,13 @@ contains
 !     but the Fortran standard does not specify a value, so it may be
 !     different for different fortran implementations.
 !
-      integer(ip)           stdout
+      integer(ip) :: stdout
       parameter           ( stdout = 6 )
 #else
 #endif
 !     Local variables
 !
-      integer(ip)           iostat
+      integer(ip) :: iostat
 
 #if defined(SPICE_OS_WINDOWS) && defined(SPICE_COMPILER_INTEL)
 !     Some environments make a distinction between a text file and the
@@ -2597,7 +2597,7 @@ contains
 
 !     Local variables
 !
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -2724,7 +2724,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 20-DEC-1995 (KRG)
       module procedure readln
       use pepper_kinds, only: ip
-      integer(ip)           iostat
+      integer(ip) :: iostat
 !
 !     Standard SPICE error handling.
 !
@@ -2961,9 +2961,9 @@ contains
 
 !     Local variables
 !
-      integer(ip)           i
+      integer(ip) :: i
 
-      logical               myeof
+      logical :: myeof
 !
 !     Standard SPICE error handling.
 !
@@ -3102,13 +3102,13 @@ contains
       use pepper_inc_das
       implicit none
       integer(ip), parameter :: filsiz = 255
-      character(nwc)        chrrec
-      character(1)     fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
-      integer(ip)           intamh
-      integer(ip)           intarc
-      integer(ip)           iostat
-      integer(ip)           unit
-      logical               found
+      character(nwc) :: chrrec
+      character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
+      integer(ip) :: intamh
+      integer(ip) :: intarc
+      integer(ip) :: iostat
+      integer(ip) :: unit
+      logical :: found
       if ( .not. allocated ( ctx%zzdasgrd_state ) ) allocate ( ctx%zzdasgrd_state )
       associate ( first => ctx%zzdasgrd_state%first, &
                   intbff => ctx%zzdasgrd_state%intbff, &
@@ -3285,13 +3285,13 @@ contains
       use pepper_inc_das
       implicit none
       integer(ip), parameter :: filsiz = 255
-      character(nwc)        chrrec
-      character(1)     fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
-      integer(ip)           intamh
-      integer(ip)           intarc
-      integer(ip)           iostat
-      integer(ip)           unit
-      logical               found
+      character(nwc) :: chrrec
+      character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
+      integer(ip) :: intamh
+      integer(ip) :: intarc
+      integer(ip) :: iostat
+      integer(ip) :: unit
+      logical :: found
       if ( .not. allocated ( ctx%zzdasgri_state ) ) allocate ( ctx%zzdasgri_state )
       associate ( first => ctx%zzdasgri_state%first, &
                   intbff => ctx%zzdasgri_state%intbff, &
@@ -3508,16 +3508,16 @@ contains
       integer(ip), parameter :: fmtlen = 8
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
-      character(1)          nullch
-      character(fmtlen)     locfmt
-      character(idwlen)     locidw
-      character(ifnlen)     locifn
-      character(sizdlm)     delim
-      character(sizend)     lftbkt
-      character(sizend)     rgtbkt
-      character(sizstr)     tststr
-      integer(ip)           i
-      integer(ip)           iostat
+      character(1) :: nullch
+      character(fmtlen) :: locfmt
+      character(idwlen) :: locidw
+      character(ifnlen) :: locifn
+      character(sizdlm) :: delim
+      character(sizend) :: lftbkt
+      character(sizend) :: rgtbkt
+      character(sizstr) :: tststr
+      integer(ip) :: i
+      integer(ip) :: iostat
       if ( .not. allocated ( ctx%zzdasnfr_state ) ) allocate ( ctx%zzdasnfr_state )
       associate ( first => ctx%zzdasnfr_state%first, &
                   ftpstr => ctx%zzdasnfr_state%ftpstr, &
@@ -3788,12 +3788,12 @@ contains
       integer(ip), parameter :: endncr = 80
       integer(ip), parameter :: begncc = 81
       integer(ip), parameter :: endncc = 84
-      character(nwc)        chrbuf
-      character(idwlen)     tmpidw
-      character(ifnlen)     tmpifn
-      integer(ip)           ibff
-      integer(ip)           iostat
-      integer(ip)           unit
+      character(nwc) :: chrbuf
+      character(idwlen) :: tmpidw
+      character(ifnlen) :: tmpifn
+      integer(ip) :: ibff
+      integer(ip) :: iostat
+      integer(ip) :: unit
       if ( .not. allocated ( ctx%zzdasrfr_state ) ) allocate ( ctx%zzdasrfr_state )
       associate ( first => ctx%zzdasrfr_state%first, &
                   natbff => ctx%zzdasrfr_state%natbff )
@@ -4278,42 +4278,42 @@ contains
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
          [ 3, 1, 2 ]
-      character(acclen)     acc
-      character(fmtlen)     format
-      character(idwlen)     idword
-      character(ifnlen)     locifn
-      character(fmtlen)     locfmt
-      character(tailen)     tail
-      character(typlen)     ttype
-      integer(ip)           curtyp
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dsctyp
-      integer(ip)           endrec
-      integer(ip)           fnb
-      integer(ip)           findex
-      integer(ip)           i
-      integer(ip)           inqsta
-      integer(ip)           iostat
-      integer(ip)           last
-      integer(ip)           ldrec  ( 3 )
-      integer(ip)           ldrmax
-      integer(ip)           loc
-      integer(ip)           loccch
-      integer(ip)           loccrc
-      integer(ip)           locrrc
-      integer(ip)           locrch
-      integer(ip)           maxadr
-      integer(ip)           new
-      integer(ip)           nrec
-      integer(ip)           number
+      character(acclen) :: acc
+      character(fmtlen) :: format
+      character(idwlen) :: idword
+      character(ifnlen) :: locifn
+      character(fmtlen) :: locfmt
+      character(tailen) :: tail
+      character(typlen) :: ttype
+      integer(ip) :: curtyp
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dsctyp
+      integer(ip) :: endrec
+      integer(ip) :: fnb
+      integer(ip) :: findex
+      integer(ip) :: i
+      integer(ip) :: inqsta
+      integer(ip) :: iostat
+      integer(ip) :: last
+      integer(ip) :: ldrec  ( 3 )
+      integer(ip) :: ldrmax
+      integer(ip) :: loc
+      integer(ip) :: loccch
+      integer(ip) :: loccrc
+      integer(ip) :: locrrc
+      integer(ip) :: locrch
+      integer(ip) :: maxadr
+      integer(ip) :: new
+      integer(ip) :: nrec
+      integer(ip) :: number
       integer(ip), parameter :: nw     ( 3 ) = &
          [ nwc, nwd, nwi ]
-      integer(ip)           nxtdir
-      integer(ip)           nxtrec
-      integer(ip)           pos
-      integer(ip)           prvtyp
-      integer(ip)           type
-      logical               found
+      integer(ip) :: nxtdir
+      integer(ip) :: nxtrec
+      integer(ip) :: pos
+      integer(ip) :: prvtyp
+      integer(ip) :: type
+      logical :: found
       if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
@@ -4924,42 +4924,42 @@ contains
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
          [ 3, 1, 2 ]
-      character(acclen)     acc
-      character(fmtlen)     format
-      character(idwlen)     idword
-      character(ifnlen)     locifn
-      character(fmtlen)     locfmt
-      character(tailen)     tail
-      character(typlen)     ttype
-      integer(ip)           curtyp
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dsctyp
-      integer(ip)           endrec
-      integer(ip)           fnb
-      integer(ip)           findex
-      integer(ip)           i
-      integer(ip)           inqsta
-      integer(ip)           iostat
-      integer(ip)           last
-      integer(ip)           ldrec  ( 3 )
-      integer(ip)           ldrmax
-      integer(ip)           loc
-      integer(ip)           loccch
-      integer(ip)           loccrc
-      integer(ip)           locrrc
-      integer(ip)           locrch
-      integer(ip)           maxadr
-      integer(ip)           new
-      integer(ip)           nrec
-      integer(ip)           number
+      character(acclen) :: acc
+      character(fmtlen) :: format
+      character(idwlen) :: idword
+      character(ifnlen) :: locifn
+      character(fmtlen) :: locfmt
+      character(tailen) :: tail
+      character(typlen) :: ttype
+      integer(ip) :: curtyp
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dsctyp
+      integer(ip) :: endrec
+      integer(ip) :: fnb
+      integer(ip) :: findex
+      integer(ip) :: i
+      integer(ip) :: inqsta
+      integer(ip) :: iostat
+      integer(ip) :: last
+      integer(ip) :: ldrec  ( 3 )
+      integer(ip) :: ldrmax
+      integer(ip) :: loc
+      integer(ip) :: loccch
+      integer(ip) :: loccrc
+      integer(ip) :: locrrc
+      integer(ip) :: locrch
+      integer(ip) :: maxadr
+      integer(ip) :: new
+      integer(ip) :: nrec
+      integer(ip) :: number
       integer(ip), parameter :: nw     ( 3 ) = &
          [ nwc, nwd, nwi ]
-      integer(ip)           nxtdir
-      integer(ip)           nxtrec
-      integer(ip)           pos
-      integer(ip)           prvtyp
-      integer(ip)           type
-      logical               found
+      integer(ip) :: nxtdir
+      integer(ip) :: nxtrec
+      integer(ip) :: pos
+      integer(ip) :: prvtyp
+      integer(ip) :: type
+      logical :: found
       if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
@@ -5490,41 +5490,41 @@ contains
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
          [ 3, 1, 2 ]
-      character(acclen)     acc
-      character(fmtlen)     format
-      character(idwlen)     idword
-      character(ifnlen)     locifn
-      character(fmtlen)     locfmt
-      character(tailen)     tail
-      character(typlen)     ttype
-      integer(ip)           curtyp
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dsctyp
-      integer(ip)           endrec
-      integer(ip)           fnb
-      integer(ip)           findex
-      integer(ip)           i
-      integer(ip)           inqsta
-      integer(ip)           iostat
-      integer(ip)           last
-      integer(ip)           ldrec  ( 3 )
-      integer(ip)           ldrmax
-      integer(ip)           loc
-      integer(ip)           loccch
-      integer(ip)           loccrc
-      integer(ip)           locrrc
-      integer(ip)           locrch
-      integer(ip)           maxadr
-      integer(ip)           new
-      integer(ip)           nrec
-      integer(ip)           number
+      character(acclen) :: acc
+      character(fmtlen) :: format
+      character(idwlen) :: idword
+      character(ifnlen) :: locifn
+      character(fmtlen) :: locfmt
+      character(tailen) :: tail
+      character(typlen) :: ttype
+      integer(ip) :: curtyp
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dsctyp
+      integer(ip) :: endrec
+      integer(ip) :: fnb
+      integer(ip) :: findex
+      integer(ip) :: i
+      integer(ip) :: inqsta
+      integer(ip) :: iostat
+      integer(ip) :: last
+      integer(ip) :: ldrec  ( 3 )
+      integer(ip) :: ldrmax
+      integer(ip) :: loc
+      integer(ip) :: loccch
+      integer(ip) :: loccrc
+      integer(ip) :: locrrc
+      integer(ip) :: locrch
+      integer(ip) :: maxadr
+      integer(ip) :: new
+      integer(ip) :: nrec
+      integer(ip) :: number
       integer(ip), parameter :: nw     ( 3 ) = &
          [ nwc, nwd, nwi ]
-      integer(ip)           nxtdir
-      integer(ip)           nxtrec
-      integer(ip)           prvtyp
-      integer(ip)           type
-      logical               found
+      integer(ip) :: nxtdir
+      integer(ip) :: nxtrec
+      integer(ip) :: prvtyp
+      integer(ip) :: type
+      logical :: found
       if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
@@ -6007,41 +6007,41 @@ contains
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
          [ 3, 1, 2 ]
-      character(acclen)     acc
-      character(fmtlen)     format
-      character(idwlen)     idword
-      character(ifnlen)     locifn
-      character(fmtlen)     locfmt
-      character(tailen)     tail
-      character(typlen)     ttype
-      integer(ip)           curtyp
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dsctyp
-      integer(ip)           endrec
-      integer(ip)           fnb
-      integer(ip)           findex
-      integer(ip)           i
-      integer(ip)           inqsta
-      integer(ip)           iostat
-      integer(ip)           last
-      integer(ip)           ldrec  ( 3 )
-      integer(ip)           ldrmax
-      integer(ip)           loc
-      integer(ip)           loccch
-      integer(ip)           loccrc
-      integer(ip)           locrrc
-      integer(ip)           locrch
-      integer(ip)           maxadr
-      integer(ip)           new
-      integer(ip)           nrec
-      integer(ip)           number
+      character(acclen) :: acc
+      character(fmtlen) :: format
+      character(idwlen) :: idword
+      character(ifnlen) :: locifn
+      character(fmtlen) :: locfmt
+      character(tailen) :: tail
+      character(typlen) :: ttype
+      integer(ip) :: curtyp
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dsctyp
+      integer(ip) :: endrec
+      integer(ip) :: fnb
+      integer(ip) :: findex
+      integer(ip) :: i
+      integer(ip) :: inqsta
+      integer(ip) :: iostat
+      integer(ip) :: last
+      integer(ip) :: ldrec  ( 3 )
+      integer(ip) :: ldrmax
+      integer(ip) :: loc
+      integer(ip) :: loccch
+      integer(ip) :: loccrc
+      integer(ip) :: locrrc
+      integer(ip) :: locrch
+      integer(ip) :: maxadr
+      integer(ip) :: new
+      integer(ip) :: nrec
+      integer(ip) :: number
       integer(ip), parameter :: nw     ( 3 ) = &
          [ nwc, nwd, nwi ]
-      integer(ip)           nxtdir
-      integer(ip)           nxtrec
-      integer(ip)           prvtyp
-      integer(ip)           type
-      logical               found
+      integer(ip) :: nxtdir
+      integer(ip) :: nxtrec
+      integer(ip) :: prvtyp
+      integer(ip) :: type
+      logical :: found
       if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
@@ -6459,42 +6459,42 @@ contains
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
          [ 3, 1, 2 ]
-      character(acclen)     acc
-      character(fmtlen)     format
-      character(idwlen)     idword
-      character(filen)      locdas
-      character(ifnlen)     locifn
-      character(fmtlen)     locfmt
-      character(tailen)     tail
-      character(typlen)     ttype
-      integer(ip)           curtyp
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dsctyp
-      integer(ip)           endrec
-      integer(ip)           fnb
-      integer(ip)           findex
-      integer(ip)           i
-      integer(ip)           inqsta
-      integer(ip)           iostat
-      integer(ip)           last
-      integer(ip)           ldrec  ( 3 )
-      integer(ip)           ldrmax
-      integer(ip)           loc
-      integer(ip)           loccch
-      integer(ip)           loccrc
-      integer(ip)           locrrc
-      integer(ip)           locrch
-      integer(ip)           maxadr
-      integer(ip)           new
-      integer(ip)           nrec
-      integer(ip)           number
+      character(acclen) :: acc
+      character(fmtlen) :: format
+      character(idwlen) :: idword
+      character(filen) :: locdas
+      character(ifnlen) :: locifn
+      character(fmtlen) :: locfmt
+      character(tailen) :: tail
+      character(typlen) :: ttype
+      integer(ip) :: curtyp
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dsctyp
+      integer(ip) :: endrec
+      integer(ip) :: fnb
+      integer(ip) :: findex
+      integer(ip) :: i
+      integer(ip) :: inqsta
+      integer(ip) :: iostat
+      integer(ip) :: last
+      integer(ip) :: ldrec  ( 3 )
+      integer(ip) :: ldrmax
+      integer(ip) :: loc
+      integer(ip) :: loccch
+      integer(ip) :: loccrc
+      integer(ip) :: locrrc
+      integer(ip) :: locrch
+      integer(ip) :: maxadr
+      integer(ip) :: new
+      integer(ip) :: nrec
+      integer(ip) :: number
       integer(ip), parameter :: nw     ( 3 ) = &
          [ nwc, nwd, nwi ]
-      integer(ip)           nxtdir
-      integer(ip)           nxtrec
-      integer(ip)           prvtyp
-      integer(ip)           type
-      logical               found
+      integer(ip) :: nxtdir
+      integer(ip) :: nxtrec
+      integer(ip) :: prvtyp
+      integer(ip) :: type
+      logical :: found
       if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
@@ -7042,41 +7042,41 @@ contains
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
          [ 3, 1, 2 ]
-      character(acclen)     acc
-      character(fmtlen)     format
-      character(idwlen)     idword
-      character(ifnlen)     locifn
-      character(fmtlen)     locfmt
-      character(tailen)     tail
-      character(typlen)     ttype
-      integer(ip)           curtyp
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dsctyp
-      integer(ip)           endrec
-      integer(ip)           fnb
-      integer(ip)           findex
-      integer(ip)           i
-      integer(ip)           inqsta
-      integer(ip)           iostat
-      integer(ip)           last
-      integer(ip)           ldrec  ( 3 )
-      integer(ip)           ldrmax
-      integer(ip)           loc
-      integer(ip)           loccch
-      integer(ip)           loccrc
-      integer(ip)           locrrc
-      integer(ip)           locrch
-      integer(ip)           maxadr
-      integer(ip)           new
-      integer(ip)           nrec
-      integer(ip)           number
+      character(acclen) :: acc
+      character(fmtlen) :: format
+      character(idwlen) :: idword
+      character(ifnlen) :: locifn
+      character(fmtlen) :: locfmt
+      character(tailen) :: tail
+      character(typlen) :: ttype
+      integer(ip) :: curtyp
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dsctyp
+      integer(ip) :: endrec
+      integer(ip) :: fnb
+      integer(ip) :: findex
+      integer(ip) :: i
+      integer(ip) :: inqsta
+      integer(ip) :: iostat
+      integer(ip) :: last
+      integer(ip) :: ldrec  ( 3 )
+      integer(ip) :: ldrmax
+      integer(ip) :: loc
+      integer(ip) :: loccch
+      integer(ip) :: loccrc
+      integer(ip) :: locrrc
+      integer(ip) :: locrch
+      integer(ip) :: maxadr
+      integer(ip) :: new
+      integer(ip) :: nrec
+      integer(ip) :: number
       integer(ip), parameter :: nw     ( 3 ) = &
          [ nwc, nwd, nwi ]
-      integer(ip)           nxtdir
-      integer(ip)           nxtrec
-      integer(ip)           prvtyp
-      integer(ip)           type
-      logical               found
+      integer(ip) :: nxtdir
+      integer(ip) :: nxtrec
+      integer(ip) :: prvtyp
+      integer(ip) :: type
+      logical :: found
       if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
@@ -7575,41 +7575,41 @@ contains
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
          [ 3, 1, 2 ]
-      character(acclen)     acc
-      character(fmtlen)     format
-      character(idwlen)     idword
-      character(ifnlen)     locifn
-      character(fmtlen)     locfmt
-      character(tailen)     tail
-      character(typlen)     ttype
-      integer(ip)           curtyp
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dsctyp
-      integer(ip)           endrec
-      integer(ip)           fnb
-      integer(ip)           findex
-      integer(ip)           i
-      integer(ip)           inqsta
-      integer(ip)           iostat
-      integer(ip)           last
-      integer(ip)           ldrec  ( 3 )
-      integer(ip)           ldrmax
-      integer(ip)           loc
-      integer(ip)           loccch
-      integer(ip)           loccrc
-      integer(ip)           locrrc
-      integer(ip)           locrch
-      integer(ip)           maxadr
-      integer(ip)           new
-      integer(ip)           nrec
-      integer(ip)           number
+      character(acclen) :: acc
+      character(fmtlen) :: format
+      character(idwlen) :: idword
+      character(ifnlen) :: locifn
+      character(fmtlen) :: locfmt
+      character(tailen) :: tail
+      character(typlen) :: ttype
+      integer(ip) :: curtyp
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dsctyp
+      integer(ip) :: endrec
+      integer(ip) :: fnb
+      integer(ip) :: findex
+      integer(ip) :: i
+      integer(ip) :: inqsta
+      integer(ip) :: iostat
+      integer(ip) :: last
+      integer(ip) :: ldrec  ( 3 )
+      integer(ip) :: ldrmax
+      integer(ip) :: loc
+      integer(ip) :: loccch
+      integer(ip) :: loccrc
+      integer(ip) :: locrrc
+      integer(ip) :: locrch
+      integer(ip) :: maxadr
+      integer(ip) :: new
+      integer(ip) :: nrec
+      integer(ip) :: number
       integer(ip), parameter :: nw     ( 3 ) = &
          [ nwc, nwd, nwi ]
-      integer(ip)           nxtdir
-      integer(ip)           nxtrec
-      integer(ip)           prvtyp
-      integer(ip)           type
-      logical               found
+      integer(ip) :: nxtdir
+      integer(ip) :: nxtrec
+      integer(ip) :: prvtyp
+      integer(ip) :: type
+      logical :: found
       if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
@@ -7901,42 +7901,42 @@ contains
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
          [ 3, 1, 2 ]
-      character(acclen)     acc
-      character(fmtlen)     format
-      character(idwlen)     idword
+      character(acclen) :: acc
+      character(fmtlen) :: format
+      character(idwlen) :: idword
       character(:), allocatable :: locdas
-      character(ifnlen)     locifn
-      character(fmtlen)     locfmt
-      character(tailen)     tail
-      character(typlen)     ttype
-      integer(ip)           curtyp
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dsctyp
-      integer(ip)           endrec
-      integer(ip)           fnb
-      integer(ip)           findex
-      integer(ip)           i
-      integer(ip)           inqsta
-      integer(ip)           iostat
-      integer(ip)           last
-      integer(ip)           ldrec  ( 3 )
-      integer(ip)           ldrmax
-      integer(ip)           loc
-      integer(ip)           loccch
-      integer(ip)           loccrc
-      integer(ip)           locrrc
-      integer(ip)           locrch
-      integer(ip)           maxadr
-      integer(ip)           new
-      integer(ip)           nrec
-      integer(ip)           number
+      character(ifnlen) :: locifn
+      character(fmtlen) :: locfmt
+      character(tailen) :: tail
+      character(typlen) :: ttype
+      integer(ip) :: curtyp
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dsctyp
+      integer(ip) :: endrec
+      integer(ip) :: fnb
+      integer(ip) :: findex
+      integer(ip) :: i
+      integer(ip) :: inqsta
+      integer(ip) :: iostat
+      integer(ip) :: last
+      integer(ip) :: ldrec  ( 3 )
+      integer(ip) :: ldrmax
+      integer(ip) :: loc
+      integer(ip) :: loccch
+      integer(ip) :: loccrc
+      integer(ip) :: locrrc
+      integer(ip) :: locrch
+      integer(ip) :: maxadr
+      integer(ip) :: new
+      integer(ip) :: nrec
+      integer(ip) :: number
       integer(ip), parameter :: nw     ( 3 ) = &
          [ nwc, nwd, nwi ]
-      integer(ip)           nxtdir
-      integer(ip)           nxtrec
-      integer(ip)           prvtyp
-      integer(ip)           type
-      logical               found
+      integer(ip) :: nxtdir
+      integer(ip) :: nxtrec
+      integer(ip) :: prvtyp
+      integer(ip) :: type
+      logical :: found
       if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
@@ -8232,41 +8232,41 @@ contains
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
          [ 3, 1, 2 ]
-      character(acclen)     acc
-      character(fmtlen)     format
-      character(idwlen)     idword
-      character(ifnlen)     locifn
-      character(fmtlen)     locfmt
-      character(tailen)     tail
-      character(typlen)     ttype
-      integer(ip)           curtyp
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dsctyp
-      integer(ip)           endrec
-      integer(ip)           fnb
-      integer(ip)           findex
-      integer(ip)           i
-      integer(ip)           inqsta
-      integer(ip)           iostat
-      integer(ip)           last
-      integer(ip)           ldrec  ( 3 )
-      integer(ip)           ldrmax
-      integer(ip)           loc
-      integer(ip)           loccch
-      integer(ip)           loccrc
-      integer(ip)           locrrc
-      integer(ip)           locrch
-      integer(ip)           maxadr
-      integer(ip)           new
-      integer(ip)           nrec
-      integer(ip)           number
+      character(acclen) :: acc
+      character(fmtlen) :: format
+      character(idwlen) :: idword
+      character(ifnlen) :: locifn
+      character(fmtlen) :: locfmt
+      character(tailen) :: tail
+      character(typlen) :: ttype
+      integer(ip) :: curtyp
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dsctyp
+      integer(ip) :: endrec
+      integer(ip) :: fnb
+      integer(ip) :: findex
+      integer(ip) :: i
+      integer(ip) :: inqsta
+      integer(ip) :: iostat
+      integer(ip) :: last
+      integer(ip) :: ldrec  ( 3 )
+      integer(ip) :: ldrmax
+      integer(ip) :: loc
+      integer(ip) :: loccch
+      integer(ip) :: loccrc
+      integer(ip) :: locrrc
+      integer(ip) :: locrch
+      integer(ip) :: maxadr
+      integer(ip) :: new
+      integer(ip) :: nrec
+      integer(ip) :: number
       integer(ip), parameter :: nw     ( 3 ) = &
          [ nwc, nwd, nwi ]
-      integer(ip)           nxtdir
-      integer(ip)           nxtrec
-      integer(ip)           prvtyp
-      integer(ip)           type
-      logical               found
+      integer(ip) :: nxtdir
+      integer(ip) :: nxtrec
+      integer(ip) :: prvtyp
+      integer(ip) :: type
+      logical :: found
       if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
@@ -8447,41 +8447,41 @@ contains
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
          [ 3, 1, 2 ]
-      character(acclen)     acc
-      character(fmtlen)     format
-      character(idwlen)     idword
-      character(ifnlen)     locifn
-      character(fmtlen)     locfmt
-      character(tailen)     tail
-      character(typlen)     ttype
-      integer(ip)           curtyp
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dsctyp
-      integer(ip)           endrec
-      integer(ip)           fnb
-      integer(ip)           findex
-      integer(ip)           i
-      integer(ip)           inqsta
-      integer(ip)           iostat
-      integer(ip)           last
-      integer(ip)           ldrec  ( 3 )
-      integer(ip)           ldrmax
-      integer(ip)           loc
-      integer(ip)           loccch
-      integer(ip)           loccrc
-      integer(ip)           locrrc
-      integer(ip)           locrch
-      integer(ip)           maxadr
-      integer(ip)           new
-      integer(ip)           nrec
-      integer(ip)           number
+      character(acclen) :: acc
+      character(fmtlen) :: format
+      character(idwlen) :: idword
+      character(ifnlen) :: locifn
+      character(fmtlen) :: locfmt
+      character(tailen) :: tail
+      character(typlen) :: ttype
+      integer(ip) :: curtyp
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dsctyp
+      integer(ip) :: endrec
+      integer(ip) :: fnb
+      integer(ip) :: findex
+      integer(ip) :: i
+      integer(ip) :: inqsta
+      integer(ip) :: iostat
+      integer(ip) :: last
+      integer(ip) :: ldrec  ( 3 )
+      integer(ip) :: ldrmax
+      integer(ip) :: loc
+      integer(ip) :: loccch
+      integer(ip) :: loccrc
+      integer(ip) :: locrrc
+      integer(ip) :: locrch
+      integer(ip) :: maxadr
+      integer(ip) :: new
+      integer(ip) :: nrec
+      integer(ip) :: number
       integer(ip), parameter :: nw     ( 3 ) = &
          [ nwc, nwd, nwi ]
-      integer(ip)           nxtdir
-      integer(ip)           nxtrec
-      integer(ip)           prvtyp
-      integer(ip)           type
-      logical               found
+      integer(ip) :: nxtdir
+      integer(ip) :: nxtrec
+      integer(ip) :: prvtyp
+      integer(ip) :: type
+      logical :: found
       if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
@@ -8711,41 +8711,41 @@ contains
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
          [ 3, 1, 2 ]
-      character(acclen)     acc
-      character(fmtlen)     format
-      character(idwlen)     idword
-      character(ifnlen)     locifn
-      character(fmtlen)     locfmt
-      character(tailen)     tail
-      character(typlen)     ttype
-      integer(ip)           curtyp
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dsctyp
-      integer(ip)           endrec
-      integer(ip)           fnb
-      integer(ip)           findex
-      integer(ip)           i
-      integer(ip)           inqsta
-      integer(ip)           iostat
-      integer(ip)           last
-      integer(ip)           ldrec  ( 3 )
-      integer(ip)           ldrmax
-      integer(ip)           loc
-      integer(ip)           loccch
-      integer(ip)           loccrc
-      integer(ip)           locrrc
-      integer(ip)           locrch
-      integer(ip)           maxadr
-      integer(ip)           new
-      integer(ip)           nrec
-      integer(ip)           number
+      character(acclen) :: acc
+      character(fmtlen) :: format
+      character(idwlen) :: idword
+      character(ifnlen) :: locifn
+      character(fmtlen) :: locfmt
+      character(tailen) :: tail
+      character(typlen) :: ttype
+      integer(ip) :: curtyp
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dsctyp
+      integer(ip) :: endrec
+      integer(ip) :: fnb
+      integer(ip) :: findex
+      integer(ip) :: i
+      integer(ip) :: inqsta
+      integer(ip) :: iostat
+      integer(ip) :: last
+      integer(ip) :: ldrec  ( 3 )
+      integer(ip) :: ldrmax
+      integer(ip) :: loc
+      integer(ip) :: loccch
+      integer(ip) :: loccrc
+      integer(ip) :: locrrc
+      integer(ip) :: locrch
+      integer(ip) :: maxadr
+      integer(ip) :: new
+      integer(ip) :: nrec
+      integer(ip) :: number
       integer(ip), parameter :: nw     ( 3 ) = &
          [ nwc, nwd, nwi ]
-      integer(ip)           nxtdir
-      integer(ip)           nxtrec
-      integer(ip)           prvtyp
-      integer(ip)           type
-      logical               found
+      integer(ip) :: nxtdir
+      integer(ip) :: nxtrec
+      integer(ip) :: prvtyp
+      integer(ip) :: type
+      logical :: found
       if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
@@ -8927,41 +8927,41 @@ contains
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
          [ 3, 1, 2 ]
-      character(acclen)     acc
-      character(fmtlen)     format
-      character(idwlen)     idword
-      character(ifnlen)     locifn
-      character(fmtlen)     locfmt
-      character(tailen)     tail
-      character(typlen)     ttype
-      integer(ip)           curtyp
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dsctyp
-      integer(ip)           endrec
-      integer(ip)           fnb
-      integer(ip)           findex
-      integer(ip)           i
-      integer(ip)           inqsta
-      integer(ip)           iostat
-      integer(ip)           last
-      integer(ip)           ldrec  ( 3 )
-      integer(ip)           ldrmax
-      integer(ip)           loc
-      integer(ip)           loccch
-      integer(ip)           loccrc
-      integer(ip)           locrrc
-      integer(ip)           locrch
-      integer(ip)           maxadr
-      integer(ip)           new
-      integer(ip)           nrec
-      integer(ip)           number
+      character(acclen) :: acc
+      character(fmtlen) :: format
+      character(idwlen) :: idword
+      character(ifnlen) :: locifn
+      character(fmtlen) :: locfmt
+      character(tailen) :: tail
+      character(typlen) :: ttype
+      integer(ip) :: curtyp
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dsctyp
+      integer(ip) :: endrec
+      integer(ip) :: fnb
+      integer(ip) :: findex
+      integer(ip) :: i
+      integer(ip) :: inqsta
+      integer(ip) :: iostat
+      integer(ip) :: last
+      integer(ip) :: ldrec  ( 3 )
+      integer(ip) :: ldrmax
+      integer(ip) :: loc
+      integer(ip) :: loccch
+      integer(ip) :: loccrc
+      integer(ip) :: locrrc
+      integer(ip) :: locrch
+      integer(ip) :: maxadr
+      integer(ip) :: new
+      integer(ip) :: nrec
+      integer(ip) :: number
       integer(ip), parameter :: nw     ( 3 ) = &
          [ nwc, nwd, nwi ]
-      integer(ip)           nxtdir
-      integer(ip)           nxtrec
-      integer(ip)           prvtyp
-      integer(ip)           type
-      logical               found
+      integer(ip) :: nxtdir
+      integer(ip) :: nxtrec
+      integer(ip) :: prvtyp
+      integer(ip) :: type
+      logical :: found
       if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
@@ -9124,41 +9124,41 @@ contains
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
          [ 3, 1, 2 ]
-      character(acclen)     acc
-      character(fmtlen)     format
-      character(idwlen)     idword
-      character(ifnlen)     locifn
-      character(fmtlen)     locfmt
-      character(tailen)     tail
-      character(typlen)     ttype
-      integer(ip)           curtyp
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dsctyp
-      integer(ip)           endrec
-      integer(ip)           fnb
-      integer(ip)           findex
-      integer(ip)           i
-      integer(ip)           inqsta
-      integer(ip)           iostat
-      integer(ip)           last
-      integer(ip)           ldrec  ( 3 )
-      integer(ip)           ldrmax
-      integer(ip)           loc
-      integer(ip)           loccch
-      integer(ip)           loccrc
-      integer(ip)           locrrc
-      integer(ip)           locrch
-      integer(ip)           maxadr
-      integer(ip)           new
-      integer(ip)           nrec
-      integer(ip)           number
+      character(acclen) :: acc
+      character(fmtlen) :: format
+      character(idwlen) :: idword
+      character(ifnlen) :: locifn
+      character(fmtlen) :: locfmt
+      character(tailen) :: tail
+      character(typlen) :: ttype
+      integer(ip) :: curtyp
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dsctyp
+      integer(ip) :: endrec
+      integer(ip) :: fnb
+      integer(ip) :: findex
+      integer(ip) :: i
+      integer(ip) :: inqsta
+      integer(ip) :: iostat
+      integer(ip) :: last
+      integer(ip) :: ldrec  ( 3 )
+      integer(ip) :: ldrmax
+      integer(ip) :: loc
+      integer(ip) :: loccch
+      integer(ip) :: loccrc
+      integer(ip) :: locrrc
+      integer(ip) :: locrch
+      integer(ip) :: maxadr
+      integer(ip) :: new
+      integer(ip) :: nrec
+      integer(ip) :: number
       integer(ip), parameter :: nw     ( 3 ) = &
          [ nwc, nwd, nwi ]
-      integer(ip)           nxtdir
-      integer(ip)           nxtrec
-      integer(ip)           prvtyp
-      integer(ip)           type
-      logical               found
+      integer(ip) :: nxtdir
+      integer(ip) :: nxtrec
+      integer(ip) :: prvtyp
+      integer(ip) :: type
+      logical :: found
       if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
@@ -9384,41 +9384,41 @@ contains
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
          [ 3, 1, 2 ]
-      character(acclen)     acc
-      character(fmtlen)     format
-      character(idwlen)     idword
-      character(ifnlen)     locifn
-      character(fmtlen)     locfmt
-      character(tailen)     tail
-      character(typlen)     ttype
-      integer(ip)           curtyp
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dsctyp
-      integer(ip)           endrec
-      integer(ip)           fnb
-      integer(ip)           findex
-      integer(ip)           i
-      integer(ip)           inqsta
-      integer(ip)           iostat
-      integer(ip)           last
-      integer(ip)           ldrec  ( 3 )
-      integer(ip)           ldrmax
-      integer(ip)           loc
-      integer(ip)           loccch
-      integer(ip)           loccrc
-      integer(ip)           locrrc
-      integer(ip)           locrch
-      integer(ip)           maxadr
-      integer(ip)           new
-      integer(ip)           nrec
-      integer(ip)           number
+      character(acclen) :: acc
+      character(fmtlen) :: format
+      character(idwlen) :: idword
+      character(ifnlen) :: locifn
+      character(fmtlen) :: locfmt
+      character(tailen) :: tail
+      character(typlen) :: ttype
+      integer(ip) :: curtyp
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dsctyp
+      integer(ip) :: endrec
+      integer(ip) :: fnb
+      integer(ip) :: findex
+      integer(ip) :: i
+      integer(ip) :: inqsta
+      integer(ip) :: iostat
+      integer(ip) :: last
+      integer(ip) :: ldrec  ( 3 )
+      integer(ip) :: ldrmax
+      integer(ip) :: loc
+      integer(ip) :: loccch
+      integer(ip) :: loccrc
+      integer(ip) :: locrrc
+      integer(ip) :: locrch
+      integer(ip) :: maxadr
+      integer(ip) :: new
+      integer(ip) :: nrec
+      integer(ip) :: number
       integer(ip), parameter :: nw     ( 3 ) = &
          [ nwc, nwd, nwi ]
-      integer(ip)           nxtdir
-      integer(ip)           nxtrec
-      integer(ip)           prvtyp
-      integer(ip)           type
-      logical               found
+      integer(ip) :: nxtdir
+      integer(ip) :: nxtrec
+      integer(ip) :: prvtyp
+      integer(ip) :: type
+      logical :: found
       if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
@@ -9648,41 +9648,41 @@ contains
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
          [ 3, 1, 2 ]
-      character(acclen)     acc
-      character(fmtlen)     format
-      character(idwlen)     idword
-      character(ifnlen)     locifn
-      character(fmtlen)     locfmt
-      character(tailen)     tail
-      character(typlen)     ttype
-      integer(ip)           curtyp
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dsctyp
-      integer(ip)           endrec
-      integer(ip)           fnb
-      integer(ip)           findex
-      integer(ip)           i
-      integer(ip)           inqsta
-      integer(ip)           iostat
-      integer(ip)           last
-      integer(ip)           ldrec  ( 3 )
-      integer(ip)           ldrmax
-      integer(ip)           loc
-      integer(ip)           loccch
-      integer(ip)           loccrc
-      integer(ip)           locrrc
-      integer(ip)           locrch
-      integer(ip)           maxadr
-      integer(ip)           new
-      integer(ip)           nrec
-      integer(ip)           number
+      character(acclen) :: acc
+      character(fmtlen) :: format
+      character(idwlen) :: idword
+      character(ifnlen) :: locifn
+      character(fmtlen) :: locfmt
+      character(tailen) :: tail
+      character(typlen) :: ttype
+      integer(ip) :: curtyp
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dsctyp
+      integer(ip) :: endrec
+      integer(ip) :: fnb
+      integer(ip) :: findex
+      integer(ip) :: i
+      integer(ip) :: inqsta
+      integer(ip) :: iostat
+      integer(ip) :: last
+      integer(ip) :: ldrec  ( 3 )
+      integer(ip) :: ldrmax
+      integer(ip) :: loc
+      integer(ip) :: loccch
+      integer(ip) :: loccrc
+      integer(ip) :: locrrc
+      integer(ip) :: locrch
+      integer(ip) :: maxadr
+      integer(ip) :: new
+      integer(ip) :: nrec
+      integer(ip) :: number
       integer(ip), parameter :: nw     ( 3 ) = &
          [ nwc, nwd, nwi ]
-      integer(ip)           nxtdir
-      integer(ip)           nxtrec
-      integer(ip)           prvtyp
-      integer(ip)           type
-      logical               found
+      integer(ip) :: nxtdir
+      integer(ip) :: nxtrec
+      integer(ip) :: prvtyp
+      integer(ip) :: type
+      logical :: found
       if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
@@ -9876,7 +9876,7 @@ contains
       integer(ip), parameter :: bufszd = 10
       integer(ip), parameter :: bufszi = 10
       integer(ip), parameter :: bufszc = 10
-      logical               return
+      logical :: return
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: forwrd = 1
       integer(ip), parameter :: bufnvd = bufszd * nwd
@@ -10219,7 +10219,7 @@ contains
       integer(ip), parameter :: bufszd = 10
       integer(ip), parameter :: bufszi = 10
       integer(ip), parameter :: bufszc = 10
-      logical               return
+      logical :: return
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: forwrd = 1
       integer(ip), parameter :: bufnvd = bufszd * nwd
@@ -10553,7 +10553,7 @@ contains
       integer(ip), parameter :: bufszd = 10
       integer(ip), parameter :: bufszi = 10
       integer(ip), parameter :: bufszc = 10
-      logical               return
+      logical :: return
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: forwrd = 1
       integer(ip), parameter :: bufnvd = bufszd * nwd
@@ -13442,7 +13442,7 @@ contains
 
       integer(ip), parameter :: nwc = 1024
 
-      integer(ip)           iostat
+      integer(ip) :: iostat
 
       if ( ctx%failed() ) return
 
@@ -13648,7 +13648,7 @@ contains
 
       integer(ip), parameter :: nwd = 128
 
-      integer(ip)           iostat
+      integer(ip) :: iostat
 
       if ( ctx%failed() ) return
 
@@ -13855,7 +13855,7 @@ contains
 
       integer(ip), parameter :: nwi = 256
 
-      integer(ip)           iostat
+      integer(ip) :: iostat
 
       if ( ctx%failed() ) return
 
@@ -15236,30 +15236,30 @@ contains
 !
       integer(ip), parameter :: begdsc = 9
 
-      integer(ip)           descr
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           dscrec
-      integer(ip)           free
-      integer(ip)           i
-      integer(ip)           last
-      integer(ip)           lastla ( 3 )
-      integer(ip)           lastrc ( 3 )
-      integer(ip)           lastwd ( 3 )
-      integer(ip)           lrec
-      integer(ip)           loc
-      integer(ip)           ltype
-      integer(ip)           lword
-      integer(ip)           maxadr
-      integer(ip)           minadr
-      integer(ip)           ncomc
-      integer(ip)           ncomr
-      integer(ip)           needed
-      integer(ip)           nresvc
-      integer(ip)           nresvr
-      integer(ip)           nw
-      integer(ip)           recno
-      integer(ip)           rngloc
-      integer(ip)           room
+      integer(ip) :: descr
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: dscrec
+      integer(ip) :: free
+      integer(ip) :: i
+      integer(ip) :: last
+      integer(ip) :: lastla ( 3 )
+      integer(ip) :: lastrc ( 3 )
+      integer(ip) :: lastwd ( 3 )
+      integer(ip) :: lrec
+      integer(ip) :: loc
+      integer(ip) :: ltype
+      integer(ip) :: lword
+      integer(ip) :: maxadr
+      integer(ip) :: minadr
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: needed
+      integer(ip) :: nresvc
+      integer(ip) :: nresvr
+      integer(ip) :: nw
+      integer(ip) :: recno
+      integer(ip) :: rngloc
+      integer(ip) :: room
 
 !
 !     NEXT maps the DAS data type codes to their successors.
@@ -15996,32 +15996,32 @@ contains
 !
       integer(ip), parameter :: begdsc = 9
 
-      character(nwc)        recc
+      character(nwc) :: recc
 
-      real(wp)              recd   ( nwd )
+      real(wp) :: recd   ( nwd )
 
-      integer(ip)           base
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           free
-      integer(ip)           i
-      integer(ip)           lastla ( 3 )
-      integer(ip)           lastrc ( 3 )
-      integer(ip)           lastwd ( 3 )
-      integer(ip)           loc
-      integer(ip)           lrec
-      integer(ip)           lindex
-      integer(ip)           lword
-      integer(ip)           ncomc
-      integer(ip)           ncomr
-      integer(ip)           nrec
-      integer(ip)           nresvc
-      integer(ip)           nresvr
-      integer(ip)           nxttyp
-      integer(ip)           pos
-      integer(ip)           prec
-      integer(ip)           reci   ( nwi    )
-      integer(ip)           type
-      integer(ip)           unit
+      integer(ip) :: base
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: free
+      integer(ip) :: i
+      integer(ip) :: lastla ( 3 )
+      integer(ip) :: lastrc ( 3 )
+      integer(ip) :: lastwd ( 3 )
+      integer(ip) :: loc
+      integer(ip) :: lrec
+      integer(ip) :: lindex
+      integer(ip) :: lword
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: nrec
+      integer(ip) :: nresvc
+      integer(ip) :: nresvr
+      integer(ip) :: nxttyp
+      integer(ip) :: pos
+      integer(ip) :: prec
+      integer(ip) :: reci   ( nwi    )
+      integer(ip) :: type
+      integer(ip) :: unit
 
 !
 !     NEXT and PREV map the DAS data type codes to their
@@ -16463,31 +16463,31 @@ contains
 !
       integer(ip), parameter :: begdsc = 9
 
-      character(nwc)        recc
+      character(nwc) :: recc
 
-      real(wp)              recd   ( nwd )
+      real(wp) :: recd   ( nwd )
 
-      integer(ip)           base
-      integer(ip)           dirrec ( nwi )
-      integer(ip)           free
-      integer(ip)           i
-      integer(ip)           lastla ( 3 )
-      integer(ip)           lastrc ( 3 )
-      integer(ip)           lastwd ( 3 )
-      integer(ip)           loc
-      integer(ip)           lrec
-      integer(ip)           lindex
-      integer(ip)           lword
-      integer(ip)           ncomc
-      integer(ip)           ncomr
-      integer(ip)           nrec
-      integer(ip)           nresvc
-      integer(ip)           nresvr
-      integer(ip)           nshift
-      integer(ip)           pos
-      integer(ip)           reci   ( nwi    )
-      integer(ip)           type
-      integer(ip)           unit
+      integer(ip) :: base
+      integer(ip) :: dirrec ( nwi )
+      integer(ip) :: free
+      integer(ip) :: i
+      integer(ip) :: lastla ( 3 )
+      integer(ip) :: lastrc ( 3 )
+      integer(ip) :: lastwd ( 3 )
+      integer(ip) :: loc
+      integer(ip) :: lrec
+      integer(ip) :: lindex
+      integer(ip) :: lword
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: nrec
+      integer(ip) :: nresvc
+      integer(ip) :: nresvr
+      integer(ip) :: nshift
+      integer(ip) :: pos
+      integer(ip) :: reci   ( nwi    )
+      integer(ip) :: type
+      integer(ip) :: unit
 
 !
 !     NEXT and PREV map the DAS data type codes to their
@@ -16936,47 +16936,47 @@ contains
 !
       integer(ip), parameter :: begdsc = 9
 
-      character(nwc)        crec
-      character(nwc)        savec
+      character(nwc) :: crec
+      character(nwc) :: savec
 
-      real(wp)              drec   ( nwd )
-      real(wp)              saved  ( nwd )
+      real(wp) :: drec   ( nwd )
+      real(wp) :: saved  ( nwd )
 
-      integer(ip)           base
-      integer(ip)           count  ( 4 )
-      integer(ip)           dest
-      integer(ip)           drbase
-      integer(ip)           free
-      integer(ip)           i
-      integer(ip)           irec   ( nwi    )
-      integer(ip)           j
-      integer(ip)           lastla ( 3 )
-      integer(ip)           lastrc ( 3 )
-      integer(ip)           lastwd ( 3 )
-      integer(ip)           loc
-      integer(ip)           lrec
-      integer(ip)           ltype
-      integer(ip)           lword
-      integer(ip)           maxadr
-      integer(ip)           minadr
-      integer(ip)           n
-      integer(ip)           ncomc
-      integer(ip)           ncomr
-      integer(ip)           nresvc
-      integer(ip)           nresvr
-      integer(ip)           offset
-      integer(ip)           pos
-      integer(ip)           prvtyp
-      integer(ip)           recno
-      integer(ip)           savei  ( nwi    )
-      integer(ip)           savtyp
-      integer(ip)           scrhan
-      integer(ip)           start
-      integer(ip)           total
-      integer(ip)           type
-      integer(ip)           unit
+      integer(ip) :: base
+      integer(ip) :: count  ( 4 )
+      integer(ip) :: dest
+      integer(ip) :: drbase
+      integer(ip) :: free
+      integer(ip) :: i
+      integer(ip) :: irec   ( nwi    )
+      integer(ip) :: j
+      integer(ip) :: lastla ( 3 )
+      integer(ip) :: lastrc ( 3 )
+      integer(ip) :: lastwd ( 3 )
+      integer(ip) :: loc
+      integer(ip) :: lrec
+      integer(ip) :: ltype
+      integer(ip) :: lword
+      integer(ip) :: maxadr
+      integer(ip) :: minadr
+      integer(ip) :: n
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: nresvc
+      integer(ip) :: nresvr
+      integer(ip) :: offset
+      integer(ip) :: pos
+      integer(ip) :: prvtyp
+      integer(ip) :: recno
+      integer(ip) :: savei  ( nwi    )
+      integer(ip) :: savtyp
+      integer(ip) :: scrhan
+      integer(ip) :: start
+      integer(ip) :: total
+      integer(ip) :: type
+      integer(ip) :: unit
 
-      logical               more
+      logical :: more
 
 !
 !     NEXT and PREV map the DAS data type codes to their
@@ -18011,26 +18011,26 @@ contains
       implicit none
       integer(ip), parameter :: char = 1
       integer(ip), parameter :: nwc = 1024
-      integer(ip)           chr
-      integer(ip)           clbase
-      integer(ip)           clsize
-      integer(ip)           elt
-      integer(ip)           free
-      integer(ip)           lastc
-      integer(ip)           lastla ( 3 )
-      integer(ip)           lastrc ( 3 )
-      integer(ip)           lastwd ( 3 )
-      integer(ip)           ncomc
-      integer(ip)           ncomr
-      integer(ip)           nmove
-      integer(ip)           nmoved
-      integer(ip)           nresvc
-      integer(ip)           nresvr
-      integer(ip)           numchr
-      integer(ip)           nwritn
-      integer(ip)           rcpos
-      integer(ip)           recno
-      integer(ip)           wordno
+      integer(ip) :: chr
+      integer(ip) :: clbase
+      integer(ip) :: clsize
+      integer(ip) :: elt
+      integer(ip) :: free
+      integer(ip) :: lastc
+      integer(ip) :: lastla ( 3 )
+      integer(ip) :: lastrc ( 3 )
+      integer(ip) :: lastwd ( 3 )
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: nmove
+      integer(ip) :: nmoved
+      integer(ip) :: nresvc
+      integer(ip) :: nresvr
+      integer(ip) :: numchr
+      integer(ip) :: nwritn
+      integer(ip) :: rcpos
+      integer(ip) :: recno
+      integer(ip) :: wordno
       if ( .not. allocated ( ctx%dasadc_state ) ) allocate ( ctx%dasadc_state )
       associate ( record => ctx%dasadc_state%record )
       if ( ctx%failed() ) return
@@ -18521,21 +18521,21 @@ contains
       implicit none
       integer(ip), parameter :: dp = 2
       integer(ip), parameter :: nwd = 128
-      integer(ip)           clbase
-      integer(ip)           clsize
-      integer(ip)           free
-      integer(ip)           lastd
-      integer(ip)           lastla ( 3 )
-      integer(ip)           lastrc ( 3 )
-      integer(ip)           lastwd ( 3 )
-      integer(ip)           ncomc
-      integer(ip)           ncomr
-      integer(ip)           nresvc
-      integer(ip)           nresvr
-      integer(ip)           numdp
-      integer(ip)           nwritn
-      integer(ip)           recno
-      integer(ip)           wordno
+      integer(ip) :: clbase
+      integer(ip) :: clsize
+      integer(ip) :: free
+      integer(ip) :: lastd
+      integer(ip) :: lastla ( 3 )
+      integer(ip) :: lastrc ( 3 )
+      integer(ip) :: lastwd ( 3 )
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: nresvc
+      integer(ip) :: nresvr
+      integer(ip) :: numdp
+      integer(ip) :: nwritn
+      integer(ip) :: recno
+      integer(ip) :: wordno
       if ( .not. allocated ( ctx%dasadd_state ) ) allocate ( ctx%dasadd_state )
       associate ( record => ctx%dasadd_state%record )
       if ( ctx%failed() ) return
@@ -18946,21 +18946,21 @@ contains
       implicit none
       integer(ip), parameter :: int = 3
       integer(ip), parameter :: nwi = 256
-      integer(ip)           clbase
-      integer(ip)           clsize
-      integer(ip)           free
-      integer(ip)           lasti
-      integer(ip)           lastla ( 3 )
-      integer(ip)           lastrc ( 3 )
-      integer(ip)           lastwd ( 3 )
-      integer(ip)           ncomc
-      integer(ip)           ncomr
-      integer(ip)           nresvc
-      integer(ip)           nresvr
-      integer(ip)           numint
-      integer(ip)           nwritn
-      integer(ip)           recno
-      integer(ip)           wordno
+      integer(ip) :: clbase
+      integer(ip) :: clsize
+      integer(ip) :: free
+      integer(ip) :: lasti
+      integer(ip) :: lastla ( 3 )
+      integer(ip) :: lastrc ( 3 )
+      integer(ip) :: lastwd ( 3 )
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: nresvc
+      integer(ip) :: nresvr
+      integer(ip) :: numint
+      integer(ip) :: nwritn
+      integer(ip) :: recno
+      integer(ip) :: wordno
       if ( .not. allocated ( ctx%dasadi_state ) ) allocate ( ctx%dasadi_state )
       associate ( record => ctx%dasadi_state%record )
       if ( ctx%failed() ) return
@@ -19437,19 +19437,19 @@ contains
 
       integer(ip), parameter :: char = 1
 
-      integer(ip)           chr
-      integer(ip)           clbase
-      integer(ip)           clsize
-      integer(ip)           elt
-      integer(ip)           l
-      integer(ip)           n
-      integer(ip)           nmove
-      integer(ip)           nmoved
-      integer(ip)           nread
-      integer(ip)           numchr
-      integer(ip)           recno
-      integer(ip)           rcpos
-      integer(ip)           wordno
+      integer(ip) :: chr
+      integer(ip) :: clbase
+      integer(ip) :: clsize
+      integer(ip) :: elt
+      integer(ip) :: l
+      integer(ip) :: n
+      integer(ip) :: nmove
+      integer(ip) :: nmoved
+      integer(ip) :: nread
+      integer(ip) :: numchr
+      integer(ip) :: recno
+      integer(ip) :: rcpos
+      integer(ip) :: wordno
 
 !
 !     Make sure BPOS and EPOS are ok; stop here if not.
@@ -19847,13 +19847,13 @@ contains
 
       integer(ip), parameter :: dp = 2
 
-      integer(ip)           clbase
-      integer(ip)           clsize
-      integer(ip)           n
-      integer(ip)           nread
-      integer(ip)           numdp
-      integer(ip)           recno
-      integer(ip)           wordno
+      integer(ip) :: clbase
+      integer(ip) :: clsize
+      integer(ip) :: n
+      integer(ip) :: nread
+      integer(ip) :: numdp
+      integer(ip) :: recno
+      integer(ip) :: wordno
 
 !
 !     Find out the physical location of the first double precision
@@ -20157,13 +20157,13 @@ contains
 
       integer(ip), parameter :: int = 3
 
-      integer(ip)           clbase
-      integer(ip)           clsize
-      integer(ip)           n
-      integer(ip)           nread
-      integer(ip)           numint
-      integer(ip)           recno
-      integer(ip)           wordno
+      integer(ip) :: clbase
+      integer(ip) :: clsize
+      integer(ip) :: n
+      integer(ip) :: nread
+      integer(ip) :: numint
+      integer(ip) :: recno
+      integer(ip) :: wordno
 
 !
 !     Find out the physical location of the first integer.  If FIRST
@@ -20584,22 +20584,22 @@ contains
 
       integer(ip), parameter :: char = 1
 
-      integer(ip)           chr
-      integer(ip)           clbase
-      integer(ip)           clsize
-      integer(ip)           elt
-      integer(ip)           l
-      integer(ip)           lastc
-      integer(ip)           lastd
-      integer(ip)           lasti
-      integer(ip)           n
-      integer(ip)           nmove
-      integer(ip)           nmoved
-      integer(ip)           numchr
-      integer(ip)           nwritn
-      integer(ip)           recno
-      integer(ip)           rcpos
-      integer(ip)           wordno
+      integer(ip) :: chr
+      integer(ip) :: clbase
+      integer(ip) :: clsize
+      integer(ip) :: elt
+      integer(ip) :: l
+      integer(ip) :: lastc
+      integer(ip) :: lastd
+      integer(ip) :: lasti
+      integer(ip) :: n
+      integer(ip) :: nmove
+      integer(ip) :: nmoved
+      integer(ip) :: numchr
+      integer(ip) :: nwritn
+      integer(ip) :: recno
+      integer(ip) :: rcpos
+      integer(ip) :: wordno
 
 !
 !     Standard SPICE error handling.
@@ -21072,16 +21072,16 @@ contains
 
       integer(ip), parameter :: nwd = 128
 
-      integer(ip)           clbase
-      integer(ip)           clsize
-      integer(ip)           lastc
-      integer(ip)           lastd
-      integer(ip)           lasti
-      integer(ip)           n
-      integer(ip)           numdp
-      integer(ip)           nwritn
-      integer(ip)           recno
-      integer(ip)           wordno
+      integer(ip) :: clbase
+      integer(ip) :: clsize
+      integer(ip) :: lastc
+      integer(ip) :: lastd
+      integer(ip) :: lasti
+      integer(ip) :: n
+      integer(ip) :: numdp
+      integer(ip) :: nwritn
+      integer(ip) :: recno
+      integer(ip) :: wordno
 
 !
 !     Standard SPICE error handling.
@@ -21452,16 +21452,16 @@ contains
 
       integer(ip), parameter :: nwi = 256
 
-      integer(ip)           clbase
-      integer(ip)           clsize
-      integer(ip)           lastc
-      integer(ip)           lastd
-      integer(ip)           lasti
-      integer(ip)           n
-      integer(ip)           numint
-      integer(ip)           nwritn
-      integer(ip)           recno
-      integer(ip)           wordno
+      integer(ip) :: clbase
+      integer(ip) :: clsize
+      integer(ip) :: lastc
+      integer(ip) :: lastd
+      integer(ip) :: lasti
+      integer(ip) :: n
+      integer(ip) :: numint
+      integer(ip) :: nwritn
+      integer(ip) :: recno
+      integer(ip) :: wordno
 
 !
 !     Standard SPICE error handling.
@@ -21917,10 +21917,10 @@ contains
       use pepper_inc_das
       implicit none
       integer(ip), parameter :: lbcell = -5
-      character(10)         method
-      integer(ip)           iostat
-      integer(ip)           unit
-      logical               notscr
+      character(10) :: method
+      integer(ip) :: iostat
+      integer(ip) :: unit
+      logical :: notscr
       if ( ctx%failed() ) return
 
 !
@@ -22472,26 +22472,26 @@ contains
 !
       integer(ip), parameter :: tailen = 932
 
-      character(fmtlen)     format
-      character(idwlen)     locidw
-      character(ifnlen)     locifn
-      character(ifnlen)     ifn
-      character(tailen)     tail
+      character(fmtlen) :: format
+      character(idwlen) :: locidw
+      character(ifnlen) :: locifn
+      character(ifnlen) :: ifn
+      character(tailen) :: tail
 
-      integer(ip)           free
-      integer(ip)           iostat
-      integer(ip)           lastla ( 3 )
-      integer(ip)           lastrc ( 3 )
-      integer(ip)           lastwd ( 3 )
-      integer(ip)           locncc
-      integer(ip)           locncr
-      integer(ip)           locnvc
-      integer(ip)           locnvr
-      integer(ip)           oldrrc
-      integer(ip)           oldrch
-      integer(ip)           oldcrc
-      integer(ip)           oldcch
-      integer(ip)           unit
+      integer(ip) :: free
+      integer(ip) :: iostat
+      integer(ip) :: lastla ( 3 )
+      integer(ip) :: lastrc ( 3 )
+      integer(ip) :: lastwd ( 3 )
+      integer(ip) :: locncc
+      integer(ip) :: locncr
+      integer(ip) :: locnvc
+      integer(ip) :: locnvr
+      integer(ip) :: oldrrc
+      integer(ip) :: oldrch
+      integer(ip) :: oldcrc
+      integer(ip) :: oldcch
+      integer(ip) :: unit
 
 !
 !     Standard SPICE error handling.
@@ -22744,24 +22744,24 @@ contains
 !     Length of a DAS file internal filename.
 !
       integer(ip), parameter :: ifnlen = 60
-      character(mxcrec)     crecrd
-      character(idwlen)     idword
-      character(ifnlen)     ifname
+      character(mxcrec) :: crecrd
+      character(idwlen) :: idword
+      character(ifnlen) :: ifname
 
-      integer(ip)           curpos
-      integer(ip)           daslun
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           length
-      integer(ip)           nchars
-      integer(ip)           ncomc
-      integer(ip)           ncomr
-      integer(ip)           newrec
-      integer(ip)           nresvc
-      integer(ip)           nresvr
-      integer(ip)           recno
-      integer(ip)           rinuse
-      integer(ip)           space
+      integer(ip) :: curpos
+      integer(ip) :: daslun
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: length
+      integer(ip) :: nchars
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: newrec
+      integer(ip) :: nresvc
+      integer(ip) :: nresvr
+      integer(ip) :: recno
+      integer(ip) :: rinuse
+      integer(ip) :: space
 
 !     Initial values
 !
@@ -23411,25 +23411,25 @@ contains
       integer(ip), parameter :: maxpch = 126
 
       integer(ip), parameter :: minpch = 32
-      character(linlen)     combuf(bufsiz)
-      character(idwlen)     idword
-      character(ifnlen)     ifname
-      character(linlen)     line
+      character(linlen) :: combuf(bufsiz)
+      character(idwlen) :: idword
+      character(ifnlen) :: ifname
+      character(linlen) :: line
 
-      integer(ip)           i
-      integer(ip)           intchr
-      integer(ip)           iostat
-      integer(ip)           j
-      integer(ip)           length
-      integer(ip)           ncomc
-      integer(ip)           ncomr
-      integer(ip)           nresvc
-      integer(ip)           nresvr
-      integer(ip)           numcom
-      integer(ip)           scrlun
+      integer(ip) :: i
+      integer(ip) :: intchr
+      integer(ip) :: iostat
+      integer(ip) :: j
+      integer(ip) :: length
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: nresvc
+      integer(ip) :: nresvr
+      integer(ip) :: numcom
+      integer(ip) :: scrlun
 
-      logical               eof
-      logical               more
+      logical :: eof
+      logical :: more
 
 !
 !     Standard SPICE error handling.
@@ -23870,13 +23870,13 @@ contains
 !     Length of a DAS file internal filename.
 !
       integer(ip), parameter :: ifnlen = 60
-      character(idwlen)     idword
-      character(ifnlen)     ifname
+      character(idwlen) :: idword
+      character(ifnlen) :: ifname
 
-      integer(ip)           ncomc
-      integer(ip)           ncomr
-      integer(ip)           nresvc
-      integer(ip)           nresvr
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: nresvc
+      integer(ip) :: nresvr
 
 !
 !     Standard SPICE error handling.
@@ -24273,24 +24273,24 @@ contains
       integer(ip), parameter :: fnmlen = 128
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
-      character(1)          ch
-      character(idwlen)     idword
-      character(ifnlen)     ifname
-      integer(ip)           curpos
-      integer(ip)           daslun
-      integer(ip)           i
-      integer(ip)           index
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           linlen
-      integer(ip)           nchars
-      integer(ip)           ncomc
-      integer(ip)           ncomr
-      integer(ip)           nresvc
-      integer(ip)           nresvr
-      integer(ip)           numcom
-      integer(ip)           recno
-      logical               eol
+      character(1) :: ch
+      character(idwlen) :: idword
+      character(ifnlen) :: ifname
+      integer(ip) :: curpos
+      integer(ip) :: daslun
+      integer(ip) :: i
+      integer(ip) :: index
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: linlen
+      integer(ip) :: nchars
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: nresvc
+      integer(ip) :: nresvr
+      integer(ip) :: numcom
+      integer(ip) :: recno
+      logical :: eol
       if ( .not. allocated ( ctx%dasec_state ) ) then
          allocate ( ctx%dasec_state )
          call init_dasec_state ( ctx%dasec_state )
@@ -24717,12 +24717,12 @@ contains
 !     Set the size of the comment buffer.
 !
       integer(ip), parameter :: bufsiz = 22
-      character(linlen)     combuf(bufsiz)
+      character(linlen) :: combuf(bufsiz)
 
-      integer(ip)           numcom
+      integer(ip) :: numcom
 
-      logical               eoc
-      logical               gotsom
+      logical :: eoc
+      logical :: gotsom
 
 !
 !     Standard SPICE error handling.
@@ -24989,30 +24989,30 @@ contains
       integer(ip), parameter :: bcbpos = 1
 
       integer(ip), parameter :: ecbpos = cbflen
-      character(cbflen)     cbuffr(bufsiz)
-      character(crlen)      crecrd
-      character(idwlen)     idword
-      character(ifnlen)     ifname
-      character(linlen)     line
+      character(cbflen) :: cbuffr(bufsiz)
+      character(crlen) :: crecrd
+      character(idwlen) :: idword
+      character(ifnlen) :: ifname
+      character(linlen) :: line
 
-      real(wp)              dbuffr(bufsiz)
+      real(wp) :: dbuffr(bufsiz)
 
-      integer(ip)           daslun
-      integer(ip)           dtabeg
-      integer(ip)           handle
-      integer(ip)           ibuffr(bufsiz)
-      integer(ip)           iostat
-      integer(ip)           ncdata
-      integer(ip)           nddata
-      integer(ip)           nidata
-      integer(ip)           nresvr
-      integer(ip)           nresvc
-      integer(ip)           ncomr
-      integer(ip)           ncomc
-      integer(ip)           numblk
-      integer(ip)           numdta
-      integer(ip)           numlft
-      integer(ip)           recno
+      integer(ip) :: daslun
+      integer(ip) :: dtabeg
+      integer(ip) :: handle
+      integer(ip) :: ibuffr(bufsiz)
+      integer(ip) :: iostat
+      integer(ip) :: ncdata
+      integer(ip) :: nddata
+      integer(ip) :: nidata
+      integer(ip) :: nresvr
+      integer(ip) :: nresvc
+      integer(ip) :: ncomr
+      integer(ip) :: ncomc
+      integer(ip) :: numblk
+      integer(ip) :: numdta
+      integer(ip) :: numlft
+      integer(ip) :: recno
 
 !
 !     Standard SPICE error handling.
@@ -26126,45 +26126,45 @@ contains
       integer(ip), parameter :: bcbpos = 1
 
       integer(ip), parameter :: ecbpos = cbflen
-      character(cbflen)     cbuffr(bufsiz)
-      character(crlen)      crecrd
-      character(errlen)     errmsg
-      character(idwlen)     idword
-      character(ifnlen)     ifname
-      character(linlen)     line
-      character(linlen)     rest
-      character(idwlen)     tarch
-      character(idwlen)     ttype
-      character(linlen)     word
+      character(cbflen) :: cbuffr(bufsiz)
+      character(crlen) :: crecrd
+      character(errlen) :: errmsg
+      character(idwlen) :: idword
+      character(ifnlen) :: ifname
+      character(linlen) :: line
+      character(linlen) :: rest
+      character(idwlen) :: tarch
+      character(idwlen) :: ttype
+      character(linlen) :: word
 
-      real(wp)              dbuffr(bufsiz)
+      real(wp) :: dbuffr(bufsiz)
 
-      integer(ip)           bcount
-      integer(ip)           bindex
-      integer(ip)           blkcnt
-      integer(ip)           daslun
-      integer(ip)           dtacnt
-      integer(ip)           ecount
-      integer(ip)           eindex
-      integer(ip)           errptr
-      integer(ip)           handle
-      integer(ip)           ibuffr(bufsiz)
-      integer(ip)           iostat
-      integer(ip)           ncdata
-      integer(ip)           ncomc
-      integer(ip)           ncomr
-      integer(ip)           nddata
-      integer(ip)           nidata
-      integer(ip)           nresvc
-      integer(ip)           nresvr
-      integer(ip)           numblk
-      integer(ip)           numdta
-      integer(ip)           numlft
-      integer(ip)           recno
-      integer(ip)           tcount
+      integer(ip) :: bcount
+      integer(ip) :: bindex
+      integer(ip) :: blkcnt
+      integer(ip) :: daslun
+      integer(ip) :: dtacnt
+      integer(ip) :: ecount
+      integer(ip) :: eindex
+      integer(ip) :: errptr
+      integer(ip) :: handle
+      integer(ip) :: ibuffr(bufsiz)
+      integer(ip) :: iostat
+      integer(ip) :: ncdata
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: nddata
+      integer(ip) :: nidata
+      integer(ip) :: nresvc
+      integer(ip) :: nresvr
+      integer(ip) :: numblk
+      integer(ip) :: numdta
+      integer(ip) :: numlft
+      integer(ip) :: recno
+      integer(ip) :: tcount
 
-      logical               inblk
-      logical               more
+      logical :: inblk
+      logical :: more
 !
 !     Standard SPICE error handling.
 !
@@ -28249,14 +28249,14 @@ contains
 
       integer(ip), parameter :: int = 3
 
-      integer(ip)           free
-      integer(ip)           ncomc
-      integer(ip)           ncomr
-      integer(ip)           nresvc
-      integer(ip)           nresvr
-      integer(ip)           lastla ( 3 )
-      integer(ip)           lastrc ( 3 )
-      integer(ip)           lastwd ( 3 )
+      integer(ip) :: free
+      integer(ip) :: ncomc
+      integer(ip) :: ncomr
+      integer(ip) :: nresvc
+      integer(ip) :: nresvr
+      integer(ip) :: lastla ( 3 )
+      integer(ip) :: lastrc ( 3 )
+      integer(ip) :: lastwd ( 3 )
 
 !
 !     Standard SPICE error handling.

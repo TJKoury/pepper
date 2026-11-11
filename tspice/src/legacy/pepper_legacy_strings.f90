@@ -13,10 +13,10 @@
       use pepper_strings, only: pepper_astrip => astrip
       use pepper_kinds, only: ip
       implicit none
-      character(*)     instr  !! Input string.
-      character(1)     asciib  !! First ASCII character in range to be stripped.
-      character(1)     asciie  !! Last ASCII character in range to be stripped.
-      character(*)     outstr  !! Output (stripped) string.
+      character(*) :: instr  !! Input string.
+      character(1) :: asciib  !! First ASCII character in range to be stripped.
+      character(1) :: asciie  !! Last ASCII character in range to be stripped.
+      character(*) :: outstr  !! Output (stripped) string.
       call pepper_astrip ( instr, asciib, asciie, outstr )
       end subroutine astrip
 
@@ -27,7 +27,7 @@
       use pepper_strings, only: pepper_bedec => bedec
       use pepper_kinds, only: ip
       implicit none
-      character(*)          string  !! Character string.
+      character(*) :: string  !! Character string.
       bedec = pepper_bedec ( string )
       end function bedec
 
@@ -38,7 +38,7 @@
       use pepper_strings, only: pepper_beint => beint
       use pepper_kinds, only: ip
       implicit none
-      character(*)          string  !! Character string.
+      character(*) :: string  !! Character string.
       beint = pepper_beint ( string )
       end function beint
 
@@ -49,7 +49,7 @@
       use pepper_strings, only: pepper_benum => benum
       use pepper_kinds, only: ip
       implicit none
-      character(*)          string  !! Character string.
+      character(*) :: string  !! Character string.
       benum = pepper_benum ( string )
       end function benum
 
@@ -60,7 +60,7 @@
       use pepper_strings, only: pepper_beuns => beuns
       use pepper_kinds, only: ip
       implicit none
-      character(*)          string  !! Character string.
+      character(*) :: string  !! Character string.
       beuns = pepper_beuns ( string )
       end function beuns
 
@@ -73,10 +73,10 @@
       use pepper_strings, only: pepper_cmprss => cmprss
       use pepper_kinds, only: ip
       implicit none
-      character(1)        delim  !! Delimiter to be compressed.
-      integer(ip)         n  !! Maximum consecutive occurrences of DELIM.
-      character(*)        input  !! Input string.
-      character(*)        output  !! Compressed string.
+      character(1) :: delim  !! Delimiter to be compressed.
+      integer(ip) :: n  !! Maximum consecutive occurrences of DELIM.
+      character(*) :: input  !! Input string.
+      character(*) :: output  !! Compressed string.
       call pepper_cmprss ( delim, n, input, output )
       end subroutine cmprss
 
@@ -89,9 +89,9 @@
       use pepper_strings, only: pepper_cpos => cpos
       use pepper_kinds, only: ip
       implicit none
-      character(*)          str  !! Any character string.
-      character(*)          chars  !! A collection of characters.
-      integer(ip)           start  !! Position to begin looking for one of CHARS
+      character(*) :: str  !! Any character string.
+      character(*) :: chars  !! A collection of characters.
+      integer(ip) :: start  !! Position to begin looking for one of CHARS
       cpos = pepper_cpos ( str, chars, start )
       end function cpos
 
@@ -104,9 +104,9 @@
       use pepper_strings, only: pepper_cposr => cposr
       use pepper_kinds, only: ip
       implicit none
-      character(*)          str  !! Any character string.
-      character(*)          chars  !! A collection of characters.
-      integer(ip)           start  !! Position to begin looking for one of CHARS
+      character(*) :: str  !! Any character string.
+      character(*) :: chars  !! A collection of characters.
+      integer(ip) :: start  !! Position to begin looking for one of CHARS
       cposr = pepper_cposr ( str, chars, start )
       end function cposr
 
@@ -117,8 +117,8 @@
       use pepper_strings, only: pepper_eqstr => eqstr
       use pepper_kinds, only: ip
       implicit none
-      character(*)          a  !! Arbitrary character strings.
-      character(*)          b  !! Arbitrary character strings.
+      character(*) :: a  !! Arbitrary character strings.
+      character(*) :: b  !! Arbitrary character strings.
       eqstr = pepper_eqstr ( a, b )
       end function eqstr
 
@@ -131,9 +131,9 @@
       use pepper_strings, only: pepper_esrchc => esrchc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     value  !! Key value to be found in ARRAY.
-      integer(ip)      ndim  !! Dimension of ARRAY.
-      character(*)     array ( * )  !! Character string array to search.
+      character(*) :: value  !! Key value to be found in ARRAY.
+      integer(ip) :: ndim  !! Dimension of ARRAY.
+      character(*) :: array ( * )  !! Character string array to search.
       esrchc = pepper_esrchc ( value, ndim, array )
       end function esrchc
 
@@ -145,10 +145,10 @@
       use pepper_strings, only: pepper_fndnwd => fndnwd
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string  !! A string to examine for words.
-      integer(ip)      start  !! Position in the string to start looking for words.
-      integer(ip)      b  !! String position of first character of the word.
-      integer(ip)      e  !! String position of last character of the word.
+      character(*) :: string  !! A string to examine for words.
+      integer(ip) :: start  !! Position in the string to start looking for words.
+      integer(ip) :: b  !! String position of first character of the word.
+      integer(ip) :: e  !! String position of last character of the word.
       call pepper_fndnwd ( string, start, b, e )
       end subroutine fndnwd
 
@@ -160,8 +160,8 @@
       use pepper_strings, only: pepper_frstnb => frstnb
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string  !! Input character string.
-      integer(ip)           ispace
+      character(*) :: string  !! Input character string.
+      integer(ip) :: ispace
       parameter           ( ispace = 32 )
       frstnb = pepper_frstnb ( string )
       end function frstnb
@@ -175,7 +175,7 @@
       use pepper_strings, only: pepper_frstnp => frstnp
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string  !! Input character string.
+      character(*) :: string  !! Input character string.
       frstnp = pepper_frstnp ( string )
       end function frstnp
 
@@ -188,7 +188,7 @@
       use pepper_strings, only: pepper_frstpc => frstpc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string  !! Input character string.
+      character(*) :: string  !! Input character string.
       frstpc = pepper_frstpc ( string )
       end function frstpc
 
@@ -202,12 +202,12 @@
       use pepper_strings, only: pepper_kxtrct => kxtrct
       use pepper_kinds, only: ip
       implicit none
-      character(*)     keywd  !! Word that marks the beginning of text of interest.
-      character(*)     terms(*)  !! Set of words, any of which marks the end of text.
-      integer(ip)      nterms  !! Number of TERMS.
-      character(*)     wordsq  !! String containing a sequence of words.
-      logical          found  !! .TRUE. if the keyword is found in the string.
-      character(*)     substr  !! String from end of KEYWD to beginning of first TERMS item found.
+      character(*) :: keywd  !! Word that marks the beginning of text of interest.
+      character(*) :: terms(*)  !! Set of words, any of which marks the end of text.
+      integer(ip) :: nterms  !! Number of TERMS.
+      character(*) :: wordsq  !! String containing a sequence of words.
+      logical :: found  !! .TRUE. if the keyword is found in the string.
+      character(*) :: substr  !! String from end of KEYWD to beginning of first TERMS item found.
       call pepper_kxtrct ( keywd, terms, nterms, wordsq, found, substr )
       end subroutine kxtrct
 
@@ -219,8 +219,8 @@
       use pepper_strings, only: pepper_lastnb => lastnb
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string  !! Input character string.
-      integer(ip)           ispace
+      character(*) :: string  !! Input character string.
+      integer(ip) :: ispace
       parameter           ( ispace = 32 )
       lastnb = pepper_lastnb ( string )
       end function lastnb
@@ -234,7 +234,7 @@
       use pepper_strings, only: pepper_lastpc => lastpc
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string  !! Input character string.
+      character(*) :: string  !! Input character string.
       lastpc = pepper_lastpc ( string )
       end function lastpc
 
@@ -245,10 +245,10 @@
       use pepper_strings, only: pepper_lbuild => lbuild
       use pepper_kinds, only: ip
       implicit none
-      character(*)     items ( * )  !! Items in the list.
-      integer(ip)      n  !! Number of items in the list.
-      character(*)     delim  !! String used to delimit items.
-      character(*)     list  !! List of items delimited by DELIM.
+      character(*) :: items ( * )  !! Items in the list.
+      integer(ip) :: n  !! Number of items in the list.
+      character(*) :: delim  !! String used to delimit items.
+      character(*) :: list  !! List of items delimited by DELIM.
       call pepper_lbuild ( items, n, delim, list )
       end subroutine lbuild
 
@@ -259,8 +259,8 @@
       use pepper_strings, only: pepper_lcase => lcase
       use pepper_kinds, only: ip
       implicit none
-      character(*)     in  !! Input string.
-      character(*)     out  !! Output string, all lowercase.
+      character(*) :: in  !! Input string.
+      character(*) :: out  !! Output string, all lowercase.
       integer(ip), parameter :: uppera = ichar ('A')
       integer(ip), parameter :: upperz = ichar ('Z')
       integer(ip), parameter :: shift = ichar ('a') - uppera
@@ -274,9 +274,9 @@
       use pepper_strings, only: pepper_ljucrs => ljucrs
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)         n  !! Maximum consecutive occurrences of space.
-      character(*)        input  !! Input string.
-      character(*)        output  !! Output string.
+      integer(ip) :: n  !! Maximum consecutive occurrences of space.
+      character(*) :: input  !! Input string.
+      character(*) :: output  !! Output string.
       integer(ip), parameter :: lowa = ichar ('a')
       integer(ip), parameter :: lowz = ichar ('z')
       integer(ip), parameter :: shift = ichar ('A') - lowa
@@ -290,8 +290,8 @@
       use pepper_strings, only: pepper_ljust => ljust
       use pepper_kinds, only: ip
       implicit none
-      character(*)     input  !! Input character string.
-      character(*)     output  !! Output character string, left justified.
+      character(*) :: input  !! Input character string.
+      character(*) :: output  !! Output character string, left justified.
       call pepper_ljust ( input, output )
       end subroutine ljust
 
@@ -302,14 +302,14 @@
       use pepper_strings, only: pepper_lparse => lparse
       use pepper_kinds, only: ip
       implicit none
-      character(*)          list  !! List of items delimited by DELIM.
-      character(1)          delim  !! Single character used to delimit items.
-      integer(ip)           nmax  !! Maximum number of items to return.
-      integer(ip)           n  !! Number of items in the list.
-      character(*)          items ( * )  !! Items in the list, left justified.
-      character(1)          blank
+      character(*) :: list  !! List of items delimited by DELIM.
+      character(1) :: delim  !! Single character used to delimit items.
+      integer(ip) :: nmax  !! Maximum number of items to return.
+      integer(ip) :: n  !! Number of items in the list.
+      character(*) :: items ( * )  !! Items in the list, left justified.
+      character(1) :: blank
       parameter           ( blank = ' ' )
-      integer(ip)           ispace
+      integer(ip) :: ispace
       parameter           ( ispace = 32 )
       call pepper_lparse ( list, delim, nmax, n, items )
       end subroutine lparse
@@ -321,14 +321,14 @@
       use pepper_strings, only: pepper_lparsm => lparsm
       use pepper_kinds, only: ip
       implicit none
-      character(*)     list  !! List of items delimited by DELIMS.
-      character(*)     delims  !! Single characters which delimit items.
-      integer(ip)      nmax  !! Maximum number of items to return.
-      integer(ip)      n  !! Number of items in the list.
-      character(*)     items ( * )  !! Items in the list, left justified.
-      character(1)          blank
+      character(*) :: list  !! List of items delimited by DELIMS.
+      character(*) :: delims  !! Single characters which delimit items.
+      integer(ip) :: nmax  !! Maximum number of items to return.
+      integer(ip) :: n  !! Number of items in the list.
+      character(*) :: items ( * )  !! Items in the list, left justified.
+      character(1) :: blank
       parameter           ( blank = ' ' )
-      integer(ip)           ispace
+      integer(ip) :: ispace
       parameter           ( ispace = 32 )
       call pepper_lparsm ( list, delims, nmax, n, items )
       end subroutine lparsm
@@ -341,7 +341,7 @@
       use pepper_strings, only: pepper_ltrim => ltrim
       use pepper_kinds, only: ip
       implicit none
-      character(*)          string  !! String to be trimmed.
+      character(*) :: string  !! String to be trimmed.
       ltrim = pepper_ltrim ( string )
       end function ltrim
 
@@ -352,11 +352,11 @@
       use pepper_strings, only: pepper_lxqstr => lxqstr
       use pepper_kinds, only: ip
       implicit none
-      character(*)          string  !! String to be scanned.
-      character(1)          qchar  !! Quote delimiter character.
-      integer(ip)           first  !! Character position at which to start scanning.
-      integer(ip)           last  !! Character position of end of token.
-      integer(ip)           nchar  !! Number of characters in token.
+      character(*) :: string  !! String to be scanned.
+      character(1) :: qchar  !! Quote delimiter character.
+      integer(ip) :: first  !! Character position at which to start scanning.
+      integer(ip) :: last  !! Character position of end of token.
+      integer(ip) :: nchar  !! Number of characters in token.
       call pepper_lxqstr ( string, qchar, first, last, nchar )
       end subroutine lxqstr
 
@@ -368,10 +368,10 @@
       use pepper_strings, only: pepper_matchw => matchw
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string  !! String to be tested.
-      character(*)     templ  !! Template (with wild cards) to test against STRING.
-      character(1)     wstr  !! Wild string token.
-      character(1)     wchr  !! Wild character token.
+      character(*) :: string  !! String to be tested.
+      character(*) :: templ  !! Template (with wild cards) to test against STRING.
+      character(1) :: wstr  !! Wild string token.
+      character(1) :: wchr  !! Wild character token.
       matchw = pepper_matchw ( string, templ, wstr, wchr )
       end function matchw
 
@@ -384,7 +384,7 @@
       use pepper_strings, only: pepper_nblen => nblen
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string  !! Input character string.
+      character(*) :: string  !! Input character string.
       nblen = pepper_nblen ( string )
       end function nblen
 
@@ -396,8 +396,8 @@
       use pepper_strings, only: pepper_nbwid => nbwid
       use pepper_kinds, only: ip
       implicit none
-      character(*)          array   ( * )  !! Input array.
-      integer(ip)           nelt  !! Number of elements in the array.
+      character(*) :: array   ( * )  !! Input array.
+      integer(ip) :: nelt  !! Number of elements in the array.
       nbwid = pepper_nbwid ( array, nelt )
       end function nbwid
 
@@ -410,9 +410,9 @@
       use pepper_strings, only: pepper_ncpos => ncpos
       use pepper_kinds, only: ip
       implicit none
-      character(*)          str  !! Any character string.
-      character(*)          chars  !! A collection of characters.
-      integer(ip)           start  !! Position to begin looking for one not in CHARS
+      character(*) :: str  !! Any character string.
+      character(*) :: chars  !! A collection of characters.
+      integer(ip) :: start  !! Position to begin looking for one not in CHARS
       ncpos = pepper_ncpos ( str, chars, start )
       end function ncpos
 
@@ -425,9 +425,9 @@
       use pepper_strings, only: pepper_ncposr => ncposr
       use pepper_kinds, only: ip
       implicit none
-      character(*)          str  !! Any character string.
-      character(*)          chars  !! A collection of characters.
-      integer(ip)           start  !! Position to begin looking for one not in CHARS
+      character(*) :: str  !! Any character string.
+      character(*) :: chars  !! A collection of characters.
+      integer(ip) :: start  !! Position to begin looking for one not in CHARS
       ncposr = pepper_ncposr ( str, chars, start )
       end function ncposr
 
@@ -439,10 +439,10 @@
       use pepper_strings, only: pepper_nextwd => nextwd
       use pepper_kinds, only: ip
       implicit none
-      character(*)      string  !! Input character string.
-      character(*)      next  !! The next word in the string.
-      character(*)      rest  !! The remaining part of STRING, left-justified.
-      integer(ip)           ispace
+      character(*) :: string  !! Input character string.
+      character(*) :: next  !! The next word in the string.
+      character(*) :: rest  !! The remaining part of STRING, left-justified.
+      integer(ip) :: ispace
       parameter           ( ispace = 32 )
       call pepper_nextwd ( string, next, rest )
       end subroutine nextwd
@@ -455,10 +455,10 @@
       use pepper_strings, only: pepper_nthwd => nthwd
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string  !! Input character string.
-      integer(ip)      nth  !! Index of the word to be returned.
-      character(*)     word  !! The NTH word in STRING.
-      integer(ip)      loc  !! Location of WORD in STRING.
+      character(*) :: string  !! Input character string.
+      integer(ip) :: nth  !! Index of the word to be returned.
+      character(*) :: word  !! The NTH word in STRING.
+      integer(ip) :: loc  !! Location of WORD in STRING.
       call pepper_nthwd ( string, nth, word, loc )
       end subroutine nthwd
 
@@ -470,13 +470,13 @@
       use pepper_strings, only: pepper_parsqs => parsqs
       use pepper_kinds, only: ip
       implicit none
-      character(*)          string  !! Quoted string to be parsed.
-      character(1)          qchar  !! Quote delimiter character.
-      character(*)          value  !! Parsed string.
-      integer(ip)           length  !! Number of significant characters in VALUE.
-      logical               error  !! Logical error flag.
-      character(*)          errmsg  !! Message indicating whether errors have occurred.
-      integer(ip)           ptr  !! Position in string where an error occurred.
+      character(*) :: string  !! Quoted string to be parsed.
+      character(1) :: qchar  !! Quote delimiter character.
+      character(*) :: value  !! Parsed string.
+      integer(ip) :: length  !! Number of significant characters in VALUE.
+      logical :: error  !! Logical error flag.
+      character(*) :: errmsg  !! Message indicating whether errors have occurred.
+      integer(ip) :: ptr  !! Position in string where an error occurred.
       call pepper_parsqs ( string, qchar, value, length, error, errmsg, ptr )
       end subroutine parsqs
 
@@ -487,8 +487,8 @@
       use pepper_strings, only: pepper_pcwid => pcwid
       use pepper_kinds, only: ip
       implicit none
-      character(*)          array   ( * )  !! Input array.
-      integer(ip)           nelt  !! Number of elements in the array.
+      character(*) :: array   ( * )  !! Input array.
+      integer(ip) :: nelt  !! Number of elements in the array.
       pcwid = pepper_pcwid ( array, nelt )
       end function pcwid
 
@@ -500,9 +500,9 @@
       use pepper_strings, only: pepper_pos => pos
       use pepper_kinds, only: ip
       implicit none
-      character(*)          str  !! A character string
-      character(*)          substr  !! Substring to locate in the character string.
-      integer(ip)           start  !! Where to start looking for SUBSTR in STR.
+      character(*) :: str  !! A character string
+      character(*) :: substr  !! Substring to locate in the character string.
+      integer(ip) :: start  !! Where to start looking for SUBSTR in STR.
       pos = pepper_pos ( str, substr, start )
       end function pos
 
@@ -514,9 +514,9 @@
       use pepper_strings, only: pepper_posr => posr
       use pepper_kinds, only: ip
       implicit none
-      character(*)          str  !! A character string
-      character(*)          substr  !! Substring to locate in the character string.
-      integer(ip)           start  !! Where to start looking for SUBSTR in STR.
+      character(*) :: str  !! A character string
+      character(*) :: substr  !! Substring to locate in the character string.
+      integer(ip) :: start  !! Where to start looking for SUBSTR in STR.
       posr = pepper_posr ( str, substr, start )
       end function posr
 
@@ -527,9 +527,9 @@
       use pepper_strings, only: pepper_prefix => prefix
       use pepper_kinds, only: ip
       implicit none
-      character(*)     pref  !! Prefix.
-      integer(ip)      spaces  !! Number of spaces separating prefix and suffix.
-      character(*)     string  !! Suffix on input, string on output.
+      character(*) :: pref  !! Prefix.
+      integer(ip) :: spaces  !! Number of spaces separating prefix and suffix.
+      character(*) :: string  !! Suffix on input, string on output.
       call pepper_prefix ( pref, spaces, string )
       end subroutine prefix
 
@@ -541,10 +541,10 @@
       use pepper_strings, only: pepper_quote => quote
       use pepper_kinds, only: ip
       implicit none
-      character(*)     in  !! Input string.
-      character(1)     left  !! Left delimiter.
-      character(1)     right  !! Right delimiter.
-      character(*)     out  !! Output (quoted) string.
+      character(*) :: in  !! Input string.
+      character(1) :: left  !! Left delimiter.
+      character(1) :: right  !! Right delimiter.
+      character(*) :: out  !! Output (quoted) string.
       call pepper_quote ( in, left, right, out )
       end subroutine quote
 
@@ -556,10 +556,10 @@
       use pepper_strings, only: pepper_replch => replch
       use pepper_kinds, only: ip
       implicit none
-      character(*)     instr  !! Input string.
-      character(1)     old  !! Character to be replaced.
-      character(1)     new  !! Replacement character.
-      character(*)     outstr  !! Output string.
+      character(*) :: instr  !! Input string.
+      character(1) :: old  !! Character to be replaced.
+      character(1) :: new  !! Replacement character.
+      character(*) :: outstr  !! Output string.
       call pepper_replch ( instr, old, new, outstr )
       end subroutine replch
 
@@ -570,10 +570,10 @@
       use pepper_strings, only: pepper_replwd => replwd
       use pepper_kinds, only: ip
       implicit none
-      character(*)     instr  !! Input string.
-      integer(ip)      nth  !! Number of the word to be replaced.
-      character(*)     new  !! Replacement word.
-      character(*)     outstr  !! Output string.
+      character(*) :: instr  !! Input string.
+      integer(ip) :: nth  !! Number of the word to be replaced.
+      character(*) :: new  !! Replacement word.
+      character(*) :: outstr  !! Output string.
       call pepper_replwd ( instr, nth, new, outstr )
       end subroutine replwd
 
@@ -584,10 +584,10 @@
       use pepper_strings, only: pepper_repmc => repmc
       use pepper_kinds, only: ip
       implicit none
-      character(*)          in  !! Input string.
-      character(*)          marker  !! Marker to be replaced.
-      character(*)          value  !! Replacement string.
-      character(*)          out  !! Output string.
+      character(*) :: in  !! Input string.
+      character(*) :: marker  !! Marker to be replaced.
+      character(*) :: value  !! Replacement string.
+      character(*) :: out  !! Output string.
       call pepper_repmc ( in, marker, value, out )
       end subroutine repmc
 
@@ -598,8 +598,8 @@
       use pepper_strings, only: pepper_rjust => rjust
       use pepper_kinds, only: ip
       implicit none
-      character(*)     input  !! Input character string.
-      character(*)     output  !! Output character string, right justified.
+      character(*) :: input  !! Input character string.
+      character(*) :: output  !! Output character string, right justified.
       call pepper_rjust ( input, output )
       end subroutine rjust
 
@@ -611,7 +611,7 @@
       use pepper_strings, only: pepper_rtrim => rtrim
       use pepper_kinds, only: ip
       implicit none
-      character(*)          string  !! String to be trimmed.
+      character(*) :: string  !! String to be trimmed.
       rtrim = pepper_rtrim ( string )
       end function rtrim
 
@@ -623,10 +623,10 @@
       use pepper_strings, only: pepper_samch => samch
       use pepper_kinds, only: ip
       implicit none
-      character(*)          str1  !! A character string
-      integer(ip)           l1  !! The location (index) of a character in STR1
-      character(*)          str2  !! A character string
-      integer(ip)           l2  !! The location (index) of a character in STR2
+      character(*) :: str1  !! A character string
+      integer(ip) :: l1  !! The location (index) of a character in STR1
+      character(*) :: str2  !! A character string
+      integer(ip) :: l2  !! The location (index) of a character in STR2
       samch = pepper_samch ( str1, l1, str2, l2 )
       end function samch
 
@@ -637,12 +637,12 @@
       use pepper_strings, only: pepper_samsub => samsub
       use pepper_kinds, only: ip
       implicit none
-      character(*)          str1  !! A string
-      integer(ip)           b1  !! Beginning of a substring in STR1
-      integer(ip)           e1  !! End of s substring in STR1
-      character(*)          str2  !! A second string
-      integer(ip)           b2  !! The beginning of a substring in STR2
-      integer(ip)           e2  !! The end  of s substring in STR2
+      character(*) :: str1  !! A string
+      integer(ip) :: b1  !! Beginning of a substring in STR1
+      integer(ip) :: e1  !! End of s substring in STR1
+      character(*) :: str2  !! A second string
+      integer(ip) :: b2  !! The beginning of a substring in STR2
+      integer(ip) :: e2  !! The end  of s substring in STR2
       samsub = pepper_samsub ( str1, b1, e1, str2, b2, e2 )
       end function samsub
 
@@ -654,12 +654,12 @@
       use pepper_strings, only: pepper_scanrj => scanrj
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           ids  ( * )  !! value of id's of tokens that should be dumped.
-      integer(ip)           n  !! number of id's.
-      integer(ip)           ntokns  !! number of tokens input. The number kept.
-      integer(ip)           ident  ( * )  !! identity of each of the tokens.
-      integer(ip)           beg    ( * )  !! indices of beginning of tokens.
-      integer(ip)           end    ( * )  !! indices of endings of tokens.
+      integer(ip) :: ids  ( * )  !! value of id's of tokens that should be dumped.
+      integer(ip) :: n  !! number of id's.
+      integer(ip) :: ntokns  !! number of tokens input. The number kept.
+      integer(ip) :: ident  ( * )  !! identity of each of the tokens.
+      integer(ip) :: beg    ( * )  !! indices of beginning of tokens.
+      integer(ip) :: end    ( * )  !! indices of endings of tokens.
       call pepper_scanrj ( ids, n, ntokns, ident, beg, end )
       end subroutine scanrj
 
@@ -672,10 +672,10 @@
       use pepper_strings, only: pepper_shiftl => shiftl
       use pepper_kinds, only: ip
       implicit none
-      character(*)       in  !! Input string.
-      integer(ip)        nshift  !! Number of times to shift.
-      character(1)       fillc  !! Character to fill spaces left vacant.
-      character(*)       out  !! Shifted string.
+      character(*) :: in  !! Input string.
+      integer(ip) :: nshift  !! Number of times to shift.
+      character(1) :: fillc  !! Character to fill spaces left vacant.
+      character(*) :: out  !! Shifted string.
       call pepper_shiftl ( in, nshift, fillc, out )
       end subroutine shiftl
 
@@ -688,10 +688,10 @@
       use pepper_strings, only: pepper_shiftr => shiftr
       use pepper_kinds, only: ip
       implicit none
-      character(*)       in  !! Input string.
-      integer(ip)        nshift  !! Number of times to shift.
-      character(1)       fillc  !! Character to fill spaces left vacant.
-      character(*)       out  !! Shifted string.
+      character(*) :: in  !! Input string.
+      integer(ip) :: nshift  !! Number of times to shift.
+      character(1) :: fillc  !! Character to fill spaces left vacant.
+      character(*) :: out  !! Shifted string.
       call pepper_shiftr ( in, nshift, fillc, out )
       end subroutine shiftr
 
@@ -702,8 +702,8 @@
       use pepper_strings, only: pepper_sigdgt => sigdgt
       use pepper_kinds, only: ip
       implicit none
-      character(*)     in  !! Input numeric string.
-      character(*)     out  !! Numeric string, with insignificant digits removed.
+      character(*) :: in  !! Input numeric string.
+      character(*) :: out  !! Numeric string, with insignificant digits removed.
       call pepper_sigdgt ( in, out )
       end subroutine sigdgt
 
@@ -714,9 +714,9 @@
       use pepper_strings, only: pepper_suffix => suffix
       use pepper_kinds, only: ip
       implicit none
-      character(*)     suff  !! Suffix.
-      integer(ip)      spaces  !! Number of spaces separating prefix and suffix.
-      character(*)     string  !! Prefix on input, string on output.
+      character(*) :: suff  !! Suffix.
+      integer(ip) :: spaces  !! Number of spaces separating prefix and suffix.
+      character(*) :: string  !! Prefix on input, string on output.
       call pepper_suffix ( suff, spaces, string )
       end subroutine suffix
 
@@ -727,8 +727,8 @@
       use pepper_strings, only: pepper_ucase => ucase
       use pepper_kinds, only: ip
       implicit none
-      character(*)     in  !! Input string.
-      character(*)     out  !! Output string, all uppercase.
+      character(*) :: in  !! Input string.
+      character(*) :: out  !! Output string, all uppercase.
       integer(ip), parameter :: lowa = ichar ('a')
       integer(ip), parameter :: lowz = ichar ('z')
       integer(ip), parameter :: shift = ichar ('A') - lowa
@@ -742,7 +742,7 @@
       use pepper_strings, only: pepper_wdcnt => wdcnt
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string  !! Input character string.
+      character(*) :: string  !! Input character string.
       wdcnt = pepper_wdcnt ( string )
       end function wdcnt
 
@@ -754,8 +754,8 @@
       use pepper_strings, only: pepper_wdindx => wdindx
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string  !! String of characters, potentially containing words
-      character(*)     word  !! A string of consecutive printable letters.
+      character(*) :: string  !! String of characters, potentially containing words
+      character(*) :: word  !! A string of consecutive printable letters.
       wdindx = pepper_wdindx ( string, word )
       end function wdindx
 
@@ -767,10 +767,10 @@
       subroutine zzinssub ( in, sub, loc, out )
       use pepper_strings, only: pepper_zzinssub => zzinssub
       use pepper_kinds, only: ip
-      character(*)     in  !! Input string.
-      character(*)     sub  !! Substring to be inserted.
-      integer(ip)      loc  !! Position at which substring is to be inserted.
-      character(*)     out  !! Output string.
+      character(*) :: in  !! Input string.
+      character(*) :: sub  !! Substring to be inserted.
+      integer(ip) :: loc  !! Position at which substring is to be inserted.
+      character(*) :: out  !! Output string.
       call pepper_zzinssub ( in, sub, loc, out )
       end subroutine zzinssub
 
@@ -783,11 +783,11 @@
       use pepper_strings, only: pepper_zzrepsub => zzrepsub
       use pepper_kinds, only: ip
       implicit none
-      character(*)          in  !! Input string.
-      integer(ip)           left  !! Ends of substring to be replaced.
-      integer(ip)           right  !! Ends of substring to be replaced.
-      character(*)          string  !! Replacement string.
-      character(*)          out  !! Resulting string.
+      character(*) :: in  !! Input string.
+      integer(ip) :: left  !! Ends of substring to be replaced.
+      integer(ip) :: right  !! Ends of substring to be replaced.
+      character(*) :: string  !! Replacement string.
+      character(*) :: out  !! Resulting string.
       call pepper_zzrepsub ( in, left, right, string, out )
       end subroutine zzrepsub
 
@@ -798,8 +798,8 @@
       use pepper_strings, only: pepper_intstr => intstr
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           number  !! Integer to be converted.
-      character(*)          string  !! Equivalent character string, left justified.
+      integer(ip) :: number  !! Integer to be converted.
+      character(*) :: string  !! Equivalent character string, left justified.
       integer(ip), parameter :: base = 10
       integer(ip), parameter :: strlen = 80
       character(1), parameter :: digits(0:9) = &
@@ -815,9 +815,9 @@
       use pepper_strings, only: pepper_dpstr => dpstr
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp) x  !! A double precision number
-      integer(ip)      sigdig  !! The number of significant digits placed in output
-      character(*)     string  !! A character string representation of X
+      real(wp) :: x  !! A double precision number
+      integer(ip) :: sigdig  !! The number of significant digits placed in output
+      character(*) :: string  !! A character string representation of X
       integer(ip), parameter :: mostdg = 14
       integer(ip), parameter :: maxpow = 17
       real(wp), parameter :: power (0:maxpow) = &
@@ -853,9 +853,9 @@
       use pepper_strings, only: pepper_eqchr => eqchr
       use pepper_kinds, only: ip
       implicit none
-      character(1)          a  !! one of the characters to check
-      character(1)          b  !! the other character to check
-      integer(ip)           lstchr
+      character(1) :: a  !! one of the characters to check
+      character(1) :: b  !! the other character to check
+      integer(ip) :: lstchr
       parameter           ( lstchr = 255 )
       eqchr = pepper_eqchr ( a, b )
       end function eqchr
@@ -868,9 +868,9 @@
       use pepper_strings, only: pepper_nechr => nechr
       use pepper_kinds, only: ip
       implicit none
-      character(1)          a  !! one of the characters to check
-      character(1)          b  !! the other character to check
-      integer(ip)           lstchr
+      character(1) :: a  !! one of the characters to check
+      character(1) :: b  !! the other character to check
+      integer(ip) :: lstchr
       parameter           ( lstchr = 255 )
       nechr = pepper_nechr ( a, b )
       end function nechr
@@ -883,10 +883,10 @@
       use pepper_strings, only: pepper_samchi => samchi
       use pepper_kinds, only: ip
       implicit none
-      character(*)          str1  !! A character string
-      integer(ip)           l1  !! The location (index) of a character in STR1
-      character(*)          str2  !! A character string
-      integer(ip)           l2  !! The location (index) of a character in STR2
+      character(*) :: str1  !! A character string
+      integer(ip) :: l1  !! The location (index) of a character in STR1
+      character(*) :: str2  !! A character string
+      integer(ip) :: l2  !! The location (index) of a character in STR2
       samchi = pepper_samchi ( str1, l1, str2, l2 )
       end function samchi
 
@@ -898,12 +898,12 @@
       use pepper_strings, only: pepper_samsbi => samsbi
       use pepper_kinds, only: ip
       implicit none
-      character(*)          str1  !! A string
-      integer(ip)           b1  !! Beginning of a substring in STR1
-      integer(ip)           e1  !! End of s substring in STR1
-      character(*)          str2  !! A second string
-      integer(ip)           b2  !! The beginning of a substring in STR2
-      integer(ip)           e2  !! The end  of s substring in STR2
+      character(*) :: str1  !! A string
+      integer(ip) :: b1  !! Beginning of a substring in STR1
+      integer(ip) :: e1  !! End of s substring in STR1
+      character(*) :: str2  !! A second string
+      integer(ip) :: b2  !! The beginning of a substring in STR2
+      integer(ip) :: e2  !! The end  of s substring in STR2
       samsbi = pepper_samsbi ( str1, b1, e1, str2, b2, e2 )
       end function samsbi
 
@@ -915,10 +915,10 @@
       use pepper_strings, only: pepper_matchi => matchi
       use pepper_kinds, only: ip
       implicit none
-      character(*)     string  !! String to be tested.
-      character(*)     templ  !! Template (with wild cards) to test against STRING.
-      character(1)     wstr  !! Wild string token.
-      character(1)     wchr  !! Wild character token.
+      character(*) :: string  !! String to be tested.
+      character(*) :: templ  !! Template (with wild cards) to test against STRING.
+      character(1) :: wstr  !! Wild string token.
+      character(1) :: wchr  !! Wild character token.
       matchi = pepper_matchi ( string, templ, wstr, wchr )
       end function matchi
 
@@ -930,10 +930,10 @@
       use pepper_strings, only: pepper_nparsd => nparsd
       use pepper_kinds, only: ip, wp
       implicit none
-      character(*)     string  !! Character string representing a numeric value.
-      real(wp) x  !! Double precision value parsed from STRING.
-      character(*)     error  !! Message indicating whether errors have occurred.
-      integer(ip)      ptr  !! Position in string where an error occurred.
+      character(*) :: string  !! Character string representing a numeric value.
+      real(wp) :: x  !! Double precision value parsed from STRING.
+      character(*) :: error  !! Message indicating whether errors have occurred.
+      integer(ip) :: ptr  !! Position in string where an error occurred.
       call pepper_nparsd ( string, x, error, ptr )
       end subroutine nparsd
 
@@ -946,10 +946,10 @@
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax, intmin
       implicit none
-      character(*)     string  !! Character string representing a numeric value.
-      integer(ip)      n  !! Translated integer value of STRING.
-      character(*)     error  !! Message indicating what errors have occurred.
-      integer(ip)      pnter  !! Position in character string where an error occurred.
+      character(*) :: string  !! Character string representing a numeric value.
+      integer(ip) :: n  !! Translated integer value of STRING.
+      character(*) :: error  !! Message indicating what errors have occurred.
+      integer(ip) :: pnter  !! Position in character string where an error occurred.
       call pepper_nparsi ( string, n, error, pnter )
       end subroutine nparsi
 
@@ -961,9 +961,9 @@
       use pepper_strings, only: pepper_lx4uns => lx4uns
       use pepper_kinds, only: ip
       implicit none
-      character(*)          string  !! any character string
-      integer(ip)           first  !! first character to scan from in STRING
-      integer(ip)           last  !! last character that is part of an unsigned integer
-      integer(ip)           nchar  !! number of characters in the unsigned integer.
+      character(*) :: string  !! any character string
+      integer(ip) :: first  !! first character to scan from in STRING
+      integer(ip) :: last  !! last character that is part of an unsigned integer
+      integer(ip) :: nchar  !! number of characters in the unsigned integer.
       call pepper_lx4uns ( string, first, last, nchar )
       end subroutine lx4uns

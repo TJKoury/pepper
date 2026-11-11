@@ -426,8 +426,8 @@ contains
       real(wp), intent(in) :: angle  !! Rotation angle, in radians.
       real(wp), intent(out) :: r     ( 3, 3 )  !! Rotation matrix corresponding to AXIS and ANGLE.
 
-      real(wp)              vtemp ( 3 )
-      integer(ip)           i
+      real(wp) :: vtemp ( 3 )
+      integer(ip) :: i
 
 !
 !     First, set R equal to the identity.
@@ -978,8 +978,8 @@ contains
       logical, intent(in) :: elplsz  !! Flag indicating how elevation is measured.
       real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of a point.
 
-      real(wp)              azimut
-      real(wp)              elevat
+      real(wp) :: azimut
+      real(wp) :: elevat
 
 !
 !     Error free routine. No check-in.
@@ -1841,12 +1841,12 @@ contains
       real(wp), intent(inout) :: partdp ( 3, 0:* )  !! Workspace provided for computing derivatives.
       real(wp), intent(out) :: dpdxs  (    0:* )  !! Array of the derivatives of the polynomial.
 
-      real(wp) scale
-      real(wp) s
-      real(wp) s2
+      real(wp) :: scale
+      real(wp) :: s
+      real(wp) :: s2
 
-      integer(ip)      i
-      integer(ip)      j
+      integer(ip) :: i
+      integer(ip) :: j
 
 !
 !     Transform X to S and initialize temporary variables.
@@ -2180,11 +2180,11 @@ contains
       real(wp), intent(out) :: p  !! Value of the polynomial at X
       real(wp), intent(out) :: dpdx  !! Value of the derivative of the polynomial at X
 
-      integer(ip)      j
-      real(wp) w (3)
-      real(wp) dw(3)
-      real(wp) s
-      real(wp) s2
+      integer(ip) :: j
+      real(wp) :: w (3)
+      real(wp) :: dw(3)
+      real(wp) :: s
+      real(wp) :: s2
 
 !
 !     Transform X to S and initialize temporary variables.
@@ -2457,10 +2457,10 @@ contains
       real(wp), intent(in) :: x  !! Value for which the polynomial is to be evaluated.
       real(wp), intent(out) :: p  !! Value of the polynomial at X.
 
-      integer(ip)      j
-      real(wp) w(3)
-      real(wp) s
-      real(wp) s2
+      integer(ip) :: j
+      real(wp) :: w(3)
+      real(wp) :: s
+      real(wp) :: s2
 
 !
 !     Transform X to S and initialize temporary variables.
@@ -2840,12 +2840,12 @@ contains
       real(wp), intent(out) :: lon  !! Longitude of point (radians).
       real(wp), intent(out) :: lat  !! Latitude of point (radians).
 
-      real(wp) big
-      real(wp) x
-      real(wp) y
+      real(wp) :: big
+      real(wp) :: x
+      real(wp) :: y
 
-      real(wp) rho
-      real(wp) lattud
+      real(wp) :: rho
+      real(wp) :: lattud
 
 !
 !     Convert the input cylindrical coordinates to latitudinal
@@ -3182,8 +3182,8 @@ contains
       real(wp), intent(in) :: z  !! Height of a point above XY plane.
       real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of the point.
 
-      real(wp) x
-      real(wp) y
+      real(wp) :: x
+      real(wp) :: y
 
 !
 !     Convert to rectangular coordinates, storing the results in
@@ -3557,12 +3557,12 @@ contains
       real(wp), intent(out) :: colat  !! Polar angle (co-latitude in radians) of point.
       real(wp), intent(out) :: slon  !! Azimuthal angle (longitude) of point (radians).
 
-      real(wp) big
-      real(wp) x
-      real(wp) y
+      real(wp) :: big
+      real(wp) :: x
+      real(wp) :: y
 
-      real(wp) rh
-      real(wp) th
+      real(wp) :: rh
+      real(wp) :: th
 
 !
 !     Convert to spherical, storing in temporary variables
@@ -4117,19 +4117,19 @@ contains
       real(wp), intent(in) :: z  !! Height of the point above the XY plane.
       real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
-      integer(ip)           dx
+      integer(ip) :: dx
       parameter           ( dx     = 1 )
 
-      integer(ip)           dy
+      integer(ip) :: dy
       parameter           ( dy     = 2 )
 
-      integer(ip)           dz
+      integer(ip) :: dz
       parameter           ( dz     = 3 )
 
-      integer(ip)           dr
+      integer(ip) :: dr
       parameter           ( dr     = 1 )
 
-      integer(ip)           dlon
+      integer(ip) :: dlon
       parameter           ( dlon   = 2 )
 
       jacobi (dx,dr)     =  dcos( clon )
@@ -4453,19 +4453,19 @@ contains
       real(wp), intent(in) :: lat  !! Angle of the point from the XY plane in radians.
       real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
-      integer(ip)           dx
+      integer(ip) :: dx
       parameter           ( dx   = 1 )
 
-      integer(ip)           dy
+      integer(ip) :: dy
       parameter           ( dy   = 2 )
 
-      integer(ip)           dz
+      integer(ip) :: dz
       parameter           ( dz   = 3 )
 
-      integer(ip)           dr
+      integer(ip) :: dr
       parameter           ( dr   = 1 )
 
-      integer(ip)           dlon
+      integer(ip) :: dlon
       parameter           ( dlon = 2 )
 
       integer(ip), parameter :: dlat = 3
@@ -4793,27 +4793,27 @@ contains
       real(wp), intent(in) :: slon  !! Angle of the point from the XY plane.
       real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
-      integer(ip)           dx
+      integer(ip) :: dx
       parameter           ( dx     = 1 )
 
-      integer(ip)           dy
+      integer(ip) :: dy
       parameter           ( dy     = 2 )
 
-      integer(ip)           dz
+      integer(ip) :: dz
       parameter           ( dz     = 3 )
 
-      integer(ip)           dr
+      integer(ip) :: dr
       parameter           ( dr     = 1 )
 
       integer(ip), parameter :: dcolat = 2
 
-      integer(ip)           dlon
+      integer(ip) :: dlon
       parameter           ( dlon   = 3 )
 
-      real(wp)              ccolat
-      real(wp)              clong
-      real(wp)              scolat
-      real(wp)              slong
+      real(wp) :: ccolat
+      real(wp) :: clong
+      real(wp) :: scolat
+      real(wp) :: slong
 
       ccolat = dcos( colat )
       scolat = dsin( colat )
@@ -5108,11 +5108,11 @@ contains
       real(wp), intent(in) :: s2   ( 6 )  !! Right hand state for cross product and derivative.
       real(wp), intent(out) :: sout ( 6 )  !! Unit vector and derivative of the cross product.
 
-      real(wp)              f1
-      real(wp)              f2
-      real(wp)              scls1  ( 6 )
-      real(wp)              scls2  ( 6 )
-      real(wp)              tmpsta ( 6 )
+      real(wp) :: f1
+      real(wp) :: f2
+      real(wp) :: scls1  ( 6 )
+      real(wp) :: scls2  ( 6 )
+      real(wp) :: tmpsta ( 6 )
 
 !
 !     Scale the components of the input states so the states have the
@@ -5469,9 +5469,9 @@ contains
       real(wp), intent(in) :: s2   ( 6 )  !! Right hand state for cross product and derivative.
       real(wp), intent(out) :: sout ( 6 )  !! State associated with cross product of positions.
 
-      real(wp)              vtemp  ( 3 )
-      real(wp)              dvtmp1 ( 3 )
-      real(wp)              dvtmp2 ( 3 )
+      real(wp) :: vtemp  ( 3 )
+      real(wp) :: dvtmp1 ( 3 )
+      real(wp) :: dvtmp2 ( 3 )
 
 !
 !     Calculate the cross product of S1 and S2, store it in VTEMP.
@@ -5871,7 +5871,7 @@ contains
 !
 !     Local variables.
 !
-      real(wp)              length
+      real(wp) :: length
 
 !
 !     Get the position portion of the output state and the length of
@@ -6099,7 +6099,7 @@ contains
 !
 !     Local Variables.
 !
-      real(wp)              xhat ( 3 )
+      real(wp) :: xhat ( 3 )
 
 !
 !     If "x" describes the zero vector, return zero as the derivative
@@ -6747,14 +6747,14 @@ contains
       real(wp), intent(out) :: y ( 3 )  !! Unit vector in the plane orthogonal to X.
       real(wp), intent(out) :: z ( 3 )  !! Unit vector given by the cross product <X,Y>.
 
-      real(wp)              a
-      real(wp)              b
-      real(wp)              c
-      real(wp)              f
+      real(wp) :: a
+      real(wp) :: b
+      real(wp) :: c
+      real(wp) :: f
 
-      integer(ip)           s1
-      integer(ip)           s2
-      integer(ip)           s3
+      integer(ip) :: s1
+      integer(ip) :: s2
+      integer(ip) :: s3
 
 !
 !     First make X into a unit vector.
@@ -6930,11 +6930,11 @@ contains
       integer(ip), intent(in) :: a  !! Any integer
       integer(ip), intent(in) :: b  !! Any integer
 
-      integer(ip)      remndr
-      integer(ip)      absa
-      integer(ip)      absb
-      integer(ip)      p
-      integer(ip)      q
+      integer(ip) :: remndr
+      integer(ip) :: absa
+      integer(ip) :: absb
+      integer(ip) :: p
+      integer(ip) :: q
 
       absa = abs(a)
       absb = abs(b)
@@ -7286,14 +7286,14 @@ contains
       logical, intent(out) :: found  !! Indicates whether V lies in the solid angle
       real(wp), intent(out) :: scale  !! Scale times V is in the triangle E1,E2,E3
 
-      real(wp)              denom
-      real(wp)              en
-      real(wp)              norm12 ( 3 )
-      real(wp)              norm23 ( 3 )
-      real(wp)              norm31 ( 3 )
-      real(wp)              vn12
-      real(wp)              vn23
-      real(wp)              vn31
+      real(wp) :: denom
+      real(wp) :: en
+      real(wp) :: norm12 ( 3 )
+      real(wp) :: norm23 ( 3 )
+      real(wp) :: norm31 ( 3 )
+      real(wp) :: vn12
+      real(wp) :: vn23
+      real(wp) :: vn31
 !
 !     Our initial value for SCALE is zero.  When we have better
 !     information, we'll change this.
@@ -7626,9 +7626,9 @@ contains
       real(wp), intent(out) :: mout ( 3,3 )  !! Inverted matrix (M)**-1. If M is singular, then MOUT
                                              !! will be the zero matrix.
 
-      real(wp)           mtemp(3,3)
-      real(wp)           mdet
-      real(wp)           invdet
+      real(wp) :: mtemp(3,3)
+      real(wp) :: mdet
+      real(wp) :: invdet
 
 !
 !  Find the determinant of M and check for singularity
@@ -8080,8 +8080,8 @@ contains
       real(wp), intent(out) :: clon  !! Angle of the point from the XZ plane in radians.
       real(wp), intent(out) :: z  !! Height of the point above the XY plane.
 
-      real(wp) rh
-      real(wp) zz
+      real(wp) :: rh
+      real(wp) :: zz
 
 !
 !     Convert to cylindrical, storing in temporary variables
@@ -8438,9 +8438,9 @@ contains
       real(wp), intent(in) :: lat  !! Latitude of point in radians.
       real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of the point.
 
-      real(wp)           x
-      real(wp)           y
-      real(wp)           z
+      real(wp) :: x
+      real(wp) :: y
+      real(wp) :: z
 
 !
 !     Convert to rectangular coordinates, storing the results in
@@ -8832,8 +8832,8 @@ contains
       real(wp), intent(out) :: colat  !! Angle of the point from positive Z axis (radians).
       real(wp), intent(out) :: slon  !! Angle of the point from the XZ plane (radians).
 
-      real(wp) th
-      real(wp) ph
+      real(wp) :: th
+      real(wp) :: ph
 
 !
 !     Convert to spherical coordinates, storing the results in
@@ -9212,10 +9212,10 @@ contains
       real(wp), intent(out) :: mout ( 3,3 )  !! 3x3 double precision matrix which is the product
                                              !! (M1**T) * M2.
 
-      real(wp)              prodm(3,3)
+      real(wp) :: prodm(3,3)
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
 !
 !  Perform the matrix multiplication
@@ -9410,9 +9410,9 @@ contains
       real(wp), intent(in) :: m2   ( nr1r2,nc2 )  !! Right-hand matrix to be multiplied.
       real(wp), intent(out) :: mout ( nc1,  nc2 )  !! Product matrix M1**T * M2.
 
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           k
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
 
 !
 !  Perform the matrix multiplication
@@ -9590,8 +9590,8 @@ contains
       real(wp), intent(out) :: vout   (   3 )  !! 3-dimensional double precision vector. VOUT is the
                                                !! product M**T * VIN.
 
-      real(wp)          prodv  ( 3 )
-      integer(ip)       i
+      real(wp) :: prodv  ( 3 )
+      integer(ip) :: i
 
 !
 !  Perform the matrix-vector multiplication
@@ -9762,8 +9762,8 @@ contains
       real(wp), intent(in) :: v2   ( nr1r2     )  !! Right-hand vector to be multiplied.
       real(wp), intent(out) :: vout (       nc1 )  !! Product vector M1**T * V2.
 
-      real(wp) sum
-      integer(ip)      i,k
+      real(wp) :: sum
+      integer(ip) :: i,k
 
 !
 !  Perform the matrix-vector multiplication
@@ -9949,10 +9949,10 @@ contains
       real(wp), intent(in) :: m2   ( 3,3 )  !! 3x3 double precision matrix.
       real(wp), intent(out) :: mout ( 3,3 )  !! The 3x3 double precision matrix product M1*M2.
 
-      real(wp)              prodm( 3, 3 )
+      real(wp) :: prodm( 3, 3 )
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
 !
 !  Perform the matrix multiplication
@@ -10130,11 +10130,11 @@ contains
       real(wp), intent(in) :: m2   ( nc1r2, nc2   )  !! NC1R2 x NC2   double precision matrix.
       real(wp), intent(out) :: mout ( nr1,   nc2   )  !! NR1 x NC2 double precision matrix.
 
-      real(wp)              sum
+      real(wp) :: sum
 
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           k
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
 
 !
 !  Perform the matrix multiplication
@@ -10330,10 +10330,10 @@ contains
       real(wp), intent(in) :: m2   ( 3,3 )  !! 3x3 double precision matrix.
       real(wp), intent(out) :: mout ( 3,3 )  !! The product M1 times transpose of M2.
 
-      real(wp)              prodm ( 3, 3 )
+      real(wp) :: prodm ( 3, 3 )
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
 !
 !  Perform the matrix multiplication
@@ -10523,10 +10523,10 @@ contains
                                                   !! multiplied.
       real(wp), intent(out) :: mout ( nr1,nr2   )  !! Product matrix M1 * M2**T.
 
-      real(wp)           sum
-      integer(ip)        i
-      integer(ip)        j
-      integer(ip)        k
+      real(wp) :: sum
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
 
 !
 !  Perform the matrix multiplication
@@ -10685,8 +10685,8 @@ contains
       real(wp), intent(out) :: vout   (    3 )  !! 3-dimensional double precision vector. VOUT is
                                                 !! the product M*VIN.
 
-      real(wp)             prodv  ( 3 )
-      integer(ip)          i
+      real(wp) :: prodv  ( 3 )
+      integer(ip) :: i
 
 !
 !  Perform the matrix-vector multiplication
@@ -10842,10 +10842,10 @@ contains
       real(wp), intent(in) :: v2   (     nc1r2 )  !! Right-hand vector to be multiplied.
       real(wp), intent(out) :: vout ( nr1       )  !! Product vector M1*V2.
 
-      real(wp)              sum
+      real(wp) :: sum
 
-      integer(ip)           i
-      integer(ip)           k
+      integer(ip) :: i
+      integer(ip) :: k
 
 !
 !  Perform the matrix-vector multiplication
@@ -11483,7 +11483,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip)           ubpl
+      integer(ip) :: ubpl
       parameter           ( ubpl    =   4 )
 
       real(wp), intent(in) :: plane  ( ubpl )  !! A SPICE plane.
@@ -11630,14 +11630,14 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip)           ubpl
+      integer(ip) :: ubpl
       parameter           ( ubpl   =    4 )
 
       real(wp), intent(in) :: plane  ( ubpl )  !! A SPICE plane.
       real(wp), intent(out) :: normal (    3 )  !! A unit normal vector and point that define PLANE.
       real(wp), intent(out) :: point  (    3 )  !! A unit normal vector and point that define PLANE.
 
-      real(wp)              const
+      real(wp) :: const
 
 !
 !     Note for programmers: validity of the input plane is not
@@ -11849,7 +11849,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip)           ubpl
+      integer(ip) :: ubpl
       parameter           ( ubpl   =   4 )
 
       real(wp), intent(in) :: plane ( ubpl )  !! A SPICE plane.
@@ -11860,7 +11860,7 @@ contains
       real(wp), intent(out) :: span2 (    3 )  !! A point in the input plane and two vectors
                                                !! spanning the input plane.
 
-      real(wp)              normal ( 3 )
+      real(wp) :: normal ( 3 )
 
 !
 !     Note for programmers: validity of the input plane is not
@@ -12058,9 +12058,9 @@ contains
       real(wp), intent(in) :: delta  !! Fraction by which the plate is to be expanded.
       real(wp), intent(out) :: overts ( 3, 3 )  !! Vertices of the expanded plate.
 
-      real(wp)              sclctr ( 3 )
-      real(wp)              d
-      real(wp)              s
+      real(wp) :: sclctr ( 3 )
+      real(wp) :: d
+      real(wp) :: s
 
 !
 !     Compute the centroid of the input vertices. Scale the centroid
@@ -12210,8 +12210,8 @@ contains
       real(wp), intent(in) :: v3     ( 3 )  !! Vertices of a plate.
       real(wp), intent(out) :: normal ( 3 )  !! Plate's outward normal vector.
 
-      real(wp)              edge1  ( 3 )
-      real(wp)              edge2  ( 3 )
+      real(wp) :: edge1  ( 3 )
+      real(wp) :: edge2  ( 3 )
 
 !
 !     This routine is error-free.
@@ -12426,9 +12426,9 @@ contains
       real(wp), intent(in) :: t  !! Point to evaluate the polynomial and derivatives
       real(wp), intent(out) :: p      ( 0:* )  !! Value of polynomial and derivatives.
 
-      integer(ip)      i
-      integer(ip)      k
-      real(wp) scale
+      integer(ip) :: i
+      integer(ip) :: k
+      real(wp) :: scale
 
       if ( nderiv < 0 ) then
          return
@@ -12950,18 +12950,18 @@ contains
       real(wp), intent(in) :: q ( 0 : 3 )  !! A unit quaternion.
       real(wp), intent(out) :: r ( 3,  3 )  !! A rotation matrix corresponding to Q.
 
-      real(wp)              q01
-      real(wp)              q02
-      real(wp)              q03
-      real(wp)              q12
-      real(wp)              q13
-      real(wp)              q23
-      real(wp)              q1s
-      real(wp)              q2s
-      real(wp)              q3s
+      real(wp) :: q01
+      real(wp) :: q02
+      real(wp) :: q03
+      real(wp) :: q12
+      real(wp) :: q13
+      real(wp) :: q23
+      real(wp) :: q1s
+      real(wp) :: q2s
+      real(wp) :: q3s
 
-      real(wp)              l2
-      real(wp)              sharpn
+      real(wp) :: l2
+      real(wp) :: sharpn
 
 !
 !     If a matrix R represents a rotation of r radians about the unit
@@ -13746,9 +13746,9 @@ contains
       real(wp), intent(in) :: dq   ( 0 : 3 )  !! Derivative of Q with respect to time.
       real(wp), intent(out) :: av   ( 3 )  !! Angular velocity defined by Q and DQ.
 
-      real(wp)              qhat  ( 0 : 3 )
-      real(wp)              qstar ( 0 : 3 )
-      real(wp)              qtemp ( 0 : 3 )
+      real(wp) :: qhat  ( 0 : 3 )
+      real(wp) :: qstar ( 0 : 3 )
+      real(wp) :: qtemp ( 0 : 3 )
 
 !
 !     Get a unitized copy of the input quaternion.
@@ -14281,7 +14281,7 @@ contains
       real(wp), intent(in) :: q2   ( 0 : 3 )  !! Second SPICE quaternion factor.
       real(wp), intent(out) :: qout ( 0 : 3 )  !! Product of Q1 and Q2.
 
-      real(wp)              cross ( 3 )
+      real(wp) :: cross ( 3 )
 
 !
 !     Compute the scalar part of the product.
@@ -14922,11 +14922,11 @@ contains
       real(wp), intent(in) :: av     ( 3    )  !! Angular velocity vector.
       real(wp), intent(out) :: xform  ( 6, 6 )  !! State transformation associated with ROT and AV.
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
-      real(wp)              omegat ( 3, 3 )
-      real(wp)              drotdt ( 3, 3 )
+      real(wp) :: omegat ( 3, 3 )
+      real(wp) :: drotdt ( 3, 3 )
 
 !
 !     A state transformation matrix XFORM has the following form
@@ -15879,9 +15879,9 @@ contains
       real(wp), intent(out) :: clon  !! Angle (radians) of the point from XZ plane
       real(wp), intent(out) :: z  !! Height of the point above XY plane.
 
-      real(wp) x
-      real(wp) y
-      real(wp) big
+      real(wp) :: x
+      real(wp) :: y
+      real(wp) :: big
 
 !
 !     Use temporary variables for computing R.
@@ -16248,10 +16248,10 @@ contains
 !
 !     Local variables.
 !
-      real(wp) x
-      real(wp) y
-      real(wp) z
-      real(wp) big
+      real(wp) :: x
+      real(wp) :: y
+      real(wp) :: z
+      real(wp) :: big
 
 !
 !     Store rectangular coordinates in temporary variables
@@ -16757,10 +16757,10 @@ contains
       real(wp), intent(out) :: colat  !! Angle of the point from the Z-axis (radians)
       real(wp), intent(out) :: slon  !! Longitude of the point (radians).
 
-      real(wp) x
-      real(wp) y
-      real(wp) z
-      real(wp) big
+      real(wp) :: x
+      real(wp) :: y
+      real(wp) :: z
+      real(wp) :: big
 
 !
 !     Store rectangular coordinates in temporary variables
@@ -17521,8 +17521,8 @@ contains
       real(wp), intent(out) :: clon  !! Angle (radians) of point from XZ plane.
       real(wp), intent(out) :: z  !! Height of point above XY plane.
 
-      real(wp) rr
-      real(wp) zz
+      real(wp) :: rr
+      real(wp) :: zz
 
 !
 !     Convert to cylindrical coordinates, storing the results in
@@ -17911,8 +17911,8 @@ contains
       real(wp), intent(out) :: lon  !! Angle of the point from the XZ plane in radians
       real(wp), intent(out) :: lat  !! Angle of the point from the XY plane in radians
 
-      real(wp) rr
-      real(wp) lattud
+      real(wp) :: rr
+      real(wp) :: lattud
 
 !
 !     Convert to latitudinal coordinates, storing the results in
@@ -18266,9 +18266,9 @@ contains
       real(wp), intent(in) :: slon  !! Angle of the point from the XZ plane in radians.
       real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of the point.
 
-      real(wp) x
-      real(wp) y
-      real(wp) z
+      real(wp) :: x
+      real(wp) :: y
+      real(wp) :: z
 
 !
 !     Convert to rectangular coordinates, storing in the results in
@@ -18585,7 +18585,7 @@ contains
       real(wp), intent(in) :: matrix ( ndim,ndim )  !! NDIM x NDIM matrix of double precision
                                                     !! numbers.
 
-      integer(ip)     i
+      integer(ip) :: i
 
       traceg = 0.0_wp
       do i = 1,ndim
@@ -18757,14 +18757,14 @@ contains
       real(wp), intent(in) :: v2   ( 3 )  !! Right vector for cross product.
       real(wp), intent(out) :: vout ( 3 )  !! Normalized cross product of V1 and V2.
 
-      real(wp)              vcross(3)
-      real(wp)              vmag
+      real(wp) :: vcross(3)
+      real(wp) :: vmag
 
-      real(wp)              maxv1
-      real(wp)              maxv2
+      real(wp) :: maxv1
+      real(wp) :: maxv2
 
-      real(wp)              tv1 ( 3 )
-      real(wp)              tv2 ( 3 )
+      real(wp) :: tv1 ( 3 )
+      real(wp) :: tv2 ( 3 )
 
 !
 !     Get the biggest component of each of the two vectors.
@@ -19143,7 +19143,7 @@ contains
       real(wp), intent(out) :: vout ( ndim )  !! Unit vector V1 / ||V1||.
       real(wp), intent(out) :: vmag  !! Magnitude of V1, i.e. ||V1||.
 
-      integer(ip)        i
+      integer(ip) :: i
 
 !
 !  Obtain the magnitude of V1
@@ -19648,7 +19648,7 @@ contains
       real(wp), intent(in) :: v2   ( 3 )  !! Right hand vector for cross product.
       real(wp), intent(out) :: vout ( 3 )  !! Cross product V1 x V2.
 
-      real(wp) vtemp(3)
+      real(wp) :: vtemp(3)
 
 !
 !  Calculate the cross product of V1 and V2, store in VTEMP
@@ -19783,7 +19783,7 @@ contains
       real(wp), intent(in) :: v1 ( 3 )  !! Two 3-vectors.
       real(wp), intent(in) :: v2 ( 3 )  !! Two 3-vectors.
 
-      real(wp)              diff ( 3 )
+      real(wp) :: diff ( 3 )
 
 !
 !     No surprises.
@@ -19913,8 +19913,8 @@ contains
       real(wp), intent(in) :: v2   ( * )  !! Two vectors of arbitrary dimension.
       integer(ip), intent(in) :: ndim  !! The common dimension of V1 and V2
 
-      real(wp)              scale
-      integer(ip)           i
+      real(wp) :: scale
+      integer(ip) :: i
 
 !
 !     We find the norm of a scaled version of the difference vector,
@@ -20305,7 +20305,7 @@ contains
       real(wp), intent(in) :: v2  ( * )  !! Second vector in the dot product.
       integer(ip), intent(in) :: ndim  !! Dimension of V1 and V2.
 
-      integer(ip) i
+      integer(ip) :: i
       vdotg = 0.0_wp
       do i = 1, ndim
          vdotg = vdotg + v1(i)*v2(i)
@@ -20739,7 +20739,7 @@ contains
       real(wp), intent(in) :: v1   ( 3 )  !! Vector to be normalized.
       real(wp), intent(out) :: vout ( 3 )  !! Unit vector V1 / |V1|.
 
-      real(wp) vmag
+      real(wp) :: vmag
 
 !
 !  Obtain the magnitude of V1
@@ -20917,9 +20917,9 @@ contains
       real(wp), intent(in) :: v1   ( ndim )  !! Vector to be normalized.
       real(wp), intent(out) :: vout ( ndim )  !! Unit vector along V1.
 
-      real(wp) vmag
+      real(wp) :: vmag
 
-      integer(ip) i
+      integer(ip) :: i
 
 !
 !  Obtain the magnitude of V1
@@ -21033,7 +21033,7 @@ contains
 
       real(wp), intent(inout) :: v ( 3 )  !! Vector to be normalized/unit vector.
 
-      real(wp)              vmag
+      real(wp) :: vmag
 
 !
 !     Obtain the magnitude of V.
@@ -22111,7 +22111,7 @@ contains
 
       real(wp), intent(in) :: v1 ( 3 )  !! Vector whose magnitude is to be found.
 
-      real(wp) v1max
+      real(wp) :: v1max
 
 !
 !  Determine the maximum component of the vector.
@@ -22275,9 +22275,9 @@ contains
 !
 !     Local variables.
 !
-      integer(ip)           i
-      real(wp)              v1max
-      real(wp)              a
+      integer(ip) :: i
+      real(wp) :: v1max
+      real(wp) :: a
 
 !
 !  Determine the maximum component of the vector.
@@ -22570,11 +22570,11 @@ contains
       real(wp), intent(in) :: b ( 3 )  !! The vector used as the orthogonal reference.
       real(wp), intent(out) :: p ( 3 )  !! The component of A orthogonal to B.
 
-      real(wp)              biga
-      real(wp)              bigb
-      real(wp)              r(3)
-      real(wp)              t(3)
-      real(wp)              v(3)
+      real(wp) :: biga
+      real(wp) :: bigb
+      real(wp) :: r(3)
+      real(wp) :: t(3)
+      real(wp) :: v(3)
 
 !
 !     Error free routine:  no check-in.
@@ -22805,11 +22805,11 @@ contains
       real(wp), intent(in) :: b ( 3 )  !! The vector onto which A is to be projected.
       real(wp), intent(out) :: p ( 3 )  !! The projection of A onto B.
 
-      real(wp)              biga
-      real(wp)              bigb
-      real(wp)              r(3)
-      real(wp)              t(3)
-      real(wp)              scale
+      real(wp) :: biga
+      real(wp) :: bigb
+      real(wp) :: r(3)
+      real(wp) :: t(3)
+      real(wp) :: scale
 
       biga = max ( dabs(a(1)), dabs(a(2)), dabs(a(3)) )
       bigb = max ( dabs(b(1)), dabs(b(2)), dabs(b(3)) )
@@ -23031,9 +23031,9 @@ contains
       real(wp), intent(in) :: b ( ndim )  !! The vector onto which A is to be projected.
       real(wp), intent(out) :: p ( ndim )  !! The projection of A onto B.
 
-      real(wp) adotb
-      real(wp) bdotb
-      real(wp) scale
+      real(wp) :: adotb
+      real(wp) :: bdotb
+      real(wp) :: scale
 
       adotb  = vdotg (a,b,ndim)
       bdotb  = vdotg (b,b,ndim)
@@ -23194,8 +23194,8 @@ contains
       real(wp), intent(in) :: v1 ( 3 )  !! Input vectors.
       real(wp), intent(in) :: v2 ( 3 )  !! Input vectors.
 
-      real(wp)              nunorm
-      real(wp)              denorm
+      real(wp) :: nunorm
+      real(wp) :: denorm
 
 !
 !     If the numerator is zero then set VREL equal to zero. Otherwise,
@@ -23395,8 +23395,8 @@ contains
       real(wp), intent(in) :: v2 ( * )  !! Input vectors.
       integer(ip), intent(in) :: ndim  !! Dimension of V1 and V2.
 
-      real(wp)              nunorm
-      real(wp)              denorm
+      real(wp) :: nunorm
+      real(wp) :: denorm
 
 !
 !     If the numerator is zero then set VRELG equal to zero. Otherwise,
@@ -23541,13 +23541,13 @@ contains
       real(wp), intent(in) :: theta  !! Angle of rotation (radians).
       real(wp), intent(out) :: r    ( 3 )  !! Result of rotating V about AXIS by THETA.
 
-      real(wp) c
-      real(wp) s
-      real(wp) rplane (3)
-      real(wp) p      (3)
-      real(wp) v1     (3)
-      real(wp) v2     (3)
-      real(wp) x      (3)
+      real(wp) :: c
+      real(wp) :: s
+      real(wp) :: rplane (3)
+      real(wp) :: p      (3)
+      real(wp) :: v1     (3)
+      real(wp) :: v2     (3)
+      real(wp) :: x      (3)
 
 !
 !     Just in case the user tries to rotate about the zero vector -
@@ -24218,11 +24218,11 @@ contains
 !        Either of the difference vectors: V1-V2 or V1-(-V2)
 !        Unit vectors parallel to V1 and V2
 !
-      real(wp)              dmag1
-      real(wp)              dmag2
-      real(wp)              vtemp(3)
-      real(wp)              u1(3)
-      real(wp)              u2(3)
+      real(wp) :: dmag1
+      real(wp) :: dmag2
+      real(wp) :: vtemp(3)
+      real(wp) :: u1(3)
+      real(wp) :: u2(3)
 
 !
 !  Calculate the magnitudes of V1 and V2; if either is 0, VSEP = 0
@@ -24479,13 +24479,13 @@ contains
 !        Magnitude of either of the difference vectors: V1-V2 or
 !           V1-(-V2)
 !
-      real(wp)              dmag1
-      real(wp)              dmag2
-      real(wp)              r1
-      real(wp)              r2
-      real(wp)              magdif
+      real(wp) :: dmag1
+      real(wp) :: dmag2
+      real(wp) :: r1
+      real(wp) :: r2
+      real(wp) :: magdif
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     Calculate the magnitudes of V1 and V2; if either is 0, VSEPG = 0
@@ -25072,8 +25072,8 @@ contains
       real(wp), intent(in) :: matrix ( 3,3 )  !! 3x3 double precision matrix.
       real(wp), intent(in) :: v2     (   3 )  !! 3-dimensional double precision column vector.
 
-      integer(ip)           k
-      integer(ip)           l
+      integer(ip) :: k
+      integer(ip) :: l
 
       vtmv = 0.0_wp
       do k=1,3
@@ -25202,8 +25202,8 @@ contains
       real(wp), intent(in) :: v2      (       ncol )  !! M-dimensional double precision column
                                                       !! vector.
 
-      integer(ip)           k
-      integer(ip)           l
+      integer(ip) :: k
+      integer(ip) :: l
 
 !
 !  Perform the multiplication
@@ -26002,11 +26002,11 @@ contains
       real(wp), intent(out) :: rot    ( 3, 3 )  !! is the rotation associated with XFORM.
       real(wp), intent(out) :: av     ( 3    )  !! is the angular velocity associated with XFORM.
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
-      real(wp)              drdt  ( 3, 3 )
-      real(wp)              omega ( 3, 3 )
+      real(wp) :: drdt  ( 3, 3 )
+      real(wp) :: omega ( 3, 3 )
 
 !
 !     A state transformation matrix XFORM has the following form
@@ -26538,17 +26538,17 @@ contains
       integer(ip), intent(in) :: ncol  !! Number of columns of input matrix.
       real(wp), intent(inout) :: matrix ( 0 : * )  !! Matrix to be transposed/transposed matrix.
 
-      real(wp)              source
-      real(wp)              temp
+      real(wp) :: source
+      real(wp) :: temp
 
-      integer(ip)           dest
-      integer(ip)           k
-      integer(ip)           m
-      integer(ip)           moved
-      integer(ip)           n
-      integer(ip)           nmoves
-      integer(ip)           r
-      integer(ip)           start
+      integer(ip) :: dest
+      integer(ip) :: k
+      integer(ip) :: m
+      integer(ip) :: moved
+      integer(ip) :: n
+      integer(ip) :: nmoves
+      integer(ip) :: r
+      integer(ip) :: start
 
 !
 !     Take care of dumb cases first.
@@ -26766,17 +26766,17 @@ contains
       integer(ip), intent(in) :: n  !! The number of state transformation matrices
       real(wp), intent(out) :: output ( 6, 6    )  !! The product of the state transformations.
 
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           l
-      integer(ip)           m
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: l
+      integer(ip) :: m
 
-      integer(ip)           get
-      integer(ip)           put
-      integer(ip)           incr
+      integer(ip) :: get
+      integer(ip) :: put
+      integer(ip) :: incr
 
-      real(wp)              temp ( 6, 6, 2 )
+      real(wp) :: temp ( 6, 6, 2 )
 
 !
 !    If we have more than 2 matrices to deal with we will need to
@@ -27085,15 +27085,15 @@ contains
       integer(ip), intent(in) :: n  !! The number of 3x3  matrices
       real(wp), intent(out) :: output ( 3, 3    )  !! The product of the 3x3 matrices.
 
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           k
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
 
-      integer(ip)           get
-      integer(ip)           put
-      integer(ip)           incr
+      integer(ip) :: get
+      integer(ip) :: put
+      integer(ip) :: incr
 
-      real(wp)              temp ( 3, 3, 2 )
+      real(wp) :: temp ( 3, 3, 2 )
 
 !
 !    If we have more than 2 matrices to deal with we will need to

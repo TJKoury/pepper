@@ -114,13 +114,13 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nptr
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nptr
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           dimval
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: dimval
 
 !
 !     Standard SPICE error handling.
@@ -264,13 +264,13 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nptr
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nptr
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           dimval
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: dimval
 
 !
 !     Standard SPICE error handling.
@@ -415,13 +415,13 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nptr
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nptr
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           dimval
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: dimval
 
 !
 !     Standard SPICE error handling.
@@ -569,8 +569,8 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           locsym
+      integer(ip) :: nsym
+      integer(ip) :: locsym
 
 !
 !     Standard SPICE error handling
@@ -712,8 +712,8 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           locsym
+      integer(ip) :: nsym
+      integer(ip) :: locsym
 
 !
 !     Standard SPICE error handling.
@@ -860,8 +860,8 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           locsym
+      integer(ip) :: nsym
+      integer(ip) :: locsym
 
 !
 !     Standard SPICE error handling
@@ -1016,17 +1016,17 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nptr
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nptr
+      integer(ip) :: nval
 
-      integer(ip)           locsym  ( 2 )
-      integer(ip)           locval  ( 2 )
-      integer(ip)           dimval  ( 2 )
-      logical               oldsym  ( 2 )
-      integer(ip)           newsym
-      integer(ip)           newval
-      integer(ip)           i
+      integer(ip) :: locsym  ( 2 )
+      integer(ip) :: locval  ( 2 )
+      integer(ip) :: dimval  ( 2 )
+      logical :: oldsym  ( 2 )
+      integer(ip) :: newsym
+      integer(ip) :: newval
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -1286,17 +1286,17 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nptr
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nptr
+      integer(ip) :: nval
 
-      integer(ip)           locsym  ( 2 )
-      integer(ip)           locval  ( 2 )
-      integer(ip)           dimval  ( 2 )
-      logical               oldsym  ( 2 )
-      integer(ip)           newsym
-      integer(ip)           newval
-      integer(ip)           i
+      integer(ip) :: locsym  ( 2 )
+      integer(ip) :: locval  ( 2 )
+      integer(ip) :: dimval  ( 2 )
+      logical :: oldsym  ( 2 )
+      integer(ip) :: newsym
+      integer(ip) :: newval
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -1557,17 +1557,17 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nptr
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nptr
+      integer(ip) :: nval
 
-      integer(ip)           locsym  ( 2 )
-      integer(ip)           locval  ( 2 )
-      integer(ip)           dimval  ( 2 )
-      logical               oldsym  ( 2 )
-      integer(ip)           newsym
-      integer(ip)           newval
-      integer(ip)           i
+      integer(ip) :: locsym  ( 2 )
+      integer(ip) :: locval  ( 2 )
+      integer(ip) :: dimval  ( 2 )
+      logical :: oldsym  ( 2 )
+      integer(ip) :: newsym
+      integer(ip) :: newval
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling
@@ -1812,7 +1812,7 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
 !
 !     Standard SPICE error handling.
@@ -1951,7 +1951,7 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
 !
 !     Standard SPICE error handling.
@@ -2092,7 +2092,7 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
 !
 !     Standard SPICE error handling.
@@ -2255,10 +2255,10 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           locsym
-      integer(ip)           locval
+      integer(ip) :: locsym
+      integer(ip) :: locval
 
 !
 !     Standard SPICE error handling.
@@ -2434,10 +2434,10 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           locsym
-      integer(ip)           locval
+      integer(ip) :: locsym
+      integer(ip) :: locval
 
 !
 !     Standard SPICE error handling.
@@ -2613,10 +2613,10 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           locsym
-      integer(ip)           locval
+      integer(ip) :: locsym
+      integer(ip) :: locval
 
 !
 !     Standard SPICE error handling.
@@ -2774,10 +2774,10 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           locsym
-      integer(ip)           locval
+      integer(ip) :: locsym
+      integer(ip) :: locval
 
 !
 !     Standard SPICE error handling.
@@ -2941,10 +2941,10 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           locsym
-      integer(ip)           locval
+      integer(ip) :: locsym
+      integer(ip) :: locval
 
 !
 !     Standard SPICE error handling.
@@ -3107,10 +3107,10 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           locsym
-      integer(ip)           locval
+      integer(ip) :: locsym
+      integer(ip) :: locval
 
 !
 !     Standard SPICE error handling.
@@ -3258,11 +3258,11 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           n
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: n
 
 !
 !     Standard SPICE error handling.
@@ -3401,11 +3401,11 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           n
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: n
 
 !
 !     Standard SPICE error handling.
@@ -3546,11 +3546,11 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           n
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: n
 
 !
 !     Standard SPICE error handling.
@@ -3703,12 +3703,12 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nptr
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nptr
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
+      integer(ip) :: locsym
+      integer(ip) :: locval
 
 !
 !     Standard SPICE error handling.
@@ -3902,12 +3902,12 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nptr
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nptr
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
+      integer(ip) :: locsym
+      integer(ip) :: locval
 
 !
 !     Standard SPICE error handling.
@@ -4100,12 +4100,12 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nptr
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nptr
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
+      integer(ip) :: locsym
+      integer(ip) :: locval
 
 !
 !     Standard SPICE error handling.
@@ -4314,16 +4314,16 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nptr
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nptr
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           dimval
-      logical               oldsym
-      integer(ip)           newsym
-      integer(ip)           newval
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: dimval
+      logical :: oldsym
+      integer(ip) :: newsym
+      integer(ip) :: newval
 
 !
 !     Standard SPICE error handling.
@@ -4590,16 +4590,16 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nptr
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nptr
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           dimval
-      logical               oldsym
-      integer(ip)           newsym
-      integer(ip)           newval
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: dimval
+      logical :: oldsym
+      integer(ip) :: newsym
+      integer(ip) :: newval
 
 !
 !     Standard SPICE error handling.
@@ -4860,16 +4860,16 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nptr
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nptr
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           dimval
-      logical               oldsym
-      integer(ip)           newsym
-      integer(ip)           newval
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: dimval
+      logical :: oldsym
+      integer(ip) :: newsym
+      integer(ip) :: newval
 
 !
 !     Standard SPICE error handling.
@@ -5128,11 +5128,11 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           n
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: n
 
 !
 !     Standard SPICE error handling.
@@ -5335,11 +5335,11 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           n
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: n
 
 !
 !     Standard SPICE error handling.
@@ -5545,11 +5545,11 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           n
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: n
 
 !
 !     Standard SPICE error handling.
@@ -5737,14 +5737,14 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nptr
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nptr
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           dimval
-      logical               oldsym
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: dimval
+      logical :: oldsym
 
 !
 !     Standard SPICE error handling.
@@ -5962,14 +5962,14 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nptr
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nptr
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           dimval
-      logical               oldsym
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: dimval
+      logical :: oldsym
 
 !
 !     Standard SPICE error handling.
@@ -6189,14 +6189,14 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nptr
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nptr
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           dimval
-      logical               oldsym
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: dimval
+      logical :: oldsym
 
 !
 !     Standard SPICE error handling.
@@ -6416,11 +6416,11 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           n
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: n
 
 !
 !     Standard SPICE error handling.
@@ -6619,11 +6619,11 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           n
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: n
 
 !
 !     Standard SPICE error handling.
@@ -6821,11 +6821,11 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      integer(ip)           n
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      integer(ip) :: n
 
 !
 !     Standard SPICE error handling.
@@ -7007,12 +7007,12 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      logical               oldsym
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      logical :: oldsym
 
 !
 !     Standard SPICE error handling.
@@ -7198,12 +7198,12 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      logical               oldsym
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      logical :: oldsym
 
 !
 !     Standard SPICE error handling.
@@ -7385,12 +7385,12 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      logical               oldsym
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      logical :: oldsym
 
 !
 !     Standard SPICE error handling.
@@ -7569,12 +7569,12 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      logical               oldsym
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      logical :: oldsym
 
 !
 !     Standard SPICE error handling.
@@ -7757,12 +7757,12 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      logical               oldsym
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      logical :: oldsym
 
 !
 !     Standard SPICE error handling.
@@ -7942,12 +7942,12 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
-      integer(ip)           nval
+      integer(ip) :: nsym
+      integer(ip) :: nval
 
-      integer(ip)           locsym
-      integer(ip)           locval
-      logical               oldsym
+      integer(ip) :: locsym
+      integer(ip) :: locval
+      logical :: oldsym
 
 !
 !     Standard SPICE error handling.
@@ -8148,13 +8148,13 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           oldloc
-      integer(ip)           oldval
-      integer(ip)           olddim
-      integer(ip)           newloc
-      integer(ip)           newval
+      integer(ip) :: oldloc
+      integer(ip) :: oldval
+      integer(ip) :: olddim
+      integer(ip) :: newloc
+      integer(ip) :: newval
 
 !
 !     Standard SPICE error handling.
@@ -8362,13 +8362,13 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           oldloc
-      integer(ip)           oldval
-      integer(ip)           olddim
-      integer(ip)           newloc
-      integer(ip)           newval
+      integer(ip) :: oldloc
+      integer(ip) :: oldval
+      integer(ip) :: olddim
+      integer(ip) :: newloc
+      integer(ip) :: newval
 
 !
 !     Standard SPICE error handling.
@@ -8576,13 +8576,13 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           nsym
+      integer(ip) :: nsym
 
-      integer(ip)           oldloc
-      integer(ip)           oldval
-      integer(ip)           olddim
-      integer(ip)           newloc
-      integer(ip)           newval
+      integer(ip) :: oldloc
+      integer(ip) :: oldval
+      integer(ip) :: olddim
+      integer(ip) :: newloc
+      integer(ip) :: newval
 
 !
 !     Standard SPICE error handling.

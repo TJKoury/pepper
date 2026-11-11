@@ -245,10 +245,10 @@ contains
 !     and  OFFSET*PSIZE <= SIZE mod(PSIZE*DSIZE+1)
 !
 
-      integer(ip)           q
-      integer(ip)           pd1
-      integer(ip)           r
-      integer(ip)           a
+      integer(ip) :: q
+      integer(ip) :: pd1
+      integer(ip) :: r
+      integer(ip) :: a
 
 !
 !     Handle the exceptional case first.
@@ -386,29 +386,29 @@ contains
 !
       integer(ip), parameter :: sumsiz = nd + ((ni+1)/2)
 
-      real(wp)              chcktm
-      real(wp)              dc    ( nd )
-      real(wp)              lastdp
-      real(wp)              frsttm
-      real(wp)              sum   ( sumsiz )
-      real(wp)              times ( 2 )
+      real(wp) :: chcktm
+      real(wp) :: dc    ( nd )
+      real(wp) :: lastdp
+      real(wp) :: frsttm
+      real(wp) :: sum   ( sumsiz )
+      real(wp) :: times ( 2 )
 
-      integer(ip)           angvel
-      integer(ip)           first
-      integer(ip)           from
-      integer(ip)           ic    ( ni )
-      integer(ip)           last
-      integer(ip)           nck2
-      integer(ip)           nspk
-      integer(ip)           size
-      integer(ip)           thisnd
-      integer(ip)           thisni
-      integer(ip)           to
-      integer(ip)           type
+      integer(ip) :: angvel
+      integer(ip) :: first
+      integer(ip) :: from
+      integer(ip) :: ic    ( ni )
+      integer(ip) :: last
+      integer(ip) :: nck2
+      integer(ip) :: nspk
+      integer(ip) :: size
+      integer(ip) :: thisnd
+      integer(ip) :: thisni
+      integer(ip) :: to
+      integer(ip) :: type
 
-      logical               ck2ok
-      logical               found
-      logical               spkok
+      logical :: ck2ok
+      logical :: found
+      logical :: spkok
 
 !
 !     Standard SPICE error handling.
@@ -1227,24 +1227,24 @@ contains
 
       integer(ip), parameter :: maxpch = 126
 
-      character(wdsize)     filarc
-      character(filsiz)     fname
-      character(idlen)      idword
-      character(idlen)      tmpwrd
+      character(wdsize) :: filarc
+      character(filsiz) :: fname
+      character(idlen) :: idword
+      character(idlen) :: tmpwrd
 
-      integer(ip)           handle
-      integer(ip)           i
-      integer(ip)           intamn
-      integer(ip)           intarc
-      integer(ip)           intbff
-      integer(ip)           iostat
-      integer(ip)           number
+      integer(ip) :: handle
+      integer(ip) :: i
+      integer(ip) :: intamn
+      integer(ip) :: intarc
+      integer(ip) :: intbff
+      integer(ip) :: iostat
+      integer(ip) :: number
 
-      logical               diropn
-      logical               exist
-      logical               found
-      logical               kept
-      logical               opened
+      logical :: diropn
+      logical :: exist
+      logical :: found
+      logical :: kept
+      logical :: opened
 
 !
 !     Standard SPICE error handling.
@@ -1740,10 +1740,10 @@ contains
       use pepper_math, only: vhatip
       implicit none
 
-      real(wp)              m
-      real(wp)              a1
-      real(wp)              b1
-      real(wp)              c1
+      real(wp) :: m
+      real(wp) :: a1
+      real(wp) :: b1
+      real(wp) :: c1
 
       character(32), parameter :: mssg ( 7 ) = &
          [ character(32) :: 'Axis A was nonpositive.', 'Axis B was nonpositive.', &
@@ -1751,7 +1751,7 @@ contains
            'Axes A and C were nonpositive.', &
            'Axes B and C were nonpositive.', &
            'All three axes were nonpositive.' ]
-      integer(ip)           bad
+      integer(ip) :: bad
 
 !
 !     Standard SPICE error handling.
@@ -2210,51 +2210,51 @@ contains
            'Axes B and C were nonpositive. ?', &
            'All three axes were nonpositive. ?' ]
 
-      real(wp)              axis   ( 3 )
-      real(wp)              axisqr ( 3 )
-      real(wp)              bestht
-      real(wp)              bestpt ( 3 )
-      real(wp)              copy   ( 3 )
-      real(wp)              denom
-      real(wp)              denom2
-      real(wp)              denom3
-      real(wp)              epoint ( 3 )
-      real(wp)              err    ( 3 )
-      real(wp)              errp   ( 3 )
-      real(wp)              factor
-      real(wp)              height
-      real(wp)              lambda
-      real(wp)              lower
-      real(wp)              newerr
-      real(wp)              normal ( 3 )
-      real(wp)              olderr
-      real(wp)              orignl ( 3 )
-      real(wp)              pnorm
-      real(wp)              point  ( 3 )
-      real(wp)              prodct
-      real(wp)              q
-      real(wp)              qlower
-      real(wp)              qupper
-      real(wp)              scale
-      real(wp)              sign
-      real(wp)              spoint ( 3 )
-      real(wp)              temp
-      real(wp)              term   ( 3 )
-      real(wp)              toobig
-      real(wp)              tlambd ( 3 )
-      real(wp)              upper
+      real(wp) :: axis   ( 3 )
+      real(wp) :: axisqr ( 3 )
+      real(wp) :: bestht
+      real(wp) :: bestpt ( 3 )
+      real(wp) :: copy   ( 3 )
+      real(wp) :: denom
+      real(wp) :: denom2
+      real(wp) :: denom3
+      real(wp) :: epoint ( 3 )
+      real(wp) :: err    ( 3 )
+      real(wp) :: errp   ( 3 )
+      real(wp) :: factor
+      real(wp) :: height
+      real(wp) :: lambda
+      real(wp) :: lower
+      real(wp) :: newerr
+      real(wp) :: normal ( 3 )
+      real(wp) :: olderr
+      real(wp) :: orignl ( 3 )
+      real(wp) :: pnorm
+      real(wp) :: point  ( 3 )
+      real(wp) :: prodct
+      real(wp) :: q
+      real(wp) :: qlower
+      real(wp) :: qupper
+      real(wp) :: scale
+      real(wp) :: sign
+      real(wp) :: spoint ( 3 )
+      real(wp) :: temp
+      real(wp) :: term   ( 3 )
+      real(wp) :: toobig
+      real(wp) :: tlambd ( 3 )
+      real(wp) :: upper
 
-      integer(ip)           bad
-      integer(ip)           i
-      integer(ip)           iorder ( 3 )
-      integer(ip)           itr
-      integer(ip)           snglpt
-      integer(ip)           solutn
+      integer(ip) :: bad
+      integer(ip) :: i
+      integer(ip) :: iorder ( 3 )
+      integer(ip) :: itr
+      integer(ip) :: snglpt
+      integer(ip) :: solutn
 
-      logical               extra
-      logical               inside
-      logical               solvng
-      logical               trim
+      logical :: extra
+      logical :: inside
+      logical :: solvng
+      logical :: trim
 
 !
 !     Here's what you can expect to find in the routine below.
@@ -4133,12 +4133,12 @@ contains
       use pepper_math, only: reclat
       implicit none
 
-      real(wp) a
-      real(wp) b
-      real(wp) c
-      real(wp) base   (3)
-      real(wp) normal (3)
-      real(wp) radius
+      real(wp) :: a
+      real(wp) :: b
+      real(wp) :: c
+      real(wp) :: base   (3)
+      real(wp) :: normal (3)
+      real(wp) :: radius
 
 !
 !     Standard SPICE error handling.
@@ -4364,9 +4364,9 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_dsk02
       implicit none
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           ncell
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: ncell
 
 !
 !     Standard SPICELIB error handling.
@@ -4559,7 +4559,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           i
+      integer(ip) :: i
 
       if ( ctx%failed() ) return
 
@@ -4914,8 +4914,8 @@ contains
       module procedure zztrvlnk
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           i
-      integer(ip)           ptr
+      integer(ip) :: i
+      integer(ip) :: ptr
 
 !
 !     Standard SPICE error handling.
@@ -5142,10 +5142,10 @@ contains
       module procedure zzuntngl
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)           aval
-      integer(ip)           ptrdex
-      integer(ip)           nfound
-      integer(ip)           room
+      integer(ip) :: aval
+      integer(ip) :: ptrdex
+      integer(ip) :: nfound
+      integer(ip) :: room
 
 !
 !     Standard SPICE error handling.
@@ -5372,7 +5372,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           i
+      integer(ip) :: i
 
       if ( ctx%failed() ) return
 
@@ -5555,8 +5555,8 @@ contains
 !
 !     Local variables.
 !
-      real(wp)               term
-      integer(ip)            i
+      real(wp) :: term
+      integer(ip) :: i
 
       if ( ctx%failed() ) return
 
@@ -6072,63 +6072,63 @@ contains
       implicit none
       real(wp), parameter :: tol = 1.0e-3_wp
 
-      real(wp)              avext
-      real(wp)              bxmax
-      real(wp)              bxmin
-      real(wp)              bymax
-      real(wp)              bymin
-      real(wp)              bzmax
-      real(wp)              bzmin
-      real(wp)              cvxsiz
-      real(wp)              mdltol
-      real(wp)              vmod   ( 3 )
-      real(wp)              xextnt ( 6 )
-      real(wp)              xmax
-      real(wp)              xmin
-      real(wp)              xp     ( 3 )
-      real(wp)              xvmax
-      real(wp)              xvmin
-      real(wp)              ymax
-      real(wp)              ymin
-      real(wp)              yp     ( 3 )
-      real(wp)              yvmax
-      real(wp)              yvmin
-      real(wp)              zmax
-      real(wp)              zmin
-      real(wp)              zp     ( 3 )
-      real(wp)              zvmax
-      real(wp)              zvmin
+      real(wp) :: avext
+      real(wp) :: bxmax
+      real(wp) :: bxmin
+      real(wp) :: bymax
+      real(wp) :: bymin
+      real(wp) :: bzmax
+      real(wp) :: bzmin
+      real(wp) :: cvxsiz
+      real(wp) :: mdltol
+      real(wp) :: vmod   ( 3 )
+      real(wp) :: xextnt ( 6 )
+      real(wp) :: xmax
+      real(wp) :: xmin
+      real(wp) :: xp     ( 3 )
+      real(wp) :: xvmax
+      real(wp) :: xvmin
+      real(wp) :: ymax
+      real(wp) :: ymin
+      real(wp) :: yp     ( 3 )
+      real(wp) :: yvmax
+      real(wp) :: yvmin
+      real(wp) :: zmax
+      real(wp) :: zmin
+      real(wp) :: zp     ( 3 )
+      real(wp) :: zvmax
+      real(wp) :: zvmin
 
-      integer(ip)           cgof1d
-      integer(ip)           cgoff  ( 3 )
-      integer(ip)           cgrdim ( 3 )
-      integer(ip)           cgxyz  ( 3 )
-      integer(ip)           cvid
-      integer(ip)           gxmax
-      integer(ip)           gxmin
-      integer(ip)           gymax
-      integer(ip)           gymin
-      integer(ip)           gzmax
-      integer(ip)           gzmin
-      integer(ip)           i
-      integer(ip)           ix
-      integer(ip)           ixptr
-      integer(ip)           iy
-      integer(ip)           iz
-      integer(ip)           j
-      integer(ip)           ncell
-      integer(ip)           ncgflg
-      integer(ip)           npcg
-      integer(ip)           nx
-      integer(ip)           ny
-      integer(ip)           nz
-      integer(ip)           q
-      integer(ip)           r
-      integer(ip)           to
-      integer(ip)           vixyz  ( 3 )
-      integer(ip)           vcoord ( 3 )
+      integer(ip) :: cgof1d
+      integer(ip) :: cgoff  ( 3 )
+      integer(ip) :: cgrdim ( 3 )
+      integer(ip) :: cgxyz  ( 3 )
+      integer(ip) :: cvid
+      integer(ip) :: gxmax
+      integer(ip) :: gxmin
+      integer(ip) :: gymax
+      integer(ip) :: gymin
+      integer(ip) :: gzmax
+      integer(ip) :: gzmin
+      integer(ip) :: i
+      integer(ip) :: ix
+      integer(ip) :: ixptr
+      integer(ip) :: iy
+      integer(ip) :: iz
+      integer(ip) :: j
+      integer(ip) :: ncell
+      integer(ip) :: ncgflg
+      integer(ip) :: npcg
+      integer(ip) :: nx
+      integer(ip) :: ny
+      integer(ip) :: nz
+      integer(ip) :: q
+      integer(ip) :: r
+      integer(ip) :: to
+      integer(ip) :: vixyz  ( 3 )
+      integer(ip) :: vcoord ( 3 )
 
-      logical               inbox
+      logical :: inbox
 
 !     Required for f2c use on Linux, all local variables
 !     to static.
@@ -6970,7 +6970,7 @@ contains
       use pepper_inc_dla
       implicit none
 
-      integer(ip)           ncomr
+      integer(ip) :: ncomr
 
       if ( ctx%failed() ) return
 
@@ -7364,13 +7364,13 @@ contains
 
       integer(ip), parameter :: lstidx = 2
 
-      integer(ip)           addr
-      integer(ip)           sgptrs ( 2 )
-      integer(ip)           descr  ( dladsz )
-      integer(ip)           lastc
-      integer(ip)           lastd
-      integer(ip)           lasti
-      integer(ip)           this
+      integer(ip) :: addr
+      integer(ip) :: sgptrs ( 2 )
+      integer(ip) :: descr  ( dladsz )
+      integer(ip) :: lastc
+      integer(ip) :: lastd
+      integer(ip) :: lasti
+      integer(ip) :: this
 
 !
 !     Standard SPICE error handling.
@@ -7806,11 +7806,11 @@ contains
       implicit none
       integer(ip) :: this_1(1)  !! one-element copy of this (array argument)
 
-      integer(ip)           descr  ( dladsz )
-      integer(ip)           lastc
-      integer(ip)           lastd
-      integer(ip)           lasti
-      integer(ip)           this
+      integer(ip) :: descr  ( dladsz )
+      integer(ip) :: lastc
+      integer(ip) :: lastd
+      integer(ip) :: lasti
+      integer(ip) :: this
 
 !
 !     Standard SPICE error handling.
@@ -8090,7 +8090,7 @@ contains
       implicit none
       integer(ip) :: this_1(1)  !! one-element copy of this (array argument)
 
-      integer(ip)           this
+      integer(ip) :: this
 
 !
 !     Standard SPICE error handling.
@@ -8368,7 +8368,7 @@ contains
       implicit none
       integer(ip) :: this_1(1)  !! one-element copy of this (array argument)
 
-      integer(ip)           this
+      integer(ip) :: this
 
 !
 !     Standard SPICE error handling.
@@ -8641,7 +8641,7 @@ contains
       use pepper_inc_dla
       implicit none
 
-      integer(ip)           fwd
+      integer(ip) :: fwd
 
 !
 !     Standard SPICE error handling.
@@ -8918,7 +8918,7 @@ contains
       use pepper_inc_dla
       implicit none
 
-      integer(ip)           bwd
+      integer(ip) :: bwd
 
 !
 !     Standard SPICE error handling.
@@ -9086,7 +9086,7 @@ contains
       use pepper_inc_dla
       implicit none
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     Give the function an initial value.
@@ -9353,7 +9353,7 @@ contains
 
       integer(ip), parameter :: methln = 10
 
-      character(methln)     method
+      character(methln) :: method
 
       if ( ctx%failed() ) return
 
@@ -9507,7 +9507,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_dsktol
       implicit none
-      logical               return
+      logical :: return
       integer(ip), parameter :: ndspar = 6
       integer(ip), parameter :: namlen = 6
       character(namlen), parameter :: names  ( ndspar ) = &
@@ -10232,8 +10232,8 @@ contains
       use pepper_inc_dskdsc
       implicit none
 
-      integer(ip)           dpbase
-      integer(ip)           dpsize
+      integer(ip) :: dpbase
+      integer(ip) :: dpsize
 
       if ( ctx%failed() ) return
 
@@ -10539,13 +10539,13 @@ contains
 
       integer(ip), parameter :: vtbsiz = 6
 
-      real(wp)              dbuff  ( dbfsiz )
+      real(wp) :: dbuff  ( dbfsiz )
 
-      integer(ip)           b
-      integer(ip)           e
-      integer(ip)           dpbase
-      integer(ip)           ibase
-      integer(ip)           ibuff  ( ibfsiz )
+      integer(ip) :: b
+      integer(ip) :: e
+      integer(ip) :: dpbase
+      integer(ip) :: ibase
+      integer(ip) :: ibuff  ( ibfsiz )
 
       if ( ctx%failed() ) return
 
@@ -10966,11 +10966,11 @@ contains
       use pepper_inc_dsk02
       implicit none
       integer(ip) :: nv_1(1)  !! one-element copy of nv (array argument)
-      integer(ip)           b
-      integer(ip)           dbase
-      integer(ip)           e
-      integer(ip)           ibase
-      integer(ip)           size
+      integer(ip) :: b
+      integer(ip) :: dbase
+      integer(ip) :: e
+      integer(ip) :: ibase
+      integer(ip) :: size
       if ( .not. allocated ( ctx%dskd02_state ) ) allocate ( ctx%dskd02_state )
       associate ( first => ctx%dskd02_state%first, &
                   prvbas => ctx%dskd02_state%prvbas, &
@@ -11553,12 +11553,12 @@ contains
       use pepper_inc_dsk02
       implicit none
       integer(ip), parameter :: ibfsiz = 10
-      integer(ip)           b
-      integer(ip)           e
-      integer(ip)           ibase
-      integer(ip)           ibuff  ( ibfsiz )
-      integer(ip)           ncgr
-      integer(ip)           size
+      integer(ip) :: b
+      integer(ip) :: e
+      integer(ip) :: ibase
+      integer(ip) :: ibuff  ( ibfsiz )
+      integer(ip) :: ncgr
+      integer(ip) :: size
       if ( .not. allocated ( ctx%dski02_state ) ) allocate ( ctx%dski02_state )
       associate ( cgscal => ctx%dski02_state%cgscal, &
                   first => ctx%dski02_state%first, &
@@ -12150,18 +12150,18 @@ contains
 
 !     Local variables
 !
-      real(wp)              dskdsc ( dskdsz )
-      real(wp)              edge1  ( 3 )
-      real(wp)              edge2  ( 3 )
-      real(wp)              verts  ( 3, 3 )
+      real(wp) :: dskdsc ( dskdsz )
+      real(wp) :: edge1  ( 3 )
+      real(wp) :: edge2  ( 3 )
+      real(wp) :: verts  ( 3, 3 )
 
-      integer(ip)           i
-      integer(ip)           n
-      integer(ip)           np
-      integer(ip)           nv
-      integer(ip)           plate  ( 3 )
-      integer(ip)           start
-      integer(ip)           unit
+      integer(ip) :: i
+      integer(ip) :: n
+      integer(ip) :: np
+      integer(ip) :: nv
+      integer(ip) :: plate  ( 3 )
+      integer(ip) :: start
+      integer(ip) :: unit
 
       if ( ctx%failed() ) return
 
@@ -12553,13 +12553,13 @@ contains
       use pepper_inc_dsk02
       implicit none
 
-      real(wp)              dskdsc ( dskdsz )
+      real(wp) :: dskdsc ( dskdsz )
 
-      integer(ip)           lcroom
-      integer(ip)           lcstrt
-      integer(ip)           np
-      integer(ip)           nv
-      integer(ip)           unit
+      integer(ip) :: lcroom
+      integer(ip) :: lcstrt
+      integer(ip) :: np
+      integer(ip) :: nv
+      integer(ip) :: unit
 
       if ( ctx%failed() ) return
 
@@ -12952,13 +12952,13 @@ contains
       use pepper_inc_dsk02
       implicit none
 
-      real(wp)              dskdsc ( dskdsz )
+      real(wp) :: dskdsc ( dskdsz )
 
-      integer(ip)           lcroom
-      integer(ip)           lcstrt
-      integer(ip)           np
-      integer(ip)           nv
-      integer(ip)           unit
+      integer(ip) :: lcroom
+      integer(ip) :: lcstrt
+      integer(ip) :: np
+      integer(ip) :: nv
+      integer(ip) :: unit
 
       if ( ctx%failed() ) return
 
@@ -13291,7 +13291,7 @@ contains
       integer(ip) :: np_1(1)  !! one-element copy of np (array argument)
       integer(ip) :: nv_1(1)  !! one-element copy of nv (array argument)
 
-      integer(ip)           n
+      integer(ip) :: n
 
       if ( ctx%failed() ) return
 
@@ -13967,16 +13967,16 @@ contains
       use pepper_inc_dsk02
       implicit none
 
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           nshift
-      integer(ip)           nvxtot
-      integer(ip)           reqsiz
-      integer(ip)           vtlidx
-      integer(ip)           vtpidx
-      integer(ip)           vtxlsz
-      integer(ip)           vxlidx
-      integer(ip)           vxpidx
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: nshift
+      integer(ip) :: nvxtot
+      integer(ip) :: reqsiz
+      integer(ip) :: vtlidx
+      integer(ip) :: vtpidx
+      integer(ip) :: vtxlsz
+      integer(ip) :: vxlidx
+      integer(ip) :: vxpidx
 
       if ( ctx%failed() ) return
 
@@ -14648,19 +14648,19 @@ contains
       implicit none
 
       real(wp), parameter :: third = 1.0_wp/3.0_wp
-      real(wp)              alt
-      real(wp)              center ( 3 )
-      real(wp)              dist
-      real(wp)              f
-      real(wp)              lat
-      real(wp)              lon
-      real(wp)              maxd
+      real(wp) :: alt
+      real(wp) :: center ( 3 )
+      real(wp) :: dist
+      real(wp) :: f
+      real(wp) :: lat
+      real(wp) :: lon
+      real(wp) :: maxd
       real(wp), parameter :: origin ( 3 ) = &
          [ 0.0_wp, 0.0_wp, 0.0_wp ]
-      real(wp)              pnear  ( 3 )
-      real(wp)              re
+      real(wp) :: pnear  ( 3 )
+      real(wp) :: re
 
-      integer(ip)           i
+      integer(ip) :: i
 
       if ( ctx%failed() ) return
 
@@ -14964,17 +14964,17 @@ contains
 
       integer(ip), parameter :: toklen = 4
 
-      character(toklen)     arch
-      character(toklen)     kertyp
+      character(toklen) :: arch
+      character(toklen) :: kertyp
 
-      real(wp)              dskdsc ( dskdsz )
+      real(wp) :: dskdsc ( dskdsz )
 
-      integer(ip)           bid
-      integer(ip)           dladsc ( dladsz )
-      integer(ip)           handle
-      integer(ip)           nxtdsc ( dladsz )
+      integer(ip) :: bid
+      integer(ip) :: dladsc ( dladsz )
+      integer(ip) :: handle
+      integer(ip) :: nxtdsc ( dladsz )
 
-      logical               found
+      logical :: found
 
       if ( ctx%failed() ) return
 
@@ -15286,18 +15286,18 @@ contains
 
       integer(ip), parameter :: toklen = 4
 
-      character(toklen)     arch
-      character(toklen)     kertyp
+      character(toklen) :: arch
+      character(toklen) :: kertyp
 
-      real(wp)              dskdsc ( dskdsz )
+      real(wp) :: dskdsc ( dskdsz )
 
-      integer(ip)           bid
-      integer(ip)           dladsc ( dladsz )
-      integer(ip)           handle
-      integer(ip)           nxtdsc ( dladsz )
-      integer(ip)           sid
+      integer(ip) :: bid
+      integer(ip) :: dladsc ( dladsz )
+      integer(ip) :: handle
+      integer(ip) :: nxtdsc ( dladsz )
+      integer(ip) :: sid
 
-      logical               found
+      logical :: found
 
       if ( ctx%failed() ) return
 

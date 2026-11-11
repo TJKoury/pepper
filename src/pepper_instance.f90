@@ -1669,7 +1669,7 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: number  !! Number to be encoded.
          character(*), intent(out) :: string  !! Encoded string.
-         integer(ip) minlen
+         integer(ip) :: minlen
          parameter        ( minlen = 5 )
       end subroutine enchar
 
@@ -1678,7 +1678,7 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(out) :: number  !! Decoded number.
          character(*), intent(in) :: string  !! Encoded character string.
-         integer(ip) minlen
+         integer(ip) :: minlen
          parameter        ( minlen = 5 )
       end subroutine dechar
 
@@ -1697,7 +1697,7 @@ module pepper_instance
       !> The function returns the cardinality of the input cell.
       module integer(ip) function cardc ( ctx, cell )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: cell  ( lbcell:* )  !! Input cell.
       end function cardc
@@ -1708,7 +1708,7 @@ module pepper_instance
       !> The function returns the cardinality of the input cell.
       module integer(ip) function cardd ( ctx, cell )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: cell  ( lbcell:* )  !! Input cell.
       end function cardd
@@ -1718,7 +1718,7 @@ module pepper_instance
       !> The function returns the cardinality of the input cell.
       module integer(ip) function cardi ( ctx, cell )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: cell  ( lbcell:* )  !! Input cell.
       end function cardi
@@ -1728,7 +1728,7 @@ module pepper_instance
       !> The function returns the size of the input cell.
       module integer(ip) function sizec ( ctx, cell )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: cell   ( lbcell:* )  !! Input cell.
       end function sizec
@@ -1739,7 +1739,7 @@ module pepper_instance
       !> The function returns the size of the input cell.
       module integer(ip) function sized ( ctx, cell )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: cell   ( lbcell:* )  !! Input cell.
       end function sized
@@ -1749,7 +1749,7 @@ module pepper_instance
       !> The function returns the size of the input cell.
       module integer(ip) function sizei ( ctx, cell )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: cell  ( lbcell: * )  !! Input cell.
       end function sizei
@@ -1757,7 +1757,7 @@ module pepper_instance
       !> Set the cardinality of a character cell.
       module subroutine scardc ( ctx, card, cell )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: card  !! Cardinality of (number of elements in) the cell.
          character(*), intent(inout) :: cell   ( lbcell:* )  !! The cell.
@@ -1766,7 +1766,7 @@ module pepper_instance
       !> Set the cardinality of a double precision cell.
       module subroutine scardd ( ctx, card, cell )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: card  !! Cardinality of (number of elements in) the cell.
          real(wp), intent(inout) :: cell   ( lbcell:* )  !! The cell.
@@ -1775,7 +1775,7 @@ module pepper_instance
       !> Set the cardinality of an integer cell.
       module subroutine scardi ( ctx, card, cell )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: card  !! Cardinality of (number of elements in) the cell.
          integer(ip), intent(inout) :: cell   ( lbcell:* )  !! The cell.
@@ -1784,7 +1784,7 @@ module pepper_instance
       !> Set the size (maximum cardinality) of a character cell.
       module subroutine ssizec ( ctx, size, cell )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the cell.
          character(*), intent(inout) :: cell   ( lbcell:* )  !! The cell.
@@ -1793,7 +1793,7 @@ module pepper_instance
       !> Set the size (maximum cardinality) of a double precision cell.
       module subroutine ssized ( ctx, size, cell )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the cell.
          real(wp), intent(inout) :: cell   ( lbcell:* )  !! The cell.
@@ -1802,7 +1802,7 @@ module pepper_instance
       !> Set the size (maximum cardinality) of an integer cell.
       module subroutine ssizei ( ctx, size, cell )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the cell.
          integer(ip), intent(inout) :: cell   ( lbcell:* )  !! The cell.
@@ -1811,7 +1811,7 @@ module pepper_instance
       !> Create a valid set from a character set array.
       module subroutine validc ( ctx, size, n, a )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the set.
          integer(ip), intent(in) :: n  !! Initial no. of (possibly non-distinct) elements.
@@ -1821,7 +1821,7 @@ module pepper_instance
       !> Create a valid set from a double precision set array.
       module subroutine validd ( ctx, size, n, a )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the set.
          integer(ip), intent(in) :: n  !! Initial no. of (possibly non-distinct) elements.
@@ -1831,7 +1831,7 @@ module pepper_instance
       !> Create a valid set from an integer set array.
       module subroutine validi ( ctx, size, n, a )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the set.
          integer(ip), intent(in) :: n  !! Initial no. of (possibly non-distinct) elements.
@@ -1841,7 +1841,7 @@ module pepper_instance
       !> Append an item to a character cell.
       module subroutine appndc ( ctx, item, cell )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: item  !! The item to append.
          character(*), intent(inout) :: cell ( lbcell:* )  !! The cell to which ITEM will be
@@ -1851,7 +1851,7 @@ module pepper_instance
       !> Append an item to a double precision cell.
       module subroutine appndd ( ctx, item, cell )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: item  !! The item to append.
          real(wp), intent(inout) :: cell ( lbcell:* )  !! The cell to which ITEM will be appended.
@@ -1860,7 +1860,7 @@ module pepper_instance
       !> Append an item to an integer cell.
       module subroutine appndi ( ctx, item, cell )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: item  !! The item to append.
          integer(ip), intent(inout) :: cell ( lbcell:* )  !! The cell to which ITEM will be
@@ -1870,7 +1870,7 @@ module pepper_instance
       !> Copy the contents of a character cell to another cell.
       module subroutine copyc ( ctx, cell, copy )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: cell     ( lbcell:* )  !! Cell to be copied.
          character(*), intent(inout) :: copy     ( lbcell:* )  !! New cell.
@@ -1879,7 +1879,7 @@ module pepper_instance
       !> Copy the contents of a double precision cell to another cell.
       module subroutine copyd ( ctx, cell, copy )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: cell     ( lbcell:* )  !! Cell to be copied.
          real(wp), intent(inout) :: copy     ( lbcell:* )  !! New cell.
@@ -1888,7 +1888,7 @@ module pepper_instance
       !> Copy the contents of an integer cell to another cell.
       module subroutine copyi ( ctx, cell, copy )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: cell     ( lbcell:* )  !! Cell to be copied.
          integer(ip), intent(inout) :: copy     ( lbcell:* )  !! New cell.
@@ -1897,7 +1897,7 @@ module pepper_instance
       !> Insert an item into a character set.
       module subroutine insrtc ( ctx, item, a )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: item  !! Item to be inserted.
          character(*), intent(inout) :: a        ( lbcell:* )  !! Insertion set.
@@ -1906,7 +1906,7 @@ module pepper_instance
       !> Insert an item into a double precision set.
       module subroutine insrtd ( ctx, item, a )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: item  !! Item to be inserted.
          real(wp), intent(inout) :: a     ( lbcell:* )  !! Insertion set.
@@ -1915,7 +1915,7 @@ module pepper_instance
       !> Insert an item into an integer set.
       module subroutine insrti ( ctx, item, a )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: item  !! Item to be inserted.
          integer(ip), intent(inout) :: a        ( lbcell:* )  !! Insertion set.
@@ -1924,7 +1924,7 @@ module pepper_instance
       !> Remove an item from a character set.
       module subroutine removc ( ctx, item, a )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: item  !! Item to be removed.
          character(*), intent(inout) :: a       ( lbcell:* )  !! Removal set.
@@ -1933,7 +1933,7 @@ module pepper_instance
       !> Remove an item from a double precision set.
       module subroutine removd ( ctx, item, a )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: item  !! Item to be removed.
          real(wp), intent(inout) :: a        ( lbcell:* )  !! Removal set.
@@ -1942,7 +1942,7 @@ module pepper_instance
       !> Remove an item from an integer set.
       module subroutine removi ( ctx, item, a )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: item  !! Item to be removed.
          integer(ip), intent(inout) :: a        ( lbcell:* )  !! Removal set.
@@ -1953,7 +1953,7 @@ module pepper_instance
       !> The function returns .TRUE. if ITEM is an element of set A.
       module logical function elemc ( ctx, item, a )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: item  !! Item to be tested.
          character(*), intent(in) :: a      ( lbcell:* )  !! Set to be tested.
@@ -1965,7 +1965,7 @@ module pepper_instance
       !> The function returns .TRUE. if ITEM is an element of set A.
       module logical function elemd ( ctx, item, a )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter               ( lbcell = -5 )
          real(wp), intent(in) :: item  !! Item to be tested.
          real(wp), intent(in) :: a      ( lbcell:* )  !! Set to be tested.
@@ -1976,7 +1976,7 @@ module pepper_instance
       !> The function returns .TRUE. if ITEM is an element of set A.
       module logical function elemi ( ctx, item, a )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter      ( lbcell = -5 )
          integer(ip), intent(in) :: item  !! Item to be tested.
          integer(ip), intent(in) :: a      ( lbcell:* )  !! Set to be tested.
@@ -1988,7 +1988,7 @@ module pepper_instance
       !> The function returns the ordinal position of ITEM within the SET.
       module integer(ip) function ordc ( ctx, item, set )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = - 5 )
          character(*), intent(in) :: item  !! An item to locate within a set.
          character(*), intent(in) :: set ( lbcell:* )  !! A set to search for a given item.
@@ -2000,7 +2000,7 @@ module pepper_instance
       !> The function returns the ordinal position of ITEM within the SET.
       module integer(ip) function ordd ( ctx, item, set )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = - 5 )
          real(wp), intent(in) :: item  !! An item to locate within a set.
          real(wp), intent(in) :: set ( lbcell:* )  !! A set to search for a given item.
@@ -2012,7 +2012,7 @@ module pepper_instance
       !> The function returns the ordinal position of ITEM within the SET.
       module integer(ip) function ordi ( ctx, item, set )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = - 5 )
          integer(ip), intent(in) :: item  !! An item to locate within a set.
          integer(ip), intent(in) :: set ( lbcell:* )  !! A set to search for a given item.
@@ -2023,7 +2023,7 @@ module pepper_instance
       !> The function returns the result of the comparison: A (OP) B.
       module logical function setc ( ctx, a, op, b )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter                ( lbcell = -5 )
          character(*), intent(in) :: a      ( lbcell:* )  !! First set.
          character(*), intent(in) :: op  !! Comparison operator.
@@ -2036,7 +2036,7 @@ module pepper_instance
       !> The function returns the result of the comparison: A (OP) B.
       module logical function setd ( ctx, a, op, b )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter                ( lbcell = -5 )
          real(wp), intent(in) :: a      ( lbcell:* )  !! First set.
          character(*), intent(in) :: op  !! Comparison operator.
@@ -2048,7 +2048,7 @@ module pepper_instance
       !> The function returns the result of the comparison: A (OP) B.
       module logical function seti ( ctx, a, op, b )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter                ( lbcell = -5 )
          integer(ip), intent(in) :: a      ( lbcell:* )  !! First set.
          character(*), intent(in) :: op  !! Comparison operator.
@@ -2058,7 +2058,7 @@ module pepper_instance
       !> Compute the union of two character sets to form a third set.
       module subroutine unionc ( ctx, a, b, c )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
          character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
@@ -2069,7 +2069,7 @@ module pepper_instance
       !> set.
       module subroutine uniond ( ctx, a, b, c )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
          real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
@@ -2079,7 +2079,7 @@ module pepper_instance
       !> Compute the union of two integer sets to form a third set.
       module subroutine unioni ( ctx, a, b, c )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
          integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
@@ -2089,7 +2089,7 @@ module pepper_instance
       !> Intersect two character sets to form a third set.
       module subroutine interc ( ctx, a, b, c )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
          character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
@@ -2099,7 +2099,7 @@ module pepper_instance
       !> Intersect two double precision sets to form a third set.
       module subroutine interd ( ctx, a, b, c )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
          real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
@@ -2109,7 +2109,7 @@ module pepper_instance
       !> Intersect two integer sets to form a third set.
       module subroutine interi ( ctx, a, b, c )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
          integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
@@ -2119,7 +2119,7 @@ module pepper_instance
       !> Take the difference of two character sets to form a third set.
       module subroutine diffc ( ctx, a, b, c )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
          character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
@@ -2130,7 +2130,7 @@ module pepper_instance
       !> a third set.
       module subroutine diffd ( ctx, a, b, c )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
          real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
@@ -2140,7 +2140,7 @@ module pepper_instance
       !> Take the difference of two integer sets to form a third set.
       module subroutine diffi ( ctx, a, b, c )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
          integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
@@ -2151,7 +2151,7 @@ module pepper_instance
       !> a third set.
       module subroutine sdiffc ( ctx, a, b, c )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
          character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
@@ -2162,7 +2162,7 @@ module pepper_instance
       !> to form a third set.
       module subroutine sdiffd ( ctx, a, b, c )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
          real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
@@ -2173,7 +2173,7 @@ module pepper_instance
       !> a third set.
       module subroutine sdiffi ( ctx, a, b, c )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
          integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
@@ -2184,7 +2184,7 @@ module pepper_instance
       module subroutine zzwninsd ( ctx, left, right, context, window )
       use pepper_inc_errhnd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter             ( lbcell = -5 )
          real(wp), intent(in) :: left  !! Left, right endpoints of new interval.
          real(wp), intent(in) :: right  !! Left, right endpoints of new interval.
@@ -2198,7 +2198,7 @@ module pepper_instance
       !> The function returns the cardinality of the input window.
       module integer(ip) function wncard ( ctx, window )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: window  ( lbcell:* )  !! Input window.
       end function wncard
@@ -2207,7 +2207,7 @@ module pepper_instance
       !> respect to the interval [LEFT,RIGHT].
       module subroutine wncomd ( ctx, left, right, window, result )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: left  !! Left, right endpoints of complement interval.
          real(wp), intent(in) :: right  !! Left, right endpoints of complement interval.
@@ -2219,7 +2219,7 @@ module pepper_instance
       !> Contract each of the intervals of a double precision window.
       module subroutine wncond ( ctx, left, right, window )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: left  !! Amount added to each left endpoint.
          real(wp), intent(in) :: right  !! Amount subtracted from each right endpoint.
@@ -2230,7 +2230,7 @@ module pepper_instance
       !> a third window.
       module subroutine wndifd ( ctx, a, b, c )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: a        ( lbcell:* )  !! Input windows.
          real(wp), intent(in) :: b        ( lbcell:* )  !! Input windows.
@@ -2243,7 +2243,7 @@ module pepper_instance
       !> The function returns .TRUE. if POINT is an element of WINDOW.
       module logical function wnelmd ( ctx, point, window )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: point  !! Input point.
          real(wp), intent(in) :: window      ( lbcell:* )  !! Input window.
@@ -2252,7 +2252,7 @@ module pepper_instance
       !> Expand each of the intervals of a double precision window.
       module subroutine wnexpd ( ctx, left, right, window )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: left  !! Amount subtracted from each left endpoint.
          real(wp), intent(in) :: right  !! Amount added to each right endpoint.
@@ -2263,7 +2263,7 @@ module pepper_instance
       !> window.
       module subroutine wnextd ( ctx, side, window )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          character(1), intent(in) :: side  !! Extract left ('L') or right ('R') endpoints.
          real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be extracted.
@@ -2272,7 +2272,7 @@ module pepper_instance
       !> Fetch a particular interval from a double precision window.
       module subroutine wnfetd ( ctx, window, n, left, right )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: window      ( lbcell:* )  !! Input window.
          integer(ip), intent(in) :: n  !! Index of interval to be fetched.
@@ -2284,7 +2284,7 @@ module pepper_instance
       !> window.
       module subroutine wnfild ( ctx, smlgap, window )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: smlgap  !! Limiting measure of small gaps.
          real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be filled.
@@ -2293,7 +2293,7 @@ module pepper_instance
       !> Filter (remove) small intervals from a double precision window.
       module subroutine wnfltd ( ctx, smlint, window )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: smlint  !! Limiting measure of small intervals.
          real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be filtered.
@@ -2305,7 +2305,7 @@ module pepper_instance
       !> The function returns .TRUE. if POINT is an element of WINDOW.
       module logical function wnincd ( ctx, left, right, window )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: left  !! Input interval.
          real(wp), intent(in) :: right  !! Input interval.
@@ -2315,7 +2315,7 @@ module pepper_instance
       !> Insert an interval into a double precision window.
       module subroutine wninsd ( ctx, left, right, window )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: left  !! Left, right endpoints of new interval.
          real(wp), intent(in) :: right  !! Left, right endpoints of new interval.
@@ -2326,7 +2326,7 @@ module pepper_instance
       !> a third window.
       module subroutine wnintd ( ctx, a, b, c )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: a        ( lbcell:* )  !! Input windows.
          real(wp), intent(in) :: b        ( lbcell:* )  !! Input windows.
@@ -2338,7 +2338,7 @@ module pepper_instance
       !> The function returns the result of comparison: A (OP) B.
       module logical function wnreld ( ctx, a, op, b )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: a        ( lbcell:* )  !! First window.
          character(*), intent(in) :: op  !! Comparison operator.
@@ -2348,7 +2348,7 @@ module pepper_instance
       !> Summarize the contents of a double precision window.
       module subroutine wnsumd ( ctx, window, meas, avg, stddev, idxsml, idxlon )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: window    ( lbcell:* )  !! Window to be summarized.
          real(wp), intent(out) :: meas  !! Total measure of intervals in WINDOW.
@@ -2362,7 +2362,7 @@ module pepper_instance
       !> window.
       module subroutine wnunid ( ctx, a, b, c )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          real(wp), intent(in) :: a        ( lbcell:* )  !! Input windows.
          real(wp), intent(in) :: b        ( lbcell:* )  !! Input windows.
@@ -2373,7 +2373,7 @@ module pepper_instance
       !> of a window array.
       module subroutine wnvald ( ctx, size, n, window )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip) lbcell
+         integer(ip) :: lbcell
          parameter           ( lbcell = -5 )
          integer(ip), intent(in) :: size  !! Size of window.
          integer(ip), intent(in) :: n  !! Original number of endpoints.

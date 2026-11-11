@@ -321,16 +321,16 @@ contains
 
       integer(ip), parameter :: ni = 6
 
-      character(lnsize)     arch
-      character(lnsize)     kertyp
+      character(lnsize) :: arch
+      character(lnsize) :: kertyp
 
-      real(wp)              dc     ( nd )
-      real(wp)              descr  ( nd + ni/2 )
+      real(wp) :: dc     ( nd )
+      real(wp) :: descr  ( nd + ni/2 )
 
-      integer(ip)           handle
-      integer(ip)           ic     ( ni )
+      integer(ip) :: handle
+      integer(ip) :: ic     ( ni )
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -1205,26 +1205,26 @@ contains
       integer(ip), parameter :: nic = 6
       integer(ip), parameter :: nc = ndc + ( nic + 1 )/2
       integer(ip), parameter :: idlen = nc * 8
-      character(idlen)      segid
-      real(wp)              av     ( 3 )
-      real(wp)              dcd    ( ndc  )
-      real(wp)              descr  ( nc   )
-      real(wp)              et
-      real(wp)              rot    ( 3, 3 )
-      real(wp)              tmpmat ( 3, 3 )
-      integer(ip)           center
-      integer(ip)           handle
-      integer(ip)           icd    ( nic  )
-      integer(ip)           refreq
-      integer(ip)           refseg
-      integer(ip)           sclk
-      integer(ip)           type1
-      integer(ip)           type2
-      integer(ip)           typeid
-      logical               needav
-      logical               pfnd
-      logical               sfnd
-      logical               gotit
+      character(idlen) :: segid
+      real(wp) :: av     ( 3 )
+      real(wp) :: dcd    ( ndc  )
+      real(wp) :: descr  ( nc   )
+      real(wp) :: et
+      real(wp) :: rot    ( 3, 3 )
+      real(wp) :: tmpmat ( 3, 3 )
+      integer(ip) :: center
+      integer(ip) :: handle
+      integer(ip) :: icd    ( nic  )
+      integer(ip) :: refreq
+      integer(ip) :: refseg
+      integer(ip) :: sclk
+      integer(ip) :: type1
+      integer(ip) :: type2
+      integer(ip) :: typeid
+      logical :: needav
+      logical :: pfnd
+      logical :: sfnd
+      logical :: gotit
       if ( .not. allocated ( ctx%ckgp_state ) ) allocate ( ctx%ckgp_state )
       associate ( svctr1 => ctx%ckgp_state%svctr1, &
                   svref => ctx%ckgp_state%svref, &
@@ -2210,28 +2210,28 @@ contains
       integer(ip), parameter :: nic = 6
       integer(ip), parameter :: nc = ndc + ( nic + 1 )/2
       integer(ip), parameter :: idlen = nc * 8
-      character(idlen)      segid
-      real(wp)              dcd      ( ndc  )
-      real(wp)              descr    ( nc   )
-      real(wp)              et
-      real(wp)              omega    ( 3    )
-      real(wp)              rot      ( 3, 3 )
-      real(wp)              tmpmat   ( 3, 3 )
-      real(wp)              tmpv     ( 3 )
-      real(wp)              xform    ( 6, 6 )
-      integer(ip)           center
-      integer(ip)           handle
-      integer(ip)           icd      ( nic  )
-      integer(ip)           refreq
-      integer(ip)           refseg
-      integer(ip)           sclk
-      integer(ip)           type1
-      integer(ip)           type2
-      integer(ip)           typeid
-      logical               needav
-      logical               pfnd
-      logical               sfnd
-      logical               gotit
+      character(idlen) :: segid
+      real(wp) :: dcd      ( ndc  )
+      real(wp) :: descr    ( nc   )
+      real(wp) :: et
+      real(wp) :: omega    ( 3    )
+      real(wp) :: rot      ( 3, 3 )
+      real(wp) :: tmpmat   ( 3, 3 )
+      real(wp) :: tmpv     ( 3 )
+      real(wp) :: xform    ( 6, 6 )
+      integer(ip) :: center
+      integer(ip) :: handle
+      integer(ip) :: icd      ( nic  )
+      integer(ip) :: refreq
+      integer(ip) :: refseg
+      integer(ip) :: sclk
+      integer(ip) :: type1
+      integer(ip) :: type2
+      integer(ip) :: typeid
+      logical :: needav
+      logical :: pfnd
+      logical :: sfnd
+      logical :: gotit
       if ( .not. allocated ( ctx%ckgpav_state ) ) allocate ( ctx%ckgpav_state )
       associate ( svctr1 => ctx%ckgpav_state%svctr1, &
                   svref => ctx%ckgpav_state%svref, &
@@ -2601,23 +2601,23 @@ contains
 
       integer(ip), parameter :: qsiz = 4
 
-      real(wp)              begin
-      real(wp)              buffer ( bufsiz )
-      real(wp)              et
-      real(wp)              finish
+      real(wp) :: begin
+      real(wp) :: buffer ( bufsiz )
+      real(wp) :: et
+      real(wp) :: finish
 
-      integer(ip)           i
-      integer(ip)           n
-      integer(ip)           nrec
-      integer(ip)           offset
-      integer(ip)           psiz
-      integer(ip)           remain
-      integer(ip)           tbase
-      integer(ip)           navsln
-      integer(ip)           avsln
-      integer(ip)           seglen
+      integer(ip) :: i
+      integer(ip) :: n
+      integer(ip) :: nrec
+      integer(ip) :: offset
+      integer(ip) :: psiz
+      integer(ip) :: remain
+      integer(ip) :: tbase
+      integer(ip) :: navsln
+      integer(ip) :: avsln
+      integer(ip) :: seglen
 
-      logical               istdb
+      logical :: istdb
 
 !
 !     Standard SPICE error handling.
@@ -2896,21 +2896,21 @@ contains
 
       integer(ip), parameter :: bsize = 100
 
-      real(wp)              begin
-      real(wp)              et
-      real(wp)              finish
-      real(wp)              first ( bsize )
-      real(wp)              last  ( bsize )
+      real(wp) :: begin
+      real(wp) :: et
+      real(wp) :: finish
+      real(wp) :: first ( bsize )
+      real(wp) :: last  ( bsize )
 
-      integer(ip)           arrsiz
-      integer(ip)           begat
-      integer(ip)           endat
-      integer(ip)           get
-      integer(ip)           got
-      integer(ip)           i
-      integer(ip)           nrec
+      integer(ip) :: arrsiz
+      integer(ip) :: begat
+      integer(ip) :: endat
+      integer(ip) :: get
+      integer(ip) :: got
+      integer(ip) :: i
+      integer(ip) :: nrec
 
-      logical               istdb
+      logical :: istdb
 
 !
 !     Standard SPICE error handling.
@@ -3139,29 +3139,29 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      real(wp)              begin
-      real(wp)              buffer ( 2 )
-      real(wp)              et
-      real(wp)              finish
-      real(wp)              start
-      real(wp)              tick
+      real(wp) :: begin
+      real(wp) :: buffer ( 2 )
+      real(wp) :: et
+      real(wp) :: finish
+      real(wp) :: start
+      real(wp) :: tick
 
-      integer(ip)           intat
-      integer(ip)           intbeg
-      integer(ip)           invls
-      integer(ip)           lstint
-      integer(ip)           lsttik
-      integer(ip)           ndir
-      integer(ip)           nrec
-      integer(ip)           rsize
-      integer(ip)           tickat
+      integer(ip) :: intat
+      integer(ip) :: intbeg
+      integer(ip) :: invls
+      integer(ip) :: lstint
+      integer(ip) :: lsttik
+      integer(ip) :: ndir
+      integer(ip) :: nrec
+      integer(ip) :: rsize
+      integer(ip) :: tickat
 
-      integer(ip)           navsln
-      integer(ip)           avsln
-      integer(ip)           seglen
+      integer(ip) :: navsln
+      integer(ip) :: avsln
+      integer(ip) :: seglen
 
-      logical               bail
-      logical               istdb
+      logical :: bail
+      logical :: istdb
 
 !
 !     Standard SPICE error handling.
@@ -3527,19 +3527,19 @@ contains
 
       integer(ip), parameter :: ni = 6
 
-      real(wp)              dc     ( nd )
-      real(wp)              descr  ( 5 )
-      real(wp)              et
-      real(wp)              left
-      real(wp)              right
-      real(wp)              values ( ck4rsz )
+      real(wp) :: dc     ( nd )
+      real(wp) :: descr  ( 5 )
+      real(wp) :: et
+      real(wp) :: left
+      real(wp) :: right
+      real(wp) :: values ( ck4rsz )
 
-      integer(ip)           ends   ( 2 )
-      integer(ip)           i
-      integer(ip)           ic     ( ni )
-      integer(ip)           nrec
+      integer(ip) :: ends   ( 2 )
+      integer(ip) :: i
+      integer(ip) :: ic     ( ni )
+      integer(ip) :: nrec
 
-      logical               istdb
+      logical :: istdb
 
 !
 !     Standard SPICE error handling.
@@ -3802,26 +3802,26 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      real(wp)              begin
-      real(wp)              buffer ( 4 )
-      real(wp)              et
-      real(wp)              finish
-      real(wp)              start
-      real(wp)              tick
+      real(wp) :: begin
+      real(wp) :: buffer ( 4 )
+      real(wp) :: et
+      real(wp) :: finish
+      real(wp) :: start
+      real(wp) :: tick
 
-      integer(ip)           intat
-      integer(ip)           intbeg
-      integer(ip)           invls
-      integer(ip)           lstint
-      integer(ip)           lsttik
-      integer(ip)           ndir
-      integer(ip)           nrec
-      integer(ip)           rsize
-      integer(ip)           subtyp
-      integer(ip)           tickat
+      integer(ip) :: intat
+      integer(ip) :: intbeg
+      integer(ip) :: invls
+      integer(ip) :: lstint
+      integer(ip) :: lsttik
+      integer(ip) :: ndir
+      integer(ip) :: nrec
+      integer(ip) :: rsize
+      integer(ip) :: subtyp
+      integer(ip) :: tickat
 
-      logical               bail
-      logical               istdb
+      logical :: bail
+      logical :: istdb
 
 !
 !     Standard SPICE error handling.
@@ -4242,24 +4242,24 @@ contains
 !
       integer(ip), parameter :: mctlsz = 4
 
-      real(wp)              begin
-      real(wp)              buffer ( mctlsz )
-      real(wp)              et
-      real(wp)              finish
-      real(wp)              ivlbds ( 2 )
-      real(wp)              lstepc
+      real(wp) :: begin
+      real(wp) :: buffer ( mctlsz )
+      real(wp) :: et
+      real(wp) :: finish
+      real(wp) :: ivlbds ( 2 )
+      real(wp) :: lstepc
 
-      integer(ip)           epaddr
-      integer(ip)           i
-      integer(ip)           ivlbas
-      integer(ip)           minie
-      integer(ip)           ndir
-      integer(ip)           nintvl
-      integer(ip)           nivdir
-      integer(ip)           nrec
-      integer(ip)           ptrbas
+      integer(ip) :: epaddr
+      integer(ip) :: i
+      integer(ip) :: ivlbas
+      integer(ip) :: minie
+      integer(ip) :: ndir
+      integer(ip) :: nintvl
+      integer(ip) :: nivdir
+      integer(ip) :: nrec
+      integer(ip) :: ptrbas
 
-      logical               istdb
+      logical :: istdb
 
 !
 !     Standard SPICE error handling.
@@ -5088,26 +5088,26 @@ contains
 
       integer(ip), parameter :: ni = 6
 
-      character(lnsize)     arch
-      character(lnsize)     kertyp
+      character(lnsize) :: arch
+      character(lnsize) :: kertyp
 
-      real(wp)              dc     ( nd )
-      real(wp)              dctol  ( nd )
-      real(wp)              descr  ( nd + (ni+1)/2 )
-      real(wp)              et
+      real(wp) :: dc     ( nd )
+      real(wp) :: dctol  ( nd )
+      real(wp) :: descr  ( nd + (ni+1)/2 )
+      real(wp) :: et
 
-      integer(ip)           clkid
-      integer(ip)           dtype
-      integer(ip)           handle
-      integer(ip)           i
-      integer(ip)           ic     ( ni )
-      integer(ip)           segbeg
-      integer(ip)           segend
+      integer(ip) :: clkid
+      integer(ip) :: dtype
+      integer(ip) :: handle
+      integer(ip) :: i
+      integer(ip) :: ic     ( ni )
+      integer(ip) :: segbeg
+      integer(ip) :: segend
 
-      logical               avok
-      logical               found
-      logical               istdb
-      logical               seglvl
+      logical :: avok
+      logical :: found
+      logical :: istdb
+      logical :: seglvl
 
 !
 !     Standard SPICE error handling.

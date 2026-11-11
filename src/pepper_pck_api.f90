@@ -490,16 +490,16 @@ contains
 
       integer(ip), parameter :: ni = 6
 
-      character(lnsize)     arch
-      character(lnsize)     kertyp
+      character(lnsize) :: arch
+      character(lnsize) :: kertyp
 
-      real(wp)              dc     ( nd )
-      real(wp)              descr  ( nd + ni/2 )
+      real(wp) :: dc     ( nd )
+      real(wp) :: descr  ( nd + ni/2 )
 
-      integer(ip)           handle
-      integer(ip)           ic     ( ni )
+      integer(ip) :: handle
+      integer(ip) :: ic     ( ni )
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -744,16 +744,16 @@ contains
 
       integer(ip), parameter :: filen = 128
 
-      character(40)   ident
+      character(40) :: ident
 
-      real(wp)              dcd     ( nd )
-      real(wp)              descr   ( ns )
-      real(wp)              record  ( 130 )
+      real(wp) :: dcd     ( nd )
+      real(wp) :: descr   ( ns )
+      real(wp) :: record  ( 130 )
 
-      integer(ip) type
-      integer(ip) handle
-      integer(ip) icd ( ni )
-      integer(ip) iref
+      integer(ip) :: type
+      integer(ip) :: handle
+      integer(ip) :: icd ( ni )
+      integer(ip) :: iref
 
 !
 !     Standard SPICE Error handling.
@@ -1073,16 +1073,16 @@ contains
 
       integer(ip), parameter :: ni = 6
 
-      character(lnsize)     arch
-      character(lnsize)     kertyp
+      character(lnsize) :: arch
+      character(lnsize) :: kertyp
 
-      real(wp)              dc     ( nd )
-      real(wp)              descr  ( nd + ni/2 )
+      real(wp) :: dc     ( nd )
+      real(wp) :: descr  ( nd + ni/2 )
 
-      integer(ip)           handle
-      integer(ip)           ic     ( ni )
+      integer(ip) :: handle
+      integer(ip) :: ic     ( ni )
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.

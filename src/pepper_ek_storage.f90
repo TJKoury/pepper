@@ -903,7 +903,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)            i
+      integer(ip) :: i
 
       i      =  handle
       isshad = .false.
@@ -992,15 +992,15 @@ contains
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
-      character(cnamsz)     cname
+      character(cnamsz) :: cname
 
-      integer(ip)           dscbas
-      integer(ip)           i
-      integer(ip)           mbase
-      integer(ip)           nambas
-      integer(ip)           ncols
+      integer(ip) :: dscbas
+      integer(ip) :: i
+      integer(ip) :: mbase
+      integer(ip) :: nambas
+      integer(ip) :: ncols
 
-      logical               found
+      logical :: found
 
 !
 !     Get the segment's integer metadata's base address.
@@ -1121,7 +1121,7 @@ contains
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
-      integer(ip)           nambas
+      integer(ip) :: nambas
 
 !
 !     Look up the name.
@@ -1218,7 +1218,7 @@ contains
       module procedure zzekgei
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
-      character(encsiz)     cval
+      character(encsiz) :: cval
 
 !
 !     Discovery error handling should be used in this utility.
@@ -1295,7 +1295,7 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_ekrecptr
       integer(ip) :: status_1(1)  !! one-element copy of status (array argument)
-      integer(ip)           loc
+      integer(ip) :: loc
 
 !
 !     Compute the status word location, and read the status.
@@ -1431,27 +1431,27 @@ contains
       module procedure zzekordc
       use pepper_kinds, only: ip
       use pepper_arrays, only: swapi
-      integer(ip)           gap
-      integer(ip)           i
-      integer(ip)           i1
-      integer(ip)           i2
-      integer(ip)           j
-      integer(ip)           jg
+      integer(ip) :: gap
+      integer(ip) :: i
+      integer(ip) :: i1
+      integer(ip) :: i2
+      integer(ip) :: j
+      integer(ip) :: jg
 
-      logical               eq1
-      logical               le1
-      logical               n1
-      logical               n2
-      logical               ok
+      logical :: eq1
+      logical :: le1
+      logical :: n1
+      logical :: n2
+      logical :: ok
 
 !
 !     Statement functions
 !
-      logical               cmp1
-      logical               cmp2
-      logical               cmp3
-      logical               cmp4
-      logical               le
+      logical :: cmp1
+      logical :: cmp2
+      logical :: cmp3
+      logical :: cmp4
+      logical :: le
 
       cmp1 ( le1, eq1, i1, i2 )   =         ( le1                      ) &
                                        .or. ( eq1 .and. ( i1 < i2 ) )
@@ -1663,28 +1663,28 @@ contains
       module procedure zzekordd
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: swapi
-      real(wp)              d1
-      real(wp)              d2
+      real(wp) :: d1
+      real(wp) :: d2
 
-      integer(ip)           gap
-      integer(ip)           i
-      integer(ip)           i1
-      integer(ip)           i2
-      integer(ip)           j
-      integer(ip)           jg
+      integer(ip) :: gap
+      integer(ip) :: i
+      integer(ip) :: i1
+      integer(ip) :: i2
+      integer(ip) :: j
+      integer(ip) :: jg
 
-      logical               n1
-      logical               n2
-      logical               ok
+      logical :: n1
+      logical :: n2
+      logical :: ok
 
 !
 !     Statement functions
 !
-      logical               cmp1
-      logical               cmp2
-      logical               cmp3
-      logical               cmp4
-      logical               le
+      logical :: cmp1
+      logical :: cmp2
+      logical :: cmp3
+      logical :: cmp4
+      logical :: le
 
       cmp1 ( d1, d2, i1, i2 )          =          ( d1 < d2 ) &
                                           .or. (  ( d1 == d2 ) .and. &
@@ -1894,28 +1894,28 @@ contains
       module procedure zzekordi
       use pepper_kinds, only: ip
       use pepper_arrays, only: swapi
-      integer(ip)           i1
-      integer(ip)           i2
-      integer(ip)           i3
-      integer(ip)           i4
+      integer(ip) :: i1
+      integer(ip) :: i2
+      integer(ip) :: i3
+      integer(ip) :: i4
 
-      integer(ip)           gap
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           jg
+      integer(ip) :: gap
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: jg
 
-      logical               n1
-      logical               n2
-      logical               ok
+      logical :: n1
+      logical :: n2
+      logical :: ok
 
 !
 !     Statement functions
 !
-      logical               cmp1
-      logical               cmp2
-      logical               cmp3
-      logical               cmp4
-      logical               le
+      logical :: cmp1
+      logical :: cmp2
+      logical :: cmp3
+      logical :: cmp4
+      logical :: le
 
       cmp1 ( i1, i2, i3, i4 )          =          ( i1 < i2 ) &
                                           .or. (  ( i1 == i2 ) .and. &
@@ -2261,16 +2261,16 @@ contains
       integer(ip), parameter :: idxpos = sizpos + 1
       integer(ip), parameter :: nflpos = idxpos + 1
       integer(ip), parameter :: fxcpos = nflpos + 1
-      character(msglen)     msg
-      character(toklen)     tokens ( maxtok )
-      integer(ip)           attloc ( cdscsz )
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           n
-      integer(ip)           ptr
-      integer(ip)           tokloc
-      logical               attfnd ( cdscsz )
-      logical               found
+      character(msglen) :: msg
+      character(toklen) :: tokens ( maxtok )
+      integer(ip) :: attloc ( cdscsz )
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: n
+      integer(ip) :: ptr
+      integer(ip) :: tokloc
+      logical :: attfnd ( cdscsz )
+      logical :: found
       if ( .not. allocated ( ctx%zzekpdec_state ) ) allocate ( ctx%zzekpdec_state )
       associate ( attkey => ctx%zzekpdec_state%attkey, &
                   reqkey => ctx%zzekpdec_state%reqkey )
@@ -2865,16 +2865,16 @@ contains
       integer(ip) :: npd_1(1)  !! one-element copy of npd (array argument)
       integer(ip) :: npc_1(1)  !! one-element copy of npc (array argument)
       integer(ip) :: id_1(1)  !! one-element copy of id (array argument)
-      integer(ip)           id
-      integer(ip)           lastc
-      integer(ip)           lastd
-      integer(ip)           lasti
-      integer(ip)           npc
-      integer(ip)           npd
-      integer(ip)           npi
-      integer(ip)           topc
-      integer(ip)           topd
-      integer(ip)           topi
+      integer(ip) :: id
+      integer(ip) :: lastc
+      integer(ip) :: lastd
+      integer(ip) :: lasti
+      integer(ip) :: npc
+      integer(ip) :: npd
+      integer(ip) :: npi
+      integer(ip) :: topc
+      integer(ip) :: topd
+      integer(ip) :: topi
 
 !
 !     Check whether the DAS is opened for the specified access method.
@@ -3056,7 +3056,7 @@ contains
 !     Minimum upper bound for the integer cell of an encoded query:
 !
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -3297,8 +3297,8 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(1)          tmpchr
-      integer(ip)           i
+      character(1) :: tmpchr
+      integer(ip) :: i
 
       tmpchr = action(1:1)
       i      = handle
@@ -4615,7 +4615,7 @@ contains
       integer(ip), parameter :: mxspec = 512
       integer(ip), parameter :: nspec = 13
       integer(ip), parameter :: spclen = 2
-      character(1)          chr
+      character(1) :: chr
       character(spclen), parameter :: spcstr ( nspec ) = [ character(spclen) :: &
          '!=', '^=', '<>', '<=',&
          '>=', '<', '>', '=',&
@@ -4649,12 +4649,12 @@ contains
          kwge, kwlt, kwgt, kweq,&
          0, 0, 0, 0,&
          0 ]
-      logical               isalph
-      logical               isdigt
-      logical               isdot
-      logical               issign
-      logical               isnum
-      logical               isquot
+      logical :: isalph
+      logical :: isdigt
+      logical :: isdot
+      logical :: issign
+      logical :: isnum
+      logical :: isquot
       isalph ( chr )  =       (      ( ichar(chr) >= ichar('A') ) &
                                .and. ( ichar(chr) <= ichar('Z') ) ) &
                         .or.  (      ( ichar(chr) >= ichar('a') ) &
@@ -5293,7 +5293,7 @@ contains
       module procedure zzeksei
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
-      character(encsiz)     cval
+      character(encsiz) :: cval
 
 !
 !     Discovery error handling should be used in this utility.
@@ -5382,10 +5382,10 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekglimit
-      integer(ip)           i
+      integer(ip) :: i
 
-      logical               fixed
-      logical               var
+      logical :: fixed
+      logical :: var
 
 !
 !     Standard SPICE error handling.
@@ -5522,11 +5522,11 @@ contains
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
       integer(ip) :: value_1(1)  !! one-element copy of the result (array argument)
 
-      integer(ip)           colidx
-      integer(ip)           datptr
-      integer(ip)           ncols
-      integer(ip)           nrec
-      integer(ip)           ptrloc
+      integer(ip) :: colidx
+      integer(ip) :: datptr
+      integer(ip) :: ncols
+      integer(ip) :: nrec
+      integer(ip) :: ptrloc
 
 !
 !     Initialize the function's return value.
@@ -5670,13 +5670,13 @@ contains
       use pepper_inc_ektype
       real(wp) :: dpcnt_1(1)  !! one-element copy of dpcnt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-      real(wp)              dpcnt
+      real(wp) :: dpcnt
 
-      integer(ip)           colidx
-      integer(ip)           datptr
-      integer(ip)           ncols
-      integer(ip)           nrec
-      integer(ip)           ptrloc
+      integer(ip) :: colidx
+      integer(ip) :: datptr
+      integer(ip) :: ncols
+      integer(ip) :: nrec
+      integer(ip) :: ptrloc
 
 !
 !     Initialize the function's return value.
@@ -5874,23 +5874,23 @@ contains
 
       integer(ip), parameter :: short = 32
 
-      character(lnsize)     locstr
-      character(short)      modify ( maxmod )
-      character(lnsize)     pictur
-      character(msglen)     sclmsg
-      character(short)      type
+      character(lnsize) :: locstr
+      character(short) :: modify ( maxmod )
+      character(lnsize) :: pictur
+      character(msglen) :: sclmsg
+      character(short) :: type
 
-      real(wp)              sclkdp
-      real(wp)              tvec   ( ncomp )
+      real(wp) :: sclkdp
+      real(wp) :: tvec   ( ncomp )
 
-      integer(ip)           clkid
-      integer(ip)           loc
-      integer(ip)           ntvec
+      integer(ip) :: clkid
+      integer(ip) :: loc
+      integer(ip) :: ntvec
 
-      logical               fnd
-      logical               mods
-      logical               succes
-      logical               yabbrv
+      logical :: fnd
+      logical :: mods
+      logical :: succes
+      logical :: yabbrv
 
       if ( ctx%failed() ) return
 
@@ -6929,7 +6929,7 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ekrecptr
       integer(ip) :: ptr_1(1)  !! one-element copy of ptr (array argument)
-      integer(ip)           loc
+      integer(ip) :: loc
 
 !
 !     Is this file handle valid--is the file open for paged write
@@ -7047,11 +7047,11 @@ contains
       use pepper_inc_ekbool
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           free
-      integer(ip)           init
-      integer(ip)           l
-      integer(ip)           room
-      integer(ip)           size
+      integer(ip) :: free
+      integer(ip) :: init
+      integer(ip) :: l
+      integer(ip) :: room
+      integer(ip) :: size
 
       call zzekreqi ( ctx, eqryi, 'INITIALIZED', init )
 
@@ -7213,10 +7213,10 @@ contains
       use pepper_inc_ekbool
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           free
-      integer(ip)           init
-      integer(ip)           room
-      integer(ip)           size
+      integer(ip) :: free
+      integer(ip) :: init
+      integer(ip) :: room
+      integer(ip) :: size
 
       call zzekreqi ( ctx, eqryi, 'INITIALIZED', init )
 
@@ -7386,35 +7386,35 @@ contains
       integer(ip) :: nsv_1(1)  !! one-element copy of nsv (array argument)
       integer(ip) :: ntab_1(1)  !! one-element copy of ntab (array argument)
       integer(ip) :: size_1(1)  !! one-element copy of size (array argument)
-      integer(ip)           cntloc
-      integer(ip)           delta
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           nsvdel
-      integer(ip)           nrvdel
-      integer(ip)           newnsv
-      integer(ip)           nr
-      integer(ip)           nrloc
-      integer(ip)           nsv
-      integer(ip)           nsvloc
-      integer(ip)           ntab
-      integer(ip)           ntloc
-      integer(ip)           pcpair ( 2 )
-      integer(ip)           ptarg
-      integer(ip)           ptbase
-      integer(ip)           ptrloc
-      integer(ip)           rc
-      integer(ip)           rbase
+      integer(ip) :: cntloc
+      integer(ip) :: delta
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: nsvdel
+      integer(ip) :: nrvdel
+      integer(ip) :: newnsv
+      integer(ip) :: nr
+      integer(ip) :: nrloc
+      integer(ip) :: nsv
+      integer(ip) :: nsvloc
+      integer(ip) :: ntab
+      integer(ip) :: ntloc
+      integer(ip) :: pcpair ( 2 )
+      integer(ip) :: ptarg
+      integer(ip) :: ptbase
+      integer(ip) :: ptrloc
+      integer(ip) :: rc
+      integer(ip) :: rbase
       integer(ip), allocatable :: rowvec ( : )
-      integer(ip)           rtarg
-      integer(ip)           rvsize
+      integer(ip) :: rtarg
+      integer(ip) :: rvsize
       integer(ip), allocatable :: segvec ( : )
-      integer(ip)           setbas
-      integer(ip)           size
-      integer(ip)           sizloc
-      integer(ip)           svbase
-      integer(ip)           svsize
-      integer(ip)           vtarg
+      integer(ip) :: setbas
+      integer(ip) :: size
+      integer(ip) :: sizloc
+      integer(ip) :: svbase
+      integer(ip) :: svsize
+      integer(ip) :: vtarg
 
 !
 !     Look up the counts that are of interest:
@@ -9592,11 +9592,11 @@ contains
       use pepper_inc_ekbool
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           iparse
-      integer(ip)           loc
-      integer(ip)           ncnj
-      integer(ip)           ncns
-      integer(ip)           ntab
+      integer(ip) :: iparse
+      integer(ip) :: loc
+      integer(ip) :: ncnj
+      integer(ip) :: ncns
+      integer(ip) :: ntab
 
       call zzekreqi ( ctx, eqryi, 'PARSED', iparse )
 
@@ -9792,15 +9792,15 @@ contains
 
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           base
-      integer(ip)           cb
-      integer(ip)           ce
-      integer(ip)           icheck
-      integer(ip)           ncns
-      integer(ip)           ntab
-      integer(ip)           ptr
-      integer(ip)           tb
-      integer(ip)           te
+      integer(ip) :: base
+      integer(ip) :: cb
+      integer(ip) :: ce
+      integer(ip) :: icheck
+      integer(ip) :: ncns
+      integer(ip) :: ntab
+      integer(ip) :: ptr
+      integer(ip) :: tb
+      integer(ip) :: te
 
       call zzekreqi ( ctx, eqryi, 'SEM_CHECKED', icheck )
 
@@ -10069,18 +10069,18 @@ contains
       use pepper_inc_ekbool
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           base
-      integer(ip)           buflen
-      integer(ip)           cb
-      integer(ip)           ce
-      integer(ip)           iparse
-      integer(ip)           ncnj
-      integer(ip)           ncns
-      integer(ip)           nord
-      integer(ip)           ntab
-      integer(ip)           resolv
-      integer(ip)           tb
-      integer(ip)           te
+      integer(ip) :: base
+      integer(ip) :: buflen
+      integer(ip) :: cb
+      integer(ip) :: ce
+      integer(ip) :: iparse
+      integer(ip) :: ncnj
+      integer(ip) :: ncns
+      integer(ip) :: nord
+      integer(ip) :: ntab
+      integer(ip) :: resolv
+      integer(ip) :: tb
+      integer(ip) :: te
 
       call zzekreqi ( ctx, eqryi, 'PARSED', iparse )
 
@@ -10325,19 +10325,19 @@ contains
       use pepper_inc_ekbool
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           base
-      integer(ip)           buflen
-      integer(ip)           cb
-      integer(ip)           ce
-      integer(ip)           iparse
-      integer(ip)           ncnj
-      integer(ip)           ncns
-      integer(ip)           nord
-      integer(ip)           nsel
-      integer(ip)           ntab
-      integer(ip)           resolv
-      integer(ip)           tb
-      integer(ip)           te
+      integer(ip) :: base
+      integer(ip) :: buflen
+      integer(ip) :: cb
+      integer(ip) :: ce
+      integer(ip) :: iparse
+      integer(ip) :: ncnj
+      integer(ip) :: ncns
+      integer(ip) :: nord
+      integer(ip) :: nsel
+      integer(ip) :: ntab
+      integer(ip) :: resolv
+      integer(ip) :: tb
+      integer(ip) :: te
 
       call zzekreqi ( ctx, eqryi, 'PARSED', iparse )
 
@@ -10586,14 +10586,14 @@ contains
       use pepper_inc_ekbool
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           ab
-      integer(ip)           ae
-      integer(ip)           base
-      integer(ip)           buflen
-      integer(ip)           iparse
-      integer(ip)           ntab
-      integer(ip)           tb
-      integer(ip)           te
+      integer(ip) :: ab
+      integer(ip) :: ae
+      integer(ip) :: base
+      integer(ip) :: buflen
+      integer(ip) :: iparse
+      integer(ip) :: ntab
+      integer(ip) :: tb
+      integer(ip) :: te
 
       call zzekreqi ( ctx, eqryi, 'PARSED', iparse )
 
@@ -10820,23 +10820,23 @@ contains
       use pepper_inc_ektype
 
       implicit none
-      character(1)          cflag
-      character(cnamsz)     column
+      character(1) :: cflag
+      character(cnamsz) :: column
 
-      integer(ip)           addrss
-      integer(ip)           colidx
-      integer(ip)           datbas
-      integer(ip)           l
-      integer(ip)           mdat   ( mdsz09 )
-      integer(ip)           metloc
-      integer(ip)           ncols
-      integer(ip)           nflbas
-      integer(ip)           offset
-      integer(ip)           q
-      integer(ip)           r
-      integer(ip)           spp
+      integer(ip) :: addrss
+      integer(ip) :: colidx
+      integer(ip) :: datbas
+      integer(ip) :: l
+      integer(ip) :: mdat   ( mdsz09 )
+      integer(ip) :: metloc
+      integer(ip) :: ncols
+      integer(ip) :: nflbas
+      integer(ip) :: offset
+      integer(ip) :: q
+      integer(ip) :: r
+      integer(ip) :: spp
 
-      logical               nullok
+      logical :: nullok
 
 !
 !     Make sure the column exists.
@@ -11025,7 +11025,7 @@ contains
       module procedure zzeksrcp
       use pepper_kinds, only: ip
       use pepper_inc_ekrecptr
-      integer(ip)           loc
+      integer(ip) :: loc
 
 !
 !     Is this file handle valid--is the file open for paged write
@@ -11109,7 +11109,7 @@ contains
       module procedure zzeksrs
       use pepper_kinds, only: ip
       use pepper_inc_ekrecptr
-      integer(ip)           loc
+      integer(ip) :: loc
 
 !
 !     Is this file handle valid--is the file open for paged write
@@ -11209,11 +11209,11 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-      integer(ip)           colidx
-      integer(ip)           datptr
-      integer(ip)           ncols
-      integer(ip)           nrec
-      integer(ip)           ptrloc
+      integer(ip) :: colidx
+      integer(ip) :: datptr
+      integer(ip) :: ncols
+      integer(ip) :: nrec
+      integer(ip) :: ptrloc
 
 !
 !     Initialize the function's return value.
@@ -11607,7 +11607,7 @@ contains
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlei
       integer(ip) :: sgvbas_1(1)  !! one-element copy of sgvbas (array argument)
-      logical               return
+      logical :: return
       integer(ip), parameter :: jszidx = 1
       integer(ip), parameter :: jrcidx = 2
       integer(ip), parameter :: jtcidx = 3
@@ -11743,8 +11743,8 @@ contains
       use pepper_inc_ektype
       integer(ip) :: fward_1(1)  !! one-element copy of fward (array argument)
       real(wp) :: dpptr_1(1)  !! one-element copy of dpptr (array argument)
-      real(wp)              dpptr
-      integer(ip)           base
+      real(wp) :: dpptr
+      integer(ip) :: base
 
 !
 !     Look up the base address of the page.
@@ -11851,8 +11851,8 @@ contains
       use pepper_inc_ektype
       integer(ip) :: nlinks_1(1)  !! one-element copy of nlinks (array argument)
       real(wp) :: dplnk_1(1)  !! one-element copy of dplnk (array argument)
-      real(wp)              dplnk
-      integer(ip)           base
+      real(wp) :: dplnk
+      integer(ip) :: base
 
 !
 !     Look up the base address of the page.
@@ -14521,8 +14521,8 @@ contains
       use pepper_inc_ekdatpag
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      real(wp)              dpptr
-      integer(ip)           base
+      real(wp) :: dpptr
+      integer(ip) :: base
 
 !
 !     Look up the base address of the page.
@@ -14632,8 +14632,8 @@ contains
       use pepper_inc_ekdatpag
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      real(wp)              dplnk
-      integer(ip)           base
+      real(wp) :: dplnk
+      integer(ip) :: base
 
 !
 !     Look up the base address of the page.
@@ -14792,16 +14792,16 @@ contains
       use pepper_inc_ektree
       use pepper_inc_ekpage
       use pepper_inc_ektype
-      integer(ip)           base
-      integer(ip)           c1page ( pgsizi )
-      integer(ip)           c2page ( pgsizi )
-      integer(ip)           child  ( 2 )
-      integer(ip)           delta
-      integer(ip)           i
-      integer(ip)           middle
-      integer(ip)           nrkeys
-      integer(ip)           root
-      integer(ip)           rpage  ( pgsizi )
+      integer(ip) :: base
+      integer(ip) :: c1page ( pgsizi )
+      integer(ip) :: c2page ( pgsizi )
+      integer(ip) :: child  ( 2 )
+      integer(ip) :: delta
+      integer(ip) :: i
+      integer(ip) :: middle
+      integer(ip) :: nrkeys
+      integer(ip) :: root
+      integer(ip) :: rpage  ( pgsizi )
 
       root    =  tree
 
@@ -15056,17 +15056,17 @@ contains
       use pepper_inc_ektree
       use pepper_inc_ekpage
       use pepper_inc_ektype
-      integer(ip)           c1page ( pgsizi )
-      integer(ip)           c2page ( pgsizi )
-      integer(ip)           child  ( 2 )
-      integer(ip)           delta
-      integer(ip)           i
-      integer(ip)           middle
-      integer(ip)           nlkeys
-      integer(ip)           nrkeys
-      integer(ip)           root
-      integer(ip)           rpage  ( pgsizi )
-      integer(ip)           sum
+      integer(ip) :: c1page ( pgsizi )
+      integer(ip) :: c2page ( pgsizi )
+      integer(ip) :: child  ( 2 )
+      integer(ip) :: delta
+      integer(ip) :: i
+      integer(ip) :: middle
+      integer(ip) :: nlkeys
+      integer(ip) :: nrkeys
+      integer(ip) :: root
+      integer(ip) :: rpage  ( pgsizi )
+      integer(ip) :: sum
 
       root    =  tree
 
@@ -15336,16 +15336,16 @@ contains
 
       integer(ip), parameter :: begidx = 3
 
-      integer(ip)           depth
-      integer(ip)           first
-      integer(ip)           kidbas
-      integer(ip)           level
-      integer(ip)           nkeys
-      integer(ip)           nkids
-      integer(ip)           node
-      integer(ip)           page  ( pgsizi )
-      integer(ip)           remain
-      integer(ip)           stack ( 3, trmxdp )
+      integer(ip) :: depth
+      integer(ip) :: first
+      integer(ip) :: kidbas
+      integer(ip) :: level
+      integer(ip) :: nkeys
+      integer(ip) :: nkids
+      integer(ip) :: node
+      integer(ip) :: page  ( pgsizi )
+      integer(ip) :: remain
+      integer(ip) :: stack ( 3, trmxdp )
 
 !
 !     Standard SPICE error handling.
@@ -15572,8 +15572,8 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_ektree
       use pepper_inc_ektype
-      integer(ip)           base
-      integer(ip)           p
+      integer(ip) :: base
+      integer(ip) :: p
       if ( .not. allocated ( ctx%zzektrit_state ) ) allocate ( ctx%zzektrit_state )
       associate ( page => ctx%zzektrit_state%page )
       if ( ctx%failed() ) return
@@ -16149,17 +16149,17 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_ektree
       use pepper_inc_ektype
-      integer(ip)           child
-      integer(ip)           lkey
-      integer(ip)           maxkey
-      integer(ip)           newkey
-      integer(ip)           offset
-      integer(ip)           page   ( pgsizi )
-      integer(ip)           prev
-      integer(ip)           prvkey
-      integer(ip)           totkey
+      integer(ip) :: child
+      integer(ip) :: lkey
+      integer(ip) :: maxkey
+      integer(ip) :: newkey
+      integer(ip) :: offset
+      integer(ip) :: page   ( pgsizi )
+      integer(ip) :: prev
+      integer(ip) :: prvkey
+      integer(ip) :: totkey
 
-      logical               found
+      logical :: found
 
 !
 ! in this puppy.
@@ -16483,27 +16483,27 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_ektree
       use pepper_inc_ekpage
-      integer(ip)           datbas
-      integer(ip)           dpar
-      integer(ip)           drotat
-      integer(ip)           dshift
-      integer(ip)           futrpk
-      integer(ip)           i
-      integer(ip)           keybas
-      integer(ip)           kidbas
-      integer(ip)           lnkeys
-      integer(ip)           lnsize
-      integer(ip)           lpage  ( pgsizi )
-      integer(ip)           lsib
-      integer(ip)           nvopar
-      integer(ip)           ppage  ( pgsizi )
-      integer(ip)           remain
-      integer(ip)           rnkeys
-      integer(ip)           root
-      integer(ip)           rpage  ( pgsizi )
-      integer(ip)           rsib
-      integer(ip)           schlep
-      integer(ip)           subsiz
+      integer(ip) :: datbas
+      integer(ip) :: dpar
+      integer(ip) :: drotat
+      integer(ip) :: dshift
+      integer(ip) :: futrpk
+      integer(ip) :: i
+      integer(ip) :: keybas
+      integer(ip) :: kidbas
+      integer(ip) :: lnkeys
+      integer(ip) :: lnsize
+      integer(ip) :: lpage  ( pgsizi )
+      integer(ip) :: lsib
+      integer(ip) :: nvopar
+      integer(ip) :: ppage  ( pgsizi )
+      integer(ip) :: remain
+      integer(ip) :: rnkeys
+      integer(ip) :: root
+      integer(ip) :: rpage  ( pgsizi )
+      integer(ip) :: rsib
+      integer(ip) :: schlep
+      integer(ip) :: subsiz
 
       if ( nrot == 0 ) return
 
@@ -16999,37 +16999,37 @@ contains
       integer(ip) :: crwbas_1(1)  !! one-element copy of crwbas (array argument)
       integer(ip) :: ncndsv_1(1)  !! one-element copy of ncndsv (array argument)
       integer(ip) :: ntab_1(1)  !! one-element copy of ntab (array argument)
-      integer(ip)           i
-      integer(ip)           base
-      integer(ip)           cand
+      integer(ip) :: i
+      integer(ip) :: base
+      integer(ip) :: cand
       integer(ip), allocatable :: candsv ( : )
-      integer(ip)           crv
-      integer(ip)           crwbas
+      integer(ip) :: crv
+      integer(ip) :: crwbas
       integer(ip), allocatable :: crwvec ( : )
-      integer(ip)           csgbas
-      integer(ip)           csv
-      integer(ip)           j
-      integer(ip)           loc
-      integer(ip)           ncndrv
-      integer(ip)           ncndsv
-      integer(ip)           ndel
-      integer(ip)           nprdrv
-      integer(ip)           nprdsv
-      integer(ip)           nr
-      integer(ip)           nrloc
-      integer(ip)           nsvloc
-      integer(ip)           ntab
-      integer(ip)           pred
+      integer(ip) :: csgbas
+      integer(ip) :: csv
+      integer(ip) :: j
+      integer(ip) :: loc
+      integer(ip) :: ncndrv
+      integer(ip) :: ncndsv
+      integer(ip) :: ndel
+      integer(ip) :: nprdrv
+      integer(ip) :: nprdsv
+      integer(ip) :: nr
+      integer(ip) :: nrloc
+      integer(ip) :: nsvloc
+      integer(ip) :: ntab
+      integer(ip) :: pred
       integer(ip), allocatable :: predsv ( : )
-      integer(ip)           prv
-      integer(ip)           prwbas
+      integer(ip) :: prv
+      integer(ip) :: prwbas
       integer(ip), allocatable :: prwvec ( : )
-      integer(ip)           psgbas
-      integer(ip)           psv
-      integer(ip)           rvsize
-      integer(ip)           svsize
+      integer(ip) :: psgbas
+      integer(ip) :: psv
+      integer(ip) :: rvsize
+      integer(ip) :: svsize
 
-      logical               hit
+      logical :: hit
 
 !
 !     PEPPER: no maximum number of join row sets (SPICELIB: MXJRS = 200,
@@ -17558,9 +17558,9 @@ contains
 
       integer(ip), parameter :: nwc = 1024
 
-      integer(ip)           base
-      integer(ip)           ncr
-      integer(ip)           p
+      integer(ip) :: base
+      integer(ip) :: ncr
+      integer(ip) :: p
 
 !
 !     Standard SPICE error handling.
@@ -18026,8 +18026,8 @@ contains
       use pepper_inc_ekfilpar
       implicit none
 
-      integer(ip)           base
-      integer(ip)           p
+      integer(ip) :: base
+      integer(ip) :: p
 
 !
 !     Standard SPICE error handling.
@@ -18359,7 +18359,7 @@ contains
 
       implicit none
       integer(ip), parameter :: lbcell = -5
-      integer(ip)           dsize
+      integer(ip) :: dsize
 
 !
 !     State parameters
@@ -18407,30 +18407,30 @@ contains
 
       integer(ip), parameter :: keylen = 32
 
-      character(typlen)     errtyp
-      character(keylen)     expkey
+      character(typlen) :: errtyp
+      character(keylen) :: expkey
 
-      integer(ip)           alsdsc ( eqvdsz )
-      integer(ip)           b
-      integer(ip)           coldsc ( eqvdsz )
-      integer(ip)           e
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           l
-      integer(ip)           lxb
-      integer(ip)           lxe
-      integer(ip)           namdsc ( eqvdsz )
-      integer(ip)           ncnstr
-      integer(ip)           norder
-      integer(ip)           nsel
-      integer(ip)           ntabs
-      integer(ip)           state
-      integer(ip)           tabdsc ( eqvdsz )
-      integer(ip)           token
-      integer(ip)           toknum
-      integer(ip)           valdsc ( eqvdsz )
+      integer(ip) :: alsdsc ( eqvdsz )
+      integer(ip) :: b
+      integer(ip) :: coldsc ( eqvdsz )
+      integer(ip) :: e
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: l
+      integer(ip) :: lxb
+      integer(ip) :: lxe
+      integer(ip) :: namdsc ( eqvdsz )
+      integer(ip) :: ncnstr
+      integer(ip) :: norder
+      integer(ip) :: nsel
+      integer(ip) :: ntabs
+      integer(ip) :: state
+      integer(ip) :: tabdsc ( eqvdsz )
+      integer(ip) :: token
+      integer(ip) :: toknum
+      integer(ip) :: valdsc ( eqvdsz )
 
-      logical               fnd
+      logical :: fnd
 
 !
 !     Standard SPICE error handling.
@@ -19888,35 +19888,35 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_ektype
       integer(ip) :: nnode_1(1)  !! one-element copy of nnode (array argument)
-      integer(ip)           base
-      integer(ip)           c1page ( pgsizi )
-      integer(ip)           c2page ( pgsizi )
-      integer(ip)           c3page ( pgsizi )
-      integer(ip)           datbas
-      integer(ip)           i
-      integer(ip)           keybas
-      integer(ip)           kidbas
-      integer(ip)           ldelta
-      integer(ip)           lnmove
-      integer(ip)           lshift
-      integer(ip)           lsib
-      integer(ip)           lsize
-      integer(ip)           ltrsiz
-      integer(ip)           msize
-      integer(ip)           new
-      integer(ip)           nlkeys
-      integer(ip)           nnode
-      integer(ip)           npkeys
-      integer(ip)           nrkeys
-      integer(ip)           ppage ( pgsizi )
-      integer(ip)           rbase
-      integer(ip)           rdelta
-      integer(ip)           rnmove
-      integer(ip)           root
-      integer(ip)           rshift
-      integer(ip)           rsib
-      integer(ip)           rsize
-      integer(ip)           sum
+      integer(ip) :: base
+      integer(ip) :: c1page ( pgsizi )
+      integer(ip) :: c2page ( pgsizi )
+      integer(ip) :: c3page ( pgsizi )
+      integer(ip) :: datbas
+      integer(ip) :: i
+      integer(ip) :: keybas
+      integer(ip) :: kidbas
+      integer(ip) :: ldelta
+      integer(ip) :: lnmove
+      integer(ip) :: lshift
+      integer(ip) :: lsib
+      integer(ip) :: lsize
+      integer(ip) :: ltrsiz
+      integer(ip) :: msize
+      integer(ip) :: new
+      integer(ip) :: nlkeys
+      integer(ip) :: nnode
+      integer(ip) :: npkeys
+      integer(ip) :: nrkeys
+      integer(ip) :: ppage ( pgsizi )
+      integer(ip) :: rbase
+      integer(ip) :: rdelta
+      integer(ip) :: rnmove
+      integer(ip) :: root
+      integer(ip) :: rshift
+      integer(ip) :: rsib
+      integer(ip) :: rsize
+      integer(ip) :: sum
 
 !
 !     The plan is to take two sibling nodes, one of which is full and
@@ -20492,35 +20492,35 @@ contains
 
       integer(ip), parameter :: rsize = 3*mnkeyc - lsize
 
-      integer(ip)           c1page ( pgsizi )
-      integer(ip)           c2page ( pgsizi )
-      integer(ip)           c3page ( pgsizi )
-      integer(ip)           datbas
-      integer(ip)           i
-      integer(ip)           keybas
-      integer(ip)           kidbas
-      integer(ip)           leftsz
-      integer(ip)           lmidsz
-      integer(ip)           lpkey
-      integer(ip)           lsib
-      integer(ip)           midsiz
-      integer(ip)           msib
-      integer(ip)           n
-      integer(ip)           nlkeys
-      integer(ip)           nmkeys
-      integer(ip)           nnode
-      integer(ip)           npkeys
-      integer(ip)           nrkeys
-      integer(ip)           ppage ( pgsizi )
-      integer(ip)           psize
-      integer(ip)           rbase
-      integer(ip)           rmidsz
-      integer(ip)           root
-      integer(ip)           rpkey
-      integer(ip)           rshift
-      integer(ip)           rsib
-      integer(ip)           sizbas
-      integer(ip)           sum
+      integer(ip) :: c1page ( pgsizi )
+      integer(ip) :: c2page ( pgsizi )
+      integer(ip) :: c3page ( pgsizi )
+      integer(ip) :: datbas
+      integer(ip) :: i
+      integer(ip) :: keybas
+      integer(ip) :: kidbas
+      integer(ip) :: leftsz
+      integer(ip) :: lmidsz
+      integer(ip) :: lpkey
+      integer(ip) :: lsib
+      integer(ip) :: midsiz
+      integer(ip) :: msib
+      integer(ip) :: n
+      integer(ip) :: nlkeys
+      integer(ip) :: nmkeys
+      integer(ip) :: nnode
+      integer(ip) :: npkeys
+      integer(ip) :: nrkeys
+      integer(ip) :: ppage ( pgsizi )
+      integer(ip) :: psize
+      integer(ip) :: rbase
+      integer(ip) :: rmidsz
+      integer(ip) :: root
+      integer(ip) :: rpkey
+      integer(ip) :: rshift
+      integer(ip) :: rsib
+      integer(ip) :: sizbas
+      integer(ip) :: sum
 
 !
 !     The plan is to take three sibling nodes, two of which contain
@@ -20998,10 +20998,10 @@ contains
       !>     Local variables
       module procedure zzektrdp
       use pepper_kinds, only: ip
-      integer(ip)           idx
-      integer(ip)           node
-      integer(ip)           noffst
-      integer(ip)           level
+      integer(ip) :: idx
+      integer(ip) :: node
+      integer(ip) :: noffst
+      integer(ip) :: level
 
 !
 ! in this puppy.
@@ -21077,7 +21077,7 @@ contains
 !     Other functions
 !
 
-      integer(ip)           addrss
+      integer(ip) :: addrss
 
 !
 !     Go straight to the address at which the key count for the
@@ -21182,21 +21182,21 @@ contains
       integer(ip) :: rkey_1(1)  !! one-element copy of rkey (array argument)
       integer(ip) :: lkey_1(1)  !! one-element copy of lkey (array argument)
       integer(ip) :: loffst_1(1)  !! one-element copy of loffst (array argument)
-      integer(ip)           addrss
-      integer(ip)           base
-      integer(ip)           keybas
-      integer(ip)           kidbas
-      integer(ip)           loffst
-      integer(ip)           llpidx
-      integer(ip)           lpidx
-      integer(ip)           lpkey
-      integer(ip)           nkbas
-      integer(ip)           parent
-      integer(ip)           pkey
-      integer(ip)           poffst
-      integer(ip)           roffst
-      integer(ip)           rpidx
-      integer(ip)           rpkey
+      integer(ip) :: addrss
+      integer(ip) :: base
+      integer(ip) :: keybas
+      integer(ip) :: kidbas
+      integer(ip) :: loffst
+      integer(ip) :: llpidx
+      integer(ip) :: lpidx
+      integer(ip) :: lpkey
+      integer(ip) :: nkbas
+      integer(ip) :: parent
+      integer(ip) :: pkey
+      integer(ip) :: poffst
+      integer(ip) :: roffst
+      integer(ip) :: rpidx
+      integer(ip) :: rpkey
 
 !
 !     Start out by looking up the parent node.  We get LSIB
@@ -21375,7 +21375,7 @@ contains
       use pepper_inc_ektree
       integer(ip) :: value_1(1)  !! one-element copy of the result (array argument)
 
-      integer(ip)           addrss
+      integer(ip) :: addrss
 
 !
 !     Go straight to the address at which the key count is stored.
@@ -21509,43 +21509,43 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
       use pepper_inc_ektree
-      integer(ip)           datptr
-      integer(ip)           depth
-      integer(ip)           i
-      integer(ip)           keyidx
-      integer(ip)           leaf
-      integer(ip)           level
-      integer(ip)           loffst
-      integer(ip)           lpage  ( pgsizi )
-      integer(ip)           lpidx
-      integer(ip)           lpidx2
-      integer(ip)           lpkey
-      integer(ip)           lpkey2
-      integer(ip)           lsib
-      integer(ip)           lsib2
-      integer(ip)           nkeys
-      integer(ip)           nlkeys
-      integer(ip)           nnode
-      integer(ip)           parent
-      integer(ip)           paren2
-      integer(ip)           pkey
-      integer(ip)           pkey2
-      integer(ip)           poffs2
-      integer(ip)           poffst
-      integer(ip)           prev
-      integer(ip)           root
-      integer(ip)           rpage  ( pgsizi )
-      integer(ip)           rpidx
-      integer(ip)           rpidx2
-      integer(ip)           rpkey
-      integer(ip)           rpkey2
-      integer(ip)           rsib
-      integer(ip)           rsib2
-      integer(ip)           target
-      integer(ip)           tnkeys
-      integer(ip)           toffst
-      integer(ip)           totkey
-      integer(ip)           tpage  ( pgsizi )
+      integer(ip) :: datptr
+      integer(ip) :: depth
+      integer(ip) :: i
+      integer(ip) :: keyidx
+      integer(ip) :: leaf
+      integer(ip) :: level
+      integer(ip) :: loffst
+      integer(ip) :: lpage  ( pgsizi )
+      integer(ip) :: lpidx
+      integer(ip) :: lpidx2
+      integer(ip) :: lpkey
+      integer(ip) :: lpkey2
+      integer(ip) :: lsib
+      integer(ip) :: lsib2
+      integer(ip) :: nkeys
+      integer(ip) :: nlkeys
+      integer(ip) :: nnode
+      integer(ip) :: parent
+      integer(ip) :: paren2
+      integer(ip) :: pkey
+      integer(ip) :: pkey2
+      integer(ip) :: poffs2
+      integer(ip) :: poffst
+      integer(ip) :: prev
+      integer(ip) :: root
+      integer(ip) :: rpage  ( pgsizi )
+      integer(ip) :: rpidx
+      integer(ip) :: rpidx2
+      integer(ip) :: rpkey
+      integer(ip) :: rpkey2
+      integer(ip) :: rsib
+      integer(ip) :: rsib2
+      integer(ip) :: target
+      integer(ip) :: tnkeys
+      integer(ip) :: toffst
+      integer(ip) :: totkey
+      integer(ip) :: tpage  ( pgsizi )
 
 !
 !     Set the variable ROOT, so we'll have something mnemonic to go
@@ -22074,43 +22074,43 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_ektree
       use pepper_inc_ektype
-      integer(ip)           datloc
-      integer(ip)           datptr
-      integer(ip)           depth
-      integer(ip)           i
-      integer(ip)           idx
-      integer(ip)           keyloc
-      integer(ip)           kidloc
-      integer(ip)           level
-      integer(ip)           lpidx
-      integer(ip)           lpidx2
-      integer(ip)           lpkey
-      integer(ip)           lpkey2
-      integer(ip)           lsib
-      integer(ip)           lsib2
-      integer(ip)           next
-      integer(ip)           nkeys
-      integer(ip)           nnode
-      integer(ip)           parent
-      integer(ip)           paren2
-      integer(ip)           pkey
-      integer(ip)           pkey2
-      integer(ip)           poffs2
-      integer(ip)           poffst
-      integer(ip)           prev
-      integer(ip)           root
-      integer(ip)           rpage  ( pgsizi )
-      integer(ip)           rpidx
-      integer(ip)           rpidx2
-      integer(ip)           rpkey
-      integer(ip)           rpkey2
-      integer(ip)           rsib
-      integer(ip)           rsib2
-      integer(ip)           target
-      integer(ip)           tnkeys
-      integer(ip)           toffst
-      integer(ip)           totkey
-      integer(ip)           tpage  ( pgsizi )
+      integer(ip) :: datloc
+      integer(ip) :: datptr
+      integer(ip) :: depth
+      integer(ip) :: i
+      integer(ip) :: idx
+      integer(ip) :: keyloc
+      integer(ip) :: kidloc
+      integer(ip) :: level
+      integer(ip) :: lpidx
+      integer(ip) :: lpidx2
+      integer(ip) :: lpkey
+      integer(ip) :: lpkey2
+      integer(ip) :: lsib
+      integer(ip) :: lsib2
+      integer(ip) :: next
+      integer(ip) :: nkeys
+      integer(ip) :: nnode
+      integer(ip) :: parent
+      integer(ip) :: paren2
+      integer(ip) :: pkey
+      integer(ip) :: pkey2
+      integer(ip) :: poffs2
+      integer(ip) :: poffst
+      integer(ip) :: prev
+      integer(ip) :: root
+      integer(ip) :: rpage  ( pgsizi )
+      integer(ip) :: rpidx
+      integer(ip) :: rpidx2
+      integer(ip) :: rpkey
+      integer(ip) :: rpkey2
+      integer(ip) :: rsib
+      integer(ip) :: rsib2
+      integer(ip) :: target
+      integer(ip) :: tnkeys
+      integer(ip) :: toffst
+      integer(ip) :: totkey
+      integer(ip) :: tpage  ( pgsizi )
 
 !
 !     Set the variable ROOT, so we'll have something mnemonic to go
@@ -22596,8 +22596,8 @@ contains
       implicit none
       integer(ip) :: tree_1(1)  !! one-element copy of tree (array argument)
 
-      integer(ip)           base
-      integer(ip)           tree
+      integer(ip) :: base
+      integer(ip) :: tree
 
 !
 !     Set a default value for EKNSEG.
@@ -22709,12 +22709,12 @@ contains
       use pepper_inc_ekdatpag
       use pepper_inc_ekpage
       integer(ip) :: recptr_1(1)  !! one-element copy of recptr (array argument)
-      integer(ip)           addrss
-      integer(ip)           base
-      integer(ip)           itype
-      integer(ip)           q
-      integer(ip)           r
-      integer(ip)           tree
+      integer(ip) :: addrss
+      integer(ip) :: base
+      integer(ip) :: itype
+      integer(ip) :: q
+      integer(ip) :: r
+      integer(ip) :: tree
 
       itype  =  coldsc ( ixtidx )
 
@@ -22824,8 +22824,8 @@ contains
       use pepper_inc_ekdatpag
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
-      integer(ip)           stype
-      integer(ip)           tree
+      integer(ip) :: stype
+      integer(ip) :: tree
 
       stype  =  segdsc ( ektidx )
 
@@ -22957,40 +22957,40 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip)           base
-      integer(ip)           basidx
-      integer(ip)           bigsiz
-      integer(ip)           child
-      integer(ip)           d
-      integer(ip)           div
-      integer(ip)           i
-      integer(ip)           key
-      integer(ip)           kidbas
-      integer(ip)           level
-      integer(ip)           maxsiz
-      integer(ip)           n
-      integer(ip)           nbig
-      integer(ip)           next
-      integer(ip)           nkeys
-      integer(ip)           nkids
-      integer(ip)           nnodes
-      integer(ip)           node
-      integer(ip)           npred
-      integer(ip)           nsmall
-      integer(ip)           page  ( pgsizi )
-      integer(ip)           q
-      integer(ip)           reqsiz
-      integer(ip)           s
-      integer(ip)           stlsiz ( trmxdp )
-      integer(ip)           stnbig ( trmxdp )
-      integer(ip)           stnext ( trmxdp )
-      integer(ip)           stnkey ( trmxdp )
-      integer(ip)           stnode ( trmxdp )
-      integer(ip)           stnbas ( trmxdp )
-      integer(ip)           subd
-      integer(ip)           subsiz
-      integer(ip)           totnod
-      integer(ip)           tsize
+      integer(ip) :: base
+      integer(ip) :: basidx
+      integer(ip) :: bigsiz
+      integer(ip) :: child
+      integer(ip) :: d
+      integer(ip) :: div
+      integer(ip) :: i
+      integer(ip) :: key
+      integer(ip) :: kidbas
+      integer(ip) :: level
+      integer(ip) :: maxsiz
+      integer(ip) :: n
+      integer(ip) :: nbig
+      integer(ip) :: next
+      integer(ip) :: nkeys
+      integer(ip) :: nkids
+      integer(ip) :: nnodes
+      integer(ip) :: node
+      integer(ip) :: npred
+      integer(ip) :: nsmall
+      integer(ip) :: page  ( pgsizi )
+      integer(ip) :: q
+      integer(ip) :: reqsiz
+      integer(ip) :: s
+      integer(ip) :: stlsiz ( trmxdp )
+      integer(ip) :: stnbig ( trmxdp )
+      integer(ip) :: stnext ( trmxdp )
+      integer(ip) :: stnkey ( trmxdp )
+      integer(ip) :: stnode ( trmxdp )
+      integer(ip) :: stnbas ( trmxdp )
+      integer(ip) :: subd
+      integer(ip) :: subsiz
+      integer(ip) :: totnod
+      integer(ip) :: tsize
 
 !
 !     Standard SPICE error handling.
@@ -23758,11 +23758,11 @@ contains
       module procedure zzektrbn
       use pepper_kinds, only: ip
       use pepper_inc_ektree
-      integer(ip)           lnkeys
-      integer(ip)           rnkeys
-      integer(ip)           root
-      integer(ip)           schlep
-      integer(ip)           sum
+      integer(ip) :: lnkeys
+      integer(ip) :: rnkeys
+      integer(ip) :: root
+      integer(ip) :: schlep
+      integer(ip) :: sum
 
       root  =  tree
 
@@ -23916,14 +23916,14 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_ektree
       integer(ip) :: key_1(1)  !! one-element copy of key (array argument)
-      integer(ip)           addrss
-      integer(ip)           base
-      integer(ip)           idx
-      integer(ip)           level
-      integer(ip)           node
-      integer(ip)           noffst
-      integer(ip)           ptr
-      integer(ip)           size
+      integer(ip) :: addrss
+      integer(ip) :: base
+      integer(ip) :: idx
+      integer(ip) :: level
+      integer(ip) :: node
+      integer(ip) :: noffst
+      integer(ip) :: ptr
+      integer(ip) :: size
 
       call zzektrlk ( ctx,  handle,  tree,    nodkey,  idx, &
                        node,    noffst,  level,   ptr   )
@@ -24030,9 +24030,9 @@ contains
       module procedure zzektrls
       use pepper_kinds, only: ip
       use pepper_inc_ektree
-      integer(ip)           i
-      integer(ip)           n
-      integer(ip)           value
+      integer(ip) :: i
+      integer(ip) :: n
+      integer(ip) :: value
 
       zzektrls  =  0
       n         =  zzektrsz ( ctx, handle, tree )
@@ -24154,9 +24154,9 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_ekfilpar
       integer(ip) :: tree_1(1)  !! one-element copy of tree (array argument)
-      integer(ip)           nseg
-      integer(ip)           tbase
-      integer(ip)           tree
+      integer(ip) :: nseg
+      integer(ip) :: tbase
+      integer(ip) :: tree
 
 !
 !     Validate the segment number to start out.
@@ -24366,43 +24366,43 @@ contains
 
       integer(ip), parameter :: rrchck = llchck + 1
 
-      integer(ip)           idx
-      integer(ip)           left
-      integer(ip)           level
-      integer(ip)           lkey
-      integer(ip)           llkey
-      integer(ip)           llsib
-      integer(ip)           lnkey
-      integer(ip)           lnode
-      integer(ip)           lpidx
-      integer(ip)           lpkey
-      integer(ip)           lrkey
-      integer(ip)           lrsib
-      integer(ip)           lsib
-      integer(ip)           mnode
-      integer(ip)           nkeys
-      integer(ip)           node
-      integer(ip)           noffst
-      integer(ip)           parent
-      integer(ip)           pkey
-      integer(ip)           poffst
-      integer(ip)           ptr
-      integer(ip)           right
-      integer(ip)           rkey
-      integer(ip)           rlkey
-      integer(ip)           rlsib
-      integer(ip)           rnode
-      integer(ip)           root
-      integer(ip)           rpidx
-      integer(ip)           rpkey
-      integer(ip)           rrkey
-      integer(ip)           rrsib
-      integer(ip)           rsib
-      integer(ip)           state
-      integer(ip)           trgkey
-      integer(ip)           trust
+      integer(ip) :: idx
+      integer(ip) :: left
+      integer(ip) :: level
+      integer(ip) :: lkey
+      integer(ip) :: llkey
+      integer(ip) :: llsib
+      integer(ip) :: lnkey
+      integer(ip) :: lnode
+      integer(ip) :: lpidx
+      integer(ip) :: lpkey
+      integer(ip) :: lrkey
+      integer(ip) :: lrsib
+      integer(ip) :: lsib
+      integer(ip) :: mnode
+      integer(ip) :: nkeys
+      integer(ip) :: node
+      integer(ip) :: noffst
+      integer(ip) :: parent
+      integer(ip) :: pkey
+      integer(ip) :: poffst
+      integer(ip) :: ptr
+      integer(ip) :: right
+      integer(ip) :: rkey
+      integer(ip) :: rlkey
+      integer(ip) :: rlsib
+      integer(ip) :: rnode
+      integer(ip) :: root
+      integer(ip) :: rpidx
+      integer(ip) :: rpkey
+      integer(ip) :: rrkey
+      integer(ip) :: rrsib
+      integer(ip) :: rsib
+      integer(ip) :: state
+      integer(ip) :: trgkey
+      integer(ip) :: trust
 
-      logical               undrfl
+      logical :: undrfl
 
 !
 !     Set the variable ROOT, so we'll have something mnemonic to go
@@ -24909,31 +24909,31 @@ contains
 
       integer(ip), parameter :: splt13 = splt23 + 1
 
-      integer(ip)           idx
-      integer(ip)           left
-      integer(ip)           level
-      integer(ip)           lkey
-      integer(ip)           lnode
-      integer(ip)           lpidx
-      integer(ip)           lpkey
-      integer(ip)           lval
-      integer(ip)           nkeys
-      integer(ip)           node
-      integer(ip)           noffst
-      integer(ip)           nsize
-      integer(ip)           parent
-      integer(ip)           pkey
-      integer(ip)           pkidx
-      integer(ip)           poffst
-      integer(ip)           right
-      integer(ip)           rnode
-      integer(ip)           root
-      integer(ip)           rpidx
-      integer(ip)           rpkey
-      integer(ip)           state
-      integer(ip)           trust
+      integer(ip) :: idx
+      integer(ip) :: left
+      integer(ip) :: level
+      integer(ip) :: lkey
+      integer(ip) :: lnode
+      integer(ip) :: lpidx
+      integer(ip) :: lpkey
+      integer(ip) :: lval
+      integer(ip) :: nkeys
+      integer(ip) :: node
+      integer(ip) :: noffst
+      integer(ip) :: nsize
+      integer(ip) :: parent
+      integer(ip) :: pkey
+      integer(ip) :: pkidx
+      integer(ip) :: poffst
+      integer(ip) :: right
+      integer(ip) :: rnode
+      integer(ip) :: root
+      integer(ip) :: rpidx
+      integer(ip) :: rpkey
+      integer(ip) :: state
+      integer(ip) :: trust
 
-      logical               overfl
+      logical :: overfl
 
 !
 !     Set the variable ROOT, so we'll have something mnemonic to go
@@ -25226,9 +25226,9 @@ contains
       use pepper_inc_ekdatpag
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      integer(ip)           mbase
-      integer(ip)           loc
-      integer(ip)           tree
+      integer(ip) :: mbase
+      integer(ip) :: loc
+      integer(ip) :: tree
 
 !
 !     Ashes to ashes, dust to dust.  This page goes to the free list.
@@ -25397,34 +25397,34 @@ contains
       integer(ip) :: stkhan_1(1)  !! one-element copy of stkhan (array argument)
       integer(ip), parameter :: bufsiz = 100
 
-      integer(ip)           addrss
-      integer(ip)           adrbuf ( bufsiz )
-      integer(ip)           base
-      integer(ip)           col
-      integer(ip)           colidx
-      integer(ip)           colord ( mxclsg )
-      integer(ip)           i
-      integer(ip)           ipage  ( pgsizi )
-      integer(ip)           j
-      integer(ip)           loc
-      integer(ip)           mbase
-      integer(ip)           ncols
-      integer(ip)           npage
-      integer(ip)           nr
-      integer(ip)           nrows
-      integer(ip)           nrp
-      integer(ip)           p
-      integer(ip)           pagloc
-      integer(ip)           pbase
-      integer(ip)           recno
-      integer(ip)           remain
-      integer(ip)           row
-      integer(ip)           rpsize
-      integer(ip)           segdsc ( sdscsz )
-      integer(ip)           stkbas
-      integer(ip)           stkhan
-      integer(ip)           stkseg
-      integer(ip)           tree
+      integer(ip) :: addrss
+      integer(ip) :: adrbuf ( bufsiz )
+      integer(ip) :: base
+      integer(ip) :: col
+      integer(ip) :: colidx
+      integer(ip) :: colord ( mxclsg )
+      integer(ip) :: i
+      integer(ip) :: ipage  ( pgsizi )
+      integer(ip) :: j
+      integer(ip) :: loc
+      integer(ip) :: mbase
+      integer(ip) :: ncols
+      integer(ip) :: npage
+      integer(ip) :: nr
+      integer(ip) :: nrows
+      integer(ip) :: nrp
+      integer(ip) :: p
+      integer(ip) :: pagloc
+      integer(ip) :: pbase
+      integer(ip) :: recno
+      integer(ip) :: remain
+      integer(ip) :: row
+      integer(ip) :: rpsize
+      integer(ip) :: segdsc ( sdscsz )
+      integer(ip) :: stkbas
+      integer(ip) :: stkhan
+      integer(ip) :: stkseg
+      integer(ip) :: tree
 
 !
 !     Standard SPICE error handling.
@@ -25662,8 +25662,8 @@ contains
       module procedure zzeksdsc
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
-      integer(ip)           mp
-      integer(ip)           mbase
+      integer(ip) :: mp
+      integer(ip) :: mbase
 
       call zzekmloc ( ctx,  handle,  segno,    mp,            mbase   )
       call dasrdi   ( ctx,  handle,  mbase+1,  mbase+sdscsz,  segdsc  )
@@ -25872,11 +25872,11 @@ contains
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektnamsz
-      integer(ip)           base
-      integer(ip)           i
-      integer(ip)           ncols
-      integer(ip)           nseg
-      integer(ip)           p
+      integer(ip) :: base
+      integer(ip) :: i
+      integer(ip) :: ncols
+      integer(ip) :: nseg
+      integer(ip) :: p
 
 !
 !     Standard SPICE error handling.
@@ -26416,8 +26416,8 @@ contains
       use pepper_inc_eksegdsc
       implicit none
 
-      integer(ip)           segdsc ( sdscsz )
-      integer(ip)           stype
+      integer(ip) :: segdsc ( sdscsz )
+      integer(ip) :: stype
 
 !
 !     Standard SPICE error handling.
@@ -26680,9 +26680,9 @@ contains
       character(short), parameter :: typstr ( ntypes ) = &
          [ character(short) :: 'CHR', 'DP', 'INT', 'TIME' ]
 
-      integer(ip)           cdscrs ( cdscsz, mxclsg )
-      integer(ip)           i
-      integer(ip)           segdsc ( sdscsz )
+      integer(ip) :: cdscrs ( cdscsz, mxclsg )
+      integer(ip) :: i
+      integer(ip) :: segdsc ( sdscsz )
 
 !
 !     Standard SPICE error handling.
@@ -26817,11 +26817,11 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      integer(ip)           b
-      integer(ip)           i
-      integer(ip)           idx
-      integer(ip)           p2
-      integer(ip)           tree
+      integer(ip) :: b
+      integer(ip) :: i
+      integer(ip) :: idx
+      integer(ip) :: p2
+      integer(ip) :: tree
 
 !
 !     Allocate the pages.
@@ -26966,8 +26966,8 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      integer(ip)           idx
-      integer(ip)           tree
+      integer(ip) :: idx
+      integer(ip) :: tree
 
       if ( new ) then
 !
@@ -27118,32 +27118,32 @@ contains
 
       integer(ip), parameter :: namlim = 32
 
-      character(pgsizc)     cpage
-      character(cnamsz)     tmpcnm
-      character(tnamsz)     tmptnm
+      character(pgsizc) :: cpage
+      character(cnamsz) :: tmpcnm
+      character(tnamsz) :: tmptnm
 
-      integer(ip)           base
-      integer(ip)           cbase
-      integer(ip)           cp1
-      integer(ip)           cp
-      integer(ip)           cpagno
-      integer(ip)           cpt
-      integer(ip)           dpt
-      integer(ip)           dscbas
-      integer(ip)           i
-      integer(ip)           ipage  ( pgsizi )
-      integer(ip)           ipagno
-      integer(ip)           ipt
-      integer(ip)           metasz
-      integer(ip)           nambas
-      integer(ip)           ncpage
-      integer(ip)           nipage
-      integer(ip)           p
-      integer(ip)           p1
-      integer(ip)           p1base
-      integer(ip)           rec
-      integer(ip)           room
-      integer(ip)           sgtree
+      integer(ip) :: base
+      integer(ip) :: cbase
+      integer(ip) :: cp1
+      integer(ip) :: cp
+      integer(ip) :: cpagno
+      integer(ip) :: cpt
+      integer(ip) :: dpt
+      integer(ip) :: dscbas
+      integer(ip) :: i
+      integer(ip) :: ipage  ( pgsizi )
+      integer(ip) :: ipagno
+      integer(ip) :: ipt
+      integer(ip) :: metasz
+      integer(ip) :: nambas
+      integer(ip) :: ncpage
+      integer(ip) :: nipage
+      integer(ip) :: p
+      integer(ip) :: p1
+      integer(ip) :: p1base
+      integer(ip) :: rec
+      integer(ip) :: room
+      integer(ip) :: sgtree
 
 !
 !     Standard SPICE error handling.
@@ -27540,31 +27540,31 @@ contains
 
       integer(ip), parameter :: namlim = 32
 
-      character(pgsizc)     cpage
-      character(cnamsz)     tmpcnm
-      character(tnamsz)     tmptnm
+      character(pgsizc) :: cpage
+      character(cnamsz) :: tmpcnm
+      character(tnamsz) :: tmptnm
 
-      integer(ip)           base
-      integer(ip)           cbase
-      integer(ip)           cp1
-      integer(ip)           cp
-      integer(ip)           cpagno
-      integer(ip)           cpt
-      integer(ip)           dpt
-      integer(ip)           dscbas
-      integer(ip)           i
-      integer(ip)           ipage  ( pgsizi )
-      integer(ip)           ipagno
-      integer(ip)           ipt
-      integer(ip)           metasz
-      integer(ip)           nambas
-      integer(ip)           ncpage
-      integer(ip)           nipage
-      integer(ip)           p
-      integer(ip)           p1
-      integer(ip)           p1base
-      integer(ip)           room
-      integer(ip)           sgtree
+      integer(ip) :: base
+      integer(ip) :: cbase
+      integer(ip) :: cp1
+      integer(ip) :: cp
+      integer(ip) :: cpagno
+      integer(ip) :: cpt
+      integer(ip) :: dpt
+      integer(ip) :: dscbas
+      integer(ip) :: i
+      integer(ip) :: ipage  ( pgsizi )
+      integer(ip) :: ipagno
+      integer(ip) :: ipt
+      integer(ip) :: metasz
+      integer(ip) :: nambas
+      integer(ip) :: ncpage
+      integer(ip) :: nipage
+      integer(ip) :: p
+      integer(ip) :: p1
+      integer(ip) :: p1base
+      integer(ip) :: room
+      integer(ip) :: sgtree
 
 !
 !     Standard SPICE error handling.
@@ -27930,15 +27930,15 @@ contains
       use pepper_inc_ektype
       integer(ip) :: nelts_1(1)  !! one-element copy of nelts (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-      integer(ip)           base
-      integer(ip)           datptr
-      integer(ip)           nelts
-      integer(ip)           next
-      integer(ip)           nlinks
-      integer(ip)           nseen
-      integer(ip)           p
-      integer(ip)           ptrloc
-      integer(ip)           recno
+      integer(ip) :: base
+      integer(ip) :: datptr
+      integer(ip) :: nelts
+      integer(ip) :: next
+      integer(ip) :: nlinks
+      integer(ip) :: nseen
+      integer(ip) :: p
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
 
 !
 !     Standard SPICE error handling.
@@ -28156,8 +28156,8 @@ contains
       module procedure zzekrp2n
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
-      integer(ip)           segdsc ( sdscsz )
-      integer(ip)           stype
+      integer(ip) :: segdsc ( sdscsz )
+      integer(ip) :: stype
 
       zzekrp2n  =  0
 

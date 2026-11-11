@@ -1365,14 +1365,14 @@ contains
 !     Include the mnemonic values for the generic segment declarations.
 !
 
-      real(wp)              buffer ( 2 )
+      real(wp) :: buffer ( 2 )
 
-      integer(ip)           b
-      integer(ip)           base
-      integer(ip)           e
-      integer(ip)           i
-      integer(ip)           mynref
-      integer(ip)           myreft
+      integer(ip) :: b
+      integer(ip) :: base
+      integer(ip) :: e
+      integer(ip) :: i
+      integer(ip) :: mynref
+      integer(ip) :: myreft
 
       if ( ctx%failed() ) return
 
@@ -1632,26 +1632,26 @@ contains
       integer(ip), parameter :: dirsiz = 100
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: ftsize = 20
-      character(ifnlen)     dummy1
-      real(wp)              xmeta  ( mxmeta )
-      real(wp)              myref
-      real(wp)              myaddr
-      real(wp)              mysize
-      real(wp)              dpksiz
-      integer(ip)           begadr
-      integer(ip)           dummy2
-      integer(ip)           dummy3
-      integer(ip)           i
-      integer(ip)           ich
-      integer(ip)           meta   ( mxmeta )
-      integer(ip)           nc
-      integer(ip)           nd
-      integer(ip)           ni
-      integer(ip)           pktadr
-      integer(ip)           pktpos
-      integer(ip)           refadr
-      integer(ip)           sidlen
-      integer(ip)           size
+      character(ifnlen) :: dummy1
+      real(wp) :: xmeta  ( mxmeta )
+      real(wp) :: myref
+      real(wp) :: myaddr
+      real(wp) :: mysize
+      real(wp) :: dpksiz
+      integer(ip) :: begadr
+      integer(ip) :: dummy2
+      integer(ip) :: dummy3
+      integer(ip) :: i
+      integer(ip) :: ich
+      integer(ip) :: meta   ( mxmeta )
+      integer(ip) :: nc
+      integer(ip) :: nd
+      integer(ip) :: ni
+      integer(ip) :: pktadr
+      integer(ip) :: pktpos
+      integer(ip) :: refadr
+      integer(ip) :: sidlen
+      integer(ip) :: size
       if ( .not. allocated ( ctx%sgseqw_state ) ) allocate ( ctx%sgseqw_state )
       associate ( explct => ctx%sgseqw_state%explct, &
                   index => ctx%sgseqw_state%index, &
@@ -2018,26 +2018,26 @@ contains
       integer(ip), parameter :: dirsiz = 100
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: ftsize = 20
-      character(ifnlen)     dummy1
-      real(wp)              xmeta  ( mxmeta )
-      real(wp)              myref
-      real(wp)              myaddr
-      real(wp)              mysize
-      real(wp)              dpksiz
-      integer(ip)           begadr
-      integer(ip)           dummy2
-      integer(ip)           dummy3
-      integer(ip)           i
-      integer(ip)           ich
-      integer(ip)           meta   ( mxmeta )
-      integer(ip)           nc
-      integer(ip)           nd
-      integer(ip)           ni
-      integer(ip)           pktadr
-      integer(ip)           pktpos
-      integer(ip)           refadr
-      integer(ip)           sidlen
-      integer(ip)           size
+      character(ifnlen) :: dummy1
+      real(wp) :: xmeta  ( mxmeta )
+      real(wp) :: myref
+      real(wp) :: myaddr
+      real(wp) :: mysize
+      real(wp) :: dpksiz
+      integer(ip) :: begadr
+      integer(ip) :: dummy2
+      integer(ip) :: dummy3
+      integer(ip) :: i
+      integer(ip) :: ich
+      integer(ip) :: meta   ( mxmeta )
+      integer(ip) :: nc
+      integer(ip) :: nd
+      integer(ip) :: ni
+      integer(ip) :: pktadr
+      integer(ip) :: pktpos
+      integer(ip) :: refadr
+      integer(ip) :: sidlen
+      integer(ip) :: size
       if ( .not. allocated ( ctx%sgseqw_state ) ) allocate ( ctx%sgseqw_state )
       associate ( explct => ctx%sgseqw_state%explct, &
                   index => ctx%sgseqw_state%index, &
@@ -2453,26 +2453,26 @@ contains
       integer(ip), parameter :: dirsiz = 100
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: ftsize = 20
-      character(ifnlen)     dummy1
-      real(wp)              xmeta  ( mxmeta )
-      real(wp)              myref
-      real(wp)              myaddr
-      real(wp)              mysize
-      real(wp)              dpksiz
-      integer(ip)           begadr
-      integer(ip)           dummy2
-      integer(ip)           dummy3
-      integer(ip)           i
-      integer(ip)           ich
-      integer(ip)           meta   ( mxmeta )
-      integer(ip)           nc
-      integer(ip)           nd
-      integer(ip)           ni
-      integer(ip)           pktadr
-      integer(ip)           pktpos
-      integer(ip)           refadr
-      integer(ip)           sidlen
-      integer(ip)           size
+      character(ifnlen) :: dummy1
+      real(wp) :: xmeta  ( mxmeta )
+      real(wp) :: myref
+      real(wp) :: myaddr
+      real(wp) :: mysize
+      real(wp) :: dpksiz
+      integer(ip) :: begadr
+      integer(ip) :: dummy2
+      integer(ip) :: dummy3
+      integer(ip) :: i
+      integer(ip) :: ich
+      integer(ip) :: meta   ( mxmeta )
+      integer(ip) :: nc
+      integer(ip) :: nd
+      integer(ip) :: ni
+      integer(ip) :: pktadr
+      integer(ip) :: pktpos
+      integer(ip) :: refadr
+      integer(ip) :: sidlen
+      integer(ip) :: size
       if ( .not. allocated ( ctx%sgseqw_state ) ) allocate ( ctx%sgseqw_state )
       associate ( explct => ctx%sgseqw_state%explct, &
                   index => ctx%sgseqw_state%index, &
@@ -2939,26 +2939,26 @@ contains
       integer(ip), parameter :: dirsiz = 100
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: ftsize = 20
-      character(ifnlen)     dummy1
-      real(wp)              xmeta  ( mxmeta )
-      real(wp)              myref
-      real(wp)              myaddr
-      real(wp)              mysize
-      real(wp)              dpksiz
-      integer(ip)           begadr
-      integer(ip)           dummy2
-      integer(ip)           dummy3
-      integer(ip)           i
-      integer(ip)           ich
-      integer(ip)           meta   ( mxmeta )
-      integer(ip)           nc
-      integer(ip)           nd
-      integer(ip)           ni
-      integer(ip)           pktadr
-      integer(ip)           pktpos
-      integer(ip)           refadr
-      integer(ip)           sidlen
-      integer(ip)           size
+      character(ifnlen) :: dummy1
+      real(wp) :: xmeta  ( mxmeta )
+      real(wp) :: myref
+      real(wp) :: myaddr
+      real(wp) :: mysize
+      real(wp) :: dpksiz
+      integer(ip) :: begadr
+      integer(ip) :: dummy2
+      integer(ip) :: dummy3
+      integer(ip) :: i
+      integer(ip) :: ich
+      integer(ip) :: meta   ( mxmeta )
+      integer(ip) :: nc
+      integer(ip) :: nd
+      integer(ip) :: ni
+      integer(ip) :: pktadr
+      integer(ip) :: pktpos
+      integer(ip) :: refadr
+      integer(ip) :: sidlen
+      integer(ip) :: size
       if ( .not. allocated ( ctx%sgseqw_state ) ) allocate ( ctx%sgseqw_state )
       associate ( explct => ctx%sgseqw_state%explct, &
                   index => ctx%sgseqw_state%index, &
@@ -3364,26 +3364,26 @@ contains
       integer(ip), parameter :: dirsiz = 100
       integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: ftsize = 20
-      character(ifnlen)     dummy1
-      real(wp)              xmeta  ( mxmeta )
-      real(wp)              myref
-      real(wp)              myaddr
-      real(wp)              mysize
-      real(wp)              dpksiz
-      integer(ip)           begadr
-      integer(ip)           dummy2
-      integer(ip)           dummy3
-      integer(ip)           i
-      integer(ip)           ich
-      integer(ip)           meta   ( mxmeta )
-      integer(ip)           nc
-      integer(ip)           nd
-      integer(ip)           ni
-      integer(ip)           pktadr
-      integer(ip)           pktpos
-      integer(ip)           refadr
-      integer(ip)           sidlen
-      integer(ip)           size
+      character(ifnlen) :: dummy1
+      real(wp) :: xmeta  ( mxmeta )
+      real(wp) :: myref
+      real(wp) :: myaddr
+      real(wp) :: mysize
+      real(wp) :: dpksiz
+      integer(ip) :: begadr
+      integer(ip) :: dummy2
+      integer(ip) :: dummy3
+      integer(ip) :: i
+      integer(ip) :: ich
+      integer(ip) :: meta   ( mxmeta )
+      integer(ip) :: nc
+      integer(ip) :: nd
+      integer(ip) :: ni
+      integer(ip) :: pktadr
+      integer(ip) :: pktpos
+      integer(ip) :: refadr
+      integer(ip) :: sidlen
+      integer(ip) :: size
       if ( .not. allocated ( ctx%sgseqw_state ) ) allocate ( ctx%sgseqw_state )
       associate ( explct => ctx%sgseqw_state%explct, &
                   index => ctx%sgseqw_state%index, &
@@ -4329,16 +4329,16 @@ contains
 
       integer(ip), parameter :: ni = 6
 
-      character(lnsize)     arch
-      character(lnsize)     kertyp
+      character(lnsize) :: arch
+      character(lnsize) :: kertyp
 
-      real(wp)              dc     ( nd )
-      real(wp)              descr  ( nd + ni/2 )
+      real(wp) :: dc     ( nd )
+      real(wp) :: descr  ( nd + ni/2 )
 
-      integer(ip)           handle
-      integer(ip)           ic     ( ni )
+      integer(ip) :: handle
+      integer(ip) :: ic     ( ni )
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -4774,31 +4774,31 @@ contains
       character(*), parameter :: rname = 'SPKGEO'
       integer(ip), parameter :: chlen = 20
       integer(ip), parameter :: ssb = 0
-      character(40)         ident
-      character(40)         tname
-      character(40)         oname
-      character(80)         tstring
-      real(wp)              descr  ( 5        )
-      real(wp)              sobs   ( 6        )
-      real(wp)              starg  ( 6, chlen )
-      real(wp)              stemp  ( 6        )
-      real(wp)              stxfrm ( 6, 6     )
-      real(wp)              rot    ( 3, 3     )
-      real(wp)              vtemp  ( 6        )
-      integer(ip)           cframe
-      integer(ip)           cobs
-      integer(ip)           ctarg  (    chlen )
-      integer(ip)           tframe (    chlen )
-      integer(ip)           ctpos
-      integer(ip)           handle
-      integer(ip)           i
-      integer(ip)           legs
-      integer(ip)           nct
-      integer(ip)           refid
-      integer(ip)           tmpfrm
-      logical               found
-      logical               nofrm
-      logical               isinrt
+      character(40) :: ident
+      character(40) :: tname
+      character(40) :: oname
+      character(80) :: tstring
+      real(wp) :: descr  ( 5        )
+      real(wp) :: sobs   ( 6        )
+      real(wp) :: starg  ( 6, chlen )
+      real(wp) :: stemp  ( 6        )
+      real(wp) :: stxfrm ( 6, 6     )
+      real(wp) :: rot    ( 3, 3     )
+      real(wp) :: vtemp  ( 6        )
+      integer(ip) :: cframe
+      integer(ip) :: cobs
+      integer(ip) :: ctarg  (    chlen )
+      integer(ip) :: tframe (    chlen )
+      integer(ip) :: ctpos
+      integer(ip) :: handle
+      integer(ip) :: i
+      integer(ip) :: legs
+      integer(ip) :: nct
+      integer(ip) :: refid
+      integer(ip) :: tmpfrm
+      logical :: found
+      logical :: nofrm
+      logical :: isinrt
       isinrt ( tmpfrm, cframe ) =       cframe > 0 &
                                   .and. cframe <= ninert &
                                   .and. tmpfrm > 0 &
@@ -5630,31 +5630,31 @@ contains
       character(*), parameter :: rname = 'SPKGPS'
       integer(ip), parameter :: chlen = 20
       integer(ip), parameter :: ssb = 0
-      character(40)         ident
-      character(40)         tname
-      character(40)         oname
-      character(80)         tstring
-      real(wp)              descr  ( 5        )
-      real(wp)              sobs   ( 6        )
-      real(wp)              starg  ( 6, chlen )
-      real(wp)              stemp  ( 6        )
-      real(wp)              psxfrm ( 3, 3     )
-      real(wp)              rot    ( 3, 3     )
-      real(wp)              vtemp  ( 6        )
-      integer(ip)           cframe
-      integer(ip)           cobs
-      integer(ip)           ctarg  (    chlen )
-      integer(ip)           tframe (    chlen )
-      integer(ip)           ctpos
-      integer(ip)           handle
-      integer(ip)           i
-      integer(ip)           legs
-      integer(ip)           nct
-      integer(ip)           refid
-      integer(ip)           tmpfrm
-      logical               found
-      logical               nofrm
-      logical               isinrt
+      character(40) :: ident
+      character(40) :: tname
+      character(40) :: oname
+      character(80) :: tstring
+      real(wp) :: descr  ( 5        )
+      real(wp) :: sobs   ( 6        )
+      real(wp) :: starg  ( 6, chlen )
+      real(wp) :: stemp  ( 6        )
+      real(wp) :: psxfrm ( 3, 3     )
+      real(wp) :: rot    ( 3, 3     )
+      real(wp) :: vtemp  ( 6        )
+      integer(ip) :: cframe
+      integer(ip) :: cobs
+      integer(ip) :: ctarg  (    chlen )
+      integer(ip) :: tframe (    chlen )
+      integer(ip) :: ctpos
+      integer(ip) :: handle
+      integer(ip) :: i
+      integer(ip) :: legs
+      integer(ip) :: nct
+      integer(ip) :: refid
+      integer(ip) :: tmpfrm
+      logical :: found
+      logical :: nofrm
+      logical :: isinrt
       isinrt ( tmpfrm, cframe ) =       cframe > 0 &
                                   .and. cframe <= ninert &
                                   .and. tmpfrm > 0 &
@@ -6610,16 +6610,16 @@ contains
 
       integer(ip), parameter :: ni = 6
 
-      character(lnsize)     arch
-      character(lnsize)     kertyp
+      character(lnsize) :: arch
+      character(lnsize) :: kertyp
 
-      real(wp)              dc     ( nd )
-      real(wp)              descr  ( nd + ni/2 )
+      real(wp) :: dc     ( nd )
+      real(wp) :: descr  ( nd + ni/2 )
 
-      integer(ip)           handle
-      integer(ip)           ic     ( ni )
+      integer(ip) :: handle
+      integer(ip) :: ic     ( ni )
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -6835,13 +6835,13 @@ contains
 !     Length of a calender string.
 !
       integer(ip), parameter :: calsiz = 40
-      character(calsiz)     calfst
-      character(calsiz)     callst
+      character(calsiz) :: calfst
+      character(calsiz) :: callst
 
-      real(wp)              dppart ( 2 )
+      real(wp) :: dppart ( 2 )
 
-      integer(ip)           ipart  ( 6 )
-      integer(ip)           refcod
+      integer(ip) :: ipart  ( 6 )
+      integer(ip) :: refcod
 
 !
 !     Standard SPICELIB error handling.
@@ -7036,14 +7036,14 @@ contains
       module procedure spks01
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              data     ( 71 )
-      integer(ip)           nrec
-      integer(ip)           ndir
-      integer(ip)           offe
-      integer(ip)           first
-      integer(ip)           last
-      integer(ip)           offset
-      integer(ip)           i
+      real(wp) :: data     ( 71 )
+      integer(ip) :: nrec
+      integer(ip) :: ndir
+      integer(ip) :: offe
+      integer(ip) :: first
+      integer(ip) :: last
+      integer(ip) :: offset
+      integer(ip) :: i
       if ( ctx%failed() ) return
 
 !
@@ -7235,16 +7235,16 @@ contains
       module procedure spks02
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              data    ( 50 )
-      real(wp)              init
-      real(wp)              intlen
-      integer(ip)           recsiz
-      integer(ip)           nrec
-      integer(ip)           first
-      integer(ip)           last
-      integer(ip)           remain
-      integer(ip)           addr
-      integer(ip)           move
+      real(wp) :: data    ( 50 )
+      real(wp) :: init
+      real(wp) :: intlen
+      integer(ip) :: recsiz
+      integer(ip) :: nrec
+      integer(ip) :: first
+      integer(ip) :: last
+      integer(ip) :: remain
+      integer(ip) :: addr
+      integer(ip) :: move
       if ( ctx%failed() ) return
 
 !
@@ -7419,16 +7419,16 @@ contains
       module procedure spks03
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              data    ( 50 )
-      real(wp)              init
-      real(wp)              intlen
-      integer(ip)           recsiz
-      integer(ip)           nrec
-      integer(ip)           first
-      integer(ip)           last
-      integer(ip)           remain
-      integer(ip)           addr
-      integer(ip)           move
+      real(wp) :: data    ( 50 )
+      real(wp) :: init
+      real(wp) :: intlen
+      integer(ip) :: recsiz
+      integer(ip) :: nrec
+      integer(ip) :: first
+      integer(ip) :: last
+      integer(ip) :: remain
+      integer(ip) :: addr
+      integer(ip) :: move
       if ( ctx%failed() ) return
 
 !
@@ -7610,15 +7610,15 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              data     ( 6 )
-      real(wp)              gm
+      real(wp) :: data     ( 6 )
+      real(wp) :: gm
 
-      integer(ip)           i
-      integer(ip)           ndir
-      integer(ip)           nrec
-      integer(ip)           offe
-      integer(ip)           offset
-      integer(ip)           rec      ( 2 )
+      integer(ip) :: i
+      integer(ip) :: ndir
+      integer(ip) :: nrec
+      integer(ip) :: offe
+      integer(ip) :: offset
+      integer(ip) :: rec      ( 2 )
 
 !
 !     Standard SPICE error handling.
@@ -7830,16 +7830,16 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              data     ( 6 )
-      real(wp)              ratio
-      real(wp)              start
-      real(wp)              step
+      real(wp) :: data     ( 6 )
+      real(wp) :: ratio
+      real(wp) :: start
+      real(wp) :: step
 
-      integer(ip)           degree
-      integer(ip)           i
-      integer(ip)           nrec
-      integer(ip)           offset
-      integer(ip)           rec      ( 2 )
+      integer(ip) :: degree
+      integer(ip) :: i
+      integer(ip) :: nrec
+      integer(ip) :: offset
+      integer(ip) :: rec      ( 2 )
 
 !
 !     Standard SPICE error handling.
@@ -8060,15 +8060,15 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              data     ( 6 )
+      real(wp) :: data     ( 6 )
 
-      integer(ip)           degree
-      integer(ip)           i
-      integer(ip)           ndir
-      integer(ip)           nrec
-      integer(ip)           offe
-      integer(ip)           offset
-      integer(ip)           rec      ( 2 )
+      integer(ip) :: degree
+      integer(ip) :: i
+      integer(ip) :: ndir
+      integer(ip) :: nrec
+      integer(ip) :: offe
+      integer(ip) :: offset
+      integer(ip) :: rec      ( 2 )
 
 !
 !     Standard SPICE error handling.
@@ -8291,7 +8291,7 @@ contains
 
       integer(ip), parameter :: nitems = 16
 
-      real(wp)              data     ( nitems )
+      real(wp) :: data     ( nitems )
 
 !
 !     Standard SPICE error handling.
@@ -8418,7 +8418,7 @@ contains
 
       integer(ip), parameter :: nitems = 12
 
-      real(wp)              data     ( nitems )
+      real(wp) :: data     ( nitems )
 
 !
 !     Standard SPICE error handling.
@@ -8590,18 +8590,18 @@ contains
 
       integer(ip), parameter :: msize = 3
 
-      real(wp)              data     ( 12 )
+      real(wp) :: data     ( 12 )
 
-      integer(ip)           i
-      integer(ip)           ndir
-      integer(ip)           nrec
-      integer(ip)           offe
-      integer(ip)           offset
-      integer(ip)           packsz
-      integer(ip)           rec      ( 2 )
-      integer(ip)           subtyp
-      integer(ip)           winsiz
-      integer(ip)           wnszm1
+      integer(ip) :: i
+      integer(ip) :: ndir
+      integer(ip) :: nrec
+      integer(ip) :: offe
+      integer(ip) :: offset
+      integer(ip) :: packsz
+      integer(ip) :: rec      ( 2 )
+      integer(ip) :: subtyp
+      integer(ip) :: winsiz
+      integer(ip) :: wnszm1
 
 !
 !     Standard SPICE error handling.
@@ -10423,24 +10423,24 @@ contains
       use pepper_constants, only: j2000, spd
       implicit none
       integer(ip), parameter :: bufsiz = 100
-      real(wp)              btime
-      real(wp)              data   ( bufsiz )
-      real(wp)              dscale
-      real(wp)              tscale
-      real(wp)              initjd
-      real(wp)              initfr
-      real(wp)              intlen
-      real(wp)              intrvl
-      real(wp)              subbeg
-      real(wp)              subifr
-      real(wp)              subijd
-      integer(ip)           recsiz
-      integer(ip)           nrec
-      integer(ip)           first
-      integer(ip)           last
-      integer(ip)           remain
-      integer(ip)           addr
-      integer(ip)           move
+      real(wp) :: btime
+      real(wp) :: data   ( bufsiz )
+      real(wp) :: dscale
+      real(wp) :: tscale
+      real(wp) :: initjd
+      real(wp) :: initfr
+      real(wp) :: intlen
+      real(wp) :: intrvl
+      real(wp) :: subbeg
+      real(wp) :: subifr
+      real(wp) :: subijd
+      integer(ip) :: recsiz
+      integer(ip) :: nrec
+      integer(ip) :: first
+      integer(ip) :: last
+      integer(ip) :: remain
+      integer(ip) :: addr
+      integer(ip) :: move
       if ( ctx%failed() ) return
 
 !
@@ -10617,16 +10617,16 @@ contains
       implicit none
       integer(ip), parameter :: dirsiz = 100
       integer(ip), parameter :: maxdsz = (4 * maxtrm) + 11
-      real(wp)              data     ( maxdsz )
-      integer(ip)           dlsize
-      integer(ip)           maxdim
-      integer(ip)           nrec
-      integer(ip)           ndir
-      integer(ip)           offe
-      integer(ip)           first
-      integer(ip)           last
-      integer(ip)           offset
-      integer(ip)           i
+      real(wp) :: data     ( maxdsz )
+      integer(ip) :: dlsize
+      integer(ip) :: maxdim
+      integer(ip) :: nrec
+      integer(ip) :: ndir
+      integer(ip) :: offe
+      integer(ip) :: first
+      integer(ip) :: last
+      integer(ip) :: offset
+      integer(ip) :: i
       if ( ctx%failed() ) return
 
 !
@@ -10850,9 +10850,9 @@ contains
 
       integer(ip), parameter :: ni = 6
 
-      real(wp)              dppart ( nd )
+      real(wp) :: dppart ( nd )
 
-      integer(ip)           ipart  ( ni )
+      integer(ip) :: ipart  ( ni )
 
 !
 !     Standard introductory error handling preparations.
@@ -11210,10 +11210,10 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              ltsign
-      real(wp)              scale
+      real(wp) :: ltsign
+      real(wp) :: scale
 
-      integer(ip)           col
+      integer(ip) :: col
 
 !
 !     Determine the sign of the light time correction.
@@ -11375,9 +11375,9 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxvg
       implicit none
-      real(wp)              delta
-      real(wp)              xstate ( 6 )
-      real(wp)              xf     ( 6, 6 )
+      real(wp) :: delta
+      real(wp) :: xstate ( 6 )
+      real(wp) :: xf     ( 6, 6 )
       if ( .not. allocated ( ctx%zzcvstat_state ) ) then
          allocate ( ctx%zzcvstat_state )
          ctx%zzcvstat_state%svref = ' '
@@ -11489,9 +11489,9 @@ contains
       module procedure zzcvssta
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              delta
-      real(wp)              xstate ( 6 )
-      real(wp)              xf     ( 6, 6 )
+      real(wp) :: delta
+      real(wp) :: xstate ( 6 )
+      real(wp) :: xf     ( 6, 6 )
       if ( .not. allocated ( ctx%zzcvstat_state ) ) then
          allocate ( ctx%zzcvstat_state )
          ctx%zzcvstat_state%svref = ' '
@@ -12314,11 +12314,11 @@ contains
 !     The number of constants:
 !
       integer(ip), parameter :: nconst = 1
-      real(wp)              dcoeff
-      real(wp)              descr(ndescr)
+      real(wp) :: dcoeff
+      real(wp) :: descr(ndescr)
 
-      integer(ip)           ncoeff
-      integer(ip)           pktsiz
+      integer(ip) :: ncoeff
+      integer(ip) :: pktsiz
 !
 !     Standard SPICELIB error handling.
 !
@@ -13230,12 +13230,12 @@ contains
       integer(ip), parameter :: ixxcn = ixxlts + 1
       integer(ip), parameter :: ixxcns = ixxcn  + 1
       integer(ip), parameter :: ssb = 0
-      character(corlen)     corr
-      real(wp)              tpos   ( 3 )
-      integer(ip)           i
-      integer(ip)           ltsign
-      integer(ip)           maxitr
-      integer(ip)           refid
+      character(corlen) :: corr
+      real(wp) :: tpos   ( 3 )
+      integer(ip) :: i
+      integer(ip) :: ltsign
+      integer(ip) :: maxitr
+      integer(ip) :: refid
       if ( .not. allocated ( ctx%spkapo_state ) ) allocate ( ctx%spkapo_state )
       associate ( first => ctx%spkapo_state%first, &
                   flags => ctx%spkapo_state%flags, &
@@ -13853,21 +13853,21 @@ contains
       real(wp), parameter :: cnvlim = 1.0e-17_wp
       integer(ip), parameter :: maxitr = 5
       integer(ip), parameter :: ssb = 0
-      real(wp)              a
-      real(wp)              b
-      real(wp)              c
-      real(wp)              dist
-      real(wp)              epoch
-      real(wp)              lterr
-      real(wp)              prvlt
-      real(wp)              ssblt
-      real(wp)              ssbtrg ( 6 )
-      integer(ip)           i
-      integer(ip)           ltsign
-      integer(ip)           numitr
-      integer(ip)           refid
-      logical               attblk ( nabcor )
-      logical               usestl
+      real(wp) :: a
+      real(wp) :: b
+      real(wp) :: c
+      real(wp) :: dist
+      real(wp) :: epoch
+      real(wp) :: lterr
+      real(wp) :: prvlt
+      real(wp) :: ssblt
+      real(wp) :: ssbtrg ( 6 )
+      integer(ip) :: i
+      integer(ip) :: ltsign
+      integer(ip) :: numitr
+      integer(ip) :: refid
+      logical :: attblk ( nabcor )
+      logical :: usestl
       if ( .not. allocated ( ctx%spkltc_state ) ) allocate ( ctx%spkltc_state )
       associate ( pass1 => ctx%spkltc_state%pass1, &
                   prvcor => ctx%spkltc_state%prvcor, &
@@ -14241,23 +14241,23 @@ contains
 
       integer(ip), parameter :: pktsiz = nelems + nangs
 
-      character(wdsize)     time
+      character(wdsize) :: time
 
-      real(wp)              begtim
-      real(wp)              consts ( nconst )
-      real(wp)              dtemp  ( nd     )
-      real(wp)              endtim
-      real(wp)              myref
-      real(wp)              packet ( pktsiz )
+      real(wp) :: begtim
+      real(wp) :: consts ( nconst )
+      real(wp) :: dtemp  ( nd     )
+      real(wp) :: endtim
+      real(wp) :: myref
+      real(wp) :: packet ( pktsiz )
 
-      integer(ip)           begidx
-      integer(ip)           dummy
-      integer(ip)           endidx
-      integer(ip)           i
-      integer(ip)           itemp  ( ni )
-      integer(ip)           nepoch
+      integer(ip) :: begidx
+      integer(ip) :: dummy
+      integer(ip) :: endidx
+      integer(ip) :: i
+      integer(ip) :: itemp  ( ni )
+      integer(ip) :: nepoch
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -14716,8 +14716,8 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              lt
-      integer(ip)           bary
+      real(wp) :: lt
+      integer(ip) :: bary
 
 !
 !     Standard SPICE error handling.
@@ -15417,13 +15417,13 @@ contains
       integer(ip), parameter :: ixxlts = ixxlt  + 1
       integer(ip), parameter :: ixxcn = ixxlts + 1
       integer(ip), parameter :: ixxcns = ixxcn  + 1
-      character(corlen)     corr
-      real(wp)              sapos  ( 3 )
-      real(wp)              tstate ( 6 )
-      integer(ip)           i
-      integer(ip)           ltsign
-      integer(ip)           maxitr
-      integer(ip)           refid
+      character(corlen) :: corr
+      real(wp) :: sapos  ( 3 )
+      real(wp) :: tstate ( 6 )
+      integer(ip) :: i
+      integer(ip) :: ltsign
+      integer(ip) :: maxitr
+      integer(ip) :: refid
       if ( .not. allocated ( ctx%spkapp_state ) ) allocate ( ctx%spkapp_state )
       associate ( first => ctx%spkapp_state%first, &
                   flags => ctx%spkapp_state%flags, &
@@ -16125,12 +16125,12 @@ contains
       logical :: xmit  !! (PEPPER) copy of the saved flag for this call
       logical :: usestl  !! (PEPPER) copy of the saved flag for this call
       character(*), parameter :: rname = 'SPKAPS'
-      real(wp)              corpos ( 3 )
-      real(wp)              corvel ( 3 )
-      real(wp)              dpcorr ( 3 )
-      real(wp)              pcorr  ( 3 )
-      integer(ip)           refid
-      logical               attblk ( nabcor )
+      real(wp) :: corpos ( 3 )
+      real(wp) :: corvel ( 3 )
+      real(wp) :: dpcorr ( 3 )
+      real(wp) :: pcorr  ( 3 )
+      integer(ip) :: refid
+      logical :: attblk ( nabcor )
       if ( .not. allocated ( ctx%spkaps_state ) ) allocate ( ctx%spkaps_state )
       associate ( first => ctx%spkaps_state%first, &
                   prvcor => ctx%spkaps_state%prvcor, &
@@ -17237,26 +17237,26 @@ contains
 !     Length of a state.
 !
       integer(ip), parameter :: nstate = 6
-      character(frmsiz)     myfram
+      character(frmsiz) :: myfram
 
-      real(wp)              begtim
-      real(wp)              dtemp  ( nd     )
-      real(wp)              endtim
-      real(wp)              myref
-      real(wp)              record ( maxrec )
+      real(wp) :: begtim
+      real(wp) :: dtemp  ( nd     )
+      real(wp) :: endtim
+      real(wp) :: myref
+      real(wp) :: record ( maxrec )
 
-      integer(ip)           begidx
-      integer(ip)           body
-      integer(ip)           center
-      integer(ip)           chbdeg
-      integer(ip)           dummy
-      integer(ip)           endidx
-      integer(ip)           i
-      integer(ip)           iframe
-      integer(ip)           itemp  ( ni )
-      integer(ip)           recsiz
+      integer(ip) :: begidx
+      integer(ip) :: body
+      integer(ip) :: center
+      integer(ip) :: chbdeg
+      integer(ip) :: dummy
+      integer(ip) :: endidx
+      integer(ip) :: i
+      integer(ip) :: iframe
+      integer(ip) :: itemp  ( ni )
+      integer(ip) :: recsiz
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -17673,23 +17673,23 @@ contains
       real(wp), parameter :: tol = 1.0e-10_wp
       real(wp), parameter :: cnvlim = 1.0e-17_wp
       integer(ip), parameter :: maxitr = 5
-      real(wp)              a
-      real(wp)              b
-      real(wp)              c
-      real(wp)              ctrssb ( 6 )
-      real(wp)              dist
-      real(wp)              epoch
-      real(wp)              prvlt
-      real(wp)              lterr
-      real(wp)              ssbtrg ( 6 )
-      real(wp)              sttctr ( 6 )
-      integer(ip)           i
-      integer(ip)           ltsign
-      integer(ip)           numitr
-      integer(ip)           refid
-      integer(ip)           trgctr
-      logical               attblk ( nabcor )
-      logical               usestl
+      real(wp) :: a
+      real(wp) :: b
+      real(wp) :: c
+      real(wp) :: ctrssb ( 6 )
+      real(wp) :: dist
+      real(wp) :: epoch
+      real(wp) :: prvlt
+      real(wp) :: lterr
+      real(wp) :: ssbtrg ( 6 )
+      real(wp) :: sttctr ( 6 )
+      integer(ip) :: i
+      integer(ip) :: ltsign
+      integer(ip) :: numitr
+      integer(ip) :: refid
+      integer(ip) :: trgctr
+      logical :: attblk ( nabcor )
+      logical :: usestl
       if ( .not. allocated ( ctx%zzspkflt_state ) ) allocate ( ctx%zzspkflt_state )
       associate ( pass1 => ctx%zzspkflt_state%pass1, &
                   prvcor => ctx%zzspkflt_state%prvcor, &
@@ -18401,15 +18401,15 @@ contains
       character(*), parameter :: rname = 'SPKACS'
       real(wp), parameter :: delta = 1.0_wp
       integer(ip), parameter :: ssb = 0
-      real(wp)              acc    ( 3 )
-      real(wp)              ltssb
-      real(wp)              ssblt
-      real(wp)              ssbobs ( 6 )
-      real(wp)              stobs  ( 6, 2 )
-      real(wp)              t
-      integer(ip)           i
-      integer(ip)           refid
-      logical               attblk ( nabcor )
+      real(wp) :: acc    ( 3 )
+      real(wp) :: ltssb
+      real(wp) :: ssblt
+      real(wp) :: ssbobs ( 6 )
+      real(wp) :: stobs  ( 6, 2 )
+      real(wp) :: t
+      integer(ip) :: i
+      integer(ip) :: refid
+      logical :: attblk ( nabcor )
       if ( .not. allocated ( ctx%spkacs_state ) ) allocate ( ctx%spkacs_state )
       associate ( first => ctx%spkacs_state%first, &
                   prvcor => ctx%spkacs_state%prvcor, &
@@ -18917,9 +18917,9 @@ contains
       use pepper_inc_zzctr
       implicit none
       integer(ip), parameter :: maxl = 36
-      integer(ip)           targid
-      integer(ip)           obsid
-      logical               found
+      integer(ip) :: targid
+      integer(ip) :: obsid
+      logical :: found
       if ( .not. allocated ( ctx%spkpos_state ) ) allocate ( ctx%spkpos_state )
       associate ( svctr1 => ctx%spkpos_state%svctr1, &
                   svtarg => ctx%spkpos_state%svtarg, &
@@ -19174,17 +19174,17 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              alpha
-      real(wp)              dc       ( 2 )
-      real(wp)              ndscr    ( 5 )
-      real(wp)              omega
+      real(wp) :: alpha
+      real(wp) :: dc       ( 2 )
+      real(wp) :: ndscr    ( 5 )
+      real(wp) :: omega
 
-      integer(ip)           baddr
-      integer(ip)           eaddr
-      integer(ip)           ic       ( 6 )
-      integer(ip)           type
+      integer(ip) :: baddr
+      integer(ip) :: eaddr
+      integer(ip) :: ic       ( 6 )
+      integer(ip) :: type
 
-      logical               okay
+      logical :: okay
 
 !
 !     Standard SPICE error handling.
@@ -19645,16 +19645,16 @@ contains
       real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
       character(*), parameter :: rname = 'ZZSPKFAO'
       real(wp), parameter :: delta = 1.0_wp
-      real(wp)              acc    ( 3 )
-      real(wp)              ssbobs ( 6 )
-      real(wp)              stctr  ( 6 )
-      real(wp)              stctro ( 6 )
-      real(wp)              stobs  ( 6, 2 )
-      real(wp)              t
-      integer(ip)           i
-      integer(ip)           obsctr
-      integer(ip)           refid
-      logical               attblk ( nabcor )
+      real(wp) :: acc    ( 3 )
+      real(wp) :: ssbobs ( 6 )
+      real(wp) :: stctr  ( 6 )
+      real(wp) :: stctro ( 6 )
+      real(wp) :: stobs  ( 6, 2 )
+      real(wp) :: t
+      integer(ip) :: i
+      integer(ip) :: obsctr
+      integer(ip) :: refid
+      logical :: attblk ( nabcor )
       if ( .not. allocated ( ctx%zzspkfao_state ) ) allocate ( ctx%zzspkfao_state )
       associate ( pass1 => ctx%zzspkfao_state%pass1, &
                   prvcor => ctx%zzspkfao_state%prvcor, &
@@ -20112,12 +20112,12 @@ contains
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
       real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
       character(*), parameter :: rname = 'ZZSPKFAP'
-      real(wp)              corpos ( 3 )
-      real(wp)              corvel ( 3 )
-      real(wp)              dpcorr ( 3 )
-      real(wp)              pcorr  ( 3 )
-      integer(ip)           refid
-      logical               attblk ( nabcor )
+      real(wp) :: corpos ( 3 )
+      real(wp) :: corvel ( 3 )
+      real(wp) :: dpcorr ( 3 )
+      real(wp) :: pcorr  ( 3 )
+      integer(ip) :: refid
+      logical :: attblk ( nabcor )
       logical :: uselt
       if ( .not. allocated ( ctx%zzspkfap_state ) ) allocate ( ctx%zzspkfap_state )
       associate ( pass1 => ctx%zzspkfap_state%pass1, &
@@ -21733,15 +21733,15 @@ contains
       character(*), parameter :: rname = 'ZZSPKFAT'
       real(wp), parameter :: delta = 1.0_wp
       integer(ip), parameter :: ssb = 0
-      real(wp)              acc    ( 3 )
-      real(wp)              ltssb
-      real(wp)              ssblt
-      real(wp)              ssbobs ( 6 )
-      real(wp)              stobs  ( 6, 2 )
-      real(wp)              t
-      integer(ip)           i
-      integer(ip)           refid
-      logical               attblk ( nabcor )
+      real(wp) :: acc    ( 3 )
+      real(wp) :: ltssb
+      real(wp) :: ssblt
+      real(wp) :: ssbobs ( 6 )
+      real(wp) :: stobs  ( 6, 2 )
+      real(wp) :: t
+      integer(ip) :: i
+      integer(ip) :: refid
+      logical :: attblk ( nabcor )
       if ( .not. allocated ( ctx%zzspkfat_state ) ) allocate ( ctx%zzspkfat_state )
       associate ( pass1 => ctx%zzspkfat_state%pass1, &
                   prvcor => ctx%zzspkfat_state%prvcor, &
@@ -22550,23 +22550,23 @@ contains
       real(wp), intent(out) :: starg    ( 6 )  !! State of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
       character(*), parameter :: rname = 'ZZSPKFZO'
-      real(wp)              corxfm   ( 6, 6 )
-      real(wp)              dlt
-      real(wp)              dltctr
-      real(wp)              ltcent
-      real(wp)              state    ( 6    )
-      real(wp)              stemp    ( 6    )
-      real(wp)              stobs    ( 6    )
-      real(wp)              stoctr   ( 6    )
-      real(wp)              xform    ( 6, 6 )
-      integer(ip)           center
-      integer(ip)           ltsign
-      integer(ip)           obsctr
-      integer(ip)           reqfrm
-      integer(ip)           type
-      integer(ip)           typeid
-      logical               attblk ( nabcor )
-      logical               found
+      real(wp) :: corxfm   ( 6, 6 )
+      real(wp) :: dlt
+      real(wp) :: dltctr
+      real(wp) :: ltcent
+      real(wp) :: state    ( 6    )
+      real(wp) :: stemp    ( 6    )
+      real(wp) :: stobs    ( 6    )
+      real(wp) :: stoctr   ( 6    )
+      real(wp) :: xform    ( 6, 6 )
+      integer(ip) :: center
+      integer(ip) :: ltsign
+      integer(ip) :: obsctr
+      integer(ip) :: reqfrm
+      integer(ip) :: type
+      integer(ip) :: typeid
+      logical :: attblk ( nabcor )
+      logical :: found
       if ( .not. allocated ( ctx%zzspkfzo_state ) ) allocate ( ctx%zzspkfzo_state )
       associate ( fj2000 => ctx%zzspkfzo_state%fj2000, &
                   pass1 => ctx%zzspkfzo_state%pass1, &
@@ -24062,17 +24062,17 @@ contains
       integer(ip), parameter :: evltrg = 2
       integer(ip), parameter :: evlctr = 3
       integer(ip), parameter :: maxl = 36
-      real(wp)              dlt
-      real(wp)              j2stat ( 6 )
-      real(wp)              s
-      real(wp)              tmpxfm ( 6, 6 )
-      real(wp)              xtrans ( 6, 6 )
-      integer(ip)           ctrcde
-      integer(ip)           evltyp
-      integer(ip)           orfcde
-      integer(ip)           trgcde
-      logical               attblk ( abatsz )
-      logical               found
+      real(wp) :: dlt
+      real(wp) :: j2stat ( 6 )
+      real(wp) :: s
+      real(wp) :: tmpxfm ( 6, 6 )
+      real(wp) :: xtrans ( 6, 6 )
+      integer(ip) :: ctrcde
+      integer(ip) :: evltyp
+      integer(ip) :: orfcde
+      integer(ip) :: trgcde
+      logical :: attblk ( abatsz )
+      logical :: found
       if ( .not. allocated ( ctx%spkcvo_state ) ) allocate ( ctx%spkcvo_state )
       associate ( evlflg => ctx%spkcvo_state%evlflg, &
                   j2code => ctx%spkcvo_state%j2code, &
@@ -24811,9 +24811,9 @@ contains
       use pepper_inc_zzctr
       implicit none
       integer(ip), parameter :: maxl = 36
-      integer(ip)           targid
-      integer(ip)           obsid
-      logical               found
+      integer(ip) :: targid
+      integer(ip) :: obsid
+      logical :: found
       if ( .not. allocated ( ctx%spkezr_state ) ) allocate ( ctx%spkezr_state )
       associate ( svctr1 => ctx%spkezr_state%svctr1, &
                   svtarg => ctx%spkezr_state%svtarg, &
@@ -27059,8 +27059,8 @@ contains
       use pepper_inc_zzabcorr
       implicit none
 
-      real(wp)              obsepc
-      real(wp)              obssta ( 6 )
+      real(wp) :: obsepc
+      real(wp) :: obssta ( 6 )
 
 !
 !     Standard SPICE error handling.
@@ -28076,17 +28076,17 @@ contains
       integer(ip), parameter :: evltrg = 2
       integer(ip), parameter :: evlctr = 3
       integer(ip), parameter :: maxl = 36
-      real(wp)              dlt
-      real(wp)              j2stat ( 6 )
-      real(wp)              s
-      real(wp)              tmpxfm ( 6, 6 )
-      real(wp)              xtrans ( 6, 6 )
-      integer(ip)           ctrcde
-      integer(ip)           evltyp
-      integer(ip)           obscde
-      integer(ip)           orfcde
-      logical               attblk ( abatsz )
-      logical               found
+      real(wp) :: dlt
+      real(wp) :: j2stat ( 6 )
+      real(wp) :: s
+      real(wp) :: tmpxfm ( 6, 6 )
+      real(wp) :: xtrans ( 6, 6 )
+      integer(ip) :: ctrcde
+      integer(ip) :: evltyp
+      integer(ip) :: obscde
+      integer(ip) :: orfcde
+      logical :: attblk ( abatsz )
+      logical :: found
       if ( .not. allocated ( ctx%spkcvt_state ) ) allocate ( ctx%spkcvt_state )
       associate ( evlflg => ctx%spkcvt_state%evlflg, &
                   j2code => ctx%spkcvt_state%j2code, &
@@ -29293,8 +29293,8 @@ contains
       use pepper_inc_zzabcorr
       implicit none
 
-      real(wp)              trgepc
-      real(wp)              trgsta ( 6 )
+      real(wp) :: trgepc
+      real(wp) :: trgsta ( 6 )
 
 !
 !     Standard SPICE error handling.

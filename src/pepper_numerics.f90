@@ -859,7 +859,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -1212,11 +1212,11 @@ contains
       use pepper_math, only: drdcyl, reccyl
       implicit none
 
-      real(wp)              rectan  ( 3 )
-      real(wp)              r
-      real(wp)              long
-      real(wp)              zz
-      real(wp)              injacb  ( 3, 3 )
+      real(wp) :: rectan  ( 3 )
+      real(wp) :: r
+      real(wp) :: long
+      real(wp) :: zz
+      real(wp) :: injacb  ( 3, 3 )
 
 !
 !     Standard SPICE error handling.
@@ -1552,11 +1552,11 @@ contains
       use pepper_math, only: drdlat, reclat
       implicit none
 
-      real(wp)              rectan  ( 3 )
-      real(wp)              r
-      real(wp)              long
-      real(wp)              lat
-      real(wp)              injacb  ( 3, 3 )
+      real(wp) :: rectan  ( 3 )
+      real(wp) :: r
+      real(wp) :: long
+      real(wp) :: lat
+      real(wp) :: injacb  ( 3, 3 )
 
 !
 !     Standard SPICE error handling.
@@ -2022,12 +2022,12 @@ contains
       use pepper_math, only: drdlat
       implicit none
 
-      real(wp)              lat
-      real(wp)              lon
+      real(wp) :: lat
+      real(wp) :: lon
 
-      integer(ip)           azsnse
-      integer(ip)           eldir
-      integer(ip)           i
+      integer(ip) :: azsnse
+      integer(ip) :: eldir
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -2478,10 +2478,10 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip)           dx
+      integer(ip) :: dx
       parameter           ( dx     = 1 )
 
-      integer(ip)           dy
+      integer(ip) :: dy
       parameter           ( dy     = 2 )
 
       integer(ip), parameter :: dz = 3
@@ -2492,16 +2492,16 @@ contains
 
       integer(ip), parameter :: dalt = 3
 
-      real(wp)              clat
-      real(wp)              clon
-      real(wp)              dgdlat
-      real(wp)              g
-      real(wp)              slat
-      real(wp)              slon
+      real(wp) :: clat
+      real(wp) :: clon
+      real(wp) :: dgdlat
+      real(wp) :: g
+      real(wp) :: slat
+      real(wp) :: slon
 
-      real(wp)              flat
-      real(wp)              flat2
-      real(wp)              g2
+      real(wp) :: flat
+      real(wp) :: flat2
+      real(wp) :: g2
 
 !
 !     Standard SPICE error handling.
@@ -2990,11 +2990,11 @@ contains
       use pepper_math, only: drdsph, recsph
       implicit none
 
-      real(wp)              rectan  ( 3 )
-      real(wp)              r
-      real(wp)              colat
-      real(wp)              long
-      real(wp)              injacb  ( 3, 3 )
+      real(wp) :: rectan  ( 3 )
+      real(wp) :: r
+      real(wp) :: colat
+      real(wp) :: long
+      real(wp) :: injacb  ( 3, 3 )
 
 !
 !     Standard SPICE error handling.
@@ -3273,53 +3273,53 @@ contains
 !     SPICELIB Functions.
 !
 
-      real(wp)              a
-      real(wp)              b
-      real(wp)              can
-      real(wp)              cf
-      real(wp)              cn
-      real(wp)              dt
-      real(wp)              di
-      real(wp)              ecc
-      real(wp)              nodedt
-      real(wp)              node
-      real(wp)              dlpdt
-      real(wp)              dlp
-      real(wp)              mldt
+      real(wp) :: a
+      real(wp) :: b
+      real(wp) :: can
+      real(wp) :: cf
+      real(wp) :: cn
+      real(wp) :: dt
+      real(wp) :: di
+      real(wp) :: ecc
+      real(wp) :: nodedt
+      real(wp) :: node
+      real(wp) :: dlpdt
+      real(wp) :: dlp
+      real(wp) :: mldt
 
-      real(wp)              trans(3,3)
-      real(wp)              sa
-      real(wp)              ca
-      real(wp)              sd
-      real(wp)              cd
+      real(wp) :: trans(3,3)
+      real(wp) :: sa
+      real(wp) :: ca
+      real(wp) :: sd
+      real(wp) :: cd
 
-      real(wp)              dx
-      real(wp)              dx1
-      real(wp)              dy
-      real(wp)              dy1
-      real(wp)              p
+      real(wp) :: dx
+      real(wp) :: dx1
+      real(wp) :: dy
+      real(wp) :: dy1
+      real(wp) :: p
 
-      real(wp)              q
-      real(wp)              r
-      real(wp)              ra
-      real(wp)              prate
-      real(wp)              rb
-      real(wp)              san
-      real(wp)              sf
-      real(wp)              sn
-      real(wp)              temp ( 3  )
+      real(wp) :: q
+      real(wp) :: r
+      real(wp) :: ra
+      real(wp) :: prate
+      real(wp) :: rb
+      real(wp) :: san
+      real(wp) :: sf
+      real(wp) :: sn
+      real(wp) :: temp ( 3  )
 
-      real(wp)              x1,y1
-      real(wp)              h
-      real(wp)              k
+      real(wp) :: x1,y1
+      real(wp) :: h
+      real(wp) :: k
 
-      real(wp)              l
-      real(wp)              ml
-      real(wp)              nfac
-      real(wp)              eecan
-      real(wp)              xhold(6)
-      real(wp)              vf   (3)
-      real(wp)              vg   (3)
+      real(wp) :: l
+      real(wp) :: ml
+      real(wp) :: nfac
+      real(wp) :: eecan
+      real(wp) :: xhold(6)
+      real(wp) :: vf   (3)
+      real(wp) :: vg   (3)
 
 !
 !     Constants
@@ -3697,8 +3697,8 @@ contains
       use pepper_kinds, only: wp
       implicit none
 
-      real(wp)              level
-      real(wp)              sq
+      real(wp) :: level
+      real(wp) :: sq
 
       if ( ctx%failed() ) return
 
@@ -4016,15 +4016,15 @@ contains
       use pepper_kinds, only: wp
       implicit none
 
-      real(wp)              arg
-      real(wp)              lambda
-      real(wp)              na2
-      real(wp)              nb2
-      real(wp)              nc2
-      real(wp)              sa
-      real(wp)              sb
-      real(wp)              sc
-      real(wp)              scale
+      real(wp) :: arg
+      real(wp) :: lambda
+      real(wp) :: na2
+      real(wp) :: nb2
+      real(wp) :: nc2
+      real(wp) :: sa
+      real(wp) :: sb
+      real(wp) :: sc
+      real(wp) :: scale
 
 !
 ! We will test RETURN though, since
@@ -4248,22 +4248,22 @@ contains
 
       real(wp), parameter :: tol = 1.0e-15_wp
 
-      real(wp)              m
-      real(wp)              mprime
-      integer(ip)           n
+      real(wp) :: m
+      real(wp) :: mprime
+      integer(ip) :: n
 
-      real(wp)              m0
-      real(wp)              a
-      real(wp)              b
-      real(wp)              q
-      real(wp)              r
-      real(wp)              qr
-      real(wp)              y
+      real(wp) :: m0
+      real(wp) :: a
+      real(wp) :: b
+      real(wp) :: q
+      real(wp) :: r
+      real(wp) :: qr
+      real(wp) :: y
 
-      real(wp)              fn
-      real(wp)              deriv
-      real(wp)              deriv2
-      real(wp)              change
+      real(wp) :: fn
+      real(wp) :: deriv
+      real(wp) :: deriv2
+      real(wp) :: change
 
 !
 !     Standard SPICE error handling.
@@ -4629,19 +4629,19 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              c1
-      real(wp)              c2
-      real(wp)              denom
-      real(wp)              newx
-      real(wp)              temp
-      real(wp)              xi
-      real(wp)              xij
+      real(wp) :: c1
+      real(wp) :: c2
+      real(wp) :: denom
+      real(wp) :: newx
+      real(wp) :: temp
+      real(wp) :: xi
+      real(wp) :: xij
 
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           next
-      integer(ip)           prev
-      integer(ip)           this
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: next
+      integer(ip) :: prev
+      integer(ip) :: this
 
       if ( ctx%failed() ) return
 
@@ -5001,18 +5001,18 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              c1
-      real(wp)              c2
-      real(wp)              denom
-      real(wp)              temp
+      real(wp) :: c1
+      real(wp) :: c2
+      real(wp) :: denom
+      real(wp) :: temp
 
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           next
-      integer(ip)           prev
-      integer(ip)           this
-      integer(ip)           xi
-      integer(ip)           xij
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: next
+      integer(ip) :: prev
+      integer(ip) :: this
+      integer(ip) :: xi
+      integer(ip) :: xij
 
       if ( ctx%failed() ) return
 
@@ -5404,12 +5404,12 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              c1
-      real(wp)              c2
-      real(wp)              newx
+      real(wp) :: c1
+      real(wp) :: c2
+      real(wp) :: newx
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
       if ( ctx%failed() ) then
          lgresp = 0.0_wp
@@ -5742,12 +5742,12 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              c1
-      real(wp)              c2
-      real(wp)              denom
+      real(wp) :: c1
+      real(wp) :: c2
+      real(wp) :: denom
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
       if ( ctx%failed() ) return
 
@@ -6075,12 +6075,12 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              c1
-      real(wp)              c2
-      real(wp)              denom
+      real(wp) :: c1
+      real(wp) :: c2
+      real(wp) :: denom
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
       if ( ctx%failed() ) then
          lgrint = 0.0_wp
@@ -6506,19 +6506,19 @@ contains
 
 !     Local variables
 !
-      real(wp)              a2
-      real(wp)              adegp1
-      real(wp)              adegp2
-      real(wp)              ai
-      real(wp)              c0
-      real(wp)              f      ( 3 )
-      real(wp)              s
-      real(wp)              s2
-      real(wp)              w      ( 3 )
-      real(wp)              z      ( 3 )
+      real(wp) :: a2
+      real(wp) :: adegp1
+      real(wp) :: adegp2
+      real(wp) :: ai
+      real(wp) :: c0
+      real(wp) :: f      ( 3 )
+      real(wp) :: s
+      real(wp) :: s2
+      real(wp) :: w      ( 3 )
+      real(wp) :: z      ( 3 )
 
-      integer(ip)           i
-      integer(ip)           nterms
+      integer(ip) :: i
+      integer(ip) :: nterms
 
 !
 !     Test RETURN but don't check in.
@@ -7095,26 +7095,26 @@ contains
 
       integer(ip), parameter :: ubel = 9
 
-      integer(ip)           ubpl
+      integer(ip) :: ubpl
       parameter           ( ubpl = 4 )
 
       real(wp), parameter :: seplim = 1.0e-9_wp
 
-      real(wp)              alpha
-      real(wp)              angle1
-      real(wp)              angle2
-      real(wp)              beta
-      real(wp)              center (    3 )
-      real(wp)              const
-      real(wp)              inpcon
-      real(wp)              normal (    3 )
-      real(wp)              point  (    3 )
-      real(wp)              sep
-      real(wp)              smajor (    3 )
-      real(wp)              sminor (    3 )
-      real(wp)              tmpvec (    3 )
-      real(wp)              trans  ( ubpl )
-      real(wp)              v      (    2 )
+      real(wp) :: alpha
+      real(wp) :: angle1
+      real(wp) :: angle2
+      real(wp) :: beta
+      real(wp) :: center (    3 )
+      real(wp) :: const
+      real(wp) :: inpcon
+      real(wp) :: normal (    3 )
+      real(wp) :: point  (    3 )
+      real(wp) :: sep
+      real(wp) :: smajor (    3 )
+      real(wp) :: sminor (    3 )
+      real(wp) :: tmpvec (    3 )
+      real(wp) :: trans  ( ubpl )
+      real(wp) :: v      (    2 )
 
 !
 !     Standard SPICE error handling.
@@ -7860,22 +7860,22 @@ contains
       use pepper_math, only: pl2nvc, smsgnd, vdot, vhat, vnorm
       implicit none
 
-      integer(ip)           ubpl
+      integer(ip) :: ubpl
       parameter           ( ubpl    =   4 )
 
       real(wp), parameter :: margin = 3.0_wp
 
-      real(wp)              const
-      real(wp)              prjdif
-      real(wp)              prjdir
-      real(wp)              prjvn
-      real(wp)              mscale
-      real(wp)              normal ( 3 )
-      real(wp)              scale
-      real(wp)              sclcon
-      real(wp)              sclvtx ( 3 )
-      real(wp)              toobig
-      real(wp)              udir   ( 3 )
+      real(wp) :: const
+      real(wp) :: prjdif
+      real(wp) :: prjdir
+      real(wp) :: prjvn
+      real(wp) :: mscale
+      real(wp) :: normal ( 3 )
+      real(wp) :: scale
+      real(wp) :: sclcon
+      real(wp) :: sclvtx ( 3 )
+      real(wp) :: toobig
+      real(wp) :: udir   ( 3 )
 
 !
 !     Standard SPICE error handling.
@@ -8289,11 +8289,11 @@ contains
       implicit none
 
       real(wp), parameter :: bound = dpmax
-      real(wp)              length
-      real(wp)              scale
-      real(wp)              temp   ( 3, 3 )
+      real(wp) :: length
+      real(wp) :: scale
+      real(wp) :: temp   ( 3, 3 )
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     For each column, construct a scaled copy. However, make sure
@@ -8738,14 +8738,14 @@ contains
       use pepper_math, only: det, unorm
       implicit none
 
-      real(wp)              d
-      real(wp)              n1
-      real(wp)              n2
-      real(wp)              n3
-      real(wp)              unit ( 3, 3 )
+      real(wp) :: d
+      real(wp) :: n1
+      real(wp) :: n2
+      real(wp) :: n3
+      real(wp) :: unit ( 3, 3 )
 
-      logical               detok
-      logical               normok
+      logical :: detok
+      logical :: normok
 
 !
 !     Standard SPICE error handling.
@@ -8893,8 +8893,8 @@ contains
       use pepper_kinds, only: wp
       implicit none
 
-      real(wp)              evec ( 2 )
-      real(wp)              e2
+      real(wp) :: evec ( 2 )
+      real(wp) :: e2
 
 !
 !     Make sure that H and K are in the expected range.
@@ -9078,23 +9078,23 @@ contains
 !
       integer(ip), parameter :: mxnewt = 5
 
-      real(wp)              cosx
-      real(wp)              ecc
-      real(wp)              ecc2
-      real(wp)              h
-      real(wp)              k
-      real(wp)              sinx
-      real(wp)              x
-      real(wp)              xl
-      real(wp)              xm
-      real(wp)              xu
-      real(wp)              y0
-      real(wp)              ypx
-      real(wp)              yx
-      real(wp)              yxm
+      real(wp) :: cosx
+      real(wp) :: ecc
+      real(wp) :: ecc2
+      real(wp) :: h
+      real(wp) :: k
+      real(wp) :: sinx
+      real(wp) :: x
+      real(wp) :: xl
+      real(wp) :: xm
+      real(wp) :: xu
+      real(wp) :: y0
+      real(wp) :: ypx
+      real(wp) :: yx
+      real(wp) :: yxm
 
-      integer(ip)           i
-      integer(ip)           maxit
+      integer(ip) :: i
+      integer(ip) :: maxit
 
 !
 !     We give the function an initial value, just in case
@@ -9628,17 +9628,17 @@ contains
 
       real(wp), parameter :: dtol = 0.1_wp
 
-      real(wp)              c
-      real(wp)              cc4
-      real(wp)              factor
-      real(wp)              l2
-      real(wp)              mtrace
-      real(wp)              polish
-      real(wp)              s(3)
-      real(wp)              s114
-      real(wp)              s224
-      real(wp)              s334
-      real(wp)              trace
+      real(wp) :: c
+      real(wp) :: cc4
+      real(wp) :: factor
+      real(wp) :: l2
+      real(wp) :: mtrace
+      real(wp) :: polish
+      real(wp) :: s(3)
+      real(wp) :: s114
+      real(wp) :: s224
+      real(wp) :: s334
+      real(wp) :: trace
 
 !
 !     If R is not a rotation matrix, we can't proceed.
@@ -9906,8 +9906,8 @@ contains
       use pepper_math, only: vdist, vproj
       implicit none
 
-      real(wp)              proj  ( 3 )
-      real(wp)              trans ( 3 )
+      real(wp) :: proj  ( 3 )
+      real(wp) :: trans ( 3 )
 
       if ( ctx%failed() ) return
 
@@ -10058,11 +10058,11 @@ contains
       use pepper_math, only: vdist, vdot
       implicit none
 
-      real(wp)              seg    ( 3 )
-      real(wp)              segdot
-      real(wp)              lnear  ( 3 )
-      real(wp)              offset ( 3 )
-      real(wp)              offdot
+      real(wp) :: seg    ( 3 )
+      real(wp) :: segdot
+      real(wp) :: lnear  ( 3 )
+      real(wp) :: offset ( 3 )
+      real(wp) :: offdot
 
       if ( ctx%failed() ) return
 
@@ -10419,7 +10419,7 @@ contains
       use pepper_math, only: unorm
       implicit none
 
-      integer(ip)           ubpl
+      integer(ip) :: ubpl
       parameter           ( ubpl    =   4 )
 
 !
@@ -10437,14 +10437,14 @@ contains
 !        origin; the normal vector, scaled by the constant, is the
 !        closest point in the plane to the origin.
 !
-      integer(ip)           nmlpos
+      integer(ip) :: nmlpos
       parameter           ( nmlpos = 1 )
 
-      integer(ip)           conpos
+      integer(ip) :: conpos
       parameter           ( conpos = 4 )
 
-      real(wp)              mag
-      real(wp)              tmpvec ( 3 )
+      real(wp) :: mag
+      real(wp) :: tmpvec ( 3 )
 
 !
 !     This routine checks in only if an error is discovered.
@@ -10604,7 +10604,7 @@ contains
       use pepper_math, only: vdot, vhat
       implicit none
 
-      integer(ip)           ubpl
+      integer(ip) :: ubpl
       parameter           ( ubpl    =   4 )
 
 !
@@ -10623,13 +10623,13 @@ contains
 !        closest point in the plane to the origin.
 !
 
-      integer(ip)           nmlpos
+      integer(ip) :: nmlpos
       parameter           ( nmlpos = 1 )
 
-      integer(ip)           conpos
+      integer(ip) :: conpos
       parameter           ( conpos = 4 )
 
-      real(wp)              tmpvec ( 3 )
+      real(wp) :: tmpvec ( 3 )
 
 !
 !     This routine checks in only if an error is discovered.
@@ -10786,7 +10786,7 @@ contains
       use pepper_math, only: ucrss, vdot
       implicit none
 
-      integer(ip)           ubpl
+      integer(ip) :: ubpl
       parameter           ( ubpl   =   4 )
 
 !
@@ -10804,13 +10804,13 @@ contains
 !        origin; the normal vector, scaled by the constant, is the
 !        closest point in the plane to the origin.
 !
-      integer(ip)           nmlpos
+      integer(ip) :: nmlpos
       parameter           ( nmlpos = 1 )
 
-      integer(ip)           conpos
+      integer(ip) :: conpos
       parameter           ( conpos = 4 )
 
-      real(wp)              tmpvec ( 3 )
+      real(wp) :: tmpvec ( 3 )
 
 !
 !     This routine checks in only if an error is discovered.
@@ -11055,12 +11055,12 @@ contains
       use pepper_math, only: vcrss, vnorm
       implicit none
 
-      real(wp)              cp    ( 3 )
-      real(wp)              edge1 ( 3 )
-      real(wp)              edge2 ( 3 )
+      real(wp) :: cp    ( 3 )
+      real(wp) :: edge1 ( 3 )
+      real(wp) :: edge2 ( 3 )
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
 !
 !     The function must have an initial value.
@@ -11299,28 +11299,28 @@ contains
       use pepper_math, only: vcrss, vdist, vdot, vnorm, vperp
       implicit none
 
-      real(wp)              d1
-      real(wp)              d2
-      real(wp)              d3
-      real(wp)              e1     ( 3 )
-      real(wp)              e2     ( 3 )
-      real(wp)              e3     ( 3 )
-      real(wp)              enorm1 ( 3 )
-      real(wp)              enorm2 ( 3 )
-      real(wp)              enorm3 ( 3 )
-      real(wp)              l1
-      real(wp)              l2
-      real(wp)              l3
-      real(wp)              normal ( 3 )
-      real(wp)              np1    ( 3 )
-      real(wp)              np2    ( 3 )
-      real(wp)              pdiff  ( 3 )
-      real(wp)              perp   ( 3 )
+      real(wp) :: d1
+      real(wp) :: d2
+      real(wp) :: d3
+      real(wp) :: e1     ( 3 )
+      real(wp) :: e2     ( 3 )
+      real(wp) :: e3     ( 3 )
+      real(wp) :: enorm1 ( 3 )
+      real(wp) :: enorm2 ( 3 )
+      real(wp) :: enorm3 ( 3 )
+      real(wp) :: l1
+      real(wp) :: l2
+      real(wp) :: l3
+      real(wp) :: normal ( 3 )
+      real(wp) :: np1    ( 3 )
+      real(wp) :: np2    ( 3 )
+      real(wp) :: pdiff  ( 3 )
+      real(wp) :: perp   ( 3 )
 
-      logical               degen
-      logical               in1
-      logical               in2
-      logical               in3
+      logical :: degen
+      logical :: in1
+      logical :: in2
+      logical :: in3
 
       if ( ctx%failed() ) return
 
@@ -11712,10 +11712,10 @@ contains
       use pepper_math, only: det
       implicit none
 
-      real(wp)              m ( 3, 3 )
+      real(wp) :: m ( 3, 3 )
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
 !
 !     The function must have an initial value.
@@ -12520,7 +12520,7 @@ contains
       use pepper_math, only: vhat, vnorm
       implicit none
 
-      real(wp)              q ( 0: 3 )
+      real(wp) :: q ( 0: 3 )
 
 !
 !     Standard SPICE error handling.
@@ -12717,13 +12717,13 @@ contains
       use pepper_kinds, only: wp
       implicit none
 
-      real(wp)              con
-      real(wp)              discrm
-      real(wp)              lin
-      real(wp)              scale
-      real(wp)              sqr
+      real(wp) :: con
+      real(wp) :: discrm
+      real(wp) :: lin
+      real(wp) :: scale
+      real(wp) :: sqr
 
-      logical               zeroed
+      logical :: zeroed
 
 !
 !     Standard SPICE error handling.
@@ -12933,8 +12933,8 @@ contains
       use pepper_kinds, only: wp
       implicit none
 
-      real(wp)              mynum
-      real(wp)              mydnom
+      real(wp) :: mynum
+      real(wp) :: mydnom
 
 !
 !     Take care of the zero-denominator case first
@@ -13212,17 +13212,17 @@ contains
       use pepper_math, only: approx, pl2nvc, vdot, vnorm
       implicit none
 
-      integer(ip)           ubpl
+      integer(ip) :: ubpl
       parameter           ( ubpl   =   4 )
 
 !     Tolerance for deviation from unit length of the normal
 !     vector of the input plane.
 !
-      real(wp)              magtol
+      real(wp) :: magtol
       parameter           ( magtol = 1.0e-14_wp )
 
-      real(wp)              const
-      real(wp)              normal ( 3 )
+      real(wp) :: const
+      real(wp) :: normal ( 3 )
 
 !
 !     Check RETURN but
@@ -13442,7 +13442,7 @@ contains
       use pepper_math, only: approx, pl2nvc, vdot, vnorm
       implicit none
 
-      integer(ip)           ubpl
+      integer(ip) :: ubpl
       parameter           ( ubpl   =    4 )
 
 !
@@ -13461,17 +13461,17 @@ contains
 !     Tolerance for deviation from unit length of the normal
 !     vector of the input plane.
 !
-      real(wp)              magtol
+      real(wp) :: magtol
       parameter           ( magtol = 1.0e-14_wp )
 
-      real(wp)              denom
-      real(wp)              invc
-      real(wp)              invn  ( 3 )
-      real(wp)              limit
-      real(wp)              mult
-      real(wp)              numer
-      real(wp)              projc
-      real(wp)              projn ( 3 )
+      real(wp) :: denom
+      real(wp) :: invc
+      real(wp) :: invn  ( 3 )
+      real(wp) :: limit
+      real(wp) :: mult
+      real(wp) :: numer
+      real(wp) :: projc
+      real(wp) :: projn ( 3 )
 
 !
 !     Standard SPICE error handling.
@@ -13876,13 +13876,13 @@ contains
       use pepper_math, only: vcrss, vdot, vhat, vnorm, vrotv
       implicit none
 
-      real(wp)              onebyc
-      real(wp)              u      ( 3 )
-      real(wp)              vbyc   ( 3 )
-      real(wp)              lensqr
-      real(wp)              h      ( 3 )
-      real(wp)              sinphi
-      real(wp)              phi
+      real(wp) :: onebyc
+      real(wp) :: u      ( 3 )
+      real(wp) :: vbyc   ( 3 )
+      real(wp) :: lensqr
+      real(wp) :: h      ( 3 )
+      real(wp) :: sinphi
+      real(wp) :: phi
 
 !
 !     Standard SPICE error handling.
@@ -14217,7 +14217,7 @@ contains
       use pepper_kinds, only: wp
       implicit none
 
-      real(wp)              negvel ( 3 )
+      real(wp) :: negvel ( 3 )
 
 !
 !     Standard SPICE error handling.
@@ -14396,12 +14396,12 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              temp
+      real(wp) :: temp
 
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           cb
-      integer(ip)           rb
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: cb
+      integer(ip) :: rb
 
 !
 !     Ok. Here's what's going to happen.

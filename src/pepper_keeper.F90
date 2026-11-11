@@ -645,16 +645,16 @@ contains
            'EIGHT', 'NINE', 'TEN', 'ELEVEN', 'TWELVE', 'THIRTEEN', &
            'FOURTEEN', 'FIFTEEN', 'SIXTEEN', 'SEVENTEEN', 'EIGHTEEN', &
            'NINETEEN' ]
-      character(lngest)     suff
+      character(lngest) :: suff
       character(lngest), parameter :: tens   ( 9) = &
          [ character(lngest) :: 'TEN', 'TWENTY', 'THIRTY', 'FORTY', 'FIFTY', 'SIXTY', &
            'SEVENTY', 'EIGHTY', 'NINETY' ]
 
-      integer(ip)           num
-      integer(ip)           pad
-      integer(ip)           space
-      integer(ip)           x
-      integer(ip)           y
+      integer(ip) :: num
+      integer(ip) :: pad
+      integer(ip) :: space
+      integer(ip) :: x
+      integer(ip) :: y
 
 !
 !     Zero is easy.
@@ -881,9 +881,9 @@ contains
 
       integer(ip), parameter :: maxord = 148
 
-      integer(ip)           i
-      integer(ip)           last
-      character(maxord)     mystr
+      integer(ip) :: i
+      integer(ip) :: last
+      character(maxord) :: mystr
 
 !
 !     First get the English equivalent of the cardinal N.
@@ -1198,14 +1198,14 @@ contains
 
       integer(ip), parameter :: maxlon = 147
 
-      character(maxlon)     ord
-      character(1)          tmpcas
+      character(maxlon) :: ord
+      character(1) :: tmpcas
 
-      integer(ip)           mrknbf
-      integer(ip)           mrknbl
+      integer(ip) :: mrknbf
+      integer(ip) :: mrknbl
 
-      integer(ip)           mrkpsb
-      integer(ip)           mrkpse
+      integer(ip) :: mrkpsb
+      integer(ip) :: mrkpse
 
 !
 !     Standard SPICE error handling.
@@ -1563,18 +1563,18 @@ contains
 
       integer(ip), parameter :: lnsize = 80
 
-      character(lnsize)     part
+      character(lnsize) :: part
 
-      integer(ip)           cfirst
-      integer(ip)           clast
-      integer(ip)           comp
-      integer(ip)           csize
-      integer(ip)           n
-      integer(ip)           putat
-      integer(ip)           room
+      integer(ip) :: cfirst
+      integer(ip) :: clast
+      integer(ip) :: comp
+      integer(ip) :: csize
+      integer(ip) :: n
+      integer(ip) :: putat
+      integer(ip) :: room
 
-      logical               gotit
-      logical               more
+      logical :: gotit
+      logical :: more
 
 !
 !     Standard SPICE error handling.
@@ -1952,19 +1952,19 @@ contains
 
       integer(ip), parameter :: lnsize = 80
 
-      character(lnsize)     part
+      character(lnsize) :: part
 
-      integer(ip)           cfirst
-      integer(ip)           clast
-      integer(ip)           comp
-      integer(ip)           csize
-      integer(ip)           n
-      integer(ip)           putat
-      integer(ip)           room
-      integer(ip)           strno
+      integer(ip) :: cfirst
+      integer(ip) :: clast
+      integer(ip) :: comp
+      integer(ip) :: csize
+      integer(ip) :: n
+      integer(ip) :: putat
+      integer(ip) :: room
+      integer(ip) :: strno
 
-      logical               gotit
-      logical               more
+      logical :: gotit
+      logical :: more
 
 !
 !     Standard SPICE error handling.
@@ -2537,15 +2537,15 @@ contains
 !
 !     Local variables.
 !
-      character(eoltsz)     native
+      character(eoltsz) :: native
 
-      integer(ip)           doscnt
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           maccnt
-      integer(ip)           number
-      integer(ip)           reclen
-      integer(ip)           unxcnt
+      integer(ip) :: doscnt
+      integer(ip) :: i
+      integer(ip) :: iostat
+      integer(ip) :: maccnt
+      integer(ip) :: number
+      integer(ip) :: reclen
+      integer(ip) :: unxcnt
 
 !
 ! Can't determine the terminator in RETURN
@@ -2983,10 +2983,10 @@ contains
       use pepper_strings, only: rtrim
       implicit none
 
-      integer(ip)           iostat
-      integer(ip)           r
+      integer(ip) :: iostat
+      integer(ip) :: r
 
-      logical               myexst
+      logical :: myexst
 
 !
 !     Standard SPICE error handling.
@@ -3240,11 +3240,11 @@ contains
 
       integer(ip), parameter :: klinsz = 132
 
-      character(wdsize)     versn
-      character(wdsize)     arch
-      character(wdsize)     mytype
-      character(eoltsz)     termin
-      character(klinsz)     kerlin
+      character(wdsize) :: versn
+      character(wdsize) :: arch
+      character(wdsize) :: mytype
+      character(eoltsz) :: termin
+      character(klinsz) :: kerlin
 
       if ( ctx%failed() ) return
 
@@ -4000,59 +4000,59 @@ contains
       integer(ip), parameter :: nknown = 3
       integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: msgsiz = 500
-      character(1)          norc
+      character(1) :: norc
       character(:), allocatable :: fil2ld
       character(:), allocatable :: pvalue
-      character(1)          probe
-      character(lnsize)     symbol
-      character(msgsiz)     nofile
-      character(typlen)     thstyp
-      integer(ip)           b
-      integer(ip)           cursrc
-      integer(ip)           d
-      integer(ip)           dollar
-      integer(ip)           e
-      integer(ip)           fidx
-      integer(ip)           filnum
-      integer(ip)           fnmlen
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           lidx
-      integer(ip)           myhand
-      integer(ip)           n
-      integer(ip)           n1
-      integer(ip)           n2
-      integer(ip)           n3
-      integer(ip)           nmult
-      integer(ip)           npaths
-      integer(ip)           npvals
-      integer(ip)           r
-      integer(ip)           size
-      integer(ip)           src
-      integer(ip)           start
-      integer(ip)           use
-      logical               add
-      logical               didck
-      logical               diddsk
-      logical               didek
-      logical               didpck
-      logical               didspk
-      logical               didtxt
-      logical               dock
-      logical               dodsk
-      logical               doek
-      logical               dometa
-      logical               dopck
-      logical               dospk
-      logical               dotext
-      logical               fnd
-      logical               gotit
-      logical               ok
-      logical               paths
-      logical               single
-      logical               update
+      character(1) :: probe
+      character(lnsize) :: symbol
+      character(msgsiz) :: nofile
+      character(typlen) :: thstyp
+      integer(ip) :: b
+      integer(ip) :: cursrc
+      integer(ip) :: d
+      integer(ip) :: dollar
+      integer(ip) :: e
+      integer(ip) :: fidx
+      integer(ip) :: filnum
+      integer(ip) :: fnmlen
+      integer(ip) :: hits
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: lidx
+      integer(ip) :: myhand
+      integer(ip) :: n
+      integer(ip) :: n1
+      integer(ip) :: n2
+      integer(ip) :: n3
+      integer(ip) :: nmult
+      integer(ip) :: npaths
+      integer(ip) :: npvals
+      integer(ip) :: r
+      integer(ip) :: size
+      integer(ip) :: src
+      integer(ip) :: start
+      integer(ip) :: use
+      logical :: add
+      logical :: didck
+      logical :: diddsk
+      logical :: didek
+      logical :: didpck
+      logical :: didspk
+      logical :: didtxt
+      logical :: dock
+      logical :: dodsk
+      logical :: doek
+      logical :: dometa
+      logical :: dopck
+      logical :: dospk
+      logical :: dotext
+      logical :: fnd
+      logical :: gotit
+      logical :: ok
+      logical :: paths
+      logical :: single
+      logical :: update
       if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
       associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded, &
@@ -4603,62 +4603,62 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, fndnwd
       implicit none
-      logical               return
+      logical :: return
       integer(ip), parameter :: typlen = 8
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: nknown = 3
       integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: msgsiz = 500
-      character(1)          norc
-      character(lnsize)     symbol
-      character(msgsiz)     nofile
-      character(typlen)     thstyp
-      integer(ip)           b
-      integer(ip)           cursrc
-      integer(ip)           d
-      integer(ip)           dollar
-      integer(ip)           e
-      integer(ip)           fidx
-      integer(ip)           filnum
-      integer(ip)           fnmlen
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           lidx
-      integer(ip)           myhand
-      integer(ip)           n
-      integer(ip)           n1
-      integer(ip)           n2
-      integer(ip)           n3
-      integer(ip)           nmult
-      integer(ip)           npaths
-      integer(ip)           npvals
-      integer(ip)           r
-      integer(ip)           size
-      integer(ip)           src
-      integer(ip)           start
-      integer(ip)           use
-      logical               add
-      logical               didck
-      logical               diddsk
-      logical               didek
-      logical               didpck
-      logical               didspk
-      logical               didtxt
-      logical               dock
-      logical               dodsk
-      logical               doek
-      logical               dometa
-      logical               dopck
-      logical               dospk
-      logical               dotext
-      logical               fnd
-      logical               gotit
-      logical               ok
-      logical               paths
-      logical               single
-      logical               update
+      character(1) :: norc
+      character(lnsize) :: symbol
+      character(msgsiz) :: nofile
+      character(typlen) :: thstyp
+      integer(ip) :: b
+      integer(ip) :: cursrc
+      integer(ip) :: d
+      integer(ip) :: dollar
+      integer(ip) :: e
+      integer(ip) :: fidx
+      integer(ip) :: filnum
+      integer(ip) :: fnmlen
+      integer(ip) :: hits
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: lidx
+      integer(ip) :: myhand
+      integer(ip) :: n
+      integer(ip) :: n1
+      integer(ip) :: n2
+      integer(ip) :: n3
+      integer(ip) :: nmult
+      integer(ip) :: npaths
+      integer(ip) :: npvals
+      integer(ip) :: r
+      integer(ip) :: size
+      integer(ip) :: src
+      integer(ip) :: start
+      integer(ip) :: use
+      logical :: add
+      logical :: didck
+      logical :: diddsk
+      logical :: didek
+      logical :: didpck
+      logical :: didspk
+      logical :: didtxt
+      logical :: dock
+      logical :: dodsk
+      logical :: doek
+      logical :: dometa
+      logical :: dopck
+      logical :: dospk
+      logical :: dotext
+      logical :: fnd
+      logical :: gotit
+      logical :: ok
+      logical :: paths
+      logical :: single
+      logical :: update
       if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
       associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded )
@@ -5012,62 +5012,62 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, fndnwd
       implicit none
-      logical               return
+      logical :: return
       integer(ip), parameter :: typlen = 8
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: nknown = 3
       integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: msgsiz = 500
-      character(1)          norc
-      character(lnsize)     symbol
-      character(msgsiz)     nofile
-      character(typlen)     thstyp
-      integer(ip)           b
-      integer(ip)           cursrc
-      integer(ip)           d
-      integer(ip)           dollar
-      integer(ip)           e
-      integer(ip)           fidx
-      integer(ip)           filnum
-      integer(ip)           fnmlen
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           lidx
-      integer(ip)           myhand
-      integer(ip)           n
-      integer(ip)           n1
-      integer(ip)           n2
-      integer(ip)           n3
-      integer(ip)           nmult
-      integer(ip)           npaths
-      integer(ip)           npvals
-      integer(ip)           r
-      integer(ip)           size
-      integer(ip)           src
-      integer(ip)           start
-      integer(ip)           use
-      logical               add
-      logical               didck
-      logical               diddsk
-      logical               didek
-      logical               didpck
-      logical               didspk
-      logical               didtxt
-      logical               dock
-      logical               dodsk
-      logical               doek
-      logical               dometa
-      logical               dopck
-      logical               dospk
-      logical               dotext
-      logical               fnd
-      logical               gotit
-      logical               ok
-      logical               paths
-      logical               single
-      logical               update
+      character(1) :: norc
+      character(lnsize) :: symbol
+      character(msgsiz) :: nofile
+      character(typlen) :: thstyp
+      integer(ip) :: b
+      integer(ip) :: cursrc
+      integer(ip) :: d
+      integer(ip) :: dollar
+      integer(ip) :: e
+      integer(ip) :: fidx
+      integer(ip) :: filnum
+      integer(ip) :: fnmlen
+      integer(ip) :: hits
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: lidx
+      integer(ip) :: myhand
+      integer(ip) :: n
+      integer(ip) :: n1
+      integer(ip) :: n2
+      integer(ip) :: n3
+      integer(ip) :: nmult
+      integer(ip) :: npaths
+      integer(ip) :: npvals
+      integer(ip) :: r
+      integer(ip) :: size
+      integer(ip) :: src
+      integer(ip) :: start
+      integer(ip) :: use
+      logical :: add
+      logical :: didck
+      logical :: diddsk
+      logical :: didek
+      logical :: didpck
+      logical :: didspk
+      logical :: didtxt
+      logical :: dock
+      logical :: dodsk
+      logical :: doek
+      logical :: dometa
+      logical :: dopck
+      logical :: dospk
+      logical :: dotext
+      logical :: fnd
+      logical :: gotit
+      logical :: ok
+      logical :: paths
+      logical :: single
+      logical :: update
       if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
       associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded )
@@ -5413,62 +5413,62 @@ contains
       module procedure kinfo
       use pepper_kinds, only: ip
       implicit none
-      logical               return
+      logical :: return
       integer(ip), parameter :: typlen = 8
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: nknown = 3
       integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: msgsiz = 500
-      character(1)          norc
-      character(lnsize)     symbol
-      character(msgsiz)     nofile
-      character(typlen)     thstyp
-      integer(ip)           b
-      integer(ip)           cursrc
-      integer(ip)           d
-      integer(ip)           dollar
-      integer(ip)           e
-      integer(ip)           fidx
-      integer(ip)           filnum
-      integer(ip)           fnmlen
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           lidx
-      integer(ip)           myhand
-      integer(ip)           n
-      integer(ip)           n1
-      integer(ip)           n2
-      integer(ip)           n3
-      integer(ip)           nmult
-      integer(ip)           npaths
-      integer(ip)           npvals
-      integer(ip)           r
-      integer(ip)           size
-      integer(ip)           src
-      integer(ip)           start
-      integer(ip)           use
-      logical               add
-      logical               didck
-      logical               diddsk
-      logical               didek
-      logical               didpck
-      logical               didspk
-      logical               didtxt
-      logical               dock
-      logical               dodsk
-      logical               doek
-      logical               dometa
-      logical               dopck
-      logical               dospk
-      logical               dotext
-      logical               fnd
-      logical               gotit
-      logical               ok
-      logical               paths
-      logical               single
-      logical               update
+      character(1) :: norc
+      character(lnsize) :: symbol
+      character(msgsiz) :: nofile
+      character(typlen) :: thstyp
+      integer(ip) :: b
+      integer(ip) :: cursrc
+      integer(ip) :: d
+      integer(ip) :: dollar
+      integer(ip) :: e
+      integer(ip) :: fidx
+      integer(ip) :: filnum
+      integer(ip) :: fnmlen
+      integer(ip) :: hits
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: lidx
+      integer(ip) :: myhand
+      integer(ip) :: n
+      integer(ip) :: n1
+      integer(ip) :: n2
+      integer(ip) :: n3
+      integer(ip) :: nmult
+      integer(ip) :: npaths
+      integer(ip) :: npvals
+      integer(ip) :: r
+      integer(ip) :: size
+      integer(ip) :: src
+      integer(ip) :: start
+      integer(ip) :: use
+      logical :: add
+      logical :: didck
+      logical :: diddsk
+      logical :: didek
+      logical :: didpck
+      logical :: didspk
+      logical :: didtxt
+      logical :: dock
+      logical :: dodsk
+      logical :: doek
+      logical :: dometa
+      logical :: dopck
+      logical :: dospk
+      logical :: dotext
+      logical :: fnd
+      logical :: gotit
+      logical :: ok
+      logical :: paths
+      logical :: single
+      logical :: update
       if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
       associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded )
@@ -5690,56 +5690,56 @@ contains
       integer(ip), parameter :: nknown = 3
       integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: msgsiz = 500
-      character(1)          norc
-      character(lnsize)     symbol
-      character(msgsiz)     nofile
-      character(typlen)     thstyp
-      integer(ip)           b
-      integer(ip)           cursrc
-      integer(ip)           d
-      integer(ip)           dollar
-      integer(ip)           e
-      integer(ip)           fidx
-      integer(ip)           filnum
-      integer(ip)           fnmlen
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           lidx
-      integer(ip)           myhand
-      integer(ip)           n
-      integer(ip)           n1
-      integer(ip)           n2
-      integer(ip)           n3
-      integer(ip)           nmult
-      integer(ip)           npaths
-      integer(ip)           npvals
-      integer(ip)           r
-      integer(ip)           size
-      integer(ip)           src
-      integer(ip)           start
-      integer(ip)           use
-      logical               add
-      logical               didck
-      logical               diddsk
-      logical               didek
-      logical               didpck
-      logical               didspk
-      logical               didtxt
-      logical               dock
-      logical               dodsk
-      logical               doek
-      logical               dometa
-      logical               dopck
-      logical               dospk
-      logical               dotext
-      logical               fnd
-      logical               gotit
-      logical               ok
-      logical               paths
-      logical               single
-      logical               update
+      character(1) :: norc
+      character(lnsize) :: symbol
+      character(msgsiz) :: nofile
+      character(typlen) :: thstyp
+      integer(ip) :: b
+      integer(ip) :: cursrc
+      integer(ip) :: d
+      integer(ip) :: dollar
+      integer(ip) :: e
+      integer(ip) :: fidx
+      integer(ip) :: filnum
+      integer(ip) :: fnmlen
+      integer(ip) :: hits
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: lidx
+      integer(ip) :: myhand
+      integer(ip) :: n
+      integer(ip) :: n1
+      integer(ip) :: n2
+      integer(ip) :: n3
+      integer(ip) :: nmult
+      integer(ip) :: npaths
+      integer(ip) :: npvals
+      integer(ip) :: r
+      integer(ip) :: size
+      integer(ip) :: src
+      integer(ip) :: start
+      integer(ip) :: use
+      logical :: add
+      logical :: didck
+      logical :: diddsk
+      logical :: didek
+      logical :: didpck
+      logical :: didspk
+      logical :: didtxt
+      logical :: dock
+      logical :: dodsk
+      logical :: doek
+      logical :: dometa
+      logical :: dopck
+      logical :: dospk
+      logical :: dotext
+      logical :: fnd
+      logical :: gotit
+      logical :: ok
+      logical :: paths
+      logical :: single
+      logical :: update
       if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
       associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded )
@@ -6254,56 +6254,56 @@ contains
       integer(ip), parameter :: nknown = 3
       integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: msgsiz = 500
-      character(1)          norc
-      character(lnsize)     symbol
-      character(msgsiz)     nofile
-      character(typlen)     thstyp
-      integer(ip)           b
-      integer(ip)           cursrc
-      integer(ip)           d
-      integer(ip)           dollar
-      integer(ip)           e
-      integer(ip)           fidx
-      integer(ip)           filnum
-      integer(ip)           fnmlen
-      integer(ip)           hits
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           lidx
-      integer(ip)           myhand
-      integer(ip)           n
-      integer(ip)           n1
-      integer(ip)           n2
-      integer(ip)           n3
-      integer(ip)           nmult
-      integer(ip)           npaths
-      integer(ip)           npvals
-      integer(ip)           r
-      integer(ip)           size
-      integer(ip)           src
-      integer(ip)           start
-      integer(ip)           use
-      logical               add
-      logical               didck
-      logical               diddsk
-      logical               didek
-      logical               didpck
-      logical               didspk
-      logical               didtxt
-      logical               dock
-      logical               dodsk
-      logical               doek
-      logical               dometa
-      logical               dopck
-      logical               dospk
-      logical               dotext
-      logical               fnd
-      logical               gotit
-      logical               ok
-      logical               paths
-      logical               single
-      logical               update
+      character(1) :: norc
+      character(lnsize) :: symbol
+      character(msgsiz) :: nofile
+      character(typlen) :: thstyp
+      integer(ip) :: b
+      integer(ip) :: cursrc
+      integer(ip) :: d
+      integer(ip) :: dollar
+      integer(ip) :: e
+      integer(ip) :: fidx
+      integer(ip) :: filnum
+      integer(ip) :: fnmlen
+      integer(ip) :: hits
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: lidx
+      integer(ip) :: myhand
+      integer(ip) :: n
+      integer(ip) :: n1
+      integer(ip) :: n2
+      integer(ip) :: n3
+      integer(ip) :: nmult
+      integer(ip) :: npaths
+      integer(ip) :: npvals
+      integer(ip) :: r
+      integer(ip) :: size
+      integer(ip) :: src
+      integer(ip) :: start
+      integer(ip) :: use
+      logical :: add
+      logical :: didck
+      logical :: diddsk
+      logical :: didek
+      logical :: didpck
+      logical :: didspk
+      logical :: didtxt
+      logical :: dock
+      logical :: dodsk
+      logical :: doek
+      logical :: dometa
+      logical :: dopck
+      logical :: dospk
+      logical :: dotext
+      logical :: fnd
+      logical :: gotit
+      logical :: ok
+      logical :: paths
+      logical :: single
+      logical :: update
       if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
       associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded, &

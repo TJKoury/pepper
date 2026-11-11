@@ -1137,11 +1137,11 @@ contains
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: mxspec = 512
       integer(ip), parameter :: namlim = 32
-      integer(ip)           cdscrs ( cdscsz, mxclsg )
-      integer(ip)           i
-      integer(ip)           idend
-      integer(ip)           nchars
-      integer(ip)           stype
+      integer(ip) :: cdscrs ( cdscsz, mxclsg )
+      integer(ip) :: i
+      integer(ip) :: idend
+      integer(ip) :: nchars
+      integer(ip) :: stype
       if ( .not. allocated ( ctx%ekbseg_state ) ) allocate ( ctx%ekbseg_state )
       associate ( first => ctx%ekbseg_state%first, &
                   idspec => ctx%ekbseg_state%idspec )
@@ -1498,23 +1498,23 @@ contains
       implicit none
       integer(ip) :: nlinks_1(1)  !! one-element copy of nlinks (array argument)
 
-      integer(ip)           base
-      integer(ip)           coldsc ( cdscsz )
-      integer(ip)           lastp
-      integer(ip)           lastw
-      integer(ip)           mbase
-      integer(ip)           mp
-      integer(ip)           ncols
-      integer(ip)           nlinks
-      integer(ip)           nrec
-      integer(ip)           p
-      integer(ip)           recbas
-      integer(ip)           recptr ( ipsize )
-      integer(ip)           room
-      integer(ip)           segdsc ( sdscsz )
-      integer(ip)           size
+      integer(ip) :: base
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: lastp
+      integer(ip) :: lastw
+      integer(ip) :: mbase
+      integer(ip) :: mp
+      integer(ip) :: ncols
+      integer(ip) :: nlinks
+      integer(ip) :: nrec
+      integer(ip) :: p
+      integer(ip) :: recbas
+      integer(ip) :: recptr ( ipsize )
+      integer(ip) :: room
+      integer(ip) :: segdsc ( sdscsz )
+      integer(ip) :: size
 
-      logical               isshad
+      logical :: isshad
 
 !
 !     Standard SPICE error handling.
@@ -2074,32 +2074,32 @@ contains
       use pepper_inc_ektype
       integer(ip), parameter :: bufsiz = ipsize
 
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           adrbuf ( bufsiz )
-      integer(ip)           bufptr
-      integer(ip)           class
-      integer(ip)           colidx
-      integer(ip)           dscbas
-      integer(ip)           from
-      integer(ip)           i
-      integer(ip)           idxtyp
-      integer(ip)           p
-      integer(ip)           page   ( pgsizi )
-      integer(ip)           pbase
-      integer(ip)           mbase
-      integer(ip)           n
-      integer(ip)           ndata
-      integer(ip)           nnull
-      integer(ip)           nrows
-      integer(ip)           nulptr
-      integer(ip)           nwrite
-      integer(ip)           remain
-      integer(ip)           to
-      integer(ip)           tree
+      integer(ip) :: adrbuf ( bufsiz )
+      integer(ip) :: bufptr
+      integer(ip) :: class
+      integer(ip) :: colidx
+      integer(ip) :: dscbas
+      integer(ip) :: from
+      integer(ip) :: i
+      integer(ip) :: idxtyp
+      integer(ip) :: p
+      integer(ip) :: page   ( pgsizi )
+      integer(ip) :: pbase
+      integer(ip) :: mbase
+      integer(ip) :: n
+      integer(ip) :: ndata
+      integer(ip) :: nnull
+      integer(ip) :: nrows
+      integer(ip) :: nulptr
+      integer(ip) :: nwrite
+      integer(ip) :: remain
+      integer(ip) :: to
+      integer(ip) :: tree
 
-      logical               indexd
-      logical               nullok
+      logical :: indexd
+      logical :: nullok
 
 !
 !     Standard SPICE error handling.
@@ -2458,33 +2458,33 @@ contains
       use pepper_inc_ektype
       integer(ip), parameter :: bufsiz = dpsize
 
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      real(wp)              page   ( pgsizd )
+      real(wp) :: page   ( pgsizd )
 
-      integer(ip)           adrbuf ( bufsiz )
-      integer(ip)           bufptr
-      integer(ip)           class
-      integer(ip)           colidx
-      integer(ip)           dscbas
-      integer(ip)           from
-      integer(ip)           i
-      integer(ip)           idxtyp
-      integer(ip)           p
-      integer(ip)           pbase
-      integer(ip)           mbase
-      integer(ip)           n
-      integer(ip)           ndata
-      integer(ip)           nnull
-      integer(ip)           nrows
-      integer(ip)           nulptr
-      integer(ip)           nwrite
-      integer(ip)           remain
-      integer(ip)           to
-      integer(ip)           tree
+      integer(ip) :: adrbuf ( bufsiz )
+      integer(ip) :: bufptr
+      integer(ip) :: class
+      integer(ip) :: colidx
+      integer(ip) :: dscbas
+      integer(ip) :: from
+      integer(ip) :: i
+      integer(ip) :: idxtyp
+      integer(ip) :: p
+      integer(ip) :: pbase
+      integer(ip) :: mbase
+      integer(ip) :: n
+      integer(ip) :: ndata
+      integer(ip) :: nnull
+      integer(ip) :: nrows
+      integer(ip) :: nulptr
+      integer(ip) :: nwrite
+      integer(ip) :: remain
+      integer(ip) :: to
+      integer(ip) :: tree
 
-      logical               indexd
-      logical               nullok
+      logical :: indexd
+      logical :: nullok
 
 !
 !     Standard SPICE error handling.
@@ -2827,40 +2827,40 @@ contains
       use pepper_inc_ektype
       integer(ip), parameter :: bufsiz = cpsize
 
-      character(cnamsz)     column
-      character(pgsizc)     page
+      character(cnamsz) :: column
+      character(pgsizc) :: page
 
-      integer(ip)           adrbuf ( bufsiz )
-      integer(ip)           bufptr
-      integer(ip)           class
-      integer(ip)           colidx
-      integer(ip)           colwid
-      integer(ip)           dscbas
-      integer(ip)           from
-      integer(ip)           i
-      integer(ip)           idxtyp
-      integer(ip)           p
-      integer(ip)           p2
-      integer(ip)           pbase
-      integer(ip)           pos
-      integer(ip)           mbase
-      integer(ip)           n
-      integer(ip)           nchars
-      integer(ip)           ndata
-      integer(ip)           nlinks
-      integer(ip)           nnull
-      integer(ip)           nrows
-      integer(ip)           nulptr
-      integer(ip)           nwrite
-      integer(ip)           remain
-      integer(ip)           room
-      integer(ip)           strlen
-      integer(ip)           to
-      integer(ip)           tree
+      integer(ip) :: adrbuf ( bufsiz )
+      integer(ip) :: bufptr
+      integer(ip) :: class
+      integer(ip) :: colidx
+      integer(ip) :: colwid
+      integer(ip) :: dscbas
+      integer(ip) :: from
+      integer(ip) :: i
+      integer(ip) :: idxtyp
+      integer(ip) :: p
+      integer(ip) :: p2
+      integer(ip) :: pbase
+      integer(ip) :: pos
+      integer(ip) :: mbase
+      integer(ip) :: n
+      integer(ip) :: nchars
+      integer(ip) :: ndata
+      integer(ip) :: nlinks
+      integer(ip) :: nnull
+      integer(ip) :: nrows
+      integer(ip) :: nulptr
+      integer(ip) :: nwrite
+      integer(ip) :: remain
+      integer(ip) :: room
+      integer(ip) :: strlen
+      integer(ip) :: to
+      integer(ip) :: tree
 
-      logical               fixlen
-      logical               indexd
-      logical               nullok
+      logical :: fixlen
+      logical :: indexd
+      logical :: nullok
 
 !
 !     Standard SPICE error handling.
@@ -3346,34 +3346,34 @@ contains
       use pepper_inc_ektype
       integer(ip), parameter :: bufsiz = ipsize
 
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           adrbuf ( bufsiz )
-      integer(ip)           bufptr
-      integer(ip)           class
-      integer(ip)           colidx
-      integer(ip)           cursiz
-      integer(ip)           from
-      integer(ip)           i
-      integer(ip)           n
-      integer(ip)           ndata
-      integer(ip)           nelt
-      integer(ip)           nlink
-      integer(ip)           nrows
-      integer(ip)           nulptr
-      integer(ip)           p
-      integer(ip)           p2
-      integer(ip)           page   ( pgsizi )
-      integer(ip)           pbase
-      integer(ip)           remain
-      integer(ip)           row
-      integer(ip)           size
-      integer(ip)           to
+      integer(ip) :: adrbuf ( bufsiz )
+      integer(ip) :: bufptr
+      integer(ip) :: class
+      integer(ip) :: colidx
+      integer(ip) :: cursiz
+      integer(ip) :: from
+      integer(ip) :: i
+      integer(ip) :: n
+      integer(ip) :: ndata
+      integer(ip) :: nelt
+      integer(ip) :: nlink
+      integer(ip) :: nrows
+      integer(ip) :: nulptr
+      integer(ip) :: p
+      integer(ip) :: p2
+      integer(ip) :: page   ( pgsizi )
+      integer(ip) :: pbase
+      integer(ip) :: remain
+      integer(ip) :: row
+      integer(ip) :: size
+      integer(ip) :: to
 
-      logical               cntinu
-      logical               fixsiz
-      logical               newreq
-      logical               nullok
+      logical :: cntinu
+      logical :: fixsiz
+      logical :: newreq
+      logical :: nullok
 
 !
 !     Standard SPICE error handling.
@@ -3811,35 +3811,35 @@ contains
       use pepper_inc_ektype
       integer(ip), parameter :: bufsiz = dpsize
 
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      real(wp)              page   ( pgsizd )
+      real(wp) :: page   ( pgsizd )
 
-      integer(ip)           adrbuf ( bufsiz )
-      integer(ip)           bufptr
-      integer(ip)           class
-      integer(ip)           colidx
-      integer(ip)           cursiz
-      integer(ip)           from
-      integer(ip)           i
-      integer(ip)           n
-      integer(ip)           ndata
-      integer(ip)           nelt
-      integer(ip)           nlink
-      integer(ip)           nrows
-      integer(ip)           nulptr
-      integer(ip)           p
-      integer(ip)           p2
-      integer(ip)           pbase
-      integer(ip)           remain
-      integer(ip)           row
-      integer(ip)           size
-      integer(ip)           to
+      integer(ip) :: adrbuf ( bufsiz )
+      integer(ip) :: bufptr
+      integer(ip) :: class
+      integer(ip) :: colidx
+      integer(ip) :: cursiz
+      integer(ip) :: from
+      integer(ip) :: i
+      integer(ip) :: n
+      integer(ip) :: ndata
+      integer(ip) :: nelt
+      integer(ip) :: nlink
+      integer(ip) :: nrows
+      integer(ip) :: nulptr
+      integer(ip) :: p
+      integer(ip) :: p2
+      integer(ip) :: pbase
+      integer(ip) :: remain
+      integer(ip) :: row
+      integer(ip) :: size
+      integer(ip) :: to
 
-      logical               cntinu
-      logical               fixsiz
-      logical               newreq
-      logical               nullok
+      logical :: cntinu
+      logical :: fixsiz
+      logical :: newreq
+      logical :: nullok
 
 !
 !     Standard SPICE error handling.
@@ -4275,45 +4275,45 @@ contains
       use pepper_inc_ektype
       integer(ip), parameter :: bufsiz = cpsize
 
-      character(cnamsz)     column
-      character(pgsizc)     page
+      character(cnamsz) :: column
+      character(pgsizc) :: page
 
-      integer(ip)           adrbuf ( bufsiz )
-      integer(ip)           bufptr
-      integer(ip)           class
-      integer(ip)           colidx
-      integer(ip)           cp
-      integer(ip)           curchr
-      integer(ip)           cursiz
-      integer(ip)           cvlen
-      integer(ip)           from
-      integer(ip)           i
-      integer(ip)           l
-      integer(ip)           n
-      integer(ip)           nchars
-      integer(ip)           ndata
-      integer(ip)           nlink
-      integer(ip)           nrows
-      integer(ip)           nulptr
-      integer(ip)           nw
-      integer(ip)           nwrite
-      integer(ip)           p
-      integer(ip)           p2
-      integer(ip)           padlen
-      integer(ip)           pbase
-      integer(ip)           remain
-      integer(ip)           room
-      integer(ip)           row
-      integer(ip)           size
-      integer(ip)           strlen
-      integer(ip)           to
+      integer(ip) :: adrbuf ( bufsiz )
+      integer(ip) :: bufptr
+      integer(ip) :: class
+      integer(ip) :: colidx
+      integer(ip) :: cp
+      integer(ip) :: curchr
+      integer(ip) :: cursiz
+      integer(ip) :: cvlen
+      integer(ip) :: from
+      integer(ip) :: i
+      integer(ip) :: l
+      integer(ip) :: n
+      integer(ip) :: nchars
+      integer(ip) :: ndata
+      integer(ip) :: nlink
+      integer(ip) :: nrows
+      integer(ip) :: nulptr
+      integer(ip) :: nw
+      integer(ip) :: nwrite
+      integer(ip) :: p
+      integer(ip) :: p2
+      integer(ip) :: padlen
+      integer(ip) :: pbase
+      integer(ip) :: remain
+      integer(ip) :: room
+      integer(ip) :: row
+      integer(ip) :: size
+      integer(ip) :: strlen
+      integer(ip) :: to
 
-      logical               cntinu
-      logical               fixsiz
-      logical               newent
-      logical               newreq
-      logical               nullok
-      logical               pad
+      logical :: cntinu
+      logical :: fixsiz
+      logical :: newent
+      logical :: newreq
+      logical :: nullok
+      logical :: pad
 
 !
 !     Standard SPICE error handling.
@@ -4831,24 +4831,24 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      integer(ip)           colidx
-      integer(ip)           datptr
-      integer(ip)           lastw
-      integer(ip)           mbase
-      integer(ip)           ncols
-      integer(ip)           nlinks
-      integer(ip)           nrec
-      integer(ip)           nwrite
-      integer(ip)           p
-      integer(ip)           p2
-      integer(ip)           pbase
-      integer(ip)           ptrloc
-      integer(ip)           recno
-      integer(ip)           remain
-      integer(ip)           room
-      integer(ip)           start
+      integer(ip) :: colidx
+      integer(ip) :: datptr
+      integer(ip) :: lastw
+      integer(ip) :: mbase
+      integer(ip) :: ncols
+      integer(ip) :: nlinks
+      integer(ip) :: nrec
+      integer(ip) :: nwrite
+      integer(ip) :: p
+      integer(ip) :: p2
+      integer(ip) :: pbase
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
+      integer(ip) :: remain
+      integer(ip) :: room
+      integer(ip) :: start
 
-      logical               fstpag
+      logical :: fstpag
 
       nrec    =  segdsc ( nridx  )
       colidx  =  coldsc ( ordidx )
@@ -5171,25 +5171,25 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      integer(ip)           colidx
-      integer(ip)           datptr
-      integer(ip)           lastw
-      integer(ip)           mbase
-      integer(ip)           ncols
-      integer(ip)           nlinks
-      integer(ip)           nrec
-      integer(ip)           nwrite
-      integer(ip)           p
-      integer(ip)           p2
-      integer(ip)           pbase
-      integer(ip)           prvbas
-      integer(ip)           ptrloc
-      integer(ip)           recno
-      integer(ip)           remain
-      integer(ip)           room
-      integer(ip)           start
+      integer(ip) :: colidx
+      integer(ip) :: datptr
+      integer(ip) :: lastw
+      integer(ip) :: mbase
+      integer(ip) :: ncols
+      integer(ip) :: nlinks
+      integer(ip) :: nrec
+      integer(ip) :: nwrite
+      integer(ip) :: p
+      integer(ip) :: p2
+      integer(ip) :: pbase
+      integer(ip) :: prvbas
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
+      integer(ip) :: remain
+      integer(ip) :: room
+      integer(ip) :: start
 
-      logical               fstpag
+      logical :: fstpag
 
       nrec    =  segdsc ( nridx  )
       colidx  =  coldsc ( ordidx )
@@ -5961,17 +5961,17 @@ contains
       use pepper_inc_ektype
       real(wp) :: dpnelt_1(1)  !! one-element copy of dpnelt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-      real(wp)              dpnelt
+      real(wp) :: dpnelt
 
-      integer(ip)           base
-      integer(ip)           datptr
-      integer(ip)           nelts
-      integer(ip)           next
-      integer(ip)           nlinks
-      integer(ip)           nseen
-      integer(ip)           p
-      integer(ip)           ptrloc
-      integer(ip)           recno
+      integer(ip) :: base
+      integer(ip) :: datptr
+      integer(ip) :: nelts
+      integer(ip) :: next
+      integer(ip) :: nlinks
+      integer(ip) :: nseen
+      integer(ip) :: p
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
 
 !
 !     Standard SPICE error handling.
@@ -6205,16 +6205,16 @@ contains
       implicit none
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
-      integer(ip)           base
-      integer(ip)           datptr
-      integer(ip)           nchars
-      integer(ip)           nelts
-      integer(ip)           next
-      integer(ip)           nlinks
-      integer(ip)           nseen
-      integer(ip)           p
-      integer(ip)           ptrloc
-      integer(ip)           recno
+      integer(ip) :: base
+      integer(ip) :: datptr
+      integer(ip) :: nchars
+      integer(ip) :: nelts
+      integer(ip) :: next
+      integer(ip) :: nlinks
+      integer(ip) :: nseen
+      integer(ip) :: p
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
 
 !
 !     Standard SPICE error handling.
@@ -6432,11 +6432,11 @@ contains
       use pepper_inc_ekcoldsc
       use pepper_inc_ekcnamsz
       use pepper_inc_eksegdsc
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           class
-      integer(ip)           recno
-      integer(ip)           segno
+      integer(ip) :: class
+      integer(ip) :: recno
+      integer(ip) :: segno
 
 !
 !     Initialize the function's return value.
@@ -6593,10 +6593,10 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_ektype
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-      integer(ip)           colidx
-      integer(ip)           ncols
-      integer(ip)           ptrloc
-      integer(ip)           recno
+      integer(ip) :: colidx
+      integer(ip) :: ncols
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
 
 !
 !     Make sure the column exists.
@@ -6713,21 +6713,21 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      integer(ip)           base
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           ncols
-      integer(ip)           npage
-      integer(ip)           nr
-      integer(ip)           nrows
-      integer(ip)           nrp
-      integer(ip)           p
-      integer(ip)           pbase
-      integer(ip)           recno
-      integer(ip)           remain
-      integer(ip)           rpsize
-      integer(ip)           segdsc ( sdscsz )
-      integer(ip)           top
+      integer(ip) :: base
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: ncols
+      integer(ip) :: npage
+      integer(ip) :: nr
+      integer(ip) :: nrows
+      integer(ip) :: nrp
+      integer(ip) :: p
+      integer(ip) :: pbase
+      integer(ip) :: recno
+      integer(ip) :: remain
+      integer(ip) :: rpsize
+      integer(ip) :: segdsc ( sdscsz )
+      integer(ip) :: top
 
 !
 !     Standard SPICE error handling.
@@ -6885,17 +6885,17 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       integer(ip) :: class_1(1)  !! one-element copy of class (array argument)
-      integer(ip)           base
-      integer(ip)           class
-      integer(ip)           dscbas
-      integer(ip)           i
-      integer(ip)           mbase
-      integer(ip)           ncols
-      integer(ip)           nrows
-      integer(ip)           offset
-      integer(ip)           p
-      integer(ip)           page   ( pgsizi )
-      integer(ip)           segdsc ( sdscsz )
+      integer(ip) :: base
+      integer(ip) :: class
+      integer(ip) :: dscbas
+      integer(ip) :: i
+      integer(ip) :: mbase
+      integer(ip) :: ncols
+      integer(ip) :: nrows
+      integer(ip) :: offset
+      integer(ip) :: p
+      integer(ip) :: page   ( pgsizi )
+      integer(ip) :: segdsc ( sdscsz )
 
 !
 !     Standard SPICE error handling.
@@ -7054,11 +7054,11 @@ contains
       integer(ip) :: ival_1(1)  !! one-element copy of ival (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
-      integer(ip)           colidx
-      integer(ip)           datptr
-      integer(ip)           ncols
-      integer(ip)           recno
-      integer(ip)           ptrloc
+      integer(ip) :: colidx
+      integer(ip) :: datptr
+      integer(ip) :: ncols
+      integer(ip) :: recno
+      integer(ip) :: ptrloc
 
 !
 !     Make sure the column exists.
@@ -7228,11 +7228,11 @@ contains
       real(wp) :: dval_1(1)  !! one-element copy of dval (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
-      integer(ip)           colidx
-      integer(ip)           datptr
-      integer(ip)           ncols
-      integer(ip)           ptrloc
-      integer(ip)           recno
+      integer(ip) :: colidx
+      integer(ip) :: datptr
+      integer(ip) :: ncols
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
 
 !
 !     Make sure the column exists.
@@ -7458,23 +7458,23 @@ contains
 
       implicit none
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           avail
-      integer(ip)           b
-      integer(ip)           bpos
-      integer(ip)           colidx
-      integer(ip)           datptr
-      integer(ip)           e
-      integer(ip)           epos
-      integer(ip)           l
-      integer(ip)           n
-      integer(ip)           ncols
-      integer(ip)           p
-      integer(ip)           pbase
-      integer(ip)           relptr
-      integer(ip)           ptrloc
-      integer(ip)           recno
+      integer(ip) :: avail
+      integer(ip) :: b
+      integer(ip) :: bpos
+      integer(ip) :: colidx
+      integer(ip) :: datptr
+      integer(ip) :: e
+      integer(ip) :: epos
+      integer(ip) :: l
+      integer(ip) :: n
+      integer(ip) :: ncols
+      integer(ip) :: p
+      integer(ip) :: pbase
+      integer(ip) :: relptr
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
 
 !
 !     Make sure the column exists.
@@ -7750,20 +7750,20 @@ contains
       integer(ip) :: nelt_1(1)  !! one-element copy of nelt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
-      integer(ip)           base
-      integer(ip)           colidx
-      integer(ip)           datptr
-      integer(ip)           maxidx
-      integer(ip)           minidx
-      integer(ip)           ncols
-      integer(ip)           nelt
-      integer(ip)           nread
-      integer(ip)           p
-      integer(ip)           ptemp
-      integer(ip)           ptrloc
-      integer(ip)           recno
-      integer(ip)           remain
-      integer(ip)           start
+      integer(ip) :: base
+      integer(ip) :: colidx
+      integer(ip) :: datptr
+      integer(ip) :: maxidx
+      integer(ip) :: minidx
+      integer(ip) :: ncols
+      integer(ip) :: nelt
+      integer(ip) :: nread
+      integer(ip) :: p
+      integer(ip) :: ptemp
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
+      integer(ip) :: remain
+      integer(ip) :: start
 
 !
 !     Make sure the column exists.
@@ -8062,22 +8062,22 @@ contains
       use pepper_inc_ektype
       real(wp) :: dpnelt_1(1)  !! one-element copy of dpnelt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-      real(wp)              dpnelt
+      real(wp) :: dpnelt
 
-      integer(ip)           base
-      integer(ip)           colidx
-      integer(ip)           datptr
-      integer(ip)           maxidx
-      integer(ip)           minidx
-      integer(ip)           ncols
-      integer(ip)           nelt
-      integer(ip)           nread
-      integer(ip)           p
-      integer(ip)           ptemp
-      integer(ip)           ptrloc
-      integer(ip)           recno
-      integer(ip)           remain
-      integer(ip)           start
+      integer(ip) :: base
+      integer(ip) :: colidx
+      integer(ip) :: datptr
+      integer(ip) :: maxidx
+      integer(ip) :: minidx
+      integer(ip) :: ncols
+      integer(ip) :: nelt
+      integer(ip) :: nread
+      integer(ip) :: p
+      integer(ip) :: ptemp
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
+      integer(ip) :: remain
+      integer(ip) :: start
 
 !
 !     Make sure the column exists.
@@ -8396,32 +8396,32 @@ contains
 
       implicit none
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           avail
-      integer(ip)           base
-      integer(ip)           colidx
-      integer(ip)           cvlen
-      integer(ip)           d
-      integer(ip)           datptr
-      integer(ip)           delta
-      integer(ip)           eltidx
-      integer(ip)           eltoff
-      integer(ip)           maxelt
-      integer(ip)           ncols
-      integer(ip)           nelt
-      integer(ip)           nread
-      integer(ip)           nskip
-      integer(ip)           offset
-      integer(ip)           p
-      integer(ip)           pagnum
-      integer(ip)           pg
-      integer(ip)           ptrloc
-      integer(ip)           ptroff
-      integer(ip)           recno
-      integer(ip)           remain
-      integer(ip)           start
-      integer(ip)           strlen
+      integer(ip) :: avail
+      integer(ip) :: base
+      integer(ip) :: colidx
+      integer(ip) :: cvlen
+      integer(ip) :: d
+      integer(ip) :: datptr
+      integer(ip) :: delta
+      integer(ip) :: eltidx
+      integer(ip) :: eltoff
+      integer(ip) :: maxelt
+      integer(ip) :: ncols
+      integer(ip) :: nelt
+      integer(ip) :: nread
+      integer(ip) :: nskip
+      integer(ip) :: offset
+      integer(ip) :: p
+      integer(ip) :: pagnum
+      integer(ip) :: pg
+      integer(ip) :: ptrloc
+      integer(ip) :: ptroff
+      integer(ip) :: recno
+      integer(ip) :: remain
+      integer(ip) :: start
+      integer(ip) :: strlen
 
 !
 !     Make sure the column exists.
@@ -8796,21 +8796,21 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       integer(ip) :: ival_1(1)  !! one-element copy of ival (array argument)
-      character(1)          cflag
+      character(1) :: cflag
 
-      integer(ip)           addrss
-      integer(ip)           colidx
-      integer(ip)           datbas
-      integer(ip)           mdat   ( mdsz07 )
-      integer(ip)           metloc
-      integer(ip)           ncols
-      integer(ip)           nflbas
-      integer(ip)           offset
-      integer(ip)           q
-      integer(ip)           r
-      integer(ip)           recno
+      integer(ip) :: addrss
+      integer(ip) :: colidx
+      integer(ip) :: datbas
+      integer(ip) :: mdat   ( mdsz07 )
+      integer(ip) :: metloc
+      integer(ip) :: ncols
+      integer(ip) :: nflbas
+      integer(ip) :: offset
+      integer(ip) :: q
+      integer(ip) :: r
+      integer(ip) :: recno
 
-      logical               nullok
+      logical :: nullok
 
 !
 !     Make sure the column exists.
@@ -8978,21 +8978,21 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       real(wp) :: dval_1(1)  !! one-element copy of dval (array argument)
-      character(1)          cflag
+      character(1) :: cflag
 
-      integer(ip)           addrss
-      integer(ip)           colidx
-      integer(ip)           datbas
-      integer(ip)           mdat   ( mdsz08 )
-      integer(ip)           metloc
-      integer(ip)           ncols
-      integer(ip)           nflbas
-      integer(ip)           offset
-      integer(ip)           q
-      integer(ip)           r
-      integer(ip)           recno
+      integer(ip) :: addrss
+      integer(ip) :: colidx
+      integer(ip) :: datbas
+      integer(ip) :: mdat   ( mdsz08 )
+      integer(ip) :: metloc
+      integer(ip) :: ncols
+      integer(ip) :: nflbas
+      integer(ip) :: offset
+      integer(ip) :: q
+      integer(ip) :: r
+      integer(ip) :: recno
 
-      logical               nullok
+      logical :: nullok
 
 !
 !     Make sure the column exists.
@@ -9163,10 +9163,10 @@ contains
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ekrecptr
-      integer(ip)           colidx
-      integer(ip)           ncols
-      integer(ip)           ptrloc
-      integer(ip)           recno
+      integer(ip) :: colidx
+      integer(ip) :: ncols
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
 
 !
 !     Is this file handle valid--is the file open for paged write
@@ -9319,12 +9319,12 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(pgsizc)     page
+      character(pgsizc) :: page
 
-      integer(ip)           from
-      integer(ip)           npage
-      integer(ip)           spp
-      integer(ip)           to
+      integer(ip) :: from
+      integer(ip) :: npage
+      integer(ip) :: spp
+      integer(ip) :: to
 
 !
 !     Standard SPICE error handling.
@@ -9488,10 +9488,10 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      integer(ip)           from
-      integer(ip)           npage
-      integer(ip)           page   ( pgsizi )
-      integer(ip)           to
+      integer(ip) :: from
+      integer(ip) :: npage
+      integer(ip) :: page   ( pgsizi )
+      integer(ip) :: to
 
 !
 !     Standard SPICE error handling.
@@ -9637,11 +9637,11 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(pgsizc)     page
+      character(pgsizc) :: page
 
-      integer(ip)           from
-      integer(ip)           npage
-      integer(ip)           to
+      integer(ip) :: from
+      integer(ip) :: npage
+      integer(ip) :: to
 
 !
 !     Standard SPICE error handling.
@@ -10066,10 +10066,10 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip)           mbase
-      integer(ip)           mp
-      integer(ip)           nrec
-      integer(ip)           segdsc ( sdscsz )
+      integer(ip) :: mbase
+      integer(ip) :: mp
+      integer(ip) :: nrec
+      integer(ip) :: segdsc ( sdscsz )
 
 !
 !     Standard SPICE error handling.
@@ -10611,10 +10611,10 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip)           mbase
-      integer(ip)           p
-      integer(ip)           segdsc ( sdscsz )
-      integer(ip)           stype
+      integer(ip) :: mbase
+      integer(ip) :: p
+      integer(ip) :: segdsc ( sdscsz )
+      integer(ip) :: stype
 
 !
 !     Standard SPICE error handling.
@@ -11043,14 +11043,14 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip)           coldsc ( cdscsz )
-      integer(ip)           class
-      integer(ip)           cvlen
-      integer(ip)           dtype
-      integer(ip)           recptr
-      integer(ip)           segdsc ( sdscsz )
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: class
+      integer(ip) :: cvlen
+      integer(ip) :: dtype
+      integer(ip) :: recptr
+      integer(ip) :: segdsc ( sdscsz )
 
-      logical               found
+      logical :: found
 
 !
 !     First step:  find the descriptor for the named segment.  Using
@@ -11275,13 +11275,13 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip)           coldsc ( cdscsz )
-      integer(ip)           class
-      integer(ip)           dtype
-      integer(ip)           recptr
-      integer(ip)           segdsc ( sdscsz )
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: class
+      integer(ip) :: dtype
+      integer(ip) :: recptr
+      integer(ip) :: segdsc ( sdscsz )
 
-      logical               found
+      logical :: found
 
 !
 !     First step:  find the descriptor for the named segment.  Using
@@ -11504,13 +11504,13 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip)           coldsc ( cdscsz )
-      integer(ip)           class
-      integer(ip)           dtype
-      integer(ip)           recptr
-      integer(ip)           segdsc ( sdscsz )
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: class
+      integer(ip) :: dtype
+      integer(ip) :: recptr
+      integer(ip) :: segdsc ( sdscsz )
 
-      logical               found
+      logical :: found
 
 !
 !     First step:  find the descriptor for the named segment.  Using
@@ -11713,29 +11713,29 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           class
-      integer(ip)           cmbase
-      integer(ip)           colidx
-      integer(ip)           datbas
-      integer(ip)           dscbas
-      integer(ip)           from
-      integer(ip)           idxbas
-      integer(ip)           idxpag
-      integer(ip)           idxtyp
-      integer(ip)           p
-      integer(ip)           page   ( pgsizi )
-      integer(ip)           mbase
-      integer(ip)           nflbas
-      integer(ip)           nflpag
-      integer(ip)           npage
-      integer(ip)           nrows
-      integer(ip)           nulptr
-      integer(ip)           to
+      integer(ip) :: class
+      integer(ip) :: cmbase
+      integer(ip) :: colidx
+      integer(ip) :: datbas
+      integer(ip) :: dscbas
+      integer(ip) :: from
+      integer(ip) :: idxbas
+      integer(ip) :: idxpag
+      integer(ip) :: idxtyp
+      integer(ip) :: p
+      integer(ip) :: page   ( pgsizi )
+      integer(ip) :: mbase
+      integer(ip) :: nflbas
+      integer(ip) :: nflpag
+      integer(ip) :: npage
+      integer(ip) :: nrows
+      integer(ip) :: nulptr
+      integer(ip) :: to
 
-      logical               indexd
-      logical               nullok
+      logical :: indexd
+      logical :: nullok
 
 !
 !     Standard SPICE error handling.
@@ -11997,30 +11997,30 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      real(wp)              page   ( pgsizd )
+      real(wp) :: page   ( pgsizd )
 
-      integer(ip)           class
-      integer(ip)           cmbase
-      integer(ip)           colidx
-      integer(ip)           datbas
-      integer(ip)           dscbas
-      integer(ip)           from
-      integer(ip)           idxbas
-      integer(ip)           idxpag
-      integer(ip)           idxtyp
-      integer(ip)           p
-      integer(ip)           mbase
-      integer(ip)           nflbas
-      integer(ip)           nflpag
-      integer(ip)           npage
-      integer(ip)           nrows
-      integer(ip)           nulptr
-      integer(ip)           to
+      integer(ip) :: class
+      integer(ip) :: cmbase
+      integer(ip) :: colidx
+      integer(ip) :: datbas
+      integer(ip) :: dscbas
+      integer(ip) :: from
+      integer(ip) :: idxbas
+      integer(ip) :: idxpag
+      integer(ip) :: idxtyp
+      integer(ip) :: p
+      integer(ip) :: mbase
+      integer(ip) :: nflbas
+      integer(ip) :: nflpag
+      integer(ip) :: npage
+      integer(ip) :: nrows
+      integer(ip) :: nulptr
+      integer(ip) :: to
 
-      logical               indexd
-      logical               nullok
+      logical :: indexd
+      logical :: nullok
 
 !
 !     Standard SPICE error handling.
@@ -12282,32 +12282,32 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
-      character(pgsizc)     page
+      character(cnamsz) :: column
+      character(pgsizc) :: page
 
-      integer(ip)           class
-      integer(ip)           cmbase
-      integer(ip)           colidx
-      integer(ip)           datbas
-      integer(ip)           dscbas
-      integer(ip)           from
-      integer(ip)           idxbas
-      integer(ip)           idxpag
-      integer(ip)           idxtyp
-      integer(ip)           p
-      integer(ip)           l
-      integer(ip)           mbase
-      integer(ip)           nflbas
-      integer(ip)           nflpag
-      integer(ip)           npage
-      integer(ip)           nrows
-      integer(ip)           nulptr
-      integer(ip)           spp
-      integer(ip)           to
+      integer(ip) :: class
+      integer(ip) :: cmbase
+      integer(ip) :: colidx
+      integer(ip) :: datbas
+      integer(ip) :: dscbas
+      integer(ip) :: from
+      integer(ip) :: idxbas
+      integer(ip) :: idxpag
+      integer(ip) :: idxtyp
+      integer(ip) :: p
+      integer(ip) :: l
+      integer(ip) :: mbase
+      integer(ip) :: nflbas
+      integer(ip) :: nflpag
+      integer(ip) :: npage
+      integer(ip) :: nrows
+      integer(ip) :: nulptr
+      integer(ip) :: spp
+      integer(ip) :: to
 
-      logical               fixlen
-      logical               indexd
-      logical               nullok
+      logical :: fixlen
+      logical :: indexd
+      logical :: nullok
 
 !
 !     Standard SPICE error handling.
@@ -12603,12 +12603,12 @@ contains
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           class
-      integer(ip)           dtype
-      integer(ip)           recno
-      integer(ip)           segno
+      integer(ip) :: class
+      integer(ip) :: dtype
+      integer(ip) :: recno
+      integer(ip) :: segno
 
 !
 !     Nothing found to begin with.
@@ -12806,12 +12806,12 @@ contains
       implicit none
       real(wp) :: dval_1(1)  !! one-element copy of dval (array argument)
 
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           class
-      integer(ip)           dtype
-      integer(ip)           recno
-      integer(ip)           segno
+      integer(ip) :: class
+      integer(ip) :: dtype
+      integer(ip) :: recno
+      integer(ip) :: segno
 
 !
 !     Nothing found to begin with.
@@ -13002,12 +13002,12 @@ contains
       implicit none
       integer(ip) :: ival_1(1)  !! one-element copy of ival (array argument)
 
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           class
-      integer(ip)           dtype
-      integer(ip)           recno
-      integer(ip)           segno
+      integer(ip) :: class
+      integer(ip) :: dtype
+      integer(ip) :: recno
+      integer(ip) :: segno
 
 !
 !     Nothing found to begin with.
@@ -13813,10 +13813,10 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip)           class
-      integer(ip)           coldsc ( cdscsz )
-      integer(ip)           dtype
-      integer(ip)           segdsc ( sdscsz )
+      integer(ip) :: class
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: dtype
+      integer(ip) :: segdsc ( sdscsz )
 
 !
 !     Standard SPICE error handling.
@@ -14292,10 +14292,10 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip)           class
-      integer(ip)           coldsc ( cdscsz )
-      integer(ip)           dtype
-      integer(ip)           segdsc ( sdscsz )
+      integer(ip) :: class
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: dtype
+      integer(ip) :: segdsc ( sdscsz )
 
 !
 !     Standard SPICE error handling.
@@ -14769,10 +14769,10 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip)           class
-      integer(ip)           coldsc ( cdscsz )
-      integer(ip)           dtype
-      integer(ip)           segdsc ( sdscsz )
+      integer(ip) :: class
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: dtype
+      integer(ip) :: segdsc ( sdscsz )
 
 !
 !     Standard SPICE error handling.
@@ -14960,16 +14960,16 @@ contains
       character(:), allocatable :: cval1  !! the left-hand string (PEPPER: SPICELIB's CHARACTER*(MAXSTR) CVAL(2))
       character(:), allocatable :: cval2  !! the right-hand string
 
-      real(wp)              dval   ( 2 )
+      real(wp) :: dval   ( 2 )
 
-      integer(ip)           cvlen  ( 2 )
-      integer(ip)           i
-      integer(ip)           ival   ( 2 )
-      integer(ip)           lhstyp
-      integer(ip)           rhstyp
+      integer(ip) :: cvlen  ( 2 )
+      integer(ip) :: i
+      integer(ip) :: ival   ( 2 )
+      integer(ip) :: lhstyp
+      integer(ip) :: rhstyp
 
-      logical               found
-      logical               null   ( 2 )
+      logical :: found
+      logical :: null   ( 2 )
 
 !
 !     The function value defaults to `equal'.
@@ -15532,18 +15532,18 @@ contains
 
       character(:), allocatable :: eltc  !! the column entry (PEPPER: SPICELIB's CHARACTER*(MAXSTR))
 
-      real(wp)              eltd
-      real(wp)              numval
+      real(wp) :: eltd
+      real(wp) :: numval
 
-      integer(ip)           cmplen
-      integer(ip)           cvlen
-      integer(ip)           coltyp
-      integer(ip)           elti
-      integer(ip)           rel
-      integer(ip)           strlen
+      integer(ip) :: cmplen
+      integer(ip) :: cvlen
+      integer(ip) :: coltyp
+      integer(ip) :: elti
+      integer(ip) :: rel
+      integer(ip) :: strlen
 
-      logical               enull
-      logical               found
+      logical :: enull
+      logical :: found
 
 !
 !     The function value defaults to .FALSE.
@@ -15954,17 +15954,17 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      integer(ip)           begin
-      integer(ip)           begptr
-      integer(ip)           end
-      integer(ip)           endptr
-      integer(ip)           middle
-      integer(ip)           midptr
-      integer(ip)           nrec
-      integer(ip)           tree
-      integer(ip)           tsize
+      integer(ip) :: begin
+      integer(ip) :: begptr
+      integer(ip) :: end
+      integer(ip) :: endptr
+      integer(ip) :: middle
+      integer(ip) :: midptr
+      integer(ip) :: nrec
+      integer(ip) :: tree
+      integer(ip) :: tsize
 
-      logical               leq
+      logical :: leq
 
       if ( ctx%failed() ) return
 
@@ -16274,17 +16274,17 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      integer(ip)           begin
-      integer(ip)           begptr
-      integer(ip)           end
-      integer(ip)           endptr
-      integer(ip)           middle
-      integer(ip)           midptr
-      integer(ip)           nrec
-      integer(ip)           tree
-      integer(ip)           tsize
+      integer(ip) :: begin
+      integer(ip) :: begptr
+      integer(ip) :: end
+      integer(ip) :: endptr
+      integer(ip) :: middle
+      integer(ip) :: midptr
+      integer(ip) :: nrec
+      integer(ip) :: tree
+      integer(ip) :: tsize
 
-      logical               leq
+      logical :: leq
 
       if ( ctx%failed() ) return
 
@@ -16594,17 +16594,17 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      integer(ip)           begin
-      integer(ip)           begptr
-      integer(ip)           end
-      integer(ip)           endptr
-      integer(ip)           middle
-      integer(ip)           midptr
-      integer(ip)           nrec
-      integer(ip)           tree
-      integer(ip)           tsize
+      integer(ip) :: begin
+      integer(ip) :: begptr
+      integer(ip) :: end
+      integer(ip) :: endptr
+      integer(ip) :: middle
+      integer(ip) :: midptr
+      integer(ip) :: nrec
+      integer(ip) :: tree
+      integer(ip) :: tsize
 
-      logical               leq
+      logical :: leq
 
       if ( ctx%failed() ) return
 
@@ -16898,18 +16898,18 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           begin
-      integer(ip)           begptr
-      integer(ip)           dtype
-      integer(ip)           end
-      integer(ip)           endptr
-      integer(ip)           middle
-      integer(ip)           midptr
-      integer(ip)           nrows
+      integer(ip) :: begin
+      integer(ip) :: begptr
+      integer(ip) :: dtype
+      integer(ip) :: end
+      integer(ip) :: endptr
+      integer(ip) :: middle
+      integer(ip) :: midptr
+      integer(ip) :: nrows
 
-      logical               indexd
+      logical :: indexd
 
 !
 !     If the column's not indexed, we have no business being here.
@@ -17142,18 +17142,18 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           begin
-      integer(ip)           begptr
-      integer(ip)           dtype
-      integer(ip)           end
-      integer(ip)           endptr
-      integer(ip)           middle
-      integer(ip)           midptr
-      integer(ip)           nrows
+      integer(ip) :: begin
+      integer(ip) :: begptr
+      integer(ip) :: dtype
+      integer(ip) :: end
+      integer(ip) :: endptr
+      integer(ip) :: middle
+      integer(ip) :: midptr
+      integer(ip) :: nrows
 
-      logical               indexd
+      logical :: indexd
 
 !
 !     If the column's not indexed, we have no business being here.
@@ -17386,18 +17386,18 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           begin
-      integer(ip)           begptr
-      integer(ip)           dtype
-      integer(ip)           end
-      integer(ip)           endptr
-      integer(ip)           middle
-      integer(ip)           midptr
-      integer(ip)           nrows
+      integer(ip) :: begin
+      integer(ip) :: begptr
+      integer(ip) :: dtype
+      integer(ip) :: end
+      integer(ip) :: endptr
+      integer(ip) :: middle
+      integer(ip) :: midptr
+      integer(ip) :: nrows
 
-      logical               indexd
+      logical :: indexd
 
 !
 !     If the column's not indexed, we have no business being here.
@@ -17626,18 +17626,18 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           begin
-      integer(ip)           begptr
-      integer(ip)           dtype
-      integer(ip)           end
-      integer(ip)           endptr
-      integer(ip)           middle
-      integer(ip)           midptr
-      integer(ip)           nrows
+      integer(ip) :: begin
+      integer(ip) :: begptr
+      integer(ip) :: dtype
+      integer(ip) :: end
+      integer(ip) :: endptr
+      integer(ip) :: middle
+      integer(ip) :: midptr
+      integer(ip) :: nrows
 
-      logical               indexd
+      logical :: indexd
 
 !
 !     If the column's not indexed, we have no business being here.
@@ -17866,18 +17866,18 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           begin
-      integer(ip)           begptr
-      integer(ip)           dtype
-      integer(ip)           end
-      integer(ip)           endptr
-      integer(ip)           middle
-      integer(ip)           midptr
-      integer(ip)           nrows
+      integer(ip) :: begin
+      integer(ip) :: begptr
+      integer(ip) :: dtype
+      integer(ip) :: end
+      integer(ip) :: endptr
+      integer(ip) :: middle
+      integer(ip) :: midptr
+      integer(ip) :: nrows
 
-      logical               indexd
+      logical :: indexd
 
 !
 !     If the column's not indexed, we have no business being here.
@@ -18107,18 +18107,18 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           begin
-      integer(ip)           begptr
-      integer(ip)           dtype
-      integer(ip)           end
-      integer(ip)           endptr
-      integer(ip)           middle
-      integer(ip)           midptr
-      integer(ip)           nrows
+      integer(ip) :: begin
+      integer(ip) :: begptr
+      integer(ip) :: dtype
+      integer(ip) :: end
+      integer(ip) :: endptr
+      integer(ip) :: middle
+      integer(ip) :: midptr
+      integer(ip) :: nrows
 
-      logical               indexd
+      logical :: indexd
 
 !
 !     If the column's not indexed, we have no business being here.
@@ -18428,13 +18428,13 @@ contains
       use pepper_inc_ekqlimit
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      integer(ip)           cldscs ( cdscsz, 2 )
-      integer(ip)           col
-      integer(ip)           elts   ( 2 )
-      integer(ip)           hans   ( 2 )
-      integer(ip)           rel
-      integer(ip)           rows   ( 2 )
-      integer(ip)           sgdscs ( sdscsz, 2 )
+      integer(ip) :: cldscs ( cdscsz, 2 )
+      integer(ip) :: col
+      integer(ip) :: elts   ( 2 )
+      integer(ip) :: hans   ( 2 )
+      integer(ip) :: rel
+      integer(ip) :: rows   ( 2 )
+      integer(ip) :: sgdscs ( sdscsz, 2 )
 
 !
 !     The function value defaults to .FALSE.
@@ -18689,7 +18689,7 @@ contains
       use pepper_inc_ekqlimit
       integer(ip), parameter :: maxcol = 10
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     For each active constraint in the list, see whether the specified
@@ -18927,20 +18927,20 @@ contains
       use pepper_inc_ektype
       integer(ip), parameter :: lbpool = -5
 
-      integer(ip)           cldscs ( cdscsz, 2 )
-      integer(ip)           col
-      integer(ip)           colidx
-      integer(ip)           colptr ( 2 )
-      integer(ip)           dtype  ( 2 )
-      integer(ip)           elidxs ( 2 )
-      integer(ip)           hans   ( 2 )
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           rel
-      integer(ip)           rows   ( 2 )
-      integer(ip)           segs   ( 2 )
-      integer(ip)           sgdscs ( sdscsz, 2 )
-      integer(ip)           tabidx
+      integer(ip) :: cldscs ( cdscsz, 2 )
+      integer(ip) :: col
+      integer(ip) :: colidx
+      integer(ip) :: colptr ( 2 )
+      integer(ip) :: dtype  ( 2 )
+      integer(ip) :: elidxs ( 2 )
+      integer(ip) :: hans   ( 2 )
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: rel
+      integer(ip) :: rows   ( 2 )
+      integer(ip) :: segs   ( 2 )
+      integer(ip) :: sgdscs ( sdscsz, 2 )
+      integer(ip) :: tabidx
 
 !
 !     The function value defaults to .FALSE.
@@ -19283,19 +19283,19 @@ contains
       character(:), allocatable :: cval1  !! the left-hand string (PEPPER: SPICELIB's CHARACTER*(MAXSTR) CVAL(2))
       character(:), allocatable :: cval2  !! the right-hand string
 
-      integer(ip)           cldscs ( cdscsz, 2 )
-      integer(ip)           cmplen ( 2 )
-      integer(ip)           cvlen  ( 2 )
-      integer(ip)           elts   ( 2 )
-      integer(ip)           hans   ( 2 )
-      integer(ip)           i
-      integer(ip)           n
-      integer(ip)           rel
-      integer(ip)           rows   ( 2 )
-      integer(ip)           sgdscs ( sdscsz, 2 )
+      integer(ip) :: cldscs ( cdscsz, 2 )
+      integer(ip) :: cmplen ( 2 )
+      integer(ip) :: cvlen  ( 2 )
+      integer(ip) :: elts   ( 2 )
+      integer(ip) :: hans   ( 2 )
+      integer(ip) :: i
+      integer(ip) :: n
+      integer(ip) :: rel
+      integer(ip) :: rows   ( 2 )
+      integer(ip) :: sgdscs ( sdscsz, 2 )
 
-      logical               found
-      logical               null   ( 2 )
+      logical :: found
+      logical :: null   ( 2 )
 
 !
 !  Don't check RETURN.
@@ -19581,11 +19581,11 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      real(wp)              dnum
+      real(wp) :: dnum
 
-      integer(ip)           coltyp
-      integer(ip)           inum
-      integer(ip)           rec
+      integer(ip) :: coltyp
+      integer(ip) :: inum
+      integer(ip) :: rec
 
 !
 !     Initialize the function's return value.
@@ -19753,11 +19753,11 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      real(wp)              dnum
+      real(wp) :: dnum
 
-      integer(ip)           coltyp
-      integer(ip)           inum
-      integer(ip)           rec
+      integer(ip) :: coltyp
+      integer(ip) :: inum
+      integer(ip) :: rec
 
 !
 !     Initialize the function's return value.
@@ -20078,63 +20078,63 @@ contains
       character(1), allocatable :: nf ( : )  !! null flag of the primary order-by column's entry in each row
       integer(ip), allocatable :: ordvec ( : )  !! order vector of the rows, sorted in parallel with the data
       character(:), allocatable :: cbuf  !! a whole string of a fixed-count column (PEPPER)
-      character(inisub)     c1
-      character(inisub)     c2
-      real(wp)              d1
-      real(wp)              d2
-      integer(ip)           addrj
-      integer(ip)           addrjg
-      integer(ip)           cprime
-      integer(ip)           colptr
-      integer(ip)           cvlen
-      integer(ip)           dtype
-      integer(ip)           eltidx
-      integer(ip)           gap
-      integer(ip)           handle
-      integer(ip)           i1
-      integer(ip)           i2
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           jg
-      integer(ip)           nr
-      integer(ip)           nrloc
-      integer(ip)           nrows
-      integer(ip)           ntab
-      integer(ip)           prvbas
-      integer(ip)           row
-      integer(ip)           rj
-      integer(ip)           rjg
+      character(inisub) :: c1
+      character(inisub) :: c2
+      real(wp) :: d1
+      real(wp) :: d2
+      integer(ip) :: addrj
+      integer(ip) :: addrjg
+      integer(ip) :: cprime
+      integer(ip) :: colptr
+      integer(ip) :: cvlen
+      integer(ip) :: dtype
+      integer(ip) :: eltidx
+      integer(ip) :: gap
+      integer(ip) :: handle
+      integer(ip) :: i1
+      integer(ip) :: i2
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: jg
+      integer(ip) :: nr
+      integer(ip) :: nrloc
+      integer(ip) :: nrows
+      integer(ip) :: ntab
+      integer(ip) :: prvbas
+      integer(ip) :: row
+      integer(ip) :: rj
+      integer(ip) :: rjg
       integer(ip), allocatable :: rowvec ( : )
       integer(ip), allocatable :: rvecj ( : )
       integer(ip), allocatable :: rvecjg ( : )
-      integer(ip)           rvsize
-      integer(ip)           rwvbas
-      integer(ip)           seg
+      integer(ip) :: rvsize
+      integer(ip) :: rwvbas
+      integer(ip) :: seg
       integer(ip), allocatable :: segvec ( : )
-      integer(ip)           sgvbas
+      integer(ip) :: sgvbas
       integer(ip), allocatable :: svecj ( : )
       integer(ip), allocatable :: svecjg ( : )
-      integer(ip)           svsize
-      integer(ip)           tabloc
-      integer(ip)           tprime
-      logical               brute
-      logical               found
-      logical               jle
-      logical               n1
-      logical               n2
-      logical               nfj
-      logical               nfjg
-      logical               null
-      logical               trunc
-      logical               inteq
-      logical               dpeq
-      logical               chreq
-      logical               intge
-      logical               intle
-      logical               dpge
-      logical               dple
-      logical               chrge
-      logical               chrle
+      integer(ip) :: svsize
+      integer(ip) :: tabloc
+      integer(ip) :: tprime
+      logical :: brute
+      logical :: found
+      logical :: jle
+      logical :: n1
+      logical :: n2
+      logical :: nfj
+      logical :: nfjg
+      logical :: null
+      logical :: trunc
+      logical :: inteq
+      logical :: dpeq
+      logical :: chreq
+      logical :: intge
+      logical :: intle
+      logical :: dpge
+      logical :: dple
+      logical :: chrge
+      logical :: chrle
       inteq ( n1, n2, i1, i2 ) =            ( n1   .and.    n2  )  .or. &
                                     (       (.not. (n1 .or. n2) ) &
                                       .and. ( i1 == i2        )  )
@@ -20871,12 +20871,12 @@ contains
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           dtype
-      integer(ip)           itype
+      integer(ip) :: dtype
+      integer(ip) :: itype
 
-      logical               indexd
+      logical :: indexd
 
       if ( ctx%failed() ) return
 
@@ -21059,12 +21059,12 @@ contains
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           dtype
-      integer(ip)           itype
+      integer(ip) :: dtype
+      integer(ip) :: itype
 
-      logical               indexd
+      logical :: indexd
 
       if ( ctx%failed() ) return
 
@@ -21247,12 +21247,12 @@ contains
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           dtype
-      integer(ip)           itype
+      integer(ip) :: dtype
+      integer(ip) :: itype
 
-      logical               indexd
+      logical :: indexd
 
       if ( ctx%failed() ) return
 
@@ -21406,17 +21406,17 @@ contains
       use pepper_inc_ektype
       character(:), allocatable :: cval  !! the column entry (PEPPER: SPICELIB's CHARACTER*(MAXSTR))
 
-      real(wp)              dval
+      real(wp) :: dval
 
-      integer(ip)           cmplen
-      integer(ip)           cvlen
-      integer(ip)           dtype
-      integer(ip)           ival
-      integer(ip)           prvptr
-      integer(ip)           recno
+      integer(ip) :: cmplen
+      integer(ip) :: cvlen
+      integer(ip) :: dtype
+      integer(ip) :: ival
+      integer(ip) :: prvptr
+      integer(ip) :: recno
 
-      logical               found
-      logical               isnull
+      logical :: found
+      logical :: isnull
 
 !
 !     Standard SPICE error handling.
@@ -21642,15 +21642,15 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           dtype
-      integer(ip)           itype
-      integer(ip)           prvidx
-      integer(ip)           prvptr
-      integer(ip)           tree
+      integer(ip) :: dtype
+      integer(ip) :: itype
+      integer(ip) :: prvidx
+      integer(ip) :: prvptr
+      integer(ip) :: tree
 
-      logical               indexd
+      logical :: indexd
 
       if ( ctx%failed() ) return
 
@@ -21827,15 +21827,15 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           dtype
-      integer(ip)           itype
-      integer(ip)           prvidx
-      integer(ip)           prvptr
-      integer(ip)           tree
+      integer(ip) :: dtype
+      integer(ip) :: itype
+      integer(ip) :: prvidx
+      integer(ip) :: prvptr
+      integer(ip) :: tree
 
-      logical               indexd
+      logical :: indexd
 
       if ( ctx%failed() ) return
 
@@ -22008,15 +22008,15 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           dtype
-      integer(ip)           itype
-      integer(ip)           prvidx
-      integer(ip)           prvptr
-      integer(ip)           tree
+      integer(ip) :: dtype
+      integer(ip) :: itype
+      integer(ip) :: prvidx
+      integer(ip) :: prvptr
+      integer(ip) :: tree
 
-      logical               indexd
+      logical :: indexd
 
       if ( ctx%failed() ) return
 
@@ -22854,7 +22854,7 @@ contains
       integer(ip) :: rrvidx_1(1)  !! one-element copy of rrvidx (array argument)
       integer(ip) :: lrvidx_1(1)  !! one-element copy of lrvidx (array argument)
       integer(ip), parameter :: lbpool = -5
-      logical               return
+      logical :: return
       integer(ip), parameter :: equi = 1
       integer(ip), parameter :: noneq = 2
       integer(ip), parameter :: noluck = 3
@@ -23574,25 +23574,25 @@ contains
       use pepper_inc_ektype
       integer(ip), parameter :: lbcell = -5
 
-      integer(ip)           b
-      integer(ip)           best
-      integer(ip)           col
+      integer(ip) :: b
+      integer(ip) :: best
+      integer(ip) :: col
       integer(ip), allocatable :: conmap ( : )
-      integer(ip)           dtype
-      integer(ip)           e
-      integer(ip)           eltidx
-      integer(ip)           i
+      integer(ip) :: dtype
+      integer(ip) :: e
+      integer(ip) :: eltidx
+      integer(ip) :: i
       integer(ip), allocatable :: idxset ( : )
-      integer(ip)           j
-      integer(ip)           lastle
-      integer(ip)           lastlt
-      integer(ip)           maxptr
-      integer(ip)           minptr
-      integer(ip)           nmatch
+      integer(ip) :: j
+      integer(ip) :: lastle
+      integer(ip) :: lastlt
+      integer(ip) :: maxptr
+      integer(ip) :: minptr
+      integer(ip) :: nmatch
 
-      logical               elim
-      logical               fnd
-      logical               indexd
+      logical :: elim
+      logical :: fnd
+      logical :: indexd
 
 !
 !     Standard SPICE error handling.
@@ -24041,17 +24041,17 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-      integer(ip)           colidx
-      integer(ip)           datptr
-      integer(ip)           itype
-      integer(ip)           lastw
-      integer(ip)           mbase
-      integer(ip)           ncols
-      integer(ip)           nlinks
-      integer(ip)           p
-      integer(ip)           pbase
-      integer(ip)           ptrloc
-      integer(ip)           recno
+      integer(ip) :: colidx
+      integer(ip) :: datptr
+      integer(ip) :: itype
+      integer(ip) :: lastw
+      integer(ip) :: mbase
+      integer(ip) :: ncols
+      integer(ip) :: nlinks
+      integer(ip) :: p
+      integer(ip) :: pbase
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
 
 !
 !     Make sure the column exists.
@@ -24332,17 +24332,17 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-      integer(ip)           colidx
-      integer(ip)           datptr
-      integer(ip)           itype
-      integer(ip)           lastw
-      integer(ip)           mbase
-      integer(ip)           ncols
-      integer(ip)           nlinks
-      integer(ip)           p
-      integer(ip)           pbase
-      integer(ip)           ptrloc
-      integer(ip)           recno
+      integer(ip) :: colidx
+      integer(ip) :: datptr
+      integer(ip) :: itype
+      integer(ip) :: lastw
+      integer(ip) :: mbase
+      integer(ip) :: ncols
+      integer(ip) :: nlinks
+      integer(ip) :: p
+      integer(ip) :: pbase
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
 
 !
 !     Make sure the column exists.
@@ -24619,27 +24619,27 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      integer(ip)           colidx
-      integer(ip)           datptr
-      integer(ip)           itype
-      integer(ip)           lastw
-      integer(ip)           lnb
-      integer(ip)           mbase
-      integer(ip)           n
-      integer(ip)           ncols
-      integer(ip)           nlinks
-      integer(ip)           nwrite
-      integer(ip)           p
-      integer(ip)           p2
-      integer(ip)           pbase
-      integer(ip)           pcount
-      integer(ip)           pos
-      integer(ip)           prvbas
-      integer(ip)           ptrloc
-      integer(ip)           recno
-      integer(ip)           strlen
+      integer(ip) :: colidx
+      integer(ip) :: datptr
+      integer(ip) :: itype
+      integer(ip) :: lastw
+      integer(ip) :: lnb
+      integer(ip) :: mbase
+      integer(ip) :: n
+      integer(ip) :: ncols
+      integer(ip) :: nlinks
+      integer(ip) :: nwrite
+      integer(ip) :: p
+      integer(ip) :: p2
+      integer(ip) :: pbase
+      integer(ip) :: pcount
+      integer(ip) :: pos
+      integer(ip) :: prvbas
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
+      integer(ip) :: strlen
 
-      logical               fixlen
+      logical :: fixlen
 
 !
 !     Make sure the column exists.
@@ -24941,10 +24941,10 @@ contains
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      integer(ip)           idx
-      integer(ip)           idxtyp
-      integer(ip)           recno
-      integer(ip)           tree
+      integer(ip) :: idx
+      integer(ip) :: idxtyp
+      integer(ip) :: recno
+      integer(ip) :: tree
 
 !
 !     Standard SPICE error handling.
@@ -25220,30 +25220,30 @@ contains
       integer(ip) :: nt1_1(1)  !! one-element copy of nt1 (array argument)
       integer(ip), parameter :: lbpool = -5
 
-      integer(ip)           i
-      integer(ip)           offset
-      integer(ip)           nr1
-      integer(ip)           nr2
-      integer(ip)           nr3
-      integer(ip)           nresv
-      integer(ip)           nsv1
-      integer(ip)           nsv2
-      integer(ip)           nsv3
-      integer(ip)           nt1
-      integer(ip)           nt2
-      integer(ip)           nt3
-      integer(ip)           rb1
-      integer(ip)           rb2
-      integer(ip)           rb3
+      integer(ip) :: i
+      integer(ip) :: offset
+      integer(ip) :: nr1
+      integer(ip) :: nr2
+      integer(ip) :: nr3
+      integer(ip) :: nresv
+      integer(ip) :: nsv1
+      integer(ip) :: nsv2
+      integer(ip) :: nsv3
+      integer(ip) :: nt1
+      integer(ip) :: nt2
+      integer(ip) :: nt3
+      integer(ip) :: rb1
+      integer(ip) :: rb2
+      integer(ip) :: rb3
       integer(ip), allocatable :: rowvec ( : )
-      integer(ip)           s1
-      integer(ip)           s2
-      integer(ip)           s3
+      integer(ip) :: s1
+      integer(ip) :: s2
+      integer(ip) :: s3
       integer(ip), allocatable :: segvec ( : )
-      integer(ip)           sgvbas
-      integer(ip)           top
+      integer(ip) :: sgvbas
+      integer(ip) :: top
 
-      logical               found
+      logical :: found
 
 !
 !     For speed, we  We don't check
@@ -26233,11 +26233,11 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip)           coldsc ( cdscsz )
-      integer(ip)           class
-      integer(ip)           dtype
-      integer(ip)           recptr
-      integer(ip)           segdsc ( sdscsz )
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: class
+      integer(ip) :: dtype
+      integer(ip) :: recptr
+      integer(ip) :: segdsc ( sdscsz )
 
 !
 !     First step:  find the descriptor for the named segment.  Using
@@ -26953,11 +26953,11 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip)           coldsc ( cdscsz )
-      integer(ip)           class
-      integer(ip)           dtype
-      integer(ip)           recptr
-      integer(ip)           segdsc ( sdscsz )
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: class
+      integer(ip) :: dtype
+      integer(ip) :: recptr
+      integer(ip) :: segdsc ( sdscsz )
 
 !
 !     First step:  find the descriptor for the named segment.  Using
@@ -27679,11 +27679,11 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip)           coldsc ( cdscsz )
-      integer(ip)           class
-      integer(ip)           dtype
-      integer(ip)           recptr
-      integer(ip)           segdsc ( sdscsz )
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: class
+      integer(ip) :: dtype
+      integer(ip) :: recptr
+      integer(ip) :: segdsc ( sdscsz )
 
 !
 !     First step:  find the descriptor for the named segment.  Using
@@ -29779,7 +29779,7 @@ contains
       implicit none
       integer(ip), parameter :: mxclld = 500
       integer(ip), parameter :: lbcell = -5
-      logical               return
+      logical :: return
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: nil = 0
       integer(ip), parameter :: ntypes = 4
@@ -35271,13 +35271,13 @@ contains
       implicit none
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
-      integer(ip)           base
-      integer(ip)           datptr
-      integer(ip)           idxtyp
-      integer(ip)           nlinks
-      integer(ip)           p
-      integer(ip)           ptrloc
-      integer(ip)           recno
+      integer(ip) :: base
+      integer(ip) :: datptr
+      integer(ip) :: idxtyp
+      integer(ip) :: nlinks
+      integer(ip) :: p
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
 
 !
 !     Standard SPICE error handling.
@@ -35486,13 +35486,13 @@ contains
       implicit none
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
-      integer(ip)           base
-      integer(ip)           datptr
-      integer(ip)           idxtyp
-      integer(ip)           nlinks
-      integer(ip)           p
-      integer(ip)           ptrloc
-      integer(ip)           recno
+      integer(ip) :: base
+      integer(ip) :: datptr
+      integer(ip) :: idxtyp
+      integer(ip) :: nlinks
+      integer(ip) :: p
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
 
 !
 !     Standard SPICE error handling.
@@ -35708,16 +35708,16 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-      integer(ip)           base
-      integer(ip)           datptr
-      integer(ip)           idxtyp
-      integer(ip)           nchars
-      integer(ip)           next
-      integer(ip)           nlinks
-      integer(ip)           nseen
-      integer(ip)           p
-      integer(ip)           ptrloc
-      integer(ip)           recno
+      integer(ip) :: base
+      integer(ip) :: datptr
+      integer(ip) :: idxtyp
+      integer(ip) :: nchars
+      integer(ip) :: next
+      integer(ip) :: nlinks
+      integer(ip) :: nseen
+      integer(ip) :: p
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
 
 !
 !     Standard SPICE error handling.
@@ -35980,13 +35980,13 @@ contains
       implicit none
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
-      integer(ip)           datptr
-      integer(ip)           idxtyp
-      integer(ip)           nlinks
-      integer(ip)           p
-      integer(ip)           pbase
-      integer(ip)           ptrloc
-      integer(ip)           recno
+      integer(ip) :: datptr
+      integer(ip) :: idxtyp
+      integer(ip) :: nlinks
+      integer(ip) :: p
+      integer(ip) :: pbase
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
 
 !
 !     Standard SPICE error handling.
@@ -36238,13 +36238,13 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
-      integer(ip)           datptr
-      integer(ip)           idxtyp
-      integer(ip)           nlinks
-      integer(ip)           p
-      integer(ip)           pbase
-      integer(ip)           ptrloc
-      integer(ip)           recno
+      integer(ip) :: datptr
+      integer(ip) :: idxtyp
+      integer(ip) :: nlinks
+      integer(ip) :: p
+      integer(ip) :: pbase
+      integer(ip) :: ptrloc
+      integer(ip) :: recno
 
 !
 !     Standard SPICE error handling.
@@ -36521,22 +36521,22 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      character(cnamsz)     column
+      character(cnamsz) :: column
 
-      integer(ip)           base
-      integer(ip)           class
-      integer(ip)           coldsc ( cdscsz )
-      integer(ip)           dscbas
-      integer(ip)           i
-      integer(ip)           mbase
-      integer(ip)           mp
-      integer(ip)           ncols
-      integer(ip)           nlinks
-      integer(ip)           nrec
-      integer(ip)           p
-      integer(ip)           recptr
-      integer(ip)           segdsc ( sdscsz )
-      integer(ip)           unit
+      integer(ip) :: base
+      integer(ip) :: class
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: dscbas
+      integer(ip) :: i
+      integer(ip) :: mbase
+      integer(ip) :: mp
+      integer(ip) :: ncols
+      integer(ip) :: nlinks
+      integer(ip) :: nrec
+      integer(ip) :: p
+      integer(ip) :: recptr
+      integer(ip) :: segdsc ( sdscsz )
+      integer(ip) :: unit
 
 !
 !     Standard SPICE error handling.
@@ -36871,13 +36871,13 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip)           coldsc ( cdscsz )
-      integer(ip)           class
-      integer(ip)           dtype
-      integer(ip)           recptr
-      integer(ip)           segdsc ( sdscsz )
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: class
+      integer(ip) :: dtype
+      integer(ip) :: recptr
+      integer(ip) :: segdsc ( sdscsz )
 
-      logical               isshad
+      logical :: isshad
 
 !
 !     First step:  find the descriptor for the named segment.  Using
@@ -37127,13 +37127,13 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip)           coldsc ( cdscsz )
-      integer(ip)           class
-      integer(ip)           dtype
-      integer(ip)           recptr
-      integer(ip)           segdsc ( sdscsz )
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: class
+      integer(ip) :: dtype
+      integer(ip) :: recptr
+      integer(ip) :: segdsc ( sdscsz )
 
-      logical               isshad
+      logical :: isshad
 
 !
 !     First step:  find the descriptor for the named segment.  Using
@@ -37373,8 +37373,8 @@ contains
 !
 !     Local variables.
 !
-      logical               found
-      logical               null
+      logical :: found
+      logical :: null
 
 !
 !     Standard SPICE error handling.
@@ -37591,8 +37591,8 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      logical               istyp1
-      character(256)        errmsg
+      logical :: istyp1
+      character(256) :: errmsg
 
 !
 !     Standard SPICE error handling.
@@ -37769,25 +37769,25 @@ contains
       use pepper_inc_ekquery
       integer(ip), parameter :: lbcell = -5
 
-      character(cnamsz)     column
-      character(1)          ctouch
+      character(cnamsz) :: column
+      character(1) :: ctouch
 
-      integer(ip)           attdsc ( adscsz )
-      integer(ip)           cb
-      integer(ip)           cc
-      integer(ip)           ce
-      integer(ip)           colidx
-      integer(ip)           i
-      integer(ip)           iparse
-      integer(ip)           j
-      integer(ip)           lxb ( 2 )
-      integer(ip)           nmatch
-      integer(ip)           tabidx
-      integer(ip)           tb
-      integer(ip)           te
+      integer(ip) :: attdsc ( adscsz )
+      integer(ip) :: cb
+      integer(ip) :: cc
+      integer(ip) :: ce
+      integer(ip) :: colidx
+      integer(ip) :: i
+      integer(ip) :: iparse
+      integer(ip) :: j
+      integer(ip) :: lxb ( 2 )
+      integer(ip) :: nmatch
+      integer(ip) :: tabidx
+      integer(ip) :: tb
+      integer(ip) :: te
 
-      logical               fnd
-      logical               noname
+      logical :: fnd
+      logical :: noname
 
 !
 !     No error to start with.
@@ -38113,30 +38113,30 @@ contains
       integer(ip), parameter :: long = 160
 
       character(tnamsz), allocatable :: alslst ( : )
-      character(long)       chrbuf
+      character(long) :: chrbuf
       character(tnamsz), allocatable :: tablst ( : )
-      character(cnamsz)     tmpcol
-      character(tnamsz)     tmptab
+      character(cnamsz) :: tmpcol
+      character(tnamsz) :: tmptab
 
-      real(wp)              numvls ( 3 )
+      real(wp) :: numvls ( 3 )
 
-      integer(ip)           attdsc ( adscsz )
-      integer(ip)           cc
-      integer(ip)           chbegs ( 3 )
-      integer(ip)           chends ( 3 )
-      integer(ip)           i
-      integer(ip)           icheck
-      integer(ip)           j
-      integer(ip)           lxbegs ( 3 )
-      integer(ip)           lxends ( 3 )
-      integer(ip)           nmatch
-      integer(ip)           ntab
-      integer(ip)           ntoken
-      integer(ip)           tokens ( 3 )
-      integer(ip)           values ( 3 )
+      integer(ip) :: attdsc ( adscsz )
+      integer(ip) :: cc
+      integer(ip) :: chbegs ( 3 )
+      integer(ip) :: chends ( 3 )
+      integer(ip) :: i
+      integer(ip) :: icheck
+      integer(ip) :: j
+      integer(ip) :: lxbegs ( 3 )
+      integer(ip) :: lxends ( 3 )
+      integer(ip) :: nmatch
+      integer(ip) :: ntab
+      integer(ip) :: ntoken
+      integer(ip) :: tokens ( 3 )
+      integer(ip) :: values ( 3 )
 
-      logical               fnd
-      logical               qual
+      logical :: fnd
+      logical :: qual
 
       error   =  .false.
       errmsg  = ' '
@@ -38521,32 +38521,32 @@ contains
       use pepper_inc_ektype
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: short = 32
-      character(tnamsz)     alias
-      character(cnamsz)     colnam
-      character(tnamsz)     lhstab
-      character(tnamsz)     ordtab
-      character(tnamsz)     rhstab
-      integer(ip)           attdsc ( adscsz )
-      integer(ip)           base
-      integer(ip)           cnstyp
-      integer(ip)           colidx
-      integer(ip)           i
-      integer(ip)           irsolv
-      integer(ip)           lhssiz
-      integer(ip)           lhstyp
-      integer(ip)           lxb    ( 2 )
-      integer(ip)           lxe    ( 2 )
-      integer(ip)           ncnj
-      integer(ip)           ncns
-      integer(ip)           nord
-      integer(ip)           ntab
-      integer(ip)           opcode
-      integer(ip)           rhssiz
-      integer(ip)           rhstyp
-      integer(ip)           tabidx
-      integer(ip)           trsolv
-      logical               likeop
-      logical               nulval
+      character(tnamsz) :: alias
+      character(cnamsz) :: colnam
+      character(tnamsz) :: lhstab
+      character(tnamsz) :: ordtab
+      character(tnamsz) :: rhstab
+      integer(ip) :: attdsc ( adscsz )
+      integer(ip) :: base
+      integer(ip) :: cnstyp
+      integer(ip) :: colidx
+      integer(ip) :: i
+      integer(ip) :: irsolv
+      integer(ip) :: lhssiz
+      integer(ip) :: lhstyp
+      integer(ip) :: lxb    ( 2 )
+      integer(ip) :: lxe    ( 2 )
+      integer(ip) :: ncnj
+      integer(ip) :: ncns
+      integer(ip) :: nord
+      integer(ip) :: ntab
+      integer(ip) :: opcode
+      integer(ip) :: rhssiz
+      integer(ip) :: rhstyp
+      integer(ip) :: tabidx
+      integer(ip) :: trsolv
+      logical :: likeop
+      logical :: nulval
       if ( .not. allocated ( ctx%zzeksemc_state ) ) allocate ( ctx%zzeksemc_state )
       associate ( typstr => ctx%zzeksemc_state%typstr )
       error   =  .false.
@@ -38960,30 +38960,30 @@ contains
 
       integer(ip), parameter :: short = 32
 
-      character(tnamsz)     alias  ( 1 )
-      character(cnamsz)     colnam
-      character(tnamsz)     table  ( 1 )
-      character(short)      timstr
-      character(1)          touchc
+      character(tnamsz) :: alias  ( 1 )
+      character(cnamsz) :: colnam
+      character(tnamsz) :: table  ( 1 )
+      character(short) :: timstr
+      character(1) :: touchc
 
-      real(wp)              et
+      real(wp) :: et
 
-      integer(ip)           attdsc ( adscsz )
-      integer(ip)           base
-      integer(ip)           cnstyp
-      integer(ip)           colidx
-      integer(ip)           descr  ( eqvdsz )
-      integer(ip)           dtype
-      integer(ip)           i
-      integer(ip)           irsolv
-      integer(ip)           lxb
-      integer(ip)           lxe
-      integer(ip)           ncns
-      integer(ip)           ntab
-      integer(ip)           opcode
-      integer(ip)           sb
-      integer(ip)           se
-      integer(ip)           tabidx
+      integer(ip) :: attdsc ( adscsz )
+      integer(ip) :: base
+      integer(ip) :: cnstyp
+      integer(ip) :: colidx
+      integer(ip) :: descr  ( eqvdsz )
+      integer(ip) :: dtype
+      integer(ip) :: i
+      integer(ip) :: irsolv
+      integer(ip) :: lxb
+      integer(ip) :: lxe
+      integer(ip) :: ncns
+      integer(ip) :: ntab
+      integer(ip) :: opcode
+      integer(ip) :: sb
+      integer(ip) :: se
+      integer(ip) :: tabidx
 
 !
 !     No error to start with.
@@ -39613,13 +39613,13 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip)           coldsc ( cdscsz )
-      integer(ip)           class
-      integer(ip)           dtype
-      integer(ip)           recptr
-      integer(ip)           segdsc ( sdscsz )
+      integer(ip) :: coldsc ( cdscsz )
+      integer(ip) :: class
+      integer(ip) :: dtype
+      integer(ip) :: recptr
+      integer(ip) :: segdsc ( sdscsz )
 
-      logical               isshad
+      logical :: isshad
 
 !
 !     First step:  find the descriptor for the named segment.  Using
@@ -39834,25 +39834,25 @@ contains
       integer(ip), parameter :: short = 32
 
       character(tnamsz), allocatable :: alias ( : )
-      character(tnamsz)     ltable
+      character(tnamsz) :: ltable
       character(tnamsz), allocatable :: table ( : )
 
-      integer(ip)           base
+      integer(ip) :: base
       integer(ip), allocatable :: cc ( : )
-      integer(ip)           cnstyp
-      integer(ip)           i
-      integer(ip)           iparse
-      integer(ip)           j
-      integer(ip)           lxb
-      integer(ip)           lxe
-      integer(ip)           ncnj
-      integer(ip)           ncns
-      integer(ip)           nload
-      integer(ip)           nord
-      integer(ip)           nsel
-      integer(ip)           ntab
+      integer(ip) :: cnstyp
+      integer(ip) :: i
+      integer(ip) :: iparse
+      integer(ip) :: j
+      integer(ip) :: lxb
+      integer(ip) :: lxe
+      integer(ip) :: ncnj
+      integer(ip) :: ncns
+      integer(ip) :: nload
+      integer(ip) :: nord
+      integer(ip) :: nsel
+      integer(ip) :: ntab
 
-      logical               fnd
+      logical :: fnd
 
 !
 !     No error to start with.
@@ -40750,7 +40750,7 @@ contains
       implicit none
 
       integer(ip), parameter :: lbcell = -5
-      integer(ip)           room
+      integer(ip) :: room
 
 !
 !     Storage limits:
@@ -40766,10 +40766,10 @@ contains
       integer(ip), allocatable :: chbegs ( : )
       integer(ip), allocatable :: chends ( : )
       integer(ip), allocatable :: eqryi ( : )
-      integer(ip)           errptr
+      integer(ip) :: errptr
       integer(ip), allocatable :: lxbegs ( : )
       integer(ip), allocatable :: lxends ( : )
-      integer(ip)           ntoken
+      integer(ip) :: ntoken
       integer(ip), allocatable :: tokens ( : )
       integer(ip), allocatable :: values ( : )
 
@@ -40931,8 +40931,8 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_ektype
       integer(ip), parameter :: lbcell = -5
-      integer(ip)           room
-      integer(ip)           dsize
+      integer(ip) :: room
+      integer(ip) :: dsize
 
 !     Storage limits:
 !
@@ -40946,7 +40946,7 @@ contains
       integer(ip), allocatable :: chends ( : )
       integer(ip), allocatable :: lxbegs ( : )
       integer(ip), allocatable :: lxends ( : )
-      integer(ip)           ntoken
+      integer(ip) :: ntoken
       integer(ip), allocatable :: tokens ( : )
       integer(ip), allocatable :: values ( : )
 
@@ -41522,27 +41522,27 @@ contains
       implicit none
 
       integer(ip), parameter :: lbcell = -5
-      integer(ip)           room
+      integer(ip) :: room
 
       integer(ip), parameter :: ntypes = 4
 
       integer(ip), parameter :: short = 4
 
-      character(tnamsz)     aka
+      character(tnamsz) :: aka
       character(short), parameter :: chrtyp ( ntypes ) = &
          [ character(short) :: 'CHR', 'DP', 'INT', 'TIME' ]
-      character(cnamsz)     column
+      character(cnamsz) :: column
       character(:), allocatable :: eqryc
-      character(tnamsz)     qtab
+      character(tnamsz) :: qtab
 
       real(wp), allocatable :: eqryd ( : )
 
-      integer(ip)           attdsc ( adscsz )
-      integer(ip)           colidx
+      integer(ip) :: attdsc ( adscsz )
+      integer(ip) :: colidx
       integer(ip), allocatable :: eqryi ( : )
-      integer(ip)           errptr
-      integer(ip)           i
-      integer(ip)           tabidx
+      integer(ip) :: errptr
+      integer(ip) :: i
+      integer(ip) :: tabidx
 
 !
 !     Saved values
@@ -41794,17 +41794,17 @@ contains
 
       integer(ip), parameter :: qrylen = 512
 
-      character(errlen)     errmsg
-      character(qrylen)     query
-      character(qrylen)     qrytm1
-      character(qrylen)     qrytm2
+      character(errlen) :: errmsg
+      character(qrylen) :: query
+      character(qrylen) :: qrytm1
+      character(qrylen) :: qrytm2
 
-      real(wp)              ramin
-      real(wp)              ramax
-      real(wp)              decmin
-      real(wp)              decmax
+      real(wp) :: ramin
+      real(wp) :: ramax
+      real(wp) :: decmin
+      real(wp) :: decmax
 
-      logical               error
+      logical :: error
 
 !
 !     Standard SPICE error handling.

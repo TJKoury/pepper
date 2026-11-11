@@ -474,13 +474,13 @@ contains
       use pepper_strings, only: eqchr
       implicit none
 
-      character(1)          class
+      character(1) :: class
 
-      integer(ip)           dim
-      integer(ip)           ratio
+      integer(ip) :: dim
+      integer(ip) :: ratio
 
-      logical               ok
-      logical               found
+      logical :: ok
+      logical :: found
 
 !
 !     Until we know otherwise, we shall assume that we have
@@ -812,8 +812,8 @@ contains
 
       integer(ip), parameter :: msglen = 320
 
-      character(msglen)     errmsg
-      integer(ip)           ptr
+      character(msglen) :: errmsg
+      integer(ip) :: ptr
 
       call nparsi ( string, intval, errmsg, ptr )
 
@@ -995,12 +995,12 @@ contains
       use pepper_strings, only: ucase
       implicit none
 
-      character(16)    inu
-      character(16)    outu
+      character(16) :: inu
+      character(16) :: outu
 
-      integer(ip)      i
-      integer(ip)      j
-      real(wp) temp
+      integer(ip) :: i
+      integer(ip) :: j
+      real(wp) :: temp
 
       real(wp), parameter :: secpjy = 86400.0_wp * 365.25_wp
 
@@ -1477,18 +1477,18 @@ contains
 
       integer(ip), parameter :: lnsize = 80
 
-      character(lnsize)     error
+      character(lnsize) :: error
 
-      integer(ip)           need
-      integer(ip)           length
-      integer(ip)           signat
-      integer(ip)           unsat
-      integer(ip)           unsto
-      integer(ip)           nchar
-      integer(ip)           ptr
+      integer(ip) :: need
+      integer(ip) :: length
+      integer(ip) :: signat
+      integer(ip) :: unsat
+      integer(ip) :: unsto
+      integer(ip) :: nchar
+      integer(ip) :: ptr
 
-      real(wp)              sign
-      real(wp)              x
+      real(wp) :: sign
+      real(wp) :: x
 
 !
 !     This is a special purpose routine.  The input string must have
@@ -2231,29 +2231,29 @@ contains
 
       integer(ip), parameter :: wdsize = 32
 
-      character(1)          fill
-      character(1)          sign
-      character(wdsize)     mystr
+      character(1) :: fill
+      character(1) :: sign
+      character(wdsize) :: mystr
 
-      real(wp)              y
+      real(wp) :: y
 
-      integer(ip)           declen
-      integer(ip)           dpat
-      integer(ip)           exp
-      integer(ip)           expsiz
-      integer(ip)           frstch
-      integer(ip)           i
-      integer(ip)           intlen
-      integer(ip)           lastch
-      integer(ip)           firstb
-      integer(ip)           sgnlen
-      integer(ip)           sigdig
-      integer(ip)           sprsiz
-      integer(ip)           start
+      integer(ip) :: declen
+      integer(ip) :: dpat
+      integer(ip) :: exp
+      integer(ip) :: expsiz
+      integer(ip) :: frstch
+      integer(ip) :: i
+      integer(ip) :: intlen
+      integer(ip) :: lastch
+      integer(ip) :: firstb
+      integer(ip) :: sgnlen
+      integer(ip) :: sigdig
+      integer(ip) :: sprsiz
+      integer(ip) :: start
 
-      logical               needsn
-      logical               ovflow
-      logical               shift
+      logical :: needsn
+      logical :: ovflow
+      logical :: shift
 
 !
 !     Determine where the picture ends.
@@ -2774,17 +2774,17 @@ contains
       use pepper_strings, only: dpstr
       implicit none
 
-      real(wp)              y
+      real(wp) :: y
 
-      integer(ip)           exp
-      integer(ip)           first
-      integer(ip)           last
-      integer(ip)           lastch
-      integer(ip)           maxdig
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: exp
+      integer(ip) :: first
+      integer(ip) :: last
+      integer(ip) :: lastch
+      integer(ip) :: maxdig
+      integer(ip) :: i
+      integer(ip) :: j
 
-      logical               ovflow
+      logical :: ovflow
 
       maxdig = min ( 14, max(1,sigdig)       )
 
@@ -3170,17 +3170,17 @@ contains
 
       integer(ip), parameter :: maxlfd = 56
 
-      character(1)          gdfmt
-      character(maxlfd)     substr
+      character(1) :: gdfmt
+      character(maxlfd) :: substr
 
-      integer(ip)           mrknbf
-      integer(ip)           mrknbl
+      integer(ip) :: mrknbf
+      integer(ip) :: mrknbl
 
-      integer(ip)           mrkpsb
-      integer(ip)           mrkpse
+      integer(ip) :: mrkpsb
+      integer(ip) :: mrkpse
 
-      integer(ip)           subnbf
-      integer(ip)           subnbl
+      integer(ip) :: subnbf
+      integer(ip) :: subnbl
 
 !
 !     If MARKER is blank, no substitution is possible.
@@ -3477,15 +3477,15 @@ contains
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlti
       implicit none
-      integer(ip)           divble
-      integer(ip)           gdoy
-      integer(ip)           gdp001
-      integer(ip)           gldays
-      integer(ip)           gydays
-      integer(ip)           jdoy
-      integer(ip)           jdp001
-      integer(ip)           jldays
-      integer(ip)           jydays
+      integer(ip) :: divble
+      integer(ip) :: gdoy
+      integer(ip) :: gdp001
+      integer(ip) :: gldays
+      integer(ip) :: gydays
+      integer(ip) :: jdoy
+      integer(ip) :: jdp001
+      integer(ip) :: jldays
+      integer(ip) :: jydays
       integer(ip), parameter :: dp400y = 365*400 + 97
       integer(ip), parameter :: dp100y = 365*100 + 24
       integer(ip), parameter :: dp4y = 365*4   + 1
@@ -3526,20 +3526,20 @@ contains
       integer(ip), parameter :: octl0 = oct0 + 1
       integer(ip), parameter :: novl0 = nov0 + 1
       integer(ip), parameter :: decl0 = dec0 + 1
-      integer(ip)           dayg
-      integer(ip)           dayj
-      integer(ip)           dofyr
-      integer(ip)           dy
-      integer(ip)           m
-      integer(ip)           m100
-      integer(ip)           m4
-      integer(ip)           m400
-      integer(ip)           mon
-      integer(ip)           offset
-      integer(ip)           tmpday
-      integer(ip)           tmpyr
-      integer(ip)           yr
-      integer(ip)           yroff
+      integer(ip) :: dayg
+      integer(ip) :: dayj
+      integer(ip) :: dofyr
+      integer(ip) :: dy
+      integer(ip) :: m
+      integer(ip) :: m100
+      integer(ip) :: m4
+      integer(ip) :: m400
+      integer(ip) :: mon
+      integer(ip) :: offset
+      integer(ip) :: tmpday
+      integer(ip) :: tmpyr
+      integer(ip) :: yr
+      integer(ip) :: yroff
       integer(ip), parameter :: extra  ( 12 ) = &
          [ 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
       integer(ip), parameter :: dpbegl ( 12 ) = &
@@ -3857,15 +3857,15 @@ contains
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlti
       implicit none
-      integer(ip)           divble
-      integer(ip)           gdoy
-      integer(ip)           gdp001
-      integer(ip)           gldays
-      integer(ip)           gydays
-      integer(ip)           jdoy
-      integer(ip)           jdp001
-      integer(ip)           jldays
-      integer(ip)           jydays
+      integer(ip) :: divble
+      integer(ip) :: gdoy
+      integer(ip) :: gdp001
+      integer(ip) :: gldays
+      integer(ip) :: gydays
+      integer(ip) :: jdoy
+      integer(ip) :: jdp001
+      integer(ip) :: jldays
+      integer(ip) :: jydays
       integer(ip), parameter :: dp400y = 365*400 + 97
       integer(ip), parameter :: dp100y = 365*100 + 24
       integer(ip), parameter :: dp4y = 365*4   + 1
@@ -3906,20 +3906,20 @@ contains
       integer(ip), parameter :: octl0 = oct0 + 1
       integer(ip), parameter :: novl0 = nov0 + 1
       integer(ip), parameter :: decl0 = dec0 + 1
-      integer(ip)           dayg
-      integer(ip)           dayj
-      integer(ip)           dofyr
-      integer(ip)           dy
-      integer(ip)           m
-      integer(ip)           m100
-      integer(ip)           m4
-      integer(ip)           m400
-      integer(ip)           mon
-      integer(ip)           offset
-      integer(ip)           tmpday
-      integer(ip)           tmpyr
-      integer(ip)           yr
-      integer(ip)           yroff
+      integer(ip) :: dayg
+      integer(ip) :: dayj
+      integer(ip) :: dofyr
+      integer(ip) :: dy
+      integer(ip) :: m
+      integer(ip) :: m100
+      integer(ip) :: m4
+      integer(ip) :: m400
+      integer(ip) :: mon
+      integer(ip) :: offset
+      integer(ip) :: tmpday
+      integer(ip) :: tmpyr
+      integer(ip) :: yr
+      integer(ip) :: yroff
       integer(ip), parameter :: extra  ( 12 ) = &
          [ 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
       integer(ip), parameter :: dpbegl ( 12 ) = &
@@ -4318,13 +4318,13 @@ contains
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
-      integer(ip)           day
-      integer(ip)           doy
-      integer(ip)           dp0001
-      integer(ip)           ldays
-      integer(ip)           month
-      integer(ip)           ydays
-      integer(ip)           year
+      integer(ip) :: day
+      integer(ip) :: doy
+      integer(ip) :: dp0001
+      integer(ip) :: ldays
+      integer(ip) :: month
+      integer(ip) :: ydays
+      integer(ip) :: year
       integer(ip), parameter :: extra  ( 12 ) = &
          [ 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
       integer(ip), parameter :: dpbegl ( 12 ) = &
@@ -5161,12 +5161,12 @@ contains
       use pepper_containers, only: grow
       implicit none
       integer(ip), parameter :: mxcomp = 10
-      integer(ip)           divble
-      integer(ip)           doy
-      integer(ip)           dp0001
-      integer(ip)           ldays
-      integer(ip)           ydays
-      real(wp)              hmssec
+      integer(ip) :: divble
+      integer(ip) :: doy
+      integer(ip) :: dp0001
+      integer(ip) :: ldays
+      integer(ip) :: ydays
+      real(wp) :: hmssec
       integer(ip), parameter :: dp400y = 365*400 + 97
       integer(ip), parameter :: dp100y = 365*100 + 24
       integer(ip), parameter :: dp4y = 365*4   + 1
@@ -5234,13 +5234,13 @@ contains
       logical, parameter :: yes = .true.
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: typlen = 8
-      real(wp)              hours
-      real(wp)              mins
-      real(wp)              secs
-      integer(ip)           day
-      integer(ip)           i
-      integer(ip)           month
-      integer(ip)           year
+      real(wp) :: hours
+      real(wp) :: mins
+      real(wp) :: secs
+      integer(ip) :: day
+      integer(ip) :: i
+      integer(ip) :: month
+      integer(ip) :: year
       integer(ip), parameter :: extra  ( 12 ) = &
          [ 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
       integer(ip), parameter :: dpbegl ( 12 ) = &
@@ -6879,20 +6879,20 @@ contains
       integer(ip), parameter :: ntdb = 4
       integer(ip), parameter :: nrecog = ntdb + ntdt
       real(wp), parameter :: gpstai = 19.0_wp
-      character(typlen)     myin
-      character(typlen)     myout
-      character(typlen)     types  ( lbcell : 2         )
-      real(wp)              mytime
-      real(wp)              tdb
-      real(wp)              tdt
-      integer(ip)           i
-      integer(ip)           n
-      logical               found    ( needed )
-      logical               intdb
-      logical               intdt
-      logical               outtdb
-      logical               outtdt
-      logical               update
+      character(typlen) :: myin
+      character(typlen) :: myout
+      character(typlen) :: types  ( lbcell : 2         )
+      real(wp) :: mytime
+      real(wp) :: tdb
+      real(wp) :: tdt
+      integer(ip) :: i
+      integer(ip) :: n
+      logical :: found    ( needed )
+      logical :: intdb
+      logical :: intdt
+      logical :: outtdb
+      logical :: outtdt
+      logical :: update
       if ( .not. allocated ( ctx%unitim_state ) ) allocate ( ctx%unitim_state )
       associate ( bslash => ctx%unitim_state%bslash, &
                   dta => ctx%unitim_state%dta, &
@@ -8773,10 +8773,10 @@ contains
       character(corlen), parameter :: corlst ( nabcor ) = [ character(corlen) :: &
          'CN', 'CN+S', 'LT', 'LT+S', 'NONE', 'RL', 'RL+S', 'S',&
          'XCN', 'XCN+S', 'XLT', 'XLT+S', 'XRL', 'XRL+S', 'XS' ]
-      character(corlen)     tmpcor
+      character(corlen) :: tmpcor
 
-      integer(ip)           i
-      integer(ip)           loc
+      integer(ip) :: i
+      integer(ip) :: loc
 
       logical, parameter :: conv ( nabcor ) = [ &
          .true., .true., .false., .false., .false., .false., .false., .false.,&
@@ -9136,7 +9136,7 @@ contains
       use pepper_kinds, only: wp
       use pepper_inc_zzabcorr
       implicit none
-      logical               corblk ( abatsz )
+      logical :: corblk ( abatsz )
 
       if ( ctx%failed() ) return
 

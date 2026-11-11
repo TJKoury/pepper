@@ -4464,12 +4464,12 @@ contains
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: sizidx = 0
       integer(ip), parameter :: freidx = -1
-      logical               return
-      integer(ip)           i
-      integer(ip)           lookat
-      integer(ip)           node
-      logical               full
-      logical               lfound
+      logical :: return
+      integer(ip) :: i
+      integer(ip) :: lookat
+      integer(ip) :: node
+      logical :: full
+      logical :: lfound
       if ( hashsz > 0 ) then
 
 !
@@ -4577,11 +4577,11 @@ contains
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: sizidx = 0
       integer(ip), parameter :: freidx = -1
-      integer(ip)           i
-      integer(ip)           lookat
-      integer(ip)           node
-      logical               full
-      logical               lfound
+      integer(ip) :: i
+      integer(ip) :: lookat
+      integer(ip) :: node
+      logical :: full
+      logical :: lfound
       if ( ctx%failed() ) return
 
 !
@@ -4791,11 +4791,11 @@ contains
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: sizidx = 0
       integer(ip), parameter :: freidx = -1
-      integer(ip)           i
-      integer(ip)           lookat
-      integer(ip)           node
-      logical               full
-      logical               lfound
+      integer(ip) :: i
+      integer(ip) :: lookat
+      integer(ip) :: node
+      logical :: full
+      logical :: lfound
       if ( ctx%failed() ) return
 
 !
@@ -4903,12 +4903,12 @@ contains
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: sizidx = 0
       integer(ip), parameter :: freidx = -1
-      logical               return
-      integer(ip)           i
-      integer(ip)           lookat
-      integer(ip)           node
-      logical               full
-      logical               lfound
+      logical :: return
+      integer(ip) :: i
+      integer(ip) :: lookat
+      integer(ip) :: node
+      logical :: full
+      logical :: lfound
       avail = collst ( sizidx ) - collst ( freidx ) + 1
 
       return
@@ -4986,12 +4986,12 @@ contains
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: sizidx = 0
       integer(ip), parameter :: freidx = -1
-      logical               return
-      integer(ip)           i
-      integer(ip)           lookat
-      integer(ip)           node
-      logical               full
-      logical               lfound
+      logical :: return
+      integer(ip) :: i
+      integer(ip) :: lookat
+      integer(ip) :: node
+      logical :: full
+      logical :: lfound
       if      ( item == 'HASH SIZE' ) then
 
          avail = collst ( sizidx )
@@ -5141,12 +5141,12 @@ contains
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: sizidx = 0
       integer(ip), parameter :: freidx = -1
-      logical               return
-      integer(ip)           i
-      integer(ip)           lookat
-      integer(ip)           node
-      logical               full
-      logical               lfound
+      logical :: return
+      integer(ip) :: i
+      integer(ip) :: lookat
+      integer(ip) :: node
+      logical :: full
+      logical :: lfound
       if ( hashsz > 0 ) then
 !
 !        Wipe out head node pointer list.
@@ -5249,11 +5249,11 @@ contains
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: sizidx = 0
       integer(ip), parameter :: freidx = -1
-      integer(ip)           i
-      integer(ip)           lookat
-      integer(ip)           node
-      logical               full
-      logical               lfound
+      integer(ip) :: i
+      integer(ip) :: lookat
+      integer(ip) :: node
+      logical :: full
+      logical :: lfound
       if ( ctx%failed() ) return
 
 !
@@ -5477,11 +5477,11 @@ contains
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: sizidx = 0
       integer(ip), parameter :: freidx = -1
-      integer(ip)           i
-      integer(ip)           lookat
-      integer(ip)           node
-      logical               full
-      logical               lfound
+      integer(ip) :: i
+      integer(ip) :: lookat
+      integer(ip) :: node
+      logical :: full
+      logical :: lfound
       if ( ctx%failed() ) return
 
 !
@@ -5596,12 +5596,12 @@ contains
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: sizidx = 0
       integer(ip), parameter :: freidx = -1
-      logical               return
-      integer(ip)           i
-      integer(ip)           lookat
-      integer(ip)           node
-      logical               full
-      logical               lfound
+      logical :: return
+      integer(ip) :: i
+      integer(ip) :: lookat
+      integer(ip) :: node
+      logical :: full
+      logical :: lfound
       avail = collst ( sizidx ) - collst ( freidx ) + 1
 
       return
@@ -5677,12 +5677,12 @@ contains
       integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: sizidx = 0
       integer(ip), parameter :: freidx = -1
-      logical               return
-      integer(ip)           i
-      integer(ip)           lookat
-      integer(ip)           node
-      logical               full
-      logical               lfound
+      logical :: return
+      integer(ip) :: i
+      integer(ip) :: lookat
+      integer(ip) :: node
+      logical :: full
+      logical :: lfound
       if      ( param == 'HASH SIZE' ) then
 
          avail = collst ( sizidx )
@@ -5939,10 +5939,10 @@ contains
 
       integer(ip), parameter :: lbpool = -5
 
-      integer(ip)           i
-      integer(ip)           item
+      integer(ip) :: i
+      integer(ip) :: item
 
-      logical               new
+      logical :: new
 
 !
 !     Consistency check.
@@ -6035,13 +6035,13 @@ contains
       integer(ip), parameter :: keylen = 32
       character(keylen), parameter :: nbc = 'NAIF_BODY_CODE'
       character(keylen), parameter :: nbn = 'NAIF_BODY_NAME'
-      character(1)          type ( 2 )
-      integer(ip)           i
-      integer(ip)           iname
-      integer(ip)           nsiz ( 2 )
-      integer(ip)           num
-      logical               found
-      logical               plfind ( 2 )
+      character(1) :: type ( 2 )
+      integer(ip) :: i
+      integer(ip) :: iname
+      integer(ip) :: nsiz ( 2 )
+      integer(ip) :: num
+      logical :: found
+      logical :: plfind ( 2 )
 !
 !     PEPPER: the names are taken whole from the kernel pool (SPICELIB
 !     read them with GCPOOL into MAXL-character strings), and there is
@@ -8802,8 +8802,8 @@ contains
 
       integer(ip), parameter :: msglen = 1
 
-      character(msglen)     errmsg
-      integer(ip)           ptr
+      character(msglen) :: errmsg
+      integer(ip) :: ptr
 
 !
 !     Standard SPICELIB error handling.
@@ -9025,7 +9025,7 @@ contains
       use pepper_strings, only: intstr
       implicit none
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICELIB error handling.
@@ -9412,13 +9412,13 @@ contains
 
       integer(ip), parameter :: numlen = 16
 
-      character(1)          dtype
-      character(numlen)     code
-      character(vnmlen)     varnam
+      character(1) :: dtype
+      character(numlen) :: code
+      character(vnmlen) :: varnam
 
-      integer(ip)           n
+      integer(ip) :: n
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -9663,7 +9663,7 @@ contains
 !
 !     Local variables.
 !
-      logical               update
+      logical :: update
 
 !
 !     Standard SPICE error handling.
@@ -9964,7 +9964,7 @@ contains
       use pepper_inc_zzctr
       implicit none
 
-      logical               update
+      logical :: update
 
       if ( ctx%failed() ) return
 
@@ -10168,9 +10168,9 @@ contains
       use pepper_strings, only: intstr, suffix
       implicit none
 
-      character(16)         code
-      character(32)         varnam
-      logical               found
+      character(16) :: code
+      character(32) :: varnam
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -10440,11 +10440,11 @@ contains
 
       integer(ip), parameter :: namlen = 32
 
-      character(cdelen)     code
-      character(1)          type
-      character(namlen)     varnam
+      character(cdelen) :: code
+      character(1) :: type
+      character(namlen) :: varnam
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling.
@@ -10818,11 +10818,11 @@ contains
       integer(ip), parameter :: cdelen = 16
       integer(ip), parameter :: namlen = 32
       integer(ip), parameter :: maxl = 36
-      character(cdelen)     code
-      character(1)          type
-      character(namlen)     varnam
-      integer(ip)           bodyid
-      logical               found
+      character(cdelen) :: code
+      character(1) :: type
+      character(namlen) :: varnam
+      integer(ip) :: bodyid
+      logical :: found
       if ( .not. allocated ( ctx%bodvrd_cache ) ) allocate ( ctx%bodvrd_cache )
       associate ( svctr1 => ctx%bodvrd_cache%svctr1, &
                   svbdnm => ctx%bodvrd_cache%svbdnm, &

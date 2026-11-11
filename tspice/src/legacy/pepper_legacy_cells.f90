@@ -33,7 +33,7 @@
       implicit none
       integer(ip) :: number  !! Number to be encoded.
       character(*) :: string  !! Encoded string.
-      integer(ip) minlen
+      integer(ip) :: minlen
       parameter        ( minlen = 5 )
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -50,7 +50,7 @@
       implicit none
       integer(ip) :: number  !! Decoded number.
       character(*) :: string  !! Encoded character string.
-      integer(ip) minlen
+      integer(ip) :: minlen
       parameter        ( minlen = 5 )
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
@@ -83,7 +83,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       character(*) :: cell  ( lbcell:* )  !! Input cell.
       type(pepper_context), pointer :: ctx
@@ -100,7 +100,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: cell  ( lbcell:* )  !! Input cell.
       type(pepper_context), pointer :: ctx
@@ -116,7 +116,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: cell  ( lbcell:* )  !! Input cell.
       type(pepper_context), pointer :: ctx
@@ -132,7 +132,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       character(*) :: cell   ( lbcell:* )  !! Input cell.
       type(pepper_context), pointer :: ctx
@@ -149,7 +149,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: cell   ( lbcell:* )  !! Input cell.
       type(pepper_context), pointer :: ctx
@@ -165,7 +165,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: cell  ( lbcell: * )  !! Input cell.
       type(pepper_context), pointer :: ctx
@@ -181,7 +181,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: card  !! Cardinality of (number of elements in) the cell.
       character(*) :: cell   ( lbcell:* )  !! The cell.
@@ -198,7 +198,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: card  !! Cardinality of (number of elements in) the cell.
       real(wp) :: cell   ( lbcell:* )  !! The cell.
@@ -215,7 +215,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: card  !! Cardinality of (number of elements in) the cell.
       integer(ip) :: cell   ( lbcell:* )  !! The cell.
@@ -232,7 +232,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: size  !! Size (maximum cardinality) of the cell.
       character(*) :: cell   ( lbcell:* )  !! The cell.
@@ -249,7 +249,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: size  !! Size (maximum cardinality) of the cell.
       real(wp) :: cell   ( lbcell:* )  !! The cell.
@@ -266,7 +266,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: size  !! Size (maximum cardinality) of the cell.
       integer(ip) :: cell   ( lbcell:* )  !! The cell.
@@ -283,7 +283,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: size  !! Size (maximum cardinality) of the set.
       integer(ip) :: n  !! Initial no. of (possibly non-distinct) elements.
@@ -301,7 +301,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: size  !! Size (maximum cardinality) of the set.
       integer(ip) :: n  !! Initial no. of (possibly non-distinct) elements.
@@ -319,7 +319,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: size  !! Size (maximum cardinality) of the set.
       integer(ip) :: n  !! Initial no. of (possibly non-distinct) elements.
@@ -337,7 +337,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       character(*) :: item  !! The item to append.
       character(*) :: cell ( lbcell:* )  !! The cell to which ITEM will be appended.
@@ -354,7 +354,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: item  !! The item to append.
       real(wp) :: cell ( lbcell:* )  !! The cell to which ITEM will be appended.
@@ -371,7 +371,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: item  !! The item to append.
       integer(ip) :: cell ( lbcell:* )  !! The cell to which ITEM will be appended.
@@ -388,7 +388,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       character(*) :: cell     ( lbcell:* )  !! Cell to be copied.
       character(*) :: copy     ( lbcell:* )  !! New cell.
@@ -405,7 +405,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: cell     ( lbcell:* )  !! Cell to be copied.
       real(wp) :: copy     ( lbcell:* )  !! New cell.
@@ -422,7 +422,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: cell     ( lbcell:* )  !! Cell to be copied.
       integer(ip) :: copy     ( lbcell:* )  !! New cell.
@@ -439,7 +439,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       character(*) :: item  !! Item to be inserted.
       character(*) :: a        ( lbcell:* )  !! Insertion set.
@@ -456,7 +456,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: item  !! Item to be inserted.
       real(wp) :: a     ( lbcell:* )  !! Insertion set.
@@ -473,7 +473,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: item  !! Item to be inserted.
       integer(ip) :: a        ( lbcell:* )  !! Insertion set.
@@ -490,7 +490,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       character(*) :: item  !! Item to be removed.
       character(*) :: a       ( lbcell:* )  !! Removal set.
@@ -507,7 +507,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: item  !! Item to be removed.
       real(wp) :: a        ( lbcell:* )  !! Removal set.
@@ -524,7 +524,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: item  !! Item to be removed.
       integer(ip) :: a        ( lbcell:* )  !! Removal set.
@@ -541,7 +541,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       character(*) :: item  !! Item to be tested.
       character(*) :: a      ( lbcell:* )  !! Set to be tested.
@@ -559,7 +559,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter               ( lbcell = -5 )
       real(wp) :: item  !! Item to be tested.
       real(wp) :: a      ( lbcell:* )  !! Set to be tested.
@@ -576,7 +576,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter      ( lbcell = -5 )
       integer(ip) :: item  !! Item to be tested.
       integer(ip) :: a      ( lbcell:* )  !! Set to be tested.
@@ -594,7 +594,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = - 5 )
       character(*) :: item  !! An item to locate within a set.
       character(*) :: set ( lbcell:* )  !! A set to search for a given item.
@@ -612,7 +612,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = - 5 )
       real(wp) :: item  !! An item to locate within a set.
       real(wp) :: set ( lbcell:* )  !! A set to search for a given item.
@@ -630,7 +630,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = - 5 )
       integer(ip) :: item  !! An item to locate within a set.
       integer(ip) :: set ( lbcell:* )  !! A set to search for a given item.
@@ -647,7 +647,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter                ( lbcell = -5 )
       character(*) :: a      ( lbcell:* )  !! First set.
       character(*) :: op  !! Comparison operator.
@@ -666,7 +666,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter                ( lbcell = -5 )
       real(wp) :: a      ( lbcell:* )  !! First set.
       character(*) :: op  !! Comparison operator.
@@ -684,7 +684,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter                ( lbcell = -5 )
       integer(ip) :: a      ( lbcell:* )  !! First set.
       character(*) :: op  !! Comparison operator.
@@ -702,7 +702,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       character(*) :: a      ( lbcell:* )  !! First input set.
       character(*) :: b      ( lbcell:* )  !! Second input set.
@@ -721,7 +721,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: a      ( lbcell:* )  !! First input set.
       real(wp) :: b      ( lbcell:* )  !! Second input set.
@@ -739,7 +739,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: a      ( lbcell:* )  !! First input set.
       integer(ip) :: b      ( lbcell:* )  !! Second input set.
@@ -757,7 +757,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       character(*) :: a      ( lbcell:* )  !! First input set.
       character(*) :: b      ( lbcell:* )  !! Second input set.
@@ -775,7 +775,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: a      ( lbcell:* )  !! First input set.
       real(wp) :: b      ( lbcell:* )  !! Second input set.
@@ -793,7 +793,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: a      ( lbcell:* )  !! First input set.
       integer(ip) :: b      ( lbcell:* )  !! Second input set.
@@ -811,7 +811,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       character(*) :: a      ( lbcell:* )  !! First input set.
       character(*) :: b      ( lbcell:* )  !! Second input set.
@@ -830,7 +830,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: a      ( lbcell:* )  !! First input set.
       real(wp) :: b      ( lbcell:* )  !! Second input set.
@@ -848,7 +848,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: a      ( lbcell:* )  !! First input set.
       integer(ip) :: b      ( lbcell:* )  !! Second input set.
@@ -867,7 +867,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       character(*) :: a      ( lbcell:* )  !! First input set.
       character(*) :: b      ( lbcell:* )  !! Second input set.
@@ -886,7 +886,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: a      ( lbcell:* )  !! First input set.
       real(wp) :: b      ( lbcell:* )  !! Second input set.
@@ -905,7 +905,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: a      ( lbcell:* )  !! First input set.
       integer(ip) :: b      ( lbcell:* )  !! Second input set.
@@ -924,7 +924,7 @@
       use pepper_kinds, only: ip, wp
       use pepper_inc_errhnd
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter             ( lbcell = -5 )
       real(wp) :: left  !! Left, right endpoints of new interval.
       real(wp) :: right  !! Left, right endpoints of new interval.
@@ -944,7 +944,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: window  ( lbcell:* )  !! Input window.
       type(pepper_context), pointer :: ctx
@@ -961,7 +961,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: left  !! Left, right endpoints of complement interval.
       real(wp) :: right  !! Left, right endpoints of complement interval.
@@ -980,7 +980,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: left  !! Amount added to each left endpoint.
       real(wp) :: right  !! Amount subtracted from each right endpoint.
@@ -999,7 +999,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: a        ( lbcell:* )  !! Input windows.
       real(wp) :: b        ( lbcell:* )  !! Input windows.
@@ -1018,7 +1018,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: point  !! Input point.
       real(wp) :: window      ( lbcell:* )  !! Input window.
@@ -1035,7 +1035,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: left  !! Amount subtracted from each left endpoint.
       real(wp) :: right  !! Amount added to each right endpoint.
@@ -1054,7 +1054,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       character(1) :: side  !! Extract left ('L') or right ('R') endpoints.
       real(wp) :: window  ( lbcell:* )  !! Window to be extracted.
@@ -1071,7 +1071,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: window      ( lbcell:* )  !! Input window.
       integer(ip) :: n  !! Index of interval to be fetched.
@@ -1091,7 +1091,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: smlgap  !! Limiting measure of small gaps.
       real(wp) :: window  ( lbcell:* )  !! Window to be filled.
@@ -1108,7 +1108,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: smlint  !! Limiting measure of small intervals.
       real(wp) :: window  ( lbcell:* )  !! Window to be filtered.
@@ -1126,7 +1126,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: left  !! Input interval.
       real(wp) :: right  !! Input interval.
@@ -1144,7 +1144,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: left  !! Left, right endpoints of new interval.
       real(wp) :: right  !! Left, right endpoints of new interval.
@@ -1163,7 +1163,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: a        ( lbcell:* )  !! Input windows.
       real(wp) :: b        ( lbcell:* )  !! Input windows.
@@ -1181,7 +1181,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: a        ( lbcell:* )  !! First window.
       character(*) :: op  !! Comparison operator.
@@ -1201,7 +1201,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: window    ( lbcell:* )  !! Window to be summarized.
       real(wp) :: meas  !! Total measure of intervals in WINDOW.
@@ -1223,7 +1223,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       real(wp) :: a        ( lbcell:* )  !! Input windows.
       real(wp) :: b        ( lbcell:* )  !! Input windows.
@@ -1242,7 +1242,7 @@
       use pepper_legacy_context, only: legacy_context
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) lbcell
+      integer(ip) :: lbcell
       parameter           ( lbcell = -5 )
       integer(ip) :: size  !! Size of window.
       integer(ip) :: n  !! Original number of endpoints.

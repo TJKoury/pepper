@@ -510,13 +510,13 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              s
-      real(wp)              c
+      real(wp) :: s
+      real(wp) :: c
 
-      integer(ip)           temp
-      integer(ip)           i1
-      integer(ip)           i2
-      integer(ip)           i3
+      integer(ip) :: temp
+      integer(ip) :: i1
+      integer(ip) :: i2
+      integer(ip) :: i3
       integer(ip), parameter :: indexs ( 5 ) = &
          [ 3, 1, 2, 3, 1 ]
 
@@ -665,16 +665,16 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              s
-      real(wp)              c
+      real(wp) :: s
+      real(wp) :: c
 
-      integer(ip)           temp
-      integer(ip)           i1
-      integer(ip)           i2
-      integer(ip)           i3
-      integer(ip)           i
+      integer(ip) :: temp
+      integer(ip) :: i1
+      integer(ip) :: i2
+      integer(ip) :: i3
+      integer(ip) :: i
 
-      real(wp)              prodm   (3,3)
+      real(wp) :: prodm   (3,3)
 
       integer(ip), parameter :: indexs  (5) = &
          [ 3, 1, 2, 3, 1 ]
@@ -1298,17 +1298,17 @@ contains
 
       real(wp), parameter :: dtol = 0.1_wp
 
-      real(wp)              change ( 3, 3 )
-      real(wp)              sign
-      real(wp)              tmpmat ( 3, 3 )
-      real(wp)              tmprot ( 3, 3 )
+      real(wp) :: change ( 3, 3 )
+      real(wp) :: sign
+      real(wp) :: tmpmat ( 3, 3 )
+      real(wp) :: tmprot ( 3, 3 )
 
-      integer(ip)           c
-      integer(ip)           i
+      integer(ip) :: c
+      integer(ip) :: i
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
 
-      logical               degen
+      logical :: degen
 
 !
 !     Standard SPICE error handling.
@@ -2028,8 +2028,8 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      real(wp)              r1    ( 3, 3 )
-      logical               badax
+      real(wp) :: r1    ( 3, 3 )
+      logical :: badax
 
 !
 !     Standard SPICE error handling.
@@ -2491,30 +2491,30 @@ contains
       integer(ip), parameter :: dalpha = 4
       integer(ip), parameter :: dbeta = 5
       integer(ip), parameter :: dgamma = 6
-      real(wp)              ca
-      real(wp)              d
+      real(wp) :: ca
+      real(wp) :: d
       real(wp), parameter :: delta  ( 3, 3 ) = reshape ( &
          [ 0.0_wp, -1.0_wp, 1.0_wp, 1.0_wp, 0.0_wp, -1.0_wp, -1.0_wp, &
            1.0_wp, 0.0_wp ], [ 3, 3 ] )
-      real(wp)              domega ( 3 )
-      real(wp)              drdt   ( 3, 3 )
-      real(wp)              drdtrt ( 3, 3 )
-      real(wp)              locang ( 6 )
-      real(wp)              omega  ( 3 )
-      real(wp)              r      ( 3, 3 )
-      real(wp)              sa
-      real(wp)              solutn ( 3, 3 )
-      real(wp)              u
-      real(wp)              v
-      integer(ip)           a
-      integer(ip)           b
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           l
-      integer(ip)           locaxa
-      integer(ip)           locaxb
-      integer(ip)           locaxc
+      real(wp) :: domega ( 3 )
+      real(wp) :: drdt   ( 3, 3 )
+      real(wp) :: drdtrt ( 3, 3 )
+      real(wp) :: locang ( 6 )
+      real(wp) :: omega  ( 3 )
+      real(wp) :: r      ( 3, 3 )
+      real(wp) :: sa
+      real(wp) :: solutn ( 3, 3 )
+      real(wp) :: u
+      real(wp) :: v
+      integer(ip) :: a
+      integer(ip) :: b
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: l
+      integer(ip) :: locaxa
+      integer(ip) :: locaxb
+      integer(ip) :: locaxc
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       if ( ctx%failed() ) return
@@ -2985,30 +2985,30 @@ contains
       integer(ip), parameter :: dalpha = 4
       integer(ip), parameter :: dbeta = 5
       integer(ip), parameter :: dgamma = 6
-      real(wp)              ca
-      real(wp)              d
+      real(wp) :: ca
+      real(wp) :: d
       real(wp), parameter :: delta  ( 3, 3 ) = reshape ( &
          [ 0.0_wp, -1.0_wp, 1.0_wp, 1.0_wp, 0.0_wp, -1.0_wp, -1.0_wp, &
            1.0_wp, 0.0_wp ], [ 3, 3 ] )
-      real(wp)              domega ( 3 )
-      real(wp)              drdt   ( 3, 3 )
-      real(wp)              drdtrt ( 3, 3 )
-      real(wp)              locang ( 6 )
-      real(wp)              omega  ( 3 )
-      real(wp)              r      ( 3, 3 )
-      real(wp)              sa
-      real(wp)              solutn ( 3, 3 )
-      real(wp)              u
-      real(wp)              v
-      integer(ip)           a
-      integer(ip)           b
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           l
-      integer(ip)           locaxa
-      integer(ip)           locaxb
-      integer(ip)           locaxc
+      real(wp) :: domega ( 3 )
+      real(wp) :: drdt   ( 3, 3 )
+      real(wp) :: drdtrt ( 3, 3 )
+      real(wp) :: locang ( 6 )
+      real(wp) :: omega  ( 3 )
+      real(wp) :: r      ( 3, 3 )
+      real(wp) :: sa
+      real(wp) :: solutn ( 3, 3 )
+      real(wp) :: u
+      real(wp) :: v
+      integer(ip) :: a
+      integer(ip) :: b
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: l
+      integer(ip) :: locaxa
+      integer(ip) :: locaxb
+      integer(ip) :: locaxc
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       if ( ctx%failed() ) return
@@ -3307,11 +3307,11 @@ contains
       use pepper_math, only: ucrss, vhat
       implicit none
 
-      real(wp)              mtemp  ( 3, 3 )
+      real(wp) :: mtemp  ( 3, 3 )
 
-      integer(ip)           i1
-      integer(ip)           i2
-      integer(ip)           i3
+      integer(ip) :: i1
+      integer(ip) :: i2
+      integer(ip) :: i3
       integer(ip), parameter :: seqnce ( 5 ) = &
          [ 1, 2, 3, 1, 2 ]
 
@@ -3654,13 +3654,13 @@ contains
       module procedure zztwovxf
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ducrss, dvhat
-      real(wp)              tmpsta ( 6 )
+      real(wp) :: tmpsta ( 6 )
 
-      integer(ip)           i
-      integer(ip)           i1
-      integer(ip)           i2
-      integer(ip)           i3
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: i1
+      integer(ip) :: i2
+      integer(ip) :: i3
+      integer(ip) :: j
       integer(ip), parameter :: seqnce ( 5 ) = &
          [ 1, 2, 3, 1, 2 ]
 
@@ -4031,7 +4031,7 @@ contains
          '1152.71013777252 3  -1002.25042010533  2  1153.75719544491  3',&
          '1152.72061453864 3  -1002.25052830351  2  1153.74663857521  3',&
          '1153.03919093833, 3, -1002.24822382286, 2, 1153.42900222357, 3' ]
-      character(25)         error
+      character(25) :: error
       character(16), parameter :: frames ( maxf ) = [ character(16) :: &
          'J2000',&
          'B1950',&
@@ -4054,16 +4054,16 @@ contains
          'DE-140',&
          'DE-142',&
          'DE-143' ]
-      character(25)         word
-      real(wp)              angle
-      real(wp)              radang
-      real(wp)              tmpmat ( 3, 3    )
-      integer(ip)           axis
-      integer(ip)           b
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           loc
-      integer(ip)           p
+      character(25) :: word
+      real(wp) :: angle
+      real(wp) :: radang
+      real(wp) :: tmpmat ( 3, 3    )
+      integer(ip) :: axis
+      integer(ip) :: b
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: loc
+      integer(ip) :: p
       if ( .not. allocated ( ctx%chgirf_cache ) ) allocate ( ctx%chgirf_cache )
       associate ( ready => ctx%chgirf_cache%ready, &
                   trans => ctx%chgirf_cache%trans )
@@ -4365,7 +4365,7 @@ contains
          '1152.71013777252 3  -1002.25042010533  2  1153.75719544491  3',&
          '1152.72061453864 3  -1002.25052830351  2  1153.74663857521  3',&
          '1153.03919093833, 3, -1002.24822382286, 2, 1153.42900222357, 3' ]
-      character(25)         error
+      character(25) :: error
       character(16), parameter :: frames ( maxf ) = [ character(16) :: &
          'J2000',&
          'B1950',&
@@ -4388,16 +4388,16 @@ contains
          'DE-140',&
          'DE-142',&
          'DE-143' ]
-      character(25)         word
-      real(wp)              angle
-      real(wp)              radang
-      real(wp)              tmpmat ( 3, 3    )
-      integer(ip)           axis
-      integer(ip)           b
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           loc
-      integer(ip)           p
+      character(25) :: word
+      real(wp) :: angle
+      real(wp) :: radang
+      real(wp) :: tmpmat ( 3, 3    )
+      integer(ip) :: axis
+      integer(ip) :: b
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: loc
+      integer(ip) :: p
       if ( .not. allocated ( ctx%spice%chgirf_state ) ) allocate ( ctx%spice%chgirf_state )
       associate ( dframe => ctx%spice%chgirf_state%dframe )
       if ( ctx%failed() ) return
@@ -4629,7 +4629,7 @@ contains
          '1152.71013777252 3  -1002.25042010533  2  1153.75719544491  3',&
          '1152.72061453864 3  -1002.25052830351  2  1153.74663857521  3',&
          '1153.03919093833, 3, -1002.24822382286, 2, 1153.42900222357, 3' ]
-      character(25)         error
+      character(25) :: error
       character(16), parameter :: frames ( maxf ) = [ character(16) :: &
          'J2000',&
          'B1950',&
@@ -4652,16 +4652,16 @@ contains
          'DE-140',&
          'DE-142',&
          'DE-143' ]
-      character(25)         word
-      real(wp)              angle
-      real(wp)              radang
-      real(wp)              tmpmat ( 3, 3    )
-      integer(ip)           axis
-      integer(ip)           b
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           loc
-      integer(ip)           p
+      character(25) :: word
+      real(wp) :: angle
+      real(wp) :: radang
+      real(wp) :: tmpmat ( 3, 3    )
+      integer(ip) :: axis
+      integer(ip) :: b
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: loc
+      integer(ip) :: p
       if ( ctx%failed() ) return
 
       if ( index < 1  .or.  index > maxf ) then
@@ -4874,7 +4874,7 @@ contains
          '1152.71013777252 3  -1002.25042010533  2  1153.75719544491  3',&
          '1152.72061453864 3  -1002.25052830351  2  1153.74663857521  3',&
          '1153.03919093833, 3, -1002.24822382286, 2, 1153.42900222357, 3' ]
-      character(25)         error
+      character(25) :: error
       character(16), parameter :: frames ( maxf ) = [ character(16) :: &
          'J2000',&
          'B1950',&
@@ -4897,16 +4897,16 @@ contains
          'DE-140',&
          'DE-142',&
          'DE-143' ]
-      character(25)         word
-      real(wp)              angle
-      real(wp)              radang
-      real(wp)              tmpmat ( 3, 3    )
-      integer(ip)           axis
-      integer(ip)           b
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           loc
-      integer(ip)           p
+      character(25) :: word
+      real(wp) :: angle
+      real(wp) :: radang
+      real(wp) :: tmpmat ( 3, 3    )
+      integer(ip) :: axis
+      integer(ip) :: b
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: loc
+      integer(ip) :: p
       if ( .not. allocated ( ctx%spice%chgirf_state ) ) allocate ( ctx%spice%chgirf_state )
       associate ( dframe => ctx%spice%chgirf_state%dframe )
       if ( ctx%failed() ) return
@@ -5649,10 +5649,10 @@ contains
       module procedure zzenut80
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              dmob
-      real(wp)              dvnut  ( 4 )
-      real(wp)              eulang ( 6 )
-      real(wp)              mob
+      real(wp) :: dmob
+      real(wp) :: dvnut  ( 4 )
+      real(wp) :: eulang ( 6 )
+      real(wp) :: mob
 
       if ( ctx%failed() ) return
 
@@ -5844,17 +5844,17 @@ contains
 
       real(wp), parameter :: theta3 = -0.041833_wp
 
-      real(wp)              cent
-      real(wp)              dtheta
-      real(wp)              dz
-      real(wp)              dzeta
-      real(wp)              eulang ( 6 )
-      real(wp)              scale
-      real(wp)              t
-      real(wp)              theta
-      real(wp)              ts
-      real(wp)              z
-      real(wp)              zeta
+      real(wp) :: cent
+      real(wp) :: dtheta
+      real(wp) :: dz
+      real(wp) :: dzeta
+      real(wp) :: eulang ( 6 )
+      real(wp) :: scale
+      real(wp) :: t
+      real(wp) :: theta
+      real(wp) :: ts
+      real(wp) :: z
+      real(wp) :: zeta
 
 !
 !     No check-in required; this routine does not participate in
@@ -6008,16 +6008,16 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxv, unorm, vdot, vtmv
       implicit none
-      real(wp)              denom
-      real(wp)              dterm  ( 3 )
-      real(wp)              grad   ( 3 )
-      real(wp)              l
-      real(wp)              length
-      real(wp)              lprime
-      real(wp)              norml  ( 3 )
-      real(wp)              temp   ( 3 )
-      real(wp)              zenith ( 3 )
-      integer(ip)           i
+      real(wp) :: denom
+      real(wp) :: dterm  ( 3 )
+      real(wp) :: grad   ( 3 )
+      real(wp) :: l
+      real(wp) :: length
+      real(wp) :: lprime
+      real(wp) :: norml  ( 3 )
+      real(wp) :: temp   ( 3 )
+      real(wp) :: zenith ( 3 )
+      integer(ip) :: i
       if ( .not. allocated ( ctx%zzdnpt_state ) ) allocate ( ctx%zzdnpt_state )
       associate ( gradm => ctx%zzdnpt_state%gradm, &
                   m => ctx%zzdnpt_state%m )
@@ -6813,33 +6813,33 @@ contains
 !
       real(wp), parameter :: tdelta = 1.0_wp
 
-      real(wp)              c
-      real(wp)              dphi
-      real(wp)              dptmag
-      real(wp)              drhat  ( 3 )
-      real(wp)              dvp    ( 3 )
-      real(wp)              dvphat ( 3 )
-      real(wp)              eptarg ( 3 )
-      real(wp)              evobs  ( 3 )
-      real(wp)              lcacc  ( 3 )
-      real(wp)              lcvobs ( 3 )
-      real(wp)              ptarg  ( 3 )
-      real(wp)              ptgmag
-      real(wp)              rhat   ( 3 )
-      real(wp)              s
-      real(wp)              saoff  ( 3, 2 )
-      real(wp)              sgn
-      real(wp)              srhat  ( 6 )
-      real(wp)              svp    ( 6 )
-      real(wp)              svphat ( 6 )
-      real(wp)              term1  ( 3 )
-      real(wp)              term2  ( 3 )
-      real(wp)              term3  ( 3 )
-      real(wp)              vp     ( 3 )
-      real(wp)              vphat  ( 3 )
-      real(wp)              vtarg  ( 3 )
+      real(wp) :: c
+      real(wp) :: dphi
+      real(wp) :: dptmag
+      real(wp) :: drhat  ( 3 )
+      real(wp) :: dvp    ( 3 )
+      real(wp) :: dvphat ( 3 )
+      real(wp) :: eptarg ( 3 )
+      real(wp) :: evobs  ( 3 )
+      real(wp) :: lcacc  ( 3 )
+      real(wp) :: lcvobs ( 3 )
+      real(wp) :: ptarg  ( 3 )
+      real(wp) :: ptgmag
+      real(wp) :: rhat   ( 3 )
+      real(wp) :: s
+      real(wp) :: saoff  ( 3, 2 )
+      real(wp) :: sgn
+      real(wp) :: srhat  ( 6 )
+      real(wp) :: svp    ( 6 )
+      real(wp) :: svphat ( 6 )
+      real(wp) :: term1  ( 3 )
+      real(wp) :: term2  ( 3 )
+      real(wp) :: term3  ( 3 )
+      real(wp) :: vp     ( 3 )
+      real(wp) :: vphat  ( 3 )
+      real(wp) :: vtarg  ( 3 )
 
-      integer(ip)           i
+      integer(ip) :: i
 
       if ( ctx%failed() ) return
 

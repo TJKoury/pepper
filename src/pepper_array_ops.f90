@@ -115,19 +115,19 @@ contains
       use pepper_math, only: gcd
       implicit none
 
-      integer(ip)      outlen
-      integer(ip)      widest
+      integer(ip) :: outlen
+      integer(ip) :: widest
 
-      character(1)     last
-      character(1)     temp
+      character(1) :: last
+      character(1) :: temp
 
-      integer(ip)      c
-      integer(ip)      g
-      integer(ip)      i
-      integer(ip)      j
-      integer(ip)      k
-      integer(ip)      l
-      integer(ip)      m
+      integer(ip) :: c
+      integer(ip) :: g
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: l
+      integer(ip) :: m
 
 !
 !     Standard SPICE error handling.
@@ -346,15 +346,15 @@ contains
       use pepper_math, only: gcd
       implicit none
 
-      real(wp) last
-      real(wp) temp
+      real(wp) :: last
+      real(wp) :: temp
 
-      integer(ip)      g
-      integer(ip)      i
-      integer(ip)      j
-      integer(ip)      k
-      integer(ip)      l
-      integer(ip)      m
+      integer(ip) :: g
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: l
+      integer(ip) :: m
 
 !
 !     Standard SPICE error handling.
@@ -536,15 +536,15 @@ contains
       use pepper_math, only: gcd
       implicit none
 
-      integer(ip)      last
-      integer(ip)      temp
+      integer(ip) :: last
+      integer(ip) :: temp
 
-      integer(ip)      g
-      integer(ip)      i
-      integer(ip)      j
-      integer(ip)      k
-      integer(ip)      l
-      integer(ip)      m
+      integer(ip) :: g
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: l
+      integer(ip) :: m
 
 !
 !     Standard SPICE error handling.
@@ -757,20 +757,20 @@ contains
       use pepper_math, only: gcd
       implicit none
 
-      integer(ip)      outlen
-      integer(ip)      widest
-      integer(ip)      limit
+      integer(ip) :: outlen
+      integer(ip) :: widest
+      integer(ip) :: limit
 
-      character(1)     last
-      character(1)     temp
+      character(1) :: last
+      character(1) :: temp
 
-      integer(ip)      c
-      integer(ip)      g
-      integer(ip)      i
-      integer(ip)      j
-      integer(ip)      k
-      integer(ip)      l
-      integer(ip)      m
+      integer(ip) :: c
+      integer(ip) :: g
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: l
+      integer(ip) :: m
 
 !
 !     Standard SPICE error handling.
@@ -1019,15 +1019,15 @@ contains
       use pepper_math, only: gcd
       implicit none
 
-      real(wp) last
-      real(wp) temp
+      real(wp) :: last
+      real(wp) :: temp
 
-      integer(ip)      g
-      integer(ip)      i
-      integer(ip)      j
-      integer(ip)      k
-      integer(ip)      l
-      integer(ip)      m
+      integer(ip) :: g
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: l
+      integer(ip) :: m
 
 !
 !     Standard SPICE error handling.
@@ -1235,15 +1235,15 @@ contains
       use pepper_math, only: gcd
       implicit none
 
-      integer(ip)      last
-      integer(ip)      temp
+      integer(ip) :: last
+      integer(ip) :: temp
 
-      integer(ip)      g
-      integer(ip)      i
-      integer(ip)      j
-      integer(ip)      k
-      integer(ip)      l
-      integer(ip)      m
+      integer(ip) :: g
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: l
+      integer(ip) :: m
 
 !
 !     Standard SPICE error handling.
@@ -1459,10 +1459,10 @@ contains
 !
 !     Other functions
 !
-      integer(ip)      max
+      integer(ip) :: max
 
-      integer(ip)      size
-      integer(ip)      i
+      integer(ip) :: size
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -1653,10 +1653,10 @@ contains
 !
 !     Other functions
 !
-      integer(ip)      max
+      integer(ip) :: max
 
-      integer(ip)      size
-      integer(ip)      i
+      integer(ip) :: size
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -1847,10 +1847,10 @@ contains
 !
 !     Other functions
 !
-      integer(ip)      max
+      integer(ip) :: max
 
-      integer(ip)      size
-      integer(ip)      i
+      integer(ip) :: size
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -2036,7 +2036,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)      i
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -2221,7 +2221,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip)      i
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -2406,7 +2406,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)      i
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -2646,19 +2646,19 @@ contains
       use pepper_arrays, only: swapc
       implicit none
 
-      integer(ip)           nn
-      integer(ip)           ln
-      integer(ip)           nm
-      integer(ip)           lm
+      integer(ip) :: nn
+      integer(ip) :: ln
+      integer(ip) :: nm
+      integer(ip) :: lm
 
-      integer(ip)           direct
-      integer(ip)           extra
+      integer(ip) :: direct
+      integer(ip) :: extra
 
-      character(1)          dir
-      integer(ip)           begsub
-      integer(ip)           nsub
+      character(1) :: dir
+      integer(ip) :: begsub
+      integer(ip) :: nsub
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     We will assume that LOCN and N refer to the earlier group of
@@ -3032,19 +3032,19 @@ contains
       use pepper_arrays, only: swapd
       implicit none
 
-      integer(ip)           nn
-      integer(ip)           ln
-      integer(ip)           nm
-      integer(ip)           lm
+      integer(ip) :: nn
+      integer(ip) :: ln
+      integer(ip) :: nm
+      integer(ip) :: lm
 
-      integer(ip)           direct
-      integer(ip)           extra
+      integer(ip) :: direct
+      integer(ip) :: extra
 
-      character(1)          dir
-      integer(ip)           begsub
-      integer(ip)           nsub
+      character(1) :: dir
+      integer(ip) :: begsub
+      integer(ip) :: nsub
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     We will assume that LOCN and N refer to the earlier group of
@@ -3419,19 +3419,19 @@ contains
       use pepper_arrays, only: swapi
       implicit none
 
-      integer(ip)           nn
-      integer(ip)           ln
-      integer(ip)           nm
-      integer(ip)           lm
+      integer(ip) :: nn
+      integer(ip) :: ln
+      integer(ip) :: nm
+      integer(ip) :: lm
 
-      integer(ip)           direct
-      integer(ip)           extra
+      integer(ip) :: direct
+      integer(ip) :: extra
 
-      character(1)          dir
-      integer(ip)           begsub
-      integer(ip)           nsub
+      character(1) :: dir
+      integer(ip) :: begsub
+      integer(ip) :: nsub
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     We will assume that LOCN and N refer to the earlier group of
@@ -3754,7 +3754,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)      i
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -3927,7 +3927,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip)      i
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -4100,7 +4100,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)      i
+      integer(ip) :: i
 
 !
 !     Standard SPICE error handling.
@@ -4250,7 +4250,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           lbpool
+      integer(ip) :: lbpool
       parameter           ( lbpool = -5 )
 
 !
@@ -4267,22 +4267,22 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip)           sizrow
+      integer(ip) :: sizrow
       parameter           ( sizrow =   1 )
 
-      integer(ip)           sizcol
+      integer(ip) :: sizcol
       parameter           ( sizcol =   0 )
 
-      integer(ip)           nfrrow
+      integer(ip) :: nfrrow
       parameter           ( nfrrow =   2 )
 
-      integer(ip)           nfrcol
+      integer(ip) :: nfrcol
       parameter           ( nfrcol =   0 )
 
-      integer(ip)           frerow
+      integer(ip) :: frerow
       parameter           ( frerow =   1 )
 
-      integer(ip)           frecol
+      integer(ip) :: frecol
       parameter           ( frecol =  -1 )
 
 !
@@ -4297,10 +4297,10 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip)           forwrd
+      integer(ip) :: forwrd
       parameter           ( forwrd  = 1 )
 
-      integer(ip)           bckwrd
+      integer(ip) :: bckwrd
       parameter           ( bckwrd  = 2 )
 
 !
@@ -4308,7 +4308,7 @@ contains
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip)           free
+      integer(ip) :: free
       parameter           ( free   = 0 )
 
 !
@@ -4461,7 +4461,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           lbpool
+      integer(ip) :: lbpool
       parameter           ( lbpool = -5 )
 
 !
@@ -4478,22 +4478,22 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip)           sizrow
+      integer(ip) :: sizrow
       parameter           ( sizrow =   1 )
 
-      integer(ip)           sizcol
+      integer(ip) :: sizcol
       parameter           ( sizcol =   0 )
 
-      integer(ip)           nfrrow
+      integer(ip) :: nfrrow
       parameter           ( nfrrow =   2 )
 
-      integer(ip)           nfrcol
+      integer(ip) :: nfrcol
       parameter           ( nfrcol =   0 )
 
-      integer(ip)           frerow
+      integer(ip) :: frerow
       parameter           ( frerow =   1 )
 
-      integer(ip)           frecol
+      integer(ip) :: frecol
       parameter           ( frecol =  -1 )
 
 !
@@ -4508,10 +4508,10 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip)           forwrd
+      integer(ip) :: forwrd
       parameter           ( forwrd  = 1 )
 
-      integer(ip)           bckwrd
+      integer(ip) :: bckwrd
       parameter           ( bckwrd  = 2 )
 
 !
@@ -4519,13 +4519,13 @@ contains
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip)           free
+      integer(ip) :: free
       parameter           ( free   = 0 )
 
-      integer(ip)           count
-      integer(ip)           next
-      integer(ip)           node
-      integer(ip)           prev
+      integer(ip) :: count
+      integer(ip) :: next
+      integer(ip) :: node
+      integer(ip) :: prev
 
 !
 !     HEAD and TAIL must be valid node numbers.  These nodes
@@ -4801,7 +4801,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           lbpool
+      integer(ip) :: lbpool
       parameter           ( lbpool = -5 )
 
 !
@@ -4818,22 +4818,22 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip)           sizrow
+      integer(ip) :: sizrow
       parameter           ( sizrow =   1 )
 
-      integer(ip)           sizcol
+      integer(ip) :: sizcol
       parameter           ( sizcol =   0 )
 
-      integer(ip)           nfrrow
+      integer(ip) :: nfrrow
       parameter           ( nfrrow =   2 )
 
-      integer(ip)           nfrcol
+      integer(ip) :: nfrcol
       parameter           ( nfrcol =   0 )
 
-      integer(ip)           frerow
+      integer(ip) :: frerow
       parameter           ( frerow =   1 )
 
-      integer(ip)           frecol
+      integer(ip) :: frecol
       parameter           ( frecol =  -1 )
 
 !
@@ -4848,10 +4848,10 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip)           forwrd
+      integer(ip) :: forwrd
       parameter           ( forwrd  = 1 )
 
-      integer(ip)           bckwrd
+      integer(ip) :: bckwrd
       parameter           ( bckwrd  = 2 )
 
 !
@@ -4859,10 +4859,10 @@ contains
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip)           free
+      integer(ip) :: free
       parameter           ( free   = 0 )
 
-      integer(ip)           prev
+      integer(ip) :: prev
 
 !
 !     If the node is non-positive, we regard it as the nil node.
@@ -5061,7 +5061,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           lbpool
+      integer(ip) :: lbpool
       parameter           ( lbpool = -5 )
 
 !
@@ -5078,22 +5078,22 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip)           sizrow
+      integer(ip) :: sizrow
       parameter           ( sizrow =   1 )
 
-      integer(ip)           sizcol
+      integer(ip) :: sizcol
       parameter           ( sizcol =   0 )
 
-      integer(ip)           nfrrow
+      integer(ip) :: nfrrow
       parameter           ( nfrrow =   2 )
 
-      integer(ip)           nfrcol
+      integer(ip) :: nfrcol
       parameter           ( nfrcol =   0 )
 
-      integer(ip)           frerow
+      integer(ip) :: frerow
       parameter           ( frerow =   1 )
 
-      integer(ip)           frecol
+      integer(ip) :: frecol
       parameter           ( frecol =  -1 )
 
 !
@@ -5108,10 +5108,10 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip)           forwrd
+      integer(ip) :: forwrd
       parameter           ( forwrd  = 1 )
 
-      integer(ip)           bckwrd
+      integer(ip) :: bckwrd
       parameter           ( bckwrd  = 2 )
 
 !
@@ -5119,12 +5119,12 @@ contains
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip)           free
+      integer(ip) :: free
       parameter           ( free   = 0 )
 
-      integer(ip)           next
-      integer(ip)           head
-      integer(ip)           tail
+      integer(ip) :: next
+      integer(ip) :: head
+      integer(ip) :: tail
 
 !
 !     If PREV is non-positive, return now.
@@ -5351,7 +5351,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           lbpool
+      integer(ip) :: lbpool
       parameter           ( lbpool = -5 )
 
 !
@@ -5368,22 +5368,22 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip)           sizrow
+      integer(ip) :: sizrow
       parameter           ( sizrow =   1 )
 
-      integer(ip)           sizcol
+      integer(ip) :: sizcol
       parameter           ( sizcol =   0 )
 
-      integer(ip)           nfrrow
+      integer(ip) :: nfrrow
       parameter           ( nfrrow =   2 )
 
-      integer(ip)           nfrcol
+      integer(ip) :: nfrcol
       parameter           ( nfrcol =   0 )
 
-      integer(ip)           frerow
+      integer(ip) :: frerow
       parameter           ( frerow =   1 )
 
-      integer(ip)           frecol
+      integer(ip) :: frecol
       parameter           ( frecol =  -1 )
 
 !
@@ -5398,10 +5398,10 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip)           forwrd
+      integer(ip) :: forwrd
       parameter           ( forwrd  = 1 )
 
-      integer(ip)           bckwrd
+      integer(ip) :: bckwrd
       parameter           ( bckwrd  = 2 )
 
 !
@@ -5409,12 +5409,12 @@ contains
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip)           free
+      integer(ip) :: free
       parameter           ( free   = 0 )
 
-      integer(ip)           head
-      integer(ip)           prev
-      integer(ip)           tail
+      integer(ip) :: head
+      integer(ip) :: prev
+      integer(ip) :: tail
 
 !
 !     If NEXT is non-positive, return now.
@@ -5591,7 +5591,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           lbpool
+      integer(ip) :: lbpool
       parameter           ( lbpool = -5 )
 
 !
@@ -5608,22 +5608,22 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip)           sizrow
+      integer(ip) :: sizrow
       parameter           ( sizrow =   1 )
 
-      integer(ip)           sizcol
+      integer(ip) :: sizcol
       parameter           ( sizcol =   0 )
 
-      integer(ip)           nfrrow
+      integer(ip) :: nfrrow
       parameter           ( nfrrow =   2 )
 
-      integer(ip)           nfrcol
+      integer(ip) :: nfrcol
       parameter           ( nfrcol =   0 )
 
-      integer(ip)           frerow
+      integer(ip) :: frerow
       parameter           ( frerow =   1 )
 
-      integer(ip)           frecol
+      integer(ip) :: frecol
       parameter           ( frecol =  -1 )
 
 !
@@ -5638,10 +5638,10 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip)           forwrd
+      integer(ip) :: forwrd
       parameter           ( forwrd  = 1 )
 
-      integer(ip)           bckwrd
+      integer(ip) :: bckwrd
       parameter           ( bckwrd  = 2 )
 
 !
@@ -5649,10 +5649,10 @@ contains
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip)           free
+      integer(ip) :: free
       parameter           ( free   = 0 )
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     The requested number of nodes must be valid.
@@ -5778,7 +5778,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           lbpool
+      integer(ip) :: lbpool
       parameter           ( lbpool = -5 )
 
 !
@@ -5795,22 +5795,22 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip)           sizrow
+      integer(ip) :: sizrow
       parameter           ( sizrow =   1 )
 
-      integer(ip)           sizcol
+      integer(ip) :: sizcol
       parameter           ( sizcol =   0 )
 
-      integer(ip)           nfrrow
+      integer(ip) :: nfrrow
       parameter           ( nfrrow =   2 )
 
-      integer(ip)           nfrcol
+      integer(ip) :: nfrcol
       parameter           ( nfrcol =   0 )
 
-      integer(ip)           frerow
+      integer(ip) :: frerow
       parameter           ( frerow =   1 )
 
-      integer(ip)           frecol
+      integer(ip) :: frecol
       parameter           ( frecol =  -1 )
 
 !
@@ -5825,10 +5825,10 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip)           forwrd
+      integer(ip) :: forwrd
       parameter           ( forwrd  = 1 )
 
-      integer(ip)           bckwrd
+      integer(ip) :: bckwrd
       parameter           ( bckwrd  = 2 )
 
 !
@@ -5836,7 +5836,7 @@ contains
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip)           free
+      integer(ip) :: free
       parameter           ( free   = 0 )
 
 !
@@ -5960,7 +5960,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           lbpool
+      integer(ip) :: lbpool
       parameter           ( lbpool = -5 )
 
 !     The control area contains 3 elements.  They are:
@@ -5976,22 +5976,22 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip)           sizrow
+      integer(ip) :: sizrow
       parameter           ( sizrow =   1 )
 
-      integer(ip)           sizcol
+      integer(ip) :: sizcol
       parameter           ( sizcol =   0 )
 
-      integer(ip)           nfrrow
+      integer(ip) :: nfrrow
       parameter           ( nfrrow =   2 )
 
-      integer(ip)           nfrcol
+      integer(ip) :: nfrcol
       parameter           ( nfrcol =   0 )
 
-      integer(ip)           frerow
+      integer(ip) :: frerow
       parameter           ( frerow =   1 )
 
-      integer(ip)           frecol
+      integer(ip) :: frecol
       parameter           ( frecol =  -1 )
 
 !
@@ -6006,10 +6006,10 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip)           forwrd
+      integer(ip) :: forwrd
       parameter           ( forwrd  = 1 )
 
-      integer(ip)           bckwrd
+      integer(ip) :: bckwrd
       parameter           ( bckwrd  = 2 )
 
 !
@@ -6017,7 +6017,7 @@ contains
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip)           free
+      integer(ip) :: free
       parameter           ( free   =  0  )
 
 !
@@ -6173,7 +6173,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           lbpool
+      integer(ip) :: lbpool
       parameter           ( lbpool = -5 )
 
 !
@@ -6190,22 +6190,22 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip)           sizrow
+      integer(ip) :: sizrow
       parameter           ( sizrow =   1 )
 
-      integer(ip)           sizcol
+      integer(ip) :: sizcol
       parameter           ( sizcol =   0 )
 
-      integer(ip)           nfrrow
+      integer(ip) :: nfrrow
       parameter           ( nfrrow =   2 )
 
-      integer(ip)           nfrcol
+      integer(ip) :: nfrcol
       parameter           ( nfrcol =   0 )
 
-      integer(ip)           frerow
+      integer(ip) :: frerow
       parameter           ( frerow =   1 )
 
-      integer(ip)           frecol
+      integer(ip) :: frecol
       parameter           ( frecol =  -1 )
 
 !
@@ -6220,10 +6220,10 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip)           forwrd
+      integer(ip) :: forwrd
       parameter           ( forwrd  = 1 )
 
-      integer(ip)           bckwrd
+      integer(ip) :: bckwrd
       parameter           ( bckwrd  = 2 )
 
 !
@@ -6231,7 +6231,7 @@ contains
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip)           free
+      integer(ip) :: free
       parameter           ( free   = 0 )
 
 !
@@ -6343,7 +6343,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           lbpool
+      integer(ip) :: lbpool
       parameter           ( lbpool = -5 )
 
 !
@@ -6360,22 +6360,22 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip)           sizrow
+      integer(ip) :: sizrow
       parameter           ( sizrow =   1 )
 
-      integer(ip)           sizcol
+      integer(ip) :: sizcol
       parameter           ( sizcol =   0 )
 
-      integer(ip)           nfrrow
+      integer(ip) :: nfrrow
       parameter           ( nfrrow =   2 )
 
-      integer(ip)           nfrcol
+      integer(ip) :: nfrcol
       parameter           ( nfrcol =   0 )
 
-      integer(ip)           frerow
+      integer(ip) :: frerow
       parameter           ( frerow =   1 )
 
-      integer(ip)           frecol
+      integer(ip) :: frecol
       parameter           ( frecol =  -1 )
 
 !
@@ -6390,10 +6390,10 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip)           forwrd
+      integer(ip) :: forwrd
       parameter           ( forwrd  = 1 )
 
-      integer(ip)           bckwrd
+      integer(ip) :: bckwrd
       parameter           ( bckwrd  = 2 )
 
 !
@@ -6401,7 +6401,7 @@ contains
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip)           free
+      integer(ip) :: free
       parameter           ( free   = 0 )
 
 !
@@ -6520,7 +6520,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           lbpool
+      integer(ip) :: lbpool
       parameter           ( lbpool = -5 )
 
 !
@@ -6537,22 +6537,22 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip)           sizrow
+      integer(ip) :: sizrow
       parameter           ( sizrow =   1 )
 
-      integer(ip)           sizcol
+      integer(ip) :: sizcol
       parameter           ( sizcol =   0 )
 
-      integer(ip)           nfrrow
+      integer(ip) :: nfrrow
       parameter           ( nfrrow =   2 )
 
-      integer(ip)           nfrcol
+      integer(ip) :: nfrcol
       parameter           ( nfrcol =   0 )
 
-      integer(ip)           frerow
+      integer(ip) :: frerow
       parameter           ( frerow =   1 )
 
-      integer(ip)           frecol
+      integer(ip) :: frecol
       parameter           ( frecol =  -1 )
 
 !
@@ -6567,10 +6567,10 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip)           forwrd
+      integer(ip) :: forwrd
       parameter           ( forwrd  = 1 )
 
-      integer(ip)           bckwrd
+      integer(ip) :: bckwrd
       parameter           ( bckwrd  = 2 )
 
 !
@@ -6578,10 +6578,10 @@ contains
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip)           free
+      integer(ip) :: free
       parameter           ( free   = 0 )
 
-      integer(ip)           next
+      integer(ip) :: next
 
 !
 !     If the node is non-positive, we regard it as the nil node.
@@ -6761,7 +6761,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip)           lbpool
+      integer(ip) :: lbpool
       parameter           ( lbpool = -5 )
 
 !
@@ -6778,22 +6778,22 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip)           sizrow
+      integer(ip) :: sizrow
       parameter           ( sizrow =   1 )
 
-      integer(ip)           sizcol
+      integer(ip) :: sizcol
       parameter           ( sizcol =   0 )
 
-      integer(ip)           nfrrow
+      integer(ip) :: nfrrow
       parameter           ( nfrrow =   2 )
 
-      integer(ip)           nfrcol
+      integer(ip) :: nfrcol
       parameter           ( nfrcol =   0 )
 
-      integer(ip)           frerow
+      integer(ip) :: frerow
       parameter           ( frerow =   1 )
 
-      integer(ip)           frecol
+      integer(ip) :: frecol
       parameter           ( frecol =  -1 )
 
 !
@@ -6808,10 +6808,10 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip)           forwrd
+      integer(ip) :: forwrd
       parameter           ( forwrd  = 1 )
 
-      integer(ip)           bckwrd
+      integer(ip) :: bckwrd
       parameter           ( bckwrd  = 2 )
 
 !
@@ -6819,12 +6819,12 @@ contains
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip)           free
+      integer(ip) :: free
       parameter           ( free   = 0 )
 
-      integer(ip)           next
-      integer(ip)           node
-      integer(ip)           prev
+      integer(ip) :: next
+      integer(ip) :: node
+      integer(ip) :: prev
 
 !
 !     HEAD and TAIL must be valid node numbers.  These nodes

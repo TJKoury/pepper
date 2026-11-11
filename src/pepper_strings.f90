@@ -143,13 +143,13 @@ contains
       character(1), intent(in) :: asciie  !! Last ASCII character in range to be stripped.
       character(*), intent(out) :: outstr  !! Output (stripped) string.
 
-      integer(ip)      outlen
-      integer(ip)      last
-      integer(ip)      lwrbnd
-      integer(ip)      uprbnd
-      integer(ip)      i
-      integer(ip)      j
-      integer(ip)      k
+      integer(ip) :: outlen
+      integer(ip) :: last
+      integer(ip) :: lwrbnd
+      integer(ip) :: uprbnd
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
 
 !
 !     Find the length of the output string. We don't want to
@@ -331,10 +331,10 @@ contains
 
       character(*), intent(in) :: string  !! Character string.
 
-      integer(ip)           c
-      integer(ip)           d
-      integer(ip)           e
-      integer(ip)           l
+      integer(ip) :: c
+      integer(ip) :: d
+      integer(ip) :: e
+      integer(ip) :: l
 
 !
 !     First determine whether or not a decimal point is present.
@@ -559,10 +559,10 @@ contains
 
       character(*), intent(in) :: string  !! Character string.
 
-      integer(ip)           i
-      integer(ip)           l
+      integer(ip) :: i
+      integer(ip) :: l
 
-      character(1)          letter
+      character(1) :: letter
 
 !
 !     Find the first non-blank character and the length of the
@@ -744,10 +744,10 @@ contains
 
       character(*), intent(in) :: string  !! Character string.
 
-      integer(ip)           d
-      integer(ip)           e
-      integer(ip)           f
-      integer(ip)           l
+      integer(ip) :: d
+      integer(ip) :: e
+      integer(ip) :: f
+      integer(ip) :: l
 
 !
 !     Determine whether or not there is an exponent character in the
@@ -903,10 +903,10 @@ contains
 !     SPICE functions
 !
 
-      integer(ip)           i
-      integer(ip)           l
+      integer(ip) :: i
+      integer(ip) :: l
 
-      logical               ok
+      logical :: ok
 
 !
 !     Get the length of the string and the position of its
@@ -1058,12 +1058,12 @@ contains
       character(*), intent(in) :: input  !! Input string.
       character(*), intent(out) :: output  !! Compressed string.
 
-      integer(ip)      i
-      integer(ip)      j
-      integer(ip)      count
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: count
 
-      integer(ip)      inlen
-      integer(ip)      outlen
+      integer(ip) :: inlen
+      integer(ip) :: outlen
 
 !
 !     Find out how much space there is in the INPUT and OUTPUT strings
@@ -1266,9 +1266,9 @@ contains
       character(*), intent(in) :: chars  !! A collection of characters.
       integer(ip), intent(in) :: start  !! Position to begin looking for one of CHARS
 
-      logical               found
-      integer(ip)           lenstr
-      integer(ip)           b
+      logical :: found
+      integer(ip) :: lenstr
+      integer(ip) :: b
 
       lenstr = len ( str )
 
@@ -1445,9 +1445,9 @@ contains
       character(*), intent(in) :: chars  !! A collection of characters.
       integer(ip), intent(in) :: start  !! Position to begin looking for one of CHARS
 
-      logical               found
-      integer(ip)           lenstr
-      integer(ip)           b
+      logical :: found
+      integer(ip) :: lenstr
+      integer(ip) :: b
 
       lenstr = len ( str )
 
@@ -1727,20 +1727,20 @@ contains
       character(*), intent(in) :: a  !! Arbitrary character strings.
       character(*), intent(in) :: b  !! Arbitrary character strings.
 
-      integer(ip)           pa
-      integer(ip)           pb
+      integer(ip) :: pa
+      integer(ip) :: pb
 
-      integer(ip)           lena
-      integer(ip)           lenb
+      integer(ip) :: lena
+      integer(ip) :: lenb
 
-      integer(ip)           ca
-      integer(ip)           cb
+      integer(ip) :: ca
+      integer(ip) :: cb
 
-      integer(ip)           lbound
-      integer(ip)           ubound
-      integer(ip)           delta
+      integer(ip) :: lbound
+      integer(ip) :: ubound
+      integer(ip) :: delta
 
-      logical               done
+      logical :: done
 
 !
 !     The general plan is to move a pair of pointers (PA, PB)
@@ -1988,7 +1988,7 @@ contains
       integer(ip), intent(in) :: ndim  !! Dimension of ARRAY.
       character(*), intent(in) :: array ( * )  !! Character string array to search.
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     Just like ISRCHC.
@@ -2118,14 +2118,14 @@ contains
       integer(ip), intent(out) :: b  !! String position of first character of the word.
       integer(ip), intent(out) :: e  !! String position of last character of the word.
 
-      integer(ip)           blank
-      integer(ip)           l
-      integer(ip)           i
-      integer(ip)           n
-      integer(ip)           size
+      integer(ip) :: blank
+      integer(ip) :: l
+      integer(ip) :: i
+      integer(ip) :: n
+      integer(ip) :: size
 
-      logical               lastn
-      logical               thisb
+      logical :: lastn
+      logical :: thisb
 
 !
 !     Set up neede parameters and check obvious out-of-bound cases.
@@ -2409,7 +2409,7 @@ contains
 
       character(*), intent(in) :: string  !! Input character string.
 
-      integer(ip)      i
+      integer(ip) :: i
 
 !
 !     Look for the first character outside the range [32,126], and
@@ -2538,7 +2538,7 @@ contains
 
       character(*), intent(in) :: string  !! Input character string.
 
-      integer(ip)      i
+      integer(ip) :: i
 
 !
 !     Look for the first character in the range [33,126], and return
@@ -2742,17 +2742,17 @@ contains
       character(*), intent(out) :: substr  !! String from end of KEYWD to beginning of first TERMS
                                            !! item found.
 
-      integer(ip)      positn
+      integer(ip) :: positn
 
-      integer(ip)      berase
-      integer(ip)      eerase
-      integer(ip)      begstr
-      integer(ip)      endstr
+      integer(ip) :: berase
+      integer(ip) :: eerase
+      integer(ip) :: begstr
+      integer(ip) :: endstr
 
-      integer(ip)      start
-      integer(ip)      b
-      integer(ip)      e
-      integer(ip)      delims
+      integer(ip) :: start
+      integer(ip) :: b
+      integer(ip) :: e
+      integer(ip) :: delims
 
 !
 !     Locate the keyword within the string.
@@ -3045,7 +3045,7 @@ contains
 
       character(*), intent(in) :: string  !! Input character string.
 
-      integer(ip)      i
+      integer(ip) :: i
 
 !
 !     Look for the last character in the range [33,126], and return
@@ -3189,13 +3189,13 @@ contains
       character(*), intent(in) :: delim  !! String used to delimit items.
       character(*), intent(out) :: list  !! List of items delimited by DELIM.
 
-      integer(ip)      lpos
-      integer(ip)      first
-      integer(ip)      last
-      integer(ip)      dlen
-      integer(ip)      llen
-      integer(ip)      ilen
-      integer(ip)      i
+      integer(ip) :: lpos
+      integer(ip) :: first
+      integer(ip) :: last
+      integer(ip) :: dlen
+      integer(ip) :: llen
+      integer(ip) :: ilen
+      integer(ip) :: i
 
 !
 !     Find the non-blank part of each item. Move it to the
@@ -3342,8 +3342,8 @@ contains
       character(*), intent(in) :: in  !! Input string.
       character(*), intent(out) :: out  !! Output string, all lowercase.
 
-      integer(ip)      i
-      integer(ip)      ich
+      integer(ip) :: i
+      integer(ip) :: ich
 !
 !     Character codes used for the case conversion.
 !
@@ -3447,14 +3447,14 @@ contains
       character(*), intent(in) :: input  !! Input string.
       character(*), intent(out) :: output  !! Output string.
 
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           count
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: count
 
-      integer(ip)           inlen
-      integer(ip)           outlen
+      integer(ip) :: inlen
+      integer(ip) :: outlen
 
-      integer(ip)           ich
+      integer(ip) :: ich
 
 !
 !     Character codes used for the case conversion.
@@ -3925,18 +3925,18 @@ contains
       integer(ip), intent(out) :: n  !! Number of items in the list.
       character(*), intent(out) :: items ( * )  !! Items in the list, left justified.
 
-      character(1)          blank
+      character(1) :: blank
       parameter           ( blank = ' ' )
 
-      integer(ip)           ispace
+      integer(ip) :: ispace
       parameter           ( ispace = 32 )
 
-      character(1)          bchr
-      character(1)          echr
+      character(1) :: bchr
+      character(1) :: echr
 
-      integer(ip)           b
-      integer(ip)           e
-      integer(ip)           eol
+      integer(ip) :: b
+      integer(ip) :: e
+      integer(ip) :: eol
 
 !
 !     Because speed is essential in many list parsing applications,
@@ -4324,18 +4324,18 @@ contains
       integer(ip), intent(out) :: n  !! Number of items in the list.
       character(*), intent(out) :: items ( * )  !! Items in the list, left justified.
 
-      character(1)          blank
+      character(1) :: blank
       parameter           ( blank = ' ' )
 
-      integer(ip)           ispace
+      integer(ip) :: ispace
       parameter           ( ispace = 32 )
 
-      character(1)          bchr
-      character(1)          echr
+      character(1) :: bchr
+      character(1) :: echr
 
-      integer(ip)           b
-      integer(ip)           e
-      integer(ip)           eol
+      integer(ip) :: b
+      integer(ip) :: e
+      integer(ip) :: eol
 
 !
 !     Because speed is essential in many list parsing applications,
@@ -4786,11 +4786,11 @@ contains
       integer(ip), intent(out) :: last  !! Character position of end of token.
       integer(ip), intent(out) :: nchar  !! Number of characters in token.
 
-      integer(ip)           l
-      integer(ip)           loc
-      integer(ip)           pos
+      integer(ip) :: l
+      integer(ip) :: loc
+      integer(ip) :: pos
 
-      logical               even
+      logical :: even
 
 !
 !     Error free, no check-in required.
@@ -5051,24 +5051,24 @@ contains
       character(1), intent(in) :: wstr  !! Wild string token.
       character(1), intent(in) :: wchr  !! Wild character token.
 
-      integer(ip)           sfirst
-      integer(ip)           tfirst
-      integer(ip)           slast
-      integer(ip)           tlast
+      integer(ip) :: sfirst
+      integer(ip) :: tfirst
+      integer(ip) :: slast
+      integer(ip) :: tlast
 
-      integer(ip)           slen
-      integer(ip)           tlen
+      integer(ip) :: slen
+      integer(ip) :: tlen
 
-      integer(ip)           scur
-      integer(ip)           tcur
+      integer(ip) :: scur
+      integer(ip) :: tcur
 
-      integer(ip)           left
-      integer(ip)           right
+      integer(ip) :: left
+      integer(ip) :: right
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
-      logical               nosubm
+      logical :: nosubm
 
 !
 !     Set the default function value to be FALSE.
@@ -5689,9 +5689,9 @@ contains
       character(*), intent(in) :: chars  !! A collection of characters.
       integer(ip), intent(in) :: start  !! Position to begin looking for one not in CHARS
 
-      logical               found
-      integer(ip)           lenstr
-      integer(ip)           b
+      logical :: found
+      integer(ip) :: lenstr
+      integer(ip) :: b
 
       lenstr = len ( str )
 
@@ -5849,9 +5849,9 @@ contains
       character(*), intent(in) :: chars  !! A collection of characters.
       integer(ip), intent(in) :: start  !! Position to begin looking for one not in CHARS
 
-      logical               found
-      integer(ip)           lenstr
-      integer(ip)           b
+      logical :: found
+      integer(ip) :: lenstr
+      integer(ip) :: b
 
       lenstr = len ( str )
 
@@ -6052,14 +6052,14 @@ contains
       character(*), intent(out) :: next  !! The next word in the string.
       character(*), intent(out) :: rest  !! The remaining part of STRING, left-justified.
 
-      integer(ip)           ispace
+      integer(ip) :: ispace
       parameter           ( ispace = 32 )
 
-      integer(ip)           begin
-      integer(ip)           end
-      integer(ip)           i
+      integer(ip) :: begin
+      integer(ip) :: end
+      integer(ip) :: i
 
-      logical               inword
+      logical :: inword
 
 !
 !     The trivial case.
@@ -6319,11 +6319,11 @@ contains
       character(*), intent(out) :: word  !! The NTH word in STRING.
       integer(ip), intent(out) :: loc  !! Location of WORD in STRING.
 
-      integer(ip)      n
-      integer(ip)      i
-      integer(ip)      length
+      integer(ip) :: n
+      integer(ip) :: i
+      integer(ip) :: length
 
-      logical          loop
+      logical :: loop
 
 !
 !     Trivial cases first. Blank STRING? Nonpositive NTH?
@@ -6619,14 +6619,14 @@ contains
       character(*), intent(out) :: errmsg  !! Message indicating whether errors have occurred.
       integer(ip), intent(out) :: ptr  !! Position in string where an error occurred.
 
-      character(1)          chr
+      character(1) :: chr
 
-      integer(ip)           first
-      integer(ip)           ipos
-      integer(ip)           inlen
-      integer(ip)           last
-      integer(ip)           outlen
-      integer(ip)           opos
+      integer(ip) :: first
+      integer(ip) :: ipos
+      integer(ip) :: inlen
+      integer(ip) :: last
+      integer(ip) :: outlen
+      integer(ip) :: opos
 
 !
 !     Error free, no check-in required.  No parse error to start with.
@@ -6895,9 +6895,9 @@ contains
       character(*), intent(in) :: array   ( * )  !! Input array.
       integer(ip), intent(in) :: nelt  !! Number of elements in the array.
 
-      integer(ip)           strlen
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: strlen
+      integer(ip) :: i
+      integer(ip) :: j
 
 !
 !     Nonsense case: no elements.
@@ -7077,11 +7077,11 @@ contains
       character(*), intent(in) :: substr  !! Substring to locate in the character string.
       integer(ip), intent(in) :: start  !! Where to start looking for SUBSTR in STR.
 
-      logical               found
-      integer(ip)           lenstr
-      integer(ip)           offset
-      integer(ip)           lchnce
-      integer(ip)           b
+      logical :: found
+      integer(ip) :: lenstr
+      integer(ip) :: offset
+      integer(ip) :: lchnce
+      integer(ip) :: b
 
 !
 !     Let's find out how big every body is.
@@ -7249,11 +7249,11 @@ contains
       character(*), intent(in) :: substr  !! Substring to locate in the character string.
       integer(ip), intent(in) :: start  !! Where to start looking for SUBSTR in STR.
 
-      logical               found
-      integer(ip)           lenstr
-      integer(ip)           offset
-      integer(ip)           fchnce
-      integer(ip)           b
+      logical :: found
+      integer(ip) :: lenstr
+      integer(ip) :: offset
+      integer(ip) :: fchnce
+      integer(ip) :: b
 
 !
 !     Let's find out how big every body is.
@@ -7391,9 +7391,9 @@ contains
       integer(ip), intent(in) :: spaces  !! Number of spaces separating prefix and suffix.
       character(*), intent(inout) :: string  !! Suffix on input, string on output.
 
-      integer(ip)      plen
-      integer(ip)      slen
-      integer(ip)      shift
+      integer(ip) :: plen
+      integer(ip) :: slen
+      integer(ip) :: shift
 
 !
 !     L is the location of the last non-blank character in the prefix.
@@ -7647,7 +7647,7 @@ contains
       character(1), intent(in) :: new  !! Replacement character.
       character(*), intent(out) :: outstr  !! Output string.
 
-      integer(ip)      i
+      integer(ip) :: i
 
 !
 !     Move the input string to the output string. If it's too long,
@@ -7786,15 +7786,15 @@ contains
       character(*), intent(in) :: new  !! Replacement word.
       character(*), intent(out) :: outstr  !! Output string.
 
-      character(2)          short
-      integer(ip)           begin
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           f
-      integer(ip)           l
-      integer(ip)           k
-      integer(ip)           n
-      integer(ip)           shift
+      character(2) :: short
+      integer(ip) :: begin
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: f
+      integer(ip) :: l
+      integer(ip) :: k
+      integer(ip) :: n
+      integer(ip) :: shift
 
 !
 !     First just shift the input string into the output string,
@@ -8120,11 +8120,11 @@ contains
       character(*), intent(in) :: value  !! Replacement string.
       character(*), intent(out) :: out  !! Output string.
 
-      integer(ip)           mrknbf
-      integer(ip)           mrknbl
+      integer(ip) :: mrknbf
+      integer(ip) :: mrknbl
 
-      integer(ip)           mrkpsb
-      integer(ip)           mrkpse
+      integer(ip) :: mrkpsb
+      integer(ip) :: mrkpse
 
 !
 !     If MARKER is blank, no substitution is possible.
@@ -8265,11 +8265,11 @@ contains
       character(*), intent(in) :: input  !! Input character string.
       character(*), intent(out) :: output  !! Output character string, right justified.
 
-      integer(ip)           first
-      integer(ip)           i
-      integer(ip)           last
-      integer(ip)           loc
-      integer(ip)           start
+      integer(ip) :: first
+      integer(ip) :: i
+      integer(ip) :: last
+      integer(ip) :: loc
+      integer(ip) :: start
 
 !
 !     Blank string? It's all the same.
@@ -8851,8 +8851,8 @@ contains
       integer(ip), intent(inout) :: beg    ( * )  !! indices of beginning of tokens.
       integer(ip), intent(inout) :: end    ( * )  !! indices of endings of tokens.
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
 !
 !     There's not much to do, shift forward the token attributes for
@@ -9007,14 +9007,14 @@ contains
       character(1), intent(in) :: fillc  !! Character to fill spaces left vacant.
       character(*), intent(out) :: out  !! Shifted string.
 
-      integer(ip)      inlen
-      integer(ip)      outlen
+      integer(ip) :: inlen
+      integer(ip) :: outlen
 
-      integer(ip)      n
-      integer(ip)      nsave
-      integer(ip)      nfill
-      integer(ip)      i
-      integer(ip)      s
+      integer(ip) :: n
+      integer(ip) :: nsave
+      integer(ip) :: nfill
+      integer(ip) :: i
+      integer(ip) :: s
 
 !
 !     Get the length of the input, output strings.
@@ -9193,13 +9193,13 @@ contains
       character(1), intent(in) :: fillc  !! Character to fill spaces left vacant.
       character(*), intent(out) :: out  !! Shifted string.
 
-      integer(ip)      inlen
-      integer(ip)      outlen
-      integer(ip)      n
-      integer(ip)      nsave
-      integer(ip)      nfill
-      integer(ip)      i
-      integer(ip)      s
+      integer(ip) :: inlen
+      integer(ip) :: outlen
+      integer(ip) :: n
+      integer(ip) :: nsave
+      integer(ip) :: nfill
+      integer(ip) :: i
+      integer(ip) :: s
 
 !
 !     Get the length of the input, output strings.
@@ -9360,14 +9360,14 @@ contains
       character(*), intent(in) :: in  !! Input numeric string.
       character(*), intent(out) :: out  !! Numeric string, with insignificant digits removed.
 
-      integer(ip)           begin
-      integer(ip)           end
-      character(1)          lchar
-      integer(ip)           zero
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           l
+      integer(ip) :: begin
+      integer(ip) :: end
+      character(1) :: lchar
+      integer(ip) :: zero
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: l
 
 !
 !     Find the first and last non-blank characters in the string.
@@ -9648,9 +9648,9 @@ contains
       integer(ip), intent(in) :: spaces  !! Number of spaces separating prefix and suffix.
       character(*), intent(inout) :: string  !! Prefix on input, string on output.
 
-      integer(ip)      l
-      integer(ip)      slen
-      integer(ip)      end
+      integer(ip) :: l
+      integer(ip) :: slen
+      integer(ip) :: end
 
 !
 !     SLEN is the allocated length of the string. L is the location of
@@ -9764,8 +9764,8 @@ contains
       character(*), intent(in) :: in  !! Input string.
       character(*), intent(out) :: out  !! Output string, all uppercase.
 
-      integer(ip)      i
-      integer(ip)      ich
+      integer(ip) :: i
+      integer(ip) :: ich
 !
 !     Character codes used for the case conversion.
 !
@@ -9884,10 +9884,10 @@ contains
 
       character(*), intent(in) :: string  !! Input character string.
 
-      integer(ip)      n
-      integer(ip)      loc
-      integer(ip)      length
-      logical          cont
+      integer(ip) :: n
+      integer(ip) :: loc
+      integer(ip) :: length
+      logical :: cont
 
 !
 !     This is just NTHWD, except that it keeps looking until
@@ -10068,19 +10068,19 @@ contains
       character(*), intent(in) :: string  !! String of characters, potentially containing words
       character(*), intent(in) :: word  !! A string of consecutive printable letters.
 
-      integer(ip)      i
-      integer(ip)      j
+      integer(ip) :: i
+      integer(ip) :: j
 
-      integer(ip)      begwd
-      integer(ip)      endwd
+      integer(ip) :: begwd
+      integer(ip) :: endwd
 
-      integer(ip)      begstr
-      integer(ip)      endstr
+      integer(ip) :: begstr
+      integer(ip) :: endstr
 
-      integer(ip)      strlen
-      integer(ip)      wdlen
+      integer(ip) :: strlen
+      integer(ip) :: wdlen
 
-      integer(ip)      bgtond
+      integer(ip) :: bgtond
 
 !
 !     Find the ends of the word and input string.
@@ -10327,19 +10327,19 @@ contains
       integer(ip), intent(in) :: loc  !! Position at which substring is to be inserted.
       character(*), intent(out) :: out  !! Output string.
 
-      character(1)          chr
+      character(1) :: chr
 
-      integer(ip)           from
-      integer(ip)           i
-      integer(ip)           inlen
-      integer(ip)           myloc
-      integer(ip)           nmove
-      integer(ip)           outlen
-      integer(ip)           subend
-      integer(ip)           sublen
-      integer(ip)           to
+      integer(ip) :: from
+      integer(ip) :: i
+      integer(ip) :: inlen
+      integer(ip) :: myloc
+      integer(ip) :: nmove
+      integer(ip) :: outlen
+      integer(ip) :: subend
+      integer(ip) :: sublen
+      integer(ip) :: to
 
-      logical               same
+      logical :: same
 
 !
 !     Note to the careful reader:  in order to scrupulously avoid
@@ -10574,18 +10574,18 @@ contains
       character(*), intent(in) :: string  !! Replacement string.
       character(*), intent(out) :: out  !! Resulting string.
 
-      integer(ip)           inlen
-      integer(ip)           strlen
-      integer(ip)           outlen
+      integer(ip) :: inlen
+      integer(ip) :: strlen
+      integer(ip) :: outlen
 
-      integer(ip)           remain
-      integer(ip)           use         ( 3 )
+      integer(ip) :: remain
+      integer(ip) :: use         ( 3 )
 
-      integer(ip)           end
-      integer(ip)           next
-      integer(ip)           i
-      integer(ip)           myleft
-      integer(ip)           myrght
+      integer(ip) :: end
+      integer(ip) :: next
+      integer(ip) :: i
+      integer(ip) :: myleft
+      integer(ip) :: myrght
 
 !
 !     Get the lengths of all the strings involved in this transaction.
@@ -10804,21 +10804,21 @@ contains
       integer(ip), intent(in) :: number  !! Integer to be converted.
       character(*), intent(out) :: string  !! Equivalent character string, left justified.
 
-      integer(ip)           base
+      integer(ip) :: base
       parameter           ( base = 10 )
 
-      integer(ip)           strlen
+      integer(ip) :: strlen
       parameter           ( strlen = 80 )
-      character(strlen)     tmpstr
+      character(strlen) :: tmpstr
 
       character(1), parameter :: digits(0:9) = &
                  ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
-      integer(ip)           tmpnum
-      integer(ip)           result
-      integer(ip)           remndr
+      integer(ip) :: tmpnum
+      integer(ip) :: result
+      integer(ip) :: remndr
 
-      integer(ip)           i
+      integer(ip) :: i
 
 !
 !     The digits are generated in reverse order, so we fill the
@@ -11148,7 +11148,7 @@ contains
          [ 0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, 6.0_wp, &
            7.0_wp, 8.0_wp, 9.0_wp ]
 
-      integer(ip)           maxexp
+      integer(ip) :: maxexp
       parameter           ( maxexp = 40 )
 
       character(2), parameter :: vaxexp(0:40) = &
@@ -11158,21 +11158,21 @@ contains
            '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', &
            '40' ]
 
-      real(wp)              copy
-      integer(ip)           postn
-      integer(ip)           expont
-      integer(ip)           maxsig
+      real(wp) :: copy
+      integer(ip) :: postn
+      integer(ip) :: expont
+      integer(ip) :: maxsig
 
-      real(wp)              exp10
+      real(wp) :: exp10
 
-      integer(ip)           i
-      integer(ip)           k
-      integer(ip)           last
+      integer(ip) :: i
+      integer(ip) :: k
+      integer(ip) :: last
 
-      character(20)         expc
-      character(28)         zero
+      character(20) :: expc
+      character(28) :: zero
 
-      character(32)         numstr
+      character(32) :: numstr
 
 !
 !     Transfer X to the local variable COPY and leave X alone for the
@@ -11473,13 +11473,13 @@ contains
 !
 !     Range of characters
 !
-      integer(ip)           lstchr
+      integer(ip) :: lstchr
       parameter           ( lstchr = 255 )
 !     The array UVALUE contains the ICHAR values for the upper case
 !     version of each character.
 !
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 !
 !     Uppercase character codes (SPICELIB filled the table on the first
 !     call).
@@ -11619,10 +11619,10 @@ contains
       implicit none
       character(1), intent(in) :: a  !! one of the characters to check
       character(1), intent(in) :: b  !! the other character to check
-      integer(ip)           lstchr
+      integer(ip) :: lstchr
       parameter           ( lstchr = 255 )
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
       integer(ip), parameter :: uvalue ( 0 : lstchr ) = &
          [ ( merge( i - ( iachar('a') - iachar('A') ), i, &
                     i >= iachar('a') .and. i <= iachar('z') ), i = 0, lstchr ) ]
@@ -11938,8 +11938,8 @@ contains
       integer(ip), intent(in) :: b2  !! The beginning of a substring in STR2
       integer(ip), intent(in) :: e2  !! The end  of s substring in STR2
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
       if (      ( e1      < b1           ) &
            .or. ( e2      < b2           ) &
@@ -12088,24 +12088,24 @@ contains
       character(1), intent(in) :: wstr  !! Wild string token.
       character(1), intent(in) :: wchr  !! Wild character token.
 
-      integer(ip)           sfirst
-      integer(ip)           tfirst
-      integer(ip)           slast
-      integer(ip)           tlast
+      integer(ip) :: sfirst
+      integer(ip) :: tfirst
+      integer(ip) :: slast
+      integer(ip) :: tlast
 
-      integer(ip)           slen
-      integer(ip)           tlen
+      integer(ip) :: slen
+      integer(ip) :: tlen
 
-      integer(ip)           scur
-      integer(ip)           tcur
+      integer(ip) :: scur
+      integer(ip) :: tcur
 
-      integer(ip)           left
-      integer(ip)           right
+      integer(ip) :: left
+      integer(ip) :: right
 
-      integer(ip)           i
-      integer(ip)           j
+      integer(ip) :: i
+      integer(ip) :: j
 
-      logical               nosubm
+      logical :: nosubm
 
 !
 !     Give the function an initial value of .FALSE.
@@ -12597,14 +12597,14 @@ contains
 !     Local Parameters.
 !
 
-      real(wp)              base
+      real(wp) :: base
       parameter           ( base   = 10.0_wp )
 
       integer(ip), parameter :: digit = 1
 
       integer(ip), parameter :: dpoint = 2
 
-      integer(ip)           expont
+      integer(ip) :: expont
       parameter           ( expont = 3   )
 
       integer(ip), parameter :: ignore = 4
@@ -12623,59 +12623,59 @@ contains
 
       integer(ip), parameter :: errsiz = 160
 
-      character(errsiz)     blnkst
-      character(errsiz)     toobig
-      character(errsiz)     unrcst
-      character(errsiz)     unxpch
-      character(errsiz)     unxppt
-      character(errsiz)     unxpsn
+      character(errsiz) :: blnkst
+      character(errsiz) :: toobig
+      character(errsiz) :: unrcst
+      character(errsiz) :: unxpch
+      character(errsiz) :: unxppt
+      character(errsiz) :: unxpsn
 
-      real(wp)              decval
-      real(wp)              divisr
-      real(wp)              dpsign (     2     )
-      real(wp)              ecount
-      real(wp)              expval
-      real(wp)              factor
-      real(wp)              intbnd
-      real(wp)              intval
+      real(wp) :: decval
+      real(wp) :: divisr
+      real(wp) :: dpsign (     2     )
+      real(wp) :: ecount
+      real(wp) :: expval
+      real(wp) :: factor
+      real(wp) :: intbnd
+      real(wp) :: intval
       real(wp), parameter :: lookup ( 0 : ibase ) = &
          [ 1.0_wp, 10.0_wp, 100.0_wp, 1000.0_wp, 10000.0_wp, &
            100000.0_wp, 1000000.0_wp, 10000000.0_wp, 100000000.0_wp, &
            1000000000.0_wp, 10000000000.0_wp ]
-      real(wp)              maxexp
-      real(wp)              minexp
-      real(wp)              next
-      real(wp)              smlbnd
-      real(wp)              value
-      real(wp)              values (     nknown )
+      real(wp) :: maxexp
+      real(wp) :: minexp
+      real(wp) :: next
+      real(wp) :: smlbnd
+      real(wp) :: value
+      real(wp) :: values (     nknown )
 
-      integer(ip)           class  ( 0 : nknown )
-      integer(ip)           exp
-      integer(ip)           i
-      integer(ip)           id
-      integer(ip)           signdx
+      integer(ip) :: class  ( 0 : nknown )
+      integer(ip) :: exp
+      integer(ip) :: i
+      integer(ip) :: id
+      integer(ip) :: signdx
 
-      integer(ip)           b
-      integer(ip)           blank
-      integer(ip)           l
-      integer(ip)           m
-      integer(ip)           nl
-      integer(ip)           nexti
-      integer(ip)           thisi
+      integer(ip) :: b
+      integer(ip) :: blank
+      integer(ip) :: l
+      integer(ip) :: m
+      integer(ip) :: nl
+      integer(ip) :: nexti
+      integer(ip) :: thisi
 
-      logical               dodec
-      logical               expok
-      logical               doexp
-      logical               doint
-      logical               mantsa
-      logical               bpiok
-      logical               epiok
-      logical               pntok
-      logical               roundi
-      logical               roundd
-      logical               sigchr
-      logical               signok
-      logical               zeroi
+      logical :: dodec
+      logical :: expok
+      logical :: doexp
+      logical :: doint
+      logical :: mantsa
+      logical :: bpiok
+      logical :: epiok
+      logical :: pntok
+      logical :: roundi
+      logical :: roundd
+      logical :: sigchr
+      logical :: signok
+      logical :: zeroi
 !
 !     Save everything.  It's easier than tracking down every
 !     little variable that might need to be saved.
@@ -13596,7 +13596,7 @@ contains
       character(*), intent(out) :: error  !! Message indicating what errors have occurred.
       integer(ip), intent(out) :: pnter  !! Position in character string where an error occurred.
 
-      real(wp)              x
+      real(wp) :: x
 
 !     Initial values
 !
@@ -13757,8 +13757,8 @@ contains
 
       integer(ip), parameter :: minc = -128
 
-      integer(ip)           i
-      integer(ip)           l
+      integer(ip) :: i
+      integer(ip) :: l
 !
 !     The digits (SPICELIB filled this table on the first call).
 !

@@ -506,12 +506,12 @@ contains
 !
 
       character(:), allocatable :: bodnam
-      character(1)          dtype
+      character(1) :: dtype
       character(:), allocatable :: kvname
 
-      integer(ip)           n
+      integer(ip) :: n
 
-      logical               found
+      logical :: found
 
       if ( ctx%failed() ) return
 
@@ -794,10 +794,10 @@ contains
 !     the sum of the lengths of the two substitution markers ('#').
 !
 
-      character(1)          dtype
+      character(1) :: dtype
       character(:), allocatable :: kvname
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling
@@ -1043,7 +1043,7 @@ contains
 !     the sum of the lengths of the two substitution markers ('#').
 !
 
-      character(1)          dtype
+      character(1) :: dtype
       character(:), allocatable :: kvname
 
 !
@@ -1297,7 +1297,7 @@ contains
 !     the sum of the lengths of the two substitution markers ('#').
 !
 
-      character(1)          dtype
+      character(1) :: dtype
       character(:), allocatable :: kvname
 
 !
@@ -1718,10 +1718,10 @@ contains
 !     the sum of the lengths of the two substitution markers ('#').
 !
 
-      character(1)          dtype
+      character(1) :: dtype
       character(:), allocatable :: kvname
 
-      logical               found
+      logical :: found
 
 !
 !     Standard SPICE error handling
@@ -2106,8 +2106,8 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip)           i
-      integer(ip)           n
+      integer(ip) :: i
+      integer(ip) :: n
 
 !
 !     Standard SPICE error handling.
@@ -2491,10 +2491,10 @@ contains
 !     Local variables.
 !
 
-      integer(ip)           i
-      integer(ip)           item
+      integer(ip) :: i
+      integer(ip) :: item
 
-      logical               new
+      logical :: new
 
 !
 !     Perform the consistency checks first.

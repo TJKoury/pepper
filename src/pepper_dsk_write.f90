@@ -820,32 +820,32 @@ contains
       use pepper_inc_dsk02
       implicit none
 
-      real(wp)              a
-      real(wp)              altlim
-      real(wp)              b
-      real(wp)              descr  ( dskdsz )
-      real(wp)              r
-      real(wp)              segbds ( 2, 2 )
-      real(wp)              voxori ( 3 )
-      real(wp)              voxsiz
-      real(wp)              vtxbds ( 2, 3 )
+      real(wp) :: a
+      real(wp) :: altlim
+      real(wp) :: b
+      real(wp) :: descr  ( dskdsz )
+      real(wp) :: r
+      real(wp) :: segbds ( 2, 2 )
+      real(wp) :: voxori ( 3 )
+      real(wp) :: voxsiz
+      real(wp) :: vtxbds ( 2, 3 )
 
-      integer(ip)           cgrscl
-      integer(ip)           frmcde
-      integer(ip)           i
-      integer(ip)           j
-      integer(ip)           k
-      integer(ip)           ncgr
-      integer(ip)           nvxtot
-      integer(ip)           pvoxpl
-      integer(ip)           pvoxpt
-      integer(ip)           pvtxpl
-      integer(ip)           pvtxpt
-      integer(ip)           q
-      integer(ip)           vgrext ( 3 )
-      integer(ip)           voxnpt
-      integer(ip)           voxnpl
-      integer(ip)           vtxnpl
+      integer(ip) :: cgrscl
+      integer(ip) :: frmcde
+      integer(ip) :: i
+      integer(ip) :: j
+      integer(ip) :: k
+      integer(ip) :: ncgr
+      integer(ip) :: nvxtot
+      integer(ip) :: pvoxpl
+      integer(ip) :: pvoxpt
+      integer(ip) :: pvtxpl
+      integer(ip) :: pvtxpt
+      integer(ip) :: q
+      integer(ip) :: vgrext ( 3 )
+      integer(ip) :: voxnpt
+      integer(ip) :: voxnpl
+      integer(ip) :: vtxnpl
 
       if ( ctx%failed() ) return
 

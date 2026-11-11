@@ -653,94 +653,94 @@ contains
       character(*), parameter :: rname = 'ZZDYNFRM'
       integer(ip), parameter :: timlen = 50
       integer(ip), parameter :: vnamln = 4
-      character(corlen)     abcorr
-      character(kvlen)      axname
+      character(corlen) :: abcorr
+      character(kvlen) :: axname
       character(:), allocatable :: basnam
       character(:), allocatable :: cfrmnm
       character(:), allocatable :: ctrnam
       logical :: namfnd
-      character(corlen)     cvcorr
-      character(kvlen)      dynstl
-      character(kvlen)      dynfam
+      character(corlen) :: cvcorr
+      character(kvlen) :: dynstl
+      character(kvlen) :: dynfam
       type(string), allocatable :: fframs(:)
       character(:), allocatable :: inname
-      character(kvlen)      nutmod
-      character(kvlen)      oblmod
-      character(kvlen)      prcmod
-      character(kvlen)      rotsta
-      character(kvlen)      spec
+      character(kvlen) :: nutmod
+      character(kvlen) :: oblmod
+      character(kvlen) :: prcmod
+      character(kvlen) :: rotsta
+      character(kvlen) :: spec
       type(string), allocatable :: tframs(:)
-      character(timlen)     timstr
-      character(kvlen)      tmpfam
-      character(kvlen)      units
-      character(kvlen)      vecdef ( 2 )
+      character(timlen) :: timstr
+      character(kvlen) :: tmpfam
+      character(kvlen) :: units
+      character(kvlen) :: vecdef ( 2 )
       character(:), allocatable :: velfrm
       character(vnamln), parameter :: vname  ( 2 ) = &
          [ character(vnamln) :: kwpri, kwsec ]
-      real(wp)              acc    ( 3 )
-      real(wp)              angles ( 2 )
-      real(wp)              coeffs ( maxcof, 3 )
-      real(wp)              ctrpos ( 3 )
-      real(wp)              dec
-      real(wp)              delta
-      real(wp)              dirvec ( 3 )
-      real(wp)              dmob
-      real(wp)              epoch
-      real(wp)              eulang ( 6 )
-      real(wp)              fet
-      real(wp)              lat
-      real(wp)              lon
-      real(wp)              lt
-      real(wp)              minsep
-      real(wp)              mob
-      real(wp)              nutxf  ( 6, 6 )
-      real(wp)              oblxf  ( 6, 6 )
-      real(wp)              poly   ( 0 : 1 )
-      real(wp)              precxf ( 6, 6 )
-      real(wp)              ra
-      real(wp)              radii  ( 3 )
-      real(wp)              s2     ( 6, 2 )
-      real(wp)              sep
-      real(wp)              stalt  ( 2 )
-      real(wp)              stemp  ( 6 )
-      real(wp)              stnear ( 6 )
-      real(wp)              stobs  ( 6 )
-      real(wp)              tarray ( 3 )
-      real(wp)              t0
-      real(wp)              varray ( 3, 3 )
-      real(wp)              vet
-      real(wp)              vflt
-      real(wp)              xf2000 ( 6, 6 )
-      real(wp)              xfinv  ( 6, 6 )
-      real(wp)              xftemp ( 6, 6 )
-      real(wp)              xipm   ( 6, 6 )
-      real(wp)              xout   ( 6, 6 )
-      integer(ip)           axis   ( 2 )
-      integer(ip)           cfrmid
-      integer(ip)           cvobs
-      integer(ip)           degs   ( 3 )
-      integer(ip)           frcid
-      integer(ip)           frcls
-      integer(ip)           frctr
-      integer(ip)           frid
-      integer(ip)           fromid
-      integer(ip)           i
-      integer(ip)           iaxes  ( 3 )
-      integer(ip)           j
-      integer(ip)           m
-      integer(ip)           n
-      integer(ip)           obs
-      integer(ip)           targ
-      integer(ip)           toid
-      logical               corblk ( nabcor )
-      logical               fnd
-      logical               frozen
-      logical               inert
-      logical               meanec
-      logical               meaneq
-      logical               negate
-      logical               ofdate
-      logical               trueeq
+      real(wp) :: acc    ( 3 )
+      real(wp) :: angles ( 2 )
+      real(wp) :: coeffs ( maxcof, 3 )
+      real(wp) :: ctrpos ( 3 )
+      real(wp) :: dec
+      real(wp) :: delta
+      real(wp) :: dirvec ( 3 )
+      real(wp) :: dmob
+      real(wp) :: epoch
+      real(wp) :: eulang ( 6 )
+      real(wp) :: fet
+      real(wp) :: lat
+      real(wp) :: lon
+      real(wp) :: lt
+      real(wp) :: minsep
+      real(wp) :: mob
+      real(wp) :: nutxf  ( 6, 6 )
+      real(wp) :: oblxf  ( 6, 6 )
+      real(wp) :: poly   ( 0 : 1 )
+      real(wp) :: precxf ( 6, 6 )
+      real(wp) :: ra
+      real(wp) :: radii  ( 3 )
+      real(wp) :: s2     ( 6, 2 )
+      real(wp) :: sep
+      real(wp) :: stalt  ( 2 )
+      real(wp) :: stemp  ( 6 )
+      real(wp) :: stnear ( 6 )
+      real(wp) :: stobs  ( 6 )
+      real(wp) :: tarray ( 3 )
+      real(wp) :: t0
+      real(wp) :: varray ( 3, 3 )
+      real(wp) :: vet
+      real(wp) :: vflt
+      real(wp) :: xf2000 ( 6, 6 )
+      real(wp) :: xfinv  ( 6, 6 )
+      real(wp) :: xftemp ( 6, 6 )
+      real(wp) :: xipm   ( 6, 6 )
+      real(wp) :: xout   ( 6, 6 )
+      integer(ip) :: axis   ( 2 )
+      integer(ip) :: cfrmid
+      integer(ip) :: cvobs
+      integer(ip) :: degs   ( 3 )
+      integer(ip) :: frcid
+      integer(ip) :: frcls
+      integer(ip) :: frctr
+      integer(ip) :: frid
+      integer(ip) :: fromid
+      integer(ip) :: i
+      integer(ip) :: iaxes  ( 3 )
+      integer(ip) :: j
+      integer(ip) :: m
+      integer(ip) :: n
+      integer(ip) :: obs
+      integer(ip) :: targ
+      integer(ip) :: toid
+      logical :: corblk ( nabcor )
+      logical :: fnd
+      logical :: frozen
+      logical :: inert
+      logical :: meanec
+      logical :: meaneq
+      logical :: negate
+      logical :: ofdate
+      logical :: trueeq
       if ( .not. allocated ( ctx%zzdynfrm_state ) ) allocate ( ctx%zzdynfrm_state )
       associate ( axes => ctx%zzdynfrm_state%axes, &
                   earth => ctx%zzdynfrm_state%earth, &
@@ -2423,93 +2423,93 @@ contains
       character(*), parameter :: rname = 'ZZDYNROT'
       integer(ip), parameter :: timlen = 50
       integer(ip), parameter :: vnamln = 4
-      character(corlen)     abcorr
-      character(kvlen)      axname
+      character(corlen) :: abcorr
+      character(kvlen) :: axname
       character(:), allocatable :: basnam
       character(:), allocatable :: cfrmnm
       character(:), allocatable :: ctrnam
       logical :: namfnd
-      character(corlen)     cvcorr
-      character(kvlen)      dynstl
-      character(kvlen)      dynfam
+      character(corlen) :: cvcorr
+      character(kvlen) :: dynstl
+      character(kvlen) :: dynfam
       type(string), allocatable :: fframs(:)
       character(:), allocatable :: inname
-      character(kvlen)      nutmod
-      character(kvlen)      oblmod
-      character(kvlen)      prcmod
-      character(kvlen)      rotsta
-      character(kvlen)      spec
+      character(kvlen) :: nutmod
+      character(kvlen) :: oblmod
+      character(kvlen) :: prcmod
+      character(kvlen) :: rotsta
+      character(kvlen) :: spec
       type(string), allocatable :: tframs(:)
-      character(timlen)     timstr
-      character(kvlen)      tmpfam
-      character(kvlen)      units
-      character(kvlen)      vecdef ( 2 )
+      character(timlen) :: timstr
+      character(kvlen) :: tmpfam
+      character(kvlen) :: units
+      character(kvlen) :: vecdef ( 2 )
       character(:), allocatable :: velfrm
       character(vnamln), parameter :: vname  ( 2 ) = &
          [ character(vnamln) :: kwpri, kwsec ]
-      real(wp)              alt
-      real(wp)              angles ( 2 )
-      real(wp)              coeffs ( maxcof, 3 )
-      real(wp)              ctrpos ( 3 )
-      real(wp)              dec
-      real(wp)              delta
-      real(wp)              dirvec ( 3 )
-      real(wp)              dmob
-      real(wp)              epoch
-      real(wp)              eulang ( 3 )
-      real(wp)              fet
-      real(wp)              lat
-      real(wp)              lon
-      real(wp)              lt
-      real(wp)              minsep
-      real(wp)              mob
-      real(wp)              nutxf  ( 6, 6 )
-      real(wp)              oblr   ( 3, 3 )
-      real(wp)              pnear  ( 3 )
-      real(wp)              pobs   ( 3 )
-      real(wp)              poly   ( 0 : 1 )
-      real(wp)              precxf ( 6, 6 )
-      real(wp)              ptemp  ( 3 )
-      real(wp)              r2000  ( 3, 3 )
-      real(wp)              ra
-      real(wp)              radii  ( 3 )
-      real(wp)              rinv   ( 3, 3 )
-      real(wp)              rnut   ( 3, 3 )
-      real(wp)              rout   ( 3, 3 )
-      real(wp)              rprec  ( 3, 3 )
-      real(wp)              rtemp  ( 3, 3 )
-      real(wp)              sep
-      real(wp)              stemp  ( 6 )
-      real(wp)              stobs  ( 6 )
-      real(wp)              tipm   ( 3, 3 )
-      real(wp)              t0
-      real(wp)              v2     ( 3, 2 )
-      real(wp)              vet
-      real(wp)              vflt
-      integer(ip)           axis   ( 2 )
-      integer(ip)           cfrmid
-      integer(ip)           cvobs
-      integer(ip)           degs   ( 3 )
-      integer(ip)           frcls
-      integer(ip)           frctr
-      integer(ip)           frcid
-      integer(ip)           frid
-      integer(ip)           fromid
-      integer(ip)           i
-      integer(ip)           iaxes  ( 3 )
-      integer(ip)           m
-      integer(ip)           n
-      integer(ip)           obs
-      integer(ip)           targ
-      integer(ip)           toid
-      logical               corblk ( nabcor )
-      logical               fnd
-      logical               frozen
-      logical               meanec
-      logical               meaneq
-      logical               negate
-      logical               ofdate
-      logical               trueeq
+      real(wp) :: alt
+      real(wp) :: angles ( 2 )
+      real(wp) :: coeffs ( maxcof, 3 )
+      real(wp) :: ctrpos ( 3 )
+      real(wp) :: dec
+      real(wp) :: delta
+      real(wp) :: dirvec ( 3 )
+      real(wp) :: dmob
+      real(wp) :: epoch
+      real(wp) :: eulang ( 3 )
+      real(wp) :: fet
+      real(wp) :: lat
+      real(wp) :: lon
+      real(wp) :: lt
+      real(wp) :: minsep
+      real(wp) :: mob
+      real(wp) :: nutxf  ( 6, 6 )
+      real(wp) :: oblr   ( 3, 3 )
+      real(wp) :: pnear  ( 3 )
+      real(wp) :: pobs   ( 3 )
+      real(wp) :: poly   ( 0 : 1 )
+      real(wp) :: precxf ( 6, 6 )
+      real(wp) :: ptemp  ( 3 )
+      real(wp) :: r2000  ( 3, 3 )
+      real(wp) :: ra
+      real(wp) :: radii  ( 3 )
+      real(wp) :: rinv   ( 3, 3 )
+      real(wp) :: rnut   ( 3, 3 )
+      real(wp) :: rout   ( 3, 3 )
+      real(wp) :: rprec  ( 3, 3 )
+      real(wp) :: rtemp  ( 3, 3 )
+      real(wp) :: sep
+      real(wp) :: stemp  ( 6 )
+      real(wp) :: stobs  ( 6 )
+      real(wp) :: tipm   ( 3, 3 )
+      real(wp) :: t0
+      real(wp) :: v2     ( 3, 2 )
+      real(wp) :: vet
+      real(wp) :: vflt
+      integer(ip) :: axis   ( 2 )
+      integer(ip) :: cfrmid
+      integer(ip) :: cvobs
+      integer(ip) :: degs   ( 3 )
+      integer(ip) :: frcls
+      integer(ip) :: frctr
+      integer(ip) :: frcid
+      integer(ip) :: frid
+      integer(ip) :: fromid
+      integer(ip) :: i
+      integer(ip) :: iaxes  ( 3 )
+      integer(ip) :: m
+      integer(ip) :: n
+      integer(ip) :: obs
+      integer(ip) :: targ
+      integer(ip) :: toid
+      logical :: corblk ( nabcor )
+      logical :: fnd
+      logical :: frozen
+      logical :: meanec
+      logical :: meaneq
+      logical :: negate
+      logical :: ofdate
+      logical :: trueeq
       if ( .not. allocated ( ctx%zzdynrot_state ) ) allocate ( ctx%zzdynrot_state )
       associate ( axes => ctx%zzdynrot_state%axes, &
                   earth => ctx%zzdynrot_state%earth, &

@@ -520,14 +520,14 @@ contains
       use pepper_strings, only: ucase
       use pepper_containers, only: grow
       implicit none
-      character(4)          type
-      real(wp)              aet
-      real(wp)              ea
-      real(wp)              ettai
-      real(wp)              leaps
-      real(wp)              ma
-      integer(ip)           i
-      logical               update
+      character(4) :: type
+      real(wp) :: aet
+      real(wp) :: ea
+      real(wp) :: ettai
+      real(wp) :: leaps
+      real(wp) :: ma
+      integer(ip) :: i
+      logical :: update
       if ( .not. allocated ( ctx%deltet_state ) ) allocate ( ctx%deltet_state )
       if ( ctx%failed() ) return
 
@@ -1083,8 +1083,8 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, prefix, suffix, ucase
       implicit none
-      integer(ip)           ndigit
-      integer(ip)           day
+      integer(ip) :: ndigit
+      integer(ip) :: day
       character(3), parameter :: mthnam   ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
@@ -1763,30 +1763,30 @@ contains
       use pepper_arrays, only: rmdupc
       use pepper_strings, only: rtrim
       implicit none
-      logical               return
-      character(1)          letter
-      integer(ip)           backup
-      integer(ip)           eblock
-      integer(ip)           fchar
-      integer(ip)           finish
-      integer(ip)           i
-      integer(ip)           intval
-      integer(ip)           j
-      integer(ip)           jump
-      integer(ip)           l
-      integer(ip)           last
-      integer(ip)           last1
-      integer(ip)           lbound
-      integer(ip)           lchar
-      integer(ip)           n
-      integer(ip)           offset
-      integer(ip)           slot
-      integer(ip)           stop
-      integer(ip)           test
-      integer(ip)           this1
-      integer(ip)           ubound
-      logical               equal
-      logical               known
+      logical :: return
+      character(1) :: letter
+      integer(ip) :: backup
+      integer(ip) :: eblock
+      integer(ip) :: fchar
+      integer(ip) :: finish
+      integer(ip) :: i
+      integer(ip) :: intval
+      integer(ip) :: j
+      integer(ip) :: jump
+      integer(ip) :: l
+      integer(ip) :: last
+      integer(ip) :: last1
+      integer(ip) :: lbound
+      integer(ip) :: lchar
+      integer(ip) :: n
+      integer(ip) :: offset
+      integer(ip) :: slot
+      integer(ip) :: stop
+      integer(ip) :: test
+      integer(ip) :: this1
+      integer(ip) :: ubound
+      logical :: equal
+      logical :: known
       if ( nmarks <= 0 ) then
 
          pnters(1) = 0
@@ -2258,30 +2258,30 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: ncpos
       implicit none
-      logical               return
-      character(1)          letter
-      integer(ip)           backup
-      integer(ip)           eblock
-      integer(ip)           fchar
-      integer(ip)           finish
-      integer(ip)           i
-      integer(ip)           intval
-      integer(ip)           j
-      integer(ip)           jump
-      integer(ip)           l
-      integer(ip)           last
-      integer(ip)           last1
-      integer(ip)           lbound
-      integer(ip)           lchar
-      integer(ip)           n
-      integer(ip)           offset
-      integer(ip)           slot
-      integer(ip)           stop
-      integer(ip)           test
-      integer(ip)           this1
-      integer(ip)           ubound
-      logical               equal
-      logical               known
+      logical :: return
+      character(1) :: letter
+      integer(ip) :: backup
+      integer(ip) :: eblock
+      integer(ip) :: fchar
+      integer(ip) :: finish
+      integer(ip) :: i
+      integer(ip) :: intval
+      integer(ip) :: j
+      integer(ip) :: jump
+      integer(ip) :: l
+      integer(ip) :: last
+      integer(ip) :: last1
+      integer(ip) :: lbound
+      integer(ip) :: lchar
+      integer(ip) :: n
+      integer(ip) :: offset
+      integer(ip) :: slot
+      integer(ip) :: stop
+      integer(ip) :: test
+      integer(ip) :: this1
+      integer(ip) :: ubound
+      logical :: equal
+      logical :: known
       offset = pnters(1) - 4
       lbound = pnters(1) - 1
       ubound = pnters(2) + 1
@@ -2638,16 +2638,16 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      character(5)          type
-      character(8)          modify   ( 5 )
+      character(5) :: type
+      character(8) :: modify   ( 5 )
 
-      real(wp)              tvec     ( 10 )
+      real(wp) :: tvec     ( 10 )
 
-      integer(ip)           ntvec
+      integer(ip) :: ntvec
 
-      logical               mods
-      logical               succes
-      logical               yabbrv
+      logical :: mods
+      logical :: succes
+      logical :: yabbrv
 
 !
 !     This routine is really just a front for one aspect of
@@ -2973,22 +2973,22 @@ contains
 
       integer(ip), parameter :: lnsize = 80
 
-      character(lnsize)     pictur
-      character(longln)     error
+      character(lnsize) :: pictur
+      character(longln) :: error
 
       integer(ip), parameter :: smwdsz = 8
 
-      character(smwdsz)     type
-      character(smwdsz)     modify ( 5 )
+      character(smwdsz) :: type
+      character(smwdsz) :: modify ( 5 )
 
-      real(wp)              tvec   ( 10 )
-      integer(ip)           ntvec
-      integer(ip)           year
+      real(wp) :: tvec   ( 10 )
+      integer(ip) :: ntvec
+      integer(ip) :: year
 
-      logical               succes
-      logical               ok
-      logical               mods
-      logical               yabbrv
+      logical :: succes
+      logical :: ok
+      logical :: mods
+      logical :: yabbrv
 
 !
 !     Standard SPICE error handling.

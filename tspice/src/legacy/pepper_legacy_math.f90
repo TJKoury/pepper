@@ -13,9 +13,9 @@
       use pepper_math, only: pepper_approx => approx
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              x  !! Double precision numbers.
-      real(wp)              y  !! Double precision numbers.
-      real(wp)              tol  !! Tolerance.
+      real(wp) :: x  !! Double precision numbers.
+      real(wp) :: y  !! Double precision numbers.
+      real(wp) :: tol  !! Tolerance.
       approx = pepper_approx ( x, y, tol )
       end function approx
 
@@ -27,9 +27,9 @@
       use pepper_math, only: pepper_axisar => axisar
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              axis  ( 3 )  !! Rotation axis.
-      real(wp)              angle  !! Rotation angle, in radians.
-      real(wp)              r     ( 3, 3 )  !! Rotation matrix corresponding to AXIS and ANGLE.
+      real(wp) :: axis  ( 3 )  !! Rotation axis.
+      real(wp) :: angle  !! Rotation angle, in radians.
+      real(wp) :: r     ( 3, 3 )  !! Rotation matrix corresponding to AXIS and ANGLE.
       call pepper_axisar ( axis, angle, r )
       end subroutine axisar
 
@@ -41,12 +41,12 @@
       use pepper_math, only: pepper_azlrec => azlrec
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           range  !! Distance of the point from the origin.
-      real(wp)           az  !! Azimuth in radians.
-      real(wp)           el  !! Elevation in radians.
-      logical            azccw  !! Flag indicating how azimuth is measured.
-      logical            elplsz  !! Flag indicating how elevation is measured.
-      real(wp)           rectan ( 3 )  !! Rectangular coordinates of a point.
+      real(wp) :: range  !! Distance of the point from the origin.
+      real(wp) :: az  !! Azimuth in radians.
+      real(wp) :: el  !! Elevation in radians.
+      logical :: azccw  !! Flag indicating how azimuth is measured.
+      logical :: elplsz  !! Flag indicating how elevation is measured.
+      real(wp) :: rectan ( 3 )  !! Rectangular coordinates of a point.
       call pepper_azlrec ( range, az, el, azccw, elplsz, rectan )
       end subroutine azlrec
 
@@ -60,9 +60,9 @@
       use pepper_math, only: pepper_brcktd => brcktd
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           number  !! Number to be bracketed.
-      real(wp)           end1  !! One of the bracketing endpoints for NUMBER.
-      real(wp)           end2  !! The other bracketing endpoint for NUMBER.
+      real(wp) :: number  !! Number to be bracketed.
+      real(wp) :: end1  !! One of the bracketing endpoints for NUMBER.
+      real(wp) :: end2  !! The other bracketing endpoint for NUMBER.
       brcktd = pepper_brcktd ( number, end1, end2 )
       end function brcktd
 
@@ -76,9 +76,9 @@
       use pepper_math, only: pepper_brckti => brckti
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)   number  !! Number to be bracketed.
-      integer(ip)   end1  !! One of the bracketing endpoints for NUMBER.
-      integer(ip)   end2  !! The other bracketing endpoint for NUMBER.
+      integer(ip) :: number  !! Number to be bracketed.
+      integer(ip) :: end1  !! One of the bracketing endpoints for NUMBER.
+      integer(ip) :: end2  !! The other bracketing endpoint for NUMBER.
       brckti = pepper_brckti ( number, end1, end2 )
       end function brckti
 
@@ -91,13 +91,13 @@
       use pepper_math, only: pepper_chbder => chbder
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              cp     (      * )  !! DEGP+1 Chebyshev polynomial coefficients.
-      integer(ip)           degp  !! Degree of polynomial.
-      real(wp)              x2s    (      2 )  !! Transformation parameters of polynomial.
-      real(wp)              x  !! Value for which the polynomial is to be evaluated.
-      integer(ip)           nderiv  !! The number of derivatives to compute.
-      real(wp)              partdp ( 3, 0:* )  !! Workspace provided for computing derivatives.
-      real(wp)              dpdxs  (    0:* )  !! Array of the derivatives of the polynomial.
+      real(wp) :: cp     (      * )  !! DEGP+1 Chebyshev polynomial coefficients.
+      integer(ip) :: degp  !! Degree of polynomial.
+      real(wp) :: x2s    (      2 )  !! Transformation parameters of polynomial.
+      real(wp) :: x  !! Value for which the polynomial is to be evaluated.
+      integer(ip) :: nderiv  !! The number of derivatives to compute.
+      real(wp) :: partdp ( 3, 0:* )  !! Workspace provided for computing derivatives.
+      real(wp) :: dpdxs  (    0:* )  !! Array of the derivatives of the polynomial.
       call pepper_chbder ( cp, degp, x2s, x, nderiv, partdp, dpdxs )
       end subroutine chbder
 
@@ -110,12 +110,12 @@
       use pepper_math, only: pepper_chbint => chbint
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              cp  ( * )  !! DEGP+1 Chebyshev polynomial coefficients.
-      integer(ip)           degp  !! Degree of polynomial.
-      real(wp)              x2s ( 2 )  !! Transformation parameters of polynomial.
-      real(wp)              x  !! Value for which the polynomial is to be evaluated
-      real(wp)              p  !! Value of the polynomial at X
-      real(wp)              dpdx  !! Value of the derivative of the polynomial at X
+      real(wp) :: cp  ( * )  !! DEGP+1 Chebyshev polynomial coefficients.
+      integer(ip) :: degp  !! Degree of polynomial.
+      real(wp) :: x2s ( 2 )  !! Transformation parameters of polynomial.
+      real(wp) :: x  !! Value for which the polynomial is to be evaluated
+      real(wp) :: p  !! Value of the polynomial at X
+      real(wp) :: dpdx  !! Value of the derivative of the polynomial at X
       call pepper_chbint ( cp, degp, x2s, x, p, dpdx )
       end subroutine chbint
 
@@ -127,11 +127,11 @@
       use pepper_math, only: pepper_chbval => chbval
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           cp  ( * )  !! DEGP+1 Chebyshev polynomial coefficients.
-      integer(ip)        degp  !! Degree of polynomial.
-      real(wp)           x2s ( 2 )  !! Transformation parameters of polynomial.
-      real(wp)           x  !! Value for which the polynomial is to be evaluated.
-      real(wp)           p  !! Value of the polynomial at X.
+      real(wp) :: cp  ( * )  !! DEGP+1 Chebyshev polynomial coefficients.
+      integer(ip) :: degp  !! Degree of polynomial.
+      real(wp) :: x2s ( 2 )  !! Transformation parameters of polynomial.
+      real(wp) :: x  !! Value for which the polynomial is to be evaluated.
+      real(wp) :: p  !! Value of the polynomial at X.
       call pepper_chbval ( cp, degp, x2s, x, p )
       end subroutine chbval
 
@@ -142,12 +142,12 @@
       use pepper_math, only: pepper_cyllat => cyllat
       use pepper_kinds, only: wp
       implicit none
-      real(wp)            r  !! Distance of point from Z axis.
-      real(wp)            clon  !! Cylindrical angle of point from XZ plane(radians).
-      real(wp)            z  !! Height of point above XY plane.
-      real(wp)            radius  !! Distance of point from origin.
-      real(wp)            lon  !! Longitude of point (radians).
-      real(wp)            lat  !! Latitude of point (radians).
+      real(wp) :: r  !! Distance of point from Z axis.
+      real(wp) :: clon  !! Cylindrical angle of point from XZ plane(radians).
+      real(wp) :: z  !! Height of point above XY plane.
+      real(wp) :: radius  !! Distance of point from origin.
+      real(wp) :: lon  !! Longitude of point (radians).
+      real(wp) :: lat  !! Latitude of point (radians).
       call pepper_cyllat ( r, clon, z, radius, lon, lat )
       end subroutine cyllat
 
@@ -158,10 +158,10 @@
       use pepper_math, only: pepper_cylrec => cylrec
       use pepper_kinds, only: wp
       implicit none
-      real(wp)            r  !! Distance of a point from Z axis.
-      real(wp)            clon  !! Angle (radians) of a point from XZ plane
-      real(wp)            z  !! Height of a point above XY plane.
-      real(wp)            rectan ( 3 )  !! Rectangular coordinates of the point.
+      real(wp) :: r  !! Distance of a point from Z axis.
+      real(wp) :: clon  !! Angle (radians) of a point from XZ plane
+      real(wp) :: z  !! Height of a point above XY plane.
+      real(wp) :: rectan ( 3 )  !! Rectangular coordinates of the point.
       call pepper_cylrec ( r, clon, z, rectan )
       end subroutine cylrec
 
@@ -172,12 +172,12 @@
       use pepper_math, only: pepper_cylsph => cylsph
       use pepper_kinds, only: wp
       implicit none
-      real(wp)            r  !! Distance of point from Z axis.
-      real(wp)            clon  !! Angle (radians) of point from XZ plane.
-      real(wp)            z  !! Height of point above XY plane.
-      real(wp)            radius  !! Distance of point from origin.
-      real(wp)            colat  !! Polar angle (co-latitude in radians) of point.
-      real(wp)            slon  !! Azimuthal angle (longitude) of point (radians).
+      real(wp) :: r  !! Distance of point from Z axis.
+      real(wp) :: clon  !! Angle (radians) of point from XZ plane.
+      real(wp) :: z  !! Height of point above XY plane.
+      real(wp) :: radius  !! Distance of point from origin.
+      real(wp) :: colat  !! Polar angle (co-latitude in radians) of point.
+      real(wp) :: slon  !! Azimuthal angle (longitude) of point (radians).
       call pepper_cylsph ( r, clon, z, radius, colat, slon )
       end subroutine cylsph
 
@@ -188,7 +188,7 @@
       use pepper_math, only: pepper_dcbrt => dcbrt
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           x  !! Number whose cube root is desired.
+      real(wp) :: x  !! Number whose cube root is desired.
       real(wp), parameter :: third = 1.0_wp/3.0_wp
       dcbrt = pepper_dcbrt ( x )
       end function dcbrt
@@ -200,7 +200,7 @@
       use pepper_math, only: pepper_det => det
       use pepper_kinds, only: wp
       implicit none
-      real(wp)            m1 ( 3,3 )  !! Matrix whose determinant is to be found.
+      real(wp) :: m1 ( 3,3 )  !! Matrix whose determinant is to be found.
       det = pepper_det ( m1 )
       end function det
 
@@ -212,19 +212,19 @@
       use pepper_math, only: pepper_drdcyl => drdcyl
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              r  !! Distance of a point from the origin.
-      real(wp)              clon  !! Angle of the point from the XZ plane in radians.
-      real(wp)              z  !! Height of the point above the XY plane.
-      real(wp)              jacobi ( 3, 3 )  !! Matrix of partial derivatives.
-      integer(ip)           dx
+      real(wp) :: r  !! Distance of a point from the origin.
+      real(wp) :: clon  !! Angle of the point from the XZ plane in radians.
+      real(wp) :: z  !! Height of the point above the XY plane.
+      real(wp) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
+      integer(ip) :: dx
       parameter           ( dx     = 1 )
-      integer(ip)           dy
+      integer(ip) :: dy
       parameter           ( dy     = 2 )
-      integer(ip)           dz
+      integer(ip) :: dz
       parameter           ( dz     = 3 )
-      integer(ip)           dr
+      integer(ip) :: dr
       parameter           ( dr     = 1 )
-      integer(ip)           dlon
+      integer(ip) :: dlon
       parameter           ( dlon   = 2 )
       call pepper_drdcyl ( r, clon, z, jacobi )
       end subroutine drdcyl
@@ -237,19 +237,19 @@
       use pepper_math, only: pepper_drdlat => drdlat
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              r  !! Distance of a point from the origin.
-      real(wp)              lon  !! Angle of the point from the XZ plane in radians.
-      real(wp)              lat  !! Angle of the point from the XY plane in radians.
-      real(wp)              jacobi ( 3, 3 )  !! Matrix of partial derivatives.
-      integer(ip)           dx
+      real(wp) :: r  !! Distance of a point from the origin.
+      real(wp) :: lon  !! Angle of the point from the XZ plane in radians.
+      real(wp) :: lat  !! Angle of the point from the XY plane in radians.
+      real(wp) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
+      integer(ip) :: dx
       parameter           ( dx   = 1 )
-      integer(ip)           dy
+      integer(ip) :: dy
       parameter           ( dy   = 2 )
-      integer(ip)           dz
+      integer(ip) :: dz
       parameter           ( dz   = 3 )
-      integer(ip)           dr
+      integer(ip) :: dr
       parameter           ( dr   = 1 )
-      integer(ip)           dlon
+      integer(ip) :: dlon
       parameter           ( dlon = 2 )
       integer(ip), parameter :: dlat = 3
       call pepper_drdlat ( r, lon, lat, jacobi )
@@ -263,20 +263,20 @@
       use pepper_math, only: pepper_drdsph => drdsph
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              r  !! Distance of a point from the origin.
-      real(wp)              colat  !! Angle of the point from the positive Z-axis.
-      real(wp)              slon  !! Angle of the point from the XY plane.
-      real(wp)              jacobi ( 3, 3 )  !! Matrix of partial derivatives.
-      integer(ip)           dx
+      real(wp) :: r  !! Distance of a point from the origin.
+      real(wp) :: colat  !! Angle of the point from the positive Z-axis.
+      real(wp) :: slon  !! Angle of the point from the XY plane.
+      real(wp) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
+      integer(ip) :: dx
       parameter           ( dx     = 1 )
-      integer(ip)           dy
+      integer(ip) :: dy
       parameter           ( dy     = 2 )
-      integer(ip)           dz
+      integer(ip) :: dz
       parameter           ( dz     = 3 )
-      integer(ip)           dr
+      integer(ip) :: dr
       parameter           ( dr     = 1 )
       integer(ip), parameter :: dcolat = 2
-      integer(ip)           dlon
+      integer(ip) :: dlon
       parameter           ( dlon   = 3 )
       call pepper_drdsph ( r, colat, slon, jacobi )
       end subroutine drdsph
@@ -289,9 +289,9 @@
       use pepper_math, only: pepper_ducrss => ducrss
       use pepper_kinds, only: wp
       implicit none
-      real(wp)            s1   ( 6 )  !! Left hand state for cross product and derivative.
-      real(wp)            s2   ( 6 )  !! Right hand state for cross product and derivative.
-      real(wp)            sout ( 6 )  !! Unit vector and derivative of the cross product.
+      real(wp) :: s1   ( 6 )  !! Left hand state for cross product and derivative.
+      real(wp) :: s2   ( 6 )  !! Right hand state for cross product and derivative.
+      real(wp) :: sout ( 6 )  !! Unit vector and derivative of the cross product.
       call pepper_ducrss ( s1, s2, sout )
       end subroutine ducrss
 
@@ -303,9 +303,9 @@
       use pepper_math, only: pepper_dvcrss => dvcrss
       use pepper_kinds, only: wp
       implicit none
-      real(wp)            s1   ( 6 )  !! Left hand state for cross product and derivative.
-      real(wp)            s2   ( 6 )  !! Right hand state for cross product and derivative.
-      real(wp)            sout ( 6 )  !! State associated with cross product of positions.
+      real(wp) :: s1   ( 6 )  !! Left hand state for cross product and derivative.
+      real(wp) :: s2   ( 6 )  !! Right hand state for cross product and derivative.
+      real(wp) :: sout ( 6 )  !! State associated with cross product of positions.
       call pepper_dvcrss ( s1, s2, sout )
       end subroutine dvcrss
 
@@ -317,8 +317,8 @@
       use pepper_math, only: pepper_dvdot => dvdot
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           s1 ( 6 )  !! First state vector in the dot product.
-      real(wp)           s2 ( 6 )  !! Second state vector in the dot product.
+      real(wp) :: s1 ( 6 )  !! First state vector in the dot product.
+      real(wp) :: s2 ( 6 )  !! Second state vector in the dot product.
       dvdot = pepper_dvdot ( s1, s2 )
       end function dvdot
 
@@ -330,8 +330,8 @@
       use pepper_math, only: pepper_dvhat => dvhat
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           s1   ( 6 )  !! State to be normalized.
-      real(wp)           sout ( 6 )  !! Unit vector S1 / |S1|, and its time derivative.
+      real(wp) :: s1   ( 6 )  !! State to be normalized.
+      real(wp) :: sout ( 6 )  !! Unit vector S1 / |S1|, and its time derivative.
       integer(ip), parameter :: pos = 1
       integer(ip), parameter :: vel = 4
       call pepper_dvhat ( s1, sout )
@@ -344,7 +344,7 @@
       use pepper_math, only: pepper_dvnorm => dvnorm
        use pepper_kinds, only: wp
       implicit none
-      real(wp)              state ( 6 )  !! A 6-vector composed of three coordinates and their
+      real(wp) :: state ( 6 )  !! A 6-vector composed of three coordinates and their
                                          !! derivatives.
       dvnorm = pepper_dvnorm ( state )
       end function dvnorm
@@ -359,10 +359,10 @@
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip), parameter :: ubel = 9
-      real(wp)              ellips ( ubel )  !! A SPICE ellipse.
-      real(wp)              center (    3 )  !! Center and semi-axes of ELLIPS.
-      real(wp)              smajor (    3 )  !! Center and semi-axes of ELLIPS.
-      real(wp)              sminor (    3 )  !! Center and semi-axes of ELLIPS.
+      real(wp) :: ellips ( ubel )  !! A SPICE ellipse.
+      real(wp) :: center (    3 )  !! Center and semi-axes of ELLIPS.
+      real(wp) :: smajor (    3 )  !! Center and semi-axes of ELLIPS.
+      real(wp) :: sminor (    3 )  !! Center and semi-axes of ELLIPS.
       integer(ip), parameter :: ctrpos = 1
       integer(ip), parameter :: majpos = 4
       integer(ip), parameter :: minpos = 7
@@ -376,7 +376,7 @@
       use pepper_math, only: pepper_even => even
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      ival  !! The integer in question.
+      integer(ip) :: ival  !! The integer in question.
       even = pepper_even ( ival )
       end function even
 
@@ -388,9 +388,9 @@
       use pepper_math, only: pepper_exact => exact
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              number  !! Double precision number.
-      real(wp)              value  !! Target value.
-      real(wp)              tol  !! Tolerance.
+      real(wp) :: number  !! Double precision number.
+      real(wp) :: value  !! Target value.
+      real(wp) :: tol  !! Tolerance.
       exact = pepper_exact ( number, value, tol )
       end function exact
 
@@ -403,9 +403,9 @@
       use pepper_math, only: pepper_frame => frame
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)            x ( 3 )  !! Input vector. A parallel unit vector on output.
-      real(wp)            y ( 3 )  !! Unit vector in the plane orthogonal to X.
-      real(wp)            z ( 3 )  !! Unit vector given by the cross product <X,Y>.
+      real(wp) :: x ( 3 )  !! Input vector. A parallel unit vector on output.
+      real(wp) :: y ( 3 )  !! Unit vector in the plane orthogonal to X.
+      real(wp) :: z ( 3 )  !! Unit vector given by the cross product <X,Y>.
       call pepper_frame ( x, y, z )
       end subroutine frame
 
@@ -416,8 +416,8 @@
       use pepper_math, only: pepper_gcd => gcd
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      a  !! Any integer
-      integer(ip)      b  !! Any integer
+      integer(ip) :: a  !! Any integer
+      integer(ip) :: b  !! Any integer
       gcd = pepper_gcd ( a, b )
       end function gcd
 
@@ -428,7 +428,7 @@
       use pepper_math, only: pepper_ident => ident
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              matrix ( 3, 3 )  !! The 3x3 identity matrix.
+      real(wp) :: matrix ( 3, 3 )  !! The 3x3 identity matrix.
       call pepper_ident ( matrix )
       end subroutine ident
 
@@ -442,12 +442,12 @@
       use pepper_math, only: pepper_insang => insang
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              v     ( 3 )  !! Vector to test for "betweenness"
-      real(wp)              e1    ( 3 )  !! First edge of the tetrahedral angle
-      real(wp)              e2    ( 3 )  !! Second edge of the tetrahedral angle
-      real(wp)              e3    ( 3 )  !! Third edge of the tetrahedral angle
-      logical               found  !! Indicates whether V lies in the solid angle
-      real(wp)              scale  !! Scale times V is in the triangle E1,E2,E3
+      real(wp) :: v     ( 3 )  !! Vector to test for "betweenness"
+      real(wp) :: e1    ( 3 )  !! First edge of the tetrahedral angle
+      real(wp) :: e2    ( 3 )  !! Second edge of the tetrahedral angle
+      real(wp) :: e3    ( 3 )  !! Third edge of the tetrahedral angle
+      logical :: found  !! Indicates whether V lies in the solid angle
+      real(wp) :: scale  !! Scale times V is in the triangle E1,E2,E3
       call pepper_insang ( v, e1, e2, e3, found, scale )
       end subroutine insang
 
@@ -458,8 +458,8 @@
       use pepper_math, only: pepper_invert => invert
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           m    ( 3,3 )  !! Matrix to be inverted.
-      real(wp)           mout ( 3,3 )  !! Inverted matrix (M)**-1. If M is singular, then MOUT will
+      real(wp) :: m    ( 3,3 )  !! Matrix to be inverted.
+      real(wp) :: mout ( 3,3 )  !! Inverted matrix (M)**-1. If M is singular, then MOUT will
                                        !! be the zero matrix.
       call pepper_invert ( m, mout )
       end subroutine invert
@@ -471,12 +471,12 @@
       use pepper_math, only: pepper_latcyl => latcyl
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           radius  !! Distance of a point from the origin.
-      real(wp)           lon  !! Angle of the point from the XZ plane in radians.
-      real(wp)           lat  !! Angle of the point from the XY plane in radians.
-      real(wp)           r  !! Distance of the point from the Z axis.
-      real(wp)           clon  !! Angle of the point from the XZ plane in radians.
-      real(wp)           z  !! Height of the point above the XY plane.
+      real(wp) :: radius  !! Distance of a point from the origin.
+      real(wp) :: lon  !! Angle of the point from the XZ plane in radians.
+      real(wp) :: lat  !! Angle of the point from the XY plane in radians.
+      real(wp) :: r  !! Distance of the point from the Z axis.
+      real(wp) :: clon  !! Angle of the point from the XZ plane in radians.
+      real(wp) :: z  !! Height of the point above the XY plane.
       call pepper_latcyl ( radius, lon, lat, r, clon, z )
       end subroutine latcyl
 
@@ -487,10 +487,10 @@
       use pepper_math, only: pepper_latrec => latrec
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           radius  !! Distance of a point from the origin.
-      real(wp)           lon  !! Longitude of point in radians.
-      real(wp)           lat  !! Latitude of point in radians.
-      real(wp)           rectan ( 3 )  !! Rectangular coordinates of the point.
+      real(wp) :: radius  !! Distance of a point from the origin.
+      real(wp) :: lon  !! Longitude of point in radians.
+      real(wp) :: lat  !! Latitude of point in radians.
+      real(wp) :: rectan ( 3 )  !! Rectangular coordinates of the point.
       call pepper_latrec ( radius, lon, lat, rectan )
       end subroutine latrec
 
@@ -501,12 +501,12 @@
       use pepper_math, only: pepper_latsph => latsph
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           radius  !! Distance of a point from the origin.
-      real(wp)           lon  !! Angle of the point from the XZ plane in radians.
-      real(wp)           lat  !! Angle of the point from the XY plane in radians.
-      real(wp)           rho  !! Distance of the point from the origin.
-      real(wp)           colat  !! Angle of the point from positive Z axis (radians).
-      real(wp)           slon  !! Angle of the point from the XZ plane (radians).
+      real(wp) :: radius  !! Distance of a point from the origin.
+      real(wp) :: lon  !! Angle of the point from the XZ plane in radians.
+      real(wp) :: lat  !! Angle of the point from the XY plane in radians.
+      real(wp) :: rho  !! Distance of the point from the origin.
+      real(wp) :: colat  !! Angle of the point from positive Z axis (radians).
+      real(wp) :: slon  !! Angle of the point from the XZ plane (radians).
       call pepper_latsph ( radius, lon, lat, rho, colat, slon )
       end subroutine latsph
 
@@ -517,8 +517,8 @@
       use pepper_math, only: pepper_mequ => mequ
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           m1   ( 3, 3 )  !! Input matrix.
-      real(wp)           mout ( 3, 3 )  !! Output matrix equal to M1.
+      real(wp) :: m1   ( 3, 3 )  !! Input matrix.
+      real(wp) :: mout ( 3, 3 )  !! Output matrix equal to M1.
       call pepper_mequ ( m1, mout )
       end subroutine mequ
 
@@ -530,10 +530,10 @@
       use pepper_math, only: pepper_mequg => mequg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        nr  !! Row dimension of M1 (and also MOUT).
-      integer(ip)        nc  !! Column dimension of M1 (and also MOUT).
-      real(wp)           m1   ( nr,nc )  !! Input matrix.
-      real(wp)           mout ( nr,nc )  !! Output matrix equal to M1.
+      integer(ip) :: nr  !! Row dimension of M1 (and also MOUT).
+      integer(ip) :: nc  !! Column dimension of M1 (and also MOUT).
+      real(wp) :: m1   ( nr,nc )  !! Input matrix.
+      real(wp) :: mout ( nr,nc )  !! Output matrix equal to M1.
       call pepper_mequg ( m1, nr, nc, mout )
       end subroutine mequg
 
@@ -544,9 +544,9 @@
       use pepper_math, only: pepper_mtxm => mtxm
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           m1   ( 3,3 )  !! 3x3 double precision matrix.
-      real(wp)           m2   ( 3,3 )  !! 3x3 double precision matrix.
-      real(wp)           mout ( 3,3 )  !! 3x3 double precision matrix which is the product (M1**T) *
+      real(wp) :: m1   ( 3,3 )  !! 3x3 double precision matrix.
+      real(wp) :: m2   ( 3,3 )  !! 3x3 double precision matrix.
+      real(wp) :: mout ( 3,3 )  !! 3x3 double precision matrix which is the product (M1**T) *
                                        !! M2.
       call pepper_mtxm ( m1, m2, mout )
       end subroutine mtxm
@@ -560,13 +560,13 @@
       use pepper_math, only: pepper_mtxmg => mtxmg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        nc1  !! Column dimension of M1 and row dimension of MOUT.
-      integer(ip)        nr1r2  !! Row dimension of both M1 and M2.
-      integer(ip)        nc2  !! Column dimension of both M2 and MOUT.
-      real(wp)           m1   ( nr1r2,nc1 )  !! Left-hand matrix whose transpose is to be
+      integer(ip) :: nc1  !! Column dimension of M1 and row dimension of MOUT.
+      integer(ip) :: nr1r2  !! Row dimension of both M1 and M2.
+      integer(ip) :: nc2  !! Column dimension of both M2 and MOUT.
+      real(wp) :: m1   ( nr1r2,nc1 )  !! Left-hand matrix whose transpose is to be
                                              !! multiplied.
-      real(wp)           m2   ( nr1r2,nc2 )  !! Right-hand matrix to be multiplied.
-      real(wp)           mout ( nc1,  nc2 )  !! Product matrix M1**T * M2.
+      real(wp) :: m2   ( nr1r2,nc2 )  !! Right-hand matrix to be multiplied.
+      real(wp) :: mout ( nc1,  nc2 )  !! Product matrix M1**T * M2.
       call pepper_mtxmg ( m1, m2, nc1, nr1r2, nc2, mout )
       end subroutine mtxmg
 
@@ -578,9 +578,9 @@
       use pepper_math, only: pepper_mtxv => mtxv
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)          m      ( 3,3 )  !! 3X3 double precision matrix.
-      real(wp)          vin    (   3 )  !! 3-dimensional double precision vector.
-      real(wp)          vout   (   3 )  !! 3-dimensional double precision vector. VOUT is the
+      real(wp) :: m      ( 3,3 )  !! 3X3 double precision matrix.
+      real(wp) :: vin    (   3 )  !! 3-dimensional double precision vector.
+      real(wp) :: vout   (   3 )  !! 3-dimensional double precision vector. VOUT is the
                                         !! product M**T * VIN.
       call pepper_mtxv ( m, vin, vout )
       end subroutine mtxv
@@ -593,12 +593,12 @@
       use pepper_math, only: pepper_mtxvg => mtxvg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        nc1  !! Column dimension of M1 and length of VOUT.
-      integer(ip)        nr1r2  !! Row dimension of M1 and length of V2.
-      real(wp)           m1   ( nr1r2,nc1 )  !! Left-hand matrix whose transpose is to be
+      integer(ip) :: nc1  !! Column dimension of M1 and length of VOUT.
+      integer(ip) :: nr1r2  !! Row dimension of M1 and length of V2.
+      real(wp) :: m1   ( nr1r2,nc1 )  !! Left-hand matrix whose transpose is to be
                                              !! multiplied.
-      real(wp)           v2   ( nr1r2     )  !! Right-hand vector to be multiplied.
-      real(wp)           vout (       nc1 )  !! Product vector M1**T * V2.
+      real(wp) :: v2   ( nr1r2     )  !! Right-hand vector to be multiplied.
+      real(wp) :: vout (       nc1 )  !! Product vector M1**T * V2.
       call pepper_mtxvg ( m1, v2, nc1, nr1r2, vout )
       end subroutine mtxvg
 
@@ -609,9 +609,9 @@
       use pepper_math, only: pepper_mxm => mxm
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           m1   ( 3,3 )  !! 3x3 double precision matrix.
-      real(wp)           m2   ( 3,3 )  !! 3x3 double precision matrix.
-      real(wp)           mout ( 3,3 )  !! The 3x3 double precision matrix product M1*M2.
+      real(wp) :: m1   ( 3,3 )  !! 3x3 double precision matrix.
+      real(wp) :: m2   ( 3,3 )  !! 3x3 double precision matrix.
+      real(wp) :: mout ( 3,3 )  !! The 3x3 double precision matrix product M1*M2.
       call pepper_mxm ( m1, m2, mout )
       end subroutine mxm
 
@@ -622,12 +622,12 @@
       use pepper_math, only: pepper_mxmg => mxmg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)         nr1  !! Row dimension of M1 (and also MOUT).
-      integer(ip)         nc1r2  !! Column dimension of M1 and row dimension of M2.
-      integer(ip)         nc2  !! Column dimension of M2 (and also MOUT).
-      real(wp)            m1   ( nr1,   nc1r2 )  !! NR1   x NC1R2 double precision matrix.
-      real(wp)            m2   ( nc1r2, nc2   )  !! NC1R2 x NC2   double precision matrix.
-      real(wp)            mout ( nr1,   nc2   )  !! NR1 x NC2 double precision matrix.
+      integer(ip) :: nr1  !! Row dimension of M1 (and also MOUT).
+      integer(ip) :: nc1r2  !! Column dimension of M1 and row dimension of M2.
+      integer(ip) :: nc2  !! Column dimension of M2 (and also MOUT).
+      real(wp) :: m1   ( nr1,   nc1r2 )  !! NR1   x NC1R2 double precision matrix.
+      real(wp) :: m2   ( nc1r2, nc2   )  !! NC1R2 x NC2   double precision matrix.
+      real(wp) :: mout ( nr1,   nc2   )  !! NR1 x NC2 double precision matrix.
       call pepper_mxmg ( m1, m2, nr1, nc1r2, nc2, mout )
       end subroutine mxmg
 
@@ -638,9 +638,9 @@
       use pepper_math, only: pepper_mxmt => mxmt
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           m1   ( 3,3 )  !! 3x3 double precision matrix.
-      real(wp)           m2   ( 3,3 )  !! 3x3 double precision matrix.
-      real(wp)           mout ( 3,3 )  !! The product M1 times transpose of M2.
+      real(wp) :: m1   ( 3,3 )  !! 3x3 double precision matrix.
+      real(wp) :: m2   ( 3,3 )  !! 3x3 double precision matrix.
+      real(wp) :: mout ( 3,3 )  !! The product M1 times transpose of M2.
       call pepper_mxmt ( m1, m2, mout )
       end subroutine mxmt
 
@@ -652,13 +652,13 @@
       use pepper_math, only: pepper_mxmtg => mxmtg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        nr1  !! Row dimension of M1 and row dimension of MOUT.
-      integer(ip)        nc1c2  !! Column dimension of M1 and column dimension of M2.
-      integer(ip)        nr2  !! Row dimension of M2 and column dimension of MOUT.
-      real(wp)           m1   ( nr1,nc1c2 )  !! Left-hand matrix to be multiplied.
-      real(wp)           m2   ( nr2,nc1c2 )  !! Right-hand matrix whose transpose is to be
+      integer(ip) :: nr1  !! Row dimension of M1 and row dimension of MOUT.
+      integer(ip) :: nc1c2  !! Column dimension of M1 and column dimension of M2.
+      integer(ip) :: nr2  !! Row dimension of M2 and column dimension of MOUT.
+      real(wp) :: m1   ( nr1,nc1c2 )  !! Left-hand matrix to be multiplied.
+      real(wp) :: m2   ( nr2,nc1c2 )  !! Right-hand matrix whose transpose is to be
                                              !! multiplied.
-      real(wp)           mout ( nr1,nr2   )  !! Product matrix M1 * M2**T.
+      real(wp) :: mout ( nr1,nr2   )  !! Product matrix M1 * M2**T.
       call pepper_mxmtg ( m1, m2, nr1, nc1c2, nr2, mout )
       end subroutine mxmtg
 
@@ -670,9 +670,9 @@
       use pepper_math, only: pepper_mxv => mxv
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           m      ( 3, 3 )  !! 3x3 double precision matrix.
-      real(wp)           vin    (    3 )  !! 3-dimensional double precision vector.
-      real(wp)           vout   (    3 )  !! 3-dimensional double precision vector. VOUT is the
+      real(wp) :: m      ( 3, 3 )  !! 3x3 double precision matrix.
+      real(wp) :: vin    (    3 )  !! 3-dimensional double precision vector.
+      real(wp) :: vout   (    3 )  !! 3-dimensional double precision vector. VOUT is the
                                           !! product M*VIN.
       call pepper_mxv ( m, vin, vout )
       end subroutine mxv
@@ -684,11 +684,11 @@
       use pepper_math, only: pepper_mxvg => mxvg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        nr1  !! Row dimension of M1 and length of VOUT.
-      integer(ip)        nc1r2  !! Column dimension of M1 and length of V2.
-      real(wp)           m1   ( nr1,nc1r2 )  !! Left-hand matrix to be multiplied.
-      real(wp)           v2   (     nc1r2 )  !! Right-hand vector to be multiplied.
-      real(wp)           vout ( nr1       )  !! Product vector M1*V2.
+      integer(ip) :: nr1  !! Row dimension of M1 and length of VOUT.
+      integer(ip) :: nc1r2  !! Column dimension of M1 and length of V2.
+      real(wp) :: m1   ( nr1,nc1r2 )  !! Left-hand matrix to be multiplied.
+      real(wp) :: v2   (     nc1r2 )  !! Right-hand vector to be multiplied.
+      real(wp) :: vout ( nr1       )  !! Product vector M1*V2.
       call pepper_mxvg ( m1, v2, nr1, nc1r2, vout )
       end subroutine mxvg
 
@@ -699,7 +699,7 @@
       use pepper_math, only: pepper_odd => odd
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      ival  !! The integer in question.
+      integer(ip) :: ival  !! The integer in question.
       odd = pepper_odd ( ival )
       end function odd
 
@@ -711,8 +711,8 @@
       use pepper_math, only: pepper_opsgnd => opsgnd
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           x  !! A double precision number
-      real(wp)           y  !! A double precision number
+      real(wp) :: x  !! A double precision number
+      real(wp) :: y  !! A double precision number
       opsgnd = pepper_opsgnd ( x, y )
       end function opsgnd
 
@@ -723,8 +723,8 @@
       use pepper_math, only: pepper_opsgni => opsgni
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      x  !! An integer.
-      integer(ip)      y  !! An integer.
+      integer(ip) :: x  !! An integer.
+      integer(ip) :: y  !! An integer.
       opsgni = pepper_opsgni ( x, y )
       end function opsgni
 
@@ -736,12 +736,12 @@
       use pepper_math, only: pepper_pl2nvc => pl2nvc
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)           ubpl
+      integer(ip) :: ubpl
       parameter           ( ubpl    =   4 )
-      real(wp)              plane  ( ubpl )  !! A SPICE plane.
-      real(wp)              normal (    3 )  !! A normal vector and constant defining the geometric
+      real(wp) :: plane  ( ubpl )  !! A SPICE plane.
+      real(wp) :: normal (    3 )  !! A normal vector and constant defining the geometric
                                              !! plane represented by PLANE.
-      real(wp)              konst  !! A normal vector and constant defining the geometric plane
+      real(wp) :: konst  !! A normal vector and constant defining the geometric plane
                                    !! represented by PLANE.
       integer(ip), parameter :: nmlpos = 1
       integer(ip), parameter :: conpos = 4
@@ -756,11 +756,11 @@
       use pepper_math, only: pepper_pl2nvp => pl2nvp
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)           ubpl
+      integer(ip) :: ubpl
       parameter           ( ubpl   =    4 )
-      real(wp)              plane  ( ubpl )  !! A SPICE plane.
-      real(wp)              normal (    3 )  !! A unit normal vector and point that define PLANE.
-      real(wp)              point  (    3 )  !! A unit normal vector and point that define PLANE.
+      real(wp) :: plane  ( ubpl )  !! A SPICE plane.
+      real(wp) :: normal (    3 )  !! A unit normal vector and point that define PLANE.
+      real(wp) :: point  (    3 )  !! A unit normal vector and point that define PLANE.
       call pepper_pl2nvp ( plane, normal, point )
       end subroutine pl2nvp
 
@@ -772,14 +772,14 @@
       use pepper_math, only: pepper_pl2psv => pl2psv
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)           ubpl
+      integer(ip) :: ubpl
       parameter           ( ubpl   =   4 )
-      real(wp)              plane ( ubpl )  !! A SPICE plane.
-      real(wp)              point (    3 )  !! A point in the input plane and two vectors spanning
+      real(wp) :: plane ( ubpl )  !! A SPICE plane.
+      real(wp) :: point (    3 )  !! A point in the input plane and two vectors spanning
                                             !! the input plane.
-      real(wp)              span1 (    3 )  !! A point in the input plane and two vectors spanning
+      real(wp) :: span1 (    3 )  !! A point in the input plane and two vectors spanning
                                             !! the input plane.
-      real(wp)              span2 (    3 )  !! A point in the input plane and two vectors spanning
+      real(wp) :: span2 (    3 )  !! A point in the input plane and two vectors spanning
                                             !! the input plane.
       call pepper_pl2psv ( plane, point, span1, span2 )
       end subroutine pl2psv
@@ -793,9 +793,9 @@
       use pepper_math, only: pepper_pltexp => pltexp
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              iverts ( 3, 3 )  !! Vertices of the plate to be expanded.
-      real(wp)              delta  !! Fraction by which the plate is to be expanded.
-      real(wp)              overts ( 3, 3 )  !! Vertices of the expanded plate.
+      real(wp) :: iverts ( 3, 3 )  !! Vertices of the plate to be expanded.
+      real(wp) :: delta  !! Fraction by which the plate is to be expanded.
+      real(wp) :: overts ( 3, 3 )  !! Vertices of the expanded plate.
       call pepper_pltexp ( iverts, delta, overts )
       end subroutine pltexp
 
@@ -807,10 +807,10 @@
       use pepper_math, only: pepper_pltnrm => pltnrm
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              v1     ( 3 )  !! Vertices of a plate.
-      real(wp)              v2     ( 3 )  !! Vertices of a plate.
-      real(wp)              v3     ( 3 )  !! Vertices of a plate.
-      real(wp)              normal ( 3 )  !! Plate's outward normal vector.
+      real(wp) :: v1     ( 3 )  !! Vertices of a plate.
+      real(wp) :: v2     ( 3 )  !! Vertices of a plate.
+      real(wp) :: v3     ( 3 )  !! Vertices of a plate.
+      real(wp) :: normal ( 3 )  !! Plate's outward normal vector.
       call pepper_pltnrm ( v1, v2, v3, normal )
       end subroutine pltnrm
 
@@ -822,11 +822,11 @@
       use pepper_math, only: pepper_polyds => polyds
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              coeffs ( 0:* )  !! Coefficients of the polynomial to be evaluated.
-      integer(ip)           deg  !! Degree of the polynomial to be evaluated.
-      integer(ip)           nderiv  !! Number of derivatives to compute.
-      real(wp)              t  !! Point to evaluate the polynomial and derivatives
-      real(wp)              p      ( 0:* )  !! Value of polynomial and derivatives.
+      real(wp) :: coeffs ( 0:* )  !! Coefficients of the polynomial to be evaluated.
+      integer(ip) :: deg  !! Degree of the polynomial to be evaluated.
+      integer(ip) :: nderiv  !! Number of derivatives to compute.
+      real(wp) :: t  !! Point to evaluate the polynomial and derivatives
+      real(wp) :: p      ( 0:* )  !! Value of polynomial and derivatives.
       call pepper_polyds ( coeffs, deg, nderiv, t, p )
       end subroutine polyds
 
@@ -838,8 +838,8 @@
       use pepper_math, only: pepper_q2m => q2m
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              q ( 0 : 3 )  !! A unit quaternion.
-      real(wp)              r ( 3,  3 )  !! A rotation matrix corresponding to Q.
+      real(wp) :: q ( 0 : 3 )  !! A unit quaternion.
+      real(wp) :: r ( 3,  3 )  !! A rotation matrix corresponding to Q.
       call pepper_q2m ( q, r )
       end subroutine q2m
 
@@ -851,9 +851,9 @@
       use pepper_math, only: pepper_qdq2av => qdq2av
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              q    ( 0 : 3 )  !! Unit SPICE quaternion.
-      real(wp)              dq   ( 0 : 3 )  !! Derivative of Q with respect to time.
-      real(wp)              av   ( 3 )  !! Angular velocity defined by Q and DQ.
+      real(wp) :: q    ( 0 : 3 )  !! Unit SPICE quaternion.
+      real(wp) :: dq   ( 0 : 3 )  !! Derivative of Q with respect to time.
+      real(wp) :: av   ( 3 )  !! Angular velocity defined by Q and DQ.
       call pepper_qdq2av ( q, dq, av )
       end subroutine qdq2av
 
@@ -864,9 +864,9 @@
       use pepper_math, only: pepper_qxq => qxq
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              q1   ( 0 : 3 )  !! First SPICE quaternion factor.
-      real(wp)              q2   ( 0 : 3 )  !! Second SPICE quaternion factor.
-      real(wp)              qout ( 0 : 3 )  !! Product of Q1 and Q2.
+      real(wp) :: q1   ( 0 : 3 )  !! First SPICE quaternion factor.
+      real(wp) :: q2   ( 0 : 3 )  !! Second SPICE quaternion factor.
+      real(wp) :: qout ( 0 : 3 )  !! Product of Q1 and Q2.
       call pepper_qxq ( q1, q2, qout )
       end subroutine qxq
 
@@ -878,10 +878,10 @@
       use pepper_math, only: pepper_radrec => radrec
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              range  !! Distance of a point from the origin.
-      real(wp)              ra  !! Right ascension of point in radians.
-      real(wp)              dec  !! Declination of point in radians.
-      real(wp)              rectan ( 3 )  !! Rectangular coordinates of the point.
+      real(wp) :: range  !! Distance of a point from the origin.
+      real(wp) :: ra  !! Right ascension of point in radians.
+      real(wp) :: dec  !! Declination of point in radians.
+      real(wp) :: rectan ( 3 )  !! Rectangular coordinates of the point.
       call pepper_radrec ( range, ra, dec, rectan )
       end subroutine radrec
 
@@ -893,9 +893,9 @@
       use pepper_math, only: pepper_rav2xf => rav2xf
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              rot    ( 3, 3 )  !! Rotation matrix.
-      real(wp)              av     ( 3    )  !! Angular velocity vector.
-      real(wp)              xform  ( 6, 6 )  !! State transformation associated with ROT and AV.
+      real(wp) :: rot    ( 3, 3 )  !! Rotation matrix.
+      real(wp) :: av     ( 3    )  !! Angular velocity vector.
+      real(wp) :: xform  ( 6, 6 )  !! State transformation associated with ROT and AV.
       call pepper_rav2xf ( rot, av, xform )
       end subroutine rav2xf
 
@@ -907,12 +907,12 @@
       use pepper_math, only: pepper_recazl => recazl
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           rectan ( 3 )  !! Rectangular coordinates of a point.
-      logical            azccw  !! Flag indicating how Azimuth is measured.
-      logical            elplsz  !! Flag indicating how Elevation is measured.
-      real(wp)           range  !! Distance of the point from the origin.
-      real(wp)           az  !! Azimuth in radians.
-      real(wp)           el  !! Elevation in radians.
+      real(wp) :: rectan ( 3 )  !! Rectangular coordinates of a point.
+      logical :: azccw  !! Flag indicating how Azimuth is measured.
+      logical :: elplsz  !! Flag indicating how Elevation is measured.
+      real(wp) :: range  !! Distance of the point from the origin.
+      real(wp) :: az  !! Azimuth in radians.
+      real(wp) :: el  !! Elevation in radians.
       call pepper_recazl ( rectan, azccw, elplsz, range, az, el )
       end subroutine recazl
 
@@ -923,10 +923,10 @@
       use pepper_math, only: pepper_reccyl => reccyl
       use pepper_kinds, only: wp
       implicit none
-      real(wp) rectan(3)  !! Rectangular coordinates of a point.
-      real(wp) r  !! Distance of the point from Z axis.
-      real(wp) clon  !! Angle (radians) of the point from XZ plane
-      real(wp) z  !! Height of the point above XY plane.
+      real(wp) :: rectan(3)  !! Rectangular coordinates of a point.
+      real(wp) :: r  !! Distance of the point from Z axis.
+      real(wp) :: clon  !! Angle (radians) of the point from XZ plane
+      real(wp) :: z  !! Height of the point above XY plane.
       call pepper_reccyl ( rectan, r, clon, z )
       end subroutine reccyl
 
@@ -937,10 +937,10 @@
       use pepper_math, only: pepper_reclat => reclat
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           rectan ( 3 )  !! Rectangular coordinates of the point.
-      real(wp)           radius  !! Distance of a point from the origin.
-      real(wp)           lon  !! Longitude of point in radians.
-      real(wp)           lat  !! Latitude of point in radians.
+      real(wp) :: rectan ( 3 )  !! Rectangular coordinates of the point.
+      real(wp) :: radius  !! Distance of a point from the origin.
+      real(wp) :: lon  !! Longitude of point in radians.
+      real(wp) :: lat  !! Latitude of point in radians.
       call pepper_reclat ( rectan, radius, lon, lat )
       end subroutine reclat
 
@@ -952,10 +952,10 @@
       use pepper_math, only: pepper_recrad => recrad
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           rectan ( 3 )  !! Rectangular coordinates of a point.
-      real(wp)           range  !! Distance of the point from the origin.
-      real(wp)           ra  !! Right ascension in radians.
-      real(wp)           dec  !! Declination in radians.
+      real(wp) :: rectan ( 3 )  !! Rectangular coordinates of a point.
+      real(wp) :: range  !! Distance of the point from the origin.
+      real(wp) :: ra  !! Right ascension in radians.
+      real(wp) :: dec  !! Declination in radians.
       call pepper_recrad ( rectan, range, ra, dec )
       end subroutine recrad
 
@@ -966,10 +966,10 @@
       use pepper_math, only: pepper_recsph => recsph
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           rectan ( 3 )  !! Rectangular coordinates of a point.
-      real(wp)           r  !! Distance of the point from the origin.
-      real(wp)           colat  !! Angle of the point from the Z-axis (radians)
-      real(wp)           slon  !! Longitude of the point (radians).
+      real(wp) :: rectan ( 3 )  !! Rectangular coordinates of a point.
+      real(wp) :: r  !! Distance of the point from the origin.
+      real(wp) :: colat  !! Angle of the point from the Z-axis (radians)
+      real(wp) :: slon  !! Longitude of the point (radians).
       call pepper_recsph ( rectan, r, colat, slon )
       end subroutine recsph
 
@@ -983,7 +983,7 @@
       use pepper_math, only: pepper_sharpr => sharpr
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              rot ( 3, 3 )  !! The rotation matrix to be sharpened.
+      real(wp) :: rot ( 3, 3 )  !! The rotation matrix to be sharpened.
       call pepper_sharpr ( rot )
       end subroutine sharpr
 
@@ -995,8 +995,8 @@
       use pepper_math, only: pepper_smsgnd => smsgnd
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           x  !! A double precision number
-      real(wp)           y  !! A double precision number
+      real(wp) :: x  !! A double precision number
+      real(wp) :: y  !! A double precision number
       smsgnd = pepper_smsgnd ( x, y )
       end function smsgnd
 
@@ -1007,8 +1007,8 @@
       use pepper_math, only: pepper_smsgni => smsgni
       use pepper_kinds, only: ip
       implicit none
-      integer(ip)      x  !! An integer.
-      integer(ip)      y  !! An integer.
+      integer(ip) :: x  !! An integer.
+      integer(ip) :: y  !! An integer.
       smsgni = pepper_smsgni ( x, y )
       end function smsgni
 
@@ -1019,12 +1019,12 @@
       use pepper_math, only: pepper_sphcyl => sphcyl
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           radius  !! Distance of point from origin.
-      real(wp)           colat  !! Polar angle (co-latitude in radians) of point.
-      real(wp)           slon  !! Azimuthal angle (longitude) of point (radians).
-      real(wp)           r  !! Distance of point from Z axis.
-      real(wp)           clon  !! Angle (radians) of point from XZ plane.
-      real(wp)           z  !! Height of point above XY plane.
+      real(wp) :: radius  !! Distance of point from origin.
+      real(wp) :: colat  !! Polar angle (co-latitude in radians) of point.
+      real(wp) :: slon  !! Azimuthal angle (longitude) of point (radians).
+      real(wp) :: r  !! Distance of point from Z axis.
+      real(wp) :: clon  !! Angle (radians) of point from XZ plane.
+      real(wp) :: z  !! Height of point above XY plane.
       call pepper_sphcyl ( radius, colat, slon, r, clon, z )
       end subroutine sphcyl
 
@@ -1035,12 +1035,12 @@
       use pepper_math, only: pepper_sphlat => sphlat
       use pepper_kinds, only: wp
       implicit none
-      real(wp) r  !! Distance of the point from the origin.
-      real(wp) colat  !! Angle of the point from positive Z axis (radians).
-      real(wp) slon  !! Angle of the point from the XZ plane (radians).
-      real(wp) radius  !! Distance of a point from the origin
-      real(wp) lon  !! Angle of the point from the XZ plane in radians
-      real(wp) lat  !! Angle of the point from the XY plane in radians
+      real(wp) :: r  !! Distance of the point from the origin.
+      real(wp) :: colat  !! Angle of the point from positive Z axis (radians).
+      real(wp) :: slon  !! Angle of the point from the XZ plane (radians).
+      real(wp) :: radius  !! Distance of a point from the origin
+      real(wp) :: lon  !! Angle of the point from the XZ plane in radians
+      real(wp) :: lat  !! Angle of the point from the XY plane in radians
       call pepper_sphlat ( r, colat, slon, radius, lon, lat )
       end subroutine sphlat
 
@@ -1051,10 +1051,10 @@
       use pepper_math, only: pepper_sphrec => sphrec
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           r  !! Distance of a point from the origin.
-      real(wp)           colat  !! Angle of the point from the Z-axis in radians.
-      real(wp)           slon  !! Angle of the point from the XZ plane in radians.
-      real(wp)           rectan ( 3 )  !! Rectangular coordinates of the point.
+      real(wp) :: r  !! Distance of a point from the origin.
+      real(wp) :: colat  !! Angle of the point from the Z-axis in radians.
+      real(wp) :: slon  !! Angle of the point from the XZ plane in radians.
+      real(wp) :: rectan ( 3 )  !! Rectangular coordinates of the point.
       call pepper_sphrec ( r, colat, slon, rectan )
       end subroutine sphrec
 
@@ -1065,7 +1065,7 @@
       use pepper_math, only: pepper_trace => trace
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           matrix ( 3, 3 )  !! 3x3 matrix of double precision numbers.
+      real(wp) :: matrix ( 3, 3 )  !! 3x3 matrix of double precision numbers.
       trace = pepper_trace ( matrix )
       end function trace
 
@@ -1076,8 +1076,8 @@
       use pepper_math, only: pepper_traceg => traceg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        ndim  !! Dimension of the matrix.
-      real(wp)           matrix ( ndim,ndim )  !! NDIM x NDIM matrix of double precision numbers.
+      integer(ip) :: ndim  !! Dimension of the matrix.
+      real(wp) :: matrix ( ndim,ndim )  !! NDIM x NDIM matrix of double precision numbers.
       traceg = pepper_traceg ( matrix, ndim )
       end function traceg
 
@@ -1088,9 +1088,9 @@
       use pepper_math, only: pepper_ucrss => ucrss
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           v1   ( 3 )  !! Left vector for cross product.
-      real(wp)           v2   ( 3 )  !! Right vector for cross product.
-      real(wp)           vout ( 3 )  !! Normalized cross product of V1 and V2.
+      real(wp) :: v1   ( 3 )  !! Left vector for cross product.
+      real(wp) :: v2   ( 3 )  !! Right vector for cross product.
+      real(wp) :: vout ( 3 )  !! Normalized cross product of V1 and V2.
       call pepper_ucrss ( v1, v2, vout )
       end subroutine ucrss
 
@@ -1101,9 +1101,9 @@
       use pepper_math, only: pepper_unorm => unorm
       use pepper_kinds, only: wp
       implicit none
-      real(wp)          v1   ( 3 )  !! Vector to be normalized.
-      real(wp)          vout ( 3 )  !! Unit vector V1 / |V1|.
-      real(wp)          vmag  !! Magnitude of V1, i.e. |V1|.
+      real(wp) :: v1   ( 3 )  !! Vector to be normalized.
+      real(wp) :: vout ( 3 )  !! Unit vector V1 / |V1|.
+      real(wp) :: vmag  !! Magnitude of V1, i.e. |V1|.
       call pepper_unorm ( v1, vout, vmag )
       end subroutine unorm
 
@@ -1115,10 +1115,10 @@
       use pepper_math, only: pepper_unormg => unormg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        ndim  !! Dimension of V1 (and also VOUT).
-      real(wp)           v1   ( ndim )  !! Vector to be normalized.
-      real(wp)           vout ( ndim )  !! Unit vector V1 / ||V1||.
-      real(wp)           vmag  !! Magnitude of V1, i.e. ||V1||.
+      integer(ip) :: ndim  !! Dimension of V1 (and also VOUT).
+      real(wp) :: v1   ( ndim )  !! Vector to be normalized.
+      real(wp) :: vout ( ndim )  !! Unit vector V1 / ||V1||.
+      real(wp) :: vmag  !! Magnitude of V1, i.e. ||V1||.
       call pepper_unormg ( v1, ndim, vout, vmag )
       end subroutine unormg
 
@@ -1129,9 +1129,9 @@
       use pepper_math, only: pepper_vadd => vadd
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           v1   ( 3 )  !! First vector to be added.
-      real(wp)           v2   ( 3 )  !! Second vector to be added.
-      real(wp)           vout ( 3 )  !! Sum vector, V1 + V2.
+      real(wp) :: v1   ( 3 )  !! First vector to be added.
+      real(wp) :: v2   ( 3 )  !! Second vector to be added.
+      real(wp) :: vout ( 3 )  !! Sum vector, V1 + V2.
       call pepper_vadd ( v1, v2, vout )
       end subroutine vadd
 
@@ -1142,10 +1142,10 @@
       use pepper_math, only: pepper_vaddg => vaddg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)         ndim  !! Dimension of V1, V2, and VOUT.
-      real(wp)            v1   ( ndim )  !! First vector to be added.
-      real(wp)            v2   ( ndim )  !! Second vector to be added.
-      real(wp)            vout ( ndim )  !! Sum vector, V1 + V2.
+      integer(ip) :: ndim  !! Dimension of V1, V2, and VOUT.
+      real(wp) :: v1   ( ndim )  !! First vector to be added.
+      real(wp) :: v2   ( ndim )  !! Second vector to be added.
+      real(wp) :: vout ( ndim )  !! Sum vector, V1 + V2.
       call pepper_vaddg ( v1, v2, ndim, vout )
       end subroutine vaddg
 
@@ -1156,9 +1156,9 @@
       use pepper_math, only: pepper_vcrss => vcrss
       use pepper_kinds, only: wp
       implicit none
-      real(wp)            v1   ( 3 )  !! Left hand vector for cross product.
-      real(wp)            v2   ( 3 )  !! Right hand vector for cross product.
-      real(wp)            vout ( 3 )  !! Cross product V1 x V2.
+      real(wp) :: v1   ( 3 )  !! Left hand vector for cross product.
+      real(wp) :: v2   ( 3 )  !! Right hand vector for cross product.
+      real(wp) :: vout ( 3 )  !! Cross product V1 x V2.
       call pepper_vcrss ( v1, v2, vout )
       end subroutine vcrss
 
@@ -1169,8 +1169,8 @@
       use pepper_math, only: pepper_vdist => vdist
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              v1 ( 3 )  !! Two 3-vectors.
-      real(wp)              v2 ( 3 )  !! Two 3-vectors.
+      real(wp) :: v1 ( 3 )  !! Two 3-vectors.
+      real(wp) :: v2 ( 3 )  !! Two 3-vectors.
       vdist = pepper_vdist ( v1, v2 )
       end function vdist
 
@@ -1181,9 +1181,9 @@
       use pepper_math, only: pepper_vdistg => vdistg
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              v1   ( * )  !! Two vectors of arbitrary dimension.
-      real(wp)              v2   ( * )  !! Two vectors of arbitrary dimension.
-      integer(ip)           ndim  !! The common dimension of V1 and V2
+      real(wp) :: v1   ( * )  !! Two vectors of arbitrary dimension.
+      real(wp) :: v2   ( * )  !! Two vectors of arbitrary dimension.
+      integer(ip) :: ndim  !! The common dimension of V1 and V2
       vdistg = pepper_vdistg ( v1, v2, ndim )
       end function vdistg
 
@@ -1195,8 +1195,8 @@
       use pepper_math, only: pepper_vdot => vdot
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           v1 ( 3 )  !! First vector in the dot product.
-      real(wp)           v2 ( 3 )  !! Second vector in the dot product.
+      real(wp) :: v1 ( 3 )  !! First vector in the dot product.
+      real(wp) :: v2 ( 3 )  !! Second vector in the dot product.
       vdot = pepper_vdot ( v1, v2 )
       end function vdot
 
@@ -1207,9 +1207,9 @@
       use pepper_math, only: pepper_vdotg => vdotg
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           v1  ( * )  !! First vector in the dot product.
-      real(wp)           v2  ( * )  !! Second vector in the dot product.
-      integer(ip)        ndim  !! Dimension of V1 and V2.
+      real(wp) :: v1  ( * )  !! First vector in the dot product.
+      real(wp) :: v2  ( * )  !! Second vector in the dot product.
+      integer(ip) :: ndim  !! Dimension of V1 and V2.
       vdotg = pepper_vdotg ( v1, v2, ndim )
       end function vdotg
 
@@ -1221,8 +1221,8 @@
       use pepper_math, only: pepper_vequ => vequ
       use pepper_kinds, only: wp
       implicit none
-      real(wp)          vin   ( 3 )  !! Double precision 3-dimensional vector.
-      real(wp)          vout  ( 3 )  !! Double precision 3-dimensional vector set equal to VIN.
+      real(wp) :: vin   ( 3 )  !! Double precision 3-dimensional vector.
+      real(wp) :: vout  ( 3 )  !! Double precision 3-dimensional vector set equal to VIN.
       call pepper_vequ ( vin, vout )
       end subroutine vequ
 
@@ -1234,9 +1234,9 @@
       use pepper_math, only: pepper_vequg => vequg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        ndim  !! Dimension of VIN (and also VOUT).
-      real(wp)           vin   ( ndim )  !! Double precision n-dimensional vector.
-      real(wp)           vout  ( ndim )  !! Double precision n-dimensional vector set equal to VIN.
+      integer(ip) :: ndim  !! Dimension of VIN (and also VOUT).
+      real(wp) :: vin   ( ndim )  !! Double precision n-dimensional vector.
+      real(wp) :: vout  ( ndim )  !! Double precision n-dimensional vector set equal to VIN.
       call pepper_vequg ( vin, ndim, vout )
       end subroutine vequg
 
@@ -1248,8 +1248,8 @@
       use pepper_math, only: pepper_vhat => vhat
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           v1   ( 3 )  !! Vector to be normalized.
-      real(wp)           vout ( 3 )  !! Unit vector V1 / |V1|.
+      real(wp) :: v1   ( 3 )  !! Vector to be normalized.
+      real(wp) :: vout ( 3 )  !! Unit vector V1 / |V1|.
       call pepper_vhat ( v1, vout )
       end subroutine vhat
 
@@ -1261,9 +1261,9 @@
       use pepper_math, only: pepper_vhatg => vhatg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        ndim  !! Dimension of V1 (and also VOUT).
-      real(wp)           v1   ( ndim )  !! Vector to be normalized.
-      real(wp)           vout ( ndim )  !! Unit vector along V1.
+      integer(ip) :: ndim  !! Dimension of V1 (and also VOUT).
+      real(wp) :: v1   ( ndim )  !! Vector to be normalized.
+      real(wp) :: vout ( ndim )  !! Unit vector along V1.
       call pepper_vhatg ( v1, ndim, vout )
       end subroutine vhatg
 
@@ -1274,7 +1274,7 @@
       use pepper_math, only: pepper_vhatip => vhatip
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           v ( 3 )  !! Vector to be normalized/unit vector.
+      real(wp) :: v ( 3 )  !! Vector to be normalized/unit vector.
       call pepper_vhatip ( v )
       end subroutine vhatip
 
@@ -1286,11 +1286,11 @@
       use pepper_math, only: pepper_vlcom => vlcom
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           a  !! Coefficient of V1.
-      real(wp)           v1  ( 3 )  !! Vector in 3-space.
-      real(wp)           b  !! Coefficient of V2.
-      real(wp)           v2  ( 3 )  !! Vector in 3-space.
-      real(wp)           sum ( 3 )  !! Linear vector combination A*V1 + B*V2.
+      real(wp) :: a  !! Coefficient of V1.
+      real(wp) :: v1  ( 3 )  !! Vector in 3-space.
+      real(wp) :: b  !! Coefficient of V2.
+      real(wp) :: v2  ( 3 )  !! Vector in 3-space.
+      real(wp) :: sum ( 3 )  !! Linear vector combination A*V1 + B*V2.
       call pepper_vlcom ( a, v1, b, v2, sum )
       end subroutine vlcom
 
@@ -1302,13 +1302,13 @@
       use pepper_math, only: pepper_vlcom3 => vlcom3
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           a  !! Coefficient of V1.
-      real(wp)           v1  ( 3 )  !! Vector in 3-space.
-      real(wp)           b  !! Coefficient of V2.
-      real(wp)           v2  ( 3 )  !! Vector in 3-space.
-      real(wp)           c  !! Coefficient of V3.
-      real(wp)           v3  ( 3 )  !! Vector in 3-space.
-      real(wp)           sum ( 3 )  !! Linear vector combination A*V1 + B*V2 + C*V3.
+      real(wp) :: a  !! Coefficient of V1.
+      real(wp) :: v1  ( 3 )  !! Vector in 3-space.
+      real(wp) :: b  !! Coefficient of V2.
+      real(wp) :: v2  ( 3 )  !! Vector in 3-space.
+      real(wp) :: c  !! Coefficient of V3.
+      real(wp) :: v3  ( 3 )  !! Vector in 3-space.
+      real(wp) :: sum ( 3 )  !! Linear vector combination A*V1 + B*V2 + C*V3.
       call pepper_vlcom3 ( a, v1, b, v2, c, v3, sum )
       end subroutine vlcom3
 
@@ -1320,12 +1320,12 @@
       use pepper_math, only: pepper_vlcomg => vlcomg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        n  !! Dimension of vector space.
-      real(wp)           a  !! Coefficient of V1.
-      real(wp)           v1  ( n )  !! Vector in N-space.
-      real(wp)           b  !! Coefficient of V2.
-      real(wp)           v2  ( n )  !! Vector in N-space.
-      real(wp)           sum ( n )  !! Linear vector combination A*V1 + B*V2.
+      integer(ip) :: n  !! Dimension of vector space.
+      real(wp) :: a  !! Coefficient of V1.
+      real(wp) :: v1  ( n )  !! Vector in N-space.
+      real(wp) :: b  !! Coefficient of V2.
+      real(wp) :: v2  ( n )  !! Vector in N-space.
+      real(wp) :: sum ( n )  !! Linear vector combination A*V1 + B*V2.
       call pepper_vlcomg ( n, a, v1, b, v2, sum )
       end subroutine vlcomg
 
@@ -1336,9 +1336,9 @@
       use pepper_math, only: pepper_vminug => vminug
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        ndim  !! Dimension of VIN (and also VOUT).
-      real(wp)           vin   ( ndim )  !! n-dimensional vector to be negated.
-      real(wp)           vout  ( ndim )  !! Negated vector -V1.
+      integer(ip) :: ndim  !! Dimension of VIN (and also VOUT).
+      real(wp) :: vin   ( ndim )  !! n-dimensional vector to be negated.
+      real(wp) :: vout  ( ndim )  !! Negated vector -V1.
       call pepper_vminug ( vin, ndim, vout )
       end subroutine vminug
 
@@ -1349,8 +1349,8 @@
       use pepper_math, only: pepper_vminus => vminus
       use pepper_kinds, only: wp
       implicit none
-      real(wp)          v1   ( 3 )  !! Vector to be negated.
-      real(wp)          vout ( 3 )  !! Negated vector -V1.
+      real(wp) :: v1   ( 3 )  !! Vector to be negated.
+      real(wp) :: vout ( 3 )  !! Negated vector -V1.
       call pepper_vminus ( v1, vout )
       end subroutine vminus
 
@@ -1362,7 +1362,7 @@
       use pepper_math, only: pepper_vnorm => vnorm
       use pepper_kinds, only: wp
       implicit none
-      real(wp)          v1 ( 3 )  !! Vector whose magnitude is to be found.
+      real(wp) :: v1 ( 3 )  !! Vector whose magnitude is to be found.
       vnorm = pepper_vnorm ( v1 )
       end function vnorm
 
@@ -1374,8 +1374,8 @@
       use pepper_math, only: pepper_vnormg => vnormg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        ndim  !! Dimension of V1.
-      real(wp)           v1   ( ndim )  !! Vector whose magnitude is to be found.
+      integer(ip) :: ndim  !! Dimension of V1.
+      real(wp) :: v1   ( ndim )  !! Vector whose magnitude is to be found.
       vnormg = pepper_vnormg ( v1, ndim )
       end function vnormg
 
@@ -1386,10 +1386,10 @@
       use pepper_math, only: pepper_vpack => vpack
       use pepper_kinds, only: wp
       implicit none
-      real(wp) x  !! Scalar components of a vector.
-      real(wp) y  !! Scalar components of a vector.
-      real(wp) z  !! Scalar components of a vector.
-      real(wp) v ( 3 )  !! Equivalent vector.
+      real(wp) :: x  !! Scalar components of a vector.
+      real(wp) :: y  !! Scalar components of a vector.
+      real(wp) :: z  !! Scalar components of a vector.
+      real(wp) :: v ( 3 )  !! Equivalent vector.
       call pepper_vpack ( x, y, z, v )
       end subroutine vpack
 
@@ -1401,9 +1401,9 @@
       use pepper_math, only: pepper_vperp => vperp
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           a ( 3 )  !! The vector whose orthogonal component is sought.
-      real(wp)           b ( 3 )  !! The vector used as the orthogonal reference.
-      real(wp)           p ( 3 )  !! The component of A orthogonal to B.
+      real(wp) :: a ( 3 )  !! The vector whose orthogonal component is sought.
+      real(wp) :: b ( 3 )  !! The vector used as the orthogonal reference.
+      real(wp) :: p ( 3 )  !! The component of A orthogonal to B.
       call pepper_vperp ( a, b, p )
       end subroutine vperp
 
@@ -1415,9 +1415,9 @@
       use pepper_math, only: pepper_vproj => vproj
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           a ( 3 )  !! The vector to be projected.
-      real(wp)           b ( 3 )  !! The vector onto which A is to be projected.
-      real(wp)           p ( 3 )  !! The projection of A onto B.
+      real(wp) :: a ( 3 )  !! The vector to be projected.
+      real(wp) :: b ( 3 )  !! The vector onto which A is to be projected.
+      real(wp) :: p ( 3 )  !! The projection of A onto B.
       call pepper_vproj ( a, b, p )
       end subroutine vproj
 
@@ -1429,10 +1429,10 @@
       use pepper_math, only: pepper_vprojg => vprojg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        ndim  !! Dimension of A, B, and P.
-      real(wp)           a ( ndim )  !! The vector to be projected.
-      real(wp)           b ( ndim )  !! The vector onto which A is to be projected.
-      real(wp)           p ( ndim )  !! The projection of A onto B.
+      integer(ip) :: ndim  !! Dimension of A, B, and P.
+      real(wp) :: a ( ndim )  !! The vector to be projected.
+      real(wp) :: b ( ndim )  !! The vector onto which A is to be projected.
+      real(wp) :: p ( ndim )  !! The projection of A onto B.
       call pepper_vprojg ( a, b, ndim, p )
       end subroutine vprojg
 
@@ -1443,8 +1443,8 @@
       use pepper_math, only: pepper_vrel => vrel
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              v1 ( 3 )  !! Input vectors.
-      real(wp)              v2 ( 3 )  !! Input vectors.
+      real(wp) :: v1 ( 3 )  !! Input vectors.
+      real(wp) :: v2 ( 3 )  !! Input vectors.
       vrel = pepper_vrel ( v1, v2 )
       end function vrel
 
@@ -1456,9 +1456,9 @@
       use pepper_math, only: pepper_vrelg => vrelg
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              v1 ( * )  !! Input vectors.
-      real(wp)              v2 ( * )  !! Input vectors.
-      integer(ip)           ndim  !! Dimension of V1 and V2.
+      real(wp) :: v1 ( * )  !! Input vectors.
+      real(wp) :: v2 ( * )  !! Input vectors.
+      integer(ip) :: ndim  !! Dimension of V1 and V2.
       vrelg = pepper_vrelg ( v1, v2, ndim )
       end function vrelg
 
@@ -1470,10 +1470,10 @@
       use pepper_math, only: pepper_vrotv => vrotv
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           v    ( 3 )  !! Vector to be rotated.
-      real(wp)           axis ( 3 )  !! Axis of the rotation.
-      real(wp)           theta  !! Angle of rotation (radians).
-      real(wp)           r    ( 3 )  !! Result of rotating V about AXIS by THETA.
+      real(wp) :: v    ( 3 )  !! Vector to be rotated.
+      real(wp) :: axis ( 3 )  !! Axis of the rotation.
+      real(wp) :: theta  !! Angle of rotation (radians).
+      real(wp) :: r    ( 3 )  !! Result of rotating V about AXIS by THETA.
       call pepper_vrotv ( v, axis, theta, r )
       end subroutine vrotv
 
@@ -1484,9 +1484,9 @@
       use pepper_math, only: pepper_vscl => vscl
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           s  !! Scalar to multiply a vector.
-      real(wp)           v1   ( 3 )  !! Vector to be multiplied.
-      real(wp)           vout ( 3 )  !! Product vector, S * V1.
+      real(wp) :: s  !! Scalar to multiply a vector.
+      real(wp) :: v1   ( 3 )  !! Vector to be multiplied.
+      real(wp) :: vout ( 3 )  !! Product vector, S * V1.
       call pepper_vscl ( s, v1, vout )
       end subroutine vscl
 
@@ -1498,10 +1498,10 @@
       use pepper_math, only: pepper_vsclg => vsclg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        ndim  !! Dimension of V1 (and also VOUT).
-      real(wp)           s  !! Scalar to multiply a vector.
-      real(wp)           v1   ( ndim )  !! Vector to be multiplied.
-      real(wp)           vout ( ndim )  !! Product vector, S * V1.
+      integer(ip) :: ndim  !! Dimension of V1 (and also VOUT).
+      real(wp) :: s  !! Scalar to multiply a vector.
+      real(wp) :: v1   ( ndim )  !! Vector to be multiplied.
+      real(wp) :: vout ( ndim )  !! Product vector, S * V1.
       call pepper_vsclg ( s, v1, ndim, vout )
       end subroutine vsclg
 
@@ -1513,8 +1513,8 @@
       use pepper_math, only: pepper_vsclip => vsclip
       use pepper_kinds, only: wp
       implicit none
-      real(wp)           s  !! Scalar by which to multiply a vector.
-      real(wp)           v ( 3 )  !! Vector to be multiplied/result of multiplication.
+      real(wp) :: s  !! Scalar by which to multiply a vector.
+      real(wp) :: v ( 3 )  !! Vector to be multiplied/result of multiplication.
       call pepper_vsclip ( s, v )
       end subroutine vsclip
 
@@ -1527,8 +1527,8 @@
       use pepper_math, only: pepper_vsep => vsep
       use pepper_kinds, only: wp
       implicit none
-      real(wp)          v1 ( 3 )  !! First vector.
-      real(wp)          v2 ( 3 )  !! Second vector.
+      real(wp) :: v1 ( 3 )  !! First vector.
+      real(wp) :: v2 ( 3 )  !! Second vector.
       vsep = pepper_vsep ( v1, v2 )
       end function vsep
 
@@ -1541,9 +1541,9 @@
       use pepper_math, only: pepper_vsepg => vsepg
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           v1 ( * )  !! First vector.
-      real(wp)           v2 ( * )  !! Second vector.
-      integer(ip)        ndim  !! The number of elements in V1 and V2.
+      real(wp) :: v1 ( * )  !! First vector.
+      real(wp) :: v2 ( * )  !! Second vector.
+      integer(ip) :: ndim  !! The number of elements in V1 and V2.
       vsepg = pepper_vsepg ( v1, v2, ndim )
       end function vsepg
 
@@ -1555,9 +1555,9 @@
       use pepper_math, only: pepper_vsub => vsub
       use pepper_kinds, only: wp
       implicit none
-      real(wp)          v1   ( 3 )  !! First vector (minuend).
-      real(wp)          v2   ( 3 )  !! Second vector (subtrahend).
-      real(wp)          vout ( 3 )  !! Difference vector, V1 - V2.
+      real(wp) :: v1   ( 3 )  !! First vector (minuend).
+      real(wp) :: v2   ( 3 )  !! Second vector (subtrahend).
+      real(wp) :: vout ( 3 )  !! Difference vector, V1 - V2.
       call pepper_vsub ( v1, v2, vout )
       end subroutine vsub
 
@@ -1569,10 +1569,10 @@
       use pepper_math, only: pepper_vsubg => vsubg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        ndim  !! Dimension of V1, V2, and VOUT.
-      real(wp)           v1   ( ndim )  !! First vector (minuend).
-      real(wp)           v2   ( ndim )  !! Second vector (subtrahend).
-      real(wp)           vout ( ndim )  !! Difference vector, V1 - V2.
+      integer(ip) :: ndim  !! Dimension of V1, V2, and VOUT.
+      real(wp) :: v1   ( ndim )  !! First vector (minuend).
+      real(wp) :: v2   ( ndim )  !! Second vector (subtrahend).
+      real(wp) :: vout ( ndim )  !! Difference vector, V1 - V2.
       call pepper_vsubg ( v1, v2, ndim, vout )
       end subroutine vsubg
 
@@ -1584,9 +1584,9 @@
       use pepper_math, only: pepper_vtmv => vtmv
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           v1     (   3 )  !! 3-dimensional double precision column vector.
-      real(wp)           matrix ( 3,3 )  !! 3x3 double precision matrix.
-      real(wp)           v2     (   3 )  !! 3-dimensional double precision column vector.
+      real(wp) :: v1     (   3 )  !! 3-dimensional double precision column vector.
+      real(wp) :: matrix ( 3,3 )  !! 3x3 double precision matrix.
+      real(wp) :: v2     (   3 )  !! 3-dimensional double precision column vector.
       vtmv = pepper_vtmv ( v1, matrix, v2 )
       end function vtmv
 
@@ -1598,11 +1598,11 @@
       use pepper_math, only: pepper_vtmvg => vtmvg
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)           nrow  !! Number of rows in MATRIX (number of rows in V1.)
-      integer(ip)           ncol  !! Number of columns in MATRIX (number of rows in V2.)
-      real(wp)              v1      ( nrow       )  !! N-dimensional double precision column vector.
-      real(wp)              matrix  ( nrow, ncol )  !! NxM double precision matrix.
-      real(wp)              v2      (       ncol )  !! M-dimensional double precision column vector.
+      integer(ip) :: nrow  !! Number of rows in MATRIX (number of rows in V1.)
+      integer(ip) :: ncol  !! Number of columns in MATRIX (number of rows in V2.)
+      real(wp) :: v1      ( nrow       )  !! N-dimensional double precision column vector.
+      real(wp) :: matrix  ( nrow, ncol )  !! NxM double precision matrix.
+      real(wp) :: v2      (       ncol )  !! M-dimensional double precision column vector.
       vtmvg = pepper_vtmvg ( v1, matrix, v2, nrow, ncol )
       end function vtmvg
 
@@ -1613,10 +1613,10 @@
       use pepper_math, only: pepper_vupack => vupack
       use pepper_kinds, only: wp
       implicit none
-      real(wp) v ( 3 )  !! Input 3-dimensional vector.
-      real(wp) x  !! Scalar components of the vector.
-      real(wp) y  !! Scalar components of the vector.
-      real(wp) z  !! Scalar components of the vector.
+      real(wp) :: v ( 3 )  !! Input 3-dimensional vector.
+      real(wp) :: x  !! Scalar components of the vector.
+      real(wp) :: y  !! Scalar components of the vector.
+      real(wp) :: z  !! Scalar components of the vector.
       call pepper_vupack ( v, x, y, z )
       end subroutine vupack
 
@@ -1627,7 +1627,7 @@
       use pepper_math, only: pepper_vzero => vzero
       use pepper_kinds, only: wp
       implicit none
-      real(wp)              v ( 3 )  !! Vector to be tested.
+      real(wp) :: v ( 3 )  !! Vector to be tested.
       vzero = pepper_vzero ( v )
       end function vzero
 
@@ -1638,8 +1638,8 @@
       use pepper_math, only: pepper_vzerog => vzerog
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              v    ( * )  !! Vector to be tested.
-      integer(ip)           ndim  !! Dimension of V.
+      real(wp) :: v    ( * )  !! Vector to be tested.
+      integer(ip) :: ndim  !! Dimension of V.
       vzerog = pepper_vzerog ( v, ndim )
       end function vzerog
 
@@ -1651,9 +1651,9 @@
       use pepper_math, only: pepper_xf2rav => xf2rav
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              xform  ( 6, 6 )  !! is a state transformation matrix.
-      real(wp)              rot    ( 3, 3 )  !! is the rotation associated with XFORM.
-      real(wp)              av     ( 3    )  !! is the angular velocity associated with XFORM.
+      real(wp) :: xform  ( 6, 6 )  !! is a state transformation matrix.
+      real(wp) :: rot    ( 3, 3 )  !! is the rotation associated with XFORM.
+      real(wp) :: av     ( 3    )  !! is the angular velocity associated with XFORM.
       call pepper_xf2rav ( xform, rot, av )
       end subroutine xf2rav
 
@@ -1664,8 +1664,8 @@
       use pepper_math, only: pepper_xpose => xpose
       use pepper_kinds, only: wp
       implicit none
-      real(wp)          m1   ( 3,3 )  !! 3x3 matrix to be transposed.
-      real(wp)          mout ( 3,3 )  !! Transpose of M1.
+      real(wp) :: m1   ( 3,3 )  !! 3x3 matrix to be transposed.
+      real(wp) :: mout ( 3,3 )  !! Transpose of M1.
       call pepper_xpose ( m1, mout )
       end subroutine xpose
 
@@ -1677,10 +1677,10 @@
       use pepper_math, only: pepper_xposeg => xposeg
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)           matrix ( 0:* )  !! Matrix to be transposed.
-      integer(ip)        nrow  !! Number of rows of input matrix MATRIX.
-      integer(ip)        ncol  !! Number of columns of input matrix MATRIX.
-      real(wp)           xposem ( 0:* )  !! Transposed matrix.
+      real(wp) :: matrix ( 0:* )  !! Matrix to be transposed.
+      integer(ip) :: nrow  !! Number of rows of input matrix MATRIX.
+      integer(ip) :: ncol  !! Number of columns of input matrix MATRIX.
+      real(wp) :: xposem ( 0:* )  !! Transposed matrix.
       call pepper_xposeg ( matrix, nrow, ncol, xposem )
       end subroutine xposeg
 
@@ -1691,9 +1691,9 @@
       use pepper_math, only: pepper_xpsgip => xpsgip
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip)        nrow  !! Number of rows of input matrix.
-      integer(ip)        ncol  !! Number of columns of input matrix.
-      real(wp)           matrix ( 0 : * )  !! Matrix to be transposed/transposed matrix.
+      integer(ip) :: nrow  !! Number of rows of input matrix.
+      integer(ip) :: ncol  !! Number of columns of input matrix.
+      real(wp) :: matrix ( 0 : * )  !! Matrix to be transposed/transposed matrix.
       call pepper_xpsgip ( nrow, ncol, matrix )
       end subroutine xpsgip
 
@@ -1706,9 +1706,9 @@
       use pepper_math, only: pepper_zzmsxf => zzmsxf
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              matrix ( 6, 6, * )  !! A sequence of state transformation matrices
-      integer(ip)           n  !! The number of state transformation matrices
-      real(wp)              output ( 6, 6    )  !! The product of the state transformations.
+      real(wp) :: matrix ( 6, 6, * )  !! A sequence of state transformation matrices
+      integer(ip) :: n  !! The number of state transformation matrices
+      real(wp) :: output ( 6, 6    )  !! The product of the state transformations.
       call pepper_zzmsxf ( matrix, n, output )
       end subroutine zzmsxf
 
@@ -1721,8 +1721,8 @@
       use pepper_math, only: pepper_zzrxr => zzrxr
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp)              matrix ( 3, 3, * )  !! A sequence of state transformation matrices
-      integer(ip)           n  !! The number of 3x3  matrices
-      real(wp)              output ( 3, 3    )  !! The product of the 3x3 matrices.
+      real(wp) :: matrix ( 3, 3, * )  !! A sequence of state transformation matrices
+      integer(ip) :: n  !! The number of 3x3  matrices
+      real(wp) :: output ( 3, 3    )  !! The product of the 3x3 matrices.
       call pepper_zzrxr ( matrix, n, output )
       end subroutine zzrxr

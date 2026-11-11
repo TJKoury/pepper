@@ -2330,7 +2330,7 @@ contains
 !     Local variables.
 !
 
-      logical               ok
+      logical :: ok
 
 !
 !     Standard SPICE error handling.
@@ -2692,14 +2692,14 @@ contains
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
            latcrd, altcrd, loncrd, latcrd, altcrd ], [ 3, nsys ] )
-      character(crdlen)     sysnam
-      real(wp)              coords ( 3 )
-      real(wp)              lt
-      real(wp)              pos    ( 3 )
-      real(wp)              trgepc
-      real(wp)              srfvec ( 3 )
-      integer(ip)           crdidx
-      integer(ip)           sysidx
+      character(crdlen) :: sysnam
+      real(wp) :: coords ( 3 )
+      real(wp) :: lt
+      real(wp) :: pos    ( 3 )
+      real(wp) :: trgepc
+      real(wp) :: srfvec ( 3 )
+      integer(ip) :: crdidx
+      integer(ip) :: sysidx
       if ( .not. allocated ( ctx%zzgfcoq_state ) ) allocate ( ctx%zzgfcoq_state )
       associate ( ctrnam => ctx%zzgfcoq_state%ctrnam, &
                   first => ctx%zzgfcoq_state%first, &
@@ -3141,18 +3141,18 @@ contains
 !     descriptive names EAST for the "tangential"
 !     direction and NORTH for the "normal" direction.
 !
-      real(wp)              alt
-      real(wp)              dp
-      real(wp)              lat
-      real(wp)              lon
-      real(wp)              normal ( 3 )
-      real(wp)              rtnvel ( 3 )
-      real(wp)              vel    ( 3 )
-      real(wp)              xmat   ( 3, 3 )
+      real(wp) :: alt
+      real(wp) :: dp
+      real(wp) :: lat
+      real(wp) :: lon
+      real(wp) :: normal ( 3 )
+      real(wp) :: rtnvel ( 3 )
+      real(wp) :: vel    ( 3 )
+      real(wp) :: xmat   ( 3, 3 )
 
-      integer(ip)           dpsign
-      integer(ip)           i
-      integer(ip)           rtnsgn ( 3 )
+      integer(ip) :: dpsign
+      integer(ip) :: i
+      integer(ip) :: rtnsgn ( 3 )
 
 !
 !     Standard SPICE error handling.
@@ -3639,8 +3639,8 @@ contains
       use pepper_math, only: vnorm
       implicit none
 
-      real(wp)              lt
-      real(wp)              pos   ( 3 )
+      real(wp) :: lt
+      real(wp) :: pos   ( 3 )
 
 !
 !     Standard SPICE error handling.
@@ -3823,11 +3823,11 @@ contains
 
       integer(ip), parameter :: lnsize = 80
 
-      character(lnsize)     tmpstr
+      character(lnsize) :: tmpstr
 
-      integer(ip)           i
-      integer(ip)           iostat
-      integer(ip)           l
+      integer(ip) :: i
+      integer(ip) :: iostat
+      integer(ip) :: l
 
 !
 !     Get a local copy of the input string.
@@ -4263,44 +4263,44 @@ contains
       real(wp), parameter :: atol = 1.0e-6_wp
       real(wp), parameter :: fvemax = 1.0e-5_wp
       integer(ip), parameter :: bdnmln = 36
-      real(wp)              bsite  ( 3 )
-      real(wp)              coord  ( 2 )
-      real(wp)              ctrext
-      real(wp)              dir    ( 3 )
-      real(wp)              ellrad ( 3 )
-      real(wp)              escale
-      real(wp)              ettarg
-      real(wp)              fovpt  ( 3 )
-      real(wp)              fvlimb ( ubel )
-      real(wp)              insmat ( 3, 3 )
-      real(wp)              l
-      real(wp)              limb   ( ubel )
-      real(wp)              lt
-      real(wp)              m1     ( 3, 3 )
-      real(wp)              m2     ( 3, 3 )
-      real(wp)              obspos ( 3 )
-      real(wp)              pnt2d  ( 3 )
-      real(wp)              semipt ( 3, 2 )
-      real(wp)              sep
-      real(wp)              stobs  ( 6 )
-      real(wp)              trgctr ( 3 )
-      real(wp)              trgsmx ( 3, 3 )
-      real(wp)              vtemp  ( 3 )
-      real(wp)              vtemp2 ( 3 )
-      real(wp)              x      ( 3 )
-      real(wp)              xpt    ( 3 )
-      real(wp)              y      ( 3 )
-      real(wp)              z      ( 3 )
-      integer(ip)           clssid
-      integer(ip)           framid
-      integer(ip)           frcent
-      integer(ip)           frclss
-      integer(ip)           i
-      integer(ip)           nxpts
-      integer(ip)           ocstat
-      integer(ip)           w
-      logical               attblk ( nabcor )
-      logical               found
+      real(wp) :: bsite  ( 3 )
+      real(wp) :: coord  ( 2 )
+      real(wp) :: ctrext
+      real(wp) :: dir    ( 3 )
+      real(wp) :: ellrad ( 3 )
+      real(wp) :: escale
+      real(wp) :: ettarg
+      real(wp) :: fovpt  ( 3 )
+      real(wp) :: fvlimb ( ubel )
+      real(wp) :: insmat ( 3, 3 )
+      real(wp) :: l
+      real(wp) :: limb   ( ubel )
+      real(wp) :: lt
+      real(wp) :: m1     ( 3, 3 )
+      real(wp) :: m2     ( 3, 3 )
+      real(wp) :: obspos ( 3 )
+      real(wp) :: pnt2d  ( 3 )
+      real(wp) :: semipt ( 3, 2 )
+      real(wp) :: sep
+      real(wp) :: stobs  ( 6 )
+      real(wp) :: trgctr ( 3 )
+      real(wp) :: trgsmx ( 3, 3 )
+      real(wp) :: vtemp  ( 3 )
+      real(wp) :: vtemp2 ( 3 )
+      real(wp) :: x      ( 3 )
+      real(wp) :: xpt    ( 3 )
+      real(wp) :: y      ( 3 )
+      real(wp) :: z      ( 3 )
+      integer(ip) :: clssid
+      integer(ip) :: framid
+      integer(ip) :: frcent
+      integer(ip) :: frclss
+      integer(ip) :: i
+      integer(ip) :: nxpts
+      integer(ip) :: ocstat
+      integer(ip) :: w
+      logical :: attblk ( nabcor )
+      logical :: found
       character(shplen) :: svtshp
       integer(ip) :: svinst
       if ( .not. allocated ( ctx%zzgffvu_state ) ) then
@@ -5134,45 +5134,45 @@ contains
       real(wp), parameter :: atol = 1.0e-6_wp
       real(wp), parameter :: fvemax = 1.0e-5_wp
       integer(ip), parameter :: bdnmln = 36
-      real(wp)              bsite  ( 3 )
-      real(wp)              coord  ( 2 )
-      real(wp)              ctrext
-      real(wp)              dir    ( 3 )
-      real(wp)              ellrad ( 3 )
-      real(wp)              escale
-      real(wp)              ettarg
-      real(wp)              fovpt  ( 3 )
-      real(wp)              fvlimb ( ubel )
-      real(wp)              insmat ( 3, 3 )
-      real(wp)              l
-      real(wp)              limb   ( ubel )
-      real(wp)              lt
-      real(wp)              m1     ( 3, 3 )
-      real(wp)              m2     ( 3, 3 )
-      real(wp)              obspos ( 3 )
-      real(wp)              pnt2d  ( 3 )
-      real(wp)              pos    ( 3 )
-      real(wp)              semipt ( 3, 2 )
-      real(wp)              sep
-      real(wp)              stobs  ( 6 )
-      real(wp)              trgctr ( 3 )
-      real(wp)              trgsmx ( 3, 3 )
-      real(wp)              vtemp  ( 3 )
-      real(wp)              vtemp2 ( 3 )
-      real(wp)              x      ( 3 )
-      real(wp)              xpt    ( 3 )
-      real(wp)              y      ( 3 )
-      real(wp)              z      ( 3 )
-      integer(ip)           clssid
-      integer(ip)           framid
-      integer(ip)           frcent
-      integer(ip)           frclss
-      integer(ip)           i
-      integer(ip)           nxpts
-      integer(ip)           ocstat
-      integer(ip)           w
-      logical               attblk ( nabcor )
-      logical               found
+      real(wp) :: bsite  ( 3 )
+      real(wp) :: coord  ( 2 )
+      real(wp) :: ctrext
+      real(wp) :: dir    ( 3 )
+      real(wp) :: ellrad ( 3 )
+      real(wp) :: escale
+      real(wp) :: ettarg
+      real(wp) :: fovpt  ( 3 )
+      real(wp) :: fvlimb ( ubel )
+      real(wp) :: insmat ( 3, 3 )
+      real(wp) :: l
+      real(wp) :: limb   ( ubel )
+      real(wp) :: lt
+      real(wp) :: m1     ( 3, 3 )
+      real(wp) :: m2     ( 3, 3 )
+      real(wp) :: obspos ( 3 )
+      real(wp) :: pnt2d  ( 3 )
+      real(wp) :: pos    ( 3 )
+      real(wp) :: semipt ( 3, 2 )
+      real(wp) :: sep
+      real(wp) :: stobs  ( 6 )
+      real(wp) :: trgctr ( 3 )
+      real(wp) :: trgsmx ( 3, 3 )
+      real(wp) :: vtemp  ( 3 )
+      real(wp) :: vtemp2 ( 3 )
+      real(wp) :: x      ( 3 )
+      real(wp) :: xpt    ( 3 )
+      real(wp) :: y      ( 3 )
+      real(wp) :: z      ( 3 )
+      integer(ip) :: clssid
+      integer(ip) :: framid
+      integer(ip) :: frcent
+      integer(ip) :: frclss
+      integer(ip) :: i
+      integer(ip) :: nxpts
+      integer(ip) :: ocstat
+      integer(ip) :: w
+      logical :: attblk ( nabcor )
+      logical :: found
       if ( .not. allocated ( ctx%zzgffvu_state ) ) then
          allocate ( ctx%zzgffvu_state )
          call init_zzgffvu_state ( ctx%zzgffvu_state )
@@ -5791,21 +5791,21 @@ contains
       integer(ip), parameter :: incidx = 2
       integer(ip), parameter :: emtidx = 3
       integer(ip), parameter :: namlen = 50
-      real(wp)              angles ( 3 )
-      real(wp)              emista ( 2 )
-      real(wp)              ettarg
-      real(wp)              incsta ( 2 )
-      real(wp)              normal ( 3 )
-      real(wp)              phssta ( 2 )
-      real(wp)              radii  ( 3 )
-      real(wp)              rate
-      real(wp)              srfvec ( 3 )
-      integer(ip)           n
-      integer(ip)           fxfcde
-      integer(ip)           fxclss
-      integer(ip)           fxtyid
-      integer(ip)           fxcent
-      logical               found
+      real(wp) :: angles ( 3 )
+      real(wp) :: emista ( 2 )
+      real(wp) :: ettarg
+      real(wp) :: incsta ( 2 )
+      real(wp) :: normal ( 3 )
+      real(wp) :: phssta ( 2 )
+      real(wp) :: radii  ( 3 )
+      real(wp) :: rate
+      real(wp) :: srfvec ( 3 )
+      integer(ip) :: n
+      integer(ip) :: fxfcde
+      integer(ip) :: fxclss
+      integer(ip) :: fxtyid
+      integer(ip) :: fxcent
+      logical :: found
       logical :: svablk ( nabcor )
       integer(ip) :: svtarg
       integer(ip) :: svobs
@@ -6132,21 +6132,21 @@ contains
       integer(ip), parameter :: incidx = 2
       integer(ip), parameter :: emtidx = 3
       integer(ip), parameter :: namlen = 50
-      real(wp)              angles ( 3 )
-      real(wp)              emista ( 2 )
-      real(wp)              ettarg
-      real(wp)              incsta ( 2 )
-      real(wp)              normal ( 3 )
-      real(wp)              phssta ( 2 )
-      real(wp)              radii  ( 3 )
-      real(wp)              rate
-      real(wp)              srfvec ( 3 )
-      integer(ip)           n
-      integer(ip)           fxfcde
-      integer(ip)           fxclss
-      integer(ip)           fxtyid
-      integer(ip)           fxcent
-      logical               found
+      real(wp) :: angles ( 3 )
+      real(wp) :: emista ( 2 )
+      real(wp) :: ettarg
+      real(wp) :: incsta ( 2 )
+      real(wp) :: normal ( 3 )
+      real(wp) :: phssta ( 2 )
+      real(wp) :: radii  ( 3 )
+      real(wp) :: rate
+      real(wp) :: srfvec ( 3 )
+      integer(ip) :: n
+      integer(ip) :: fxfcde
+      integer(ip) :: fxclss
+      integer(ip) :: fxtyid
+      integer(ip) :: fxcent
+      logical :: found
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -6282,21 +6282,21 @@ contains
       integer(ip), parameter :: incidx = 2
       integer(ip), parameter :: emtidx = 3
       integer(ip), parameter :: namlen = 50
-      real(wp)              angles ( 3 )
-      real(wp)              emista ( 2 )
-      real(wp)              ettarg
-      real(wp)              incsta ( 2 )
-      real(wp)              normal ( 3 )
-      real(wp)              phssta ( 2 )
-      real(wp)              radii  ( 3 )
-      real(wp)              rate
-      real(wp)              srfvec ( 3 )
-      integer(ip)           n
-      integer(ip)           fxfcde
-      integer(ip)           fxclss
-      integer(ip)           fxtyid
-      integer(ip)           fxcent
-      logical               found
+      real(wp) :: angles ( 3 )
+      real(wp) :: emista ( 2 )
+      real(wp) :: ettarg
+      real(wp) :: incsta ( 2 )
+      real(wp) :: normal ( 3 )
+      real(wp) :: phssta ( 2 )
+      real(wp) :: radii  ( 3 )
+      real(wp) :: rate
+      real(wp) :: srfvec ( 3 )
+      integer(ip) :: n
+      integer(ip) :: fxfcde
+      integer(ip) :: fxclss
+      integer(ip) :: fxtyid
+      integer(ip) :: fxcent
+      logical :: found
       if ( .not. allocated ( ctx%zzgfilu_state ) ) then
          allocate ( ctx%zzgfilu_state )
          ctx%zzgfilu_state%svref = ' '
@@ -6652,54 +6652,54 @@ contains
       integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: poslen = 10
       character(:), allocatable :: fixfrm
-      character(cvtlen)     pntdef
-      character(poslen)     posnam
-      character(shplen)     shape
-      character(shplen)     shpstr
-      character(sublen)     subtyp
-      character(tmtlen)     trmtyp
-      real(wp)              bckfrt ( 3 )
-      real(wp)              bckobs ( 3 )
-      real(wp)              bckpos ( 3 )
-      real(wp)              bdist
-      real(wp)              bsmaxs ( 3, 3 )
-      real(wp)              etbcor
-      real(wp)              etfcor
-      real(wp)              fdist
-      real(wp)              frtbck ( 3 )
-      real(wp)              frtobs ( 3 )
-      real(wp)              frtpos ( 3 )
-      real(wp)              fsmaxs ( 3, 3 )
-      real(wp)              ltback
-      real(wp)              ltfrnt
-      real(wp)              maxang
-      real(wp)              minang
-      real(wp)              mtemp  ( 3, 3 )
-      real(wp)              radii  ( 3 )
-      real(wp)              spoint ( 3 )
-      real(wp)              srfvec ( 3 )
-      real(wp)              srad
-      real(wp)              t2sep
-      real(wp)              tdist
-      real(wp)              trgepc
-      integer(ip)           center
-      integer(ip)           clssid
-      integer(ip)           ffrmid
-      integer(ip)           frclss
-      integer(ip)           i
-      integer(ip)           idback
-      integer(ip)           idfrnt
-      integer(ip)           idobs
-      integer(ip)           loc
-      integer(ip)           nsurf
-      integer(ip)           occnum
-      integer(ip)           occode
-      integer(ip)           srflst ( max ( len(fshape), len(bshape) ) / 2 + 1 )  ! PEPPER: room for any number of surfaces (SPICELIB: MAXSRF)
-      integer(ip)           trgid
-      logical               attblk ( nabcor )
-      logical               found
-      logical               pntocc
-      logical               pri
+      character(cvtlen) :: pntdef
+      character(poslen) :: posnam
+      character(shplen) :: shape
+      character(shplen) :: shpstr
+      character(sublen) :: subtyp
+      character(tmtlen) :: trmtyp
+      real(wp) :: bckfrt ( 3 )
+      real(wp) :: bckobs ( 3 )
+      real(wp) :: bckpos ( 3 )
+      real(wp) :: bdist
+      real(wp) :: bsmaxs ( 3, 3 )
+      real(wp) :: etbcor
+      real(wp) :: etfcor
+      real(wp) :: fdist
+      real(wp) :: frtbck ( 3 )
+      real(wp) :: frtobs ( 3 )
+      real(wp) :: frtpos ( 3 )
+      real(wp) :: fsmaxs ( 3, 3 )
+      real(wp) :: ltback
+      real(wp) :: ltfrnt
+      real(wp) :: maxang
+      real(wp) :: minang
+      real(wp) :: mtemp  ( 3, 3 )
+      real(wp) :: radii  ( 3 )
+      real(wp) :: spoint ( 3 )
+      real(wp) :: srfvec ( 3 )
+      real(wp) :: srad
+      real(wp) :: t2sep
+      real(wp) :: tdist
+      real(wp) :: trgepc
+      integer(ip) :: center
+      integer(ip) :: clssid
+      integer(ip) :: ffrmid
+      integer(ip) :: frclss
+      integer(ip) :: i
+      integer(ip) :: idback
+      integer(ip) :: idfrnt
+      integer(ip) :: idobs
+      integer(ip) :: loc
+      integer(ip) :: nsurf
+      integer(ip) :: occnum
+      integer(ip) :: occode
+      integer(ip) :: srflst ( max ( len(fshape), len(bshape) ) / 2 + 1 )  ! PEPPER: room for any number of surfaces (SPICELIB: MAXSRF)
+      integer(ip) :: trgid
+      logical :: attblk ( nabcor )
+      logical :: found
+      logical :: pntocc
+      logical :: pri
       if ( .not. allocated ( ctx%zzgfocu_state ) ) then
          allocate ( ctx%zzgfocu_state )
          ctx%zzgfocu_state%svbfrm = ' '
@@ -7322,54 +7322,54 @@ contains
       real(wp), parameter :: atol = 1.0e-12_wp
       integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: poslen = 10
-      character(cvtlen)     pntdef
-      character(poslen)     posnam
-      character(shplen)     shape
-      character(shplen)     shpstr
-      character(sublen)     subtyp
-      character(tmtlen)     trmtyp
-      real(wp)              bckfrt ( 3 )
-      real(wp)              bckobs ( 3 )
-      real(wp)              bckpos ( 3 )
-      real(wp)              bdist
-      real(wp)              bsmaxs ( 3, 3 )
-      real(wp)              etbcor
-      real(wp)              etfcor
-      real(wp)              fdist
-      real(wp)              frtbck ( 3 )
-      real(wp)              frtobs ( 3 )
-      real(wp)              frtpos ( 3 )
-      real(wp)              fsmaxs ( 3, 3 )
-      real(wp)              ltback
-      real(wp)              ltfrnt
-      real(wp)              maxang
-      real(wp)              minang
-      real(wp)              mtemp  ( 3, 3 )
-      real(wp)              radii  ( 3 )
-      real(wp)              spoint ( 3 )
-      real(wp)              srfvec ( 3 )
-      real(wp)              srad
-      real(wp)              t2sep
-      real(wp)              tdist
-      real(wp)              trgepc
-      real(wp)              trgsep
-      integer(ip)           center
-      integer(ip)           clssid
-      integer(ip)           ffrmid
-      integer(ip)           frclss
-      integer(ip)           i
-      integer(ip)           idback
-      integer(ip)           idfrnt
-      integer(ip)           idobs
-      integer(ip)           loc
-      integer(ip)           nsurf
-      integer(ip)           occnum
-      integer(ip)           occode
-      integer(ip)           trgid
-      logical               attblk ( nabcor )
-      logical               found
-      logical               pntocc
-      logical               pri
+      character(cvtlen) :: pntdef
+      character(poslen) :: posnam
+      character(shplen) :: shape
+      character(shplen) :: shpstr
+      character(sublen) :: subtyp
+      character(tmtlen) :: trmtyp
+      real(wp) :: bckfrt ( 3 )
+      real(wp) :: bckobs ( 3 )
+      real(wp) :: bckpos ( 3 )
+      real(wp) :: bdist
+      real(wp) :: bsmaxs ( 3, 3 )
+      real(wp) :: etbcor
+      real(wp) :: etfcor
+      real(wp) :: fdist
+      real(wp) :: frtbck ( 3 )
+      real(wp) :: frtobs ( 3 )
+      real(wp) :: frtpos ( 3 )
+      real(wp) :: fsmaxs ( 3, 3 )
+      real(wp) :: ltback
+      real(wp) :: ltfrnt
+      real(wp) :: maxang
+      real(wp) :: minang
+      real(wp) :: mtemp  ( 3, 3 )
+      real(wp) :: radii  ( 3 )
+      real(wp) :: spoint ( 3 )
+      real(wp) :: srfvec ( 3 )
+      real(wp) :: srad
+      real(wp) :: t2sep
+      real(wp) :: tdist
+      real(wp) :: trgepc
+      real(wp) :: trgsep
+      integer(ip) :: center
+      integer(ip) :: clssid
+      integer(ip) :: ffrmid
+      integer(ip) :: frclss
+      integer(ip) :: i
+      integer(ip) :: idback
+      integer(ip) :: idfrnt
+      integer(ip) :: idobs
+      integer(ip) :: loc
+      integer(ip) :: nsurf
+      integer(ip) :: occnum
+      integer(ip) :: occode
+      integer(ip) :: trgid
+      logical :: attblk ( nabcor )
+      logical :: found
+      logical :: pntocc
+      logical :: pri
       if ( .not. allocated ( ctx%zzgfocu_state ) ) then
          allocate ( ctx%zzgfocu_state )
          ctx%zzgfocu_state%svbfrm = ' '
@@ -7932,12 +7932,12 @@ contains
 !
 !     Local Variables.
 !
-      real(wp)              lt
-      real(wp)              sep
-      real(wp)              pv1    ( 3 )
-      real(wp)              pv2    ( 3 )
+      real(wp) :: lt
+      real(wp) :: sep
+      real(wp) :: pv1    ( 3 )
+      real(wp) :: pv2    ( 3 )
 
-      character(5)          ref
+      character(5) :: ref
 
 !
 !     Standard SPICE error handling.
@@ -8075,7 +8075,7 @@ contains
       implicit none
       real(wp) :: putval  !! copy of the value to store
 
-      logical               ok
+      logical :: ok
 
 !
 !     Store the REFVAL value for use in ZZGFUDLT.
@@ -8209,10 +8209,10 @@ contains
 !
 !     Local Variables.
 !
-      real(wp)              lt
-      real(wp)              state    ( 6 )
+      real(wp) :: lt
+      real(wp) :: state    ( 6 )
 
-      character(5)          ref
+      character(5) :: ref
 
 !
 !     Standard SPICE error handling.
@@ -8549,28 +8549,28 @@ contains
 !     SPICELIB functions.
 !
 
-      real(wp)              begin
-      real(wp)              curtim
-      real(wp)              diff
-      real(wp)              prvdif
-      real(wp)              svdtim
-      real(wp)              t
-      real(wp)              t1
-      real(wp)              t2
-      real(wp)              timest
-      real(wp)              trnstn
+      real(wp) :: begin
+      real(wp) :: curtim
+      real(wp) :: diff
+      real(wp) :: prvdif
+      real(wp) :: svdtim
+      real(wp) :: t
+      real(wp) :: t1
+      real(wp) :: t2
+      real(wp) :: timest
+      real(wp) :: trnstn
 
-      logical               curste
-      logical               instat
-      logical               s
-      logical               state1
-      logical               savst
-      logical               l1
-      logical               l2
+      logical :: curste
+      logical :: instat
+      logical :: s
+      logical :: state1
+      logical :: savst
+      logical :: l1
+      logical :: l2
 
-      character(256)       contxt
+      character(256) :: contxt
 
-      integer(ip)          nloop
+      integer(ip) :: nloop
 
 !
 !     The maximum number of search loop iterations to execute.
@@ -9344,28 +9344,28 @@ contains
 
       integer(ip), parameter :: msglen = 256
 
-      real(wp)              begin
-      real(wp)              curtim
-      real(wp)              diff
-      real(wp)              prvdif
-      real(wp)              svdtim
-      real(wp)              t
-      real(wp)              t1
-      real(wp)              t2
-      real(wp)              timest
-      real(wp)              trnstn
+      real(wp) :: begin
+      real(wp) :: curtim
+      real(wp) :: diff
+      real(wp) :: prvdif
+      real(wp) :: svdtim
+      real(wp) :: t
+      real(wp) :: t1
+      real(wp) :: t2
+      real(wp) :: timest
+      real(wp) :: trnstn
 
-      logical               curste
-      logical               instat
-      logical               s
-      logical               state1
-      logical               savst
-      logical               l1
-      logical               l2
+      logical :: curste
+      logical :: instat
+      logical :: s
+      logical :: state1
+      logical :: savst
+      logical :: l1
+      logical :: l2
 
-      character(msglen)     contxt
+      character(msglen) :: contxt
 
-      integer(ip)           nloop
+      integer(ip) :: nloop
 
 !
 !     The maximum number of search loop iterations to execute.
@@ -9982,14 +9982,14 @@ contains
 !
 !     Local Variables.
 !
-      real(wp)              ang1
-      real(wp)              ang2
-      real(wp)              pv1    ( 3 )
-      real(wp)              pv2    ( 3 )
-      real(wp)              range1
-      real(wp)              range2
-      real(wp)              theta
-      real(wp)              lt
+      real(wp) :: ang1
+      real(wp) :: ang2
+      real(wp) :: pv1    ( 3 )
+      real(wp) :: pv2    ( 3 )
+      real(wp) :: range1
+      real(wp) :: range2
+      real(wp) :: theta
+      real(wp) :: lt
 
 !
 !     ATOL is a tolerance value for computing arc sine.
@@ -10253,20 +10253,20 @@ contains
       use pepper_strings, only: cmprss, ucase
       use pepper_inc_zzabcorr
       implicit none
-      real(wp)              axes1 (3)
-      real(wp)              axes2 (3)
-      real(wp)              pv1   (6)
-      real(wp)              pv2   (6)
-      real(wp)              dtheta
-      real(wp)              lt
-      logical               attblk ( nabcor )
-      logical               found
-      integer(ip)           fcode1
-      integer(ip)           fcode2
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           ctr1
-      integer(ip)           ctr2
+      real(wp) :: axes1 (3)
+      real(wp) :: axes2 (3)
+      real(wp) :: pv1   (6)
+      real(wp) :: pv2   (6)
+      real(wp) :: dtheta
+      real(wp) :: lt
+      logical :: attblk ( nabcor )
+      logical :: found
+      integer(ip) :: fcode1
+      integer(ip) :: fcode2
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: ctr1
+      integer(ip) :: ctr2
       character(5), parameter :: ref = 'J2000'
       integer(ip), parameter :: spshpn = 2
       character(32), parameter :: svshap ( spshpn ) = &
@@ -10619,20 +10619,20 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
-      real(wp)              axes1 (3)
-      real(wp)              axes2 (3)
-      real(wp)              pv1   (6)
-      real(wp)              pv2   (6)
-      real(wp)              dtheta
-      real(wp)              lt
-      logical               attblk ( nabcor )
-      logical               found
-      integer(ip)           fcode1
-      integer(ip)           fcode2
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           ctr1
-      integer(ip)           ctr2
+      real(wp) :: axes1 (3)
+      real(wp) :: axes2 (3)
+      real(wp) :: pv1   (6)
+      real(wp) :: pv2   (6)
+      real(wp) :: dtheta
+      real(wp) :: lt
+      logical :: attblk ( nabcor )
+      logical :: found
+      integer(ip) :: fcode1
+      integer(ip) :: fcode2
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: ctr1
+      integer(ip) :: ctr2
       character(5), parameter :: ref = 'J2000'
       integer(ip), parameter :: spshpn = 2
       character(32), parameter :: svshap ( spshpn ) = &
@@ -10777,21 +10777,21 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
-      logical               return
-      real(wp)              axes1 (3)
-      real(wp)              axes2 (3)
-      real(wp)              pv1   (6)
-      real(wp)              pv2   (6)
-      real(wp)              dtheta
-      real(wp)              lt
-      logical               attblk ( nabcor )
-      logical               found
-      integer(ip)           fcode1
-      integer(ip)           fcode2
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           ctr1
-      integer(ip)           ctr2
+      logical :: return
+      real(wp) :: axes1 (3)
+      real(wp) :: axes2 (3)
+      real(wp) :: pv1   (6)
+      real(wp) :: pv2   (6)
+      real(wp) :: dtheta
+      real(wp) :: lt
+      logical :: attblk ( nabcor )
+      logical :: found
+      integer(ip) :: fcode1
+      integer(ip) :: fcode2
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: ctr1
+      integer(ip) :: ctr2
       character(5), parameter :: ref = 'J2000'
       integer(ip), parameter :: spshpn = 2
       character(32), parameter :: svshap ( spshpn ) = &
@@ -10893,21 +10893,21 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
-      logical               return
-      real(wp)              axes1 (3)
-      real(wp)              axes2 (3)
-      real(wp)              pv1   (6)
-      real(wp)              pv2   (6)
-      real(wp)              dtheta
-      real(wp)              lt
-      logical               attblk ( nabcor )
-      logical               found
-      integer(ip)           fcode1
-      integer(ip)           fcode2
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           ctr1
-      integer(ip)           ctr2
+      logical :: return
+      real(wp) :: axes1 (3)
+      real(wp) :: axes2 (3)
+      real(wp) :: pv1   (6)
+      real(wp) :: pv2   (6)
+      real(wp) :: dtheta
+      real(wp) :: lt
+      logical :: attblk ( nabcor )
+      logical :: found
+      integer(ip) :: fcode1
+      integer(ip) :: fcode2
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: ctr1
+      integer(ip) :: ctr2
       character(5), parameter :: ref = 'J2000'
       integer(ip), parameter :: spshpn = 2
       character(32), parameter :: svshap ( spshpn ) = &
@@ -11222,53 +11222,53 @@ contains
       implicit none
       real(wp), parameter :: tdelta = 1.0_wp
       integer(ip), parameter :: bdnmln = 36
-      real(wp)              acc    ( 3 )
-      real(wp)              corxfi ( 6, 6 )
-      real(wp)              corxfm ( 6, 6 )
-      real(wp)              ctrsta ( 6 )
-      real(wp)              dcorxf ( 6, 6 )
-      real(wp)              dlt
-      real(wp)              dltctr
-      real(wp)              drfepc
-      real(wp)              drxfrm ( 6, 6 )
-      real(wp)              fxdsta ( 6 )
-      real(wp)              fxosta ( 6 )
-      real(wp)              fxpsta ( 6 )
-      real(wp)              fxpvel ( 3 )
-      real(wp)              fxtsta ( 6 )
-      real(wp)              j2dsta ( 6 )
-      real(wp)              lt
-      real(wp)              ltctr
-      real(wp)              ltsign
-      real(wp)              obspnt ( 6 )
-      real(wp)              obssta ( 6, 2 )
-      real(wp)              obstrg ( 6 )
-      real(wp)              pntsta ( 6 )
-      real(wp)              sa     ( 3 )
-      real(wp)              sastat ( 6 )
-      real(wp)              savel  ( 3 )
-      real(wp)              scale
-      real(wp)              spoint ( 3 )
-      real(wp)              srfvec ( 3 )
-      real(wp)              ssbobs ( 6 )
-      real(wp)              ssbtg0 ( 6 )
-      real(wp)              ssbtrg ( 6 )
-      real(wp)              stemp  ( 6 )
-      real(wp)              t
-      real(wp)              trgepc
-      real(wp)              upos   ( 3 )
-      real(wp)              xform  ( 6, 6 )
-      integer(ip)           center
-      integer(ip)           clssid
-      integer(ip)           frcode
-      integer(ip)           frclss
-      integer(ip)           i
-      logical               attblk ( abatsz )
-      logical               fnd
-      logical               geom
-      logical               uselt
-      logical               usestl
-      logical               xmit
+      real(wp) :: acc    ( 3 )
+      real(wp) :: corxfi ( 6, 6 )
+      real(wp) :: corxfm ( 6, 6 )
+      real(wp) :: ctrsta ( 6 )
+      real(wp) :: dcorxf ( 6, 6 )
+      real(wp) :: dlt
+      real(wp) :: dltctr
+      real(wp) :: drfepc
+      real(wp) :: drxfrm ( 6, 6 )
+      real(wp) :: fxdsta ( 6 )
+      real(wp) :: fxosta ( 6 )
+      real(wp) :: fxpsta ( 6 )
+      real(wp) :: fxpvel ( 3 )
+      real(wp) :: fxtsta ( 6 )
+      real(wp) :: j2dsta ( 6 )
+      real(wp) :: lt
+      real(wp) :: ltctr
+      real(wp) :: ltsign
+      real(wp) :: obspnt ( 6 )
+      real(wp) :: obssta ( 6, 2 )
+      real(wp) :: obstrg ( 6 )
+      real(wp) :: pntsta ( 6 )
+      real(wp) :: sa     ( 3 )
+      real(wp) :: sastat ( 6 )
+      real(wp) :: savel  ( 3 )
+      real(wp) :: scale
+      real(wp) :: spoint ( 3 )
+      real(wp) :: srfvec ( 3 )
+      real(wp) :: ssbobs ( 6 )
+      real(wp) :: ssbtg0 ( 6 )
+      real(wp) :: ssbtrg ( 6 )
+      real(wp) :: stemp  ( 6 )
+      real(wp) :: t
+      real(wp) :: trgepc
+      real(wp) :: upos   ( 3 )
+      real(wp) :: xform  ( 6, 6 )
+      integer(ip) :: center
+      integer(ip) :: clssid
+      integer(ip) :: frcode
+      integer(ip) :: frclss
+      integer(ip) :: i
+      logical :: attblk ( abatsz )
+      logical :: fnd
+      logical :: geom
+      logical :: uselt
+      logical :: usestl
+      logical :: xmit
       if ( .not. allocated ( ctx%zzgfssin_state ) ) allocate ( ctx%zzgfssin_state )
       associate ( first => ctx%zzgfssin_state%first, &
                   svobs => ctx%zzgfssin_state%svobs, &
@@ -11980,48 +11980,48 @@ contains
       implicit none
       real(wp), parameter :: tdelta = 1.0_wp
       integer(ip), parameter :: bdnmln = 36
-      real(wp)              acc    ( 3 )
-      real(wp)              corxfi ( 6, 6 )
-      real(wp)              corxfm ( 6, 6 )
-      real(wp)              dalt   ( 2 )
-      real(wp)              dlt
-      real(wp)              fxosta ( 6 )
-      real(wp)              fxpsta ( 6 )
-      real(wp)              fxpvel ( 3 )
-      real(wp)              fxtsta ( 6 )
-      real(wp)              lt
-      real(wp)              obspnt ( 6 )
-      real(wp)              obssta ( 6, 2 )
-      real(wp)              obstrg ( 6 )
-      real(wp)              pntsta ( 6 )
-      real(wp)              raysta ( 6 )
-      real(wp)              sa     ( 3 )
-      real(wp)              sastat ( 6 )
-      real(wp)              savel  ( 3 )
-      real(wp)              scale
-      real(wp)              spoint ( 3 )
-      real(wp)              srfvec ( 3 )
-      real(wp)              ssbobs ( 6 )
-      real(wp)              ssbtg0 ( 6 )
-      real(wp)              ssbtrg ( 6 )
-      real(wp)              stemp  ( 6 )
-      real(wp)              t
-      real(wp)              trgepc
-      real(wp)              upos   ( 3 )
-      real(wp)              xform  ( 6, 6 )
-      integer(ip)           center
-      integer(ip)           clssid
-      integer(ip)           frclss
-      integer(ip)           frcode
-      integer(ip)           i
-      logical               attblk ( abatsz )
-      logical               fnd
-      logical               found
-      logical               geom
-      logical               near
-      logical               uselt
-      logical               usestl
-      logical               xmit
+      real(wp) :: acc    ( 3 )
+      real(wp) :: corxfi ( 6, 6 )
+      real(wp) :: corxfm ( 6, 6 )
+      real(wp) :: dalt   ( 2 )
+      real(wp) :: dlt
+      real(wp) :: fxosta ( 6 )
+      real(wp) :: fxpsta ( 6 )
+      real(wp) :: fxpvel ( 3 )
+      real(wp) :: fxtsta ( 6 )
+      real(wp) :: lt
+      real(wp) :: obspnt ( 6 )
+      real(wp) :: obssta ( 6, 2 )
+      real(wp) :: obstrg ( 6 )
+      real(wp) :: pntsta ( 6 )
+      real(wp) :: raysta ( 6 )
+      real(wp) :: sa     ( 3 )
+      real(wp) :: sastat ( 6 )
+      real(wp) :: savel  ( 3 )
+      real(wp) :: scale
+      real(wp) :: spoint ( 3 )
+      real(wp) :: srfvec ( 3 )
+      real(wp) :: ssbobs ( 6 )
+      real(wp) :: ssbtg0 ( 6 )
+      real(wp) :: ssbtrg ( 6 )
+      real(wp) :: stemp  ( 6 )
+      real(wp) :: t
+      real(wp) :: trgepc
+      real(wp) :: upos   ( 3 )
+      real(wp) :: xform  ( 6, 6 )
+      integer(ip) :: center
+      integer(ip) :: clssid
+      integer(ip) :: frclss
+      integer(ip) :: frcode
+      integer(ip) :: i
+      logical :: attblk ( abatsz )
+      logical :: fnd
+      logical :: found
+      logical :: geom
+      logical :: near
+      logical :: uselt
+      logical :: usestl
+      logical :: xmit
       if ( .not. allocated ( ctx%zzgfssob_state ) ) allocate ( ctx%zzgfssob_state )
       associate ( first => ctx%zzgfssob_state%first, &
                   svobs => ctx%zzgfssob_state%svobs, &
@@ -12595,10 +12595,10 @@ contains
       use pepper_inc_zzholdd
       implicit none
 
-      real(wp)              udval
-      real(wp)              refval
+      real(wp) :: udval
+      real(wp) :: refval
 
-      logical               ok
+      logical :: ok
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -12757,24 +12757,24 @@ contains
 
       integer(ip), parameter :: inclen = 2
 
-      character(inclen)     locinc
+      character(inclen) :: locinc
 
-      integer(ip)           begp1
-      integer(ip)           begp2
-      integer(ip)           begp3
-      integer(ip)           endp1
-      integer(ip)           endp2
-      integer(ip)           endp3
-      integer(ip)           maxpts
-      integer(ip)           ovflow
-      integer(ip)           size1
-      integer(ip)           size2
+      integer(ip) :: begp1
+      integer(ip) :: begp2
+      integer(ip) :: begp3
+      integer(ip) :: endp1
+      integer(ip) :: endp2
+      integer(ip) :: endp3
+      integer(ip) :: maxpts
+      integer(ip) :: ovflow
+      integer(ip) :: size1
+      integer(ip) :: size2
 
-      logical               closed
-      logical               keep
-      logical               left
-      logical               open
-      logical               right
+      logical :: closed
+      logical :: keep
+      logical :: left
+      logical :: open
+      logical :: right
 
 !
 !     Standard SPICE error handling.
@@ -15274,11 +15274,11 @@ contains
 !
       logical, parameter :: cstep = .false.
 
-      real(wp)              finish
-      real(wp)              start
+      real(wp) :: finish
+      real(wp) :: start
 
-      integer(ip)           count
-      integer(ip)           i
+      integer(ip) :: count
+      integer(ip) :: i
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -16517,11 +16517,11 @@ contains
       character(:), allocatable :: lbshap  !! PEPPER: any length (SPICELIB: MTHLEN, 500)
       character(:), allocatable :: lfshap
 
-      real(wp)              finish
-      real(wp)              start
+      real(wp) :: finish
+      real(wp) :: start
 
-      integer(ip)           count
-      integer(ip)           i
+      integer(ip) :: count
+      integer(ip) :: i
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -17405,36 +17405,36 @@ contains
       character(:), allocatable :: bname
       character(:), allocatable :: bframe
       character(:), allocatable :: bmethd  !! PEPPER: any length (SPICELIB: MTHLEN, 500)
-      character(shplen)     bshape
+      character(shplen) :: bshape
       character(:), allocatable :: fmethd
       character(:), allocatable :: fname
       character(:), allocatable :: front
       character(:), allocatable :: fframe
-      character(shplen)     fshape
+      character(shplen) :: fshape
       character(shplen), parameter :: occtyp ( 3 ) = [ character(shplen) :: &
          partl,&
          annulr,&
          full ]
-      character(cvtlen)     pntdef
-      character(shplen)     prshp1
-      character(shplen)     prshp2
+      character(cvtlen) :: pntdef
+      character(shplen) :: prshp1
+      character(shplen) :: prshp2
       character(:), allocatable :: shap1  !! PEPPER: any length (SPICELIB: MTHLEN, 500)
       character(:), allocatable :: shap2
-      character(sublen)     subtyp
-      character(tmtlen)     trmtyp
+      character(sublen) :: subtyp
+      character(tmtlen) :: trmtyp
 
-      integer(ip)           i
-      integer(ip)           id1
-      integer(ip)           id2
-      integer(ip)           index
-      integer(ip)           mltfac
-      integer(ip)           nsurf
-      integer(ip)           srflst ( max ( len(shape1), len(shape2) ) / 2 + 1 )  ! PEPPER: room for any number of surfaces (SPICELIB: MAXSRF)
+      integer(ip) :: i
+      integer(ip) :: id1
+      integer(ip) :: id2
+      integer(ip) :: index
+      integer(ip) :: mltfac
+      integer(ip) :: nsurf
+      integer(ip) :: srflst ( max ( len(shape1), len(shape2) ) / 2 + 1 )  ! PEPPER: room for any number of surfaces (SPICELIB: MAXSRF)
 
-      logical               ellps2
-      logical               found
-      logical               ocstat
-      logical               pri
+      logical :: ellps2
+      logical :: found
+      logical :: ocstat
+      logical :: pri
 
 !
 !     The variable OCCTYP associates the string of an occultation
@@ -18147,12 +18147,12 @@ contains
       implicit none
       character(*), parameter :: rname = 'PHASEQ'
       integer(ip), parameter :: maxl = 36
-      integer(ip)           targ
-      integer(ip)           illum
-      integer(ip)           obs
-      logical               attblk ( nabcor )
-      logical               fnd
-      character(32)         xbcorr
+      integer(ip) :: targ
+      integer(ip) :: illum
+      integer(ip) :: obs
+      logical :: attblk ( nabcor )
+      logical :: fnd
+      character(32) :: xbcorr
       if ( .not. allocated ( ctx%phaseq_state ) ) allocate ( ctx%phaseq_state )
       associate ( svctr1 => ctx%phaseq_state%svctr1, &
                   svtarg => ctx%phaseq_state%svtarg, &
@@ -18588,7 +18588,7 @@ contains
       use pepper_inc_zzgf
       implicit none
 
-      real(wp)              lt
+      real(wp) :: lt
 
 !
 !     Standard SPICE error handling.
@@ -18744,10 +18744,10 @@ contains
       use pepper_strings, only: cmprss, ucase
       use pepper_inc_zzabcorr
       implicit none
-      real(wp)              lt
-      real(wp)              state  ( 6 )
-      logical               attblk ( nabcor )
-      logical               found
+      real(wp) :: lt
+      real(wp) :: state  ( 6 )
+      logical :: attblk ( nabcor )
+      logical :: found
       if ( .not. allocated ( ctx%zzgfdiu_state ) ) allocate ( ctx%zzgfdiu_state )
       associate ( svcorr => ctx%zzgfdiu_state%svcorr, &
                   svobs => ctx%zzgfdiu_state%svobs, &
@@ -18906,10 +18906,10 @@ contains
       use pepper_math, only: vdot
       use pepper_inc_zzabcorr
       implicit none
-      real(wp)              lt
-      real(wp)              state  ( 6 )
-      logical               attblk ( nabcor )
-      logical               found
+      real(wp) :: lt
+      real(wp) :: state  ( 6 )
+      logical :: attblk ( nabcor )
+      logical :: found
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -19004,10 +19004,10 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
-      real(wp)              lt
-      real(wp)              state  ( 6 )
-      logical               attblk ( nabcor )
-      logical               found
+      real(wp) :: lt
+      real(wp) :: state  ( 6 )
+      logical :: attblk ( nabcor )
+      logical :: found
       if ( .not. allocated ( ctx%zzgfdiu_state ) ) allocate ( ctx%zzgfdiu_state )
       associate ( svcorr => ctx%zzgfdiu_state%svcorr, &
                   svobs => ctx%zzgfdiu_state%svobs, &
@@ -19140,14 +19140,14 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       character(*), parameter :: ref = 'J2000'
-      real(wp)              dsep
-      real(wp)              lt
-      real(wp)              dlt
-      real(wp)              s1   (6)
-      real(wp)              s2   (6)
-      real(wp)              uvec (3)
-      integer(ip)           i
-      logical               found
+      real(wp) :: dsep
+      real(wp) :: lt
+      real(wp) :: dlt
+      real(wp) :: s1   (6)
+      real(wp) :: s2   (6)
+      real(wp) :: uvec (3)
+      integer(ip) :: i
+      logical :: found
       if ( .not. allocated ( ctx%zzgfpau_state ) ) allocate ( ctx%zzgfpau_state )
       associate ( svablk => ctx%zzgfpau_state%svablk, &
                   svabco => ctx%zzgfpau_state%svabco, &
@@ -19326,14 +19326,14 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       character(*), parameter :: ref = 'J2000'
-      real(wp)              dsep
-      real(wp)              lt
-      real(wp)              dlt
-      real(wp)              s1   (6)
-      real(wp)              s2   (6)
-      real(wp)              uvec (3)
-      integer(ip)           i
-      logical               found
+      real(wp) :: dsep
+      real(wp) :: lt
+      real(wp) :: dlt
+      real(wp) :: s1   (6)
+      real(wp) :: s2   (6)
+      real(wp) :: uvec (3)
+      integer(ip) :: i
+      logical :: found
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -19485,16 +19485,16 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
-      logical               return
+      logical :: return
       character(*), parameter :: ref = 'J2000'
-      real(wp)              dsep
-      real(wp)              lt
-      real(wp)              dlt
-      real(wp)              s1   (6)
-      real(wp)              s2   (6)
-      real(wp)              uvec (3)
-      integer(ip)           i
-      logical               found
+      real(wp) :: dsep
+      real(wp) :: lt
+      real(wp) :: dlt
+      real(wp) :: s1   (6)
+      real(wp) :: s2   (6)
+      real(wp) :: uvec (3)
+      integer(ip) :: i
+      logical :: found
       if ( .not. allocated ( ctx%zzgfpau_state ) ) allocate ( ctx%zzgfpau_state )
       associate ( svabco => ctx%zzgfpau_state%svabco, &
                   svtarg => ctx%zzgfpau_state%svtarg, &
@@ -19567,16 +19567,16 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
-      logical               return
+      logical :: return
       character(*), parameter :: ref = 'J2000'
-      real(wp)              dsep
-      real(wp)              lt
-      real(wp)              dlt
-      real(wp)              s1   (6)
-      real(wp)              s2   (6)
-      real(wp)              uvec (3)
-      integer(ip)           i
-      logical               found
+      real(wp) :: dsep
+      real(wp) :: lt
+      real(wp) :: dlt
+      real(wp) :: s1   (6)
+      real(wp) :: s2   (6)
+      real(wp) :: uvec (3)
+      integer(ip) :: i
+      logical :: found
       if ( .not. allocated ( ctx%zzgfpau_state ) ) allocate ( ctx%zzgfpau_state )
       associate ( svablk => ctx%zzgfpau_state%svablk, &
                   svabco => ctx%zzgfpau_state%svabco, &
@@ -20010,28 +20010,28 @@ contains
       integer(ip), parameter :: nc = 7
       integer(ip), parameter :: b = lbcell
       integer(ip), parameter :: ctxlen = 500
-      character(ctxlen)     contxt
-      character(maxcln)     locrel
-      real(wp)              addl
-      real(wp)              addr
-      real(wp)              endpt  (  2 )
-      real(wp)              extrem
-      real(wp)              finish
-      real(wp)              refer2
-      real(wp)              start
-      real(wp)              step
-      real(wp)              value
-      integer(ip)           case
-      integer(ip)           count
-      integer(ip)           i
-      integer(ip)           maxat
-      integer(ip)           minat
-      integer(ip)           name    (  2 )
-      integer(ip)           pass
-      integer(ip)           qcnum
-      integer(ip)           want
-      integer(ip)           winsiz
-      logical               need
+      character(ctxlen) :: contxt
+      character(maxcln) :: locrel
+      real(wp) :: addl
+      real(wp) :: addr
+      real(wp) :: endpt  (  2 )
+      real(wp) :: extrem
+      real(wp) :: finish
+      real(wp) :: refer2
+      real(wp) :: start
+      real(wp) :: step
+      real(wp) :: value
+      integer(ip) :: case
+      integer(ip) :: count
+      integer(ip) :: i
+      integer(ip) :: maxat
+      integer(ip) :: minat
+      integer(ip) :: name    (  2 )
+      integer(ip) :: pass
+      integer(ip) :: qcnum
+      integer(ip) :: want
+      integer(ip) :: winsiz
+      logical :: need
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -21058,28 +21058,28 @@ contains
       integer(ip), parameter :: nc = 7
       integer(ip), parameter :: b = lbcell
       integer(ip), parameter :: ctxlen = 500
-      character(ctxlen)     contxt
-      character(maxcln)     locrel
-      real(wp)              addl
-      real(wp)              addr
-      real(wp)              endpt  (  2 )
-      real(wp)              extrem
-      real(wp)              finish
-      real(wp)              refer2
-      real(wp)              start
-      real(wp)              step
-      real(wp)              value
-      integer(ip)           case
-      integer(ip)           count
-      integer(ip)           i
-      integer(ip)           maxat
-      integer(ip)           minat
-      integer(ip)           name    (  2 )
-      integer(ip)           pass
-      integer(ip)           qcnum
-      integer(ip)           want
-      integer(ip)           winsiz
-      logical               need
+      character(ctxlen) :: contxt
+      character(maxcln) :: locrel
+      real(wp) :: addl
+      real(wp) :: addr
+      real(wp) :: endpt  (  2 )
+      real(wp) :: extrem
+      real(wp) :: finish
+      real(wp) :: refer2
+      real(wp) :: start
+      real(wp) :: step
+      real(wp) :: value
+      integer(ip) :: case
+      integer(ip) :: count
+      integer(ip) :: i
+      integer(ip) :: maxat
+      integer(ip) :: minat
+      integer(ip) :: name    (  2 )
+      integer(ip) :: pass
+      integer(ip) :: qcnum
+      integer(ip) :: want
+      integer(ip) :: winsiz
+      logical :: need
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -21804,11 +21804,11 @@ contains
       use pepper_strings, only: rtrim
       use pepper_inc_zzgf
       implicit none
-      character(10)         prcent
-      character(mxmsg)      messge
-      real(wp)              cursec
-      real(wp)              fractn
-      real(wp)              tvec ( 6 )
+      character(10) :: prcent
+      character(mxmsg) :: messge
+      real(wp) :: cursec
+      real(wp) :: fractn
+      real(wp) :: tvec ( 6 )
       if ( .not. allocated ( ctx%zzgfrpwk_state ) ) allocate ( ctx%zzgfrpwk_state )
       associate ( calls => ctx%zzgfrpwk_state%calls, &
                   check => ctx%zzgfrpwk_state%check, &
@@ -21954,11 +21954,11 @@ contains
       use pepper_strings, only: rtrim
       use pepper_inc_zzgf
       implicit none
-      character(10)         prcent
-      character(mxmsg)      messge
-      real(wp)              cursec
-      real(wp)              fractn
-      real(wp)              tvec ( 6 )
+      character(10) :: prcent
+      character(mxmsg) :: messge
+      real(wp) :: cursec
+      real(wp) :: fractn
+      real(wp) :: tvec ( 6 )
       if ( .not. allocated ( ctx%zzgfrpwk_state ) ) allocate ( ctx%zzgfrpwk_state )
       associate ( calls => ctx%zzgfrpwk_state%calls, &
                   check => ctx%zzgfrpwk_state%check, &
@@ -22143,12 +22143,12 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
-      logical               return
-      character(10)         prcent
-      character(mxmsg)      messge
-      real(wp)              cursec
-      real(wp)              fractn
-      real(wp)              tvec ( 6 )
+      logical :: return
+      character(10) :: prcent
+      character(mxmsg) :: messge
+      real(wp) :: cursec
+      real(wp) :: fractn
+      real(wp) :: tvec ( 6 )
       if ( .not. allocated ( ctx%zzgfrpwk_state ) ) allocate ( ctx%zzgfrpwk_state )
       associate ( check => ctx%zzgfrpwk_state%check, &
                   finish => ctx%zzgfrpwk_state%finish, &
@@ -22222,12 +22222,12 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
-      logical               return
-      character(10)         prcent
-      character(mxmsg)      messge
-      real(wp)              cursec
-      real(wp)              fractn
-      real(wp)              tvec ( 6 )
+      logical :: return
+      character(10) :: prcent
+      character(mxmsg) :: messge
+      real(wp) :: cursec
+      real(wp) :: fractn
+      real(wp) :: tvec ( 6 )
       if ( .not. allocated ( ctx%zzgfrpwk_state ) ) allocate ( ctx%zzgfrpwk_state )
       associate ( first => ctx%zzgfrpwk_state%first, &
                   stdout => ctx%zzgfrpwk_state%stdout, &
@@ -22314,12 +22314,12 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
-      logical               return
-      character(10)         prcent
-      character(mxmsg)      messge
-      real(wp)              cursec
-      real(wp)              fractn
-      real(wp)              tvec ( 6 )
+      logical :: return
+      character(10) :: prcent
+      character(mxmsg) :: messge
+      real(wp) :: cursec
+      real(wp) :: fractn
+      real(wp) :: tvec ( 6 )
       if ( .not. allocated ( ctx%zzgfrpwk_state ) ) allocate ( ctx%zzgfrpwk_state )
       associate ( check => ctx%zzgfrpwk_state%check, &
                   entire => ctx%zzgfrpwk_state%entire, &
@@ -22477,15 +22477,15 @@ contains
       use pepper_strings, only: cmprss, ucase
       use pepper_inc_zzabcorr
       implicit none
-      real(wp)              lt
-      real(wp)              drvel
-      real(wp)              srhat  ( 6 )
-      real(wp)              state  ( 6 )
-      real(wp)              dfdt   ( 6 )
-      real(wp)              states ( 6, 2 )
-      integer(ip)           n
-      logical               attblk ( nabcor )
-      logical               found
+      real(wp) :: lt
+      real(wp) :: drvel
+      real(wp) :: srhat  ( 6 )
+      real(wp) :: state  ( 6 )
+      real(wp) :: dfdt   ( 6 )
+      real(wp) :: states ( 6, 2 )
+      integer(ip) :: n
+      logical :: attblk ( nabcor )
+      logical :: found
       if ( .not. allocated ( ctx%zzgfrru_state ) ) allocate ( ctx%zzgfrru_state )
       associate ( svabco => ctx%zzgfrru_state%svabco, &
                   svtarg => ctx%zzgfrru_state%svtarg, &
@@ -22654,15 +22654,15 @@ contains
       use pepper_math, only: dvhat, vdot
       use pepper_inc_zzabcorr
       implicit none
-      real(wp)              lt
-      real(wp)              drvel
-      real(wp)              srhat  ( 6 )
-      real(wp)              state  ( 6 )
-      real(wp)              dfdt   ( 6 )
-      real(wp)              states ( 6, 2 )
-      integer(ip)           n
-      logical               attblk ( nabcor )
-      logical               found
+      real(wp) :: lt
+      real(wp) :: drvel
+      real(wp) :: srhat  ( 6 )
+      real(wp) :: state  ( 6 )
+      real(wp) :: dfdt   ( 6 )
+      real(wp) :: states ( 6, 2 )
+      integer(ip) :: n
+      logical :: attblk ( nabcor )
+      logical :: found
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -22779,16 +22779,16 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
-      logical               return
-      real(wp)              lt
-      real(wp)              drvel
-      real(wp)              srhat  ( 6 )
-      real(wp)              state  ( 6 )
-      real(wp)              dfdt   ( 6 )
-      real(wp)              states ( 6, 2 )
-      integer(ip)           n
-      logical               attblk ( nabcor )
-      logical               found
+      logical :: return
+      real(wp) :: lt
+      real(wp) :: drvel
+      real(wp) :: srhat  ( 6 )
+      real(wp) :: state  ( 6 )
+      real(wp) :: dfdt   ( 6 )
+      real(wp) :: states ( 6, 2 )
+      integer(ip) :: n
+      logical :: attblk ( nabcor )
+      logical :: found
       if ( .not. allocated ( ctx%zzgfrru_state ) ) allocate ( ctx%zzgfrru_state )
       associate ( svabco => ctx%zzgfrru_state%svabco, &
                   svtarg => ctx%zzgfrru_state%svtarg, &
@@ -22856,16 +22856,16 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
-      logical               return
-      real(wp)              lt
-      real(wp)              drvel
-      real(wp)              srhat  ( 6 )
-      real(wp)              state  ( 6 )
-      real(wp)              dfdt   ( 6 )
-      real(wp)              states ( 6, 2 )
-      integer(ip)           n
-      logical               attblk ( nabcor )
-      logical               found
+      logical :: return
+      real(wp) :: lt
+      real(wp) :: drvel
+      real(wp) :: srhat  ( 6 )
+      real(wp) :: state  ( 6 )
+      real(wp) :: dfdt   ( 6 )
+      real(wp) :: states ( 6, 2 )
+      integer(ip) :: n
+      logical :: attblk ( nabcor )
+      logical :: found
       if ( .not. allocated ( ctx%zzgfrru_state ) ) allocate ( ctx%zzgfrru_state )
       associate ( svabco => ctx%zzgfrru_state%svabco, &
                   svtarg => ctx%zzgfrru_state%svtarg, &
@@ -23328,11 +23328,11 @@ contains
 !
       logical, parameter :: cstep = .false.
 
-      real(wp)              finish
-      real(wp)              start
+      real(wp) :: finish
+      real(wp) :: start
 
-      integer(ip)           count
-      integer(ip)           i
+      integer(ip) :: count
+      integer(ip) :: i
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -25064,8 +25064,8 @@ contains
 !
 !     Local variables.
 !
-      real(wp)              tol
-      logical               ok
+      real(wp) :: tol
+      logical :: ok
 
 !
 !     External routines
@@ -25944,8 +25944,8 @@ contains
 !
       logical, parameter :: rpt = .false.
 
-      real(wp)              tol
-      logical               ok
+      real(wp) :: tol
+      logical :: ok
 
 !
 !     Standard SPICE error handling.
@@ -26113,20 +26113,20 @@ contains
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: fprint = 32
       integer(ip), parameter :: lprint = 126
-      character(mxbegm)     begin
-      character(mxendm)     end
-      real(wp)              ave
-      real(wp)              freq
-      real(wp)              incr
-      real(wp)              measur
-      real(wp)              stddev
-      real(wp)              total
-      integer(ip)           chrcod
-      integer(ip)           i
-      integer(ip)           long
-      integer(ip)           short
-      integer(ip)           stdout
-      integer(ip)           unit
+      character(mxbegm) :: begin
+      character(mxendm) :: end
+      real(wp) :: ave
+      real(wp) :: freq
+      real(wp) :: incr
+      real(wp) :: measur
+      real(wp) :: stddev
+      real(wp) :: total
+      integer(ip) :: chrcod
+      integer(ip) :: i
+      integer(ip) :: long
+      integer(ip) :: short
+      integer(ip) :: stdout
+      integer(ip) :: unit
       if ( .not. allocated ( ctx%gfrprt_state ) ) allocate ( ctx%gfrprt_state )
       associate ( copyb => ctx%gfrprt_state%copyb, &
                   copye => ctx%gfrprt_state%copye, &
@@ -26342,20 +26342,20 @@ contains
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: fprint = 32
       integer(ip), parameter :: lprint = 126
-      character(mxbegm)     begin
-      character(mxendm)     end
-      real(wp)              ave
-      real(wp)              freq
-      real(wp)              incr
-      real(wp)              measur
-      real(wp)              stddev
-      real(wp)              total
-      integer(ip)           chrcod
-      integer(ip)           i
-      integer(ip)           long
-      integer(ip)           short
-      integer(ip)           stdout
-      integer(ip)           unit
+      character(mxbegm) :: begin
+      character(mxendm) :: end
+      real(wp) :: ave
+      real(wp) :: freq
+      real(wp) :: incr
+      real(wp) :: measur
+      real(wp) :: stddev
+      real(wp) :: total
+      integer(ip) :: chrcod
+      integer(ip) :: i
+      integer(ip) :: long
+      integer(ip) :: short
+      integer(ip) :: stdout
+      integer(ip) :: unit
       if ( .not. allocated ( ctx%gfrprt_state ) ) allocate ( ctx%gfrprt_state )
       associate ( t0 => ctx%gfrprt_state%t0, &
                   remain => ctx%gfrprt_state%remain )
@@ -26494,21 +26494,21 @@ contains
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: fprint = 32
       integer(ip), parameter :: lprint = 126
-      character(mxbegm)     begin
-      character(mxendm)     end
-      real(wp)              ave
-      real(wp)              freq
-      real(wp)              incr
-      real(wp)              measur
-      real(wp)              stddev
-      real(wp)              total
-      integer(ip)           chrcod
-      integer(ip)           i
-      integer(ip)           long
-      integer(ip)           short
-      integer(ip)           stdout
-      integer(ip)           tcheck
-      integer(ip)           unit
+      character(mxbegm) :: begin
+      character(mxendm) :: end
+      real(wp) :: ave
+      real(wp) :: freq
+      real(wp) :: incr
+      real(wp) :: measur
+      real(wp) :: stddev
+      real(wp) :: total
+      integer(ip) :: chrcod
+      integer(ip) :: i
+      integer(ip) :: long
+      integer(ip) :: short
+      integer(ip) :: stdout
+      integer(ip) :: tcheck
+      integer(ip) :: unit
       if ( .not. allocated ( ctx%gfrprt_state ) ) allocate ( ctx%gfrprt_state )
       associate ( copyb => ctx%gfrprt_state%copyb, &
                   copye => ctx%gfrprt_state%copye )
@@ -27335,8 +27335,8 @@ contains
       integer(ip), parameter :: lbcell = -5
       logical, parameter :: bail = .false.
       logical, parameter :: rpt = .false.
-      real(wp)              tol
-      logical               ok
+      real(wp) :: tol
+      logical :: ok
       if ( .not. allocated ( ctx%gftfov_state ) ) allocate ( ctx%gftfov_state )
       associate ( raydir => ctx%gftfov_state%raydir )
       if ( ctx%failed() ) return
@@ -28286,8 +28286,8 @@ contains
 !     Local variables.
 !
 
-      real(wp)              tol
-      logical               ok
+      real(wp) :: tol
+      logical :: ok
 
       logical, parameter :: nobail = .false.
 
@@ -29293,8 +29293,8 @@ contains
 !     Local variables.
 !
 
-      real(wp)              tol
-      logical               ok
+      real(wp) :: tol
+      logical :: ok
 
       logical, parameter :: nobail = .false.
 
@@ -29303,8 +29303,8 @@ contains
 !
 !     Dummy variables.
 !
-      character(1)          rptpre ( 2 )
-      character(1)          rptsuf ( 2 )
+      character(1) :: rptpre ( 2 )
+      character(1) :: rptsuf ( 2 )
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -29740,20 +29740,20 @@ contains
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
            latcrd, altcrd, loncrd, latcrd, altcrd ], [ 3, nsys ] )
-      character(timlen)     timstr
-      real(wp)              alt
-      real(wp)              coords ( 3 )
-      real(wp)              lat
-      real(wp)              lon
-      real(wp)              state  ( 6 )
-      real(wp)              value
-      integer(ip)           cdsign ( 3 )
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           frcode
-      integer(ip)           sysidx
-      logical               attblk ( abatsz )
-      logical               found
+      character(timlen) :: timstr
+      real(wp) :: alt
+      real(wp) :: coords ( 3 )
+      real(wp) :: lat
+      real(wp) :: lon
+      real(wp) :: state  ( 6 )
+      real(wp) :: value
+      integer(ip) :: cdsign ( 3 )
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: frcode
+      integer(ip) :: sysidx
+      logical :: attblk ( abatsz )
+      logical :: found
       if ( .not. allocated ( ctx%zzgfcou_state ) ) then
          allocate ( ctx%zzgfcou_state )
          ctx%zzgfcou_state%svdref = ' '
@@ -30258,20 +30258,20 @@ contains
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
            latcrd, altcrd, loncrd, latcrd, altcrd ], [ 3, nsys ] )
-      character(timlen)     timstr
-      real(wp)              alt
-      real(wp)              coords ( 3 )
-      real(wp)              lat
-      real(wp)              lon
-      real(wp)              state  ( 6 )
-      real(wp)              value
-      integer(ip)           cdsign ( 3 )
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           frcode
-      integer(ip)           sysidx
-      logical               attblk ( abatsz )
-      logical               found
+      character(timlen) :: timstr
+      real(wp) :: alt
+      real(wp) :: coords ( 3 )
+      real(wp) :: lat
+      real(wp) :: lon
+      real(wp) :: state  ( 6 )
+      real(wp) :: value
+      integer(ip) :: cdsign ( 3 )
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: frcode
+      integer(ip) :: sysidx
+      logical :: attblk ( abatsz )
+      logical :: found
       if ( .not. allocated ( ctx%zzgfcou_state ) ) then
          allocate ( ctx%zzgfcou_state )
          ctx%zzgfcou_state%svdref = ' '
@@ -30420,20 +30420,20 @@ contains
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
            latcrd, altcrd, loncrd, latcrd, altcrd ], [ 3, nsys ] )
-      character(timlen)     timstr
-      real(wp)              alt
-      real(wp)              coords ( 3 )
-      real(wp)              lat
-      real(wp)              lon
-      real(wp)              state  ( 6 )
-      real(wp)              value
-      integer(ip)           cdsign ( 3 )
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           frcode
-      integer(ip)           sysidx
-      logical               attblk ( abatsz )
-      logical               found
+      character(timlen) :: timstr
+      real(wp) :: alt
+      real(wp) :: coords ( 3 )
+      real(wp) :: lat
+      real(wp) :: lon
+      real(wp) :: state  ( 6 )
+      real(wp) :: value
+      integer(ip) :: cdsign ( 3 )
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: frcode
+      integer(ip) :: sysidx
+      logical :: attblk ( abatsz )
+      logical :: found
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -30592,20 +30592,20 @@ contains
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
            latcrd, altcrd, loncrd, latcrd, altcrd ], [ 3, nsys ] )
-      character(timlen)     timstr
-      real(wp)              alt
-      real(wp)              coords ( 3 )
-      real(wp)              lat
-      real(wp)              lon
-      real(wp)              state  ( 6 )
-      real(wp)              value
-      integer(ip)           cdsign ( 3 )
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           frcode
-      integer(ip)           sysidx
-      logical               attblk ( abatsz )
-      logical               found
+      character(timlen) :: timstr
+      real(wp) :: alt
+      real(wp) :: coords ( 3 )
+      real(wp) :: lat
+      real(wp) :: lon
+      real(wp) :: state  ( 6 )
+      real(wp) :: value
+      integer(ip) :: cdsign ( 3 )
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: frcode
+      integer(ip) :: sysidx
+      logical :: attblk ( abatsz )
+      logical :: found
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -30714,20 +30714,20 @@ contains
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
            latcrd, altcrd, loncrd, latcrd, altcrd ], [ 3, nsys ] )
-      character(timlen)     timstr
-      real(wp)              alt
-      real(wp)              coords ( 3 )
-      real(wp)              lat
-      real(wp)              lon
-      real(wp)              state  ( 6 )
-      real(wp)              value
-      integer(ip)           cdsign ( 3 )
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           frcode
-      integer(ip)           sysidx
-      logical               attblk ( abatsz )
-      logical               found
+      character(timlen) :: timstr
+      real(wp) :: alt
+      real(wp) :: coords ( 3 )
+      real(wp) :: lat
+      real(wp) :: lon
+      real(wp) :: state  ( 6 )
+      real(wp) :: value
+      integer(ip) :: cdsign ( 3 )
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: frcode
+      integer(ip) :: sysidx
+      logical :: attblk ( abatsz )
+      logical :: found
       if ( .not. allocated ( ctx%zzgfcou_state ) ) then
          allocate ( ctx%zzgfcou_state )
          ctx%zzgfcou_state%svdref = ' '
@@ -30842,20 +30842,20 @@ contains
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
            latcrd, altcrd, loncrd, latcrd, altcrd ], [ 3, nsys ] )
-      character(timlen)     timstr
-      real(wp)              alt
-      real(wp)              coords ( 3 )
-      real(wp)              lat
-      real(wp)              lon
-      real(wp)              state  ( 6 )
-      real(wp)              value
-      integer(ip)           cdsign ( 3 )
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           frcode
-      integer(ip)           sysidx
-      logical               attblk ( abatsz )
-      logical               found
+      character(timlen) :: timstr
+      real(wp) :: alt
+      real(wp) :: coords ( 3 )
+      real(wp) :: lat
+      real(wp) :: lon
+      real(wp) :: state  ( 6 )
+      real(wp) :: value
+      integer(ip) :: cdsign ( 3 )
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: frcode
+      integer(ip) :: sysidx
+      logical :: attblk ( abatsz )
+      logical :: found
       if ( .not. allocated ( ctx%zzgfcou_state ) ) then
          allocate ( ctx%zzgfcou_state )
          ctx%zzgfcou_state%svdref = ' '
@@ -31007,20 +31007,20 @@ contains
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
            latcrd, altcrd, loncrd, latcrd, altcrd ], [ 3, nsys ] )
-      character(timlen)     timstr
-      real(wp)              alt
-      real(wp)              coords ( 3 )
-      real(wp)              lat
-      real(wp)              lon
-      real(wp)              state  ( 6 )
-      real(wp)              value
-      integer(ip)           cdsign ( 3 )
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           frcode
-      integer(ip)           sysidx
-      logical               attblk ( abatsz )
-      logical               found
+      character(timlen) :: timstr
+      real(wp) :: alt
+      real(wp) :: coords ( 3 )
+      real(wp) :: lat
+      real(wp) :: lon
+      real(wp) :: state  ( 6 )
+      real(wp) :: value
+      integer(ip) :: cdsign ( 3 )
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: frcode
+      integer(ip) :: sysidx
+      logical :: attblk ( abatsz )
+      logical :: found
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -31255,20 +31255,20 @@ contains
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
            latcrd, altcrd, loncrd, latcrd, altcrd ], [ 3, nsys ] )
-      character(timlen)     timstr
-      real(wp)              alt
-      real(wp)              coords ( 3 )
-      real(wp)              lat
-      real(wp)              lon
-      real(wp)              state  ( 6 )
-      real(wp)              value
-      integer(ip)           cdsign ( 3 )
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           frcode
-      integer(ip)           sysidx
-      logical               attblk ( abatsz )
-      logical               found
+      character(timlen) :: timstr
+      real(wp) :: alt
+      real(wp) :: coords ( 3 )
+      real(wp) :: lat
+      real(wp) :: lon
+      real(wp) :: state  ( 6 )
+      real(wp) :: value
+      integer(ip) :: cdsign ( 3 )
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: frcode
+      integer(ip) :: sysidx
+      logical :: attblk ( abatsz )
+      logical :: found
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -32194,68 +32194,68 @@ contains
       integer(ip), parameter :: crdlen = 32
       integer(ip), parameter :: syslen = 32
       integer(ip), parameter :: rptlen = 80
-      character(crdlen)     nrmcrd
-      character(syslen)     nrmsys
-      character(crdlen)     prxcrd
-      character(funlen)     prxfun
-      character(syslen)     prxsys
+      character(crdlen) :: nrmcrd
+      character(syslen) :: nrmsys
+      character(crdlen) :: prxcrd
+      character(funlen) :: prxfun
+      character(syslen) :: prxsys
       character(:), allocatable :: rctrnm
       logical :: fnd
-      character(rptlen)     rptpre ( 2 )
-      character(rptlen)     rptsuf ( 2 )
-      character(rptlen)     tmplat
-      character(namlen)     rlist  ( nwlong )
-      character(oplen)      uop
-      character(oplen)      prxrel
-      real(wp)              alt
-      real(wp)              cmpval
-      real(wp)              cv
-      real(wp)              et
-      real(wp)              extval
-      real(wp)              lat
-      real(wp)              locref
-      real(wp)              loctol
-      real(wp)              lon
-      real(wp)              prxval
-      real(wp)              r2ovr2
-      real(wp)              start
-      real(wp)              sv
-      real(wp)              value
-      real(wp)              xrfval
-      integer(ip)           bot
-      integer(ip)           class
-      integer(ip)           clssid
-      integer(ip)           compl
-      integer(ip)           f1
-      integer(ip)           f2
-      integer(ip)           frcode
-      integer(ip)           head
-      integer(ip)           i
-      integer(ip)           left
-      integer(ip)           n
-      integer(ip)           needwn ( lbcell : nwlong )
-      integer(ip)           next
-      integer(ip)           nl
-      integer(ip)           node
-      integer(ip)           q1
-      integer(ip)           q2
-      integer(ip)           q3
-      integer(ip)           q4
-      integer(ip)           quad
-      integer(ip)           refctr
-      integer(ip)           region ( 3 )
-      integer(ip)           res
-      integer(ip)           res1
-      integer(ip)           res2
-      integer(ip)           right
-      integer(ip)           s
-      integer(ip)           top
-      integer(ip)           total
-      integer(ip)           wh
-      integer(ip)           wix    (             nwlong )
-      integer(ip)           wwpool ( 2, lbpool : nwlong )
-      logical               flip
-      logical               found
+      character(rptlen) :: rptpre ( 2 )
+      character(rptlen) :: rptsuf ( 2 )
+      character(rptlen) :: tmplat
+      character(namlen) :: rlist  ( nwlong )
+      character(oplen) :: uop
+      character(oplen) :: prxrel
+      real(wp) :: alt
+      real(wp) :: cmpval
+      real(wp) :: cv
+      real(wp) :: et
+      real(wp) :: extval
+      real(wp) :: lat
+      real(wp) :: locref
+      real(wp) :: loctol
+      real(wp) :: lon
+      real(wp) :: prxval
+      real(wp) :: r2ovr2
+      real(wp) :: start
+      real(wp) :: sv
+      real(wp) :: value
+      real(wp) :: xrfval
+      integer(ip) :: bot
+      integer(ip) :: class
+      integer(ip) :: clssid
+      integer(ip) :: compl
+      integer(ip) :: f1
+      integer(ip) :: f2
+      integer(ip) :: frcode
+      integer(ip) :: head
+      integer(ip) :: i
+      integer(ip) :: left
+      integer(ip) :: n
+      integer(ip) :: needwn ( lbcell : nwlong )
+      integer(ip) :: next
+      integer(ip) :: nl
+      integer(ip) :: node
+      integer(ip) :: q1
+      integer(ip) :: q2
+      integer(ip) :: q3
+      integer(ip) :: q4
+      integer(ip) :: quad
+      integer(ip) :: refctr
+      integer(ip) :: region ( 3 )
+      integer(ip) :: res
+      integer(ip) :: res1
+      integer(ip) :: res2
+      integer(ip) :: right
+      integer(ip) :: s
+      integer(ip) :: top
+      integer(ip) :: total
+      integer(ip) :: wh
+      integer(ip) :: wix    (             nwlong )
+      integer(ip) :: wwpool ( 2, lbpool : nwlong )
+      logical :: flip
+      logical :: found
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -34645,18 +34645,18 @@ contains
       integer(ip), parameter :: xpass = 3
       integer(ip), parameter :: nc = 7
       integer(ip), parameter :: maxop = 6
-      character(lnsize)     loccrd
-      character(lnsize)     locvdf
-      character(mxbegm)     prebuf ( mxpass )
-      character(maxop)      uop
-      real(wp)              excon
-      real(wp)              finish
-      real(wp)              start
-      integer(ip)           i
-      integer(ip)           loc
-      integer(ip)           npass
-      logical               localx
-      logical               noadjx
+      character(lnsize) :: loccrd
+      character(lnsize) :: locvdf
+      character(mxbegm) :: prebuf ( mxpass )
+      character(maxop) :: uop
+      real(wp) :: excon
+      real(wp) :: finish
+      real(wp) :: start
+      integer(ip) :: i
+      integer(ip) :: loc
+      integer(ip) :: npass
+      logical :: localx
+      logical :: noadjx
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -36428,17 +36428,17 @@ contains
       integer(ip), parameter :: nc = 7
       integer(ip), parameter :: maxop = 6
       integer(ip), parameter :: maxcln = 80
-      character(maxcln)     abcorr
-      character(maxcln)     angtyp
-      character(maxcln)     cornam
-      character(maxcln)     corsys
-      character(maxcln)     cpars  ( maxpar )
-      character(maxcln)     frame  ( 2 )
-      character(maxcln)     illum
-      character(maxcln)     method
-      character(maxcln)     obsrvr
-      character(maxcln)     of     ( 2 )
-      character(maxcln)     pnames ( maxpar )
+      character(maxcln) :: abcorr
+      character(maxcln) :: angtyp
+      character(maxcln) :: cornam
+      character(maxcln) :: corsys
+      character(maxcln) :: cpars  ( maxpar )
+      character(maxcln) :: frame  ( 2 )
+      character(maxcln) :: illum
+      character(maxcln) :: method
+      character(maxcln) :: obsrvr
+      character(maxcln) :: of     ( 2 )
+      character(maxcln) :: pnames ( maxpar )
       character(maxcln), parameter :: qpars ( maxpar, nq ) = reshape ( [ character(maxcln) :: &
          'TARGET1', 'FRAME1', 'SHAPE1', 'TARGET2', 'FRAME2', 'SHAPE2', 'OBSERVER', 'ABCORR', ' ', ' ',&
          'TARGET', 'OBSERVER', 'ABCORR', ' ', ' ', ' ', ' ', ' ', ' ', ' ',&
@@ -36449,22 +36449,22 @@ contains
          'TARGET1', 'TARGET2', 'OBSERVER', 'ABCORR', 'REFERENCE FRAME', ' ', ' ', ' ', ' ', ' ',&
          'TARGET', 'OBSERVER', 'ABCORR', 'REFERENCE FRAME', ' ', ' ', ' ', ' ', ' ', ' ' ], &
          [ maxpar, nq ] )
-      character(maxcln)     quant
-      character(maxcln)     ref
-      character(maxcln)     shape  ( 2 )
-      character(maxcln)     target
-      character(maxcln)     vecdef
-      character(maxop)      uop
-      character(mxbegm)     rptpre ( 2 )
-      real(wp)              dt
-      integer(ip)           i
-      integer(ip)           loc
-      integer(ip)           npass
-      integer(ip)           qtnum
-      logical               localx
-      logical               noadjx
-      real(wp)              dvec   ( 3 )
-      real(wp)              spoint ( 3 )
+      character(maxcln) :: quant
+      character(maxcln) :: ref
+      character(maxcln) :: shape  ( 2 )
+      character(maxcln) :: target
+      character(maxcln) :: vecdef
+      character(maxop) :: uop
+      character(mxbegm) :: rptpre ( 2 )
+      real(wp) :: dt
+      integer(ip) :: i
+      integer(ip) :: loc
+      integer(ip) :: npass
+      integer(ip) :: qtnum
+      logical :: localx
+      logical :: noadjx
+      real(wp) :: dvec   ( 3 )
+      real(wp) :: spoint ( 3 )
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -38222,20 +38222,20 @@ contains
 
       logical, parameter :: norpt = .false.
 
-      real(wp)              tol
-      logical               ok
+      real(wp) :: tol
+      logical :: ok
 
 !
 !     Quantity definition parameter arrays:
 !
-      character(lnsize)     qcpars ( qnpars )
-      character(lnsize)     qpnams ( qnpars )
+      character(lnsize) :: qcpars ( qnpars )
+      character(lnsize) :: qpnams ( qnpars )
 
-      real(wp)              qdpars ( qnpars )
+      real(wp) :: qdpars ( qnpars )
 
-      integer(ip)           qipars ( qnpars )
+      integer(ip) :: qipars ( qnpars )
 
-      logical               qlpars ( qnpars )
+      logical :: qlpars ( qnpars )
 
 !
 !     Standard SPICE error handling.
@@ -39480,18 +39480,18 @@ contains
 !
 !     Quantity definition parameter arrays:
 !
-      character(lnsize)     qcpars ( qnpars )
-      character(lnsize)     qpnams ( qnpars )
+      character(lnsize) :: qcpars ( qnpars )
+      character(lnsize) :: qpnams ( qnpars )
 
-      real(wp)              qdpars ( qnpars )
+      real(wp) :: qdpars ( qnpars )
 
-      integer(ip)           qipars ( qnpars )
+      integer(ip) :: qipars ( qnpars )
 
-      logical               qlpars ( qnpars )
+      logical :: qlpars ( qnpars )
 
-      real(wp)              tol
+      real(wp) :: tol
 
-      logical               ok
+      logical :: ok
 
 !
 !     Standard SPICE error handling.
@@ -40516,20 +40516,20 @@ contains
 
       logical, parameter :: norpt = .false.
 
-      real(wp)              tol
-      logical               ok
+      real(wp) :: tol
+      logical :: ok
 
 !
 !     Quantity definition parameter arrays:
 !
-      character(lnsize)     qcpars ( qnpars )
-      character(lnsize)     qpnams ( qnpars )
+      character(lnsize) :: qcpars ( qnpars )
+      character(lnsize) :: qpnams ( qnpars )
 
-      real(wp)              qdpars ( qnpars )
+      real(wp) :: qdpars ( qnpars )
 
-      integer(ip)           qipars ( qnpars )
+      integer(ip) :: qipars ( qnpars )
 
-      logical               qlpars ( qnpars )
+      logical :: qlpars ( qnpars )
 
 !
 !     Standard SPICE error handling.
@@ -42380,23 +42380,23 @@ contains
 
       logical, parameter :: norpt = .false.
 
-      real(wp)              tol
-      logical               ok
+      real(wp) :: tol
+      logical :: ok
 
 !
 !     Quantity definition parameter arrays:
 !
-      character(lnsize)     qcpars ( qnpars )
-      character(lnsize)     qpnams ( qnpars )
+      character(lnsize) :: qcpars ( qnpars )
+      character(lnsize) :: qpnams ( qnpars )
       character(lnsize), parameter :: dref = ' '
 
-      real(wp)              qdpars ( qnpars )
+      real(wp) :: qdpars ( qnpars )
       real(wp), parameter :: dvec   ( 3 ) = &
          [ 0.0_wp, 0.0_wp, 0.0_wp ]
 
-      integer(ip)           qipars ( qnpars )
+      integer(ip) :: qipars ( qnpars )
 
-      logical               qlpars ( qnpars )
+      logical :: qlpars ( qnpars )
 
 !
 !     Define no-use values for DVEC and DREF
@@ -43418,20 +43418,20 @@ contains
 
       logical, parameter :: norpt = .false.
 
-      real(wp)              tol
-      logical               ok
+      real(wp) :: tol
+      logical :: ok
 
 !
 !     Quantity definition parameter arrays:
 !
-      character(lnsize)     qcpars ( qnpars )
-      character(lnsize)     qpnams ( qnpars )
+      character(lnsize) :: qcpars ( qnpars )
+      character(lnsize) :: qpnams ( qnpars )
 
-      real(wp)              qdpars ( qnpars )
+      real(wp) :: qdpars ( qnpars )
 
-      integer(ip)           qipars ( qnpars )
+      integer(ip) :: qipars ( qnpars )
 
-      logical               qlpars ( qnpars )
+      logical :: qlpars ( qnpars )
 
 !
 !     Standard SPICE error handling.
@@ -44523,20 +44523,20 @@ contains
 
       integer(ip), parameter :: qnpars = 8
 
-      real(wp)              tol
-      logical               ok
+      real(wp) :: tol
+      logical :: ok
 
 !
 !     Quantity definition parameter arrays:
 !
-      character(lnsize)     qcpars ( qnpars )
-      character(lnsize)     qpnams ( qnpars )
+      character(lnsize) :: qcpars ( qnpars )
+      character(lnsize) :: qpnams ( qnpars )
 
-      real(wp)              qdpars ( qnpars )
+      real(wp) :: qdpars ( qnpars )
 
-      integer(ip)           qipars ( qnpars )
+      integer(ip) :: qipars ( qnpars )
 
-      logical               qlpars ( qnpars )
+      logical :: qlpars ( qnpars )
 
 !
 !     Standard SPICE error handling.
@@ -46003,20 +46003,20 @@ contains
 
       logical, parameter :: norpt = .false.
 
-      real(wp)              tol
-      logical               ok
+      real(wp) :: tol
+      logical :: ok
 
 !
 !     Quantity definition parameter arrays:
 !
-      character(lnsize)     qcpars ( qnpars )
-      character(lnsize)     qpnams ( qnpars )
+      character(lnsize) :: qcpars ( qnpars )
+      character(lnsize) :: qpnams ( qnpars )
 
-      real(wp)              qdpars ( qnpars )
+      real(wp) :: qdpars ( qnpars )
 
-      integer(ip)           qipars ( qnpars )
+      integer(ip) :: qipars ( qnpars )
 
-      logical               qlpars ( qnpars )
+      logical :: qlpars ( qnpars )
 
 !
 !     Standard SPICE error handling.
@@ -47239,23 +47239,23 @@ contains
 
       logical, parameter :: norpt = .false.
 
-      real(wp)              tol
-      logical               ok
+      real(wp) :: tol
+      logical :: ok
 
 !
 !     Quantity definition parameter arrays:
 !
-      character(lnsize)     qcpars ( qnpars )
-      character(lnsize)     qpnams ( qnpars )
+      character(lnsize) :: qcpars ( qnpars )
+      character(lnsize) :: qpnams ( qnpars )
       character(lnsize), parameter :: dref = ' '
 
-      real(wp)              qdpars ( qnpars )
+      real(wp) :: qdpars ( qnpars )
       real(wp), parameter :: dvec   ( 3 ) = &
          [ 0.0_wp, 0.0_wp, 0.0_wp ]
 
-      integer(ip)           qipars ( qnpars )
+      integer(ip) :: qipars ( qnpars )
 
-      logical               qlpars ( qnpars )
+      logical :: qlpars ( qnpars )
 
 !
 !     Define no-use values for DVEC and DREF
