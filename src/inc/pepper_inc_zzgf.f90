@@ -154,8 +154,4 @@ module pepper_inc_zzgf
 !
    integer(ip), parameter :: mxmsg = mxbegm + mxendm + 10
 
-!
-!     End of file zzgf.inc.
-!
-
 end module pepper_inc_zzgf

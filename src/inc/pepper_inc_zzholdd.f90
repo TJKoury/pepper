@@ -110,8 +110,4 @@ module pepper_inc_zzholdd
 !
    integer(ip), parameter :: nid = 4
 
-!
-!     End of file zzholdd.inc.
-!
-
 end module pepper_inc_zzholdd

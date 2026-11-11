@@ -42,8 +42,4 @@ module pepper_inc_zzsrftrn
 !
    integer(ip), parameter :: lbsngl = -5
 
-!
-!     End of file zzsrftrn.inc.
-!
-
 end module pepper_inc_zzsrftrn

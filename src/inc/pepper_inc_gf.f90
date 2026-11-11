@@ -199,8 +199,4 @@ module pepper_inc_gf
 
    character(*), parameter :: recfov = 'RECTANGLE'
 
-!
-!     End of file gf.inc.
-!
-
 end module pepper_inc_gf

@@ -118,8 +118,4 @@ module pepper_inc_ck06
 
    integer(ip), parameter :: maxrsz = 4 + (maxdeg+1)*(c06ps3+1)
 
-!
-!     End of file ck06.inc.
-!
-
 end module pepper_inc_ck06

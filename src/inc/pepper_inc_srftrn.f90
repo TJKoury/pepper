@@ -33,8 +33,4 @@ module pepper_inc_srftrn
 !
    integer(ip), parameter :: sfnmln = 36
 
-!
-!     End of file srftrn.inc.
-!
-
 end module pepper_inc_srftrn

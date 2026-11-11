@@ -70,8 +70,4 @@ module pepper_inc_ck05
 
    integer(ip), parameter :: c05ps3 = 7
 
-!
-!     End of file ck05.inc.
-!
-
 end module pepper_inc_ck05
