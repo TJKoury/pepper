@@ -5809,6 +5809,12 @@ contains
 
       end do
 
+!
+!     PEPPER: the programmatic ephemerides and frames go too (the frames
+!     before CLPOOL, which writes the definitions of those it knows).
+!
+      call clear_provided_ephemerides ( ctx )
+      call clear_provided_frames ( ctx )
       call clpool ( ctx )
 
 !

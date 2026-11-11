@@ -12732,6 +12732,12 @@ contains
       call ps%clear ( )
       call pool_changed ( ctx%spice, ' ' )
       end associate
+!
+!     PEPPER: the programmatic frames stay (they are registrations, as
+!     loaded files are): their definitions are written into the emptied
+!     pool.
+!
+      call write_provided_frames ( ctx )
       end procedure clpool
 
       !>## Detailed Input

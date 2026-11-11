@@ -174,6 +174,15 @@ module pepper_instance
       !> ldpool, boddef, ...) work and signal their errors through it (see
       !> [[instance_context]]).
       type(pepper_context), allocatable :: own
+      !> Programmatic ephemerides ([[spice_add_ephemeris]]): their providers, and
+      !> the virtual SPK files that put them in the segment index.
+      type(provided_ephemeris), allocatable :: provided_spk(:)
+      integer(ip) :: nprovided_spk = 0  !! number of programmatic ephemerides
+      integer(ip) :: next_virtual_handle = -1000  !! the handle of the next virtual SPK file (negative, decreasing)
+      !> Programmatic frames ([[spice_add_frame]]): their providers (their
+      !> definitions are in the kernel pool).
+      type(provided_frame), allocatable :: provided_frames(:)
+      integer(ip) :: nprovided_frames = 0  !! number of programmatic frames
    contains
       procedure, non_overridable :: new_context
       procedure, non_overridable :: context => instance_context
@@ -194,6 +203,11 @@ module pepper_instance
       procedure, non_overridable :: lmpool => spice_lmpool
       procedure, non_overridable :: dvpool => spice_dvpool
       procedure, non_overridable :: boddef => spice_boddef
+      ! Programmatic ephemerides and frames (pepper_programmatic)
+      procedure, non_overridable :: add_ephemeris => spice_add_ephemeris
+      procedure, non_overridable :: remove_ephemeris => spice_remove_ephemeris
+      procedure, non_overridable :: add_frame => spice_add_frame
+      procedure, non_overridable :: remove_frame => spice_remove_frame
       procedure, non_overridable :: spklef => spice_spklef
       procedure, non_overridable :: spkuef => spice_spkuef
       procedure, non_overridable :: pcklof => spice_pcklof
@@ -1698,6 +1712,253 @@ module pepper_instance
       end subroutine gf_decr_x
    end interface
    ! <<< generated callbacks
+
+   ! ------------------------------------------------------------------------
+   ! Programmatic ephemerides and frames (PEPPER; programmatic_plan.md,
+   ! src/pepper_programmatic.f90)
+   ! ------------------------------------------------------------------------
+
+   !> The source of a programmatic ephemeris ([[spice_add_ephemeris]]): extend
+   !> this type with the data of the motion and implement `state`, the state
+   !> of a body relative to its registered center, in its registered frame.
+   !>
+   !> Providers are called from any context, so from several threads at
+   !> once: `state` must not change shared data (`self` is `intent(in)`).
+   type, abstract, public :: ephemeris_provider
+   contains
+      procedure(ephemeris_provider_state), deferred :: state
+   end type ephemeris_provider
+
+   !> The source of a programmatic frame ([[spice_add_frame]]): extend this type
+   !> and implement `transform`, the state transformation from this frame to
+   !> the RELATIVE frame (it maps states relative to this frame to states
+   !> relative to RELATIVE, as a TK frame's rotation does),
+   !> `[R 0; dR/dt R]`. `rotation` (PXFORM's path) returns the
+   !> transformation's rotation block unless a provider overrides it with a
+   !> faster one.
+   !>
+   !> Providers are called from any context, so from several threads at
+   !> once: they must not change shared data (`self` is `intent(in)`).
+   type, abstract, public :: frame_provider
+   contains
+      procedure(frame_provider_transform), deferred :: transform
+      procedure :: rotation => frame_provider_rotation
+   end type frame_provider
+
+   abstract interface
+      !> The state of a programmatic body at an epoch.
+      subroutine ephemeris_provider_state ( self, ctx, body, et, state, found )
+         import :: ephemeris_provider, pepper_context, ip, wp
+         class(ephemeris_provider), intent(in) :: self  !! the provider
+         class(pepper_context), intent(inout) :: ctx  !! the context of the query (for errors and other queries)
+         integer(ip), intent(in) :: body  !! the body's ID code
+         real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+         real(wp), intent(out) :: state(6)  !! the state relative to the registered center, in the registered frame (km, km/s)
+         logical, intent(out) :: found  !! a state is available at ET
+      end subroutine ephemeris_provider_state
+
+      !> The state transformation of a programmatic frame at an epoch.
+      subroutine frame_provider_transform ( self, ctx, frame, et, xform, relative, found )
+         import :: frame_provider, pepper_context, ip, wp
+         class(frame_provider), intent(in) :: self  !! the provider
+         class(pepper_context), intent(inout) :: ctx  !! the context of the query
+         integer(ip), intent(in) :: frame  !! the frame's ID code
+         real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+         real(wp), intent(out) :: xform(6, 6)  !! the transformation from this frame to RELATIVE
+         integer(ip), intent(out) :: relative  !! the ID code of the frame transformed to
+         logical, intent(out) :: found  !! the transformation is available at ET
+      end subroutine frame_provider_transform
+
+      !> A plain procedure as the source of a programmatic ephemeris
+      !> ([[ephemeris_procedure]]).
+      subroutine ephemeris_function ( ctx, body, et, state, found )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context of the query
+         integer(ip), intent(in) :: body  !! the body's ID code
+         real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+         real(wp), intent(out) :: state(6)  !! the state relative to the registered center, in the registered frame
+         logical, intent(out) :: found  !! a state is available at ET
+      end subroutine ephemeris_function
+
+      !> A plain procedure as the source of a programmatic frame
+      !> ([[frame_procedure]]).
+      subroutine frame_function ( ctx, frame, et, xform, relative, found )
+         import :: pepper_context, ip, wp
+         class(pepper_context), intent(inout) :: ctx  !! the context of the query
+         integer(ip), intent(in) :: frame  !! the frame's ID code
+         real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+         real(wp), intent(out) :: xform(6, 6)  !! the transformation from this frame to RELATIVE
+         integer(ip), intent(out) :: relative  !! the ID code of the frame transformed to
+         logical, intent(out) :: found  !! the transformation is available at ET
+      end subroutine frame_function
+   end interface
+
+   !> A plain procedure as an [[ephemeris_provider]] (for programs that
+   !> need no data of their own in the provider).
+   type, extends(ephemeris_provider), public :: ephemeris_procedure
+      procedure(ephemeris_function), pointer, nopass :: f => null()  !! the procedure
+   contains
+      procedure :: state => ephemeris_procedure_state
+   end type ephemeris_procedure
+
+   !> A plain procedure as a [[frame_provider]].
+   type, extends(frame_provider), public :: frame_procedure
+      procedure(frame_function), pointer, nopass :: f => null()  !! the procedure
+   contains
+      procedure :: transform => frame_procedure_transform
+   end type frame_procedure
+
+   !> A programmatic ephemeris: a body's registration and its virtual SPK
+   !> file (instance state).
+   type, public :: provided_ephemeris
+      integer(ip) :: body = 0  !! the body
+      integer(ip) :: center = 0  !! its center of motion
+      integer(ip) :: frame = 0  !! the frame of its states
+      real(wp) :: tbeg = 0.0_wp  !! start of its coverage
+      real(wp) :: tend = 0.0_wp  !! end of its coverage
+      integer(ip) :: handle = 0  !! the handle of its virtual SPK file
+      class(ephemeris_provider), allocatable :: provider  !! the source of its states
+   end type provided_ephemeris
+
+   !> A programmatic frame (instance state; its definition is in the kernel
+   !> pool).
+   type, public :: provided_frame
+      integer(ip) :: code = 0  !! the frame's ID code
+      integer(ip) :: center = 0  !! its center
+      character(:), allocatable :: name  !! its name (upper case)
+      class(frame_provider), allocatable :: provider  !! the source of its orientation
+   end type provided_frame
+
+   interface
+
+      !> Add a programmatic ephemeris (PEPPER; programmatic_plan.md): the
+      !> states of BODY relative to CENTER in FRAME come from PROVIDER (a copy
+      !> of it is kept) at the epochs of [TBEG, TEND]. The body enters the SPK
+      !> segment search as a file loaded now: it overrides the files loaded
+      !> before (and is overridden by those loaded after) at those epochs.
+      !> Adding a body again replaces its registration. Errors are signaled
+      !> in the instance's context.
+      module subroutine spice_add_ephemeris ( this, body, center, frame, tbeg, tend, provider )
+         class(pepper_spice), target, intent(inout) :: this  !! the instance
+         integer(ip), intent(in) :: body  !! the body's ID code
+         integer(ip), intent(in) :: center  !! the ID code of its center of motion
+         character(*), intent(in) :: frame  !! the frame of the states
+         real(wp), intent(in) :: tbeg  !! start of the coverage (TDB seconds past J2000)
+         real(wp), intent(in) :: tend  !! end of the coverage
+         class(ephemeris_provider), intent(in) :: provider  !! the source of the states
+      end subroutine spice_add_ephemeris
+
+      !> Remove a programmatic ephemeris (PEPPER): the body's other segments
+      !> (files) apply again. No error if the body has none.
+      module subroutine spice_remove_ephemeris ( this, body )
+         class(pepper_spice), target, intent(inout) :: this  !! the instance
+         integer(ip), intent(in) :: body  !! the body's ID code
+      end subroutine spice_remove_ephemeris
+
+      !> Add a programmatic frame (PEPPER; programmatic_plan.md): a frame of
+      !> class 7 whose orientation comes from PROVIDER (a copy of it is kept).
+      !> The frame's definition (name, ID code, class, center) is written into
+      !> the kernel pool, so no frame kernel is needed. Adding a frame again
+      !> (the same code) replaces it; the names and codes of built-in frames
+      !> are refused (SPICE(FRAMEEXISTS)). Errors are signaled in the
+      !> instance's context.
+      module subroutine spice_add_frame ( this, name, code, center, provider )
+         class(pepper_spice), target, intent(inout) :: this  !! the instance
+         character(*), intent(in) :: name  !! the frame's name
+         integer(ip), intent(in) :: code  !! its ID code
+         integer(ip), intent(in) :: center  !! the ID code of its center
+         class(frame_provider), intent(in) :: provider  !! the source of its orientation
+      end subroutine spice_add_frame
+
+      !> Remove a programmatic frame and its definition from the kernel pool
+      !> (PEPPER). No error if there is no such programmatic frame.
+      module subroutine spice_remove_frame ( this, name )
+         class(pepper_spice), target, intent(inout) :: this  !! the instance
+         character(*), intent(in) :: name  !! the frame's name
+      end subroutine spice_remove_frame
+
+      !> The state of [[ephemeris_procedure]]: its procedure's.
+      module subroutine ephemeris_procedure_state ( self, ctx, body, et, state, found )
+         class(ephemeris_procedure), intent(in) :: self  !! the provider
+         class(pepper_context), intent(inout) :: ctx  !! the context of the query
+         integer(ip), intent(in) :: body  !! the body's ID code
+         real(wp), intent(in) :: et  !! the epoch
+         real(wp), intent(out) :: state(6)  !! the state
+         logical, intent(out) :: found  !! a state is available at ET
+      end subroutine ephemeris_procedure_state
+
+      !> The transformation of [[frame_procedure]]: its procedure's.
+      module subroutine frame_procedure_transform ( self, ctx, frame, et, xform, relative, found )
+         class(frame_procedure), intent(in) :: self  !! the provider
+         class(pepper_context), intent(inout) :: ctx  !! the context of the query
+         integer(ip), intent(in) :: frame  !! the frame's ID code
+         real(wp), intent(in) :: et  !! the epoch
+         real(wp), intent(out) :: xform(6, 6)  !! the transformation from this frame to RELATIVE
+         integer(ip), intent(out) :: relative  !! the frame transformed to
+         logical, intent(out) :: found  !! the transformation is available at ET
+      end subroutine frame_procedure_transform
+
+      !> A [[frame_provider]]'s rotation: by default, the rotation block of
+      !> its `transform`.
+      module subroutine frame_provider_rotation ( self, ctx, frame, et, rotate, relative, found )
+         class(frame_provider), intent(in) :: self  !! the provider
+         class(pepper_context), intent(inout) :: ctx  !! the context of the query
+         integer(ip), intent(in) :: frame  !! the frame's ID code
+         real(wp), intent(in) :: et  !! the epoch
+         real(wp), intent(out) :: rotate(3, 3)  !! the rotation from this frame to RELATIVE
+         integer(ip), intent(out) :: relative  !! the frame rotated to
+         logical, intent(out) :: found  !! the rotation is available at ET
+      end subroutine frame_provider_rotation
+
+      !> The state of a programmatic ephemeris's virtual segment (SPKPVN's
+      !> type 100): its provider's, at ET (PEPPER).
+      module subroutine provided_state ( ctx, handle, et, state )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: handle  !! the virtual file's handle
+         real(wp), intent(in) :: et  !! the epoch
+         real(wp), intent(out) :: state(6)  !! the state relative to the registered center
+      end subroutine provided_state
+
+      !> The rotation of a programmatic frame (ROTGET's class 7) (PEPPER).
+      module subroutine provided_rotation ( ctx, frame, et, rotate, outfrm, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: frame  !! the frame's ID code
+         real(wp), intent(in) :: et  !! the epoch
+         real(wp), intent(out) :: rotate(3, 3)  !! the rotation from FRAME to OUTFRM
+         integer(ip), intent(out) :: outfrm  !! the frame rotated to
+         logical, intent(out) :: found  !! a rotation is available
+      end subroutine provided_rotation
+
+      !> The state transformation of a programmatic frame (FRMGET's class 7)
+      !> (PEPPER).
+      module subroutine provided_transform ( ctx, frame, et, xform, outfrm, found )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: frame  !! the frame's ID code
+         real(wp), intent(in) :: et  !! the epoch
+         real(wp), intent(out) :: xform(6, 6)  !! the transformation from FRAME to OUTFRM
+         integer(ip), intent(out) :: outfrm  !! the frame transformed to
+         logical, intent(out) :: found  !! a transformation is available
+      end subroutine provided_transform
+
+      !> Remove every programmatic ephemeris (KCLEAR) (PEPPER).
+      module subroutine clear_provided_ephemerides ( ctx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+      end subroutine clear_provided_ephemerides
+
+      !> Forget every programmatic frame (KCLEAR, before it empties the
+      !> kernel pool) (PEPPER).
+      module subroutine clear_provided_frames ( ctx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+      end subroutine clear_provided_frames
+
+      !> Write the definitions of the programmatic frames into the kernel
+      !> pool (CLPOOL, after it empties the pool: programmatic frames are
+      !> registrations, like loaded files, not kernel variables) (PEPPER).
+      module subroutine write_provided_frames ( ctx )
+         class(pepper_context), intent(inout) :: ctx  !! the context
+      end subroutine write_provided_frames
+
+   end interface
 
    ! The procedures of the subsystems, implemented in submodules of this
    ! module (e.g. pepper_cells in src/pepper_cells.f90). Each has the

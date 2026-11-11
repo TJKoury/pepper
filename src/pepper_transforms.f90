@@ -243,6 +243,12 @@ contains
 
          call zzswfxfm ( ctx, infrm, et, 6, xform, outfrm, found )
 
+      else if ( type == prgmtc ) then
+!
+!        PEPPER: a programmatic frame (ADD_FRAME): its provider.
+!
+         call provided_transform ( ctx, infrm, et, xform, outfrm, found )
+
       else
 
          xform = 0.0_wp
@@ -471,6 +477,12 @@ contains
       else if ( type == swtch ) then
 
          call zzswfxfm ( ctx, infrm, et, 3, rotate, outfrm, found )
+
+      else if ( type == prgmtc ) then
+!
+!        PEPPER: a programmatic frame (ADD_FRAME): its provider.
+!
+         call provided_rotation ( ctx, infrm, et, rotate, outfrm, found )
 
       else
 

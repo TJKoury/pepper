@@ -7014,6 +7014,13 @@ contains
          call spkr21 ( ctx, handle, descr, et, record         )
          call spke21 ( ctx,                et, record, state  )
 
+      else if ( type == 100 ) then
+!
+!        PEPPER: a programmatic ephemeris (ADD_EPHEMERIS): the virtual
+!        segment's provider.
+!
+         call provided_state ( ctx, handle, et, state )
+
       else
          call ctx%setmsg ( 'SPK type # is not supported in your ' &
          //            'version of the SPICE library.  You will ' &

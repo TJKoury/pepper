@@ -19,7 +19,7 @@ program test_parallel
    use, intrinsic :: iso_fortran_env, only: int64
    use pepper_kinds, only: ip, wp
    use pepper_constants, only: twopi
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance, only: pepper_spice, pepper_context, ephemeris_procedure, frame_procedure
    !$ use omp_lib, only: omp_get_thread_num, omp_get_max_threads
 
    implicit none
@@ -29,7 +29,7 @@ program test_parallel
    character(*), parameter :: fk = 'test_parallel.tf'
    character(*), parameter :: spk_mem = 'test_parallel_mem.bsp'  !! the SPK's copy, loaded in memory
    integer, parameter :: nepoch = 2000  !! number of query epochs
-   integer, parameter :: nres = 6 + 1 + 3 + 1 + 9 + 9 + 1  !! results per epoch
+   integer, parameter :: nres = 6 + 1 + 3 + 1 + 9 + 9 + 1 + 6 + 9  !! results per epoch
    integer, parameter :: nthreads = 4
    type(pepper_spice), target :: spice
    type(pepper_spice), target :: memspice  !! the same kernels, the SPK in memory
@@ -39,6 +39,8 @@ program test_parallel
    real(wp) :: ref(nres, nepoch), par(nres, nepoch)
    character(40) :: refutc(nepoch), parutc(nepoch)
    integer :: failures = 0, pass, i, nbad, errors
+   type(ephemeris_procedure) :: eproc  !! a programmatic body (PEPPER_P, 9100)
+   type(frame_procedure) :: fproc  !! a programmatic frame (PEPPER_SPIN)
 
    setup => spice%context()
    call delete_files()
@@ -52,6 +54,15 @@ program test_parallel
    call memspice%furnsh(spk_mem, in_memory=.true.)
    call memspice%furnsh(fk)
    call check(.not. memspice%failed() .and. memspice%kernel_memory() > 0, 'the second instance loads the SPK in memory')
+   ! a programmatic body and frame in both instances: providers called from
+   ! every thread
+   eproc%f => programmatic_body
+   fproc%f => programmatic_frame
+   call spice%add_ephemeris(9100_ip, 1000_ip, 'J2000', 0.0_wp, 3.0e6_wp, eproc)
+   call spice%add_frame('PEPPER_SPIN', 1400500_ip, 1000_ip, fproc)
+   call memspice%add_ephemeris(9100_ip, 1000_ip, 'J2000', 0.0_wp, 3.0e6_wp, eproc)
+   call memspice%add_frame('PEPPER_SPIN', 1400500_ip, 1000_ip, fproc)
+   call check(.not. spice%failed() .and. .not. memspice%failed(), 'a programmatic body and frame')
 
    et = [(1.0e5_wp + (1.8e6_wp*(i - 1))/(nepoch - 1), i = 1, nepoch)]
 
@@ -128,7 +139,43 @@ contains
       res(21:29) = reshape(rot, [9])
       call ctx%et2utc(t, 'ISOC', 3_ip, utc)
       call ctx%str2et(utc, res(30))
+      call ctx%spkezr('9100', t, 'PEPPER_SPIN', 'LT+S', 'PEPPER_B', res(31:36), lt)
+      call ctx%pxform('PEPPER_SPIN', 'PEPPER_TK', t, rot)
+      res(37:45) = reshape(rot, [9])
    end subroutine queries
+
+   !> A programmatic body circling PEPPER_A (an ephemeris_procedure).
+   subroutine programmatic_body(c, body, et, state, found)
+      class(pepper_context), intent(inout) :: c  !! the context
+      integer(ip), intent(in) :: body  !! the body
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp), intent(out) :: state(6)  !! the state relative to PEPPER_A
+      logical, intent(out) :: found  !! always
+      real(wp), parameter :: r = 5000.0_wp, w = 1.0e-3_wp
+      state = [r*cos(w*et), r*sin(w*et), 100.0_wp, -r*w*sin(w*et), r*w*cos(w*et), 0.0_wp]
+      found = .true.
+   end subroutine programmatic_body
+
+   !> A programmatic frame turning about Z relative to J2000 (a
+   !> frame_procedure).
+   subroutine programmatic_frame(c, frame, et, xform, relative, found)
+      class(pepper_context), intent(inout) :: c  !! the context
+      integer(ip), intent(in) :: frame  !! the frame
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp), intent(out) :: xform(6, 6)  !! from this frame to J2000
+      integer(ip), intent(out) :: relative  !! J2000
+      logical, intent(out) :: found  !! always
+      real(wp), parameter :: w = 2.0e-6_wp
+      real(wp) :: cs, sn
+      cs = cos(w*et)
+      sn = sin(w*et)
+      xform = 0
+      xform(1:3, 1:3) = reshape([cs, sn, 0.0_wp, -sn, cs, 0.0_wp, 0.0_wp, 0.0_wp, 1.0_wp], [3, 3])
+      xform(4:6, 4:6) = xform(1:3, 1:3)
+      xform(4:6, 1:3) = w*reshape([-sn, cs, 0.0_wp, -cs, -sn, 0.0_wp, 0.0_wp, 0.0_wp, 0.0_wp], [3, 3])
+      relative = 1
+      found = .true.
+   end subroutine programmatic_frame
 
    !> Count and report a failed check.
    subroutine check(ok, what)

@@ -126,6 +126,43 @@ call ctx%query_rotation(r, et, rot)            ! PXFORM; query_transform: SXFORM
 A query keeps the segments it used and their current records, so a thread
 uses its own queries (as its own context).
 
+## Programmatic ephemerides and frames
+
+Bodies and frames can come from the program instead of kernel files: a
+provider computes the states or the orientation, and the body or frame is
+then used everywhere one from a kernel is (states with any correction,
+frame transformations, GF searches, prepared queries). See
+`programmatic_plan.md`.
+
+```fortran
+use pepper_instance, only: ephemeris_provider, frame_provider, pepper_context
+
+type, extends(ephemeris_provider) :: my_orbit     ! the program's data and code
+   real(wp) :: r0(3), v(3)
+contains
+   procedure :: state => my_orbit_state           ! (self, ctx, body, et, state, found)
+end type
+
+call spice%add_ephemeris(-999, 399, 'J2000', t0, t1, my_orbit(r0, v))
+call ctx%spkezr('-999', et, 'J2000', 'LT+S', 'MOON', state, lt)
+
+call spice%add_frame('MY_FRAME', 1400000, 399, my_frame_provider)  ! no frame kernel
+call ctx%pxform('MY_FRAME', 'J2000', et, rot)
+```
+
+- A provider's `state` gives the body's state relative to its registered
+  center in the registered frame. A frame provider's `transform` gives the
+  state transformation from the frame to the frame it is relative to (any
+  frame, programmatic ones included), as a TK frame's rotation does.
+- `ephemeris_procedure` and `frame_procedure` wrap plain procedures.
+- A programmatic body takes part in the segment search as a file loaded when
+  it was added: it overrides files loaded before and is overridden by files
+  loaded after, within its coverage.
+- `remove_ephemeris` and `remove_frame` remove one; `kclear` removes all
+  (`clpool` keeps the frames, as it keeps the loaded files).
+- Providers are called from any context, so from several threads at once:
+  they must not change shared data.
+
 ## Results of any size
 
 SPICELIB makes the caller size every output array, and fails (or truncates)

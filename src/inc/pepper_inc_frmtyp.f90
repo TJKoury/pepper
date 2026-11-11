@@ -82,6 +82,8 @@ module pepper_inc_frmtyp
    integer(ip), parameter :: dyn = tk + 1
 
    integer(ip), parameter :: swtch = dyn + 1
+   integer(ip), parameter :: prgmtc = swtch + 1  !! PEPPER: programmatic frames, whose orientation comes from a provider
+                                                 !! ([[spice_add_frame]]; programmatic_plan.md).
 
    integer(ip), parameter :: all = -1
 

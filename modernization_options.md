@@ -77,7 +77,8 @@ from changing the shape of the API, not from tuning the algorithms.
 ## 3. New capabilities
 
 - **Frames, bodies and ephemerides defined in code**, without text kernels:
-  simulators and estimators need this.
+  simulators and estimators need this. Done: `spice%add_ephemeris` and
+  `spice%add_frame` with provider objects (`programmatic_plan.md`).
 - **Ephemerides from data:** fit Chebyshev or Hermite polynomials to a
   trajectory with error control, and write SPK or keep it in memory
   (bspline-fortran is an option).
@@ -151,6 +152,10 @@ Next steps for this option:
   states) could come from the Chebyshev series' second derivative instead of
   a finite difference; this changes the results in the last bits, so it
   would be an option, not the default.
+
+### Programmatic ephemerides and frames: done
+
+`programmatic_plan.md`.
 
 ### The others
 
