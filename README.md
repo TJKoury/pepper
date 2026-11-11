@@ -251,3 +251,11 @@ do i = 1, size(result, 2)
    print *, result(:, i)
 end do
 ```
+
+### Other projects
+
+* [NAIF SPICE Toolkit](https://naif.jpl.nasa.gov/naif/toolkit.html) -- The original SPICE toolkit from NASA's NAIF
+* [rust-spice](https://github.com/GregoireHENRY/rust-spice) -- CSPICE interface from Rust
+* [SpiceyPy](https://github.com/AndrewAnnex/SpiceyPy) -- CSPICE interface from Python
+* [ANISE](https://github.com/nyx-space/anise) -- A thread-safe alternative to NASA SPICE toolkit (Rust)
+
