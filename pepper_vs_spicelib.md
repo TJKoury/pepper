@@ -126,6 +126,12 @@ tables grow, and each removed limit has a test that goes past it
 Because each TK frame takes 10 pool variables, the 26003 variables also limit
 a kernel set to about 2600 TK frames.
 
+Text kernels load whatever their line terminators: LF or CR-LF on every
+platform (and, with gfortran, a lone CR). SPICELIB's FURNSH rejected a text
+kernel whose terminators were not the platform's (SPICE(INCOMPATIBLEEOL)),
+although the Fortran run-time library could read it; CSPICE never made that
+check (`test/core/test_pool.f90`).
+
 ### Names, frames and clocks
 
 | What | SPICELIB | When exceeded |

@@ -22,6 +22,7 @@ program test_pool
    call test_text_kernel()
    call test_watches()
    call test_long_line()
+   call test_line_terminators()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -186,5 +187,53 @@ contains
       open (newunit=unit, file=file, status='old')
       close (unit, status='delete')
    end subroutine test_long_line
+
+   !> Text kernels load whatever their line terminators (LF, CR-LF or a lone
+   !> CR), with LDPOOL and with FURNSH: SPICELIB's FURNSH rejected a file
+   !> whose terminators were not the platform's (SPICE(INCOMPATIBLEEOL)).
+   subroutine test_line_terminators()
+      character(*), parameter :: file = 'test_pool_eol.tk'
+      character(*), parameter :: lf = achar(10), cr = achar(13)
+      character(*), parameter :: names(3) = [character(5) :: 'LF', 'CR-LF', 'CR']
+      character(2) :: eol
+      character(1840) :: msg
+      real(wp) :: values(5)
+      integer(ip) :: n, unit
+      integer :: k, how
+      logical :: found
+      do k = 1, size(names)
+         select case (k)
+         case (1); eol = lf
+         case (2); eol = cr // lf
+         case (3); eol = cr
+         end select
+         do how = 1, 2
+            open (newunit=unit, file=file, status='replace', access='stream', form='unformatted')
+            write (unit) 'A text kernel.' // trim(eol) // trim(eol) // '\begindata' // trim(eol) // &
+               'TEST_EOL = ( 1, 2,' // trim(eol) // '  3 )' // trim(eol) // &
+               "TEST_EOL_NAME = 'X'" // trim(eol) // '\begintext' // trim(eol)
+            close (unit)
+            call ctx%reset()
+            call spice%clpool()
+            if (how == 1) then
+               call spice%ldpool(file)
+            else
+               call spice%furnsh(file)
+            end if
+            if (ctx%failed()) then
+               call ctx%getmsg('SHORT', msg)
+               print '(4a)', trim(names(k)), ': ', trim(msg)
+            end if
+            call ctx%gdpool('TEST_EOL', 1_ip, 5_ip, n, values, found)
+            call check(.not. ctx%failed() .and. found .and. n == 3 .and. &
+                       all(values(1:3) == [1.0_wp, 2.0_wp, 3.0_wp]), &
+                       'line terminators ' // trim(names(k)) // merge(' (ldpool)', ' (furnsh)', how == 1))
+            if (how == 2) call spice%unload(file)
+         end do
+      end do
+      call ctx%reset()
+      open (newunit=unit, file=file, status='old')
+      close (unit, status='delete')
+   end subroutine test_line_terminators
 
 end program test_pool

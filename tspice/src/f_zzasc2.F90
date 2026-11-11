@@ -448,64 +448,16 @@
 
 
 !
-!     Set FURNSH exception flag, exception message and loaded flag for
-!     each file as if FURNSH wouldn't fail and then reset some of them
-!     depending on the platform.
+!     Set FURNSH exception flag and exception message for each file.
+!
+!     PEPPER: FURNSH loads text kernels whatever their line terminators,
+!     so it does not fail on any of the files (SPICELIB signaled
+!     SPICE(INCOMPATIBLEEOL) for the files with non-native terminators).
 !
       DO I = 1, NFILES
          MYFNEF( I ) = .FALSE.
          MYFNEM( I ) = ' '
       END DO
-
-
-
-!
-#if defined(SPICE_COMPILER_INTEL)
-!     FORTRANs on MS PCs can detect terminators in small and medium
-!     files and, therefore, complain about them same way as for the
-!     large files.
-#else
-!     IFORT on Macs and Linux and GFORTRAN everywhere can detect
-!     terminators in small and medium files and, therefore, complain
-!     about them same way as for the large files.
-#endif
-!
-      MYFNEF(  1 ) = .TRUE.
-#if defined(SPICE_COMPILER_INTEL)
-      MYFNEF(  2 ) = .TRUE.
-#else
-      MYFNEF(  3 ) = .TRUE.
-#endif
-      MYFNEF(  4 ) = .TRUE.
-#if defined(SPICE_COMPILER_INTEL)
-      MYFNEF(  5 ) = .TRUE.
-#else
-      MYFNEF(  6 ) = .TRUE.
-#endif
-      MYFNEF(  7 ) = .TRUE.
-#if defined(SPICE_COMPILER_INTEL)
-      MYFNEF(  8 ) = .TRUE.
-#else
-      MYFNEF(  9 ) = .TRUE.
-#endif
-      MYFNEM(  1 ) = 'SPICE(INCOMPATIBLEEOL)'
-#if defined(SPICE_COMPILER_INTEL)
-      MYFNEM(  2 ) = 'SPICE(INCOMPATIBLEEOL)'
-#else
-      MYFNEM(  3 ) = 'SPICE(INCOMPATIBLEEOL)'
-#endif
-      MYFNEM(  4 ) = 'SPICE(INCOMPATIBLEEOL)'
-#if defined(SPICE_COMPILER_INTEL)
-      MYFNEM(  5 ) = 'SPICE(INCOMPATIBLEEOL)'
-#else
-      MYFNEM(  6 ) = 'SPICE(INCOMPATIBLEEOL)'
-#endif
-      MYFNEM(  7 ) = 'SPICE(INCOMPATIBLEEOL)'
-#if defined(SPICE_COMPILER_INTEL)
-      MYFNEM(  8 ) = 'SPICE(INCOMPATIBLEEOL)'
-#else
-      MYFNEM(  9 ) = 'SPICE(INCOMPATIBLEEOL)'
-#endif
 
 
 !

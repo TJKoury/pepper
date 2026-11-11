@@ -450,14 +450,16 @@
       CALL TCASE ('Check for correct FURNSH response, non-native.')
 
 !
-!     Check a non-native file causes an error signal when used in a
-!     FURNSH call.
+!     PEPPER: FURNSH loads text kernels whatever their line terminators
+!     (SPICELIB signaled SPICE(INCOMPATIBLEEOL) for a non-native file).
 !
       CALL FURNSH ( FILES( FAIL(1) ) )
-      CALL CHCKXC ( .TRUE., 'SPICE(INCOMPATIBLEEOL)', OK )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+      CALL UNLOAD ( FILES( FAIL(1) ) )
 
       CALL FURNSH ( FILES( FAIL(2) ) )
-      CALL CHCKXC ( .TRUE., 'SPICE(INCOMPATIBLEEOL)', OK )
+      CALL CHCKXC ( .FALSE., ' ', OK )
+      CALL UNLOAD ( FILES( FAIL(2) ) )
 
 
 !

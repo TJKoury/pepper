@@ -2635,6 +2635,18 @@ contains
       read (lstunt,fmt='(A)',iostat=iostat) line
 
 !
+!     PEPPER: drop the CR of a CR-LF line terminator, which some Fortran
+!     run-time libraries keep in the line (gfortran's does not), so that
+!     files with DOS line terminators read the same on every platform.
+!
+      if ( iostat == 0 ) then
+         i = len_trim ( line )
+         if ( i > 0 ) then
+            if ( line(i:i) == achar(13) ) line(i:i) = ' '
+         end if
+      end if
+
+!
 !     Well, what happened? An end-of-file condition is indicated by
 !     a negative value for IOSTAT. Any other non-zero value indicates
 !     some other error. In any event, close the file immediately.

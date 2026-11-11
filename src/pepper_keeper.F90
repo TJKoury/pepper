@@ -3236,15 +3236,9 @@ contains
 !
       integer(ip), parameter :: wdsize = 32
 
-      integer(ip), parameter :: eoltsz = 5
-
-      integer(ip), parameter :: klinsz = 132
-
       character(wdsize) :: versn
       character(wdsize) :: arch
       character(wdsize) :: mytype
-      character(eoltsz) :: termin
-      character(klinsz) :: kerlin
 
       if ( ctx%failed() ) return
 
@@ -3382,13 +3376,11 @@ contains
       else
 
 !
-!        Check for line terminator compatibility with this platform.
-!        .TRUE. means that ZZASCII will compare terminator
-!        detected with the one native to this platform and will
-!        stop if they don't match.
-!
-         call zzascii( ctx, file, kerlin, .true., termin )
-
+!        PEPPER: SPICELIB checked here (ZZASCII) that the file's line
+!        terminators were the platform's, and signaled
+!        SPICE(INCOMPATIBLEEOL) otherwise. The text reader (RDTEXT) reads
+!        LF and CR-LF files on any platform, as CSPICE always did, so the
+!        check is gone.
 !
 !        Load the file using the text file loader.
 !
