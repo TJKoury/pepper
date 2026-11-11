@@ -1,6 +1,6 @@
 !> The SPICE instance and the per-thread context.
 !>
-!> All PEPPER state belongs to an instance, type(pepper_spice): the loaded
+!> All PEPPER state belongs to an instance, type([[pepper_spice]]): the loaded
 !> kernels, the kernel pool, the file tables, the names defined with
 !> boddef. The kernels are changed through the instance: spice%furnsh,
 !> unload, kclear, ldpool, clpool, the pool's setters (pcpool, pdpool,
@@ -8,7 +8,7 @@
 !> pcklof, cklpf, eklef and their unloaders). These work through the
 !> instance's own context (spice%context()), where they signal their
 !> errors. Each thread that queries an instance works through its own
-!> type(pepper_context), created with spice%new_context(): a context holds
+!> type([[pepper_context]]), created with spice%new_context(): a context holds
 !> the per-call mutable state (the error status and messages, the caches,
 !> the open files) and finds the changes of the kernels on its next call.
 !> The kernels must not be changed while contexts are in use in other
@@ -64,7 +64,7 @@ module pepper_instance
       integer(int64) :: seen = -1  !! pool_changes at the last check (-1: a notice is pending)
    end type pool_watch
 
-   integer, parameter, public :: explanation_length = 80      !! length of an explanation (EXPLN)
+   integer, parameter, public :: explanation_length = 80      !! length of an explanation ([[expln]])
 
    ! Error actions (ERRACT).
    integer, parameter :: action_abort = 1, action_report = 2, action_return = 3, &
@@ -93,7 +93,7 @@ module pepper_instance
       !> Number of files a context keeps open at the same time (its unit
       !> table; SPICELIB: 23, UTSIZE). A context opens a file again when it
       !> needs it after it was closed to make room. Set before the contexts
-      !> open files (see set_max_open_files).
+      !> open files (see [[set_max_open_files]]).
       integer(ip) :: open_files_limit = 23
       !> Incremented by every load and unload of an SPK, CK, PCK or DSK file;
       !> contexts discard their segment caches when it changed.
@@ -125,10 +125,10 @@ module pepper_instance
       ! The state of the subsystems (allocated when first used).
       ! >>> generated state components (tools/modularize_ctx.py)
       ! --- pepper_pool
-      type(rdtext_state), allocatable :: rdtext  !! state of RDTEXT
+      type(rdtext_state), allocatable :: rdtext  !! state of [[rdtext]]
       type(rdker_state), allocatable :: rdker  !! state of RDKER
-      type(tcheck_state), allocatable :: tcheck  !! state of TCHECK
-      type(texpyr_state), allocatable :: texpyr  !! state of TEXPYR
+      type(tcheck_state), allocatable :: tcheck  !! state of [[tcheck]]
+      type(texpyr_state), allocatable :: texpyr  !! state of [[texpyr]]
       type(pool_state), allocatable :: pool  !! state of POOL
       ! --- end pepper_pool
       ! --- pepper_files
@@ -153,7 +153,7 @@ module pepper_instance
       type(keeper_state), allocatable :: keeper  !! state of KEEPER
       ! --- end pepper_keeper
       ! --- pepper_time
-      type(timdef_state), allocatable :: timdef_state  !! state of TIMDEF
+      type(timdef_state), allocatable :: timdef_state  !! state of [[timdef]]
       ! --- end pepper_time
       ! --- pepper_rotations
       type(chgirf_state), allocatable :: chgirf_state  !! state of CHGIRF
@@ -164,7 +164,7 @@ module pepper_instance
       ! <<< generated state components
       !> The instance's own context: the loading methods (furnsh, unload,
       !> ldpool, boddef, ...) work and signal their errors through it (see
-      !> instance_context).
+      !> [[instance_context]]).
       type(pepper_context), allocatable :: own
    contains
       procedure, non_overridable :: new_context
@@ -233,48 +233,48 @@ module pepper_instance
       ! --- pepper_bodies
       type(zzbodblt_state), allocatable :: zzbodblt  !! state of ZZBODBLT
       type(zzbodtrn_state), allocatable :: zzbodtrn  !! state of ZZBODTRN
-      type(bodvrd_state), allocatable :: bodvrd_cache  !! state of BODVRD
+      type(bodvrd_state), allocatable :: bodvrd_cache  !! state of [[bodvrd]]
       ! --- end pepper_bodies
       ! --- pepper_files
-      type(zzplatfm_state), allocatable :: zzplatfm  !! state of ZZPLATFM
-      type(zzftpstr_state), allocatable :: zzftpstr  !! state of ZZFTPSTR
-      type(zzftpchk_state), allocatable :: zzftpchk  !! state of ZZFTPCHK
-      type(zzddhgsd_state), allocatable :: zzddhgsd  !! state of ZZDDHGSD
-      type(zzddhmnm_state), allocatable :: zzddhmnm  !! state of ZZDDHMNM
-      type(zzddhppf_state), allocatable :: zzddhppf  !! state of ZZDDHPPF
-      type(zzxlatei_state), allocatable :: zzxlatei  !! state of ZZXLATEI
-      type(zzddhnfc_state), allocatable :: zzddhnfc  !! state of ZZDDHNFC
+      type(zzplatfm_state), allocatable :: zzplatfm  !! state of [[zzplatfm]]
+      type(zzftpstr_state), allocatable :: zzftpstr  !! state of [[zzftpstr]]
+      type(zzftpchk_state), allocatable :: zzftpchk  !! state of [[zzftpchk]]
+      type(zzddhgsd_state), allocatable :: zzddhgsd  !! state of [[zzddhgsd]]
+      type(zzddhmnm_state), allocatable :: zzddhmnm  !! state of [[zzddhmnm]]
+      type(zzddhppf_state), allocatable :: zzddhppf  !! state of [[zzddhppf]]
+      type(zzxlatei_state), allocatable :: zzxlatei  !! state of [[zzxlatei]]
+      type(zzddhnfc_state), allocatable :: zzddhnfc  !! state of [[zzddhnfc]]
       type(zzddhman_context_state), allocatable :: zzddhman_units  !! per-context state of ZZDDHMAN
       ! --- end pepper_files
       ! --- pepper_daf
-      type(hx2dp_state), allocatable :: hx2dp_state  !! state of HX2DP
-      type(zzdafgfr_state), allocatable :: zzdafgfr_state  !! state of ZZDAFGFR
-      type(zzdafnfr_state), allocatable :: zzdafnfr_state  !! state of ZZDAFNFR
-      type(zzdafgdr_state), allocatable :: zzdafgdr_state  !! state of ZZDAFGDR
-      type(zzdafgsr_state), allocatable :: zzdafgsr_state  !! state of ZZDAFGSR
+      type(hx2dp_state), allocatable :: hx2dp_state  !! state of [[hx2dp]]
+      type(zzdafgfr_state), allocatable :: zzdafgfr_state  !! state of [[zzdafgfr]]
+      type(zzdafnfr_state), allocatable :: zzdafnfr_state  !! state of [[zzdafnfr]]
+      type(zzdafgdr_state), allocatable :: zzdafgdr_state  !! state of [[zzdafgdr]]
+      type(zzdafgsr_state), allocatable :: zzdafgsr_state  !! state of [[zzdafgsr]]
       type(dafrwd_state), allocatable :: dafrwd  !! state of DAFRWD
-      type(zzxlated_state), allocatable :: zzxlated_state  !! state of ZZXLATED
-      type(dafwda_state), allocatable :: dafwda_state  !! state of DAFWDA
-      type(dafec_state), allocatable :: dafec_state  !! state of DAFEC
+      type(zzxlated_state), allocatable :: zzxlated_state  !! state of [[zzxlated]]
+      type(dafwda_state), allocatable :: dafwda_state  !! state of [[dafwda]]
+      type(dafec_state), allocatable :: dafec_state  !! state of [[dafec]]
       type(dafana_state), allocatable :: dafana  !! state of DAFANA
       type(daffa_state), allocatable :: daffa  !! state of DAFFA
       ! --- end pepper_daf
       ! --- pepper_das
-      type(wrencc_state), allocatable :: wrencc_state  !! state of WRENCC
-      type(zzdasgrd_state), allocatable :: zzdasgrd_state  !! state of ZZDASGRD
-      type(zzdasgri_state), allocatable :: zzdasgri_state  !! state of ZZDASGRI
-      type(zzdasnfr_state), allocatable :: zzdasnfr_state  !! state of ZZDASNFR
-      type(zzdasrfr_state), allocatable :: zzdasrfr_state  !! state of ZZDASRFR
+      type(wrencc_state), allocatable :: wrencc_state  !! state of [[wrencc]]
+      type(zzdasgrd_state), allocatable :: zzdasgrd_state  !! state of [[zzdasgrd]]
+      type(zzdasgri_state), allocatable :: zzdasgri_state  !! state of [[zzdasgri]]
+      type(zzdasnfr_state), allocatable :: zzdasnfr_state  !! state of [[zzdasnfr]]
+      type(zzdasrfr_state), allocatable :: zzdasrfr_state  !! state of [[zzdasrfr]]
       type(dasrwr_state), allocatable :: dasrwr  !! state of DASRWR
-      type(dasa2l_state), allocatable :: dasa2l_state  !! state of DASA2L
-      type(dasadc_state), allocatable :: dasadc_state  !! state of DASADC
-      type(dasadd_state), allocatable :: dasadd_state  !! state of DASADD
-      type(dasadi_state), allocatable :: dasadi_state  !! state of DASADI
-      type(dasec_state), allocatable :: dasec_state  !! state of DASEC
+      type(dasa2l_state), allocatable :: dasa2l_state  !! state of [[dasa2l]]
+      type(dasadc_state), allocatable :: dasadc_state  !! state of [[dasadc]]
+      type(dasadd_state), allocatable :: dasadd_state  !! state of [[dasadd]]
+      type(dasadi_state), allocatable :: dasadi_state  !! state of [[dasadi]]
+      type(dasec_state), allocatable :: dasec_state  !! state of [[dasec]]
       ! --- end pepper_das
       ! --- pepper_dsk_files
-      type(dskd02_state), allocatable :: dskd02_state  !! state of DSKD02
-      type(dski02_state), allocatable :: dski02_state  !! state of DSKI02
+      type(dskd02_state), allocatable :: dskd02_state  !! state of [[dskd02]]
+      type(dski02_state), allocatable :: dski02_state  !! state of [[dski02]]
       ! --- end pepper_dsk_files
       ! --- pepper_segments
       type(spkbsr_context_state), allocatable :: spkbsr_cache  !! per-context state of SPKBSR
@@ -284,201 +284,201 @@ module pepper_instance
       ! --- end pepper_segments
       ! --- pepper_time
       type(zzvstrng_state), allocatable :: zzvstrng_state  !! state of ZZVSTRNG
-      type(jul2gr_state), allocatable :: jul2gr_state  !! state of JUL2GR
-      type(etcal_state), allocatable :: etcal_state  !! state of ETCAL
-      type(ttrans_state), allocatable :: ttrans_state  !! state of TTRANS
-      type(unitim_state), allocatable :: unitim_state  !! state of UNITIM
-      type(str2et_state), allocatable :: str2et_state  !! state of STR2ET
+      type(jul2gr_state), allocatable :: jul2gr_state  !! state of [[jul2gr]]
+      type(etcal_state), allocatable :: etcal_state  !! state of [[etcal]]
+      type(ttrans_state), allocatable :: ttrans_state  !! state of [[ttrans]]
+      type(unitim_state), allocatable :: unitim_state  !! state of [[unitim]]
+      type(str2et_state), allocatable :: str2et_state  !! state of [[str2et]]
       ! --- end pepper_time
       ! --- pepper_sclk
-      type(zzsclk_state), allocatable :: zzsclk_state  !! state of ZZSCLK
+      type(zzsclk_state), allocatable :: zzsclk_state  !! state of [[zzsclk]]
       type(sc01_state), allocatable :: sc01_state  !! state of SC01
       ! --- end pepper_sclk
       ! --- pepper_rotations
       type(chgirf_context_state), allocatable :: chgirf_cache  !! per-context state of CHGIRF
-      type(zzmobliq_state), allocatable :: zzmobliq_state  !! state of ZZMOBLIQ
-      type(zzwahr_state), allocatable :: zzwahr_state  !! state of ZZWAHR
-      type(zzdnpt_state), allocatable :: zzdnpt_state  !! state of ZZDNPT
+      type(zzmobliq_state), allocatable :: zzmobliq_state  !! state of [[zzmobliq]]
+      type(zzwahr_state), allocatable :: zzwahr_state  !! state of [[zzwahr]]
+      type(zzdnpt_state), allocatable :: zzdnpt_state  !! state of [[zzdnpt]]
       ! --- end pepper_rotations
       ! --- pepper_records
-      type(ckr03_state), allocatable :: ckr03_state  !! state of CKR03
-      type(ckr05_state), allocatable :: ckr05_state  !! state of CKR05
-      type(ckr06_state), allocatable :: ckr06_state  !! state of CKR06
-      type(sgmeta_state), allocatable :: sgmeta_state  !! state of SGMETA
-      type(spkr19_state), allocatable :: spkr19_state  !! state of SPKR19
-      type(stmp03_state), allocatable :: stmp03_state  !! state of STMP03
-      type(ckmeta_state), allocatable :: ckmeta_state  !! state of CKMETA
-      type(prop2b_state), allocatable :: prop2b_state  !! state of PROP2B
+      type(ckr03_state), allocatable :: ckr03_state  !! state of [[ckr03]]
+      type(ckr05_state), allocatable :: ckr05_state  !! state of [[ckr05]]
+      type(ckr06_state), allocatable :: ckr06_state  !! state of [[ckr06]]
+      type(sgmeta_state), allocatable :: sgmeta_state  !! state of [[sgmeta]]
+      type(spkr19_state), allocatable :: spkr19_state  !! state of [[spkr19]]
+      type(stmp03_state), allocatable :: stmp03_state  !! state of [[stmp03]]
+      type(ckmeta_state), allocatable :: ckmeta_state  !! state of [[ckmeta]]
+      type(prop2b_state), allocatable :: prop2b_state  !! state of [[prop2b]]
       type(zzsgp4_state), allocatable :: zzsgp4_state  !! state of ZZSGP4
       ! --- end pepper_records
       ! --- pepper_frames
       type(framex_state), allocatable :: framex_state  !! state of FRAMEX
       ! --- end pepper_frames
       ! --- pepper_orientation
-      type(tisbod_state), allocatable :: tisbod_state  !! state of TISBOD
-      type(tkfram_state), allocatable :: tkfram_state  !! state of TKFRAM
-      type(zzswfxfm_state), allocatable :: zzswfxfm_state  !! state of ZZSWFXFM
+      type(tisbod_state), allocatable :: tisbod_state  !! state of [[tisbod]]
+      type(tkfram_state), allocatable :: tkfram_state  !! state of [[tkfram]]
+      type(zzswfxfm_state), allocatable :: zzswfxfm_state  !! state of [[zzswfxfm]]
       ! --- end pepper_orientation
       ! --- pepper_dynamic
-      type(zzdynfrm_state), allocatable :: zzdynfrm_state  !! state of ZZDYNFRM
-      type(zzdynrot_state), allocatable :: zzdynrot_state  !! state of ZZDYNROT
+      type(zzdynfrm_state), allocatable :: zzdynfrm_state  !! state of [[zzdynfrm]]
+      type(zzdynrot_state), allocatable :: zzdynrot_state  !! state of [[zzdynrot]]
       ! --- end pepper_dynamic
       ! --- pepper_transforms
-      type(frmget_state), allocatable :: frmget_state  !! state of FRMGET
-      type(rotget_state), allocatable :: rotget_state  !! state of ROTGET
-      type(pxform_state), allocatable :: pxform_state  !! state of PXFORM
-      type(sxform_state), allocatable :: sxform_state  !! state of SXFORM
+      type(frmget_state), allocatable :: frmget_state  !! state of [[frmget]]
+      type(rotget_state), allocatable :: rotget_state  !! state of [[rotget]]
+      type(pxform_state), allocatable :: pxform_state  !! state of [[pxform]]
+      type(sxform_state), allocatable :: sxform_state  !! state of [[sxform]]
       ! --- end pepper_transforms
       ! --- pepper_time_api
-      type(deltet_state), allocatable :: deltet_state  !! state of DELTET
-      type(et2utc_state), allocatable :: et2utc_state  !! state of ET2UTC
-      type(timout_state), allocatable :: timout_state  !! state of TIMOUT
+      type(deltet_state), allocatable :: deltet_state  !! state of [[deltet]]
+      type(et2utc_state), allocatable :: et2utc_state  !! state of [[et2utc]]
+      type(timout_state), allocatable :: timout_state  !! state of [[timout]]
       ! --- end pepper_time_api
       ! --- pepper_sclk_api
       ! --- end pepper_sclk_api
       ! --- pepper_ck_api
-      type(ckgp_state), allocatable :: ckgp_state  !! state of CKGP
-      type(ckgpav_state), allocatable :: ckgpav_state  !! state of CKGPAV
+      type(ckgp_state), allocatable :: ckgp_state  !! state of [[ckgp]]
+      type(ckgpav_state), allocatable :: ckgpav_state  !! state of [[ckgpav]]
       ! --- end pepper_ck_api
       ! --- pepper_pck_api
-      type(bodeul_state), allocatable :: bodeul_state  !! state of BODEUL
+      type(bodeul_state), allocatable :: bodeul_state  !! state of [[bodeul]]
       ! --- end pepper_pck_api
       ! --- pepper_spk_api
       type(sgseqw_state), allocatable :: sgseqw_state  !! state of SGSEQW
-      type(spkgeo_state), allocatable :: spkgeo_state  !! state of SPKGEO
-      type(spkgps_state), allocatable :: spkgps_state  !! state of SPKGPS
-      type(spks19_state), allocatable :: spks19_state  !! state of SPKS19
+      type(spkgeo_state), allocatable :: spkgeo_state  !! state of [[spkgeo]]
+      type(spkgps_state), allocatable :: spkgps_state  !! state of [[spkgps]]
+      type(spks19_state), allocatable :: spks19_state  !! state of [[spks19]]
       type(zzcvstat_state), allocatable :: zzcvstat_state  !! state of ZZCVSTAT
-      type(spkapo_state), allocatable :: spkapo_state  !! state of SPKAPO
-      type(spkltc_state), allocatable :: spkltc_state  !! state of SPKLTC
-      type(spkapp_state), allocatable :: spkapp_state  !! state of SPKAPP
-      type(spkaps_state), allocatable :: spkaps_state  !! state of SPKAPS
-      type(spkezp_state), allocatable :: spkezp_state  !! state of SPKEZP
-      type(zzspkflt_state), allocatable :: zzspkflt_state  !! state of ZZSPKFLT
-      type(spkacs_state), allocatable :: spkacs_state  !! state of SPKACS
-      type(spkpos_state), allocatable :: spkpos_state  !! state of SPKPOS
-      type(zzspkfao_state), allocatable :: zzspkfao_state  !! state of ZZSPKFAO
-      type(zzspkfap_state), allocatable :: zzspkfap_state  !! state of ZZSPKFAP
-      type(spkez_state), allocatable :: spkez_state  !! state of SPKEZ
-      type(zzspkfat_state), allocatable :: zzspkfat_state  !! state of ZZSPKFAT
-      type(zzspkfzo_state), allocatable :: zzspkfzo_state  !! state of ZZSPKFZO
-      type(spkcvo_state), allocatable :: spkcvo_state  !! state of SPKCVO
-      type(spkezr_state), allocatable :: spkezr_state  !! state of SPKEZR
-      type(zzspkfzt_state), allocatable :: zzspkfzt_state  !! state of ZZSPKFZT
-      type(spkcvt_state), allocatable :: spkcvt_state  !! state of SPKCVT
+      type(spkapo_state), allocatable :: spkapo_state  !! state of [[spkapo]]
+      type(spkltc_state), allocatable :: spkltc_state  !! state of [[spkltc]]
+      type(spkapp_state), allocatable :: spkapp_state  !! state of [[spkapp]]
+      type(spkaps_state), allocatable :: spkaps_state  !! state of [[spkaps]]
+      type(spkezp_state), allocatable :: spkezp_state  !! state of [[spkezp]]
+      type(zzspkflt_state), allocatable :: zzspkflt_state  !! state of [[zzspkflt]]
+      type(spkacs_state), allocatable :: spkacs_state  !! state of [[spkacs]]
+      type(spkpos_state), allocatable :: spkpos_state  !! state of [[spkpos]]
+      type(zzspkfao_state), allocatable :: zzspkfao_state  !! state of [[zzspkfao]]
+      type(zzspkfap_state), allocatable :: zzspkfap_state  !! state of [[zzspkfap]]
+      type(spkez_state), allocatable :: spkez_state  !! state of [[spkez]]
+      type(zzspkfat_state), allocatable :: zzspkfat_state  !! state of [[zzspkfat]]
+      type(zzspkfzo_state), allocatable :: zzspkfzo_state  !! state of [[zzspkfzo]]
+      type(spkcvo_state), allocatable :: spkcvo_state  !! state of [[spkcvo]]
+      type(spkezr_state), allocatable :: spkezr_state  !! state of [[spkezr]]
+      type(zzspkfzt_state), allocatable :: zzspkfzt_state  !! state of [[zzspkfzt]]
+      type(spkcvt_state), allocatable :: spkcvt_state  !! state of [[spkcvt]]
       ! --- end pepper_spk_api
       ! --- pepper_writers
-      type(spcrfl_state), allocatable :: spcrfl_state  !! state of SPCRFL
+      type(spcrfl_state), allocatable :: spcrfl_state  !! state of [[spcrfl]]
       ! --- end pepper_writers
       ! --- pepper_geometry
-      type(gfstep_state), allocatable :: gfstep_state  !! state of GFSTEP
-      type(ana_state), allocatable :: ana_state  !! state of ANA
-      type(azlcpo_state), allocatable :: azlcpo_state  !! state of AZLCPO
-      type(bltfrm_state), allocatable :: bltfrm_state  !! state of BLTFRM
-      type(diags2_state), allocatable :: diags2_state  !! state of DIAGS2
-      type(ev2lin_state), allocatable :: ev2lin_state  !! state of EV2LIN
-      type(hyptof_state), allocatable :: hyptof_state  !! state of HYPTOF
-      type(illum_state), allocatable :: illum_state  !! state of ILLUM
-      type(lspcn_state), allocatable :: lspcn_state  !! state of LSPCN
-      type(oscelt_state), allocatable :: oscelt_state  !! state of OSCELT
-      type(pxfrm2_state), allocatable :: pxfrm2_state  !! state of PXFRM2
-      type(repml_state), allocatable :: repml_state  !! state of REPML
-      type(scps01_state), allocatable :: scps01_state  !! state of SCPS01
-      type(spkpv_state), allocatable :: spkpv_state  !! state of SPKPV
-      type(surfpt_state), allocatable :: surfpt_state  !! state of SURFPT
-      type(zzbquad_state), allocatable :: zzbquad_state  !! state of ZZBQUAD
-      type(zzdiv_state), allocatable :: zzdiv_state  !! state of ZZDIV
-      type(zzdskbbl_state), allocatable :: zzdskbbl_state  !! state of ZZDSKBBL
+      type(gfstep_state), allocatable :: gfstep_state  !! state of [[gfstep]]
+      type(ana_state), allocatable :: ana_state  !! state of [[ana]]
+      type(azlcpo_state), allocatable :: azlcpo_state  !! state of [[azlcpo]]
+      type(bltfrm_state), allocatable :: bltfrm_state  !! state of [[bltfrm]]
+      type(diags2_state), allocatable :: diags2_state  !! state of [[diags2]]
+      type(ev2lin_state), allocatable :: ev2lin_state  !! state of [[ev2lin]]
+      type(hyptof_state), allocatable :: hyptof_state  !! state of [[hyptof]]
+      type(illum_state), allocatable :: illum_state  !! state of [[illum]]
+      type(lspcn_state), allocatable :: lspcn_state  !! state of [[lspcn]]
+      type(oscelt_state), allocatable :: oscelt_state  !! state of [[oscelt]]
+      type(pxfrm2_state), allocatable :: pxfrm2_state  !! state of [[pxfrm2]]
+      type(repml_state), allocatable :: repml_state  !! state of [[repml]]
+      type(scps01_state), allocatable :: scps01_state  !! state of [[scps01]]
+      type(spkpv_state), allocatable :: spkpv_state  !! state of [[spkpv]]
+      type(surfpt_state), allocatable :: surfpt_state  !! state of [[surfpt]]
+      type(zzbquad_state), allocatable :: zzbquad_state  !! state of [[zzbquad]]
+      type(zzdiv_state), allocatable :: zzdiv_state  !! state of [[zzdiv]]
+      type(zzdskbbl_state), allocatable :: zzdskbbl_state  !! state of [[zzdskbbl]]
       type(zzdsksel_state), allocatable :: zzdsksel_state  !! state of ZZDSKSEL
-      type(zzgetelm_state), allocatable :: zzgetelm_state  !! state of ZZGETELM
-      type(zzholdd_state), allocatable :: zzholdd_state  !! state of ZZHOLDD
-      type(zzmult_state), allocatable :: zzmult_state  !! state of ZZMULT
-      type(zzrtnmat_state), allocatable :: zzrtnmat_state  !! state of ZZRTNMAT
-      type(zzsfxcor_state), allocatable :: zzsfxcor_state  !! state of ZZSFXCOR
-      type(zzsglatx_state), allocatable :: zzsglatx_state  !! state of ZZSGLATX
-      type(zzspin_state), allocatable :: zzspin_state  !! state of ZZSPIN
-      type(dpgrdr_state), allocatable :: dpgrdr_state  !! state of DPGRDR
-      type(drdpgr_state), allocatable :: drdpgr_state  !! state of DRDPGR
-      type(edterm_state), allocatable :: edterm_state  !! state of EDTERM
-      type(getfvn_state), allocatable :: getfvn_state  !! state of GETFVN
-      type(pgrrec_state), allocatable :: pgrrec_state  !! state of PGRREC
-      type(recpgr_state), allocatable :: recpgr_state  !! state of RECPGR
-      type(subpt_state), allocatable :: subpt_state  !! state of SUBPT
-      type(subsol_state), allocatable :: subsol_state  !! state of SUBSOL
-      type(tostdo_state), allocatable :: tostdo_state  !! state of TOSTDO
-      type(zzcnquad_state), allocatable :: zzcnquad_state  !! state of ZZCNQUAD
-      type(zzdsksph_state), allocatable :: zzdsksph_state  !! state of ZZDSKSPH
+      type(zzgetelm_state), allocatable :: zzgetelm_state  !! state of [[zzgetelm]]
+      type(zzholdd_state), allocatable :: zzholdd_state  !! state of [[zzholdd]]
+      type(zzmult_state), allocatable :: zzmult_state  !! state of [[zzmult]]
+      type(zzrtnmat_state), allocatable :: zzrtnmat_state  !! state of [[zzrtnmat]]
+      type(zzsfxcor_state), allocatable :: zzsfxcor_state  !! state of [[zzsfxcor]]
+      type(zzsglatx_state), allocatable :: zzsglatx_state  !! state of [[zzsglatx]]
+      type(zzspin_state), allocatable :: zzspin_state  !! state of [[zzspin]]
+      type(dpgrdr_state), allocatable :: dpgrdr_state  !! state of [[dpgrdr]]
+      type(drdpgr_state), allocatable :: drdpgr_state  !! state of [[drdpgr]]
+      type(edterm_state), allocatable :: edterm_state  !! state of [[edterm]]
+      type(getfvn_state), allocatable :: getfvn_state  !! state of [[getfvn]]
+      type(pgrrec_state), allocatable :: pgrrec_state  !! state of [[pgrrec]]
+      type(recpgr_state), allocatable :: recpgr_state  !! state of [[recpgr]]
+      type(subpt_state), allocatable :: subpt_state  !! state of [[subpt]]
+      type(subsol_state), allocatable :: subsol_state  !! state of [[subsol]]
+      type(tostdo_state), allocatable :: tostdo_state  !! state of [[tostdo]]
+      type(zzcnquad_state), allocatable :: zzcnquad_state  !! state of [[zzcnquad]]
+      type(zzdsksph_state), allocatable :: zzdsksph_state  !! state of [[zzdsksph]]
       type(zznrddp_state), allocatable :: zznrddp_state  !! state of ZZNRDDP
-      type(zzpdcmpl_state), allocatable :: zzpdcmpl_state  !! state of ZZPDCMPL
-      type(zzsrfker_state), allocatable :: zzsrfker_state  !! state of ZZSRFKER
-      type(dpspce_state), allocatable :: dpspce_state  !! state of DPSPCE
-      type(incnsg_state), allocatable :: incnsg_state  !! state of INCNSG
-      type(xfmsta_state), allocatable :: xfmsta_state  !! state of XFMSTA
+      type(zzpdcmpl_state), allocatable :: zzpdcmpl_state  !! state of [[zzpdcmpl]]
+      type(zzsrfker_state), allocatable :: zzsrfker_state  !! state of [[zzsrfker]]
+      type(dpspce_state), allocatable :: dpspce_state  !! state of [[dpspce]]
+      type(incnsg_state), allocatable :: incnsg_state  !! state of [[incnsg]]
+      type(xfmsta_state), allocatable :: xfmsta_state  !! state of [[xfmsta]]
       type(zzsrftrn_state), allocatable :: zzsrftrn_state  !! state of ZZSRFTRN
-      type(zzelvupy_state), allocatable :: zzelvupy_state  !! state of ZZELVUPY
-      type(zzinpdt_state), allocatable :: zzinpdt_state  !! state of ZZINPDT
-      type(zzrytlat_state), allocatable :: zzrytlat_state  !! state of ZZRYTLAT
-      type(zzrytpdt_state), allocatable :: zzrytpdt_state  !! state of ZZRYTPDT
-      type(dskx02_state), allocatable :: dskx02_state  !! state of DSKX02
-      type(srfxpt_state), allocatable :: srfxpt_state  !! state of SRFXPT
-      type(tangpt_state), allocatable :: tangpt_state  !! state of TANGPT
-      type(zzptpl02_state), allocatable :: zzptpl02_state  !! state of ZZPTPL02
+      type(zzelvupy_state), allocatable :: zzelvupy_state  !! state of [[zzelvupy]]
+      type(zzinpdt_state), allocatable :: zzinpdt_state  !! state of [[zzinpdt]]
+      type(zzrytlat_state), allocatable :: zzrytlat_state  !! state of [[zzrytlat]]
+      type(zzrytpdt_state), allocatable :: zzrytpdt_state  !! state of [[zzrytpdt]]
+      type(dskx02_state), allocatable :: dskx02_state  !! state of [[dskx02]]
+      type(srfxpt_state), allocatable :: srfxpt_state  !! state of [[srfxpt]]
+      type(tangpt_state), allocatable :: tangpt_state  !! state of [[tangpt]]
+      type(zzptpl02_state), allocatable :: zzptpl02_state  !! state of [[zzptpl02]]
       type(zzdsksbf_state), allocatable :: zzdsksbf_state  !! state of ZZDSKSBF
-      type(dskxsi_state), allocatable :: dskxsi_state  !! state of DSKXSI
-      type(dskxv_state), allocatable :: dskxv_state  !! state of DSKXV
-      type(illumg_state), allocatable :: illumg_state  !! state of ILLUMG
-      type(srfnrm_state), allocatable :: srfnrm_state  !! state of SRFNRM
+      type(dskxsi_state), allocatable :: dskxsi_state  !! state of [[dskxsi]]
+      type(dskxv_state), allocatable :: dskxv_state  !! state of [[dskxv]]
+      type(illumg_state), allocatable :: illumg_state  !! state of [[illumg]]
+      type(srfnrm_state), allocatable :: srfnrm_state  !! state of [[srfnrm]]
       type(zzsinutl_state), allocatable :: zzsinutl_state  !! state of ZZSINUTL
-      type(illumf_state), allocatable :: illumf_state  !! state of ILLUMF
-      type(latsrf_state), allocatable :: latsrf_state  !! state of LATSRF
-      type(sincpt_state), allocatable :: sincpt_state  !! state of SINCPT
-      type(subpnt_state), allocatable :: subpnt_state  !! state of SUBPNT
-      type(subslr_state), allocatable :: subslr_state  !! state of SUBSLR
+      type(illumf_state), allocatable :: illumf_state  !! state of [[illumf]]
+      type(latsrf_state), allocatable :: latsrf_state  !! state of [[latsrf]]
+      type(sincpt_state), allocatable :: sincpt_state  !! state of [[sincpt]]
+      type(subpnt_state), allocatable :: subpnt_state  !! state of [[subpnt]]
+      type(subslr_state), allocatable :: subslr_state  !! state of [[subslr]]
       type(zztanutl_state), allocatable :: zztanutl_state  !! state of ZZTANUTL
-      type(limbpt_state), allocatable :: limbpt_state  !! state of LIMBPT
-      type(termpt_state), allocatable :: termpt_state  !! state of TERMPT
+      type(limbpt_state), allocatable :: limbpt_state  !! state of [[limbpt]]
+      type(termpt_state), allocatable :: termpt_state  !! state of [[termpt]]
       ! --- end pepper_geometry
       ! --- pepper_gf
-      type(zzgfcoq_state), allocatable :: zzgfcoq_state  !! state of ZZGFCOQ
+      type(zzgfcoq_state), allocatable :: zzgfcoq_state  !! state of [[zzgfcoq]]
       type(zzgffvu_state), allocatable :: zzgffvu_state  !! state of ZZGFFVU
       type(zzgfilu_state), allocatable :: zzgfilu_state  !! state of ZZGFILU
       type(zzgfocu_state), allocatable :: zzgfocu_state  !! state of ZZGFOCU
       type(zzgfspu_state), allocatable :: zzgfspu_state  !! state of ZZGFSPU
-      type(zzgfssin_state), allocatable :: zzgfssin_state  !! state of ZZGFSSIN
-      type(zzgfssob_state), allocatable :: zzgfssob_state  !! state of ZZGFSSOB
-      type(fovtrg_state), allocatable :: fovtrg_state  !! state of FOVTRG
-      type(phaseq_state), allocatable :: phaseq_state  !! state of PHASEQ
+      type(zzgfssin_state), allocatable :: zzgfssin_state  !! state of [[zzgfssin]]
+      type(zzgfssob_state), allocatable :: zzgfssob_state  !! state of [[zzgfssob]]
+      type(fovtrg_state), allocatable :: fovtrg_state  !! state of [[fovtrg]]
+      type(phaseq_state), allocatable :: phaseq_state  !! state of [[phaseq]]
       type(zzgfdiu_state), allocatable :: zzgfdiu_state  !! state of ZZGFDIU
       type(zzgfpau_state), allocatable :: zzgfpau_state  !! state of ZZGFPAU
-      type(zzgfrel_state), allocatable :: zzgfrel_state  !! state of ZZGFREL
-      type(zzgfrelx_state), allocatable :: zzgfrelx_state  !! state of ZZGFRELX
+      type(zzgfrel_state), allocatable :: zzgfrel_state  !! state of [[zzgfrel]]
+      type(zzgfrelx_state), allocatable :: zzgfrelx_state  !! state of [[zzgfrelx]]
       type(zzgfrpwk_state), allocatable :: zzgfrpwk_state  !! state of ZZGFRPWK
       type(zzgfrru_state), allocatable :: zzgfrru_state  !! state of ZZGFRRU
       type(gfrprt_state), allocatable :: gfrprt_state  !! state of GFRPRT
-      type(gftfov_state), allocatable :: gftfov_state  !! state of GFTFOV
+      type(gftfov_state), allocatable :: gftfov_state  !! state of [[gftfov]]
       type(zzgfcou_state), allocatable :: zzgfcou_state  !! state of ZZGFCOU
-      type(zzgflong_state), allocatable :: zzgflong_state  !! state of ZZGFLONG
-      type(zzgfcslv_state), allocatable :: zzgfcslv_state  !! state of ZZGFCSLV
-      type(gfevnt_state), allocatable :: gfevnt_state  !! state of GFEVNT
+      type(zzgflong_state), allocatable :: zzgflong_state  !! state of [[zzgflong]]
+      type(zzgfcslv_state), allocatable :: zzgfcslv_state  !! state of [[zzgfcslv]]
+      type(gfevnt_state), allocatable :: gfevnt_state  !! state of [[gfevnt]]
       ! --- end pepper_gf
       ! --- pepper_ek_storage
-      type(zzekpdec_state), allocatable :: zzekpdec_state  !! state of ZZEKPDEC
-      type(zzekreqi_state), allocatable :: zzekreqi_state  !! state of ZZEKREQI
+      type(zzekpdec_state), allocatable :: zzekpdec_state  !! state of [[zzekpdec]]
+      type(zzekreqi_state), allocatable :: zzekreqi_state  !! state of [[zzekreqi]]
       type(zzeksca_state), allocatable :: zzeksca_state  !! state of ZZEKSCA
-      type(zzekscan_state), allocatable :: zzekscan_state  !! state of ZZEKSCAN
-      type(zzekweqi_state), allocatable :: zzekweqi_state  !! state of ZZEKWEQI
+      type(zzekscan_state), allocatable :: zzekscan_state  !! state of [[zzekscan]]
+      type(zzekweqi_state), allocatable :: zzekweqi_state  !! state of [[zzekweqi]]
       type(zzekpage_state), allocatable :: zzekpage_state  !! state of ZZEKPAGE
       type(zzekvadr_state), allocatable :: zzekvadr_state  !! state of ZZEKVADR
-      type(zzektrit_state), allocatable :: zzektrit_state  !! state of ZZEKTRIT
-      type(zzektrlk_state), allocatable :: zzektrlk_state  !! state of ZZEKTRLK
+      type(zzektrit_state), allocatable :: zzektrit_state  !! state of [[zzektrit]]
+      type(zzektrlk_state), allocatable :: zzektrlk_state  !! state of [[zzektrlk]]
       ! --- end pepper_ek_storage
       ! --- pepper_ek
-      type(ekbseg_state), allocatable :: ekbseg_state  !! state of EKBSEG
-      type(stcc01_state), allocatable :: stcc01_state  !! state of STCC01
-      type(zzekad06_state), allocatable :: zzekad06_state  !! state of ZZEKAD06
+      type(ekbseg_state), allocatable :: ekbseg_state  !! state of [[ekbseg]]
+      type(stcc01_state), allocatable :: stcc01_state  !! state of [[stcc01]]
+      type(zzekad06_state), allocatable :: zzekad06_state  !! state of [[zzekad06]]
       type(zzekjtst_state), allocatable :: zzekjtst_state  !! state of ZZEKJTST
       type(ekqmgr_context_state), allocatable :: ekqmgr_query  !! per-context state of EKQMGR
-      type(zzeksemc_state), allocatable :: zzeksemc_state  !! state of ZZEKSEMC
+      type(zzeksemc_state), allocatable :: zzeksemc_state  !! state of [[zzeksemc]]
       ! --- end pepper_ek
       ! <<< generated context state components
    contains
@@ -1441,9 +1441,9 @@ module pepper_instance
    public :: gf_scalar
 
    abstract interface
-      !> A segment selection function of the DSK segment buffer (ZZDSKSNS): true
-      !> if the segment satisfies the search's criteria. SPICELIB's are ZZDSKBDC
-      !> and ZZDSKNOT. PEPPER: the context is its first argument.
+      !> A segment selection function of the DSK segment buffer ([[zzdsksns]]): true
+      !> if the segment satisfies the search's criteria. SPICELIB's are [[zzdskbdc]]
+      !> and [[zzdsknot]]. PEPPER: the context is its first argument.
       logical function zzdsk_compare ( ctx, handle, dladsc, dskdsc )
          import :: pepper_context, ip, wp
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -1452,10 +1452,10 @@ module pepper_instance
          real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of the segment
       end function zzdsk_compare
 
-      !> A state routine for the SPK routines that take one (ZZSPKFAO, ZZSPKFAP,
-      !> ZZSPKFAT, ZZSPKFLT, ZZSPKFZO, ZZSPKFZT): the state of an object relative
+      !> A state routine for the SPK routines that take one ([[zzspkfao]], [[zzspkfap]],
+      !> [[zzspkfat]], [[zzspkflt]], [[zzspkfzo]], [[zzspkfzt]]): the state of an object relative
       !> to the solar system barycenter at an epoch, in an inertial frame.
-      !> SPICELIB's is ZZCVXSTA. PEPPER: the context is its first argument.
+      !> SPICELIB's is [[zzcvxsta]]. PEPPER: the context is its first argument.
       subroutine zzspk_state ( ctx, et, ref, center, state )
          import :: pepper_context, ip, wp
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -1465,8 +1465,8 @@ module pepper_instance
          real(wp), intent(out) :: state ( 6 )  !! state of the object
       end subroutine zzspk_state
 
-      !> The near point on the target's surface to a ray (ZZSFXCOR); SPICELIB's is
-      !> ZZRAYNP. PEPPER: the context is its first argument.
+      !> The near point on the target's surface to a ray ([[zzsfxcor]]); SPICELIB's is
+      !> [[zzraynp]]. PEPPER: the context is its first argument.
       subroutine zzsfx_near ( ctx, vertex, raydir, et, pnear, dist )
          import :: pepper_context, ip, wp
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -1477,16 +1477,16 @@ module pepper_instance
          real(wp), intent(out) :: dist  !! distance between the near point and the ray
       end subroutine zzsfx_near
 
-      !> The radius of the target's outer bounding sphere (ZZSFXCOR); SPICELIB's
-      !> is ZZMAXRAD. PEPPER: the context is its first argument.
+      !> The radius of the target's outer bounding sphere ([[zzsfxcor]]); SPICELIB's
+      !> is [[zzmaxrad]]. PEPPER: the context is its first argument.
       subroutine zzsfx_maxrad ( ctx, maxrad )
          import :: pepper_context, ip, wp
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(out) :: maxrad  !! radius of the outer bounding sphere
       end subroutine zzsfx_maxrad
 
-      !> The intercept of a ray with the target's surface (ZZSFXCOR); SPICELIB's
-      !> is ZZRAYSFX. PEPPER: the context is its first argument.
+      !> The intercept of a ray with the target's surface ([[zzsfxcor]]); SPICELIB's
+      !> is [[zzraysfx]]. PEPPER: the context is its first argument.
       subroutine zzsfx_rayx ( ctx, vertex, raydir, et, spoint, found )
          import :: pepper_context, ip, wp
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -1497,8 +1497,8 @@ module pepper_instance
          logical, intent(out) :: found  !! the intercept exists
       end subroutine zzsfx_rayx
 
-      !> The occultation state of a ray at an angle (ZZTANSLV); SPICELIB's is
-      !> ZZTANSTA. PEPPER: the context is its first argument.
+      !> The occultation state of a ray at an angle ([[zztanslv]]); SPICELIB's is
+      !> [[zztansta]]. PEPPER: the context is its first argument.
       subroutine zztan_cond ( ctx, angle, ocultd, point )
          import :: pepper_context, ip, wp
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -1508,7 +1508,7 @@ module pepper_instance
       end subroutine zztan_cond
 
       !> A GF step size routine: the time step to take from a time. SPICELIB's is
-      !> GFSTEP. PEPPER: the context is its first argument.
+      !> [[gfstep]]. PEPPER: the context is its first argument.
       subroutine gf_step ( ctx, time, step )
          import :: pepper_context, ip, wp
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -1517,7 +1517,7 @@ module pepper_instance
       end subroutine gf_step
 
       !> A GF refinement routine: a time between two times at which a condition
-      !> differs. SPICELIB's is GFREFN. PEPPER: the context is its first argument.
+      !> differs. SPICELIB's is [[gfrefn]]. PEPPER: the context is its first argument.
       subroutine gf_refine ( ctx, t1, t2, s1, s2, t )
          import :: pepper_context, ip, wp
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -1528,7 +1528,7 @@ module pepper_instance
          real(wp), intent(out) :: t  !! the time between T1 and T2
       end subroutine gf_refine
 
-      !> A GF progress report initialization routine. SPICELIB's is GFREPI.
+      !> A GF progress report initialization routine. SPICELIB's is [[gfrepi]].
       !> PEPPER: the context is its first argument.
       subroutine gf_rep_init ( ctx, window, begmss, endmss )
          import :: pepper_context, ip, wp
@@ -1539,7 +1539,7 @@ module pepper_instance
          character(*), intent(in) :: endmss  !! end of the text of the report
       end subroutine gf_rep_init
 
-      !> A GF progress report update routine. SPICELIB's is GFREPU. PEPPER: the
+      !> A GF progress report update routine. SPICELIB's is [[gfrepu]]. PEPPER: the
       !> context is its first argument.
       subroutine gf_rep_update ( ctx, ivbeg, ivend, time )
          import :: pepper_context, ip, wp
@@ -1549,7 +1549,7 @@ module pepper_instance
          real(wp), intent(in) :: time  !! current time of the search
       end subroutine gf_rep_update
 
-      !> A GF progress report finalization routine. SPICELIB's is GFREPF. PEPPER:
+      !> A GF progress report finalization routine. SPICELIB's is [[gfrepf]]. PEPPER:
       !> the context is its first argument.
       subroutine gf_rep_final ( ctx )
          import :: pepper_context, ip, wp
@@ -1557,13 +1557,13 @@ module pepper_instance
       end subroutine gf_rep_final
 
       !> A GF interrupt check: true if the search is to stop. SPICELIB's is
-      !> GFBAIL. PEPPER: the context is its first argument.
+      !> [[gfbail]]. PEPPER: the context is its first argument.
       logical function gf_bail ( ctx )
          import :: pepper_context, ip, wp
          class(pepper_context), intent(inout) :: ctx  !! the context
       end function gf_bail
 
-      !> A GF condition of time (ZZGFREL, ZZGFSOLV): whether a condition holds, or
+      !> A GF condition of time ([[zzgfrel]], [[zzgfsolv]]): whether a condition holds, or
       !> whether a quantity is decreasing, at a time. PEPPER: the context is its
       !> first argument.
       subroutine gf_cond ( ctx, et, xbool )
@@ -1573,15 +1573,15 @@ module pepper_instance
          logical, intent(out) :: xbool  !! the condition at ET
       end subroutine gf_cond
 
-      !> A GF routine that takes the reference value of a search (ZZGFREL);
-      !> SPICELIB's is ZZGFREF. PEPPER: the context is its first argument.
+      !> A GF routine that takes the reference value of a search ([[zzgfrel]]);
+      !> SPICELIB's is [[zzgfref]]. PEPPER: the context is its first argument.
       subroutine gf_ref ( ctx, refval )
          import :: pepper_context, ip, wp
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: refval  !! the reference value
       end subroutine gf_ref
 
-      !> A user-defined scalar function of time for GF (GFUDS, GFUDB, UDDF, UDDC).
+      !> A user-defined scalar function of time for GF ([[gfuds]], [[gfudb]], [[uddf]], [[uddc]]).
       !> PEPPER: the context is its first argument.
       subroutine gf_scalar ( ctx, et, value )
          import :: pepper_context, ip, wp
@@ -1590,8 +1590,8 @@ module pepper_instance
          real(wp), intent(out) :: value  !! the value of the function
       end subroutine gf_scalar
 
-      !> A GF condition of a scalar function of time (GFUDB, GFUDS, ZZGFRELX,
-      !> ZZGFSOLVX): whether a condition on the function holds at a time, or
+      !> A GF condition of a scalar function of time ([[gfudb]], [[gfuds]], [[zzgfrelx]],
+      !> [[zzgfsolvx]]): whether a condition on the function holds at a time, or
       !> whether the function is decreasing (UDQDEC). PEPPER: the context is its
       !> first argument.
       subroutine gf_boolean ( ctx, udfunc, et, xbool )
@@ -1603,7 +1603,7 @@ module pepper_instance
       end subroutine gf_boolean
 
       !> A GF routine that tells whether a quantity is decreasing at a time
-      !> (ZZGFREL). PEPPER: the context is its first argument.
+      !> ([[zzgfrel]]). PEPPER: the context is its first argument.
       subroutine gf_decr ( ctx, et, xbool )
          import :: pepper_context, ip, wp
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -1612,7 +1612,7 @@ module pepper_instance
       end subroutine gf_decr
 
       !> A GF routine that tells whether a scalar function of time is decreasing
-      !> at a time (GFUDS, ZZGFRELX); SPICELIB's examples use UDDC. PEPPER: the
+      !> at a time ([[gfuds]], [[zzgfrelx]]); SPICELIB's examples use [[uddc]]. PEPPER: the
       !> context is its first argument.
       subroutine gf_decr_x ( ctx, udfunc, et, xbool )
          import :: pepper_context, ip, wp, gf_scalar
@@ -1644,7 +1644,7 @@ module pepper_instance
       end function chbase
 
       !> Encode a nonnegative integer number into a character string
-      !> as the expansion of the number in base CHBASE (a function of
+      !> as the expansion of the number in base [[chbase]] (a function of
       !> the size of the available character set).
       !>
       !> MINLEN     P   Minimum length of string.
@@ -1656,7 +1656,7 @@ module pepper_instance
          parameter        ( minlen = 5 )
       end subroutine enchar
 
-      !> Decode a character string encoded by ENCHAR.
+      !> Decode a character string encoded by [[enchar]].
       module subroutine dechar ( ctx, string, number )
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(out) :: number  !! Decoded number.
@@ -3458,7 +3458,7 @@ module pepper_instance
          logical, intent(out) :: eof  !! End-of-file indicator.
       end subroutine rdtext
 
-      !> Close a text file currently opened by RDTEXT.
+      !> Close a text file currently opened by [[rdtext]].
       module subroutine cltext ( ctx, file )
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: file  !! Text file to be closed.
@@ -3478,7 +3478,7 @@ module pepper_instance
       end subroutine rdkdat
 
       !> Return the name of file and line number of the last line read by
-      !> the entry point RDKDAT.
+      !> the entry point [[rdkdat]].
       module subroutine rdklin ( ctx, kernel, number )
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(out) :: kernel  !! The name of the current file that is being read.
@@ -3829,8 +3829,8 @@ module pepper_instance
       end subroutine cvpool
 
       !> The names of the kernel variables that match a template (wildcards
-      !> * and %, case-insensitive, as GNPOOL), of any length, in the order
-      !> of GNPOOL (PEPPER).
+      !> * and %, case-insensitive, as [[gnpool]]), of any length, in the order
+      !> of [[gnpool]] (PEPPER).
       module subroutine pool_names ( ctx, template, names )
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: template  !! the template
@@ -3838,7 +3838,7 @@ module pepper_instance
       end subroutine pool_names
 
       !> Return one string value of a character kernel variable, of any
-      !> length (PEPPER; GCPOOL truncates to the length of its output).
+      !> length (PEPPER; [[gcpool]] truncates to the length of its output).
       module subroutine pool_string ( ctx, name, nth, value, found, n )
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: name  !! the name of the variable
@@ -4198,7 +4198,7 @@ module pepper_instance
       !> to the volatile nature of this routine.
       !>
       !> PEPPER: fills KER (SPICELIB returned arrays of NROOM entries and
-      !> their hash tables; see body_names).
+      !> their hash tables; see [[body_names]]).
       module subroutine zzbodker ( ctx, ker )
       use pepper_inc_zzbodtrn
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4257,7 +4257,7 @@ module pepper_instance
       end subroutine zzbodc2n
 
       !> The name of a body from its ID code, of any length (PEPPER; the
-      !> body of ZZBODC2N, which truncates to its argument's length).
+      !> body of [[zzbodc2n]], which truncates to its argument's length).
       module subroutine body_name_of ( ctx, code, name, found )
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: code  !! the body ID code
@@ -4356,7 +4356,7 @@ module pepper_instance
       end subroutine bodc2s
 
       !> Define a body name/ID code pair for later translation via
-      !> BODN2C or BODC2N.
+      !> [[bodn2c]] or [[bodc2n]].
       !>
       !> MAXL       P   Maximum length of NAME string.
       module subroutine boddef ( ctx, name, code )
@@ -4408,8 +4408,8 @@ module pepper_instance
          real(wp), intent(inout) :: values ( * )  !! Array of double precision values.
       end subroutine zzbodvcd
 
-      !> **Deprecated:** This routine has been superseded by BODVCD and
-      !> BODVRD. This routine is supported for purposes of backward
+      !> **Deprecated:** This routine has been superseded by [[bodvcd]] and
+      !> [[bodvrd]]. This routine is supported for purposes of backward
       !> compatibility only.
       module subroutine bodvar ( ctx, body, item, dim, values )
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4751,7 +4751,7 @@ module pepper_instance
       module subroutine zzddhfnh ( ctx, fname, handle, found )
       use pepper_inc_zzddhman
          class(pepper_context), intent(inout) :: ctx  !! the context
-         character(*), intent(in) :: fname  !! Name of a file previously loaded with ZZDDHOPN.
+         character(*), intent(in) :: fname  !! Name of a file previously loaded with [[zzddhopn]].
          integer(ip), intent(out) :: handle  !! Corresponding file handle.
          logical, intent(out) :: found  !! Logical indicating whether HANDLE was located.
       end subroutine zzddhfnh
@@ -4942,7 +4942,7 @@ module pepper_instance
       end subroutine dafonw
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine DAFONW. NAIF supports this routine only to provide
+      !> routine [[dafonw]]. NAIF supports this routine only to provide
       !> backward compatibility.
       module subroutine dafopn ( ctx, fname, nd, ni, ifname, resv, handle )
       use pepper_inc_zzddhman
@@ -5088,7 +5088,7 @@ module pepper_instance
 
       !> Read a portion of the contents of a double precision record in a
       !> DAF file.
-      !> **Obsolete:** This routine has been superseded by DAFGDR, and it is
+      !> **Obsolete:** This routine has been superseded by [[dafgdr]], and it is
       !> supported for purposes of backwards compatibility only.
       module subroutine dafrdr ( ctx, handle, recno, begin, end, data, found )
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5109,7 +5109,7 @@ module pepper_instance
          real(wp), intent(in) :: drec     ( 128 )  !! Contents of record.
       end subroutine dafwdr
 
-      !> Return the number of reads and requests fielded by DAFRDR.
+      !> Return the number of reads and requests fielded by [[dafrdr]].
       module subroutine dafnrr ( ctx, reads, reqs )
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(out) :: reads  !! Reads, requests in this execution.
@@ -5139,7 +5139,7 @@ module pepper_instance
       end subroutine zzxlated
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routines DAFGDA and DAFGSR. This routine is supported for purposes
+      !> routines [[dafgda]] and [[dafgsr]]. This routine is supported for purposes
       !> of backward compatibility only.
       module subroutine dafrda ( ctx, handle, begin, end, data )
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5373,7 +5373,7 @@ module pepper_instance
       end subroutine dafbt
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine DAFTB. NAIF supports this routine only to provide backward
+      !> routine [[daftb]]. NAIF supports this routine only to provide backward
       !> compatibility.
       module subroutine dafa2b ( ctx, ascii, binary, resv )
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5383,7 +5383,7 @@ module pepper_instance
       end subroutine dafa2b
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine DAFBT. NAIF supports this routine only to provide backward
+      !> routine [[dafbt]]. NAIF supports this routine only to provide backward
       !> compatibility.
       module subroutine dafb2a ( ctx, binary, ascii )
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5392,7 +5392,7 @@ module pepper_instance
       end subroutine dafb2a
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine DAFBT. NAIF supports this routine only to provide backward
+      !> routine [[dafbt]]. NAIF supports this routine only to provide backward
       !> compatibility.
       module subroutine dafb2t ( ctx, binary, text )
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5401,7 +5401,7 @@ module pepper_instance
       end subroutine dafb2t
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine DAFTB. NAIF supports this routine only to provide backward
+      !> routine [[daftb]]. NAIF supports this routine only to provide backward
       !> compatibility.
       !>
       !> BSIZE      P   Buffer size.
@@ -5561,7 +5561,7 @@ module pepper_instance
          integer(ip), intent(in) :: ncomr  !! Number of comment records to allocate.
       end subroutine dasonw
 
-      !> **Obsolete:** This routine has been superseded by DASONW, and it is
+      !> **Obsolete:** This routine has been superseded by [[dasonw]], and it is
       !> supported for purposes of backward compatibility only.
       module subroutine dasopn ( ctx, fname, ifname, handle )
       use pepper_inc_das
@@ -6555,7 +6555,7 @@ module pepper_instance
       !> Make spatial index for a DSK type 2 segment. The index is
       !> returned as a pair of arrays, one of type INTEGER and one of type
       !> DOUBLE PRECISION. These arrays are suitable for use with the DSK
-      !> type 2 writer DSKW02.
+      !> type 2 writer [[dskw02]].
       !>
       !> IXDFIX     P   Size of fixed-size portion of d.p. index component.
       !> IXIFIX     P   Size of fixed-size portion of integer index
@@ -7443,7 +7443,7 @@ module pepper_instance
       end subroutine irfrot
 
       !> Return the index of one of the standard inertial reference
-      !> frames supported by IRFROT.
+      !> frames supported by [[irfrot]].
       module subroutine irfnum ( ctx, name, index )
       use pepper_inc_ninert
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7452,7 +7452,7 @@ module pepper_instance
       end subroutine irfnum
 
       !> Return the name of one of the standard inertial reference
-      !> frames supported by IRFROT.
+      !> frames supported by [[irfrot]].
       module subroutine irfnam ( ctx, index, name )
       use pepper_inc_ninert
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7552,7 +7552,7 @@ module pepper_instance
 
    interface
 
-      !> Evaluate a pointing record returned by CKR01 from a CK data type 1
+      !> Evaluate a pointing record returned by [[ckr01]] from a CK data type 1
       !> segment. Return the C-matrix and optionally the angular velocity
       !> vector associated with the time CLKOUT.
       module subroutine cke01 ( ctx, needav, record, cmat, av, clkout )
@@ -7564,7 +7564,7 @@ module pepper_instance
          real(wp), intent(out) :: clkout  !! Output spacecraft clock time.
       end subroutine cke01
 
-      !> Evaluate a pointing record returned by CKR02 from a CK data type 2
+      !> Evaluate a pointing record returned by [[ckr02]] from a CK data type 2
       !> segment. Return the C-matrix and angular velocity vector
       !> associated with the time CLKOUT.
       module subroutine cke02 ( ctx, needav, record, cmat, av, clkout )
@@ -7576,7 +7576,7 @@ module pepper_instance
          real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
       end subroutine cke02
 
-      !> Evaluate a pointing record returned by CKR03 from a CK type 3
+      !> Evaluate a pointing record returned by [[ckr03]] from a CK type 3
       !> segment. Return the C-matrix and angular velocity vector
       !> associated with the time CLKOUT.
       module subroutine cke03 ( ctx, needav, record, cmat, av, clkout )
@@ -7588,7 +7588,7 @@ module pepper_instance
          real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
       end subroutine cke03
 
-      !> Evaluate a pointing record returned by CKR04 from a CK type 4
+      !> Evaluate a pointing record returned by [[ckr04]] from a CK type 4
       !> segment. Return the C-matrix and angular velocity vector
       !> associated with the time CLKOUT.
       module subroutine cke04 ( ctx, needav, record, cmat, av, clkout )
@@ -7758,7 +7758,7 @@ module pepper_instance
 
       !> Evaluate a single data record from a type 12 SPK segment.
       !>
-      !> MAXREC     P   Maximum size of SPK record. See SPKPVN.
+      !> MAXREC     P   Maximum size of SPK record. See [[spkpvn]].
       module subroutine spke12 ( ctx, et, record, state )
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: et  !! Epoch for which a state is desired.
@@ -7768,7 +7768,7 @@ module pepper_instance
 
       !> Evaluate a single data record from a type 13 SPK segment.
       !>
-      !> MAXREC     P   Maximum size of SPK record. See SPKPVN.
+      !> MAXREC     P   Maximum size of SPK record. See [[spkpvn]].
       module subroutine spke13 ( ctx, et, record, state )
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: et  !! Epoch for which a state is desired.
@@ -8749,7 +8749,7 @@ module pepper_instance
       end subroutine dynamic_frame_variable
 
       !> The character values of the kernel variable that defines an item
-      !> of a dynamic frame, at full length (PEPPER; the body of ZZDYNVAC).
+      !> of a dynamic frame, at full length (PEPPER; the body of [[zzdynvac]]).
       module subroutine dynamic_frame_strings ( ctx, frname, frcode, item, maxn, n, values )
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: frname  !! the frame name
@@ -8761,7 +8761,7 @@ module pepper_instance
       end subroutine dynamic_frame_strings
 
       !> The name of a frame from its ID code, of any length (PEPPER; the
-      !> body of FRMNAM, which truncates to its argument's length).
+      !> body of [[frmnam]], which truncates to its argument's length).
       module subroutine frame_name_of ( ctx, frcode, frname, found )
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: frcode  !! the frame ID code
@@ -8770,7 +8770,7 @@ module pepper_instance
       end subroutine frame_name_of
 
       !> The frame associated with an object, its name of any length
-      !> (PEPPER; the body of CIDFRM).
+      !> (PEPPER; the body of [[cidfrm]]).
       module subroutine frame_of_center ( ctx, cent, frcode, frname, found )
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: cent  !! the object's ID code
@@ -8780,7 +8780,7 @@ module pepper_instance
       end subroutine frame_of_center
 
       !> The frame of a class and class ID, its name of any length
-      !> (PEPPER; the body of CCIFRM).
+      !> (PEPPER; the body of [[ccifrm]]).
       module subroutine frame_of_class ( ctx, frclss, clssid, frcode, frname, cent, found )
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: frclss  !! the frame class
@@ -9114,7 +9114,7 @@ module pepper_instance
          integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
          real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
          real(wp), intent(out) :: rotate ( 3, 3 )  !! A rotation matrix.
-         integer(ip), intent(out) :: outfrm  !! The frame that ROTATE transforms INFRM to.
+         integer(ip), intent(out) :: outfrm  !! The frame that [[rotate]] transforms INFRM to.
          logical, intent(out) :: found  !! .TRUE. if a rotation can be found.
       end subroutine rotget
 
@@ -9188,7 +9188,7 @@ module pepper_instance
       end subroutine et2utc
 
       !> Prepare recognized markers and auxiliary arrays for the
-      !> routine SCAN.
+      !> routine [[scan]].
       module subroutine scanpr ( ctx, nmarks, marks, mrklen, pnters )
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(inout) :: nmarks  !! Number of recognizable substrings.
@@ -9215,7 +9215,7 @@ module pepper_instance
       end subroutine scan
 
       !> Create a time format picture suitable for use by the routine
-      !> TIMOUT from a given sample time string.
+      !> [[timout]] from a given sample time string.
       module subroutine tpictr ( ctx, sample, pictur, ok, errmsg )
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: sample  !! is a sample date time string
@@ -9250,7 +9250,7 @@ module pepper_instance
       !> Convert ephemeris seconds past J2000 (ET) to integral
       !> encoded spacecraft clock (`ticks'). For conversion to
       !> fractional ticks, (required for C-kernel production), see
-      !> the routine SCE2C.
+      !> the routine [[sce2c]].
       module subroutine sce2t ( ctx, sc, et, sclkdp )
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
@@ -10015,7 +10015,7 @@ module pepper_instance
       end subroutine spkssb
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine SPKAPS. This routine is supported for purposes of
+      !> routine [[spkaps]]. This routine is supported for purposes of
       !> backward compatibility only.
       module subroutine spkapp ( ctx, targ, et, ref, sobs, abcorr, starg, lt )
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11119,7 +11119,7 @@ module pepper_instance
       end subroutine ckw03
 
       !> Begin a type CK04 segment in the DAF file associated with
-      !> HANDLE. See also CKW04A and CKW04E.
+      !> HANDLE. See also [[ckw04a]] and [[ckw04e]].
       module subroutine ckw04b ( ctx, handle, begtim, inst, ref, avflag, segid )
       use pepper_inc_sgparam
       use pepper_inc_ckparam
@@ -11133,7 +11133,7 @@ module pepper_instance
       end subroutine ckw04b
 
       !> End the type 04 CK segment currently being written to the DAF
-      !> file associated with HANDLE. See also CKW04B and CKW04E.
+      !> file associated with HANDLE. See also [[ckw04b]] and [[ckw04e]].
       module subroutine ckw04e ( ctx, handle, endtim )
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! The handle of an CK file open for writing.
@@ -11189,7 +11189,7 @@ module pepper_instance
       end subroutine ckw06
 
       !> Add data to a type 03 PCK segment in the binary PCK file
-      !> associated with HANDLE. See also PCK03B and PCK03E.
+      !> associated with HANDLE. See also [[pck03b]] and [[pck03e]].
       module subroutine pck03a ( ctx, handle, ncsets, coeffs, epochs )
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! The handle of a DAF file open for writing.
@@ -11199,7 +11199,7 @@ module pepper_instance
       end subroutine pck03a
 
       !> End the type 03 PCK segment currently being written to the binary
-      !> PCK file associated with HANDLE. See also PCK03B and PCK03A.
+      !> PCK file associated with HANDLE. See also [[pck03b]] and [[pck03a]].
       module subroutine pck03e ( ctx, handle )
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! The handle of a binary PCK file open for writing.
@@ -11330,7 +11330,7 @@ module pepper_instance
 
       !> Continue reading lines from the comment area of a binary
       !> SPK or CK file specified by the most recent call to
-      !> the routine SPCRFL.
+      !> the routine [[spcrfl]].
       module subroutine spcrnl ( ctx, line, eoc )
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(out) :: line  !! Next line of text from the comment area.
@@ -11678,7 +11678,7 @@ module pepper_instance
       end subroutine ckgr02
 
       !> Add data to a type 4 CK segment currently being written to
-      !> the file associated with HANDLE. See also CKW04B and CKW04E.
+      !> the file associated with HANDLE. See also [[ckw04b]] and [[ckw04e]].
       module subroutine ckw04a ( ctx, handle, npkts, pktsiz, pktdat, sclkdp )
       use pepper_inc_ckparam
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11690,7 +11690,7 @@ module pepper_instance
       end subroutine ckw04a
 
       !> Begin a type 03 PCK segment in the binary PCK file associated with
-      !> HANDLE. See also PCK03A and PCK03E.
+      !> HANDLE. See also [[pck03a]] and [[pck03e]].
       module subroutine pck03b ( ctx, handle, segid, body, frame, first, last, chbdeg )
       use pepper_inc_sgparam
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11756,14 +11756,14 @@ module pepper_instance
 
    interface
 
-      !> Return the time step set by the most recent call to GFSSTP.
+      !> Return the time step set by the most recent call to [[gfsstp]].
       module subroutine gfstep ( ctx, time, step )
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: time  !! Ignored ET value.
          real(wp), intent(out) :: step  !! Time step to take.
       end subroutine gfstep
 
-      !> Set the step size to be returned by GFSTEP.
+      !> Set the step size to be returned by [[gfstep]].
       module subroutine gfsstp ( ctx, step )
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: step  !! Time step to take.
@@ -11790,7 +11790,7 @@ module pepper_instance
       module character(2) function ana ( ctx, word, case )
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: word  !! is a word that should be modified by "a" or "an".
-         character(*), intent(in) :: case  !! 'U', 'L', or 'C' to specify capitalization of ANA.
+         character(*), intent(in) :: case  !! 'U', 'L', or 'C' to specify capitalization of [[ana]].
       end function ana
 
       !> Return the azimuth/elevation coordinates of a specified target
@@ -11903,8 +11903,8 @@ module pepper_instance
       end subroutine dxtrct
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine EVSGP4. *ALL* TLE evaluations should use that routine.
-      !> NAIF supports EV2LIN only for backward compatibility.
+      !> routine [[evsgp4]]. *ALL* TLE evaluations should use that routine.
+      !> NAIF supports [[ev2lin]] only for backward compatibility.
       !>
       !> NMODL      P   Parameter controlling number of buffered elements.
       module subroutine ev2lin ( ctx, et, geophs, elems, state )
@@ -12002,7 +12002,7 @@ module pepper_instance
       end subroutine hyptof
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine ILUMIN. This routine is supported for purposes of
+      !> routine [[ilumin]]. This routine is supported for purposes of
       !> backward compatibility only.
       module subroutine illum ( ctx, target, et, abcorr, obsrvr, spoint, phase, solar, emissn )
       use pepper_inc_zzctr
@@ -12027,7 +12027,7 @@ module pepper_instance
       end subroutine irftrn
 
       !> **Deprecated:** This routine is deprecated because all high-level
-      !> time conversion routines (STR2ET, UTC2ET, TPARSE) were updated
+      !> time conversion routines ([[str2et]], [[utc2et]], [[tparse]]) were updated
       !> to accept ISO formatted times on input.  This routine is
       !> supported for purposes of backward compatibility only.
       module subroutine iso2utc ( ctx, tstrng, utcstr, error )
@@ -12217,7 +12217,7 @@ module pepper_instance
          character(*), intent(out) :: string  !! Encoded string.
       end subroutine prtenc
 
-      !> Decode a character string encoded by PRTENC.
+      !> Decode a character string encoded by [[prtenc]].
       module subroutine prtdec ( ctx, string, number )
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(out) :: number  !! Decoded number.
@@ -12387,7 +12387,7 @@ module pepper_instance
       !> function using a three-point estimation.
       module subroutine uddf ( ctx, udfunc, x, dx, deriv )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+         procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
          real(wp), intent(in) :: x  !! Independent variable of UDFUNC.
          real(wp), intent(in) :: dx  !! Interval from X for derivative calculation.
          real(wp), intent(out) :: deriv  !! Approximate derivative of UDFUNC at X.
@@ -12399,7 +12399,7 @@ module pepper_instance
       module subroutine udf ( ctx, x, value )
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: x  !! Double precision value, unused.
-         real(wp), intent(out) :: value  !! Double precision value, unused. (PEPPER: an output, as for any GF_SCALAR; not set)
+         real(wp), intent(out) :: value  !! Double precision value, unused. (PEPPER: an output, as for any [[gf_scalar]]; not set)
       end subroutine udf
 
       !> Find the minimum or maximum angular separation between a
@@ -12551,7 +12551,7 @@ module pepper_instance
       !> volatile nature of this routine.
       !>
       !> The function returns .TRUE. if and only if the specified segment
-      !> matches the body ID set via ZZDSKSBD.
+      !> matches the body ID set via [[zzdsksbd]].
       module logical function zzdskbdc ( ctx, handle, dladsc, dskdsc )
       use pepper_inc_dsk
       use pepper_inc_dskdsc
@@ -12595,7 +12595,7 @@ module pepper_instance
       !> volatile nature of this routine.
       !>
       !> The function returns .TRUE. if and only if the specified segment
-      !> matches the body ID set via ZZDSKSIT.
+      !> matches the body ID set via [[zzdsksit]].
       module logical function zzdskcit ( ctx, handle, dladsc, dskdsc )
       use pepper_inc_dsk
       use pepper_inc_dskdsc
@@ -12625,7 +12625,7 @@ module pepper_instance
       !> volatile nature of this routine.
       !>
       !> The function returns .TRUE. if and only if the specified segment
-      !> matches the body ID set via ZZDSKUSC.
+      !> matches the body ID set via [[zzdskusc]].
       module logical function zzdskumc ( ctx, handle, dladsc, dskdsc )
       use pepper_inc_dsk
       use pepper_inc_dskdsc
@@ -12659,7 +12659,7 @@ module pepper_instance
       !> volatile nature of this routine.
       !>
       !> The function returns .TRUE. if and only if the specified segment
-      !> matches the body ID set via ZZDSKMSC.
+      !> matches the body ID set via [[zzdskmsc]].
       module logical function zzdskmmc ( ctx, handle, dladsc, dskdsc )
       use pepper_inc_dsk
       use pepper_inc_dskdsc
@@ -12691,7 +12691,7 @@ module pepper_instance
       !> volatile nature of this routine.
       !>
       !> The function returns .TRUE. if and only if the specified segment
-      !> matches the body ID set via ZZDSKSRC.
+      !> matches the body ID set via [[zzdsksrc]].
       module logical function zzdskmrc ( ctx, handle, dladsc, dskdsc )
       use pepper_inc_dsk
       use pepper_inc_dskdsc
@@ -12984,9 +12984,9 @@ module pepper_instance
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         procedure(zzsfx_near) :: udnear  !! the zzsfx_near routine
-         procedure(zzsfx_maxrad) :: udmaxr  !! the zzsfx_maxrad routine
-         procedure(zzsfx_rayx) :: udrayx  !! the zzsfx_rayx routine
+         procedure(zzsfx_near) :: udnear  !! the [[zzsfx_near]] routine
+         procedure(zzsfx_maxrad) :: udmaxr  !! the [[zzsfx_maxrad]] routine
+         procedure(zzsfx_rayx) :: udrayx  !! the [[zzsfx_rayx]] routine
          integer(ip), intent(in) :: trgcde  !! Target body ID code.
          real(wp), intent(in) :: et  !! Epoch at observer.
          character(*), intent(in) :: abcorr  !! Aberration correction string.
@@ -13045,9 +13045,9 @@ module pepper_instance
       !> to the volatile nature of this routine.
       module subroutine zztanslv ( ctx, udcond, udstep, udrefn, cstep, step, start, finish, tol, result, points, endflg, room )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         procedure(zztan_cond) :: udcond  !! the zztan_cond routine
-         procedure(gf_step) :: udstep  !! the gf_step routine
-         procedure(gf_refine) :: udrefn  !! the gf_refine routine
+         procedure(zztan_cond) :: udcond  !! the [[zztan_cond]] routine
+         procedure(gf_step) :: udstep  !! the [[gf_step]] routine
+         procedure(gf_refine) :: udrefn  !! the [[gf_refine]] routine
          logical, intent(in) :: cstep  !! Logical indicating constant step size.
          real(wp), intent(in) :: step  !! Constant step size for finding geometric events.
          real(wp), intent(in) :: start  !! Beginning of the search interval.
@@ -13256,7 +13256,7 @@ module pepper_instance
       end subroutine scpars
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine SUBPNT. This routine is supported for purposes of
+      !> routine [[subpnt]]. This routine is supported for purposes of
       !> backward compatibility only.
       module subroutine subpt ( ctx, method, target, et, abcorr, obsrvr, spoint, alt )
       use pepper_inc_zzctr
@@ -13271,7 +13271,7 @@ module pepper_instance
       end subroutine subpt
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine SUBSLR. This routine is supported for purposes of
+      !> routine [[subslr]]. This routine is supported for purposes of
       !> backward compatibility only.
       module subroutine subsol ( ctx, method, target, et, abcorr, obsrvr, spoint )
       use pepper_inc_zzctr
@@ -13328,7 +13328,7 @@ module pepper_instance
       !> at a given abscissa value is negative.
       module subroutine uddc ( ctx, udfunc, x, dx, isdecr )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+         procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
          real(wp), intent(in) :: x  !! Independent variable of UDFUNC.
          real(wp), intent(in) :: dx  !! Interval from X for derivative calculation.
          logical, intent(out) :: isdecr  !! Boolean indicating if the derivative is negative.
@@ -13530,7 +13530,7 @@ module pepper_instance
       !> volatile nature of this routine.
       !>
       !> PEPPER: fills SRF (SPICELIB returned arrays of MXNSRF entries and
-      !> their hash tables; see surface_names).
+      !> their hash tables; see [[surface_names]]).
       module subroutine zzsrfker ( ctx, srf )
          class(pepper_context), intent(inout) :: ctx  !! the context
          type(surface_names), intent(inout) :: srf  !! the surface names from the kernel pool
@@ -13548,8 +13548,8 @@ module pepper_instance
       end subroutine cgv2el
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine EVSGP4. *ALL* TLE evaluations should use that routine.
-      !> NAIF supports DPSPCE only for backward compatibility.
+      !> routine [[evsgp4]]. *ALL* TLE evaluations should use that routine.
+      !> NAIF supports [[dpspce]] only for backward compatibility.
       module subroutine dpspce ( ctx, et, geophs, elems, state )
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: et  !! Time for state evaluation in seconds past ephemeris epoch J2000.
@@ -14002,7 +14002,7 @@ module pepper_instance
       end subroutine dskx02
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine SINCPT. This routine is supported for purposes of
+      !> routine [[sincpt]]. This routine is supported for purposes of
       !> backward compatibility only.
       module subroutine srfxpt ( ctx, method, target, et, abcorr, obsrvr, dref, dvec, spoint, dist, trgepc, obspos, found )
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
@@ -14689,8 +14689,8 @@ module pepper_instance
       !> Override the default GF convergence value used in the high
       !> level GF routines.
       !>
-      !> ZZPUT      P   ZZHOLDD stores a DP value.
-      !> GF_TOL     P   ZZHOLDD acts on the GF subsystem tolerance.
+      !> ZZPUT      P   [[zzholdd]] stores a DP value.
+      !> GF_TOL     P   [[zzholdd]] acts on the GF subsystem tolerance.
       module subroutine gfstol ( ctx, value )
       use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14866,8 +14866,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       !>
-      !> ZZPUT      P   ZZHOLDD stores a DP value.
-      !> GF_REF     P   ZZHOLDD acts on the reference value
+      !> ZZPUT      P   [[zzholdd]] stores a DP value.
+      !> [[gf_ref]]     P   [[zzholdd]] acts on the reference value
       !> for a GF search.
       module subroutine zzgfref ( ctx, refval )
       use pepper_inc_zzholdd
@@ -14947,7 +14947,7 @@ module pepper_instance
       end subroutine zzgfspq
 
       !> This routine initializes variables that describe an angular
-      !> separation event of interest for solution by ZZGFSOLV.
+      !> separation event of interest for solution by [[zzgfsolv]].
       module subroutine zzgfspin ( ctx, of, from, shape, frame, abcorr )
       use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14965,7 +14965,7 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          logical, intent(out) :: decres  !! .TRUE. if angular separation is decreasing .FALSE. otherwise.
-         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+         procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfspdc
 
       !> Determine the angular separation between the limbs of the two
@@ -14977,7 +14977,7 @@ module pepper_instance
          real(wp), intent(out) :: sep  !! Separation at time ET.
       end subroutine zzgfspgq
 
-      !> Retrieve values set in ZZGFSPIN.
+      !> Retrieve values set in [[zzgfspin]].
       module subroutine zzgfspx ( ctx, xabcr, xbod, yref, xref, xobs, xrad, xshp )
       use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15034,8 +15034,8 @@ module pepper_instance
       !> routines. Users should not call this routine directly due to the
       !> volatile nature of this routine.
       !>
-      !> ZZGET      P   ZZHOLDD retrieves a stored DP value.
-      !> GF_REF     P   ZZHOLDD acts on the reference value
+      !> ZZGET      P   [[zzholdd]] retrieves a stored DP value.
+      !> [[gf_ref]]     P   [[zzholdd]] acts on the reference value
       !> for a GF search.
       module subroutine zzgfudlt ( ctx, udfunc, et, isless )
       use pepper_inc_zzholdd
@@ -15223,7 +15223,7 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          logical, intent(out) :: decres  !! Flag indicating whether distance is decreasing.
-         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+         procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfdidc
 
       !> Return the distance between the target and observer
@@ -15236,7 +15236,7 @@ module pepper_instance
       end subroutine zzgfdigq
 
       !> This is the initialization entry point used for describing
-      !> the event that is to be solved for by ZZGFSOLV.
+      !> the event that is to be solved for by [[zzgfsolv]].
       module subroutine zzgfpain ( ctx, target, illmn, abcorr, obsrvr )
       use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15253,7 +15253,7 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          logical, intent(out) :: decres  !! .TRUE. if phase angle is decreasing, .FALSE. otherwise.
-         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+         procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfpadc
 
       !> Determine the phase angle between the centers of the two
@@ -15265,7 +15265,7 @@ module pepper_instance
          real(wp), intent(out) :: rvl  !! Phase angle at time ET.
       end subroutine zzgfpagq
 
-      !> Retrieve values set in ZZGFPAIN.
+      !> Retrieve values set in [[zzgfpain]].
       module subroutine zzgfpax ( ctx, xtarg, xillmn, xabcor, xobs, xablk )
       use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15396,7 +15396,7 @@ module pepper_instance
       end subroutine zzgfwkmo
 
       !> This is the initialization entry point used for describing
-      !> the event that is to be solved for by ZZGFSOLV.
+      !> the event that is to be solved for by [[zzgfsolv]].
       module subroutine zzgfrrin ( ctx, target, abcorr, obsrvr, dt )
       use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15413,7 +15413,7 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
          logical, intent(out) :: decres  !! true if range rate is decreasing, false otherwise.
-         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+         procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfrrdc
 
       !> Determine the range rate between the centers of the two
@@ -15425,7 +15425,7 @@ module pepper_instance
          real(wp), intent(out) :: rvl  !! Range rate at time ET.
       end subroutine zzgfrrgq
 
-      !> Retrieve values set in ZZGFRRIN.
+      !> Retrieve values set in [[zzgfrrin]].
       module subroutine zzgfrrx ( ctx, xtarg, xabcor, xobs, xdt )
       use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15462,8 +15462,8 @@ module pepper_instance
       !>
       !> LBCELL     P   SPICE Cell lower bound.
       !> CNVTOL     P   Convergence tolerance.
-      !> ZZGET      P   ZZHOLDD retrieves a stored DP value.
-      !> GF_TOL     P   ZZHOLDD acts on the GF subsystem tolerance.
+      !> ZZGET      P   [[zzholdd]] retrieves a stored DP value.
+      !> GF_TOL     P   [[zzholdd]] acts on the GF subsystem tolerance.
       module subroutine gfoclt ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_inc_gf
       use pepper_inc_zzholdd
@@ -15491,8 +15491,8 @@ module pepper_instance
       !> LBCELL     P   SPICE Cell lower bound.
       !> CNVTOL     P   Convergence tolerance.
       !> MAXVRT     P   Maximum number of FOV boundary vertices.
-      !> ZZGET      P   ZZHOLDD retrieves a stored DP value.
-      !> GF_TOL     P   ZZHOLDD acts on the GF subsystem tolerance.
+      !> ZZGET      P   [[zzholdd]] retrieves a stored DP value.
+      !> GF_TOL     P   [[zzholdd]] acts on the GF subsystem tolerance.
       module subroutine gfrfov ( ctx, inst, raydir, rframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_inc_gf
       use pepper_inc_zzholdd
@@ -15622,7 +15622,7 @@ module pepper_instance
          character(*), intent(in) :: crdnam  !! Coordinate name.
       end subroutine zzgfcoin
 
-      !> Compute the coordinate defined by the last call to ZZGFCOIN is at
+      !> Compute the coordinate defined by the last call to [[zzgfcoin]] is at
       !> the specified epoch.
       module subroutine zzgfcog ( ctx, et, crdval )
       use pepper_inc_gf
@@ -15634,7 +15634,7 @@ module pepper_instance
       end subroutine zzgfcog
 
       !> Indicate whether the coordinate defined by the last call to
-      !> ZZGFCOIN is decreasing at the specified epoch.
+      !> [[zzgfcoin]] is decreasing at the specified epoch.
       module subroutine zzgfcodc ( ctx, udfunc, et, decres )
       use pepper_inc_gf
       use pepper_inc_zzgf
@@ -15642,11 +15642,11 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: et  !! Computation epoch.
          logical, intent(out) :: decres  !! Flag indicating if coordinate is decreasing.
-         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+         procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfcodc
 
       !> Indicate whether the state of coordinate defined by the last call
-      !> to ZZGFCOIN is computable at the specified epoch.
+      !> to [[zzgfcoin]] is computable at the specified epoch.
       module subroutine zzgfcoex ( ctx, udfunc, et, crdfnd )
       use pepper_inc_gf
       use pepper_inc_zzgf
@@ -15654,11 +15654,11 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: et  !! Computation epoch.
          logical, intent(out) :: crdfnd  !! Flag indicating if coordinate state is computable.
-         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+         procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfcoex
 
       !> Compute the cosine of the coordinate defined by the last call to
-      !> ZZGFCOIN is at the specified epoch.
+      !> [[zzgfcoin]] is at the specified epoch.
       module subroutine zzgfcocg ( ctx, et, crdval )
       use pepper_inc_gf
       use pepper_inc_zzgf
@@ -15669,7 +15669,7 @@ module pepper_instance
       end subroutine zzgfcocg
 
       !> Compute the sine of the coordinate defined by the last call to
-      !> ZZGFCOIN is at the specified epoch.
+      !> [[zzgfcoin]] is at the specified epoch.
       module subroutine zzgfcosg ( ctx, et, crdval )
       use pepper_inc_gf
       use pepper_inc_zzgf
@@ -15680,7 +15680,7 @@ module pepper_instance
       end subroutine zzgfcosg
 
       !> Indicate whether the cosine of the coordinate defined by the
-      !> last call to ZZGFCOIN is decreasing at the specified epoch.
+      !> last call to [[zzgfcoin]] is decreasing at the specified epoch.
       module subroutine zzgfcocd ( ctx, udfunc, et, decres )
       use pepper_inc_gf
       use pepper_inc_zzgf
@@ -15688,11 +15688,11 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: et  !! Computation epoch.
          logical, intent(out) :: decres  !! Flag indicating if cos of coordinate is decreasing.
-         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+         procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfcocd
 
       !> Indicate whether the sine of the coordinate defined by the
-      !> last call to ZZGFCOIN is decreasing at the specified epoch.
+      !> last call to [[zzgfcoin]] is decreasing at the specified epoch.
       module subroutine zzgfcosd ( ctx, udfunc, et, decres )
       use pepper_inc_gf
       use pepper_inc_zzgf
@@ -15700,7 +15700,7 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: et  !! Computation epoch.
          logical, intent(out) :: decres  !! Flag indicating if sine of coordinate is decreasing.
-         procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+         procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfcosd
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -15961,8 +15961,8 @@ module pepper_instance
       !>
       !> LBCELL     P   SPICE Cell lower bound.
       !> CNVTOL     P   Convergence tolerance.
-      !> ZZGET      P   ZZHOLDD retrieves a stored DP value.
-      !> GF_TOL     P   ZZHOLDD acts on the GF subsystem tolerance.
+      !> ZZGET      P   [[zzholdd]] retrieves a stored DP value.
+      !> GF_TOL     P   [[zzholdd]] acts on the GF subsystem tolerance.
       module subroutine gfsep ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_inc_gf
       use pepper_inc_zzabcorr
@@ -15994,8 +15994,8 @@ module pepper_instance
       !>
       !> LBCELL     P   SPICE Cell lower bound.
       !> CNVTOL     P   Convergence tolerance.
-      !> ZZGET      P   ZZHOLDD retrieves a stored DP value.
-      !> GF_TOL     P   ZZHOLDD acts on the GF subsystem tolerance.
+      !> ZZGET      P   [[zzholdd]] retrieves a stored DP value.
+      !> GF_TOL     P   [[zzholdd]] acts on the GF subsystem tolerance.
       module subroutine gfsntc ( ctx, target, fixref, method, abcorr, obsrvr, dref, dvec, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_inc_gf
       use pepper_inc_zzgf
@@ -19682,7 +19682,7 @@ contains
    end subroutine set_max_open_files
 
    !> The number of files each context keeps open at the same time (see
-   !> set_max_open_files).
+   !> [[set_max_open_files]]).
    pure integer(ip) function max_open_files(this) result(n)
       class(pepper_spice), intent(in) :: this  !! the instance
       n = this%open_files_limit
@@ -19725,7 +19725,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's FURNSH changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_furnsh(this, file)
       class(pepper_spice), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: file  !! SPICE kernel file (text or binary).
@@ -19738,7 +19738,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's UNLOAD changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_unload(this, file)
       class(pepper_spice), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: file  !! The name of a kernel to unload.
@@ -19753,7 +19753,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's KCLEAR changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_kclear(this)
       class(pepper_spice), target, intent(inout) :: this  !! the instance
       type(pepper_context), pointer :: ctx
@@ -19767,7 +19767,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's LDPOOL changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_ldpool(this, fname)
       use pepper_inc_zzctr
       class(pepper_spice), target, intent(inout) :: this  !! the instance
@@ -19782,7 +19782,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's CLPOOL changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_clpool(this)
       use pepper_inc_zzctr
       class(pepper_spice), target, intent(inout) :: this  !! the instance
@@ -19796,7 +19796,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's PCPOOL changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_pcpool(this, name, n, cvals)
       use pepper_inc_zzctr
       class(pepper_spice), target, intent(inout) :: this  !! the instance
@@ -19814,7 +19814,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's PDPOOL changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_pdpool(this, name, n, values)
       use pepper_inc_zzctr
       class(pepper_spice), target, intent(inout) :: this  !! the instance
@@ -19832,7 +19832,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's PIPOOL changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_pipool(this, name, n, ivals)
       use pepper_inc_zzctr
       class(pepper_spice), target, intent(inout) :: this  !! the instance
@@ -19850,7 +19850,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's LMPOOL changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_lmpool(this, cvals, n)
       use pepper_inc_zzctr
       class(pepper_spice), target, intent(inout) :: this  !! the instance
@@ -19865,7 +19865,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's DVPOOL changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_dvpool(this, name)
       use pepper_inc_zzctr
       class(pepper_spice), target, intent(inout) :: this  !! the instance
@@ -19876,11 +19876,11 @@ contains
    end subroutine spice_dvpool
 
    !> Define a body name/ID code pair for later translation via
-   !> BODN2C or BODC2N.
+   !> [[bodn2c]] or [[bodc2n]].
    !>
    !> PEPPER: a method of the instance (SPICELIB's BODDEF changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_boddef(this, name, code)
       class(pepper_spice), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: name  !! Common name of some body.
@@ -19895,7 +19895,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's SPKLEF changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_spklef(this, fname, handle)
       class(pepper_spice), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: fname  !! Name of the file to be loaded.
@@ -19910,7 +19910,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's SPKUEF changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_spkuef(this, handle)
       class(pepper_spice), target, intent(inout) :: this  !! the instance
       integer(ip), intent(in) :: handle  !! Handle of file to be unloaded
@@ -19925,7 +19925,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's PCKLOF changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_pcklof(this, fname, handle)
       class(pepper_spice), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: fname  !! Name of the file to be loaded.
@@ -19940,7 +19940,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's PCKUOF changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_pckuof(this, handle)
       class(pepper_spice), target, intent(inout) :: this  !! the instance
       integer(ip), intent(in) :: handle  !! Handle of file to be unloaded
@@ -19955,7 +19955,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's CKLPF changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_cklpf(this, fname, handle)
       class(pepper_spice), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: fname  !! Name of the CK file to be loaded.
@@ -19970,7 +19970,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's CKUPF changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_ckupf(this, handle)
       class(pepper_spice), target, intent(inout) :: this  !! the instance
       integer(ip), intent(in) :: handle  !! Handle of CK file to be unloaded
@@ -19983,7 +19983,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's EKLEF changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_eklef(this, fname, handle)
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -20010,7 +20010,7 @@ contains
    !>
    !> PEPPER: a method of the instance (SPICELIB's EKUEF changes the
    !> kernels of the program); errors are signaled in the instance's
-   !> context (see instance_context).
+   !> context (see [[instance_context]]).
    subroutine spice_ekuef(this, handle)
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -20099,7 +20099,7 @@ contains
    end subroutine ctx_errch
 
    !> Replace the first occurrence of marker in the long message with the
-   !> number, with 14 significant digits (as DPSTR writes it).
+   !> number, with 14 significant digits (as [[dpstr]] writes it).
    subroutine ctx_errdp(this, marker, number)
       class(pepper_context), intent(inout) :: this  !! the context
       character(*), intent(in) :: marker  !! marker in the long message, e.g. '#'
@@ -20135,8 +20135,8 @@ contains
    end subroutine ctx_errfnm
 
    !> The number of values of the body kernel variable BODY<body>_<item>
-   !> (0 if there is none): the room the callers of BODVCD allocate
-   !> (PEPPER: SPICELIB used fixed sizes, e.g. TISBOD's MAXANG).
+   !> (0 if there is none): the room the callers of [[bodvcd]] allocate
+   !> (PEPPER: SPICELIB used fixed sizes, e.g. [[tisbod]]'s MAXANG).
    function body_item_size(ctx, body, item) result(n)
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: body  !! the body ID code
@@ -20152,7 +20152,7 @@ contains
 
    !> The number of partitions of a spacecraft clock (the size of its
    !> SCLK_PARTITION_START kernel variable), at least 1: the room the
-   !> callers of SCPART allocate (PEPPER: SPICELIB used MXPART, 9999).
+   !> callers of [[scpart]] allocate (PEPPER: SPICELIB used MXPART, 9999).
    function sclk_partition_count(ctx, sc) result(n)
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: sc  !! the spacecraft clock ID
@@ -20308,9 +20308,9 @@ contains
       watch_index = k
    end function watch_index
 
-   !> SWPOOL for a context: the watch is the
+   !> [[swpool]] for a context: the watch is the
    !> context's own, so that contexts do not take each other's notices, and
-   !> setting it changes nothing that other contexts use. As with SWPOOL, the
+   !> setting it changes nothing that other contexts use. As with [[swpool]], the
    !> agent's variables are added to those it watches already, and a notice
    !> is posted for it.
    subroutine swpool_context(ctx, agent, nnames, names)
@@ -20387,7 +20387,7 @@ contains
       end associate
    end function watch_pending
 
-   !> CVPOOL for a context: true if a variable the
+   !> [[cvpool]] for a context: true if a variable the
    !> agent watches (in this context) was updated since the last check.
    subroutine cvpool_context(ctx, agent, update)
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20401,7 +20401,7 @@ contains
       ctx%watches(k)%seen = ctx%spice%pool_changes
    end subroutine cvpool_context
 
-   !> DWPOOL for a context: delete the agent's
+   !> [[dwpool]] for a context: delete the agent's
    !> watch; SPICE(UPDATEPENDING) if it has an unchecked update.
    subroutine dwpool_context(ctx, agent)
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21102,7 +21102,7 @@ contains
       if (allocated(s)) n = len(s)
    end function text_length
 
-   !> The length of ctx_message's result for an option.
+   !> The length of [[ctx_message]]'s result for an option.
    pure integer function message_length(this, option) result(n)
       class(pepper_context), intent(in) :: this  !! the context
       character(*), intent(in) :: option  !! 'SHORT', 'LONG' or 'EXPLAIN'

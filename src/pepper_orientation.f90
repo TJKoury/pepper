@@ -1,8 +1,8 @@
-!> Orientation data: body orientation from PCK files and text kernels (TISBOD, TIPBOD), C-kernel and text-kernel frames (CKFROT, CKFXFM, TKFRAM), switch frames (ZZSWFXFM), the TEME frame, and frame and SCLK lookups.
+!> Orientation data: body orientation from PCK files and text kernels ([[tisbod]], [[tipbod]]), C-kernel and text-kernel frames ([[ckfrot]], [[ckfxfm]], [[tkfram]]), switch frames ([[zzswfxfm]]), the TEME frame, and frame and SCLK lookups.
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_orientation.f90.
 submodule (pepper_instance) pepper_orientation

@@ -3,7 +3,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_bodies.f90.
 submodule (pepper_instance) pepper_bodies
@@ -6913,7 +6913,7 @@ contains
       end procedure zzbodc2n
 
 !> PEPPER: the name of a body from its ID code, of any length (the body of
-!> ZZBODC2N, which copies the name into its fixed-length argument).
+!> [[zzbodc2n]], which copies the name into its fixed-length argument).
       !>
       !>## Abstract
       !>
@@ -7285,7 +7285,7 @@ contains
       end procedure body_name_of
 
       !> Add a name/code pair to this context's table of defined names (the
-      !> code of SPICELIB's ZZBODDEF; zzboddef also records it in the instance).
+      !> code of SPICELIB's [[zzboddef]]; zzboddef also records it in the instance).
       !>
       !>## Abstract
       !>
@@ -7883,7 +7883,7 @@ contains
       end procedure zzbodkik
 
       !> Reset this context's table of defined names to the built-in names
-      !> (the code of SPICELIB's ZZBODRST).
+      !> (the code of SPICELIB's [[zzbodrst]]).
       !>
       !>## Abstract
       !>
@@ -11015,7 +11015,7 @@ contains
       end associate
       end procedure bodvrd
 
-      !> Add a name/code pair to the defined names (SPICELIB's ZZBODDEF). The
+      !> Add a name/code pair to the defined names (SPICELIB's [[zzboddef]]). The
       !> pair is recorded in the instance, so that all its contexts see it.
       module procedure zzboddef
       implicit none
@@ -11029,7 +11029,7 @@ contains
       end procedure zzboddef
 
       !> Reset the defined names to the built-in names (SPICELIB's
-      !> ZZBODRST), in the instance and so for all its contexts.
+      !> [[zzbodrst]]), in the instance and so for all its contexts.
       module procedure zzbodrst
       implicit none
       ctx%spice%boddef_count = 0
@@ -11093,8 +11093,8 @@ contains
       spice%boddef_epoch = spice%boddef_epoch + 1
       end subroutine record_boddef
 
-      !> PEPPER: set the defined names to the built-in names (ZZBODGET),
-      !> with their maps (SPICELIB's ZZBODINI).
+      !> PEPPER: set the defined names to the built-in names ([[zzbodget]]),
+      !> with their maps (SPICELIB's [[zzbodini]]).
       subroutine body_builtins ( ctx, def )
       use pepper_inc_zzbodtrn
       class(pepper_context), intent(inout) :: ctx  !! the context

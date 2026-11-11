@@ -3,22 +3,22 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_pool.f90.
 submodule (pepper_instance) pepper_pool
 
    implicit none
 
-   !> The time-string patterns TPARTV recognizes (ZZTPATS) and their
-   !> meanings are stored in the order of SPICELIB's sort (ORDERC) of
-   !> ZZTPATS's table, so that BSRCHC finds the same entry as in SPICELIB
+   !> The time-string patterns [[tpartv]] recognizes ([[zztpats]]) and their
+   !> meanings are stored in the order of SPICELIB's sort ([[orderc]]) of
+   !> [[zztpats]]'s table, so that [[bsrchc]] finds the same entry as in SPICELIB
    !> (the table has duplicate patterns).
    !>
-   !> PEPPER: SPICELIB sorted the table on the first call of TPARTV and
-   !> saved it; without the saved copy, TPARTV built and sorted it on
-   !> every call (90 percent of STR2ET's time). test_time checks that
-   !> ORDERC leaves this order unchanged.
+   !> PEPPER: SPICELIB sorted the table on the first call of [[tpartv]] and
+   !> saved it; without the saved copy, [[tpartv]] built and sorted it on
+   !> every call (90 percent of [[str2et]]'s time). test_time checks that
+   !> [[orderc]] leaves this order unchanged.
    integer, parameter :: ntpats = 231  !! number of patterns
    !> the patterns, sorted
    character(32), parameter :: tpats_known ( 231 ) = [ character(32) :: &

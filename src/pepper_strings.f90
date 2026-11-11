@@ -5449,7 +5449,7 @@ contains
       end function nblen
 
       !> Determine the non-blank width of a character array---that is,
-      !> the largest value of LASTNB for any element in the array.
+      !> the largest value of [[lastnb]] for any element in the array.
       !>
       !> The function returns the index of the rightmost non-blank
       !> character in the entire array of strings ARRAY.

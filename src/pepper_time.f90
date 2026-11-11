@@ -1,8 +1,8 @@
-!> Time conversion: calendars and time scales (TTRANS, UNITIM, ETCAL, JUL2GR), parsing (STR2ET), the defaults (TIMDEF), number formatting, unit conversion, and the aberration correction strings.
+!> Time conversion: calendars and time scales ([[ttrans]], [[unitim]], [[etcal]], [[jul2gr]]), parsing ([[str2et]]), the defaults ([[timdef]]), number formatting, unit conversion, and the aberration correction strings.
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_time.f90.
 submodule (pepper_instance) pepper_time

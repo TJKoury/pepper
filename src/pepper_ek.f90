@@ -1,8 +1,8 @@
-!> EK files (E-kernels): opening, writing (fast and record-oriented loading), reading, the query manager (loading EK files for queries, EKFIND, EKG*), the query parser and its semantic checks, and joins.
+!> EK files (E-kernels): opening, writing (fast and record-oriented loading), reading, the query manager (loading EK files for queries, [[ekfind]], EKG*), the query parser and its semantic checks, and joins.
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_ek.f90.
 submodule (pepper_instance) pepper_ek
@@ -41916,7 +41916,7 @@ contains
 
    !> PEPPER: initialize EKQMGR's five linked list pools (the file table,
    !> segment table, column descriptor table, column attribute table and
-   !> table list) at their current sizes: SPICELIB's block of five LNKINI
+   !> table list) at their current sizes: SPICELIB's block of five [[lnkini]]
    !> calls with the fixed sizes, in every entry point.
    subroutine ekqmgr_lnkini ( ctx )
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -42065,7 +42065,7 @@ contains
       end associate
    end subroutine ekqmgr_query_room
 
-   !> PEPPER: read an element of a character column entry, as ZZEKRSC
+   !> PEPPER: read an element of a character column entry, as [[zzekrsc]]
    !> does, into a buffer that holds the whole string. The buffer has the
    !> declared length of a column of fixed-length strings (whose readers
    !> signal SPICE(STRINGTRUNCATED) on a shorter one); a variable-length

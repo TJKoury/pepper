@@ -2,7 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_gf.f90.
 submodule (pepper_instance) pepper_gf
@@ -9462,7 +9462,7 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! .TRUE. if angular separation is decreasing .FALSE. otherwise.
-      procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       if ( .not. allocated ( ctx%zzgfspu_state ) ) then
          allocate ( ctx%zzgfspu_state )
          ctx%zzgfspu_state%svref = ' '
@@ -17849,7 +17849,7 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! Flag indicating whether distance is decreasing.
-      procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       if ( .not. allocated ( ctx%zzgfdiu_state ) ) allocate ( ctx%zzgfdiu_state )
       associate ( svcorr => ctx%zzgfdiu_state%svcorr, &
                   svobs => ctx%zzgfdiu_state%svobs, &
@@ -18430,7 +18430,7 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! .TRUE. if phase angle is decreasing, .FALSE. otherwise.
-      procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       if ( .not. allocated ( ctx%zzgfpau_state ) ) allocate ( ctx%zzgfpau_state )
       associate ( svablk => ctx%zzgfpau_state%svablk, &
                   svabco => ctx%zzgfpau_state%svabco, &
@@ -22098,7 +22098,7 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! true if range rate is decreasing, false otherwise.
-      procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       if ( .not. allocated ( ctx%zzgfrru_state ) ) allocate ( ctx%zzgfrru_state )
       associate ( svabco => ctx%zzgfrru_state%svabco, &
                   svtarg => ctx%zzgfrru_state%svtarg, &
@@ -30535,7 +30535,7 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: decres  !! Flag indicating if coordinate is decreasing.
-      procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       if ( .not. allocated ( ctx%zzgfcou_state ) ) then
          allocate ( ctx%zzgfcou_state )
          ctx%zzgfcou_state%svdref = ' '
@@ -30707,7 +30707,7 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: crdfnd  !! Flag indicating if coordinate state is computable.
-      procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       if ( .not. allocated ( ctx%zzgfcou_state ) ) then
          allocate ( ctx%zzgfcou_state )
          ctx%zzgfcou_state%svdref = ' '
@@ -31122,7 +31122,7 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: decres  !! Flag indicating if cos of coordinate is decreasing.
-      procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       if ( .not. allocated ( ctx%zzgfcou_state ) ) then
          allocate ( ctx%zzgfcou_state )
          ctx%zzgfcou_state%svdref = ' '
@@ -31370,7 +31370,7 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: decres  !! Flag indicating if sine of coordinate is decreasing.
-      procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       if ( .not. allocated ( ctx%zzgfcou_state ) ) then
          allocate ( ctx%zzgfcou_state )
          ctx%zzgfcou_state%svdref = ' '

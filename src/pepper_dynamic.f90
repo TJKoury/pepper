@@ -1,5 +1,5 @@
-!> Dynamic frames (ZZDYNFRM, ZZDYNROT). A dynamic frame defined by states of
-!> bodies or by other frames calls the frame and SPK routines (FRMCHG, SPKEZ,
+!> Dynamic frames ([[zzdynfrm]], [[zzdynrot]]). A dynamic frame defined by states of
+!> bodies or by other frames calls the frame and SPK routines ([[frmchg]], [[spkez]],
 !> ...), which may evaluate other dynamic frames: the calls nest to any depth.
 !> SPICELIB, without recursion, used copies of those routines one and two
 !> levels down (ZZ*0, ZZ*1) and refused a third level; the copies are gone
@@ -9,7 +9,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_dynamic.f90.
 submodule (pepper_instance) pepper_dynamic
@@ -627,7 +627,7 @@ contains
       ctx%ndynamic = ctx%ndynamic - 1
       end procedure zzdynrot
 
-      !> PEPPER: the evaluation of ZZDYNFRM (SPICELIB's body of the
+      !> PEPPER: the evaluation of [[zzdynfrm]] (SPICELIB's body of the
       !> routine; see zzdynfrm).
       recursive subroutine dynamic_frame_xform ( ctx, infram, center, et, xform, basfrm )
       use pepper_kinds, only: ip, wp
@@ -2397,7 +2397,7 @@ contains
       end associate
       end subroutine dynamic_frame_xform
 
-      !> PEPPER: the evaluation of ZZDYNROT (SPICELIB's body of the
+      !> PEPPER: the evaluation of [[zzdynrot]] (SPICELIB's body of the
       !> routine; see zzdynrot).
       recursive subroutine dynamic_frame_rotation ( ctx, infram, center, et, rotate, basfrm )
       use pepper_kinds, only: ip, wp
@@ -3997,7 +3997,7 @@ contains
       end subroutine dynamic_frame_rotation
 
       !> PEPPER: record that the dynamic frame FRAME is being evaluated
-      !> (ZZDYNFRM, ZZDYNROT), or signal SPICE(RECURSIONTOODEEP) if it is
+      !> ([[zzdynfrm]], [[zzdynrot]]), or signal SPICE(RECURSIONTOODEEP) if it is
       !> already: its definition depends on itself.
       subroutine enter_dynamic_frame ( ctx, frame )
       use pepper_containers, only: grow

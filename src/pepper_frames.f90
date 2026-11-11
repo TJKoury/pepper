@@ -1,8 +1,8 @@
-!> Reference frames: names, IDs and classes (FRAMEX, ZZFDAT), and the parameters of dynamic frames.
+!> Reference frames: names, IDs and classes (FRAMEX, [[zzfdat]]), and the parameters of dynamic frames.
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_frames.f90.
 submodule (pepper_instance) pepper_frames
@@ -4783,7 +4783,7 @@ contains
 
 !> PEPPER: the character values of the kernel variable that defines an
 !> item of a dynamic frame (FRAME_<ID code>_<item>, or else
-!> FRAME_<name>_<item>), at full length: the body of ZZDYNVAC.
+!> FRAME_<name>_<item>), at full length: the body of [[zzdynvac]].
       module procedure dynamic_frame_strings
       use pepper_kinds, only: ip
       implicit none
@@ -4837,7 +4837,7 @@ contains
       end procedure dynamic_frame_strings
 
 !> PEPPER: the name of a frame from its ID code, of any length (the body
-!> of FRMNAM, which copies it into its fixed-length argument).
+!> of [[frmnam]], which copies it into its fixed-length argument).
       module procedure frame_name_of
       use pepper_kinds, only: ip
       implicit none
@@ -4888,7 +4888,7 @@ contains
       end procedure frame_name_of
 
 !> PEPPER: the frame associated with an object, its name of any length
-!> (the body of CIDFRM).
+!> (the body of [[cidfrm]]).
       module procedure frame_of_center
       use pepper_kinds, only: ip
       use pepper_arrays, only: bschoi
@@ -4952,7 +4952,7 @@ contains
       end procedure frame_of_center
 
 !> PEPPER: the frame of a class and class ID, its name of any length
-!> (the body of CCIFRM).
+!> (the body of [[ccifrm]]).
       module procedure frame_of_class
       use pepper_kinds, only: ip
       use pepper_inc_ninert
@@ -5139,7 +5139,7 @@ contains
 
    !> PEPPER: the frame assigned to an object by the kernel variable
    !> LOOKUP (OBJECT_<ID or name>_FRAME): a frame name ('C') or ID code
-   !> ('N'). Shared by CIDFRM and CNMFRM.
+   !> ('N'). Shared by [[cidfrm]] and [[cnmfrm]].
    subroutine object_frame ( ctx, lookup, dattyp, frcode, frname, found )
       class(pepper_context), intent(inout) :: ctx  !! the context (FRAMEX ready)
       character(*), intent(in) :: lookup  !! the kernel variable
@@ -5181,7 +5181,7 @@ contains
    !> specification expression, not a deferred length: gfortran keeps
    !> the length of a deferred-length result in a static variable at the
    !> call site, which is not thread-safe (see text_length in
-   !> pepper_instance).
+   !> [[pepper_instance]]).
    pure function int_text ( i ) result ( text )
       use pepper_strings, only: intstr
       integer(ip), intent(in) :: i  !! the integer
@@ -5200,7 +5200,7 @@ contains
       n = len_trim ( buf )
    end function int_text_length
 
-   !> PEPPER: a string as REPMC substitutes it for a marker: without
+   !> PEPPER: a string as [[repmc]] substitutes it for a marker: without
    !> leading and trailing blanks, or a single blank if it is blank.
    pure function marker_text ( value ) result ( text )
       character(*), intent(in) :: value  !! the string

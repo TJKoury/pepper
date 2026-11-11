@@ -1,8 +1,8 @@
-!> The SPK API: states and positions of targets relative to observers with aberration corrections (SPKEZR, SPKPOS, SPKEZ, SPKEZP, SPKGEO, SPKGPS, SPKSSB, SPKAPO, SPKAPP, SPKACS, SPKAPS, SPKLTC, SPKCPO, SPKCPT, SPKCVO, SPKCVT), coverage, segment subsetting (SPKSUB, SPKS*), and the generic segment writer (SGSEQW).
+!> The SPK API: states and positions of targets relative to observers with aberration corrections ([[spkezr]], [[spkpos]], [[spkez]], [[spkezp]], [[spkgeo]], [[spkgps]], [[spkssb]], [[spkapo]], [[spkapp]], [[spkacs]], [[spkaps]], [[spkltc]], [[spkcpo]], [[spkcpt]], [[spkcvo]], [[spkcvt]]), coverage, segment subsetting ([[spksub]], SPKS*), and the generic segment writer (SGSEQW).
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_spk_api.f90.
 submodule (pepper_instance) pepper_spk_api

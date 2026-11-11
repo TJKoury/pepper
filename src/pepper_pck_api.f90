@@ -1,8 +1,8 @@
-!> PCK coverage and frames (PCKCOV, PCKFRM), and Euler angles of bodies (BODEUL, PCKEUL).
+!> PCK coverage and frames ([[pckcov]], [[pckfrm]]), and Euler angles of bodies ([[bodeul]], [[pckeul]]).
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_pck_api.f90.
 submodule (pepper_instance) pepper_pck_api

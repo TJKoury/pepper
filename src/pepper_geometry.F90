@@ -2,7 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_geometry.f90.
 submodule (pepper_instance) pepper_geometry
@@ -19957,7 +19957,7 @@ contains
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
-      procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       real(wp), intent(in) :: x  !! Independent variable of UDFUNC.
       real(wp), intent(in) :: dx  !! Interval from X for derivative calculation.
       real(wp), intent(out) :: deriv  !! Approximate derivative of UDFUNC at X.
@@ -31974,9 +31974,9 @@ contains
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
-      procedure(zzsfx_near) :: udnear  !! the zzsfx_near routine
-      procedure(zzsfx_maxrad) :: udmaxr  !! the zzsfx_maxrad routine
-      procedure(zzsfx_rayx) :: udrayx  !! the zzsfx_rayx routine
+      procedure(zzsfx_near) :: udnear  !! the [[zzsfx_near]] routine
+      procedure(zzsfx_maxrad) :: udmaxr  !! the [[zzsfx_maxrad]] routine
+      procedure(zzsfx_rayx) :: udrayx  !! the [[zzsfx_rayx]] routine
       integer(ip), intent(in) :: trgcde  !! Target body ID code.
       real(wp), intent(in) :: et  !! Epoch at observer.
       character(*), intent(in) :: abcorr  !! Aberration correction string.
@@ -33833,9 +33833,9 @@ contains
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
-      procedure(zztan_cond) :: udcond  !! the zztan_cond routine
-      procedure(gf_step) :: udstep  !! the gf_step routine
-      procedure(gf_refine) :: udrefn  !! the gf_refine routine
+      procedure(zztan_cond) :: udcond  !! the [[zztan_cond]] routine
+      procedure(gf_step) :: udstep  !! the [[gf_step]] routine
+      procedure(gf_refine) :: udrefn  !! the [[gf_refine]] routine
       logical, intent(in) :: cstep  !! Logical indicating constant step size.
       real(wp), intent(in) :: step  !! Constant step size for finding geometric events.
       real(wp), intent(in) :: start  !! Beginning of the search interval.
@@ -34455,7 +34455,7 @@ contains
        !>   C
        !>   C     Convert the coordinate POS to voxel grid coordinates.
        !>   C
-       !>         CALL ZZTOGRID ( POS, VOXORI, VOXSIZ, POSVOX )
+       !>         CALL [[zztogrid]] ( POS, VOXORI, VOXSIZ, POSVOX )
        !>
        !>## Restrictions
        !>
@@ -44558,7 +44558,7 @@ contains
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
-      procedure(gf_scalar) :: udfunc  !! the gf_scalar routine
+      procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       real(wp), intent(in) :: x  !! Independent variable of UDFUNC.
       real(wp), intent(in) :: dx  !! Interval from X for derivative calculation.
       logical, intent(out) :: isdecr  !! Boolean indicating if the derivative is negative.

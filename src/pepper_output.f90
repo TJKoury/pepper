@@ -1,10 +1,10 @@
-!> Text output to the screen or to files: SPICELIB's WRLINE and CLLINE, and
-!> the program exit of BYEBYE.
+!> Text output to the screen or to files: SPICELIB's [[wrline]] and [[clline]], and
+!> the program exit of [[byebye]].
 !>
 !> A device is 'SCREEN' (standard output), 'NULL' (nothing is written) or
 !> the name of a file. A file that is not open yet is opened as a new file
 !> (with a unit from NEWUNIT=); lines are appended to it while it stays open,
-!> and CLLINE closes it. These routines report their own I/O problems on
+!> and [[clline]] closes it. These routines report their own I/O problems on
 !> standard output, as SPICELIB's do (they are used to report errors, so
 !> they cannot signal any).
 module pepper_output

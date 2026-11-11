@@ -1,8 +1,8 @@
-!> Frame transformations: FRMGET and ROTGET (one frame to its base), FRMCHG and REFCHG (between any two frames), PXFORM and SXFORM.
+!> Frame transformations: [[frmget]] and [[rotget]] (one frame to its base), [[frmchg]] and [[refchg]] (between any two frames), [[pxform]] and [[sxform]].
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_transforms.f90.
 submodule (pepper_instance) pepper_transforms

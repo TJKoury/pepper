@@ -9,7 +9,7 @@
 !> - `string_map`, `int_map`: hash maps from a string or an integer to an
 !>   integer (typically an index into a table), growing and rehashing
 !>   internally;
-!> - `lnkgrow`: enlarge a SPICELIB doubly linked list pool (LNKINI layout)
+!> - `lnkgrow`: enlarge a SPICELIB doubly linked list pool ([[lnkini]] layout)
 !>   without changing the existing nodes.
 !>
 !> Growing reallocates: a pointer or an `associate` name referring to the
@@ -286,7 +286,7 @@ contains
       cell(-1) = m
    end subroutine grow_cell_int
 
-   !> Enlarge a doubly linked list pool (the layout of LNKINI: `pool(2,
+   !> Enlarge a doubly linked list pool (the layout of [[lnkini]]: `pool(2,
    !> lbpool:size)` with the size, the number of free nodes and the head of
    !> the free list in columns 0 and -1) to `size` nodes. The existing
    !> nodes and lists keep their indices; the new nodes are added to the
@@ -294,7 +294,7 @@ contains
    pure subroutine lnkgrow(pool, size)
       integer(ip), allocatable, intent(inout) :: pool(:, :)  !! the pool, `pool(2, lbpool:n)`
       integer(ip), intent(in) :: size  !! the number of nodes needed
-      integer(ip), parameter :: lbpool = -5  !! lower bound of the second dimension (LNKINI)
+      integer(ip), parameter :: lbpool = -5  !! lower bound of the second dimension ([[lnkini]])
       integer(ip), parameter :: forwrd = 1, bckwrd = 2  !! rows of the links
       integer(ip), parameter :: free = 0  !! backward link of a free node
       integer(ip), allocatable :: tmp(:, :)

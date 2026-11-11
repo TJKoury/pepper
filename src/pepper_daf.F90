@@ -3,7 +3,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_daf.f90.
 submodule (pepper_instance) pepper_daf
@@ -26374,10 +26374,10 @@ contains
       end procedure daftb
 
    !> PEPPER: make room in the DAFFA state table for one more search (as
-   !> DAFBFS and DAFBBS need when they start a search of a DAF not in the
+   !> [[dafbfs]] and [[dafbbs]] need when they start a search of a DAF not in the
    !> table): if no entry is free, free the entries of DAFs that are not
    !> open any more (as SPICELIB did), and if none is, double the table.
-   !> Called before the ASSOCIATE blocks of DAFBFS and DAFBBS, since the
+   !> Called before the ASSOCIATE blocks of [[dafbfs]] and [[dafbbs]], since the
    !> table may be reallocated.
    subroutine daffa_room(ctx)
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -26408,9 +26408,9 @@ contains
       if (ctx%daffa%stfptr == nil) call daffa_grow(ctx%daffa)
    end subroutine daffa_room
 
-   !> PEPPER: make room in the DAFANA state table before DAFBNA (which
+   !> PEPPER: make room in the DAFANA state table before [[dafbna]] (which
    !> may need one more entry) enters its ASSOCIATE block: if no entry is
-   !> free and DAFBNA's two ways of freeing one (entries of DAFs no longer
+   !> free and [[dafbna]]'s two ways of freeing one (entries of DAFs no longer
    !> open; entries of DAFs to which no array is being added) would find
    !> none, double the table.
    subroutine dafana_room(ctx)

@@ -2,7 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_segments.f90.
 submodule (pepper_instance) pepper_segments
@@ -5256,7 +5256,7 @@ contains
 
    !> PEPPER: open a DAF (SPK, PCK or CK) for reading, index its segments
    !> and record it as the file searched first (the body of SPKLEF, PCKLOF
-   !> and CKLPF). A file loaded again is closed once (DAFOPR counted a
+   !> and CKLPF). A file loaded again is closed once ([[dafopr]] counted a
    !> second open) and moved to the top. If its segments cannot be read,
    !> the file is closed and not loaded.
    subroutine load_daf_file ( ctx, ix, fname, nd, ni, handle )
@@ -5347,7 +5347,7 @@ contains
    end subroutine unload_daf_file
 
    !> PEPPER: the segment of highest priority for a body that covers a
-   !> time (the search of SPKSFS and PCKSFS). The segment returned last for
+   !> time (the search of [[spksfs]] and [[pcksfs]]). The segment returned last for
    !> the body is the answer while the time stays strictly inside its
    !> re-use interval: the part of its coverage that no segment of higher
    !> priority covers, as in SPICELIB.

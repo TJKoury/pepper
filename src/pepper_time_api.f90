@@ -1,8 +1,8 @@
-!> Time conversion and output: ET2UTC, UTC2ET, TIMOUT, TPICTR, DELTET, and the scanner they use (SCANIT).
+!> Time conversion and output: [[et2utc]], [[utc2et]], [[timout]], [[tpictr]], [[deltet]], and the scanner they use (SCANIT).
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_time_api.f90.
 submodule (pepper_instance) pepper_time_api

@@ -2,7 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_ek_storage.f90.
 submodule (pepper_instance) pepper_ek_storage
@@ -28230,7 +28230,7 @@ contains
       return
       end procedure zzekrp2n
 
-   !> PEPPER: APPNDI for the integer part of an encoded query, which grows
+   !> PEPPER: [[appndi]] for the integer part of an encoded query, which grows
    !> (SPICELIB: a cell of EQIMIN elements, sized for the largest query).
    subroutine append_query ( ctx, item, eqryi )
       use pepper_containers, only: grow_cell

@@ -3,7 +3,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> pepper_instance). Moved here from src/spicelib by
+!> [[pepper_instance]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_files.f90.
 submodule (pepper_instance) pepper_files
@@ -8187,7 +8187,7 @@ contains
       end procedure zzddhluh
 
    !> PEPPER: allocate the unit table of a context, with the instance's
-   !> max_open_files entries (SPICELIB: UTSIZE).
+   !> [[max_open_files]] entries (SPICELIB: UTSIZE).
    subroutine units_ready ( ctx )
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip) :: n

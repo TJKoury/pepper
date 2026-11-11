@@ -1,6 +1,6 @@
 !> Hashing of names (kernel pool variables, ...).
 !>
-!> name_hash computes the same values as SPICELIB's ZZHASH2, without its
+!> [[name_hash]] computes the same values as SPICELIB's ZZHASH2, without its
 !> saved table and divisor: the value of a character is its position in
 !> hash_chars (letters case-insensitive; other characters count 0), and a
 !> blank ends the name.
