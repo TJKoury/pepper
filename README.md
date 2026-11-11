@@ -177,8 +177,8 @@ frame transformations, GF searches, prepared queries). See
 ```fortran
 use pepper_instance, only: ephemeris_provider, frame_provider, pepper_context
 
-type, extends(ephemeris_provider) :: my_orbit  ! your provider type: its components hold the orbit data
-
+type, extends(ephemeris_provider) :: my_orbit
+   !! your provider type: its components hold the orbit data
    real(wp) :: r0(3), v(3)
 contains
    procedure :: state => my_orbit_state  ! (self, ctx, body, et, state, found)
