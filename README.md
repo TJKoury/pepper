@@ -16,6 +16,17 @@ PEPPER can be used from three languages:
 - **C and C++:** a C interface (`include/pepper.h`), generated from the Fortran interfaces (see [The C interface](#the-c-interface)).
 - **Python:** [PepperyPy](python/README.md), with [SpiceyPy](https://github.com/AndrewAnnex/SpiceyPy)'s API, so SpiceyPy programs run with `import pepperypy as spice`, 3 to 5 times faster and safe to call from several threads (see [Python: PepperyPy](#python-pepperypy)).
 
+PEPPER is fast:
+
+- **Against SPICELIB**, both reading kernels from their files, it is 1.4 to 5× faster than NAIF's build for most queries, and about as fast as or faster than SPICELIB compiled with `-O3`. Where SPICELIB searched linear lists, the gains are larger: unloading a kernel is 1,800× faster, and a frame among 1,000 TK frames 39×.
+- **With kernels read into memory** (`in_memory=.true.`), a state takes about 0.25 µs instead of about 10 µs from the files.
+- **Prepared queries** resolve names and frames once, then cost 0.1 to 0.5 µs per state.
+- **Against [ANISE](https://github.com/nyx-space/anise)**, the Rust library, PEPPER's in-memory queries are generally faster, and its prepared queries are 1.1 to 19× faster.
+- **Threads:** queries scale with cores (5.4× on 8 threads). SPICELIB can't be used from several threads at all.
+- **From Python**, PepperyPy is 3 to 5× faster than SpiceyPy for single calls, and up to 30× with prepared queries in batches across threads.
+
+The measurements are in [pepper_vs_spicelib.md](pepper_vs_spicelib.md) and [python/README.md](python/README.md).
+
 > PEPPER is new and experimental. Its interfaces (Fortran, C and Python) may still change. It passes NAIF's test suite and agrees with SPICELIB and SpiceyPy in the comparisons described here, but it has not yet been used for any mission-critical applications. PEPPER is not developed or supported by NAIF, JPL, or NASA.
 
 ## Features
