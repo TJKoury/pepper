@@ -1,7 +1,33 @@
 # JSON text kernels: plan
 
-**Status:** proposed; nothing is implemented. The recommended choices are
-listed under Decisions (D1–D7); D2 is decided.
+**Status:** implemented, with the decisions D1–D7 as proposed.
+
+What was built:
+- `src/pepper_json.f90`: the parser (pure, no state), `json_kernel_parse`;
+- `ldjson` and `is_json_kernel` in `src/pepper_pool.f90`, and the dispatch
+  in LDPOOL;
+- `tools/tk2json.py`: text kernel → JSON (comments kept as `//` lines), and
+  `--reverse`;
+- the tests:
+  - `test/core/test_json_kernels.f90`: the parser and its errors, the same
+    pool from `.tpc` and `.json`, the extension, atomic loads, watches,
+    bodies and frames, KEEPER, meta-kernels;
+  - `test_parallel` now loads its frame kernel as JSON;
+  - `python/tests/test_json_kernels.py`: jsonspice's tests, and the
+    converter both ways on SpiceyPy's test kernels;
+  - a JSON kernel in `capi/test_capi.c`;
+- the README's "JSON kernels" section, and `pepper_vs_spicelib.md`.
+
+Found along the way:
+- **STPOOL and SEPOOL (FURNSH's `PATH_VALUES` and `KERNELS_TO_LOAD`)** read
+  each string through an 80-character buffer, SPICELIB's limit of pool
+  strings. PEPPER's pool strings have any length, so a longer path value or
+  file name was cut silently. They now read the whole string; this applied
+  to text kernels too.
+- **SPICELIB's NPARSD**, the number reader of text kernels, is not correctly
+  rounded (up to a few ulps; `spicelib_bugs.md`). JSON numbers, read with
+  Fortran's READ, are, so the same literal can differ in the last bits.
+  The tests compare to within a few ulps.
 
 ## Origin: jsonspice
 

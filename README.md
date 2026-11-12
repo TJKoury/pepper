@@ -211,6 +211,77 @@ end program legacy_example
 Bugs and inconsistencies found in SPICELIB N0067 are listed in
 `spicelib_bugs.md`; the design and its history are in `plans/plan.md`.
 
+## JSON kernels
+
+A text kernel can be written in JSON instead of SPICE's PCK syntax: any file
+named `*.json` is read as one. The format is the one
+[jsonspice](https://github.com/jacobwilliams/jsonspice) defined for
+SpiceyPy. Here is a text kernel:
+
+```text
+KPL/PCK
+\begindata
+BODY399_RADII   = ( 6378.1366 6378.1366 6356.7519 )
+NAIF_BODY_NAME += 'SPOCK'
+NAIF_BODY_CODE += -1000
+EPOCH           = @2026-NOV-11/12:00
+\begintext
+```
+
+And the same kernel in JSON:
+
+```json5
+// a JSON kernel
+{
+    "BODY399_RADII": [6378.1366, 6378.1366, 6356.7519],
+    "+NAIF_BODY_NAME": "SPOCK",
+    "+NAIF_BODY_CODE": -1000,
+    "EPOCH": "@2026-NOV-11 12:00",
+}
+```
+
+It is loaded like any kernel: `spice%furnsh('masses.json')` in Fortran, and
+`furnsh` from C or Python. FURNSH, UNLOAD, `kdata`/`ktotal` (where it is a
+`TEXT` kernel) and the pool's watches treat it as a text kernel.
+
+| JSON | Kernel pool |
+|---|---|
+| number | a numeric value |
+| `true`, `false` | 1, 0 |
+| string | a character value |
+| `"@..."` | a time: UTC seconds past J2000 (as `@` in text kernels; a bad time is SPICE(BADTIMESPEC)) |
+| array of the above | the values: all strings, or all numbers and times |
+| `"+NAME": ...` | appends to NAME (`+=`) |
+| `null`, a nested object or array, an empty array | an error (SPICE(BADVARASSIGN)) |
+
+The syntax is standard JSON plus `//` comments and trailing commas.
+
+- **Atomic loads:** a kernel with an error (a SPICE(JSONSYNTAXERROR), with
+  its line) loads nothing.
+- **Duplicate keys:** they apply in order, as repeated assignments do in a
+  text kernel.
+- **Meta-kernels:** a JSON kernel that sets `KERNELS_TO_LOAD` is a
+  meta-kernel, with `PATH_VALUES` and `PATH_SYMBOLS` as usual, and it may
+  list both kinds of kernel:
+
+```json5
+{
+    "PATH_VALUES": ["/data/kernels"],
+    "PATH_SYMBOLS": ["K"],
+    "KERNELS_TO_LOAD": ["$K/naif0012.tls", "$K/de440.bsp", "$K/masses.json"],
+}
+```
+
+`tools/tk2json.py` converts a text kernel to JSON, keeping its comments as
+`//` lines. `--reverse` converts JSON back to a text kernel, for SPICELIB and
+other toolkits.
+
+A number can differ in its last bits between the two formats. A JSON
+kernel's numbers are correctly rounded, while SPICELIB's text kernel reader
+is not: it reads `1.3271244004193938E+11` 5 ulps low (`spicelib_bugs.md`).
+The parser is `src/pepper_json.f90`; the design is in
+`plans/json_kernels_plan.md`.
+
 ## Prepared queries
 
 A state or frame query can be resolved once (names, aberration correction,

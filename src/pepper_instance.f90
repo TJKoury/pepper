@@ -4127,6 +4127,10 @@ module pepper_instance
       !> Load the variables contained in a NAIF ASCII kernel file into the
       !> kernel pool. Lines have at most 132 characters; a longer line is
       !> cut without an error (see Restrictions).
+      !>
+      !> PEPPER: a file named `*.json` (in any case) is a JSON kernel (see
+      !> [[pepper_json]]), loaded atomically: on an error nothing in it is
+      !> loaded.
       module subroutine ldpool ( ctx, fname )
       use pepper_inc_zzctr
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7376,6 +7380,9 @@ module pepper_instance
       !> Load one or more SPICE kernels into a program. Lines of text
       !> kernels and meta-kernels have at most 132 characters; a longer
       !> line is cut without an error (see Restrictions).
+      !>
+      !> PEPPER: a file named `*.json` (in any case) is a JSON kernel (see
+      !> [[pepper_json]]), a text kernel or meta-kernel.
       !>
       !> FILSIZ     P   Maximum file name length.
       module subroutine furnsh ( ctx, file )
@@ -20966,6 +20973,9 @@ contains
    !> kernels and meta-kernels have at most 132 characters; a longer
    !> line is cut without an error (see Restrictions).
    !>
+   !> PEPPER: a file named `*.json` is a JSON kernel (see [[pepper_json]]),
+   !> a text kernel or meta-kernel.
+   !>
    !> PEPPER: a method of the instance (SPICELIB's FURNSH changes the
    !> kernels of the program); errors are signaled in the instance's
    !> context (see [[instance_context]]).
@@ -21058,6 +21068,8 @@ contains
    !> Load the variables contained in a NAIF ASCII kernel file into the
    !> kernel pool. Lines have at most 132 characters; a longer line is
    !> cut without an error (see Restrictions).
+   !>
+   !> PEPPER: a file named `*.json` is a JSON kernel (see [[pepper_json]]).
    !>
    !> PEPPER: a method of the instance (SPICELIB's LDPOOL changes the
    !> kernels of the program); errors are signaled in the instance's

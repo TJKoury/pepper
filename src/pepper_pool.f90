@@ -13110,15 +13110,22 @@ contains
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
       call zzctrinc ( ctx, ps%subctr )
-      call rdknew ( ctx, fname )
-      call zzrvar ( ctx, ps, varnam, eof )
-      do while (  ( .not. eof ) .and. (.not. ctx%failed() )   )
-         if ( varnam /= ' ' ) then
-            call pool_changed ( ctx%spice, varnam )
-         end if
+!
+!     PEPPER: a file named *.json is a JSON kernel (see pepper_json).
+!
+      if ( is_json_kernel ( fname ) ) then
+         call ldjson ( ctx, ps, fname )
+      else
+         call rdknew ( ctx, fname )
          call zzrvar ( ctx, ps, varnam, eof )
-      end do
-      call cltext ( ctx,  fname  )
+         do while (  ( .not. eof ) .and. (.not. ctx%failed() )   )
+            if ( varnam /= ' ' ) then
+               call pool_changed ( ctx%spice, varnam )
+            end if
+            call zzrvar ( ctx, ps, varnam, eof )
+         end do
+         call cltext ( ctx,  fname  )
+      end if
       end associate
       end procedure ldpool
 
@@ -17239,5 +17246,164 @@ contains
       if ( ctx%failed() ) return
       call zzctrchk ( ctx, ctx%spice%pool%subctr, usrctr, update )
       end procedure zzpctrck
+
+   !> True if a file is a JSON kernel: its name ends in `.json` (in any
+   !> case). PEPPER: no SPICELIB counterpart.
+   pure logical function is_json_kernel(fname)
+      character(*), intent(in) :: fname  !! the file name
+      integer :: n, k
+      character(5) :: ext
+      is_json_kernel = .false.
+      n = len_trim(fname)
+      if (n < 5) return
+      ext = fname(n - 4:n)
+      do k = 2, 5
+         if (ext(k:k) >= 'A' .and. ext(k:k) <= 'Z') ext(k:k) = achar(iachar(ext(k:k)) + 32)
+      end do
+      is_json_kernel = ext == '.json'
+   end function is_json_kernel
+
+   !> Load a JSON kernel (see [[pepper_json]]) into the kernel pool: the
+   !> text kernel [[ldpool]] reads when the file is named `*.json`.
+   !>
+   !> The load is atomic: the file is read whole and parsed, the `@` times
+   !> are converted and the types of the appends are checked before the
+   !> pool changes, so that a kernel with an error loads nothing (a text
+   !> kernel's variables before an error stay loaded). The errors:
+   !>
+   !>  - SPICE(FILEOPENFAILED), SPICE(FILEREADFAILED): the file;
+   !>  - SPICE(JSONSYNTAXERROR): the JSON;
+   !>  - SPICE(BADVARNAME): an empty name, or one with blanks or characters
+   !>    that are not printable ASCII;
+   !>  - SPICE(BADVARASSIGN): `null`, a nested object or array, an empty
+   !>    array, an array that mixes strings with numbers or times;
+   !>  - SPICE(BADTIMESPEC): a time (`"@..."`) TPARSE does not accept;
+   !>  - SPICE(TYPEMISMATCH): an append (`"+NAME"`) of strings to a numeric
+   !>    variable, or of numbers or times to a character variable.
+   !>
+   !> PEPPER: no SPICELIB counterpart.
+   subroutine ldjson(ctx, ps, fname)
+      use pepper_json, only: json_assignment, json_kernel_parse, json_numeric, json_character
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      type(pool_state), intent(inout) :: ps  !! the kernel pool
+      character(*), intent(in) :: fname  !! the JSON kernel
+      character(:), allocatable :: text, short, long
+      type(json_assignment), allocatable :: items(:)
+      type(string_map) :: kinds
+      character(len=1024) :: errmsg
+      integer(ip) :: nitems, line, k, j, at, kind
+      integer(int64) :: size
+      integer :: unit, ios
+      logical :: ok, found
+
+      ! the file, whole
+      open (newunit=unit, file=trim(fname), access='stream', form='unformatted', action='read', &
+            status='old', iostat=ios)
+      if (ios /= 0) then
+         call ctx%setmsg('The JSON kernel ''#'' could not be opened. IOSTAT was #.')
+         call ctx%errch('#', trim(fname))
+         call ctx%errint('#', ios)
+         call ctx%sigerr('SPICE(FILEOPENFAILED)')
+         return
+      end if
+      inquire (unit=unit, size=size)
+      allocate (character(max(size, 0_int64)) :: text)
+      ios = 0
+      if (size > 0) read (unit, iostat=ios) text
+      close (unit)
+      if (ios /= 0) then
+         call ctx%setmsg('The JSON kernel ''#'' could not be read. IOSTAT was #.')
+         call ctx%errch('#', trim(fname))
+         call ctx%errint('#', ios)
+         call ctx%sigerr('SPICE(FILEREADFAILED)')
+         return
+      end if
+
+      call json_kernel_parse(text, items, nitems, ok, short, long, line)
+      deallocate (text)
+      if (.not. ok) then
+         call ctx%setmsg('Line # of the JSON kernel ''#'': #.')
+         call ctx%errint('#', line)
+         call ctx%errch('#', trim(fname))
+         call ctx%errch('#', long)
+         call ctx%sigerr(short)
+         return
+      end if
+
+      ! the times, and the types of the appends: before anything changes
+      do k = 1, nitems
+         associate (a => items(k))
+            do j = 1, a%n
+               if (.not. a%is_time(j)) cycle
+               errmsg = ' '
+               if (len_trim(a%texts(j)%s) == 0) then
+                  errmsg = 'the time is blank'
+               else
+                  call tparse(ctx, a%texts(j)%s, a%numbers(j), errmsg)
+                  if (ctx%failed()) return
+               end if
+               if (errmsg /= ' ') then
+                  call ctx%setmsg('Encountered ''@#'' while attempting to parse a time for the variable ' &
+                                  //'''#'' on line # of the JSON kernel ''#''. Error message: ''#''')
+                  call ctx%errch('#', a%texts(j)%s)
+                  call ctx%errch('#', a%name)
+                  call ctx%errint('#', a%line)
+                  call ctx%errch('#', trim(fname))
+                  call ctx%errch('#', trim(errmsg))
+                  call ctx%sigerr('SPICE(BADTIMESPEC)')
+                  return
+               end if
+            end do
+            if (a%append) then
+               ! the variable's type: set before in this file, or in the pool
+               call kinds%get(a%name, kind, found)
+               if (.not. found) then
+                  kind = 0
+                  at = ps%find(a%name)
+                  if (at > 0) then
+                     if (ps%vars(at)%kind == pool_numeric) kind = json_numeric
+                     if (ps%vars(at)%kind == pool_character) kind = json_character
+                  end if
+               end if
+               if (kind /= 0 .and. kind /= a%kind) then
+                  call ctx%setmsg('Line # of the JSON kernel ''#'' appends # to the variable ''#'', '// &
+                                  'which has #.')
+                  call ctx%errint('#', a%line)
+                  call ctx%errch('#', trim(fname))
+                  if (a%kind == json_numeric) then
+                     call ctx%errch('#', 'numbers')
+                     call ctx%errch('#', a%name)
+                     call ctx%errch('#', 'strings')
+                  else
+                     call ctx%errch('#', 'strings')
+                     call ctx%errch('#', a%name)
+                     call ctx%errch('#', 'numbers')
+                  end if
+                  call ctx%sigerr('SPICE(TYPEMISMATCH)')
+                  return
+               end if
+            end if
+            call kinds%set(a%name, int(a%kind, ip))
+         end associate
+      end do
+
+      ! the pool
+      do k = 1, nitems
+         associate (a => items(k))
+            call ps%create(a%name, at, found)
+            if (found .and. .not. a%append) call ps%clear_values(at)
+            if (a%kind == json_numeric) then
+               do j = 1, a%n
+                  call ps%add_number(at, a%numbers(j))
+               end do
+            else
+               do j = 1, a%n
+                  call ps%add_string(at, a%texts(j)%s)
+               end do
+            end if
+            call pool_changed(ctx%spice, a%name)
+         end associate
+      end do
+   end subroutine ldjson
 
 end submodule pepper_pool

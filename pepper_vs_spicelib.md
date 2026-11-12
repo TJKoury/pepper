@@ -189,7 +189,7 @@ a size.
 
 ## Bugs fixed along the way
 
-Moving SPICELIB into modules with explicit interfaces exposed 71 bugs and
+Moving SPICELIB into modules with explicit interfaces exposed 72 bugs and
 inconsistencies in N0067. Each is listed, with what PEPPER does, in
 [`spicelib_bugs.md`](spicelib_bugs.md). Most are harmless (arguments passed
 against their declarations, documentation errors), but some give wrong
@@ -622,6 +622,14 @@ fastest time of each operation).
   arguments (a scalar for an array, a double for an integer) are compile
   errors. Like SPICELIB, it is not thread-safe.
 - **The same files.** PEPPER reads and writes the same kernel files.
+- **JSON kernels.** A file named `*.json` is a text kernel written in JSON
+  (the README's "JSON kernels"): FURNSH, LDPOOL, UNLOAD and meta-kernels
+  treat it as a text kernel. SPICELIB cannot read it; `tools/tk2json.py
+  --reverse` converts it to a text kernel. A JSON kernel with an error
+  loads nothing, where a text kernel keeps the variables before the error.
+  Its numbers are correctly rounded; SPICELIB's text kernel reader (NPARSD)
+  is not, so the same literal can differ in the last bits
+  (`spicelib_bugs.md`).
 - **A kernel open on several units.** Each context reads the kernels
   through units of its own, and each instance loads its own: one process
   opens a file on several units. SPICELIB refuses to load a file that is

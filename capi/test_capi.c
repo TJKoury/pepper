@@ -79,6 +79,22 @@ int main(void) {
     CHECK(found && nvalues == 2 && fabs(values[1] - 1.99096871e-7) < 1e-20, "pool_values: %d %d", found,
           nvalues);
 
+    /* a JSON kernel (a file named *.json), loaded and unloaded */
+    {
+        const char *json = "test_capi_kernel.json";
+        FILE *f = fopen(json, "w");
+        fputs("// a JSON kernel\n{ \"CAPI_JSON\": [1.5, \"@2000-01-02T12:00\"], \"+CAPI_JSON\": 3, }\n", f);
+        fclose(f);
+        CHECK(pepper_spice_furnsh(spice, json, -1) == 0, "furnsh of a JSON kernel");
+        CHECK(pepper_pool_values(ctx, "CAPI_JSON", &values, &nvalues, &found) == 0, "pool_values (JSON)");
+        CHECK(found && nvalues == 3 && values[0] == 1.5 && values[1] == 86400.0 && values[2] == 3.0,
+              "pool_values (JSON): %d %d", found, nvalues);
+        CHECK(pepper_spice_unload(spice, json) == 0, "unload of a JSON kernel");
+        CHECK(pepper_pool_values(ctx, "CAPI_JSON", &values, &nvalues, &found) == 0 && !found,
+              "the JSON kernel's variable is gone");
+        remove(json);
+    }
+
     /* an error: a missing file, reported in the instance */
     CHECK(pepper_spice_furnsh(spice, "no-such-kernel.bsp", -1) == 1, "furnsh of a missing file");
     pepper_spice_getmsg(spice, "SHORT", sizeof msg, msg);

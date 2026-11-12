@@ -250,6 +250,11 @@ the threads, each with its own context). The speedups are over SpiceyPy's
   always raised as exceptions.
 - `KernelPool` uses a temporary instance: the current one, its kernels and
   its kernel pool, are untouched (SpiceyPy's clears and reloads them).
+- `furnsh` also loads JSON kernels: a file named `*.json` is a text kernel
+  in [jsonspice](https://github.com/jacobwilliams/jsonspice)'s format,
+  read by PEPPER itself (see the [main README](../README.md#json-kernels)).
+  Unlike jsonspice, a bad `"@"` time is an error, and dicts are not
+  accepted (write the JSON to a file).
 - Limits PEPPER removed are gone: string lengths, the sizes of output cells
   (`lenout`, `room` and the like are accepted and ignored).
 - SpiceyPy's functions that PepperyPy does not have are listed, with the

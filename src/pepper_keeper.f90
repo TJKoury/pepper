@@ -1561,9 +1561,9 @@ contains
 !     SPICELIB Variables
 !
 
-      integer(ip), parameter :: lnsize = 80
-
-      character(lnsize) :: part
+      ! PEPPER: the components are read whole (pool strings have any
+      ! length; SPICELIB's are at most 80 characters, the length of PART).
+      character(:), allocatable :: part
 
       integer(ip) :: cfirst
       integer(ip) :: clast
@@ -1599,9 +1599,7 @@ contains
 !
 !     Check if the first component exists. Return empty output if not.
 !
-      call gcpool ( ctx, item, fidx, 1, n, part, gotit )
-
-      gotit = gotit .and. n > 0
+      call get_part ( fidx, gotit )
 
       if ( .not. gotit ) then
          found  = .false.
@@ -1625,9 +1623,7 @@ contains
 
       do while ( more )
 
-         call gcpool ( ctx, item, comp, 1, n, part, more )
-
-         more = more .and. n > 0
+         call get_part ( comp, more )
 
          if ( more ) then
 
@@ -1676,6 +1672,14 @@ contains
       lidx = comp  - 1
 
       return
+      contains
+      !> The component K of the variable (a blank for an empty string).
+      subroutine get_part ( k, got )
+         integer(ip), intent(in) :: k  !! the component
+         logical, intent(out) :: got  !! it exists (a character variable)
+         call pool_string ( ctx, item, k, part, got )
+         if ( got .and. len ( part ) == 0 ) part = ' '
+      end subroutine get_part
       end procedure sepool
 
       !>## Detailed Input
@@ -1950,9 +1954,9 @@ contains
 !     SPICELIB Variables
 !
 
-      integer(ip), parameter :: lnsize = 80
-
-      character(lnsize) :: part
+      ! PEPPER: the components are read whole (pool strings have any
+      ! length; SPICELIB's are at most 80 characters, the length of PART).
+      character(:), allocatable :: part
 
       integer(ip) :: cfirst
       integer(ip) :: clast
@@ -1992,9 +1996,7 @@ contains
 
       do while ( strno < nth )
 
-         call gcpool ( ctx, item, comp, 1, n, part, gotit )
-
-         gotit = n > 0
+         call get_part ( comp, gotit )
 
          if ( .not. gotit ) then
             nthstr = ' '
@@ -2028,9 +2030,7 @@ contains
 
       do while ( more )
 
-         call gcpool ( ctx, item, comp, 1, n, part, more )
-
-         more = more .and. n > 0
+         call get_part ( comp, more )
 
          if ( more ) then
 
@@ -2077,6 +2077,14 @@ contains
       size = putat - 1
 
       return
+      contains
+      !> The component K of the variable (a blank for an empty string).
+      subroutine get_part ( k, got )
+         integer(ip), intent(in) :: k  !! the component
+         logical, intent(out) :: got  !! it exists (a character variable)
+         call pool_string ( ctx, item, k, part, got )
+         if ( got .and. len ( part ) == 0 ) part = ' '
+      end subroutine get_part
       end procedure stpool
 
       !>## Detailed Input

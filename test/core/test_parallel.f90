@@ -2,7 +2,7 @@
 !> threads at once, each with its own context of one instance.
 !>
 !> A setup context writes and loads small kernels (a leapseconds kernel, an
-!> SPK with two bodies, the second relative to the first, a frame kernel with
+!> SPK with two bodies, the second relative to the first, a JSON frame kernel with
 !> a TK frame, and body names). One context computes the reference results
 !> serially; then OpenMP threads, each with a context of its own, compute the
 !> same queries, interleaved in a different order, twice; then twice more
@@ -26,7 +26,7 @@ program test_parallel
 
    character(*), parameter :: lsk = 'test_parallel.tls'
    character(*), parameter :: spk = 'test_parallel.bsp'
-   character(*), parameter :: fk = 'test_parallel.tf'
+   character(*), parameter :: fk = 'test_parallel_fk.json'  !! a JSON kernel
    character(*), parameter :: spk_mem = 'test_parallel_mem.bsp'  !! the SPK's copy, loaded in memory
    integer, parameter :: nepoch = 2000  !! number of query epochs
    integer, parameter :: nres = 6 + 1 + 3 + 1 + 9 + 9 + 1 + 6 + 9 + 6  !! results per epoch
@@ -248,7 +248,7 @@ contains
    end subroutine copy_file
 
    !> Write the kernels: the leapseconds, the frame kernel (a TK frame and
-   !> the body names) and the SPK.
+   !> the body names, as a JSON kernel) and the SPK.
    subroutine write_kernels()
       integer :: unit
       open (newunit=unit, file=lsk, status='new', action='write')
@@ -261,22 +261,23 @@ contains
       write (unit, '(a)') 'DELTET/DELTA_AT = ( 32, @1999-JAN-1 )'
       write (unit, '(a)') '\begintext'
       close (unit)
+      ! the frame kernel as a JSON kernel
       open (newunit=unit, file=fk, status='new', action='write')
-      write (unit, '(a)') 'KPL/FK'
-      write (unit, '(a)') '\begindata'
-      write (unit, '(a)') 'NAIF_BODY_NAME += ( ''PEPPER_A'', ''PEPPER_B'' )'
-      write (unit, '(a)') 'NAIF_BODY_CODE += ( 1000, 1001 )'
-      write (unit, '(a)') 'FRAME_PEPPER_TK = 1500001'
-      write (unit, '(a)') 'FRAME_1500001_NAME = ''PEPPER_TK'''
-      write (unit, '(a)') 'FRAME_1500001_CLASS = 4'
-      write (unit, '(a)') 'FRAME_1500001_CLASS_ID = 1500001'
-      write (unit, '(a)') 'FRAME_1500001_CENTER = 1000'
-      write (unit, '(a)') 'TKFRAME_1500001_RELATIVE = ''ECLIPJ2000'''
-      write (unit, '(a)') 'TKFRAME_1500001_SPEC = ''ANGLES'''
-      write (unit, '(a)') 'TKFRAME_1500001_UNITS = ''DEGREES'''
-      write (unit, '(a)') 'TKFRAME_1500001_AXES = ( 3, 1, 3 )'
-      write (unit, '(a)') 'TKFRAME_1500001_ANGLES = ( 10.0, 20.0, 30.0 )'
-      write (unit, '(a)') '\begintext'
+      write (unit, '(a)') '// the frame kernel'
+      write (unit, '(a)') '{'
+      write (unit, '(a)') '  "+NAIF_BODY_NAME": ["PEPPER_A", "PEPPER_B"],'
+      write (unit, '(a)') '  "+NAIF_BODY_CODE": [1000, 1001],'
+      write (unit, '(a)') '  "FRAME_PEPPER_TK": 1500001,'
+      write (unit, '(a)') '  "FRAME_1500001_NAME": "PEPPER_TK",'
+      write (unit, '(a)') '  "FRAME_1500001_CLASS": 4,'
+      write (unit, '(a)') '  "FRAME_1500001_CLASS_ID": 1500001,'
+      write (unit, '(a)') '  "FRAME_1500001_CENTER": 1000,'
+      write (unit, '(a)') '  "TKFRAME_1500001_RELATIVE": "ECLIPJ2000",'
+      write (unit, '(a)') '  "TKFRAME_1500001_SPEC": "ANGLES",'
+      write (unit, '(a)') '  "TKFRAME_1500001_UNITS": "DEGREES",'
+      write (unit, '(a)') '  "TKFRAME_1500001_AXES": [3, 1, 3],'
+      write (unit, '(a)') '  "TKFRAME_1500001_ANGLES": [10.0, 20.0, 30.0]'
+      write (unit, '(a)') '}'
       close (unit)
       call write_spk()
    end subroutine write_kernels
