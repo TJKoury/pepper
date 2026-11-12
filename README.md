@@ -82,6 +82,8 @@ pixi run test-parallel  # queries from several OpenMP threads
 pixi run check-threads  # no thread-unsafe constructs (also run by `pixi run test`)
 pixi run bench-parallel # timings from 1, 2, 4 and 8 threads
 pixi run docs           # FORD documentation in doc/
+pixi run -e coverage coverage      # test coverage of src/ (unit tests): build/coverage/html/index.html
+pixi run -e coverage coverage-all  # the same with NAIF's test suite (tspice) too
 ```
 
 PepperyPy, the Python interface, and the C interface build with

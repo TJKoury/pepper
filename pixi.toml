@@ -37,8 +37,17 @@ rust = "*"
 [feature.anise.tasks]
 compare-anise = { cmd = "python bench/compare_anise.py", description = "Speed of PEPPER against ANISE, the Rust library (bench/compare_anise.py; pass --kernels DIR)" }
 
+# Test coverage (lcov; gcov comes with gfortran): pixi run -e coverage coverage
+[feature.coverage.dependencies]
+lcov = "*"
+
+[feature.coverage.tasks]
+coverage = { cmd = "python tools/coverage.py", depends-on = ["clean-stale"], description = "Coverage of src/ by the unit tests: build/coverage/html/index.html (tools/coverage.py)" }
+coverage-all = { cmd = "python tools/coverage.py --tspice", depends-on = ["clean-stale"], description = "Coverage of src/ by the unit tests and NAIF's test suite (tspice): build/coverage/html/index.html" }
+
 [environments]
 anise = { features = ["anise"], solve-group = "default" }
+coverage = { features = ["coverage"], solve-group = "default" }
 python = { features = ["python"], solve-group = "default" }
 
 # PepperyPy, the Python interface (python/, capi/; pepperypy_plan.md):
