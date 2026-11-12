@@ -25,9 +25,9 @@ Found along the way:
   file name was cut silently. They now read the whole string; this applied
   to text kernels too.
 - **SPICELIB's NPARSD**, the number reader of text kernels, is not correctly
-  rounded (up to a few ulps; `spicelib_bugs.md`). JSON numbers, read with
-  Fortran's READ, are, so the same literal can differ in the last bits.
-  The tests compare to within a few ulps.
+  rounded (up to a few ulps; `spicelib_bugs.md`), while JSON numbers, read
+  with Fortran's READ, are. NPARSD now reads its value with READ too, so
+  both formats give the same pool exactly.
 
 ## Origin: jsonspice
 

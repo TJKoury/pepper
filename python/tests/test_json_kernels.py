@@ -5,7 +5,6 @@ and the converter tools/tk2json.py on SpiceyPy's test kernels."""
 import sys
 from pathlib import Path
 
-import numpy as np
 import pytest
 
 import pepperypy
@@ -119,14 +118,8 @@ def test_converter(kernels, tmp_path, which):
             s.furnsh(str(f))
             pools.append(pool(s))
     assert len(pools[0]) > 3
-    # the same names, types and strings; the numbers within a few ulps
-    # (text kernels are read by SPICELIB's NPARSD, which is not correctly
-    # rounded, JSON kernels by Fortran's READ: spicelib_bugs.md)
-    for other in pools[1:]:
-        assert other.keys() == pools[0].keys()
-        for name, (t, vals) in pools[0].items():
-            assert other[name][0] == t, name
-            if t == 'N':
-                np.testing.assert_allclose(other[name][1], vals, rtol=1e-15, atol=0, err_msg=name)
-            else:
-                assert other[name][1] == vals, name
+    # exactly the same: both formats' numbers are correctly rounded (NPARSD
+    # reads with Fortran's READ in PEPPER; SPICELIB's could be a few ulps
+    # off: spicelib_bugs.md)
+    assert pools[1] == pools[0]
+    assert pools[2] == pools[0]

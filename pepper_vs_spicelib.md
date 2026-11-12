@@ -205,6 +205,10 @@ results without an error:
   distinct frames, instead of evicting.
 - ZZEKJSRT fails (SPICE(STRINGTRUNCATED)) to order EK rows by a fixed-count
   string column longer than 32 characters.
+- NPARSD, which reads the numbers of text kernels, is not correctly rounded.
+  It reads the Sun's GM in NAIF's `gm_de431.tpc` (`1.3271244004193938E+11`)
+  5 ulps low. PEPPER reads the value with Fortran's READ, so text kernel
+  constants can differ from SPICELIB's in their last bits.
 
 ## Speed
 
@@ -224,10 +228,13 @@ same compiler as PEPPER, in two ways:
 PEPPER is its release build (`fpm --profile release`). Two programs do the
 same operations in the same order with the same pseudo-random inputs:
 `test/core/bench_compare.f90` (PEPPER) and `bench/bench_spicelib.f90`
-(SPICELIB). Each operation also sums its results; PEPPER's sums agree with
-those of the -O3 SPICELIB to the last bit (the build with NAIF's flags
-differs in the last digits, because `-O3` fuses multiplications and
-additions).
+(SPICELIB). Each operation also sums its results. PEPPER's sums agree with
+those of the -O3 SPICELIB to the last bit, except where a text kernel's
+constants come in (the build with NAIF's flags differs in the last digits,
+because `-O3` fuses multiplications and additions). PEPPER reads text kernel
+numbers correctly rounded, and SPICELIB's NPARSD does not (see "Bugs fixed
+along the way"). So PXFORM to IAU_MARS, which uses `pck00011.tpc`'s
+constants, differs in the 16th digit.
 
 - **Real kernels:** naif0012.tls (leap seconds), pck00011.tpc (text PCK),
   de421.bsp (planets, Moon), earth_latest_high_prec.bpc (ITRF93),
@@ -613,7 +620,9 @@ fastest time of each operation).
   furnsh(...)` becomes `call spice%furnsh(...)`.
 - **The same results.** In the comparison above, every query of PEPPER gives
   the same result, to the last bit, as SPICELIB compiled with the same
-  optimization.
+  optimization, except where text kernel constants differ in their last
+  bits. PEPPER reads text kernel numbers correctly rounded; SPICELIB's NPARSD
+  can be a few ulps off (`spicelib_bugs.md`).
 - **SPICELIB programs.** The module `pepper_legacy` (`src/legacy`) has
   SPICELIB's routines with SPICELIB's names and arguments, on a default
   instance: a SPICELIB program uses it (`use pepper_legacy`) instead of
@@ -627,9 +636,6 @@ fastest time of each operation).
   treat it as a text kernel. SPICELIB cannot read it; `tools/tk2json.py
   --reverse` converts it to a text kernel. A JSON kernel with an error
   loads nothing, where a text kernel keeps the variables before the error.
-  Its numbers are correctly rounded; SPICELIB's text kernel reader (NPARSD)
-  is not, so the same literal can differ in the last bits
-  (`spicelib_bugs.md`).
 - **A kernel open on several units.** Each context reads the kernels
   through units of its own, and each instance loads its own: one process
   opens a file on several units. SPICELIB refuses to load a file that is

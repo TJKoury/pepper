@@ -276,10 +276,8 @@ The syntax is standard JSON plus `//` comments and trailing commas.
 `//` lines. `--reverse` converts JSON back to a text kernel, for SPICELIB and
 other toolkits.
 
-A number can differ in its last bits between the two formats. A JSON
-kernel's numbers are correctly rounded, while SPICELIB's text kernel reader
-is not: it reads `1.3271244004193938E+11` 5 ulps low (`spicelib_bugs.md`).
-The parser is `src/pepper_json.f90`; the design is in
+Numbers are correctly rounded in both formats, so a `.tpc` and its `.json`
+give the same pool. The parser is `src/pepper_json.f90`; the design is in
 `plans/json_kernels_plan.md`.
 
 ## Prepared queries

@@ -12480,6 +12480,12 @@ contains
       !>         the decimal character string representation of the largest
       !>         and smallest double precision numbers.
       !>
+      !>     PEPPER: the value is read with Fortran's READ from the scanned
+      !>     characters, so it is the double nearest the decimal number
+      !>     (SPICELIB's arithmetic could be a few ulps off; see
+      !>     spicelib_bugs.md). What is accepted, and the errors, are
+      !>     SPICELIB's.
+      !>
       !>## Literature References
       !>
       !>     None.
@@ -12590,7 +12596,6 @@ contains
       integer(ip), parameter :: bpistr = 5
       integer(ip), parameter :: epistr = 6
       integer(ip), parameter :: sign = 7
-      integer(ip), parameter :: ibase = 10
       integer(ip), parameter :: nknown = 128
       integer(ip), parameter :: test = 16
       integer(ip), parameter :: errsiz = 160
@@ -12610,19 +12615,13 @@ contains
       real(wp) :: factor
       real(wp) :: intbnd
       real(wp) :: intval
-      real(wp), parameter :: lookup ( 0 : ibase ) = &
-         [ 1.0_wp, 10.0_wp, 100.0_wp, 1000.0_wp, 10000.0_wp, &
-           100000.0_wp, 1000000.0_wp, 10000000.0_wp, 100000000.0_wp, &
-           1000000000.0_wp, 10000000000.0_wp ]
       real(wp) :: maxexp
       real(wp) :: minexp
       real(wp) :: next
-      real(wp) :: smlbnd
       real(wp) :: value
       real(wp) :: values (     nknown )
 
       integer(ip) :: class  ( 0 : nknown )
-      integer(ip) :: exp
       integer(ip) :: i
       integer(ip) :: id
       integer(ip) :: signdx
@@ -12648,6 +12647,11 @@ contains
       logical :: sigchr
       logical :: signok
       logical :: zeroi
+      logical :: ispi
+      character(len(string) + 2) :: buf
+      integer(ip) :: nb
+      integer(ip) :: epos
+      integer :: ios
 
 !
 !     PEPPER: SPICELIB computed these tables and limits on the first call
@@ -12732,7 +12736,6 @@ contains
 !
       maxexp = dint ( dlog10( dpmax ) )
       minexp =-( maxexp + 1 )
-      smlbnd = dpmax/lookup(ibase)
 
       intbnd = base
       next   = intbnd + 1.0_wp
@@ -12770,6 +12773,7 @@ contains
       doint     = .true.
       roundd    = .true.
       roundi    = .true.
+      ispi      = .false.
 !
 !     Here's some other facts.
 !
@@ -13216,6 +13220,7 @@ contains
                signok = .false.
                epiok  = .false.
                mantsa = .true.
+               ispi   = .true.
 
                intval = pi
 
@@ -13270,118 +13275,72 @@ contains
       end if
 
 !
-!     Put together the portion that does not involve an exponent.
+!     PEPPER: the value is read with Fortran's READ, which is correctly
+!     rounded (IEEE round to nearest), from the characters scanned above:
+!     the blanks and commas left out, the exponent marker made 'E', a
+!     mantissa of 1 when there is none ('E10'), an exponent of 0 when the
+!     marker has no digits ('1E'). SPICELIB accumulated the digits and
+!     scaled them by powers of ten in double precision, which can be a few
+!     ulps from the nearest double (1.3271244004193938E+11 was 5 ulps low;
+!     spicelib_bugs.md). The scan above still decides what is a number and
+!     which error is reported.
 !
-!     If
-!        (1) MANTSA = .TRUE., then we had some explicit part of a
-!            number, an  integer part, a fractional part, or both.
+      if ( .not. sigchr ) then
 !
-!        (2) SIGCHR = .TRUE, then we had either:
-!
-!            (a) MANTSA = .TRUE.
-!
-!         or
-!
-!            (b) there was an implicit value associated with the input
-!                string. For example, an exponent character followed
-!                by an optional exponent would produce a valid number:
-!                E+10 --> 1.0d+10. This is due to the fact that this
-!                routine emulates an RPN calculator of popular repute,
-!                not because it is inherently a good idea.
-!
-      if ( mantsa ) then
-!
-!        We had an integer part of the number, a fractional part, or
-!        both, so we need to put them together in an appropriate
-!        fashion.
-!
-         value = intval + ( decval / divisr ) * factor
-
-      else if ( sigchr ) then
-!
-!        We do not have a mantissa, so we had an  implicit mantissa,
-!        see above, so we need to set the value to one.
-!
-         value = 1.0_wp
-
-      else
-!
-!        We have an error. There were no significant characters in the
-!        input character string, and hence we could not parse it into
-!        a number. An example of such a string would be: '+  ,,.,,'.
-!        So, we will set an appropriate error message and return.
+!        No significant characters in the input string (for example
+!        '+  ,,.,,'): not a number.
 !
          error = unrcst
          ptr   = len(string) + 1
          return
-
       end if
-!
-!     Adjust the entered part of the exponent by the amount
-!     we "shifted" the decimal point when we were computing
-!     the integer and decimal values.
-!
-      expval = expval + ecount
-!
-!     Now take care of the exponent contribution to the answer.
-!
-!     If the exponent is negative ...
-!
-      if ( expval < 0 ) then
 
-         do while ( expval < -base )
+      if ( ispi ) then
+         x = dpsign(1)*pi
+         return
+      end if
 
-            value  = value  / lookup(ibase)
-            expval = expval + base
-
-         end do
-
-         value  = value / lookup( -int(expval) )
-!
-!     If the exponent is positive ...
-!
-      else if ( expval > 0 ) then
-
-         do while ( expval > base )
-!
-!           Make sure that a multiply isn't going to create
-!           a number that overflows.
-!
-            if ( value >= smlbnd ) then
-
-               error = toobig
-               ptr   = len(string)+1
-               return
-
-            else
-
-               value  = value  * lookup(ibase)
-               expval = expval - base
-
+      buf  = ' '
+      nb   = 0
+      epos = 0
+      do i = 1, l
+         id = ichar(string(i:i))
+         select case ( class(id) )
+         case ( digit, sign )
+            nb = nb + 1
+            buf(nb:nb) = string(i:i)
+         case ( dpoint )
+!           (a point without digits, as in '-.E3', is part of the
+!           implicit mantissa 1)
+            if ( mantsa ) then
+               nb = nb + 1
+               buf(nb:nb) = '.'
             end if
-
-         end do
-
-         exp = nint(expval)
-!
-!        Again, make sure that a floating point overflow isn't
-!        going to happen.
-!
-         if ( value < dpmax/lookup(exp) ) then
-
-            value = value * lookup(exp)
-
-         else
-
-               error = toobig
-               ptr   = len(string)+1
-               return
-
+         case ( expont )
+            if ( .not. mantsa ) then
+               nb = nb + 1
+               buf(nb:nb) = '1'
+            end if
+            nb   = nb + 1
+            buf(nb:nb) = 'E'
+            epos = nb
+         end select
+      end do
+      if ( epos > 0 ) then
+         if ( verify ( buf(epos+1:nb), '+-' ) == 0 ) then
+            nb = nb + 1
+            buf(nb:nb) = '0'
          end if
-
       end if
 
-      x = dpsign(1)*value
+      read ( buf(1:nb), *, iostat = ios ) value
+      if ( ios /= 0 .or. abs(value) > huge(value) ) then
+         error = toobig
+         ptr   = len(string) + 1
+         return
+      end if
+
+      x = value
 
       return
       end subroutine nparsd
