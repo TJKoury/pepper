@@ -2,6 +2,7 @@
 !$Procedure CBPUT ( Character buffer, put )
 
       SUBROUTINE CBPUT_1 ( BEGIN, END, STRING, BUFFER )
+      use pepper_legacy
       IMPLICIT NONE
 
 
@@ -121,7 +122,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
       INTEGER               SIZECB_1
 
 !

@@ -1,6 +1,7 @@
 !$Procedure F_NPLNPT ( NPLNPT tests )
 
       SUBROUTINE F_NPLNPT ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -81,7 +82,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDIST
 
 !
 !     Other functions

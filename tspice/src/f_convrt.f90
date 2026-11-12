@@ -1,6 +1,7 @@
 !$Procedure F_CONVRT ( CONVRT tests )
 
       SUBROUTINE F_CONVRT ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -79,13 +80,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      TYEAR
 
-      LOGICAL               EQSTR
 
 !
 !     Local Parameters

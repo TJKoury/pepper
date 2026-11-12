@@ -1,6 +1,7 @@
 !$Procedure M2SELC ( META/2 --- select a named word )
 
       SUBROUTINE M2SELC ( NAME, STRING, NTH, FOUND, WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

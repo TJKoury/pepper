@@ -1,6 +1,7 @@
 !$Procedure F_ZZDGFR ( ZZDAFGFR Test Family )
 
       SUBROUTINE F_ZZDGFR ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract

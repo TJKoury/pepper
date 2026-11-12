@@ -1,6 +1,7 @@
 !$Procedure      M2SHLL ( Shell sort an array of Meta/2 syntaxs )
 
       SUBROUTINE M2SHLL ( NDIM, ARRAY )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -113,7 +114,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               POS
 
 !
 !     Local variables

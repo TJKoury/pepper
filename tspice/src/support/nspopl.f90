@@ -1,4 +1,5 @@
       SUBROUTINE NSPOPL ( LOGNAM, VERSN )
+      use pepper_legacy
 
 !
 ! $ Version
@@ -24,9 +25,6 @@
 !     to the default output device.
 !
       LOGICAL               HAVE
-      INTEGER               POS
-      INTEGER               RTRIM
-      LOGICAL               EQSTR
 
       INTEGER               LNGSIZ
       PARAMETER           ( LNGSIZ = 800 )
@@ -64,7 +62,7 @@
       LOGICAL               FOUND
 
 
-      EXTERNAL               NSPWLN
+      EXTERNAL NSPWLN
 !
 !     Empty out the internal error buffers.
 !

@@ -6,6 +6,7 @@
                              NCOD, &
                              ORDNAM, &
                              ORDCOD )
+      use pepper_legacy
 
 ! $ Abstract
 !

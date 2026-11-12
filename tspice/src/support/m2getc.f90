@@ -1,6 +1,7 @@
 !$Procedure M2GETC ( META/2 --- get a named word---character )
 
       SUBROUTINE M2GETC ( NAME, STRING, FOUND, WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

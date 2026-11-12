@@ -89,6 +89,7 @@
 !-&
 
       PROGRAM TSPICE
+      use pepper_legacy, pepper_legacy_failed => failed
       IMPLICIT NONE
 
       INTEGER, PARAMETER :: NFAM = 399
@@ -577,6 +578,7 @@
       END FUNCTION UPPER
 
       SUBROUTINE RUN_FAMILY ( NAME, OK )
+      use pepper_legacy
          CHARACTER(LEN=*), INTENT(IN)  :: NAME
          LOGICAL,          INTENT(OUT) :: OK
 

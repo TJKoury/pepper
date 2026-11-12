@@ -1,6 +1,7 @@
 !$Procedure F_DDHGTU ( ZZDDHGTU Test Family )
 
       SUBROUTINE F_DDHGTU ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract

@@ -1,6 +1,7 @@
 !$Procedure      F_ZZCORSXF ( Test ZZCORSXF )
 
       SUBROUTINE F_ZZCORSXF ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 

@@ -1,13 +1,13 @@
       SUBROUTINE SHOSYM ( TEMPLT )
+      use pepper_legacy
 
       IMPLICIT NONE
       CHARACTER*(*)         TEMPLT
 
 
-      EXTERNAL              NSPWLN
-      EXTERNAL              RETSYM
+      EXTERNAL NSPWLN
+      EXTERNAL RETSYM
 
-      INTEGER               RTRIM
 
       INTEGER               MAXLEN
       PARAMETER           ( MAXLEN = 132 )

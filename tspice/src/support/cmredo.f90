@@ -1,6 +1,7 @@
 !$Procedure      CMREDO ( COMMND loop trap )
 
       SUBROUTINE CMREDO ( COMMND, FROM, TRAP )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -102,7 +103,6 @@
 !     command loop trap
 !
 !-&
-      INTEGER               RTRIM
       LOGICAL               M2WMCH
 
 

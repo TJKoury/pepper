@@ -1,6 +1,7 @@
 !$Procedure F_SPK18 ( SPK data type 18 tests )
 
       SUBROUTINE F_SPK18 ( OK )
+      use pepper_legacy
       use pepper_inc_spk18
 
 ! $ Abstract
@@ -105,7 +106,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters
@@ -189,6 +189,8 @@
       DOUBLE PRECISION      DC     (     ND     )
       DOUBLE PRECISION      DESCR  (     DSCSIZ )
       DOUBLE PRECISION      DPVAL
+      DOUBLE PRECISION DPVAL_A1 ( 1 )
+      EQUIVALENCE ( DPVAL, DPVAL_A1 )
       DOUBLE PRECISION      DSCEPC (     NDSCRT )
       DOUBLE PRECISION      DSCSTS ( 6,  NDSCRT )
       DOUBLE PRECISION      DSCPAK ( 12, NDSCRT )
@@ -1103,7 +1105,7 @@
 
       EADDR = IC(6)
 
-      CALL DAFGDA ( HANDLE, EADDR, EADDR, DPVAL )
+      CALL DAFGDA ( HANDLE, EADDR, EADDR, DPVAL_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       N = NINT(DPVAL )
@@ -1311,7 +1313,7 @@
 
       EADDR = IC(6)
 
-      CALL DAFGDA ( HANDLE, EADDR, EADDR, DPVAL )
+      CALL DAFGDA ( HANDLE, EADDR, EADDR, DPVAL_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       N = NINT(DPVAL )

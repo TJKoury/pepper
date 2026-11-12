@@ -1,9 +1,8 @@
       SUBROUTINE RESSYM ( INPUT, OUTPUT )
+      use pepper_legacy
 
       IMPLICIT NONE
 
-      LOGICAL               FAILED
-      INTEGER               LASTNB
 
       CHARACTER*(*)         INPUT
       CHARACTER*(*)         OUTPUT

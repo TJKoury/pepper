@@ -1,6 +1,7 @@
 !$Procedure F_DSKX02 ( DSKX02 tests )
 
       SUBROUTINE F_DSKX02 ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
@@ -102,11 +103,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPMIN
-      DOUBLE PRECISION      PI
 
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters

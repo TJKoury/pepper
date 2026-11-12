@@ -1,6 +1,7 @@
 !$Procedure F_ET2LST ( Test the SPICELIB routine ET2LST )
 
       SUBROUTINE F_ET2LST ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -87,11 +88,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      TWOPI
 
-      LOGICAL               EQSTR
 !
 !     Other functions
 !
@@ -172,6 +169,8 @@
       DOUBLE PRECISION      SUNRAD
       DOUBLE PRECISION      X      ( 3 )
       DOUBLE PRECISION      RATE
+      DOUBLE PRECISION RATE_A1 ( 1 )
+      EQUIVALENCE ( RATE, RATE_A1 )
 
       INTEGER               BODIES ( NBODS )
       INTEGER               BODNO
@@ -327,7 +326,7 @@
                   BPMKWD = 'BODY#_PM'
                   CALL REPMI ( BPMKWD, '#', BODY, BPMKWD )
 
-                  CALL GDPOOL ( BPMKWD, 2, 1, N, RATE, FOUND )
+                  CALL GDPOOL ( BPMKWD, 2, 1, N, RATE_A1, FOUND )
                   CALL CHCKXC ( .FALSE., ' ', OK )
 
                   IF ( RATE .LT. 0.D0 ) THEN

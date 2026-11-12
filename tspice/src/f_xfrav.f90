@@ -1,6 +1,7 @@
 !$Procedure F_XFRAV ( Frame conversion to angular velocity )
 
       SUBROUTINE F_XFRAV ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -109,9 +110,6 @@
 !
 !     SPICELIB Functions
 !
-      EXTERNAL              PI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      HALFPI
 
 !
 !     Local Variables

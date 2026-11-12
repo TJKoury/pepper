@@ -1,6 +1,7 @@
 !$Procedure F_SYMTBI ( Test SPICELIB integer symbol table routines )
 
       SUBROUTINE F_SYMTBI ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -118,9 +119,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      INTEGER               CARDI
-      INTEGER               SYDIMI
 
 !
 !     Local Parameters
@@ -163,9 +161,13 @@
       INTEGER               TO
       INTEGER               UB
       INTEGER               VAL
+      INTEGER VAL_A1 ( 1 )
+      EQUIVALENCE ( VAL, VAL_A1 )
       INTEGER               XCARD
       INTEGER               XPTRS  (          MAXTAB )
       INTEGER               XVAL
+      INTEGER XVAL_A1 ( 1 )
+      EQUIVALENCE ( XVAL, XVAL_A1 )
       INTEGER               XVALS  (          MAXVAL )
 
       LOGICAL               FOUND
@@ -445,7 +447,7 @@
          CALL REPMI ( TITLE, '#', I, TITLE )
 
          CALL SYGETI( XNAMES(I), &
-                      SYNAMS, SYPTRS, SYVALS, NVALS, VAL, FOUND )
+                      SYNAMS, SYPTRS, SYVALS, NVALS, VAL_A1, FOUND )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          CALL CHCKSL ( TITLE, FOUND, .TRUE., OK )
@@ -463,7 +465,7 @@
       NAME = 'NOT_THERE'
 
       CALL SYGETI( NAME, &
-                   SYNAMS, SYPTRS, SYVALS, NVALS, VAL, FOUND )
+                   SYNAMS, SYPTRS, SYVALS, NVALS, VAL_A1, FOUND )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       TITLE = 'Was name # found?'
@@ -486,7 +488,7 @@
          CALL T_ITHSYM ( I, MAXTAB, NAME )
 
          CALL SYGETI ( NAME,  SYNAMS, SYPTRS, SYVALS, &
-                       NVALS, XVAL,   FOUND           )
+                       NVALS, XVAL_A1,   FOUND           )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          TITLE = 'Was name # found?'
@@ -511,7 +513,7 @@
 !        Make sure the old symbol is gone.
 !
          CALL SYGETI ( NAME,  SYNAMS, SYPTRS, SYVALS, &
-                       NVALS, VAL,    FOUND           )
+                       NVALS, VAL_A1,    FOUND           )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          TITLE = 'Was name # found?'
@@ -527,7 +529,7 @@
 !        Get the name and value of the ith symbol.
 !
          CALL SYGETI ( NEWNAM,  SYNAMS, SYPTRS, SYVALS, &
-                       NVALS,   VAL,    FOUND           )
+                       NVALS,   VAL_A1,    FOUND           )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          TITLE = 'Was name # found?'
@@ -572,7 +574,7 @@
          CALL REPMI ( TITLE, '#', I, TITLE )
 
          CALL SYGETI( XNAMES(I), &
-                      SYNAMS, SYPTRS, SYVALS, NVALS, VAL, FOUND )
+                      SYNAMS, SYPTRS, SYVALS, NVALS, VAL_A1, FOUND )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          CALL CHCKSL ( TITLE, FOUND, .FALSE., OK )
@@ -586,7 +588,7 @@
             CALL REPMI ( TITLE, '#', I, TITLE )
 
             CALL SYGETI ( XNAMES(J), &
-                          SYNAMS, SYPTRS, SYVALS, NVALS, VAL, FOUND )
+                          SYNAMS, SYPTRS, SYVALS, NVALS, VAL_A1, FOUND )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             CALL CHCKSL ( TITLE, FOUND, .TRUE., OK )
@@ -1976,7 +1978,7 @@
       END DO
 
 
-      CALL SYPUTI ( 'NEWNAME', I, 1, SYNAMS, SYPTRS, SYVALS )
+      CALL SYPUTI ( 'NEWNAME', [I], 1, SYNAMS, SYPTRS, SYVALS )
 
       CALL CHCKXC ( .TRUE., 'SPICE(NAMETABLEFULL)', OK )
 
@@ -1999,7 +2001,7 @@
 
       END DO
 
-      CALL SYPUTI ( 'NEWNAME', I, 1, SYNAMS, SYPTRS, SYVALS )
+      CALL SYPUTI ( 'NEWNAME', [I], 1, SYNAMS, SYPTRS, SYVALS )
 
       CALL CHCKXC ( .TRUE., 'SPICE(POINTERTABLEFULL)', OK )
 
@@ -2023,7 +2025,7 @@
 
       END DO
 
-      CALL SYPUTI ( 'NEWNAME', I, 1, SYNAMS, SYPTRS, SYVALS )
+      CALL SYPUTI ( 'NEWNAME', [I], 1, SYNAMS, SYPTRS, SYVALS )
 
       CALL CHCKXC ( .TRUE., 'SPICE(VALUETABLEFULL)', OK )
 
@@ -2049,7 +2051,7 @@
 
       END DO
 
-      CALL SYPUTI ( 'NEWNAME', I, -1, SYNAMS, SYPTRS, SYVALS )
+      CALL SYPUTI ( 'NEWNAME', [I], -1, SYNAMS, SYPTRS, SYVALS )
 
       CALL CHCKXC ( .TRUE., 'SPICE(INVALIDARGUMENT)', OK )
 
@@ -2268,6 +2270,7 @@
 !     leading 'X' characters up to the length of the string NAME.
 !
       SUBROUTINE T_ITHSYM ( N, NMAX, NAME )
+      use pepper_legacy
       IMPLICIT NONE
 
       INTEGER               N

@@ -1,6 +1,7 @@
 !$Procedure F_AZLCPV ( Test AZ/EL constant position/velocity routines )
 
       SUBROUTINE F_AZLCPV ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_zzabcorr
 
 ! $ Abstract
@@ -97,10 +98,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      JYEAR
 
 !
 !     Local parameters

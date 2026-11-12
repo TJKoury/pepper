@@ -1,6 +1,7 @@
 !$Procedure F_STMP03 ( STMP03 tests )
 
       SUBROUTINE F_STMP03 ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -81,7 +82,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
 
 
 !

@@ -1,6 +1,7 @@
 !$Procedure ZZCKCVR2 ( Private --- C-kernel segment coverage, type 02 )
 
       SUBROUTINE ZZCKCVR2 ( HANDLE, ARRBEG, ARREND, SCHEDL )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -122,7 +123,6 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local Parameters

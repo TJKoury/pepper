@@ -1,6 +1,7 @@
 !$Procedure F_CHBIGR ( CHBIGR tests )
 
       SUBROUTINE F_CHBIGR ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -122,7 +123,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
 
 
 !

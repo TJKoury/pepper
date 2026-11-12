@@ -1,6 +1,7 @@
 !$Procedure      F_GFBAIL ( Test GFBAIL )
 
       SUBROUTINE F_GFBAIL ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -87,7 +88,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               GFBAIL
 
 !
 !     Local parameters

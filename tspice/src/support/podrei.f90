@@ -1,6 +1,7 @@
 !$Procedure      PODREI ( Pod, remove elements, integer )
 
       SUBROUTINE PODREI ( N, LOC, POD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -124,7 +125,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local variables

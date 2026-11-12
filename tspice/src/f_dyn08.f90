@@ -1,6 +1,7 @@
 !$Procedure F_DYN08 ( Dynamic Frame Test Family 08 )
 
       SUBROUTINE F_DYN08 ( OK )
+      use pepper_legacy
       use pepper_inc_errhnd
       use pepper_inc_zzdyn
 
@@ -1661,7 +1662,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS )
+      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS(1) )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -1678,7 +1679,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_2', INVALS )
+      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_2', INVALS(1) )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -1707,7 +1708,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS )
+      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS(1) )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -1723,7 +1724,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_2', INVALS )
+      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_2', INVALS(1) )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -1757,7 +1758,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS )
+      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS(1) )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -1774,7 +1775,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_2', INVALS )
+      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_2', INVALS(1) )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -1796,7 +1797,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_3', INVALS )
+      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_3', INVALS(1) )
 
       CALL CHCKXC ( .TRUE., 'SPICE(KERNELVARNOTFOUND)', OK )
 
@@ -1821,7 +1822,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS )
+      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS(1) )
 
       CALL CHCKXC ( .TRUE., 'SPICE(BADVARIABLESIZE)', OK )
 
@@ -1844,7 +1845,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS )
+      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS(1) )
 
       CALL CHCKXC ( .TRUE., 'SPICE(BADVARIABLESIZE)', OK )
 
@@ -1869,7 +1870,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS )
+      CALL ZZDYNBID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS(1) )
 
       CALL CHCKXC ( .TRUE., 'SPICE(NOTRANSLATION)', OK )
 
@@ -1914,7 +1915,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS )
+      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS(1) )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -1931,7 +1932,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_2', INVALS )
+      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_2', INVALS(1) )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -1962,7 +1963,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS )
+      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS(1) )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -1978,7 +1979,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_2', INVALS )
+      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_2', INVALS(1) )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -2013,7 +2014,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS )
+      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS(1) )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -2030,7 +2031,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_2', INVALS )
+      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_2', INVALS(1) )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -2055,7 +2056,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_3', INVALS )
+      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_3', INVALS(1) )
 
       CALL CHCKXC ( .TRUE., 'SPICE(KERNELVARNOTFOUND)', OK )
 
@@ -2080,7 +2081,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS )
+      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS(1) )
 
       CALL CHCKXC ( .TRUE., 'SPICE(BADVARIABLESIZE)', OK )
 
@@ -2103,7 +2104,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS )
+      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS(1) )
 
       CALL CHCKXC ( .TRUE., 'SPICE(BADVARIABLESIZE)', OK )
 
@@ -2128,7 +2129,7 @@
 !
 !     Call the body ID fetch routine for required arguments.
 !
-      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS )
+      CALL ZZDYNFID ( FRAMNM, FRCODE, 'IN_ARRAY_1', INVALS(1) )
 
       CALL CHCKXC ( .TRUE., 'SPICE(NOTRANSLATION)', OK )
 

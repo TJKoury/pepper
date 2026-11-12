@@ -1,6 +1,7 @@
 !$Procedure      CMSTUP ( Command Loop Startup )
 
       SUBROUTINE CMSTUP
+      use pepper_legacy
 
 ! $ Abstract
 !

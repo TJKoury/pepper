@@ -1,6 +1,7 @@
 !$Procedure T_ZZSTLABN ( Test utility, numeric stellar aberration )
 
       SUBROUTINE T_ZZSTLABN ( XMIT, ACCOBS, VOBS, STARG, SCORR, DSCORR )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -170,12 +171,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
 
 !
 !     Local parameters

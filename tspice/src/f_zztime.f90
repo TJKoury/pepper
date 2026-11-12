@@ -1,6 +1,7 @@
 !$Procedure      F_ZZTIME ( Family of tests for ZZTIME )
 
       SUBROUTINE F_ZZTIME ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -117,19 +118,7 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
 
-      LOGICAL               ZZTOKNS
-      LOGICAL               ZZGREP
-      LOGICAL               ZZNOTE
-      LOGICAL               ZZREMT
-      LOGICAL               ZZCMBT
-      LOGICAL               ZZSUBT
-      LOGICAL               ZZISPT
-      LOGICAL               ZZIST
-      LOGICAL               ZZVALT
-      LOGICAL               ZZUNPCK
-      LOGICAL               ZZREPT
 
 !
 !     Parameters from ZZTIME: maximum number of tokens that a valid

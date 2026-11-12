@@ -1,6 +1,7 @@
 !$Procedure      T_PCK09 (Create a test text PCK based on pck00009.tpc )
 
       SUBROUTINE T_PCK09 ( NAMEPC, LOADPC, KEEPPC )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -112,7 +113,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Test Utility Functions

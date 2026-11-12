@@ -2,6 +2,7 @@
 
       SUBROUTINE REGLON ( NIVALS, BOUNDS, MAXN,   NOUT, &
                           MINLON, MAXLON, OUTBDS, SRCS )
+      use pepper_legacy
       use pepper_inc_dsktol
 
 ! $ Abstract
@@ -179,14 +180,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPMIN
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local variables

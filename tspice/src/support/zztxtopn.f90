@@ -1,6 +1,7 @@
 !$Procedure ZZTXTOPN ( Private Routine -- Text file, open new )
 
       SUBROUTINE ZZTXTOPN ( FNAME, UNIT, SUCCSS )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -234,7 +235,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local variables

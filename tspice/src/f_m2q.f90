@@ -1,6 +1,7 @@
 !$Procedure      F_M2Q ( Family of tests for the SPICE routine M2Q)
 
       SUBROUTINE F_M2Q ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

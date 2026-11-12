@@ -1,6 +1,7 @@
 !$Procedure F_ZZGETELM ( Family of tests for ZZGETELM)
 
       SUBROUTINE F_ZZGETELM ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

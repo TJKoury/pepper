@@ -1,6 +1,7 @@
 !$Procedure      F_KEEPER ( Test the entry points of KEEPER )
 
       SUBROUTINE F_KEEPER ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -96,7 +97,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDI
 
 !
 !     Local parameters

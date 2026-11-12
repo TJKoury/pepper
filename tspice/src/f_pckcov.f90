@@ -2,6 +2,7 @@
 !$Procedure      F_PCKCOV ( PCKCOV tests )
 
       SUBROUTINE F_PCKCOV ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -22,8 +23,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      INTEGER               CARDI
 
 !
 !     Local parameters

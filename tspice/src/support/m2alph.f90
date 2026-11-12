@@ -1,6 +1,7 @@
 !$Procedure      M2ALPH ( Determine if a word starts with a letter)
 
       LOGICAL FUNCTION M2ALPH ( WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -108,7 +109,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LTRIM
 
 !
 !     Local variables

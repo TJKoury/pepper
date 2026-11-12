@@ -1,6 +1,7 @@
 !$Procedure      F_ZZOCCED ( Test ellipsoid occultation routine )
 
       SUBROUTINE F_ZZOCCED ( OK )
+      use pepper_legacy
       use pepper_inc_zzocced
       IMPLICIT NONE
 
@@ -27,8 +28,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      INTEGER               ZZOCCED
 
 !
 !     Local parameters
@@ -4744,6 +4743,7 @@
 !
       SUBROUTINE XINPUT ( VIEWPT, CENTR1, SEMAX1, CENTR2, SEMAX2, &
                           OVIEW,  OCTR1,  OAX1,   OCTR2,  OAX2    )
+      use pepper_legacy
       IMPLICIT NONE
 
       DOUBLE PRECISION      VIEWPT ( 3 )
@@ -4760,7 +4760,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      RPD
 
 !
 !     Local variables

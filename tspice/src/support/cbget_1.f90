@@ -2,6 +2,7 @@
 !$Procedure CBGET ( Character buffer, get )
 
       SUBROUTINE CBGET_1 ( BEGIN, END, BUFFER, STRING  )
+      use pepper_legacy
       IMPLICIT NONE
 
 
@@ -119,7 +120,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
       INTEGER               SIZECB_1
 
 !

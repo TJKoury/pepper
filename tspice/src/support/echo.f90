@@ -1,6 +1,7 @@
 !$Procedure      ECHO ( Echo the translation of a string )
 
       SUBROUTINE ECHO ( STRING, TRANSL )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -119,7 +120,7 @@
 !     Echo translated commands.
 !
 !-&
-      EXTERNAL              NSPWLN
+      EXTERNAL NSPWLN
 
       INTEGER               LNSIZE
       PARAMETER           ( LNSIZE = 80 )

@@ -1,6 +1,7 @@
 !$Procedure      PODONI ( Pod, offset and number, integer )
 
       SUBROUTINE PODONI ( POD, OFFSET, NUMBER )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -127,8 +128,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               CARDI
 
 !
 !     Local parameters

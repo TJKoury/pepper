@@ -1,6 +1,7 @@
 !$Procedure TSETUP ( Test utility setup )
 
       SUBROUTINE TSETUP ( CMLINE, LOGNAM, VERSN )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

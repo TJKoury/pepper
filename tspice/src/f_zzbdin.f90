@@ -1,6 +1,7 @@
 !$Procedure F_ZZBDIN ( Body Name/Code Initialization Test Family )
 
       SUBROUTINE F_ZZBDIN ( OK )
+      use pepper_legacy
       use pepper_inc_zzbodtrn
 
 ! $ Abstract

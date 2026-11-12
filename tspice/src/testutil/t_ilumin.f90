@@ -3,6 +3,7 @@
       SUBROUTINE T_ILUMIN ( METHOD, TARGET, ET,     FIXREF, &
                             ABCORR, OBSRVR, SPOINT, TRGEPC, &
                             SRFVEC, PHASE,  SOLAR,  EMISSN  )
+      use pepper_legacy
       use pepper_inc_zzabcorr
 
 ! $ Abstract
@@ -718,14 +719,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      TOUCHD
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local parameters

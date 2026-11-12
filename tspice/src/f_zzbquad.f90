@@ -1,6 +1,7 @@
 !$Procedure F_ZZBQUAD ( ZZBQUAD tests )
 
       SUBROUTINE F_ZZBQUAD ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

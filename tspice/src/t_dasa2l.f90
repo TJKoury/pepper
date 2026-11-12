@@ -2,6 +2,7 @@
 
       SUBROUTINE T_DASA2L (  HANDLE,  TYPE,    ADDRSS, &
                              CLBASE,  CLSIZE,  RECNO,  WORDNO  )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -278,7 +279,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHI
 
 !
 !     Local parameters
@@ -368,6 +368,8 @@
       INTEGER               NTYPES
       INTEGER               NW     ( 3 )
       INTEGER               NXTREC
+      INTEGER NXTREC_A1 ( 1 )
+      EQUIVALENCE ( NXTREC, NXTREC_A1 )
       INTEGER               PREV   ( 3 )
       INTEGER               PRVHAN
       INTEGER               PRVTYP
@@ -808,7 +810,7 @@
 !              with this pointer.  Get the address range for the
 !              specified type covered by this next directory record.
 !
-               CALL DASRRI ( HANDLE, NREC, FWDLOC, FWDLOC, NXTREC )
+               CALL DASRRI ( HANDLE, NREC, FWDLOC, FWDLOC, NXTREC_A1 )
 
                NREC  = NXTREC
                NDIRS = NDIRS + 1

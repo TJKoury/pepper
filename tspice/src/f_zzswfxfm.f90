@@ -1,6 +1,7 @@
 !$Procedure F_ZZSWFXFM ( ZZSWFXFM tests )
 
       SUBROUTINE F_ZZSWFXFM ( OK )
+      use pepper_legacy
       use pepper_inc_errhnd
 
 ! $ Abstract
@@ -88,8 +89,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
-      LOGICAL               ODD
 
 !
 !     Local Parameters
@@ -202,6 +201,8 @@
       INTEGER               CKID
       INTEGER               FIDLST ( MAXFRM )
       INTEGER               FRAMID
+      INTEGER FRAMID_A1 ( 1 )
+      EQUIVALENCE ( FRAMID, FRAMID_A1 )
       INTEGER               FREE
       INTEGER               FRPOOL ( LBSNGL : MAXFRM )
       INTEGER               HANDLE
@@ -1170,7 +1171,7 @@
       //           'transformation lookups for each base frame of ' &
       //           'frame SWITCH0.' )
 
-      CALL PDPOOL ( 'X', 1, 0.D0 )
+      CALL PDPOOL ( 'X', 1, [0.D0] )
 
 !
 !     We expect to get the identity matrix for each call.
@@ -1863,11 +1864,11 @@
 !
       NBASES = 15000
 
-      CALL PIPOOL ( 'FRAME_SWITCH_MAXBASE',   1, 1400010          )
+      CALL PIPOOL ( 'FRAME_SWITCH_MAXBASE',   1, [1400010]          )
       CALL PCPOOL ( 'FRAME_1400010_NAME',     1, 'SWITCH_MAXBASE' )
-      CALL PIPOOL ( 'FRAME_1400010_CLASS',    1, 6                )
-      CALL PIPOOL ( 'FRAME_1400010_CLASS_ID', 1, 1400010          )
-      CALL PIPOOL ( 'FRAME_1400010_CENTER',   1, 0                )
+      CALL PIPOOL ( 'FRAME_1400010_CLASS',    1, [6]                )
+      CALL PIPOOL ( 'FRAME_1400010_CLASS_ID', 1, [1400010]          )
+      CALL PIPOOL ( 'FRAME_1400010_CENTER',   1, [0]                )
       CALL CHCKXC ( .FALSE., ' ', OK )
 !
 !     17 is the ID code of ECLIPJ2000.
@@ -1962,7 +1963,7 @@
 
          FRAMID = 1500000 + I
 
-         CALL PIPOOL ( 'FRAME_'//FRNAME, 1, FRAMID )
+         CALL PIPOOL ( 'FRAME_'//FRNAME, 1, FRAMID_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          KVNAME = 'FRAME_#_NAME'
@@ -1972,17 +1973,17 @@
 
          KVNAME = 'FRAME_#_CLASS'
          CALL REPMI  ( KVNAME, '#', FRAMID, KVNAME )
-         CALL PIPOOL ( KVNAME,      1, 6      )
+         CALL PIPOOL ( KVNAME,      1, [6]      )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          KVNAME = 'FRAME_#_CLASS_ID'
          CALL REPMI  ( KVNAME, '#', FRAMID, KVNAME )
-         CALL PIPOOL ( KVNAME,      1, FRAMID )
+         CALL PIPOOL ( KVNAME,      1, FRAMID_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          KVNAME = 'FRAME_#_CENTER'
          CALL REPMI  ( KVNAME, '#', FRAMID, KVNAME )
-         CALL PIPOOL ( KVNAME,      1, 0      )
+         CALL PIPOOL ( KVNAME,      1, [0]      )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          KVNAME = 'FRAME_#_ALIGNED_WITH'
@@ -2053,7 +2054,7 @@
 
          FRAMID = 1600000 + I
 
-         CALL PIPOOL ( 'FRAME_'//FRNAME, 1, FRAMID )
+         CALL PIPOOL ( 'FRAME_'//FRNAME, 1, FRAMID_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          KVNAME = 'FRAME_#_NAME'
@@ -2063,17 +2064,17 @@
 
          KVNAME = 'FRAME_#_CLASS'
          CALL REPMI  ( KVNAME, '#', FRAMID, KVNAME )
-         CALL PIPOOL ( KVNAME,      1, 6      )
+         CALL PIPOOL ( KVNAME,      1, [6]      )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          KVNAME = 'FRAME_#_CLASS_ID'
          CALL REPMI  ( KVNAME, '#', FRAMID, KVNAME )
-         CALL PIPOOL ( KVNAME,      1, FRAMID )
+         CALL PIPOOL ( KVNAME,      1, FRAMID_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          KVNAME = 'FRAME_#_CENTER'
          CALL REPMI  ( KVNAME, '#', FRAMID, KVNAME )
-         CALL PIPOOL ( KVNAME,      1, 0      )
+         CALL PIPOOL ( KVNAME,      1, [0]      )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          KVNAME = 'FRAME_#_ALIGNED_WITH'
@@ -2141,11 +2142,11 @@
       CALL FURNSH ( FK0 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL PIPOOL ( 'FRAME_SWITCH_BINARY',    1, 1700000         )
+      CALL PIPOOL ( 'FRAME_SWITCH_BINARY',    1, [1700000]         )
       CALL PCPOOL ( 'FRAME_1700000_NAME',     1, 'SWITCH_BINARY' )
-      CALL PIPOOL ( 'FRAME_1700000_CLASS',    1, 6               )
-      CALL PIPOOL ( 'FRAME_1700000_CLASS_ID', 1, 1700000         )
-      CALL PIPOOL ( 'FRAME_1700000_CENTER',   1, 0               )
+      CALL PIPOOL ( 'FRAME_1700000_CLASS',    1, [6]               )
+      CALL PIPOOL ( 'FRAME_1700000_CLASS_ID', 1, [1700000]         )
+      CALL PIPOOL ( 'FRAME_1700000_CENTER',   1, [0]               )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 
@@ -2289,7 +2290,7 @@
 !           Update the kernel pool. This will force storage of the
 !           frame parameters at new locations.
 !
-            CALL PIPOOL ( 'XYZ', 1, 3 )
+            CALL PIPOOL ( 'XYZ', 1, [3] )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
          END IF
@@ -2330,11 +2331,11 @@
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 
-      CALL PIPOOL ( 'FRAME_SWITCH_BINARY2',   1, 1800000         )
+      CALL PIPOOL ( 'FRAME_SWITCH_BINARY2',   1, [1800000]         )
       CALL PCPOOL ( 'FRAME_1800000_NAME',     1, 'SWITCH_BINARY2' )
-      CALL PIPOOL ( 'FRAME_1800000_CLASS',    1, 6               )
-      CALL PIPOOL ( 'FRAME_1800000_CLASS_ID', 1, 1800000         )
-      CALL PIPOOL ( 'FRAME_1800000_CENTER',   1, 0               )
+      CALL PIPOOL ( 'FRAME_1800000_CLASS',    1, [6]               )
+      CALL PIPOOL ( 'FRAME_1800000_CLASS_ID', 1, [1800000]         )
+      CALL PIPOOL ( 'FRAME_1800000_CENTER',   1, [0]               )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 
@@ -2450,7 +2451,7 @@
 !           Update the kernel pool. This will force storage of the
 !           frame parameters at new locations.
 !
-            CALL PIPOOL ( 'XYZ', 1, 3 )
+            CALL PIPOOL ( 'XYZ', 1, [3] )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
          END IF
@@ -2475,11 +2476,11 @@
       //           '(PEPPER: no error).' )
 
 
-      CALL PIPOOL ( 'FRAME_TOOBIG1',          1, 1400011   )
+      CALL PIPOOL ( 'FRAME_TOOBIG1',          1, [1400011]   )
       CALL PCPOOL ( 'FRAME_1400011_NAME',     1, 'TOOBIG1' )
-      CALL PIPOOL ( 'FRAME_1400011_CLASS',    1, 6         )
-      CALL PIPOOL ( 'FRAME_1400011_CLASS_ID', 1, 1400011   )
-      CALL PIPOOL ( 'FRAME_1400011_CENTER',   1, 0         )
+      CALL PIPOOL ( 'FRAME_1400011_CLASS',    1, [6]         )
+      CALL PIPOOL ( 'FRAME_1400011_CLASS_ID', 1, [1400011]   )
+      CALL PIPOOL ( 'FRAME_1400011_CENTER',   1, [0]         )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       NBASES = MAXBAS + 1
@@ -2512,11 +2513,11 @@
       //           'is invalid' )
 
 
-      CALL PIPOOL ( 'FRAME_BADSTOP1',         1, 1400012    )
+      CALL PIPOOL ( 'FRAME_BADSTOP1',         1, [1400012]    )
       CALL PCPOOL ( 'FRAME_1400012_NAME',     1, 'BADSTOP1' )
-      CALL PIPOOL ( 'FRAME_1400012_CLASS',    1, 6                )
-      CALL PIPOOL ( 'FRAME_1400012_CLASS_ID', 1, 1400012          )
-      CALL PIPOOL ( 'FRAME_1400012_CENTER',   1, 0                )
+      CALL PIPOOL ( 'FRAME_1400012_CLASS',    1, [6]                )
+      CALL PIPOOL ( 'FRAME_1400012_CLASS_ID', 1, [1400012]          )
+      CALL PIPOOL ( 'FRAME_1400012_CENTER',   1, [0]                )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       NBASES = 10
@@ -2565,11 +2566,11 @@
       //           'at index 200 is invalid.' )
 
 
-      CALL PIPOOL ( 'FRAME_BADSTOP1',         1, 1400012    )
+      CALL PIPOOL ( 'FRAME_BADSTOP1',         1, [1400012]    )
       CALL PCPOOL ( 'FRAME_1400012_NAME',     1, 'BADSTOP1' )
-      CALL PIPOOL ( 'FRAME_1400012_CLASS',    1, 6                )
-      CALL PIPOOL ( 'FRAME_1400012_CLASS_ID', 1, 1400012          )
-      CALL PIPOOL ( 'FRAME_1400012_CENTER',   1, 0                )
+      CALL PIPOOL ( 'FRAME_1400012_CLASS',    1, [6]                )
+      CALL PIPOOL ( 'FRAME_1400012_CLASS_ID', 1, [1400012]          )
+      CALL PIPOOL ( 'FRAME_1400012_CENTER',   1, [0]                )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       NBASES = 200
@@ -2618,11 +2619,11 @@
       //           'specification: center is missing.' )
 
 
-      CALL PIPOOL ( 'FRAME_BADBASE1',         1, 1400013    )
+      CALL PIPOOL ( 'FRAME_BADBASE1',         1, [1400013]    )
       CALL PCPOOL ( 'FRAME_1400013_NAME',     1, 'BADBASE1' )
-      CALL PIPOOL ( 'FRAME_1400013_CLASS',    1, 6          )
-      CALL PIPOOL ( 'FRAME_1400013_CLASS_ID', 1, 1400013    )
-      CALL PIPOOL ( 'FRAME_1400013_CENTER',   1, 0          )
+      CALL PIPOOL ( 'FRAME_1400013_CLASS',    1, [6]          )
+      CALL PIPOOL ( 'FRAME_1400013_CLASS_ID', 1, [1400013]    )
+      CALL PIPOOL ( 'FRAME_1400013_CENTER',   1, [0]          )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       NBASES = 10
@@ -2660,7 +2661,7 @@
 !
 !     Make sure the system recovers after the center is restored.
 !
-      CALL PIPOOL ( 'FRAME_1400000_CENTER',  1, 0 )
+      CALL PIPOOL ( 'FRAME_1400000_CENTER',  1, [0] )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL ZZSWFXFM ( 1400013, 0.D0, 6, XFORM, OUTFRM, FOUND )
@@ -2711,7 +2712,7 @@
 !
 !     Make sure the system recovers after the center is restored.
 !
-      CALL PIPOOL ( 'FRAME_1400000_CENTER',  1, 0 )
+      CALL PIPOOL ( 'FRAME_1400000_CENTER',  1, [0] )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       ET1 = DSTPBF(NBASES)

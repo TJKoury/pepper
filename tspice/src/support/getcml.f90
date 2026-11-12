@@ -1,6 +1,7 @@
 !$Procedure      GETCML ( Get the command line )
 
       SUBROUTINE GETCML ( LINE )
+      use pepper_legacy
 
 ! $ Abstract
 !

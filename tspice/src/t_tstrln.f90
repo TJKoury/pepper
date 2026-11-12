@@ -1,6 +1,7 @@
 !$Procedure T_TSTRLN (Test RESLUN)
 
       SUBROUTINE T_TSTRLN ( LUN, RESRVD )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -122,8 +123,6 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
 
 !
 !     Local Variables

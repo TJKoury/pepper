@@ -2,6 +2,7 @@
 ! $ Procedure CONVBT ( Convert Kernel file from binary to text )
 
       SUBROUTINE CONVBT ( BINFIL, TXTFIL )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -118,8 +119,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 !
 !     Local parameters
 !

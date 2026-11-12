@@ -1,6 +1,7 @@
 !$Procedure      M2CHCK ( Meta-2, check a table of syntax definitions )
 
       SUBROUTINE M2CHCK ( STATMN, SYNKEY, SYNPTR, SYNVAL, ERROR )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -149,8 +150,6 @@
 !
 !     Spicelib functions
 !
-      INTEGER               CARDI
-      LOGICAL               RETURN
 
 !
 !     Local Variables

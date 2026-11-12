@@ -341,3 +341,23 @@ Each phase ends with tspice green, the concurrency tests that apply passing, and
 6. **Priority:** ephemeris and time first; geometry, DSK, GF and EK afterwards.
 7. **Compilers:** only gfortran in the pixi environment for now.
 8. **Kinds:** `ip` (`int32`) and `wp` (`real64`) everywhere.
+
+## The legacy interface as a module (2026-11-11)
+
+The legacy wrappers (`tspice/src/legacy/pepper_legacy_*.f90`: external
+procedures, and the modules `pepper_legacy_context` and
+`pepper_legacy_callbacks`) are one module now, `pepper_legacy`, in the
+library (`src/legacy/pepper_legacy.f90`; merged by
+`tools/make_legacy_module.py`, the source since). A SPICELIB program uses it
+(`use pepper_legacy`) instead of declaring SPICELIB's functions; tspice's
+program units do (`tools/use_legacy_module.py`). The explicit interfaces
+found the calls of NAIF's test code that passed arguments against their
+declarations: scalars for arrays (passed as `[x]`, or a one-element array
+equivalenced with the variable, `tools/fix_legacy_calls.py`), arrays for
+scalars (their first element), and a few type puns and slips fixed by hand
+(a double precision handle, `SPKAPS`'s acceleration and state swapped in
+error cases, `TTRANS`'s 10-element vector declared with 7, logical arrays
+copied with `MOVEI`, ...). `ZZDSKSEL`'s umbrella is a logical function, as
+in SPICELIB; `ZZDSKBSR`'s comparison argument a procedure. tspice passes
+(399 families).
+

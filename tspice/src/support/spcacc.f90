@@ -1,6 +1,7 @@
 !$Procedure  SPCACC  ( SPK and CK add comments from a cell buffer  )
 
       SUBROUTINE SPCACC( DAFHDL, BUFFER )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -158,11 +159,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CPOS
-      INTEGER               LASTNB
-      INTEGER               CARDC
 
-      LOGICAL               RETURN
 !
 !     Local parameters
 !

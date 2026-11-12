@@ -1,6 +1,7 @@
 !$Procedure      F_ZZHULLAX ( Test ZZHULLAX )
 
       SUBROUTINE F_ZZHULLAX ( OK )
+      use pepper_legacy
       use pepper_inc_gf
 
 ! $ Abstract
@@ -95,12 +96,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VSEP
 
-      LOGICAL               EVEN
-      LOGICAL               ODD
 
 !
 !     Test utility functions

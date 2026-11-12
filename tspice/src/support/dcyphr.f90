@@ -1,6 +1,7 @@
 !$Procedure      DCYPHR ( Decypher the meaning of an IOSTAT code)
 
       SUBROUTINE DCYPHR ( IOSTAT, FOUND, DIAGNS )
+      use pepper_legacy
 
 ! $ Abstract
 !

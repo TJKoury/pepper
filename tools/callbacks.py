@@ -13,7 +13,9 @@ callback this writes
 - an abstract interface with the context, in the "callbacks" region of
   src/pepper_instance.f90 (the dummy procedures of the module procedures are
   declared with it: modules.PROCEDURE_ARGS);
-- for the legacy interface, in tspice/src/legacy/pepper_legacy_callbacks.f90: an
+- for the legacy interface, in the callbacks section of
+  src/legacy/pepper_legacy.f90 (merged there from pepper_legacy_callbacks.f90;
+  this tool no longer writes it: edit the module): an
   abstract interface of SPICELIB's form (without the context), a procedure
   pointer to the legacy caller's routine, and a bridge with the context
   that calls it. A legacy wrapper of a routine with a callback argument
@@ -156,9 +158,10 @@ def write() -> None:
         anchor = "   end type pepper_context\n"
         text = text.replace(anchor, anchor + "\n" + body, 1)
     INSTANCE.write_text(text, encoding="ascii")
-    LEGACY.write_text(legacy_module(), encoding="ascii")
+    # The legacy callbacks are part of src/legacy/pepper_legacy.f90 now
+    # (tools/make_legacy_module.py merged them): not written here.
 
 
 if __name__ == "__main__":
     write()
-    print("callbacks: wrote the interfaces and tspice/src/legacy/pepper_legacy_callbacks.f90")
+    print("callbacks: wrote the interfaces (the legacy callbacks are in src/legacy/pepper_legacy.f90)")

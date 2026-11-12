@@ -1,6 +1,7 @@
 !$Procedure F_SPKBSR ( Family of tests for T_SSFS )
 
       SUBROUTINE F_SPKBSR ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -112,7 +113,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local parameters

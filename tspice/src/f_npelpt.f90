@@ -1,6 +1,7 @@
 !$Procedure F_NPELPT ( NPELPT tests )
 
       SUBROUTINE F_NPELPT ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -417,6 +418,7 @@
 !     Supporting function T_ISNPEL
 !
       LOGICAL FUNCTION T_ISNPEL ( VIEWPT, ELLIPS, PNEAR, D, OK )
+      use pepper_legacy
       IMPLICIT NONE
 !
 !     The utility function T_ISNPEL tests whether the "near point"
@@ -438,8 +440,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
 
 !
 !     Local parameters

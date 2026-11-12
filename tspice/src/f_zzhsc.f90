@@ -1,6 +1,7 @@
 !$Procedure F_ZZHSC ( Family of tests for ZZHSC )
 
       SUBROUTINE F_ZZHSC ( OK )
+      use pepper_legacy
       use pepper_inc_zzbodtrn
 
       IMPLICIT NONE
@@ -92,9 +93,7 @@
 !     SPICELIB Functions
 !
 !      DOUBLE PRECISION      T_RANDD
-      INTEGER               CARDI
 !      INTEGER               INTMAX
-      INTEGER               ZZHASH2
 
 !
 !     Local parameters

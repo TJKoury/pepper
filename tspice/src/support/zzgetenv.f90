@@ -1,6 +1,7 @@
 !$Procedure      ZZGETENV ( Get environment variable value. )
 
       SUBROUTINE ZZGETENV ( ENVVAR, VALUE )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -288,7 +289,6 @@
 !     SPICELIB functions
 !
 
-      LOGICAL               RETURN
 !
 !     Local variables
 !

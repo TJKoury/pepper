@@ -3,6 +3,7 @@
       SUBROUTINE CK3SDN ( SDNTOL, AVFLAG, &
                          NREC, SCLKDP, QUATS, AVVS, &
                          NINTS, STARTS, DPARR, INTARR )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -205,9 +206,6 @@
 !
 !     SPICELIB functions.
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VDOT
 
 !
 !     Local parameters.
@@ -252,10 +250,6 @@
 !
 !     SPICELIB functions.
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      VDISTG
-      INTEGER               BSRCHD
-      LOGICAL               RETURN
 
 !
 !     Standard SPICE error handling.

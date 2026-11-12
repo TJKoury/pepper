@@ -1,6 +1,7 @@
 !$Procedure F_CYIP ( Cycle array in place tests )
 
       SUBROUTINE F_CYIP ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

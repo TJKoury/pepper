@@ -1,6 +1,7 @@
 !$Procedure      FNDPTK ( Find the previous token in a string )
 
       SUBROUTINE FNDPTK ( STRING, DELIMS, START, BEG, END )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -251,10 +252,6 @@
 !
 !     SPICE funtions.
 !
-      LOGICAL               RETURN
-      INTEGER               CPOSR
-      INTEGER               NCPOS
-      INTEGER               NCPOSR
 !
 !     Local variables
 !

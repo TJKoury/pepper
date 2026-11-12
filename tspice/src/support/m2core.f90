@@ -3,6 +3,7 @@
       SUBROUTINE M2CORE ( TEMP,   TBEG,   KEYWDS, &
                           STRING, SBEG,   REASON, CUTOFF, &
                           M2CODE, SCORE,  CAUSE,  SEND    )
+      use pepper_legacy, pepper_legacy_countc => countc
       IMPLICIT NONE
 
 
@@ -115,16 +116,11 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      INTEGER               CARDI
-      INTEGER               ESRCHC
       LOGICAL               M2WMCH
       LOGICAL               M2KEYW
       INTEGER               QLSTNB
-      INTEGER               POS
       INTEGER               QRTRIM
 
-      CHARACTER*(2)         ANA
 
 
       INTEGER               LNSIZE
@@ -894,9 +890,9 @@
                            CAUSE(1) = 'I was not able to parse the ' // &
                                       'calendar string "'
 
-                           CALL SUFFIX (STRING(TIMEB:SUFFSE), 0, CAUSE)
-                           CALL SUFFIX ('". ',                0, CAUSE)
-                           CALL SUFFIX (MSSG,                 1, CAUSE)
+                           CALL SUFFIX (STRING(TIMEB:SUFFSE), 0, CAUSE(1))
+                           CALL SUFFIX ('". ',                0, CAUSE(1))
+                           CALL SUFFIX (MSSG,                 1, CAUSE(1))
 
                            CALL M2MARK ( STRING, TIMEB, SUFFSE,  CAUSE)
 
@@ -948,9 +944,9 @@
                      //         'I counted #. '
 
                      CALL M2CLSS ( TEMP(TB:TC), LOWER,   PHRASE )
-                     CALL REPMC  ( CAUSE, '#',  LOWERC,  CAUSE )
-                     CALL REPMC  ( CAUSE, '#',  PHRASE,  CAUSE )
-                     CALL REPMC  ( CAUSE, '#',  COUNTC,  CAUSE )
+                     CALL REPMC  ( CAUSE(1), '#',  LOWERC,  CAUSE(1) )
+                     CALL REPMC  ( CAUSE(1), '#',  PHRASE,  CAUSE(1) )
+                     CALL REPMC  ( CAUSE(1), '#',  COUNTC,  CAUSE(1) )
 
 !
 !                    OK. now we want to tack on the string and keep
@@ -1004,9 +1000,9 @@
                      //         'the problem for you. '
 
                      CALL M2CLSS ( TEMP(TB:TC), UPPER,   PHRASE )
-                     CALL REPMC  ( CAUSE, '#',  UPPERC,  CAUSE )
-                     CALL REPMC  ( CAUSE, '#',  PHRASE,  CAUSE )
-                     CALL REPMC  ( CAUSE, '#',  COUNTC,  CAUSE )
+                     CALL REPMC  ( CAUSE(1), '#',  UPPERC,  CAUSE(1) )
+                     CALL REPMC  ( CAUSE(1), '#',  PHRASE,  CAUSE(1) )
+                     CALL REPMC  ( CAUSE(1), '#',  COUNTC,  CAUSE(1) )
 
 
                      CALL M2MARK ( STRING, OVERSB, OVERSE,  CAUSE )
@@ -1202,10 +1198,10 @@
 
                         CAUSE(1) = 'I was looking for the keyword "'
 
-                        CALL SUFFIX ( TEMP(KB:KE),            1, CAUSE )
-                        CALL SUFFIX ( '" when I reached the', 1, CAUSE )
-                        CALL SUFFIX ( 'end of the input ',    1, CAUSE )
-                        CALL SUFFIX ( 'command. ',            1, CAUSE )
+                        CALL SUFFIX ( TEMP(KB:KE),            1, CAUSE(1) )
+                        CALL SUFFIX ( '" when I reached the', 1, CAUSE(1) )
+                        CALL SUFFIX ( 'end of the input ',    1, CAUSE(1) )
+                        CALL SUFFIX ( 'command. ',            1, CAUSE(1) )
 
                      ELSE IF ( USELST .AND. REASON ) THEN
 
@@ -1216,8 +1212,8 @@
 
                         DO I = 1, NKEY
 
-                           CALL SUFFIX ( KEYWDS(I), 2, CAUSE )
-                           CALL SUFFIX ( ',',       0, CAUSE )
+                           CALL SUFFIX ( KEYWDS(I), 2, CAUSE(1) )
+                           CALL SUFFIX ( ',',       0, CAUSE(1) )
 
                         END DO
 
@@ -1230,7 +1226,7 @@
                         CAUSE(2) = CAUSE(1)
                         CAUSE(1) = ' '
 
-                        CALL SUFFIX ( MSSG,           1,      CAUSE   )
+                        CALL SUFFIX ( MSSG,           1,      CAUSE(1)   )
                         CALL M2MARK ( STRING, PBEG,   PEND,   CAUSE   )
                         CALL SUFFIX ( MSSG,           1,      CAUSE(2))
                         CALL M2MARK ( STRING, PBEG,   PEND,   CAUSE(2))
@@ -1386,14 +1382,14 @@
 
                            CAUSE(1) = 'I was looking for the '
 
-                           CALL SUFFIX ('keyword "',    1, CAUSE)
-                           CALL SUFFIX (TEMP(KB:KE),    0, CAUSE)
-                           CALL SUFFIX ('" when I ',    0, CAUSE)
-                           CALL SUFFIX ('encountered ', 1, CAUSE)
-                           CALL SUFFIX ('the word "',   1, CAUSE)
-                           CALL SUFFIX (STRING(SB:SE),  0, CAUSE)
-                           CALL SUFFIX ('".   ',        0, CAUSE)
-                           CALL SUFFIX ( MSSG,          1, CAUSE)
+                           CALL SUFFIX ('keyword "',    1, CAUSE(1))
+                           CALL SUFFIX (TEMP(KB:KE),    0, CAUSE(1))
+                           CALL SUFFIX ('" when I ',    0, CAUSE(1))
+                           CALL SUFFIX ('encountered ', 1, CAUSE(1))
+                           CALL SUFFIX ('the word "',   1, CAUSE(1))
+                           CALL SUFFIX (STRING(SB:SE),  0, CAUSE(1))
+                           CALL SUFFIX ('".   ',        0, CAUSE(1))
+                           CALL SUFFIX ( MSSG,          1, CAUSE(1))
                            CAUSE(2) = CAUSE(1)
                            CAUSE(1) = MSSG
 
@@ -1407,19 +1403,19 @@
                                       '{ '
 
                            DO I = 1, NKEY
-                              CALL SUFFIX ( KEYWDS(I),  1, CAUSE)
+                              CALL SUFFIX ( KEYWDS(I),  1, CAUSE(1))
 
                               IF ( I .NE. NKEY ) THEN
-                                 CALL SUFFIX ( ',',     0, CAUSE)
+                                 CALL SUFFIX ( ',',     0, CAUSE(1))
                               END IF
                            END DO
 
-                           CALL SUFFIX ('}  when I ',   1, CAUSE)
-                           CALL SUFFIX ('encountered ', 1, CAUSE)
-                           CALL SUFFIX ('the word "',   1, CAUSE)
-                           CALL SUFFIX (STRING(SB:SE),  0, CAUSE)
-                           CALL SUFFIX ('".   ',        0, CAUSE)
-                           CALL SUFFIX ( MSSG,          1, CAUSE)
+                           CALL SUFFIX ('}  when I ',   1, CAUSE(1))
+                           CALL SUFFIX ('encountered ', 1, CAUSE(1))
+                           CALL SUFFIX ('the word "',   1, CAUSE(1))
+                           CALL SUFFIX (STRING(SB:SE),  0, CAUSE(1))
+                           CALL SUFFIX ('".   ',        0, CAUSE(1))
+                           CALL SUFFIX ( MSSG,          1, CAUSE(1))
 
                            CALL M2MARK ( STRING, SB,   SE, CAUSE)
                            CAUSE(2) = CAUSE(1)
@@ -1635,41 +1631,41 @@
                      //         '# and # # '
 
                      CALL M2CLSS ( TEMP(TB:TC),UPPER,  PHRASE )
-                     CALL REPMC  ( CAUSE, '#', LOWERC, CAUSE )
-                     CALL REPMC  ( CAUSE, '#', UPPERC, CAUSE )
-                     CALL REPMC  ( CAUSE, '#', PHRASE, CAUSE )
+                     CALL REPMC  ( CAUSE(1), '#', LOWERC, CAUSE(1) )
+                     CALL REPMC  ( CAUSE(1), '#', UPPERC, CAUSE(1) )
+                     CALL REPMC  ( CAUSE(1), '#', PHRASE, CAUSE(1) )
 
 
 
                      IF      ( USEKEY ) THEN
 
-                        CALL SUFFIX ( 'followed by ',      1, CAUSE )
-                        CALL SUFFIX ( 'the keyword, ',     1, CAUSE )
-                        CALL SUFFIX ( TEMP(KB:KE),         1, CAUSE )
-                        CALL SUFFIX ( '.',                 0, CAUSE )
+                        CALL SUFFIX ( 'followed by ',      1, CAUSE(1) )
+                        CALL SUFFIX ( 'the keyword, ',     1, CAUSE(1) )
+                        CALL SUFFIX ( TEMP(KB:KE),         1, CAUSE(1) )
+                        CALL SUFFIX ( '.',                 0, CAUSE(1) )
 
                      ELSE IF ( USELST ) THEN
 
-                        CALL SUFFIX ( 'followed by ',      1, CAUSE )
-                        CALL SUFFIX ( 'one of the ',       1, CAUSE )
-                        CALL SUFFIX ( 'keywords from the', 1, CAUSE )
-                        CALL SUFFIX ( 'list {',            1, CAUSE )
+                        CALL SUFFIX ( 'followed by ',      1, CAUSE(1) )
+                        CALL SUFFIX ( 'one of the ',       1, CAUSE(1) )
+                        CALL SUFFIX ( 'keywords from the', 1, CAUSE(1) )
+                        CALL SUFFIX ( 'list {',            1, CAUSE(1) )
 
                         DO I = 1, NKEY
 
-                           CALL SUFFIX ( KEYWDS(I),        1, CAUSE )
+                           CALL SUFFIX ( KEYWDS(I),        1, CAUSE(1) )
 
                            IF ( I .NE. NKEY ) THEN
-                              CALL SUFFIX ( ',',           1, CAUSE )
+                              CALL SUFFIX ( ',',           1, CAUSE(1) )
                            END IF
                         END DO
 
-                        CALL SUFFIX ( '}.',                1, CAUSE )
+                        CALL SUFFIX ( '}.',                1, CAUSE(1) )
 
                      ELSE IF ( USEEND ) THEN
 
-                        CALL SUFFIX ( 'filling out the   ',1, CAUSE )
-                        CALL SUFFIX ( 'end of the string.',1, CAUSE )
+                        CALL SUFFIX ( 'filling out the   ',1, CAUSE(1) )
+                        CALL SUFFIX ( 'end of the string.',1, CAUSE(1) )
 
                      END IF
 
@@ -1690,16 +1686,16 @@
 
                      END IF
 
-                     CALL SUFFIX ( 'I had counted ',      1, CAUSE )
-                     CALL SUFFIX ( COUNTC,                1, CAUSE )
+                     CALL SUFFIX ( 'I had counted ',      1, CAUSE(1) )
+                     CALL SUFFIX ( COUNTC,                1, CAUSE(1) )
 
                      IF ( MCOUNT .EQ. 1 ) THEN
-                        CALL SUFFIX ( 'such word',  1, CAUSE )
+                        CALL SUFFIX ( 'such word',  1, CAUSE(1) )
                      ELSE
-                        CALL SUFFIX ( 'such words', 1, CAUSE )
+                        CALL SUFFIX ( 'such words', 1, CAUSE(1) )
                      END IF
 
-                     CALL SUFFIX ( 'when I encountered',  1, CAUSE )
+                     CALL SUFFIX ( 'when I encountered',  1, CAUSE(1) )
 
                   END IF
 
@@ -1713,18 +1709,18 @@
 !
                   IF ( REASON .AND. ( M2CODE .LT. 100 ) ) THEN
 
-                     CALL SUFFIX ( 'the word "',          1, CAUSE )
-                     CALL SUFFIX ( STRING(PBEG:PEND),     0, CAUSE )
-                     CALL SUFFIX ( '" .',                 0, CAUSE )
+                     CALL SUFFIX ( 'the word "',          1, CAUSE(1) )
+                     CALL SUFFIX ( STRING(PBEG:PEND),     0, CAUSE(1) )
+                     CALL SUFFIX ( '" .',                 0, CAUSE(1) )
 
-                     CALL SUFFIX ( MSSG,                  1, CAUSE )
+                     CALL SUFFIX ( MSSG,                  1, CAUSE(1) )
 
                      CALL M2MARK ( STRING, PBEG,       PEND, CAUSE )
                      CAUSE(2) = CAUSE(1)
                   ELSE IF ( REASON .AND. ( SE .EQ. 0 ) ) THEN
 
-                     CALL SUFFIX ( 'the end of the input',1,   CAUSE )
-                     CALL SUFFIX ( 'string.    ',         1,   CAUSE )
+                     CALL SUFFIX ( 'the end of the input',1,   CAUSE(1) )
+                     CALL SUFFIX ( 'string.    ',         1,   CAUSE(1) )
                      CALL M2MARK ( STRING, QLSTNB(STRING)+1, &
                                            QLSTNB(STRING)+1,   CAUSE )
                      CAUSE(2) = CAUSE(1)
@@ -1735,9 +1731,9 @@
 
                   ELSE IF (  REASON .AND. ( SE  .NE. 0   )  ) THEN
 
-                     CALL SUFFIX ( 'the word "',          1, CAUSE )
-                     CALL SUFFIX ( STRING(SB:SE),         0, CAUSE )
-                     CALL SUFFIX ( '" .',                 0, CAUSE )
+                     CALL SUFFIX ( 'the word "',          1, CAUSE(1) )
+                     CALL SUFFIX ( STRING(SB:SE),         0, CAUSE(1) )
+                     CALL SUFFIX ( '" .',                 0, CAUSE(1) )
 
 !
 !                    If misspell likely mention that too.
@@ -1760,7 +1756,7 @@
                      IF (       ( CARDI ( SCORES ) .GT. 0      ) &
                           .AND. ( SCORES(1)        .GT. CUTOFF ) ) THEN
 
-                        CALL SUFFIX ( MSSG, 1, CAUSE )
+                        CALL SUFFIX ( MSSG, 1, CAUSE(1) )
 
 
                      END IF
@@ -1804,8 +1800,8 @@
 
                         CALL M2CLSS ( TEMP(TB:TC), 1, PHRASE )
                         ARTCLE = ANA( PHRASE, 'L'              )
-                        CALL REPMC  ( CAUSE, '#', ARTCLE, CAUSE )
-                        CALL REPMC  ( CAUSE, '#', PHRASE, CAUSE )
+                        CALL REPMC  ( CAUSE(1), '#', ARTCLE, CAUSE(1) )
+                        CALL REPMC  ( CAUSE(1), '#', PHRASE, CAUSE(1) )
 
                         CALL M2MARK( STRING, QLSTNB(STRING)+1, &
                                              QLSTNB(STRING)+1, CAUSE )
@@ -1844,9 +1840,9 @@
 
                         CALL M2CLSS ( TEMP(TB:TC), 1, PHRASE )
                         ARTCLE = ANA( PHRASE, 'L'              )
-                        CALL REPMC  ( CAUSE, '#', ARTCLE,        CAUSE )
-                        CALL REPMC  ( CAUSE, '#', PHRASE,        CAUSE )
-                        CALL REPMC  ( CAUSE, '#', STRING(SB:SE), CAUSE )
+                        CALL REPMC  ( CAUSE(1), '#', ARTCLE,        CAUSE(1) )
+                        CALL REPMC  ( CAUSE(1), '#', PHRASE,        CAUSE(1) )
+                        CALL REPMC  ( CAUSE(1), '#', STRING(SB:SE), CAUSE(1) )
 
 
                         CALL M2MARK ( STRING, SB,           SE, CAUSE )
@@ -1949,13 +1945,13 @@
                         CAUSE(1) = 'I was expecting to see the '      // &
                                    'keyword "'
 
-                        CALL SUFFIX ( TEMP(TB:TC),            0, CAUSE )
-                        CALL SUFFIX ( '" when I encountered', 0, CAUSE )
-                        CALL SUFFIX ( 'the word "',           1, CAUSE )
-                        CALL SUFFIX ( STRING(SB:SE),          0, CAUSE )
-                        CALL SUFFIX ( '" in the input ',      0, CAUSE )
-                        CALL SUFFIX ( 'string.     ',         1, CAUSE )
-                        CALL SUFFIX ( MSSG,                   1, CAUSE )
+                        CALL SUFFIX ( TEMP(TB:TC),            0, CAUSE(1) )
+                        CALL SUFFIX ( '" when I encountered', 0, CAUSE(1) )
+                        CALL SUFFIX ( 'the word "',           1, CAUSE(1) )
+                        CALL SUFFIX ( STRING(SB:SE),          0, CAUSE(1) )
+                        CALL SUFFIX ( '" in the input ',      0, CAUSE(1) )
+                        CALL SUFFIX ( 'string.     ',         1, CAUSE(1) )
+                        CALL SUFFIX ( MSSG,                   1, CAUSE(1) )
                         CAUSE(2) = CAUSE(1)
                         CAUSE(1) = MSSG
                         CALL M2MARK ( STRING, SB,    SE,      CAUSE(1) )
@@ -1991,22 +1987,22 @@
                         CAUSE(1) = 'I was expecting to see the '      // &
                                    'keyword "'
 
-                        CALL SUFFIX ( TEMP(TB:TC),            0, CAUSE )
-                        CALL SUFFIX ( '" when I ',            0, CAUSE )
+                        CALL SUFFIX ( TEMP(TB:TC),            0, CAUSE(1) )
+                        CALL SUFFIX ( '" when I ',            0, CAUSE(1) )
 
                         IF ( SB .EQ. 0 ) THEN
-                           CALL SUFFIX ( 'ran out of ',       1, CAUSE )
-                           CALL SUFFIX ( 'characters in the', 1, CAUSE )
-                           CALL SUFFIX ( 'input string. ',    1, CAUSE )
+                           CALL SUFFIX ( 'ran out of ',       1, CAUSE(1) )
+                           CALL SUFFIX ( 'characters in the', 1, CAUSE(1) )
+                           CALL SUFFIX ( 'input string. ',    1, CAUSE(1) )
 
                            SB = QLSTNB ( STRING ) + 1
                            SE = SB
                         ELSE
-                           CALL SUFFIX ( 'encountered',       1, CAUSE )
-                           CALL SUFFIX ( 'the word "',        1, CAUSE )
-                           CALL SUFFIX ( STRING(SB:SE),       0, CAUSE )
-                           CALL SUFFIX ( '" in the input ',   0, CAUSE )
-                           CALL SUFFIX ( 'string.     ',      1, CAUSE )
+                           CALL SUFFIX ( 'encountered',       1, CAUSE(1) )
+                           CALL SUFFIX ( 'the word "',        1, CAUSE(1) )
+                           CALL SUFFIX ( STRING(SB:SE),       0, CAUSE(1) )
+                           CALL SUFFIX ( '" in the input ',   0, CAUSE(1) )
+                           CALL SUFFIX ( 'string.     ',      1, CAUSE(1) )
                         END IF
 
                         CALL M2MARK ( STRING, SB,    SE,         CAUSE )
@@ -2032,20 +2028,20 @@
 
                      CALL M2CLSS ( TEMP(TB:TC), 1, PHRASE )
                      ARTCLE = ANA( PHRASE, 'L'              )
-                     CALL  REPMC ( CAUSE, '#', ARTCLE,        CAUSE )
-                     CALL  REPMC ( CAUSE, '#', PHRASE,        CAUSE )
+                     CALL  REPMC ( CAUSE(1), '#', ARTCLE,        CAUSE(1) )
+                     CALL  REPMC ( CAUSE(1), '#', PHRASE,        CAUSE(1) )
 
 
                      IF ( SB .EQ. 0 ) THEN
-                        CALL SUFFIX ( 'ran out of characters', 1, CAUSE)
-                        CALL SUFFIX ( 'in the input string. ', 1, CAUSE)
+                        CALL SUFFIX ( 'ran out of characters', 1, CAUSE(1))
+                        CALL SUFFIX ( 'in the input string. ', 1, CAUSE(1))
 
                         SB = QLSTNB ( STRING ) + 1
                         SE = SB
                      ELSE
-                        CALL SUFFIX ( 'encountered the word "', 1,CAUSE)
-                        CALL SUFFIX ( STRING(SB:SE),            0,CAUSE)
-                        CALL SUFFIX ( '" in the input string.', 0,CAUSE)
+                        CALL SUFFIX ( 'encountered the word "', 1, CAUSE(1))
+                        CALL SUFFIX ( STRING(SB:SE),            0, CAUSE(1))
+                        CALL SUFFIX ( '" in the input string.', 0, CAUSE(1))
                      END IF
 
                      CALL M2MARK (STRING, SB, SE, CAUSE )

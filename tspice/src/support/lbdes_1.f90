@@ -2,6 +2,7 @@
 !$Procedure LBDES ( Line buffer, describe )
 
       SUBROUTINE LBDES_1 ( PTRS, MAXLN, NLINE, NCOM, PCARD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -110,9 +111,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDI
-      LOGICAL               RETURN
-      INTEGER               SIZEI
 
 !
 !     Local variables

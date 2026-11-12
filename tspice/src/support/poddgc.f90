@@ -1,6 +1,7 @@
 !$Procedure      PODDGC ( Pod, duplicate group, character )
 
       SUBROUTINE PODDGC ( POD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -119,9 +120,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               CARDC
-      INTEGER               SIZEC
 
 !
 !     Local parameters

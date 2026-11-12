@@ -1,6 +1,7 @@
 !$Procedure F_SPK10 ( Family of tests for types 10 )
 
       SUBROUTINE F_SPK10 ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame, pepper_legacy_ident => ident
       use pepper_inc_zzsgp4
 
 ! $ Abstract
@@ -109,11 +110,7 @@
 !
 !     SPICELIB Functions
 !
-      EXTERNAL              PI
-      EXTERNAL              SPD
 
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      SPD
 
 !
 !     Local Variables
@@ -140,14 +137,14 @@
       CHARACTER*(LNSIZE)    LOW2LN ( 20 )
 
       DOUBLE PRECISION      ARG
-      DOUBLE PRECISION      BEGIN
+      INTEGER               BEGIN
       DOUBLE PRECISION      GEOPHS ( 8 )
       DOUBLE PRECISION      DARGDT
       DOUBLE PRECISION      DENOM
       DOUBLE PRECISION      DESCR  ( 6 )
       DOUBLE PRECISION      DWDT
       DOUBLE PRECISION      ELEMS  ( 290 )
-      DOUBLE PRECISION      END
+      INTEGER               END
       DOUBLE PRECISION      EPOCH  ( NMIX  )
       DOUBLE PRECISION      ET
       DOUBLE PRECISION      EXPST  ( 6 )
@@ -230,7 +227,7 @@
          GEOPHS( 7 ) = 6378.135D0
          GEOPHS( 8 ) =    1.0D0
 
-         CALL GETELM ( 1950, LOW2LN, EPOCH, ELEMS )
+         CALL GETELM ( 1950, LOW2LN, EPOCH(1), ELEMS )
 
          FIRST = EPOCH(1) - 100.0D0*SPD()
          LAST  = EPOCH(1) + 100.0D0*SPD()
@@ -488,7 +485,7 @@
          HI2LN( 2) = '2 24846   4.5222  86.7012 6052628 17' &
          //          '8.7924 183.5048  2.04105068    52'
 
-         CALL GETELM ( 1950, HI2LN, EPOCH, ELEMS )
+         CALL GETELM ( 1950, HI2LN, EPOCH(1), ELEMS )
          CALL CHCKXC ( .FALSE., ' ',  OK )
 
          FIRST = EPOCH(1) - 10.0D0*SPD()

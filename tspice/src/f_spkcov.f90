@@ -2,6 +2,7 @@
 !$Procedure      F_SPKCOV ( SPKCOV tests )
 
       SUBROUTINE F_SPKCOV ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -22,8 +23,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      INTEGER               CARDI
 
 !
 !     Local parameters

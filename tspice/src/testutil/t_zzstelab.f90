@@ -2,6 +2,7 @@
 
       SUBROUTINE T_ZZSTELAB ( XMIT,  ACCOBS, VOBS, &
                               STARG, SCORR,  DSCORR  )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -152,12 +153,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
 
 !
 !     Local parameters

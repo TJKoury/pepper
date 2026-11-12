@@ -1,6 +1,7 @@
 !$Procedure TSTCKN (Test CK No angular velocity)
 
       SUBROUTINE TSTCKN ( CKNM, SCLKNM, LOADCK, LOADSC, KEEPSC, HANDLE )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -213,7 +214,6 @@
 !
 !     Spicelib Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Test Utility Functions

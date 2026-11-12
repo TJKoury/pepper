@@ -1,6 +1,7 @@
 !$Procedure M2SELD ( META/2 --- select a named double precision number )
 
       SUBROUTINE M2SELD ( NAME, STRING, NTH, FOUND, DP   )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

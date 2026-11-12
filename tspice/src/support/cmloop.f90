@@ -2,6 +2,7 @@
 !
       SUBROUTINE CMLOOP ( DELIM,  PROMPT, LOGNAM, VERSN, &
                           GREET,  PREPRC, ACTION )
+      use pepper_legacy, pepper_legacy_prompt => prompt
       IMPLICIT NONE
 !
 ! $ Abstract
@@ -24,9 +25,9 @@
       CHARACTER*(*)         LOGNAM
       CHARACTER*(*)         VERSN
 
-      EXTERNAL              GREET
-      EXTERNAL              PREPRC
-      EXTERNAL              ACTION
+      EXTERNAL GREET
+      EXTERNAL PREPRC
+      EXTERNAL ACTION
 
 ! $ Brief_I/O
 !
@@ -260,8 +261,6 @@
 
 
 
-      INTEGER               ISRCHC
-      INTEGER               LTRIM
       INTEGER               QRTRIM
 
       LOGICAL               HAVE

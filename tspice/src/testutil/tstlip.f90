@@ -1,6 +1,7 @@
 !$Procedure      TSTLIP ( Test log if passed )
 !
       SUBROUTINE TSTLIP ()
+      use pepper_legacy
 !
 ! $ Abstract
 !

@@ -1,6 +1,7 @@
 !$Procedure     PRTRAP
 
       SUBROUTINE PRTRAP ( COMMAND, TRAN )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -102,7 +103,6 @@
 !
 !     Spicelib Functions
 !
-      INTEGER               RTRIM
 !
 !     Local variables
 !

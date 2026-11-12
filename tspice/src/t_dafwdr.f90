@@ -1,6 +1,7 @@
 !$Procedure T_DAFWDR ( Write a DAF summary/descriptor record to file )
 
       SUBROUTINE T_DAFWDR ( UNIT, RECNO, OUTBFF, NUMDP, ARRAY )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -114,8 +115,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
-      LOGICAL               RETURN
 
 !
 !     Local Parameters

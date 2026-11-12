@@ -1,6 +1,7 @@
 !$Procedure F_SURFPV ( SURFPV tests )
 
       SUBROUTINE F_SURFPV ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -102,7 +103,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               ODD
 
 !
 !     Other functions

@@ -1,6 +1,7 @@
 !$Procedure      F_GFOCCE ( GFOCCE family tests )
 
       SUBROUTINE F_GFOCCE ( OK )
+      use pepper_legacy
       use pepper_inc_gf
 
 ! $ Abstract
@@ -98,11 +99,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      SPD
 
-      INTEGER               WNCARD
 
-      LOGICAL               GFBAIL
 
 
 !
@@ -118,12 +116,6 @@
 !        - Progress report update:                GFREPU
 !        - Search step size "get" function:       GFSTEP
 !
-      EXTERNAL              GFBAIL
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPF
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFSTEP
 
 
 !

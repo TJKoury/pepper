@@ -1,6 +1,7 @@
 !$Procedure F_PLT ( Plate routine tests )
 
       SUBROUTINE F_PLT ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -92,11 +93,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PLTAR
-      DOUBLE PRECISION      PLTVOL
 
-      INTEGER               CARDD
-      INTEGER               CARDI
 
 !
 !     Local Parameters

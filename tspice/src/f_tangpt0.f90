@@ -1,6 +1,7 @@
 !$Procedure F_TANGPT0 ( Test tangent point routine, part 0 )
 
       SUBROUTINE F_TANGPT0 ( OK )
+      use pepper_legacy
       use pepper_inc_zzdsk
       use pepper_inc_zzabcorr
 
@@ -84,7 +85,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
 
 !
 !     Test utility functions
@@ -725,7 +725,7 @@
       CALL PCPOOL ( 'NAIF_BODY_NAME', 1, 'JUPITER' )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL PIPOOL ( 'NAIF_BODY_CODE', 1, 399 )
+      CALL PIPOOL ( 'NAIF_BODY_CODE', 1, [399] )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 !

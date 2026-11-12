@@ -1,6 +1,7 @@
 !$Procedure      SHOERR ( Show Errors )
 
       SUBROUTINE SHOERR
+      use pepper_legacy
 
 ! $ Abstract
 !

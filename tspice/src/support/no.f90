@@ -1,4 +1,5 @@
       LOGICAL FUNCTION NO ( ERROR )
+      use pepper_legacy
       IMPLICIT NONE
 ! $ Version
 !

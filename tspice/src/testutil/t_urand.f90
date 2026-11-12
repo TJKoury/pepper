@@ -1,6 +1,7 @@
 !$Procedure      T_URAND ( Random double precision number )
 
       DOUBLE PRECISION FUNCTION T_URAND ( SEED )
+      use pepper_legacy
 
 ! $ Abstract
 !

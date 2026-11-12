@@ -1,6 +1,7 @@
 !$Procedure ZZGRDPLT ( Create grid of plates )
 
       SUBROUTINE ZZGRDPLT ( NROWS, NCOLS, WRAP, NP, PLATES )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -143,7 +144,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local variables

@@ -1,6 +1,7 @@
 !$Procedure F_ZZPLAT ( Test Fortran Intrinsics )
 
       SUBROUTINE F_ZZPLAT ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -87,11 +88,8 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      TOUCHD
 
-      INTEGER               TOUCHI
 
-      LOGICAL               EQSTR
 
 !
 !     Local Variables

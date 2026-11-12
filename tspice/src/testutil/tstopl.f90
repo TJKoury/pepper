@@ -1,4 +1,5 @@
       SUBROUTINE TSTOPL ( LOGNAM, VERSN )
+      use pepper_legacy
 
 !
 ! $ Version
@@ -21,7 +22,6 @@
 !     commands.  It should only be called once.  If a log file
 !     cannot be opened, the routine stop.
 !
-      LOGICAL               FAILED
 
       INTEGER               FILEN
       PARAMETER           ( FILEN = 255 )

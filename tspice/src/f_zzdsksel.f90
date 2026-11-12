@@ -1,6 +1,7 @@
 !$Procedure      F_ZZDSKSEL ( Test the entry points of ZZDSKSEL )
 
       SUBROUTINE F_ZZDSKSEL ( OK )
+      use pepper_legacy, pepper_legacy_pos => pos
       use pepper_inc_dla
       use pepper_inc_dskdsc
 
@@ -137,16 +138,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      RPD
 
-      LOGICAL               ZZDSKBDC
-      LOGICAL               ZZDSKCIT
-      LOGICAL               ZZDSKSBD
-      LOGICAL               ZZDSKSEL
-      LOGICAL               ZZDSKSIT
-      LOGICAL               ZZDSKUMC
-      LOGICAL               ZZDSKUSC
 
 !
 !     Local parameters
@@ -479,7 +471,7 @@
 
 
 
-      LGRETV = ZZDSKSIT( BODYID, 1, -3, ET )
+      LGRETV = ZZDSKSIT( BODYID, 1, [-3], ET )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 

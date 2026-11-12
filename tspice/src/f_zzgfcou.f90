@@ -1,6 +1,7 @@
 !$Procedure F_ZZGFCOU ( Test GF coordinate quantity utilities )
 
       SUBROUTINE F_ZZGFCOU ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
@@ -108,20 +109,12 @@
 !
 !-&
 
-      EXTERNAL              UDF
 
-      EXTERNAL              ZZGFCOG
-      EXTERNAL              ZZGFCOCG
-      EXTERNAL              ZZGFCOSG
 
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPMIN
-      DOUBLE PRECISION      SPD
 
-      LOGICAL               ODD
 
 !
 !     Local parameters

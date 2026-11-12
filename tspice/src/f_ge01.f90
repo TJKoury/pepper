@@ -1,6 +1,7 @@
 !$Procedure F_GE01 ( SPICE higher-level geometry routine tests )
 
       SUBROUTINE F_GE01 ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

@@ -1,6 +1,7 @@
 !$Procedure      F_DPSTRF (Family of tests for dpstrf )
 
       SUBROUTINE F_DPSTRF ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

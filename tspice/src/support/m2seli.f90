@@ -1,6 +1,7 @@
 !$Procedure M2SELI ( META/2 --- select a named integer )
 
       SUBROUTINE M2SELI ( NAME, STRING, NTH, FOUND, INT  )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

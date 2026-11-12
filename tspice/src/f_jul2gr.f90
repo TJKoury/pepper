@@ -1,6 +1,7 @@
 !$Procedure      F_JUL2GR ( Family of tests for Julian and Gregorian
 
       SUBROUTINE F_JUL2GR ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

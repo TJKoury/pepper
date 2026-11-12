@@ -1,6 +1,7 @@
 !$Procedure F_DYN05 ( Dynamic Frame Test Family 05 )
 
       SUBROUTINE F_DYN05 ( OK )
+      use pepper_legacy, pepper_legacy_ident => ident
       use pepper_inc_zzdyn
       use pepper_inc_frmtyp
 

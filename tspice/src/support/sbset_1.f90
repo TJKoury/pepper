@@ -4,6 +4,7 @@
       SUBROUTINE SBSET_1 ( NAME, STR, NAMES, &
                                     PTRS, &
                                     BUFFER  )
+      use pepper_legacy, pepper_legacy_pos => pos
       IMPLICIT NONE
 
 
@@ -128,12 +129,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      INTEGER               FRSTNB
-      INTEGER               LASTNB
-      INTEGER               LSTLEC
-      LOGICAL               RETURN
-      INTEGER               SIZEC
 
 !
 !     Local variables

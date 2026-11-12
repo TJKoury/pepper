@@ -1,6 +1,7 @@
 !$Procedure      TCASE (Test Case)
 
       SUBROUTINE TCASE ( TITLE )
+      use pepper_legacy
 
 ! $ Abstract
 !

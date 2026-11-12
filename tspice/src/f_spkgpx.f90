@@ -1,6 +1,7 @@
 !$Procedure      F_SPKGPX (Family of tests for SPKGPS frame exceptions)
 
       SUBROUTINE F_SPKGPX ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

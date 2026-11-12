@@ -1,6 +1,7 @@
 !$Procedure F_PHASEQ ( PHASEQ tests )
 
       SUBROUTINE F_PHASEQ ( OK )
+      use pepper_legacy, pepper_legacy_illum => illum
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 
@@ -85,11 +86,7 @@
 !     SPICELIB functions
 !
 
-      DOUBLE PRECISION      PHASEQ
-      DOUBLE PRECISION      VSEP
-      DOUBLE PRECISION      SPD
       DOUBLE PRECISION      T_RANDD
-      INTEGER               WNCARD
 
 !
 !     Local parameters

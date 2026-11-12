@@ -1,6 +1,7 @@
 !$Procedure F_ZZPDTBOX ( ZZPDTBOX tests )
 
       SUBROUTINE F_ZZPDTBOX ( OK )
+      use pepper_legacy
       use pepper_inc_dskdsc
 
 ! $ Abstract
@@ -86,10 +87,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VNORM
 
 !
 !     Local Parameters
@@ -1318,6 +1315,7 @@
 !     X-Y plane.
 !
       SUBROUTINE T_TSTPBX ( BOUNDS, CORPAR, CENTER, LR, LT, LZ, RADIUS )
+      use pepper_legacy
       IMPLICIT NONE
 
       DOUBLE PRECISION      BOUNDS ( 2, 3 )
@@ -1331,9 +1329,7 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      VNORM
 
-      LOGICAL               RETURN
 
 !
 !     Local parameters
@@ -1464,6 +1460,7 @@
 !     be used for elements that cross the X-Y plane.
 !
       SUBROUTINE T_MKPBOX ( BOUNDS, CORPAR, CENTER, LR, LT, LZ, RADIUS )
+      use pepper_legacy
       IMPLICIT NONE
 
       DOUBLE PRECISION      BOUNDS ( 2, 3 )
@@ -1477,14 +1474,7 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPMIN
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
 
-      LOGICAL               RETURN
 
 !
 !     Local parameters

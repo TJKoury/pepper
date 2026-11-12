@@ -2,6 +2,7 @@
 !$Procedure LBREM ( Line buffer, remove )
 
       SUBROUTINE LBREM_1 ( POS, PTRS, BUFFER )
+      use pepper_legacy, pepper_legacy_pos => pos
       IMPLICIT NONE
 
 ! $ Abstract
@@ -123,11 +124,9 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 !
 !     Other Functions
 !
-      CHARACTER*(1)         TOUCHC
 
 !
 !     Local variables

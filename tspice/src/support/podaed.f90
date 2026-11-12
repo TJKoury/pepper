@@ -1,6 +1,7 @@
 !$Procedure      PODAED ( Pod, append elements, double precision )
 
       SUBROUTINE PODAED ( ELEMS, N, POD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -121,10 +122,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      INTEGER               SIZED
 
-      LOGICAL               RETURN
 
 !
 !     Local Variables

@@ -3,6 +3,7 @@
       SUBROUTINE T_WCLK01 ( FNAME,  COMS,   CLKID,  KERID, TIMSYS, &
                             NFIELD, MODULI, OFFSET, DELIM, NPARTS, &
                             PSTART, PSTOP,  NCOEFF, COEFFS        )
+      use pepper_legacy
       use pepper_inc_sclk
 
 ! $ Abstract
@@ -422,21 +423,15 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      INTEGER               LASTNB
 
-      LOGICAL               EQSTR
-      LOGICAL               EXISTS
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Test utility functions
 !
-      EXTERNAL              BEGDAT
+      EXTERNAL BEGDAT
       CHARACTER*(80)        BEGDAT
 
-      EXTERNAL              BEGTXT
+      EXTERNAL BEGTXT
       CHARACTER*(80)        BEGTXT
 
 !

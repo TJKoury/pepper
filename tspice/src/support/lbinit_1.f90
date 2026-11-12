@@ -2,6 +2,7 @@
 !$Procedure LBINIT ( Line buffer, initialize )
 
       SUBROUTINE LBINIT_1 ( PSIZE, VDIM, PTRS, BUFFER )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -130,7 +131,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
       INTEGER               SIZECB_1
 
 !

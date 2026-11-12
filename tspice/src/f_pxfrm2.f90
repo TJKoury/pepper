@@ -1,6 +1,7 @@
 !$Procedure      F_PXFRM2 ( Family of tests for PXFRM2 )
 
       SUBROUTINE F_PXFRM2 ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

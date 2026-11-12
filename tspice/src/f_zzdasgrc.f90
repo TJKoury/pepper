@@ -1,6 +1,7 @@
 !$Procedure F_ZZDASGRC ( DAS record fetch tests )
 
       SUBROUTINE F_ZZDASGRC ( OK )
+      use pepper_legacy
       use pepper_inc_das
 
 ! $ Abstract
@@ -85,8 +86,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
-      LOGICAL               FAILED
 
 !
 !     Local Parameters

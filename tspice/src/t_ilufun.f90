@@ -3,6 +3,7 @@
       DOUBLE PRECISION FUNCTION T_ILUFUN ( METHOD, TARGET, ILLUM, &
                                            ET,     FIXREF, ABCORR, &
                                            OBSRVR, SPOINT, NORMAL )
+      use pepper_legacy, pepper_legacy_illum => illum
 
 ! $ Abstract
 !
@@ -131,7 +132,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local parameters

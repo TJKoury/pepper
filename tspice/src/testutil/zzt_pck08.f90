@@ -1,6 +1,7 @@
 !$Procedure ZZT_PCK08 (Create a test text PCK based on pck00008.tpc )
 
       SUBROUTINE ZZT_PCK08 ( NAMEPC )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -98,7 +99,6 @@
 !
 !     Spicelib Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Test Utility Functions

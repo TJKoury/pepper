@@ -1,6 +1,7 @@
 !$Procedure      F_ZZGFILU ( ZZGFILU family tests )
 
       SUBROUTINE F_ZZGFILU ( OK )
+      use pepper_legacy, pepper_legacy_illum => illum
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 
@@ -21,6 +22,7 @@
 ! $ Declarations
 
       IMPLICIT NONE
+      EXTERNAL              T_ZZGFILU_UDF
 
 
       LOGICAL               OK
@@ -85,10 +87,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      SPD
 
-      EXTERNAL              UDDC
 
 !
 !     Local parameters
@@ -549,7 +548,7 @@
       CALL CHCKXC ( .FALSE., ' ',   OK )
 
 
-      CALL ZZGFILDC ( UDDC, 0.D0, ISDEC )
+      CALL ZZGFILDC ( T_ZZGFILU_UDF, 0.D0, ISDEC )
 
       CALL CHCKXC ( .TRUE., 'SPICE(SPKINSUFFDATA)',   OK )
 
@@ -565,7 +564,7 @@
       CALL CHCKXC ( .FALSE., ' ',   OK )
 
 
-      CALL ZZGFILDC ( UDDC, 0.D0, ISDEC )
+      CALL ZZGFILDC ( T_ZZGFILU_UDF, 0.D0, ISDEC )
 
       CALL CHCKXC ( .TRUE., 'SPICE(SPKINSUFFDATA)',   OK )
 
@@ -582,7 +581,7 @@
       CALL CHCKXC ( .FALSE., ' ',   OK )
 
 
-      CALL ZZGFILDC ( UDDC, 0.D0, ISDEC )
+      CALL ZZGFILDC ( T_ZZGFILU_UDF, 0.D0, ISDEC )
 
       CALL CHCKXC ( .TRUE., 'SPICE(SPKINSUFFDATA)',   OK )
 
@@ -596,7 +595,7 @@
                       'ITRF93',     ABCORR, OBSRVR,  SPOINT )
       CALL CHCKXC ( .FALSE., ' ',   OK )
 
-      CALL ZZGFILDC ( UDDC, 0.D0, ISDEC )
+      CALL ZZGFILDC ( T_ZZGFILU_UDF, 0.D0, ISDEC )
       CALL CHCKXC ( .TRUE., 'SPICE(FRAMEDATANOTFOUND)',   OK )
 
 
@@ -729,7 +728,7 @@
 
          ET = ET0 + (I-1)*SPD()
 
-         CALL ZZGFILDC ( UDDC, ET, ISDEC )
+         CALL ZZGFILDC ( T_ZZGFILU_UDF, ET, ISDEC )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          CALL ZZILUSTA ( METHOD, TARGET, ILLUM,  ET, &
@@ -785,7 +784,7 @@
 
          ET = ET0 + (I-1)*SPD()
 
-         CALL ZZGFILDC ( UDDC, ET, ISDEC )
+         CALL ZZGFILDC ( T_ZZGFILU_UDF, ET, ISDEC )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          CALL ZZILUSTA ( METHOD, TARGET, ILLUM,  ET, &
@@ -843,7 +842,7 @@
 
          ET = ET0 + (I-1)*SPD()
 
-         CALL ZZGFILDC ( UDDC, ET, ISDEC )
+         CALL ZZGFILDC ( T_ZZGFILU_UDF, ET, ISDEC )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          CALL ZZILUSTA ( METHOD, TARGET, ILLUM,  ET, &
@@ -1024,4 +1023,15 @@
       CALL T_SUCCESS ( OK )
 
       RETURN
+      END
+
+
+!     PEPPER: ZZGFILDC's UDFUNC is a placeholder it does not call; the
+!     tests passed UDDC, whose interface is not a scalar function's (an
+!     error with the explicit interfaces of pepper_legacy). This one is.
+      SUBROUTINE T_ZZGFILU_UDF ( ET, VALUE )
+      IMPLICIT NONE
+      DOUBLE PRECISION      ET
+      DOUBLE PRECISION      VALUE
+      VALUE = ET
       END

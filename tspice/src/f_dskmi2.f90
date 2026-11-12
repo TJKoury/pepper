@@ -1,6 +1,7 @@
 !$Procedure      F_DSKMI2 ( Test DSKMI2 )
 
       SUBROUTINE F_DSKMI2 ( OK )
+      use pepper_legacy
       use pepper_inc_dsk02
 
 ! $ Abstract

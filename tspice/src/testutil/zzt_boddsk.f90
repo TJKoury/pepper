@@ -1,6 +1,7 @@
 !$Procedure ZZT_BODDSK (Make type 2 DSK for body's reference ellipsoid)
 
       SUBROUTINE ZZT_BODDSK ( DSK, BODY, FIXREF, LOAD, HANDLE )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -181,8 +182,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local parameters

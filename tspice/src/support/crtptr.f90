@@ -1,6 +1,7 @@
 !$Procedure                  CRTPTR (Create pointer)
 
       CHARACTER*(*) FUNCTION CRTPTR (BASE, INDEX, PNTER)
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -105,8 +106,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
-      LOGICAL               RETURN
 
 !
 !     Local variables

@@ -1,6 +1,7 @@
 !$Procedure      F_ET2UTC ( Family of tests for ET2UTC)
 
       SUBROUTINE F_ET2UTC ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

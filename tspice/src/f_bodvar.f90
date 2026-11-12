@@ -2,6 +2,7 @@
 !$Procedure      F_BODVAR ( BODVAR family tests )
 
       SUBROUTINE F_BODVAR ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

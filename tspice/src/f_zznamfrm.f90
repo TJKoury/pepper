@@ -1,6 +1,7 @@
 !$Procedure F_ZZNAMFRM ( Family of tests for ZZNAMFRM and its callers )
 
       SUBROUTINE F_ZZNAMFRM ( OK )
+      use pepper_legacy
       use pepper_inc_zzctr
 
       IMPLICIT NONE

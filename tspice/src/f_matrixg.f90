@@ -1,6 +1,7 @@
 !$Procedure F_MATRIXG (Family of tests on general matrix operations)
 
       SUBROUTINE F_MATRIXG ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -109,9 +110,6 @@
 !     SPICELIB Functions
 !
 
-      DOUBLE PRECISION      TRACEG
-      DOUBLE PRECISION      VDOTG
-      DOUBLE PRECISION      VTMVG
 
 !
 !     Local Parameters

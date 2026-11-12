@@ -1,6 +1,7 @@
 !$Procedure      F_SPKEZ ( Family of tests for SPKEZ)
 
       SUBROUTINE F_SPKEZ ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

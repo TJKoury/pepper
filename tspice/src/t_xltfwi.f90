@@ -1,6 +1,7 @@
 !$Procedure T_XLTFWI ( Translate For Write, Integers )
 
       SUBROUTINE T_XLTFWI ( INPUT, NUMINT, OUTBFF, OUTPUT )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -129,8 +130,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
-      LOGICAL               RETURN
 
 !
 !     Local Variables

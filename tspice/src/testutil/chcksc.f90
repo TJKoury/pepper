@@ -1,6 +1,7 @@
 !$Procedure      CHCKSC ( Check scalar character string )
 !
       SUBROUTINE CHCKSC ( NAME, VAL, COMP, EXP,  OK )
+      use pepper_legacy
 !
 ! $ Abstract
 !
@@ -135,7 +136,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
 
 !
 !     Local Variables

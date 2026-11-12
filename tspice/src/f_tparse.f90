@@ -1,6 +1,7 @@
 !$Procedure F_TPARSE ( Family of tests for TPARSE )
 
       SUBROUTINE F_TPARSE ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

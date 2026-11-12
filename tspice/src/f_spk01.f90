@@ -1,6 +1,7 @@
 !$Procedure F_SPK01 ( SPK data type 01 tests )
 
       SUBROUTINE F_SPK01 ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_spkrec
       use pepper_inc_spk21
 
@@ -104,10 +105,7 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      SPD
 
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters
@@ -692,7 +690,7 @@
 !     Note that our time buffer contains a single element.
 !
       CALL SPKW01 ( HAN2,  BODY,    CENTER,  FRAME,      FIRST, &
-                    LAST,  SEGID,   1,       T01REC(1),  LAST )
+                    LAST,  SEGID,   1,       T01REC(1),  [LAST] )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 

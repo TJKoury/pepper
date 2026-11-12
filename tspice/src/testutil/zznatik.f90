@@ -1,6 +1,7 @@
 !$Procedure ZZNATIK (Create an SCLK file)
 
       SUBROUTINE ZZNATIK( NAMEIK, SPK, PCK )
+      use pepper_legacy, pepper_legacy_pos => pos
 
 ! $ Abstract
 !

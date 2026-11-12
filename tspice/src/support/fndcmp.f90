@@ -3,6 +3,7 @@
       SUBROUTINE FNDCMP ( NROWS, NCOLS,  VALUE,  MAXN, &
                           GRID,  VSET,   MRKSET, TMPSET, &
                           NCOMP, MINPXX, MAXPXX, MINPXY, MAXPXY )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -185,10 +186,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDI
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local variables

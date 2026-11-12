@@ -1,6 +1,7 @@
 !$Procedure      BATCH (Tell whether or not a program is in batch mode)
 
       LOGICAL FUNCTION      BATCH ()
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

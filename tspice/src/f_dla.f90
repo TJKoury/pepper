@@ -1,6 +1,7 @@
 !$Procedure F_DLA ( Test DLA routines )
 
       SUBROUTINE F_DLA ( OK )
+      use pepper_legacy
       use pepper_inc_dla
       use pepper_inc_das
 
@@ -107,8 +108,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               DLASSG
-      LOGICAL               EXISTS
 
 !
 !     Local parameters

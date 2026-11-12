@@ -1,6 +1,7 @@
 !$Procedure F_DDHCLU ( ZZDDHCLU Test Family )
 
       SUBROUTINE F_DDHCLU ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -83,7 +84,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ZZDDHCLU
 
 !
 !     Local Variables

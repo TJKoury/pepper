@@ -1,6 +1,7 @@
 !$Procedure      F_ZZVRTPLT ( Test ZZVRTPLT )
 
       SUBROUTINE F_ZZVRTPLT ( OK )
+      use pepper_legacy
       use pepper_inc_dsk02
 
 ! $ Abstract

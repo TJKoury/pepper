@@ -1,6 +1,7 @@
 !$Procedure      F_DSKXV ( DSKXV family tests )
 
       SUBROUTINE F_DSKXV ( OK )
+      use pepper_legacy
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_zzdsk
@@ -93,13 +94,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      PI
 
-      LOGICAL               EXISTS
 
 !
 !     Local parameters
@@ -228,6 +223,8 @@
 
       LOGICAL               FNDARR ( MAXPTS )
       LOGICAL               FOUND
+      LOGICAL FOUND_A1 ( 1 )
+      EQUIVALENCE ( FOUND, FOUND_A1 )
       LOGICAL               PRI
       LOGICAL               XFND
 
@@ -310,7 +307,7 @@
 !     Add an incomplete frame definition to the kernel pool;
 !     we'll need this later.
 !
-      CALL PIPOOL ( 'FRAME_BAD_NAME', 1, -666 )
+      CALL PIPOOL ( 'FRAME_BAD_NAME', 1, [-666] )
 
 !
 ! --- Case: ------------------------------------------------------
@@ -667,7 +664,7 @@
 
                   CALL DSKXV ( .FALSE., TARGET, NSURF,  SRFLST, &
                                ET,      TRGFRM, 1,      VERTEX, &
-                               RAYDIR,  SPOINT, FOUND          )
+                               RAYDIR,  SPOINT, FOUND_A1          )
                   CALL CHCKXC ( .FALSE., ' ', OK )
 
                   CALL CHCKSL ( 'DSKXV FOUND', FOUND, .TRUE., OK )
@@ -938,14 +935,14 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF,  SRFLST, &
                    ET,      FIXREF, 1,      VERTEX, &
-                   RAYDIR,  XPT,    FOUND          )
+                   RAYDIR,  XPT,    FOUND_A1          )
       CALL CHCKXC ( .FALSE., ' ', OK )
       CALL CHCKSL ( '(0) FOUND', FOUND, .TRUE., OK )
 
 
       CALL DSKXV ( .FALSE., '499',  NSURF,  SRFLST, &
                    ET,      FIXREF, 1,      VERTEX, &
-                   RAYDIR,  SPOINT, FOUND          )
+                   RAYDIR,  SPOINT, FOUND_A1          )
       CALL CHCKXC ( .FALSE., ' ', OK )
       CALL CHCKSL ( '(1) FOUND', FOUND, .TRUE., OK )
 
@@ -1006,7 +1003,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF,  SRFLST, &
                    ET,      FIXREF, 1,      VERTEX, &
-                   RAYDIR,  XPT,    FOUND          )
+                   RAYDIR,  XPT,    FOUND_A1          )
       CALL CHCKXC ( .FALSE., ' ', OK )
       CALL CHCKSL ( '(0) FOUND', FOUND, .TRUE., OK )
 
@@ -1016,7 +1013,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF,  SRFLST, &
                    ET,      FIXREF, 1,      VERTEX, &
-                   RAYDIR,  SPOINT, FOUND          )
+                   RAYDIR,  SPOINT, FOUND_A1          )
       CALL CHCKXC ( .FALSE., ' ', OK )
       CALL CHCKSL ( '(1) FOUND', FOUND, .TRUE., OK )
 
@@ -1058,7 +1055,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF,  SRFLST, &
                    ET,      FIXREF, 1,      VERTEX, &
-                   RAYDIR,  XPT,    FOUND          )
+                   RAYDIR,  XPT,    FOUND_A1          )
       CALL CHCKXC ( .FALSE., ' ', OK )
       CALL CHCKSL ( '(0) FOUND', FOUND, .TRUE., OK )
 
@@ -1079,7 +1076,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF,  SRFLST, &
                    ET,      FIXREF, 1,      VERTEX, &
-                   RAYDIR,  SPOINT, FOUND          )
+                   RAYDIR,  SPOINT, FOUND_A1          )
       CALL CHCKXC ( .FALSE., ' ', OK )
       CALL CHCKSL ( '(1) FOUND', FOUND, .TRUE., OK )
 
@@ -1121,7 +1118,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF,  SRFLST, &
                    ET,      FIXREF, 1,      VERTEX, &
-                   RAYDIR,  XPT,    FOUND          )
+                   RAYDIR,  XPT,    FOUND_A1          )
       CALL CHCKXC ( .FALSE., ' ', OK )
       CALL CHCKSL ( '(0) FOUND', FOUND, .TRUE., OK )
 
@@ -1140,7 +1137,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF,  SRFLST, &
                    ET,      FIXREF, 1,      VERTEX, &
-                   RAYDIR,  SPOINT, FOUND          )
+                   RAYDIR,  SPOINT, FOUND_A1          )
       CALL CHCKXC ( .FALSE., ' ', OK )
       CALL CHCKSL ( '(1) FOUND', FOUND, .TRUE., OK )
 
@@ -1173,7 +1170,7 @@
 
       CALL DSKXV ( .TRUE.,  TARGET,  NSURF,  SRFLST, &
                    ET,      FIXREF, 1,      VERTEX, &
-                   RAYDIR,  SPOINT, FOUND          )
+                   RAYDIR,  SPOINT, FOUND_A1          )
       CALL CHCKXC ( .TRUE., 'SPICE(BADPRIORITYSPEC)', OK )
 
 
@@ -1191,13 +1188,13 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF,  SRFLST, &
                    ET,      FIXREF, -1,      VERTEX, &
-                   RAYDIR,  SPOINT, FOUND          )
+                   RAYDIR,  SPOINT, FOUND_A1          )
       CALL CHCKXC ( .TRUE., 'SPICE(INVALIDCOUNT)', OK )
 
 
       CALL DSKXV ( .FALSE., TARGET, NSURF,  SRFLST, &
                    ET,      FIXREF, 0,      VERTEX, &
-                   RAYDIR,  SPOINT, FOUND          )
+                   RAYDIR,  SPOINT, FOUND_A1          )
       CALL CHCKXC ( .TRUE., 'SPICE(INVALIDCOUNT)', OK )
 
 
@@ -1210,7 +1207,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, -1,  SRFLST, &
                    ET,      FIXREF, 1,   VERTEX, &
-                   RAYDIR,  SPOINT, FOUND          )
+                   RAYDIR,  SPOINT, FOUND_A1          )
       CALL CHCKXC ( .TRUE., 'SPICE(INVALIDCOUNT)', OK )
 
 
@@ -1228,7 +1225,7 @@
 
       CALL DSKXV ( .FALSE., 'xxx',  NSURF,  SRFLST, &
                    ET,      FIXREF, 1,      VERTEX, &
-                   RAYDIR,  SPOINT, FOUND          )
+                   RAYDIR,  SPOINT, FOUND_A1          )
       CALL CHCKXC ( .TRUE., 'SPICE(IDCODENOTFOUND)', OK )
 
 
@@ -1241,7 +1238,7 @@
 
       CALL DSKXV ( .FALSE., TARGET,      NSURF,  SRFLST, &
                    ET,      'IAU_EARTH', 1,      VERTEX, &
-                   RAYDIR,  SPOINT,      FOUND          )
+                   RAYDIR,  SPOINT,      FOUND_A1          )
       CALL CHCKXC ( .TRUE., 'SPICE(INVALIDFRAME)', OK )
 
 !
@@ -1255,13 +1252,13 @@
 
       CALL DSKXV ( .FALSE., TARGET,      NSURF,  SRFLST, &
                    ET,      'IAU_MARS',  1,      VERTEX, &
-                   RAYDIR,  SPOINT,      FOUND          )
+                   RAYDIR,  SPOINT,      FOUND_A1          )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 
       CALL DSKXV ( .FALSE., 'phobos',    NSURF,  SRFLST, &
                    ET,      'IAU_MARS',  1,      VERTEX, &
-                   RAYDIR,  SPOINT,      FOUND          )
+                   RAYDIR,  SPOINT,      FOUND_A1          )
       CALL CHCKXC ( .TRUE., 'SPICE(INVALIDFRAME)', OK )
 
 
@@ -1274,7 +1271,7 @@
 
       CALL DSKXV ( .FALSE., TARGET,      NSURF,  SRFLST, &
                    ET,      'ZZZ',       1,      VERTEX, &
-                   RAYDIR,  SPOINT,      FOUND          )
+                   RAYDIR,  SPOINT,      FOUND_A1          )
       CALL CHCKXC ( .TRUE., 'SPICE(IDCODENOTFOUND)', OK )
 
 
@@ -1314,7 +1311,7 @@
 
       CALL DSKXV ( .FALSE., TARGET,           NSURF,  SRFLST, &
                    ET,      'MARS_FIXED_PCK', 1,      VERTEX, &
-                   RAYDIR,  SPOINT,           FOUND          )
+                   RAYDIR,  SPOINT,           FOUND_A1          )
       CALL CHCKXC ( .TRUE., 'SPICE(FRAMEDATANOTFOUND)', OK )
 
       CALL TSTLSK
@@ -1361,7 +1358,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF,  SRFLST, &
                    ET,      FIXREF, 1,      VERTEX, &
-                   RAYDIR,  SPOINT, FOUND          )
+                   RAYDIR,  SPOINT, FOUND_A1          )
       CALL CHCKXC ( .TRUE., 'SPICE(NOLOADEDDSKFILES)', OK )
 
 !

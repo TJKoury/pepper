@@ -1,6 +1,7 @@
 !$Procedure  T_PD2DT ( Polynomial derivatives to difference table )
 
       SUBROUTINE T_PD2DT ( DEGP, PDERIV, WORK, DIFTAB )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

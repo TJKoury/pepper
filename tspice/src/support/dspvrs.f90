@@ -1,6 +1,7 @@
 !$Procedure      DSPVRS ( Display Version )
 
       SUBROUTINE DSPVRS ( PNAME, VRSN )
+      use pepper_legacy
 
 ! $ Abstract
 !

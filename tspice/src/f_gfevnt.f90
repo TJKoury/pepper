@@ -1,6 +1,7 @@
 !$Procedure F_GFEVNT ( GFEVNT family tests )
 
       SUBROUTINE F_GFEVNT ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 
@@ -85,7 +86,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      SPD
 
 !
 !     Local parameters
@@ -151,8 +151,6 @@
       INTEGER               J
 
       LOGICAL               BAIL
-      LOGICAL               GFBAIL
-      EXTERNAL              GFBAIL
       LOGICAL               RPT
 
 !
@@ -180,11 +178,6 @@
 !     Routines to set step size, refine transition times
 !     and report work.
 !
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFREPF
-      EXTERNAL              GFSTEP
 
       SAVE
 

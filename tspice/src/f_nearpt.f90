@@ -1,6 +1,7 @@
 !$Procedure F_NEARPT ( NEARPT tests )
 
       SUBROUTINE F_NEARPT ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -97,8 +98,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VNORM
 
 !
 !     Other functions
@@ -1044,6 +1043,7 @@
 !     separation from the vector from the near point to view point.
 !
       LOGICAL FUNCTION T_ISNPPT ( V, A, B, C, X, ALT, ATOL, STOL, OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       DOUBLE PRECISION      V      ( 3 )
@@ -1059,8 +1059,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
 
 !
 !     Local parameters

@@ -1,6 +1,7 @@
 !$Procedure F_CK06 ( CK data type 06 tests )
 
       SUBROUTINE F_CK06 ( OK )
+      use pepper_legacy
       use pepper_inc_ck06
 
 ! $ Abstract
@@ -87,8 +88,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EVEN
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters
@@ -6489,6 +6488,7 @@
 !
       SUBROUTINE T_GENC06 ( SEGNO, MNSGNO, BEGREC, N,    FRAME, &
                             RATE,  EPOCHS, QUATS,  AVVS, OK    )
+      use pepper_legacy, pepper_legacy_frame => frame
       IMPLICIT NONE
 
       INTEGER               SEGNO
@@ -6505,10 +6505,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPR
 
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
 
 !
 !     Local parameters
@@ -6658,6 +6655,7 @@
 !
       SUBROUTINE T_GENCSM ( SEGNO, MNSGNO, BEGREC, N,     FRAME, &
                             RATE,  SUBTYP, EPOCHS, QUATS, AVVS, OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_ck06
       IMPLICIT NONE
 
@@ -6675,9 +6673,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDISTG
-      INTEGER               TOUCHI
-      LOGICAL               RETURN
 
 !
 !     Local parameters
@@ -6812,6 +6807,7 @@
 !        Version 1.0.0 07-FEB-2014 (NJB)
 !
       SUBROUTINE T_GENTAG ( BEGREC, N, EPOCHS )
+      use pepper_legacy
       use pepper_inc_ck06
       IMPLICIT NONE
 
@@ -6821,7 +6817,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local parameters
@@ -6875,6 +6870,7 @@
 !     with respect to ticks of the angular velocity.
 !
       SUBROUTINE T_XSUBTP ( QUAT, AVV, DAVV, SUBTYP, SIZE, RECORD )
+      use pepper_legacy
       use pepper_inc_ck06
       IMPLICIT NONE
 
@@ -6890,7 +6886,6 @@
 !     SPICELIB functions
 !
 !      DOUBLE PRECISION      VDOTG
-      LOGICAL               RETURN
 
 !
 !     Local variables

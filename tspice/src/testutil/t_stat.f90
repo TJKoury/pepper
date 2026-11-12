@@ -1,6 +1,7 @@
 !$Procedure      T_STAT ( Test Status )
 
       SUBROUTINE T_STAT ( ACT, NAME, OK, NUMBER )
+      use pepper_legacy, pepper_legacy_trace => trace
 
 ! $ Abstract
 !

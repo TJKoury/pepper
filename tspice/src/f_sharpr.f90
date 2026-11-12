@@ -1,6 +1,7 @@
 !$Procedure F_SHARPR ( Test the SPICELIB routine SHARPR )
 
       SUBROUTINE F_SHARPR ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -83,9 +84,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
 
-      LOGICAL               ISROT
 
 !
 !     Other functions

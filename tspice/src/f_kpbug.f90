@@ -1,6 +1,7 @@
 !$Procedure F_KPBUG ( UNLOAD bug demonstration )
 
       SUBROUTINE F_KPBUG ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -112,7 +113,6 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters

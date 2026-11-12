@@ -1,6 +1,7 @@
 !$Procedure      F_DASA2L ( Test DAS address calculation routine )
 
       SUBROUTINE F_DASA2L ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -87,7 +88,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
 
 !
 !     Other functions
@@ -245,6 +245,8 @@
       CHARACTER*(FILSIZ)    WRTABL ( NWRIT  )
 
       DOUBLE PRECISION      DVAL
+      DOUBLE PRECISION DVAL_A1 ( 1 )
+      EQUIVALENCE ( DVAL, DVAL_A1 )
 
       INTEGER               ADDRSS
       INTEGER               BIGHAN
@@ -261,6 +263,8 @@
       INTEGER               HWRIT  ( NWRIT  )
       INTEGER               I
       INTEGER               IVAL
+      INTEGER IVAL_A1 ( 1 )
+      EQUIVALENCE ( IVAL, IVAL_A1 )
       INTEGER               J
       INTEGER               K
       INTEGER               LASTC
@@ -365,12 +369,12 @@
       N = 10
 
       DO I = 1, N
-         CALL DASADD ( HANDLE, 1, DBLE(I) )
+         CALL DASADD ( HANDLE, 1, [DBLE(I)] )
          CALL CHCKXC ( .FALSE., ' ', OK )
       END DO
 
       DO I = 1, N
-         CALL DASADI ( HANDLE, 1, I )
+         CALL DASADI ( HANDLE, 1, [I] )
          CALL CHCKXC ( .FALSE., ' ', OK )
       END DO
 
@@ -503,7 +507,7 @@
 !     directory record.
 !
       IVAL = 1000000
-      CALL DASURI ( HANDLE, 2, INTRNG+1, INTRNG+1, IVAL )
+      CALL DASURI ( HANDLE, 2, INTRNG+1, INTRNG+1, [IVAL] )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -595,7 +599,7 @@
 !
       DO I = 1, CLNWDS(1)
 
-         CALL DASRDI ( HANDLE, I, I, IVAL )
+         CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( IVAL .NE. I ) THEN
@@ -629,7 +633,7 @@
 
       DO I = 1, CLNWDS(1)
 
-         CALL DASRDI ( HANDLE, I, I, IVAL )
+         CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( IVAL .NE. I ) THEN
@@ -684,7 +688,7 @@
 !
       DO I = 1, CLNWDS(1)
 
-         CALL DASRDD ( HANDLE, I, I, DVAL )
+         CALL DASRDD ( HANDLE, I, I, DVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( DVAL .NE. DBLE(I) ) THEN
@@ -717,7 +721,7 @@
 
       DO I = 1, CLNWDS(1)
 
-         CALL DASRDD ( HANDLE, I, I, DVAL )
+         CALL DASRDD ( HANDLE, I, I, DVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( DVAL .NE. DBLE(I) ) THEN
@@ -855,7 +859,7 @@
 !
       DO I = 1, CLNWDS(1)
 
-         CALL DASRDI ( HANDLE, I, I, IVAL )
+         CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( IVAL .NE. I ) THEN
@@ -866,7 +870,7 @@
 
       DO I = 1, CLNWDS(2)
 
-         CALL DASRDD ( HANDLE, I, I, DVAL )
+         CALL DASRDD ( HANDLE, I, I, DVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( DVAL .NE. DBLE(I) ) THEN
@@ -903,7 +907,7 @@
 
       DO I = 1, CLNWDS(1)
 
-         CALL DASRDI ( HANDLE, I, I, IVAL )
+         CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( IVAL .NE. I ) THEN
@@ -914,7 +918,7 @@
 
       DO I = 1, CLNWDS(2)
 
-         CALL DASRDD ( HANDLE, I, I, DVAL )
+         CALL DASRDD ( HANDLE, I, I, DVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( DVAL .NE. DBLE(I) ) THEN
@@ -950,7 +954,7 @@
 
       DO I = 1, CLNWDS(1)
 
-         CALL DASRDI ( HANDLE, I, I, IVAL )
+         CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( IVAL .NE. I ) THEN
@@ -961,7 +965,7 @@
 
       DO I = 1, CLNWDS(2)
 
-         CALL DASRDD ( HANDLE, I, I, DVAL )
+         CALL DASRDD ( HANDLE, I, I, DVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( DVAL .NE. DBLE(I) ) THEN
@@ -1016,7 +1020,7 @@
 !
       DO I = 1, CLNWDS(1)
 
-         CALL DASRDI ( HANDLE, I, I, IVAL )
+         CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( IVAL .NE. I ) THEN
@@ -1062,7 +1066,7 @@
 
       DO I = 1, CLNWDS(1)
 
-         CALL DASRDI ( HANDLE, I, I, IVAL )
+         CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( IVAL .NE. I ) THEN
@@ -1144,7 +1148,7 @@
 
       DO I = 1, CLNWDS(2)
 
-         CALL DASRDD ( HANDLE, I, I, DVAL )
+         CALL DASRDD ( HANDLE, I, I, DVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( DVAL .NE. DBLE(I) ) THEN
@@ -1190,7 +1194,7 @@
 
       DO I = 1, CLNWDS(2)
 
-         CALL DASRDD ( HANDLE, I, I, DVAL )
+         CALL DASRDD ( HANDLE, I, I, DVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( DVAL .NE. DBLE(I) ) THEN
@@ -1247,7 +1251,7 @@
 !
       DO I = 1, CLNWDS(1)
 
-         CALL DASRDI ( HANDLE, I, I, IVAL )
+         CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( IVAL .NE. I ) THEN
@@ -1271,7 +1275,7 @@
 
       DO I = 1, CLNWDS(3)
 
-         CALL DASRDD ( HANDLE, I, I, DVAL )
+         CALL DASRDD ( HANDLE, I, I, DVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( DVAL .NE. DBLE(I) ) THEN
@@ -1301,7 +1305,7 @@
 
       DO I = 1, CLNWDS(1)
 
-         CALL DASRDI ( HANDLE, I, I, IVAL )
+         CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( IVAL .NE. I ) THEN
@@ -1325,7 +1329,7 @@
 
       DO I = 1, CLNWDS(3)
 
-         CALL DASRDD ( HANDLE, I, I, DVAL )
+         CALL DASRDD ( HANDLE, I, I, DVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( DVAL .NE. DBLE(I) ) THEN
@@ -1364,7 +1368,7 @@
 
       DO I = 1, CLNWDS(1)
 
-         CALL DASRDI ( HANDLE, I, I, IVAL )
+         CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( IVAL .NE. I ) THEN
@@ -1388,7 +1392,7 @@
 
       DO I = 1, CLNWDS(3)
 
-         CALL DASRDD ( HANDLE, I, I, DVAL )
+         CALL DASRDD ( HANDLE, I, I, DVAL_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          IF ( DVAL .NE. DBLE(I) ) THEN
@@ -1951,7 +1955,7 @@
 
             HANDLE = HWRIT(K)
 
-            CALL DASRDI ( HANDLE, I, I, IVAL )
+            CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             IF ( IVAL .NE. I ) THEN
@@ -1999,7 +2003,7 @@
 
             HANDLE = HWRIT(K)
 
-            CALL DASRDD ( HANDLE, I, I, DVAL )
+            CALL DASRDD ( HANDLE, I, I, DVAL_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             IF ( DVAL .NE. DBLE(I) ) THEN
@@ -2021,7 +2025,7 @@
 
             HANDLE = HWRIT(K)
 
-            CALL DASRDI ( HANDLE, I, I, IVAL )
+            CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             IF ( IVAL .NE. I ) THEN
@@ -2250,7 +2254,7 @@
             HANDLE = HRDNSG(K)
 
 
-            CALL DASRDI ( HANDLE, I, I, IVAL )
+            CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             IF ( IVAL .NE. I ) THEN
@@ -2295,7 +2299,7 @@
 
             HANDLE = HRDNSG(K)
 
-            CALL DASRDD ( HANDLE, I, I, DVAL )
+            CALL DASRDD ( HANDLE, I, I, DVAL_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             IF ( DVAL .NE. DBLE(I) ) THEN
@@ -2318,7 +2322,7 @@
             HANDLE = HRDNSG(K)
 
 
-            CALL DASRDI ( HANDLE, I, I, IVAL )
+            CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             IF ( IVAL .NE. I ) THEN
@@ -2544,7 +2548,7 @@
             HANDLE = HFAST(K)
 
 
-            CALL DASRDI ( HANDLE, I, I, IVAL )
+            CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             IF ( IVAL .NE. I ) THEN
@@ -2594,7 +2598,7 @@
 
             HANDLE = HFAST(K)
 
-            CALL DASRDD ( HANDLE, I, I, DVAL )
+            CALL DASRDD ( HANDLE, I, I, DVAL_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             IF ( DVAL .NE. DBLE(I) ) THEN
@@ -2616,7 +2620,7 @@
             HANDLE = HFAST(K)
 
 
-            CALL DASRDI ( HANDLE, I, I, IVAL )
+            CALL DASRDI ( HANDLE, I, I, IVAL_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             IF ( IVAL .NE. I ) THEN
@@ -2881,6 +2885,7 @@
 !     Utilities for execution path checking:
 !
       SUBROUTINE T_PATH ( STR, PATH )
+      use pepper_legacy
       IMPLICIT NONE
 
       INTEGER               LBCELL
@@ -2937,6 +2942,7 @@
 !     Detect path mismatch.
 !
       SUBROUTINE T_PTHCMP ( PATH, EXPPTH )
+      use pepper_legacy
       IMPLICIT NONE
 
       INTEGER               LBCELL
@@ -2945,7 +2951,6 @@
       CHARACTER*(*)         PATH   ( LBCELL : * )
       CHARACTER*(*)         EXPPTH ( LBCELL : * )
 
-      INTEGER               CARDC
 
       INTEGER               CP
       INTEGER               CX

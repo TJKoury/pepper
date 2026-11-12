@@ -1,6 +1,7 @@
 !$Procedure F_SCLK ( SCLK tests )
 
       SUBROUTINE F_SCLK ( OK )
+      use pepper_legacy
       use pepper_inc_sclk
 
 ! $ Abstract
@@ -119,13 +120,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      UNITIM
 
-      INTEGER               LASTNB
-      INTEGER               SCTYPE
-      INTEGER               TOUCHI
 
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters
@@ -209,9 +205,13 @@
       INTEGER               CLKID
       INTEGER               CLKTYP
       INTEGER               DELCDE
+      INTEGER DELCDE_A1 ( 1 )
+      EQUIVALENCE ( DELCDE, DELCDE_A1 )
       INTEGER               FIELD ( 4 )
       INTEGER               HANDLE
       INTEGER               I
+      INTEGER I_A1 ( 1 )
+      EQUIVALENCE ( I, I_A1 )
       INTEGER               J
       INTEGER               K
       INTEGER               N
@@ -1025,7 +1025,7 @@
 !
 !     Fetch the current output delimiter code.
 !
-      CALL GIPOOL ( 'SCLK01_OUTPUT_DELIM_9', 1, 1, N, DELCDE, FOUND )
+      CALL GIPOOL ( 'SCLK01_OUTPUT_DELIM_9', 1, 1, N, DELCDE_A1, FOUND )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
@@ -1042,7 +1042,7 @@
 !        ordered so that the Ith character has code I.
 !        Insert this code into the kernel pool.
 !
-         CALL PIPOOL ( 'SCLK01_OUTPUT_DELIM_9', 1, I )
+         CALL PIPOOL ( 'SCLK01_OUTPUT_DELIM_9', 1, I_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -1067,7 +1067,7 @@
 !
 !     Restore the original output delimiter code.
 !
-      CALL PIPOOL ( 'SCLK01_OUTPUT_DELIM_9', 1, DELCDE )
+      CALL PIPOOL ( 'SCLK01_OUTPUT_DELIM_9', 1, DELCDE_A1 )
 
 !
 ! --- Case: ------------------------------------------------------

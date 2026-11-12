@@ -1,6 +1,7 @@
 !$Procedure T_BINGO ( BINGO: Process binary kernels to alternate BFFs )
 
       SUBROUTINE T_BINGO ( INAME, ONAME, OBFF )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -133,10 +134,7 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
 
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
 
 !
 !     Local Variables

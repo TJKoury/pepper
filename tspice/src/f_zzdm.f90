@@ -1,6 +1,7 @@
 !$Procedure F_ZZDM ( Test ZZDIV, ZZMULT )
 
       SUBROUTINE F_ZZDM ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -80,9 +81,6 @@
 !     SPICELIB Functions
 !
 
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      ZZDIV
-      DOUBLE PRECISION      ZZMULT
       DOUBLE PRECISION      T_RANDD
 
 

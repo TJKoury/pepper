@@ -1,6 +1,7 @@
 !$Procedure TSTIO ( Test utilities IO Manager )
 
       SUBROUTINE TSTIO ( LINE, NAME, PORT, OK, STATUS )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -147,9 +148,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      INTEGER               ISRCHC
-      INTEGER               RTRIM
 
       INTEGER               ID
       INTEGER               IOSTAT

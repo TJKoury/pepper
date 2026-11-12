@@ -1,6 +1,7 @@
 !$Procedure NATSPK ( Create an SPK file for Nat's solar system )
 
       SUBROUTINE NATSPK ( FILE, LOAD, HANDLE )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -314,10 +315,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      TWOPI
 
 !
 !     Local parameters
@@ -537,13 +534,13 @@
       SEGID = 'Outer object alpha'
 
       CALL SPKW05 ( MYHAND, IDA, IDC, REF,    FIRST, LAST, &
-                    SEGID,  MU,  1,   STATEA, 0.D0        )
+                    SEGID,  MU,  1,   STATEA, [0.D0]        )
 
 
       SEGID = 'Inner object beta'
 
       CALL SPKW05 ( MYHAND, IDB, IDC, REF,    FIRST, LAST, &
-                    SEGID,  MU,  1,   STATEB, 0.D0        )
+                    SEGID,  MU,  1,   STATEB, [0.D0]        )
 
 
 !
@@ -567,7 +564,7 @@
       SEGID = 'Alpha''s moon Gamma'
 
       CALL SPKW05 ( MYHAND, IDG, IDA, REF,    FIRST, LAST, &
-                    SEGID,  MU,  1,   STATEG, 0.D0        )
+                    SEGID,  MU,  1,   STATEG, [0.D0]        )
 
 
 

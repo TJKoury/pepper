@@ -1,6 +1,7 @@
 !$Procedure F_XLATED ( ZZXLATED Test Family )
 
       SUBROUTINE F_XLATED ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -193,8 +194,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPMIN
 
 !
 !     Local Parameters

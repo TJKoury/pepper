@@ -1,6 +1,7 @@
 !$Procedure F_TPARTV2 ( Family of tests for TPARTV )
 
       SUBROUTINE F_TPARTV2 ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

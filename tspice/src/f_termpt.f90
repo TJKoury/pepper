@@ -1,6 +1,7 @@
 !$Procedure      F_TERMPT ( TERMPT family tests )
 
       SUBROUTINE F_TERMPT ( OK )
+      use pepper_legacy
       use pepper_inc_dskdsc
       use pepper_inc_zzdsk
       use pepper_inc_zzabcorr
@@ -86,17 +87,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
 
-      LOGICAL               EQSTR
-      LOGICAL               EXISTS
-      LOGICAL               MATCHI
-      LOGICAL               ODD
 
 !
 !     Local parameters
@@ -332,6 +323,8 @@
 
       LOGICAL               ATTBLK ( ABATSZ )
       LOGICAL               FOUND
+      LOGICAL FOUND_A1 ( 1 )
+      EQUIVALENCE ( FOUND, FOUND_A1 )
       LOGICAL               ISDSK
       LOGICAL               ISELL
       LOGICAL               ISHI
@@ -526,7 +519,7 @@
 
       CALL SPKW05 ( HANDLE(2),    SCID,         499,      'MARSIAU', &
                     -10*JYEAR(),  10*JYEAR(),  'Mars orbiter', &
-                    ELTS(8),      1,            STATE0,    ET        )
+                    ELTS(8),      1,            STATE0,    [ET]        )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -544,14 +537,14 @@
 !
       CALL PCPOOL ( 'NAIF_BODY_NAME', 1,  OBSNMS(2) )
       CALL CHCKXC ( .FALSE., ' ', OK )
-      CALL PIPOOL ( 'NAIF_BODY_CODE', 1,  SCID      )
+      CALL PIPOOL ( 'NAIF_BODY_CODE', 1,  [SCID]      )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
 !     Add an incomplete frame definition to the kernel pool;
 !     we'll need this later.
 !
-      CALL PIPOOL ( 'FRAME_BAD_NAME', 1, -666 )
+      CALL PIPOOL ( 'FRAME_BAD_NAME', 1, [-666] )
 
 
 !
@@ -1257,10 +1250,10 @@
 
 
                                  CALL DSKXV  ( .FALSE., TARGET, NSURF, &
-                                               SURFID,  ET,     TRGFRM, &
+                                               [SURFID],  ET,     TRGFRM, &
                                                1, &
                                                VERTEX,  RAYDIR, XPT, &
-                                               FOUND          )
+                                               FOUND_A1          )
                                  CALL CHCKXC ( .FALSE., ' ', OK   )
 
                                  CALL CHCKSL ( 'DSKXV FOUND', FOUND, &
@@ -1480,10 +1473,10 @@
                                     END IF
 
                                     CALL DSKXV ( .FALSE., TARGET, NSURF, &
-                                                 SURFID,  ET, &
+                                                 [SURFID],  ET, &
                                                  TRGFRM,  1, &
                                                  VERTEX,  RAYDIR, &
-                                                 XPT,     FOUND       )
+                                                 XPT,     FOUND_A1       )
                                     CALL CHCKXC ( .FALSE., ' ', OK   )
 
                                     LABEL = '(miss) Ray hit PLANE #, ' &
@@ -1506,10 +1499,10 @@
                                                  THETA,  RAYDIR )
 
                                     CALL DSKXV ( .FALSE., TARGET, NSURF, &
-                                                 SURFID,  ET, &
+                                                 [SURFID],  ET, &
                                                  TRGFRM,  1, &
                                                  VERTEX,  RAYDIR, &
-                                                 XPT,     FOUND       )
+                                                 XPT,     FOUND_A1       )
                                     CALL CHCKXC ( .FALSE., ' ', OK   )
 
 
@@ -1986,7 +1979,7 @@
                   CALL DSKXV  ( .FALSE., TARGET, 2, &
                                 SRFIDS,  ET,     TRGFRM, &
                                 1, &
-                                VERTEX,  RAYDIR, XPT, FOUND )
+                                VERTEX,  RAYDIR, XPT, FOUND_A1 )
                   CALL CHCKXC ( .FALSE., ' ', OK   )
 
                   CALL CHCKSL ( 'DSKXV FOUND', FOUND, .TRUE., OK )
@@ -2071,7 +2064,7 @@
                                SRFIDS,  ET, &
                                TRGFRM,  1, &
                                VERTEX,  RAYDIR, &
-                               XPT,     FOUND       )
+                               XPT,     FOUND_A1       )
                   CALL CHCKXC ( .FALSE., ' ', OK   )
 
                   LABEL = '(miss) Ray hit PLANE #, PT #'
@@ -2091,7 +2084,7 @@
 
                   CALL DSKXV ( .FALSE., TARGET, NSURF, &
                                SRFIDS,  ET,     TRGFRM, 1, &
-                               VERTEX,  RAYDIR, XPT,    FOUND )
+                               VERTEX,  RAYDIR, XPT,    FOUND_A1 )
                   CALL CHCKXC ( .FALSE., ' ', OK   )
 
                   LABEL = '(hit) Ray hit PLANE #, PT #'

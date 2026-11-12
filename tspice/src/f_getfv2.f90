@@ -1,6 +1,7 @@
 !$Procedure F_GETFV2 ( GETFOV Test Family )
 
       SUBROUTINE F_GETFV2 ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
 
 ! $ Abstract
 !

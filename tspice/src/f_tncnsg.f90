@@ -1,6 +1,7 @@
 !$Procedure F_TNCNSG ( T_INCNSG tests )
 
       SUBROUTINE F_TNCNSG ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -89,11 +90,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
 
 
 !

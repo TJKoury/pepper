@@ -2,6 +2,7 @@
 
       SUBROUTINE T_DAFWSR ( UNIT, RECNO, OUTBFF, ND,   NI, &
                             NEXT, PREV,  NSUM,   ARRAY     )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -147,8 +148,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
-      LOGICAL               RETURN
 
 !
 !     Local Parameters

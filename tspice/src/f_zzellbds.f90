@@ -1,6 +1,7 @@
 !$Procedure      F_ZZELLBDS ( Test bounding ellipsoid routine )
 
       SUBROUTINE F_ZZELLBDS ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -91,7 +92,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
 
 !
 !     Local parameters

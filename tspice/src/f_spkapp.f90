@@ -1,6 +1,7 @@
 !$Procedure      F_SPKAPP ( Family of tests for SPKAPP)
 
       SUBROUTINE F_SPKAPP ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -27,8 +28,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      VNORM
 
 !
 !     Local Variables

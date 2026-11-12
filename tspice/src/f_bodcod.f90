@@ -1,6 +1,7 @@
 !$Procedure F_BODCOD ( Body Code/Name Mapping Test Family )
 
       SUBROUTINE F_BODCOD ( OK )
+      use pepper_legacy
       use pepper_inc_zzbodtrn
       use pepper_inc_zzctr
 

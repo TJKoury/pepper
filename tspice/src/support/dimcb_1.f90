@@ -2,6 +2,7 @@
 !$Procedure DIMCB ( Dimension of character buffer )
 
       INTEGER FUNCTION DIMCB_1 ( BUFFER )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -105,7 +106,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local variables

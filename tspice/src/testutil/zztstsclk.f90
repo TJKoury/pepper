@@ -1,6 +1,7 @@
 !$Procedure ZZTSTSCLK (Create an SCLK file)
 
       SUBROUTINE ZZTSTSCLK( SCLKNM )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -94,7 +95,6 @@
 !
 !     Spicelib Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Test Utility Functions

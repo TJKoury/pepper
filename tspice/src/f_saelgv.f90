@@ -1,6 +1,7 @@
 !$Procedure F_SAELGV ( SAELGV tests )
 
       SUBROUTINE F_SAELGV ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -82,10 +83,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
 
 !
 !     Other functions

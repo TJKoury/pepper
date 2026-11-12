@@ -2,6 +2,7 @@
 
 
       SUBROUTINE NSPPWD ( MARGIN, LEFT, RIGHT )
+      use pepper_legacy
 
 ! $ Abstract
 !

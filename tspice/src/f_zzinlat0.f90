@@ -1,6 +1,7 @@
 !$Procedure F_ZZINLAT0 ( ZZINLAT0 tests )
 
       SUBROUTINE F_ZZINLAT0 ( OK )
+      use pepper_legacy
       use pepper_inc_dsktol
 
 ! $ Abstract
@@ -85,10 +86,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      RPD
 
 !
 !     Local Parameters

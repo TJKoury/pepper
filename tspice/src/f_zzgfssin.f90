@@ -1,6 +1,7 @@
 !$Procedure      F_ZZGFSSIN ( Test surface intercept state computation )
 
       SUBROUTINE F_ZZGFSSIN ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 
@@ -97,7 +98,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      SPD
 
 
 !

@@ -1,6 +1,7 @@
 !$Procedure T_DAFOPN ( Open a new DAF file for testing )
 
       SUBROUTINE T_DAFOPN ( FNAME, OUTBFF, UNIT )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -98,8 +99,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
-      LOGICAL               RETURN
 
 !
 !     Local Variables

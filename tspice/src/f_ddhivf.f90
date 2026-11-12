@@ -1,6 +1,7 @@
 !$Procedure F_DDHIVF ( ZZDDHIVF Test Family )
 
       SUBROUTINE F_DDHIVF ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract

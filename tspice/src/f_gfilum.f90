@@ -1,6 +1,7 @@
 !$Procedure      F_GFILUM ( GFILUM family tests )
 
       SUBROUTINE F_GFILUM ( OK )
+      use pepper_legacy, pepper_legacy_illum => illum, pepper_legacy_pos => pos
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 
@@ -92,13 +93,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      SPD
 
-      INTEGER               CARDD
-      INTEGER               WNCARD
 
-      LOGICAL               EQSTR
 
 !
 !     Local parameters

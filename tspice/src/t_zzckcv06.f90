@@ -2,6 +2,7 @@
 
       SUBROUTINE T_ZZCKCV06 ( HANDLE, DESCR,  SCLKID, &
                               TOL,    TIMSYS, SCHEDL )
+      use pepper_legacy
       use pepper_inc_ck06
 
 ! $ Abstract
@@ -188,9 +189,6 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local parameters

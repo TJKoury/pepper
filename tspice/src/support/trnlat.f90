@@ -1,4 +1,5 @@
       SUBROUTINE TRNLAT ( PHRASE,  MESSGE )
+      use pepper_legacy
       IMPLICIT NONE
 !
 ! $ Version
@@ -19,7 +20,6 @@
 !
 !     Spicelib functions
 !
-      INTEGER               BSRCHC
 
 !
 !     Local parameters and variables

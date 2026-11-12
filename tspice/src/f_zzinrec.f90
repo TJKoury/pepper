@@ -1,6 +1,7 @@
 !$Procedure F_ZZINREC ( ZZINREC tests )
 
       SUBROUTINE F_ZZINREC ( OK )
+      use pepper_legacy
       use pepper_inc_dskdsc
       use pepper_inc_dsktol
 

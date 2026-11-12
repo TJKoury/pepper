@@ -1,6 +1,7 @@
 !$Procedure      F_SEPOOL ( Family of tests for SEPOOL )
 
       SUBROUTINE F_SEPOOL ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -88,7 +89,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Local Variables

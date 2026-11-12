@@ -1,6 +1,7 @@
 !$Procedure F_REGLON ( REGLON tests )
 
       SUBROUTINE F_REGLON ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -85,8 +86,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
 
 !
 !     Local Parameters

@@ -1,6 +1,7 @@
 !$Procedure F_DHFA ( DHFA, DVSEP family tests )
 
       SUBROUTINE F_DHFA ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -85,9 +86,7 @@
 !     SPICELIB functions
 !
 
-      DOUBLE PRECISION      DHFA
       DOUBLE PRECISION      T_RANDD
-      DOUBLE PRECISION      VNORM
 
 !
 !     Local parameters

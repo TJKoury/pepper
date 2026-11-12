@@ -1,6 +1,7 @@
 !$Procedure ZZPSWRIT ( Plate set, write to file )
 
       SUBROUTINE ZZPSWRIT ( UNIT, V1, P1 )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -101,8 +102,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      INTEGER               CARDI
 
 !
 !     Local parameters

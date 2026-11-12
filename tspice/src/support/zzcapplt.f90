@@ -2,6 +2,7 @@
 
       SUBROUTINE ZZCAPPLT ( NCOLS,  NORTH,  WRAP, &
                             BASIDX, POLIDX, NP,   PLATES )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -143,7 +144,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local variables

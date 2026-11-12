@@ -1,6 +1,7 @@
 !$Procedure ZZTSTSPK ( Create an SPK file for use in testing )
 
       SUBROUTINE ZZTSTSPK ( FILE )
+      use pepper_legacy, pepper_legacy_frame => frame
 
 ! $ Abstract
 !
@@ -222,7 +223,7 @@
             CALL SPKW05 ( HANDLE, BODY,  CENTER, &
                            FRAME,  FIRST, LAST, &
                            SEGID,  GM,    N, &
-                           STATES, EPOCH       )
+                           STATES, [EPOCH]       )
 
          ELSE
 

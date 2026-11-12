@@ -1,6 +1,7 @@
 !$Procedure      F_TIMDEF ( Family of tests for TIMDEF )
 
       SUBROUTINE F_TIMDEF ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

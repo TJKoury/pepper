@@ -1,6 +1,7 @@
 !$Procedure      PODRED ( Pod, remove elements, double precision )
 
       SUBROUTINE PODRED ( N, LOC, POD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -124,7 +125,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local variables

@@ -2,6 +2,7 @@
 !$Procedure CBREM ( Character buffer, remove )
 
       SUBROUTINE CBREM_1 ( BEGIN, END, BUFFER )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -118,7 +119,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
       INTEGER               SIZECB_1
 
 !

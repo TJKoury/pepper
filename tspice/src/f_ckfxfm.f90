@@ -1,6 +1,7 @@
 !$Procedure F_CKFXFM ( Test Family for CKFXFM )
 
       SUBROUTINE F_CKFXFM ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
 
 ! $ Abstract
 !

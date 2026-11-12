@@ -1,6 +1,7 @@
 !$Procedure F_SPKSPV ( Family of tests for SPKS15 )
 
       SUBROUTINE F_SPKSPV ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
 
 ! $ Abstract
 !
@@ -108,8 +109,6 @@
 !
 !     Spicelib Functions
 !
-      EXTERNAL              PI
-      DOUBLE PRECISION      PI
 !
 !     Local Variables.
 !

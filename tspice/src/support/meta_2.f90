@@ -1,6 +1,7 @@
 !$Procedure      META_2 ( Percy's interface to META_0 )
 
       SUBROUTINE META_2 ( COMMAND, TEMPS, NTEMPS, TEMP, BTEMP, ERROR )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -125,8 +126,6 @@
 !
 !     Spice Functions
 !
-      INTEGER               CARDC
-      INTEGER               RTRIM
       LOGICAL               BATCH
 !
 !     Local variables.

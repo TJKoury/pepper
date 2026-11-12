@@ -1,5 +1,6 @@
 
       SUBROUTINE T_CHDS ( NAME, ARRAY, COMP, EXP, SIZE, TOL, OK )
+      use pepper_legacy
 !
 !     Check segment descriptors for BSR test families.
 !

@@ -1,6 +1,7 @@
 !$Procedure      F_AB ( Test DSK AB list routines )
 
       SUBROUTINE F_AB ( OK )
+      use pepper_legacy
       use pepper_inc_dsk02
 
 ! $ Abstract
@@ -126,6 +127,8 @@
       INTEGER               BVAL
       INTEGER               CELLS  ( 2, MXCELL )
       INTEGER               I
+      INTEGER I_A1 ( 1 )
+      EQUIVALENCE ( I, I_A1 )
       INTEGER               J
       INTEGER               K
       INTEGER               N
@@ -516,7 +519,7 @@
       CALL TCASE ( 'Pointer for AVAL is null.' )
 
       I = -1
-      CALL ZZTRVLNK ( 1,     MAXA, I,  MXCELL, &
+      CALL ZZTRVLNK ( 1,     MAXA, I_A1,  MXCELL, &
                       CELLS, MAXB, NB, BLIST   )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -532,17 +535,17 @@
       CALL TCASE ( 'Pointer for AVAL is out of range.' )
 
       I = -2
-      CALL ZZTRVLNK ( 1,     MAXA, I,  MXCELL, &
+      CALL ZZTRVLNK ( 1,     MAXA, I_A1,  MXCELL, &
                       CELLS, MAXB, NB, BLIST   )
       CALL CHCKXC ( .TRUE., 'SPICE(POINTEROUTOFRANGE)', OK )
 
       I =  0
-      CALL ZZTRVLNK ( 1,     MAXA, I,  MXCELL, &
+      CALL ZZTRVLNK ( 1,     MAXA, I_A1,  MXCELL, &
                       CELLS, MAXB, NB, BLIST   )
       CALL CHCKXC ( .TRUE., 'SPICE(POINTEROUTOFRANGE)', OK )
 
       I = MXCELL + 1
-      CALL ZZTRVLNK ( 1,     MAXA, I,  MXCELL, &
+      CALL ZZTRVLNK ( 1,     MAXA, I_A1,  MXCELL, &
                       CELLS, MAXB, NB, BLIST   )
       CALL CHCKXC ( .TRUE., 'SPICE(POINTEROUTOFRANGE)', OK )
 

@@ -1,6 +1,7 @@
 !$Procedure      T_RANDSIGN ( Random sign )
 
       INTEGER FUNCTION T_RANDSIGN ( SEED )
+      use pepper_legacy
 
 ! $ Abstract
 !

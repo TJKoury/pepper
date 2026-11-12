@@ -1,6 +1,7 @@
 !$Procedure F_ZZCTR ( Family of tests for ZZCTR )
 
       SUBROUTINE F_ZZCTR ( OK )
+      use pepper_legacy
       use pepper_inc_zzctr
 
       IMPLICIT NONE
@@ -85,8 +86,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               INTMIN
-      INTEGER               INTMAX
 
 !
 !     Local parameters

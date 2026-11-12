@@ -1,6 +1,7 @@
 !$Procedure F_NPEDLN ( NPEDLN tests )
 
       SUBROUTINE F_NPEDLN ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -471,6 +472,7 @@
 !     orthogonally.
 !
       LOGICAL FUNCTION T_ISNPLN ( A, B, C,  LINEPT, LINEDR, X, D, OK )
+      use pepper_legacy, pepper_legacy_approx => approx
       IMPLICIT NONE
 
       DOUBLE PRECISION      A
@@ -552,6 +554,7 @@
 !     Supporting function T_ISEDPT
 !
       LOGICAL FUNCTION T_ISEDPT ( PT, A, B, C, OK )
+      use pepper_legacy
       IMPLICIT NONE
 !
 !     Test whether a point is on a specified ellipsoid.

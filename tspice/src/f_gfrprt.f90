@@ -1,6 +1,7 @@
 !$Procedure      F_GFRPRT ( Test GFRPRT entry points )
 
       SUBROUTINE F_GFRPRT ( OK )
+      use pepper_legacy, pepper_legacy_tcheck => tcheck
       use pepper_inc_zzgf
 
 ! $ Abstract
@@ -88,9 +89,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               WNCARD
 
-      LOGICAL               EXISTS
 
 !
 !     Local parameters

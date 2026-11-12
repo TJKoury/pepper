@@ -1,6 +1,7 @@
 !$Procedure F_XDDA ( XDDA tests )
 
       SUBROUTINE F_XDDA ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -86,12 +87,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      VNORM
 
-      INTEGER               BRCKTI
 
-      LOGICAL               VZERO
 
 !
 !     Local Parameters
@@ -1267,6 +1264,7 @@
 !
 
       SUBROUTINE T_CHKVOX ( VERTEX, RAYDIR, EXTENT, N, VOXLST )
+      use pepper_legacy
       IMPLICIT NONE
 
       DOUBLE PRECISION      VERTEX ( 3 )
@@ -1278,10 +1276,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      VNORM
 
-      LOGICAL               RETURN
 !
 !     Other functions
 !

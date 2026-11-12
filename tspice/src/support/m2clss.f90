@@ -1,6 +1,7 @@
 !$Procedure      M2CLSS (Meta 2 --- meta 2 word classification )
 
       SUBROUTINE M2CLSS ( WORD, NUM, PHRASE  )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -127,8 +128,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               POS
-      INTEGER               RTRIM
 
 
       INTEGER               LNSIZE

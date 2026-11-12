@@ -1,6 +1,7 @@
 !$Procedure      TSTST ( Test States )
 
       SUBROUTINE TSTST ( BODY, ET, SEGID, FRAME, STATE, CENTER, GM )
+      use pepper_legacy, pepper_legacy_frame => frame
 
 ! $ Abstract
 !
@@ -141,8 +142,6 @@
 !
 !     Spicelib Functions.
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      DPR
 
 
 !

@@ -1,6 +1,7 @@
 !$Procedure      T_TAYHRM ( Taylor expansions of Hermite polynomials )
 
       SUBROUTINE T_TAYHRM ( N,  NEQ,  MBUFF,  RSYS, DERIVS, FOUND )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -151,7 +152,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local variables

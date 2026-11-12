@@ -1,6 +1,7 @@
 !$Procedure M2GETI ( META/2 --- get a named integer)
 
       SUBROUTINE M2GETI ( NAME, STRING, FOUND, INT  )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

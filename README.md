@@ -156,12 +156,36 @@ turn can raise this before creating its contexts, for example
 `call spice%set_max_open_files(500)`; each context may then use that many file
 descriptors, within the operating system's limit (`ulimit -n`).
 
-The library has no SPICELIB-style interface. One lives in the `tspice`
-package (`tspice/src/legacy/`), where NAIF's test suite uses it: SPICELIB's
-routines as external procedures (`call spkezr(...)`). They are thin wrappers
-that call the library with a default instance and context, whose
-error handling starts with SPICELIB's settings (`erract`, `errprt` and
-`errdev` work as in SPICELIB).
+For programs written for SPICELIB, the module `pepper_legacy`
+(`src/legacy/pepper_legacy.f90`) has SPICELIB's routines with SPICELIB's names
+and arguments (`call spkezr(...)`): thin wrappers that call the library with a
+default instance and context, whose error handling starts with SPICELIB's
+settings (`erract`, `errprt` and `errdev` work as in SPICELIB). It is close to
+a drop-in replacement: a program adds `use pepper_legacy` to each program
+unit and drops its own declarations of SPICELIB's functions (`LOGICAL
+FAILED`, `EXTERNAL ...`), which the module declares. Its interfaces are
+explicit, so the compiler checks the calls: F77 code that passes a scalar
+where SPICELIB declares an array (or the reverse), or one type for another,
+is fixed as NAIF's test suite was (`[x]` for a value the routine reads; an
+array equivalenced with the scalar, or the array's first element, otherwise).
+Like SPICELIB, it is not thread-safe; threads use the module API. NAIF's
+test suite (the `tspice` package) runs through it.
+
+```fortran
+program legacy_example
+   use pepper_legacy
+   implicit none
+   character(80) :: action = 'RETURN'
+   double precision :: et, state(6), lt
+   call erract('SET', action)       ! errors return (SPICELIB's default stops)
+   call furnsh('kernels.tm')
+   call str2et('2026 NOV 8 12:00:00', et)
+   call spkezr('MOON', et, 'J2000', 'LT+S', 'EARTH', state, lt)
+   if (failed()) call reset()
+end program legacy_example
+```
+
+`example/legacy_example.f90` is a complete one (`fpm run --example legacy_example`).
 
 Bugs and inconsistencies found in SPICELIB N0067 are listed in
 `spicelib_bugs.md`; the design and its history are in `plan.md`.

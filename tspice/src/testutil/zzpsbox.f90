@@ -1,6 +1,7 @@
 !$Procedure ZZPSBOX ( Plate set, create box )
 
       SUBROUTINE ZZPSBOX ( A, B, C, VOUT, POUT )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -116,13 +117,10 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               SIZED
-      INTEGER               SIZEI
 
 !
 !     Local variables
 !
-      LOGICAL               RETURN
 
       INTEGER               CPOUT
       INTEGER               CVOUT

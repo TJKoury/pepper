@@ -1,6 +1,7 @@
 !$Procedure F_EDNMPT ( EDNMPT tests )
 
       SUBROUTINE F_EDNMPT ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -79,7 +80,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
 
 !
 !     Local Parameters

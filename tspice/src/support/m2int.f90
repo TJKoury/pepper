@@ -1,6 +1,7 @@
 !$Procedure      M2INT ( Determine whether or not a word is an integer )
 
       LOGICAL FUNCTION M2INT ( WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -111,10 +112,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               INTMAX
-      INTEGER               INTMIN
       INTEGER               QRTRIM
-      INTEGER               LTRIM
 !
 !     Local variables
 !

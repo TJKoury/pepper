@@ -1,6 +1,7 @@
 !$Procedure F_ZZHSI ( Family of tests for ZZHSI )
 
       SUBROUTINE F_ZZHSI ( OK )
+      use pepper_legacy
       use pepper_inc_zzbodtrn
 
       IMPLICIT NONE
@@ -90,9 +91,6 @@
 !     SPICELIB Functions
 !
 !      DOUBLE PRECISION      T_RANDD
-      INTEGER               CARDI
-      INTEGER               INTMAX
-      INTEGER               ZZHASHI
 
 !
 !     Local Parameters

@@ -1,6 +1,7 @@
 !$Procedure F_DDHF2H ( ZZDDHF2H Test Family )
 
       SUBROUTINE F_DDHF2H ( OK )
+      use pepper_legacy, pepper_legacy_exists => exists
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -94,9 +95,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
-      INTEGER               ISRCHI
-      DOUBLE PRECISION      ZZDDHMNM
 
 !
 !     Local Parameters

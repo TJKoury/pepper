@@ -1,6 +1,7 @@
 !$Procedure ZZT_CG ( Make plate set for shape like comet C-G )
 
       SUBROUTINE ZZT_CG ( VOUT, POUT )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -106,7 +107,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local parameters

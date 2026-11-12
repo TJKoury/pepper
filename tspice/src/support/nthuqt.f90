@@ -1,6 +1,7 @@
 !$Procedure      NTHUQT ( N'th unquoted token )
 
       SUBROUTINE NTHUQT ( STRING, N, EQUOTE, WORD, LOC )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -128,7 +129,6 @@
 !
 !     Spice Functions
 !
-      INTEGER               RTRIM
 !
 !     Local Variables
 !

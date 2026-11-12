@@ -4,6 +4,7 @@
       SUBROUTINE SBREM_1 ( NAME, NAMES, &
                                PTRS, &
                                BUFFER  )
+      use pepper_legacy, pepper_legacy_pos => pos
       IMPLICIT NONE
 
 
@@ -121,9 +122,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      LOGICAL               RETURN
 
 !
 !     Local variables

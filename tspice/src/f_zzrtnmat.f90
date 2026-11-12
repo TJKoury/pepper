@@ -1,6 +1,7 @@
 !$Procedure      F_ZZRTNMAT ( Test ZZRTNMAT )
 
       SUBROUTINE F_ZZRTNMAT ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
@@ -88,8 +89,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      PI
 
 !
 !     Local parameters

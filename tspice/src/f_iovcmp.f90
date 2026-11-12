@@ -1,6 +1,7 @@
 !$Procedure F_IOVCMP ( IOVCMP tests )
 
       SUBROUTINE F_IOVCMP ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -81,7 +82,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
 
 !
 !     Local Parameters

@@ -1,6 +1,7 @@
 !$Procedure      F_SPKEZP (Family of tests for SPKEZP)
 
       SUBROUTINE F_SPKEZP( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

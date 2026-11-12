@@ -1,6 +1,7 @@
 !$Procedure F_DDHUNL ( ZZDDHUNL Test Family )
 
       SUBROUTINE F_DDHUNL ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract

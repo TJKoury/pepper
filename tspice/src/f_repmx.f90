@@ -1,6 +1,7 @@
 !$Procedure F_REPMX ( Family of tests for replace marker routines )
 
       SUBROUTINE F_REPMX ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

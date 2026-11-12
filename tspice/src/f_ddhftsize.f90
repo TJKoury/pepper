@@ -1,6 +1,7 @@
 !$Procedure F_DDHFTSIZE ( Handle Manager File Table Size )
 
       SUBROUTINE F_DDHFTSIZE ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -94,10 +95,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
       CHARACTER*(WDSIZE)    BEGDAT
       CHARACTER*(WDSIZE)    BEGTXT
-      INTEGER               RTRIM
 
 !
 !     Local Variables

@@ -1,6 +1,7 @@
 !$Procedure  F_MOVED ( Family of tests for MOVED )
 
       SUBROUTINE F_MOVED ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -189,10 +190,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPMIN
 
-      INTEGER               INTMAX
 
 !
 !     Local parameters

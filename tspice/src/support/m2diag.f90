@@ -2,6 +2,7 @@
 
       SUBROUTINE M2DIAG ( FILLER, BEGMRK, ENDMRK, &
                           STRING, SB, SE, MESSGE )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -109,7 +110,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
 !
 !     Local variables
 !

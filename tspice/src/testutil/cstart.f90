@@ -1,6 +1,7 @@
 !$Procedure      CSTART ( Clean Start )
 
       SUBROUTINE CSTART
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -101,7 +102,6 @@
 !
 !     Spicelib Functions
 !
-      INTEGER               CARDI
 
 !
 !     Local Variables

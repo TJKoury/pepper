@@ -1,6 +1,7 @@
 !$Procedure CHGIRF_O ( Change inertial reference frames )
 
       SUBROUTINE CHGIRF_O ( REFA, REFB, ROTAB, NAME, INDEX )
+      use pepper_legacy
       use pepper_inc_ninert
 
 ! $ Abstract
@@ -188,12 +189,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ESRCHC
-      INTEGER               ISRCHC
-      INTEGER               WDCNT
 
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
 
 !
 !     Local parameters

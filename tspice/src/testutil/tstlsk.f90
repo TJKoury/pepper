@@ -1,6 +1,7 @@
 !$Procedure      TSTLSK ( Test Leapseconds Kernel )
 
       SUBROUTINE TSTLSK
+      use pepper_legacy
 
 ! $ Abstract
 !

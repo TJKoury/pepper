@@ -1,6 +1,7 @@
 !$Procedure T_CTRBEQF ( Set Equal ZZBODS2C and ZZNAMFRM Counters )
 
       SUBROUTINE T_CTRBEQF (  )
+      use pepper_legacy
       use pepper_inc_zzctr
 
 
@@ -89,8 +90,6 @@
 !
 !     SPICELIB functions.
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
 
 !
 !     Local parameters

@@ -3,6 +3,7 @@
       SUBROUTINE T_DZZILU ( METHOD, TARGET, ILLUM,  ET, &
                             FIXREF, ABCORR, OBSRVR, SPOINT, &
                             NORMAL, DPHASE, DINCDN, DEMSSN  )
+      use pepper_legacy, pepper_legacy_illum => illum
 
 ! $ Abstract
 !
@@ -179,22 +180,20 @@
 !     External routines
 !
       DOUBLE PRECISION      T_ILUINI
-      EXTERNAL              T_ILUINI
+      EXTERNAL T_ILUINI
 
       DOUBLE PRECISION      T_ILUPHS
-      EXTERNAL              T_ILUPHS
+      EXTERNAL T_ILUPHS
 
       DOUBLE PRECISION      T_ILUINC
-      EXTERNAL              T_ILUINC
+      EXTERNAL T_ILUINC
 
       DOUBLE PRECISION      T_ILUEMI
-      EXTERNAL              T_ILUEMI
+      EXTERNAL T_ILUEMI
 
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local parameters

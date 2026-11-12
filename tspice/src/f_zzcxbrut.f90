@@ -1,6 +1,7 @@
 !$Procedure      F_ZZCXBRUT ( Test brute force cone-segment intercept )
 
       SUBROUTINE F_ZZCXBRUT ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -87,7 +88,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
 
 !
 !     Local parameters

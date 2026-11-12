@@ -1,6 +1,7 @@
 !$Procedure      F_ZZGFLNG1 ( Test GF longitude solver, part 1 )
 
       SUBROUTINE F_ZZGFLNG1 ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
@@ -99,21 +100,12 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      SPD
 
-      INTEGER               WNCARD
 
-      LOGICAL               GFBAIL
 
 !
 !     EXTERNAL declarations
 !
-      EXTERNAL              GFSTEP
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFREPF
-      EXTERNAL              GFBAIL
 
 
 !

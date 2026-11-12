@@ -4,6 +4,7 @@
                            FIRST,   LAST,    SEGID,   NINTVL, &
                            NPKTS,   SUBTPS,  DEGRES,  PACKTS, &
                            RATES,   SCLKDP,  IVLBDS,  SELLST )
+      use pepper_legacy
       use pepper_inc_ck06
       use pepper_inc_ckparam
 
@@ -607,11 +608,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BRCKTI
 
-      LOGICAL               FAILED
-      LOGICAL               ODD
-      LOGICAL               RETURN
 
 !
 !     Local parameters
@@ -902,9 +899,9 @@
 !        packet count to the segment.
 !
          CALL DAFADA ( RATES(I),           1 )
-         CALL DAFADA ( DBLE( SUBTPS(I) ),  1 )
-         CALL DAFADA ( DBLE( WINSIZ    ),  1 )
-         CALL DAFADA ( DBLE( NPKTS(I)  ),  1 )
+         CALL DAFADA ( [DBLE( SUBTPS(I) )],  1 )
+         CALL DAFADA ( [DBLE( WINSIZ    )],  1 )
+         CALL DAFADA ( [DBLE( NPKTS(I)  )],  1 )
 
          IF ( FAILED() ) THEN
             CALL CHKOUT ( 'T_CKW06' )
@@ -987,7 +984,7 @@
 !        After the loop terminates, the final end pointer, incremented
 !        by 1, will be written.
 !
-         CALL DAFADA ( DBLE(SEGBEG), 1 )
+         CALL DAFADA ( [DBLE(SEGBEG)], 1 )
 
       END DO
 
@@ -995,7 +992,7 @@
 !     Write the last mini-segment end pointer, incremented by one.
 !     SEGEND was computed on the last iteration of the above loop.
 !
-      CALL DAFADA ( DBLE(SEGEND+1), 1 )
+      CALL DAFADA ( [DBLE(SEGEND+1)], 1 )
 
 !
 !     Write out the interval selection flag. The input
@@ -1008,12 +1005,12 @@
          ISEL = IFALSE
       END IF
 
-      CALL DAFADA ( DBLE( ISEL ),  1 )
+      CALL DAFADA ( [DBLE( ISEL )],  1 )
 
 !
 !     Write the mini-segment/interpolation interval count.
 !
-      CALL DAFADA ( DBLE(NINTVL), 1 )
+      CALL DAFADA ( [DBLE(NINTVL)], 1 )
 
 !
 !     End the segment.

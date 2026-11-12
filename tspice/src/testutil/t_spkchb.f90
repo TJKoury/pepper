@@ -2,6 +2,7 @@
 
       SUBROUTINE T_SPKCHB ( TARGET, CENTER, FRAME, FIRST,  LAST, &
                             NPOS,   NVEL,   WORK,  POSCOF, VELCOF )
+      use pepper_legacy, pepper_legacy_frame => frame
 
 ! $ Abstract
 !
@@ -157,7 +158,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Other functions
@@ -170,12 +170,12 @@
       DOUBLE PRECISION      T_GETDZ
       DOUBLE PRECISION      T_STCINI
 
-      EXTERNAL              T_GETX
-      EXTERNAL              T_GETY
-      EXTERNAL              T_GETZ
-      EXTERNAL              T_GETDX
-      EXTERNAL              T_GETDY
-      EXTERNAL              T_GETDZ
+      EXTERNAL T_GETX
+      EXTERNAL T_GETY
+      EXTERNAL T_GETZ
+      EXTERNAL T_GETDX
+      EXTERNAL T_GETDY
+      EXTERNAL T_GETDZ
 
 !
 !     Local parameters

@@ -1,6 +1,7 @@
 !$Procedure       SYPTRI ( Symbol table, fetch pointers, generic )
 
       SUBROUTINE  SYPTRI ( NAME, SYMNAM, SYMPTR, SYMVAL, PTR, N, FOUND )
+      use pepper_legacy
       IMPLICIT NONE
 
 
@@ -137,12 +138,7 @@
 !-&
 
 
-      INTEGER               BSRCHC
-      INTEGER               SUMAI
-      INTEGER               CARDC
-      LOGICAL               RETURN
 
-      INTEGER               TOUCHI
 
       INTEGER               LOC
       INTEGER               NUMBER

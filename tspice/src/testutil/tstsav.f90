@@ -1,6 +1,7 @@
 !$Procedure      TSTSAV ( Save test info )
 !
       SUBROUTINE TSTSAV ( ENV, VERSN, TIME )
+      use pepper_legacy
 !
 ! $ Abstract
 !

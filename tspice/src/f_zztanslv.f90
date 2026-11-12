@@ -1,6 +1,7 @@
 !$Procedure F_ZZTANSLV ( ZZTANSLV tests )
 
       SUBROUTINE F_ZZTANSLV ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -79,14 +80,11 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               WNCARD
 
 !
 !     EXTERNAL routines
 !
-      EXTERNAL              GFSTEP
-      EXTERNAL              GFREFN
-      EXTERNAL              T_TANSTA
+      EXTERNAL T_TANSTA
 
 !
 !     Local Parameters
@@ -971,6 +969,7 @@
 !
 !
       SUBROUTINE T_TANSTA ( X, STATE, POINT )
+      use pepper_legacy
 
       IMPLICIT NONE
 
@@ -981,7 +980,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               ODD
 
 !
 !     Local variables

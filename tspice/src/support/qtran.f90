@@ -1,6 +1,7 @@
 !$Procedure     QTRAN
 
       SUBROUTINE QTRAN ( INPUT, OUTPUT, TRAN )
+      use pepper_legacy, pepper_legacy_prompt => prompt
 
 ! $ Abstract
 !
@@ -94,7 +95,6 @@
 !
 !     OPTLIB functions
 !
-      INTEGER               LASTNB
 
 !
 !     Local variables

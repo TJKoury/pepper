@@ -1,6 +1,7 @@
 !$Procedure F_SCLK1 ( SCLK interleaved computation tests )
 
       SUBROUTINE F_SCLK1 ( OK )
+      use pepper_legacy
       use pepper_inc_sclk
 
 ! $ Abstract
@@ -92,9 +93,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      UNITIM
 
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters

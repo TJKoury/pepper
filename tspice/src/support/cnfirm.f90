@@ -1,6 +1,7 @@
 !$Procedure CNFIRM ( Return status of a yes/no query )
 
       SUBROUTINE CNFIRM ( PRMPT, TORF )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -19,7 +20,6 @@
 !
 ! $ Declarations
 
-      EXTERNAL              PROMPT
 
       CHARACTER*(*)         PRMPT
       LOGICAL               TORF

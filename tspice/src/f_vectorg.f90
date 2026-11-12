@@ -1,6 +1,7 @@
 !$Procedure F_VECTORG (Family of tests on general vector operations)
 
       SUBROUTINE F_VECTORG ( OK )
+      use pepper_legacy, pepper_legacy_vzero => vzero
 
 ! $ Abstract
 !
@@ -109,12 +110,6 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               VZEROG
-      DOUBLE PRECISION      VDOTG
-      DOUBLE PRECISION      VNORMG
-      DOUBLE PRECISION      VDISTG
-      DOUBLE PRECISION      VRELG
-      DOUBLE PRECISION      VSEPG
 
 !
 !     Local parameters

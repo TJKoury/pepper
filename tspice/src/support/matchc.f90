@@ -2,6 +2,7 @@
 !$Procedure MATCHC ( Match the characters in two words )
 
       INTEGER FUNCTION MATCHC ( WORD, GUESS )
+      use pepper_legacy, pepper_legacy_scardi => scardi
       IMPLICIT NONE
 
 ! $ Abstract

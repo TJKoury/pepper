@@ -1,6 +1,7 @@
 !$Procedure      M2DAY ( Determine whether or not a word is a day )
 
       LOGICAL FUNCTION M2DAY ( WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -112,7 +113,6 @@
 !     SPICELIB functions
 !
       INTEGER               QRTRIM
-      INTEGER               LTRIM
 !
 !     Local variables
 !

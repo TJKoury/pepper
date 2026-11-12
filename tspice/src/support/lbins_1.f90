@@ -2,6 +2,7 @@
 !$Procedure LBINS ( Line buffer, insert )
 
       SUBROUTINE LBINS_1 ( POS, LINE, PTRS, BUFFER )
+      use pepper_legacy, pepper_legacy_pos => pos
       IMPLICIT NONE
 
 ! $ Abstract
@@ -130,8 +131,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
-      LOGICAL               RETURN
 
 !
 !     Local variables

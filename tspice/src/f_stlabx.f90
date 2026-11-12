@@ -1,6 +1,7 @@
 !$Procedure  F_STLABX ( Family of tests for STLABX )
 
       SUBROUTINE F_STLABX ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -25,7 +26,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VSEP
 
 !
 !     Local parameters

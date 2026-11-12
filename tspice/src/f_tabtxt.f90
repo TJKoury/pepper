@@ -1,6 +1,7 @@
 !$Procedure F_TABTXT ( Text kernel tab processing tests )
 
       SUBROUTINE F_TABTXT ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -92,7 +93,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
 
 !
 !     Non-SPICELIB functions

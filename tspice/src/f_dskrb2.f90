@@ -1,6 +1,7 @@
 !$Procedure      F_DSKRB2 ( Test DSKRB2 )
 
       SUBROUTINE F_DSKRB2 ( OK )
+      use pepper_legacy
       use pepper_inc_dla
       use pepper_inc_dsk02
       use pepper_inc_dskdsc
@@ -89,12 +90,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPMIN
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VNORM
 
-      LOGICAL               EXISTS
 
 !
 !     Local parameters

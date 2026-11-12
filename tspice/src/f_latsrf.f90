@@ -1,6 +1,7 @@
 !$Procedure      F_LATSRF ( LATSRF family tests )
 
       SUBROUTINE F_LATSRF ( OK )
+      use pepper_legacy
       use pepper_inc_dla
       use pepper_inc_dsk02
       use pepper_inc_dskdsc
@@ -94,15 +95,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      RPD
 
-      LOGICAL               EXISTS
-      LOGICAL               MATCHI
 
 !
 !     Local parameters
@@ -248,6 +241,8 @@
 
       LOGICAL               FNDARR ( MAXPTS )
       LOGICAL               FOUND
+      LOGICAL FOUND_A1 ( 1 )
+      EQUIVALENCE ( FOUND, FOUND_A1 )
       LOGICAL               ISDSK
       LOGICAL               PRI
 
@@ -322,7 +317,7 @@
 !     Add an incomplete frame definition to the kernel pool;
 !     we'll need this later.
 !
-      CALL PIPOOL ( 'FRAME_BAD_NAME', 1, -666 )
+      CALL PIPOOL ( 'FRAME_BAD_NAME', 1, [-666] )
 
 !
 ! --- Case: ------------------------------------------------------
@@ -704,7 +699,7 @@
 
                      CALL DSKXV ( .FALSE., TARGET, NSURF,  SRFLST, &
                                   ET,      TRGFRM, 1,      VERTEX, &
-                                  RAYDIR,  XPT,    FOUND          )
+                                  RAYDIR,  XPT,    FOUND_A1          )
                      CALL CHCKXC ( .FALSE., ' ', OK )
 
                   ELSE

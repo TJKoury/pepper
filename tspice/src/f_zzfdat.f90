@@ -1,6 +1,7 @@
 !$Procedure F_ZZFDAT ( ZZFDAT Test Family )
 
       SUBROUTINE F_ZZFDAT ( OK )
+      use pepper_legacy
       use pepper_inc_frmtyp
       use pepper_inc_ninert
       use pepper_inc_nninrt
@@ -164,7 +165,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
 
 !
 !     Start the test family with an open call.

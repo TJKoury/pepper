@@ -2,6 +2,7 @@
 !$Procedure      BESTWD ( Perform a spell match against a set of words )
 
       SUBROUTINE BESTWD ( WORD, KNOWN, CUTOFF, BEST, SCORES, MSSG )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -296,15 +297,10 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDI
-      INTEGER               CARDC
-      INTEGER               SIZEI
       INTEGER               MATCHC
       INTEGER               MATCHO
-      INTEGER               LSTLTI
       INTEGER               QRTRIM
 
-      LOGICAL               EQSTR
 
 !
 !     Local variables

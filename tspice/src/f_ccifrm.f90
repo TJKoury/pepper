@@ -1,6 +1,7 @@
 !$Procedure      F_CCIFRM ( Family of tests for CCIFRM )
 
       SUBROUTINE F_CCIFRM ( OK )
+      use pepper_legacy
       use pepper_inc_ninert
       use pepper_inc_nninrt
       use pepper_inc_frmtyp

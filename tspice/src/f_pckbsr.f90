@@ -1,6 +1,7 @@
 !$Procedure F_PCKBSR ( Family of tests for PCKBSR )
 
       SUBROUTINE F_PCKBSR ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -109,7 +110,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local parameters

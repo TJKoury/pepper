@@ -1,6 +1,7 @@
 !$Procedure F_ZZBDTRN ( Family of tests for ZZBODTRN )
 
       SUBROUTINE F_ZZBDTRN ( OK )
+      use pepper_legacy
       use pepper_inc_zzbodtrn
 
 ! $ Abstract

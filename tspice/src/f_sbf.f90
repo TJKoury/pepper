@@ -1,6 +1,7 @@
 !$Procedure F_SBF ( SBF tests )
 
       SUBROUTINE F_SBF ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_dla
       use pepper_inc_dskdsc
 
@@ -113,11 +114,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      RPD
 
-      LOGICAL               EXISTS
 
 !
 !     Local parameters
@@ -229,7 +226,7 @@
       DOUBLE PRECISION      DSKDSC ( DSKDSZ )
       DOUBLE PRECISION      ET
       DOUBLE PRECISION      FIRST
-      DOUBLE PRECISION      HANDLE
+      INTEGER               HANDLE
       DOUBLE PRECISION      LAT
       DOUBLE PRECISION      LAST
       DOUBLE PRECISION      LON

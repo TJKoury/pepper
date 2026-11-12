@@ -1,6 +1,7 @@
 !$Procedure F_ZZDSKBUX ( ZZDSKBUX tests )
 
       SUBROUTINE F_ZZDSKBUX ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_dla
       use pepper_inc_dsk02
       use pepper_inc_dskdsc
@@ -114,11 +115,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      PI
 
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters
@@ -1171,7 +1168,7 @@
       CALL VPACK  ( 0.D0, 0.D0, -R, VERTEX )
       CALL VMINUS ( VERTEX,         RAYDIR )
 
-      CALL ZZSBFXR ( BODYID, 1,      1,      ET, &
+      CALL ZZSBFXR ( BODYID, 1,      [1],      ET, &
                      FIXFID, VERTEX, RAYDIR, XPT, FOUND )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -1706,7 +1703,7 @@
 
       BODYID = 699
 
-      CALL ZZSBFXR ( BODYID, 1,      -1,     ET, &
+      CALL ZZSBFXR ( BODYID, 1,      [-1],     ET, &
                      FIXFID, VERTEX, RAYDIR, XPT, FOUND )
       CALL CHCKXC ( .TRUE., 'SPICE(DSKDATANOTFOUND)', OK )
 
@@ -2813,7 +2810,7 @@
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 
-      CALL ZZSBFNRM ( BODYID, 1,   -1,     ET, &
+      CALL ZZSBFNRM ( BODYID, 1,   [-1],     ET, &
                       FIXFID, XPT, XNORML     )
       CALL CHCKXC ( .TRUE., 'SPICE(POINTNOTINSEGMENT)', OK )
 

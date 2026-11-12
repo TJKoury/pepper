@@ -1,6 +1,7 @@
 !$Procedure F_SPK20 ( SPK data type 20 tests )
 
       SUBROUTINE F_SPK20 ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_spkrec
       use pepper_inc_spk20
 
@@ -109,12 +110,7 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      J2000
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      SPD
 
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters

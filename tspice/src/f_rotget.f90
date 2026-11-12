@@ -1,6 +1,7 @@
 !$Procedure      F_ROTGET ( Family of tests for ROTGET )
 
       SUBROUTINE F_ROTGET ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

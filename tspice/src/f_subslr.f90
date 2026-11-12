@@ -1,6 +1,7 @@
 !$Procedure      F_SUBSLR ( SUBSLR family tests )
 
       SUBROUTINE F_SUBSLR ( OK )
+      use pepper_legacy
       use pepper_inc_zzdsk
       use pepper_inc_zzabcorr
 
@@ -101,11 +102,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      RPD
 
-      LOGICAL               EXISTS
-      LOGICAL               MATCHI
 !
 !     Local parameters
 !
@@ -243,6 +240,8 @@
       INTEGER               TRGIDX
 
       LOGICAL               FOUND
+      LOGICAL FOUND_A1 ( 1 )
+      EQUIVALENCE ( FOUND, FOUND_A1 )
       LOGICAL               USECN
       LOGICAL               USELT
 
@@ -362,7 +361,7 @@
 
       CALL SPKW05 ( HANDLE(2),    SCID,         499,      'MARSIAU', &
                     -10*JYEAR(),  10*JYEAR(),  'Mars orbiter', &
-                    ELTS(8),      1,            STATE0,    ET        )
+                    ELTS(8),      1,            STATE0,    [ET]        )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -380,14 +379,14 @@
 !
       CALL PCPOOL ( 'NAIF_BODY_NAME', 1,  OBSNMS(2) )
       CALL CHCKXC ( .FALSE., ' ', OK )
-      CALL PIPOOL ( 'NAIF_BODY_CODE', 1,  SCID      )
+      CALL PIPOOL ( 'NAIF_BODY_CODE', 1,  [SCID]      )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
 !     Add an incomplete frame definition to the kernel pool;
 !     we'll need this later.
 !
-      CALL PIPOOL ( 'FRAME_BAD_NAME', 1, -666 )
+      CALL PIPOOL ( 'FRAME_BAD_NAME', 1, [-666] )
 
 
 !
@@ -725,7 +724,7 @@
 
                               CALL DSKXV ( .FALSE., TARGET, 1, SRFLST, &
                                            TRGEPC,  TRGFRM, 1, SUNPOS, &
-                                           SUNTRG,  XSUBPT,    FOUND  )
+                                           SUNTRG,  XSUBPT,    FOUND_A1  )
                               CALL CHCKXC   ( .FALSE., ' ', OK )
 
                            END IF
@@ -796,7 +795,7 @@
 !
                               CALL DSKXV ( .FALSE., TARGET, 1, SRFLST, &
                                            TRGEPC,  TRGFRM, 1, SUNPOS, &
-                                           SUBDIR,  XSUBPT,    FOUND  )
+                                           SUBDIR,  XSUBPT,    FOUND_A1  )
                               CALL CHCKXC   ( .FALSE., ' ', OK )
 
                               CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )

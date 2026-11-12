@@ -1,6 +1,7 @@
 !$Procedure F_ZZPTPL02 ( ZZPTPL02 tests )
 
       SUBROUTINE F_ZZPTPL02 ( OK )
+      use pepper_legacy
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsktol
@@ -83,7 +84,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters

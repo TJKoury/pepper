@@ -1,6 +1,7 @@
 !$Procedure ZZPSBALL ( Plate set, create ball )
 
       SUBROUTINE ZZPSBALL ( R, NLON, NLAT, VOUT, POUT )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -136,11 +137,7 @@
 
 
 
-      INTEGER               SIZED
-      INTEGER               SIZEI
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 
       INTEGER               MAXP

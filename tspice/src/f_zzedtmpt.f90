@@ -1,6 +1,7 @@
 !$Procedure F_ZZEDTMPT ( ZZEDTMPT tests )
 
       SUBROUTINE F_ZZEDTMPT ( OK )
+      use pepper_legacy
       use pepper_inc_zzctr
 
 ! $ Abstract
@@ -87,12 +88,7 @@
 !
 !        T_RANDD ( LOWER, UPPER, SEED )
 !
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      PI
       DOUBLE PRECISION      T_RANDD
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VDOT
 
 !
 !     Local Parameters

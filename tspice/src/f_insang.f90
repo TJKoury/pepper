@@ -1,6 +1,7 @@
 !$Procedure F_INSANG ( INSANG tests )
 
       SUBROUTINE F_INSANG ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -80,10 +81,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      TWOPI
 
 
 !

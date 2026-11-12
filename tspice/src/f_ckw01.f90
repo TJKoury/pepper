@@ -1,6 +1,7 @@
 !$Procedure F_CKW01 ( Family of checks for CKW01 )
 
       SUBROUTINE F_CKW01 ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

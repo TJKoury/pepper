@@ -5,6 +5,7 @@
                                            DVALS, &
                                            CVALS, &
                                            SVAL   )
+      use pepper_legacy, pepper_legacy_pos => pos
       IMPLICIT NONE
 
 ! $ Abstract
@@ -505,10 +506,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               SYDIMC
-      INTEGER               SYDIMD
-      INTEGER               SYDIMI
 
 !
 !     Local variables

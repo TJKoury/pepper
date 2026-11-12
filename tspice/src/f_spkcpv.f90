@@ -1,6 +1,7 @@
 !$Procedure F_SPKCPV ( Test constant velocity state routines )
 
       SUBROUTINE F_SPKCPV ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_zzabcorr
 
 ! $ Abstract
@@ -106,8 +107,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      JYEAR
 
 !
 !     Local parameters

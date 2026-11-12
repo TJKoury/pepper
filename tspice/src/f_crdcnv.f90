@@ -1,6 +1,7 @@
 !$Procedure F_CRDCNV (Family of tests on coordinate conversions)
 
       SUBROUTINE F_CRDCNV ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -107,9 +108,6 @@
 !     SPICELIB Functions
 !
 
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      HALFPI
 
 !
 !     grid dimension of a cube ( NGRID x NGRID x NGRID )

@@ -3,6 +3,7 @@
       SUBROUTINE T_GFTREP ( CNFINE, MSGPRE, MSGSUF, IVBEG,  IVEND, &
                             ET,     NMAX,   MW,     NCALLS, CNFLOG, &
                             MSGLOG, REPLOG, SEQLOG                 )
+      use pepper_legacy
 
 ! $ Abstract
 !

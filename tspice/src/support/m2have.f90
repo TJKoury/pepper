@@ -1,6 +1,7 @@
 !$Procedure      M2HAVE ( META/2 --- How many matches do we have )
 
       INTEGER FUNCTION M2HAVE ( NAME )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

@@ -1,6 +1,7 @@
 !$Procedure      F_XFNEUL ( State transformations and Euler angles)
 
       SUBROUTINE F_XFNEUL ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

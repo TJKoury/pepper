@@ -1,6 +1,7 @@
 !$Procedure      F_RDPCKD ( Text PCK reader tests )
 
       SUBROUTINE F_RDPCKD ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -120,22 +121,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      B1950
-      DOUBLE PRECISION      J2000
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      TWOPI
 
-      INTEGER               BSRCHC
-      INTEGER               CARDC
-      INTEGER               CARDI
-      INTEGER               ZZBODBRY
 
-      LOGICAL               BODFND
-      LOGICAL               ELEMI
-      LOGICAL               EXISTS
 
 !
 !     Local parameters
@@ -762,7 +749,7 @@
 !
 !              Set the maximum degree to the default, which is 1.
 !
-               CALL PIPOOL ( KVNAME, 1, 1 )
+               CALL PIPOOL ( KVNAME, 1, [1] )
                CALL CHCKXC  ( .FALSE., ' ', OK )
 
 
@@ -861,7 +848,7 @@
                                REFID,                    KVDEG )
                   CALL CHCKXC  ( .FALSE., ' ', OK )
 
-                  CALL PIPOOL ( KVDEG, 1, 3 )
+                  CALL PIPOOL ( KVDEG, 1, [3] )
                   CALL CHCKXC  ( .FALSE., ' ', OK )
 
 !
@@ -1069,13 +1056,13 @@
       CALL REPMI ( 'BODY#_MAX_PHASE_DEGREE', '#', REFID, KVDEG )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
-      CALL PIPOOL ( KVDEG, 1, 4 )
+      CALL PIPOOL ( KVDEG, 1, [4] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
       CALL TISBOD ( 'J2000', 399, 0.D0, TSIPM )
       CALL CHCKXC  ( .TRUE., 'SPICE(DEGREEOUTOFRANGE)', OK )
 
-      CALL PIPOOL ( KVDEG, 1, 0 )
+      CALL PIPOOL ( KVDEG, 1, [0] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
       CALL TISBOD ( 'J2000', 399, 0.D0, TSIPM )
@@ -1124,7 +1111,7 @@
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
 
-      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
       CALL TIPBOD ( 'B1950', -10, ET,   TIPM  )
@@ -1148,7 +1135,7 @@
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
 
-      CALL PDPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
       CALL TIPBOD ( 'B1950', -10, ET,   TIPM  )
@@ -1176,10 +1163,10 @@
 !
 !     Add the new keywords.
 !
-      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
-      CALL PIPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, 2  )
+      CALL PIPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, [2]  )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
 !
@@ -1219,10 +1206,10 @@
 !
 !     Restore the old keywords.
 !
-      CALL PDPOOL ( 'BODY-10_CONSTANTS_JED_EPOCH', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTANTS_JED_EPOCH', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
-      CALL PIPOOL ( 'BODY-10_CONSTANTS_REF_FRAME', 1, 2  )
+      CALL PIPOOL ( 'BODY-10_CONSTANTS_REF_FRAME', 1, [2]  )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
       CALL TISBOD ( 'J2000', 10, 0.D0, XTSIPM )
@@ -1248,7 +1235,7 @@
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
 
-      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
       CALL TISBOD ( 'B1950', -10, ET, TSIPM  )
@@ -1272,7 +1259,7 @@
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
 
-      CALL PDPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
       CALL TISBOD ( 'B1950', -10, ET, TSIPM )
@@ -1300,10 +1287,10 @@
 !
 !     Add the new keywords.
 !
-      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
-      CALL PIPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, 2  )
+      CALL PIPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, [2]  )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
 !
@@ -1343,10 +1330,10 @@
 !
 !     Restore the old keywords.
 !
-      CALL PDPOOL ( 'BODY-10_CONSTANTS_JED_EPOCH', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTANTS_JED_EPOCH', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
-      CALL PIPOOL ( 'BODY-10_CONSTANTS_REF_FRAME', 1, 2  )
+      CALL PIPOOL ( 'BODY-10_CONSTANTS_REF_FRAME', 1, [2]  )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
       CALL BODMAT ( 10, 0.D0, XTIPM )
@@ -1383,7 +1370,7 @@
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
 
-      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
       CALL BODMAT ( -10, ET, TSIPM  )
@@ -1407,7 +1394,7 @@
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
 
-      CALL PDPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
       CALL BODMAT ( -10, ET, TSIPM )
@@ -1435,10 +1422,10 @@
 !
 !     Add the new keywords.
 !
-      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
-      CALL PIPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, 2  )
+      CALL PIPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, [2]  )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
 !
@@ -1496,10 +1483,10 @@
 !
 !     Restore the old keywords.
 !
-      CALL PDPOOL ( 'BODY-10_CONSTANTS_JED_EPOCH', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTANTS_JED_EPOCH', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
-      CALL PIPOOL ( 'BODY-10_CONSTANTS_REF_FRAME', 1, 2  )
+      CALL PIPOOL ( 'BODY-10_CONSTANTS_REF_FRAME', 1, [2]  )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
 
@@ -1579,7 +1566,7 @@
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
 
-      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
       CALL BODEUL ( -10, 0.D0,  RA,  DEC,  W, LAMBDA )
@@ -1603,7 +1590,7 @@
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
 
-      CALL PDPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
       CALL BODEUL ( -10, 0.D0,  RA,  DEC,  W, LAMBDA )
@@ -1636,10 +1623,10 @@
 !     Add the new keywords.
 !
 
-      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
-      CALL PIPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, 2  )
+      CALL PIPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, [2]  )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
 
@@ -1697,10 +1684,10 @@
 !
 !     Add the new keywords.
 !
-      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, B1950() )
+      CALL PDPOOL ( 'BODY-10_CONSTS_JED_EPOCH', 1, [B1950()] )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
-      CALL PIPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, 2  )
+      CALL PIPOOL ( 'BODY-10_CONSTS_REF_FRAME', 1, [2]  )
       CALL CHCKXC  ( .FALSE., ' ', OK )
 
       ET  =  ( J2000() - B1950() ) * SPD()

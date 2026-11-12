@@ -1,6 +1,7 @@
 !$Procedure F_ZZSEGBOX ( ZZSEGBOX tests )
 
       SUBROUTINE F_ZZSEGBOX ( OK )
+      use pepper_legacy
       use pepper_inc_dla
       use pepper_inc_dskdsc
 
@@ -85,12 +86,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPMIN
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      PI
 
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters

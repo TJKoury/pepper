@@ -1,6 +1,7 @@
 !$Procedure F_TEXPYR ( Family of tests for TEXPYR )
 
       SUBROUTINE F_TEXPYR ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

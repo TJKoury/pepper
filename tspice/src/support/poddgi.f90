@@ -1,6 +1,7 @@
 !$Procedure      PODDGI ( Pod, duplicate group, integer )
 
       SUBROUTINE PODDGI ( POD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -119,9 +120,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               CARDI
-      INTEGER               SIZEI
 
 !
 !     Local parameters

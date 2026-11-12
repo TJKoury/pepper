@@ -1,6 +1,7 @@
 !$Procedure      F_DASCUD ( DASCUD routine tests )
 
       SUBROUTINE F_DASCUD ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -1810,6 +1811,7 @@
                           LASTRC, &
                           LASTWD, &
                           FSUM     )
+      use pepper_legacy
       IMPLICIT NONE
 
       INTEGER               NRESVR
@@ -1844,6 +1846,7 @@
 !
 
       SUBROUTINE CHKFS ( FSUM, XFSUM, OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       INTEGER               FSUM   ( * )
@@ -1877,6 +1880,7 @@
 !
 
       SUBROUTINE CHKCDS ( CDREC, XCDREC, OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       INTEGER               CDREC  ( * )

@@ -1,6 +1,7 @@
 !$Procedure F_DNEARP ( Family of DNEARP tests )
 
       SUBROUTINE F_DNEARP ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -136,8 +137,6 @@
 !
 !     Spicelib Functions
 !
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VDOT
 
 
 !

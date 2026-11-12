@@ -1,6 +1,7 @@
 !$Procedure T_ELAPSD ( Time program execution )
 
       SUBROUTINE T_ELAPSD ( REPORT, TITLE, KIND )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 
@@ -93,7 +94,6 @@
 !
 !     SPICELIB functions.
 !
-      LOGICAL               EQSTR
 
 !
 !     Local variables

@@ -1,6 +1,7 @@
 !$Procedure      PODBEC ( Pod, begin and end, character )
 
       SUBROUTINE PODBEC ( POD, BEGIN, END )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -119,7 +120,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local variables

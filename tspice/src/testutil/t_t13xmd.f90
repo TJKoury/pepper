@@ -1,6 +1,7 @@
 !$Procedure      T_T13XMD ( Type 13 SPK record to extended MDA )
 
       SUBROUTINE T_T13XMD ( T13REC, MDABEG, MDAEND, T21REC, FOUND )
+      use pepper_legacy
       use pepper_inc_spk21
       IMPLICIT NONE
 
@@ -198,10 +199,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LSTLTD
 
-      LOGICAL               ODD
-      LOGICAL               RETURN
 
 !
 !     Local parameters

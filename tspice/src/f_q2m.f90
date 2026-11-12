@@ -1,6 +1,7 @@
 !$Procedure      F_Q2M (Family of tests for Q2M )
 
       SUBROUTINE F_Q2M ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

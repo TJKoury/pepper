@@ -1,6 +1,7 @@
 !$Procedure F_DDHISN ( ZZDDHISN Test Family )
 
       SUBROUTINE F_DDHISN ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -88,7 +89,6 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               EQSTR
 
 !
 !     Local Variables

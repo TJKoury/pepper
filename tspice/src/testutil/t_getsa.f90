@@ -1,6 +1,7 @@
 !$Procedure      T_GETSA ( Test utility, get stellar aberration )
 
       SUBROUTINE T_GETSA ( TARG, ET, REF, ABCORR, OBS, PCORR, DPCORR )
+      use pepper_legacy
       use pepper_inc_zzabcorr
       IMPLICIT NONE
 
@@ -134,7 +135,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
 
 !
 !     Local parameters

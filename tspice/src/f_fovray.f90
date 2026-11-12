@@ -1,6 +1,7 @@
 !$Procedure F_FOVRAY ( FOVRAY family tests )
 
       SUBROUTINE F_FOVRAY ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 

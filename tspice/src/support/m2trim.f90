@@ -1,6 +1,7 @@
 !$Procedure      M2TRIM ( META/2 trim the name portion from a word )
 
       SUBROUTINE M2TRIM ( WORD, ROOT )
+      use pepper_legacy
       IMPLICIT NONE
 ! $ Abstract
 !

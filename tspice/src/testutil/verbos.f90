@@ -1,6 +1,7 @@
 !$Procedure      VERBOS ( Display detailed information to the screen)
 !
       LOGICAL FUNCTION VERBOS ()
+      use pepper_legacy
 !
 ! $ Abstract
 !

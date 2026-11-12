@@ -2,6 +2,7 @@
 !$Procedure UPTO ( Up to the next index of a substring )
 
       INTEGER FUNCTION UPTO ( STRING, SUBSTR, START )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

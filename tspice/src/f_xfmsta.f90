@@ -1,6 +1,7 @@
 !$Procedure      F_XFMSTA ( Family of tests for XFMSTA )
 
       SUBROUTINE F_XFMSTA ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -118,7 +119,7 @@
 !
       CHARACTER*(30)        COSYS (6)
 
-      DOUBLE PRECISION      DIM
+      INTEGER               DIM
       DOUBLE PRECISION      LOWERP
       DOUBLE PRECISION      LOWERV
       DOUBLE PRECISION      TOL

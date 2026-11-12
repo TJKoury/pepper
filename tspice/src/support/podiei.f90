@@ -1,6 +1,7 @@
 !$Procedure      PODIEI ( Pod, insert elements, integer )
 
       SUBROUTINE PODIEI ( ELEMS, N, LOC, POD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -127,9 +128,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               SIZEI
-      INTEGER               CARDI
 !
 !     Local variables
 !

@@ -1,6 +1,7 @@
 !$Procedure      PODIED ( Pod, insert elements, double precision )
 
       SUBROUTINE PODIED ( ELEMS, N, LOC, POD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -127,9 +128,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               SIZED
-      INTEGER               CARDD
 !
 !     Local variables
 !

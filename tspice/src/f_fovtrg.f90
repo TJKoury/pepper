@@ -1,6 +1,7 @@
 !$Procedure      F_FOVTRG ( FOVTRG family tests )
 
       SUBROUTINE F_FOVTRG ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 

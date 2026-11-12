@@ -1,6 +1,7 @@
 !$Procedure F_ZZNOFCON ( ZZNOFCON tests )
 
       SUBROUTINE F_ZZNOFCON ( OK )
+      use pepper_legacy
       use pepper_inc_errhnd
       use pepper_inc_frmtyp
 
@@ -97,8 +98,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
-      LOGICAL               ZZSCLK
 
 !
 !     Other functions

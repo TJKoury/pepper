@@ -1,6 +1,7 @@
 !$Procedure F_ZZGFSPU ( ZZGFSPU family tests )
 
       SUBROUTINE F_ZZGFSPU ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 
@@ -106,9 +107,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
-      DOUBLE PRECISION      ZZSEPQ
 
 
 !

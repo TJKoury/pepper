@@ -1,6 +1,7 @@
 !$Procedure F_DVSEP ( DVSEP family tests )
 
       SUBROUTINE F_DVSEP ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -80,11 +81,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DVSEP
-      DOUBLE PRECISION      DPMAX
       DOUBLE PRECISION      T_RANDD
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
 
 
 !

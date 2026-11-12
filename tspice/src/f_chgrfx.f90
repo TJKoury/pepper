@@ -1,6 +1,7 @@
 !$Procedure      F_CHGRFX ( Test the Change IRF exceptions )
 
       SUBROUTINE F_CHGRFX ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

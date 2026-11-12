@@ -1,6 +1,7 @@
 !$Procedure CONVRT_2  ( Convert Units )
 
       SUBROUTINE CONVRT_2  (  XIN, UNIN, UNOUT, XOUT )
+      use pepper_legacy, pepper_legacy_ident => ident
       IMPLICIT NONE
 
 ! $ Abstract
@@ -196,9 +197,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      LOGICAL               RETURN
-      EXTERNAL              SCAN
 
 !
 !     Other functions

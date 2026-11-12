@@ -1,4 +1,5 @@
       SUBROUTINE T_CRDESC ( TYPE, SEGNO, BODY, START, STOP, DESCR )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -28,7 +29,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
 
 
 !

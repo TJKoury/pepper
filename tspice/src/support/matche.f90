@@ -2,6 +2,7 @@
 !$Procedure MATCHE ( Match two words, allowing for common errors )
 
       SUBROUTINE MATCHE ( WORD, GUESS, TRANSF, LOC )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -160,7 +161,6 @@
 !     SPICELIB functions
 !
       INTEGER               QRTRIM
-      LOGICAL               EQSTR
 
 !
 !     Local variables

@@ -1,6 +1,7 @@
 !$Procedure      TOPEN (Open a family of tests)
 
       SUBROUTINE TOPEN ( NAME )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -129,7 +130,6 @@
 !
 !     Spicelib Functions
 !
-      INTEGER               RTRIM
       LOGICAL               ISOFF
       LOGICAL               SETOFF
 

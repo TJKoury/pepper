@@ -3,6 +3,7 @@
       SUBROUTINE TSTDAS ( FILE,   FTYPE,  NCOMRC, FILENO, &
                           NCLUST, CLTYPS, CLNWDS, SGRGAT, &
                           FCLOSE, NSCHEM, HANDLE         )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -210,8 +211,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local parameters

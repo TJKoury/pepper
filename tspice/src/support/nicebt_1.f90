@@ -1,6 +1,7 @@
 !$Procedure     NICEBT_1 ( Nicely buffered text )
 
       SUBROUTINE NICEBT_1 ( STRING, STYLE, BUFFER )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -485,13 +486,9 @@
 !
 !     SPICELIB Functions.
 !
-      LOGICAL               RETURN
-      INTEGER               FRSTNB
       INTEGER               QLSTNB
       INTEGER               UPTO
       LOGICAL               MATCH
-      INTEGER               POS
-      INTEGER               NCPOS
 !
 !   Local Variables
 !

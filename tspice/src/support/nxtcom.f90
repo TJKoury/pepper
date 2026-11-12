@@ -1,6 +1,7 @@
 !$Procedure      NXTCOM ( Next command )
 
       SUBROUTINE NXTCOM ( PROMPT, DELIM, COMMND, SOURCE )
+      use pepper_legacy, pepper_legacy_prompt => prompt
       IMPLICIT NONE
 
 ! $ Abstract
@@ -98,9 +99,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BRCKTI
       LOGICAL               BATCH
-      LOGICAL               RETURN
 
 !
 !     Below are the various sources from which

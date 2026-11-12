@@ -1,6 +1,7 @@
 !$Procedure   NATIK ( Create an IK for Nat's solar system )
 
       SUBROUTINE NATIK ( IK, SPK, PCK, LOADIK, KEEPIK )
+      use pepper_legacy, pepper_legacy_pos => pos
 
 ! $ Abstract
 !

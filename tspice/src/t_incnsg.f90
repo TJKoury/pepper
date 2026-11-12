@@ -2,6 +2,7 @@
 
       SUBROUTINE T_INCNSG ( APEX,   AXIS,  ANGLE, ENDPT1, &
                             ENDPT2, NXPTS, XPT1,  XPT2   )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -265,13 +266,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VDOT
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local parameters

@@ -1,6 +1,7 @@
 !$Procedure      F_TSTCK3 ( Family of tests for tstck3 and tstatd )
 
       SUBROUTINE F_TSTCK3 ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

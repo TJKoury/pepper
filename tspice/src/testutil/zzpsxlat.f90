@@ -1,6 +1,7 @@
 !$Procedure ZZPSXLAT ( Plate set, translate )
 
       SUBROUTINE ZZPSXLAT ( V1, OFFSET, VOUT )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -100,9 +101,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      INTEGER               SIZED
-      LOGICAL               RETURN
 
 !
 !     Local variables

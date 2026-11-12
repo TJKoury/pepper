@@ -1,6 +1,7 @@
 !$Procedure      QRTRIM (Quick right trim )
 
       INTEGER FUNCTION QRTRIM ( STRING )
+      use pepper_legacy
 
 ! $ Abstract
 !

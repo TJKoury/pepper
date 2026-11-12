@@ -1,4 +1,5 @@
       SUBROUTINE T_CRDAF ( TYPE, NAME, NSEG, IDS, TBEGS, TENDS, SEGIDS )
+      use pepper_legacy
 
 ! $ Abstract
 !

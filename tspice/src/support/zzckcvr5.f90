@@ -1,6 +1,7 @@
 !$Procedure ZZCKCVR5 ( Private --- C-kernel segment coverage, type 05 )
 
       SUBROUTINE ZZCKCVR5 ( HANDLE, ARRBEG, ARREND, SCHEDL )
+      use pepper_legacy
       use pepper_inc_ck05
 
 ! $ Abstract
@@ -111,7 +112,6 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local Variables
@@ -119,8 +119,14 @@
       DOUBLE PRECISION      BEGIN
       DOUBLE PRECISION      BUFFER ( 4 )
       DOUBLE PRECISION      FINISH
+      DOUBLE PRECISION FINISH_A1 ( 1 )
+      EQUIVALENCE ( FINISH, FINISH_A1 )
       DOUBLE PRECISION      START
+      DOUBLE PRECISION START_A1 ( 1 )
+      EQUIVALENCE ( START, START_A1 )
       DOUBLE PRECISION      TICK
+      DOUBLE PRECISION TICK_A1 ( 1 )
+      EQUIVALENCE ( TICK, TICK_A1 )
 
       INTEGER               INTAT
       INTEGER               INTBEG
@@ -172,7 +178,7 @@
          RSIZE = C05PS3
       ELSE
          CALL SETMSG ( 'CK type 5 subtype <#> is not supported.' )
-         CALL ERRINT ( '#', BUFFER(1)                            )
+         CALL ERRINT ( '#', NINT(BUFFER(1))                      )
          CALL SIGERR ( 'SPICE(NOTSUPPORTED)'                     )
          CALL CHKOUT ( 'ZZCKCVR5'                                )
          RETURN
@@ -226,12 +232,12 @@
       INTAT  = INTBEG
       LSTINT = INTBEG + INVLS - 1
 
-      CALL DAFGDA ( HANDLE, INTAT,  INTAT,   START )
-      CALL DAFGDA ( HANDLE, TICKAT, TICKAT,  TICK  )
+      CALL DAFGDA ( HANDLE, INTAT,  INTAT,   START_A1 )
+      CALL DAFGDA ( HANDLE, TICKAT, TICKAT,  TICK_A1  )
 
       DO WHILE ( TICK .LT. START .AND. TICKAT .LT. LSTTIK )
          TICKAT = TICKAT + 1
-         CALL DAFGDA ( HANDLE, TICKAT, TICKAT, TICK )
+         CALL DAFGDA ( HANDLE, TICKAT, TICKAT, TICK_A1 )
       END DO
 
 !
@@ -259,7 +265,7 @@
 !        reads.
 !
          IF ( INTAT .EQ. LSTINT ) THEN
-            CALL DAFGDA ( HANDLE, LSTTIK, LSTTIK, FINISH )
+            CALL DAFGDA ( HANDLE, LSTTIK, LSTTIK, FINISH_A1 )
             CALL WNINSD ( START, FINISH, SCHEDL )
             CALL CHKOUT ( 'ZZCKCVR5' )
             RETURN
@@ -270,7 +276,7 @@
 !        interval.
 !
          INTAT  = INTAT  + 1
-         CALL DAFGDA ( HANDLE, INTAT, INTAT, START )
+         CALL DAFGDA ( HANDLE, INTAT, INTAT, START_A1 )
 
 !
 !        Read forward from the last tick until we reach the
@@ -279,7 +285,7 @@
          DO WHILE ( TICK .LT. START .AND. TICKAT .LT. LSTTIK )
             FINISH = TICK
             TICKAT = TICKAT + 1
-            CALL DAFGDA ( HANDLE, TICKAT, TICKAT, TICK  )
+            CALL DAFGDA ( HANDLE, TICKAT, TICKAT, TICK_A1  )
          END DO
 
 !

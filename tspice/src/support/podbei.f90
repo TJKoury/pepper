@@ -1,6 +1,7 @@
 !$Procedure      PODBEI ( Pod, begin and end, integer )
 
       SUBROUTINE PODBEI ( POD, BEGIN, END )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -119,7 +120,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local variables

@@ -1,4 +1,5 @@
       SUBROUTINE LANGUA ( STRING )
+      use pepper_legacy
       IMPLICIT NONE
 !
 ! $ Version

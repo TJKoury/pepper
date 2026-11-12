@@ -2,6 +2,7 @@
 
       SUBROUTINE T_TORUTL ( R,     CENTER, NORMAL, T, &
                             CURVE, DERIV,  TWIST     )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -111,9 +112,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      TWOPI
 
-      LOGICAL               RETURN
 
 !
 !     Local variables

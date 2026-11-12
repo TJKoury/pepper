@@ -1,6 +1,7 @@
 !$Procedure F_VECTOR3 (Family of tests on 3-vector operations)
 
       SUBROUTINE F_VECTOR3 ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -118,13 +119,6 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               VZERO
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VREL
-      DOUBLE PRECISION      VSEP
-      DOUBLE PRECISION      TWOPI
 
 !
 !     Local parameters

@@ -1,6 +1,7 @@
 !$Procedure      F_ZZSGLATX ( Test segment latitude extent routine )
 
       SUBROUTINE F_ZZSGLATX ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -110,8 +111,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VDOT
 !
 !     Local parameters
 !

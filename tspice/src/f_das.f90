@@ -1,6 +1,7 @@
 !$Procedure F_DAS ( Test subset of DAS routines )
 
       SUBROUTINE F_DAS ( OK )
+      use pepper_legacy
       use pepper_inc_das
 
 ! $ Abstract
@@ -1252,12 +1253,12 @@
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       DO I = 1, 10
-         CALL DASADI ( HANDLE, 1, I )
+         CALL DASADI ( HANDLE, 1, [I] )
          CALL CHCKXC ( .FALSE., ' ', OK )
       END DO
 
       DO I = 1, 5
-         CALL DASADD ( HANDLE, 1, DBLE(I) )
+         CALL DASADD ( HANDLE, 1, [DBLE(I)] )
          CALL CHCKXC ( .FALSE., ' ', OK )
       END DO
 
@@ -1315,12 +1316,12 @@
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       DO I = 1, 10
-         CALL DASADI ( HANDLE, 1, I )
+         CALL DASADI ( HANDLE, 1, [I] )
          CALL CHCKXC ( .FALSE., ' ', OK )
       END DO
 
       DO I = 1, 5
-         CALL DASADD ( HANDLE, 1, DBLE(I) )
+         CALL DASADD ( HANDLE, 1, [DBLE(I)] )
          CALL CHCKXC ( .FALSE., ' ', OK )
       END DO
 

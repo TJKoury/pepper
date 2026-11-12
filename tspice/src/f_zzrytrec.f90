@@ -1,6 +1,7 @@
 !$Procedure F_ZZRYTREC ( ZZRYTREC tests )
 
       SUBROUTINE F_ZZRYTREC ( OK )
+      use pepper_legacy
       use pepper_inc_dskdsc
       use pepper_inc_dsktol
 

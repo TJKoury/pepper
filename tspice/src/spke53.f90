@@ -1,6 +1,7 @@
 !$Procedure      SPKE53 ( Evaluate a type 53 SPK data record)
 
       SUBROUTINE SPKE53 ( ET, RECIN, STATE )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -240,11 +241,6 @@
 !
 !     SPICELIB Functions
 !
-      EXTERNAL              PI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VDOT
-      LOGICAL               RETURN
 
 
 !

@@ -1,6 +1,7 @@
 !$Procedure IOVCMP ( Inverse order vector with compressed range )
 
       SUBROUTINE IOVCMP ( DARRAY, NDIM, IORDER, INVORD, RNGMAX )
+      use pepper_legacy
 
 ! $ Abstract
 !

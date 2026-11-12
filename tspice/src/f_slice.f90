@@ -1,6 +1,7 @@
 !$Procedure F_SLICE ( Ellipsoid/plane intersection routine tests )
 
       SUBROUTINE F_SLICE ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -100,7 +101,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORM
 
 !
 !     Other functions
@@ -684,6 +684,7 @@
 !     Supporting function T_ISLIMB
 !
       LOGICAL FUNCTION T_ISLIMB ( LIMB,  A, B, C, VIEWPT, OK )
+      use pepper_legacy
       IMPLICIT NONE
 !
 !     Test whether an ellipse is the limb of an ellipsoid as seen
@@ -707,9 +708,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
 
 !
 !     Local parameters
@@ -820,6 +818,7 @@
 !     Supporting function T_ISPXED
 !
       LOGICAL FUNCTION T_ISPXED ( ELLIPS, A, B, C, PLANE, OK )
+      use pepper_legacy
       IMPLICIT NONE
 !
 !     Test whether an ellipse is the intersection of a specified
@@ -841,7 +840,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
 
 !
 !     Local parameters

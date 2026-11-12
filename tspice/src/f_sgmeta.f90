@@ -1,6 +1,7 @@
 !$Procedure F_SGMETA ( SGMETA Test Family )
 
       SUBROUTINE F_SGMETA ( OK )
+      use pepper_legacy
       use pepper_inc_sgparam
 
 ! $ Abstract
@@ -313,7 +314,7 @@
 !
       DO I = ( IC(5) + MXMETA - 1 ), ( IC(6) - 1 )
 
-         CALL DAFWDA ( HANDL3, I, I, 0.0D0 )
+         CALL DAFWDA ( HANDL3, I, I, [0.0D0] )
 
       END DO
       CALL CHCKXC ( .FALSE., ' ', OK )

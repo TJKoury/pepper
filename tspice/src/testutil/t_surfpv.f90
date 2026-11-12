@@ -1,6 +1,7 @@
 !$Procedure T_SURFPV ( Surface intercept position and velocity )
 
       SUBROUTINE T_SURFPV ( STVRTX, STDIR, A, B, C, STX, FOUND )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -182,13 +183,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      TOUCHD
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
 
-      LOGICAL               RETURN
-      LOGICAL               VZERO
 
 !
 !     Local parameters

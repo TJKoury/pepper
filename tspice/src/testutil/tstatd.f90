@@ -1,6 +1,7 @@
 !$Procedure      TSTATD ( Test Attitude )
 
       SUBROUTINE TSTATD ( ET, MATRIX, ANGVEL )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -134,7 +135,6 @@
 !
 !     Spicelib Functions
 !
-      INTEGER               LSTLED
 
 !
 !     Local Variables

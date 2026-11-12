@@ -1,6 +1,7 @@
 !$Procedure      F_FRMCHG ( Family of tests for FRMCHG )
 
       SUBROUTINE F_FRMCHG ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       IMPLICIT NONE
 
       LOGICAL               OK

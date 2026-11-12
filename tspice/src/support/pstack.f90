@@ -1,6 +1,7 @@
 !$Procedure      PSTACK (Save paragraphs of text in a paragraph stack)
 
       SUBROUTINE PSTACK ( DEPTH, LINE, BUFFER )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -243,7 +244,6 @@
 !
 !     Spicelib Functions
 !
-      INTEGER               SIZEC
 
 !
 !     Local Buffers

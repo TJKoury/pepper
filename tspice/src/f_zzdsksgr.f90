@@ -1,6 +1,7 @@
 !$Procedure      F_ZZDSKSGR ( Test ZZDSKSGR )
 
       SUBROUTINE F_ZZDSKSGR ( OK )
+      use pepper_legacy
       use pepper_inc_dskdsc
       IMPLICIT NONE
 
@@ -87,9 +88,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      ZZDSKSGR
 
 !
 !     Local parameters

@@ -3,6 +3,7 @@
       SUBROUTINE ZZELLSEC ( A,      B,      C,     MINLON, MAXLON, &
                             MINLAT, MAXLAT, NLON,  NLAT,   MAXV, &
                             MAXP,   NV,     VERTS, NP,     PLATES )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -230,10 +231,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local parameters

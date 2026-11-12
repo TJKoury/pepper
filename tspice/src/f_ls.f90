@@ -1,6 +1,7 @@
 !$Procedure      F_LS ( Test solar longitude routines )
 
       SUBROUTINE F_LS ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -20,8 +21,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      LSPCN
 
 !
 !     Local parameters

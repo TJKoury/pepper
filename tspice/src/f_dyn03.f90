@@ -1,6 +1,7 @@
 !$Procedure F_DYN03 ( Dynamic Frame Test Family 03 )
 
       SUBROUTINE F_DYN03 ( OK )
+      use pepper_legacy
       use pepper_inc_zzdyn
 
 ! $ Abstract
@@ -129,12 +130,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORMG
 
-      INTEGER               PRODAI
-      INTEGER               RTRIM
 
-      LOGICAL               EQSTR
 
 !
 !     Local Parameters

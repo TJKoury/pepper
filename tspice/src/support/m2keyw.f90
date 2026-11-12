@@ -1,6 +1,7 @@
 !$Procedure      M2KEYW ( Determine whether or not a word is a keyword )
 
       LOGICAL FUNCTION M2KEYW ( WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -119,8 +120,6 @@
 !     SPICELIB functions
 !
 
-      INTEGER               BSRCHC
-      LOGICAL               MATCHW
 
 
 !

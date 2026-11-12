@@ -4,6 +4,7 @@
       SUBROUTINE M2GMCH ( TEMP,    THNWDS, &
                           STRING,  SBEG,   REASON, CUTOFF, &
                           PSSTHN,  M2CODE, SCORE,  CAUSE   )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -204,15 +205,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHI
-      INTEGER               CARDC
-      INTEGER               CARDI
       INTEGER               QLSTNB
-      INTEGER               LSTLTI
-      INTEGER               NCPOS
-      INTEGER               POS
-      INTEGER               RTRIM
-      INTEGER               SIZEC
       INTEGER               UPTO
       LOGICAL               M2KEYW
       LOGICAL               MATCH

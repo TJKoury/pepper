@@ -614,10 +614,13 @@ fastest time of each operation).
 - **The same results.** In the comparison above, every query of PEPPER gives
   the same result, to the last bit, as SPICELIB compiled with the same
   optimization.
-- **SPICELIB programs.** The legacy interface (`tspice/src/legacy`) has
-  SPICELIB's external routines with SPICELIB's names and arguments, on a
-  default instance; NAIF's test suite runs through it. Like SPICELIB, it is
-  not thread-safe.
+- **SPICELIB programs.** The module `pepper_legacy` (`src/legacy`) has
+  SPICELIB's routines with SPICELIB's names and arguments, on a default
+  instance: a SPICELIB program uses it (`use pepper_legacy`) instead of
+  declaring SPICELIB's functions; NAIF's test suite runs through it. Its
+  interfaces are explicit, so calls that F77 let pass with mismatched
+  arguments (a scalar for an array, a double for an integer) are compile
+  errors. Like SPICELIB, it is not thread-safe.
 - **The same files.** PEPPER reads and writes the same kernel files.
 - **A kernel open on several units.** Each context reads the kernels
   through units of its own, and each instance loads its own: one process

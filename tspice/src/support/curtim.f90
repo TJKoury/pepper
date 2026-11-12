@@ -1,6 +1,7 @@
 !$Procedure CURTIM (Current Time)
 
       SUBROUTINE CURTIM ( TIME )
+      use pepper_legacy
 
 ! $ Abstract
 !

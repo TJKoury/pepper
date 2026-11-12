@@ -3,6 +3,7 @@
 !$Procedure UNITP ( Determine whether a string represents units)
 
       LOGICAL FUNCTION UNITP ( STRING )
+      use pepper_legacy, pepper_legacy_ident => ident
       IMPLICIT NONE
 
 ! $ Abstract
@@ -127,8 +128,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
-      EXTERNAL              SCAN
 
 !
 !     Parameters

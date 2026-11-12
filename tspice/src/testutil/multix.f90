@@ -1,6 +1,7 @@
 !$Procedure MULTIX ( Multiple dimensional index )
 
       SUBROUTINE MULTIX ( BASIDX, N, DIMS, OFFSET, COORDS )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

@@ -1,6 +1,7 @@
 !$Procedure F_PLTNP ( PLTNP tests )
 
       SUBROUTINE F_PLTNP ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -80,10 +81,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
 
 !
 !     Local Parameters

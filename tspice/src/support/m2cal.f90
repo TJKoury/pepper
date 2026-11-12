@@ -1,6 +1,7 @@
 !$Procedure      M2CAL ( Parse a UTC time string )
 
       SUBROUTINE M2CAL ( UTCSTR, MSSG, TCODE )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -196,7 +197,6 @@
 !
 !     NAIFLIB functions
 !
-      LOGICAL               RETURN
 
       INTEGER               LNSIZE
       PARAMETER           ( LNSIZE = 80 )

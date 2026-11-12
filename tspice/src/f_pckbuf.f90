@@ -1,6 +1,7 @@
 !$Procedure      F_PCKBUF ( Text PCK reader buffering tests )
 
       SUBROUTINE F_PCKBUF ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -98,11 +99,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      J2000
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      HALFPI
 
-      INTEGER               ZZBODBRY
 
 !
 !     Local parameters.
@@ -140,6 +137,8 @@
       INTEGER               I
       INTEGER               J
       INTEGER               FRMID
+      INTEGER FRMID_A1 ( 1 )
+      EQUIVALENCE ( FRMID, FRMID_A1 )
       INTEGER               NANGLS
 
       DOUBLE PRECISION      DVALS  ( MAXANG * 2 )
@@ -202,11 +201,11 @@
 
          LINE = 'BODY#_CONSTANTS_JED_EPOCH'
          CALL REPMI ( LINE, '#', REFID, LINE )
-         CALL PDPOOL ( LINE, 1, DVALS(1) + J2000() )
+         CALL PDPOOL ( LINE, 1, [DVALS(1) + J2000()] )
 
          LINE = 'BODY#_CONSTANTS_REF_FRAME'
          CALL REPMI ( LINE, '#', REFID, LINE )
-         CALL PIPOOL ( LINE, 1, FRMID )
+         CALL PIPOOL ( LINE, 1, FRMID_A1 )
 
          LINE = 'BODY#_NUT_PREC_ANGLES'
          CALL REPMI ( LINE, '#', REFID, LINE )
@@ -214,7 +213,7 @@
 
          LINE = 'BODY#_MAX_PHASE_DEGREE'
          CALL REPMI  ( LINE, '#', BODYID, LINE )
-         CALL PIPOOL ( LINE, 1, 1 )
+         CALL PIPOOL ( LINE, 1, [1] )
 
       END DO
 
@@ -286,17 +285,17 @@
          CALL EUL2M  ( W, HALFPI() - DEC, HALFPI() + RA, 3, 1, 3, MEUL )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
-         CALL PIPOOL ( 'I', 1, 1 )
+         CALL PIPOOL ( 'I', 1, [1] )
 
          CALL BODMAT ( BODYID, ET, MBOD )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
-         CALL PIPOOL ( 'I', 1, 1 )
+         CALL PIPOOL ( 'I', 1, [1] )
 
          CALL TIPBOD ( 'J2000', BODYID, ET, MTIP )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
-         CALL PIPOOL ( 'I', 1, 1 )
+         CALL PIPOOL ( 'I', 1, [1] )
 
          CALL TISBOD ( 'J2000', BODYID, ET, M6X6 )
          CALL CHCKXC ( .FALSE., ' ', OK )
@@ -404,17 +403,17 @@
          CALL EUL2M  ( W, HALFPI() - DEC, HALFPI() + RA, 3, 1, 3, MEUL )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
-         CALL PIPOOL ( 'I', 1, 1 )
+         CALL PIPOOL ( 'I', 1, [1] )
 
          CALL BODMAT ( BODYID, ET, MBOD )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
-         CALL PIPOOL ( 'I', 1, 1 )
+         CALL PIPOOL ( 'I', 1, [1] )
 
          CALL TIPBOD ( 'J2000', BODYID, ET, MTIP )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
-         CALL PIPOOL ( 'I', 1, 1 )
+         CALL PIPOOL ( 'I', 1, [1] )
 
          CALL TISBOD ( 'J2000', BODYID, ET, M6X6 )
          CALL CHCKXC ( .FALSE., ' ', OK )

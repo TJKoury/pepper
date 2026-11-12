@@ -1,6 +1,7 @@
 !$Procedure      ZZCKE06 ( C-Kernel, evaluate, type 6 )
 
       SUBROUTINE ZZCKE06 ( RECORD, QSTATE, CLKOUT )
+      use pepper_legacy
       use pepper_inc_ck06
       use pepper_inc_ckparam
 
@@ -178,12 +179,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      LGRINT
-      DOUBLE PRECISION      VDISTG
-      DOUBLE PRECISION      VDOTG
-      DOUBLE PRECISION      VNORMG
 
-      LOGICAL               RETURN
 
 !
 !     Local parameters

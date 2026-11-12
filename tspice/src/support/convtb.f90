@@ -2,6 +2,7 @@
 ! $ Procedure CONVTB ( Convert kernel file from text to binary )
 
       SUBROUTINE CONVTB ( TXTFIL, BINFIL )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -160,11 +161,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LTRIM
-      INTEGER               RTRIM
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 !
 !     Local parameters
 !

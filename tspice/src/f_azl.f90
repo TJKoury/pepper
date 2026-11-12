@@ -1,6 +1,7 @@
 !$Procedure F_AZL ( Azimuth/elevation coordinate tests )
 
       SUBROUTINE F_AZL ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -95,13 +96,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      RPD
       DOUBLE PRECISION      T_RANDD
-      DOUBLE PRECISION      TWOPI
 
-      LOGICAL               VZERO
 
 !
 !     Local parameters

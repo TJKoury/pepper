@@ -1,6 +1,7 @@
 !$Procedure      F_SRFTRN ( Test surface name/ID mapping routines )
 
       SUBROUTINE F_SRFTRN ( OK )
+      use pepper_legacy
       use pepper_inc_srftrn
       use pepper_inc_zzctr
       use pepper_inc_zzsrftrn

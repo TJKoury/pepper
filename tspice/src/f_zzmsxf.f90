@@ -1,6 +1,7 @@
 !$Procedure      F_ZZMSXF ( Check the routine zzmsxf )
 
       SUBROUTINE F_ZZMSXF ( OK )
+      use pepper_legacy, pepper_legacy_sxform => sxform
       IMPLICIT NONE
 
       LOGICAL               OK

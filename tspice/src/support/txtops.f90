@@ -1,6 +1,7 @@
 !$Procedure      TXTOPS ( Text file, open scratch )
 
       SUBROUTINE TXTOPS (  UNIT )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -226,7 +227,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local variables

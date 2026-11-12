@@ -1,6 +1,7 @@
 !$Procedure      F_ZZFGEO ( Test private "fast" geometry routines )
 
       SUBROUTINE F_ZZFGEO ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -87,7 +88,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
 !      DOUBLE PRECISION      VNORM
 
 !

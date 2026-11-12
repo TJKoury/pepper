@@ -1,6 +1,7 @@
 !$Procedure F_EQNCPV (Family of tests for EQNCPV)
 
       SUBROUTINE F_EQNCPV ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -110,8 +111,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      RPD
 
 !
 !     Local Variables

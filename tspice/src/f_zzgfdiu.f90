@@ -1,6 +1,7 @@
 !$Procedure F_ZZGFDIU ( ZZGFDIU family tests )
 
       SUBROUTINE F_ZZGFDIU ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 
@@ -88,19 +89,11 @@
 !
 !-&
 
-      EXTERNAL              UDF
-      EXTERNAL              ZZGFDIGQ
 
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPMIN
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
 
-      LOGICAL               ODD
 
 !
 !     Local parameters

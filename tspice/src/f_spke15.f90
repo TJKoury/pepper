@@ -1,6 +1,7 @@
 !$Procedure F_SPKE15  (  Test routine SPKE15  )
 
       SUBROUTINE F_SPKE15 ( OK )
+      use pepper_legacy, pepper_legacy_pos => pos
 
 ! $ Abstract
 !
@@ -121,9 +122,6 @@
 !
 !     Spicelib Functions
 !
-      EXTERNAL              PI
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      PI
 
 !
 !     Check out the error handling first.

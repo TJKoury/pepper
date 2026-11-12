@@ -2,6 +2,7 @@
 !$Procedure      F_SRFXPT ( SRFXPT family tests )
 
       SUBROUTINE F_SRFXPT ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -21,14 +22,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
 
-      LOGICAL               EQSTR
 
 !
 !     Local parameters
@@ -283,7 +277,7 @@
 
       CALL SPKW05 ( HANDLE(2),    SCID,         499,      'MARSIAU', &
                     -10*JYEAR(),  10*JYEAR(),  'Mars orbiter', &
-                    ELTS(8),      1,            STATE0,    ET        )
+                    ELTS(8),      1,            STATE0,    [ET]        )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -301,14 +295,14 @@
 !
       CALL PCPOOL ( 'NAIF_BODY_NAME', 1,  OBSNMS(2) )
       CALL CHCKXC ( .FALSE., ' ', OK )
-      CALL PIPOOL ( 'NAIF_BODY_CODE', 1,  SCID      )
+      CALL PIPOOL ( 'NAIF_BODY_CODE', 1,  [SCID]      )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
 !     Add an incomplete frame definition to the kernel pool;
 !     we'll need this later.
 !
-      CALL PIPOOL ( 'FRAME_BAD_NAME', 1, -666 )
+      CALL PIPOOL ( 'FRAME_BAD_NAME', 1, [-666] )
 
 !
 !     Start out with consistency checks:  having found SPOINT,

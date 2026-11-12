@@ -1,6 +1,7 @@
 !$Procedure      M2EPOC ( Determine whether or not a word is an epoch )
 
       LOGICAL FUNCTION M2EPOC ( WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

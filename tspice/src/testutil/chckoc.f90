@@ -1,6 +1,7 @@
 !$Procedure      CHCKOC ( Check order of an d.p. array )
 
       SUBROUTINE CHCKOC ( NAME, ARRAY, ORDER, SIZE, OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -131,7 +132,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
 !
 !     Test Utility Functions
 !

@@ -1,6 +1,7 @@
 !$Procedure      F_VSTRNG ( Tests for the virtual string routine )
 
       SUBROUTINE F_VSTRNG ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -190,8 +191,6 @@
 !
 !     SPICELIB Functions
 !
-      EXTERNAL              PI
-      DOUBLE PRECISION      PI
 !
 !     Local Variables
 !

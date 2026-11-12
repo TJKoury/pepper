@@ -1,6 +1,7 @@
 !$Procedure      CNFIRM_1 ( Return status of a yes/no query )
 
       SUBROUTINE CNFIRM_1 ( PRMPT, TORF )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

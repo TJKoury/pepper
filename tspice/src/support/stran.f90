@@ -1,6 +1,7 @@
 !$Procedure     STRAN
 
       SUBROUTINE STRAN ( INPUT, OUTPUT, TRAN )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -177,14 +178,7 @@
 !-&
 !     SPICELIB Functions
 !
-      INTEGER               CARDC
-      INTEGER               ISRCHC
-      INTEGER               LASTNB
-      INTEGER               NCPOS
-      INTEGER               RTRIM
-      LOGICAL               FAILED
       LOGICAL               MATCHM
-      LOGICAL               RETURN
 !
 !     Other supporting functions
 !

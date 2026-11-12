@@ -1,6 +1,7 @@
 !$Procedure      QLSTNB (Quick LAST non-blank character)
 
       INTEGER FUNCTION QLSTNB ( STRING )
+      use pepper_legacy
 
 ! $ Abstract
 !

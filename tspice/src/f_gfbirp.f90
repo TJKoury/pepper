@@ -1,6 +1,7 @@
 !$Procedure      F_GFBIRP ( Test GF binary quantity progress reporting )
 
       SUBROUTINE F_GFBIRP ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
@@ -97,14 +98,10 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               GFBAIL
 
-      EXTERNAL              GFBAIL
-      EXTERNAL              GFREFN
-      EXTERNAL              GFSTEP
-      EXTERNAL              T_GFREPI
-      EXTERNAL              T_GFREPU
-      EXTERNAL              T_GFREPF
+      EXTERNAL T_GFREPI
+      EXTERNAL T_GFREPU
+      EXTERNAL T_GFREPF
 
 !
 !     Local parameters

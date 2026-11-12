@@ -1,6 +1,7 @@
 !$Procedure F_CKBSR ( Family of tests for T_CBR )
 
       SUBROUTINE F_CKBSR ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -114,8 +115,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EVEN
-      LOGICAL               RETURN
 
 !
 !     Local parameters

@@ -1,6 +1,7 @@
 !$Procedure      F_GFTFOV ( Test GFTFOV )
 
       SUBROUTINE F_GFTFOV ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
@@ -109,9 +110,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      SPD
 
-      INTEGER               WNCARD
 
 !
 !     EXTERNAL declarations

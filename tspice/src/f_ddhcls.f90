@@ -1,6 +1,7 @@
 !$Procedure F_DDHCLS ( ZZDDHCLS Test Family )
 
       SUBROUTINE F_DDHCLS ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -87,7 +88,6 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               EXISTS
 
 !
 !     Local Variables

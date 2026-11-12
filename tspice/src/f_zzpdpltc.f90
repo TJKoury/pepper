@@ -1,6 +1,7 @@
 !$Procedure F_ZZPDPLTC ( ZZPDPLTC tests )
 
       SUBROUTINE F_ZZPDPLTC ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -80,9 +81,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
 
-      LOGICAL               ZZPDPLTC
 
 !
 !     Local Parameters

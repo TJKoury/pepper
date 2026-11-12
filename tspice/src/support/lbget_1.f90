@@ -2,6 +2,7 @@
 !$Procedure LBGET ( Line buffer, get )
 
       SUBROUTINE LBGET_1 ( POS, PTRS, BUFFER, LINE, FOUND )
+      use pepper_legacy, pepper_legacy_pos => pos
       IMPLICIT NONE
 
 ! $ Abstract
@@ -131,7 +132,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local variables

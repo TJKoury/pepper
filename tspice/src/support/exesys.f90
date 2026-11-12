@@ -1,6 +1,7 @@
 !$Procedure   EXESYS  ( Execute system command )
 
       SUBROUTINE EXESYS ( CMD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -283,8 +284,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
-      LOGICAL               RETURN
 
 !
 !     Local variables

@@ -1,6 +1,7 @@
 !$Procedure      F_OCCULT ( OCCULT family tests )
 
       SUBROUTINE F_OCCULT ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame, pepper_legacy_pos => pos
       use pepper_inc_dskdsc
       use pepper_inc_occult
 
@@ -91,10 +92,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      JYEAR
 
-      LOGICAL               EXISTS
 
 !
 !     Local parameters

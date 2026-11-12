@@ -1,6 +1,7 @@
 !$Procedure F_PRJP ( Test wrappers for plane projection routines )
 
       SUBROUTINE F_PRJP ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -92,8 +93,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VDOT
 
 !
 !     Test utility functions

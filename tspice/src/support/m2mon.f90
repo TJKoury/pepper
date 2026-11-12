@@ -1,6 +1,7 @@
 !$Procedure      M2MON ( Determine whether or not a word is a month )
 
       LOGICAL FUNCTION M2MON ( WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -109,9 +110,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               BSRCHC
       INTEGER               QRTRIM
-      INTEGER               LTRIM
 
 !
 !     Local variables

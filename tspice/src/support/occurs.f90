@@ -2,6 +2,7 @@
 !$Procedure OCCURS ( Count occurrences of a substring in a string )
 
       INTEGER FUNCTION OCCURS ( STR, SUB )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

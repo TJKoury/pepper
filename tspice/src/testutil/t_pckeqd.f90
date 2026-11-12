@@ -3,6 +3,7 @@
       SUBROUTINE T_PCKEQD ( BODY,   ET, &
                             RA,     DEC,    PM, &
                             ANGSET, RADSET, RADII )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -144,10 +145,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      SPD
 
-      LOGICAL               RETURN
 
 !
 !     Local variables

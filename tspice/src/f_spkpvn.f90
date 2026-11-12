@@ -1,6 +1,7 @@
 !$Procedure      F_SPKPVN ( Family of routine tests for SPKPVN )
 
       SUBROUTINE F_SPKPVN ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame, pepper_legacy_ident => ident
       IMPLICIT NONE
 
       LOGICAL               OK

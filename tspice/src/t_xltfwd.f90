@@ -1,6 +1,7 @@
 !$Procedure T_XLTFWD ( Translate For Write, Double Precision Values )
 
       SUBROUTINE T_XLTFWD ( INPUT, NUMDP, OUTBFF, OUTPUT )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -131,8 +132,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
-      LOGICAL               RETURN
 
 !
 !     Local Variables
@@ -141,6 +140,8 @@
       CHARACTER*(STRSIZ)    TMPSTR
 
       DOUBLE PRECISION      DEQUIV
+      DOUBLE PRECISION DEQUIV_A1 ( 1 )
+      EQUIVALENCE ( DEQUIV, DEQUIV_A1 )
 
       INTEGER               I
       INTEGER               J
@@ -329,7 +330,7 @@
 !
 !              Perform the necessary computations.
 !
-               CALL MOVED ( INPUT(I), 1, DEQUIV )
+               CALL MOVED ( INPUT(I), 1, DEQUIV_A1 )
 
                VALUE = ISHFT( IEQUIV(2),  24 )
                VALUE = ISHFT( VALUE,     -24 )
@@ -462,7 +463,7 @@
 !
 !              Perform the necessary computations.
 !
-               CALL MOVED ( INPUT(I), 1, DEQUIV )
+               CALL MOVED ( INPUT(I), 1, DEQUIV_A1 )
 
                VALUE = ISHFT( IEQUIV(2), -24 )
                OUTPUT(J:J) = CHAR(VALUE)

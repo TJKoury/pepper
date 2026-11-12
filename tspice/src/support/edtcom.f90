@@ -1,6 +1,7 @@
 !$Procedure      EDTCOM (Edit a command)
 
       SUBROUTINE EDTCOM ( DELIM, PROMPT, COMMND, SOURCE )
+      use pepper_legacy, pepper_legacy_prompt => prompt
 
 ! $ Abstract
 !
@@ -316,10 +317,7 @@
 !
 !     Spicelib Functions
 !
-      INTEGER               RTRIM
-      INTEGER               CARDC
       LOGICAL               MATCH
-      LOGICAL               FAILED
       LOGICAL               HAVE
 
 !
@@ -615,7 +613,7 @@
             CALL REPMC ( ERROR(1), '#', SCNDWD, ERROR(1) )
             COMMND = ' '
             SOURCE = NONE
-            CALL SETMSG (  ERROR              )
+            CALL SETMSG (  ERROR(1)              )
             CALL SIGERR ( 'EDTCOM(NOMATCH)'   )
             RETURN
 
@@ -689,7 +687,7 @@
             CALL NSPPST ( 'SAVE',    SVSTAT )
             COMMND = ' '
             SOURCE = NONE
-            CALL SETMSG (  ERROR                   )
+            CALL SETMSG (  ERROR(1)                   )
             CALL SIGERR ( 'SPICE(FILEREADERROR)'   )
             RETURN
          END IF
@@ -706,7 +704,7 @@
             COMMND = ' '
             SOURCE = NONE
             CALL PREXIT
-            CALL SETMSG (  ERROR                   )
+            CALL SETMSG (  ERROR(1)                   )
             CALL SIGERR ( 'SPICE(FILEREADERROR)'   )
             RETURN
          END IF
@@ -830,7 +828,7 @@
                   CALL NSPPST ( 'SAVE',    SVSTAT )
                   COMMND = ' '
                   SOURCE = NONE
-                  CALL SETMSG (  ERROR                   )
+                  CALL SETMSG (  ERROR(1)                   )
                   CALL SIGERR ( 'SPICE(FILEREADERROR)'   )
                   RETURN
                END IF
@@ -848,7 +846,7 @@
                   COMMND = ' '
                   SOURCE = NONE
                   CALL PREXIT
-                  CALL SETMSG (  ERROR                   )
+                  CALL SETMSG (  ERROR(1)                   )
                   CALL SIGERR ( 'SPICE(FILEREADERROR)'   )
                   RETURN
                END IF
@@ -912,7 +910,7 @@
             CALL REPMC ( ERROR(1), '#', SCNDWD, ERROR(1) )
             COMMND = ' '
             SOURCE = NONE
-            CALL SETMSG (  ERROR              )
+            CALL SETMSG (  ERROR(1)              )
             CALL SIGERR ( 'EDTCOM(NOMATCH)'   )
             RETURN
 
@@ -1057,7 +1055,7 @@
             CALL REPMC ( ERROR(1), '#', SCNDWD, ERROR(1) )
             COMMND = ' '
             SOURCE = NONE
-            CALL SETMSG (  ERROR              )
+            CALL SETMSG (  ERROR(1)              )
             CALL SIGERR ( 'EDTCOM(NOMATCH)'   )
             RETURN
 

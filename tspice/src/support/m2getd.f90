@@ -1,6 +1,7 @@
 !$Procedure M2GETD (META/2 --- select a named word, double precision )
 
       SUBROUTINE M2GETD ( NAME, STRING, FOUND, DP   )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

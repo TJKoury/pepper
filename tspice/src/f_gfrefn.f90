@@ -1,6 +1,7 @@
 !$Procedure F_GFREFN ( GFREFN family tests )
 
       SUBROUTINE F_GFREFN ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

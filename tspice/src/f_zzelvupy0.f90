@@ -1,6 +1,7 @@
 !$Procedure      F_ZZELVUPY0 ( Test ZZELVUPY )
 
       SUBROUTINE F_ZZELVUPY0 ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

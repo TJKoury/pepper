@@ -2,6 +2,7 @@
 !$Procedure MATCH ( Match string against multiple wildcard templates )
 
       LOGICAL FUNCTION MATCH ( STRING, TEMPL )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -185,7 +186,6 @@
 !     SPICELIB functions
 !
       LOGICAL               MATCHM
-      LOGICAL               RETURN
 
 !
 !     Local variables

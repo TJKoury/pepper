@@ -1,6 +1,7 @@
 !$Procedure      F_FRFTCH ( Family of tests for frame fetch APIs )
 
       SUBROUTINE F_FRFTCH ( OK )
+      use pepper_legacy
       use pepper_inc_frmtyp
       use pepper_inc_ninert
       use pepper_inc_nninrt
@@ -106,7 +107,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               CARDI
 
 !
 !     Local parameters
@@ -146,12 +146,22 @@
       INTEGER               BIGN
       INTEGER               CENTRD ( MAXBLT )
       INTEGER               CLSIDX
+      INTEGER CLSIDX_A1 ( 1 )
+      EQUIVALENCE ( CLSIDX, CLSIDX_A1 )
       INTEGER               CTRS   ( MAXBLT )
       INTEGER               FRCLSS
+      INTEGER FRCLSS_A1 ( 1 )
+      EQUIVALENCE ( FRCLSS, FRCLSS_A1 )
       INTEGER               FRCLID
+      INTEGER FRCLID_A1 ( 1 )
+      EQUIVALENCE ( FRCLID, FRCLID_A1 )
       INTEGER               FRCODE
       INTEGER               FRCENT
+      INTEGER FRCENT_A1 ( 1 )
+      EQUIVALENCE ( FRCENT, FRCENT_A1 )
       INTEGER               FRMID
+      INTEGER FRMID_A1 ( 1 )
+      EQUIVALENCE ( FRMID, FRMID_A1 )
       INTEGER               I
       INTEGER               IDCDES ( MAXBLT )
       INTEGER               IDSET  ( LBCELL : BUFSIZ )
@@ -463,7 +473,7 @@
 !
 !           Insert the frame ID assignment into the pool.
 !
-            CALL PIPOOL ( KVNAME, 1, FRMID )
+            CALL PIPOOL ( KVNAME, 1, FRMID_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -485,7 +495,7 @@
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             FRCLSS = CLSIDX
-            CALL PIPOOL ( KVNAME, 1, FRCLSS )
+            CALL PIPOOL ( KVNAME, 1, FRCLSS_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -497,7 +507,7 @@
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             FRCLID = - FRMID
-            CALL PIPOOL ( KVNAME, 1, FRCLID )
+            CALL PIPOOL ( KVNAME, 1, FRCLID_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -509,7 +519,7 @@
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             FRCENT = 10 * FRMID
-            CALL PIPOOL ( KVNAME, 1, FRCENT )
+            CALL PIPOOL ( KVNAME, 1, FRCENT_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
          END DO
@@ -716,7 +726,7 @@
 !
 !           Insert the frame ID assignment into the pool.
 !
-            CALL PIPOOL ( KVNAME, 1, FRMID )
+            CALL PIPOOL ( KVNAME, 1, FRMID_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
          END DO
@@ -775,7 +785,7 @@
 !
 !           Insert the frame ID assignment into the pool.
 !
-            CALL PIPOOL ( KVNAME, 1, FRMID )
+            CALL PIPOOL ( KVNAME, 1, FRMID_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -846,7 +856,7 @@
 !
 !           Insert the frame ID assignment into the pool.
 !
-            CALL PIPOOL ( KVNAME, 1, FRMID )
+            CALL PIPOOL ( KVNAME, 1, FRMID_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -857,7 +867,7 @@
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             FRCLSS = CLSIDX
-            CALL PIPOOL ( KVNAME, 1, FRCLSS )
+            CALL PIPOOL ( KVNAME, 1, FRCLSS_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
 
@@ -917,7 +927,7 @@
 !
 !           Insert the frame ID assignment into the pool.
 !
-            CALL PIPOOL ( KVNAME, 1, FRMID )
+            CALL PIPOOL ( KVNAME, 1, FRMID_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -928,7 +938,7 @@
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             FRCLSS = CLSIDX
-            CALL PIPOOL ( KVNAME, 1, FRCLSS )
+            CALL PIPOOL ( KVNAME, 1, FRCLSS_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
 
@@ -990,7 +1000,7 @@
 !
 !           Insert the frame ID assignment into the pool.
 !
-            CALL PIPOOL ( KVNAME, 1, FRMID )
+            CALL PIPOOL ( KVNAME, 1, FRMID_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -1062,7 +1072,7 @@
 !
 !        Insert the frame ID assignment into the pool.
 !
-         CALL PIPOOL ( KVNAME, 1, FRMID )
+         CALL PIPOOL ( KVNAME, 1, FRMID_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -1088,7 +1098,7 @@
          CALL REPMI ( KVNAME, '<code>', FRMID, KVNAME )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
-         CALL PIPOOL ( KVNAME, 1, CLSIDX )
+         CALL PIPOOL ( KVNAME, 1, CLSIDX_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
       END DO
@@ -1148,7 +1158,7 @@
 !
 !           Insert the frame ID assignment into the pool.
 !
-            CALL PIPOOL ( KVNAME, 1, FRMID )
+            CALL PIPOOL ( KVNAME, 1, FRMID_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -1170,7 +1180,7 @@
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             FRCLSS = CLSIDX
-            CALL PIPOOL ( KVNAME, 1, FRCLSS )
+            CALL PIPOOL ( KVNAME, 1, FRCLSS_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -1182,7 +1192,7 @@
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             FRCLID = - FRMID
-            CALL PIPOOL ( KVNAME, 1, FRCLID )
+            CALL PIPOOL ( KVNAME, 1, FRCLID_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -1194,7 +1204,7 @@
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             FRCENT = 10 * FRMID
-            CALL PIPOOL ( KVNAME, 1, FRCENT )
+            CALL PIPOOL ( KVNAME, 1, FRCENT_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
          END DO

@@ -1,6 +1,7 @@
 !$Procedure ZZGETFAT ( Get file architecture, type, and unit )
 
       SUBROUTINE ZZGETFAT ( FILE, ARCH, TYPE, NUMBER )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -335,7 +336,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local parameters

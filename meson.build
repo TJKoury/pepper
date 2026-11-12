@@ -20,8 +20,9 @@ fc = meson.get_compiler('fortran')
 add_project_arguments(fc.get_supported_arguments(['-frecursive', '-recursive']), language: 'fortran')
 
 # All of src/ (meson has no globbing; reconfigure after adding a source).
+# (src/legacy, SPICELIB's interface, is not needed by the Python package)
 pepper_sources = run_command(py, '-c',
-  'import glob; print("\\n".join(sorted(glob.glob("src/**/*.f90", recursive=True))))',
+  'import glob; print("\\n".join(sorted(f for f in glob.glob("src/**/*.f90", recursive=True) if "/legacy/" not in f)))',
   check: true).stdout().strip().split('\n')
 
 pepper_lib = static_library('pepper', pepper_sources, pic: true)

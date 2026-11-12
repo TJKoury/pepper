@@ -2,6 +2,7 @@
 !
       SUBROUTINE GETOPT_1( TITLE, NOPT, OPTNAM, NAMLEN, OPTTXT, TXTLEN, &
                            OPTVAL, OPTION )
+      use pepper_legacy
       IMPLICIT NONE
 !
 ! $ Abstract
@@ -149,9 +150,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
-      INTEGER               ISRCHC
-      LOGICAL               RETURN
 !
 !     Local variables
 !

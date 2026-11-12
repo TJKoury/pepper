@@ -2,6 +2,7 @@
 
       SUBROUTINE T_CKCOV ( CK,    IDCODE, NEEDAV, &
                            LEVEL, TOL,    TIMSYS, COVER )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -581,9 +582,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local parameters

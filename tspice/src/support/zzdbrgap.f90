@@ -2,6 +2,7 @@
 
       SUBROUTINE ZZDBRGAP ( CORSYS, NREC,  BDS1,  BDS2, &
                             MAXN,   NCOMP, CBDS1, CBDS2 )
+      use pepper_legacy
       use pepper_inc_dskdsc
 
 ! $ Abstract
@@ -179,8 +180,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local parameters

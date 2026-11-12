@@ -1,6 +1,7 @@
 !$Procedure      F_PXFORM ( Family of tests for PXFORM )
 
       SUBROUTINE F_PXFORM ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

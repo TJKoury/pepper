@@ -1,6 +1,7 @@
 !$Procedure      TCLOSE (Close testing.)
 
       SUBROUTINE TCLOSE
+      use pepper_legacy
 
 ! $ Abstract
 !

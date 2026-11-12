@@ -1,6 +1,7 @@
 !$Procedure      PODCGI ( Pod, close group, integer )
 
       SUBROUTINE PODCGI ( POD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -128,7 +129,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local parameters

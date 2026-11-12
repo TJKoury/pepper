@@ -1,6 +1,7 @@
 !$Procedure   ISON ( Determine whether a system is on or off )
 
       LOGICAL FUNCTION ISON ( SYSTEM )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -170,7 +171,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
 
 
       INTEGER               MAXSYS

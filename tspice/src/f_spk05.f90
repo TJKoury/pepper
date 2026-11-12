@@ -1,6 +1,7 @@
 !$Procedure F_SPK05 ( SPK data type 05 tests )
 
       SUBROUTINE F_SPK05 ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -81,8 +82,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters

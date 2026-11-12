@@ -1,6 +1,7 @@
 !$Procedure F_POOL ( Family of tests for POOL.)
 
       SUBROUTINE F_POOL ( OK )
+      use pepper_legacy
       use pepper_inc_zzctr
       IMPLICIT NONE
 

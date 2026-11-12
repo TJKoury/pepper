@@ -1,6 +1,7 @@
 !$Procedure      PODBED ( Pod, begin and end, double precision )
 
       SUBROUTINE PODBED ( POD, BEGIN, END )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -119,7 +120,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local variables

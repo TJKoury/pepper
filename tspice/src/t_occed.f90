@@ -2,6 +2,7 @@
 
       INTEGER FUNCTION T_OCCED ( VIEWPT, &
                                  CENTR1, SEMAX1, CENTR2, SEMAX2 )
+      use pepper_legacy
       use pepper_inc_zzocced
 
 ! $ Abstract
@@ -279,16 +280,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DASINE
-      DOUBLE PRECISION      DET
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
 
-      LOGICAL               FAILED
-      LOGICAL               ISROT
-      LOGICAL               RETURN
 
 !
 !     Local parameters

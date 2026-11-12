@@ -1,6 +1,7 @@
 !$Procedure F_BADKPV (Family of tests for BADKPV )
 
       SUBROUTINE F_BADKPV ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -103,7 +104,6 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               BADKPV
 
 !
 !     Local Variables

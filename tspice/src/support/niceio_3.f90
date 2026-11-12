@@ -1,6 +1,7 @@
 !$Procedure     NICEIO_3 ( Nicely formatted output -- test version )
 
       SUBROUTINE NICEIO_3 ( STRING, UNIT, STYLE )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -492,14 +493,9 @@
 !
 !     SPICELIB Functions.
 !
-      LOGICAL               RETURN
-      LOGICAL               FAILED
-      INTEGER               FRSTNB
       INTEGER               QLSTNB
       INTEGER               UPTO
       LOGICAL               MATCH
-      INTEGER               POS
-      INTEGER               NCPOS
 !
 !   Local Variables
 !

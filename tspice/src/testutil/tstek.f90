@@ -1,6 +1,7 @@
 !$Procedure  TSTEK ( Produce EK column entries for EK testing )
 
       SUBROUTINE TSTEK ( FILE, FILENO, MXROWS, LOAD, HANDLE )
+      use pepper_legacy
       use pepper_inc_ekcnamsz
       use pepper_inc_ekglimit
       use pepper_inc_ekqlimit
@@ -296,7 +297,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
 
 !
 !     Local parameters

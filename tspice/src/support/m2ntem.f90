@@ -1,6 +1,7 @@
 !$Procedure      M2NTEM ( Parse the numeric template of a @number )
 
       SUBROUTINE M2NTEM ( STRING, BASE, BEG, END, A, B )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -135,11 +136,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               INTMAX
-      INTEGER               INTMIN
 
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPMIN
 
 !
 !     Local variables

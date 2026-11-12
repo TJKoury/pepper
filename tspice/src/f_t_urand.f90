@@ -1,6 +1,7 @@
 !$Procedure F_T_URAND ( T_URAND tests )
 
       SUBROUTINE F_T_URAND ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

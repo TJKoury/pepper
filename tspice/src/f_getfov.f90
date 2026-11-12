@@ -1,6 +1,7 @@
 !$Procedure F_GETFOV (Family of tests for GETFOV, GETFVN )
 
       SUBROUTINE F_GETFOV ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
 
 ! $ Abstract
 !
@@ -103,7 +104,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      HALFPI
 
 !
 !     Local parameters
@@ -136,9 +136,13 @@
       CHARACTER*(WDSIZE)    UNITS
 
       DOUBLE PRECISION      ANGLE
+      DOUBLE PRECISION ANGLE_A1 ( 1 )
+      EQUIVALENCE ( ANGLE, ANGLE_A1 )
       DOUBLE PRECISION      BSIGHT ( 3    )
       DOUBLE PRECISION      BOUNDS ( 3, 5 )
       DOUBLE PRECISION      CRSANG
+      DOUBLE PRECISION CRSANG_A1 ( 1 )
+      EQUIVALENCE ( CRSANG, CRSANG_A1 )
       DOUBLE PRECISION      FOVBS  ( 3    )
       DOUBLE PRECISION      FOVBND ( 3, 5 )
       DOUBLE PRECISION      REFVEC ( 3    )
@@ -653,7 +657,7 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
       CALL CHCKXC ( .TRUE., 'SPICE(REFANGLEMISSING)',           OK )
@@ -674,7 +678,7 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
@@ -696,7 +700,7 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
@@ -717,7 +721,7 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
@@ -740,7 +744,7 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
@@ -762,9 +766,9 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
-      CALL PDPOOL ( KWCANG,               1, CRSANG )
+      CALL PDPOOL ( KWCANG,               1, CRSANG_A1 )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
       CALL CHCKXC ( .TRUE., 'SPICE(CROSSANGLEMISSING)',         OK )
@@ -785,9 +789,9 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
-      CALL PDPOOL ( KWCANG,               1, CRSANG )
+      CALL PDPOOL ( KWCANG,               1, CRSANG_A1 )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
       CALL CHCKXC ( .TRUE., 'SPICE(BOUNDARYTOOBIG)',            OK )
@@ -808,9 +812,9 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
-      CALL PDPOOL ( KWCANG,               1, CRSANG )
+      CALL PDPOOL ( KWCANG,               1, CRSANG_A1 )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
       CALL CHCKXC ( .TRUE., 'SPICE(CROSSANGLEMISSING)',         OK )
@@ -831,9 +835,9 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
-      CALL PDPOOL ( KWCANG,               1, CRSANG )
+      CALL PDPOOL ( KWCANG,               1, CRSANG_A1 )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
       CALL CHCKXC ( .TRUE., 'SPICE(BOUNDARYTOOBIG)',            OK )
@@ -856,9 +860,9 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
-      CALL PDPOOL ( KWCANG,               1, CRSANG )
+      CALL PDPOOL ( KWCANG,               1, CRSANG_A1 )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
       CALL CHCKXC ( .TRUE., 'SPICE(BADBOUNDARY)',               OK )
@@ -882,9 +886,9 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
-      CALL PDPOOL ( KWCANG,               1, CRSANG )
+      CALL PDPOOL ( KWCANG,               1, CRSANG_A1 )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
       CALL CHCKXC ( .TRUE., 'SPICE(BADBOUNDARY)',               OK )
@@ -1081,7 +1085,7 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
@@ -1119,9 +1123,9 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
-      CALL PDPOOL ( KWCANG,               1, CRSANG )
+      CALL PDPOOL ( KWCANG,               1, CRSANG_A1 )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
       CALL CHCKXC ( .FALSE., ' ',  OK )
@@ -1173,9 +1177,9 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
-      CALL PDPOOL ( KWCANG,               1, CRSANG )
+      CALL PDPOOL ( KWCANG,               1, CRSANG_A1 )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
       CALL CHCKXC ( .FALSE., ' ',  OK )
@@ -1229,9 +1233,9 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
-      CALL PDPOOL ( KWCANG,               1, CRSANG )
+      CALL PDPOOL ( KWCANG,               1, CRSANG_A1 )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
       CALL CHCKXC ( .FALSE., ' ',  OK )
@@ -1286,9 +1290,9 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
-      CALL PDPOOL ( KWCANG,               1, CRSANG )
+      CALL PDPOOL ( KWCANG,               1, CRSANG_A1 )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
       CALL CHCKXC ( .FALSE., ' ',  OK )
@@ -1342,9 +1346,9 @@
       CALL PCPOOL ( KWSHAP,               1, SHAPE  )
       CALL PDPOOL ( KWBORE,               3, BSIGHT )
       CALL PDPOOL ( KWRVEC,               3, REFVEC )
-      CALL PDPOOL ( KWRANG,               1, ANGLE  )
+      CALL PDPOOL ( KWRANG,               1, ANGLE_A1  )
       CALL PCPOOL ( KWAUNT,               1, UNITS  )
-      CALL PDPOOL ( KWCANG,               1, CRSANG )
+      CALL PDPOOL ( KWCANG,               1, CRSANG_A1 )
 
       CALL GETFOV ( INSTID, ROOM, FOVSHP, FOVFRM, FOVBS, N, FOVBND )
       CALL CHCKXC ( .FALSE., ' ',  OK )

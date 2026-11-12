@@ -2,6 +2,7 @@
 
       SUBROUTINE TSTENT ( FILENO, TABLE, SEGNO, COLUMN, ROWNO,  NMAX, &
                           NELTS,  CVALS, DVALS, IVALS,  TVALS,  ISNULL )
+      use pepper_legacy
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
       use pepper_inc_ekglimit
@@ -315,11 +316,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHC
-      INTEGER               RTRIM
 
-      LOGICAL               ODD
-      LOGICAL               RETURN
 
 
 !

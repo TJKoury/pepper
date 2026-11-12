@@ -1,6 +1,7 @@
 !$Procedure      F_GFSTEP ( Test GFSTEP )
 
       SUBROUTINE F_GFSTEP ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -96,7 +97,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
 
 !
 !     Local parameters

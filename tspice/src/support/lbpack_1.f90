@@ -2,6 +2,7 @@
 !$Procedure LBPACK ( Line buffer, pack )
 
       SUBROUTINE LBPACK_1 ( PTRS, BUFFER )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -95,7 +96,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
       INTEGER               SIZECB_1
 
 !

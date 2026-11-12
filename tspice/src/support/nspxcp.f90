@@ -1,4 +1,5 @@
       SUBROUTINE NSPXCP ( STRING, ERROR, SCREEN, LOGFIL )
+      use pepper_legacy
 
       IMPLICIT NONE
 !
@@ -16,7 +17,7 @@
       CHARACTER*(*)         SCREEN
       CHARACTER*(*)         LOGFIL
 
-      EXTERNAL               NSPWLN
+      EXTERNAL NSPWLN
 
 
 

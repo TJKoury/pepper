@@ -1,6 +1,7 @@
 !$Procedure      UTRANS_2 ( Translate Units To Default Units )
 
       SUBROUTINE UTRANS_2 ( STRING, PLACES )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -164,8 +165,6 @@
 !     NAIFLIB functions
 !
       LOGICAL               UNITP
-      INTEGER               FRSTNB
-      INTEGER               LASTNB
 
 !
 !     Local variables
@@ -235,7 +234,7 @@
                STRING(BEG:END) = ' '
                X               = X * CONVERT
 
-               CALL DPSTRF ( X,     PLACES, 'E', DPNUM        )
+               CALL DPSTRF ( X,     NINT(PLACES), 'E', DPNUM  )
                CALL SIGDGT ( DPNUM,              DPNUM        )
                CALL PREFIX ( DPNUM, 1,           STRING(BEG:) )
 

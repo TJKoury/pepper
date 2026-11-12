@@ -1,6 +1,7 @@
 !$Procedure F_XLATEI ( ZZXLATEI Test Family )
 
       SUBROUTINE F_XLATEI ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -192,8 +193,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               INTMIN
-      INTEGER               INTMAX
 
 !
 !     Local Parameters

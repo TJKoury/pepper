@@ -1,6 +1,7 @@
 !$Procedure F_FNDCMP ( FNDCMP tests )
 
       SUBROUTINE F_FNDCMP ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -89,7 +90,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EVEN
 
 !
 !     Local Parameters
@@ -605,7 +605,7 @@
 !
       N = NCOLS * NROWS
 
-      CALL MOVEI ( GRID, N, GRID1 )
+      GRID1(1:N) = GRID(1:N)
 
 !
 !     Find the gaps in the grid.
@@ -720,7 +720,7 @@
 !
       N = NCOLS * NROWS
 
-      CALL MOVEI ( GRID, N, GRID1 )
+      GRID1(1:N) = GRID(1:N)
 
 
 !
@@ -829,7 +829,7 @@
 !
       N = NCOLS * NROWS
 
-      CALL MOVEI ( GRID, N, GRID1 )
+      GRID1(1:N) = GRID(1:N)
 
 
 !
@@ -943,7 +943,7 @@
 !
       N = NCOLS * NROWS
 
-      CALL MOVEI ( GRID, N, GRID1 )
+      GRID1(1:N) = GRID(1:N)
 
 
 !
@@ -1058,7 +1058,7 @@
 !
       N = NCOLS * NROWS
 
-      CALL MOVEI ( GRID, N, GRID1 )
+      GRID1(1:N) = GRID(1:N)
 
 
 !
@@ -1174,7 +1174,7 @@
 !
       N = NCOLS * NROWS
 
-      CALL MOVEI ( GRID, N, GRID1 )
+      GRID1(1:N) = GRID(1:N)
 
 
 !
@@ -1290,7 +1290,7 @@
 !
       N = NCOLS * NROWS
 
-      CALL MOVEI ( GRID, N, GRID1 )
+      GRID1(1:N) = GRID(1:N)
 
 
 !
@@ -1410,7 +1410,7 @@
 !
       N = NCOLS * NROWS
 
-      CALL MOVEI ( GRID, N, GRID1 )
+      GRID1(1:N) = GRID(1:N)
 
 
 !
@@ -1565,7 +1565,7 @@
 !
 !     Get a copy of the input grid, since GRID is an in-out argument.
 !
-      CALL MOVEI ( GRID, N, GRID1 )
+      GRID1(1:N) = GRID(1:N)
 
 
 !
@@ -1724,7 +1724,7 @@
 !
 !        Get a copy of the input grid, since GRID is an in-out argument.
 !
-         CALL MOVEI ( GRID, NGRID, GRID1 )
+         GRID1(1:NGRID) = GRID(1:NGRID)
 
 !
 !        Find the gaps in the grid.

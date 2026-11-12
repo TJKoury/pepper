@@ -5,6 +5,7 @@
                             LAST,    NINTVL,  NPKTS,   SUBTPS,  DEGRES, &
                             PACKTS,  EPOCHS,  IVLBDS,  SELLST,  DELSUB, &
                             OK                                         )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_spk19
       use pepper_inc_spkrec
 
@@ -225,7 +226,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local parameters

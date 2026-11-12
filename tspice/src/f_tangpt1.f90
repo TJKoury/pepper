@@ -1,6 +1,7 @@
 !$Procedure F_TANGPT1 ( Test tangent point routine, part 1 )
 
       SUBROUTINE F_TANGPT1 ( OK )
+      use pepper_legacy
       use pepper_inc_zzdsk
       use pepper_inc_zzabcorr
 
@@ -84,13 +85,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
 
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters

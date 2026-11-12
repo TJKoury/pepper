@@ -1,6 +1,7 @@
 !$Procedure CPUTIM ( CPU Time )
 
       SUBROUTINE CPUTIM ( TVEC )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -228,7 +229,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Standard SPICE error handling.

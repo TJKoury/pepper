@@ -1,6 +1,7 @@
 !$Procedure      PODONC ( Pod, offset and number, character )
 
       SUBROUTINE PODONC ( POD, OFFSET, NUMBER )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -127,8 +128,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               CARDC
 
 !
 !     Local parameters

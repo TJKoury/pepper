@@ -1,6 +1,7 @@
 !$Procedure SPKGEO_O ( S/P Kernel, geometric state )
 
       SUBROUTINE SPKGEO_O ( TARG, ET, REF, OBS, STATE, LT )
+      use pepper_legacy, pepper_legacy_ident => ident
       use pepper_inc_ninert
 
 ! $ Abstract
@@ -317,14 +318,8 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      VNORM
 
-      INTEGER               FRSTNP
-      INTEGER               ISRCHI
 
 !
 !     Local parameters

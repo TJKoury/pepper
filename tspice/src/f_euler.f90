@@ -1,6 +1,7 @@
 !$Procedure F_EULER ( Test the SPICELIB Euler angle routines )
 
       SUBROUTINE F_EULER ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -84,10 +85,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      PI
 
-      LOGICAL               ISROT
 
 !
 !     Other functions

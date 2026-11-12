@@ -1,6 +1,7 @@
 !$Procedure F_ZZDSKSPH ( ZZDSKSPH tests )
 
       SUBROUTINE F_ZZDSKSPH ( OK )
+      use pepper_legacy
       use pepper_inc_dla
       use pepper_inc_dskdsc
 
@@ -92,15 +93,7 @@
 !
 !     Other functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VNORM
 
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters

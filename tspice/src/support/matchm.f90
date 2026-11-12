@@ -4,6 +4,7 @@
                                                WCHR, &
                                                NOTCHR, &
                                                ORCHR )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -442,11 +443,8 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               FRSTNB
       INTEGER               QLSTNB
-      LOGICAL               MATCHI
       INTEGER               UPTO
-      LOGICAL               RETURN
 
 !
 !     Local variables

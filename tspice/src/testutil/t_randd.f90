@@ -1,6 +1,7 @@
 !$Procedure      T_RANDD ( Random double precision number )
 
       DOUBLE PRECISION FUNCTION T_RANDD ( LOWER, UPPER, SEED )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -140,7 +141,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Other functions

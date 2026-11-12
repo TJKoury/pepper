@@ -1,6 +1,7 @@
 !$Procedure      PODDGD ( Pod, duplicate group, double precision )
 
       SUBROUTINE PODDGD ( POD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -119,9 +120,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               CARDD
-      INTEGER               SIZED
 
 !
 !     Local parameters

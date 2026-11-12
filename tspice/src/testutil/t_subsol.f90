@@ -1,6 +1,7 @@
 !$Procedure      T_SUBSOL ( Sub-solar point )
 
       SUBROUTINE T_SUBSOL ( METHOD, TARGET, ET, ABCORR, OBSRVR, SPOINT )
+      use pepper_legacy, pepper_legacy_pos => pos
 
 ! $ Abstract
 !
@@ -384,9 +385,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
-      LOGICAL               RETURN
-      EXTERNAL              LTIME
 !
 !     Local parameters
 !

@@ -1,6 +1,7 @@
 !$Procedure      CHCKXC ( Check exceptions )
 
       SUBROUTINE CHCKXC ( EXCEPT, SHORT, OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -114,9 +115,7 @@
 !
 !     Spicelib functions
 !
-      LOGICAL               FAILED
       LOGICAL               SETON
-      INTEGER               RTRIM
 
 
 

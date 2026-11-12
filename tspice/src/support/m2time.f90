@@ -1,6 +1,7 @@
 !$Procedure      M2TIME ( Determine whether or not a word is a time )
 
       LOGICAL FUNCTION M2TIME ( WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -121,7 +122,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LTRIM
       INTEGER               QRTRIM
 
       INTEGER               DIGIT

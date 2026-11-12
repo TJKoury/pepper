@@ -1,6 +1,7 @@
 !$Procedure F_GFSEP ( GFSEP family tests )
 
       SUBROUTINE F_GFSEP ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 
@@ -115,13 +116,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      ZZSEPQ
 
-      INTEGER               WNCARD
 
 
 !

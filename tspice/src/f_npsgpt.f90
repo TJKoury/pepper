@@ -1,6 +1,7 @@
 !$Procedure F_NPSGPT ( NPSGPT tests )
 
       SUBROUTINE F_NPSGPT ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -79,8 +80,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VNORM
 
 !
 !     Local Parameters

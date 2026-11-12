@@ -1,6 +1,7 @@
 !$Procedure F_DVOPS (Family of vector operations derivative tests)
 
       SUBROUTINE F_DVOPS ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -97,9 +98,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      DVDOT
-      DOUBLE PRECISION      DVNORM
-      DOUBLE PRECISION      VNORM
       DOUBLE PRECISION      T_RANDD
 
 !

@@ -1,4 +1,5 @@
       SUBROUTINE FLGRPT ( NITEMS, NAMES, VALUES, MYIO )
+      use pepper_legacy
 !
 !     This routine takes an array of names and an array of associated
 !     value strings and produces a flagged set of outputs.  This
@@ -19,13 +20,11 @@
 !
 !        Unused variables LEFT and RIGHT were removed.
 !
-      EXTERNAL              MYIO
+      EXTERNAL MYIO
 
 !
 !     Spicelib functions
 !
-      INTEGER               RTRIM
-      LOGICAL               RETURN
 
 
       INTEGER               STYLEN

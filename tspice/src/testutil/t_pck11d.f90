@@ -1,6 +1,7 @@
 !$Procedure T_PCK11D (Create a draft version of pck00011.tpc )
 
       SUBROUTINE T_PCK11D ( NAMEPC, LOADPC, KEEPPC )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -126,7 +127,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Test Utility Functions

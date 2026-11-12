@@ -1,6 +1,7 @@
 !$Procedure F_ZZGFSOLVX ( ZZGFSOLV family tests )
 
       SUBROUTINE F_ZZGFSOLVX ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -99,21 +100,15 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               WNCARD
 
-      LOGICAL               GFBAIL
 
 !
 !     External routines
 !
-      EXTERNAL              GFBAIL
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPU
-      EXTERNAL              GFSTEP
-      EXTERNAL              T_UDQLTX
-      EXTERNAL              T_REPUX
-      EXTERNAL              T_REFNX
-      EXTERNAL              UDFUNCX
+      EXTERNAL T_UDQLTX
+      EXTERNAL T_REPUX
+      EXTERNAL T_REFNX
+      EXTERNAL UDFUNCX
 
 !
 !     Local parameters
@@ -382,6 +377,7 @@
 
        SUBROUTINE T_SOLVX ( UDFUNCX, ET,   IN_CON, VAL, &
                             IVBEG,  IVEND, NVAL )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -399,7 +395,7 @@
 
       IMPLICIT NONE
 
-      EXTERNAL              UDFUNCX
+      EXTERNAL UDFUNCX
 
       DOUBLE PRECISION      ET
       LOGICAL               IN_CON
@@ -570,6 +566,7 @@
 !     The default GFREFN uses an EPSILON value 0.5.
 !
       SUBROUTINE T_REFNX ( T1, T2, S1, S2, T )
+      use pepper_legacy
       IMPLICIT NONE
 
       DOUBLE PRECISION      T1
@@ -578,7 +575,6 @@
       LOGICAL               S2
       DOUBLE PRECISION      T
 
-      DOUBLE PRECISION      BRCKTD
       DOUBLE PRECISION      X
       DOUBLE PRECISION      EPSILON
 
@@ -595,6 +591,7 @@
 !$Procedure UDFUNCX ( Test routine )
 
       SUBROUTINE UDFUNCX ( ET, X )
+      use pepper_legacy
 
 ! $ Abstract
 !

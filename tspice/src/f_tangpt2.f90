@@ -1,6 +1,7 @@
 !$Procedure F_TANGPT2 ( Test tangent point routine TANGPT, part 2 )
 
       SUBROUTINE F_TANGPT2 ( OK )
+      use pepper_legacy, pepper_legacy_pos => pos
       use, intrinsic :: iso_fortran_env, only: compiler_version
       use pepper_inc_zzdsk
       use pepper_inc_zzabcorr
@@ -95,17 +96,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
 
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters
@@ -460,7 +451,7 @@
 
       CALL SPKW05 ( HAN1,         SCID,         499,      'MARSIAU', &
                     -20*JYEAR(),  20*JYEAR(),  'Mars orbiter', &
-                    ELTS(8),      1,            STATE0,    ET0       )
+                    ELTS(8),      1,            STATE0,    [ET0]       )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -478,7 +469,7 @@
 !
       CALL PCPOOL ( 'NAIF_BODY_NAME', 1,  SCNAME )
       CALL CHCKXC ( .FALSE., ' ', OK )
-      CALL PIPOOL ( 'NAIF_BODY_CODE', 1,  SCID      )
+      CALL PIPOOL ( 'NAIF_BODY_CODE', 1,  [SCID]      )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 !

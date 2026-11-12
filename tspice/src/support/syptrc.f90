@@ -1,6 +1,7 @@
 !$Procedure       SYPTRC ( Symbol table, fetch pointers, generic )
 
       SUBROUTINE  SYPTRC ( NAME, SYMNAM, SYMPTR, SYMVAL, PTR, N, FOUND )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -148,12 +149,7 @@
 !-&
 
 
-      INTEGER               BSRCHC
-      INTEGER               SUMAI
-      INTEGER               CARDC
-      LOGICAL               RETURN
 
-      CHARACTER*(1)         TOUCHC
 
       INTEGER               LOC
       INTEGER               NUMBER

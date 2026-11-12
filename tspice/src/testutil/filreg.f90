@@ -1,6 +1,7 @@
 !$Procedure      FILREG ( File Registry )
 
       SUBROUTINE FILREG ( FILE )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -120,7 +121,6 @@
 !
 !
 !-&
-      INTEGER               RTRIM
       LOGICAL               ISON
 
 

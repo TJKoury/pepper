@@ -2,6 +2,7 @@
 
       SUBROUTINE PARCML ( LINE, NKEYS, CLKEYS, CLFLAG, CLVALS, FOUND, &
                           UNPRSD )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -232,11 +233,7 @@
 !
 !     SPICELIB functions.
 !
-      INTEGER               ISRCHC
-      INTEGER               POS
-      INTEGER               RTRIM
 
-      LOGICAL               RETURN
 
 !
 !     Standard SPICE error handling.

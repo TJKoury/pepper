@@ -2,6 +2,7 @@
 
       SUBROUTINE TSTCK3 ( CKNM,   SCLKNM, LOADCK, &
                           LOADSC, KEEPSC, HANDLE )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -228,7 +229,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Test Utility Functions

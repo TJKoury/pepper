@@ -1,6 +1,7 @@
 !$Procedure      T_PCK08 (Create a test text PCK based on pck00008.tpc )
 
       SUBROUTINE T_PCK08 ( NAMEPC, LOADPC, KEEPPC )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -115,7 +116,6 @@
 !
 !     Spicelib Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Test Utility Functions

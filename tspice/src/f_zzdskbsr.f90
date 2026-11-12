@@ -1,6 +1,7 @@
 !$Procedure F_ZZDSKBSR ( ZZDSKBSR tests )
 
       SUBROUTINE F_ZZDSKBSR ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
@@ -96,18 +97,10 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EVEN
-      LOGICAL               EXISTS
-      LOGICAL               ODD
-      LOGICAL               ZZDSKBDC
-      LOGICAL               ZZDSKSBD
 
 !
 !     EXTERNAL functions
 !
-      EXTERNAL              ZZDSKBDC
-      EXTERNAL              ZZDSKNOT
-      EXTERNAL              ZZDSKSBD
 
 !
 !     ZZDSKBSR parameters

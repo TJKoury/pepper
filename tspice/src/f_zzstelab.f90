@@ -1,6 +1,7 @@
 !$Procedure      F_ZZSTELAB ( Tests for stellar aberration corrections )
 
       SUBROUTINE F_ZZSTELAB ( OK )
+      use pepper_legacy
       use pepper_inc_zzabcorr
 
 ! $ Abstract
@@ -111,12 +112,7 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VSEP
 
-      LOGICAL               EVEN
 
 !
 !     Local parameters

@@ -2,6 +2,7 @@
 !$Procedure CBINIT ( Character buffer, initialize  )
 
       SUBROUTINE CBINIT_1 ( DIM, BUFFER )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -110,7 +111,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 
 !

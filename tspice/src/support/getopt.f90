@@ -1,6 +1,7 @@
 !$Procedure GETOPT ( Get an option from a menu )
 
       SUBROUTINE GETOPT ( TITLE, NOPT, OPTNAM, OPTTXT, OPTION )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -18,7 +19,6 @@
 !
 ! $ Declarations
 
-      EXTERNAL              PROMPT
 
       CHARACTER*(*)         TITLE
       INTEGER               NOPT
@@ -149,11 +149,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
-      INTEGER               ISRCHC
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 !
 !     Local Parameters
 !

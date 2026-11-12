@@ -3,6 +3,7 @@
       SUBROUTINE TSTSCH ( TABLE,  MXROWS, &
                           SEGTYP, NROWS,  NCOLS, CNAMES, CCLASS, &
                           DTYPES, STLENS, DIMS,  INDEXD, NULLOK, DECLS )
+      use pepper_legacy
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
       use pepper_inc_ekqlimit
@@ -291,7 +292,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 
 !

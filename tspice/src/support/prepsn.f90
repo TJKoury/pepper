@@ -1,6 +1,7 @@
 !$Procedure      PREPSN (Pretty print syntax definition)
 
       SUBROUTINE PREPSN ( STRING )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -149,7 +150,6 @@
       INTEGER               END
       INTEGER               INDNBY
       INTEGER               R
-      INTEGER               RTRIM
 
       LOGICAL               BEGIN
       LOGICAL               INDENT

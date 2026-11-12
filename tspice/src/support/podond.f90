@@ -1,6 +1,7 @@
 !$Procedure      PODOND ( Pod, offset and number, double precision )
 
       SUBROUTINE PODOND ( POD, OFFSET, NUMBER )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -127,8 +128,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               CARDD
 
 !
 !     Local parameters

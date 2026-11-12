@@ -1,6 +1,7 @@
 !$Procedure F_DYN01 ( Dynamic Frame Test Family 01 )
 
       SUBROUTINE F_DYN01 ( OK )
+      use pepper_legacy, pepper_legacy_pos => pos
       use pepper_inc_zzabcorr
       use pepper_inc_zzdyn
 
@@ -126,12 +127,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VNORMG
 
-      INTEGER               ISRCHC
-      INTEGER               PRODAI
 
-      LOGICAL               EQSTR
 
 !
 !     Local Parameters

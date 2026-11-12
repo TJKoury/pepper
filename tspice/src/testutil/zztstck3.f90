@@ -1,6 +1,7 @@
 !$Procedure ZZTSTCK3 (Create at test CK of type 3 and SCLK file)
 
       SUBROUTINE ZZTSTCK3 ( CK )
+      use pepper_legacy
 
 ! $ Abstract
 !

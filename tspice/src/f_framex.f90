@@ -1,6 +1,7 @@
 !$Procedure      F_FRAMEX ( Family of tests for FRAMEX)
 
       SUBROUTINE F_FRAMEX ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
 
 ! $ Abstract
 !

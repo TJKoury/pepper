@@ -3,6 +3,7 @@
       SUBROUTINE RC2GRD ( NREC,   BNDS1,  BNDS2, MAXGRD, MAXORD, &
                           VALUE,  ORD1,   ORD2,  CIVOR1, CIVOR2, &
                           PXMAP1, PXMAP2, NROWS, NCOLS,  GRID   )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -206,8 +207,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local variables

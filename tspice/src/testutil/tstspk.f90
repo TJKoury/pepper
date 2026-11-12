@@ -1,6 +1,7 @@
 !$Procedure      TSTSPK ( Create an SPK file for use in testing)
 
       SUBROUTINE TSTSPK ( FILE, LOAD, HANDLE )
+      use pepper_legacy, pepper_legacy_frame => frame
 
 ! $ Abstract
 !
@@ -177,7 +178,6 @@
 !
 !     Spicelib Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Local Variables.
@@ -236,7 +236,7 @@
             CALL SPKW05 ( MYHAND, BODY,  CENTER, &
                            FRAME,  FIRST, LAST, &
                            SEGID,  GM,    N, &
-                           STATES, EPOCH       )
+                           STATES, [EPOCH]       )
 
          ELSE
 

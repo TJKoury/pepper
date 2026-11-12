@@ -1,6 +1,7 @@
 !$Procedure ZZTSTEK ( Private --- produce an EK for testing )
 
       SUBROUTINE ZZTSTEK ( FILE, FILENO, MXROWS )
+      use pepper_legacy
       use pepper_inc_ekcnamsz
       use pepper_inc_ekglimit
       use pepper_inc_ekqlimit
@@ -270,7 +271,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
 
 !
 !     Local parameters

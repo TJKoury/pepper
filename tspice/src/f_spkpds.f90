@@ -1,6 +1,7 @@
 !$Procedure      F_SPKPDS ( Test routine for SPKPDS )
 
       SUBROUTINE F_SPKPDS ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
 
       IMPLICIT NONE
       LOGICAL               OK

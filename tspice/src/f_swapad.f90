@@ -1,6 +1,7 @@
 !$Procedure F_SWAPAD ( Test the SPICELIB routine SWAPAD )
 
       SUBROUTINE F_SWAPAD ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -134,7 +135,7 @@
 !
 !     We'll do an exhaustive set of tests on a small array.
 !
-      CALL CLEARI ( LARGE, ARRAY0 )
+      CALL CLEARD ( LARGE, ARRAY0 )
 
       SIZE = SMALL
 
@@ -294,6 +295,7 @@
 !     This routine does no error checking.
 !
       SUBROUTINE T_SWAPAD ( SIZE, N, LOCN, M, LOCM, ARRAY, WORK )
+      use pepper_legacy
       IMPLICIT NONE
 
       INTEGER               SIZE

@@ -1,6 +1,7 @@
 !$Procedure      F_ZZGFWSTS ( Test ZZGFWSTS )
 
       SUBROUTINE F_ZZGFWSTS ( OK )
+      use pepper_legacy
       use pepper_inc_gf
 
 ! $ Abstract
@@ -86,7 +87,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               WNCARD
 
 !
 !     Local parameters

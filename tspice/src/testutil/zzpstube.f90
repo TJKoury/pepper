@@ -2,6 +2,7 @@
 
       SUBROUTINE ZZPSTUBE ( N,     VRTCES, CRVSUB, &
                             NSAMP, CLOSED, VOUT,   POUT )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -34,7 +35,7 @@
 
       INTEGER               N
       DOUBLE PRECISION      VRTCES ( 3, * )
-      EXTERNAL              CRVSUB
+      EXTERNAL CRVSUB
       INTEGER               NSAMP
       LOGICAL               CLOSED
       DOUBLE PRECISION      VOUT ( LBCELL : * )
@@ -345,13 +346,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
 
-      INTEGER               SIZED
-      INTEGER               SIZEI
 
-      LOGICAL               RETURN
 
 !
 !     Local variables

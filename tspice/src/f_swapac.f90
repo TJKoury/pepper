@@ -1,6 +1,7 @@
 !$Procedure F_SWAPAC ( Test the SPICELIB routine SWAPAC )
 
       SUBROUTINE F_SWAPAC ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -307,6 +308,7 @@
 !     This routine does no error checking.
 !
       SUBROUTINE T_SWAPAC ( SIZE, N, LOCN, M, LOCM, ARRAY, WORK )
+      use pepper_legacy
       IMPLICIT NONE
 
       INTEGER               SIZE

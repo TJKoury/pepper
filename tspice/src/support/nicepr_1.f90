@@ -1,6 +1,7 @@
 !$Procedure     NICEPR_1 ( Nicely printed output -- test version )
 
       SUBROUTINE NICEPR_1 ( STRING, STYLE, MYIO )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -20,7 +21,7 @@
 
       CHARACTER*(*)         STRING
       CHARACTER*(*)         STYLE
-      EXTERNAL              MYIO
+      EXTERNAL MYIO
 
 ! $ Brief_I/O
 !
@@ -498,13 +499,9 @@
 !
 !     SPICELIB Functions.
 !
-      LOGICAL               RETURN
-      INTEGER               FRSTNB
       INTEGER               QLSTNB
       INTEGER               UPTO
       LOGICAL               MATCH
-      INTEGER               POS
-      INTEGER               NCPOS
 !
 !   Local Variables
 !

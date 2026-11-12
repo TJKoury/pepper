@@ -1,6 +1,7 @@
 !$Procedure      F_DSKOBJ ( Test DSK body/surface coverage routines )
 
       SUBROUTINE F_DSKOBJ ( OK )
+      use pepper_legacy
       use pepper_inc_srftrn
       use pepper_inc_zzctr
       use pepper_inc_zzsrftrn
@@ -91,10 +92,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDI
-      INTEGER               ISRCHI
 
-      LOGICAL               EXISTS
 
 !
 !     Local parameters

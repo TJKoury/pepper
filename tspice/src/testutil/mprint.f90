@@ -1,6 +1,7 @@
 !$Procedure      MPRINT ( Matrix Print )
 
       SUBROUTINE MPRINT ( MAT, ROWS, COLS, FMT )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -147,8 +148,6 @@
 !
 !     Spicelib functions
 !
-      INTEGER               NBLEN
-      INTEGER               RTRIM
 
 !
 !     Local Variables.

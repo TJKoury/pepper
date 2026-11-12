@@ -1,6 +1,7 @@
 !$Procedure F_ZZBODS2C ( Family of tests for ZZBODS2C and its callers )
 
       SUBROUTINE F_ZZBODS2C ( OK )
+      use pepper_legacy
       use pepper_inc_zzctr
 
 ! $ Abstract
@@ -100,8 +101,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      LSPCN
-      DOUBLE PRECISION      PHASEQ
 
 !
 !     Local parameters

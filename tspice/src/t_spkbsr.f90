@@ -7,6 +7,7 @@
                           DESCR, &
                           IDENT, &
                           FOUND   )
+      use pepper_legacy, pepper_legacy_ident => ident, pepper_legacy_stpool => stpool
 
 ! $ Abstract
 !
@@ -561,18 +562,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPMIN
 
-      INTEGER               INTMAX
-      INTEGER               ISRCHI
-      INTEGER               LNKNFN
-      INTEGER               LNKNXT
-      INTEGER               LNKPRV
-      INTEGER               LNKTL
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local parameters

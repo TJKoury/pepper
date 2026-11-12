@@ -1,6 +1,7 @@
 !$Procedure      F_SPKGXC (Family of tests for SPKGEO frame exceptions)
 
       SUBROUTINE F_SPKGXC ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

@@ -1,6 +1,7 @@
 !$Procedure      M2NAME ( Determine whether or not a word is a name )
 
       LOGICAL FUNCTION M2NAME ( WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -110,7 +111,6 @@
 !     SPICELIB functions
 !
       INTEGER               QRTRIM
-      INTEGER               LTRIM
 
 !
 !     Local variables

@@ -1,6 +1,7 @@
 !$Procedure      F_TIMOUT ( Family of tests for TIMOUT )
 
       SUBROUTINE F_TIMOUT ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -23,9 +24,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      J2000
-      DOUBLE PRECISION      J1950
 
 !
 !     Local parameters

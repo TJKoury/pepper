@@ -1,6 +1,7 @@
 !$Procedure F_DSKTOL ( DSKTOL tests )
 
       SUBROUTINE F_DSKTOL ( OK )
+      use pepper_legacy
       use pepper_inc_dsktol
 
 ! $ Abstract

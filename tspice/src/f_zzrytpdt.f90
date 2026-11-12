@@ -1,6 +1,7 @@
 !$Procedure F_ZZRYTPDT ( ZZRYTPDT tests )
 
       SUBROUTINE F_ZZRYTPDT ( OK )
+      use pepper_legacy
       use pepper_inc_dskdsc
       use pepper_inc_dsktol
 
@@ -82,9 +83,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
 
 !
 !     Local Parameters

@@ -1,6 +1,7 @@
 !$Procedure F_AAAAPHSH ( Family of tests for ZZPHSH )
 
       SUBROUTINE F_AAAAPHSH ( OK )
+      use pepper_legacy
 
       IMPLICIT NONE
 
@@ -86,12 +87,7 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               INTMAX
 
-      INTEGER               ZZPHSH
-      INTEGER               ZZSHSH
-      INTEGER               ZZHASH
-      INTEGER               ZZHASH2
 
 !
 !     Local parameters

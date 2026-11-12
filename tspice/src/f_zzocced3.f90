@@ -1,6 +1,7 @@
 !$Procedure      F_ZZOCCED3 ( Test ellipsoid occultation routine )
 
       SUBROUTINE F_ZZOCCED3 ( OK )
+      use pepper_legacy
       use pepper_inc_zzocced
       IMPLICIT NONE
 
@@ -28,13 +29,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DASINE
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
 
-      INTEGER               ZZOCCED
 
 !
 !     Other functions

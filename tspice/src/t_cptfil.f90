@@ -2,6 +2,7 @@
 
       SUBROUTINE T_CPTFIL ( NAME,   ARCH,  FDREC,  BFFID,  CNI, &
                             CFDREC, CNSUM, ADDFTP, BRKFTP, NEWIDW )
+      use pepper_legacy
       use pepper_inc_zzddhman
       use pepper_inc_zzftprms
 
@@ -145,8 +146,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
-      LOGICAL               RETURN
 
 !
 !     Local Parameters

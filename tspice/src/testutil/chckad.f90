@@ -1,6 +1,7 @@
 !$Procedure CHCKAD ( Check an array of double precision values )
 
       SUBROUTINE CHCKAD ( NAME, ARRAY, COMP, EXP, SIZE,  TOL, OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -158,12 +159,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VSEPG
-      DOUBLE PRECISION      VDISTG
-      DOUBLE PRECISION      VNORMG
-      DOUBLE PRECISION      HALFPI
 
-      INTEGER               RTRIM
 !
 !     Testing Utility Functions
 !

@@ -1,6 +1,7 @@
 !$Procedure      CHCKAI ( Check an array of integers )
 
       SUBROUTINE CHCKAI ( NAME, ARRAY, COMP, EXP, SIZE,  OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -118,7 +119,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
 !
 !     Testing Utility Functions
 !

@@ -1,6 +1,7 @@
 !$Procedure F_DASMUL ( DAS test, multiple DAS files )
 
       SUBROUTINE F_DASMUL ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -91,7 +92,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters

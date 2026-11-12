@@ -1,6 +1,7 @@
 !$Procedure F_GFUDB ( GFUDB family tests )
 
       SUBROUTINE F_GFUDB ( OK )
+      use pepper_legacy
       use pepper_inc_gf
 
 ! $ Abstract
@@ -89,15 +90,12 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               WNCARD
-      DOUBLE PRECISION      SPD
 
 
 !
 !     Local parameters
 !
-      EXTERNAL              GFB
-      EXTERNAL              UDF
+      EXTERNAL GFB
 
       INTEGER               LBCELL
       PARAMETER           ( LBCELL = -5 )
@@ -355,6 +353,7 @@
 !$Procedure GFB ( Time dependent boolean function )
 
       SUBROUTINE GFB ( UDFUNS, T, XBOOL )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -372,7 +371,7 @@
 
       IMPLICIT NONE
 
-      EXTERNAL                  UDFUNS
+      EXTERNAL UDFUNS
       DOUBLE PRECISION          T
       LOGICAL                   XBOOL
 

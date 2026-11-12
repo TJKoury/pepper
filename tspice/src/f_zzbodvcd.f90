@@ -1,6 +1,7 @@
 !$Procedure F_ZZBODVCD ( ZZBODVCD tests )
 
       SUBROUTINE F_ZZBODVCD ( OK )
+      use pepper_legacy
       use pepper_inc_zzctr
 
 ! $ Abstract
@@ -81,7 +82,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters

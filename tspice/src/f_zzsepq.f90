@@ -1,6 +1,7 @@
 !$Procedure F_ZZSEPQ ( ZZSEPQ family tests )
 
       SUBROUTINE F_ZZSEPQ ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzbodtrn
@@ -99,11 +100,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VSEP
-      DOUBLE PRECISION      DASINE
-      DOUBLE PRECISION      TRGSEP
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      ZZSEPQ
 
 
 !

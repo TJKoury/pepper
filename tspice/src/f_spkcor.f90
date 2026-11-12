@@ -1,6 +1,7 @@
 !$Procedure      F_SPKCOR ( Tests for SPK aberration corrections )
 
       SUBROUTINE F_SPKCOR ( OK )
+      use pepper_legacy, pepper_legacy_pos => pos
       use pepper_inc_zzabcorr
 
 ! $ Abstract
@@ -191,20 +192,19 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      JYEAR
 
 
 !
 !     External functions
 !
-      EXTERNAL              T_GETX
-      EXTERNAL              T_GETY
-      EXTERNAL              T_GETZ
-      EXTERNAL              T_GETLT
-      EXTERNAL              T_GETSX
-      EXTERNAL              T_GETSY
-      EXTERNAL              T_GETSZ
-      EXTERNAL              T_STCINI
+      EXTERNAL T_GETX
+      EXTERNAL T_GETY
+      EXTERNAL T_GETZ
+      EXTERNAL T_GETLT
+      EXTERNAL T_GETSX
+      EXTERNAL T_GETSY
+      EXTERNAL T_GETSZ
+      EXTERNAL T_STCINI
       DOUBLE PRECISION      T_STCINI
 
 
@@ -1275,15 +1275,15 @@
       CALL TCASE( TITLE  )
 
       CALL SPKAPS ( TARGET, ET,  REF, ABCORR, STOBS, &
-                    STATE,  ACC, LT,  DLT              )
+                    ACC,    STATE, LT,  DLT              )
       CALL CHCKXC ( .TRUE., 'SPICE(BADFRAME)', OK )
 
       CALL ZZSPKAS0 ( TARGET, ET,  REF, ABCORR, STOBS, &
-                      STATE,  ACC, LT,  DLT            )
+                      ACC,  STATE, LT,  DLT            )
       CALL CHCKXC ( .TRUE., 'SPICE(BADFRAME)', OK )
 
       CALL ZZSPKAS1 ( TARGET, ET,  REF, ABCORR, STOBS, &
-                      STATE,  ACC, LT,  DLT            )
+                      ACC,  STATE, LT,  DLT            )
       CALL CHCKXC ( .TRUE., 'SPICE(BADFRAME)', OK )
 
 
@@ -1305,7 +1305,7 @@
       DO I = 1, NBAD
 
          CALL SPKAPS ( TARGET, ET,  REF, BADCOR(I), STOBS, &
-                       STATE,  ACC, LT,  DLT              )
+                       ACC,    STATE, LT,  DLT              )
          CALL CHCKXC ( .TRUE., 'SPICE(INVALIDOPTION)', OK )
 
       END DO
@@ -1324,7 +1324,7 @@
       CALL TCASE( TITLE  )
 
       CALL SPKAPS ( TARGET, ET,  REF, 'XYZ', STOBS, &
-                    STATE,  ACC, LT,  DLT              )
+                    ACC,  STATE, LT,  DLT              )
       CALL CHCKXC ( .TRUE., 'SPICE(INVALIDOPTION)', OK )
 
 

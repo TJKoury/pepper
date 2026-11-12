@@ -1,6 +1,7 @@
 !$Procedure      MSPELD ( Misspelling diagnosis )
 
       SUBROUTINE MSPELD ( WORD, GUESS, CAUSE )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

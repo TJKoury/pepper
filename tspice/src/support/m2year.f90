@@ -1,6 +1,7 @@
 !$Procedure      M2YEAR ( Determine whether or not a word is a year )
 
       LOGICAL FUNCTION M2YEAR ( WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -124,7 +125,6 @@
 !     SPICELIB functions
 !
       INTEGER               QRTRIM
-      INTEGER               LTRIM
 !
 !     Local variables
 !

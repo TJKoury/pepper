@@ -1,6 +1,7 @@
 !$Procedure      F_FRMGET ( Family of tests for FRMGET )
 
       SUBROUTINE F_FRMGET ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

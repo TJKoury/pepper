@@ -2,6 +2,7 @@
 
       SUBROUTINE NATDSK ( DSK,    AFRAME, ANLON, ANLAT, &
                           BFRAME, BNLON,  BNLAT        )
+      use pepper_legacy
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
 
@@ -179,13 +180,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      TWOPI
 
-      LOGICAL               EXISTS
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local Parameters

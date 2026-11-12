@@ -1,6 +1,7 @@
 !$Procedure F_SPK17 ( Family of tests for the SPK type 17 code)
 
       SUBROUTINE F_SPK17 ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
 
 ! $ Abstract
 !
@@ -96,7 +97,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      RPD
 
 !
 !     Local Variables

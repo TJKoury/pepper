@@ -1,6 +1,7 @@
 !$Procedure F_TKFRAM ( Family Test of TKFRAM )
 
       SUBROUTINE F_TKFRAM ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
 
 ! $ Abstract
 !
@@ -130,9 +131,6 @@
 !
 !     SPICELIB functions
 !
-      EXTERNAL              PI
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      RPD
 
 !
 !     Local parameters

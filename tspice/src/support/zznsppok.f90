@@ -1,6 +1,7 @@
 !$Procedure ZZNSPPOK (Private Routine -- NSPIO Port)
 
       INTEGER FUNCTION ZZNSPPOK ( PORT, NPORTS, PORTS )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -97,7 +98,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
 
 !
 !     Local Variables

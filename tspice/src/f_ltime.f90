@@ -1,6 +1,7 @@
 !$Procedure      F_LTIME ( Family of light time tests )
 
       SUBROUTINE F_LTIME ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -21,7 +22,6 @@
 !
 !     SPICELIB Functions
 !
-      EXTERNAL              LTIME
 !
 !
 !     Local Variables

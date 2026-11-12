@@ -1,6 +1,7 @@
 !$Procedure      FNDNTK ( Find the next token in a string )
 
       SUBROUTINE FNDNTK ( STRING, DELIMS, START, BEG, END )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

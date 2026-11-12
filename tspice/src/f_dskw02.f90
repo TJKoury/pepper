@@ -1,6 +1,7 @@
 !$Procedure      F_DSKW02 ( Test DSK type 2 writer )
 
       SUBROUTINE F_DSKW02 ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_dla
       use pepper_inc_dsk02
       use pepper_inc_dskdsc
@@ -95,12 +96,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
 
-      LOGICAL               EXISTS
 
 !
 !     Local parameters
@@ -192,12 +188,14 @@
       DOUBLE PRECISION      VRTCS3 ( 3 * MAXV )
       DOUBLE PRECISION      X
       DOUBLE PRECISION      XFORM  ( 3, 3 )
-      DOUBLE PRECISION      WORK   ( 2, WORKSZ )
+      INTEGER               WORK   ( 2, WORKSZ )
 
       INTEGER               ADDR
       INTEGER               BODYID
       INTEGER               CORIX
       INTEGER               CORSCL
+      INTEGER CORSCL_A1 ( 1 )
+      EQUIVALENCE ( CORSCL, CORSCL_A1 )
       INTEGER               CORSYS
       INTEGER               DCLASS
       INTEGER               DLADS2 ( DLADSZ )
@@ -215,8 +213,12 @@
       INTEGER               NLAT
       INTEGER               NLON
       INTEGER               NP
+      INTEGER NP_A1 ( 1 )
+      EQUIVALENCE ( NP, NP_A1 )
       INTEGER               NP2
       INTEGER               NV
+      INTEGER NV_A1 ( 1 )
+      EQUIVALENCE ( NV, NV_A1 )
       INTEGER               NV2
       INTEGER               NVXTOT
       INTEGER               NXTDSC ( DLADSZ )
@@ -230,10 +232,20 @@
       INTEGER               SURF2
       INTEGER               VGREXT ( 3 )
       INTEGER               VPSIZ3
+      INTEGER VPSIZ3_A1 ( 1 )
+      EQUIVALENCE ( VPSIZ3, VPSIZ3_A1 )
       INTEGER               VPSIZE
+      INTEGER VPSIZE_A1 ( 1 )
+      EQUIVALENCE ( VPSIZE, VPSIZE_A1 )
       INTEGER               VLSIZE
+      INTEGER VLSIZE_A1 ( 1 )
+      EQUIVALENCE ( VLSIZE, VLSIZE_A1 )
       INTEGER               VLSIZ3
+      INTEGER VLSIZ3_A1 ( 1 )
+      EQUIVALENCE ( VLSIZ3, VLSIZ3_A1 )
       INTEGER               VTXLSZ
+      INTEGER VTXLSZ_A1 ( 1 )
+      EQUIVALENCE ( VTXLSZ, VTXLSZ_A1 )
       INTEGER               W
       INTEGER               XNCGR
       INTEGER               XNP
@@ -566,12 +578,12 @@
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
 
-      CALL DSKI02 ( HANDLE, DLADSC, KWNV, 1, 1, N, NV )
+      CALL DSKI02 ( HANDLE, DLADSC, KWNV, 1, 1, N, NV_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSI ( 'NV', NV, '=', XNV, 0, OK )
 
-      CALL DSKI02 ( HANDLE, DLADSC, KWNP, 1, 1, N, NP )
+      CALL DSKI02 ( HANDLE, DLADSC, KWNP, 1, 1, N, NP_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSI ( 'NP', NP, '=', XNP, 0, OK )
@@ -601,7 +613,7 @@
 !
       CALL TCASE ( 'Check coarse voxel grid scale.' )
 
-      CALL DSKI02 ( HANDLE, DLADSC, KWCGSC, 1, 1, N, CORSCL )
+      CALL DSKI02 ( HANDLE, DLADSC, KWCGSC, 1, 1, N, CORSCL_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -616,7 +628,7 @@
 !
       CALL TCASE ( 'Check voxel pointer count.' )
 
-      CALL DSKI02 ( HANDLE, DLADSC, KWVXPS, 1, 1, N, VPSIZE )
+      CALL DSKI02 ( HANDLE, DLADSC, KWVXPS, 1, 1, N, VPSIZE_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -632,7 +644,7 @@
       CALL TCASE ( 'Check voxel-plate correspondence ' &
       //           'list size.' )
 
-      CALL DSKI02 ( HANDLE, DLADSC, KWVXLS, 1, 1, N, VLSIZE )
+      CALL DSKI02 ( HANDLE, DLADSC, KWVXLS, 1, 1, N, VLSIZE_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -648,7 +660,7 @@
       CALL TCASE ( 'Check vertex-plate correspondence ' &
       //           'list size.' )
 
-      CALL DSKI02 ( HANDLE, DLADSC, KWVTLS, 1, 1, N, VTXLSZ )
+      CALL DSKI02 ( HANDLE, DLADSC, KWVTLS, 1, 1, N, VTXLSZ_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
@@ -838,13 +850,13 @@
 !        array in order to get the correct index of the voxel-plate
 !        list in the spatial index.
 !
-         CALL DSKI02 ( HAN1, DLADS2, KWVXPS, 1, 1, N, VPSIZ3 )
+         CALL DSKI02 ( HAN1, DLADS2, KWVXPS, 1, 1, N, VPSIZ3_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
 !
 !        Get the voxel-plate list size as well.
 !
-         CALL DSKI02 ( HAN1, DLADS2, KWVXLS, 1, 1, N, VLSIZ3 )
+         CALL DSKI02 ( HAN1, DLADS2, KWVXLS, 1, 1, N, VLSIZ3_A1 )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
 !

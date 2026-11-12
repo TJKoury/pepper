@@ -1,6 +1,7 @@
 !$Procedure F_SYMTBD ( Test SPICELIB d.p. symbol table routines )
 
       SUBROUTINE F_SYMTBD ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -97,10 +98,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      INTEGER               CARDD
-      INTEGER               CARDI
-      INTEGER               SYDIMD
 
 !
 !     Local Parameters
@@ -133,7 +130,11 @@
       DOUBLE PRECISION      DVALS  (          MAXVAL )
       DOUBLE PRECISION      SYVALS ( LBCELL : MAXVAL )
       DOUBLE PRECISION      VAL
+      DOUBLE PRECISION VAL_A1 ( 1 )
+      EQUIVALENCE ( VAL, VAL_A1 )
       DOUBLE PRECISION      XVAL
+      DOUBLE PRECISION XVAL_A1 ( 1 )
+      EQUIVALENCE ( XVAL, XVAL_A1 )
       DOUBLE PRECISION      XVALS  (          MAXVAL )
 
       INTEGER               I
@@ -427,7 +428,7 @@
          CALL REPMI ( TITLE, '#', I, TITLE )
 
          CALL SYGETD( XNAMES(I), &
-                      SYNAMS, SYPTRS, SYVALS, NVALS, VAL, FOUND )
+                      SYNAMS, SYPTRS, SYVALS, NVALS, VAL_A1, FOUND )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          CALL CHCKSL ( TITLE, FOUND, .TRUE., OK )
@@ -445,7 +446,7 @@
       NAME = 'NOT_THERE'
 
       CALL SYGETD( NAME, &
-                   SYNAMS, SYPTRS, SYVALS, NVALS, VAL, FOUND )
+                   SYNAMS, SYPTRS, SYVALS, NVALS, VAL_A1, FOUND )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       TITLE = 'Was name # found?'
@@ -468,7 +469,7 @@
          CALL T_ITHSYM ( I, MAXTAB, NAME )
 
          CALL SYGETD ( NAME,  SYNAMS, SYPTRS, SYVALS, &
-                       NVALS, XVAL,   FOUND           )
+                       NVALS, XVAL_A1,   FOUND           )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          TITLE = 'Was name # found?'
@@ -493,7 +494,7 @@
 !        Make sure the old symbol is gone.
 !
          CALL SYGETD ( NAME,  SYNAMS, SYPTRS, SYVALS, &
-                       NVALS, VAL,    FOUND           )
+                       NVALS, VAL_A1,    FOUND           )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          TITLE = 'Was name # found?'
@@ -509,7 +510,7 @@
 !        Get the name and value of the ith symbol.
 !
          CALL SYGETD ( NEWNAM,  SYNAMS, SYPTRS, SYVALS, &
-                       NVALS,   VAL,    FOUND           )
+                       NVALS,   VAL_A1,    FOUND           )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          TITLE = 'Was name # found?'
@@ -554,7 +555,7 @@
          CALL REPMI ( TITLE, '#', I, TITLE )
 
          CALL SYGETD( XNAMES(I), &
-                      SYNAMS, SYPTRS, SYVALS, NVALS, VAL, FOUND )
+                      SYNAMS, SYPTRS, SYVALS, NVALS, VAL_A1, FOUND )
          CALL CHCKXC ( .FALSE., ' ', OK )
 
          CALL CHCKSL ( TITLE, FOUND, .FALSE., OK )
@@ -568,7 +569,7 @@
             CALL REPMI ( TITLE, '#', I, TITLE )
 
             CALL SYGETD ( XNAMES(J), &
-                          SYNAMS, SYPTRS, SYVALS, NVALS, VAL, FOUND )
+                          SYNAMS, SYPTRS, SYVALS, NVALS, VAL_A1, FOUND )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             CALL CHCKSL ( TITLE, FOUND, .TRUE., OK )
@@ -1961,7 +1962,7 @@
       END DO
 
 
-      CALL SYPUTD ( 'NEWNAME', DBLE(I), 1, SYNAMS, SYPTRS, SYVALS )
+      CALL SYPUTD ( 'NEWNAME', [DBLE(I)], 1, SYNAMS, SYPTRS, SYVALS )
 
       CALL CHCKXC ( .TRUE., 'SPICE(NAMETABLEFULL)', OK )
 
@@ -1984,7 +1985,7 @@
 
       END DO
 
-      CALL SYPUTD ( 'NEWNAME', DBLE(I), 1, SYNAMS, SYPTRS, SYVALS )
+      CALL SYPUTD ( 'NEWNAME', [DBLE(I)], 1, SYNAMS, SYPTRS, SYVALS )
 
       CALL CHCKXC ( .TRUE., 'SPICE(POINTERTABLEFULL)', OK )
 
@@ -2008,7 +2009,7 @@
 
       END DO
 
-      CALL SYPUTD ( 'NEWNAME', DBLE(I), 1, SYNAMS, SYPTRS, SYVALS )
+      CALL SYPUTD ( 'NEWNAME', [DBLE(I)], 1, SYNAMS, SYPTRS, SYVALS )
 
       CALL CHCKXC ( .TRUE., 'SPICE(VALUETABLEFULL)', OK )
 
@@ -2034,7 +2035,7 @@
 
       END DO
 
-      CALL SYPUTD ( 'NEWNAME', DBLE(I), -1, SYNAMS, SYPTRS, SYVALS )
+      CALL SYPUTD ( 'NEWNAME', [DBLE(I)], -1, SYNAMS, SYPTRS, SYVALS )
 
       CALL CHCKXC ( .TRUE., 'SPICE(INVALIDARGUMENT)', OK )
 

@@ -1,6 +1,7 @@
 !$Procedure NSPIO (Inspekt I/O Manager)
 
       SUBROUTINE NSPIO ( LINE, PORT, NAME, STATUS, OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -211,9 +212,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Other Functions

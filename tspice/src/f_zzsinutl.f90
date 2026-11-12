@@ -1,6 +1,7 @@
 !$Procedure F_ZZSINUTL ( ZZSINUTL tests )
 
       SUBROUTINE F_ZZSINUTL ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -110,8 +111,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      JYEAR
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters
@@ -172,6 +171,8 @@
       INTEGER               SURFID
 
       LOGICAL               FOUND
+      LOGICAL FOUND_A1 ( 1 )
+      EQUIVALENCE ( FOUND, FOUND_A1 )
 
 !
 !     Saved values
@@ -824,7 +825,7 @@
 !
       CALL DSKXV ( .FALSE., TARGET, NSURF, &
                    SRFLST,  ET,     FIXREF, 1, &
-                   VERTEX,  RAYDIR, XXPT,   FOUND )
+                   VERTEX,  RAYDIR, XXPT,   FOUND_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'DSKXV found', FOUND, .TRUE., OK )
@@ -878,7 +879,7 @@
 !
       CALL DSKXV ( .FALSE., TARGET, NSURF, &
                    SRFLST,  ET,     FIXREF, 1, &
-                   VERTEX,  RAYDIR, XXPT,   FOUND )
+                   VERTEX,  RAYDIR, XXPT,   FOUND_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'DSKXV found', FOUND, .TRUE., OK )
@@ -932,7 +933,7 @@
 !
       CALL DSKXV ( .FALSE., TARGET, NSURF, &
                    SRFLST,  ET,     FIXREF, 1, &
-                   VERTEX,  RAYDIR, XXPT,   FOUND )
+                   VERTEX,  RAYDIR, XXPT,   FOUND_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'DSKXV found', FOUND, .TRUE., OK )

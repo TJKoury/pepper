@@ -1,6 +1,7 @@
 !$Procedure      CHCKSD ( Check Scalar d.p. )
 !
       SUBROUTINE CHCKSD ( NAME, VAL, COMP, EXP, TOL, OK )
+      use pepper_legacy
 !
 ! $ Abstract
 !
@@ -134,7 +135,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
 
 !
 !     Local Variables

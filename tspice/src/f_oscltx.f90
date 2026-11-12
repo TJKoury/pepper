@@ -1,6 +1,7 @@
 !$Procedure      F_OSCLTX ( OSCLTX routine tests )
 
       SUBROUTINE F_OSCLTX ( OK )
+      use pepper_legacy
       use pepper_inc_oscltx
 
 ! $ Abstract
@@ -94,12 +95,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      DACOSH
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      EXACT
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
-      DOUBLE PRECISION      VNORM
 
 !
 !     Local Parameters

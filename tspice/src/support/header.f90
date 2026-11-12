@@ -1,6 +1,7 @@
 !$Procedure      HEADER (HEADER for a report)
 
       SUBROUTINE HEADER ( N, COMP, VALUE, WDTH )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -139,7 +140,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Buffer declarations

@@ -1,6 +1,7 @@
 !$Procedure T_TAYMAT ( Taylor expansion coefficient matrix )
 
       SUBROUTINE T_TAYMAT ( N, XVALS, X, MBUFF )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -172,7 +173,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local variables

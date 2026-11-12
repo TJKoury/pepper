@@ -1,6 +1,7 @@
 !$Procedure F_RC2GRD ( RC2GRD tests )
 
       SUBROUTINE F_RC2GRD ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -84,7 +85,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
 
 !
 !     Local Parameters

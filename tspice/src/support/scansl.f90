@@ -1,6 +1,7 @@
 !$Procedure      SCANSL ( Scan --- select tokens )
 
       SUBROUTINE SCANSL ( IDS, N, NTOKNS, IDENT, BEG, END )
+      use pepper_legacy, pepper_legacy_ident => ident
       IMPLICIT NONE
 
 ! $ Abstract
@@ -145,7 +146,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ISRCHI
 
 !
 !     Local variables

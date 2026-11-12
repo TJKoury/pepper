@@ -1,6 +1,7 @@
 !$Procedure CHCKAC ( Check an array of characters )
 
       SUBROUTINE CHCKAC ( NAME, ARRAY, COMP, EXP, SIZE, OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -134,7 +135,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Testing Utility Functions

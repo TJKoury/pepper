@@ -1,6 +1,7 @@
 !$Procedure      F_ZZGFCSLV ( Test GF coordinate solver )
 
       SUBROUTINE F_ZZGFCSLV ( OK )
+      use pepper_legacy, pepper_legacy_pos => pos
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
@@ -104,24 +105,12 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      VNORM
 
-      INTEGER               WNCARD
 
-      LOGICAL               GFBAIL
 
 !
 !     EXTERNAL declarations
 !
-      EXTERNAL              GFSTEP
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFREPF
-      EXTERNAL              GFBAIL
 
 
 

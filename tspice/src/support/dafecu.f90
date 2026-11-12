@@ -1,6 +1,7 @@
 !$Procedure      DAFECU( DAF extract comments to a logical unit )
 
       SUBROUTINE DAFECU ( HANDLE, COMLUN, COMNTS )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -146,8 +147,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 !
 !     Local parameters
 !

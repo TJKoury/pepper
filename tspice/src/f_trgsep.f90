@@ -1,6 +1,7 @@
 !$Procedure F_TRGSEP ( TRGSEP tests )
 
       SUBROUTINE F_TRGSEP ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_zzabcorr
       use pepper_inc_zzbodtrn
 
@@ -97,10 +98,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VSEP
-      DOUBLE PRECISION      DASINE
-      DOUBLE PRECISION      TRGSEP
-      DOUBLE PRECISION      VNORM
 
 !
 !     Local parameters

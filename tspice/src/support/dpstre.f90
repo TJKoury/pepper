@@ -1,6 +1,7 @@
 !$Procedure      DPSTRE ( Double Precision Number to Character )
 
       SUBROUTINE DPSTRE ( X, SIGDIG, STRING )
+      use pepper_legacy
 
 ! $ Abstract
 !

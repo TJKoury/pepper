@@ -1,6 +1,7 @@
 !$Procedure F_ZZBDKR ( Body Kernel Pool Initialization Test Family )
 
       SUBROUTINE F_ZZBDKR ( OK )
+      use pepper_legacy
       use pepper_inc_zzbodtrn
 
 ! $ Abstract

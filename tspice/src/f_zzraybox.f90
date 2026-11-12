@@ -1,6 +1,7 @@
 !$Procedure F_ZZRAYBOX ( ray-box intercept tests )
 
       SUBROUTINE F_ZZRAYBOX ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

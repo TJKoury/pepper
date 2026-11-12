@@ -1,6 +1,7 @@
 !$Procedure F_ZZGFFVU ( Test GF FOV utilities )
 
       SUBROUTINE F_ZZGFFVU ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
@@ -209,7 +210,11 @@
       INTEGER               INSTID
       INTEGER               N
       INTEGER               OBSID
+      INTEGER OBSID_A1 ( 1 )
+      EQUIVALENCE ( OBSID, OBSID_A1 )
       INTEGER               TFRMID
+      INTEGER TFRMID_A1 ( 1 )
+      EQUIVALENCE ( TFRMID, TFRMID_A1 )
 
       LOGICAL               FOUND
       LOGICAL               VISTAT
@@ -1013,7 +1018,7 @@
       KVNAME = 'FRAME_#'
       CALL REPMC ( KVNAME, '#', TFRAME, KVNAME )
       CALL CHCKXC( .FALSE., ' ', OK )
-      CALL PIPOOL( KVNAME, 1, TFRMID )
+      CALL PIPOOL( KVNAME, 1, TFRMID_A1 )
       CALL CHCKXC( .FALSE., ' ', OK )
 
       KVNAME = 'FRAME_#_NAME'
@@ -1025,19 +1030,19 @@
       KVNAME = 'FRAME_#_CLASS'
       CALL REPMI ( KVNAME, '#', TFRMID, KVNAME )
       CALL CHCKXC( .FALSE., ' ', OK )
-      CALL PIPOOL( KVNAME, 1, 4 )
+      CALL PIPOOL( KVNAME, 1, [4] )
       CALL CHCKXC( .FALSE., ' ', OK )
 
       KVNAME = 'FRAME_#_CLASS_ID'
       CALL REPMI ( KVNAME, '#', TFRMID, KVNAME )
       CALL CHCKXC( .FALSE., ' ', OK )
-      CALL PIPOOL( KVNAME, 1, TFRMID )
+      CALL PIPOOL( KVNAME, 1, TFRMID_A1 )
       CALL CHCKXC( .FALSE., ' ', OK )
 
       KVNAME = 'FRAME_#_CENTER'
       CALL REPMI ( KVNAME, '#', TFRMID, KVNAME )
       CALL CHCKXC( .FALSE., ' ', OK )
-      CALL PIPOOL( KVNAME, 1, OBSID )
+      CALL PIPOOL( KVNAME, 1, OBSID_A1 )
       CALL CHCKXC( .FALSE., ' ', OK )
 
       KVNAME = 'TKFRAME_#_RELATIVE'

@@ -1,6 +1,7 @@
 !$Procedure      F_TCHECK ( Test the routine TCHECK )
 
       SUBROUTINE F_TCHECK ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

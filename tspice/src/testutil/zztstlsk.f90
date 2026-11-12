@@ -1,6 +1,7 @@
 !$Procedure TSTLSK (Create a test LSK)
 
       SUBROUTINE ZZTSTLSK( NAMELS )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -93,7 +94,6 @@
 !
 !     Spicelib Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Test Utility Functions

@@ -1,6 +1,7 @@
 !$Procedure F_DDHPPF ( ZZDDHPPF Test Family )
 
       SUBROUTINE F_DDHPPF ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -92,7 +93,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
 
 !
 !     Local Variables

@@ -1,6 +1,7 @@
 !$Procedure ZZPSSCAL ( Plate set, scale )
 
       SUBROUTINE ZZPSSCAL ( SCALE, V1, VOUT )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -100,9 +101,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      INTEGER               SIZED
-      LOGICAL               RETURN
 
 !
 !     Local variables

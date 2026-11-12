@@ -2,6 +2,7 @@
 
       SUBROUTINE ZZELLPLT ( A,    B,  C,     NLON, NLAT,  MAXV, &
                             MAXP, NV, VERTS, NP,   PLATES      )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -202,10 +203,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local variables

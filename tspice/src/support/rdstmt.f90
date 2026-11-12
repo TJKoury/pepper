@@ -1,6 +1,7 @@
 !$Procedure RDSTMT ( Read a statement entered on one or more lines)
 
       SUBROUTINE RDSTMT (PRMPT, DELIM, STMT)
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -17,7 +18,6 @@
 !
 ! $ Declarations
 
-      EXTERNAL           PROMPT
 
       CHARACTER*(*)      PRMPT
       CHARACTER*(1)      DELIM
@@ -104,7 +104,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
 
 !
 !     Local variables

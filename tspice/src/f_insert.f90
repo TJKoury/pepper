@@ -1,6 +1,7 @@
 !$Procedure F_INSERT ( SPICE set insertion tests )
 
       SUBROUTINE F_INSERT ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -84,9 +85,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      INTEGER               CARDD
-      INTEGER               CARDI
 
 !
 !     Local Parameters

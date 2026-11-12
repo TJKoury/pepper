@@ -1,6 +1,7 @@
 !$Procedure      PODCGD ( Pod, close group, double precision )
 
       SUBROUTINE PODCGD ( POD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -128,7 +129,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local parameters

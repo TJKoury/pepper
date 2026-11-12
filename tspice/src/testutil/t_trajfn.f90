@@ -1,6 +1,7 @@
 !$Procedure T_TRAJFN ( Test utility, evaluate trajectory functions )
 
       DOUBLE PRECISION FUNCTION T_TRAJFN ( TARG, ET, REF, ABCORR, OBS )
+      use pepper_legacy
       use pepper_inc_zzabcorr
       IMPLICIT NONE
 

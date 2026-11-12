@@ -1,6 +1,7 @@
 !$Procedure      HAVE ( Do we have an error? )
 
       LOGICAL FUNCTION HAVE ( ERROR )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -87,7 +88,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
 
 
 

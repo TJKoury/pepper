@@ -1,6 +1,7 @@
 !$Procedure ZZPSPOLY ( Plate set, create polygon )
 
       SUBROUTINE ZZPSPOLY ( N, VRTCES, VOUT, POUT )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -114,12 +115,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOTG
 
-      INTEGER               SIZED
-      INTEGER               SIZEI
 
-      LOGICAL               RETURN
 
 !
 !     Local variables

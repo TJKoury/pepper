@@ -1,6 +1,7 @@
 !$Procedure      M2THNQ ( Find a META/2 qualified @then directive )
 
       SUBROUTINE M2THNQ ( STRING, POSITN, LABEL )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

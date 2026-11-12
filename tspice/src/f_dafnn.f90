@@ -1,6 +1,7 @@
 !$Procedure F_DAFNN ( DAF Non-Native Test Family )
 
       SUBROUTINE F_DAFNN ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -92,7 +93,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Local Parameters

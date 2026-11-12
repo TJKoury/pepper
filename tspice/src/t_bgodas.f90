@@ -1,6 +1,7 @@
 !$Procedure T_BGODAS ( BINGO: Process DAS files to alternate BFFs )
 
       SUBROUTINE T_BGODAS ( INAME, ONAME, OBFF )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -117,9 +118,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local parameters

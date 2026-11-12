@@ -1,6 +1,7 @@
 !$Procedure      TSTFIL ( Open a new file on the specified port )
 !
       SUBROUTINE TSTFIL ( PATTRN, PORT, FILE )
+      use pepper_legacy
 !
 ! $ Abstract
 !
@@ -182,8 +183,6 @@
 !
 !     Spicelib routines.
 !
-      LOGICAL               EXISTS
-      LOGICAL               FAILED
 
 !
 !     Local Parameters

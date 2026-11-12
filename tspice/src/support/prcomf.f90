@@ -1,6 +1,7 @@
 ! $ Procedure
 !
       SUBROUTINE PRCOMF ( FILE, DELIM, COMMAND, ERROR, LEVEL )
+      use pepper_legacy
 !
 ! $ Abstract
 !
@@ -177,7 +178,6 @@
 !
 !   OPTLIB functions
 !
-      INTEGER               LASTNB
 
       LOGICAL               HAVE
 

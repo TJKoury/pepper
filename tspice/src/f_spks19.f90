@@ -1,6 +1,7 @@
 !$Procedure F_SPKS19 ( SPK data type 19 subsetter tests )
 
       SUBROUTINE F_SPKS19 ( OK )
+      use pepper_legacy
       use pepper_inc_spk19
 
 ! $ Abstract
@@ -92,8 +93,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
-      LOGICAL               ODD
 
 !
 !     Local Parameters

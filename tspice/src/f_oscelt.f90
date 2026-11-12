@@ -1,6 +1,7 @@
 !$Procedure      F_OSCELT ( OSCELT routine tests )
 
       SUBROUTINE F_OSCELT ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -93,10 +94,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      EXACT
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
 
 !      DOUBLE PRECISION      VNORM
 

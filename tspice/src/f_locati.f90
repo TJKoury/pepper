@@ -1,6 +1,7 @@
 !$Procedure      F_LOCATI ( Family of tests for LOCATI )
 
       SUBROUTINE F_LOCATI ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -16,8 +17,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               LNKHL
-      INTEGER               LNKTL
 
 !
 !     Local Variables
@@ -67,7 +66,7 @@
             J   = I
             ID1 = I
 
-            CALL LOCATI  ( ID1, IDSZ, LIST1, POOL1, AT, PRESNT )
+            CALL LOCATI  ( [ID1], IDSZ, LIST1, POOL1, AT, PRESNT )
             HEAD = LNKHL ( AT, POOL1 )
 
             CALL CHCKXC ( .FALSE., ' ',  OK )
@@ -86,7 +85,7 @@
          ID1 = 12
 
          TAIL = LNKTL ( AT, POOL1 )
-         CALL LOCATI  ( ID1, IDSZ, LIST1, POOL1, AT, PRESNT )
+         CALL LOCATI  ( [ID1], IDSZ, LIST1, POOL1, AT, PRESNT )
          HEAD = LNKHL ( AT, POOL1 )
 
          CALL CHCKXC ( .FALSE., ' ',  OK )
@@ -100,7 +99,7 @@
 !
          ID1 = 5
 
-         CALL LOCATI ( ID1, IDSZ, LIST1, POOL1, AT, PRESNT )
+         CALL LOCATI ( [ID1], IDSZ, LIST1, POOL1, AT, PRESNT )
          CALL CHCKSI ( 'HEAD',   HEAD, '!=', AT,  0, OK )
 
          HEAD = LNKHL ( AT, POOL1 )
@@ -112,7 +111,7 @@
          CALL CHCKSI ( 'LIST1', LIST1(1,AT), '=', ID1, 0, OK )
 
 
-         CALL LOCATI ( ID1, IDSZ, LIST1, POOL1, AT, PRESNT )
+         CALL LOCATI ( [ID1], IDSZ, LIST1, POOL1, AT, PRESNT )
 
 
          CALL CHCKXC ( .FALSE., ' ',  OK )

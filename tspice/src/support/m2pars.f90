@@ -1,6 +1,7 @@
 !$Procedure M2PARS ( META/2 --- Parsing utility. )
 
       SUBROUTINE M2PARS ( NAME, B, E, NTH, FOUND, SIZE )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -227,8 +228,6 @@
 !
 !     Spicelib Functions.
 !
-      INTEGER               CARDC
-      INTEGER               SYDIMI
 
 !
 !     Private Parameters

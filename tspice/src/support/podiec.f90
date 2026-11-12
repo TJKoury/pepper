@@ -1,6 +1,7 @@
 !$Procedure      PODIEC ( Pod, insert elements, character )
 
       SUBROUTINE PODIEC ( ELEMS, N, LOC, POD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -127,9 +128,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               SIZEC
-      INTEGER               CARDC
 !
 !     Local variables
 !

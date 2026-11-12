@@ -1,6 +1,7 @@
 !$Procedure F_ZZRYTELT ( ZZRYTELT tests )
 
       SUBROUTINE F_ZZRYTELT ( OK )
+      use pepper_legacy
       use pepper_inc_dskdsc
       use pepper_inc_dsktol
 
@@ -82,7 +83,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
 
 !
 !     Local Parameters

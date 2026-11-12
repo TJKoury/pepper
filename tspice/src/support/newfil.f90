@@ -1,6 +1,7 @@
 !$Procedure      NEWFIL ( Open a new file on the specified port )
 
       SUBROUTINE NEWFIL ( PATTRN, PORT, FILE )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -181,8 +182,6 @@
 !
 !     Spicelib routines.
 !
-      LOGICAL               EXISTS
-      LOGICAL               FAILED
 
 !
 !     Local Parameters

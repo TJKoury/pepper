@@ -1,6 +1,7 @@
 !$Procedure DAFACU ( DAF add comments from a logical unit )
 
       SUBROUTINE DAFACU ( COMLUN, BEGMRK, ENDMRK, INSBLN, HANDLE )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -358,10 +359,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               LASTNB
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 !
 !     Local parameters
 !

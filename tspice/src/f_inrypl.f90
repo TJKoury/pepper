@@ -1,6 +1,7 @@
 !$Procedure F_INRYPL ( INRYPL tests )
 
       SUBROUTINE F_INRYPL ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -121,10 +122,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
 
 
 !

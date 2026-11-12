@@ -1,6 +1,7 @@
 !$Procedure F_QUAT ( Quaternion routine tests )
 
       SUBROUTINE F_QUAT ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -114,7 +115,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      RPD
 
 !
 !     Local Parameters

@@ -1,6 +1,7 @@
 !$Procedure   ZZNATPCK (Create a text PCK for Nat's solar system)
 
       SUBROUTINE ZZNATPCK ( NAMEPC )
+      use pepper_legacy
 
 ! $ Abstract
 !

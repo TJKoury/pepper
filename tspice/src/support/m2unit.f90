@@ -1,6 +1,7 @@
 !$Procedure      M2UNIT ( Determine whether a word is a unit spec )
 
       LOGICAL FUNCTION M2UNIT ( WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -96,8 +97,6 @@
 !     SPICELIB functions
 !
       LOGICAL               UNITP
-      INTEGER               LTRIM
-      INTEGER               RTRIM
 !
 !     Local variables
 !

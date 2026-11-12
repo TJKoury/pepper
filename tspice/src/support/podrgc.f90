@@ -1,6 +1,7 @@
 !$Procedure      PODRGC ( Pod, replace group, character )
 
       SUBROUTINE PODRGC ( POD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -127,7 +128,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local parameters

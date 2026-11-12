@@ -1,6 +1,7 @@
 !$Procedure F_SYMTBC ( Test SPICELIB character symbol table routines )
 
       SUBROUTINE F_SYMTBC ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -97,9 +98,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      INTEGER               CARDI
-      INTEGER               SYDIMC
 
 !
 !     Local Parameters

@@ -1,6 +1,7 @@
 !$Procedure PAGMAN (Page Manager)
 
       SUBROUTINE PAGMAN ( WHICH, LINE, VALUE )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -22,7 +23,6 @@
 !
 ! $ Declarations
 
-      EXTERNAL              PROMPT
 
       CHARACTER*(*)         WHICH
       CHARACTER*(*)         LINE
@@ -227,7 +227,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
 
 !
 !     Local variables

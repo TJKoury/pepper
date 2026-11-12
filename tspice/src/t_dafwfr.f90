@@ -2,6 +2,7 @@
 
       SUBROUTINE T_DAFWFR ( UNIT,   OUTBFF, IDWORD, ND,     NI, &
                             IFNAME, FWARD,  BWARD,  FREE,   ADDFTP )
+      use pepper_legacy
       use pepper_inc_zzddhman
       use pepper_inc_zzftprms
 
@@ -135,9 +136,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHC
-      INTEGER               RTRIM
-      LOGICAL               RETURN
 
 !
 !     Local Parameters

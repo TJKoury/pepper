@@ -1,6 +1,7 @@
 !$Procedure SPKAPP_O ( S/P Kernel, apparent state )
 
       SUBROUTINE SPKAPP_O ( TARG, ET, REF, SOBS, ABCORR, STARG, LT )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -688,13 +689,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      VNORM
 
-      INTEGER               ISRCHC
 
-      LOGICAL               ODD
-      LOGICAL               RETURN
 
 !
 !     Local parameters

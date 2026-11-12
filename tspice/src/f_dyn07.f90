@@ -1,6 +1,7 @@
 !$Procedure F_DYN07 ( Dynamic Frame Test Family 07 )
 
       SUBROUTINE F_DYN07 ( OK )
+      use pepper_legacy
       use pepper_inc_zzdyn
       use pepper_inc_errhnd
 
@@ -97,7 +98,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
 !
 !     Local Parameters
 !

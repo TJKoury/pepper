@@ -1,6 +1,7 @@
 !$Procedure F_MATRIX3 (Family of tests on 3x3-matrix operations)
 
       SUBROUTINE F_MATRIX3 ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -106,10 +107,6 @@
 !     SPICELIB Functions
 !
 
-      DOUBLE PRECISION      DET
-      DOUBLE PRECISION      TRACE
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VTMV
 
 !
 !     Local Parameters

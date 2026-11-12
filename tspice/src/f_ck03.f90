@@ -1,6 +1,7 @@
 !$Procedure F_CK03 ( CK data type 03 tests )
 
       SUBROUTINE F_CK03 ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -116,7 +117,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters

@@ -1,6 +1,7 @@
 !$Procedure      TSTVRS ( Test Utility version strings )
 
       SUBROUTINE TSTVRS (  VERSTR )
+      use pepper_legacy
 
 ! $ Abstract
 !

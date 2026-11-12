@@ -1,6 +1,7 @@
 !$Procedure F_DDHRCM ( ZZDDHRCM Test Family )
 
       SUBROUTINE F_DDHRCM ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -83,7 +84,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               INTMAX
 
 !
 !     Local Variables

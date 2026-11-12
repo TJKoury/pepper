@@ -1,6 +1,7 @@
 !$Procedure      F_CKGP (Family of tests for CKGP)
 
       SUBROUTINE F_CKGP ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

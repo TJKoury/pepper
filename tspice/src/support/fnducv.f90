@@ -1,6 +1,7 @@
 !$Procedure      FNDUCV ( Find unit, class and value. )
 
       SUBROUTINE FNDUCV ( UNIN, KNOWN, CLASS, VALUE )
+      use pepper_legacy, pepper_legacy_jyear => jyear, pepper_legacy_tyear => tyear
       IMPLICIT NONE
 
 ! $ Abstract
@@ -138,11 +139,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
-      INTEGER               BSRCHC
-      LOGICAL               BENUM
 
 !
 !
@@ -212,6 +208,8 @@
 
 
       DOUBLE PRECISION      AU
+      DOUBLE PRECISION AU_A1 ( 1 )
+      EQUIVALENCE ( AU, AU_A1 )
 !
 !     This value will be computed at run time or default to the
 !     value given here.
@@ -386,7 +384,7 @@
 !
          CALL SWPOOL ( 'FNDUCV', NNAMES, NAMES  )
          CALL CVPOOL ( 'FNDUCV',         UPDATE )
-         CALL RTPOOL ( 'AU',     I,  AU, FOUND  )
+         CALL RTPOOL ( 'AU',     I,  AU_A1, FOUND  )
 
          IF ( .NOT. FOUND ) THEN
 
@@ -770,7 +768,7 @@
          IAUS   = BSRCHC ( 'AUS',     COUNT, UNITS )
          IPARSC = BSRCHC ( 'PARSECS', COUNT, UNITS )
 
-         CALL RTPOOL ( 'AU', I, AU, FOUND )
+         CALL RTPOOL ( 'AU', I, AU_A1, FOUND )
 
          IF ( DABS(AU - DE200V) .LT. 10.0D0 ) THEN
 

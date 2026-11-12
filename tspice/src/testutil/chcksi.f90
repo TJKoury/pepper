@@ -1,6 +1,7 @@
 !$Procedure      CHCKSI ( Check Scalar Integer )
 !
       SUBROUTINE CHCKSI ( NAME, VAL, COMP, EXP, TOL, OK )
+      use pepper_legacy
 !
 ! $ Abstract
 !
@@ -125,7 +126,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
 
 !
 !     Local Variables

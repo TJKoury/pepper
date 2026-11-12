@@ -1,6 +1,7 @@
 !$Procedure      TSTTXT (Create at test text file.)
 
       SUBROUTINE TSTTXT ( NAMTXT, TXT, NLINES, LOAD, KEEP   )
+      use pepper_legacy
 
 ! $ Abstract
 !

@@ -1,6 +1,7 @@
 !$Procedure F_SCLK0 ( SCLK error handling tests )
 
       SUBROUTINE F_SCLK0 ( OK )
+      use pepper_legacy
       use pepper_inc_errhnd
       use pepper_inc_sclk
 
@@ -98,11 +99,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      UNITIM
 
-      INTEGER               SCTYPE
 
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters
@@ -175,6 +173,8 @@
       DOUBLE PRECISION      DVALS  ( DVALSZ )
       DOUBLE PRECISION      ET
       DOUBLE PRECISION      KERNID
+      DOUBLE PRECISION KERNID_A1 ( 1 )
+      EQUIVALENCE ( KERNID, KERNID_A1 )
       DOUBLE PRECISION      MAJOR
       DOUBLE PRECISION      MODULI ( MXNFLD )
       DOUBLE PRECISION      OFFSET ( MXNFLD )
@@ -195,6 +195,8 @@
       INTEGER               HANDLE
       INTEGER               I
       INTEGER               IVAL
+      INTEGER IVAL_A1 ( 1 )
+      EQUIVALENCE ( IVAL, IVAL_A1 )
       INTEGER               IVALS ( IVALSZ )
       INTEGER               N
       INTEGER               NCOEFF
@@ -831,7 +833,7 @@
 
       KVNAME = 'SCLK_DATA_TYPE_101'
 
-      CALL PIPOOL ( KVNAME, 1, 2 )
+      CALL PIPOOL ( KVNAME, 1, [2] )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       SCLKDP = 0.D0
@@ -1297,7 +1299,7 @@
 
       KVNAME = 'SCLK_DATA_TYPE_101'
 
-      CALL PIPOOL ( KVNAME, 1, 2 )
+      CALL PIPOOL ( KVNAME, 1, [2] )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       SCLKDP = 0.D0
@@ -1316,7 +1318,7 @@
 
       KVNAME = 'SCLK_DATA_TYPE_101'
 
-      CALL PIPOOL ( KVNAME, 1, 2 )
+      CALL PIPOOL ( KVNAME, 1, [2] )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       SCLKDP = 0.D0
@@ -1335,7 +1337,7 @@
 
       KVNAME = 'SCLK_DATA_TYPE_101'
 
-      CALL PIPOOL ( KVNAME, 1, 2 )
+      CALL PIPOOL ( KVNAME, 1, [2] )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CLKSTR = '0000000:0:0:0'
@@ -2211,7 +2213,7 @@
       CLKID = 1
 
       ITEM = 'SCLK01_N_FIELDS'
-      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL )
+      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL_A1 )
       CALL CHCKXC ( .TRUE., 'SPICE(KERNELVARNOTFOUND)', OK )
 
 
@@ -2223,7 +2225,7 @@
       CLKID = 1
 
       ITEM = 'SCLK01_OUTPUT_DELIM'
-      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL )
+      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL_A1 )
       CALL CHCKXC ( .TRUE., 'SPICE(KERNELVARNOTFOUND)', OK )
 
 
@@ -2239,7 +2241,7 @@
       CLKID = 1
 
       ITEM = 'SCLK01_TIME_SYSTEM'
-      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL )
+      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSI ( 'N', N, '=', 0, 0, OK )
@@ -2257,7 +2259,7 @@
       CLKID = 1
 
       ITEM = 'SCLK_DATA_TYPE'
-      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL )
+      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL_A1 )
       CALL CHCKXC ( .TRUE., 'SPICE(KERNELVARNOTFOUND)', OK )
 
 !
@@ -2343,7 +2345,7 @@
       CLKID = 1
 
       ITEM = 'SCLK01_KERNEL_ID'
-      CALL SCLD01 ( ITEM, CLKID, 1, N, KERNID )
+      CALL SCLD01 ( ITEM, CLKID, 1, N, KERNID_A1 )
       CALL CHCKXC ( .TRUE., 'SPICE(KERNELVARNOTFOUND)', OK )
 
 !
@@ -2361,7 +2363,7 @@
       CALL PCPOOL ( KVNAME, 1, 'XYZ' )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL SCLD01 ( ITEM, CLKID, 1, N, KERNID )
+      CALL SCLD01 ( ITEM, CLKID, 1, N, KERNID_A1 )
       CALL CHCKXC ( .TRUE., 'SPICE(BADKERNELVARTYPE)', OK )
 
 !
@@ -2376,7 +2378,7 @@
 
       ITEM   = 'SCLK01_N_FIELDS'
 
-      CALL SCLI01 ( ITEM, CLKID, 0, N, IVAL )
+      CALL SCLI01 ( ITEM, CLKID, 0, N, IVAL_A1 )
       CALL CHCKXC ( .TRUE., 'SPICE(ARRAYTOOSMALL)', OK )
 
 
@@ -2714,18 +2716,18 @@
 
       IVAL = 0
 
-      CALL PIPOOL ( KVNAME, 1, IVAL )
+      CALL PIPOOL ( KVNAME, 1, IVAL_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL )
+      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL_A1 )
       CALL CHCKXC ( .TRUE., 'SPICE(VALUEOUTOFRANGE)', OK )
 
       IVAL = NDELIM + 1
 
-      CALL PIPOOL ( KVNAME, 1, IVAL )
+      CALL PIPOOL ( KVNAME, 1, IVAL_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL )
+      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL_A1 )
       CALL CHCKXC ( .TRUE., 'SPICE(VALUEOUTOFRANGE)', OK )
 
 
@@ -2743,19 +2745,19 @@
 
       IVAL = 0
 
-      CALL PIPOOL ( KVNAME, 1, IVAL )
+      CALL PIPOOL ( KVNAME, 1, IVAL_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL )
+      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL_A1 )
       CALL CHCKXC ( .TRUE., 'SPICE(VALUEOUTOFRANGE)', OK )
 
 
       IVAL = MXNFLD + 1
 
-      CALL PIPOOL ( KVNAME, 1, IVAL )
+      CALL PIPOOL ( KVNAME, 1, IVAL_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL )
+      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL_A1 )
       CALL CHCKXC ( .TRUE., 'SPICE(VALUEOUTOFRANGE)', OK )
 
 
@@ -2775,18 +2777,18 @@
 
       IVAL = 0
 
-      CALL PIPOOL ( KVNAME, 1, IVAL )
+      CALL PIPOOL ( KVNAME, 1, IVAL_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL )
+      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL_A1 )
       CALL CHCKXC ( .TRUE., 'SPICE(VALUEOUTOFRANGE)', OK )
 
       IVAL = MXTSYS + 1
 
-      CALL PIPOOL ( KVNAME, 1, IVAL )
+      CALL PIPOOL ( KVNAME, 1, IVAL_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
-      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL )
+      CALL SCLI01 ( ITEM, CLKID, 1, N, IVAL_A1 )
       CALL CHCKXC ( .TRUE., 'SPICE(VALUEOUTOFRANGE)', OK )
 
 

@@ -1,6 +1,7 @@
 !$Procedure      F_TIMCVR ( TIMOUT tests to exercise branch coverage)
 
       SUBROUTINE F_TIMCVR ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

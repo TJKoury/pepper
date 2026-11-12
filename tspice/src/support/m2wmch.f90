@@ -1,6 +1,7 @@
 !$Procedure            M2WMCH ( Match a word against a META/2 class )
 
       LOGICAL FUNCTION M2WMCH ( STRING, WORDB, WORDE, CLASS )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -174,7 +175,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EQSTR
       LOGICAL               M2ALPH
       LOGICAL               M2NAME
       LOGICAL               M2ENGL
@@ -188,7 +188,6 @@
       LOGICAL               M2BODY
       LOGICAL               M2UNIT
       LOGICAL               MATCHM
-      LOGICAL               ZZTOKNS
 
 !
 !     Local variables

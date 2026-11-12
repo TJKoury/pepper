@@ -1,6 +1,7 @@
 !$Procedure      CHBFIT ( Chebyshev fit )
 
       SUBROUTINE CHBFIT ( FUNC, LEFT, RIGHT, N, WORK, COEFFS )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -24,7 +25,7 @@
       PARAMETER           ( MAXSIZ = 25 )
 
       DOUBLE PRECISION      FUNC
-      EXTERNAL              FUNC
+      EXTERNAL FUNC
 
       DOUBLE PRECISION      LEFT
       DOUBLE PRECISION      RIGHT
@@ -304,8 +305,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      LOGICAL               RETURN
 
 !
 !     Local parameters

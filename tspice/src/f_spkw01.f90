@@ -1,6 +1,7 @@
 !$Procedure      F_SPKW01 ( SPKW01 routine tests )
 
       SUBROUTINE F_SPKW01 ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       IMPLICIT NONE
 
       LOGICAL               OK

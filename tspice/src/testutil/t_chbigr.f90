@@ -1,6 +1,7 @@
 !$Procedure T_CHBIGR ( Test utility: integrate Chebyshev expansion  )
 
       SUBROUTINE T_CHBIGR ( NDIM, DEGP, CP, X2S, X, WORK, P, ITGRLP )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -171,7 +172,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 !
 !     Local variables
 !

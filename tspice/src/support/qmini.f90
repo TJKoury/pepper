@@ -1,6 +1,7 @@
 !$Procedure    QMINI ( Quaternion linear interpolation )
 
       SUBROUTINE QMINI ( INIT, FINAL, FRAC, QINTRP )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -247,7 +248,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
 
 !
 !     Local variables

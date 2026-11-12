@@ -1,6 +1,7 @@
 !$Procedure      F_TTRANS ( Family of tests for TTRANS )
 
       SUBROUTINE F_TTRANS ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -99,7 +100,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      J2000
 !
 !     Local Variables
 !
@@ -116,7 +116,7 @@
       CHARACTER*(LNSIZE)    GOODKR  ( 23 )
 
       DOUBLE PRECISION      ETVEC   ( 7 )
-      DOUBLE PRECISION      TVEC    ( 7 )
+      DOUBLE PRECISION      TVEC    ( 10 )
       DOUBLE PRECISION      TVECS   ( 7, 21 )
 
       DOUBLE PRECISION      TDT1

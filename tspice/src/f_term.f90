@@ -1,6 +1,7 @@
 !$Procedure      F_TERM ( Test terminator routines )
 
       SUBROUTINE F_TERM ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -96,8 +97,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
 
 !
 !     Local parameters
@@ -1131,6 +1130,7 @@
 !
       SUBROUTINE T_ETERM ( TITLE, UMBRAL, SRCPOS, SRCRAD, A, B, C, &
                            X,     OK                               )
+      use pepper_legacy
       IMPLICIT NONE
 
       CHARACTER*(*)         TITLE
@@ -1146,9 +1146,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
 
 !
 !     Local parameters

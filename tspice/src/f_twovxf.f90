@@ -1,6 +1,7 @@
 !$Procedure F_TWOVXF ( TWOVXF tests )
 
       SUBROUTINE F_TWOVXF ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -96,7 +97,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VSEP
 
 !
 !     Other functions

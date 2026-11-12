@@ -2,6 +2,7 @@
 !$Procedure MATCHO ( Match the characters in two words )
 
       INTEGER FUNCTION MATCHO ( WORD, GUESS )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -146,8 +147,6 @@
 !     SPICELIB functions
 !
       INTEGER               QRTRIM
-      INTEGER               LTRIM
-      LOGICAL               EQSTR
 
 !
 !     Local Parameters

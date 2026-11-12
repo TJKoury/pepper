@@ -1,6 +1,8 @@
 !$Procedure F_DDHOPN ( ZZDDHOPN Test Family )
 
       SUBROUTINE F_DDHOPN ( OK )
+      use pepper_legacy, pepper_legacy_exists => exists
+      use pepper_legacy, pepper_legacy_exists => exists
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -204,7 +206,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               ISRCHI
 
 !
 !     Local Variables

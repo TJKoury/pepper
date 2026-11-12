@@ -1,6 +1,7 @@
 !$Procedure ZZCKCVR4 ( Private --- C-kernel segment coverage, type 04 )
 
       SUBROUTINE ZZCKCVR4 ( HANDLE, ARRBEG, ARREND, SCHEDL )
+      use pepper_legacy
       use pepper_inc_ckparam
 
 ! $ Abstract
@@ -104,8 +105,6 @@
 !
 !-&
 
-      INTEGER               INTMAX
-      LOGICAL               RETURN
 
       INTEGER               ND
       PARAMETER           ( ND = 2 )

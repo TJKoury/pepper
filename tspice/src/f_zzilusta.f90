@@ -1,6 +1,7 @@
 !$Procedure      F_ZZILUSTA ( ZZILUSTA tests )
 
       SUBROUTINE F_ZZILUSTA ( OK )
+      use pepper_legacy, pepper_legacy_illum => illum
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 
@@ -94,9 +95,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DVSEP
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      SPD
 
 !
 !     Local parameters

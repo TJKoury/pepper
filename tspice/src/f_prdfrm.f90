@@ -1,6 +1,7 @@
 !$Procedure F_PRDFRM ( Product frame tests )
 
       SUBROUTINE F_PRDFRM ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -89,7 +90,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters

@@ -1,6 +1,7 @@
 !$Procedure F_SPK19 ( SPK data type 19 tests )
 
       SUBROUTINE F_SPK19 ( OK )
+      use pepper_legacy
       use pepper_inc_spk19
 
 ! $ Abstract
@@ -100,10 +101,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      LGRINT
 
-      LOGICAL               EXISTS
-      LOGICAL               ODD
 
 !
 !     Local Parameters

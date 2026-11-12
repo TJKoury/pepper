@@ -1,6 +1,7 @@
 !$Procedure      EXPFNM_2 ( Expand a filename )
 
       SUBROUTINE EXPFNM_2 ( INSTR, OUTFIL )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -199,10 +200,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
-      INTEGER               POS
-      INTEGER               RTRIM
 !
 !     Local variables
 !

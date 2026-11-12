@@ -3,6 +3,7 @@
       SUBROUTINE T_TOPKER ( FK,     SPK,    TARGET, TRGREF, NSITES, &
                             SITIDS, SITNMS, SITPOS, SITFNM, SITFID, &
                             FIRST,  LAST,   AXES,   ANGLES         )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -201,13 +202,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPR
 
-      INTEGER               RTRIM
 
-      LOGICAL               EXISTS
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local parameters

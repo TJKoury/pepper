@@ -2,6 +2,7 @@
 
       SUBROUTINE TSTLGR( MESSGE, ERRLOG, GSTYLE, FSTYLE, &
                          MARKER, INT,    DP )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -114,7 +115,7 @@
 !
 !-&
 
-      EXTERNAL              TSTWLN
+      EXTERNAL TSTWLN
 !
 !     Test Utility Functions.
 !
@@ -122,7 +123,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
 !
 !     Local Variables
 !

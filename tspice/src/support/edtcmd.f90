@@ -1,6 +1,7 @@
 !$Procedure     EDTCMD ( Edit a file using a specified text editor )
 
       SUBROUTINE EDTCMD ( CMD, FILE )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -292,8 +293,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
-      LOGICAL               RETURN
 
 !
 !     Local parameters

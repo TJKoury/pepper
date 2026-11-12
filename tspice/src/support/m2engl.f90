@@ -1,6 +1,7 @@
 !$Procedure      M2ENGL ( Determine if a word contains all letters)
 
       LOGICAL FUNCTION M2ENGL ( WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -110,7 +111,6 @@
 !     SPICELIB functions
 !
       INTEGER               QRTRIM
-      INTEGER               LTRIM
 
 !
 !     Local variables

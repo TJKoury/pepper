@@ -2,6 +2,7 @@
 !$Procedure NCODEC ( Encode integer value into character item )
 
       SUBROUTINE NCODEC ( VALUE, ITEM )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -107,7 +108,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Standard SPICE error handling.

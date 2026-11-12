@@ -1,6 +1,7 @@
 !$Procedure      F_SPKGPS ( Family of tests for SPKGPS )
 
       SUBROUTINE F_SPKGPS ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -25,8 +26,6 @@
 !
 !     Spicelib Routines.
 !
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      CLIGHT
 
 
 !

@@ -1,6 +1,7 @@
 !$Procedure M2SELB ( META/2 --- select a named integer )
 
       SUBROUTINE M2SELB ( NAME, STRING, NTH, FOUND, INT  )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

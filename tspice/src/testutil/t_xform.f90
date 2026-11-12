@@ -2,6 +2,7 @@
 
       SUBROUTINE T_XFORM ( XFORM,  RMINUS, RPLUS,  DELTA, &
                            NRMERR, DETERR, DRVERR, DRLERR, DRDIFF )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -156,13 +157,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DET
-      DOUBLE PRECISION      VDISTG
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VRELG
 
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local variables

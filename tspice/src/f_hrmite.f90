@@ -1,6 +1,7 @@
 !$Procedure F_HRMITE ( Hermite interpolation )
 
       SUBROUTINE F_HRMITE ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

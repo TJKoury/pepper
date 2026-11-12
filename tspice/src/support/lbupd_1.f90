@@ -2,6 +2,7 @@
 !$Procedure LBUPD ( Line buffer, update )
 
       SUBROUTINE LBUPD_1 ( NLINE, NCOM, PTRS )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -96,8 +97,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      INTEGER               SIZEI
 
 !
 !     Standard error handling.

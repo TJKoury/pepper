@@ -1,6 +1,7 @@
 !$Procedure      F_ZZUTC ( Family of tests for ZZUTCPM )
 
       SUBROUTINE F_ZZUTC ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

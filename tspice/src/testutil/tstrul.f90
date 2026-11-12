@@ -1,6 +1,7 @@
 !$Procedure      TSTRUL (Test Rules)
 !
       SUBROUTINE TSTRUL
+      use pepper_legacy
 !
 ! $ Abstract
 !

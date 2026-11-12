@@ -1,6 +1,7 @@
 !$Procedure      F_ZZGFDIQ ( ZZGFDIQ tests )
 
       SUBROUTINE F_ZZGFDIQ ( OK )
+      use pepper_legacy, pepper_legacy_pos => pos
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 
@@ -82,10 +83,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      VNORM
 
-      LOGICAL               ODD
 
 !
 !     Local parameters
@@ -187,27 +185,27 @@
       CALL TCASE ( 'Bad aberration correction specifiers' )
 
 
-      CALL ZZGFDIQ ( 301, 0.D0, 'S',  399, POS )
+      CALL ZZGFDIQ ( 301, 0.D0, 'S',  399, POS(1) )
 
       CALL CHCKXC ( .TRUE., 'SPICE(SPKINVALIDOPTION)',   OK )
 
 
-      CALL ZZGFDIQ ( 301, 0.D0, 'XS',  399, POS )
+      CALL ZZGFDIQ ( 301, 0.D0, 'XS',  399, POS(1) )
 
       CALL CHCKXC ( .TRUE., 'SPICE(SPKINVALIDOPTION)',   OK )
 
 
-      CALL ZZGFDIQ ( 301, 0.D0, 'RLT',  399, POS )
+      CALL ZZGFDIQ ( 301, 0.D0, 'RLT',  399, POS(1) )
 
       CALL CHCKXC ( .TRUE., 'SPICE(SPKINVALIDOPTION)',   OK )
 
 
-      CALL ZZGFDIQ ( 301, 0.D0, 'XRLT',  399, POS )
+      CALL ZZGFDIQ ( 301, 0.D0, 'XRLT',  399, POS(1) )
 
       CALL CHCKXC ( .TRUE., 'SPICE(SPKINVALIDOPTION)',   OK )
 
 
-      CALL ZZGFDIQ ( 301, 0.D0, 'z',  399, POS )
+      CALL ZZGFDIQ ( 301, 0.D0, 'z',  399, POS(1) )
 
       CALL CHCKXC ( .TRUE., 'SPICE(SPKINVALIDOPTION)',   OK )
 
@@ -224,7 +222,7 @@
       CALL CHCKXC ( .FALSE., ' ',   OK )
 
 
-      CALL ZZGFDIQ ( 9511010, ET, 'LT+S', 399, POS )
+      CALL ZZGFDIQ ( 9511010, ET, 'LT+S', 399, POS(1) )
       CALL CHCKXC ( .TRUE., 'SPICE(SPKINSUFFDATA)',   OK )
 
 

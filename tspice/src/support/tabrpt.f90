@@ -5,6 +5,7 @@
                                   PRESRV, SPCIAL, &
                                   LMARGE, SPACE, &
                                   FETCH   )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -36,7 +37,7 @@
       LOGICAL               PRESRV ( * )
       CHARACTER*(*)         SPCIAL ( * )
 
-      EXTERNAL              FETCH
+      EXTERNAL FETCH
 
       INTEGER               MXWDTH
       PARAMETER           ( MXWDTH = 132 )
@@ -180,11 +181,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
 
-      LOGICAL               RETURN
-      LOGICAL               FAILED
-      LOGICAL               EQSTR
 
 !
 !     Other functions

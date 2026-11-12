@@ -1,6 +1,7 @@
 !$Procedure ZZTSTPCK (Create a test PCK)
 
       SUBROUTINE ZZTSTPCK( NAMEPC )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -95,7 +96,6 @@
 !
 !     Spicelib Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Test Utility Functions

@@ -1,6 +1,7 @@
 !$Procedure      F_SPKGEO ( Family of tests for SPKGEO )
 
       SUBROUTINE F_SPKGEO ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -25,8 +26,6 @@
 !
 !     Spicelib Routines.
 !
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      CLIGHT
 
 
 !

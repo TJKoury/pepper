@@ -1,6 +1,7 @@
 !$Procedure      F_STPOOL ( Family of tests for STPOOL )
 
       SUBROUTINE F_STPOOL ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -23,7 +24,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Local Variables

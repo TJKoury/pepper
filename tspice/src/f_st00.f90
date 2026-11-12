@@ -1,6 +1,7 @@
 !$Procedure F_ST00 ( Tests for string routines, subset 00 )
 
       SUBROUTINE F_ST00 ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

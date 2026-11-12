@@ -1,6 +1,7 @@
 !$Procedure F_SURFNM ( SURFNM tests )
 
       SUBROUTINE F_SURFNM ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

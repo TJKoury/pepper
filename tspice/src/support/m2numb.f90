@@ -1,6 +1,7 @@
 !$Procedure      M2NUMB ( Determine whether or not a word is a number )
 
       LOGICAL FUNCTION M2NUMB ( WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -111,7 +112,6 @@
 !     SPICELIB functions
 !
       INTEGER               QRTRIM
-      INTEGER               LTRIM
 
 !
 !     Local variables

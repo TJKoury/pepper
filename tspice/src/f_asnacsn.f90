@@ -1,6 +1,7 @@
 !$Procedure      F_ASNACSN (Family of tests for DASINE and DACOSN)
 
       SUBROUTINE F_ASNACSN ( OK )
+      use pepper_legacy
 
       IMPLICIT              NONE
 
@@ -26,10 +27,6 @@
 !     SPICELIB functions
 !
 
-      DOUBLE PRECISION      DASINE
-      DOUBLE PRECISION      DACOSN
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      HALFPI
 
 !
 !     Local variables.

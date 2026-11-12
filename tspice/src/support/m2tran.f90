@@ -1,6 +1,7 @@
 !$Procedure      M2TRAN ( See if a word has a restriction template )
 
       SUBROUTINE M2TRAN ( STRING, BEG, END, BASE, KEY, TEMP )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -161,8 +162,6 @@
 !     SPICELIB functions
 !
 
-      INTEGER               BSRCHC
-      LOGICAL               MATCHW
 
 !
 !     Local variables

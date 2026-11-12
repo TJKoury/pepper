@@ -1,6 +1,7 @@
 !$Procedure      F_ZZVALCOR ( Test ZZVALCOR )
 
       SUBROUTINE F_ZZVALCOR ( OK )
+      use pepper_legacy
       use pepper_inc_zzabcorr
 
 ! $ Abstract
@@ -85,7 +86,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               MATCHI
 
 !
 !     Local parameters

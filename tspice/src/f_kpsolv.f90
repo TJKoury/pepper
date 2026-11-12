@@ -1,6 +1,7 @@
 !$Procedure      F_KPSOLV (Family of tests for KPSOLV )
 
       SUBROUTINE F_KPSOLV ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -22,7 +23,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      KPSOLV
 
 !
 !     Local Variables

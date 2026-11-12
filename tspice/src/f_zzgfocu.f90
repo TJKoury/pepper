@@ -1,6 +1,7 @@
 !$Procedure      F_ZZGFOCU ( ZZGFOCU family tests )
 
       SUBROUTINE F_ZZGFOCU ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

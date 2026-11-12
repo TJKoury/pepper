@@ -2,6 +2,7 @@
 !$Procedure      CUTSTR ( Cut a long string into substrings )
 
       SUBROUTINE CUTSTR ( STRING, START, WIDTH, BREAKS, BEG, END )
+      use pepper_legacy, pepper_legacy_quote => quote
       IMPLICIT NONE
 
 ! $ Abstract
@@ -250,9 +251,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EVEN
       INTEGER               OCCURS
-      LOGICAL               RETURN
 
 !
 !     Local variables

@@ -1,6 +1,7 @@
 !$Procedure      F_ZZGFRPWK ( Test ZZGFRPWK entry points )
 
       SUBROUTINE F_ZZGFRPWK ( OK )
+      use pepper_legacy, pepper_legacy_tcheck => tcheck
       use pepper_inc_zzgf
 
 ! $ Abstract
@@ -101,7 +102,6 @@
 !     SPICELIB functions
 !
 
-      LOGICAL               EXISTS
 
 !
 !     Local parameters

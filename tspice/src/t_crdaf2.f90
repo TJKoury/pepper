@@ -2,6 +2,7 @@
 
       SUBROUTINE T_CRDAF2 ( TYPE, NAME, IFNAME, NSEG, IDS, TBEGS, &
                                                    TENDS, SEGIDS )
+      use pepper_legacy
 
 ! $ Abstract
 !

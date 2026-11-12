@@ -1,6 +1,7 @@
 !$Procedure F_SPK12 ( SPK data type 12 tests )
 
       SUBROUTINE F_SPK12 ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -86,7 +87,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters

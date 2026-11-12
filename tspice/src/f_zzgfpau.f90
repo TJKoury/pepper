@@ -1,6 +1,7 @@
 !$Procedure F_ZZGFPAU ( ZZGFPAU family tests )
 
       SUBROUTINE F_ZZGFPAU ( OK )
+      use pepper_legacy, pepper_legacy_illum => illum
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 
@@ -81,7 +82,6 @@
 !
 !-&
 
-      EXTERNAL              UDF
 
 !
 !     Local parameters

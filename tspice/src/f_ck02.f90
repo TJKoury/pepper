@@ -1,6 +1,7 @@
 !$Procedure F_CK02 ( CK data type 02 tests )
 
       SUBROUTINE F_CK02 ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

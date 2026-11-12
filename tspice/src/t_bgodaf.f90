@@ -1,6 +1,7 @@
 !$Procedure T_BGODAF ( BINGO: Process DAF files to alternate BFFs )
 
       SUBROUTINE T_BGODAF ( INAME, ONAME, OBFF )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -114,8 +115,6 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local Variables

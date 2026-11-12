@@ -1,6 +1,7 @@
 !$Procedure      T_CHOOSE ( Compute "N choose K" )
 
       INTEGER FUNCTION T_CHOOSE ( N, K )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

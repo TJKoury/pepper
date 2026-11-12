@@ -1,6 +1,7 @@
 !$Procedure      M2TERM (Find possible terminators of variable template)
 
       SUBROUTINE M2TERM ( TEMP, TERMS, INDXES )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -166,13 +167,7 @@
 !     SPICELIB functions
 !
       INTEGER               UPTO
-      LOGICAL               MATCHW
       LOGICAL               M2KEYW
-      INTEGER               SIZEC
-      INTEGER               SIZEI
-      INTEGER               POS
-      INTEGER               POSR
-      INTEGER               NCPOS
 
 !
 !     Local variables

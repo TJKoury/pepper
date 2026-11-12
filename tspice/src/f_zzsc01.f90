@@ -1,6 +1,7 @@
 !$Procedure F_ZZSC01 ( SCLK type 01 database tests )
 
       SUBROUTINE F_ZZSC01 ( OK )
+      use pepper_legacy
       use pepper_inc_errhnd
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
@@ -93,9 +94,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               SCTYPE
 
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters
@@ -175,6 +174,8 @@
       DOUBLE PRECISION      ET0
       DOUBLE PRECISION      MAJOR
       DOUBLE PRECISION      MAXMOD
+      DOUBLE PRECISION MAXMOD_A1 ( 1 )
+      EQUIVALENCE ( MAXMOD, MAXMOD_A1 )
       DOUBLE PRECISION      MODULI ( MXNFLD )
       DOUBLE PRECISION      OFFSET ( MXNFLD )
       DOUBLE PRECISION      SCLKDP
@@ -207,6 +208,8 @@
       INTEGER               MODBAS
       INTEGER               NCOEFF
       INTEGER               NFIELD
+      INTEGER NFIELD_A1 ( 1 )
+      EQUIVALENCE ( NFIELD, NFIELD_A1 )
       INTEGER               NITER
       INTEGER               NPARTS
       INTEGER               NREC
@@ -221,6 +224,8 @@
       INTEGER               STRBAS
       INTEGER               TIMSYS
       INTEGER               XTYPE
+      INTEGER XTYPE_A1 ( 1 )
+      EQUIVALENCE ( XTYPE, XTYPE_A1 )
       INTEGER               XIBUFF ( MXNCLK )
 
       LOGICAL               UPDATE
@@ -1019,7 +1024,7 @@
 !        not be affected.
 !
          IF ( J .EQ. NITER/2 ) THEN
-            CALL PDPOOL( 'XYZ',   1,   1.D0 )
+            CALL PDPOOL( 'XYZ',   1,   [1.D0] )
             CALL CHCKXC( .FALSE., ' ', OK   )
          END IF
 
@@ -1093,7 +1098,7 @@
 !        not be affected.
 !
          IF ( J .EQ. NITER/2 ) THEN
-            CALL PDPOOL( 'XYZ',   1,   1.D0 )
+            CALL PDPOOL( 'XYZ',   1,   [1.D0] )
             CALL CHCKXC( .FALSE., ' ', OK   )
          END IF
 
@@ -1142,7 +1147,7 @@
 !        not be affected.
 !
          IF ( J .EQ. NITER/2 ) THEN
-            CALL PDPOOL( 'XYZ',   1,   1.D0 )
+            CALL PDPOOL( 'XYZ',   1,   [1.D0] )
             CALL CHCKXC( .FALSE., ' ', OK   )
          END IF
 
@@ -1192,7 +1197,7 @@
 !        not be affected.
 !
          IF ( J .EQ. NITER/2 ) THEN
-            CALL PDPOOL( 'XYZ',   1,   1.D0 )
+            CALL PDPOOL( 'XYZ',   1,   [1.D0] )
             CALL CHCKXC( .FALSE., ' ', OK   )
          END IF
 
@@ -1245,7 +1250,7 @@
          CALL REPMI( KVNAME, '#', -SC, KVNAME )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
-         CALL PIPOOL ( KVNAME, 1, 1 )
+         CALL PIPOOL ( KVNAME, 1, [1] )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1253,7 +1258,7 @@
          CALL REPMI( KVNAME, '#', -SC, KVNAME )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
-         CALL PIPOOL ( KVNAME, 1, TDB )
+         CALL PIPOOL ( KVNAME, 1, [TDB] )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1261,7 +1266,7 @@
          CALL REPMI( KVNAME, '#', -SC, KVNAME )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
-         CALL PIPOOL ( KVNAME, 1, 1 )
+         CALL PIPOOL ( KVNAME, 1, [1] )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1271,7 +1276,7 @@
          CALL REPMI( KVNAME, '#', -SC, KVNAME )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
-         CALL PDPOOL ( KVNAME, 1, MAXMOD )
+         CALL PDPOOL ( KVNAME, 1, MAXMOD_A1 )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1279,7 +1284,7 @@
          CALL REPMI( KVNAME, '#', -SC, KVNAME )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
-         CALL PDPOOL ( KVNAME, 1, 0.D0 )
+         CALL PDPOOL ( KVNAME, 1, [0.D0] )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1287,7 +1292,7 @@
          CALL REPMI( KVNAME, '#', -SC, KVNAME )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
-         CALL PIPOOL ( KVNAME, 1, 1 )
+         CALL PIPOOL ( KVNAME, 1, [1] )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1295,7 +1300,7 @@
          CALL REPMI( KVNAME, '#', -SC, KVNAME )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
-         CALL PDPOOL ( KVNAME, 1, DBLE(I) )
+         CALL PDPOOL ( KVNAME, 1, [DBLE(I)] )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1303,7 +1308,7 @@
          CALL REPMI( KVNAME, '#', -SC, KVNAME )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
-         CALL PDPOOL ( KVNAME, 1, MAXMOD )
+         CALL PDPOOL ( KVNAME, 1, MAXMOD_A1 )
          CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1464,14 +1469,14 @@
       CALL REPMI( KVNAME, '#', -SC, KVNAME )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
-      CALL PIPOOL ( KVNAME, 1, 1 )
+      CALL PIPOOL ( KVNAME, 1, [1] )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
       KVNAME = 'SCLK01_TIME_SYSTEM_#'
       CALL REPMI( KVNAME, '#', -SC, KVNAME )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
-      CALL PIPOOL ( KVNAME, 1, TDB )
+      CALL PIPOOL ( KVNAME, 1, [TDB] )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
 !
@@ -1483,7 +1488,7 @@
 
 
       NFIELD = 10
-      CALL PIPOOL ( KVNAME, 1, NFIELD )
+      CALL PIPOOL ( KVNAME, 1, NFIELD_A1 )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1519,7 +1524,7 @@
 !
 !     Use the delimiter ':'
 !
-      CALL PIPOOL ( KVNAME, 1, 2 )
+      CALL PIPOOL ( KVNAME, 1, [2] )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
 !
@@ -1752,7 +1757,7 @@
 
       XTYPE = 7
 
-      CALL PIPOOL ( KVNAME, 1, XTYPE )
+      CALL PIPOOL ( KVNAME, 1, XTYPE_A1 )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
       CLKTYP = SCTYPE( SC )
@@ -1853,7 +1858,7 @@
       CALL REPMI( KVNAME, '#', -SC, KVNAME )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
-      CALL PIPOOL ( KVNAME, 1, 1 )
+      CALL PIPOOL ( KVNAME, 1, [1] )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1861,7 +1866,7 @@
       CALL REPMI( KVNAME, '#', -SC, KVNAME )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
-      CALL PIPOOL ( KVNAME, 1, TDB )
+      CALL PIPOOL ( KVNAME, 1, [TDB] )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1869,7 +1874,7 @@
       CALL REPMI( KVNAME, '#', -SC, KVNAME )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
-      CALL PIPOOL ( KVNAME, 1, 1 )
+      CALL PIPOOL ( KVNAME, 1, [1] )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1879,7 +1884,7 @@
       CALL REPMI( KVNAME, '#', -SC, KVNAME )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
-      CALL PDPOOL ( KVNAME, 1, MAXMOD )
+      CALL PDPOOL ( KVNAME, 1, MAXMOD_A1 )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1887,7 +1892,7 @@
       CALL REPMI( KVNAME, '#', -SC, KVNAME )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
-      CALL PDPOOL ( KVNAME, 1, 0.D0 )
+      CALL PDPOOL ( KVNAME, 1, [0.D0] )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1895,7 +1900,7 @@
       CALL REPMI( KVNAME, '#', -SC, KVNAME )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
-      CALL PIPOOL ( KVNAME, 1, 1 )
+      CALL PIPOOL ( KVNAME, 1, [1] )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1903,7 +1908,7 @@
       CALL REPMI( KVNAME, '#', -SC, KVNAME )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
-      CALL PDPOOL ( KVNAME, 1, 0.D0 )
+      CALL PDPOOL ( KVNAME, 1, [0.D0] )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
 
@@ -1911,7 +1916,7 @@
       CALL REPMI( KVNAME, '#', -SC, KVNAME )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
-      CALL PDPOOL ( KVNAME, 1, MAXMOD )
+      CALL PDPOOL ( KVNAME, 1, MAXMOD_A1 )
       CALL CHCKXC( .FALSE., ' ', OK   )
 
 !

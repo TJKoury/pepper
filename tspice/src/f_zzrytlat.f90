@@ -1,6 +1,7 @@
 !$Procedure F_ZZRYTLAT ( ZZRYTLAT tests )
 
       SUBROUTINE F_ZZRYTLAT ( OK )
+      use pepper_legacy
       use pepper_inc_dsktol
 
 ! $ Abstract
@@ -83,8 +84,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      PI
 
 !
 !     Local Parameters

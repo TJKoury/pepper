@@ -1,6 +1,7 @@
 !$Procedure      F_GFOCLT ( GFOCLT family tests )
 
       SUBROUTINE F_GFOCLT ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_dskdsc
       use pepper_inc_zzabcorr
@@ -124,15 +125,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      VNORM
 
-      INTEGER               WNCARD
 
-      LOGICAL               EXISTS
-      LOGICAL               ODD
 
 !
 !     Local parameters

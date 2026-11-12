@@ -4,6 +4,7 @@
       SUBROUTINE SBINIT_1 ( NSIZE, PSIZE, VDIM, NAMES, &
                                               PTRS, &
                                               BUFFER )
+      use pepper_legacy
       IMPLICIT NONE
 
 
@@ -162,7 +163,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local variables

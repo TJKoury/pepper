@@ -1,6 +1,7 @@
 !$Procedure F_DAFANA ( DAFANA Test Family )
 
       SUBROUTINE F_DAFANA ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract

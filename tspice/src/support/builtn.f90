@@ -1,6 +1,7 @@
 !$Procedure      BUILTN ( Built in Commands )
 
       SUBROUTINE BUILTN ( COMMND, HIT, ERROR )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -113,10 +114,6 @@
 !
 !     Spicelib functions
 !
-      INTEGER               RTRIM
-      INTEGER               LTRIM
-      INTEGER               ISRCHC
-      INTEGER               TOUCHI
 !
 !     Error handling interface routines.
 !
@@ -129,7 +126,7 @@
 !
 !     Inspekt External Routines
 !
-      EXTERNAL              NSPWLN
+      EXTERNAL NSPWLN
 
 !
 !     Variables needed for syntax declarations.

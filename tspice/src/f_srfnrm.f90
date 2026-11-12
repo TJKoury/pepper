@@ -1,6 +1,7 @@
 !$Procedure      F_SRFNRM ( SRFNRM family tests )
 
       SUBROUTINE F_SRFNRM ( OK )
+      use pepper_legacy
       use pepper_inc_dla
       use pepper_inc_dsk02
       use pepper_inc_dskdsc
@@ -94,14 +95,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      PI
 
-      LOGICAL               EXISTS
-      LOGICAL               MATCHI
 
 !
 !     Local parameters
@@ -309,7 +303,7 @@
 !     Add an incomplete frame definition to the kernel pool;
 !     we'll need this later.
 !
-      CALL PIPOOL ( 'FRAME_BAD_NAME', 1, -666 )
+      CALL PIPOOL ( 'FRAME_BAD_NAME', 1, [-666] )
 
 !
 ! --- Case: ------------------------------------------------------

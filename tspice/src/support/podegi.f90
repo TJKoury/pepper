@@ -1,6 +1,7 @@
 !$Procedure      PODEGI ( Pod, end group, integer )
 
       SUBROUTINE PODEGI ( POD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -129,7 +130,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local parameters

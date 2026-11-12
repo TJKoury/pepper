@@ -1,6 +1,7 @@
 !$Procedure F_DASFR ( DASFR Test Family )
 
       SUBROUTINE F_DASFR ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract
@@ -86,7 +87,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Local Parameters

@@ -1,6 +1,7 @@
 !$Procedure F_ZZSPKFUN ( Family of tests for SPK function routines )
 
       SUBROUTINE F_ZZSPKFUN ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -103,12 +104,11 @@
 !
 !     Test Utility Functions
 !
-      EXTERNAL              F_ZZSPKGET
+      EXTERNAL F_ZZSPKGET
 
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      JYEAR
 
 !
 !     Local parameters
@@ -2296,6 +2296,7 @@
 !     via external calls:
 !
       SUBROUTINE F_ZZEXTSPK ( TRGCDE, ET, REF, INCTR, OUTCTR, STATE )
+      use pepper_legacy
       IMPLICIT NONE
 
       INTEGER               TRGCDE

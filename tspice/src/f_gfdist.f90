@@ -1,6 +1,7 @@
 !$Procedure F_GFDIST ( GFDIST family tests )
 
       SUBROUTINE F_GFDIST ( OK )
+      use pepper_legacy, pepper_legacy_pos => pos
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 
@@ -96,11 +97,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      VNORM
 
-      INTEGER               WNCARD
 
 
 !

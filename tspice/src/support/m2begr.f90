@@ -1,6 +1,7 @@
 !$Procedure      M2BEGR ( See if a word begins with a range template )
 
       SUBROUTINE M2BEGR ( STRING, BEG, END, A, B )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -145,7 +146,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               INTMAX
 
 !
 !     Local variables

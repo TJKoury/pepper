@@ -1,6 +1,7 @@
 !$Procedure  F_ZZASC2 ( Family of tests for ZZASCII )
 
       SUBROUTINE F_ZZASC2 ( OK )
+      use pepper_legacy
 
       IMPLICIT NONE
 
@@ -249,7 +250,6 @@
 !
 !     SPICELIB functions.
 !
-      LOGICAL               EXISTS
 
 !
 !     Open the test family.

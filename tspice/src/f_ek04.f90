@@ -1,6 +1,7 @@
 !$Procedure F_EK04 ( EK tests, subset 4 )
 
       SUBROUTINE F_EK04 ( OK )
+      use pepper_legacy
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -103,7 +104,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               ZZEKSCMP
 
 !
 !     Local Parameters

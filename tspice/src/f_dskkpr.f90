@@ -1,6 +1,7 @@
 !$Procedure F_DSKKPR ( DSK KEEPER tests )
 
       SUBROUTINE F_DSKKPR ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_dla
       use pepper_inc_dskdsc
 
@@ -90,7 +91,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
 
 !
 !     Test utility functions

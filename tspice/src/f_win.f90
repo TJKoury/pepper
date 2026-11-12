@@ -1,6 +1,7 @@
 !$Procedure F_WIN ( Window family tests )
 
       SUBROUTINE F_WIN ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -85,7 +86,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               POS
 
 !
 !     Local parameters

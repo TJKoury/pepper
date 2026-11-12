@@ -1,6 +1,7 @@
 !$Procedure  F_ZZASRYEL ( Test ray-ellipse angular separation routine )
 
       SUBROUTINE F_ZZASRYEL ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -20,8 +21,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VNORM
 
 !
 !     Local parameters

@@ -1,6 +1,7 @@
 !$Procedure F_SPK03 ( SPK type 3 tests )
 
       SUBROUTINE F_SPK03 ( OK )
+      use pepper_legacy
       use pepper_inc_spkrec
       use pepper_inc_spk03
 
@@ -93,7 +94,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters

@@ -1,6 +1,7 @@
 !$Procedure T_URAND2 ( Mirror T_URAND )
 
       DOUBLE PRECISION FUNCTION T_URAND2 ( IDUM )
+      use pepper_legacy
 
 ! $ Abstract
 !

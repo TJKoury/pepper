@@ -1,6 +1,7 @@
 !$Procedure ZZPSPYR ( Plate set, create pyramid )
 
       SUBROUTINE ZZPSPYR ( N, VRTCES, H, VOUT, POUT )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -128,12 +129,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOTG
 
-      INTEGER               SIZED
-      INTEGER               SIZEI
 
-      LOGICAL               RETURN
 
 !
 !     Local variables

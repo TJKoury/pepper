@@ -1,5 +1,6 @@
 
       SUBROUTINE T_CRCKDS ( SEGNO, INST, START, STOP, DESCR, GOTAV )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

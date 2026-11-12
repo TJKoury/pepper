@@ -1,6 +1,7 @@
 !$Procedure      M2BODY ( Determine whether or not a word is a body )
 
       LOGICAL FUNCTION M2BODY ( WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

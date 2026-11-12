@@ -1,6 +1,7 @@
 !$Procedure F_CKMETA ( Family of CKMETA tests )
 
       SUBROUTINE F_CKMETA ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

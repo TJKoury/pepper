@@ -1,6 +1,7 @@
 !$Procedure      PLTFRM ( Get platform attributes )
 
       SUBROUTINE PLTFRM ( ROOM, N, ATTR )
+      use pepper_legacy
 !~  NEXT
 !*    IMPLICIT NONE
 !~~

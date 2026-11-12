@@ -1,6 +1,7 @@
 !$Procedure F_STR2ET ( Family of tests for STR2ET )
 
       SUBROUTINE F_STR2ET ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -100,7 +101,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      UNITIM
 
 !
 !     Local Variables
@@ -130,7 +130,11 @@
       DOUBLE PRECISION      TAI
       DOUBLE PRECISION      GPS
       DOUBLE PRECISION      EB
+      DOUBLE PRECISION EB_A1 ( 1 )
+      EQUIVALENCE ( EB, EB_A1 )
       DOUBLE PRECISION      K
+      DOUBLE PRECISION K_A1 ( 1 )
+      EQUIVALENCE ( K, K_A1 )
       DOUBLE PRECISION      M     ( 0:1 )
 
       LOGICAL               FOUND
@@ -220,8 +224,8 @@
 !         Reverse order.
 !
 
-          CALL GDPOOL ( 'DELTET/EB', 1, 1, N, EB, FOUND )
-          CALL GDPOOL ( 'DELTET/K',  1, 1, N, K,  FOUND )
+          CALL GDPOOL ( 'DELTET/EB', 1, 1, N, EB_A1, FOUND )
+          CALL GDPOOL ( 'DELTET/K',  1, 1, N, K_A1,  FOUND )
           CALL GDPOOL ( 'DELTET/M',  1, 2, N, M,  FOUND )
 
           CALL CHCKXC ( .FALSE., ' ', OK )

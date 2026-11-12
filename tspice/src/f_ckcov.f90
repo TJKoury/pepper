@@ -1,6 +1,7 @@
 !$Procedure F_CKCOV ( CKCOV tests )
 
       SUBROUTINE F_CKCOV ( OK )
+      use pepper_legacy
       use pepper_inc_ck05
       use pepper_inc_ck06
       use pepper_inc_ckparam
@@ -114,11 +115,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      INTEGER               CARDI
 
-      LOGICAL               EXISTS
-      LOGICAL               ODD
 
 !
 !     Local parameters
@@ -228,6 +225,8 @@
       INTEGER               NREC
       INTEGER               NSTART
       INTEGER               PKTSIZ
+      INTEGER PKTSIZ_A1 ( 1 )
+      EQUIVALENCE ( PKTSIZ, PKTSIZ_A1 )
       INTEGER               SUBTPS ( MXMINI )
       INTEGER               SUBTYP
       INTEGER               TIKPER ( NINS )
@@ -960,7 +959,7 @@
 !
 !                 Add the current packet.
 !
-                  CALL CKW04A ( HANDLE, 1, PKTSIZ, PKTS, EPOCHS(K) )
+                  CALL CKW04A ( HANDLE, 1, PKTSIZ_A1, PKTS, EPOCHS(K) )
                   CALL CHCKXC ( .FALSE., ' ', OK )
 
 !

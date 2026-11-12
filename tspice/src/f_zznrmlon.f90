@@ -1,6 +1,7 @@
 !$Procedure F_ZZNRMLON ( ZZNRMLON tests )
 
       SUBROUTINE F_ZZNRMLON ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -89,8 +90,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      TWOPI
 !
 !     Local Parameters
 !

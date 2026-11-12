@@ -1,6 +1,7 @@
 !$Procedure      CMMORE ( Command Loop---More Commands)
 
       LOGICAL  FUNCTION CMMORE ( COMMND )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -92,8 +93,6 @@
 !-&
 !     SPICELIB Functions
 !
-      INTEGER               RTRIM
-      LOGICAL               NECHR
 
 !
 !     Local Variables.

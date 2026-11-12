@@ -1,6 +1,7 @@
 !$Procedure      F_REFCHG ( Family of tests for REFCHG )
 
       SUBROUTINE F_REFCHG ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       IMPLICIT NONE
 
       LOGICAL               OK

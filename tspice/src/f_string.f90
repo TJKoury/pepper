@@ -1,6 +1,7 @@
 !$Procedure F_STRING ( Family of tests for string routines )
 
       SUBROUTINE F_STRING ( OK )
+      use pepper_legacy
 
       IMPLICIT NONE
 
@@ -79,7 +80,6 @@
 !
 !     Test Utility Functions
 !
-      INTEGER               LASTNB
 
 !
 !     SPICELIB Functions

@@ -1,6 +1,7 @@
 !$Procedure F_ZZGFRRU ( ZZGFRRU family tests )
 
       SUBROUTINE F_ZZGFRRU ( OK )
+      use pepper_legacy
       use pepper_inc_zzabcorr
       use pepper_inc_gf
 

@@ -4,6 +4,7 @@
       SUBROUTINE SBGET_1 ( NAME, NAMES, &
                                PTRS, &
                                BUFFER, STR, POS )
+      use pepper_legacy, pepper_legacy_pos => pos
       IMPLICIT NONE
 
 
@@ -132,9 +133,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      INTEGER               BSRCHC
-      LOGICAL               RETURN
 
 !
 !     Local variables

@@ -1,6 +1,7 @@
 !$Procedure F_ZZCNQUAD ( ZZCNQUAD tests )
 
       SUBROUTINE F_ZZCNQUAD ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -82,7 +83,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      TOUCHD
 
 !
 !     Local Parameters

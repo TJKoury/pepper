@@ -1,6 +1,7 @@
 !$Procedure      F_DPFMT ( Family of tests for DPFMT)
 
       SUBROUTINE F_DPFMT ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

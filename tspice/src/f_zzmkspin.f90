@@ -1,6 +1,7 @@
 !$Procedure      F_ZZMKSPIN ( Test ZZMKSPIN )
 
       SUBROUTINE F_ZZMKSPIN ( OK )
+      use pepper_legacy
       use pepper_inc_dsk02
 
 ! $ Abstract
@@ -88,11 +89,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPMAX
-      DOUBLE PRECISION      DPMIN
 
-      INTEGER               ISRCHI
-      INTEGER               ZZVOX2ID
 
 !
 !     Local parameters

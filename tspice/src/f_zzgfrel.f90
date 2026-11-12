@@ -1,6 +1,7 @@
 !$Procedure      F_ZZGFREL ( Test ZZGFREL )
 
       SUBROUTINE F_ZZGFREL ( OK )
+      use pepper_legacy
       use pepper_inc_gf
 
 ! $ Abstract
@@ -92,25 +93,16 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
 
-      INTEGER               WNCARD
 
-      LOGICAL               GFBAIL
 
 !
 !     External routines
 !
-      EXTERNAL              GFBAIL
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPF
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFSTEP
-      EXTERNAL              T_ZZGFREL_DEC
-      EXTERNAL              T_ZZGFREL_GET
-      EXTERNAL              T_ZZGFREL_LT
-      EXTERNAL              T_ZZGFREL_UP
+      EXTERNAL T_ZZGFREL_DEC
+      EXTERNAL T_ZZGFREL_GET
+      EXTERNAL T_ZZGFREL_LT
+      EXTERNAL T_ZZGFREL_UP
 
 
 !
@@ -4243,6 +4235,7 @@
 !     Utility package umbrella:
 !
       SUBROUTINE T_ZZGFREL_UTIL ( F, ET, REF, VALUE, DECRES, LSSTHN )
+      use pepper_legacy
       IMPLICIT NONE
 
       CHARACTER*(*)         F

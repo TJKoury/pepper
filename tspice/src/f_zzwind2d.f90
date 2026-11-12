@@ -1,6 +1,7 @@
 !$Procedure      F_ZZWIND2D ( Test ZZWIND2D )
 
       SUBROUTINE F_ZZWIND2D ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
@@ -87,9 +88,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
 
-      INTEGER               ZZWIND2D
 
 !
 !     Local parameters

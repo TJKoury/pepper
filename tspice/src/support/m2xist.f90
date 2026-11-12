@@ -1,6 +1,7 @@
 !$Procedure      M2XIST ( META/2 --- does a named template word exist )
 
       LOGICAL FUNCTION M2XIST ( NAME )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

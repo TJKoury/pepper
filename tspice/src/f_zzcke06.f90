@@ -1,6 +1,7 @@
 !$Procedure      F_ZZCKE06 ( Family of tests for ZZCKE06 )
 
       SUBROUTINE F_ZZCKE06 ( OK )
+      use pepper_legacy
       use pepper_inc_ckparam
       use pepper_inc_ck06
 
@@ -93,10 +94,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      BRCKTD
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      VDOTG
 
 !
 !     Local parameters

@@ -1,6 +1,7 @@
 !$Procedure F_SWAPAI ( Test the SPICELIB routine SWAPAI )
 
       SUBROUTINE F_SWAPAI ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -293,6 +294,7 @@
 !     This routine does no error checking.
 !
       SUBROUTINE T_SWAPAI ( SIZE, N, LOCN, M, LOCM, ARRAY, WORK )
+      use pepper_legacy
       IMPLICIT NONE
 
       INTEGER               SIZE

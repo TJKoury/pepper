@@ -1,6 +1,7 @@
 !$Procedure F_GFPOSC ( GFPOSC family tests )
 
       SUBROUTINE F_GFPOSC ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
       use pepper_inc_gf
       use pepper_inc_zzabcorr
 
@@ -107,10 +108,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      RPD
 
-      INTEGER               WNCARD
 
 
 !

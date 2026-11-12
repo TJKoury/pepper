@@ -1,6 +1,7 @@
 !$Procedure ZZPSXFRM ( Plate set, transform )
 
       SUBROUTINE ZZPSXFRM ( V1, XFORM, VOUT )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -101,9 +102,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      INTEGER               SIZED
-      LOGICAL               RETURN
 
 
       INTEGER               CV1

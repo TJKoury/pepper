@@ -2,6 +2,7 @@
 
       SUBROUTINE CHANGU ( ANGLE, LENGTH, TIME, MASS, CHARGE, IN, &
                           OUT,   ERROR )
+      use pepper_legacy, pepper_legacy_ident => ident
 
 ! $ Abstract
 !
@@ -247,9 +248,6 @@
 !
 !     SPICELIB functions.
 !
-      INTEGER               BSRCHC
-      INTEGER               LASTNB
-      EXTERNAL              SCAN
 !
 !     Local Parameters
 !

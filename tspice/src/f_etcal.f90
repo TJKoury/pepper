@@ -1,6 +1,7 @@
 !$Procedure      F_ETCAL ( Family of tests for ETCAL )
 
       SUBROUTINE F_ETCAL  ( OK )
+      use pepper_legacy
 
       IMPLICIT NONE
       LOGICAL               OK
@@ -16,8 +17,6 @@
 !
 !-&
 
-      DOUBLE PRECISION      J2000
-      DOUBLE PRECISION      SPD
 
       DOUBLE PRECISION      ET
       DOUBLE PRECISION      ET2

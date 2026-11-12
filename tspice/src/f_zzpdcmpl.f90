@@ -1,6 +1,7 @@
 !$Procedure F_ZZPDCMPL ( ZZPDCMPL tests )
 
       SUBROUTINE F_ZZPDCMPL ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -82,9 +83,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      RPD
 
 !
 !     Local Parameters

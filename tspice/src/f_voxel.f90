@@ -1,6 +1,7 @@
 !$Procedure F_VOXEL ( VOXEL utility tests )
 
       SUBROUTINE F_VOXEL ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -90,8 +91,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               ZZVOX2ID
-      LOGICAL               ZZINGRD
 
 !
 !     Local Parameters

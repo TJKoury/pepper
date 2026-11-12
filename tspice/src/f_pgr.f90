@@ -1,6 +1,7 @@
 !$Procedure      F_PGR ( Planetographic coordinate tests )
 
       SUBROUTINE F_PGR ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -91,13 +92,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      RPD
-      DOUBLE PRECISION      TWOPI
 
-      LOGICAL               EQSTR
-      LOGICAL               VZERO
-      LOGICAL               VZEROG
 
 !
 !     Local parameters
@@ -670,7 +665,7 @@
 !
 !     Overwrite Mars' PM coefficients in the kernel pool.
 !
-      CALL PDPOOL ( 'BODY499_PM', 1, 0.D0 )
+      CALL PDPOOL ( 'BODY499_PM', 1, [0.D0] )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL RECPGR ( 'MARS', RECTAN(1,1), RE, F, LON, LAT, ALT )
@@ -1037,7 +1032,7 @@
 !
 !     Overwrite Mars' PM coefficients in the kernel pool.
 !
-      CALL PDPOOL ( 'BODY499_PM', 1, 0.D0 )
+      CALL PDPOOL ( 'BODY499_PM', 1, [0.D0] )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL DPGRDR ( 'MARS', &

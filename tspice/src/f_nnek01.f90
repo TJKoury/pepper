@@ -1,6 +1,7 @@
 !$Procedure F_NNEK01 ( EK test, subset 1, non-native )
 
       SUBROUTINE F_NNEK01 ( OK )
+      use pepper_legacy
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -96,10 +97,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               EKNSEG
-      INTEGER               LASTNB
 
-      LOGICAL               EXISTS
 
 !
 !     Local Parameters
@@ -598,7 +596,7 @@
 !
 !        Fetch the value for d_col_1 from the current row.
 !
-         CALL EKGD ( SELIDX, ROWNO, ELTIDX, DDATA, ISNULL, FOUND )
+         CALL EKGD ( SELIDX, ROWNO, ELTIDX, DDATA(1), ISNULL, FOUND )
 
          CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -652,7 +650,7 @@
 !
 !        Fetch the value for i_col_1 from the current row.
 !
-         CALL EKGI ( SELIDX, ROWNO, ELTIDX, IDATA, ISNULL, FOUND )
+         CALL EKGI ( SELIDX, ROWNO, ELTIDX, IDATA(1), ISNULL, FOUND )
 
          CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -706,7 +704,7 @@
 !
 !        Fetch the value for t_col_1 from the current row.
 !
-         CALL EKGD ( SELIDX, ROWNO, ELTIDX, TDATA, ISNULL, FOUND )
+         CALL EKGD ( SELIDX, ROWNO, ELTIDX, TDATA(1), ISNULL, FOUND )
 
          CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -910,7 +908,7 @@
                   ELSE IF ( DTYPE .EQ. 'DP' ) THEN
 
                      CALL EKGD ( SELIDX, ROWNO,  ELTIDX, &
-                                 DDATA,  ISNULL, FOUND  )
+                                 DDATA(1),  ISNULL, FOUND  )
 
 !
 !                    Make sure no error was signaled.
@@ -941,7 +939,7 @@
                   ELSE IF ( DTYPE .EQ. 'INT' ) THEN
 
                      CALL EKGI ( SELIDX, ROWNO,  ELTIDX, &
-                                 IDATA,  ISNULL, FOUND  )
+                                 IDATA(1),  ISNULL, FOUND  )
 
 !
 !                    Make sure no error was signaled.
@@ -974,7 +972,7 @@
 !
 
                      CALL EKGD ( SELIDX, ROWNO,  ELTIDX, &
-                                 DDATA,  ISNULL, FOUND  )
+                                 DDATA(1),  ISNULL, FOUND  )
 
 !
 !                    Make sure no error was signaled.
@@ -1059,7 +1057,7 @@
 !     Add the column to the table.
 !
       CALL EKACLI ( HANDLE,  SEGNO,   'COL_1',  IVALS, &
-                    1,       NLFLGS,  RCPTRS,   WKINDX )
+                    [1],       NLFLGS,  RCPTRS,   WKINDX )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -1144,7 +1142,7 @@
 !     Add the column to the table.
 !
       CALL EKACLI ( EK2HAN,  SEGNO,   'COL_1',  IVALS, &
-                    1,       NLFLGS,  RCPTRS,   WKINDX )
+                    [1],       NLFLGS,  RCPTRS,   WKINDX )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 
@@ -1207,7 +1205,7 @@
 !     Add the column to the table.
 !
       CALL EKACLI ( EK2HAN,  SEGNO,   'COL_2',  IVALS, &
-                    1,       NLFLGS,  RCPTRS,   WKINDX )
+                    [1],       NLFLGS,  RCPTRS,   WKINDX )
 
       CALL CHCKXC ( .FALSE., ' ', OK )
 

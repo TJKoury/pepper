@@ -1,4 +1,5 @@
       SUBROUTINE NSPLG  ( COMMND, HIDDEN, VSTYLE, HSTYLE, CDELIM )
+      use pepper_legacy
 !
 ! $ Version
 !
@@ -24,7 +25,7 @@
       CHARACTER*(*)         HSTYLE
       CHARACTER*(*)         CDELIM
 
-      EXTERNAL              NSPWLN
+      EXTERNAL NSPWLN
 
 
       INCLUDE              'commdpar.inc'

@@ -1,6 +1,7 @@
 !$Procedure      F_SCTRAN ( Test SCLK name/ID translation )
 
       SUBROUTINE F_SCTRAN ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

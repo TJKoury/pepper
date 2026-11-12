@@ -1,6 +1,7 @@
 !$Procedure      M2INTS (Meta 2 --- initialize syntax table)
 
       SUBROUTINE M2INTS ( NSYN, SYNKEY, SYNPTR, SYNVAL )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -138,7 +139,6 @@
 !
 !     Spicelib functions.
 !
-      INTEGER               CARDC
 
 !
 !     Local variables.

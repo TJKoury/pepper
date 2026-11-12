@@ -1,6 +1,7 @@
 !$Procedure F_CHBSHV ( Chebyshev expansion tests )
 
       SUBROUTINE F_CHBSHV ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

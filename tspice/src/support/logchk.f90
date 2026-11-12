@@ -1,6 +1,7 @@
 !$Procedure      LOGCHK ( Log file check )
 
       SUBROUTINE LOGCHK ( DEFALT, USENAM, DOLOG )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -95,7 +96,6 @@
 !
 !     Spicelib Functions.
 !
-      LOGICAL               EQSTR
 
       INTEGER               LONGSZ
       PARAMETER           ( LONGSZ = 900 )

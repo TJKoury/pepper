@@ -1,6 +1,7 @@
 !$Procedure      F_CHGIRF (Family of tests for CHGIRF )
 
       SUBROUTINE F_CHGIRF ( OK )
+      use pepper_legacy, pepper_legacy_rotate => rotate
       IMPLICIT NONE
 
       LOGICAL               OK
@@ -61,7 +62,6 @@
 !
 !     SPICELIB Functions
 !
-      INTEGER               CARDC
 
 !
 !     Local Variables

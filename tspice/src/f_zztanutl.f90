@@ -1,6 +1,7 @@
 !$Procedure F_ZZTANUTL ( ZZTANUTL/ZZTANGNT tests )
 
       SUBROUTINE F_ZZTANUTL ( OK )
+      use pepper_legacy
       use pepper_inc_zzdsk
 
 ! $ Abstract
@@ -105,15 +106,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      DPR
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VSEP
 
-      INTEGER               CARDD
 
-      LOGICAL               EXISTS
-      LOGICAL               ODD
 
 !
 !     Local Parameters
@@ -264,6 +258,8 @@
       INTEGER               TRGCDE
 
       LOGICAL               FOUND
+      LOGICAL FOUND_A1 ( 1 )
+      EQUIVALENCE ( FOUND, FOUND_A1 )
       LOGICAL               OCULTD
 
 
@@ -2842,7 +2838,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF, &
                    SRFLST,  ET,     FIXREF, 1, &
-                   VERTEX,  DIR,    NPT,    FOUND )
+                   VERTEX,  DIR,    NPT,    FOUND_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
@@ -3086,7 +3082,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF, &
                    SRFLST,  ET,     FIXREF, 1, &
-                   VERTEX,  DIR,    NPT,    FOUND )
+                   VERTEX,  DIR,    NPT,    FOUND_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
@@ -3265,7 +3261,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF, &
                    SRFLST,  ET,     FIXREF, 1, &
-                   VERTEX,  DIR,    NPT,    FOUND )
+                   VERTEX,  DIR,    NPT,    FOUND_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
@@ -3510,7 +3506,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF, &
                    SRFLST,  ET,     FIXREF, 1, &
-                   VERTEX,  DIR,    NPT,    FOUND )
+                   VERTEX,  DIR,    NPT,    FOUND_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
@@ -3820,7 +3816,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF, &
                    SRFLST,  ET,     FIXREF, 1, &
-                   VERTEX,  DIR,    NPT,    FOUND )
+                   VERTEX,  DIR,    NPT,    FOUND_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
@@ -4180,7 +4176,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF, &
                    SRFLST,  ET,     FIXREF, 1, &
-                   VERTEX,  DIR,    NPT,    FOUND )
+                   VERTEX,  DIR,    NPT,    FOUND_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
@@ -4486,7 +4482,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF, &
                    SRFLST,  ET,     FIXREF, 1, &
-                   VERTEX,  DIR,    NPT,    FOUND )
+                   VERTEX,  DIR,    NPT,    FOUND_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
@@ -4846,7 +4842,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF, &
                    SRFLST,  ET,     FIXREF, 1, &
-                   VERTEX,  DIR,    NPT,    FOUND )
+                   VERTEX,  DIR,    NPT,    FOUND_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
@@ -5159,7 +5155,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF, &
                    SRFLST,  ET,     FIXREF, 1, &
-                   VERTEX,  DIR,    NPT,    FOUND )
+                   VERTEX,  DIR,    NPT,    FOUND_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
@@ -5517,7 +5513,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF, &
                    SRFLST,  ET,     FIXREF, 1, &
-                   VERTEX,  DIR,    NPT,    FOUND )
+                   VERTEX,  DIR,    NPT,    FOUND_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
@@ -5824,7 +5820,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF, &
                    SRFLST,  ET,     FIXREF, 1, &
-                   VERTEX,  DIR,    NPT,    FOUND )
+                   VERTEX,  DIR,    NPT,    FOUND_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
@@ -6182,7 +6178,7 @@
 
       CALL DSKXV ( .FALSE., TARGET, NSURF, &
                    SRFLST,  ET,     FIXREF, 1, &
-                   VERTEX,  DIR,    NPT,    FOUND )
+                   VERTEX,  DIR,    NPT,    FOUND_A1 )
       CALL CHCKXC ( .FALSE., ' ', OK )
 
       CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
@@ -6444,7 +6440,7 @@
 
             CALL DSKXV ( .FALSE., TARGET, NSURF, &
                          SRFLST,  ET,     FIXREF, 1, &
-                         VERTEX,  DIR,    NPT,    FOUND )
+                         VERTEX,  DIR,    NPT,    FOUND_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
@@ -6678,7 +6674,7 @@
 
             CALL DSKXV ( .FALSE., TARGET, NSURF, &
                          SRFLST,  ET,     FIXREF, 1, &
-                         VERTEX,  DIR,    NPT,    FOUND )
+                         VERTEX,  DIR,    NPT,    FOUND_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )
@@ -6957,7 +6953,7 @@
 
             CALL DSKXV ( .FALSE., TARGET, NSURF, &
                          SRFLST,  ET,     FIXREF, 1, &
-                         VERTEX,  DIR,    NPT,    FOUND )
+                         VERTEX,  DIR,    NPT,    FOUND_A1 )
             CALL CHCKXC ( .FALSE., ' ', OK )
 
             CALL CHCKSL ( 'FOUND', FOUND, .TRUE., OK )

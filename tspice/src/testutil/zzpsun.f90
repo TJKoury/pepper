@@ -1,6 +1,7 @@
 !$Procedure ZZPSUN ( Plate set union )
 
       SUBROUTINE ZZPSUN ( V1, P1, V2, P2, VOUT, POUT )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -136,11 +137,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDD
-      INTEGER               CARDI
-      INTEGER               SIZED
-      INTEGER               SIZEI
-      LOGICAL               RETURN
 
 !
 !     Local variables

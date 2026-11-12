@@ -6,6 +6,7 @@
                             USRVRT, USRPLT, MAKVTL, USEPAD, NPOLYV, &
                             NCROSS, R,      RCROSS, CENTER, NORMAL, &
                             DSK                                     )
+      use pepper_legacy
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
 
@@ -213,21 +214,13 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      HALFPI
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      TWOPI
 
-      INTEGER               CARDD
-      INTEGER               CARDI
 
-      LOGICAL               EXISTS
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     EXTERNAL routines
 !
-      EXTERNAL              T_TORCRV
+      EXTERNAL T_TORCRV
 
 !
 !     Local parameters

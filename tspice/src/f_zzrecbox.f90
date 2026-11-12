@@ -1,6 +1,7 @@
 !$Procedure F_ZZRECBOX ( ZZRECBOX tests )
 
       SUBROUTINE F_ZZRECBOX ( OK )
+      use pepper_legacy
       use pepper_inc_dskdsc
       use pepper_inc_dsktol
 

@@ -1,6 +1,7 @@
 !$Procedure F_ZZDDHNFC ( ZZDDHNFC tests )
 
       SUBROUTINE F_ZZDDHNFC ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

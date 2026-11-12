@@ -1,6 +1,7 @@
 !$Procedure F_DDHNFO ( ZZDDHNFO Test Family )
 
       SUBROUTINE F_DDHNFO ( OK )
+      use pepper_legacy
       use pepper_inc_zzddhman
 
 ! $ Abstract

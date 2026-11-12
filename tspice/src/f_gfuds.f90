@@ -1,6 +1,7 @@
 !$Procedure F_GFUDS ( GFUDS family tests )
 
       SUBROUTINE F_GFUDS ( OK )
+      use pepper_legacy, pepper_legacy_posr => posr
       use pepper_inc_gf
 
 ! $ Abstract
@@ -93,13 +94,10 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      SPD
-      DOUBLE PRECISION      DVNORM
-      INTEGER               WNCARD
 
-      EXTERNAL              GFQ
-      EXTERNAL              GFDECR
-      EXTERNAL              GFRRDC
+      EXTERNAL GFQ
+      EXTERNAL GFDECR
+      EXTERNAL GFRRDC
 
 !
 !     Local parameters
@@ -680,6 +678,7 @@
 !$Procedure GFQ ( Scalar function - range rate )
 
       SUBROUTINE GFQ ( ET, VALUE )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -764,7 +763,6 @@
 
       DOUBLE PRECISION      STATE ( 6 )
       DOUBLE PRECISION      LT
-      DOUBLE PRECISION      DVNORM
 
 !
 !     Initialization. Retrieve the vector from the Sun to
@@ -792,6 +790,7 @@
 !$Procedure GFDECR ( Derivative numeric )
 
       SUBROUTINE GFDECR ( UDFUNC, ET, BOOL )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -811,7 +810,7 @@
 
       IMPLICIT NONE
 
-      EXTERNAL              UDFUNC
+      EXTERNAL UDFUNC
 
       DOUBLE PRECISION      ET
       LOGICAL               BOOL
@@ -891,6 +890,7 @@
 !$Procedure GFRRDC ( Derivative analytic/numeric )
 
       SUBROUTINE GFRRDC ( UDFUNC, ET, DECRES )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -910,7 +910,7 @@
 
       IMPLICIT NONE
 
-      EXTERNAL              UDFUNC
+      EXTERNAL UDFUNC
       DOUBLE PRECISION      ET
       LOGICAL               DECRES
 
@@ -969,7 +969,6 @@
 !
 !     SPICELIB functions.
 !
-      DOUBLE PRECISION      VDOT
 
 
       INTEGER               N

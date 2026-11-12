@@ -1,6 +1,7 @@
 !$Procedure F_CKFROT ( Test Family for CKFROT )
 
       SUBROUTINE F_CKFROT ( OK )
+      use pepper_legacy, pepper_legacy_frame => frame
 
 ! $ Abstract
 !

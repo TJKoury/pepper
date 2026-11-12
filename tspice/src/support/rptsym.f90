@@ -1,4 +1,5 @@
       SUBROUTINE RPTSYM ( ID, COMP, STRING, WDTH, NAME, DEF, VALUE )
+      use pepper_legacy
 
       IMPLICIT NONE
 
@@ -39,7 +40,6 @@
 !                fully_expanded_value.
 !
 
-      INTEGER               RTRIM
 
       INTEGER               WDSIZE
       PARAMETER           ( WDSIZE = 32 )

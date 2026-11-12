@@ -1,6 +1,7 @@
 !$Procedure F_LAGRNG ( Lagrange interpolation )
 
       SUBROUTINE F_LAGRNG ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -107,8 +108,6 @@
 !
 !     SPICELIB Functions
 !
-      DOUBLE PRECISION      LGRESP
-      DOUBLE PRECISION      LGRINT
 
 !
 !     Local Parameters

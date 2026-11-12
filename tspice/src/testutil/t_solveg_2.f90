@@ -1,6 +1,7 @@
 !$Procedure      T_SOLVEG_2 ( Solve a system of algebraic equations )
 
       SUBROUTINE T_SOLVEG_2 ( B, DIM, NEQ, A, X, FOUND )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -154,7 +155,6 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               RETURN
 !
 !     Local parameters
 !

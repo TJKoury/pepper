@@ -1,6 +1,7 @@
 !$Procedure M2GETA ( META/2 --- get all of a named word )
 
       SUBROUTINE M2GETA ( NAME, STRING, FOUND, WORD )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract

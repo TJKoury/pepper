@@ -1,6 +1,7 @@
 !$Procedure F_EDPNT ( EDPNT tests )
 
       SUBROUTINE F_EDPNT ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -92,7 +93,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
 
 !
 !     Local Parameters

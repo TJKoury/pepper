@@ -1,6 +1,7 @@
 !$Procedure F_ZZELNAXX ( ZZELNAXX tests )
 
       SUBROUTINE F_ZZELNAXX ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -79,7 +80,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
 
 !
 !     Local Parameters

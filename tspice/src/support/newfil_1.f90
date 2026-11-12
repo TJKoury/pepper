@@ -1,6 +1,7 @@
 !$Procedure      NEWFIL_1 ( Generate a filename that does not exist )
 
       SUBROUTINE NEWFIL_1 ( PATTRN, FILE )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -158,8 +159,6 @@
 !
 !     Spicelib routines.
 !
-      LOGICAL               EXISTS
-      LOGICAL               RETURN
 !
 !     Local Parameters
 !

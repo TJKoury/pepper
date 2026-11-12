@@ -1,6 +1,7 @@
 !$Procedure      M2BODTRN ( Body name and code translation )
 
       SUBROUTINE M2BODTRN ( NAME, CODE, FOUND )
+      use pepper_legacy
 
       IMPLICIT NONE
 
@@ -282,14 +283,10 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
-      LOGICAL               EQSTR
 
 !
 !     Functions
 !
-      INTEGER               BSCHOC
-      INTEGER               BSCHOI
 
 !
 !     The parameters here are for ease in maintaining the

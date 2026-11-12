@@ -1,6 +1,7 @@
 !$Procedure F_PLN ( SPICE plane constructor/decomposition tests )
 
       SUBROUTINE F_PLN ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -90,9 +91,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
 
 !
 !     Local Parameters

@@ -1,6 +1,7 @@
 !$Procedure  F_ZZGFRELX ( Test ZZGFRELX )
 
       SUBROUTINE F_ZZGFRELX ( OK )
+      use pepper_legacy
       use pepper_inc_gf
 
 ! $ Abstract
@@ -95,24 +96,15 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
 
-      INTEGER               WNCARD
 
-      LOGICAL               GFBAIL
 
 !
 !     External routines
 !
-      EXTERNAL              GFBAIL
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPF
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFSTEP
-      EXTERNAL              T_DEC
-      EXTERNAL              T_GET
-      EXTERNAL              T_LT
+      EXTERNAL T_DEC
+      EXTERNAL T_GET
+      EXTERNAL T_LT
 
 
 !
@@ -4133,6 +4125,7 @@
 
       SUBROUTINE T_RELX ( UDFUNC, F, ET, VALUE, &
                           DECRES, LSSTHN )
+      use pepper_legacy
       use pepper_inc_zzholdd
 
 ! $ Abstract
@@ -4152,7 +4145,7 @@
       IMPLICIT NONE
 
 
-      EXTERNAL              UDFUNC
+      EXTERNAL UDFUNC
 
       CHARACTER*(*)         F
       DOUBLE PRECISION      ET

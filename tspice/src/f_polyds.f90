@@ -1,6 +1,7 @@
 !$Procedure F_POLYDS ( POLYDS tests )
 
       SUBROUTINE F_POLYDS ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !

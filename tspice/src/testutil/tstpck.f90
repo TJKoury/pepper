@@ -1,6 +1,7 @@
 !$Procedure      TSTPCK (Create at test CK of type 3 and SCLK file)
 
       SUBROUTINE TSTPCK ( NAMEPC, LOADPC, KEEPPC )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -121,7 +122,6 @@
 !
 !     Spicelib Functions
 !
-      INTEGER               RTRIM
 
 !
 !     Test Utility Functions

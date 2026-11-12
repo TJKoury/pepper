@@ -3,6 +3,7 @@
 !
       SUBROUTINE GETOPT_2 ( TITLE,  TINDNT, NOPT, OPTNAM, OPTTXT, &
                             OINDNT, OPTION )
+      use pepper_legacy
       IMPLICIT NONE
 
 !
@@ -138,11 +139,7 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               RTRIM
-      INTEGER               ISRCHC
-      INTEGER               NBWID
 
-      LOGICAL               RETURN
 !
 !     Local variables
 !

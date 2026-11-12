@@ -3,6 +3,7 @@
       SUBROUTINE T_SINCPT ( METHOD,  TARGET,  ET,      FIXREF, &
                             ABCORR,  OBSRVR,  DREF,    DVEC, &
                             SPOINT,  TRGEPC,  SRFVEC,  FOUND  )
+      use pepper_legacy
       use pepper_inc_frmtyp
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
@@ -1195,17 +1196,7 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      CLIGHT
-      DOUBLE PRECISION      DASINE
-      DOUBLE PRECISION      TOUCHD
-      DOUBLE PRECISION      VDIST
-      DOUBLE PRECISION      VNORM
-      DOUBLE PRECISION      VSEP
 
-      LOGICAL               EQSTR
-      LOGICAL               FAILED
-      LOGICAL               RETURN
-      LOGICAL               VZERO
 
 !
 !     Local parameters

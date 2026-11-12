@@ -1,6 +1,7 @@
 !$Procedure      MAKSTR (Make String )
 
       SUBROUTINE MAKSTR ( PATTRN, THIS, NEXT )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -238,7 +239,6 @@
 !
 !     Spicelib functions
 !
-      INTEGER               RTRIM
 
 !
 !     Local Varialbes

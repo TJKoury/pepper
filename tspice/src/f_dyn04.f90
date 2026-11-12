@@ -1,6 +1,7 @@
 !$Procedure F_DYN04 ( Dynamic Frame Test Family 04 )
 
       SUBROUTINE F_DYN04 ( OK )
+      use pepper_legacy
       use pepper_inc_zzdyn
 
 ! $ Abstract
@@ -213,13 +214,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      JYEAR
-      DOUBLE PRECISION      VNORMG
 
-      INTEGER               PRODAI
-      INTEGER               RTRIM
 
-      LOGICAL               EQSTR
 
 !
 !     Local Parameters

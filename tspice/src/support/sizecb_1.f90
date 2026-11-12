@@ -2,6 +2,7 @@
 !$Procedure SIZECB ( Size of character buffer )
 
       INTEGER FUNCTION SIZECB_1 ( BUFFER )
+      use pepper_legacy
       IMPLICIT NONE
 
 
@@ -107,7 +108,6 @@
 !     SPICELIB functions
 !
       INTEGER               DIMCB_1
-      LOGICAL               RETURN
 
 !
 !     Give the function some initial value.  Zero seems as good as

@@ -1,6 +1,7 @@
 !$Procedure F_LPARSE ( SPICE list parser tests )
 
       SUBROUTINE F_LPARSE ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -85,8 +86,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               CARDC
-      INTEGER               RTRIM
 
 !
 !     Local Parameters

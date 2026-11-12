@@ -1,6 +1,7 @@
 !$Procedure F_TLE ( Family of tests for TLE evaluator )
 
       SUBROUTINE F_TLE ( OK )
+      use pepper_legacy
       use pepper_inc_zzsgp4
 
 ! $ Abstract

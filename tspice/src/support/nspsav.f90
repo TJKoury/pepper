@@ -1,4 +1,5 @@
       SUBROUTINE NSPSAV  ( FILE, ERROR )
+      use pepper_legacy
 !
 !     This routine opens the file specified by FILE for saving all
 !     screen output.

@@ -1,6 +1,7 @@
 !$Procedure F_QDERIV ( QDERIV tests )
 
       SUBROUTINE F_QDERIV ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -95,7 +96,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      PI
 
 !
 !     Local Parameters

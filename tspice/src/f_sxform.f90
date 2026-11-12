@@ -1,6 +1,7 @@
 !$Procedure      F_SXFORM ( Family of tests for SXFORM )
 
       SUBROUTINE F_SXFORM ( OK )
+      use pepper_legacy
       IMPLICIT NONE
 
       LOGICAL               OK

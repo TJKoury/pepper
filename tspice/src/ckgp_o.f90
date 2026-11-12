@@ -1,6 +1,7 @@
 !$Procedure      CKGP_O ( C-kernel, get pointing )
 
       SUBROUTINE CKGP_O ( INST, SCLKDP, TOL, REF, CMAT, CLKOUT, FOUND )
+      use pepper_legacy
       use pepper_inc_frmtyp
 
 ! $ Abstract
@@ -708,9 +709,7 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               RETURN
 
-      LOGICAL               FAILED
 
 !
 !     Local parameters

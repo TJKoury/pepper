@@ -1,6 +1,7 @@
 !$Procedure F_EK03 ( EK tests, subset 3 )
 
       SUBROUTINE F_EK03 ( OK )
+      use pepper_legacy
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -98,7 +99,6 @@
 !
 !     SPICELIB functions
 !
-      INTEGER               EKNSEG
 
 !
 !     Local Parameters

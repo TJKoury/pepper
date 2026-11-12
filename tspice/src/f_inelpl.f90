@@ -1,6 +1,7 @@
 !$Procedure F_INELPL ( Ellipse/plane intersection routine tests )
 
       SUBROUTINE F_INELPL ( OK )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -793,6 +794,7 @@
 !     Supporting function T_ISPXEL
 !
       LOGICAL FUNCTION T_ISPXEL ( ELLIPS, PLANE, N, XPTS, OK )
+      use pepper_legacy
       IMPLICIT NONE
 !
 !     Test whether a set of points constitute the intersection of a
@@ -813,8 +815,6 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      VDOT
-      DOUBLE PRECISION      VNORM
 
 !
 !     Local parameters

@@ -1,6 +1,7 @@
 !$Procedure KILFIL ( Kill a file  )
 
       SUBROUTINE KILFIL ( FILNAM )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -118,8 +119,6 @@
 !
 !     Spicelib Routines
 !
-      LOGICAL               RETURN
-      LOGICAL               EXISTS
 
 !
 !     Local Variables

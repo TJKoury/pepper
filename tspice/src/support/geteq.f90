@@ -1,6 +1,7 @@
 
 
       SUBROUTINE GETEQ ( LETTER )
+      use pepper_legacy
       IMPLICIT NONE
 
       CHARACTER*(1)         LETTER

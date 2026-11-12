@@ -1,6 +1,7 @@
 !$Procedure      F_GFFOVE ( Test GFFOVE )
 
       SUBROUTINE F_GFFOVE ( OK )
+      use pepper_legacy
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
@@ -95,11 +96,8 @@
 !
 !     SPICELIB functions
 !
-      DOUBLE PRECISION      SPD
 
-      INTEGER               WNCARD
 
-      LOGICAL               GFBAIL
 
 
 !
@@ -115,12 +113,6 @@
 !        - Progress report update:                GFREPU
 !        - Search step size "get" function:       GFSTEP
 !
-      EXTERNAL              GFBAIL
-      EXTERNAL              GFREFN
-      EXTERNAL              GFREPF
-      EXTERNAL              GFREPI
-      EXTERNAL              GFREPU
-      EXTERNAL              GFSTEP
 
 
 !

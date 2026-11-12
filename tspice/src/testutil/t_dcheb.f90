@@ -1,6 +1,7 @@
 !$Procedure      T_DCHEB ( Numeric derivative from Chebyshev fit )
 
       SUBROUTINE T_DCHEB ( FUNC, X, DELTA, NTERMS, NRTAIN, F, DF )
+      use pepper_legacy
       IMPLICIT NONE
 
 ! $ Abstract
@@ -22,7 +23,7 @@
 ! $ Declarations
 
       DOUBLE PRECISION      FUNC
-      EXTERNAL              FUNC
+      EXTERNAL FUNC
       DOUBLE PRECISION      X
       DOUBLE PRECISION      DELTA
       INTEGER               NTERMS
@@ -171,8 +172,6 @@
 !
 !     SPICELIB functions
 !
-      LOGICAL               FAILED
-      LOGICAL               RETURN
 
 !
 !     Local parameters

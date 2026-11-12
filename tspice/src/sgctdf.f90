@@ -1,6 +1,7 @@
 !$Procedure SGCTDF ( Generic Segments Create Test DAF )
 
       SUBROUTINE SGCTDF ( FILE, ND, NI, VALUE, CASES, NCASE, HANDLE )
+      use pepper_legacy
 
 ! $ Abstract
 !
@@ -105,7 +106,6 @@
 !
 !     SPICELIB Functions
 !
-      LOGICAL               RETURN
 
 !
 !     Local Variables
@@ -164,7 +164,7 @@
 !
          DO J = 1, ( CASES(I) - 1 )
 
-            CALL DAFADA ( VALUE, 1 )
+            CALL DAFADA ( [VALUE], 1 )
 
          END DO
 
@@ -172,7 +172,7 @@
 !        Place the number of elements into the last entry in the array
 !        before ending it's creation.
 !
-         CALL DAFADA ( DBLE ( CASES(I) ), 1 )
+         CALL DAFADA ( [DBLE ( CASES(I) )], 1 )
 
          CALL DAFENA ( )
 
