@@ -1,4 +1,4 @@
-/* PepperyPy: the in-use flag of a Context (pepperypy_plan.md, "Contexts in
+/* PepperyPy: the in-use flag of a Context (plans/pepperypy_plan.md, "Contexts in
    Python"). A context may be entered again by the thread that is in it (a
    callback that makes queries), never by another thread at the same time. */
 #ifndef PEPPERYPY_GUARD_H

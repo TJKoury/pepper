@@ -1,4 +1,4 @@
-!> Tests past SPICELIB's fixed limits (limits.md): file names longer than
+!> Tests past SPICELIB's fixed limits (plans/limits.md): file names longer than
 !> 255 characters, more kernels than the 5000 (5300 through FURNSH) that
 !> SPICELIB's file tables held, the priority of SPK files after
 !> unloading, more DAFs written at once than DAFANA's 20, and comments
@@ -226,7 +226,7 @@ contains
    !> 5000 (file tables) and 5300 (KEEPER): all load and are found;
    !> unloading every other one leaves the others. (The bodies checked are
    !> a few around the old limits: the first query of a body reads the
-   !> summaries of every file loaded after its own, see limits.md.)
+   !> summaries of every file loaded after its own, see plans/limits.md.)
    subroutine test_many_spks()
       integer(ip), parameter :: n = 6000, first = 910001
       real(wp) :: state(6), lt, err

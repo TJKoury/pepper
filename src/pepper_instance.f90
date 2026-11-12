@@ -1720,7 +1720,7 @@ module pepper_instance
    ! <<< generated callbacks
 
    ! ------------------------------------------------------------------------
-   ! Programmatic ephemerides and frames (PEPPER; programmatic_plan.md,
+   ! Programmatic ephemerides and frames (PEPPER; plans/programmatic_plan.md,
    ! src/pepper_programmatic.f90)
    ! ------------------------------------------------------------------------
 
@@ -1837,7 +1837,7 @@ module pepper_instance
 
    interface
 
-      !> Add a programmatic ephemeris (PEPPER; programmatic_plan.md): the
+      !> Add a programmatic ephemeris (PEPPER; plans/programmatic_plan.md): the
       !> states of BODY relative to CENTER in FRAME come from PROVIDER (a copy
       !> of it is kept) at the epochs of [TBEG, TEND]. The body enters the SPK
       !> segment search as a file loaded now: it overrides the files loaded
@@ -1861,7 +1861,7 @@ module pepper_instance
          integer(ip), intent(in) :: body  !! the body's ID code
       end subroutine spice_remove_ephemeris
 
-      !> Add a programmatic frame (PEPPER; programmatic_plan.md): a frame of
+      !> Add a programmatic frame (PEPPER; plans/programmatic_plan.md): a frame of
       !> class 7 whose orientation comes from PROVIDER (a copy of it is kept).
       !> The frame's definition (name, ID code, class, center) is written into
       !> the kernel pool, so no frame kernel is needed. Adding a frame again

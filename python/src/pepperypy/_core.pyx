@@ -5,7 +5,7 @@ conversions between Python and PEPPER's C interface, callbacks,
 programmatic providers and prepared queries. The routines themselves are
 generated (tools/gen_capi.py) into the included .pxi files.
 
-See pepperypy_plan.md for the design.
+See plans/pepperypy_plan.md for the design.
 """
 
 cimport numpy as cnp

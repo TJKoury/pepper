@@ -1,6 +1,6 @@
 """Run SpiceyPy's own test suite (test_wrapper.py of the installed SpiceyPy)
 against PepperyPy, and summarize: the compatibility measure of
-pepperypy_plan.md.
+plans/pepperypy_plan.md.
 
     pixi run -e python py-test-spiceypy [-- pytest arguments]
 

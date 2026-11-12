@@ -1,5 +1,5 @@
 !> Containers that grow on demand, for the tables that SPICELIB sizes with
-!> fixed limits (see limits.md):
+!> fixed limits (see plans/limits.md):
 !>
 !> - `grow`: enlarge an allocatable array to hold at least a given number of
 !>   elements, keeping its contents (capacity doubles, so appending n

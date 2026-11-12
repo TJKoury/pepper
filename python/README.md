@@ -285,4 +285,4 @@ Fortran     PEPPER (pepper_spice, pepper_context)
   with cells, ...).
 - meson-python builds PEPPER's Fortran sources into a static library linked
   into the extension (`meson.build` at the repository's root).
-- The design: [pepperypy_plan.md](../pepperypy_plan.md).
+- The design: [plans/pepperypy_plan.md](../plans/pepperypy_plan.md).

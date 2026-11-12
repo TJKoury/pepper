@@ -422,7 +422,7 @@ With the binary kernels read from their files as needed:
   19 times for frames.
 - **Batches** give the speed of the single queries: the gain is in the
   preparation. A batch is the place for further work (see
-  `modernization_options.md`).
+  `plans/modernization_options.md`).
 
 ## Compared with ANISE
 

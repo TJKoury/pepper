@@ -24,7 +24,7 @@ source-form = "default"
 
 # Compiler options, applied through the default profile (also with --profile
 # debug/release). The sources have no preprocessor directives: what differed
-# between platforms is standard Fortran now (preprocessor_plan.md).
+# between platforms is standard Fortran now (plans/preprocessor_plan.md).
 #
 # The library needs no -fallow-argument-mismatch (all calls have explicit
 # interfaces); NAIF's tspice test code does (tspice/fpm.toml). -frecursive

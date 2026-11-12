@@ -1,4 +1,4 @@
-!> Phase 7 (limits.md): the routines whose outputs PEPPER sizes. Each is
+!> Phase 7 (plans/limits.md): the routines whose outputs PEPPER sizes. Each is
 !> checked against its SPICELIB form, and past the size where that form
 !> fails or truncates.
 program test_outputs

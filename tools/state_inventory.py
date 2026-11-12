@@ -3,7 +3,7 @@
 Inventory of the global state in the SPICELIB sources: what each routine
 saves, where the ENTRY umbrellas are, and which routines depend on state
 through the routines they call. It drives and tracks the thread-safety work
-(plan.md, step 3).
+(plans/plan.md, step 3).
 
     python tools/state_inventory.py [options] [DIR ...]   (default: src/spicelib)
 

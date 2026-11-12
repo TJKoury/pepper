@@ -59,7 +59,7 @@ PEPPER incorporates. As they concern PEPPER:
 - PEPPER is a derived product of the SPICE Toolkit, not NAIF software: NAIF
   does not support it ("Limitations of NAIF Support").
 - PEPPER modifies SPICE code: its changes are marked in the code ("PEPPER:"
-  comments) and described in pepper_vs_spicelib.md and plan.md
+  comments) and described in pepper_vs_spicelib.md and plans/plan.md
   ("Modifications to SPICE Code").
 - This repository does not redistribute the unmodified SPICE Toolkit: the
   toolkit packages it was derived from (upstream/archives) are not part of it

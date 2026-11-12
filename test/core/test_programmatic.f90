@@ -240,7 +240,7 @@ contains
 end module test_programmatic_providers
 
 !> Programmatic ephemerides and frames (pepper_programmatic;
-!> programmatic_plan.md).
+!> plans/programmatic_plan.md).
 !>
 !> - States of a programmatic body against an SPK copy of the same motion
 !>   (linear motion, which SPK type 9 of degree 1 represents exactly),

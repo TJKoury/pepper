@@ -1,4 +1,4 @@
-# PepperyPy: PEPPER's Python interface (pepperypy_plan.md), built by
+# PepperyPy: PEPPER's Python interface (plans/pepperypy_plan.md), built by
 # meson-python (pyproject.toml). PEPPER and its C interface (src/, src/capi)
 # become a static library, linked into the Cython extension module.
 #

@@ -201,7 +201,7 @@ end program legacy_example
 `example/legacy_example.f90` is a complete one (`fpm run --example legacy_example`).
 
 Bugs and inconsistencies found in SPICELIB N0067 are listed in
-`spicelib_bugs.md`; the design and its history are in `plan.md`.
+`spicelib_bugs.md`; the design and its history are in `plans/plan.md`.
 
 ## Prepared queries
 
@@ -235,7 +235,7 @@ Bodies and frames can come from the program instead of kernel files: a
 provider computes the states or the orientation, and the body or frame is
 then used everywhere one from a kernel is (states with any correction,
 frame transformations, GF searches, prepared queries). See
-`programmatic_plan.md`.
+`plans/programmatic_plan.md`.
 
 ```fortran
 use pepper_instance, only: ephemeris_provider, frame_provider, pepper_context
@@ -342,7 +342,7 @@ the Fortran interfaces; a call costs 0.2 to 0.8 µs, 3 to 5 times less than
 SpiceyPy's. It has 88% of SpiceyPy's functions, and passes 524 of the 638
 tests of SpiceyPy's own suite. See [python/README.md](python/README.md), the coverage of
 SpiceyPy's functions in [python/COVERAGE.md](python/COVERAGE.md), and the
-design in [pepperypy_plan.md](pepperypy_plan.md).
+design in [plans/pepperypy_plan.md](plans/pepperypy_plan.md).
 
 ## The C interface
 

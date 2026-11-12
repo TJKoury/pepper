@@ -21,7 +21,7 @@ test = { cmd = "fpm test", depends-on = ["clean-stale", "check-threads"], descri
 #   pixi run tspice -j 4 'spk*'     # families matching F_SPK*
 #   pixi run tspice --help
 test-parallel = { cmd = "fpm test test_parallel --flag -fopenmp", depends-on = ["clean-stale"], description = "Run the parallel milestone test with OpenMP (the library has no OpenMP; see test/core/test_parallel.f90)" }
-bench-limits = { cmd = "fpm test bench_limits --profile release -- full", depends-on = ["clean-stale"], description = "Benchmark: many kernels, pool variables, body names, frames and contexts (test/core/bench_limits.f90; the baseline is in limits.md)" }
+bench-limits = { cmd = "fpm test bench_limits --profile release -- full", depends-on = ["clean-stale"], description = "Benchmark: many kernels, pool variables, body names, frames and contexts (test/core/bench_limits.f90; the baseline is in plans/limits.md)" }
 bench-parallel = { cmd = "fpm run --example bench_parallel --profile release --flag -fopenmp", depends-on = ["clean-stale"], description = "Benchmark: queries from 1, 2, 4, 8 threads (example/bench_parallel.f90)" }
 bench-queries = { cmd = "fpm test bench_queries --profile release -- build/compare/kernels", depends-on = ["clean-stale"], description = "Speed of prepared queries against SPKEZR, PXFORM and SXFORM on the real kernels (test/core/bench_queries.f90; the kernels of bench/compare_spicelib.py in build/compare/kernels)" }
 compare-spicelib = { cmd = "python bench/compare_spicelib.py", description = "Speed of PEPPER against SPICELIB N0067 built from NAIF's sources, with NAIF's flags and with -O3 (bench/compare_spicelib.py; pass --kernels DIR)" }
@@ -50,7 +50,7 @@ anise = { features = ["anise"], solve-group = "default" }
 coverage = { features = ["coverage"], solve-group = "default" }
 python = { features = ["python"], solve-group = "default" }
 
-# PepperyPy, the Python interface (python/, capi/; pepperypy_plan.md):
+# PepperyPy, the Python interface (python/, capi/; plans/pepperypy_plan.md):
 # Cython extension modules over PEPPER's C interface, built by meson-python.
 # pixi run -e python py-build / py-test
 [feature.python.dependencies]

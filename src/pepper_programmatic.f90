@@ -1,4 +1,4 @@
-!> Programmatic ephemerides and frames (PEPPER; programmatic_plan.md):
+!> Programmatic ephemerides and frames (PEPPER; plans/programmatic_plan.md):
 !> bodies whose states and frames whose orientations come from the program
 !> (an [[ephemeris_provider]] or a [[frame_provider]]), not from kernel
 !> files.

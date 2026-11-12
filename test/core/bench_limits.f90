@@ -1,5 +1,5 @@
 !> Benchmark of the operations whose cost depends on the tables that
-!> SPICELIB sizes with fixed limits (limits.md, phase 0): loading many
+!> SPICELIB sizes with fixed limits (plans/limits.md, phase 0): loading many
 !> kernels, SPK queries across many files, pool lookups among many
 !> variables, body names, TK frames, and new contexts. Every result is
 !> checked, so it also runs as a test:

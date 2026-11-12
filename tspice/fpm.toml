@@ -31,7 +31,7 @@ implicit-external = true
 source-form = "default"
 
 [features]
-# No preprocessor directives (preprocessor_plan.md): only compiler options.
+# No preprocessor directives (plans/preprocessor_plan.md): only compiler options.
 platform.gfortran.flags = "-frecursive -fallow-argument-mismatch"
 platform.ifx.flags = "-recursive"
 platform.ifort.flags = "-recursive"

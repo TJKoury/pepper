@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Generate PEPPER's C interface and PepperyPy's wrappers from the Fortran
-interfaces (pepperypy_plan.md).
+interfaces (plans/pepperypy_plan.md).
 
 Reads:
   src/pepper_instance.f90   the context's procedures (their interfaces) and

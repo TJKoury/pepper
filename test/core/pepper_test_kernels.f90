@@ -1,6 +1,6 @@
 !> Small synthetic kernels for tests and benchmarks that need many of them:
 !> enough files, bodies, frames or pool variables to go past SPICELIB's
-!> fixed limits (see limits.md) in seconds.
+!> fixed limits (see plans/limits.md) in seconds.
 !>
 !> The kernels are written to the working directory under names starting
 !> with a prefix chosen by the caller; `delete_file` removes them.
