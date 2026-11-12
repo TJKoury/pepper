@@ -145,6 +145,14 @@ Load kernels first, then query from any number of threads, one context per
 thread (see `test/core/test_parallel.f90`). The kernels must not be changed
 while other threads use contexts of the instance (nothing checks this).
 
+A context is released when it goes out of scope, and an instance likewise.
+Variables of a main program or a module live until the program ends, so to
+release them sooner call `ctx%destroy()`, which closes the context's files and
+frees its memory. Then call `spice%destroy()`, which unloads the kernels,
+removes programmatic ephemerides and frames, and frees the instance's memory.
+Destroy an instance's contexts before the instance itself. Both can be used
+again afterward: `ctx = spice%new_context()`, `spice%furnsh(...)`.
+
 Binary kernels (SPK, CK, binary PCK) are read record by record as queries
 need them, as in SPICELIB. They can instead be read whole into memory when
 they are loaded: `call spice%furnsh('de440.bsp', in_memory=.true.)` (for a

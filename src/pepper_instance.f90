@@ -13,7 +13,8 @@
 !> the open files) and finds the changes of the kernels on its next call.
 !> The kernels must not be changed while contexts are in use in other
 !> threads; a context must not be used by two threads at the same time;
-!> the instance must outlive its contexts:
+!> the instance must outlive its contexts (spice%destroy() and
+!> ctx%destroy() release them before they go out of scope):
 !>```fortran
 !>     type(pepper_spice), target :: spice
 !>     type(pepper_context) :: ctx
@@ -195,6 +196,7 @@ module pepper_instance
       procedure, non_overridable :: furnsh => spice_furnsh
       procedure, non_overridable :: unload => spice_unload
       procedure, non_overridable :: kclear => spice_kclear
+      procedure, non_overridable :: destroy => spice_destroy
       procedure, non_overridable :: ldpool => spice_ldpool
       procedure, non_overridable :: clpool => spice_clpool
       procedure, non_overridable :: pcpool => spice_pcpool
@@ -524,6 +526,7 @@ module pepper_instance
       procedure, non_overridable :: instance
       !> Close the context's file units when it goes away.
       final :: ctx_final
+      procedure, non_overridable :: destroy => ctx_destroy
       procedure, non_overridable :: failed => ctx_failed
       procedure, non_overridable :: sigerr => ctx_sigerr
       procedure, non_overridable :: setmsg => ctx_setmsg
@@ -21010,6 +21013,48 @@ contains
       call kclear(ctx)
    end subroutine spice_kclear
 
+   !> Destroy the instance: unload all its kernels, remove its programmatic
+   !> ephemerides and frames, close the files of its own context, and
+   !> release all its memory. The instance is then as new: it can load
+   !> kernels again (with new contexts).
+   !>
+   !> Destroy (or stop using) the instance's contexts first: a context is
+   !> not valid after its instance is destroyed. Files opened for writing
+   !> (spkopn, ...) are closed without being finished; close them first
+   !> (spkcls, ...).
+   !>
+   !> PEPPER: no SPICELIB counterpart. An instance is also released when it
+   !> goes out of scope or is deallocated, but not one declared in a main
+   !> program (or a module), which lives until the program ends.
+   subroutine spice_destroy(this)
+      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      integer(ip) :: generation, file_generation, close_generation, segment_epoch, boddef_epoch
+      integer(int64) :: pool_changes
+      call this%kclear()
+      ! the counters go on from where they were, so that a context still
+      ! pointing to the instance finds every cache out of date
+      generation = this%generation + 1
+      file_generation = this%file_generation + 1
+      close_generation = this%close_generation + 1
+      segment_epoch = this%segment_epoch + 1
+      boddef_epoch = this%boddef_epoch + 1
+      pool_changes = this%pool_changes + 1
+      if (allocated(this%own)) call this%own%destroy()
+      call reset_spice(this)
+      this%generation = generation
+      this%file_generation = file_generation
+      this%close_generation = close_generation
+      this%segment_epoch = segment_epoch
+      this%boddef_epoch = boddef_epoch
+      this%pool_changes = pool_changes
+      this%all_changed_at = pool_changes
+   contains
+      !> The instance's default values (its allocatable components deallocated).
+      subroutine reset_spice(spice)
+         type(pepper_spice), intent(out) :: spice  !! the instance
+      end subroutine reset_spice
+   end subroutine spice_destroy
+
    !> Load the variables contained in a NAIF ASCII kernel file into the
    !> kernel pool. Lines have at most 132 characters; a longer line is
    !> cut without an error (see Restrictions).
@@ -21847,6 +21892,25 @@ contains
          u%nut = 0
       end associate
    end subroutine ctx_final
+
+   !> Destroy the context: close the file units it opened and release all
+   !> its memory (its caches, its error messages and settings, its
+   !> watches). It is then detached from its instance; make it again with
+   !> spice%new_context() to use it.
+   !>
+   !> PEPPER: no SPICELIB counterpart. A context is also destroyed when it
+   !> goes out of scope or is deallocated, but not one declared in a main
+   !> program (or a module), which lives until the program ends.
+   subroutine ctx_destroy(this)
+      class(pepper_context), intent(inout) :: this  !! the context
+      call ctx_final(this)
+      call reset_context(this)
+   contains
+      !> The context's default values (its allocatable components deallocated).
+      subroutine reset_context(ctx)
+         type(pepper_context), intent(out) :: ctx  !! the context
+      end subroutine reset_context
+   end subroutine ctx_destroy
 
    !> Clear the error status and the messages.
    subroutine ctx_reset(this)

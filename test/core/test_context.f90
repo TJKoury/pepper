@@ -16,6 +16,7 @@ program test_context
    call test_lengths()
    call test_report()
    call test_shared_files()
+   call test_destroy()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -259,5 +260,49 @@ contains
       call other%kclear()
       call delete_file(spk)
    end subroutine test_shared_files
+
+   !> ctx%destroy and spice%destroy: the context's state and units go, the
+   !> instance's kernels, pool and memory go, and both can be used again.
+   subroutine test_destroy()
+      use pepper_test_kernels, only: write_spk, circle_state, delete_file
+      type(pepper_spice), target :: inst
+      type(pepper_context) :: c
+      character(*), parameter :: spk = 'test_context_destroy.bsp'
+      real(wp) :: state(6), lt, values(1)
+      integer(ip) :: count, n
+      logical :: found
+      c = inst%new_context()
+      call write_spk(c, spk, 1001_ip, 0_ip, 7000.0_wp, 0.0_wp)
+      call inst%furnsh(spk)
+      call inst%pdpool('DESTROY_TEST', 1_ip, [1.5_wp])
+      call c%spkgeo(1001_ip, 100.0_wp, 'J2000', 0_ip, state, lt)
+      call check(.not. c%failed(), 'a context reads the file before destroy')
+      call c%sigerr('SPICE(TESTERROR)')
+      call c%destroy()
+      call check(.not. c%failed(), 'a destroyed context has no error')
+      c = inst%new_context()
+      call c%spkgeo(1001_ip, 200.0_wp, 'J2000', 0_ip, state, lt)
+      call check(.not. c%failed() .and. maxval(abs(state - circle_state(7000.0_wp, 0.0_wp, 200.0_wp))) < 1e-6_wp, &
+                 'a context made again after destroy reads the file')
+      call c%destroy()
+      call inst%destroy()
+      call check(inst%kernel_memory() == 0, 'a destroyed instance holds no kernel memory')
+      c = inst%new_context()
+      call c%ktotal('ALL', count)
+      call check(count == 0, 'a destroyed instance has no kernels')
+      call c%gdpool('DESTROY_TEST', 1_ip, 1_ip, n, values, found)
+      call check(.not. found, 'a destroyed instance has an empty kernel pool')
+      call c%spkgeo(1001_ip, 300.0_wp, 'J2000', 0_ip, state, lt)
+      call check(c%failed(), 'a destroyed instance has no ephemeris')
+      call c%reset()
+      call inst%furnsh(spk)
+      call check(.not. inst%failed(), 'a destroyed instance loads the file again')
+      call c%spkgeo(1001_ip, 300.0_wp, 'J2000', 0_ip, state, lt)
+      call check(.not. c%failed() .and. maxval(abs(state - circle_state(7000.0_wp, 0.0_wp, 300.0_wp))) < 1e-6_wp, &
+                 'and reads it')
+      call c%destroy()
+      call inst%destroy()
+      call delete_file(spk)
+   end subroutine test_destroy
 
 end program test_context
