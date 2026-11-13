@@ -178,7 +178,7 @@ turn can raise this before creating its contexts, for example
 descriptors, within the operating system's limit (`ulimit -n`).
 
 For programs written for SPICELIB, the module `pepper_legacy`
-(`src/legacy/pepper_legacy.f90`) has SPICELIB's routines with SPICELIB's names
+(`src/legacy/`) has SPICELIB's routines with SPICELIB's names
 and arguments (`call spkezr(...)`): thin wrappers that call the library with a
 default instance and context, whose error handling starts with SPICELIB's
 settings (`erract`, `errprt` and `errdev` work as in SPICELIB). It is close to

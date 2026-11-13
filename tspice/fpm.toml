@@ -1,6 +1,6 @@
 # NAIF's test suite for SPICELIB (tspice), run against PEPPER through its
 # SPICELIB interface: each program unit uses the library's module
-# pepper_legacy (src/legacy/pepper_legacy.f90 of the library), which has
+# pepper_legacy (src/legacy/ of the library: a module per subsystem), which has
 # SPICELIB's routines with explicit interfaces. A package of its own: its
 # F77-style code still calls a few of its own routines with mismatched
 # arguments and needs gfortran's -fallow-argument-mismatch, which the library

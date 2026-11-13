@@ -13,7 +13,8 @@ In each procedure:
 - EXTERNAL statements and type declarations of the module's procedures go
   (they are host procedures now), except for dummy arguments.
 
-Run once (the migration); src/legacy/pepper_legacy.f90 is then the source.
+Run once (the migration); src/legacy/pepper_legacy.f90 was then the source,
+until tools/split_legacy_module.py split it into a module per subsystem.
     python tools/make_legacy_module.py [legacy source directory]
 """
 

@@ -1,0 +1,634 @@
+!> The legacy interface's routines of the subsystem dynamic (30 routines):
+!> SPICELIB's names and arguments, on the default context. Programs use
+!> them through [[pepper_legacy]].
+module pepper_legacy_dynamic
+
+   use pepper_instance, only: pepper_context, pepper_zzdynfrm => zzdynfrm, &
+      pepper_zzdynrot => zzdynrot
+   use pepper_legacy_context, only: legacy_context, legacy_spice
+
+   implicit none
+
+   private
+   public :: zzfrmgt1, zzrotgt1, zzfrmch1, zzrefch1, zzspkgo1, zzspkgp1, zzspklt1, zzspkpa1, &
+      zzspksb1, zzspkas1, zzspkzp1, zzspkac1, zzspkez1, zzdynfr0, zzfrmgt0, zzfrmch0, zzspkgo0, &
+      zzspklt0, zzspksb0, zzspkas0, zzspkac0, zzspkez0, zzdynrt0, zzrotgt0, zzrefch0, zzspkgp0, &
+      zzspkpa0, zzspkzp0, zzdynfrm, zzdynrot
+
+contains
+
+      !> Find the transformation from a user specified frame to
+      !> another frame at a user specified epoch.
+      !>
+      !> Legacy interface: calls frmget (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzfrmgt1 ( infrm, et, xform, outfrm, found )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      implicit none
+      integer(ip) :: infrm  !! The integer code for a SPICE reference frame.
+      real(wp) :: et  !! An epoch in seconds past J2000.
+      real(wp) :: xform ( 6, 6 )  !! A state transformation matrix.
+      integer(ip) :: outfrm  !! The frame that XFORM transforms INFRM to.
+      logical :: found  !! TRUE if a frame transformation can be found.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%frmget ( infrm, et, xform, outfrm, found )
+      end subroutine zzfrmgt1
+
+      !> Find the rotation from a user specified frame to another frame at
+      !> a user specified epoch.
+      !>
+      !> Legacy interface: calls rotget (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzrotgt1 ( infrm, et, rotate, outfrm, found )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      implicit none
+      integer(ip) :: infrm  !! The integer code for a SPICE reference frame.
+      real(wp) :: et  !! An epoch in seconds past J2000.
+      real(wp) :: rotate ( 3, 3 )  !! A rotation matrix.
+      integer(ip) :: outfrm  !! The frame that ROTATE transforms INFRM to.
+      logical :: found  !! TRUE if a rotation can be found.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%rotget ( infrm, et, rotate, outfrm, found )
+      end subroutine zzrotgt1
+
+      !> Return the state transformation matrix from one
+      !> frame to another.
+      !>
+      !> Legacy interface: calls frmchg (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzfrmch1 ( frame1, frame2, et, xform )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
+      implicit none
+      integer(ip) :: frame1  !! the frame id-code for some reference frame
+      integer(ip) :: frame2  !! the frame id-code for some reference frame
+      real(wp) :: et  !! an epoch in TDB seconds past J2000.
+      real(wp) :: xform ( 6, 6 )  !! a state transformation matrix
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%frmchg ( frame1, frame2, et, xform )
+      end subroutine zzfrmch1
+
+      !> Return the transformation matrix from one
+      !> frame to another.
+      !>
+      !> Legacy interface: calls refchg (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzrefch1 ( frame1, frame2, et, rotate )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
+      implicit none
+      integer(ip) :: frame1  !! the frame id-code for some reference frame
+      integer(ip) :: frame2  !! the frame id-code for some reference frame
+      real(wp) :: et  !! an epoch in TDB seconds past J2000.
+      real(wp) :: rotate ( 3, 3 )  !! a rotation matrix
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%refchg ( frame1, frame2, et, rotate )
+      end subroutine zzrefch1
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> Legacy interface: calls spkgeo (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspkgo1 ( targ, et, ref, obs, state, lt )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Target epoch.
+      character(*) :: ref  !! Target reference frame.
+      integer(ip) :: obs  !! Observing body.
+      real(wp) :: state    ( 6 )  !! State of target.
+      real(wp) :: lt  !! Light time.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkgeo ( targ, et, ref, obs, state, lt )
+      end subroutine zzspkgo1
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> Legacy interface: calls spkgps (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspkgp1 ( targ, et, ref, obs, pos, lt )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Target epoch.
+      character(*) :: ref  !! Target reference frame.
+      integer(ip) :: obs  !! Observing body.
+      real(wp) :: pos ( 3 )  !! Position of target.
+      real(wp) :: lt  !! Light time.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkgps ( targ, et, ref, obs, pos, lt )
+      end subroutine zzspkgp1
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time,
+      !> expressed relative to an inertial reference frame.
+      !>
+      !> Legacy interface: calls spkltc (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspklt1 ( targ, et, ref, abcorr, stobs, starg, lt, dlt )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Observer epoch.
+      character(*) :: ref  !! Inertial reference frame of output state.
+      character(*) :: abcorr  !! Aberration correction flag.
+      real(wp) :: stobs  ( 6 )  !! State of the observer relative to the SSB.
+      real(wp) :: starg  ( 6 )  !! State of target.
+      real(wp) :: lt  !! One way light time between observer and target.
+      real(wp) :: dlt  !! Derivative of light time with respect to time.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkltc ( targ, et, ref, abcorr, stobs, starg, lt, dlt )
+      end subroutine zzspklt1
+
+      !> Return the position of a target body relative to an observer,
+      !> optionally corrected for light time and stellar aberration.
+      !>
+      !> Legacy interface: calls spkapo (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspkpa1 ( targ, et, ref, sobs, abcorr, ptarg, lt )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Observer epoch.
+      character(*) :: ref  !! Inertial reference frame of observer's state.
+      real(wp) :: sobs     ( 6 )  !! State of observer wrt. solar system barycenter.
+      character(*) :: abcorr  !! Aberration correction flag.
+      real(wp) :: ptarg    ( 3 )  !! Position of target.
+      real(wp) :: lt  !! One way light time between observer and target.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkapo ( targ, et, ref, sobs, abcorr, ptarg, lt )
+      end subroutine zzspkpa1
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> Legacy interface: calls spkssb (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspksb1 ( targ, et, ref, starg )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Target epoch.
+      character(*) :: ref  !! Target reference frame.
+      real(wp) :: starg    ( 6 )  !! State of target.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkssb ( targ, et, ref, starg )
+      end subroutine zzspksb1
+
+      !> Given the state and acceleration of an observer relative to the
+      !> solar system barycenter, return the state (position and velocity)
+      !> of a target body relative to the observer, optionally corrected
+      !> for light time and stellar aberration. All input and output
+      !> vectors are expressed relative to an inertial reference frame.
+      !>
+      !> Legacy interface: calls spkaps (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspkas1 ( targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Observer epoch.
+      character(*) :: ref  !! Inertial reference frame of output state.
+      character(*) :: abcorr  !! Aberration correction flag.
+      real(wp) :: stobs  ( 6 )  !! State of the observer relative to the SSB.
+      real(wp) :: accobs ( 3 )  !! Acceleration of the observer relative to the SSB.
+      real(wp) :: starg  ( 6 )  !! State of target.
+      real(wp) :: lt  !! One way light time between observer and target.
+      real(wp) :: dlt  !! Derivative of light time with respect to time.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkaps ( targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+      end subroutine zzspkas1
+
+      !> Return the position of a target body relative to an observing
+      !> body, optionally corrected for light time (planetary aberration)
+      !> and stellar aberration.
+      !>
+      !> Legacy interface: calls spkezp (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspkzp1 ( targ, et, ref, abcorr, obs, ptarg, lt )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
+      implicit none
+      integer(ip) :: targ  !! Target body NAIF ID code.
+      real(wp) :: et  !! Observer epoch.
+      character(*) :: ref  !! Reference frame of output position vector.
+      character(*) :: abcorr  !! Aberration correction flag.
+      integer(ip) :: obs  !! Observing body NAIF ID code.
+      real(wp) :: ptarg    ( 3 )  !! Position of target.
+      real(wp) :: lt  !! One way light time between observer and target.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkezp ( targ, et, ref, abcorr, obs, ptarg, lt )
+      end subroutine zzspkzp1
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time
+      !> and stellar aberration, expressed relative to an inertial
+      !> reference frame.
+      !>
+      !> Legacy interface: calls spkacs (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspkac1 ( targ, et, ref, abcorr, obs, starg, lt, dlt )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Observer epoch.
+      character(*) :: ref  !! Inertial reference frame of output state.
+      character(*) :: abcorr  !! Aberration correction flag.
+      integer(ip) :: obs  !! Observer.
+      real(wp) :: starg    ( 6 )  !! State of target.
+      real(wp) :: lt  !! One way light time between observer and target.
+      real(wp) :: dlt  !! Derivative of light time with respect to time.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkacs ( targ, et, ref, abcorr, obs, starg, lt, dlt )
+      end subroutine zzspkac1
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observing body, optionally corrected for light
+      !> time (planetary aberration) and stellar aberration.
+      !>
+      !> Legacy interface: calls spkez (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspkez1 ( targ, et, ref, abcorr, obs, starg, lt )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Observer epoch.
+      character(*) :: ref  !! Reference frame of output state vector.
+      character(*) :: abcorr  !! Aberration correction flag.
+      integer(ip) :: obs  !! Observing body.
+      real(wp) :: starg    ( 6 )  !! State of target.
+      real(wp) :: lt  !! One way light time between observer and target.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkez ( targ, et, ref, abcorr, obs, starg, lt )
+      end subroutine zzspkez1
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> Legacy interface: calls zzdynfrm (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzdynfr0 ( infram, center, et, xform, basfrm )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
+      implicit none
+      integer(ip) :: infram  !! Frame ID code for a SPICE dynamic reference frame.
+      integer(ip) :: center  !! ID code for the center of the input frame.
+      real(wp) :: et  !! An epoch in seconds past J2000 TDB.
+      real(wp) :: xform ( 6, 6 )  !! The requested state transformation matrix.
+      integer(ip) :: basfrm  !! Frame ID of base frame associated with INFRAM.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call pepper_zzdynfrm ( ctx, infram, center, et, xform, basfrm )
+      end subroutine zzdynfr0
+
+      !> Find the transformation from a user specified frame to
+      !> another frame at a user specified epoch.
+      !>
+      !> Legacy interface: calls frmget (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzfrmgt0 ( infrm, et, xform, outfrm, found )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      implicit none
+      integer(ip) :: infrm  !! The integer code for a SPICE reference frame.
+      real(wp) :: et  !! An epoch in seconds past J2000.
+      real(wp) :: xform ( 6, 6 )  !! A state transformation matrix.
+      integer(ip) :: outfrm  !! The frame that XFORM transforms INFRM to.
+      logical :: found  !! TRUE if a frame transformation can be found.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%frmget ( infrm, et, xform, outfrm, found )
+      end subroutine zzfrmgt0
+
+      !> Return the state transformation matrix from one
+      !> frame to another.
+      !>
+      !> Legacy interface: calls frmchg (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzfrmch0 ( frame1, frame2, et, xform )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
+      implicit none
+      integer(ip) :: frame1  !! the frame id-code for some reference frame
+      integer(ip) :: frame2  !! the frame id-code for some reference frame
+      real(wp) :: et  !! an epoch in TDB seconds past J2000.
+      real(wp) :: xform ( 6, 6 )  !! a state transformation matrix
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%frmchg ( frame1, frame2, et, xform )
+      end subroutine zzfrmch0
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> Legacy interface: calls spkgeo (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspkgo0 ( targ, et, ref, obs, state, lt )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Target epoch.
+      character(*) :: ref  !! Target reference frame.
+      integer(ip) :: obs  !! Observing body.
+      real(wp) :: state    ( 6 )  !! State of target.
+      real(wp) :: lt  !! Light time.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkgeo ( targ, et, ref, obs, state, lt )
+      end subroutine zzspkgo0
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time,
+      !> expressed relative to an inertial reference frame.
+      !>
+      !> Legacy interface: calls spkltc (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspklt0 ( targ, et, ref, abcorr, stobs, starg, lt, dlt )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Observer epoch.
+      character(*) :: ref  !! Inertial reference frame of output state.
+      character(*) :: abcorr  !! Aberration correction flag.
+      real(wp) :: stobs  ( 6 )  !! State of the observer relative to the SSB.
+      real(wp) :: starg  ( 6 )  !! State of target.
+      real(wp) :: lt  !! One way light time between observer and target.
+      real(wp) :: dlt  !! Derivative of light time with respect to time.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkltc ( targ, et, ref, abcorr, stobs, starg, lt, dlt )
+      end subroutine zzspklt0
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> Legacy interface: calls spkssb (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspksb0 ( targ, et, ref, starg )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Target epoch.
+      character(*) :: ref  !! Target reference frame.
+      real(wp) :: starg    ( 6 )  !! State of target.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkssb ( targ, et, ref, starg )
+      end subroutine zzspksb0
+
+      !> Given the state and acceleration of an observer relative to the
+      !> solar system barycenter, return the state (position and velocity)
+      !> of a target body relative to the observer, optionally corrected
+      !> for light time and stellar aberration. All input and output
+      !> vectors are expressed relative to an inertial reference frame.
+      !>
+      !> Legacy interface: calls spkaps (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspkas0 ( targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Observer epoch.
+      character(*) :: ref  !! Inertial reference frame of output state.
+      character(*) :: abcorr  !! Aberration correction flag.
+      real(wp) :: stobs  ( 6 )  !! State of the observer relative to the SSB.
+      real(wp) :: accobs ( 3 )  !! Acceleration of the observer relative to the SSB.
+      real(wp) :: starg  ( 6 )  !! State of target.
+      real(wp) :: lt  !! One way light time between observer and target.
+      real(wp) :: dlt  !! Derivative of light time with respect to time.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkaps ( targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+      end subroutine zzspkas0
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time
+      !> and stellar aberration, expressed relative to an inertial
+      !> reference frame.
+      !>
+      !> Legacy interface: calls spkacs (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspkac0 ( targ, et, ref, abcorr, obs, starg, lt, dlt )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_zzabcorr
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Observer epoch.
+      character(*) :: ref  !! Inertial reference frame of output state.
+      character(*) :: abcorr  !! Aberration correction flag.
+      integer(ip) :: obs  !! Observer.
+      real(wp) :: starg    ( 6 )  !! State of target.
+      real(wp) :: lt  !! One way light time between observer and target.
+      real(wp) :: dlt  !! Derivative of light time with respect to time.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkacs ( targ, et, ref, abcorr, obs, starg, lt, dlt )
+      end subroutine zzspkac0
+
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observing body, optionally corrected for light
+      !> time (planetary aberration) and stellar aberration.
+      !>
+      !> Legacy interface: calls spkez (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspkez0 ( targ, et, ref, abcorr, obs, starg, lt )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzctr
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Observer epoch.
+      character(*) :: ref  !! Reference frame of output state vector.
+      character(*) :: abcorr  !! Aberration correction flag.
+      integer(ip) :: obs  !! Observing body.
+      real(wp) :: starg    ( 6 )  !! State of target.
+      real(wp) :: lt  !! One way light time between observer and target.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkez ( targ, et, ref, abcorr, obs, starg, lt )
+      end subroutine zzspkez0
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> Legacy interface: calls zzdynrot (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzdynrt0 ( infram, center, et, rotate, basfrm )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
+      implicit none
+      integer(ip) :: infram  !! Class ID code for a SPICE dynamic reference frame.
+      integer(ip) :: center  !! ID code for the center of the input frame.
+      real(wp) :: et  !! An epoch in seconds past J2000 TDB.
+      real(wp) :: rotate ( 3, 3 )  !! The requested rotation matrix.
+      integer(ip) :: basfrm  !! Frame ID of base frame associated with INFRAM.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call pepper_zzdynrot ( ctx, infram, center, et, rotate, basfrm )
+      end subroutine zzdynrt0
+
+      !> Find the rotation from a user specified frame to another frame at
+      !> a user specified epoch.
+      !>
+      !> Legacy interface: calls rotget (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzrotgt0 ( infrm, et, rotate, outfrm, found )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      implicit none
+      integer(ip) :: infrm  !! The integer code for a SPICE reference frame.
+      real(wp) :: et  !! An epoch in seconds past J2000.
+      real(wp) :: rotate ( 3, 3 )  !! A rotation matrix.
+      integer(ip) :: outfrm  !! The frame that ROTATE transforms INFRM to.
+      logical :: found  !! TRUE if a rotation can be found.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%rotget ( infrm, et, rotate, outfrm, found )
+      end subroutine zzrotgt0
+
+      !> Return the transformation matrix from one
+      !> frame to another.
+      !>
+      !> Legacy interface: calls refchg (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzrefch0 ( frame1, frame2, et, rotate )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_errhnd
+      use pepper_inc_frmtyp
+      implicit none
+      integer(ip) :: frame1  !! the frame id-code for some reference frame
+      integer(ip) :: frame2  !! the frame id-code for some reference frame
+      real(wp) :: et  !! an epoch in TDB seconds past J2000.
+      real(wp) :: rotate ( 3, 3 )  !! a rotation matrix
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%refchg ( frame1, frame2, et, rotate )
+      end subroutine zzrefch0
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> Legacy interface: calls spkgps (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspkgp0 ( targ, et, ref, obs, pos, lt )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_ninert
+      use pepper_inc_zzctr
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Target epoch.
+      character(*) :: ref  !! Target reference frame.
+      integer(ip) :: obs  !! Observing body.
+      real(wp) :: pos ( 3 )  !! Position of target.
+      real(wp) :: lt  !! Light time.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkgps ( targ, et, ref, obs, pos, lt )
+      end subroutine zzspkgp0
+
+      !> Return the position of a target body relative to an observer,
+      !> optionally corrected for light time and stellar aberration.
+      !>
+      !> Legacy interface: calls spkapo (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspkpa0 ( targ, et, ref, sobs, abcorr, ptarg, lt )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip) :: targ  !! Target body.
+      real(wp) :: et  !! Observer epoch.
+      character(*) :: ref  !! Inertial reference frame of observer's state.
+      real(wp) :: sobs     ( 6 )  !! State of observer wrt. solar system barycenter.
+      character(*) :: abcorr  !! Aberration correction flag.
+      real(wp) :: ptarg    ( 3 )  !! Position of target.
+      real(wp) :: lt  !! One way light time between observer and target.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkapo ( targ, et, ref, sobs, abcorr, ptarg, lt )
+      end subroutine zzspkpa0
+
+      !> Return the position of a target body relative to an observing
+      !> body, optionally corrected for light time (planetary aberration)
+      !> and stellar aberration.
+      !>
+      !> Legacy interface: calls spkezp (PEPPER: the copies of SPICELIB for each recursion level are gone) with the legacy context.
+      subroutine zzspkzp0 ( targ, et, ref, abcorr, obs, ptarg, lt )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzctr
+      implicit none
+      integer(ip) :: targ  !! Target body NAIF ID code.
+      real(wp) :: et  !! Observer epoch.
+      character(*) :: ref  !! Reference frame of output position vector.
+      character(*) :: abcorr  !! Aberration correction flag.
+      integer(ip) :: obs  !! Observing body NAIF ID code.
+      real(wp) :: ptarg    ( 3 )  !! Position of target.
+      real(wp) :: lt  !! One way light time between observer and target.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%spkezp ( targ, et, ref, abcorr, obs, ptarg, lt )
+      end subroutine zzspkzp0
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> Legacy interface: calls zz routine zzdynfrm with the legacy context.
+      subroutine zzdynfrm ( infram, center, et, xform, basfrm )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
+      implicit none
+      integer(ip) :: infram  !! Frame ID code for a SPICE dynamic reference frame.
+      integer(ip) :: center  !! ID code for the center of the input frame.
+      real(wp) :: et  !! An epoch in seconds past J2000 TDB.
+      real(wp) :: xform ( 6, 6 )  !! The requested state transformation matrix.
+      integer(ip) :: basfrm  !! Frame ID of base frame associated with INFRAM.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call pepper_zzdynfrm ( ctx, infram, center, et, xform, basfrm )
+      end subroutine zzdynfrm
+
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      !>
+      !> Legacy interface: calls zz routine zzdynrot with the legacy context.
+      subroutine zzdynrot ( infram, center, et, rotate, basfrm )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_frmtyp
+      use pepper_inc_zzabcorr
+      use pepper_inc_zzdyn
+      implicit none
+      integer(ip) :: infram  !! Class ID code for a SPICE dynamic reference frame.
+      integer(ip) :: center  !! ID code for the center of the input frame.
+      real(wp) :: et  !! An epoch in seconds past J2000 TDB.
+      real(wp) :: rotate ( 3, 3 )  !! The requested rotation matrix.
+      integer(ip) :: basfrm  !! Frame ID of base frame associated with INFRAM.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call pepper_zzdynrot ( ctx, infram, center, et, rotate, basfrm )
+      end subroutine zzdynrot
+
+end module pepper_legacy_dynamic

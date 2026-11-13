@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-MODULE = ROOT / 'src' / 'legacy' / 'pepper_legacy.f90'
+MODULES = ROOT / 'src' / 'legacy'  # pepper_legacy and its modules pepper_legacy_*
 
 UNIT = re.compile(r'^\s*(?:(?:recursive|pure|elemental)\s+)*(?:(?:integer|logical|real|double\s+precision|'
                   r'character\s*(?:\*\s*\(?\s*[\w*]*\s*\)?|\(\s*[\w*]*\s*\))?|integer\s*\(\s*\w+\s*\)|'
@@ -30,7 +30,7 @@ TYPES = re.compile(r'^(\s*)(integer(?:\s*\(\s*\w+\s*\))?|logical|real(?:\s*\(\s*
 
 
 def module_names():
-    text = MODULE.read_text()
+    text = '\n'.join(f.read_text() for f in sorted(MODULES.glob('pepper_legacy*.f90')))
     names = set()
     funcs = set()
     for m in re.finditer(r'^\s*(?:(?:recursive|pure|elemental)\s+)*(?:([\w()*]+(?:\s+precision)?)\s+)?'

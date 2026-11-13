@@ -361,3 +361,22 @@ copied with `MOVEI`, ...). `ZZDSKSEL`'s umbrella is a logical function, as
 in SPICELIB; `ZZDSKBSR`'s comparison argument a procedure. tspice passes
 (399 families).
 
+
+## The legacy interface split into modules (2026-11-12)
+
+The one module (37,000 lines) took 4.5 GB of RAM to compile with gfortran
+and more than 16 GB with ifx on Windows. Most of it was not its size: each
+of its 1,400 wrappers had its own `use pepper_instance`, and the compiler
+reads `pepper_instance.mod` (240 KB; the context type's hundreds of
+type-bound procedures) for each. `tools/split_legacy_module.py` split it
+into `pepper_legacy_context` (the default instance), `pepper_legacy_callbacks`
+and a module per subsystem (`pepper_legacy_<subsystem>`, 41), each with one
+`use pepper_instance` for all its routines; `pepper_legacy` uses them all
+and exports the same entities (programs still `use pepper_legacy`). The
+subsystems call no routine of another, except SETMSG and SIGERR of errsys
+(in the umbrellas' entries). With gfortran the largest module (geometry)
+takes 80 MB and 0.3 s (2.8 GB and 18 s with its USE in each routine; the
+merged module 4.5 GB and 280 s). tspice passes (399 families).
+
+Avoid `use pepper_instance` in many procedures of one file: put it in the
+module's specification part.

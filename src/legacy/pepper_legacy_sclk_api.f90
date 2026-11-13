@@ -1,0 +1,157 @@
+!> The legacy interface's routines of the subsystem sclk_api (9 routines):
+!> SPICELIB's names and arguments, on the default context. Programs use
+!> them through [[pepper_legacy]].
+module pepper_legacy_sclk_api
+
+   use pepper_instance, only: pepper_context
+   use pepper_legacy_context, only: legacy_context, legacy_spice
+
+   implicit none
+
+   private
+   public :: sce2t, scfmt, scpart, sct2e, sctiks, scdecd, scencd, sce2s, scs2e
+
+contains
+
+      !> Convert ephemeris seconds past J2000 (ET) to integral
+      !> encoded spacecraft clock (`ticks'). For conversion to
+      !> fractional ticks, (required for C-kernel production), see
+      !> the routine SCE2C.
+      !>
+      !> Legacy interface: calls ctx%sce2t with the legacy context.
+      subroutine sce2t ( sc, et, sclkdp )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip) :: sc  !! NAIF spacecraft ID code.
+      real(wp) :: et  !! Ephemeris time, seconds past J2000.
+      real(wp) :: sclkdp  !! SCLK, encoded as ticks since spacecraft clock start.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%sce2t ( sc, et, sclkdp )
+      end subroutine sce2t
+
+      !> Convert encoded spacecraft clock ticks to character clock format.
+      !>
+      !> Legacy interface: calls ctx%scfmt with the legacy context.
+      subroutine scfmt ( sc, ticks, clkstr )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip) :: sc  !! NAIF spacecraft identification code.
+      real(wp) :: ticks  !! Spacecraft clock count encoded representation.
+      character(*) :: clkstr  !! Character representation of a clock count.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%scfmt ( sc, ticks, clkstr )
+      end subroutine scfmt
+
+      !> Get spacecraft clock partition information from a spacecraft
+      !> clock kernel file.
+      !>
+      !> Legacy interface: calls ctx%scpart with the legacy context.
+      subroutine scpart ( sc, nparts, pstart, pstop )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_sclk
+      use pepper_inc_zzctr
+      implicit none
+      integer(ip) :: sc  !! NAIF spacecraft identification code.
+      integer(ip) :: nparts  !! The number of spacecraft clock partitions.
+      real(wp) :: pstart  ( * )  !! Array of partition start times.
+      real(wp) :: pstop   ( * )  !! Array of partition stop times.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%scpart ( sc, nparts, pstart, pstop )
+      end subroutine scpart
+
+      !> Convert encoded spacecraft clock (`ticks') to ephemeris
+      !> seconds past J2000 (ET).
+      !>
+      !> Legacy interface: calls ctx%sct2e with the legacy context.
+      subroutine sct2e ( sc, sclkdp, et )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip) :: sc  !! NAIF spacecraft ID code.
+      real(wp) :: sclkdp  !! SCLK, encoded as ticks since spacecraft clock start.
+      real(wp) :: et  !! Ephemeris time, seconds past J2000.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%sct2e ( sc, sclkdp, et )
+      end subroutine sct2e
+
+      !> Convert a spacecraft clock format string to number of "ticks".
+      !>
+      !> Legacy interface: calls ctx%sctiks with the legacy context.
+      subroutine sctiks ( sc, clkstr, ticks )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip) :: sc  !! NAIF spacecraft identification code.
+      character(*) :: clkstr  !! Character representation of a spacecraft clock.
+      real(wp) :: ticks  !! Number of ticks represented by the clock string.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%sctiks ( sc, clkstr, ticks )
+      end subroutine sctiks
+
+      !> Convert a double precision encoding of spacecraft clock time into
+      !> a character representation.
+      !>
+      !> Legacy interface: calls ctx%scdecd with the legacy context.
+      subroutine scdecd ( sc, sclkdp, sclkch )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_sclk
+      implicit none
+      integer(ip) :: sc  !! NAIF spacecraft identification code.
+      real(wp) :: sclkdp  !! Encoded representation of a spacecraft clock count.
+      character(*) :: sclkch  !! Character representation of a clock count.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%scdecd ( sc, sclkdp, sclkch )
+      end subroutine scdecd
+
+      !> Encode a character representation of spacecraft clock time into a
+      !> double precision number.
+      !>
+      !> Legacy interface: calls ctx%scencd with the legacy context.
+      subroutine scencd ( sc, sclkch, sclkdp )
+      use pepper_kinds, only: ip, wp
+      use pepper_inc_sclk
+      implicit none
+      integer(ip) :: sc  !! NAIF spacecraft identification code.
+      character(*) :: sclkch  !! Character representation of a spacecraft clock.
+      real(wp) :: sclkdp  !! Encoded representation of the clock count.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%scencd ( sc, sclkch, sclkdp )
+      end subroutine scencd
+
+      !> Convert an epoch specified as ephemeris seconds past J2000 (ET) to
+      !> a character string representation of a spacecraft clock value
+      !> (SCLK).
+      !>
+      !> Legacy interface: calls ctx%sce2s with the legacy context.
+      subroutine sce2s ( sc, et, sclkch )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip) :: sc  !! NAIF spacecraft clock ID code.
+      real(wp) :: et  !! Ephemeris time, specified as seconds past J2000.
+      character(*) :: sclkch  !! An SCLK string.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%sce2s ( sc, et, sclkch )
+      end subroutine sce2s
+
+      !> Convert a spacecraft clock string to ephemeris seconds past
+      !> J2000 (ET).
+      !>
+      !> Legacy interface: calls ctx%scs2e with the legacy context.
+      subroutine scs2e ( sc, sclkch, et )
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip) :: sc  !! NAIF integer code for a spacecraft.
+      character(*) :: sclkch  !! An SCLK string.
+      real(wp) :: et  !! Ephemeris time, seconds past J2000.
+      type(pepper_context), pointer :: ctx
+      ctx => legacy_context()
+      call ctx%scs2e ( sc, sclkch, et )
+      end subroutine scs2e
+
+end module pepper_legacy_sclk_api
