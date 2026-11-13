@@ -35,7 +35,12 @@ program bench_queries
    do i = 1, nq
       rnd(i) = 20*year*(random(1000000_ip) - 1)/1.0e6_wp
    end do
-   seq = [(i*60.0_wp, i=0, nq - 1)]
+   ! (a loop, not an array constructor: its temporary of NQ elements would be
+   ! on the stack, more than Windows' default of 1 to 2 MB)
+   allocate (seq(nq))
+   do i = 1, nq
+      seq(i) = (i - 1)*60.0_wp
+   end do
    print '(a)', '| Operation | Epochs | Kernels | SPICELIB routine (µs) | Prepared query (µs) | Batch (µs) | Speedup (query) | Speedup (batch) |'
    print '(a)', '|---|---|---|--:|--:|--:|--:|--:|'
    do mem = 0, 1

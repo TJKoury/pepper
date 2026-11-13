@@ -35,9 +35,11 @@ program test_parallel
    type(pepper_spice), target :: memspice  !! the same kernels, the SPK in memory
    type(pepper_context), pointer :: setup  !! the instance's context (it loads the kernels)
    type(pepper_context) :: serial
-   real(wp) :: et(nepoch)
-   real(wp) :: ref(nres, nepoch), par(nres, nepoch)
-   character(40) :: refutc(nepoch), parutc(nepoch)
+   ! allocatable: fixed-size arrays this large (2 MB) are on the stack with
+   ! -frecursive, more than Windows' default stack of 1 to 2 MB
+   real(wp), allocatable :: et(:)
+   real(wp), allocatable :: ref(:, :), par(:, :)
+   character(40), allocatable :: refutc(:), parutc(:)
    integer :: failures = 0, pass, i, nbad, errors
    type(ephemeris_procedure) :: eproc  !! a programmatic body (PEPPER_P, 9100)
    type(ephemeris_procedure) :: nproc  !! a programmatic body whose provider queries 9100 (9101)
@@ -68,7 +70,10 @@ program test_parallel
    call memspice%add_ephemeris(9101_ip, 1001_ip, 'J2000', 0.0_wp, 3.0e6_wp, nproc)
    call check(.not. spice%failed() .and. .not. memspice%failed(), 'a programmatic body and frame')
 
-   et = [(1.0e5_wp + (1.8e6_wp*(i - 1))/(nepoch - 1), i = 1, nepoch)]
+   allocate (et(nepoch), ref(nres, nepoch), par(nres, nepoch), refutc(nepoch), parutc(nepoch))
+   do i = 1, nepoch
+      et(i) = 1.0e5_wp + (1.8e6_wp*(i - 1))/(nepoch - 1)
+   end do
 
    ! the reference: one context, in order
    serial = spice%new_context()
