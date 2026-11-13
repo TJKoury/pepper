@@ -81,7 +81,7 @@ query.
 | Routine | Problem | PEPPER |
 |---|---|---|
 | ZZEKUE04, ZZEKUE05, ZZEKUE06 | `IVALS`, `DVALS`, `CVALS` are declared as scalars but are arrays: they are passed on to ZZEKAD04/05/06, which use `NVALS` of them. | Declared as arrays `( * )`. |
-| Callers of TTRANS (STR2ET, SGP4 routines) | Pass 8-element time vectors; TTRANS declares 10. | 10 elements. |
+| Callers of TTRANS (STR2ET, SGP4 routines, ET2UTC, TIMOUT, ZZGETELM) | Pass 8-element time vectors; TTRANS declares 10 (`MXCOMP`; it uses at most 7). | 10 elements (ET2UTC's, TIMOUT's and ZZGETELM's in their state types were missed at first: ifx found them, error #7983). |
 | ZZSCUP01 | The pool counter `POLCTR` is declared scalar; it is a 2-element counter. | Declared as the counter array. |
 | DNEARP | Passes an array (`DALT`) for NEARPT's scalar altitude. | Passes `DALT(1)`. |
 | ZZDAFGFR | Passes scalars to ZZXLATEI's array argument. | One-element arrays. |

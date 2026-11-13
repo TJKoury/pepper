@@ -1101,7 +1101,7 @@ module pepper_states
    !> held in [[pepper_context]] (one per thread).
    type, public :: et2utc_state
       character(80) :: str = ' '  !! work: output string of the Julian date format
-      real(wp) :: tvec ( 8 ) = 0.0_wp  !! work: time vector converted from TDB to JDUTC
+      real(wp) :: tvec ( 10 ) = 0.0_wp  !! work: time vector converted from TDB to JDUTC
    end type et2utc_state
 
    ! ------------------------------------------------------------------ ETCAL
@@ -2908,9 +2908,9 @@ module pepper_states
       character(16) :: tsys = ' '  !! work: default time system ([[timdef]])
       character(16) :: cal = ' '  !! work: default calendar ([[timdef]])
       character(32) :: zon = ' '  !! work: default time zone ([[timdef]])
-      real(wp) :: ntvec ( 8 ) = 0.0_wp  !! work: time vector of the next unit of the current component
-      real(wp) :: ptvec ( 8 ) = 0.0_wp  !! work: time vector of the start of the current component unit
-      real(wp) :: tvec ( 8 ) = 0.0_wp  !! work: time vector of the epoch
+      real(wp) :: ntvec ( 10 ) = 0.0_wp  !! work: time vector of the next unit of the current component
+      real(wp) :: ptvec ( 10 ) = 0.0_wp  !! work: time vector of the start of the current component unit
+      real(wp) :: tvec ( 10 ) = 0.0_wp  !! work: time vector of the epoch
       real(wp) :: value = 0.0_wp  !! work: value of the current numeric component
       integer(ip) :: mylen = 0  !! work: length of the current month or weekday name
    end type timout_state
@@ -3974,7 +3974,7 @@ module pepper_states
       real(wp) :: d2r = 0.0_wp  !! radians per degree, set on the first call
       real(wp) :: pi2 = 0.0_wp  !! 2 pi, set on the first call
       real(wp) :: power ( minp:zzgetelm_maxp ) = 0.0_wp  !! powers of ten 10**minp ... 10**maxp, set on the first call
-      real(wp) :: tvec ( 8 ) = 0.0_wp  !! work: epoch time vector (year, day) converted by [[ttrans]] from YD.D to TDB
+      real(wp) :: tvec ( 10 ) = 0.0_wp  !! work: epoch time vector (year, day) converted by [[ttrans]] from YD.D to TDB
       logical :: first = .true.  !! first call: constants, powers of ten and term descriptions not yet set
    end type zzgetelm_state
 
