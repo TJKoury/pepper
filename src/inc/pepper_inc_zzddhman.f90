@@ -140,8 +140,7 @@
 !>                user may have open simultaneously.
 module pepper_inc_zzddhman
 
-   use, intrinsic :: iso_fortran_env, only: file_storage_size
-   use pepper_kinds, only: ip
+   use pepper_kinds, only: ip, wp
 
    implicit none
 
@@ -217,44 +216,54 @@ module pepper_inc_zzddhman
 
    integer(ip), parameter :: numarc = 2
 
-   !> PEPPER: the RECL= of a binary kernel's records of 1024 bytes, in the
-   !> file storage units that RECL= counts (FILE_STORAGE_SIZE bits: 8 for
-   !> gfortran; 32 for Intel Fortran without -assume byterecl), so no
-   !> compiler option is needed (SPICELIB set 1024 per platform, and built
-   !> ifort with -assume byterecl). SPICELIB's notes:
-   integer(ip), parameter :: recl = (1024*8)/file_storage_size  !! For the following environments, record length is measured in
-                                          !! characters (bytes) with eight characters per double precision
-                                          !! number.
-                                          !!
-                                          !! Environment: Sun, Sun FORTRAN
-                                          !! Source:      Sun Fortran Programmer's Guide
-                                          !!
-                                          !! Environment: PC, MS FORTRAN
-                                          !! Source:      Microsoft Fortran Optimizing Compiler User's Guide
-                                          !!
-                                          !! Environment: Macintosh, Language Systems FORTRAN
-                                          !! Source:      Language Systems FORTRAN Reference Manual,
-                                          !! Version 1.2, page 12-7
-                                          !!
-                                          !! Environment: PC/Linux, g77
-                                          !! Source:      Determined by experiment.
-                                          !!
-                                          !! Environment: PC, Lahey F77 EM/32 Version 4.0
-                                          !! Source:      Lahey F77 EM/32 Language Reference Manual,
-                                          !! page 144
-                                          !!
-                                          !! Environment: HP-UX 9000/750, FORTRAN/9000 Series 700 computers
-                                          !! Source:      FORTRAN/9000 Reference-Series 700 Computers,
-                                          !! page 5-110
-                                          !!
-                                          !! Environment: NeXT Mach OS (Black Hardware),
-                                          !! Absoft Fortran Version 3.2
-                                          !! Source:      NAIF Program
-
    integer(ip), parameter :: filen = 255  !! The following parameter defines the size of a string used
                                           !! to store a filenames on this target platform.
 
    integer(ip), parameter :: cbfsiz = 1024  !! The following parameter controls the size of the character record
                                             !! buffer used to read data from non-native files.
+
+contains
+
+   !> PEPPER: the RECL= of a binary kernel's record of 1024 bytes (128
+   !> double precision numbers), in the units the compiler counts RECL=
+   !> in: from INQUIRE (IOLENGTH=), so no compiler option is needed.
+   !> SPICELIB set 1024 per platform, and built ifort with -assume
+   !> byterecl: Intel Fortran counts RECL= in 4-byte units by default
+   !> (256 here), although its FILE_STORAGE_SIZE is 8. SPICELIB's notes
+   !> on the record length follow.
+   integer(ip) function record_length()
+      !! For the following environments, record length is measured in
+      !! characters (bytes) with eight characters per double precision
+      !! number.
+      !!
+      !! Environment: Sun, Sun FORTRAN
+      !! Source:      Sun Fortran Programmer's Guide
+      !!
+      !! Environment: PC, MS FORTRAN
+      !! Source:      Microsoft Fortran Optimizing Compiler User's Guide
+      !!
+      !! Environment: Macintosh, Language Systems FORTRAN
+      !! Source:      Language Systems FORTRAN Reference Manual,
+      !! Version 1.2, page 12-7
+      !!
+      !! Environment: PC/Linux, g77
+      !! Source:      Determined by experiment.
+      !!
+      !! Environment: PC, Lahey F77 EM/32 Version 4.0
+      !! Source:      Lahey F77 EM/32 Language Reference Manual,
+      !! page 144
+      !!
+      !! Environment: HP-UX 9000/750, FORTRAN/9000 Series 700 computers
+      !! Source:      FORTRAN/9000 Reference-Series 700 Computers,
+      !! page 5-110
+      !!
+      !! Environment: NeXT Mach OS (Black Hardware),
+      !! Absoft Fortran Version 3.2
+      !! Source:      NAIF Program
+      real(wp) :: record(128)  !! one record
+      integer :: n
+      inquire (iolength=n) record
+      record_length = n
+   end function record_length
 
 end module pepper_inc_zzddhman

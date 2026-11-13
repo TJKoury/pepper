@@ -35,7 +35,8 @@ module pepper_query_types
       integer(ip) :: type = 0  !! the segment type
       integer(ip) :: center = 0  !! the center of motion
       integer(ip) :: frame = 0  !! the frame of the states
-      integer(ip) :: begin = 0  !! address of the first record (types 2 and 3)
+      integer(ip) :: begin = 0  !! address of the segment's first word (types 2 and 3: of the first record)
+      integer(ip) :: last = 0  !! address of the segment's last word
       real(wp) :: init = 0.0_wp  !! start of the first record's interval (types 2 and 3)
       real(wp) :: intlen = 0.0_wp  !! length of a record's interval (types 2 and 3)
       real(wp) :: rsize = 0.0_wp  !! record size, as stored in the segment (types 2 and 3)

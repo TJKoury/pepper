@@ -20,6 +20,7 @@ program test_daf
    a = spice%new_context()
    b = spice%new_context()
 
+   call test_pack_unpack()
    call delete_file()
    call write_daf()
    call test_units_closed()
@@ -93,6 +94,28 @@ contains
       call a%dafcls(h)
       call check(.not. a%failed(), 'write the DAF')
    end subroutine write_daf
+
+   !> DAFPS and DAFUS: integers whose packed words are NaN patterns or
+   !> denormals as reals (negative, small) round trip bit for bit; an odd
+   !> number of integers leaves the last word's second half zero; nothing
+   !> is written past the summary.
+   subroutine test_pack_unpack()
+      integer(ip), parameter :: ics(5) = [-1_ip, -82_ip, huge(0_ip), -huge(0_ip) - 1_ip, 3_ip]
+      real(wp) :: sum(6), dc(2)
+      integer(ip) :: ic(5), halves(2)
+      sum = 7.0_wp
+      call a%dafps(2_ip, 5_ip, [1.5_wp, -2.5_wp], ics, sum)
+      call a%dafus(sum, 2_ip, 5_ip, dc, ic)
+      call check(all(dc == [1.5_wp, -2.5_wp]) .and. all(ic == ics), 'dafps/dafus round trip')
+      halves = transfer(sum(3), 0_ip, 2)
+      call check(all(halves == ics(1:2)), 'dafps: two integers to a word, in order')
+      halves = transfer(sum(5), 0_ip, 2)
+      call check(halves(1) == ics(5) .and. halves(2) == 0, 'dafps: odd NI, the last half word is zero')
+      call check(sum(6) == 7.0_wp, 'dafps: nothing past the summary')
+      sum = 7.0_wp
+      call a%dafps(2_ip, 0_ip, [1.5_wp, -2.5_wp], ic, sum)
+      call check(all(sum(3:) == 7.0_wp), 'dafps: NI = 0, no integer words')
+   end subroutine test_pack_unpack
 
    !> The summary's integer components (the array number and its length).
    subroutine array_of(ctx, k, n)

@@ -2536,7 +2536,6 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 17-FEB-2004 (EDW) (BVS)
       module procedure zzascii
-      use, intrinsic :: iso_fortran_env, only: file_storage_size, character_storage_size
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, rtrim
 
@@ -2554,6 +2553,7 @@ contains
       integer(ip) :: maccnt
       integer(ip) :: number
       integer(ip) :: reclen
+      integer :: iolen
       integer(ip) :: unxcnt
 
 !
@@ -2589,10 +2589,11 @@ contains
 !     Set the record length that will be used to read data from
 !     the file.
 !
-      ! PEPPER: the record of LEN(LINE) characters in the file storage
-      ! units RECL= counts (8 bits: gfortran; 32 bits: Intel Fortran without
-      ! -assume byterecl), rounded up
-      reclen  = ( len(line)*character_storage_size + file_storage_size - 1 ) / file_storage_size
+      ! PEPPER: the record of LEN(LINE) characters, in the units RECL=
+      ! counts (bytes for gfortran; 4-byte words for Intel Fortran without
+      ! -assume byterecl): INQUIRE (IOLENGTH=), no compiler option needed
+      inquire ( iolength = iolen ) line
+      reclen  = iolen
 
 !
 !     Check the length of the work string is sufficient to perform the

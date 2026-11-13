@@ -38,9 +38,10 @@ source-form = "default"
 # do the tests. NAIF's tspice test code does on Windows (tspice/fpm.toml).
 #
 # The library needs no option for the record lengths of binary files: it
-# computes RECL= from FILE_STORAGE_SIZE (pepper_inc_zzddhman), where
-# SPICELIB's ifort builds needed -assume byterecl. NAIF's tspice test code
-# does need it (tspice/fpm.toml).
+# gets RECL= from INQUIRE (IOLENGTH=) (pepper_inc_zzddhman, ZZASCII), where
+# SPICELIB's ifort builds needed -assume byterecl. (Not FILE_STORAGE_SIZE:
+# Intel Fortran's is 8 bits, though it counts RECL= in 4-byte words.)
+# NAIF's tspice test code does need the option (tspice/fpm.toml).
 [features]
 platform.gfortran.flags = "-frecursive"
 platform.ifx.flags = "-recursive"

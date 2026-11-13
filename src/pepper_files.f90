@@ -4797,7 +4797,7 @@ contains
       open ( newunit = utlun(uindex), &
              file   = fname( 1:rchar ), &
              access = 'DIRECT', &
-             recl   = recl, &
+             recl   = record_length(), &
              status = 'OLD', &
              iostat = iostat            )
 
@@ -6333,7 +6333,7 @@ contains
 
          open ( newunit = utlun(uindex), &
                 access = 'DIRECT', &
-                recl   = recl, &
+                recl   = record_length(), &
                 status = 'SCRATCH', &
                 iostat = iostat           )
 
@@ -6344,7 +6344,7 @@ contains
          open ( newunit = utlun(uindex), &
                 file   = locfnm, &
                 access = 'DIRECT', &
-                recl   = recl, &
+                recl   = record_length(), &
                 status = 'NEW', &
                 iostat = iostat           )
 
@@ -6355,7 +6355,7 @@ contains
          open ( newunit = utlun(uindex), &
                 file   = locfnm, &
                 access = 'DIRECT', &
-                recl   = recl, &
+                recl   = record_length(), &
                 status = 'OLD', &
                 iostat = iostat           )
 
@@ -6364,7 +6364,7 @@ contains
          open ( newunit = utlun(uindex), &
                 file   = locfnm, &
                 access = 'DIRECT', &
-                recl   = recl, &
+                recl   = record_length(), &
                 status = 'OLD', &
                 iostat = iostat           )
 
@@ -7201,7 +7201,7 @@ contains
             open ( newunit = utlun(uindex), &
                    file   = ft%files(findex)%name, &
                    access = 'DIRECT', &
-                   recl   = recl, &
+                   recl   = record_length(), &
                    status = 'OLD', &
                    iostat = iostat           )
 
@@ -7210,7 +7210,7 @@ contains
             open ( newunit = utlun(uindex), &
                    file   = ft%files(findex)%name, &
                    access = 'DIRECT', &
-                   recl   = recl, &
+                   recl   = record_length(), &
                    status = 'OLD', &
                    iostat = iostat           )
 

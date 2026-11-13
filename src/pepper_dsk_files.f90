@@ -1397,7 +1397,7 @@ contains
          open ( newunit               = number, &
                 file               = file, &
                 access             = 'DIRECT', &
-                recl               = recl, &
+                recl               = record_length(), &
                 status             = 'OLD', &
                 iostat             = iostat    )
 

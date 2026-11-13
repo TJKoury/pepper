@@ -11751,22 +11751,24 @@ contains
       module procedure dafps
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp) :: dequiv   ( 125 )
-      integer(ip) :: iequiv   ( 250 )
+      integer(ip) :: words ( 250 )
       integer(ip) :: n
       integer(ip) :: m
-      equivalence         ( dequiv, iequiv )
+      integer(ip) :: nw
       n = min ( 125, max ( 0, nd ) )
 
       sum(1:n) = dc(1:n)
 
 !
-!     The integer components must detour through an equivalence.
+!     PEPPER: the integers are packed two to a double precision word
+!     by TRANSFER (SPICELIB: EQUIVALENCE); the second half of the last
+!     word is zero when NI is odd.
 !
-      m = min ( 250 - 2 * n, max ( 0, ni ) )
-
-      iequiv(1:m) = ic(1:m)
-      sum(n+1:n+1+(m-1)/2) = dequiv(1:(m - 1) / 2 + 1)
+      m  = min ( 250 - 2 * n, max ( 0, ni ) )
+      nw = ( m + 1 ) / 2
+      words(1:m)      = ic(1:m)
+      words(m+1:2*nw) = 0
+      sum(n+1:n+nw)   = transfer ( words(1:2*nw), 0.0_wp, nw )
 
       return
       end procedure dafps
@@ -12006,19 +12008,19 @@ contains
       module procedure dafus
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp) :: dequiv   ( 125 )
-      integer(ip) :: iequiv   ( 250 )
       integer(ip) :: n
       integer(ip) :: m
-      equivalence         ( dequiv, iequiv )
       n = min ( 125, max ( 0, nd ) )
 
       dc(1:n) = sum(1:n)
 
+!
+!     PEPPER: the integers are unpacked from the double precision words
+!     by TRANSFER (SPICELIB: EQUIVALENCE).
+!
       m = min ( 250 - 2 * n, max ( 0, ni ) )
 
-      dequiv(1:(m - 1) / 2 + 1) = sum(n+1:n+1+(m-1)/2)
-      ic(1:m) = iequiv(1:m)
+      ic(1:m) = transfer ( sum(n+1:n+(m+1)/2), 0_ip, m )
 
       return
       end procedure dafus

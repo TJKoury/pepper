@@ -339,12 +339,11 @@ contains
    !> The index in Q%SEGS of a segment (added if new): its center, frame
    !> and type, and for types 2 and 3 the record directory (SPKR02, SPKR03).
    !>
-   !> Descriptors are compared bit for bit, not as reals: their integer
-   !> components are packed in doubles that are denormal numbers, which
-   !> compare equal to zero (and to each other) when the compiler flushes
-   !> denormals to zero (ifx's default floating-point model).
+   !> A segment is identified by its file and its addresses in the file,
+   !> from the unpacked descriptor. (The packed descriptor's integer
+   !> components are not numbers: as reals they are denormals or NaNs, which
+   !> do not compare as their bits do.)
    recursive integer(ip) function segment_slot ( ctx, q, handle, descr ) result ( k )
-      use, intrinsic :: iso_fortran_env, only: int64
       class(pepper_context), intent(inout) :: ctx  !! the context
       type(state_query), intent(inout) :: q  !! the query
       integer(ip), intent(in) :: handle  !! the segment's file
@@ -353,10 +352,11 @@ contains
       real(wp) :: dc(2)
       real(wp) :: trailer(4)
       integer(ip) :: ic(6)
+      call dafus ( ctx, descr, 2, 6, dc, ic )
       do k = 1, q%nsegs
-         if ( q%segs(k)%handle == handle ) then
-            if ( all ( transfer ( q%segs(k)%descr, 0_int64, 5 ) == transfer ( descr, 0_int64, 5 ) ) ) return
-         end if
+         if (       q%segs(k)%handle == handle &
+              .and. q%segs(k)%begin  == ic(5) &
+              .and. q%segs(k)%last   == ic(6) ) return
       end do
       if ( .not. allocated ( q%segs ) ) allocate ( q%segs(8) )
       if ( q%nsegs == size(q%segs) ) then
@@ -365,9 +365,10 @@ contains
          call move_alloc ( tmp, q%segs )
       end if
       k = q%nsegs + 1
-      call dafus ( ctx, descr, 2, 6, dc, ic )
       q%segs(k)%handle = handle
       q%segs(k)%descr  = descr
+      q%segs(k)%begin  = ic(5)
+      q%segs(k)%last   = ic(6)
       q%segs(k)%center = ic(2)
       q%segs(k)%frame  = ic(3)
       q%segs(k)%type   = ic(4)
@@ -375,7 +376,6 @@ contains
       if ( ic(4) == 2 .or. ic(4) == 3 ) then
          call dafgda ( ctx, handle, ic(6)-3, ic(6), trailer )
          if ( ctx%failed() ) return
-         q%segs(k)%begin  = ic(5)
          q%segs(k)%init   = trailer(1)
          q%segs(k)%intlen = trailer(2)
          q%segs(k)%rsize  = trailer(3)
