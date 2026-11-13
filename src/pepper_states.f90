@@ -6127,6 +6127,14 @@ contains
       call self%id_map%clear()
    end subroutine surface_names_clear
 
+   !> The length of id_text's result.
+   pure integer function id_text_length(id) result(n)
+      integer(ip), intent(in) :: id  !! the ID
+      character(12) :: b
+      write (b, '(i0)') id
+      n = len_trim(b)
+   end function id_text_length
+
    !> The key of a (normalized name or ID, body) pair in the maps.
    pure function surface_key(item, body) result(key)
       character(*), intent(in) :: item  !! the normalized name, or the ID as text
@@ -6145,14 +6153,6 @@ contains
       write (b, '(i0)') id
       t = b
    end function id_text
-
-   !> The length of id_text's result.
-   pure integer function id_text_length(id) result(n)
-      integer(ip), intent(in) :: id  !! the ID
-      character(12) :: b
-      write (b, '(i0)') id
-      n = len_trim(b)
-   end function id_text_length
 
    !> Build the maps (SPICELIB's ZZSRFINI order: from the last assignment
    !> to the first, a (name, body) is added if it is new, and then its

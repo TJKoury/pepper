@@ -21473,6 +21473,18 @@ contains
       n = max(1_ip, n)
    end function sclk_partition_count
 
+   !> The length of file_name's result: the length of the file's name, 1
+   !> if there is no file with the handle.
+   pure integer function file_name_length(spice, handle) result(n)
+      type(pepper_spice), intent(in) :: spice  !! the instance
+      integer(ip), intent(in) :: handle  !! the handle
+      integer(ip) :: i
+      n = 1
+      if (.not. allocated(spice%zzddhman)) return
+      i = spice%zzddhman%find(handle)
+      if (i > 0) n = len(spice%zzddhman%files(i)%name)
+   end function file_name_length
+
    !> The name of the file with a DAF or DAS handle, whole (blank if no
    !> file has the handle).
    pure function file_name(spice, handle) result(name)
@@ -21485,18 +21497,6 @@ contains
       i = spice%zzddhman%find(handle)
       if (i > 0) name = spice%zzddhman%files(i)%name
    end function file_name
-
-   !> The length of file_name's result: the length of the file's name, 1
-   !> if there is no file with the handle.
-   pure integer function file_name_length(spice, handle) result(n)
-      type(pepper_spice), intent(in) :: spice  !! the instance
-      integer(ip), intent(in) :: handle  !! the handle
-      integer(ip) :: i
-      n = 1
-      if (.not. allocated(spice%zzddhman)) return
-      i = spice%zzddhman%find(handle)
-      if (i > 0) n = len(spice%zzddhman%files(i)%name)
-   end function file_name_length
 
    !> Replace the first occurrence of marker in the long message with the
    !> name of the file with a DAF or DAS handle.
@@ -21970,6 +21970,24 @@ contains
          call this%sigerr('SPICE(INVALIDMSGTYPE)')
       end select
    end subroutine ctx_getmsg
+
+   !> The length of [[ctx_message]]'s result for an option.
+   pure integer function message_length(this, option) result(n)
+      class(pepper_context), intent(in) :: this  !! the context
+      character(*), intent(in) :: option  !! 'SHORT', 'LONG' or 'EXPLAIN'
+      character(explanation_length) :: xmsg
+      select case (upper(adjustl(option)))
+      case ('SHORT')
+         n = text_length(this%short)
+      case ('EXPLAIN')
+         call expln(short_text(this), xmsg)
+         n = len_trim(xmsg)
+      case ('LONG')
+         n = text_length(this%long)
+      case default
+         n = 0
+      end select
+   end function message_length
 
    !> An error message, whole: option 'SHORT', 'LONG' or 'EXPLAIN' (as
    !> getmsg), case-insensitive. Blank if there is no error; an invalid
@@ -22501,6 +22519,21 @@ contains
       this%long = this%long(:k - 1) // string // this%long(k + len(mark):)
    end subroutine replace_marker
 
+   !> The length of a string that may not be allocated (0 if it is not).
+   !>
+   !> PEPPER: the functions of this module that return strings give them
+   !> the length of a specification expression like this one, not a
+   !> deferred length (`character(:), allocatable` results): gfortran (at
+   !> least up to 16.2) keeps the length of a deferred-length function
+   !> result in a static variable at each call site (`slen`), which threads
+   !> share, so concurrent calls get each other's lengths and corrupt the
+   !> heap. Functions with a deferred-length result are not used.
+   pure integer function text_length(s) result(n)
+      character(:), allocatable, intent(in) :: s  !! the string
+      n = 0
+      if (allocated(s)) n = len(s)
+   end function text_length
+
    !> The short error message (blank if none).
    pure function short_text(this) result(msg)
       type(pepper_context), intent(in) :: this  !! the context
@@ -22533,39 +22566,6 @@ contains
          device = 'NULL'
       end if
    end function device_text
-
-   !> The length of a string that may not be allocated (0 if it is not).
-   !>
-   !> PEPPER: the functions of this module that return strings give them
-   !> the length of a specification expression like this one, not a
-   !> deferred length (`character(:), allocatable` results): gfortran (at
-   !> least up to 16.2) keeps the length of a deferred-length function
-   !> result in a static variable at each call site (`slen`), which threads
-   !> share, so concurrent calls get each other's lengths and corrupt the
-   !> heap. Functions with a deferred-length result are not used.
-   pure integer function text_length(s) result(n)
-      character(:), allocatable, intent(in) :: s  !! the string
-      n = 0
-      if (allocated(s)) n = len(s)
-   end function text_length
-
-   !> The length of [[ctx_message]]'s result for an option.
-   pure integer function message_length(this, option) result(n)
-      class(pepper_context), intent(in) :: this  !! the context
-      character(*), intent(in) :: option  !! 'SHORT', 'LONG' or 'EXPLAIN'
-      character(explanation_length) :: xmsg
-      select case (upper(adjustl(option)))
-      case ('SHORT')
-         n = text_length(this%short)
-      case ('EXPLAIN')
-         call expln(short_text(this), xmsg)
-         n = len_trim(xmsg)
-      case ('LONG')
-         n = text_length(this%long)
-      case default
-         n = 0
-      end select
-   end function message_length
 
    !> Uppercase version of a string (ASCII letters).
    pure function upper(s) result(u)

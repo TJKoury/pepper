@@ -5134,6 +5134,15 @@ contains
       end if
    end subroutine object_frame
 
+   !> PEPPER: the length of int_text's result.
+   pure integer function int_text_length ( i ) result ( n )
+      use pepper_strings, only: intstr
+      integer(ip), intent(in) :: i  !! the integer
+      character(24) :: buf
+      call intstr ( i, buf )
+      n = len_trim ( buf )
+   end function int_text_length
+
    !> PEPPER: the frame kernel variable FRAME_<frcode>_<item>.
    pure function frame_variable ( frcode, item ) result ( name )
       integer(ip), intent(in) :: frcode  !! the frame ID code
@@ -5157,15 +5166,6 @@ contains
       call intstr ( i, buf )
       text = buf
    end function int_text
-
-   !> PEPPER: the length of int_text's result.
-   pure integer function int_text_length ( i ) result ( n )
-      use pepper_strings, only: intstr
-      integer(ip), intent(in) :: i  !! the integer
-      character(24) :: buf
-      call intstr ( i, buf )
-      n = len_trim ( buf )
-   end function int_text_length
 
    !> PEPPER: a string as [[repmc]] substitutes it for a marker: without
    !> leading and trailing blanks, or a single blank if it is blank.

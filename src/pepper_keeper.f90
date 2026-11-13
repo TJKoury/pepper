@@ -5499,6 +5499,22 @@ contains
       end associate
       end procedure kinfo
 
+      !> The length of the longest file name among the kernels loaded
+      !> through FURNSH (at least 1).
+      pure integer(ip) function longest_kernel_name ( ctx ) result ( n )
+      use pepper_kinds, only: ip
+      implicit none
+      class(pepper_context), intent(in) :: ctx  !! the context
+      integer(ip) :: j
+      n = 1
+      if ( .not. allocated ( ctx%spice%keeper ) ) return
+      associate ( kt => ctx%spice%keeper )
+      do j = 1, kt%loaded
+         n = max ( n, len ( kt%kernels(j)%name, ip ) )
+      end do
+      end associate
+      end function longest_kernel_name
+
       !> The data of the nth kernel of a kind loaded through FURNSH, with
       !> file names of any length (PEPPER).
       module procedure kernel_data
@@ -5524,22 +5540,6 @@ contains
       filtyp = trim ( t )
       source = trim ( s )
       end procedure kernel_info
-
-      !> The length of the longest file name among the kernels loaded
-      !> through FURNSH (at least 1).
-      pure integer(ip) function longest_kernel_name ( ctx ) result ( n )
-      use pepper_kinds, only: ip
-      implicit none
-      class(pepper_context), intent(in) :: ctx  !! the context
-      integer(ip) :: j
-      n = 1
-      if ( .not. allocated ( ctx%spice%keeper ) ) return
-      associate ( kt => ctx%spice%keeper )
-      do j = 1, kt%loaded
-         n = max ( n, len ( kt%kernels(j)%name, ip ) )
-      end do
-      end associate
-      end function longest_kernel_name
 
       !>## Detailed Input
       !>
