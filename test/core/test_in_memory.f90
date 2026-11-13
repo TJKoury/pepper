@@ -43,6 +43,7 @@ program test_in_memory
    call check(.not. from_file%failed() .and. .not. in_memory%failed(), 'both instances load the SPK')
    call check(from_file%kernel_memory() == 0, 'the file read as needed takes no memory')
    call check(in_memory%kernel_memory() == size_bytes, 'the file in memory takes its size')
+   call same_data(size_bytes)
    call same_states(m, 'the instance''s context: the same states as from the file')
    call same_states(m2, 'another context: the same states as from the file')
 
@@ -128,6 +129,42 @@ contains
       call report_error(ctx)
       call report_error(f)
    end subroutine same_states
+
+   !> The copy in memory holds the file's data: every address read through
+   !> DAFGDA from the copy (the instance in memory) and from the file (the
+   !> other instance, the same data in spk_file). On the first difference,
+   !> print the address, both values, and where the file's value is in the
+   !> copy, if anywhere (a shift, or bytes swapped, would show there).
+   subroutine same_data(nbytes)
+      integer(int64), intent(in) :: nbytes  !! the size of the file
+      character(1024) :: file, kind, source
+      integer(ip) :: hf, hm, n, k, j
+      real(wp), allocatable :: df(:), dm(:)
+      logical :: found
+      ! the data records only (from record 3: the file record and the first
+      ! summary record hold characters and packed integers)
+      n = int(nbytes/8, ip)
+      call f%kinfo(spk_file, kind, source, hf, found)
+      call m%kinfo(spk, kind, source, hm, found)
+      allocate (df(n), dm(n))
+      df = 0.0_wp
+      dm = 0.0_wp
+      do k = 257, n, 128
+         call f%dafgda(hf, k, min(k + 127, n), df(k))
+         call m%dafgda(hm, k, min(k + 127, n), dm(k))
+      end do
+      call report_error(f)
+      call report_error(m)
+      k = findloc(df(257:n) == dm(257:n), .false., dim=1)
+      if (k > 0) then
+         k = k + 256
+         j = findloc(dm, df(k), dim=1)
+         print '(a, i0, a, es24.16, a, es24.16, a, i0)', '   first difference at address ', k, &
+            ': file ', df(k), ', memory ', dm(k), '; the file''s value is in memory at ', j
+      end if
+      call check(k == 0 .and. .not. m%failed(), 'the copy in memory holds the file''s data')
+      call m%reset()
+   end subroutine same_data
 
    !> Print a context's error message, if it has one (for the logs of CI).
    subroutine report_error(ctx)
