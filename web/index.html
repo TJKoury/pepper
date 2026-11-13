@@ -10,6 +10,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <!-- three.js, for the hero's 3D logo (hero3d.js) -->
+  <script type="importmap">
+    {"imports": {"three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                 "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+  </script>
 </head>
 <body>
   <canvas id="stars" aria-hidden="true"></canvas>
@@ -33,6 +38,7 @@
         <div class="orbit o2"><span class="planet p2"></span></div>
         <div class="orbit o3"><span class="planet p3"><span class="ring"></span></span></div>
         <img class="hero-logo" src="logo_mark.svg" alt="PEPPER logo: a pepper shaker pouring out the planets">
+        <canvas class="hero-3d" aria-hidden="true"></canvas>
       </div>
       <div class="hero-text">
         <p class="eyebrow">Modern Fortran · thread-safe · SPICE-compatible</p>
@@ -157,5 +163,6 @@ state, lt = spice.spkezr(<span class="s">'MOON'</span>, et, <span class="s">'J20
   </footer>
 
   <script src="script.js"></script>
+  <script type="module" src="hero3d.js"></script>
 </body>
 </html>

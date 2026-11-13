@@ -5,7 +5,9 @@ pouring planets, with textures, as
 
   pepper_logo.glb   glTF 2.0 binary: geometry, materials (metallic chrome,
                     glazed ceramic) and textures in one file, and a camera
-                    looking at the scene as the logo shows it;
+                    looking at the scene as the logo shows it; each planet
+                    is a node placed and tilted (its mesh around its own
+                    axis, Y), so it can be spun (the website's hero does);
   pepper_logo.3ds   3D Studio, with its texture images next to it (3DS
                     stores only their file names, 8.3 DOS names).
 
@@ -299,6 +301,33 @@ class Mesh:
     def __init__(self, name, material):
         self.name, self.material = name, material
         self.pos, self.nrm, self.uv, self.tri, self.group = [], [], [], [], []
+        # a placement kept apart from the vertices (a planet's: its center,
+        # and its axis tilted TOWARD the viewer then IN the logo's plane, in
+        # degrees): the glTF file has it as its node's transform, so the
+        # planet can spin about its own axis; the 3DS file applies it
+        self.translation, self.tilt = None, None
+
+    def placed(self):
+        """Positions and normals with the placement applied."""
+        if self.translation is None:
+            return self.pos, self.nrm
+        toward, inplane = self.tilt
+        t = self.translation
+        pos = [tuple(a + b for a, b in zip(rot_z(rot_x(p, toward), inplane), t)) for p in self.pos]
+        nrm = [rot_z(rot_x(n, toward), inplane) for n in self.nrm]
+        return pos, nrm
+
+    def quaternion(self):
+        """The placement's rotation (rotation about X by TOWARD, then about
+        Z by INPLANE), as glTF's (x, y, z, w)."""
+        a, b = (math.radians(x) / 2 for x in self.tilt)
+        qx = (math.sin(a), 0.0, 0.0, math.cos(a))
+        qz = (0.0, 0.0, math.sin(b), math.cos(b))
+        # qz * qx
+        return (qz[3] * qx[0] + qz[0] * qx[3] + qz[1] * qx[2] - qz[2] * qx[1],
+                qz[3] * qx[1] - qz[0] * qx[2] + qz[1] * qx[3] + qz[2] * qx[0],
+                qz[3] * qx[2] + qz[0] * qx[1] - qz[1] * qx[0] + qz[2] * qx[3],
+                qz[3] * qx[3] - qz[0] * qx[0] - qz[1] * qx[1] - qz[2] * qx[2])
 
     def vertex(self, p, n, uv):
         self.pos.append(p)
@@ -380,7 +409,7 @@ def lathe_point(r, h, u):
     return (r * math.sin(a), h, r * math.cos(a))
 
 
-def lathe(name, material, profile, slices=96):
+def lathe(name, material, profile, slices=72):
     """The surface of revolution of PROFILE (logo pixels; Y up)."""
     m = Mesh(name, material)
     s0 = 0.0
@@ -580,27 +609,21 @@ def build_scene():
         center = to_model(cx, cy, depth)
         if kind == "dust":
             ndust += 1
-            m = sphere(f"DUST{ndust}", "dust", r * SCALE, 8, 16)
+            m = sphere(f"DUST{ndust}", "dust", r * SCALE, 6, 12)
         else:
             big = r >= 20
-            m = sphere(kind.upper()[:10], kind, r * SCALE, 48 if big else 32, 96 if big else 64)
+            m = sphere(kind.upper()[:10], kind, r * SCALE, 36 if big else 24, 72 if big else 48)
             if kind in TEXTURED:
                 name = kind.upper()[:8] + ".PNG"
                 textures[name] = sphere_texture(512, 256, TEXTURED[kind])
                 materials[kind] = {"texture": name, "color": "#ffffff", "metal": 0.0, "rough": 0.85}
             else:
                 materials[kind] = {"color": PLAIN[kind], "metal": 0.0, "rough": 0.85}
-        toward, inplane = TILTS.get(kind, (0, 0))
-
-        def place(p, is_point, toward=toward, inplane=inplane, center=center):
-            q = rot_z(rot_x(p, toward), inplane)
-            return (q[0] + center[0], q[1] + center[1], q[2] + center[2]) if is_point else q
-
-        m.transform(place)
+        m.translation, m.tilt = center, TILTS.get(kind, (0, 0))
         meshes.append(m)
         if kind == "saturn":
-            ring = annulus("RINGS", "rings", SATURN_RING[0] * r * SCALE, SATURN_RING[1] * r * SCALE, 128)
-            ring.transform(place)
+            ring = annulus("RINGS", "rings", SATURN_RING[0] * r * SCALE, SATURN_RING[1] * r * SCALE, 96)
+            ring.translation, ring.tilt = m.translation, m.tilt
             meshes.append(ring)
             textures["RINGS.PNG"] = ring_texture(512)
             materials["rings"] = {"texture": "RINGS.PNG", "color": "#ffffff", "metal": 0.0, "rough": 0.8,
@@ -628,7 +651,7 @@ def write_glb(path, meshes, materials, textures):
 
     def add_accessor(values, kind, ctype, target, minmax=False):
         flat = [x for v in values for x in (v if isinstance(v, tuple) else (v,))]
-        fmt = {5126: "f", 5125: "I"}[ctype]
+        fmt = {5126: "f", 5125: "I", 5123: "H"}[ctype]
         acc = {"bufferView": add_view(struct.pack(f"<{len(flat)}{fmt}", *flat), target),
                "componentType": ctype, "count": len(values), "type": kind}
         if minmax:
@@ -662,13 +685,18 @@ def write_glb(path, meshes, materials, textures):
 
     gl_meshes, nodes = [], []
     for m in meshes:
+        indices = [i for t in m.tri for i in t]
         prim = {"attributes": {"POSITION": add_accessor(m.pos, "VEC3", 5126, 34962, True),
                                "NORMAL": add_accessor(m.nrm, "VEC3", 5126, 34962),
                                "TEXCOORD_0": add_accessor(m.uv, "VEC2", 5126, 34962)},
-                "indices": add_accessor([i for t in m.tri for i in t], "SCALAR", 5125, 34963),
+                "indices": add_accessor(indices, "SCALAR", 5123 if len(m.pos) < 65536 else 5125, 34963),
                 "material": mat_index[m.material]}
         gl_meshes.append({"name": m.name, "primitives": [prim]})
-        nodes.append({"name": m.name, "mesh": len(gl_meshes) - 1})
+        node = {"name": m.name, "mesh": len(gl_meshes) - 1}
+        if m.translation is not None:
+            node["translation"] = list(m.translation)
+            node["rotation"] = list(m.quaternion())
+        nodes.append(node)
     # a camera looking at the scene as the logo shows it (the whole of it)
     nodes.append({"name": "Camera", "camera": 0, "translation": [0.0, 0.0, 14.0]})
 
@@ -737,7 +765,8 @@ def write_3ds(path, meshes, materials):
     for m in meshes:
         if len(m.pos) > 65535 or len(m.tri) > 65535:
             raise ValueError(f"{m.name}: too many vertices or faces for 3DS")
-        verts = b"".join(struct.pack("<3f", p[0], -p[2], p[1]) for p in m.pos)
+        pos, _ = m.placed()
+        verts = b"".join(struct.pack("<3f", p[0], -p[2], p[1]) for p in pos)
         uvs = b"".join(struct.pack("<2f", u, 1 - v) for u, v in m.uv)
         faces = b"".join(struct.pack("<4H", a, b, c, 7) for a, b, c in m.tri)
         face_mat = chunk(0x4130, cstr(m.material[:16]) + struct.pack("<H", len(m.tri))

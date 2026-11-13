@@ -109,6 +109,24 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
   animation: float 6s ease-in-out infinite;
 }
 
+/* the logo in 3D (hero3d.js): over the SVG, which it replaces once loaded */
+.hero-3d {
+  position: absolute;
+  inset: 18%;
+  width: 64%;
+  height: 64%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 42%, #1d2a5c, #070b1f 72%);
+  box-shadow: 0 0 60px rgba(255, 179, 71, 0.35), 0 0 140px rgba(122, 162, 255, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.2s ease;
+  animation: float 6s ease-in-out infinite;
+}
+.hero-3d.ready { opacity: 1; }
+.hero-logo { transition: opacity 1.2s ease; }
+.hero-logo.replaced { opacity: 0; }
+
 /* orbit rings, each spinning a planet around the logo */
 .orbit {
   position: absolute;
@@ -305,6 +323,6 @@ footer {
 /* ---------- reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .orbit, .hero-logo, .glow { animation: none; }
+  .orbit, .hero-logo, .hero-3d, .glow { animation: none; }
   .reveal { opacity: 1; transform: none; transition: none; }
 }
