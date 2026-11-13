@@ -33,7 +33,8 @@ source-form = "default"
 [features]
 # No preprocessor directives (plans/preprocessor_plan.md): only compiler options.
 platform.gfortran.flags = "-frecursive -fallow-argument-mismatch"
-# Intel: RECL= in bytes, as NAIF's ifort builds (the library's fpm.toml)
+# Intel: RECL= in bytes, as in NAIF's ifort builds: NAIF's test code opens
+# binary files with RECL=1024 (the library computes RECL= itself)
 platform.ifx.flags = "-recursive -assume byterecl"
 platform.ifort.flags = "-recursive -assume byterecl"
 platform.windows.ifx.flags = "/recursive /assume:byterecl"

@@ -140,6 +140,7 @@
 !>                user may have open simultaneously.
 module pepper_inc_zzddhman
 
+   use, intrinsic :: iso_fortran_env, only: file_storage_size
    use pepper_kinds, only: ip
 
    implicit none
@@ -216,7 +217,12 @@ module pepper_inc_zzddhman
 
    integer(ip), parameter :: numarc = 2
 
-   integer(ip), parameter :: recl = 1024  !! For the following environments, record length is measured in
+   !> PEPPER: the RECL= of a binary kernel's records of 1024 bytes, in the
+   !> file storage units that RECL= counts (FILE_STORAGE_SIZE bits: 8 for
+   !> gfortran; 32 for Intel Fortran without -assume byterecl), so no
+   !> compiler option is needed (SPICELIB set 1024 per platform, and built
+   !> ifort with -assume byterecl). SPICELIB's notes:
+   integer(ip), parameter :: recl = (1024*8)/file_storage_size  !! For the following environments, record length is measured in
                                           !! characters (bytes) with eight characters per double precision
                                           !! number.
                                           !!
