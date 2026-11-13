@@ -542,7 +542,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = FNAME, &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -607,7 +607,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = FNAME, &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 

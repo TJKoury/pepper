@@ -175,7 +175,7 @@
          OPEN ( UNIT   = LUN, &
                 FILE   = FNAME, &
                 ACCESS = 'DIRECT', &
-                RECL   = RECL, &
+                RECL   = RECORD_LENGTH(), &
                 STATUS = 'OLD', &
                 IOSTAT = IOSTAT      )
 
@@ -257,7 +257,7 @@
       OPEN ( UNIT   = LUN, &
              FILE   = 'spk1.bsp', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT      )
 
@@ -321,7 +321,7 @@
       OPEN ( UNIT   = LUN, &
              FILE   = 'spk1.bsp', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT      )
 
@@ -412,7 +412,7 @@
          OPEN ( UNIT   = LUN, &
                 FILE   = FNAME, &
                 ACCESS = 'DIRECT', &
-                RECL   = RECL, &
+                RECL   = RECORD_LENGTH(), &
                 STATUS = 'OLD', &
                 IOSTAT = IOSTAT      )
 
@@ -536,7 +536,7 @@
          OPEN ( UNIT   = LUN, &
                 FILE   = FNAME, &
                 ACCESS = 'DIRECT', &
-                RECL   = RECL, &
+                RECL   = RECORD_LENGTH(), &
                 STATUS = 'OLD', &
                 IOSTAT = IOSTAT      )
 
@@ -661,7 +661,7 @@
          OPEN ( UNIT   = LUN, &
                 FILE   = FNAME, &
                 ACCESS = 'DIRECT', &
-                RECL   = RECL, &
+                RECL   = RECORD_LENGTH(), &
                 STATUS = 'OLD', &
                 IOSTAT = IOSTAT      )
 

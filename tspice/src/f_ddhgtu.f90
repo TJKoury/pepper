@@ -337,7 +337,7 @@
 !
       OPEN ( UNIT   = LUN, &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'SCRATCH', &
              IOSTAT = IOSTAT     )
 
@@ -417,7 +417,7 @@
 
       OPEN ( UNIT   = LUN, &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'SCRATCH', &
              IOSTAT = IOSTAT     )
 

@@ -130,7 +130,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = FNAME(1:RTRIM(FNAME)), &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'NEW', &
              IOSTAT = IOSTAT                 )
 

@@ -457,7 +457,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = NATIVE(1:RTRIM(NATIVE)), &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT              )
 

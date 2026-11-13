@@ -197,7 +197,7 @@
       OPEN ( UNIT   = LUN, &
              FILE   = NAME, &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'NEW', &
              IOSTAT = IOSTAT    )
 

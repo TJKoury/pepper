@@ -251,7 +251,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -303,7 +303,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -355,7 +355,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdas.das', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -407,7 +407,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -459,7 +459,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdas.das', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -511,7 +511,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -564,7 +564,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -617,7 +617,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -670,7 +670,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -723,7 +723,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -776,7 +776,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdas.das', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -829,7 +829,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdas.das', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -882,7 +882,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdas.das', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -935,7 +935,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdas.das', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -988,7 +988,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdas.das', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -1056,7 +1056,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -1115,7 +1115,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -1195,7 +1195,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -1275,7 +1275,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -1355,7 +1355,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -1434,7 +1434,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -1514,7 +1514,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -1594,7 +1594,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -1675,7 +1675,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -1755,7 +1755,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -1836,7 +1836,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 
@@ -1916,7 +1916,7 @@
       OPEN ( UNIT   = UNIT, &
              FILE   = 'testdaf.daf', &
              ACCESS = 'DIRECT', &
-             RECL   = RECL, &
+             RECL   = RECORD_LENGTH(), &
              STATUS = 'OLD', &
              IOSTAT = IOSTAT    )
 

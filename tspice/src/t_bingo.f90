@@ -206,7 +206,7 @@
          OPEN ( UNIT   = UNIT, &
                 FILE   = INAME( 1 : RTRIM(INAME) ), &
                 ACCESS = 'DIRECT', &
-                RECL   = RECL, &
+                RECL   = RECORD_LENGTH(), &
                 STATUS = 'OLD', &
                 IOSTAT = IOSTAT                     )
 
