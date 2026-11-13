@@ -30,6 +30,8 @@ program test_daf
    call a%dafcls(handle)
    call check(.not. a%failed(), 'dafcls')
    call test_rewrite_seen()
+   ! b's units for the closed file (Windows cannot delete an open file)
+   call b%close_unloaded_files()
    call delete_file()
 
    if (failures > 0) then
@@ -63,8 +65,11 @@ contains
    subroutine delete_file()
       logical :: exists
       integer :: unit
+      logical :: still_open  !! the file is connected to a unit (Windows can't delete it)
       inquire (file=file, exist=exists)
       if (exists) then
+         inquire (file=file, opened=still_open)
+         if (still_open) error stop 'a file to delete is still open (Windows cannot delete it): '//file
          open (newunit=unit, file=file, status='old')
          close (unit, status='delete')
       end if

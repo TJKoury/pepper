@@ -345,6 +345,9 @@ contains
    subroutine delete(file)
       character(*), intent(in) :: file  !! the file name
       integer :: unit, iostat
+      logical :: still_open  !! the file is connected to a unit (Windows can't delete it)
+      inquire (file=file, opened=still_open)
+      if (still_open) error stop 'a file to delete is still open (Windows cannot delete it): '//file
       open (newunit=unit, file=file, status='old', iostat=iostat)
       if (iostat == 0) close (unit, status='delete')
    end subroutine delete

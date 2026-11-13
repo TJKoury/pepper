@@ -63,6 +63,7 @@ program test_gf
    if (a%wncard(ra) == b%wncard(rb)) call check(all(ra(1:2*a%wncard(ra)) == rb(1:2*b%wncard(rb))), &
                                                 'gfdist: same windows in a and b')
    call spice%kclear()
+   call b%close_unloaded_files()  ! (Windows cannot delete an open file)
    call delete_file()
 
    if (failures > 0) then
@@ -113,8 +114,11 @@ contains
    subroutine delete_file()
       logical :: exists
       integer :: unit
+      logical :: still_open  !! the file is connected to a unit (Windows can't delete it)
       inquire (file=spk, exist=exists)
       if (exists) then
+         inquire (file=spk, opened=still_open)
+         if (still_open) error stop 'a file to delete is still open (Windows cannot delete it): '//spk
          open (newunit=unit, file=spk, status='old')
          close (unit, status='delete')
       end if

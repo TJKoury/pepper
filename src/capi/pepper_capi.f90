@@ -2945,6 +2945,8 @@ contains
    integer(c_int) function c_pepper_dskw02 ( ctx, handle, center, surfid, dclass, frame, corsys, corpar, mncor1, &
          mxcor1, mncor2, mxcor2, mncor3, mxcor3, first, last, nv, vrtces, np, plates, spaixd, spaixi ) bind(c, &
          name='pepper_dskw02')
+      integer(c_int), value :: nv  !! Number of vertices.
+      integer(c_int), value :: np  !! Number of plates.
       type(c_ptr), value :: ctx  !! the context
       integer(c_int), value :: handle  !! Handle assigned to the opened DSK file.
       integer(c_int), value :: center  !! Central body ID code.
@@ -2961,9 +2963,7 @@ contains
       real(c_double), value :: mxcor3  !! Maximum value of third coordinate.
       real(c_double), value :: first  !! Coverage start time.
       real(c_double), value :: last  !! Coverage stop time.
-      integer(c_int), value :: nv  !! Number of vertices.
       real(c_double), intent(in) :: vrtces(3,nv)  !! Vertices.
-      integer(c_int), value :: np  !! Number of plates.
       integer(c_int), intent(in) :: plates(3,np)  !! Plates.
       real(c_double), intent(in) :: spaixd(*)  !! Double precision component of spatial index.
       integer(c_int), intent(in) :: spaixi(*)  !! Integer component of spatial index.
@@ -3099,6 +3099,7 @@ contains
    !> C interface of `edterm`: Compute a set of points on the umbral or penumbral terminator of a specified target body, where the target shape is modeled as an ellipsoid.
    integer(c_int) function c_pepper_edterm ( ctx, trmtyp, source, target, et, fixref, abcorr, obsrvr, npts, trgepc, &
          obspos, trmpts ) bind(c, name='pepper_edterm')
+      integer(c_int), value :: npts  !! Number of points in terminator set.
       type(c_ptr), value :: ctx  !! the context
       character(kind=c_char), intent(in) :: trmtyp(*)  !! Terminator type.
       character(kind=c_char), intent(in) :: source(*)  !! Light source.
@@ -3107,7 +3108,6 @@ contains
       character(kind=c_char), intent(in) :: fixref(*)  !! Body-fixed frame associated with target.
       character(kind=c_char), intent(in) :: abcorr(*)  !! Aberration correction.
       character(kind=c_char), intent(in) :: obsrvr(*)  !! Observer.
-      integer(c_int), value :: npts  !! Number of points in terminator set.
       real(c_double), intent(out) :: trgepc  !! Epoch associated with target center.
       real(c_double), intent(out) :: obspos(3)  !! Position of observer in body-fixed frame.
       real(c_double), intent(out) :: trmpts(3,npts)  !! Terminator point set.
@@ -4136,6 +4136,8 @@ contains
    !> C interface of `gf_distance`: A GF search on the observer-target distance (PEPPER; [[gfdist]] with the confinement and result windows as arrays, and without workspace).
    integer(c_int) function c_pepper_gf_distance ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, &
          cnfine_rows, cnfine_cols, cnfine, result, result_rows, result_cols ) bind(c, name='pepper_gf_distance')
+      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
+      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       type(c_ptr), value :: ctx  !! the context
       character(kind=c_char), intent(in) :: target(*)  !! Name of the target body.
       character(kind=c_char), intent(in) :: abcorr(*)  !! Aberration correction flag.
@@ -4144,8 +4146,6 @@ contains
       real(c_double), value :: refval  !! Reference value.
       real(c_double), value :: adjust  !! Adjustment value for absolute extrema searches.
       real(c_double), value :: step  !! Step size used for locating extrema and roots.
-      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
-      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       real(c_double), intent(in) :: cnfine(cnfine_cols, cnfine_rows)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
       type(c_ptr), intent(out) :: result  !! the result window, shape (2, n) (n = 0 after an error) (in the context)
       integer(c_int), intent(out) :: result_rows  !! its number of rows (Fortran: columns)
@@ -4174,6 +4174,8 @@ contains
    integer(c_int) function c_pepper_gf_illumination ( ctx, method, angtyp, target, illmn, fixref, abcorr, obsrvr, &
          spoint, relate, refval, adjust, step, cnfine_rows, cnfine_cols, cnfine, result, result_rows, &
          result_cols ) bind(c, name='pepper_gf_illumination')
+      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
+      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       type(c_ptr), value :: ctx  !! the context
       character(kind=c_char), intent(in) :: method(*)  !! Computation method.
       character(kind=c_char), intent(in) :: angtyp(*)  !! Type of illumination angle.
@@ -4187,8 +4189,6 @@ contains
       real(c_double), value :: refval  !! Reference value.
       real(c_double), value :: adjust  !! Adjustment value for absolute extrema searches.
       real(c_double), value :: step  !! Step size used for locating extrema and roots.
-      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
-      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       real(c_double), intent(in) :: cnfine(cnfine_cols, cnfine_rows)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
       type(c_ptr), intent(out) :: result  !! the result window, shape (2, n) (n = 0 after an error) (in the context)
       integer(c_int), intent(out) :: result_rows  !! its number of rows (Fortran: columns)
@@ -4226,6 +4226,8 @@ contains
    integer(c_int) function c_pepper_gf_intercept ( ctx, target, fixref, method, abcorr, obsrvr, dref, dvec, crdsys, &
          coord, relate, refval, adjust, step, cnfine_rows, cnfine_cols, cnfine, result, result_rows, &
          result_cols ) bind(c, name='pepper_gf_intercept')
+      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
+      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       type(c_ptr), value :: ctx  !! the context
       character(kind=c_char), intent(in) :: target(*)  !! Name of the target body.
       character(kind=c_char), intent(in) :: fixref(*)  !! Body fixed frame associated with TARGET.
@@ -4240,8 +4242,6 @@ contains
       real(c_double), value :: refval  !! Reference value.
       real(c_double), value :: adjust  !! Adjustment value for absolute extrema searches.
       real(c_double), value :: step  !! Step size used for locating extrema and roots.
-      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
-      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       real(c_double), intent(in) :: cnfine(cnfine_cols, cnfine_rows)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
       type(c_ptr), intent(out) :: result  !! the result window, shape (2, n) (n = 0 after an error) (in the context)
       integer(c_int), intent(out) :: result_rows  !! its number of rows (Fortran: columns)
@@ -4281,6 +4281,8 @@ contains
    integer(c_int) function c_pepper_gf_occultation ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, &
          abcorr, obsrvr, step, cnfine_rows, cnfine_cols, cnfine, result, result_rows, result_cols ) bind(c, &
          name='pepper_gf_occultation')
+      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
+      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       type(c_ptr), value :: ctx  !! the context
       character(kind=c_char), intent(in) :: occtyp(*)  !! Type of occultation.
       character(kind=c_char), intent(in) :: front(*)  !! Name of body occulting the other.
@@ -4292,8 +4294,6 @@ contains
       character(kind=c_char), intent(in) :: abcorr(*)  !! Aberration correction flag.
       character(kind=c_char), intent(in) :: obsrvr(*)  !! Name of the observing body.
       real(c_double), value :: step  !! Step size in seconds for finding occultation events.
-      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
-      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       real(c_double), intent(in) :: cnfine(cnfine_cols, cnfine_rows)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
       type(c_ptr), intent(out) :: result  !! the result window, shape (2, n) (n = 0 after an error) (in the context)
       integer(c_int), intent(out) :: result_rows  !! its number of rows (Fortran: columns)
@@ -4332,6 +4332,8 @@ contains
    !> C interface of `gf_phase`: A GF search on the phase angle (PEPPER; [[gfpa]] with the confinement and result windows as arrays, and without workspace).
    integer(c_int) function c_pepper_gf_phase ( ctx, target, illmn, abcorr, obsrvr, relate, refval, adjust, step, &
          cnfine_rows, cnfine_cols, cnfine, result, result_rows, result_cols ) bind(c, name='pepper_gf_phase')
+      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
+      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       type(c_ptr), value :: ctx  !! the context
       character(kind=c_char), intent(in) :: target(*)  !! Name of the target body.
       character(kind=c_char), intent(in) :: illmn(*)  !! Name of the illuminating body.
@@ -4341,8 +4343,6 @@ contains
       real(c_double), value :: refval  !! Reference value.
       real(c_double), value :: adjust  !! Adjustment value for absolute extrema searches.
       real(c_double), value :: step  !! Step size used for locating extrema and roots.
-      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
-      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       real(c_double), intent(in) :: cnfine(cnfine_cols, cnfine_rows)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
       type(c_ptr), intent(out) :: result  !! the result window, shape (2, n) (n = 0 after an error) (in the context)
       integer(c_int), intent(out) :: result_rows  !! its number of rows (Fortran: columns)
@@ -4373,6 +4373,8 @@ contains
    integer(c_int) function c_pepper_gf_position ( ctx, target, frame, abcorr, obsrvr, crdsys, coord, relate, refval, &
          adjust, step, cnfine_rows, cnfine_cols, cnfine, result, result_rows, result_cols ) bind(c, &
          name='pepper_gf_position')
+      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
+      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       type(c_ptr), value :: ctx  !! the context
       character(kind=c_char), intent(in) :: target(*)  !! Name of the target body.
       character(kind=c_char), intent(in) :: frame(*)  !! Name of the reference frame for coordinate calculations.
@@ -4384,8 +4386,6 @@ contains
       real(c_double), value :: refval  !! Reference value.
       real(c_double), value :: adjust  !! Adjustment value for absolute extrema searches.
       real(c_double), value :: step  !! Step size used for locating extrema and roots.
-      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
-      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       real(c_double), intent(in) :: cnfine(cnfine_cols, cnfine_rows)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
       type(c_ptr), intent(out) :: result  !! the result window, shape (2, n) (n = 0 after an error) (in the context)
       integer(c_int), intent(out) :: result_rows  !! its number of rows (Fortran: columns)
@@ -4420,6 +4420,8 @@ contains
    !> C interface of `gf_range_rate`: A GF search on the range rate (PEPPER; [[gfrr]] with the confinement and result windows as arrays, and without workspace).
    integer(c_int) function c_pepper_gf_range_rate ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, &
          cnfine_rows, cnfine_cols, cnfine, result, result_rows, result_cols ) bind(c, name='pepper_gf_range_rate')
+      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
+      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       type(c_ptr), value :: ctx  !! the context
       character(kind=c_char), intent(in) :: target(*)  !! Name of the target body.
       character(kind=c_char), intent(in) :: abcorr(*)  !! Aberration correction flag.
@@ -4428,8 +4430,6 @@ contains
       real(c_double), value :: refval  !! Reference value.
       real(c_double), value :: adjust  !! Adjustment value for absolute extrema searches.
       real(c_double), value :: step  !! Step size used for locating extrema and roots.
-      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
-      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       real(c_double), intent(in) :: cnfine(cnfine_cols, cnfine_rows)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
       type(c_ptr), intent(out) :: result  !! the result window, shape (2, n) (n = 0 after an error) (in the context)
       integer(c_int), intent(out) :: result_rows  !! its number of rows (Fortran: columns)
@@ -4457,6 +4457,8 @@ contains
    !> C interface of `gf_ray_in_fov`: A GF search on a ray in an instrument field of view (PEPPER; [[gfrfov]] with the confinement and result windows as arrays, and without workspace).
    integer(c_int) function c_pepper_gf_ray_in_fov ( ctx, inst, raydir, rframe, abcorr, obsrvr, step, cnfine_rows, &
          cnfine_cols, cnfine, result, result_rows, result_cols ) bind(c, name='pepper_gf_ray_in_fov')
+      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
+      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       type(c_ptr), value :: ctx  !! the context
       character(kind=c_char), intent(in) :: inst(*)  !! Name of the instrument.
       real(c_double), intent(in) :: raydir(3)  !! Ray's direction vector.
@@ -4464,8 +4466,6 @@ contains
       character(kind=c_char), intent(in) :: abcorr(*)  !! Aberration correction flag.
       character(kind=c_char), intent(in) :: obsrvr(*)  !! Name of the observing body.
       real(c_double), value :: step  !! Step size in seconds for finding FOV events.
-      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
-      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       real(c_double), intent(in) :: cnfine(cnfine_cols, cnfine_rows)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
       type(c_ptr), intent(out) :: result  !! the result window, shape (2, n) (n = 0 after an error) (in the context)
       integer(c_int), intent(out) :: result_rows  !! its number of rows (Fortran: columns)
@@ -4494,6 +4494,8 @@ contains
    integer(c_int) function c_pepper_gf_separation ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, &
          obsrvr, relate, refval, adjust, step, cnfine_rows, cnfine_cols, cnfine, result, result_rows, &
          result_cols ) bind(c, name='pepper_gf_separation')
+      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
+      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       type(c_ptr), value :: ctx  !! the context
       character(kind=c_char), intent(in) :: targ1(*)  !! Name of first body.
       character(kind=c_char), intent(in) :: shape1(*)  !! Name of shape model describing the first body.
@@ -4507,8 +4509,6 @@ contains
       real(c_double), value :: refval  !! Reference value.
       real(c_double), value :: adjust  !! Absolute extremum adjustment value.
       real(c_double), value :: step  !! Step size in seconds for finding angular separation events.
-      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
-      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       real(c_double), intent(in) :: cnfine(cnfine_cols, cnfine_rows)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
       type(c_ptr), intent(out) :: result  !! the result window, shape (2, n) (n = 0 after an error) (in the context)
       integer(c_int), intent(out) :: result_rows  !! its number of rows (Fortran: columns)
@@ -4548,6 +4548,8 @@ contains
    integer(c_int) function c_pepper_gf_subpoint ( ctx, target, fixref, method, abcorr, obsrvr, crdsys, coord, relate, &
          refval, adjust, step, cnfine_rows, cnfine_cols, cnfine, result, result_rows, result_cols ) bind(c, &
          name='pepper_gf_subpoint')
+      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
+      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       type(c_ptr), value :: ctx  !! the context
       character(kind=c_char), intent(in) :: target(*)  !! Name of the target body.
       character(kind=c_char), intent(in) :: fixref(*)  !! Body fixed frame associated with TARGET.
@@ -4560,8 +4562,6 @@ contains
       real(c_double), value :: refval  !! Reference value.
       real(c_double), value :: adjust  !! Adjustment value for absolute extrema searches.
       real(c_double), value :: step  !! Step size used for locating extrema and roots.
-      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
-      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       real(c_double), intent(in) :: cnfine(cnfine_cols, cnfine_rows)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
       type(c_ptr), intent(out) :: result  !! the result window, shape (2, n) (n = 0 after an error) (in the context)
       integer(c_int), intent(out) :: result_rows  !! its number of rows (Fortran: columns)
@@ -4598,6 +4598,8 @@ contains
    !> C interface of `gf_target_in_fov`: A GF search on a target in an instrument field of view (PEPPER; [[gftfov]] with the confinement and result windows as arrays, and without workspace).
    integer(c_int) function c_pepper_gf_target_in_fov ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, step, &
          cnfine_rows, cnfine_cols, cnfine, result, result_rows, result_cols ) bind(c, name='pepper_gf_target_in_fov')
+      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
+      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       type(c_ptr), value :: ctx  !! the context
       character(kind=c_char), intent(in) :: inst(*)  !! Name of the instrument.
       character(kind=c_char), intent(in) :: target(*)  !! Name of the target body.
@@ -4606,8 +4608,6 @@ contains
       character(kind=c_char), intent(in) :: abcorr(*)  !! Aberration correction flag.
       character(kind=c_char), intent(in) :: obsrvr(*)  !! Name of the observing body.
       real(c_double), value :: step  !! Step size in seconds for finding FOV events.
-      integer(c_int), value :: cnfine_rows  !! the number of rows of cnfine (Fortran: its columns)
-      integer(c_int), value :: cnfine_cols  !! the number of columns of cnfine (Fortran: its rows)
       real(c_double), intent(in) :: cnfine(cnfine_cols, cnfine_rows)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
       type(c_ptr), intent(out) :: result  !! the result window, shape (2, n) (n = 0 after an error) (in the context)
       integer(c_int), intent(out) :: result_rows  !! its number of rows (Fortran: columns)
@@ -5529,8 +5529,8 @@ contains
 
    !> C interface of `lgrind`: Evaluate a Lagrange interpolating polynomial, for a specified set of coordinate pairs, at a specified abscissa value.
    integer(c_int) function c_pepper_lgrind ( ctx, n, xvals, yvals, work, x, p, dp ) bind(c, name='pepper_lgrind')
-      type(c_ptr), value :: ctx  !! the context
       integer(c_int), value :: n  !! Number of points defining the polynomial.
+      type(c_ptr), value :: ctx  !! the context
       real(c_double), intent(in) :: xvals(n)  !! Abscissa values.
       real(c_double), intent(in) :: yvals(n)  !! Ordinate values.
       real(c_double), intent(inout) :: work(n,2)  !! Work space array.
@@ -6273,10 +6273,10 @@ contains
 
    !> C interface of `pltar`: Compute the total area of a collection of triangular plates.
    integer(c_int) function c_pepper_pltar ( ctx, nv, vrtces, np, plates, fresult ) bind(c, name='pepper_pltar')
-      type(c_ptr), value :: ctx  !! the context
       integer(c_int), value :: nv  !! Number of vertices.
-      real(c_double), intent(in) :: vrtces(3,nv)  !! Array of vertices.
       integer(c_int), value :: np  !! Number of triangular plates.
+      type(c_ptr), value :: ctx  !! the context
+      real(c_double), intent(in) :: vrtces(3,nv)  !! Array of vertices.
       integer(c_int), intent(in) :: plates(3,np)  !! Array of plates.
       real(c_double), intent(out) :: fresult  !! the result
       type(capi_context), pointer :: c_
@@ -6304,10 +6304,10 @@ contains
 
    !> C interface of `pltvol`: Compute the volume of a three-dimensional region bounded by a collection of triangular plates.
    integer(c_int) function c_pepper_pltvol ( ctx, nv, vrtces, np, plates, fresult ) bind(c, name='pepper_pltvol')
-      type(c_ptr), value :: ctx  !! the context
       integer(c_int), value :: nv  !! Number of vertices.
-      real(c_double), intent(in) :: vrtces(3,nv)  !! Array of vertices.
       integer(c_int), value :: np  !! Number of triangular plates.
+      type(c_ptr), value :: ctx  !! the context
+      real(c_double), intent(in) :: vrtces(3,nv)  !! Array of vertices.
       integer(c_int), intent(in) :: plates(3,np)  !! Array of plates.
       real(c_double), intent(out) :: fresult  !! the result
       type(capi_context), pointer :: c_
@@ -6519,8 +6519,8 @@ contains
 
    !> C interface of `qderiv`: Estimate the derivative of a function by finding the derivative of a quadratic approximating function.
    integer(c_int) function c_pepper_qderiv ( ctx, ndim, f0, f2, delta, dfdt ) bind(c, name='pepper_qderiv')
-      type(c_ptr), value :: ctx  !! the context
       integer(c_int), value :: ndim  !! Dimension of function to be differentiated.
+      type(c_ptr), value :: ctx  !! the context
       real(c_double), intent(in) :: f0(ndim)  !! Function values at left endpoint.
       real(c_double), intent(in) :: f2(ndim)  !! Function values at right endpoint.
       real(c_double), value :: delta  !! Separation of abscissa points.
@@ -9089,6 +9089,7 @@ contains
    !> C interface of `spkw21`: Write a type 21 segment to an SPK file.
    integer(c_int) function c_pepper_spkw21 ( ctx, handle, body, center, frame, first, last, segid, n, dlsize, dlines, &
          epochs ) bind(c, name='pepper_spkw21')
+      integer(c_int), value :: dlsize  !! Difference line size.
       type(c_ptr), value :: ctx  !! the context
       integer(c_int), value :: handle  !! Handle of an SPK file open for writing.
       integer(c_int), value :: body  !! NAIF code for an ephemeris object.
@@ -9098,7 +9099,6 @@ contains
       real(c_double), value :: last  !! End time of interval covered by segment.
       character(kind=c_char), intent(in) :: segid(*)  !! Segment identifier.
       integer(c_int), value :: n  !! Number of difference lines in segment.
-      integer(c_int), value :: dlsize  !! Difference line size.
       real(c_double), intent(in) :: dlines(dlsize,*)  !! Array of difference lines.
       real(c_double), intent(in) :: epochs(*)  !! Coverage end times of difference lines.
       type(capi_context), pointer :: c_
@@ -10488,10 +10488,10 @@ contains
 
    !> C interface of `xposbl`: Transpose the square blocks within a matrix.
    integer(c_int) function c_pepper_xposbl ( ctx, bmat, nrow, ncol, bsize, btmat ) bind(c, name='pepper_xposbl')
-      type(c_ptr), value :: ctx  !! the context
-      real(c_double), intent(in) :: bmat(nrow,ncol)  !! a matrix composed of square block
       integer(c_int), value :: nrow  !! the number of rows in the matrix BMAT
       integer(c_int), value :: ncol  !! the number of columns in the matrix BMAT
+      type(c_ptr), value :: ctx  !! the context
+      real(c_double), intent(in) :: bmat(nrow,ncol)  !! a matrix composed of square block
       integer(c_int), value :: bsize  !! the size of the square blocks in BMAT
       real(c_double), intent(out) :: btmat(nrow,ncol)  !! the result of transposing the blocks of
       type(capi_context), pointer :: c_
@@ -11707,9 +11707,9 @@ contains
 
    !> C interface of `mequg`: Set one double precision matrix of arbitrary size equal to another.
    integer(c_int) function c_pepper_mequg ( m1, nr, nc, mout ) bind(c, name='pepper_mequg')
-      real(c_double), intent(in) :: m1(nr,nc)  !! Input matrix.
       integer(c_int), value :: nr  !! Row dimension of M1 (and also MOUT).
       integer(c_int), value :: nc  !! Column dimension of M1 (and also MOUT).
+      real(c_double), intent(in) :: m1(nr,nc)  !! Input matrix.
       real(c_double), intent(out) :: mout(nr,nc)  !! Output matrix equal to M1.
       call mequg(m1, nr, nc, mout)
       c_pepper_mequg = 0_c_int
@@ -11765,11 +11765,11 @@ contains
 
    !> C interface of `mtxmg`: Multiply the transpose of a matrix with another matrix, both of arbitrary size.
    integer(c_int) function c_pepper_mtxmg ( m1, m2, nc1, nr1r2, nc2, mout ) bind(c, name='pepper_mtxmg')
-      real(c_double), intent(in) :: m1(nr1r2,nc1)  !! Left-hand matrix whose transpose is to be
-      real(c_double), intent(in) :: m2(nr1r2,nc2)  !! Right-hand matrix to be multiplied.
       integer(c_int), value :: nc1  !! Column dimension of M1 and row dimension of MOUT.
       integer(c_int), value :: nr1r2  !! Row dimension of both M1 and M2.
       integer(c_int), value :: nc2  !! Column dimension of both M2 and MOUT.
+      real(c_double), intent(in) :: m1(nr1r2,nc1)  !! Left-hand matrix whose transpose is to be
+      real(c_double), intent(in) :: m2(nr1r2,nc2)  !! Right-hand matrix to be multiplied.
       real(c_double), intent(out) :: mout(nc1,nc2)  !! Product matrix M1**T * M2.
       call mtxmg(m1, m2, nc1, nr1r2, nc2, mout)
       c_pepper_mtxmg = 0_c_int
@@ -11786,10 +11786,10 @@ contains
 
    !> C interface of `mtxvg`: Multiply the transpose of a matrix and a vector of arbitrary size.
    integer(c_int) function c_pepper_mtxvg ( m1, v2, nc1, nr1r2, vout ) bind(c, name='pepper_mtxvg')
-      real(c_double), intent(in) :: m1(nr1r2,nc1)  !! Left-hand matrix whose transpose is to be
-      real(c_double), intent(in) :: v2(nr1r2)  !! Right-hand vector to be multiplied.
       integer(c_int), value :: nc1  !! Column dimension of M1 and length of VOUT.
       integer(c_int), value :: nr1r2  !! Row dimension of M1 and length of V2.
+      real(c_double), intent(in) :: m1(nr1r2,nc1)  !! Left-hand matrix whose transpose is to be
+      real(c_double), intent(in) :: v2(nr1r2)  !! Right-hand vector to be multiplied.
       real(c_double), intent(out) :: vout(nc1)  !! Product vector M1**T * V2.
       call mtxvg(m1, v2, nc1, nr1r2, vout)
       c_pepper_mtxvg = 0_c_int
@@ -11806,11 +11806,11 @@ contains
 
    !> C interface of `mxmg`: Multiply two double precision matrices of arbitrary size.
    integer(c_int) function c_pepper_mxmg ( m1, m2, nr1, nc1r2, nc2, mout ) bind(c, name='pepper_mxmg')
-      real(c_double), intent(in) :: m1(nr1,nc1r2)  !! NR1   x NC1R2 double precision matrix.
-      real(c_double), intent(in) :: m2(nc1r2,nc2)  !! NC1R2 x NC2   double precision matrix.
       integer(c_int), value :: nr1  !! Row dimension of M1 (and also MOUT).
       integer(c_int), value :: nc1r2  !! Column dimension of M1 and row dimension of M2.
       integer(c_int), value :: nc2  !! Column dimension of M2 (and also MOUT).
+      real(c_double), intent(in) :: m1(nr1,nc1r2)  !! NR1   x NC1R2 double precision matrix.
+      real(c_double), intent(in) :: m2(nc1r2,nc2)  !! NC1R2 x NC2   double precision matrix.
       real(c_double), intent(out) :: mout(nr1,nc2)  !! NR1 x NC2 double precision matrix.
       call mxmg(m1, m2, nr1, nc1r2, nc2, mout)
       c_pepper_mxmg = 0_c_int
@@ -11827,11 +11827,11 @@ contains
 
    !> C interface of `mxmtg`: Multiply a matrix and the transpose of a matrix, both of arbitrary size.
    integer(c_int) function c_pepper_mxmtg ( m1, m2, nr1, nc1c2, nr2, mout ) bind(c, name='pepper_mxmtg')
-      real(c_double), intent(in) :: m1(nr1,nc1c2)  !! Left-hand matrix to be multiplied.
-      real(c_double), intent(in) :: m2(nr2,nc1c2)  !! Right-hand matrix whose transpose is to be
       integer(c_int), value :: nr1  !! Row dimension of M1 and row dimension of MOUT.
       integer(c_int), value :: nc1c2  !! Column dimension of M1 and column dimension of M2.
       integer(c_int), value :: nr2  !! Row dimension of M2 and column dimension of MOUT.
+      real(c_double), intent(in) :: m1(nr1,nc1c2)  !! Left-hand matrix to be multiplied.
+      real(c_double), intent(in) :: m2(nr2,nc1c2)  !! Right-hand matrix whose transpose is to be
       real(c_double), intent(out) :: mout(nr1,nr2)  !! Product matrix M1 * M2**T.
       call mxmtg(m1, m2, nr1, nc1c2, nr2, mout)
       c_pepper_mxmtg = 0_c_int
@@ -11848,10 +11848,10 @@ contains
 
    !> C interface of `mxvg`: Multiply a matrix and a vector of arbitrary size.
    integer(c_int) function c_pepper_mxvg ( m1, v2, nr1, nc1r2, vout ) bind(c, name='pepper_mxvg')
-      real(c_double), intent(in) :: m1(nr1,nc1r2)  !! Left-hand matrix to be multiplied.
-      real(c_double), intent(in) :: v2(nc1r2)  !! Right-hand vector to be multiplied.
       integer(c_int), value :: nr1  !! Row dimension of M1 and length of VOUT.
       integer(c_int), value :: nc1r2  !! Column dimension of M1 and length of V2.
+      real(c_double), intent(in) :: m1(nr1,nc1r2)  !! Left-hand matrix to be multiplied.
+      real(c_double), intent(in) :: v2(nc1r2)  !! Right-hand vector to be multiplied.
       real(c_double), intent(out) :: vout(nr1)  !! Product vector M1*V2.
       call mxvg(m1, v2, nr1, nc1r2, vout)
       c_pepper_mxvg = 0_c_int
@@ -12624,8 +12624,8 @@ contains
 
    !> C interface of `traceg`: Return the trace of a square matrix of arbitrary dimension.
    integer(c_int) function c_pepper_traceg ( matrix, ndim, fresult ) bind(c, name='pepper_traceg')
-      real(c_double), intent(in) :: matrix(ndim,ndim)  !! NDIM x NDIM matrix of double precision
       integer(c_int), value :: ndim  !! Dimension of the matrix.
+      real(c_double), intent(in) :: matrix(ndim,ndim)  !! NDIM x NDIM matrix of double precision
       real(c_double), intent(out) :: fresult  !! the result
       real(wp) :: f_fresult
       f_fresult = traceg(matrix, ndim)
@@ -12667,8 +12667,8 @@ contains
 
    !> C interface of `unormg`: Normalize a double precision vector of arbitrary dimension and return its magnitude.
    integer(c_int) function c_pepper_unormg ( v1, ndim, vout, vmag ) bind(c, name='pepper_unormg')
-      real(c_double), intent(in) :: v1(ndim)  !! Vector to be normalized.
       integer(c_int), value :: ndim  !! Dimension of V1 (and also VOUT).
+      real(c_double), intent(in) :: v1(ndim)  !! Vector to be normalized.
       real(c_double), intent(out) :: vout(ndim)  !! Unit vector V1 / ||V1||.
       real(c_double), intent(out) :: vmag  !! Magnitude of V1, i.e. ||V1||.
       call unormg(v1, ndim, vout, vmag)
@@ -12686,9 +12686,9 @@ contains
 
    !> C interface of `vaddg`: Add two vectors of arbitrary dimension.
    integer(c_int) function c_pepper_vaddg ( v1, v2, ndim, vout ) bind(c, name='pepper_vaddg')
+      integer(c_int), value :: ndim  !! Dimension of V1, V2, and VOUT.
       real(c_double), intent(in) :: v1(ndim)  !! First vector to be added.
       real(c_double), intent(in) :: v2(ndim)  !! Second vector to be added.
-      integer(c_int), value :: ndim  !! Dimension of V1, V2, and VOUT.
       real(c_double), intent(out) :: vout(ndim)  !! Sum vector, V1 + V2.
       call vaddg(v1, v2, ndim, vout)
       c_pepper_vaddg = 0_c_int
@@ -12759,8 +12759,8 @@ contains
 
    !> C interface of `vequg`: Make one double precision vector of arbitrary dimension equal to another.
    integer(c_int) function c_pepper_vequg ( vin, ndim, vout ) bind(c, name='pepper_vequg')
-      real(c_double), intent(in) :: vin(ndim)  !! Double precision n-dimensional vector.
       integer(c_int), value :: ndim  !! Dimension of VIN (and also VOUT).
+      real(c_double), intent(in) :: vin(ndim)  !! Double precision n-dimensional vector.
       real(c_double), intent(out) :: vout(ndim)  !! Double precision n-dimensional vector set equal to
       call vequg(vin, ndim, vout)
       c_pepper_vequg = 0_c_int
@@ -12776,8 +12776,8 @@ contains
 
    !> C interface of `vhatg`: Find the unit vector along a double precision vector of arbitrary dimension.
    integer(c_int) function c_pepper_vhatg ( v1, ndim, vout ) bind(c, name='pepper_vhatg')
-      real(c_double), intent(in) :: v1(ndim)  !! Vector to be normalized.
       integer(c_int), value :: ndim  !! Dimension of V1 (and also VOUT).
+      real(c_double), intent(in) :: v1(ndim)  !! Vector to be normalized.
       real(c_double), intent(out) :: vout(ndim)  !! Unit vector along V1.
       call vhatg(v1, ndim, vout)
       c_pepper_vhatg = 0_c_int
@@ -12828,8 +12828,8 @@ contains
 
    !> C interface of `vminug`: Negate a double precision vector of arbitrary dimension.
    integer(c_int) function c_pepper_vminug ( vin, ndim, vout ) bind(c, name='pepper_vminug')
-      real(c_double), intent(in) :: vin(ndim)  !! n-dimensional vector to be negated.
       integer(c_int), value :: ndim  !! Dimension of VIN (and also VOUT).
+      real(c_double), intent(in) :: vin(ndim)  !! n-dimensional vector to be negated.
       real(c_double), intent(out) :: vout(ndim)  !! Negated vector -V1.
       call vminug(vin, ndim, vout)
       c_pepper_vminug = 0_c_int
@@ -12855,8 +12855,8 @@ contains
 
    !> C interface of `vnormg`: Compute the magnitude of a double precision vector of arbitrary dimension.
    integer(c_int) function c_pepper_vnormg ( v1, ndim, fresult ) bind(c, name='pepper_vnormg')
-      real(c_double), intent(in) :: v1(ndim)  !! Vector whose magnitude is to be found.
       integer(c_int), value :: ndim  !! Dimension of V1.
+      real(c_double), intent(in) :: v1(ndim)  !! Vector whose magnitude is to be found.
       real(c_double), intent(out) :: fresult  !! the result
       real(wp) :: f_fresult
       f_fresult = vnormg(v1, ndim)
@@ -12894,9 +12894,9 @@ contains
 
    !> C interface of `vprojg`: Compute the projection of one vector onto another vector.
    integer(c_int) function c_pepper_vprojg ( a, b, ndim, p ) bind(c, name='pepper_vprojg')
+      integer(c_int), value :: ndim  !! Dimension of A, B, and P.
       real(c_double), intent(in) :: a(ndim)  !! The vector to be projected.
       real(c_double), intent(in) :: b(ndim)  !! The vector onto which A is to be projected.
-      integer(c_int), value :: ndim  !! Dimension of A, B, and P.
       real(c_double), intent(out) :: p(ndim)  !! The projection of A onto B.
       call vprojg(a, b, ndim, p)
       c_pepper_vprojg = 0_c_int
@@ -12946,9 +12946,9 @@ contains
 
    !> C interface of `vsclg`: Multiply a scalar and a double precision vector of arbitrary dimension.
    integer(c_int) function c_pepper_vsclg ( s, v1, ndim, vout ) bind(c, name='pepper_vsclg')
+      integer(c_int), value :: ndim  !! Dimension of V1 (and also VOUT).
       real(c_double), value :: s  !! Scalar to multiply a vector.
       real(c_double), intent(in) :: v1(ndim)  !! Vector to be multiplied.
-      integer(c_int), value :: ndim  !! Dimension of V1 (and also VOUT).
       real(c_double), intent(out) :: vout(ndim)  !! Product vector, S * V1.
       call vsclg(s, v1, ndim, vout)
       c_pepper_vsclg = 0_c_int
@@ -12996,9 +12996,9 @@ contains
 
    !> C interface of `vsubg`: Compute the difference between two double precision vectors of arbitrary dimension.
    integer(c_int) function c_pepper_vsubg ( v1, v2, ndim, vout ) bind(c, name='pepper_vsubg')
+      integer(c_int), value :: ndim  !! Dimension of V1, V2, and VOUT.
       real(c_double), intent(in) :: v1(ndim)  !! First vector (minuend).
       real(c_double), intent(in) :: v2(ndim)  !! Second vector (subtrahend).
-      integer(c_int), value :: ndim  !! Dimension of V1, V2, and VOUT.
       real(c_double), intent(out) :: vout(ndim)  !! Difference vector, V1 - V2.
       call vsubg(v1, v2, ndim, vout)
       c_pepper_vsubg = 0_c_int
@@ -13018,11 +13018,11 @@ contains
 
    !> C interface of `vtmvg`: Multiply the transpose of a n-dimensional column vector, a nxm matrix, and a m-dimensional column vector.
    integer(c_int) function c_pepper_vtmvg ( v1, matrix, v2, nrow, ncol, fresult ) bind(c, name='pepper_vtmvg')
+      integer(c_int), value :: nrow  !! Number of rows in MATRIX (number of rows in V1.)
+      integer(c_int), value :: ncol  !! Number of columns in MATRIX (number of rows in V2.)
       real(c_double), intent(in) :: v1(nrow)  !! N-dimensional double precision column
       real(c_double), intent(in) :: matrix(nrow,ncol)  !! NxM double precision matrix.
       real(c_double), intent(in) :: v2(ncol)  !! M-dimensional double precision column
-      integer(c_int), value :: nrow  !! Number of rows in MATRIX (number of rows in V1.)
-      integer(c_int), value :: ncol  !! Number of columns in MATRIX (number of rows in V2.)
       real(c_double), intent(out) :: fresult  !! the result
       real(wp) :: f_fresult
       f_fresult = vtmvg(v1, matrix, v2, nrow, ncol)

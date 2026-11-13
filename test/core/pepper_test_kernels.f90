@@ -58,8 +58,11 @@ contains
       character(*), intent(in) :: file  !! the file
       logical :: exists
       integer :: unit
+      logical :: still_open  !! the file is connected to a unit (Windows can't delete it)
       inquire (file=file, exist=exists)
       if (exists) then
+         inquire (file=file, opened=still_open)
+         if (still_open) error stop 'a file to delete is still open (Windows cannot delete it): '//file
          open (newunit=unit, file=file, status='old')
          close (unit, status='delete')
       end if

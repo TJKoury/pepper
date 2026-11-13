@@ -37,6 +37,10 @@ platform.ifx.flags = "-recursive"
 platform.ifort.flags = "-recursive"
 platform.windows.ifx.flags = "/recursive"
 platform.windows.ifort.flags = "/recursive"
+# Windows' default stack is 1 MB; the library's fpm.toml explains
+platform.windows.gfortran.link-time-flags = "-Wl,--stack,67108864"
+platform.windows.ifx.link-time-flags = "/F67108864"
+platform.windows.ifort.link-time-flags = "/F67108864"
 
 [profiles]
 default = ["platform"]

@@ -181,10 +181,13 @@ contains
       character(:), allocatable :: msg, all
       character(200) :: line, dev
       integer :: unit, ios, longest
+      logical :: still_open  !! the file is connected to a unit (Windows can't delete it)
       logical :: exists
       ctx = spice%new_context()
       inquire (file=file, exist=exists)
       if (exists) then
+         inquire (file=file, opened=still_open)
+         if (still_open) error stop 'a file to delete is still open (Windows cannot delete it): '//file
          open (newunit=unit, file=file, status='old')
          close (unit, status='delete')
       end if
@@ -258,6 +261,9 @@ contains
       call check(.not. c1%failed(), 'the first instance''s context still reads it')
       call spice%kclear()
       call other%kclear()
+      ! the contexts' units (Windows cannot delete an open file)
+      call c1%close_unloaded_files()
+      call c2%close_unloaded_files()
       call delete_file(spk)
    end subroutine test_shared_files
 

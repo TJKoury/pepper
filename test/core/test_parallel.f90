@@ -111,6 +111,7 @@ program test_parallel
 
    call spice%kclear()
    call memspice%kclear()
+   call serial%close_unloaded_files()  ! (Windows cannot delete an open file)
    call delete_files()
 
    if (failures > 0) then
@@ -220,10 +221,13 @@ contains
       character(32) :: files(4)
       logical :: exists
       integer :: unit, k
+      logical :: still_open  !! the file is connected to a unit (Windows can't delete it)
       files = [character(32) :: lsk, spk, fk, spk_mem]
       do k = 1, size(files)
          inquire (file=trim(files(k)), exist=exists)
          if (exists) then
+            inquire (file=trim(files(k)), opened=still_open)
+            if (still_open) error stop 'a file to delete is still open (Windows cannot delete it): '//trim(files(k))
             open (newunit=unit, file=trim(files(k)), status='old')
             close (unit, status='delete')
          end if

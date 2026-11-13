@@ -159,10 +159,13 @@ contains
       character(32) :: files(3)
       logical :: exists
       integer :: unit, k
+      logical :: still_open  !! the file is connected to a unit (Windows can't delete it)
       files = [character(32) :: spk, text, meta]
       do k = 1, size(files)
          inquire (file=trim(files(k)), exist=exists)
          if (exists) then
+            inquire (file=trim(files(k)), opened=still_open)
+            if (still_open) error stop 'a file to delete is still open (Windows cannot delete it): '//trim(files(k))
             open (newunit=unit, file=trim(files(k)), status='old')
             close (unit, status='delete')
          end if

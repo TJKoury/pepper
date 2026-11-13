@@ -62,6 +62,7 @@ program test_spk
 
    ! a unloads the file: b has no data
    call spice%unload(spk)
+   call b%close_unloaded_files()  ! (Windows cannot delete an open file)
    call b%spkezr('1000', 150.0_wp, 'J2000', 'NONE', '0', sb, ltb)
    call check(b%failed(), 'b: no data after a unloads the SPK')
    call b%reset()
@@ -99,8 +100,11 @@ contains
    subroutine delete_file()
       logical :: exists
       integer :: unit
+      logical :: still_open  !! the file is connected to a unit (Windows can't delete it)
       inquire (file=spk, exist=exists)
       if (exists) then
+         inquire (file=spk, opened=still_open)
+         if (still_open) error stop 'a file to delete is still open (Windows cannot delete it): '//spk
          open (newunit=unit, file=spk, status='old')
          close (unit, status='delete')
       end if

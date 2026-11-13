@@ -100,8 +100,11 @@ contains
    subroutine delete_file()
       logical :: exists
       integer :: unit
+      logical :: still_open  !! the file is connected to a unit (Windows can't delete it)
       inquire (file=fk, exist=exists)
       if (exists) then
+         inquire (file=fk, opened=still_open)
+         if (still_open) error stop 'a file to delete is still open (Windows cannot delete it): '//fk
          open (newunit=unit, file=fk, status='old')
          close (unit, status='delete')
       end if

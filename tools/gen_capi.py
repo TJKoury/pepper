@@ -50,7 +50,8 @@ EXCLUDE_CTX = {
     'gf_user_scalar', 'gf_user_boolean', 'uddc', 'instance',
 }
 # Instance procedures with hand-written wrappers.
-EXCLUDE_SPICE = {'furnsh', 'pcpool', 'pdpool', 'pipool', 'lmpool', 'add_ephemeris', 'add_frame'}
+EXCLUDE_SPICE = {'furnsh', 'pcpool', 'pdpool', 'pipool', 'lmpool', 'add_ephemeris', 'add_frame',
+                 'destroy'}  # (destroy: the lifetime is pepper_spice_free's, Spice.close's)
 # Shims generated, Python wrappers written by hand (_core.pyx).
 NO_PYTHON = {'kclear', 'remove_ephemeris', 'remove_frame'}
 
@@ -739,6 +740,18 @@ def fortran_shim(p):
     out.append(f'   !> C interface of `{p.name}`: {summary}.')
     head = f'   integer(c_int) function {fname} ( {", ".join(dummies)} ) bind(c, name=\'{p.cname}\')'
     out.extend(wrap_fortran(head))
+    # The scalars that are array bounds are declared before the arrays: a
+    # name in a specification expression must have its type already
+    # (implicit none; using it first is a GNU extension).
+    def declared(d):
+        return re.match(r'.*?::\s*(\w+)', d).group(1)
+    bounds = set()
+    for d in decls:
+        m = re.match(r'.*?::\s*\w+\(([^)]*)\)', d.split('!!')[0])
+        if m:
+            bounds |= set(re.findall(r'[a-z_]\w*', m.group(1), re.I))
+    first = [d for d in decls if declared(d) in bounds and '(' not in d.split('::')[1].split('!!')[0]]
+    decls = first + [d for d in decls if d not in first]
     for d in decls:
         out.append('      ' + d.rstrip().rstrip('!').rstrip())
     for d in locs:

@@ -33,12 +33,20 @@ source-form = "default"
 # thread-safe code, and for queries made by programmatic providers
 # (pepper_programmatic); Intel Fortran's counterpart is -recursive
 # (/recursive on Windows).
+#
+# With the local variables on the stack, programs need more than Windows'
+# default stack of 1 MB (Linux and macOS: 8 MB): executables built on
+# Windows get 64 MB (gfortran: --stack; Intel: /F). The same in
+# tspice/fpm.toml.
 [features]
 platform.gfortran.flags = "-frecursive"
 platform.ifx.flags = "-recursive"
 platform.ifort.flags = "-recursive"
 platform.windows.ifx.flags = "/recursive"
 platform.windows.ifort.flags = "/recursive"
+platform.windows.gfortran.link-time-flags = "-Wl,--stack,67108864"
+platform.windows.ifx.link-time-flags = "/F67108864"
+platform.windows.ifort.link-time-flags = "/F67108864"
 
 [profiles]
 default = ["platform"]

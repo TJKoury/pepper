@@ -527,6 +527,7 @@ module pepper_instance
       !> Close the context's file units when it goes away.
       final :: ctx_final
       procedure, non_overridable :: destroy => ctx_destroy
+      procedure, non_overridable :: close_unloaded_files => ctx_close_unloaded_files
       procedure, non_overridable :: failed => ctx_failed
       procedure, non_overridable :: sigerr => ctx_sigerr
       procedure, non_overridable :: setmsg => ctx_setmsg
@@ -21884,8 +21885,10 @@ contains
    !> Finalization of a context: close the units it opened (each context
    !> opens its own units for the instance's files; see units_check). A
    !> context must not be copied while it has open units: the copy's
-   !> finalization would close them too.
-   subroutine ctx_final(this)
+   !> finalization would close them too. Elemental, so that the elements of
+   !> an array of contexts are finalized too (a final subroutine for a
+   !> scalar is not called for them).
+   impure elemental subroutine ctx_final(this)
       type(pepper_context), intent(inout) :: this  !! the context
       integer(ip) :: k
       integer :: ios
@@ -21923,6 +21926,20 @@ contains
          type(pepper_context), intent(out) :: ctx  !! the context
       end subroutine reset_context
    end subroutine ctx_destroy
+
+   !> Close the context's units for the files that are no longer loaded
+   !> (unloaded, or closed, through any context of the instance).
+   !>
+   !> PEPPER: no SPICELIB counterpart. Each context opens its own units for
+   !> the files it reads, and closes those of unloaded files on its next
+   !> access to a file (the instance cannot reach the program's contexts).
+   !> On Windows, where an open file cannot be deleted or replaced, call this
+   !> in every context that read a file (or destroy them) before deleting
+   !> it after the instance unloaded it.
+   subroutine ctx_close_unloaded_files(this)
+      class(pepper_context), intent(inout) :: this  !! the context
+      call units_check(this)
+   end subroutine ctx_close_unloaded_files
 
    !> Clear the error status and the messages.
    subroutine ctx_reset(this)

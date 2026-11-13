@@ -46,7 +46,7 @@ module pepper_containers
 
    !> A variable-length string. Arrays of `string` hold strings of
    !> different lengths; `s` is unallocated until set.
-   type, public :: string
+   type :: string
       character(:), allocatable :: s  !! the text
    end type string
 

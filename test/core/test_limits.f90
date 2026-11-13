@@ -96,12 +96,23 @@ contains
       character(1024) :: file, filtyp, source
       real(wp) :: state(6), lt, values(2)
       integer(ip) :: handle, n, count, unit
+      integer :: ios
       logical :: found
       dots = repeat('./', 150)
       spk = dots // prefix // 'long.bsp'
       tk = dots // prefix // 'long.tk'
       meta = prefix // 'long.tm'
       call check(len(spk) > 255 .and. len(tk) > 255, 'long paths: longer than 255')
+      ! The system's limit, not PEPPER's: skipped where a path this long
+      ! cannot be opened at all (Windows: 260 characters, without long path
+      ! support)
+      open (newunit=unit, file=tk, status='replace', action='write', iostat=ios)
+      if (ios /= 0) then
+         print '(a, i0, a)', 'test_limits: long paths skipped (the system cannot open a path of ', &
+            len(tk), ' characters)'
+         return
+      end if
+      close (unit, status='delete')
 
       call write_spk(ctx, spk, 900001_ip, 0_ip, 1.0e5_wp, 0.5_wp)
       call check_ok('long paths: writing the SPK')
