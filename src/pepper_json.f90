@@ -347,7 +347,7 @@ contains
 
    !> A JSON number: `-?(0|[1-9][0-9]*)(.[0-9]+)?([eE][+-]?[0-9]+)?`,
    !> correctly rounded (Fortran's READ). Beyond the range of double
-   !> precision (READ gives an infinity): SPICE(NUMBEREXPECTED), as for
+   !> precision (gfortran's READ gives an infinity, ifx's an error): SPICE(NUMBEREXPECTED), as for
    !> text kernels (NPARSD).
    pure subroutine read_number(text, c, x)
       character(*), intent(in) :: text  !! the text
@@ -391,11 +391,9 @@ contains
          end do
       end if
       read (text(b:p - 1), *, iostat=ios) x
-      if (ios /= 0) then
-         call syntax(c, 'the number "'//text(b:p - 1)//'" cannot be read')
-         return
-      end if
-      if (abs(x) > huge(x)) then
+      ! The text is a JSON number (checked above), so READ can only fail on its
+      ! range: gfortran gives an infinity, ifx an error
+      if (ios /= 0 .or. abs(x) > huge(x)) then
          call fail(c, 'SPICE(NUMBEREXPECTED)', 'the number "'//text(b:p - 1)//'" is beyond the range '// &
                    'of double precision', c%line)
          return

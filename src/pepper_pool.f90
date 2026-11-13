@@ -2194,6 +2194,13 @@ contains
       !>         part of the line. (Text files have no carriage control
       !>         characters.)
       !>
+      !>     PEPPER: the file is read as a stream of bytes and split into
+      !>     lines here: a line ends at LF, CR-LF or a lone CR, whatever the
+      !>     platform or the compiler (gfortran's run-time library takes a
+      !>     lone CR as a line end, Intel's does not), and its terminator is
+      !>     not part of it. A line longer than LINE is truncated, as by a
+      !>     formatted read.
+      !>
       !>     3)  In order to avoid access violations, the VAX/VMS version of
       !>         RDTEXT uses the VAX READONLY qualifier to open files. This
       !>         must be removed or replaced when the routine is ported to
@@ -2601,6 +2608,9 @@ contains
             open ( file            = file, &
                    newunit         = unit, &
                    status          = 'OLD', &
+                   access          = 'STREAM', &
+                   form            = 'UNFORMATTED', &
+                   action          = 'READ', &
                    iostat          = iostat )
 
             if ( iostat /= 0 ) then
@@ -2621,6 +2631,8 @@ contains
             n         = n + 1
             units(n)  = unit
             index     = n
+            ctx%spice%rdtext%pos(n) = 1
+            inquire ( unit = unit, size = ctx%spice%rdtext%fsize(n) )
 
          end if
 
@@ -2632,19 +2644,12 @@ contains
 !
 !     This is the easy part. Read the next line from the file.
 !
-      read (lstunt,fmt='(A)',iostat=iostat) line
-
+!     PEPPER: the line is split from the bytes of the file here (LF,
+!     CR-LF or a lone CR), not by a formatted read, whose run-time
+!     libraries differ (Intel's does not take a lone CR as a line end).
 !
-!     PEPPER: drop the CR of a CR-LF line terminator, which some Fortran
-!     run-time libraries keep in the line (gfortran's does not), so that
-!     files with DOS line terminators read the same on every platform.
-!
-      if ( iostat == 0 ) then
-         i = len_trim ( line )
-         if ( i > 0 ) then
-            if ( line(i:i) == achar(13) ) line(i:i) = ' '
-         end if
-      end if
+      call next_line ( lstunt, ctx%spice%rdtext%pos(index), &
+                       ctx%spice%rdtext%fsize(index), line, iostat )
 
 !
 !     Well, what happened? An end-of-file condition is indicated by
@@ -2661,6 +2666,8 @@ contains
 
          do i = index+1, n
             units(i-1)  = units(i)
+            ctx%spice%rdtext%pos(i-1) = ctx%spice%rdtext%pos(i)
+            ctx%spice%rdtext%fsize(i-1) = ctx%spice%rdtext%fsize(i)
          end do
 
          n = n - 1
@@ -2690,6 +2697,66 @@ contains
 
       return
       end associate
+
+      contains
+
+         !> PEPPER: the next line of a file read as a stream, from byte POS
+         !> (updated): the bytes up to LF, CR-LF or a lone CR, or to the end
+         !> of the file; truncated to the length of LINE, blank-padded.
+         !> IOSTAT is negative at the end of the file, positive on an error.
+         subroutine next_line ( unit, pos, size, line, iostat )
+            use, intrinsic :: iso_fortran_env, only: int64
+            integer(ip), intent(in) :: unit  !! the unit (stream access)
+            integer(int64), intent(inout) :: pos  !! the position of the next byte
+            integer(int64), intent(in) :: size  !! the size of the file (bytes)
+            character(*), intent(out) :: line  !! the line
+            integer(ip), intent(out) :: iostat  !! 0, negative at the end, positive on an error
+            integer, parameter :: chunk = 512
+            character(chunk) :: buf
+            integer :: m, k, kept, ios, room
+            character(1) :: next
+            intrinsic :: scan  ! (not the scanner SCAN, a procedure of the context)
+            line = ' '
+            iostat = 0
+            kept = 0
+            if ( pos > size ) then
+               iostat = -1
+               return
+            end if
+            do
+               m = int ( min ( int(chunk, int64), size - pos + 1 ) )
+               read ( unit, pos = pos, iostat = ios ) buf(1:m)
+               if ( ios /= 0 ) then
+                  iostat = max ( ios, 1 )
+                  return
+               end if
+               k = scan ( buf(1:m), achar(10) // achar(13) )
+               if ( k == 0 ) then
+                  ! no line end in this chunk: keep it all (as far as LINE
+                  ! has room) and read on
+                  room = min ( m, len(line) - kept )
+                  if ( room > 0 ) line(kept+1:kept+room) = buf(1:room)
+                  kept = kept + m
+                  pos = pos + m
+                  if ( pos > size ) return   ! the last line, without a terminator
+                  cycle
+               end if
+               room = min ( k - 1, len(line) - kept )
+               if ( room > 0 ) line(kept+1:kept+room) = buf(1:room)
+               pos = pos + k
+               if ( buf(k:k) == achar(13) ) then
+                  ! CR-LF: one line end
+                  if ( k < m ) then
+                     if ( buf(k+1:k+1) == achar(10) ) pos = pos + 1
+                  else if ( pos <= size ) then
+                     read ( unit, pos = pos, iostat = ios ) next
+                     if ( ios == 0 .and. next == achar(10) ) pos = pos + 1
+                  end if
+               end if
+               return
+            end do
+         end subroutine next_line
+
       end procedure rdtext
 
       !>## Detailed Input
@@ -2890,6 +2957,8 @@ contains
 !
          do i = index+1, n
             units(i-1)  = units(i)
+            ctx%spice%rdtext%pos(i-1) = ctx%spice%rdtext%pos(i)
+            ctx%spice%rdtext%fsize(i-1) = ctx%spice%rdtext%fsize(i)
          end do
 
          n = n - 1

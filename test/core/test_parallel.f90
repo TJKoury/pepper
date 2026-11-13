@@ -105,7 +105,16 @@ program test_parallel
             call queries(ctx, et(i), mod(i, 2) == 0, par(:, i), parutc(i))
          end do
          !$omp end do
-         if (ctx%failed()) errors = errors + 1
+         if (ctx%failed()) then
+            errors = errors + 1
+            block
+               character(1840) :: msg
+               call ctx%getmsg('LONG', msg)
+               !$omp critical (report)
+               print '(2a)', '   error: ', trim(msg)
+               !$omp end critical (report)
+            end block
+         end if
       end block
       !$omp end parallel
       call check(errors == 0, 'no errors in the parallel queries')

@@ -125,7 +125,18 @@ contains
          same = same .and. all(s1 == s2)
       end do
       call check(same .and. .not. ctx%failed() .and. .not. f%failed(), what)
+      call report_error(ctx)
+      call report_error(f)
    end subroutine same_states
+
+   !> Print a context's error message, if it has one (for the logs of CI).
+   subroutine report_error(ctx)
+      type(pepper_context), intent(inout) :: ctx  !! the context
+      character(1840) :: msg
+      if (.not. ctx%failed()) return
+      call ctx%getmsg('LONG', msg)
+      print '(2a)', '   error: ', trim(msg)
+   end subroutine report_error
 
    !> The segment of `body` is found by `ctx`.
    logical function found(ctx)

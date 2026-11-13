@@ -20,6 +20,7 @@
 module pepper_states
 
    use, intrinsic :: iso_fortran_env, only: output_unit
+   use, intrinsic :: iso_fortran_env, only: int64
    use pepper_kinds, only: ip, wp
    use pepper_containers, only: grow, string, string_map, int_map
    use pepper_segment_index, only: segment_index, segment_reuse
@@ -1824,6 +1825,10 @@ module pepper_states
    !> cltext), held in [[pepper_spice]].
    type, public :: rdtext_state
       integer(ip) :: units ( maxopn ) = 0  !! units of the files open for reading
+      !> PEPPER: the files are read as streams of bytes, split into lines by
+      !> [[rdtext]] itself: the position of the next byte, and the size
+      integer(int64) :: pos ( maxopn ) = 1
+      integer(int64) :: fsize ( maxopn ) = 0  !! the size of each file (bytes)
       integer(ip) :: n = 0  !! number of files open
       character(:), allocatable :: lstfil  !! the file read last (PEPPER: any length; SPICELIB's
                                             !! held 255 characters)

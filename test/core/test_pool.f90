@@ -23,6 +23,7 @@ program test_pool
    call test_watches()
    call test_long_line()
    call test_line_terminators()
+   call test_rdtext_lines()
 
    if (failures > 0) then
       print '(i0, a)', failures, ' check(s) failed'
@@ -235,5 +236,42 @@ contains
       open (newunit=unit, file=file, status='old')
       close (unit, status='delete')
    end subroutine test_line_terminators
+
+   !> RDTEXT splits the lines itself (the file is read as a stream): a
+   !> CR-LF across its reads of 512 bytes, a lone CR, an empty line, a line
+   !> longer than the caller's variable (truncated), and a last line without
+   !> a terminator.
+   subroutine test_rdtext_lines()
+      character(*), parameter :: file = 'test_pool_rdtext.txt'
+      character(*), parameter :: lf = achar(10), cr = achar(13)
+      character(1000) :: line
+      character(10) :: short
+      logical :: eof
+      integer :: unit
+      open (newunit=unit, file=file, status='replace', access='stream', form='unformatted')
+      write (unit) repeat('a', 511) // cr // lf // 'b' // cr // lf // 'c' // cr // cr // 'last'
+      close (unit)
+      call ctx%rdtext(file, line, eof)
+      call check(.not. eof .and. line == repeat('a', 511), 'rdtext: a CR-LF across two reads')
+      call ctx%rdtext(file, line, eof)
+      call check(.not. eof .and. line == 'b', 'rdtext: the line after it')
+      call ctx%rdtext(file, line, eof)
+      call check(.not. eof .and. line == 'c', 'rdtext: a lone CR')
+      call ctx%rdtext(file, line, eof)
+      call check(.not. eof .and. line == ' ', 'rdtext: an empty line')
+      call ctx%rdtext(file, line, eof)
+      call check(.not. eof .and. line == 'last', 'rdtext: a last line without a terminator')
+      call ctx%rdtext(file, line, eof)
+      call check(eof .and. line == ' ', 'rdtext: the end of the file')
+      ! a variable shorter than the line: truncated, and the next line is next
+      call ctx%rdtext(file, short, eof)
+      call check(.not. eof .and. short == repeat('a', 10), 'rdtext: a long line truncated')
+      call ctx%rdtext(file, short, eof)
+      call check(.not. eof .and. short == 'b', 'rdtext: the line after a truncated one')
+      call ctx%cltext(file)
+      call check(.not. ctx%failed(), 'rdtext: no error')
+      open (newunit=unit, file=file, status='old')
+      close (unit, status='delete')
+   end subroutine test_rdtext_lines
 
 end program test_pool
