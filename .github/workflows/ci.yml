@@ -61,6 +61,25 @@ jobs:
           path: build/tspice/*/output.txt
           if-no-files-found: ignore
 
+  # The website (web/) on GitHub Pages: pushed to the gh-pages branch on
+  # every push to master (Settings > Pages: deploy from the gh-pages branch).
+  # A job of its own: once, and without waiting for the Fortran builds.
+  pages:
+    name: Website (GitHub Pages)
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # to push the gh-pages branch
+    steps:
+      - uses: actions/checkout@v6.1.0
+
+      - name: Deploy the website
+        uses: JamesIves/github-pages-deploy-action@v4.9.0
+        with:
+          branch: gh-pages  # the branch the action deploys to
+          folder: web  # the folder it deploys
+          single-commit: true
+
   ifx:
     name: ifx (ubuntu-latest)
     runs-on: ubuntu-latest
