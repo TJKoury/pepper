@@ -338,7 +338,13 @@ contains
 
    !> The index in Q%SEGS of a segment (added if new): its center, frame
    !> and type, and for types 2 and 3 the record directory (SPKR02, SPKR03).
+   !>
+   !> Descriptors are compared bit for bit, not as reals: their integer
+   !> components are packed in doubles that are denormal numbers, which
+   !> compare equal to zero (and to each other) when the compiler flushes
+   !> denormals to zero (ifx's default floating-point model).
    recursive integer(ip) function segment_slot ( ctx, q, handle, descr ) result ( k )
+      use, intrinsic :: iso_fortran_env, only: int64
       class(pepper_context), intent(inout) :: ctx  !! the context
       type(state_query), intent(inout) :: q  !! the query
       integer(ip), intent(in) :: handle  !! the segment's file
@@ -349,7 +355,7 @@ contains
       integer(ip) :: ic(6)
       do k = 1, q%nsegs
          if ( q%segs(k)%handle == handle ) then
-            if ( all ( q%segs(k)%descr == descr ) ) return
+            if ( all ( transfer ( q%segs(k)%descr, 0_int64, 5 ) == transfer ( descr, 0_int64, 5 ) ) ) return
          end if
       end do
       if ( .not. allocated ( q%segs ) ) allocate ( q%segs(8) )
