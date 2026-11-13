@@ -11,6 +11,7 @@ Usage:
     python make_logo.py                 # writes pepper_logo.svg
     python make_logo.py -o out.svg      # custom output path
     python make_logo.py --no-tagline    # name only
+    python make_logo.py --no-text       # the graphic only, centered (pepper_logo_mark.svg)
     python make_logo.py --transparent   # no space background
     python make_logo.py --down          # shaker pointing down (pepper_logo_down.svg)
 """
@@ -360,19 +361,27 @@ def wordmark(tagline=True, dark=False):
     return "\n  ".join(out)
 
 
-def build_svg(tagline=True, transparent=False, pose="up"):
+# Without the text, the graphic is moved down by this much to center it
+# (the name and tagline fill the bottom of the square otherwise).
+MARK_SHIFT = 115
+
+
+def build_svg(tagline=True, transparent=False, pose="up", text=True):
     origin, tilt = POSES[pose]["origin"], POSES[pose]["tilt"]
     trails, bodies = spray(origin, tilt)
     ox, oy = origin
+    shift = 0 if text else MARK_SHIFT
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">',
         "  <title>PEPPER</title>",
         defs(),
         "  " + (background() if not transparent else ""),
+        f'  <g transform="translate(0 {shift})">',
         "  " + trails,
         f'  <g transform="translate({ox} {oy}) rotate({tilt})">{shaker()}</g>',
         "  " + bodies,
-        "  " + wordmark(tagline, dark=transparent),
+        "  </g>",
+        "  " + (wordmark(tagline, dark=transparent) if text else ""),
         "</svg>",
     ]
     return "\n".join(parts) + "\n"
@@ -384,13 +393,14 @@ def main():
                     help="output SVG path (default: pepper_logo.svg, or pepper_logo_down.svg with --down)")
     ap.add_argument("--down", action="store_true", help="shaker points down, pouring planets downward")
     ap.add_argument("--no-tagline", action="store_true", help="omit the acronym/tagline text")
+    ap.add_argument("--no-text", action="store_true", help="omit the name and tagline: the graphic only, centered")
     ap.add_argument("--transparent", action="store_true", help="no background; dark text")
     args = ap.parse_args()
 
     if args.output is None:
-        args.output = "pepper_logo_down.svg" if args.down else "pepper_logo.svg"
+        args.output = ("pepper_logo_down" if args.down else "pepper_logo") + ("_mark" if args.no_text else "") + ".svg"
     svg = build_svg(tagline=not args.no_tagline, transparent=args.transparent,
-                    pose="down" if args.down else "up")
+                    pose="down" if args.down else "up", text=not args.no_text)
     with open(args.output, "w", encoding="utf-8") as f:
         f.write(svg)
     print(f"wrote {args.output}")
