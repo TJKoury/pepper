@@ -1,0 +1,143 @@
+# Continuous integration: the unit tests (test/core), the parallel test with
+# OpenMP, and NAIF's test suite (tspice), with
+# - gfortran on macOS and Windows: pixi's environment (pixi.toml: gfortran 16,
+#   fpm, python), the same tasks as on a developer's machine;
+# - ifx on Linux: Intel's apt packages, cached (/opt/intel/oneapi, about 2 GB
+#   to download otherwise), with fpm from setup-fpm and the runner's python
+#   (not pixi's environment: its conda gcc and binutils would come before
+#   the system's, which ifx links with).
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  gfortran:
+    name: gfortran (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v6.1.0
+
+      - uses: prefix-dev/setup-pixi@v0.11.2
+        with:
+          pixi-version: v0.80.0
+          environments: default
+          locked: true
+          cache: true
+          cache-write: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+
+      - name: Compiler
+        run: pixi run gfortran --version
+
+      - name: Unit tests
+        run: pixi run test
+
+      - name: Parallel test (OpenMP)
+        run: pixi run test-parallel
+
+      - name: tspice
+        run: pixi run tspice
+
+      - name: tspice output of the families
+        if: failure()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: tspice-gfortran-${{ matrix.os }}
+          path: build/tspice/*/output.txt
+          if-no-files-found: ignore
+
+  ifx:
+    name: ifx (ubuntu-latest)
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      IFX_VERSION: '2026.2'
+      FPM_FC: ifx
+    steps:
+      - uses: actions/checkout@v6.1.0
+
+      # The cache's tar runs as the runner's user: make /opt/intel its own.
+      - name: Prepare /opt/intel
+        run: |
+          sudo mkdir -p /opt/intel
+          sudo chown "$USER" /opt/intel
+
+      # Restore and save are separate steps: the cache is saved right after
+      # the install, even if the tests fail (actions/cache saves only at the
+      # end of a successful job).
+      - name: Restore ifx
+        id: cache-ifx
+        uses: actions/cache/restore@v6.0.0
+        with:
+          path: /opt/intel/oneapi
+          key: oneapi-ifx-${{ env.IFX_VERSION }}-${{ runner.os }}-${{ runner.arch }}
+
+      - name: Install ifx
+        if: steps.cache-ifx.outputs.cache-hit != 'true'
+        run: |
+          wget -qO- https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB \
+            | gpg --dearmor | sudo tee /usr/share/keyrings/oneapi-archive-keyring.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/oneapi-archive-keyring.gpg] https://apt.repos.intel.com/oneapi all main" \
+            | sudo tee /etc/apt/sources.list.d/oneAPI.list
+          sudo apt-get update -o Dir::Etc::sourcelist="sources.list.d/oneAPI.list" \
+            -o Dir::Etc::sourceparts="-" -o APT::Get::List-Cleanup="0"
+          sudo apt-get install -y --no-install-recommends "intel-oneapi-compiler-fortran-${IFX_VERSION}"
+          # Not needed to compile Fortran: MPI (a dependency of the package),
+          # the debugger, the documentation. Smaller cache.
+          sudo rm -rf /opt/intel/oneapi/mpi /opt/intel/oneapi/debugger /opt/intel/oneapi/documentation
+          sudo chown -R "$USER" /opt/intel/oneapi
+
+      - name: Save ifx
+        if: steps.cache-ifx.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6.0.0
+        with:
+          path: /opt/intel/oneapi
+          key: ${{ steps.cache-ifx.outputs.cache-primary-key }}
+
+      # setvars.sh's environment, for the later steps.
+      - name: ifx environment
+        run: |
+          source /opt/intel/oneapi/setvars.sh > /dev/null
+          for v in PATH LD_LIBRARY_PATH LIBRARY_PATH CPATH CMPLR_ROOT ONEAPI_ROOT; do
+            if [ -n "${!v}" ]; then echo "$v=${!v}" >> "$GITHUB_ENV"; fi
+          done
+          ifx --version
+
+      - uses: fortran-lang/setup-fpm@v10
+        with:
+          fpm-version: v0.13.0
+
+      - name: Unit tests
+        run: |
+          python3 tools/check_threads.py
+          fpm test --compiler ifx
+
+      - name: Parallel test (OpenMP)
+        run: fpm test test_parallel --compiler ifx --flag -qopenmp
+
+      - name: tspice
+        working-directory: tspice
+        run: fpm run --compiler ifx --runner 'python3 ../tools/run_tspice.py' --
+
+      - name: tspice output of the families
+        if: failure()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: tspice-ifx
+          path: build/tspice/*/output.txt
+          if-no-files-found: ignore

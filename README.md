@@ -5,6 +5,7 @@
 **PEPPER**: Planetary Ephemerides, Positions, Pointing, Events & Rotations.
 
 [![Language](https://img.shields.io/badge/-Fortran-734f96?logo=fortran&logoColor=white)](https://github.com/topics/fortran)
+[![CI](https://github.com/jacobwilliams/pepper/actions/workflows/ci.yml/badge.svg)](https://github.com/jacobwilliams/pepper/actions/workflows/ci.yml)
 
 ## Overview
 
