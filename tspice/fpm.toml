@@ -33,10 +33,11 @@ source-form = "default"
 [features]
 # No preprocessor directives (plans/preprocessor_plan.md): only compiler options.
 platform.gfortran.flags = "-frecursive -fallow-argument-mismatch"
-platform.ifx.flags = "-recursive"
-platform.ifort.flags = "-recursive"
-platform.windows.ifx.flags = "/recursive"
-platform.windows.ifort.flags = "/recursive"
+# Intel: RECL= in bytes, as NAIF's ifort builds (the library's fpm.toml)
+platform.ifx.flags = "-recursive -assume byterecl"
+platform.ifort.flags = "-recursive -assume byterecl"
+platform.windows.ifx.flags = "/recursive /assume:byterecl"
+platform.windows.ifort.flags = "/recursive /assume:byterecl"
 # NAIF's test programs have local arrays of up to 1.5 MB (on the stack with
 # -frecursive); Windows' default stack is 1 MB (MSVC, Intel) or 2 MB
 # (MinGW gfortran): 64 MB there

@@ -21603,12 +21603,17 @@ contains
    !> happens if the file is in memory already. Signals SPICE(MALLOCFAILED)
    !> if the memory cannot be allocated, and SPICE(FILEREADFAILED) if the file
    !> cannot be read.
+   !>
+   !> The records are read as SPICELIB's DAF readers read them (ZZDAFGDR):
+   !> through the handle manager's unit for the file (direct access, records
+   !> of 1024 bytes), one record at a time, without a second connection to
+   !> the file.
    subroutine daf_load_image(ctx, handle)
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: handle  !! the handle of the DAF (loaded for reading)
       integer, parameter :: recl = 1024  !! bytes per DAF record
-      integer(ip) :: k, r
-      integer :: unit, ios, stat
+      integer(ip) :: k, r, lun
+      integer :: ios, stat
       integer(int64) :: nbytes, nrec
       logical :: native, found
       real(wp), allocatable :: image(:)
@@ -21620,42 +21625,43 @@ contains
       if (allocated(ctx%spice%zzddhman%files(k)%image)) return
       call zzddhisn(ctx, handle, native, found)
       if (ctx%failed() .or. .not. found) return
+      ! the handle manager's unit for the file (opened if needed)
+      call zzddhhlu(ctx, handle, 'DAF', .false., lun)
+      if (ctx%failed()) return
+      k = ctx%spice%zzddhman%find(handle)
       associate (f => ctx%spice%zzddhman%files(k))
-         open (newunit=unit, file=f%name, access='stream', form='unformatted', &
-               status='old', action='read', iostat=ios)
-         if (ios /= 0) then
-            call ctx%setmsg('The file ''#'' could not be opened to read it into memory.')
+         inquire (file=f%name, size=nbytes)
+         if (nbytes < 0) then
+            call ctx%setmsg('The size of the file ''#'' is not known: it cannot be read into memory.')
             call ctx%errch('#', f%name)
             call ctx%sigerr('SPICE(FILEREADFAILED)')
             return
          end if
-         inquire (unit=unit, size=nbytes)
-         nrec = max(nbytes, 0_int64)/recl
+         nrec = nbytes/recl
          allocate (image(128*nrec), stat=stat)
          if (stat /= 0) then
-            close (unit)
             call ctx%setmsg('Not enough memory to read the file ''#'' (# bytes) into memory.')
             call ctx%errch('#', f%name)
             call ctx%errint('#', int(min(nbytes, int(huge(1_ip), int64)), ip))
             call ctx%sigerr('SPICE(MALLOCFAILED)')
             return
          end if
-         if (native) then
-            if (nrec > 0) read (unit, pos=1, iostat=ios) image
-         else
-            ios = 0
-            do r = 1, int(nrec, ip)
-               read (unit, pos=int(r - 1, int64)*recl + 1, iostat=ios) chrbuf
-               if (ios /= 0) exit
-               call zzxlated(ctx, f%bff, chrbuf, 128_ip, image(128*(r - 1) + 1))
-               if (ctx%failed()) exit
-            end do
-         end if
-         close (unit)
+         ios = 0
+         do r = 1, int(nrec, ip)
+            if (native) then
+               read (lun, rec=r, iostat=ios) image(128*(r - 1) + 1:128*r)
+            else
+               read (lun, rec=r, iostat=ios) chrbuf
+               if (ios == 0) call zzxlated(ctx, f%bff, chrbuf, 128_ip, image(128*(r - 1) + 1:128*r))
+            end if
+            if (ios /= 0 .or. ctx%failed()) exit
+         end do
          if (ctx%failed()) return
          if (ios /= 0) then
-            call ctx%setmsg('The file ''#'' could not be read into memory.')
+            call ctx%setmsg('The file ''#'' could not be read into memory (record #, IOSTAT #).')
             call ctx%errch('#', f%name)
+            call ctx%errint('#', r)
+            call ctx%errint('#', int(ios, ip))
             call ctx%sigerr('SPICE(FILEREADFAILED)')
             return
          end if

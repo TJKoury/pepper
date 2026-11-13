@@ -36,12 +36,19 @@ source-form = "default"
 #
 # The library needs no large stack (its largest frame is about 64 KB), nor
 # do the tests. NAIF's tspice test code does on Windows (tspice/fpm.toml).
+#
+# Intel Fortran measures the RECL= of unformatted files in 4-byte units
+# unless -assume byterecl (/assume:byterecl on Windows): the binary kernels'
+# records are 1024 bytes (RECL=1024), as in NAIF's builds with ifort. These
+# flags replace fpm's own defaults for the compiler (which have it), so it is
+# given here. Without it, kernels written by NAIF are read at the wrong
+# offsets.
 [features]
 platform.gfortran.flags = "-frecursive"
-platform.ifx.flags = "-recursive"
-platform.ifort.flags = "-recursive"
-platform.windows.ifx.flags = "/recursive"
-platform.windows.ifort.flags = "/recursive"
+platform.ifx.flags = "-recursive -assume byterecl"
+platform.ifort.flags = "-recursive -assume byterecl"
+platform.windows.ifx.flags = "/recursive /assume:byterecl"
+platform.windows.ifort.flags = "/recursive /assume:byterecl"
 
 [profiles]
 default = ["platform"]
