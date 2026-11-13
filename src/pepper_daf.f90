@@ -7030,7 +7030,9 @@ contains
       !>
       !>     Local Variables
       !>
-      !>     Equivalence DPBUF to INBUF.
+      !>     Equivalence DPBUF to INBUF. (PEPPER: not equivalenced; a
+      !>     summary's integers are translated into INBUF and packed into
+      !>     DPBUF with TRANSFER.)
       !>
       !>     Saved Variables
       !>
@@ -7039,6 +7041,7 @@ contains
       !>     Standard SPICE error handling.
       module procedure zzdafgsr
       use pepper_kinds, only: ip, wp
+      use pepper_packing, only: pack_integers
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
@@ -7054,14 +7057,13 @@ contains
       integer(ip) :: iamh
       integer(ip) :: iarch
       integer(ip) :: ibff
-      integer(ip) :: inbuf  ( 256 )
+      integer(ip) :: inbuf  ( 256 )  !! a summary's integers, translated (PEPPER: not equivalenced to DPBUF)
       integer(ip) :: iostat
       integer(ip) :: left
       integer(ip) :: lun
       integer(ip) :: nsum
       integer(ip) :: sumsiz
       logical :: locfnd
-      equivalence         ( dpbuf, inbuf )
       if ( .not. allocated ( ctx%zzdafgsr_state ) ) allocate ( ctx%zzdafgsr_state )
       associate ( first => ctx%zzdafgsr_state%first, &
                   natbff => ctx%zzdafgsr_state%natbff, &
@@ -7263,7 +7265,9 @@ contains
 !           At this point DINDEX and CINDEX are pointing at the
 !           locations for the packed integers in the record.
 !           Use DINDEX to compute the index into INBUF, the
-!           equivalenced integer buffer and translate.
+!           equivalenced integer buffer and translate. (PEPPER: the
+!           integers are translated into INBUF, then packed into
+!           DPBUF(DINDEX...) by PACK_INTEGERS.)
 !
             if ( ni > 0 ) then
 
@@ -7272,13 +7276,16 @@ contains
 !              the amount of space left in the buffer.  Since
 !              it is equivalenced to DPBUF, account for the
 !              double precision numbers that were just added.
+!              (PEPPER: INBUF is separate, and holds one summary's
+!              integers; the space left in the record still bounds
+!              them.)
 !
                left = 256 - 2*(i-1)*sumsiz - nd*2 - 6
 
                call zzxlatei ( ctx, ibff, &
                                chrbuf(cindex:cindex+ni*inlen-1), &
                                left, &
-                               inbuf(2*dindex-1)                 )
+                               inbuf                             )
 
 !
 !              If the translation routine fails for any reason,
@@ -7293,8 +7300,15 @@ contains
 !              present in memory.
 !
                if ( mod(ni,2) == 1 ) then
-                  inbuf(2*dindex-1+ni) = 0
+                  inbuf(ni+1) = 0
                end if
+
+!
+!              PEPPER: the integers packed into the summary's double
+!              precision words by PACK_INTEGERS (SPICELIB translated
+!              them into the words through an EQUIVALENCE).
+!
+               dpbuf(dindex:dindex+(ni+1)/2-1) = pack_integers ( inbuf(1:ni) )
 
             end if
 
@@ -11750,25 +11764,22 @@ contains
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure dafps
       use pepper_kinds, only: ip, wp
+      use pepper_packing, only: pack_integers
       implicit none
-      integer(ip) :: words ( 250 )
       integer(ip) :: n
       integer(ip) :: m
-      integer(ip) :: nw
       n = min ( 125, max ( 0, nd ) )
 
       sum(1:n) = dc(1:n)
 
 !
-!     PEPPER: the integers are packed two to a double precision word
-!     by TRANSFER (SPICELIB: EQUIVALENCE); the second half of the last
-!     word is zero when NI is odd.
+!     PEPPER: the integers are packed two to a double precision word by
+!     PACK_INTEGERS (SPICELIB: an EQUIVALENCE); the second half of the
+!     last word is zero when NI is odd.
 !
-      m  = min ( 250 - 2 * n, max ( 0, ni ) )
-      nw = ( m + 1 ) / 2
-      words(1:m)      = ic(1:m)
-      words(m+1:2*nw) = 0
-      sum(n+1:n+nw)   = transfer ( words(1:2*nw), 0.0_wp, nw )
+      m = min ( 250 - 2 * n, max ( 0, ni ) )
+
+      sum(n+1:n+(m+1)/2) = pack_integers ( ic(1:m) )
 
       return
       end procedure dafps
@@ -12007,6 +12018,7 @@ contains
       !>     Just undo whatever DAFPS did.
       module procedure dafus
       use pepper_kinds, only: ip, wp
+      use pepper_packing, only: unpack_integers
       implicit none
       integer(ip) :: n
       integer(ip) :: m
@@ -12016,11 +12028,11 @@ contains
 
 !
 !     PEPPER: the integers are unpacked from the double precision words
-!     by TRANSFER (SPICELIB: EQUIVALENCE).
+!     by UNPACK_INTEGERS (SPICELIB: an EQUIVALENCE).
 !
       m = min ( 250 - 2 * n, max ( 0, ni ) )
 
-      ic(1:m) = transfer ( sum(n+1:n+(m+1)/2), 0_ip, m )
+      ic(1:m) = unpack_integers ( sum(n+1:n+(m+1)/2), m )
 
       return
       end procedure dafus
@@ -13765,13 +13777,15 @@ contains
       !>     Local Parameters
       !>
       !>     Length of the double precision and integer buffers that
-      !>     are equivalenced.
+      !>     are equivalenced. (PEPPER: the integer buffer only; its
+      !>     integers are copied to OUTPUT as doubles with TRANSFER.)
       !>
       !>     These parameters are used for arithmetic shifting.
       !>
       !>     Local Variables
       !>
-      !>     Equivalence DPBUFR to INBUFR.
+      !>     Equivalence DPBUFR to INBUFR. (PEPPER: no DPBUFR; TRANSFER of
+      !>     INBUFR.)
       !>
       !>     Statement Functions
       !>
@@ -13792,6 +13806,7 @@ contains
       !>     Standard SPICE error handling.
       module procedure zzxlated
       use pepper_kinds, only: ip, wp
+      use pepper_packing, only: pack_integers
       use pepper_constants, only: intmin
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
@@ -13803,7 +13818,6 @@ contains
       integer(ip), parameter :: shft24 = 2**24
       character(1) :: carg
       character(strsiz) :: tmpstr
-      real(wp) :: dpbufr ( dpblen )
       integer(ip) :: i
       integer(ip) :: inbufr ( inblen )
       integer(ip) :: j
@@ -13813,7 +13827,6 @@ contains
       integer(ip) :: osign
       integer(ip) :: outpos
       integer(ip) :: value
-      equivalence         ( dpbufr, inbufr )
       integer(ip) :: zzichr
 !     PEPPER: one portable form (ICHAR is 0:255 with current compilers; the
 !     MODULO also maps a signed ICHAR, as SPICELIB's g77 branch did).
@@ -13960,7 +13973,8 @@ contains
 !           The remainder of this branch is devoted to translating
 !           and copying blocks of DPBLEN double precision numbers
 !           into OUTPUT.  Initialize K, the integer index into the
-!           buffer equivalenced to DPBUFR.
+!           buffer equivalenced to DPBUFR. (PEPPER: INBUFR, whose
+!           pairs of integers are copied to OUTPUT as doubles.)
 !
             k = 1
 
@@ -14157,7 +14171,7 @@ contains
 !
                if ( k == inblen-1 ) then
 
-                  output(outpos:outpos+dpblen-1) = dpbufr
+                  output(outpos:outpos+dpblen-1) = pack_integers ( inbufr )
                   outpos = outpos + dpblen
                   k = 1
 
@@ -14172,10 +14186,10 @@ contains
 
 !
 !           Copy any remaining double precision numbers from DPBUFR
-!           into OUTPUT.
+!           into OUTPUT. (PEPPER: from INBUFR, by PACK_INTEGERS.)
 !
             if ( k /= 1 ) then
-               output(outpos:outpos+k/2-1) = dpbufr(1:k/2)
+               output(outpos:outpos+k/2-1) = pack_integers ( inbufr(1:k-1) )
             end if
 
          else
@@ -14243,7 +14257,8 @@ contains
 !           The remainder of this branch is devoted to translating
 !           and copying blocks of DPBLEN double precision numbers
 !           into OUTPUT.  Initialize K, the integer index into the
-!           buffer equivalenced to DPBUFR.
+!           buffer equivalenced to DPBUFR. (PEPPER: INBUFR, whose
+!           pairs of integers are copied to OUTPUT as doubles.)
 !
             k = 1
 
@@ -14440,7 +14455,7 @@ contains
 !
                if ( k == inblen-1 ) then
 
-                  output(outpos:outpos+dpblen-1) = dpbufr
+                  output(outpos:outpos+dpblen-1) = pack_integers ( inbufr )
                   outpos = outpos + dpblen
                   k = 1
 
@@ -14455,10 +14470,10 @@ contains
 
 !
 !           Copy any remaining double precision numbers from DPBUFR
-!           into OUTPUT.
+!           into OUTPUT. (PEPPER: from INBUFR, by PACK_INTEGERS.)
 !
             if ( k /= 1 ) then
-               output(outpos:outpos+k/2-1) = dpbufr(1:k/2)
+               output(outpos:outpos+k/2-1) = pack_integers ( inbufr(1:k-1) )
             end if
 
          else

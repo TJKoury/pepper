@@ -1770,36 +1770,27 @@ contains
       !>     Local Variables
       module procedure zzgetbff
       use pepper_kinds, only: ip, wp
+      use pepper_packing, only: unpack_integers
       use pepper_inc_zzddhman
       implicit none
       real(wp), parameter :: dpvalu = 7.0_wp
       integer(ip) :: i
-      real(wp) :: dequiv
       integer(ip) :: iequiv ( 2 )
-      equivalence         ( dequiv, iequiv )
-
-      integer(ip) :: int1st ( numbff )
-      integer(ip) :: int2nd ( numbff )
-
-      data                  int1st(bigi3e)  / 1075576832 /
-      data                  int2nd(bigi3e)  / 0          /
-
-      data                  int1st(ltli3e)  / 0          /
-      data                  int2nd(ltli3e)  / 1075576832 /
-
-      data                  int1st(vaxgfl)  / 16444      /
-      data                  int2nd(vaxgfl)  / 0          /
-
-      data                  int1st(vaxdfl)  / 16864      /
-      data                  int2nd(vaxdfl)  / 0          /
-
-      save                  int1st
-      save                  int2nd
+!
+!     The two integers of 7.0's bits in each binary file format, indexed
+!     by BIGI3E, LTLI3E, VAXGFL and VAXDFL (1 to 4). (PEPPER: parameters;
+!     SPICELIB: saved arrays set by DATA statements.)
+!
+      integer(ip), parameter :: int1st ( numbff ) = &
+         [ 1075576832, 0, 16444, 16864 ]  !! the first integer, per format
+      integer(ip), parameter :: int2nd ( numbff ) = &
+         [ 0, 1075576832, 0, 0 ]  !! the second integer, per format
 
 !
-!     Copy DPVALU into the equivalenced DP, DEQUIV.
+!     The two integers of DPVALU's bits (PEPPER: UNPACK_INTEGERS;
+!     SPICELIB: an EQUIVALENCE).
 !
-      dequiv = dpvalu
+      iequiv = unpack_integers ( [ dpvalu ], 2 )
 
 !
 !     Examine the integer pairs, to identify the binary

@@ -8259,6 +8259,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 11-APR-1995 (KRG) (WLT)
       module procedure sgmeta
       use pepper_kinds, only: ip, wp
+      use pepper_packing, only: unpack_integers
       use pepper_inc_sgparam
       implicit none
       real(wp) :: dmtasz_1(1)  !! one-element copy of dmtasz (array argument)
@@ -8274,9 +8275,7 @@ contains
       integer(ip) :: niovr2
       real(wp) :: dmtasz
       real(wp) :: xmeta  ( mxmeta )
-      real(wp) :: dtemp  (      2 )
       integer(ip) :: itemp  (      4 )
-      equivalence         ( dtemp, itemp )
       if ( .not. allocated ( ctx%sgmeta_state ) ) allocate ( ctx%sgmeta_state )
       associate ( lstbeg => ctx%sgmeta_state%lstbeg, &
                   lsthan => ctx%sgmeta_state%lsthan, &
@@ -8300,11 +8299,11 @@ contains
 !        located in the last two "integer" positions of the descriptor.
 !
          if ( nieven ) then
-            dtemp(1:1) = descr(ioffst:ioffst)
+            itemp(1:2) = unpack_integers ( descr(ioffst:ioffst), 2 )
             begin = itemp(1)
             end   = itemp(2)
          else
-            dtemp = descr(ioffst:ioffst+2-1)
+            itemp = unpack_integers ( descr(ioffst:ioffst+2-1), 4 )
             begin = itemp(2)
             end   = itemp(3)
          end if
@@ -8371,11 +8370,11 @@ contains
 !        located in the last two "integer" positions of the descriptor.
 !
          if ( nieven ) then
-            dtemp(1:1) = descr(ioffst:ioffst)
+            itemp(1:2) = unpack_integers ( descr(ioffst:ioffst), 2 )
             begin = itemp(1)
             end   = itemp(2)
          else
-            dtemp = descr(ioffst:ioffst+2-1)
+            itemp = unpack_integers ( descr(ioffst:ioffst+2-1), 4 )
             begin = itemp(2)
             end   = itemp(3)
          end if
