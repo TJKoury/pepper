@@ -19,7 +19,11 @@
 !> `false`, or flat arrays of them; an array holds strings only, or numbers
 !> and times only. `null`, nested objects and arrays, and empty arrays are
 !> errors. A string starting with `@` is a time; the loader converts it
-!> (TPARSE, as for `@` values in text kernels).
+!> (TPARSE, as for `@` values in text kernels). A number beyond the range
+!> of double precision is an error (SPICE(NUMBEREXPECTED), as in text
+!> kernels; a smaller one than the smallest is zero); a string can't have
+!> a NUL (`\u0000`) or a lone UTF-16 surrogate (`\ud800` to `\udfff` not
+!> in a pair).
 !>
 !> [[json_kernel_parse]] turns the text into the list of assignments, in
 !> the text's order. It has no state and does no I/O: the loader (LDPOOL,
@@ -341,7 +345,10 @@ contains
       literal = text(c%pos:c%pos + len(w) - 1) == w
    end function literal
 
-   !> A JSON number: `-?(0|[1-9][0-9]*)(.[0-9]+)?([eE][+-]?[0-9]+)?`
+   !> A JSON number: `-?(0|[1-9][0-9]*)(.[0-9]+)?([eE][+-]?[0-9]+)?`,
+   !> correctly rounded (Fortran's READ). Beyond the range of double
+   !> precision (READ gives an infinity): SPICE(NUMBEREXPECTED), as for
+   !> text kernels (NPARSD).
    pure subroutine read_number(text, c, x)
       character(*), intent(in) :: text  !! the text
       type(json_cursor), intent(inout) :: c  !! the parser
@@ -388,6 +395,11 @@ contains
          call syntax(c, 'the number "'//text(b:p - 1)//'" cannot be read')
          return
       end if
+      if (abs(x) > huge(x)) then
+         call fail(c, 'SPICE(NUMBEREXPECTED)', 'the number "'//text(b:p - 1)//'" is beyond the range '// &
+                   'of double precision', c%line)
+         return
+      end if
       c%pos = p
    contains
       !> The character at q (a blank after the end of the text).
@@ -404,7 +416,7 @@ contains
    end subroutine read_number
 
    !> A JSON string (the parser is on its opening quote), with its escapes
-   !> resolved (`\uXXXX`: UTF-8).
+   !> resolved (`\uXXXX`: UTF-8; not `\u0000`, nor a lone surrogate).
    pure subroutine read_string(text, c, s)
       character(*), intent(in) :: text  !! the text
       type(json_cursor), intent(inout) :: c  !! the parser
@@ -453,6 +465,14 @@ contains
          case ('u')
             call hex4(text, c, p + 1, code)
             if (.not. c%ok) return
+            if (code == 0) then
+               call syntax(c, 'a string has a NUL character (\u0000)')
+               return
+            end if
+            if (code >= 56320 .and. code <= 57343) then
+               call syntax(c, 'a \u escape has an unpaired surrogate (a low surrogate first)')
+               return
+            end if
             p = p + 4
             ! a surrogate pair: one code point
             if (code >= 55296 .and. code <= 56319) then

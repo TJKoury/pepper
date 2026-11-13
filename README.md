@@ -246,9 +246,9 @@ It is loaded like any kernel: `spice%furnsh('masses.json')` in Fortran, and
 
 | JSON | Kernel pool |
 |---|---|
-| number | a numeric value |
+| number | a numeric value, correctly rounded (beyond double precision's range: SPICE(NUMBEREXPECTED), as in text kernels) |
 | `true`, `false` | 1, 0 |
-| string | a character value |
+| string | a character value (escapes resolved, `\u` as UTF-8; a NUL or a lone surrogate is an error) |
 | `"@..."` | a time: UTC seconds past J2000 (as `@` in text kernels; a bad time is SPICE(BADTIMESPEC)) |
 | array of the above | the values: all strings, or all numbers and times |
 | `"+NAME": ...` | appends to NAME (`+=`) |

@@ -14,6 +14,8 @@ program test_json_kernels
 
    call test_parser()
    call test_parser_errors()
+   call test_numbers()
+   call test_values()
    call test_equivalence()
    call test_extension()
    call test_errors_atomic()
@@ -63,7 +65,7 @@ contains
       call json_kernel_parse( &
          char(239)//char(187)//char(191)//'// a comment'//nl// &
          '{ "A": 1, "+A": [2, -3.5e2, true, false], // the end of a line'//nl// &
-         '  "S": "x\"y\\z\/\né😀", "T": ["@2000-01-01", 4,], "E": "",'//nl// &
+         '  "S": "x\"y\\z\/\n\u00e9\ud83d\ude00", "T": ["@2000-01-01", 4,], "E": "",'//nl// &
          '  "LIST": ["a", "b", ], }'//nl//'// done', items, n, ok, short, long, line)
       call check(ok, 'parser: a valid kernel ('//short//' '//long//')')
       if (.not. ok) return
@@ -116,7 +118,235 @@ contains
       call expect('{"": 1}', 'SPICE(BADVARNAME)', 1, 'an empty name')
       call expect('{"+": 1}', 'SPICE(BADVARNAME)', 1, 'an append without a name')
       call expect('{"A B": 1}', 'SPICE(BADVARNAME)', 1, 'a blank in a name')
+      ! numbers beyond double precision (text kernels: the same error)
+      call expect('{'//nl//'"A": 1e400}', 'SPICE(NUMBEREXPECTED)', 2, 'a number too large')
+      call expect('{"A": [1, -1.8e308]}', 'SPICE(NUMBEREXPECTED)', 1, 'a negative number too large')
+      call expect('{"A": 1797693134862315800000000000000000000000000000000000000000000000000000000000'// &
+                  '000000000000000000000000000000000000000000000000000000000000000000000000000000000000'// &
+                  '000000000000000000000000000000000000000000000000000000000000000000000000000000000000'// &
+                  '000000000000000000000000000000000000000000000000000000000000000000000000000000000000}', &
+                  'SPICE(NUMBEREXPECTED)', 1, 'an integer too large (310 digits)')
+      ! more bad numbers
+      call expect('{"A": +1}', 'SPICE(JSONSYNTAXERROR)', 1, 'a plus sign')
+      call expect('{"A": -}', 'SPICE(JSONSYNTAXERROR)', 1, 'a sign without digits')
+      call expect('{"A": -01}', 'SPICE(JSONSYNTAXERROR)', 1, 'a negative leading zero')
+      call expect('{"A": 0x10}', 'SPICE(JSONSYNTAXERROR)', 1, 'hexadecimal')
+      call expect('{"A": 1e+}', 'SPICE(JSONSYNTAXERROR)', 1, 'an exponent sign without digits')
+      call expect('{"A": 1.5.2}', 'SPICE(JSONSYNTAXERROR)', 1, 'two decimal points')
+      call expect('{"A": 1d5}', 'SPICE(JSONSYNTAXERROR)', 1, 'a Fortran D exponent')
+      call expect('{"A": NaN}', 'SPICE(JSONSYNTAXERROR)', 1, 'NaN')
+      call expect('{"A": Infinity}', 'SPICE(JSONSYNTAXERROR)', 1, 'Infinity')
+      call expect('{"A": -Infinity}', 'SPICE(JSONSYNTAXERROR)', 1, '-Infinity')
+      call expect('{"A": 1 2}', 'SPICE(JSONSYNTAXERROR)', 1, 'two numbers without a comma')
+      ! more bad strings
+      call expect('{"A": "a\u0000b"}', 'SPICE(JSONSYNTAXERROR)', 1, 'a NUL escape')
+      call expect('{"A": "a'//achar(0)//'b"}', 'SPICE(JSONSYNTAXERROR)', 1, 'a raw NUL')
+      call expect('{"A": "x'//achar(9)//'y"}', 'SPICE(JSONSYNTAXERROR)', 1, 'a raw tab in a string')
+      call expect('{"A": "\udc00"}', 'SPICE(JSONSYNTAXERROR)', 1, 'a lone low surrogate')
+      call expect('{"A": "\ude00\ud83d"}', 'SPICE(JSONSYNTAXERROR)', 1, 'surrogates in the wrong order')
+      call expect('{"A": "\ud83d\u0041"}', 'SPICE(JSONSYNTAXERROR)', 1, 'a high surrogate, then not a low one')
+      call expect('{"A": "\ud83dx"}', 'SPICE(JSONSYNTAXERROR)', 1, 'a high surrogate, then a character')
+      call expect('{"A": "\ud83d\uzzzz"}', 'SPICE(JSONSYNTAXERROR)', 1, 'a bad \u after a high surrogate')
+      call expect('{"A": "\u00G0"}', 'SPICE(JSONSYNTAXERROR)', 1, 'a \u with a bad hexadecimal digit')
+      call expect('{"A": "\', 'SPICE(JSONSYNTAXERROR)', 1, 'a backslash at the end of the text')
+      call expect('{"A": ''x''}', 'SPICE(JSONSYNTAXERROR)', 1, 'a single-quoted string')
+      ! more bad structure
+      call expect('{"A": [1,,2]}', 'SPICE(JSONSYNTAXERROR)', 1, 'two commas in an array')
+      call expect('{"A": 1,, "B": 2}', 'SPICE(JSONSYNTAXERROR)', 1, 'two commas in the object')
+      call expect('{,}', 'SPICE(JSONSYNTAXERROR)', 1, 'only a comma')
+      call expect('{"A" 1}', 'SPICE(JSONSYNTAXERROR)', 1, 'a missing colon')
+      call expect('{"A": }', 'SPICE(JSONSYNTAXERROR)', 1, 'a missing value')
+      call expect('{"A": [1, 2}', 'SPICE(JSONSYNTAXERROR)', 1, 'a missing ]')
+      call expect('{"A": [1, 2', 'SPICE(JSONSYNTAXERROR)', 1, 'an array at the end of the text')
+      call expect('{"A": 1}{"B": 2}', 'SPICE(JSONSYNTAXERROR)', 1, 'two objects')
+      call expect('{"A": truex}', 'SPICE(JSONSYNTAXERROR)', 1, 'a literal with more letters')
+      call expect('{"A": True}', 'SPICE(JSONSYNTAXERROR)', 1, 'a capitalized literal')
+      call expect('{"A": 1} /', 'SPICE(JSONSYNTAXERROR)', 1, 'a lone slash')
+      call expect('{"A": /* c */ 1}', 'SPICE(JSONSYNTAXERROR)', 1, 'a block comment inside')
+      call expect('{"A": 1 // a comment}', 'SPICE(JSONSYNTAXERROR)', 1, 'a comment hides the }')
+      call expect(char(239)//char(187)//'{"A": 1}', 'SPICE(JSONSYNTAXERROR)', 1, 'a partial byte order mark')
+      call expect('{"A": "a", "+A": [2, "b"]}', 'SPICE(BADVARASSIGN)', 1, 'a mixed array in an append')
+      call expect('{"A": [true, "b"]}', 'SPICE(BADVARASSIGN)', 1, 'true and a string')
+      call expect('{"A": [null]}', 'SPICE(BADVARASSIGN)', 1, 'null in an array')
+      call expect('{"A": [{}]}', 'SPICE(BADVARASSIGN)', 1, 'an object in an array')
+      call expect('{"A\u0009B": 1}', 'SPICE(BADVARNAME)', 1, 'a tab (escaped) in a name')
+      call expect('{"\u00e9": 1}', 'SPICE(BADVARNAME)', 1, 'a name that is not ASCII')
    end subroutine test_parser_errors
+
+   !> Numbers: correctly rounded (the same as Fortran's READ of the same
+   !> text), at the ends of double precision's range.
+   subroutine test_numbers()
+      character(*), parameter :: texts(*) = [character(40) :: &
+         '0', '-0', '1', '-1', '0.1', '-0.5', '1e5', '1E5', '1e+5', '1e-5', '1.5E-3', &
+         '123456789012345678901234567890', '9007199254740993', &
+         '1.7976931348623157e308', '-1.7976931348623157e308', '2.2250738585072014e-308', &
+         '4.9406564584124654e-324', '1.3271244004193938E+11', '6.644300993056522e-09', &
+         '0.30000000000000004', '1e-400', '-1e-400', '0e999', '1.000000000000000000000001']
+      type(json_assignment), allocatable :: items(:)
+      integer(ip) :: n, line, k
+      logical :: ok
+      character(:), allocatable :: short, long
+      real(wp) :: x
+      character(40) :: buffer
+      do k = 1, size(texts)
+         call json_kernel_parse('{"X": '//trim(texts(k))//'}', items, n, ok, short, long, line)
+         buffer = texts(k)
+         read (buffer, *) x
+         if (ok) ok = items(1)%n == 1 .and. items(1)%kind == json_numeric
+         if (ok) ok = transfer(items(1)%numbers(1), 0_8) == transfer(x, 0_8)
+         call check(ok, 'numbers: '//trim(texts(k))//' (the same bits as READ)')
+      end do
+      call json_kernel_parse('{"X": [-0, 1e-400, 1e400]}', items, n, ok, short, long, line)
+      call check(.not. ok .and. short == 'SPICE(NUMBEREXPECTED)', 'numbers: 1e400 after others')
+      call json_kernel_parse('{"X": [true, false, 1, "@2000-01-01"]}', items, n, ok, short, long, line)
+      call check(ok, 'numbers: true, false, a number and a time in one array')
+      if (ok) call check(items(1)%n == 4 .and. all(items(1)%numbers(1:3) == [1.0_wp, 0.0_wp, 1.0_wp]) .and. &
+                         all(items(1)%is_time .eqv. [.false., .false., .false., .true.]), &
+                         'numbers: the values of true, false, a number and a time')
+   end subroutine test_numbers
+
+   !> Every kind of value a JSON kernel's variable can have, through
+   !> FURNSH and the kernel pool.
+   subroutine test_values()
+      type(pepper_spice), target :: spice
+      type(pepper_context) :: c
+      type(string), allocatable :: sv(:)
+      logical :: found
+      character(*), parameter :: nl = achar(10)
+      character(*), parameter :: long_name = 'A_NAME_OF_MORE_THAN_32_CHARACTERS_'//repeat('X', 66)
+      character(*), parameter :: long_value = repeat('0123456789', 100)
+      character(:), allocatable :: text
+      integer :: unit
+
+      ! the kernel, written as bytes (a raw UTF-8 character, tabs, CR LF)
+      text = char(239)//char(187)//char(191)// &
+         '// all the kinds of values'//char(13)//nl// &
+         '{'//nl// &
+         achar(9)//'"INT": 42,'//char(13)//nl// &
+         '  "NEG": -7, "FRAC": -0.25, "EXP": 6.02214076e23, "ZERO": -0,'//nl// &
+         '  "TINY": 1e-400, "MAX": 1.7976931348623157e308,'//nl// &
+         '  "T": true, "F": false,'//nl// &
+         '  "NUMS": [1, 2.5, -3e-3, true],'//nl// &
+         '  "ONE": [7],'//nl// &
+         '  "STR": "hello", "EMPTY": "", "BLANKS": "  two  ",'//nl// &
+         '  "ESC": "q\"b\\s\/n\nr\rt\tb\bf\f",'//nl// &
+         '  "UNI": "\u00e9\u20AC\ud83d\ude00'//char(195)//char(169)//'",'//nl// &
+         '  "SLIST": ["a", "b c", "", "x@y"],'//nl// &
+         '  "LONG": "'//long_value//'",'//nl// &
+         '  "TIME": "@2000-01-01T12:00",'//nl// &
+         '  "TIMES": ["@2000-01-02T12:00", "@JD 2451545.0", 5, "\u00402000-01-03T12:00"],'//nl// &
+         '  "NUM_APP": 1, "+NUM_APP": [2, 3], "+NUM_APP": "@2000-01-01T12:00:01",'//nl// &
+         '  "STR_APP": "x", "+STR_APP": ["y", "z"],'//nl// &
+         '  "+NEW_APP": 9,'//nl// &
+         '  "REPL": 1, "REPL": "now a string",'//nl// &
+         '  "lower": 1, "LOWER": 2,'//nl// &
+         '  "ODD/NAME.1-A": 3, "\u0041\u0042": 4,'//nl// &
+         '  "'//long_name//'": 5,'//nl// &
+         '  "QUOTE\"NAME": 6,'//nl// &
+         '}'//nl
+      call delete_file('test_json_values.json')
+      open (newunit=unit, file='test_json_values.json', access='stream', status='new', action='write')
+      write (unit) text
+      close (unit)
+      call spice%furnsh('test_json_values.json')
+      call check(.not. spice%failed(), 'values: the kernel loads')
+      c = spice%new_context()
+
+      call pool_numbers(c, 'INT', [42.0_wp])
+      call pool_numbers(c, 'NEG', [-7.0_wp])
+      call pool_numbers(c, 'FRAC', [-0.25_wp])
+      call pool_numbers(c, 'EXP', [6.02214076e23_wp])
+      call pool_numbers(c, 'ZERO', [0.0_wp])
+      call pool_numbers(c, 'TINY', [0.0_wp])
+      call pool_numbers(c, 'MAX', [huge(1.0_wp)])
+      call pool_numbers(c, 'T', [1.0_wp])
+      call pool_numbers(c, 'F', [0.0_wp])
+      call pool_numbers(c, 'NUMS', [1.0_wp, 2.5_wp, -3.0e-3_wp, 1.0_wp])
+      call check(nint(log10(huge(1.0_wp))) == 308, 'values: double precision')
+      call pool_numbers(c, 'ONE', [7.0_wp])
+      call pool_strings(c, 'STR', [string('hello')])
+      call pool_strings(c, 'EMPTY', [string('')])
+      call pool_strings(c, 'ESC', [string('q"b\s/n'//achar(10)//'r'//achar(13)//'t'//achar(9)//'b'//achar(8)// &
+                                  'f'//achar(12))])
+      call pool_strings(c, 'UNI', [string(char(195)//char(169)//char(226)//char(130)//char(172)// &
+                                  char(240)//char(159)//char(152)//char(128)//char(195)//char(169))])
+      call pool_strings(c, 'SLIST', [string('a'), string('b c'), string(''), string('x@y')])
+      call pool_strings(c, 'LONG', [string(long_value)])
+      ! times: TPARSE's seconds past J2000 (as @ in text kernels)
+      call pool_numbers(c, 'TIME', [0.0_wp])
+      ! (an escaped "@", \u0040, is a time too: escapes are resolved first)
+      call pool_numbers(c, 'TIMES', [86400.0_wp, 0.0_wp, 5.0_wp, 172800.0_wp])
+      ! appends of each kind, an append to a new variable, a replacement
+      call pool_numbers(c, 'NUM_APP', [1.0_wp, 2.0_wp, 3.0_wp, 1.0_wp])
+      call pool_strings(c, 'STR_APP', [string('x'), string('y'), string('z')])
+      call pool_numbers(c, 'NEW_APP', [9.0_wp])
+      call pool_strings(c, 'REPL', [string('now a string')])
+      ! names: case-sensitive, punctuation, escapes, any length, a quote
+      call pool_numbers(c, 'lower', [1.0_wp])
+      call pool_numbers(c, 'LOWER', [2.0_wp])
+      call pool_numbers(c, 'ODD/NAME.1-A', [3.0_wp])
+      call pool_numbers(c, 'AB', [4.0_wp])
+      call pool_numbers(c, long_name, [5.0_wp])
+      call pool_numbers(c, 'QUOTE"NAME', [6.0_wp])
+      ! blanks: as a text kernel keeps them
+      call c%pool_strings('BLANKS', sv, found)
+      call check(found .and. size(sv) == 1, 'values: BLANKS')
+      if (found) call check(sv(1)%s(1:5) == '  two' .and. len_trim(sv(1)%s) == 5, &
+                            'values: leading blanks kept (got "'//sv(1)%s//'")')
+
+      ! appends to a variable of an earlier kernel (numbers, strings)
+      call write_file('test_json_values2.json', [character(80) :: &
+         '{"+INT": 43, "+STR": ["world"], "+TIME": "@2000-01-01T12:00:02"}'])
+      call spice%furnsh('test_json_values2.json')
+      call check(.not. spice%failed(), 'values: appends in a second kernel load')
+      call pool_numbers(c, 'INT', [42.0_wp, 43.0_wp])
+      call pool_strings(c, 'STR', [string('hello'), string('world')])
+      call pool_numbers(c, 'TIME', [0.0_wp, 2.0_wp])
+
+      call c%destroy()
+      call spice%destroy()
+      call delete_file('test_json_values.json')
+      call delete_file('test_json_values2.json')
+
+   end subroutine test_values
+
+   !> A numeric variable's values (test_values).
+   subroutine pool_numbers(c, name, expected)
+      type(pepper_context), intent(inout) :: c  !! the context
+      character(*), intent(in) :: name  !! the variable
+      real(wp), intent(in) :: expected(:)  !! its values
+      real(wp), allocatable :: v(:)
+      logical :: found, same
+      integer(ip) :: n
+      character(1) :: t
+      call c%dtpool(name, found, n, t)
+      same = found .and. t == 'N' .and. n == size(expected)
+      if (same) then
+         call c%pool_values(name, v, found)
+         same = all(v == expected)
+      end if
+      call check(same, 'values: '//name)
+   end subroutine pool_numbers
+
+   !> A string variable's values (test_values).
+   subroutine pool_strings(c, name, expected)
+      type(pepper_context), intent(inout) :: c  !! the context
+      character(*), intent(in) :: name  !! the variable
+      type(string), intent(in) :: expected(:)  !! its values
+      type(string), allocatable :: sv(:)
+      logical :: found, same
+      integer(ip) :: n, k
+      character(1) :: t
+      call c%dtpool(name, found, n, t)
+      same = found .and. t == 'C' .and. n == size(expected)
+      if (same) then
+         call c%pool_strings(name, sv, found)
+         do k = 1, n
+            same = same .and. sv(k)%s == expected(k)%s
+         end do
+      end if
+      call check(same, 'values: '//name)
+   end subroutine pool_strings
 
    !> Parse a text that has an error, and check the error.
    subroutine expect(text, code, at, what)
@@ -241,6 +471,7 @@ contains
       type(pepper_context), pointer :: own
       real(wp), allocatable :: v(:)
       logical :: found
+      character(80) :: short
       own => spice%context()
       call write_lsk('test_json_err.tls')
       call spice%furnsh('test_json_err.tls')
@@ -254,6 +485,15 @@ contains
       call load_error(spice, '{"OK1": 1, "T": "@not a time"}', 'SPICE(BADTIMESPEC)')
       call load_error(spice, '{"OK1": 1, "T": "@"}', 'SPICE(BADTIMESPEC)')
       call load_error(spice, '{"OK1": 1, "T": 2', 'SPICE(JSONSYNTAXERROR)')
+      call load_error(spice, '{"OK1": 1, "BIG": [1, 1e400]}', 'SPICE(NUMBEREXPECTED)')
+      ! the same error for the same number in a text kernel
+      call write_file('test_json_err.tpc', [character(20) :: '\begindata', 'BIG = ( 1 1E400 )'])
+      call spice%furnsh('test_json_err.tpc')
+      call own%getmsg('SHORT', short)
+      call check(spice%failed() .and. short == 'SPICE(NUMBEREXPECTED)', &
+                 'loader: 1E400 in a text kernel: SPICE(NUMBEREXPECTED) too (got '//trim(short)//')')
+      call own%reset()
+      call delete_file('test_json_err.tpc')
       call spice%furnsh('test_json_missing.json')
       call check(spice%failed(), 'loader: a missing file')
       call own%reset()
