@@ -127,6 +127,15 @@ main { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
 .hero-logo { transition: opacity 1.2s ease; }
 .hero-logo.replaced { opacity: 0; }
 
+/* the logo is a link to the interactive viewer (model.html) */
+a.orbits { display: block; cursor: pointer; }
+a.orbits .hero-logo, a.orbits .hero-3d { transition: opacity 1.2s ease, box-shadow 0.3s ease; }
+a.orbits:hover .hero-logo, a.orbits:hover .hero-3d,
+a.orbits:focus-visible .hero-logo, a.orbits:focus-visible .hero-3d {
+  box-shadow: 0 0 80px rgba(255, 179, 71, 0.55), 0 0 180px rgba(122, 162, 255, 0.4);
+}
+a.orbits:focus-visible { outline: none; }
+
 /* orbit rings, each spinning a planet around the logo */
 .orbit {
   position: absolute;
@@ -311,6 +320,95 @@ footer {
   50% { transform: translateY(-10px) rotate(2deg); }
 }
 @keyframes shimmer { to { background-position: 300% 0; } }
+
+/* ---------- the interactive 3D logo (model.html, model3d.js) ---------- */
+/* the header, then the viewer filling the rest of the window */
+body.viewer {
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.viewer-main {
+  position: relative;
+  flex: 1;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.viewer-3d {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+  touch-action: none;   /* the gestures rotate and zoom the model, not the page */
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.viewer-3d:active { cursor: grabbing; }
+.viewer-3d.ready { opacity: 1; }
+.viewer-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 32px);
+  margin: 0;
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(5, 8, 22, 0.6);
+  backdrop-filter: blur(6px);
+  color: var(--muted);
+  font-size: 0.9rem;
+  text-align: center;
+  pointer-events: none;
+  transition: opacity 1.5s ease;
+}
+.viewer-hint.hidden { opacity: 0; }
+.viewer-reset {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(5, 8, 22, 0.6);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1s ease, border-color 0.2s;
+}
+.viewer-ready .viewer-reset { opacity: 1; pointer-events: auto; }
+.viewer-reset:hover { border-color: var(--accent-2); }
+.viewer-fallback {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px;
+  text-align: center;
+  color: var(--muted);
+}
+.viewer-fallback img {
+  width: min(420px, 70vw, 60vh);
+  border-radius: 50%;
+  box-shadow: 0 0 60px rgba(255, 179, 71, 0.35), 0 0 140px rgba(122, 162, 255, 0.25);
+}
+.viewer-static .viewer-fallback { display: flex; }
+.viewer-static .viewer-3d, .viewer-static .viewer-hint { display: none; }
 
 /* ---------- small screens ---------- */
 @media (max-width: 800px) {

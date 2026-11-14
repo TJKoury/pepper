@@ -1,33 +1,19 @@
-// The hero's logo in 3D: the model of media/make_logo_3d.py (pepper_logo.glb)
-// rendered with three.js in the logo's circle, the scene swaying from side
-// to side and each planet spinning about its own axis. The SVG logo stays
-// in place until the model is ready, and stays for good without WebGL, if
-// loading fails, or with reduced motion. Rendering stops while the hero is
-// out of view or the page is hidden.
+// The hero's logo in 3D: the model (logo3d.js) rendered with three.js in the
+// logo's circle, the scene swaying from side to side and each planet
+// spinning about its own axis. The SVG logo stays in place until the model
+// is ready, and stays for good without WebGL, if loading fails, or with
+// reduced motion. Rendering stops while the hero is out of view or the page
+// is hidden. A click on the logo opens the interactive viewer (model.html).
 
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { webglAvailable, createRenderer, createScene, loadLogo, mulberry32 } from './logo3d.js';
 
 const SWAY = 0.6;        // radians each way (a full turn shows the flat composition edge on)
 const SWAY_PERIOD = 26;  // seconds per sway
-const SPIN = {           // planets' spins, radians per second
-  MOON: 0.25, MARS: 0.5, EARTH: 0.6, VENUS: 0.2, MERCURY: 0.3,
-  NEPTUNE: 0.7, URANUS: 0.6, SATURN: 0.8, JUPITER: 0.9,
-};
 
 const canvas = document.querySelector('.hero-3d');
 const image = document.querySelector('.hero-logo');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-function webglAvailable() {
-  try {
-    const c = document.createElement('canvas');
-    return !!(c.getContext('webgl2') || c.getContext('webgl'));
-  } catch {
-    return false;
-  }
-}
 
 // the reason the SVG stays, in the console (none: the 3D logo starts)
 function keepSvg(reason, error) {
@@ -41,18 +27,8 @@ else if (location.protocol === 'file:') keepSvg('the page is a local file: brows
 else start();
 
 function start() {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-
-  const scene = new THREE.Scene();
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;  // the chrome's reflections
-  const sun = new THREE.DirectionalLight(0xfff4e0, 2.2);
-  sun.position.set(-4, 5, 7);
-  scene.add(sun);
-  scene.add(new THREE.AmbientLight(0x8090ff, 0.25));
+  const renderer = createRenderer(canvas);
+  const scene = createScene(renderer);
 
   // the logo's circle is 10 units across (1000 pixels): fit it in the view
   const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
@@ -62,18 +38,16 @@ function start() {
   scene.add(pivot);
   pivot.add(stars());
 
-  const spinning = [];
-  new GLTFLoader().load('pepper_logo.glb', gltf => {
-    gltf.scene.traverse(node => {
-      if (SPIN[node.name] !== undefined) spinning.push(node);
-    });
-    pivot.add(gltf.scene);
+  let spin = () => {};
+  loadLogo((model, spinPlanets) => {
+    spin = spinPlanets;
+    pivot.add(model);
     resize();
     renderer.render(scene, camera);
     canvas.classList.add('ready');      // fade in over the SVG
     image.classList.add('replaced');
     observe();
-  }, undefined, error => keepSvg('the model could not be loaded', error));
+  }, error => keepSvg('the model could not be loaded', error));
 
   function resize() {
     const w = canvas.clientWidth, h = canvas.clientHeight;
@@ -92,7 +66,7 @@ function start() {
     t += dt;
     pivot.rotation.y = SWAY * Math.sin((2 * Math.PI * t) / SWAY_PERIOD);
     pivot.rotation.x = 0.08 * Math.sin((2 * Math.PI * t) / (SWAY_PERIOD * 1.7));
-    for (const p of spinning) p.rotateY(SPIN[p.name] * dt);  // about its own (tilted) axis
+    spin(dt);
     resize();
     renderer.render(scene, camera);
   }
@@ -127,13 +101,4 @@ function stars() {
   return new THREE.Points(g, new THREE.PointsMaterial({
     color: 0xffffff, size: 0.05, transparent: true, opacity: 0.8, depthWrite: false,
   }));
-}
-
-function mulberry32(a) {
-  return () => {
-    a |= 0; a = (a + 0x6d2b79f5) | 0;
-    let t = Math.imul(a ^ (a >>> 15), 1 | a);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
 }
