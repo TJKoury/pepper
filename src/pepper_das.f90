@@ -6393,7 +6393,6 @@ contains
       implicit none
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: filen = 255
       integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
@@ -6424,7 +6423,7 @@ contains
       character(acclen) :: acc
       character(fmtlen) :: format
       character(idwlen) :: idword
-      character(filen) :: locdas
+      character(*), parameter :: locdas = 'DAS SCRATCH FILE'  !! the scratch file's label (it has no name)
       character(ifnlen) :: locifn
       character(fmtlen) :: locfmt
       character(tailen) :: tail
@@ -6473,7 +6472,6 @@ contains
 !     Assign a name to the scratch file. This name is required
 !     by the DDH subsystem.
 !
-      locdas = 'DAS SCRATCH FILE'
 
 !
 !     Open a DAS file for scratch access.
@@ -6511,7 +6509,7 @@ contains
 !     Initially, all of these counts are zero, except for the
 !     comment record count, which is set by the caller.
 !
-      locifn = locdas(:ifnlen)
+      locifn = locdas
 
       call zzdasnfr ( ctx, number, &
                       idword, &
