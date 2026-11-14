@@ -32,7 +32,7 @@ program test_nparsd
    call same('123.456E-20', '123.456E-20')
    call same('1500000000000000000000000000', '1500000000000000000000000000')  ! trailing zeros
    call same('0.000000000000000000000000001', '0.000000000000000000000000001')
-   call same('-0.0', '-0.0')
+   call same('-0.0', '-0.0')  ! a zero (its sign: the compiler's)
    call same('0E5', '0E5')
    call random_against_read(200000)
    ! SPICELIB's forms
@@ -79,7 +79,6 @@ contains
 
    !> NPARSD gives the same value as Fortran's READ.
    subroutine same(string, fortran)
-      use, intrinsic :: iso_fortran_env, only: int64
       character(*), intent(in) :: string  !! the input of NPARSD
       character(*), intent(in) :: fortran  !! the same number for READ
       real(wp) :: x, y
@@ -87,15 +86,13 @@ contains
       integer(ip) :: ptr
       read (fortran, *) y
       call nparsd(string, x, error, ptr)
-      call check(error == ' ' .and. transfer(x, 0_int64) == transfer(y, 0_int64), &
-                 'nparsd: '//string//' as READ, bit for bit')
+      call check(error == ' ' .and. same_bits(x, y), 'nparsd: '//string//' as READ, bit for bit')
    end subroutine same
 
    !> N random numbers (1 to 18 digits, a decimal point anywhere or none,
    !> leading and trailing zeros, exponents from -40 to 40 or none, signs):
    !> NPARSD's value is READ's, bit for bit.
    subroutine random_against_read(n)
-      use, intrinsic :: iso_fortran_env, only: int64
       integer, intent(in) :: n  !! how many numbers
       character(60) :: text
       character(200) :: error
@@ -122,13 +119,22 @@ contains
          end if
          read (text, *) y
          call nparsd(trim(text), x, error, ptr)
-         if (error /= ' ' .or. transfer(x, 0_int64) /= transfer(y, 0_int64)) then
+         if (error /= ' ' .or. .not. same_bits(x, y)) then
             nbad = nbad + 1
             if (nbad <= 5) print '(3a, 2es26.17)', '   ', trim(text), ': nparsd, READ =', x, y
          end if
       end do
       call check(nbad == 0, 'nparsd = READ, bit for bit, for random numbers')
    end subroutine random_against_read
+
+   !> X and Y are the same double bit for bit, but for the sign of a zero:
+   !> compilers differ there (ifx's READ, and its fast floating-point
+   !> model, give +0 for "-0", gfortran -0), and -0 == +0.
+   logical function same_bits(x, y)
+      use, intrinsic :: iso_fortran_env, only: int64
+      real(wp), intent(in) :: x, y  !! the values
+      same_bits = (x == 0.0_wp .and. y == 0.0_wp) .or. transfer(x, 0_int64) == transfer(y, 0_int64)
+   end function same_bits
 
    !> NPARSD gives a value.
    subroutine value(string, expected)
