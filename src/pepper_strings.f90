@@ -13339,7 +13339,11 @@ contains
 !     digits and the power of ten allow it (EXACT_DECIMAL: the numbers of
 !     time strings, and most of kernels'); otherwise Fortran's READ, which
 !     is slower, and serializes threads (gfortran's I/O library takes a
-!     lock for each I/O statement, internal ones too).
+!     lock for each I/O statement, internal ones too). The two can differ
+!     only for an exact tie (a decimal value halfway between two
+!     doubles): the exact path rounds to even (IEEE), READ as the
+!     compiler does (Fortran leaves it to the compiler: gfortran to
+!     even, ifx away from zero).
 !
       call exact_decimal ( buf(1:nb), value, exact )
       if ( .not. exact ) then

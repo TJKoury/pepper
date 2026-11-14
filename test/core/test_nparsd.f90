@@ -34,6 +34,14 @@ program test_nparsd
    call same('0.000000000000000000000000001', '0.000000000000000000000000001')
    call same('-0.0', '-0.0')  ! a zero (its sign: the compiler's)
    call same('0E5', '0E5')
+   ! exact ties (decimal values halfway between two doubles): NPARSD rounds
+   ! to even, as IEEE arithmetic does, whatever the compiler's READ does
+   call value('730183456592122000.E-1', 73018345659212192.0_wp)
+   call value('475699515413137000.E-1', 47569951541313696.0_wp)
+   call check(tie('730183456592122000.E-1', 73018345659212192.0_wp, 73018345659212208.0_wp), &
+              'tie: an exact midpoint')
+   call check(.not. tie('730183456592122001', 73018345659212192.0_wp, 73018345659212208.0_wp), &
+              'tie: not a midpoint')
    call random_against_read(200000)
    ! SPICELIB's forms
    call value('+12.2 e-1', 1.22_wp)
@@ -119,7 +127,7 @@ contains
          end if
          read (text, *) y
          call nparsd(trim(text), x, error, ptr)
-         if (error /= ' ' .or. .not. same_bits(x, y)) then
+         if (error /= ' ' .or. .not. (same_bits(x, y) .or. tie(trim(text), x, y))) then
             nbad = nbad + 1
             if (nbad <= 5) print '(3a, 2es26.17)', '   ', trim(text), ': nparsd, READ =', x, y
          end if
@@ -135,6 +143,57 @@ contains
       real(wp), intent(in) :: x, y  !! the values
       same_bits = (x == 0.0_wp .and. y == 0.0_wp) .or. transfer(x, 0_int64) == transfer(y, 0_int64)
    end function same_bits
+
+   !> TEXT, an integer, is exactly halfway between the adjacent doubles X
+   !> and Y: compilers' READ may break the tie either way (the Fortran
+   !> standard leaves it to them: ifx rounds away from zero, gfortran to
+   !> even, as IEEE arithmetic and NPARSD's exact path do).
+   logical function tie(text, x, y)
+      use, intrinsic :: iso_fortran_env, only: int64
+      character(*), intent(in) :: text  !! the number ([-]digits[.digits][E[+-]digits])
+      real(wp), intent(in) :: x, y  !! the two values
+      integer(int64) :: v, ix, iy
+      integer :: i, k, ndec, e
+      logical :: point
+      character(len(text)) :: digits
+      tie = .false.
+      if (abs(x - y) /= spacing(max(abs(x), abs(y))) .or. abs(x) < 2.0_wp**53 .or. abs(x) > 1.0e18_wp) return
+      ! the digits without sign and point, the digits after the point, the exponent
+      digits = ' '
+      k = 0
+      ndec = 0
+      e = 0
+      point = .false.
+      do i = 1, len(text)
+         select case (text(i:i))
+         case ('0':'9')
+            k = k + 1
+            digits(k:k) = text(i:i)
+            if (point) ndec = ndec + 1
+         case ('.')
+            point = .true.
+         case ('E', 'e')
+            read (text(i + 1:), *) e
+            exit
+         end select
+      end do
+      e = e - ndec  ! the value is digits * 10**e
+      do while (e < 0)  ! drop trailing zeros (an integer: they must cover e)
+         if (k == 0) return
+         if (digits(k:k) /= '0') return
+         k = k - 1
+         e = e + 1
+      end do
+      if (k + e > 18) return
+      v = 0
+      do i = 1, k
+         v = 10*v + (iachar(digits(i:i)) - iachar('0'))
+      end do
+      v = v*10_int64**e
+      ix = int(abs(x), int64)
+      iy = int(abs(y), int64)
+      tie = ix + iy == 2*v
+   end function tie
 
    !> NPARSD gives a value.
    subroutine value(string, expected)
