@@ -10,6 +10,19 @@ submodule (pepper_instance) pepper_array_ops
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: bckwrd = 2  !! row of the backward pointers of a linked list pool
+   integer(ip), parameter :: forwrd = 1  !! row of the forward pointers of a linked list pool
+   integer(ip), parameter :: frecol = -1  !! column of the head of the free list (in row FREROW)
+   integer(ip), parameter :: free = 0  !! backward pointer of a node that is free (not in a list)
+   integer(ip), parameter :: frerow = 1  !! row of the head of the free list (in column FRECOL)
+   integer(ip), parameter :: nfrcol = 0  !! column of the number of free nodes (in row NFRROW)
+   integer(ip), parameter :: nfrrow = 2  !! row of the number of free nodes (in column NFRCOL)
+   integer(ip), parameter :: sizcol = 0  !! column of the pool's size (in row SIZROW)
+   integer(ip), parameter :: sizrow = 1  !! row of the pool's size (in column SIZCOL)
+
 contains
 
       !>## Detailed Input
@@ -4250,8 +4263,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbpool
-      parameter           ( lbpool = -5 )
 
 !
 !     The control area contains 3 elements.  They are:
@@ -4267,23 +4278,11 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip) :: sizrow
-      parameter           ( sizrow =   1 )
 
-      integer(ip) :: sizcol
-      parameter           ( sizcol =   0 )
 
-      integer(ip) :: nfrrow
-      parameter           ( nfrrow =   2 )
 
-      integer(ip) :: nfrcol
-      parameter           ( nfrcol =   0 )
 
-      integer(ip) :: frerow
-      parameter           ( frerow =   1 )
 
-      integer(ip) :: frecol
-      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -4297,19 +4296,13 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip) :: forwrd
-      parameter           ( forwrd  = 1 )
 
-      integer(ip) :: bckwrd
-      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip) :: free
-      parameter           ( free   = 0 )
 
 !
 !     Discovery check-in is used in place of standard SPICE error
@@ -4461,8 +4454,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbpool
-      parameter           ( lbpool = -5 )
 
 !
 !     The control area contains 3 elements.  They are:
@@ -4478,23 +4469,11 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip) :: sizrow
-      parameter           ( sizrow =   1 )
 
-      integer(ip) :: sizcol
-      parameter           ( sizcol =   0 )
 
-      integer(ip) :: nfrrow
-      parameter           ( nfrrow =   2 )
 
-      integer(ip) :: nfrcol
-      parameter           ( nfrcol =   0 )
 
-      integer(ip) :: frerow
-      parameter           ( frerow =   1 )
 
-      integer(ip) :: frecol
-      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -4508,19 +4487,13 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip) :: forwrd
-      parameter           ( forwrd  = 1 )
 
-      integer(ip) :: bckwrd
-      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip) :: free
-      parameter           ( free   = 0 )
 
       integer(ip) :: count
       integer(ip) :: next
@@ -4801,8 +4774,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbpool
-      parameter           ( lbpool = -5 )
 
 !
 !     The control area contains 3 elements.  They are:
@@ -4818,23 +4789,11 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip) :: sizrow
-      parameter           ( sizrow =   1 )
 
-      integer(ip) :: sizcol
-      parameter           ( sizcol =   0 )
 
-      integer(ip) :: nfrrow
-      parameter           ( nfrrow =   2 )
 
-      integer(ip) :: nfrcol
-      parameter           ( nfrcol =   0 )
 
-      integer(ip) :: frerow
-      parameter           ( frerow =   1 )
 
-      integer(ip) :: frecol
-      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -4848,19 +4807,13 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip) :: forwrd
-      parameter           ( forwrd  = 1 )
 
-      integer(ip) :: bckwrd
-      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip) :: free
-      parameter           ( free   = 0 )
 
       integer(ip) :: prev
 
@@ -5061,8 +5014,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbpool
-      parameter           ( lbpool = -5 )
 
 !
 !     The control area contains 3 elements.  They are:
@@ -5078,23 +5029,11 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip) :: sizrow
-      parameter           ( sizrow =   1 )
 
-      integer(ip) :: sizcol
-      parameter           ( sizcol =   0 )
 
-      integer(ip) :: nfrrow
-      parameter           ( nfrrow =   2 )
 
-      integer(ip) :: nfrcol
-      parameter           ( nfrcol =   0 )
 
-      integer(ip) :: frerow
-      parameter           ( frerow =   1 )
 
-      integer(ip) :: frecol
-      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -5108,19 +5047,13 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip) :: forwrd
-      parameter           ( forwrd  = 1 )
 
-      integer(ip) :: bckwrd
-      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip) :: free
-      parameter           ( free   = 0 )
 
       integer(ip) :: next
       integer(ip) :: head
@@ -5351,8 +5284,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbpool
-      parameter           ( lbpool = -5 )
 
 !
 !     The control area contains 3 elements.  They are:
@@ -5368,23 +5299,11 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip) :: sizrow
-      parameter           ( sizrow =   1 )
 
-      integer(ip) :: sizcol
-      parameter           ( sizcol =   0 )
 
-      integer(ip) :: nfrrow
-      parameter           ( nfrrow =   2 )
 
-      integer(ip) :: nfrcol
-      parameter           ( nfrcol =   0 )
 
-      integer(ip) :: frerow
-      parameter           ( frerow =   1 )
 
-      integer(ip) :: frecol
-      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -5398,19 +5317,13 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip) :: forwrd
-      parameter           ( forwrd  = 1 )
 
-      integer(ip) :: bckwrd
-      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip) :: free
-      parameter           ( free   = 0 )
 
       integer(ip) :: head
       integer(ip) :: prev
@@ -5591,8 +5504,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbpool
-      parameter           ( lbpool = -5 )
 
 !
 !     The control area contains 3 elements.  They are:
@@ -5608,23 +5519,11 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip) :: sizrow
-      parameter           ( sizrow =   1 )
 
-      integer(ip) :: sizcol
-      parameter           ( sizcol =   0 )
 
-      integer(ip) :: nfrrow
-      parameter           ( nfrrow =   2 )
 
-      integer(ip) :: nfrcol
-      parameter           ( nfrcol =   0 )
 
-      integer(ip) :: frerow
-      parameter           ( frerow =   1 )
 
-      integer(ip) :: frecol
-      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -5638,19 +5537,13 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip) :: forwrd
-      parameter           ( forwrd  = 1 )
 
-      integer(ip) :: bckwrd
-      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip) :: free
-      parameter           ( free   = 0 )
 
       integer(ip) :: i
 
@@ -5778,8 +5671,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbpool
-      parameter           ( lbpool = -5 )
 
 !
 !     The control area contains 3 elements.  They are:
@@ -5795,23 +5686,11 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip) :: sizrow
-      parameter           ( sizrow =   1 )
 
-      integer(ip) :: sizcol
-      parameter           ( sizcol =   0 )
 
-      integer(ip) :: nfrrow
-      parameter           ( nfrrow =   2 )
 
-      integer(ip) :: nfrcol
-      parameter           ( nfrcol =   0 )
 
-      integer(ip) :: frerow
-      parameter           ( frerow =   1 )
 
-      integer(ip) :: frecol
-      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -5825,19 +5704,13 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip) :: forwrd
-      parameter           ( forwrd  = 1 )
 
-      integer(ip) :: bckwrd
-      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip) :: free
-      parameter           ( free   = 0 )
 
 !
 !     Grab the number of free nodes from the control area.
@@ -5960,8 +5833,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbpool
-      parameter           ( lbpool = -5 )
 
 !     The control area contains 3 elements.  They are:
 !
@@ -5976,23 +5847,11 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip) :: sizrow
-      parameter           ( sizrow =   1 )
 
-      integer(ip) :: sizcol
-      parameter           ( sizcol =   0 )
 
-      integer(ip) :: nfrrow
-      parameter           ( nfrrow =   2 )
 
-      integer(ip) :: nfrcol
-      parameter           ( nfrcol =   0 )
 
-      integer(ip) :: frerow
-      parameter           ( frerow =   1 )
 
-      integer(ip) :: frecol
-      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -6006,19 +5865,13 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip) :: forwrd
-      parameter           ( forwrd  = 1 )
 
-      integer(ip) :: bckwrd
-      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip) :: free
-      parameter           ( free   =  0  )
 
 !
 !     If the node is out of range, something's very wrong.
@@ -6173,8 +6026,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbpool
-      parameter           ( lbpool = -5 )
 
 !
 !     The control area contains 3 elements.  They are:
@@ -6190,23 +6041,11 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip) :: sizrow
-      parameter           ( sizrow =   1 )
 
-      integer(ip) :: sizcol
-      parameter           ( sizcol =   0 )
 
-      integer(ip) :: nfrrow
-      parameter           ( nfrrow =   2 )
 
-      integer(ip) :: nfrcol
-      parameter           ( nfrcol =   0 )
 
-      integer(ip) :: frerow
-      parameter           ( frerow =   1 )
 
-      integer(ip) :: frecol
-      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -6220,19 +6059,13 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip) :: forwrd
-      parameter           ( forwrd  = 1 )
 
-      integer(ip) :: bckwrd
-      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip) :: free
-      parameter           ( free   = 0 )
 
 !
 !     If the node is out of range, something's very wrong.
@@ -6343,8 +6176,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbpool
-      parameter           ( lbpool = -5 )
 
 !
 !     The control area contains 3 elements.  They are:
@@ -6360,23 +6191,11 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip) :: sizrow
-      parameter           ( sizrow =   1 )
 
-      integer(ip) :: sizcol
-      parameter           ( sizcol =   0 )
 
-      integer(ip) :: nfrrow
-      parameter           ( nfrrow =   2 )
 
-      integer(ip) :: nfrcol
-      parameter           ( nfrcol =   0 )
 
-      integer(ip) :: frerow
-      parameter           ( frerow =   1 )
 
-      integer(ip) :: frecol
-      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -6390,19 +6209,13 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip) :: forwrd
-      parameter           ( forwrd  = 1 )
 
-      integer(ip) :: bckwrd
-      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip) :: free
-      parameter           ( free   = 0 )
 
 !
 !     Grab the pool size from the control area.
@@ -6520,8 +6333,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbpool
-      parameter           ( lbpool = -5 )
 
 !
 !     The control area contains 3 elements.  They are:
@@ -6537,23 +6348,11 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip) :: sizrow
-      parameter           ( sizrow =   1 )
 
-      integer(ip) :: sizcol
-      parameter           ( sizcol =   0 )
 
-      integer(ip) :: nfrrow
-      parameter           ( nfrrow =   2 )
 
-      integer(ip) :: nfrcol
-      parameter           ( nfrcol =   0 )
 
-      integer(ip) :: frerow
-      parameter           ( frerow =   1 )
 
-      integer(ip) :: frecol
-      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -6567,19 +6366,13 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip) :: forwrd
-      parameter           ( forwrd  = 1 )
 
-      integer(ip) :: bckwrd
-      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip) :: free
-      parameter           ( free   = 0 )
 
       integer(ip) :: next
 
@@ -6761,8 +6554,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbpool
-      parameter           ( lbpool = -5 )
 
 !
 !     The control area contains 3 elements.  They are:
@@ -6778,23 +6569,11 @@ contains
 !     Parameters defining the row and column indices of these control
 !     elements are given below.
 !
-      integer(ip) :: sizrow
-      parameter           ( sizrow =   1 )
 
-      integer(ip) :: sizcol
-      parameter           ( sizcol =   0 )
 
-      integer(ip) :: nfrrow
-      parameter           ( nfrrow =   2 )
 
-      integer(ip) :: nfrcol
-      parameter           ( nfrcol =   0 )
 
-      integer(ip) :: frerow
-      parameter           ( frerow =   1 )
 
-      integer(ip) :: frecol
-      parameter           ( frecol =  -1 )
 
 !
 !     Each assigned node consists of a backward pointer and a forward
@@ -6808,19 +6587,13 @@ contains
 !
 !            node 1                 node I              node SIZE
 !
-      integer(ip) :: forwrd
-      parameter           ( forwrd  = 1 )
 
-      integer(ip) :: bckwrd
-      parameter           ( bckwrd  = 2 )
 
 !
 !     Free nodes say that that's what they are.  The way they say it
 !     is by containing the value FREE in their backward pointers.
 !     Needless to say, FREE is a value that cannot be a valid pointer.
 !
-      integer(ip) :: free
-      parameter           ( free   = 0 )
 
       integer(ip) :: next
       integer(ip) :: node

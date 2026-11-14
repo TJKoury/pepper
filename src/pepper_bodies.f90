@@ -1629,6 +1629,14 @@ submodule (pepper_instance) pepper_bodies
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: cdelen = 16  !! length of a body ID code as text
+   integer(ip), parameter :: freidx = -1  !! index in a hash list of its first free entry
+   integer(ip), parameter :: namlen = 32  !! length of a kernel variable name (NAIF_BODY_NAME ...)
+   integer(ip), parameter :: sizidx = 0  !! index in a hash list of its size
+
 contains
 
       !>## Detailed Input
@@ -4461,9 +4469,6 @@ contains
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax
       implicit none
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: sizidx = 0
-      integer(ip), parameter :: freidx = -1
       logical :: return
       integer(ip) :: i
       integer(ip) :: lookat
@@ -4574,9 +4579,6 @@ contains
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax
       implicit none
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: sizidx = 0
-      integer(ip), parameter :: freidx = -1
       integer(ip) :: i
       integer(ip) :: lookat
       integer(ip) :: node
@@ -4788,9 +4790,6 @@ contains
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax
       implicit none
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: sizidx = 0
-      integer(ip), parameter :: freidx = -1
       integer(ip) :: i
       integer(ip) :: lookat
       integer(ip) :: node
@@ -4900,9 +4899,6 @@ contains
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax
       implicit none
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: sizidx = 0
-      integer(ip), parameter :: freidx = -1
       logical :: return
       integer(ip) :: i
       integer(ip) :: lookat
@@ -4983,9 +4979,6 @@ contains
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax
       implicit none
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: sizidx = 0
-      integer(ip), parameter :: freidx = -1
       logical :: return
       integer(ip) :: i
       integer(ip) :: lookat
@@ -5138,9 +5131,6 @@ contains
       module procedure zzhsiini
       use pepper_kinds, only: ip
       implicit none
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: sizidx = 0
-      integer(ip), parameter :: freidx = -1
       logical :: return
       integer(ip) :: i
       integer(ip) :: lookat
@@ -5246,9 +5236,6 @@ contains
       module procedure zzhsiadd
       use pepper_kinds, only: ip
       implicit none
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: sizidx = 0
-      integer(ip), parameter :: freidx = -1
       integer(ip) :: i
       integer(ip) :: lookat
       integer(ip) :: node
@@ -5474,9 +5461,6 @@ contains
       module procedure zzhsichk
       use pepper_kinds, only: ip
       implicit none
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: sizidx = 0
-      integer(ip), parameter :: freidx = -1
       integer(ip) :: i
       integer(ip) :: lookat
       integer(ip) :: node
@@ -5593,9 +5577,6 @@ contains
       module procedure zzhsiavl
       use pepper_kinds, only: ip
       implicit none
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: sizidx = 0
-      integer(ip), parameter :: freidx = -1
       logical :: return
       integer(ip) :: i
       integer(ip) :: lookat
@@ -5674,9 +5655,6 @@ contains
       module procedure zzhsiinf
       use pepper_kinds, only: ip
       implicit none
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: sizidx = 0
-      integer(ip), parameter :: freidx = -1
       logical :: return
       integer(ip) :: i
       integer(ip) :: lookat
@@ -5937,7 +5915,6 @@ contains
       use pepper_inc_zzbodtrn
       implicit none
 
-      integer(ip), parameter :: lbpool = -5
 
       integer(ip) :: i
       integer(ip) :: item
@@ -6664,8 +6641,6 @@ contains
       use pepper_inc_zzbodtrn
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: wdsize = 32
-      integer(ip), parameter :: lbpool = -5
       character(:), allocatable :: tmpnam
       logical :: lupdte
 !     PEPPER: apply the body names defined through other contexts.
@@ -7011,8 +6986,6 @@ contains
       use pepper_inc_zzbodtrn
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: wdsize = 32
-      integer(ip), parameter :: lbpool = -5
       logical :: lupdte
       integer(ip) :: j
 !     PEPPER: apply the body names defined through other contexts.
@@ -7437,8 +7410,6 @@ contains
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: name  !! common name of some body
          integer(ip), intent(in) :: code  !! integer code for that body
-      integer(ip), parameter :: wdsize = 32
-      integer(ip), parameter :: lbpool = -5
       integer(ip) :: index
       character(:), allocatable :: tmpnam
       integer(ip) :: codidx
@@ -7694,8 +7665,6 @@ contains
       use pepper_inc_zzbodtrn
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: wdsize = 32
-      integer(ip), parameter :: lbpool = -5
       logical :: lupdte
       if ( .not. allocated ( ctx%zzbodtrn ) ) then
          allocate ( ctx%zzbodtrn )
@@ -7869,8 +7838,6 @@ contains
       use pepper_inc_zzctr
       implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
-      integer(ip), parameter :: wdsize = 32
-      integer(ip), parameter :: lbpool = -5
       if ( .not. allocated ( ctx%zzbodtrn ) ) then
          allocate ( ctx%zzbodtrn )
          call init_zzbodtrn_state ( ctx%zzbodtrn )
@@ -8103,8 +8070,6 @@ contains
       use pepper_inc_zzbodtrn
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: wdsize = 32
-      integer(ip), parameter :: lbpool = -5
       logical :: lupdte
 !     PEPPER: apply the body names defined through other contexts.
       call sync_boddefs ( ctx )
@@ -10435,9 +10400,7 @@ contains
       use pepper_strings, only: intstr, suffix
       implicit none
 
-      integer(ip), parameter :: cdelen = 16
 
-      integer(ip), parameter :: namlen = 32
 
       character(cdelen) :: code
       character(1) :: type
@@ -10814,9 +10777,6 @@ contains
       use pepper_strings, only: intstr, suffix
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: cdelen = 16
-      integer(ip), parameter :: namlen = 32
-      integer(ip), parameter :: maxl = 36
       character(cdelen) :: code
       character(1) :: type
       character(namlen) :: varnam

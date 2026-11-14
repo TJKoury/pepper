@@ -9,6 +9,37 @@ submodule (pepper_instance) pepper_writers
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: acclen = 5  !! length of a file access method name
+   character(*), parameter :: bmark = '~NAIF/SPC BEGIN COMMENTS~'  !! the line before the comments of a SPICE kernel
+   integer(ip), parameter :: mctlsz = 4  !! maximum number of control words at the end of a segment
+   integer(ip), parameter :: bufsiz = mctlsz  !! size of a buffer of control words
+   integer(ip), parameter :: ctrlsz = 2  !! number of control words at the end of a segment
+   integer(ip), parameter :: dirsiz = 100  !! size of a segment's directory of epochs (every 100th epoch)
+   integer(ip), parameter :: dscsiz = 5  !! size of a packed segment descriptor
+   integer(ip), parameter :: dtype = 2  !! segment data type
+   character(*), parameter :: emark = '~NAIF/SPC END COMMENTS~'  !! the line after the comments of a SPICE kernel
+   integer(ip), parameter :: fprint = 32  !! first printable ASCII character (space)
+   integer(ip), parameter :: ifnlen = 60  !! length of a DAF or DAS internal file name
+   integer(ip), parameter :: lprint = 126  !! last printable ASCII character (~)
+   integer(ip), parameter :: maxcpr = 1000  !! maximum number of characters of a comment line
+   integer(ip), parameter :: maxdeg = 27  !! maximum polynomial degree
+   integer(ip), parameter :: mxcrec = 1000  !! number of characters in a comment record
+   integer(ip), parameter :: nd = 2  !! number of double precision components of a DAF array summary (SPK, CK, PCK: 2)
+   integer(ip), parameter :: ndc = 2  !! number of double precision components of a segment descriptor
+   integer(ip), parameter :: ni = 6  !! number of integer components of a DAF array summary (SPK, CK: 6)
+   integer(ip), parameter :: ndescr = nd + ( ni + 1 ) / 2  !! size of a packed descriptor
+   integer(ip), parameter :: nic = 6  !! number of integer components of a segment descriptor
+   integer(ip), parameter :: ns = 5  !! size of a packed segment descriptor
+   integer(ip), parameter :: qavsiz = 7  !! number of components of a quaternion and angular velocity
+   integer(ip), parameter :: qidx = 1  !! index in a packet of the quaternion
+   integer(ip), parameter :: qsiz = 4  !! number of components of a quaternion
+   integer(ip), parameter :: sidlen = 40  !! maximum length of a segment identifier
+   integer(ip), parameter :: statsz = 6  !! number of components of a state (position and velocity)
+   integer(ip), parameter :: timlen = 40  !! length of a time string
+
 contains
 
       !>## Detailed Input
@@ -284,7 +315,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip), parameter :: acclen = 5
       character(acclen) :: access
 
       logical :: found
@@ -587,13 +617,9 @@ contains
 !                   pointing record.
 !
 
-      integer(ip), parameter :: ndc = 2
 
-      integer(ip), parameter :: nic = 6
 
-      integer(ip), parameter :: qsiz = 4
 
-      integer(ip), parameter :: qavsiz = 7
 
       integer(ip) :: icd    ( nic )
       integer(ip) :: nrec
@@ -1013,13 +1039,9 @@ contains
 !                   operates on.
 !
 
-      integer(ip), parameter :: ndc = 2
 
-      integer(ip), parameter :: nic = 6
 
-      integer(ip), parameter :: qsiz = 4
 
-      integer(ip), parameter :: qavsiz = 7
 
       integer(ip), parameter :: dtype = 3
 
@@ -1331,9 +1353,7 @@ contains
       use pepper_inc_ckparam
       implicit none
 
-      integer(ip), parameter :: ndc = 2
 
-      integer(ip), parameter :: nic = 6
 
 !
 !     Length (in DPs) of non-coefficient front part of RECORD when
@@ -1672,9 +1692,7 @@ contains
 !                   operates on.
 !
 
-      integer(ip), parameter :: ndc = 2
 
-      integer(ip), parameter :: nic = 6
 
       integer(ip), parameter :: dtype = 5
 
@@ -2299,22 +2317,16 @@ contains
 !                   operates on.
 !
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       integer(ip), parameter :: dtype = 6
 
-      integer(ip), parameter :: ctrlsz = 2
 
 !
 !     Mini-segment control area size:
 !
-      integer(ip), parameter :: mctlsz = 4
 
-      integer(ip), parameter :: bufsiz = mctlsz
 
-      integer(ip), parameter :: dirsiz = 100
 
       real(wp) :: buffer ( bufsiz )
       real(wp) :: dc     ( nd )
@@ -2942,22 +2954,16 @@ contains
 !                   operates on.
 !
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       integer(ip), parameter :: dtype = 6
 
-      integer(ip), parameter :: ctrlsz = 2
 
 !
 !     Mini-segment control area size:
 !
-      integer(ip), parameter :: mctlsz = 4
 
-      integer(ip), parameter :: bufsiz = mctlsz
 
-      integer(ip), parameter :: dirsiz = 100
 
       real(wp) :: buffer ( bufsiz )
       real(wp) :: dc     ( nd )
@@ -3501,9 +3507,7 @@ contains
 !        DTYPE      is the data type of the segment that this routine
 !                   operates on.
 !
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       integer(ip), parameter :: dtype = 6
 
@@ -3758,9 +3762,7 @@ contains
 !        NIC        is the number of integer components in an unpacked
 !                   C-kernel descriptor.
 !
-      integer(ip), parameter :: ndc = 2
 
-      integer(ip), parameter :: nic = 6
 
       integer(ip) :: icd  ( nic )
 
@@ -4134,11 +4136,8 @@ contains
 !        DTYPE      is the data type.
 !
 
-      integer(ip), parameter :: ndc = 2
 
-      integer(ip), parameter :: nic = 6
 
-      integer(ip), parameter :: dtype = 2
 
       integer(ip) :: beg
       integer(ip) :: end
@@ -4519,9 +4518,7 @@ contains
 !                   operates on.
 !
 
-      integer(ip), parameter :: ndc = 2
 
-      integer(ip), parameter :: nic = 6
 
       integer(ip), parameter :: dtype = 3
 
@@ -4750,9 +4747,7 @@ contains
 !                   operates on.
 !
 
-      integer(ip), parameter :: ndc = 2
 
-      integer(ip), parameter :: nic = 6
 
       integer(ip), parameter :: dtype = 5
 
@@ -5106,14 +5101,11 @@ contains
 !
 !     DAF ND and NI values for CK files.
 !
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
 !
 !     Length of a DAF comment record, in characters.
 !
-      integer(ip), parameter :: mxcrec = 1000
 
       integer(ip) :: ncomr
 
@@ -5723,19 +5715,14 @@ contains
 !     LPRINT    is the integer value of the last printable ASCII
 !               character.
 !
-      integer(ip), parameter :: sidlen = 40
 
       integer(ip), parameter :: ndc = 5
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       integer(ip), parameter :: dtype = 1
 
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
       real(wp) :: dcd    ( nd    )
       real(wp) :: dirent
@@ -6616,19 +6603,13 @@ contains
 !     LPRINT   is the integer value of the last printable ASCII
 !              character.
 !
-      integer(ip), parameter :: sidlen = 40
 
       integer(ip), parameter :: ndc = 5
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
-      integer(ip), parameter :: dtype = 2
 
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
       real(wp) :: dcd    ( nd    )
       real(wp) :: dirent
@@ -7585,19 +7566,14 @@ contains
 !     LPRINT   is the integer value of the last printable ASCII
 !              character.
 !
-      integer(ip), parameter :: sidlen = 40
 
       integer(ip), parameter :: ndc = 5
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       integer(ip), parameter :: dtype = 3
 
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
       real(wp) :: dcd    ( nd    )
       real(wp) :: descr  ( ndc   )
@@ -8181,11 +8157,8 @@ contains
 !
 !     DAF ND and NI values for CK files and length of a DAF descriptor.
 !
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
-      integer(ip), parameter :: ndescr = nd + ( ni + 1 ) / 2
 
 !
 !     The number of generic segment constants in a type 4 CK segment.
@@ -8196,15 +8169,12 @@ contains
 !     The integer codes of the first and last printable ASCII
 !     characters.
 !
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
 !
 !     The maximum number of characters allowed in a CK segment
 !     identifier.
 !
-      integer(ip), parameter :: sidlen = 40
 
       real(wp) :: dcd    ( nd )
       real(wp) :: dcoeff
@@ -8518,11 +8488,8 @@ contains
 !
 !     DAF ND and NI values for CK files and length of a DAF descriptor.
 !
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
-      integer(ip), parameter :: ndescr = nd + ( ni + 1 ) / 2
 
 !
 !     Local variables.
@@ -9101,30 +9068,20 @@ contains
 
       integer(ip), parameter :: maxdeg = 23
 
-      integer(ip), parameter :: sidlen = 40
 
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
-      integer(ip), parameter :: dscsiz = 5
 
-      integer(ip), parameter :: typidx = 4
 
       integer(ip), parameter :: dtype = 5
 
-      integer(ip), parameter :: dirsiz = 100
 
-      integer(ip), parameter :: statsz = 6
 
 !
 !     Packet structure parameters
 !
-      integer(ip), parameter :: qidx = 1
 
       real(wp) :: dc     ( nd )
       real(wp) :: descr  ( dscsiz )
@@ -10172,26 +10129,18 @@ contains
       use pepper_inc_ckparam
       implicit none
 
-      integer(ip), parameter :: sidlen = 40
 
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
-      integer(ip), parameter :: dscsiz = 5
 
       integer(ip), parameter :: dtype = 6
 
-      integer(ip), parameter :: dirsiz = 100
 
 !
 !     Packet structure parameters
 !
-      integer(ip), parameter :: qidx = 1
 
       real(wp) :: dc     ( nd )
       real(wp) :: descr  ( dscsiz )
@@ -11731,7 +11680,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip), parameter :: acclen = 5
 
       character(acclen) :: access
 
@@ -12026,13 +11974,11 @@ contains
 !
 !     DAF ND and NI values for PCK files.
 !
-      integer(ip), parameter :: nd = 2
 
       integer(ip), parameter :: ni = 5
 !
 !     Length of a DAF comment record, in characters.
 !
-      integer(ip), parameter :: mxcrec = 1000
 
       integer(ip) :: ncomr
 
@@ -12170,7 +12116,6 @@ contains
 
 !     ND and NI values for a PCK file.
 !
-      integer(ip), parameter :: nd = 2
 
       integer(ip), parameter :: ni = 5
 !
@@ -12365,7 +12310,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: nd = 2
 
       integer(ip), parameter :: ni = 5
 
@@ -12688,16 +12632,13 @@ contains
 
 !     DTYPE is the PCK data type.
 !
-      integer(ip), parameter :: dtype = 2
 !
 !     NS is the size of a packed PCK segment descriptor.
 !
-      integer(ip), parameter :: ns = 5
 !
 !     ND is the number of double precision components in an PCK
 !     segment descriptor. PCK uses ND = 2.
 !
-      integer(ip), parameter :: nd = 2
 !
 !     NI is the number of integer components in an PCK segment
 !     descriptor. PCK uses NI = 5.
@@ -12707,7 +12648,6 @@ contains
 !     SIDLEN is the maximum number of characters allowed in an
 !     PCK segment identifier.
 !
-      integer(ip), parameter :: sidlen = 40
 
       character(sidlen) :: etstr
       character(sidlen) :: netstr
@@ -13276,7 +13216,6 @@ contains
 !     ND is the number of double precision components in a PCK
 !     segment descriptor. PCK uses ND = 2.
 !
-      integer(ip), parameter :: nd = 2
 
 !
 !     NI is the number of integer components in a PCK segment
@@ -13287,13 +13226,11 @@ contains
 !
 !     NS is the size of a packed PCK segment descriptor.
 !
-      integer(ip), parameter :: ns = 5
 
 !
 !     SIDLEN is the maximum number of characters allowed in an
 !     PCK segment identifier.
 !
-      integer(ip), parameter :: sidlen = 40
 
       character(sidlen) :: etstr
       character(sidlen) :: netstr
@@ -13842,8 +13779,6 @@ contains
       module procedure spcac
       use pepper_kinds, only: ip
       implicit none
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: maxcpr = 1000
       character(maxcpr+2) :: data
       character(1) :: eot
       character(ifnlen) :: ifname
@@ -14328,7 +14263,6 @@ contains
 
 !     IFNLEN      is the length of a DAF internal file name.
 !
-      integer(ip), parameter :: ifnlen = 60
 
       character(ifnlen) :: ifname
 
@@ -14518,9 +14452,7 @@ contains
 !     MAXCPR      is the maximum number of characters per DAF record and
 !                 hence the maximum comment line length.
 !
-      integer(ip), parameter :: ifnlen = 60
 
-      integer(ip), parameter :: maxcpr = 1000
 
       character(ifnlen) :: ifname
       character(maxcpr) :: line
@@ -14780,9 +14712,7 @@ contains
 !     RESV        is the number of records to reserve when opening the
 !                 file.
 !
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       integer(ip), parameter :: resv = 0
 
@@ -14986,8 +14916,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: pos
       implicit none
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: maxcpr = 1000
       integer(ip) :: nd
       integer(ip) :: posnul
       integer(ip) :: nrr
@@ -15270,8 +15198,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: pos
       implicit none
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: maxcpr = 1000
       integer(ip) :: posnul
       integer(ip) :: tmplen
       integer(ip) :: dafu
@@ -15689,7 +15615,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip), parameter :: acclen = 5
       character(acclen) :: access
 
       logical :: found
@@ -16279,14 +16204,11 @@ contains
 !
 !     DAF ND and NI values for SPK files.
 !
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
 !
 !     Length of a DAF comment record, in characters.
 !
-      integer(ip), parameter :: mxcrec = 1000
 
       integer(ip) :: ncomr
 
@@ -16500,19 +16422,13 @@ contains
 
       integer(ip), parameter :: dlsize = 71
 
-      integer(ip), parameter :: sidlen = 40
 
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
-      integer(ip), parameter :: dscsiz = 5
 
-      integer(ip), parameter :: typidx = 4
 
       integer(ip), parameter :: dtype = 1
 
-      integer(ip), parameter :: dirsiz = 100
 
       real(wp) :: descr  ( dscsiz )
       real(wp) :: maxtim
@@ -17049,26 +16965,21 @@ contains
 
 !     DTYPE is the SPK data type.
 !
-      integer(ip), parameter :: dtype = 2
 !
 !     ND is the number of double precision components in an SPK
 !     segment descriptor. SPK uses ND = 2.
 !
-      integer(ip), parameter :: nd = 2
 !
 !     NI is the number of integer components in an SPK segment
 !     descriptor. SPK uses NI = 6.
 !
-      integer(ip), parameter :: ni = 6
 !
 !     NS is the size of a packed SPK segment descriptor.
 !
-      integer(ip), parameter :: ns = 5
 !
 !     SIDLEN is the maximum number of characters allowed in an
 !     SPK segment identifier.
 !
-      integer(ip), parameter :: sidlen = 40
 
       character(sidlen) :: etstr
       character(sidlen) :: netstr
@@ -17696,21 +17607,17 @@ contains
 !     ND is the number of double precision components in an SPK
 !     segment descriptor. SPK uses ND = 2.
 !
-      integer(ip), parameter :: nd = 2
 !
 !     NI is the number of integer components in an SPK segment
 !     descriptor. SPK uses NI = 6.
 !
-      integer(ip), parameter :: ni = 6
 !
 !     NS is the size of a packed SPK segment descriptor.
 !
-      integer(ip), parameter :: ns = 5
 !
 !     SIDLEN is the maximum number of characters allowed in an
 !     SPK segment identifier.
 !
-      integer(ip), parameter :: sidlen = 40
 
       character(sidlen) :: etstr
       character(sidlen) :: netstr
@@ -18231,19 +18138,13 @@ contains
 !
 !     LPRINT is the integer value of the last printable ASCII character.
 !
-      integer(ip), parameter :: sidlen = 40
 
-      integer(ip), parameter :: ns = 5
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       integer(ip), parameter :: dtype = 5
 
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
       real(wp) :: dcd      ( nd     )
       real(wp) :: descr    ( ns     )
@@ -18740,23 +18641,15 @@ contains
 !
 !     LPRINT is the integer value of the last printable ASCII character.
 !
-      integer(ip), parameter :: sidlen = 40
 
-      integer(ip), parameter :: ns = 5
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       integer(ip), parameter :: dtype = 8
 
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
-      integer(ip), parameter :: statsz = 6
 
-      integer(ip), parameter :: timlen = 40
 
       character(timlen) :: etstr
 
@@ -19349,7 +19242,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: maxdeg = 27
 
 !
 !     SIDLEN is the maximum number of characters allowed in an
@@ -19370,23 +19262,15 @@ contains
 !
 !     LPRINT is the integer value of the last printable ASCII character.
 !
-      integer(ip), parameter :: sidlen = 40
 
-      integer(ip), parameter :: ns = 5
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       integer(ip), parameter :: dtype = 9
 
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
-      integer(ip), parameter :: statsz = 6
 
-      integer(ip), parameter :: dirsiz = 100
 
       real(wp) :: dcd    ( nd )
       real(wp) :: descr  ( ns )
@@ -20475,19 +20359,13 @@ contains
 !
 !     LPRINT is the integer value of the last printable ASCII character.
 !
-      integer(ip), parameter :: sidlen = 40
 
-      integer(ip), parameter :: ns = 5
 
       integer(ip), parameter :: dtype = 12
 
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
-      integer(ip), parameter :: statsz = 6
 
-      integer(ip), parameter :: timlen = 40
 
       character(timlen) :: etstr
 
@@ -21066,21 +20944,14 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: maxdeg = 27
 
-      integer(ip), parameter :: sidlen = 40
 
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
-      integer(ip), parameter :: dscsiz = 5
 
       integer(ip), parameter :: dtype = 13
 
-      integer(ip), parameter :: dirsiz = 100
 
-      integer(ip), parameter :: statsz = 6
 
       real(wp) :: descr  ( dscsiz )
       real(wp) :: maxtim
@@ -21545,12 +21416,10 @@ contains
 
 !     Segment descriptor size
 !
-      integer(ip), parameter :: ns = 5
 
 !
 !     Segment identifier size
 !
-      integer(ip), parameter :: sidlen = 40
 
 !
 !     SPK data type
@@ -21560,9 +21429,7 @@ contains
 !
 !     Range of printing characters
 !
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
 !
 !     Number of items in a segment
@@ -22129,12 +21996,10 @@ contains
 
 !     Segment descriptor size
 !
-      integer(ip), parameter :: ns = 5
 
 !
 !     Segment identifier size
 !
-      integer(ip), parameter :: sidlen = 40
 
 !
 !     SPK data type
@@ -22144,9 +22009,7 @@ contains
 !
 !     Range of printing characters
 !
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
 !
 !     Number of items in a segment
@@ -22468,25 +22331,16 @@ contains
 
       integer(ip), parameter :: maxdeg = 15
 
-      integer(ip), parameter :: sidlen = 40
 
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
-      integer(ip), parameter :: dscsiz = 5
 
-      integer(ip), parameter :: typidx = 4
 
       integer(ip), parameter :: dtype = 18
 
-      integer(ip), parameter :: dirsiz = 100
 
-      integer(ip), parameter :: statsz = 6
 
       real(wp) :: dc     ( nd )
       real(wp) :: descr  ( dscsiz )
@@ -23086,21 +22940,14 @@ contains
       use pepper_inc_spkrec
       implicit none
 
-      integer(ip), parameter :: sidlen = 40
 
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
-      integer(ip), parameter :: dscsiz = 5
 
       integer(ip), parameter :: dtype = 19
 
-      integer(ip), parameter :: dirsiz = 100
 
       real(wp) :: dc     ( nd )
       real(wp) :: descr  ( dscsiz )
@@ -24049,24 +23896,20 @@ contains
 !     ND is the number of double precision components in an SPK
 !     segment descriptor. SPK uses ND = 2.
 !
-      integer(ip), parameter :: nd = 2
 
 !
 !     NI is the number of integer components in an SPK segment
 !     descriptor. SPK uses NI = 6.
 !
-      integer(ip), parameter :: ni = 6
 
 !
 !     NS is the size of a packed SPK segment descriptor.
 !
-      integer(ip), parameter :: ns = 5
 
 !
 !     SIDLEN is the maximum number of characters allowed in an
 !     SPK segment identifier.
 !
-      integer(ip), parameter :: sidlen = 40
 
       character(sidlen) :: etstr
       character(sidlen) :: netstr
@@ -24550,11 +24393,8 @@ contains
       use pepper_inc_spk21
       implicit none
 
-      integer(ip), parameter :: sidlen = 40
 
-      integer(ip), parameter :: fprint = 32
 
-      integer(ip), parameter :: lprint = 126
 
 !
 !     MINDSZ is the minimum MDA size; this is the size
@@ -24562,11 +24402,9 @@ contains
 !
       integer(ip), parameter :: mindsz = 71
 
-      integer(ip), parameter :: dscsiz = 5
 
       integer(ip), parameter :: dtype = 21
 
-      integer(ip), parameter :: dirsiz = 100
 
       real(wp) :: descr  ( dscsiz )
       real(wp) :: prvepc
@@ -25298,13 +25136,10 @@ contains
 !        DTYPE      is the data type.
 !
 
-      integer(ip), parameter :: ndc = 2
 
-      integer(ip), parameter :: nic = 6
 
       integer(ip), parameter :: psiz = 8
 
-      integer(ip), parameter :: dtype = 2
 
       integer(ip) :: icd    ( nic )
       integer(ip) :: nrec
@@ -26249,7 +26084,6 @@ contains
 
 !     DAF ND and NI values for PCK files.
 !
-      integer(ip), parameter :: nd = 2
 
       integer(ip), parameter :: ni = 5
 !
@@ -26458,9 +26292,7 @@ contains
 
 !     IFNLEN is the length of a DAF internal file name.
 !
-      character(*), parameter :: bmark = '~NAIF/SPC BEGIN COMMENTS~'
 
-      character(*), parameter :: emark = '~NAIF/SPC END COMMENTS~'
 
       integer(ip) :: handle
       integer(ip) :: iostat
@@ -26701,11 +26533,8 @@ contains
       use pepper_strings, only: ltrim, rtrim
       implicit none
 
-      character(*), parameter :: bmark = '~NAIF/SPC BEGIN COMMENTS~'
 
-      character(*), parameter :: emark = '~NAIF/SPC END COMMENTS~'
 
-      integer(ip), parameter :: maxcpr = 1000
       character(maxcpr) :: line
 
       integer(ip) :: handle
@@ -26961,9 +26790,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      character(*), parameter :: bmark = '~NAIF/SPC BEGIN COMMENTS~'
 
-      character(*), parameter :: emark = '~NAIF/SPC END COMMENTS~'
 
 !     Local variables
 !
@@ -27107,9 +26934,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      character(*), parameter :: bmark = '~NAIF/SPC BEGIN COMMENTS~'
 
-      character(*), parameter :: emark = '~NAIF/SPC END COMMENTS~'
 
       integer(ip) :: unit
 

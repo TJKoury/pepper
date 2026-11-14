@@ -491,6 +491,18 @@ submodule (pepper_instance) pepper_ek_storage
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: term = 1  !! tree balancing state: done
+   integer(ip), parameter :: lcheck = term   + 1  !! tree balancing state: check the left neighbor
+   integer(ip), parameter :: rcheck = lcheck + 1  !! tree balancing state: check the right neighbor
+   integer(ip), parameter :: balnce = rcheck + 1  !! tree balancing state: balance the node
+   integer(ip), parameter :: lnsize = 80  !! length of a line of text (messages, kernel lines)
+   integer(ip), parameter :: maxnam = 15  !! maximum length of a query name
+   integer(ip), parameter :: memsiz = 2500000  !! size of the scratch area (records)
+   integer(ip), parameter :: namlen = 32  !! length of a table or column name
+
 contains
 
       !>## Detailed Input
@@ -3051,7 +3063,6 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_ekqlimit
       use pepper_inc_ekbool
-      integer(ip), parameter :: lbcell = -5
 
 !     Minimum upper bound for the integer cell of an encoded query:
 !
@@ -3386,9 +3397,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
       use pepper_inc_ekquery
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: namlen = 32
-      integer(ip), parameter :: maxnam = 15
       character(namlen), parameter :: namlst ( maxnam ) = [ character(namlen) :: &
          'ARCHITECTURE', 'INITIALIZED', 'PARSED', 'NAMES_RESOLVED',&
          'TIMES_RESOLVED', 'SEM_CHECKED', 'NUM_TABLES', 'NUM_CONJUNCTIONS',&
@@ -3480,7 +3488,6 @@ contains
       !>-    Beta Version 1.0.0, 25-FEB-1993 (NJB)
       module procedure zzekstop
       use pepper_kinds, only: ip
-      integer(ip), parameter :: memsiz = 2500000
       if ( .not. allocated ( ctx%zzeksca_state ) ) then
          allocate ( ctx%zzeksca_state )
          call init_zzeksca_state ( ctx%zzeksca_state )
@@ -3565,7 +3572,6 @@ contains
       module procedure zzekspsh
       use pepper_kinds, only: ip
       use pepper_containers, only: grow
-      integer(ip), parameter :: memsiz = 2500000
       integer(ip) :: remain
       integer(ip) :: numadd
       integer(ip) :: rt
@@ -3760,7 +3766,6 @@ contains
       !>-    Beta Version 1.0.0, 10-SEP-1994 (NJB)
       module procedure zzekspop
       use pepper_kinds, only: ip
-      integer(ip), parameter :: memsiz = 2500000
       integer(ip) :: remain
       integer(ip) :: start
       integer(ip) :: e
@@ -3917,7 +3922,6 @@ contains
       !>-    Beta Version 1.0.0, 10-SEP-1994 (NJB)
       module procedure zzeksdec
       use pepper_kinds, only: ip
-      integer(ip), parameter :: memsiz = 2500000
       if ( .not. allocated ( ctx%zzeksca_state ) ) then
          allocate ( ctx%zzeksca_state )
          call init_zzeksca_state ( ctx%zzeksca_state )
@@ -4046,7 +4050,6 @@ contains
       !>-    Beta Version 1.0.0, 25-FEB-1993 (NJB)
       module procedure zzeksupd
       use pepper_kinds, only: ip
-      integer(ip), parameter :: memsiz = 2500000
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzeksca_state ) ) then
          allocate ( ctx%zzeksca_state )
@@ -4195,7 +4198,6 @@ contains
       !>-    Beta Version 1.0.0, 23-FEB-1995 (NJB)
       module procedure zzeksrd
       use pepper_kinds, only: ip
-      integer(ip), parameter :: memsiz = 2500000
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzeksca_state ) ) then
          allocate ( ctx%zzeksca_state )
@@ -4314,7 +4316,6 @@ contains
       !>-    SPICELIB Version 3.0.0, 27-DEC-2001 (NJB)
       module procedure zzekscln
       use pepper_kinds, only: ip
-      integer(ip), parameter :: memsiz = 2500000
       if ( .not. allocated ( ctx%zzeksca_state ) ) then
          allocate ( ctx%zzeksca_state )
          call init_zzeksca_state ( ctx%zzeksca_state )
@@ -4603,7 +4604,6 @@ contains
       use pepper_inc_ekqlimit
       character(*), parameter :: dquote = '"'
       character(*), parameter :: squote = ''''
-      integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: nxttok = 1
       integer(ip), parameter :: newtok = nxttok + 1
       integer(ip), parameter :: term = newtok + 1
@@ -4612,7 +4612,6 @@ contains
       integer(ip), parameter :: number = dot    + 1
       integer(ip), parameter :: ident = number + 1
       integer(ip), parameter :: spcial = ident + 1
-      integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: mxspec = 512
       integer(ip), parameter :: nspec = 13
       integer(ip), parameter :: spclen = 2
@@ -5863,7 +5862,6 @@ contains
       use pepper_strings, only: cmprss, posr, rtrim, suffix, repmc_inplace, ucase_inplace
       use pepper_inc_ektype
       implicit none
-      integer(ip), parameter :: lnsize = 80
 
       integer(ip), parameter :: msglen = 160
 
@@ -6240,9 +6238,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
       use pepper_inc_ekquery
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: namlen = 32
-      integer(ip), parameter :: maxnam = 15
       character(namlen), parameter :: namlst ( maxnam ) = [ character(namlen) :: &
          'ARCHITECTURE', 'INITIALIZED', 'PARSED', 'NAMES_RESOLVED',&
          'TIMES_RESOLVED', 'SEM_CHECKED', 'NUM_TABLES', 'NUM_CONJUNCTIONS',&
@@ -7044,7 +7039,6 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_ektype
       use pepper_inc_ekbool
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: free
       integer(ip) :: init
@@ -7210,7 +7204,6 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_ektype
       use pepper_inc_ekbool
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: free
       integer(ip) :: init
@@ -9589,7 +9582,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_ekquery
       use pepper_inc_ekbool
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: iparse
       integer(ip) :: loc
@@ -9789,7 +9781,6 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: base
       integer(ip) :: cb
@@ -10066,7 +10057,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_ekquery
       use pepper_inc_ekbool
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: base
       integer(ip) :: buflen
@@ -10322,7 +10312,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_ekquery
       use pepper_inc_ekbool
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: base
       integer(ip) :: buflen
@@ -10583,7 +10572,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_ekquery
       use pepper_inc_ekbool
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: ab
       integer(ip) :: ae
@@ -11362,11 +11350,9 @@ contains
       integer(ip) :: nsv_1(1)  !! one-element copy of nsv (array argument)
       integer(ip) :: j_1(1)  !! one-element copy of j (array argument)
       integer(ip) :: ntabs_1(1)  !! one-element copy of ntabs (array argument)
-      integer(ip), parameter :: jszidx = 1
       integer(ip), parameter :: jrcidx = 2
       integer(ip), parameter :: jtcidx = 3
       integer(ip), parameter :: jscidx = 4
-      integer(ip), parameter :: jsvbas = 4
       integer(ip) :: addrss
       integer(ip) :: nsv
       integer(ip) :: i
@@ -11607,11 +11593,6 @@ contains
       use pepper_arrays, only: lstlei
       integer(ip) :: sgvbas_1(1)  !! one-element copy of sgvbas (array argument)
       logical :: return
-      integer(ip), parameter :: jszidx = 1
-      integer(ip), parameter :: jrcidx = 2
-      integer(ip), parameter :: jtcidx = 3
-      integer(ip), parameter :: jscidx = 4
-      integer(ip), parameter :: jsvbas = 4
       integer(ip) :: reloff
       integer(ip) :: jrsidx
       if ( .not. allocated ( ctx%zzekvadr_state ) ) allocate ( ctx%zzekvadr_state )
@@ -18357,7 +18338,6 @@ contains
       use pepper_inc_ekqlimit
 
       implicit none
-      integer(ip), parameter :: lbcell = -5
       integer(ip) :: dsize
 
 !
@@ -18400,7 +18380,6 @@ contains
 !
 !     Other local parameters
 !
-      integer(ip), parameter :: maxrel = 200
 
       integer(ip), parameter :: typlen = 32
 
@@ -24349,13 +24328,9 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
       use pepper_inc_ektree
-      integer(ip), parameter :: term = 1
 
-      integer(ip), parameter :: lcheck = term   + 1
 
-      integer(ip), parameter :: rcheck = lcheck + 1
 
-      integer(ip), parameter :: balnce = rcheck + 1
 
       integer(ip), parameter :: merg32 = balnce + 1
 
@@ -24896,13 +24871,9 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
       use pepper_inc_ektree
-      integer(ip), parameter :: term = 1
 
-      integer(ip), parameter :: lcheck = term   + 1
 
-      integer(ip), parameter :: rcheck = lcheck + 1
 
-      integer(ip), parameter :: balnce = rcheck + 1
 
       integer(ip), parameter :: splt23 = balnce + 1
 
@@ -27111,11 +27082,8 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       integer(ip) :: sgtree_1(1)  !! one-element copy of sgtree (array argument)
-      integer(ip), parameter :: lbcell = -5
 
-      integer(ip), parameter :: mxspec = 512
 
-      integer(ip), parameter :: namlim = 32
 
       character(pgsizc) :: cpage
       character(cnamsz) :: tmpcnm
@@ -27533,11 +27501,8 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       integer(ip) :: sgtree_1(1)  !! one-element copy of sgtree (array argument)
-      integer(ip), parameter :: lbcell = -5
 
-      integer(ip), parameter :: mxspec = 512
 
-      integer(ip), parameter :: namlim = 32
 
       character(pgsizc) :: cpage
       character(cnamsz) :: tmpcnm

@@ -5041,11 +5041,6 @@ contains
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: btsize = 100
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: stsize = 10000
-      integer(ip), parameter :: slen = 40
-      integer(ip), parameter :: forwrd = 1
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.

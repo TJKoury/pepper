@@ -490,6 +490,21 @@ submodule (pepper_instance) pepper_sclk
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: msglen = 320  !! length of an error message template
+   character(msglen), parameter :: bvlmsg = 'Invalid value of #. Value was #.'  !! message: a kernel variable's value is invalid
+   integer(ip), parameter :: cofidx = 1  !! index of the coefficients variable among the SCLK items
+   integer(ip), parameter :: kvnmln = 32  !! length of a kernel variable name
+   integer(ip), parameter :: namlen = 80  !! length of an SCLK kernel variable name
+   character(msglen), parameter :: nfdmsg = '# not found. Did you load the SCLK kernel?'
+      !! message: a kernel variable was not found
+   integer(ip), parameter :: nflidx = 4  !! index of the number of fields variable among the SCLK items
+   integer(ip), parameter :: nkitem = 9  !! number of SCLK kernel items
+   character(msglen), parameter :: nummsg = '# values found for #: valid range is #:#.'
+      !! message: a kernel variable has a wrong number of values
+
 contains
 
       !>## Detailed Input
@@ -700,22 +715,12 @@ contains
       use pepper_strings, only: repmc, suffix, repmc_inplace, repmi_inplace
       use pepper_inc_sclk
       implicit none
-      integer(ip), parameter :: msglen = 320
-      integer(ip), parameter :: kvnmln = 32
       integer(ip), parameter :: mxcofa = 3 * mxcoef
-      integer(ip), parameter :: namlen = 80
-      integer(ip), parameter :: nkitem = 9
-      integer(ip), parameter :: cofidx = 1
-      integer(ip), parameter :: nflidx = 4
-      integer(ip), parameter :: offidx = 5
-      integer(ip), parameter :: modidx = 6
       integer(ip), parameter :: delidx = 7
       integer(ip), parameter :: sysidx = 9
       character(msglen), parameter :: bvlmsg = 'Invalid value found for #:  #.'
       character(msglen) :: errmsg
       character(kvnmln) :: kvname
-      character(msglen), parameter :: nfdmsg = '# not found. Did you load the SCLK kernel?'
-      character(msglen), parameter :: nummsg = '# values found for #: valid range is #:#.'
       character(namlen), parameter :: namlst ( nkitem ) = [ character(namlen) :: &
          'SCLK01_COEFFICIENTS', 'SCLK_PARTITION_START', 'SCLK_PARTITION_END', 'SCLK01_N_FIELDS',&
          'SCLK01_OFFSETS', 'SCLK01_MODULI', 'SCLK01_OUTPUT_DELIM', 'SCLK01_KERNEL_ID',&
@@ -1150,21 +1155,11 @@ contains
       use pepper_inc_sclk
       implicit none
       integer(ip) :: nfield_1(1)  !! one-element copy of nfield (array argument)
-      integer(ip), parameter :: msglen = 320
-      integer(ip), parameter :: kvnmln = 32
-      integer(ip), parameter :: namlen = 80
-      integer(ip), parameter :: nkitem = 9
-      integer(ip), parameter :: cofidx = 1
-      integer(ip), parameter :: nflidx = 4
       integer(ip), parameter :: offidx = 5
       integer(ip), parameter :: modidx = 6
-      integer(ip), parameter :: delidx = 7
-      integer(ip), parameter :: sysidx = 9
       character(msglen), parameter :: bvlmsg = 'Invalid value found for #:  #.'
       character(msglen) :: errmsg
       character(kvnmln) :: kvname
-      character(msglen), parameter :: nfdmsg = '# not found. Did you load the SCLK kernel?'
-      character(msglen), parameter :: nummsg = '# values found for #: valid range is #:#.'
       character(namlen), parameter :: namlst ( nkitem ) = [ character(namlen) :: &
          'SCLK01_COEFFICIENTS', 'SCLK_PARTITION_START', 'SCLK_PARTITION_END', 'SCLK01_N_FIELDS',&
          'SCLK01_OFFSETS', 'SCLK01_MODULI', 'SCLK01_OUTPUT_DELIM', 'SCLK01_KERNEL_ID',&
@@ -1601,7 +1596,6 @@ contains
       use pepper_inc_zzsc01
       implicit none
       integer(ip), parameter :: namlen = 60
-      integer(ip), parameter :: cofidx = 1
       integer(ip), parameter :: prsidx = cofidx + 1
       integer(ip), parameter :: preidx = prsidx + 1
       integer(ip), parameter :: offidx = preidx + 1
@@ -1870,7 +1864,6 @@ contains
       use pepper_strings, only: intstr
       implicit none
       integer(ip), parameter :: wdsize = 32
-      integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: maxids = 10
       character(wdsize) :: sclk
       character(wdsize) :: sclkvr ( 7 )
@@ -2317,11 +2310,6 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
       implicit none
-      integer(ip), parameter :: errlen = 240
-      integer(ip), parameter :: msglen = 320
-      integer(ip), parameter :: initsc = 0
-      integer(ip), parameter :: kvnmln = 32
-      character(msglen), parameter :: bvlmsg = 'Invalid value of #. Value was #.'
       character(1), parameter :: del    ( ndelim ) = &
          [ character(1) :: '.', ':', '-', ',', ' ' ]
       integer(ip) :: n
@@ -2752,11 +2740,6 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
       implicit none
-      integer(ip), parameter :: errlen = 240
-      integer(ip), parameter :: msglen = 320
-      integer(ip), parameter :: initsc = 0
-      integer(ip), parameter :: kvnmln = 32
-      character(msglen), parameter :: bvlmsg = 'Invalid value of #. Value was #.'
       character(1), parameter :: del    ( ndelim ) = &
          [ character(1) :: '.', ':', '-', ',', ' ' ]
       integer(ip) :: j
@@ -3202,11 +3185,6 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
       implicit none
-      integer(ip), parameter :: errlen = 240
-      integer(ip), parameter :: msglen = 320
-      integer(ip), parameter :: initsc = 0
-      integer(ip), parameter :: kvnmln = 32
-      character(msglen), parameter :: bvlmsg = 'Invalid value of #. Value was #.'
       character(1), parameter :: del    ( ndelim ) = &
          [ character(1) :: '.', ':', '-', ',', ' ' ]
       real(wp) :: const
@@ -3705,11 +3683,6 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
       implicit none
-      integer(ip), parameter :: errlen = 240
-      integer(ip), parameter :: msglen = 320
-      integer(ip), parameter :: initsc = 0
-      integer(ip), parameter :: kvnmln = 32
-      character(msglen), parameter :: bvlmsg = 'Invalid value of #. Value was #.'
       character(1), parameter :: del    ( ndelim ) = &
          [ character(1) :: '.', ':', '-', ',', ' ' ]
       real(wp) :: timdif
@@ -4185,11 +4158,6 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
       implicit none
-      integer(ip), parameter :: errlen = 240
-      integer(ip), parameter :: msglen = 320
-      integer(ip), parameter :: initsc = 0
-      integer(ip), parameter :: kvnmln = 32
-      character(msglen), parameter :: bvlmsg = 'Invalid value of #. Value was #.'
       character(1), parameter :: del    ( ndelim ) = &
          [ character(1) :: '.', ':', '-', ',', ' ' ]
       real(wp) :: timdif
@@ -4536,11 +4504,6 @@ contains
       use pepper_strings, only: repmi_inplace
       implicit none
       integer(ip) :: clktyp_1(1)  !! one-element copy of clktyp (array argument)
-      integer(ip), parameter :: errlen = 240
-      integer(ip), parameter :: msglen = 320
-      integer(ip), parameter :: initsc = 0
-      integer(ip), parameter :: kvnmln = 32
-      character(msglen), parameter :: bvlmsg = 'Invalid value of #. Value was #.'
       character(1), parameter :: del    ( ndelim ) = &
          [ character(1) :: '.', ':', '-', ',', ' ' ]
       integer(ip) :: n
@@ -4764,11 +4727,6 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
       implicit none
-      integer(ip), parameter :: errlen = 240
-      integer(ip), parameter :: msglen = 320
-      integer(ip), parameter :: initsc = 0
-      integer(ip), parameter :: kvnmln = 32
-      character(msglen), parameter :: bvlmsg = 'Invalid value of #. Value was #.'
       character(1), parameter :: del    ( ndelim ) = &
          [ character(1) :: '.', ':', '-', ',', ' ' ]
       if ( .not. allocated ( ctx%sc01_state ) ) then

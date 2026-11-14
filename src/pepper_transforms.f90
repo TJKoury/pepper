@@ -9,6 +9,13 @@ submodule (pepper_instance) pepper_transforms
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: maxnod = 10  !! maximum number of nodes of a frame tree
+   integer(ip), parameter :: maxxfm = maxnod + 4  !! maximum number of transformations of a chain
+   integer(ip), parameter :: rootf = 1  !! index of the root frame
+
 contains
 
       !>## Detailed Input
@@ -742,14 +749,11 @@ contains
 !     SPICE functions
 !
 
-      integer(ip), parameter :: maxnod = 10
 
-      integer(ip), parameter :: maxxfm = maxnod + 4
 
 !
 !     The root of all reference frames is J2000 (Frame ID = 1).
 !
-      integer(ip), parameter :: rootf = 1
 
       character(lmsgln) :: errmsg
 
@@ -1285,14 +1289,11 @@ contains
 !     SPICE functions
 !
 
-      integer(ip), parameter :: maxnod = 10
 
-      integer(ip), parameter :: maxxfm = maxnod + 4
 
 !
 !     The root of all reference frames is J2000 (Frame ID = 1).
 !
-      integer(ip), parameter :: rootf = 1
 
       character(lmsgln) :: errmsg
 

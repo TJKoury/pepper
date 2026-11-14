@@ -3901,11 +3901,8 @@ contains
       integer(ip), parameter :: finish = rlyear
       integer(ip), parameter :: ymd = 1
       integer(ip), parameter :: contin = ymd + 1
-      integer(ip), parameter :: maxmrk = 43
       integer(ip), parameter :: room = 100
       integer(ip), parameter :: maxlen = 256
-      integer(ip), parameter :: mrksiz = 8
-      integer(ip), parameter :: loclen = 32
       real(wp), parameter :: power  ( 0 : 14 ) = &
          [ 1.0_wp, 1.0e1_wp, 1.0e2_wp, 1.0e3_wp, 1.0e4_wp, 1.0e5_wp, &
            1.0e6_wp, 1.0e7_wp, 1.0e8_wp, 1.0e9_wp, 1.0e10_wp, 1.0e11_wp, &

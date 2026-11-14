@@ -989,6 +989,60 @@ submodule (pepper_instance) pepper_das
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: acclen = 10  !! length of a file access method name (READ, WRITE, SCRATCH, NEW)
+   character(*), parameter :: bcblk = 'BEGIN_CHARACTER_BLOCK'  !! transfer file: the line before a character block
+   integer(ip), parameter :: bcbpos = 1  !! position in a character buffer of the first character
+   character(*), parameter :: bdblk = 'BEGIN_DP_BLOCK'  !! transfer file: the line before a double precision block
+   character(*), parameter :: begcom = 'BEGIN_COMMENT_BLOCK'  !! transfer file: the line before the comment area
+   integer(ip), parameter :: begdsc = 9  !! index in a directory record of the first cluster descriptor
+   character(*), parameter :: biblk = 'BEGIN_INTEGER_BLOCK'  !! transfer file: the line before an integer block
+   integer(ip), parameter :: bufsiz = 22  !! size of a buffer of records
+   integer(ip), parameter :: bufszc = 10  !! number of character records the buffer holds
+   integer(ip), parameter :: bufszd = 10  !! number of double precision records the buffer holds
+   integer(ip), parameter :: bufszi = 10  !! number of integer records the buffer holds
+   integer(ip), parameter :: bwdloc = 1  !! index in a directory record of the backward pointer
+   integer(ip), parameter :: cbflen = 4  !! length of an element of the character buffer
+   integer(ip), parameter :: rrcidx = 1  !! index in a file summary of the number of reserved records
+   integer(ip), parameter :: rchidx = rrcidx + 1  !! index in a file summary of the number of reserved characters
+   integer(ip), parameter :: crcidx = rchidx + 1  !! index in a file summary of the number of comment records
+   integer(ip), parameter :: cchidx = crcidx + 1  !! index in a file summary of the number of comment characters
+   integer(ip), parameter :: crlen = 1024  !! number of characters in a DAS character record
+   integer(ip), parameter :: dp = 2  !! DAS data type code: double precision
+   character(*), parameter :: ecblk = 'END_CHARACTER_BLOCK'  !! transfer file: the line after a character block
+   integer(ip), parameter :: ecbpos = cbflen  !! position in a character buffer of the last character
+   character(*), parameter :: edblk = 'END_DP_BLOCK'  !! transfer file: the line after a double precision block
+   character(*), parameter :: eiblk = 'END_INTEGER_BLOCK'  !! transfer file: the line after an integer block
+   character(*), parameter :: endcom = 'END_COMMENT_BLOCK'  !! transfer file: the line after the comment area
+   character(1), parameter :: escchr = '@'  !! escape character of encoded comment lines
+   integer(ip), parameter :: fmtlen = 8  !! length of a binary file format name (e.g. BIG-IEEE)
+   integer(ip), parameter :: forwrd = 1  !! row of the forward pointers of a doubly linked list pool
+   integer(ip), parameter :: freidx = cchidx + 1  !! index in a file summary of the first free record
+   integer(ip), parameter :: fwdloc = 2  !! index in a directory record of the forward pointer
+   integer(ip), parameter :: idwlen = 8  !! length of a file ID word (e.g. DAF/SPK)
+   integer(ip), parameter :: ifnlen = 60  !! length of a DAF or DAS internal file name
+   integer(ip), parameter :: inteol = 0  !! character code ending a line in a comment record (NUL)
+   integer(ip), parameter :: linlen = 255  !! length of a comment line
+   integer(ip), parameter :: llabas = freidx  !! index in a file summary before the last logical addresses
+   integer(ip), parameter :: lrcbas = llabas + 3  !! index in a file summary before the last records of each type
+   integer(ip), parameter :: lwdbas = lrcbas + 3  !! index in a file summary before the last words of each type
+   integer(ip), parameter :: maxenc = 64  !! length of an encoded number in a transfer file
+   integer(ip), parameter :: maxpch = 126  !! last printable character code
+   integer(ip), parameter :: minpch = 32  !! first printable character code
+   integer(ip), parameter :: mxcrec = 1024  !! number of characters in a comment record
+   integer(ip), parameter :: nwc = 1024  !! number of characters in a DAS record
+   integer(ip), parameter :: nwd = 128  !! number of double precision numbers in a DAS record
+   integer(ip), parameter :: nwi = 256  !! number of integers in a DAS record
+   integer(ip), parameter :: rngbas = 2  !! index in a directory record before the address ranges
+   integer(ip), parameter :: tailen = 932  !! length of the unused tail of the file record
+   character(*), parameter :: tcblks = 'TOTAL_CHARACTER_BLOCKS'  !! transfer file: the line with the number of character blocks
+   character(*), parameter :: tcmblk = 'TOTAL_COMMENT_BLOCKS'  !! transfer file: the line with the number of comment blocks
+   character(*), parameter :: tdblks = 'TOTAL_DP_BLOCKS'  !! transfer file: the line with the number of double precision blocks
+   character(*), parameter :: tiblks = 'TOTAL_INTEGER_BLOCKS'  !! transfer file: the line with the number of integer blocks
+   integer(ip), parameter :: typlen = 4  !! length of a DAS file type (e.g. DSK)
+
 contains
 
       !>## Detailed Input
@@ -1226,11 +1280,9 @@ contains
 
 !     Local parameters
 !
-      character(1), parameter :: escchr = '@'
 
       integer(ip), parameter :: mxescd = 2
 
-      integer(ip), parameter :: maxenc = 64
 
       integer(ip), parameter :: errlen = 80
       character(1) :: ch
@@ -1882,10 +1934,8 @@ contains
       use pepper_kinds, only: ip
       implicit none
       character(1), parameter :: quote = ''''
-      character(1), parameter :: escchr = '@'
       character(1), parameter :: chrfpc = ' '
       character(1), parameter :: chrlpc = '~'
-      integer(ip), parameter :: maxenc = 64
       integer(ip), parameter :: hexbas = 16
       character(1) :: carg
       character(1) :: ch
@@ -3471,9 +3521,6 @@ contains
       implicit none
       integer(ip), parameter :: preftp = 607
       integer(ip), parameter :: pstftp = 297
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
       character(1) :: nullch
       character(fmtlen) :: locfmt
       character(idwlen) :: locidw
@@ -3739,9 +3786,6 @@ contains
       integer(ip) :: ncomr_1(1)  !! one-element copy of ncomr (array argument)
       integer(ip) :: nresvc_1(1)  !! one-element copy of nresvc (array argument)
       integer(ip) :: nresvr_1(1)  !! one-element copy of nresvr (array argument)
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: nwc = 1024
       integer(ip), parameter :: begidw = 1
       integer(ip), parameter :: endidw = 8
       integer(ip), parameter :: begifn = 9
@@ -4214,31 +4258,7 @@ contains
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip), parameter :: read = 1
-      integer(ip), parameter :: write = read  + 1
-      integer(ip), parameter :: rrcidx = 1
-      integer(ip), parameter :: rchidx = rrcidx + 1
-      integer(ip), parameter :: crcidx = rchidx + 1
-      integer(ip), parameter :: cchidx = crcidx + 1
-      integer(ip), parameter :: freidx = cchidx + 1
-      integer(ip), parameter :: llabas = freidx
-      integer(ip), parameter :: lrcbas = llabas + 3
-      integer(ip), parameter :: lwdbas = lrcbas + 3
-      integer(ip), parameter :: sumsiz = lwdbas + 3
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: rngbas = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: tailen = 932
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -4859,31 +4879,8 @@ contains
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
-      integer(ip), parameter :: rrcidx = 1
-      integer(ip), parameter :: rchidx = rrcidx + 1
-      integer(ip), parameter :: crcidx = rchidx + 1
-      integer(ip), parameter :: cchidx = crcidx + 1
-      integer(ip), parameter :: freidx = cchidx + 1
-      integer(ip), parameter :: llabas = freidx
-      integer(ip), parameter :: lrcbas = llabas + 3
-      integer(ip), parameter :: lwdbas = lrcbas + 3
-      integer(ip), parameter :: sumsiz = lwdbas + 3
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: rngbas = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: tailen = 932
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -5424,31 +5421,10 @@ contains
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
-      integer(ip), parameter :: rrcidx = 1
-      integer(ip), parameter :: rchidx = rrcidx + 1
-      integer(ip), parameter :: crcidx = rchidx + 1
-      integer(ip), parameter :: cchidx = crcidx + 1
-      integer(ip), parameter :: freidx = cchidx + 1
-      integer(ip), parameter :: llabas = freidx
-      integer(ip), parameter :: lrcbas = llabas + 3
-      integer(ip), parameter :: lwdbas = lrcbas + 3
-      integer(ip), parameter :: sumsiz = lwdbas + 3
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: rngbas = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: tailen = 932
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -5940,31 +5916,8 @@ contains
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
-      integer(ip), parameter :: rrcidx = 1
-      integer(ip), parameter :: rchidx = rrcidx + 1
-      integer(ip), parameter :: crcidx = rchidx + 1
-      integer(ip), parameter :: cchidx = crcidx + 1
-      integer(ip), parameter :: freidx = cchidx + 1
-      integer(ip), parameter :: llabas = freidx
-      integer(ip), parameter :: lrcbas = llabas + 3
-      integer(ip), parameter :: lwdbas = lrcbas + 3
-      integer(ip), parameter :: sumsiz = lwdbas + 3
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: rngbas = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: tailen = 932
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -6391,31 +6344,8 @@ contains
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
-      integer(ip), parameter :: rrcidx = 1
-      integer(ip), parameter :: rchidx = rrcidx + 1
-      integer(ip), parameter :: crcidx = rchidx + 1
-      integer(ip), parameter :: cchidx = crcidx + 1
-      integer(ip), parameter :: freidx = cchidx + 1
-      integer(ip), parameter :: llabas = freidx
-      integer(ip), parameter :: lrcbas = llabas + 3
-      integer(ip), parameter :: lwdbas = lrcbas + 3
-      integer(ip), parameter :: sumsiz = lwdbas + 3
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: rngbas = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: tailen = 932
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -6972,31 +6902,6 @@ contains
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: read = 1
-      integer(ip), parameter :: write = read  + 1
-      integer(ip), parameter :: rrcidx = 1
-      integer(ip), parameter :: rchidx = rrcidx + 1
-      integer(ip), parameter :: crcidx = rchidx + 1
-      integer(ip), parameter :: cchidx = crcidx + 1
-      integer(ip), parameter :: freidx = cchidx + 1
-      integer(ip), parameter :: llabas = freidx
-      integer(ip), parameter :: lrcbas = llabas + 3
-      integer(ip), parameter :: lwdbas = lrcbas + 3
-      integer(ip), parameter :: sumsiz = lwdbas + 3
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: rngbas = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: tailen = 932
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -7504,31 +7409,6 @@ contains
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: read = 1
-      integer(ip), parameter :: write = read  + 1
-      integer(ip), parameter :: rrcidx = 1
-      integer(ip), parameter :: rchidx = rrcidx + 1
-      integer(ip), parameter :: crcidx = rchidx + 1
-      integer(ip), parameter :: cchidx = crcidx + 1
-      integer(ip), parameter :: freidx = cchidx + 1
-      integer(ip), parameter :: llabas = freidx
-      integer(ip), parameter :: lrcbas = llabas + 3
-      integer(ip), parameter :: lwdbas = lrcbas + 3
-      integer(ip), parameter :: sumsiz = lwdbas + 3
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: rngbas = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: tailen = 932
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -7829,31 +7709,8 @@ contains
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
-      integer(ip), parameter :: rrcidx = 1
-      integer(ip), parameter :: rchidx = rrcidx + 1
-      integer(ip), parameter :: crcidx = rchidx + 1
-      integer(ip), parameter :: cchidx = crcidx + 1
-      integer(ip), parameter :: freidx = cchidx + 1
-      integer(ip), parameter :: llabas = freidx
-      integer(ip), parameter :: lrcbas = llabas + 3
-      integer(ip), parameter :: lwdbas = lrcbas + 3
-      integer(ip), parameter :: sumsiz = lwdbas + 3
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: rngbas = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: tailen = 932
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -8159,31 +8016,6 @@ contains
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: read = 1
-      integer(ip), parameter :: write = read  + 1
-      integer(ip), parameter :: rrcidx = 1
-      integer(ip), parameter :: rchidx = rrcidx + 1
-      integer(ip), parameter :: crcidx = rchidx + 1
-      integer(ip), parameter :: cchidx = crcidx + 1
-      integer(ip), parameter :: freidx = cchidx + 1
-      integer(ip), parameter :: llabas = freidx
-      integer(ip), parameter :: lrcbas = llabas + 3
-      integer(ip), parameter :: lwdbas = lrcbas + 3
-      integer(ip), parameter :: sumsiz = lwdbas + 3
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: rngbas = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: tailen = 932
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -8373,31 +8205,6 @@ contains
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: read = 1
-      integer(ip), parameter :: write = read  + 1
-      integer(ip), parameter :: rrcidx = 1
-      integer(ip), parameter :: rchidx = rrcidx + 1
-      integer(ip), parameter :: crcidx = rchidx + 1
-      integer(ip), parameter :: cchidx = crcidx + 1
-      integer(ip), parameter :: freidx = cchidx + 1
-      integer(ip), parameter :: llabas = freidx
-      integer(ip), parameter :: lrcbas = llabas + 3
-      integer(ip), parameter :: lwdbas = lrcbas + 3
-      integer(ip), parameter :: sumsiz = lwdbas + 3
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: rngbas = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: tailen = 932
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -8636,31 +8443,6 @@ contains
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: read = 1
-      integer(ip), parameter :: write = read  + 1
-      integer(ip), parameter :: rrcidx = 1
-      integer(ip), parameter :: rchidx = rrcidx + 1
-      integer(ip), parameter :: crcidx = rchidx + 1
-      integer(ip), parameter :: cchidx = crcidx + 1
-      integer(ip), parameter :: freidx = cchidx + 1
-      integer(ip), parameter :: llabas = freidx
-      integer(ip), parameter :: lrcbas = llabas + 3
-      integer(ip), parameter :: lwdbas = lrcbas + 3
-      integer(ip), parameter :: sumsiz = lwdbas + 3
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: rngbas = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: tailen = 932
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -8851,31 +8633,6 @@ contains
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: read = 1
-      integer(ip), parameter :: write = read  + 1
-      integer(ip), parameter :: rrcidx = 1
-      integer(ip), parameter :: rchidx = rrcidx + 1
-      integer(ip), parameter :: crcidx = rchidx + 1
-      integer(ip), parameter :: cchidx = crcidx + 1
-      integer(ip), parameter :: freidx = cchidx + 1
-      integer(ip), parameter :: llabas = freidx
-      integer(ip), parameter :: lrcbas = llabas + 3
-      integer(ip), parameter :: lwdbas = lrcbas + 3
-      integer(ip), parameter :: sumsiz = lwdbas + 3
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: rngbas = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: tailen = 932
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -9048,30 +8805,6 @@ contains
       use pepper_inc_errhnd
       implicit none
       integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: read = 1
-      integer(ip), parameter :: write = read  + 1
-      integer(ip), parameter :: rrcidx = 1
-      integer(ip), parameter :: rchidx = rrcidx + 1
-      integer(ip), parameter :: crcidx = rchidx + 1
-      integer(ip), parameter :: cchidx = crcidx + 1
-      integer(ip), parameter :: freidx = cchidx + 1
-      integer(ip), parameter :: llabas = freidx
-      integer(ip), parameter :: lrcbas = llabas + 3
-      integer(ip), parameter :: lwdbas = lrcbas + 3
-      integer(ip), parameter :: sumsiz = lwdbas + 3
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: rngbas = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: tailen = 932
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -9306,31 +9039,8 @@ contains
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
-      integer(ip), parameter :: rrcidx = 1
-      integer(ip), parameter :: rchidx = rrcidx + 1
-      integer(ip), parameter :: crcidx = rchidx + 1
-      integer(ip), parameter :: cchidx = crcidx + 1
-      integer(ip), parameter :: freidx = cchidx + 1
-      integer(ip), parameter :: llabas = freidx
-      integer(ip), parameter :: lrcbas = llabas + 3
-      integer(ip), parameter :: lwdbas = lrcbas + 3
-      integer(ip), parameter :: sumsiz = lwdbas + 3
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: rngbas = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: tailen = 932
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -9569,31 +9279,7 @@ contains
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip), parameter :: read = 1
-      integer(ip), parameter :: write = read  + 1
-      integer(ip), parameter :: rrcidx = 1
-      integer(ip), parameter :: rchidx = rrcidx + 1
-      integer(ip), parameter :: crcidx = rchidx + 1
-      integer(ip), parameter :: cchidx = crcidx + 1
-      integer(ip), parameter :: freidx = cchidx + 1
-      integer(ip), parameter :: llabas = freidx
-      integer(ip), parameter :: lrcbas = llabas + 3
-      integer(ip), parameter :: lwdbas = lrcbas + 3
-      integer(ip), parameter :: sumsiz = lwdbas + 3
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: rngbas = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: tailen = 932
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -9820,17 +9506,7 @@ contains
       module procedure dasrrd
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: nwd = 128
-      integer(ip), parameter :: nwi = 256
-      integer(ip), parameter :: nwc = 1024
-      integer(ip), parameter :: bufszd = 10
-      integer(ip), parameter :: bufszi = 10
-      integer(ip), parameter :: bufszc = 10
       logical :: return
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: forwrd = 1
-      integer(ip), parameter :: bufnvd = bufszd * nwd
-      integer(ip), parameter :: bufnvi = bufszi * nwi
       integer(ip) :: node
       integer(ip) :: wrunit
       call files_check ( ctx )
@@ -10163,17 +9839,7 @@ contains
       module procedure dasrri
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: nwd = 128
-      integer(ip), parameter :: nwi = 256
-      integer(ip), parameter :: nwc = 1024
-      integer(ip), parameter :: bufszd = 10
-      integer(ip), parameter :: bufszi = 10
-      integer(ip), parameter :: bufszc = 10
       logical :: return
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: forwrd = 1
-      integer(ip), parameter :: bufnvd = bufszd * nwd
-      integer(ip), parameter :: bufnvi = bufszi * nwi
       integer(ip) :: node
       integer(ip) :: wrunit
       call files_check ( ctx )
@@ -10497,17 +10163,7 @@ contains
       module procedure dasrrc
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: nwd = 128
-      integer(ip), parameter :: nwi = 256
-      integer(ip), parameter :: nwc = 1024
-      integer(ip), parameter :: bufszd = 10
-      integer(ip), parameter :: bufszi = 10
-      integer(ip), parameter :: bufszc = 10
       logical :: return
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: forwrd = 1
-      integer(ip), parameter :: bufnvd = bufszd * nwd
-      integer(ip), parameter :: bufnvi = bufszi * nwi
       integer(ip) :: node
       integer(ip) :: unit
       integer(ip) :: wrunit
@@ -10815,16 +10471,6 @@ contains
       module procedure daswrd
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: nwd = 128
-      integer(ip), parameter :: nwi = 256
-      integer(ip), parameter :: nwc = 1024
-      integer(ip), parameter :: bufszd = 10
-      integer(ip), parameter :: bufszi = 10
-      integer(ip), parameter :: bufszc = 10
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: forwrd = 1
-      integer(ip), parameter :: bufnvd = bufszd * nwd
-      integer(ip), parameter :: bufnvi = bufszi * nwi
       integer(ip) :: node
       integer(ip) :: wrunit
       call files_check ( ctx )
@@ -11107,16 +10753,6 @@ contains
       module procedure daswri
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: nwd = 128
-      integer(ip), parameter :: nwi = 256
-      integer(ip), parameter :: nwc = 1024
-      integer(ip), parameter :: bufszd = 10
-      integer(ip), parameter :: bufszi = 10
-      integer(ip), parameter :: bufszc = 10
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: forwrd = 1
-      integer(ip), parameter :: bufnvd = bufszd * nwd
-      integer(ip), parameter :: bufnvi = bufszi * nwi
       integer(ip) :: node
       integer(ip) :: unit
       integer(ip) :: wrunit
@@ -11402,16 +11038,6 @@ contains
       module procedure daswrc
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: nwd = 128
-      integer(ip), parameter :: nwi = 256
-      integer(ip), parameter :: nwc = 1024
-      integer(ip), parameter :: bufszd = 10
-      integer(ip), parameter :: bufszi = 10
-      integer(ip), parameter :: bufszc = 10
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: forwrd = 1
-      integer(ip), parameter :: bufnvd = bufszd * nwd
-      integer(ip), parameter :: bufnvi = bufszi * nwi
       integer(ip) :: node
       integer(ip) :: wrunit
       call files_check ( ctx )
@@ -11723,16 +11349,6 @@ contains
       module procedure dasurd
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: nwd = 128
-      integer(ip), parameter :: nwi = 256
-      integer(ip), parameter :: nwc = 1024
-      integer(ip), parameter :: bufszd = 10
-      integer(ip), parameter :: bufszi = 10
-      integer(ip), parameter :: bufszc = 10
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: forwrd = 1
-      integer(ip), parameter :: bufnvd = bufszd * nwd
-      integer(ip), parameter :: bufnvi = bufszi * nwi
       integer(ip) :: node
       integer(ip) :: wrunit
       call files_check ( ctx )
@@ -12081,16 +11697,6 @@ contains
       module procedure dasuri
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: nwd = 128
-      integer(ip), parameter :: nwi = 256
-      integer(ip), parameter :: nwc = 1024
-      integer(ip), parameter :: bufszd = 10
-      integer(ip), parameter :: bufszi = 10
-      integer(ip), parameter :: bufszc = 10
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: forwrd = 1
-      integer(ip), parameter :: bufnvd = bufszd * nwd
-      integer(ip), parameter :: bufnvi = bufszi * nwi
       integer(ip) :: node
       integer(ip) :: wrunit
       call files_check ( ctx )
@@ -12442,16 +12048,6 @@ contains
       module procedure dasurc
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: nwd = 128
-      integer(ip), parameter :: nwi = 256
-      integer(ip), parameter :: nwc = 1024
-      integer(ip), parameter :: bufszd = 10
-      integer(ip), parameter :: bufszi = 10
-      integer(ip), parameter :: bufszc = 10
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: forwrd = 1
-      integer(ip), parameter :: bufnvd = bufszd * nwd
-      integer(ip), parameter :: bufnvi = bufszi * nwi
       integer(ip) :: node
       integer(ip) :: unit
       integer(ip) :: wrunit
@@ -13037,16 +12633,6 @@ contains
       module procedure daswbr
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: nwd = 128
-      integer(ip), parameter :: nwi = 256
-      integer(ip), parameter :: nwc = 1024
-      integer(ip), parameter :: bufszd = 10
-      integer(ip), parameter :: bufszi = 10
-      integer(ip), parameter :: bufszc = 10
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: forwrd = 1
-      integer(ip), parameter :: bufnvd = bufszd * nwd
-      integer(ip), parameter :: bufnvi = bufszi * nwi
       integer(ip) :: node
       integer(ip) :: wrunit
       integer(ip) :: next
@@ -13390,7 +12976,6 @@ contains
       use pepper_strings, only: eqstr
       implicit none
 
-      integer(ip), parameter :: nwc = 1024
 
       integer(ip) :: iostat
 
@@ -13596,7 +13181,6 @@ contains
       use pepper_strings, only: eqstr
       implicit none
 
-      integer(ip), parameter :: nwd = 128
 
       integer(ip) :: iostat
 
@@ -13803,7 +13387,6 @@ contains
       use pepper_strings, only: eqstr
       implicit none
 
-      integer(ip), parameter :: nwi = 256
 
       integer(ip) :: iostat
 
@@ -14373,18 +13956,8 @@ contains
       integer(ip) :: nxtrec_1(1)  !! one-element copy of nxtrec (array argument)
       integer(ip), parameter :: char = 1
       integer(ip), parameter :: int = 3
-      integer(ip), parameter :: nwc = 1024
-      integer(ip), parameter :: nwd = 128
-      integer(ip), parameter :: nwi = 256
-      integer(ip), parameter :: fwdloc = 2
-      integer(ip), parameter :: chrrng = 3
-      integer(ip), parameter :: dprng = chrrng + 2
-      integer(ip), parameter :: intrng = dprng  + 2
       integer(ip), parameter :: high = 2
-      integer(ip), parameter :: begdsc = 9
-      integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: maxfil = 20
-      integer(ip), parameter :: maxvec = 3 * maxfil
       integer(ip) :: curtyp
       integer(ip) :: lstrec ( 3 )
       integer(ip) :: hiaddr
@@ -15152,25 +14725,19 @@ contains
 
       integer(ip), parameter :: char = 1
 
-      integer(ip), parameter :: dp = 2
 
       integer(ip), parameter :: int = 3
 
 !
 !     Words per data record, for each data type:
 !
-      integer(ip), parameter :: nwc = 1024
 
-      integer(ip), parameter :: nwd = 128
 
-      integer(ip), parameter :: nwi = 256
 
 !
 !     Directory pointer locations (backward and forward):
 !
-      integer(ip), parameter :: bwdloc = 1
 
-      integer(ip), parameter :: fwdloc = 2
 
 !
 !     Directory address range locations
@@ -15184,7 +14751,6 @@ contains
 !
 !     Location of first type descriptor
 !
-      integer(ip), parameter :: begdsc = 9
 
       integer(ip) :: descr
       integer(ip) :: dirrec ( nwi )
@@ -15921,30 +15487,23 @@ contains
 !
 !     Words per data record, for each data type:
 !
-      integer(ip), parameter :: nwc = 1024
 
-      integer(ip), parameter :: nwd = 128
 
-      integer(ip), parameter :: nwi = 256
 
 !
 !     Data type parameters
 !
       integer(ip), parameter :: char = 1
 
-      integer(ip), parameter :: dp = 2
 
 !
 !     Directory pointer locations (backward and forward):
 !
-      integer(ip), parameter :: bwdloc = 1
 
-      integer(ip), parameter :: fwdloc = 2
 
 !
 !     Location of first type descriptor
 !
-      integer(ip), parameter :: begdsc = 9
 
       character(nwc) :: recc
 
@@ -16390,18 +15949,14 @@ contains
 !
 !     Words per data record, for each data type:
 !
-      integer(ip), parameter :: nwc = 1024
 
-      integer(ip), parameter :: nwd = 128
 
-      integer(ip), parameter :: nwi = 256
 
 !
 !     Data type parameters
 !
       integer(ip), parameter :: char = 1
 
-      integer(ip), parameter :: dp = 2
 
 !
 !     Directory pointer location (forward):
@@ -16411,7 +15966,6 @@ contains
 !
 !     Location of first type descriptor
 !
-      integer(ip), parameter :: begdsc = 9
 
       character(nwc) :: recc
 
@@ -16852,39 +16406,30 @@ contains
       integer(ip) :: dest_1(1)  !! one-element copy of dest (array argument)
       integer(ip) :: type_1(1)  !! one-element copy of type (array argument)
 
-      integer(ip), parameter :: nwc = 1024
 
-      integer(ip), parameter :: nwd = 128
 
-      integer(ip), parameter :: nwi = 256
 
 !
 !     Data type parameters
 !
       integer(ip), parameter :: char = 1
 
-      integer(ip), parameter :: dp = 2
 
-      integer(ip), parameter :: int = 3
 
       integer(ip), parameter :: dir = 4
 
 !
 !     Directory pointer locations (backward and forward):
 !
-      integer(ip), parameter :: bwdloc = 1
 
-      integer(ip), parameter :: fwdloc = 2
 
 !
 !     Directory address range location base
 !
-      integer(ip), parameter :: rngbas = 2
 
 !
 !     Location of first type descriptor
 !
-      integer(ip), parameter :: begdsc = 9
 
       character(nwc) :: crec
       character(nwc) :: savec
@@ -17960,7 +17505,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
       integer(ip), parameter :: char = 1
-      integer(ip), parameter :: nwc = 1024
       integer(ip) :: chr
       integer(ip) :: clbase
       integer(ip) :: clsize
@@ -18469,8 +18013,6 @@ contains
       module procedure dasadd
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: dp = 2
-      integer(ip), parameter :: nwd = 128
       integer(ip) :: clbase
       integer(ip) :: clsize
       integer(ip) :: free
@@ -18895,7 +18437,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
       integer(ip), parameter :: int = 3
-      integer(ip), parameter :: nwi = 256
       integer(ip) :: clbase
       integer(ip) :: clsize
       integer(ip) :: free
@@ -19383,7 +18924,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip), parameter :: nwc = 1024
 
       integer(ip), parameter :: char = 1
 
@@ -19793,9 +19333,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: nwd = 128
 
-      integer(ip), parameter :: dp = 2
 
       integer(ip) :: clbase
       integer(ip) :: clsize
@@ -20103,7 +19641,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip), parameter :: nwi = 256
 
       integer(ip), parameter :: int = 3
 
@@ -20530,7 +20067,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip), parameter :: nwc = 1024
 
       integer(ip), parameter :: char = 1
 
@@ -21018,9 +20554,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: dp = 2
 
-      integer(ip), parameter :: nwd = 128
 
       integer(ip) :: clbase
       integer(ip) :: clsize
@@ -21400,7 +20934,6 @@ contains
 
       integer(ip), parameter :: int = 3
 
-      integer(ip), parameter :: nwi = 256
 
       integer(ip) :: clbase
       integer(ip) :: clsize
@@ -21866,7 +21399,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_das
       implicit none
-      integer(ip), parameter :: lbcell = -5
       character(10) :: method
       integer(ip) :: iostat
       integer(ip) :: unit
@@ -22383,11 +21915,8 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip), parameter :: fmtlen = 8
 
-      integer(ip), parameter :: idwlen = 8
 
-      integer(ip), parameter :: ifnlen = 60
 
 !
 !     The parameter TAILEN determines the tail length of a DAS file
@@ -22420,7 +21949,6 @@ contains
 !     1 byte characters, and a DAS record size of 1024 bytes, will
 !     require the adjustment of this parameter.
 !
-      integer(ip), parameter :: tailen = 932
 
       character(fmtlen) :: format
       character(idwlen) :: locidw
@@ -22674,26 +22202,20 @@ contains
 
 !     Length of a DAS character record, in characters.
 !
-      integer(ip), parameter :: mxcrec = 1024
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
 !
-      integer(ip), parameter :: maxpch = 126
 
-      integer(ip), parameter :: minpch = 32
 !
 !     Decimal value for the DAS comment area end-of-line (EOL) marker.
 !
-      integer(ip), parameter :: inteol = 0
 !
 !     Length of a DAS file ID word.
 !
-      integer(ip), parameter :: idwlen = 8
 !
 !     Length of a DAS file internal filename.
 !
-      integer(ip), parameter :: ifnlen = 60
       character(mxcrec) :: crecrd
       character(idwlen) :: idword
       character(ifnlen) :: ifname
@@ -23341,26 +22863,20 @@ contains
 
 !     Set the value for the maximum length of a text line.
 !
-      integer(ip), parameter :: linlen = 255
 !
 !     Set the length of a DAS file ID word.
 !
-      integer(ip), parameter :: idwlen = 8
 !
 !     Set the length of a DAS file internal filename.
 !
-      integer(ip), parameter :: ifnlen = 60
 !
 !     Set the size of the comment buffer.
 !
-      integer(ip), parameter :: bufsiz = 22
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
 !
-      integer(ip), parameter :: maxpch = 126
 
-      integer(ip), parameter :: minpch = 32
       character(linlen) :: combuf(bufsiz)
       character(idwlen) :: idword
       character(ifnlen) :: ifname
@@ -23815,11 +23331,9 @@ contains
 !
 !     Length of a DAS file ID word.
 !
-      integer(ip), parameter :: idwlen = 8
 !
 !     Length of a DAS file internal filename.
 !
-      integer(ip), parameter :: ifnlen = 60
       character(idwlen) :: idword
       character(ifnlen) :: ifname
 
@@ -24216,13 +23730,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_das
       implicit none
-      integer(ip), parameter :: mxcrec = 1024
-      integer(ip), parameter :: maxpch = 126
-      integer(ip), parameter :: minpch = 32
-      integer(ip), parameter :: inteol = 0
-      integer(ip), parameter :: fnmlen = 128
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
       character(1) :: ch
       character(idwlen) :: idword
       character(ifnlen) :: ifname
@@ -24696,11 +24203,9 @@ contains
 
 !     Set the value for the maximum length of a text line.
 !
-      integer(ip), parameter :: linlen = 255
 !
 !     Set the size of the comment buffer.
 !
-      integer(ip), parameter :: bufsiz = 22
       character(linlen) :: combuf(bufsiz)
 
       integer(ip) :: numcom
@@ -24914,29 +24419,17 @@ contains
 !      CHARACTER*(*)         TRRBLK
 !      PARAMETER           ( TRRBLK = 'TOTAL_RESERVED_BLOCKS'     )
 !
-      character(*), parameter :: begcom = 'BEGIN_COMMENT_BLOCK'
 
-      character(*), parameter :: endcom = 'END_COMMENT_BLOCK'
 
-      character(*), parameter :: tcmblk = 'TOTAL_COMMENT_BLOCKS'
 
-      character(*), parameter :: bcblk = 'BEGIN_CHARACTER_BLOCK'
 
-      character(*), parameter :: ecblk = 'END_CHARACTER_BLOCK'
 
-      character(*), parameter :: tcblks = 'TOTAL_CHARACTER_BLOCKS'
 
-      character(*), parameter :: bdblk = 'BEGIN_DP_BLOCK'
 
-      character(*), parameter :: edblk = 'END_DP_BLOCK'
 
-      character(*), parameter :: tdblks = 'TOTAL_DP_BLOCKS'
 
-      character(*), parameter :: biblk = 'BEGIN_INTEGER_BLOCK'
 
-      character(*), parameter :: eiblk = 'END_INTEGER_BLOCK'
 
-      character(*), parameter :: tiblks = 'TOTAL_INTEGER_BLOCKS'
 
       character(*), parameter :: ftypid = 'DASETF'
 
@@ -24948,19 +24441,15 @@ contains
 !
 !     Length of a character buffer array element.
 !
-      integer(ip), parameter :: cbflen = 4
 !
 !     Length of a DAS file ID word.
 !
-      integer(ip), parameter :: idwlen = 8
 !
 !     Length of a DAS internal filename.
 !
-      integer(ip), parameter :: ifnlen = 60
 !
 !     Length of a DAS comment record, in characters.
 !
-      integer(ip), parameter :: crlen = 1024
 !
 !     Size of the character, double precision, and integer data buffers.
 !
@@ -24970,9 +24459,7 @@ contains
 !     character data from/to a DAS file using the character data
 !     buffer.
 !
-      integer(ip), parameter :: bcbpos = 1
 
-      integer(ip), parameter :: ecbpos = cbflen
       character(cbflen) :: cbuffr(bufsiz)
       character(crlen) :: crecrd
       character(idwlen) :: idword
@@ -26069,47 +25556,28 @@ contains
 !      CHARACTER*(*)         TRRBLK
 !      PARAMETER           ( TRRBLK = 'TOTAL_RESERVED_BLOCKS'  )
 !
-      character(*), parameter :: begcom = 'BEGIN_COMMENT_BLOCK'
 
-      character(*), parameter :: endcom = 'END_COMMENT_BLOCK'
 
-      character(*), parameter :: bcblk = 'BEGIN_CHARACTER_BLOCK'
 
-      character(*), parameter :: ecblk = 'END_CHARACTER_BLOCK'
 
-      character(*), parameter :: bdblk = 'BEGIN_DP_BLOCK'
 
-      character(*), parameter :: edblk = 'END_DP_BLOCK'
 
-      character(*), parameter :: biblk = 'BEGIN_INTEGER_BLOCK'
 
-      character(*), parameter :: eiblk = 'END_INTEGER_BLOCK'
 
-      character(*), parameter :: tcmblk = 'TOTAL_COMMENT_BLOCKS'
 
-      character(*), parameter :: tcblks = 'TOTAL_CHARACTER_BLOCKS'
 
-      character(*), parameter :: tdblks = 'TOTAL_DP_BLOCKS'
 
-      character(*), parameter :: tiblks = 'TOTAL_INTEGER_BLOCKS'
 
-      integer(ip), parameter :: cbflen = 4
 
-      integer(ip), parameter :: crlen = 1024
 
-      integer(ip), parameter :: linlen = 255
 
       integer(ip), parameter :: errlen = 320
 
-      integer(ip), parameter :: idwlen = 8
 
-      integer(ip), parameter :: ifnlen = 60
 
       integer(ip), parameter :: bufsiz = 1024
 
-      integer(ip), parameter :: bcbpos = 1
 
-      integer(ip), parameter :: ecbpos = cbflen
       character(cbflen) :: cbuffr(bufsiz)
       character(crlen) :: crecrd
       character(errlen) :: errmsg
@@ -28229,7 +27697,6 @@ contains
 !
       integer(ip), parameter :: chr = 1
 
-      integer(ip), parameter :: dp = 2
 
       integer(ip), parameter :: int = 3
 

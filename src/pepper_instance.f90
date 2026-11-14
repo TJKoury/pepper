@@ -1998,8 +1998,6 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: number  !! Number to be encoded.
          character(*), intent(out) :: string  !! Encoded string.
-         integer(ip) :: minlen
-         parameter        ( minlen = 5 )
       end subroutine enchar
 
       !> Decode a character string encoded by [[enchar]].
@@ -2007,8 +2005,6 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(out) :: number  !! Decoded number.
          character(*), intent(in) :: string  !! Encoded character string.
-         integer(ip) :: minlen
-         parameter        ( minlen = 5 )
       end subroutine dechar
 
       !> Set the long error message so as to indicate the number of excess
@@ -2018,7 +2014,6 @@ module pepper_instance
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: number  !! Number of excess elements.
          character(*), intent(in) :: struct  !! Name of the data structure.
-         integer(ip), parameter :: longln = 320
       end subroutine excess
 
       !> Return the cardinality (number of elements) of a character cell.
@@ -9905,7 +9900,6 @@ module pepper_instance
       !> to the volatile nature of this routine.
       module subroutine zzckcv01 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
          integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
          integer(ip), intent(in) :: arrend  !! Ending DAF address
@@ -9920,7 +9914,6 @@ module pepper_instance
       !> to the volatile nature of this routine.
       module subroutine zzckcv02 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
          integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
          integer(ip), intent(in) :: arrend  !! Ending DAF address
@@ -9935,7 +9928,6 @@ module pepper_instance
       !> to the volatile nature of this routine.
       module subroutine zzckcv03 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
          integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
          integer(ip), intent(in) :: arrend  !! Ending DAF address
@@ -9953,7 +9945,6 @@ module pepper_instance
       module subroutine zzckcv04 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
       use pepper_inc_ckparam
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
          integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
          integer(ip), intent(in) :: arrend  !! Ending DAF address
@@ -9969,7 +9960,6 @@ module pepper_instance
       module subroutine zzckcv05 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, schedl )
       use pepper_inc_ck05
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
          integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
          integer(ip), intent(in) :: arrend  !! Ending DAF address
@@ -9986,7 +9976,6 @@ module pepper_instance
       module subroutine zzckcv06 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, schedl )
       use pepper_inc_ck06
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access.
          integer(ip), intent(in) :: arrbeg  !! Beginning DAF address.
          integer(ip), intent(in) :: arrend  !! Ending DAF address.
@@ -16631,7 +16620,6 @@ module pepper_instance
       use pepper_inc_gf
       use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: target  !! Name of the target body.
          character(*), intent(in) :: abcorr  !! Aberration correction flag.
          character(*), intent(in) :: obsrvr  !! Name of the observing body.
@@ -16657,7 +16645,6 @@ module pepper_instance
       use pepper_inc_zzabcorr
       use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: target  !! Name of the target body.
          character(*), intent(in) :: frame  !! Name of the reference frame for coordinate calculations.
          character(*), intent(in) :: abcorr  !! Aberration correction flag.
@@ -16686,7 +16673,6 @@ module pepper_instance
       use pepper_inc_zzabcorr
       use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: target  !! Name of the target body.
          character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
          character(*), intent(in) :: method  !! Name of method type for subpoint calculation.
@@ -16715,7 +16701,6 @@ module pepper_instance
       use pepper_inc_zzgf
       use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: target  !! Name of the target body.
          character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
          character(*), intent(in) :: method  !! Name of method type for surface intercept calculation.
@@ -16746,7 +16731,6 @@ module pepper_instance
       use pepper_inc_zzabcorr
       use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: targ1  !! Name of first body.
          character(*), intent(in) :: shape1  !! Name of shape model describing the first body.
          character(*), intent(in) :: frame1  !! The body-fixed reference frame of the first body.
@@ -16775,7 +16759,6 @@ module pepper_instance
       use pepper_inc_gf
       use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: occtyp  !! Type of occultation.
          character(*), intent(in) :: front  !! Name of body occulting the other.
          character(*), intent(in) :: fshape  !! Type of shape model used for front body.
@@ -16803,7 +16786,6 @@ module pepper_instance
       use pepper_inc_zzabcorr
       use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: method  !! Computation method.
          character(*), intent(in) :: angtyp  !! Type of illumination angle.
          character(*), intent(in) :: target  !! Name of the target body.
@@ -16832,7 +16814,6 @@ module pepper_instance
       use pepper_inc_gf
       use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: target  !! Name of the target body.
          character(*), intent(in) :: illmn  !! Name of the illuminating body.
          character(*), intent(in) :: abcorr  !! Aberration correction flag.
@@ -16858,7 +16839,6 @@ module pepper_instance
       use pepper_inc_zzgf
       use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: target  !! Name of the target body.
          character(*), intent(in) :: abcorr  !! Aberration correction flag.
          character(*), intent(in) :: obsrvr  !! Name of the observing body.
@@ -16882,7 +16862,6 @@ module pepper_instance
       use pepper_inc_gf
       use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: inst  !! Name of the instrument.
          character(*), intent(in) :: target  !! Name of the target body.
          character(*), intent(in) :: tshape  !! Type of shape model used for target body.
@@ -16906,7 +16885,6 @@ module pepper_instance
       use pepper_inc_gf
       use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: inst  !! Name of the instrument.
          real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
          character(*), intent(in) :: rframe  !! Reference frame of ray's direction vector.
@@ -16930,7 +16908,6 @@ module pepper_instance
       use pepper_inc_zzgf
       use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
          real(wp), intent(in) :: refval  !! Value used as reference for scalar quantity condition.
          real(wp), intent(in) :: adjust  !! Allowed variation for absolute extremal geometric conditions.
@@ -16954,7 +16931,6 @@ module pepper_instance
       use pepper_inc_zzgf
       use pepper_inc_zzholdd
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          real(wp), intent(in) :: step  !! Constant step size in seconds for finding geometric events.
          real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
          real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
@@ -16977,7 +16953,6 @@ module pepper_instance
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: gquant  !! Type of geometric quantity.
          integer(ip), intent(in) :: qnpars  !! Number of quantity definition parameters.
          character(*), intent(in) :: qpnams ( * )  !! Names of quantity definition parameters.
@@ -18038,7 +18013,6 @@ module pepper_instance
       use pepper_inc_ektokn
       use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: query  !! Input EK query.
          integer(ip), intent(in) :: ntoken  !! Number of tokens in query.
          integer(ip), intent(in) :: lxbegs ( * )  !! Start positions of lexemes comprising WHERE clause.
@@ -18236,7 +18210,6 @@ module pepper_instance
       use pepper_inc_ekquery
       use pepper_inc_ekqlimit
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: query  !! Query in string form.
          integer(ip), intent(in) :: ntoken  !! Number of tokens in query.
          integer(ip), intent(in) :: lxbegs ( * )  !! Lexeme begin and end positions in QUERY.
@@ -20841,7 +20814,6 @@ module pepper_instance
       use pepper_inc_ekquery
       use pepper_inc_ektype
          class(pepper_context), intent(inout) :: ctx  !! the context
-         integer(ip), parameter :: lbcell = -5
          character(*), intent(in) :: query  !! Query specifying events to be found.
          integer(ip), allocatable, intent(inout) :: eqryi ( : )  !! Integer component of encoded query. PEPPER: allocatable, lower bound LBCELL; grows as the query is encoded.
          character(*), intent(out) :: eqryc  !! Character component of encoded query.

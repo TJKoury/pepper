@@ -2431,7 +2431,6 @@ contains
       use pepper_inc_nninrt
       implicit none
 
-      integer(ip), parameter :: lbpool = -5
 
       integer(ip), parameter :: non = nninrt
 
@@ -3886,10 +3885,6 @@ contains
       integer(ip), parameter :: ncount = ninert + non
       integer(ip), parameter :: room = 8
       integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: kvnmln = 32
-      integer(ip), parameter :: kvbsz = 100
-      integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: maxbfr = 149
       integer(ip) :: n
       integer(ip) :: values ( room )

@@ -16,6 +16,12 @@ submodule (pepper_instance) pepper_dynamic
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: timlen = 50  !! length of a time string (frozen epochs)
+   integer(ip), parameter :: vnamln = 4  !! length of a vector name
+
 contains
 
       !>## Abstract
@@ -650,9 +656,6 @@ contains
       real(wp) :: lat_1(1)  !! one-element copy of lat (array argument)
       real(wp) :: lon_1(1)  !! one-element copy of lon (array argument)
       real(wp) :: t0_1(1)  !! one-element copy of t0 (array argument)
-      character(*), parameter :: rname = 'ZZDYNFRM'
-      integer(ip), parameter :: timlen = 50
-      integer(ip), parameter :: vnamln = 4
       character(corlen) :: abcorr
       character(kvlen) :: axname
       character(:), allocatable :: basnam
@@ -2420,9 +2423,6 @@ contains
       real(wp) :: lat_1(1)  !! one-element copy of lat (array argument)
       real(wp) :: lon_1(1)  !! one-element copy of lon (array argument)
       real(wp) :: t0_1(1)  !! one-element copy of t0 (array argument)
-      character(*), parameter :: rname = 'ZZDYNROT'
-      integer(ip), parameter :: timlen = 50
-      integer(ip), parameter :: vnamln = 4
       character(corlen) :: abcorr
       character(kvlen) :: axname
       character(:), allocatable :: basnam

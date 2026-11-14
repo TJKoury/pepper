@@ -1909,6 +1909,38 @@ submodule (pepper_instance) pepper_gf
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   real(wp), parameter :: atol = 1.0e-12_wp  !! tolerance of an angle (radians)
+   integer(ip), parameter :: lbcell = -5  !! lower bound of a SPICE cell (its control area: elements -5 to 0)
+   integer(ip), parameter :: b = lbcell  !! lower bound of the work windows (LBCELL)
+   logical, parameter :: bail = .false.  !! interrupt handling: off
+   integer(ip), parameter :: confin = 3  !! work window: the confinement window
+   integer(ip), parameter :: copy = 4  !! work window: a copy
+   integer(ip), parameter :: crdlen = 32  !! length of a coordinate name
+   integer(ip), parameter :: ctxlen = 500  !! length of an error context
+   integer(ip), parameter :: decres = 2  !! work window: where the quantity decreases
+   integer(ip), parameter :: incres = 1  !! work window: where the quantity increases
+   integer(ip), parameter :: left = 1  !! interval endpoint: left
+   integer(ip), parameter :: lnsize = 80  !! length of a line of text (messages, kernel lines)
+   integer(ip), parameter :: maxcln = 80  !! length of a relation name
+   integer(ip), parameter :: maxop = 6  !! length of a relational operator
+   integer(ip), parameter :: mxloop = 1000  !! maximum number of iterations of the root finding loop
+   logical, parameter :: nobail = .false.  !! interrupt handling: off
+   logical, parameter :: norpt = .false.  !! progress reporting: off
+   integer(ip), parameter :: nsys = 7  !! number of coordinate systems
+   integer(ip), parameter :: nwreq = 5  !! number of work windows needed
+   integer(ip), parameter :: poslen = 10  !! length of a position quantity name
+   integer(ip), parameter :: qnpars = 10  !! number of quantity definition parameters
+   integer(ip), parameter :: right = 2  !! interval endpoint: right
+   logical, parameter :: rpt = .false.  !! progress reporting: off
+   integer(ip), parameter :: spshpn = 2  !! number of shape names
+   real(wp), parameter :: tdelta = 1.0_wp  !! time step of numerical derivatives (s)
+   integer(ip), parameter :: tempw = 5  !! work window: temporary
+   integer(ip), parameter :: timlen = 40  !! length of a time string
+   integer(ip), parameter :: ubel = 9  !! upper bound of an ellipse array (center, semi-major and semi-minor axes)
+
 contains
 
       !>## Detailed Input
@@ -2685,9 +2717,6 @@ contains
       use pepper_inc_gf
       use pepper_inc_zzgf
       implicit none
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: nsys = 7
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -3821,7 +3850,6 @@ contains
       use pepper_strings, only: rtrim
       implicit none
 
-      integer(ip), parameter :: lnsize = 80
 
       character(lnsize) :: tmpstr
 
@@ -4222,11 +4250,8 @@ contains
       use pepper_inc_zzocced
       use pepper_inc_gf
       implicit none
-      integer(ip), parameter :: ubel = 9
-      integer(ip), parameter :: ubpl = 4
       real(wp), parameter :: atol = 1.0e-6_wp
       real(wp), parameter :: fvemax = 1.0e-5_wp
-      integer(ip), parameter :: bdnmln = 36
       real(wp) :: bsite  ( 3 )
       real(wp) :: coord  ( 2 )
       real(wp) :: ctrext
@@ -5093,11 +5118,6 @@ contains
       use pepper_inc_zzocced
       use pepper_inc_gf
       implicit none
-      integer(ip), parameter :: ubel = 9
-      integer(ip), parameter :: ubpl = 4
-      real(wp), parameter :: atol = 1.0e-6_wp
-      real(wp), parameter :: fvemax = 1.0e-5_wp
-      integer(ip), parameter :: bdnmln = 36
       real(wp) :: bsite  ( 3 )
       real(wp) :: coord  ( 2 )
       real(wp) :: ctrext
@@ -5750,11 +5770,6 @@ contains
       use pepper_strings, only: cmprss, esrchc, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: phsidx = 1
-      integer(ip), parameter :: incidx = 2
-      integer(ip), parameter :: emtidx = 3
-      integer(ip), parameter :: namlen = 50
       real(wp) :: angles ( 3 )
       real(wp) :: emista ( 2 )
       real(wp) :: ettarg
@@ -6091,11 +6106,9 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
-      integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: phsidx = 1
       integer(ip), parameter :: incidx = 2
       integer(ip), parameter :: emtidx = 3
-      integer(ip), parameter :: namlen = 50
       real(wp) :: angles ( 3 )
       real(wp) :: emista ( 2 )
       real(wp) :: ettarg
@@ -6241,11 +6254,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: phsidx = 1
-      integer(ip), parameter :: incidx = 2
-      integer(ip), parameter :: emtidx = 3
-      integer(ip), parameter :: namlen = 50
       real(wp) :: angles ( 3 )
       real(wp) :: emista ( 2 )
       real(wp) :: ettarg
@@ -6610,10 +6618,6 @@ contains
       use pepper_inc_zzdsk
       use pepper_inc_zzocced
       implicit none
-      real(wp), parameter :: alpha = 1.0e-2_wp
-      real(wp), parameter :: atol = 1.0e-12_wp
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: poslen = 10
       character(:), allocatable :: fixfrm
       character(cvtlen) :: pntdef
       character(poslen) :: posnam
@@ -7281,9 +7285,6 @@ contains
       use pepper_inc_zzocced
       implicit none
       real(wp), parameter :: alpha = 1.0e-2_wp
-      real(wp), parameter :: atol = 1.0e-12_wp
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: poslen = 10
       character(cvtlen) :: pntdef
       character(poslen) :: posnam
       character(shplen) :: shape
@@ -8505,7 +8506,6 @@ contains
       use pepper_constants, only: dpmax
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     SPICELIB functions.
@@ -8543,7 +8543,6 @@ contains
 !     function operates slower than would bisection, in which
 !     case the user should use the default GFREFN function.
 !
-      integer(ip), parameter :: mxloop = 1000
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -9302,7 +9301,6 @@ contains
       use pepper_constants, only: dpmax
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip), parameter :: msglen = 256
 
@@ -9338,7 +9336,6 @@ contains
 !     function operates slower than would bisection, in which
 !     case the user should use the default GFREFN function.
 !
-      integer(ip), parameter :: mxloop = 1000
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -9957,7 +9954,6 @@ contains
 !     ATOL is a tolerance value for computing arc sine.
 !
 
-      real(wp), parameter :: atol = 1.0e-12_wp
 
 !
 !     Standard SPICE error handling.
@@ -10230,7 +10226,6 @@ contains
       integer(ip) :: ctr1
       integer(ip) :: ctr2
       character(5), parameter :: ref = 'J2000'
-      integer(ip), parameter :: spshpn = 2
       character(32), parameter :: svshap ( spshpn ) = &
          [ character(32) :: 'POINT', 'SPHERE' ]
       integer(ip), parameter :: point = 1
@@ -10595,12 +10590,8 @@ contains
       integer(ip) :: clssid
       integer(ip) :: ctr1
       integer(ip) :: ctr2
-      character(5), parameter :: ref = 'J2000'
-      integer(ip), parameter :: spshpn = 2
       character(32), parameter :: svshap ( spshpn ) = &
          [ character(32) :: 'POINT', 'SPHERE' ]
-      integer(ip), parameter :: point = 1
-      integer(ip), parameter :: sphere = 2
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -10754,12 +10745,8 @@ contains
       integer(ip) :: clssid
       integer(ip) :: ctr1
       integer(ip) :: ctr2
-      character(5), parameter :: ref = 'J2000'
-      integer(ip), parameter :: spshpn = 2
       character(32), parameter :: svshap ( spshpn ) = &
          [ character(32) :: 'POINT', 'SPHERE' ]
-      integer(ip), parameter :: point = 1
-      integer(ip), parameter :: sphere = 2
       if ( .not. allocated ( ctx%zzgfspu_state ) ) then
          allocate ( ctx%zzgfspu_state )
          ctx%zzgfspu_state%svref = ' '
@@ -10870,12 +10857,8 @@ contains
       integer(ip) :: clssid
       integer(ip) :: ctr1
       integer(ip) :: ctr2
-      character(5), parameter :: ref = 'J2000'
-      integer(ip), parameter :: spshpn = 2
       character(32), parameter :: svshap ( spshpn ) = &
          [ character(32) :: 'POINT', 'SPHERE' ]
-      integer(ip), parameter :: point = 1
-      integer(ip), parameter :: sphere = 2
       if ( .not. allocated ( ctx%zzgfspu_state ) ) then
          allocate ( ctx%zzgfspu_state )
          ctx%zzgfspu_state%svref = ' '
@@ -11182,8 +11165,6 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
-      real(wp), parameter :: tdelta = 1.0_wp
-      integer(ip), parameter :: bdnmln = 36
       real(wp) :: acc    ( 3 )
       real(wp) :: corxfi ( 6, 6 )
       real(wp) :: corxfm ( 6, 6 )
@@ -11940,8 +11921,6 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
-      real(wp), parameter :: tdelta = 1.0_wp
-      integer(ip), parameter :: bdnmln = 36
       real(wp) :: acc    ( 3 )
       real(wp) :: corxfi ( 6, 6 )
       real(wp) :: corxfm ( 6, 6 )
@@ -12715,7 +12694,6 @@ contains
       use pepper_strings, only: cmprss
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip), parameter :: inclen = 2
 
@@ -15218,7 +15196,6 @@ contains
       use pepper_inc_gf
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     External routines
@@ -16457,7 +16434,6 @@ contains
       use pepper_inc_zzdsk
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     External routines
@@ -17360,7 +17336,6 @@ contains
 !
 !     External routines
 !
-      integer(ip), parameter :: bdnmln = 36
 
       character(:), allocatable :: back
       character(:), allocatable :: bname
@@ -18106,8 +18081,6 @@ contains
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
       implicit none
-      character(*), parameter :: rname = 'PHASEQ'
-      integer(ip), parameter :: maxl = 36
       integer(ip) :: targ
       integer(ip) :: illum
       integer(ip) :: obs
@@ -19100,7 +19073,6 @@ contains
       use pepper_strings, only: cmprss, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
-      character(*), parameter :: ref = 'J2000'
       real(wp) :: dsep
       real(wp) :: lt
       real(wp) :: dlt
@@ -19447,7 +19419,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       logical :: return
-      character(*), parameter :: ref = 'J2000'
       real(wp) :: dsep
       real(wp) :: lt
       real(wp) :: dlt
@@ -19529,7 +19500,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       logical :: return
-      character(*), parameter :: ref = 'J2000'
       real(wp) :: dsep
       real(wp) :: lt
       real(wp) :: dlt
@@ -19958,19 +19928,6 @@ contains
       use pepper_strings, only: ucase_inplace
       use pepper_inc_gf
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: nwreq = 5
-      integer(ip), parameter :: left = 1
-      integer(ip), parameter :: right = 2
-      integer(ip), parameter :: maxcln = 80
-      integer(ip), parameter :: confin = 3
-      integer(ip), parameter :: copy = 4
-      integer(ip), parameter :: decres = 2
-      integer(ip), parameter :: incres = 1
-      integer(ip), parameter :: tempw = 5
-      integer(ip), parameter :: nc = 7
-      integer(ip), parameter :: b = lbcell
-      integer(ip), parameter :: ctxlen = 500
       character(ctxlen) :: contxt
       character(maxcln) :: locrel
       real(wp) :: addl
@@ -21006,19 +20963,6 @@ contains
       use pepper_strings, only: ucase_inplace
       use pepper_inc_gf
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: nwreq = 5
-      integer(ip), parameter :: left = 1
-      integer(ip), parameter :: right = 2
-      integer(ip), parameter :: maxcln = 80
-      integer(ip), parameter :: confin = 3
-      integer(ip), parameter :: copy = 4
-      integer(ip), parameter :: decres = 2
-      integer(ip), parameter :: incres = 1
-      integer(ip), parameter :: tempw = 5
-      integer(ip), parameter :: nc = 7
-      integer(ip), parameter :: b = lbcell
-      integer(ip), parameter :: ctxlen = 500
       character(ctxlen) :: contxt
       character(maxcln) :: locrel
       real(wp) :: addl
@@ -23250,7 +23194,6 @@ contains
       use pepper_inc_gf
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     STEP is a step size initializer for the unused, dummy step size
@@ -24996,7 +24939,6 @@ contains
       use pepper_inc_zzholdd
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     Local variables.
@@ -25017,12 +24959,10 @@ contains
 
 !     Geometric quantity  bail switch:
 !
-      logical, parameter :: bail = .false.
 
 !
 !     Progress report switch:
 !
-      logical, parameter :: rpt = .false.
 
 !
 !     Standard SPICE error handling.
@@ -25858,7 +25798,6 @@ contains
       use pepper_inc_zzholdd
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     External routines
@@ -25874,12 +25813,10 @@ contains
 !
 !     Geometric quantity  bail switch:
 !
-      logical, parameter :: bail = .false.
 
 !
 !     Progress report switch:
 !
-      logical, parameter :: rpt = .false.
 
       real(wp) :: tol
       logical :: ok
@@ -26047,7 +25984,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
-      integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: fprint = 32
       integer(ip), parameter :: lprint = 126
       character(mxbegm) :: begin
@@ -26275,9 +26211,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: fprint = 32
-      integer(ip), parameter :: lprint = 126
       character(mxbegm) :: begin
       character(mxendm) :: end
       real(wp) :: ave
@@ -26427,9 +26360,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: fprint = 32
-      integer(ip), parameter :: lprint = 126
       character(mxbegm) :: begin
       character(mxendm) :: end
       real(wp) :: ave
@@ -27265,9 +27195,6 @@ contains
       use pepper_inc_gf
       use pepper_inc_zzholdd
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      logical, parameter :: bail = .false.
-      logical, parameter :: rpt = .false.
       real(wp) :: tol
       logical :: ok
       if ( .not. allocated ( ctx%gftfov_state ) ) allocate ( ctx%gftfov_state )
@@ -28209,7 +28136,6 @@ contains
       use pepper_inc_zzholdd
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     SPICELIB functions.
@@ -28222,9 +28148,7 @@ contains
       real(wp) :: tol
       logical :: ok
 
-      logical, parameter :: nobail = .false.
 
-      logical, parameter :: norpt = .false.
 !     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
 !     declared again: gfortran ignores the interface of a dummy procedure
 !     in a MODULE PROCEDURE body.
@@ -29216,7 +29140,6 @@ contains
       use pepper_inc_zzholdd
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     SPICELIB functions.
@@ -29229,9 +29152,7 @@ contains
       real(wp) :: tol
       logical :: ok
 
-      logical, parameter :: nobail = .false.
 
-      logical, parameter :: norpt = .false.
 
 !
 !     Dummy variables.
@@ -29662,13 +29583,6 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
-      integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: syslen = 32
-      integer(ip), parameter :: vdflen = 32
-      integer(ip), parameter :: nsys = 7
-      integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -30180,13 +30094,6 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
-      integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: syslen = 32
-      integer(ip), parameter :: vdflen = 32
-      integer(ip), parameter :: nsys = 7
-      integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -30342,13 +30249,6 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
-      integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: syslen = 32
-      integer(ip), parameter :: vdflen = 32
-      integer(ip), parameter :: nsys = 7
-      integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -30514,13 +30414,6 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
-      integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: syslen = 32
-      integer(ip), parameter :: vdflen = 32
-      integer(ip), parameter :: nsys = 7
-      integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -30636,13 +30529,6 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
-      integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: syslen = 32
-      integer(ip), parameter :: vdflen = 32
-      integer(ip), parameter :: nsys = 7
-      integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -30764,13 +30650,6 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
-      integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: syslen = 32
-      integer(ip), parameter :: vdflen = 32
-      integer(ip), parameter :: nsys = 7
-      integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -30929,13 +30808,6 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
-      integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: syslen = 32
-      integer(ip), parameter :: vdflen = 32
-      integer(ip), parameter :: nsys = 7
-      integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -31177,13 +31049,6 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
-      integer(ip), parameter :: abclen = 20
-      integer(ip), parameter :: bdnmln = 36
-      integer(ip), parameter :: syslen = 32
-      integer(ip), parameter :: vdflen = 32
-      integer(ip), parameter :: nsys = 7
-      integer(ip), parameter :: crdlen = 32
-      integer(ip), parameter :: timlen = 40
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -32114,17 +31979,13 @@ contains
       use pepper_inc_gf
       use pepper_inc_zzgf
       implicit none
-      integer(ip), parameter :: lbcell = -5
       real(wp), parameter :: bcamrg = 1.0e-11_wp
       real(wp), parameter :: lcxmrg = 1.0e-12_wp
       integer(ip), parameter :: lb = lbcell
       integer(ip), parameter :: lbpool = lbcell
-      integer(ip), parameter :: nc = 7
-      integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: namlen = 32
       integer(ip), parameter :: oplen = 6
       integer(ip), parameter :: funlen = 50
-      integer(ip), parameter :: crdlen = 32
       integer(ip), parameter :: syslen = 32
       integer(ip), parameter :: rptlen = 80
       character(crdlen) :: nrmcrd
@@ -34571,13 +34432,9 @@ contains
       use pepper_inc_gf
       use pepper_inc_zzgf
       implicit none
-      integer(ip), parameter :: lbcell = -5
       real(wp), parameter :: cntrct = 1.0_wp
-      integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: mxpass = 3
       integer(ip), parameter :: xpass = 3
-      integer(ip), parameter :: nc = 7
-      integer(ip), parameter :: maxop = 6
       character(lnsize) :: loccrd
       character(lnsize) :: locvdf
       character(mxbegm) :: prebuf ( mxpass )
@@ -36348,7 +36205,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       integer(ip), parameter :: maxpar = 10
-      integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: sep = 1
       integer(ip), parameter :: dist = 2
       integer(ip), parameter :: coord = 3
@@ -36358,9 +36214,6 @@ contains
       integer(ip), parameter :: angspd = 7
       integer(ip), parameter :: apdiam = 8
       integer(ip), parameter :: nq = 8
-      integer(ip), parameter :: nc = 7
-      integer(ip), parameter :: maxop = 6
-      integer(ip), parameter :: maxcln = 80
       character(maxcln) :: abcorr
       character(maxcln) :: angtyp
       character(maxcln) :: cornam
@@ -38132,7 +37985,6 @@ contains
       use pepper_inc_zzholdd
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     External functions
@@ -38147,13 +37999,10 @@ contains
 !     and report work.
 !
 
-      integer(ip), parameter :: lnsize = 80
 
       integer(ip), parameter :: qnpars = 3
 
-      logical, parameter :: nobail = .false.
 
-      logical, parameter :: norpt = .false.
 
       real(wp) :: tol
       logical :: ok
@@ -39387,7 +39236,6 @@ contains
       use pepper_inc_zzholdd
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     External functions
@@ -39402,13 +39250,10 @@ contains
 !     and report work.
 !
 
-      integer(ip), parameter :: lnsize = 80
 
       integer(ip), parameter :: qnpars = 8
 
-      logical, parameter :: nobail = .false.
 
-      logical, parameter :: norpt = .false.
 
 !
 !     Quantity definition parameter arrays:
@@ -40434,20 +40279,16 @@ contains
       use pepper_inc_zzholdd
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     Routines to set step size, refine transition times
 !     and report work.
 !
 
-      integer(ip), parameter :: lnsize = 80
 
       integer(ip), parameter :: qnpars = 4
 
-      logical, parameter :: nobail = .false.
 
-      logical, parameter :: norpt = .false.
 
       real(wp) :: tol
       logical :: ok
@@ -42298,20 +42139,15 @@ contains
       use pepper_inc_zzholdd
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     Routines to set step size, refine transition times
 !     and report work.
 !
 
-      integer(ip), parameter :: lnsize = 80
 
-      integer(ip), parameter :: qnpars = 10
 
-      logical, parameter :: nobail = .false.
 
-      logical, parameter :: norpt = .false.
 
       real(wp) :: tol
       logical :: ok
@@ -43336,20 +43172,16 @@ contains
       use pepper_inc_zzholdd
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     Routines to set step size, refine transition times
 !     and report work.
 !
 
-      integer(ip), parameter :: lnsize = 80
 
       integer(ip), parameter :: qnpars = 3
 
-      logical, parameter :: nobail = .false.
 
-      logical, parameter :: norpt = .false.
 
       real(wp) :: tol
       logical :: ok
@@ -44445,14 +44277,12 @@ contains
       use pepper_inc_zzholdd
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     Routines to set step size, refine transition times
 !     and report work.
 !
 
-      integer(ip), parameter :: lnsize = 80
 
       integer(ip), parameter :: qnpars = 8
 
@@ -45921,20 +45751,15 @@ contains
       use pepper_inc_zzholdd
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     Routines to set step size, refine transition times
 !     and report work.
 !
 
-      integer(ip), parameter :: lnsize = 80
 
-      integer(ip), parameter :: qnpars = 10
 
-      logical, parameter :: nobail = .false.
 
-      logical, parameter :: norpt = .false.
 
       real(wp) :: tol
       logical :: ok
@@ -47157,20 +46982,15 @@ contains
       use pepper_inc_zzholdd
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     Routines to set step size, refine transition times
 !     and report work.
 !
 
-      integer(ip), parameter :: lnsize = 80
 
-      integer(ip), parameter :: qnpars = 10
 
-      logical, parameter :: nobail = .false.
 
-      logical, parameter :: norpt = .false.
 
       real(wp) :: tol
       logical :: ok

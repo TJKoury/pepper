@@ -9,6 +9,15 @@ submodule (pepper_instance) pepper_orientation
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: ndc = 2  !! number of double precision components of a segment descriptor
+   integer(ip), parameter :: nic = 6  !! number of integer components of a segment descriptor
+   integer(ip), parameter :: nc = ndc + ( nic + 1 )/2  !! number of characters (double precision words) a packed descriptor takes
+   integer(ip), parameter :: idlen = nc * 8  !! length of a segment identifier (NC double precision words of 8 characters)
+   integer(ip), parameter :: timlen = 35  !! length of a time string
+
 contains
 
       !>## Detailed Input
@@ -946,8 +955,6 @@ contains
       integer(ip), parameter :: mxphas = 4
       integer(ip), parameter :: mxpoly = 3
       integer(ip), parameter :: namlen = 32
-      integer(ip), parameter :: timlen = 35
-      integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: maxbod = 157
       character(:), allocatable :: fixfrm
       character(timlen) :: timstr
@@ -2010,11 +2017,6 @@ contains
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: nitems = 14
       integer(ip), parameter :: nvars = 14
-      integer(ip), parameter :: ndps = 9
-      integer(ip), parameter :: dbufsz = ndps * bufsiz
-      integer(ip), parameter :: nints = 1
-      integer(ip), parameter :: ibufsz = nints * bufsiz
-      integer(ip), parameter :: lbpool = -5
       logical :: full
       integer(ip) :: tail
       character(wdsize) :: units
@@ -3477,7 +3479,6 @@ contains
 
       implicit none
 
-      integer(ip), parameter :: timlen = 35
 
       integer(ip), parameter :: phrsln = 600
 
@@ -4082,7 +4083,6 @@ contains
 
       character(*), parameter :: tmclid = 'FRAME_#_CLASS_ID'
 
-      character(*), parameter :: tmid = 'FRAME_#'
 
       character(*), parameter :: tmfnam = 'FRAME_#_NAME'
 
@@ -6177,13 +6177,9 @@ contains
 !                   a name and a summary have the same length in bytes.)
 !
 
-      integer(ip), parameter :: ndc = 2
 
-      integer(ip), parameter :: nic = 6
 
-      integer(ip), parameter :: nc = ndc + ( nic + 1 )/2
 
-      integer(ip), parameter :: idlen = nc * 8
 
       integer(ip) :: handle
       integer(ip) :: icd      ( nic  )
@@ -6571,13 +6567,9 @@ contains
 !                   a name and a summary have the same length in bytes.)
 !
 
-      integer(ip), parameter :: ndc = 2
 
-      integer(ip), parameter :: nic = 6
 
-      integer(ip), parameter :: nc = ndc + ( nic + 1 )/2
 
-      integer(ip), parameter :: idlen = nc * 8
 
       integer(ip) :: handle
       integer(ip) :: icd      ( nic  )
@@ -7259,11 +7251,8 @@ contains
       use pepper_inc_zzctr
       implicit none
       integer(ip), parameter :: j2code = 1
-      integer(ip), parameter :: fplsiz = maxfrm - lbsngl + 1
       integer(ip), parameter :: d3 = 3
       integer(ip), parameter :: d6 = 6
-      integer(ip), parameter :: size33 = 9
-      integer(ip), parameter :: size66 = 36
       real(wp) :: rmat   ( 3, 3 )
       real(wp) :: tsipm  ( 6, 6 )
       integer(ip) :: basidx

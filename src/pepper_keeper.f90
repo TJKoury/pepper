@@ -532,6 +532,14 @@ submodule (pepper_instance) pepper_keeper
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: lnsize = 80  !! length of a line of text (messages, kernel lines)
+   integer(ip), parameter :: msgsiz = 500  !! length of an error message
+   integer(ip), parameter :: nknown = 3  !! number of known kernel types
+   integer(ip), parameter :: typlen = 8  !! length of a kernel type (SPK, TEXT, META ...)
+
 contains
 
       !>## Detailed Input
@@ -4000,11 +4008,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: pos, rtrim, samsub, repmc_inplace
       implicit none
-      integer(ip), parameter :: typlen = 8
-      integer(ip), parameter :: wdsize = 32
-      integer(ip), parameter :: nknown = 3
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: msgsiz = 500
       character(1) :: norc
       character(:), allocatable :: fil2ld
       character(:), allocatable :: pvalue
@@ -4607,11 +4610,6 @@ contains
       use pepper_strings, only: eqstr, fndnwd
       implicit none
       logical :: return
-      integer(ip), parameter :: typlen = 8
-      integer(ip), parameter :: wdsize = 32
-      integer(ip), parameter :: nknown = 3
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: msgsiz = 500
       character(1) :: norc
       character(lnsize) :: symbol
       character(msgsiz) :: nofile
@@ -5016,11 +5014,6 @@ contains
       use pepper_strings, only: eqstr, fndnwd
       implicit none
       logical :: return
-      integer(ip), parameter :: typlen = 8
-      integer(ip), parameter :: wdsize = 32
-      integer(ip), parameter :: nknown = 3
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: msgsiz = 500
       character(1) :: norc
       character(lnsize) :: symbol
       character(msgsiz) :: nofile
@@ -5417,11 +5410,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
       logical :: return
-      integer(ip), parameter :: typlen = 8
-      integer(ip), parameter :: wdsize = 32
-      integer(ip), parameter :: nknown = 3
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: msgsiz = 500
       character(1) :: norc
       character(lnsize) :: symbol
       character(msgsiz) :: nofile
@@ -5730,11 +5718,6 @@ contains
       module procedure kclear
       use pepper_kinds, only: ip
       implicit none
-      integer(ip), parameter :: typlen = 8
-      integer(ip), parameter :: wdsize = 32
-      integer(ip), parameter :: nknown = 3
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: msgsiz = 500
       character(1) :: norc
       character(lnsize) :: symbol
       character(msgsiz) :: nofile
@@ -6300,11 +6283,6 @@ contains
       module procedure unload
       use pepper_kinds, only: ip
       implicit none
-      integer(ip), parameter :: typlen = 8
-      integer(ip), parameter :: wdsize = 32
-      integer(ip), parameter :: nknown = 3
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: msgsiz = 500
       character(1) :: norc
       character(lnsize) :: symbol
       character(msgsiz) :: nofile

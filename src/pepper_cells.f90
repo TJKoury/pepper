@@ -10,6 +10,12 @@ submodule (pepper_instance) pepper_cells
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: lbcell = -5  !! lower bound of a SPICE cell (its control area: elements -5 to 0)
+   integer(ip), parameter :: minlen = 5  !! minimum length of the strings of a character cell
+
 contains
 
       !>## Detailed Input
@@ -483,8 +489,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: minlen
-      parameter        ( minlen = 5 )
 
       integer(ip) :: base
       integer(ip) :: num
@@ -622,8 +626,6 @@ contains
       module procedure dechar
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) :: minlen
-      parameter        ( minlen = 5 )
       integer(ip) :: base
       integer(ip) :: num
       integer(ip) :: remain
@@ -938,8 +940,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: card
       integer(ip) :: size
@@ -1103,8 +1103,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       if ( ctx%failed() ) then
          cardd = 0
@@ -1263,8 +1261,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       if ( ctx%failed() ) then
          cardi = 0
@@ -1409,8 +1405,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: size
       integer(ip) :: card
@@ -1560,8 +1554,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       if ( ctx%failed() ) then
          sized = 0
@@ -1706,8 +1698,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       if ( ctx%failed() ) then
          sizei = 0
@@ -1875,8 +1865,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: size
 
@@ -2027,8 +2015,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       if ( ctx%failed() ) return
 
@@ -2174,8 +2160,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       if ( ctx%failed() ) return
 
@@ -2321,8 +2305,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: i
 
@@ -2474,8 +2456,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: i
 
@@ -2627,8 +2607,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: i
 
@@ -2784,8 +2762,6 @@ contains
       use pepper_arrays, only: rmdupc
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: card
 
@@ -2946,8 +2922,6 @@ contains
       use pepper_arrays, only: rmdupd
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: card
 
@@ -3111,8 +3085,6 @@ contains
       use pepper_arrays, only: rmdupi
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: card
 
@@ -3247,8 +3219,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: nwcard
 
@@ -3461,8 +3431,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: nwcard
 
@@ -3673,8 +3641,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: nwcard
 
@@ -3805,8 +3771,6 @@ contains
       use pepper_strings, only: lastpc
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
 !     Local variables
 !
@@ -3984,8 +3948,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: size
       integer(ip) :: card
@@ -4117,8 +4079,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: size
       integer(ip) :: card
@@ -4361,8 +4321,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: card
       integer(ip) :: i
@@ -4624,8 +4582,6 @@ contains
       use pepper_arrays, only: lstled
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: card
       integer(ip) :: i
@@ -4874,8 +4830,6 @@ contains
       use pepper_arrays, only: lstlei
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: size
       integer(ip) :: card
@@ -5117,8 +5071,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
 !     Local variables
 !
@@ -5342,8 +5294,6 @@ contains
       use pepper_arrays, only: bsrchd
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
 !     Local variables
 !
@@ -5563,8 +5513,6 @@ contains
       use pepper_arrays, only: bsrchi
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: card
       integer(ip) :: loc
@@ -5783,8 +5731,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
 !
 !     Standard error handling:
@@ -5967,8 +5913,6 @@ contains
       use pepper_arrays, only: bsrchd
       implicit none
 
-      integer(ip) :: lbcell
-      parameter               ( lbcell = -5 )
 
 !
 !     Standard error handling:
@@ -6149,8 +6093,6 @@ contains
       use pepper_arrays, only: bsrchi
       implicit none
 
-      integer(ip) :: lbcell
-      parameter      ( lbcell = -5 )
 
 !
 !     Standard error handling:
@@ -6307,8 +6249,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = - 5 )
 
 !
 !     Standard error handling:
@@ -6464,8 +6404,6 @@ contains
       use pepper_arrays, only: bsrchd
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = - 5 )
 
 !
 !     Standard error handling:
@@ -6621,8 +6559,6 @@ contains
       use pepper_arrays, only: bsrchi
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = - 5 )
 
 !     Standard error handling:
 !
@@ -6794,8 +6730,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter                ( lbcell = -5 )
 
       integer(ip) :: carda
       integer(ip) :: cardb
@@ -7351,8 +7285,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter                ( lbcell = -5 )
 
       integer(ip) :: carda
       integer(ip) :: cardb
@@ -7908,8 +7840,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter                ( lbcell = -5 )
 
       integer(ip) :: carda
       integer(ip) :: cardb
@@ -8426,8 +8356,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: apoint
       integer(ip) :: bpoint
@@ -8687,8 +8615,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: apoint
       integer(ip) :: bpoint
@@ -8931,8 +8857,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: apoint
       integer(ip) :: bpoint
@@ -9183,8 +9107,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: apoint
       integer(ip) :: bpoint
@@ -9415,8 +9337,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: apoint
       integer(ip) :: bpoint
@@ -9630,8 +9550,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: apoint
       integer(ip) :: bpoint
@@ -9860,8 +9778,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: apoint
       integer(ip) :: bpoint
@@ -10112,8 +10028,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: apoint
       integer(ip) :: bpoint
@@ -10345,8 +10259,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: apoint
       integer(ip) :: bpoint
@@ -10583,8 +10495,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
 !     Local variables
 !
@@ -10844,8 +10754,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: apoint
       integer(ip) :: bpoint
@@ -11086,8 +10994,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: apoint
       integer(ip) :: bpoint
@@ -11321,8 +11227,6 @@ contains
       use pepper_inc_errhnd
       implicit none
 
-      integer(ip) :: lbcell
-      parameter             ( lbcell = -5 )
 
       integer(ip) :: size
       integer(ip) :: card
@@ -11646,8 +11550,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
 !
 !     Standard SPICE error handling.
@@ -11812,8 +11714,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: card
       integer(ip) :: i
@@ -12029,8 +11929,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
 !
 !     Standard SPICE error handling.
@@ -12155,8 +12053,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: acard
       integer(ip) :: bcard
@@ -12522,8 +12418,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: card
       integer(ip) :: i
@@ -12670,8 +12564,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: card
       integer(ip) :: gone
@@ -12860,8 +12752,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: card
       integer(ip) :: i
@@ -13069,8 +12959,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: card
       integer(ip) :: end
@@ -13326,8 +13214,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: card
       integer(ip) :: i
@@ -13590,8 +13476,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: card
       integer(ip) :: i
@@ -13739,8 +13623,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: card
       integer(ip) :: i
@@ -14007,8 +13889,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: size
       integer(ip) :: card
@@ -14275,8 +14155,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: acard
       integer(ip) :: bcard
@@ -14607,8 +14485,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: acard
       integer(ip) :: bcard
@@ -14988,8 +14864,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       real(wp) :: m
       real(wp) :: sum
@@ -15185,8 +15059,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       integer(ip) :: acard
       integer(ip) :: bcard
@@ -15538,8 +15410,6 @@ contains
       use pepper_math, only: odd
       implicit none
 
-      integer(ip) :: lbcell
-      parameter           ( lbcell = -5 )
 
       real(wp) :: left
       real(wp) :: right

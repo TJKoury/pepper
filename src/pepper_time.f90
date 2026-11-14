@@ -159,6 +159,52 @@ submodule (pepper_instance) pepper_time
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: apr = 30  !! days in April (common year)
+   integer(ip), parameter :: mar = 31  !! days in March (common year)
+   integer(ip), parameter :: jan0 = 0  !! days in the year before January (common year)
+   integer(ip), parameter :: jan = 31  !! days in January (common year)
+   integer(ip), parameter :: feb0 = jan + jan0  !! days in the year before February (common year)
+   integer(ip), parameter :: feb = 28  !! days in February (common year)
+   integer(ip), parameter :: mar0 = feb + feb0  !! days in the year before March (common year)
+   integer(ip), parameter :: apr0 = mar + mar0  !! days in the year before April (common year)
+   integer(ip), parameter :: aprl0 = apr0 + 1  !! days in the year before April (leap year)
+   integer(ip), parameter :: aug = 31  !! days in August (common year)
+   integer(ip), parameter :: may = 31  !! days in May (common year)
+   integer(ip), parameter :: may0 = apr + apr0  !! days in the year before May (common year)
+   integer(ip), parameter :: jun0 = may + may0  !! days in the year before June (common year)
+   integer(ip), parameter :: jun = 30  !! days in June (common year)
+   integer(ip), parameter :: jul0 = jun + jun0  !! days in the year before July (common year)
+   integer(ip), parameter :: jul = 31  !! days in July (common year)
+   integer(ip), parameter :: aug0 = jul + jul0  !! days in the year before August (common year)
+   integer(ip), parameter :: augl0 = aug0 + 1  !! days in the year before August (leap year)
+   integer(ip), parameter :: sep0 = aug + aug0  !! days in the year before September (common year)
+   integer(ip), parameter :: sep = 30  !! days in September (common year)
+   integer(ip), parameter :: oct0 = sep + sep0  !! days in the year before October (common year)
+   integer(ip), parameter :: oct = 31  !! days in October (common year)
+   integer(ip), parameter :: nov0 = oct + oct0  !! days in the year before November (common year)
+   integer(ip), parameter :: nov = 30  !! days in November (common year)
+   integer(ip), parameter :: dec0 = nov + nov0  !! days in the year before December (common year)
+   integer(ip), parameter :: decl0 = dec0 + 1  !! days in the year before December (leap year)
+   integer(ip), parameter :: dp100y = 365*100 + 24  !! days in 100 years
+   integer(ip), parameter :: dp1y = 365  !! days in a year
+   integer(ip), parameter :: dp400y = 365*400 + 97  !! days in 400 years
+   integer(ip), parameter :: dp4y = 365*4   + 1  !! days in 4 years
+   integer(ip), parameter :: febl0 = feb0  !! days in the year before February (leap year)
+   integer(ip), parameter :: janl0 = jan0  !! days in the year before January (leap year)
+   integer(ip), parameter :: jull0 = jul0 + 1  !! days in the year before July (leap year)
+   integer(ip), parameter :: junl0 = jun0 + 1  !! days in the year before June (leap year)
+   integer(ip), parameter :: lnsize = 80  !! length of a line of text (messages, kernel lines)
+   integer(ip), parameter :: marl0 = mar0 + 1  !! days in the year before March (leap year)
+   integer(ip), parameter :: maxsig = 14  !! maximum number of significant digits
+   integer(ip), parameter :: mayl0 = may0 + 1  !! days in the year before May (leap year)
+   logical, parameter :: no = .false.  !! false
+   integer(ip), parameter :: novl0 = nov0 + 1  !! days in the year before November (leap year)
+   integer(ip), parameter :: octl0 = oct0 + 1  !! days in the year before October (leap year)
+   integer(ip), parameter :: sepl0 = sep0 + 1  !! days in the year before September (leap year)
+
 contains
 
       !>## Detailed Input
@@ -1475,7 +1521,6 @@ contains
       use pepper_strings, only: lx4uns, nparsd, samch
       implicit none
 
-      integer(ip), parameter :: lnsize = 80
 
       character(lnsize) :: error
 
@@ -1628,13 +1673,9 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: dpstr
       implicit none
-      integer(ip), parameter :: maxsig = 14
       integer(ip), parameter :: esgn = maxsig + 4
       integer(ip), parameter :: efst = esgn + 1
       integer(ip), parameter :: escd = efst + 1
-      integer(ip), parameter :: wdsize = maxsig + 16
-      logical, parameter :: yes = .true.
-      logical, parameter :: no = .false.
       integer(ip) :: i
       integer(ip) :: blank
       logical :: minus
@@ -1829,13 +1870,6 @@ contains
       module procedure zzvsbstr
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: maxsig = 14
-      integer(ip), parameter :: esgn = maxsig + 4
-      integer(ip), parameter :: efst = esgn + 1
-      integer(ip), parameter :: escd = efst + 1
-      integer(ip), parameter :: wdsize = maxsig + 16
-      logical, parameter :: yes = .true.
-      logical, parameter :: no = .false.
       integer(ip) :: slot
       integer(ip) :: j
       logical :: incr
@@ -3486,46 +3520,6 @@ contains
       integer(ip) :: jdp001
       integer(ip) :: jldays
       integer(ip) :: jydays
-      integer(ip), parameter :: dp400y = 365*400 + 97
-      integer(ip), parameter :: dp100y = 365*100 + 24
-      integer(ip), parameter :: dp4y = 365*4   + 1
-      integer(ip), parameter :: dp1y = 365
-      integer(ip), parameter :: jan = 31
-      integer(ip), parameter :: feb = 28
-      integer(ip), parameter :: mar = 31
-      integer(ip), parameter :: apr = 30
-      integer(ip), parameter :: may = 31
-      integer(ip), parameter :: jun = 30
-      integer(ip), parameter :: jul = 31
-      integer(ip), parameter :: aug = 31
-      integer(ip), parameter :: sep = 30
-      integer(ip), parameter :: oct = 31
-      integer(ip), parameter :: nov = 30
-      integer(ip), parameter :: dec = 31
-      integer(ip), parameter :: jan0 = 0
-      integer(ip), parameter :: feb0 = jan + jan0
-      integer(ip), parameter :: mar0 = feb + feb0
-      integer(ip), parameter :: apr0 = mar + mar0
-      integer(ip), parameter :: may0 = apr + apr0
-      integer(ip), parameter :: jun0 = may + may0
-      integer(ip), parameter :: jul0 = jun + jun0
-      integer(ip), parameter :: aug0 = jul + jul0
-      integer(ip), parameter :: sep0 = aug + aug0
-      integer(ip), parameter :: oct0 = sep + sep0
-      integer(ip), parameter :: nov0 = oct + oct0
-      integer(ip), parameter :: dec0 = nov + nov0
-      integer(ip), parameter :: janl0 = jan0
-      integer(ip), parameter :: febl0 = feb0
-      integer(ip), parameter :: marl0 = mar0 + 1
-      integer(ip), parameter :: aprl0 = apr0 + 1
-      integer(ip), parameter :: mayl0 = may0 + 1
-      integer(ip), parameter :: junl0 = jun0 + 1
-      integer(ip), parameter :: jull0 = jul0 + 1
-      integer(ip), parameter :: augl0 = aug0 + 1
-      integer(ip), parameter :: sepl0 = sep0 + 1
-      integer(ip), parameter :: octl0 = oct0 + 1
-      integer(ip), parameter :: novl0 = nov0 + 1
-      integer(ip), parameter :: decl0 = dec0 + 1
       integer(ip) :: dayg
       integer(ip) :: dayj
       integer(ip) :: dofyr
@@ -3866,46 +3860,6 @@ contains
       integer(ip) :: jdp001
       integer(ip) :: jldays
       integer(ip) :: jydays
-      integer(ip), parameter :: dp400y = 365*400 + 97
-      integer(ip), parameter :: dp100y = 365*100 + 24
-      integer(ip), parameter :: dp4y = 365*4   + 1
-      integer(ip), parameter :: dp1y = 365
-      integer(ip), parameter :: jan = 31
-      integer(ip), parameter :: feb = 28
-      integer(ip), parameter :: mar = 31
-      integer(ip), parameter :: apr = 30
-      integer(ip), parameter :: may = 31
-      integer(ip), parameter :: jun = 30
-      integer(ip), parameter :: jul = 31
-      integer(ip), parameter :: aug = 31
-      integer(ip), parameter :: sep = 30
-      integer(ip), parameter :: oct = 31
-      integer(ip), parameter :: nov = 30
-      integer(ip), parameter :: dec = 31
-      integer(ip), parameter :: jan0 = 0
-      integer(ip), parameter :: feb0 = jan + jan0
-      integer(ip), parameter :: mar0 = feb + feb0
-      integer(ip), parameter :: apr0 = mar + mar0
-      integer(ip), parameter :: may0 = apr + apr0
-      integer(ip), parameter :: jun0 = may + may0
-      integer(ip), parameter :: jul0 = jun + jun0
-      integer(ip), parameter :: aug0 = jul + jul0
-      integer(ip), parameter :: sep0 = aug + aug0
-      integer(ip), parameter :: oct0 = sep + sep0
-      integer(ip), parameter :: nov0 = oct + oct0
-      integer(ip), parameter :: dec0 = nov + nov0
-      integer(ip), parameter :: janl0 = jan0
-      integer(ip), parameter :: febl0 = feb0
-      integer(ip), parameter :: marl0 = mar0 + 1
-      integer(ip), parameter :: aprl0 = apr0 + 1
-      integer(ip), parameter :: mayl0 = may0 + 1
-      integer(ip), parameter :: junl0 = jun0 + 1
-      integer(ip), parameter :: jull0 = jul0 + 1
-      integer(ip), parameter :: augl0 = aug0 + 1
-      integer(ip), parameter :: sepl0 = sep0 + 1
-      integer(ip), parameter :: octl0 = oct0 + 1
-      integer(ip), parameter :: novl0 = nov0 + 1
-      integer(ip), parameter :: decl0 = dec0 + 1
       integer(ip) :: dayg
       integer(ip) :: dayj
       integer(ip) :: dofyr
@@ -4273,46 +4227,6 @@ contains
       use pepper_arrays, only: lstlti
       use pepper_strings, only: intstr, cmprss_inplace
       implicit none
-      integer(ip), parameter :: dp400y = 365*400 + 97
-      integer(ip), parameter :: dp100y = 365*100 + 24
-      integer(ip), parameter :: dp4y = 365*4   + 1
-      integer(ip), parameter :: dp1y = 365
-      integer(ip), parameter :: jan = 31
-      integer(ip), parameter :: feb = 28
-      integer(ip), parameter :: mar = 31
-      integer(ip), parameter :: apr = 30
-      integer(ip), parameter :: may = 31
-      integer(ip), parameter :: jun = 30
-      integer(ip), parameter :: jul = 31
-      integer(ip), parameter :: aug = 31
-      integer(ip), parameter :: sep = 30
-      integer(ip), parameter :: oct = 31
-      integer(ip), parameter :: nov = 30
-      integer(ip), parameter :: dec = 31
-      integer(ip), parameter :: jan0 = 0
-      integer(ip), parameter :: feb0 = jan + jan0
-      integer(ip), parameter :: mar0 = feb + feb0
-      integer(ip), parameter :: apr0 = mar + mar0
-      integer(ip), parameter :: may0 = apr + apr0
-      integer(ip), parameter :: jun0 = may + may0
-      integer(ip), parameter :: jul0 = jun + jun0
-      integer(ip), parameter :: aug0 = jul + jul0
-      integer(ip), parameter :: sep0 = aug + aug0
-      integer(ip), parameter :: oct0 = sep + sep0
-      integer(ip), parameter :: nov0 = oct + oct0
-      integer(ip), parameter :: dec0 = nov + nov0
-      integer(ip), parameter :: janl0 = jan0
-      integer(ip), parameter :: febl0 = feb0
-      integer(ip), parameter :: marl0 = mar0 + 1
-      integer(ip), parameter :: aprl0 = apr0 + 1
-      integer(ip), parameter :: mayl0 = may0 + 1
-      integer(ip), parameter :: junl0 = jun0 + 1
-      integer(ip), parameter :: jull0 = jul0 + 1
-      integer(ip), parameter :: augl0 = aug0 + 1
-      integer(ip), parameter :: sepl0 = sep0 + 1
-      integer(ip), parameter :: octl0 = oct0 + 1
-      integer(ip), parameter :: novl0 = nov0 + 1
-      integer(ip), parameter :: decl0 = dec0 + 1
       integer(ip), parameter :: strsiz = 16
       integer(ip), parameter :: lngsiz = 180
       character(3), parameter :: months ( 12 ) = &
@@ -5160,54 +5074,12 @@ contains
       use pepper_inc_zzctr
       use pepper_containers, only: grow
       implicit none
-      integer(ip), parameter :: mxcomp = 10
       integer(ip) :: divble
       integer(ip) :: doy
       integer(ip) :: dp0001
       integer(ip) :: ldays
       integer(ip) :: ydays
       real(wp) :: hmssec
-      integer(ip), parameter :: dp400y = 365*400 + 97
-      integer(ip), parameter :: dp100y = 365*100 + 24
-      integer(ip), parameter :: dp4y = 365*4   + 1
-      integer(ip), parameter :: dp1y = 365
-      integer(ip), parameter :: jan = 31
-      integer(ip), parameter :: feb = 28
-      integer(ip), parameter :: mar = 31
-      integer(ip), parameter :: apr = 30
-      integer(ip), parameter :: may = 31
-      integer(ip), parameter :: jun = 30
-      integer(ip), parameter :: jul = 31
-      integer(ip), parameter :: aug = 31
-      integer(ip), parameter :: sep = 30
-      integer(ip), parameter :: oct = 31
-      integer(ip), parameter :: nov = 30
-      integer(ip), parameter :: dec = 31
-      integer(ip), parameter :: jan0 = 0
-      integer(ip), parameter :: feb0 = jan + jan0
-      integer(ip), parameter :: mar0 = feb + feb0
-      integer(ip), parameter :: apr0 = mar + mar0
-      integer(ip), parameter :: may0 = apr + apr0
-      integer(ip), parameter :: jun0 = may + may0
-      integer(ip), parameter :: jul0 = jun + jun0
-      integer(ip), parameter :: aug0 = jul + jul0
-      integer(ip), parameter :: sep0 = aug + aug0
-      integer(ip), parameter :: oct0 = sep + sep0
-      integer(ip), parameter :: nov0 = oct + oct0
-      integer(ip), parameter :: dec0 = nov + nov0
-      integer(ip), parameter :: janl0 = jan0
-      integer(ip), parameter :: febl0 = feb0
-      integer(ip), parameter :: marl0 = mar0 + 1
-      integer(ip), parameter :: aprl0 = apr0 + 1
-      integer(ip), parameter :: mayl0 = may0 + 1
-      integer(ip), parameter :: junl0 = jun0 + 1
-      integer(ip), parameter :: jull0 = jul0 + 1
-      integer(ip), parameter :: augl0 = aug0 + 1
-      integer(ip), parameter :: sepl0 = sep0 + 1
-      integer(ip), parameter :: octl0 = oct0 + 1
-      integer(ip), parameter :: novl0 = nov0 + 1
-      integer(ip), parameter :: decl0 = dec0 + 1
-      integer(ip), parameter :: maxvar = 1
       integer(ip), parameter :: daysec = 1
       integer(ip), parameter :: dayp2 = daysec + 1
       integer(ip), parameter :: et = dayp2 + 1
@@ -5230,10 +5102,7 @@ contains
       integer(ip), parameter :: ywd = ymwdf  + 1
       integer(ip), parameter :: ywdf = ywd    + 1
       integer(ip), parameter :: nrec = ywdf
-      logical, parameter :: no = .false.
       logical, parameter :: yes = .true.
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: typlen = 8
       real(wp) :: hours
       real(wp) :: mins
       real(wp) :: secs
@@ -6872,12 +6741,9 @@ contains
       real(wp) :: dta_1(1)  !! one-element copy of dta (array argument)
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: needed = 4
-      integer(ip), parameter :: lngvar = 16
-      integer(ip), parameter :: mislen = 20
       integer(ip), parameter :: typlen = 8
       integer(ip), parameter :: ntdt = 5
       integer(ip), parameter :: ntdb = 4
-      integer(ip), parameter :: nrecog = ntdb + ntdt
       real(wp), parameter :: gpstai = 19.0_wp
       character(typlen) :: myin
       character(typlen) :: myout
@@ -7956,7 +7822,6 @@ contains
       use pepper_strings, only: prefix, repmc_inplace, repmi_inplace
       implicit none
       integer(ip), parameter :: smwdsz = 16
-      integer(ip), parameter :: lnsize = 80
       integer(ip), parameter :: msgsiz = 400
       integer(ip), parameter :: era = 1
       integer(ip), parameter :: wkday = era    + 1

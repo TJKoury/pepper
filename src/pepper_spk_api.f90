@@ -1263,6 +1263,40 @@ submodule (pepper_instance) pepper_spk_api
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: bufsiz = 100  !! size of a buffer of epochs
+   integer(ip), parameter :: chlen = 20  !! maximum length of a chain of SPK segments
+   real(wp), parameter :: cnvlim = 1.0e-17_wp  !! convergence limit of the light time iteration
+   integer(ip), parameter :: corlen = 5  !! length of an aberration correction (e.g. LT+S)
+   real(wp), parameter :: delta = 1.0_wp  !! time step of numerical derivatives (s)
+   integer(ip), parameter :: dirsiz = 100  !! size of a segment's directory of epochs (every 100th epoch)
+   integer(ip), parameter :: evlctr = 3  !! evaluation at the center
+   integer(ip), parameter :: evlobs = 1  !! evaluation at the observer
+   integer(ip), parameter :: evltrg = 2  !! evaluation at the target
+   integer(ip), parameter :: fprint = 32  !! first printable ASCII character (space)
+   integer(ip), parameter :: ftsize = 20  !! size of the table of files being written
+   integer(ip), parameter :: ifnlen = 60  !! length of a DAF or DAS internal file name
+   integer(ip), parameter :: ixnone = 1  !! aberration correction index: none
+   integer(ip), parameter :: ixlt = ixnone + 1  !! aberration correction index: LT
+   integer(ip), parameter :: ixlts = ixlt   + 1  !! aberration correction index: LT+S
+   integer(ip), parameter :: ixcn = ixlts  + 1  !! aberration correction index: CN
+   integer(ip), parameter :: ixcns = ixcn   + 1  !! aberration correction index: CN+S
+   integer(ip), parameter :: ixxlt = ixcns  + 1  !! aberration correction index: XLT
+   integer(ip), parameter :: ixxlts = ixxlt  + 1  !! aberration correction index: XLT+S
+   integer(ip), parameter :: ixxcn = ixxlts + 1  !! aberration correction index: XCN
+   integer(ip), parameter :: ixxcns = ixxcn  + 1  !! aberration correction index: XCN+S
+   integer(ip), parameter :: lnsize = 80  !! length of a line of text (messages, kernel lines)
+   integer(ip), parameter :: lprint = 126  !! last printable ASCII character (~)
+   integer(ip), parameter :: maxitr = 5  !! maximum number of light time iterations
+   integer(ip), parameter :: nd = 2  !! number of double precision components of a DAF array summary (SPK, CK, PCK: 2)
+   integer(ip), parameter :: nevflg = 3  !! number of evaluation locations
+   integer(ip), parameter :: ni = 6  !! number of integer components of a DAF array summary (SPK, CK: 6)
+   integer(ip), parameter :: nstate = 6  !! number of components of a state
+   integer(ip), parameter :: ssb = 0  !! NAIF ID code of the solar system barycenter
+   real(wp), parameter :: tol = 1.0e-10_wp  !! tolerance of the light time derivative
+
 contains
 
       !>## Detailed Input
@@ -1627,11 +1661,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
-      integer(ip), parameter :: fprint = 32
-      integer(ip), parameter :: lprint = 126
-      integer(ip), parameter :: dirsiz = 100
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: ftsize = 20
       character(ifnlen) :: dummy1
       real(wp) :: xmeta  ( mxmeta )
       real(wp) :: myref
@@ -2013,11 +2042,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
-      integer(ip), parameter :: fprint = 32
-      integer(ip), parameter :: lprint = 126
-      integer(ip), parameter :: dirsiz = 100
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: ftsize = 20
       character(ifnlen) :: dummy1
       real(wp) :: xmeta  ( mxmeta )
       real(wp) :: myref
@@ -2448,11 +2472,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
-      integer(ip), parameter :: fprint = 32
-      integer(ip), parameter :: lprint = 126
-      integer(ip), parameter :: dirsiz = 100
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: ftsize = 20
       character(ifnlen) :: dummy1
       real(wp) :: xmeta  ( mxmeta )
       real(wp) :: myref
@@ -2934,11 +2953,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
-      integer(ip), parameter :: fprint = 32
-      integer(ip), parameter :: lprint = 126
-      integer(ip), parameter :: dirsiz = 100
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: ftsize = 20
       character(ifnlen) :: dummy1
       real(wp) :: xmeta  ( mxmeta )
       real(wp) :: myref
@@ -3359,11 +3373,6 @@ contains
       implicit none
       real(wp) :: mysize_1(1)  !! one-element copy of mysize (array argument)
       real(wp) :: myref_1(1)  !! one-element copy of myref (array argument)
-      integer(ip), parameter :: fprint = 32
-      integer(ip), parameter :: lprint = 126
-      integer(ip), parameter :: dirsiz = 100
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: ftsize = 20
       character(ifnlen) :: dummy1
       real(wp) :: xmeta  ( mxmeta )
       real(wp) :: myref
@@ -4340,11 +4349,8 @@ contains
       type(interval_list) :: window  ! the coverage being built
 
 
-      integer(ip), parameter :: lnsize = 80
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       character(lnsize) :: arch
       character(lnsize) :: kertyp
@@ -4790,9 +4796,6 @@ contains
       use pepper_inc_ninert
       use pepper_inc_zzctr
       implicit none
-      character(*), parameter :: rname = 'SPKGEO'
-      integer(ip), parameter :: chlen = 20
-      integer(ip), parameter :: ssb = 0
       character(40) :: ident
       character(40) :: tname
       character(40) :: oname
@@ -5646,9 +5649,6 @@ contains
       use pepper_inc_ninert
       use pepper_inc_zzctr
       implicit none
-      character(*), parameter :: rname = 'SPKGPS'
-      integer(ip), parameter :: chlen = 20
-      integer(ip), parameter :: ssb = 0
       character(40) :: ident
       character(40) :: tname
       character(40) :: oname
@@ -6642,11 +6642,8 @@ contains
       integer(ip) :: nlist  ! the number of IDs in LIST
 
 
-      integer(ip), parameter :: lnsize = 80
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       character(lnsize) :: arch
       character(lnsize) :: kertyp
@@ -6872,9 +6869,7 @@ contains
 
 !     ND and NI values for an SPK file.
 !
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 !
 !     Length of a calender string.
 !
@@ -8917,9 +8912,7 @@ contains
       implicit none
       real(wp) :: ivlbeg_1(1)  !! one-element copy of ivlbeg (array argument)
       real(wp) :: ivlend_1(1)  !! one-element copy of ivlend (array argument)
-      integer(ip), parameter :: bufsiz = 100
       integer(ip), parameter :: ctrlsz = 3
-      integer(ip), parameter :: dirsiz = 100
       integer(ip), parameter :: pktszs ( 0 : s19nst-1 ) = &
          [ s19ps0, s19ps1, s19ps2 ]
       integer(ip) :: npad
@@ -10460,7 +10453,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       implicit none
-      integer(ip), parameter :: bufsiz = 100
       real(wp) :: btime
       real(wp) :: data   ( bufsiz )
       real(wp) :: dscale
@@ -10653,7 +10645,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_spk21
       implicit none
-      integer(ip), parameter :: dirsiz = 100
       integer(ip), parameter :: maxdsz = (4 * maxtrm) + 11
       real(wp) :: data     ( maxdsz )
       integer(ip) :: dlsize
@@ -10884,9 +10875,7 @@ contains
 
 !     Values of ND and NI for SPK files.
 !
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       real(wp) :: dppart ( nd )
 
@@ -12333,9 +12322,7 @@ contains
 
 !     DAF ND and NI values for SPK files.
 !
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 !
 !     Length of an SPK descriptor.
 !
@@ -12343,7 +12330,6 @@ contains
 !
 !     Length of a state.
 !
-      integer(ip), parameter :: nstate = 6
 !
 !     The type of this segment
 !
@@ -13256,18 +13242,6 @@ contains
       logical :: uselt  !! (PEPPER) copy of the saved flag for this call
       logical :: usecn  !! (PEPPER) copy of the saved flag for this call
       logical :: usestl  !! (PEPPER) copy of the saved flag for this call
-      integer(ip), parameter :: corlen = 5
-      integer(ip), parameter :: nflags = 9
-      integer(ip), parameter :: ixnone = 1
-      integer(ip), parameter :: ixlt = ixnone + 1
-      integer(ip), parameter :: ixlts = ixlt   + 1
-      integer(ip), parameter :: ixcn = ixlts  + 1
-      integer(ip), parameter :: ixcns = ixcn   + 1
-      integer(ip), parameter :: ixxlt = ixcns  + 1
-      integer(ip), parameter :: ixxlts = ixxlt  + 1
-      integer(ip), parameter :: ixxcn = ixxlts + 1
-      integer(ip), parameter :: ixxcns = ixxcn  + 1
-      integer(ip), parameter :: ssb = 0
       character(corlen) :: corr
       real(wp) :: tpos   ( 3 )
       integer(ip) :: i
@@ -13886,11 +13860,6 @@ contains
       logical :: xmit  !! (PEPPER) copy of the saved flag for this call
       logical :: uselt  !! (PEPPER) copy of the saved flag for this call
       logical :: usecn  !! (PEPPER) copy of the saved flag for this call
-      character(*), parameter :: rname = 'SPKLTC'
-      real(wp), parameter :: tol = 1.0e-10_wp
-      real(wp), parameter :: cnvlim = 1.0e-17_wp
-      integer(ip), parameter :: maxitr = 5
-      integer(ip), parameter :: ssb = 0
       real(wp) :: a
       real(wp) :: b
       real(wp) :: c
@@ -14262,9 +14231,7 @@ contains
 !
 !     DAF ND and NI values for SPK files.
 !
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
 !
 !     The number of geophysical constants:
@@ -15444,17 +15411,6 @@ contains
       logical :: uselt  !! (PEPPER) copy of the saved flag for this call
       logical :: usecn  !! (PEPPER) copy of the saved flag for this call
       logical :: usestl  !! (PEPPER) copy of the saved flag for this call
-      integer(ip), parameter :: corlen = 5
-      integer(ip), parameter :: nflags = 9
-      integer(ip), parameter :: ixnone = 1
-      integer(ip), parameter :: ixlt = ixnone + 1
-      integer(ip), parameter :: ixlts = ixlt   + 1
-      integer(ip), parameter :: ixcn = ixlts  + 1
-      integer(ip), parameter :: ixcns = ixcn   + 1
-      integer(ip), parameter :: ixxlt = ixcns  + 1
-      integer(ip), parameter :: ixxlts = ixxlt  + 1
-      integer(ip), parameter :: ixxcn = ixxlts + 1
-      integer(ip), parameter :: ixxcns = ixxcn  + 1
       character(corlen) :: corr
       real(wp) :: sapos  ( 3 )
       real(wp) :: tstate ( 6 )
@@ -16162,7 +16118,6 @@ contains
       implicit none
       logical :: xmit  !! (PEPPER) copy of the saved flag for this call
       logical :: usestl  !! (PEPPER) copy of the saved flag for this call
-      character(*), parameter :: rname = 'SPKAPS'
       real(wp) :: corpos ( 3 )
       real(wp) :: corvel ( 3 )
       real(wp) :: dpcorr ( 3 )
@@ -17021,7 +16976,6 @@ contains
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
-      character(*), parameter :: rname = 'SPKEZP'
       real(wp) :: temp     ( 3    )
       real(wp) :: xform    ( 3, 3 )
       logical :: found
@@ -17268,13 +17222,10 @@ contains
 !
 !     DAF ND and NI values for SPK files.
 !
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 !
 !     Length of a state.
 !
-      integer(ip), parameter :: nstate = 6
       character(frmsiz) :: myfram
 
       real(wp) :: begtim
@@ -17707,10 +17658,6 @@ contains
       real(wp), intent(out) :: starg  ( 6 )  !! State of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
       real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
-      character(*), parameter :: rname = 'ZZSPKFLT'
-      real(wp), parameter :: tol = 1.0e-10_wp
-      real(wp), parameter :: cnvlim = 1.0e-17_wp
-      integer(ip), parameter :: maxitr = 5
       real(wp) :: a
       real(wp) :: b
       real(wp) :: c
@@ -18436,9 +18383,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
       logical :: usestl  !! (PEPPER) copy of the saved flag for this call
-      character(*), parameter :: rname = 'SPKACS'
-      real(wp), parameter :: delta = 1.0_wp
-      integer(ip), parameter :: ssb = 0
       real(wp) :: acc    ( 3 )
       real(wp) :: ltssb
       real(wp) :: ssblt
@@ -18954,7 +18898,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: maxl = 36
       integer(ip) :: targid
       integer(ip) :: obsid
       logical :: found
@@ -19681,8 +19624,6 @@ contains
       real(wp), intent(out) :: starg    ( 6 )  !! State of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
       real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
-      character(*), parameter :: rname = 'ZZSPKFAO'
-      real(wp), parameter :: delta = 1.0_wp
       real(wp) :: acc    ( 3 )
       real(wp) :: ssbobs ( 6 )
       real(wp) :: stctr  ( 6 )
@@ -20149,7 +20090,6 @@ contains
       real(wp), intent(out) :: starg  ( 6 )  !! State of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
       real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
-      character(*), parameter :: rname = 'ZZSPKFAP'
       real(wp) :: corpos ( 3 )
       real(wp) :: corvel ( 3 )
       real(wp) :: dpcorr ( 3 )
@@ -21202,7 +21142,6 @@ contains
       implicit none
       logical :: xmit  !! (PEPPER) copy of the saved flag for this call
       logical :: usegeo  !! (PEPPER) copy of the saved flag for this call
-      character(*), parameter :: rname = 'SPKEZ'
       real(wp) :: state    ( 6    )
       real(wp) :: temp     ( 6    )
       real(wp) :: xform    ( 6, 6 )
@@ -21768,9 +21707,6 @@ contains
       real(wp), intent(out) :: starg    ( 6 )  !! State of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
       real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
-      character(*), parameter :: rname = 'ZZSPKFAT'
-      real(wp), parameter :: delta = 1.0_wp
-      integer(ip), parameter :: ssb = 0
       real(wp) :: acc    ( 3 )
       real(wp) :: ltssb
       real(wp) :: ssblt
@@ -22587,7 +22523,6 @@ contains
       character(*), intent(in) :: abcorr  !! Aberration correction flag.
       real(wp), intent(out) :: starg    ( 6 )  !! State of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
-      character(*), parameter :: rname = 'ZZSPKFZO'
       real(wp) :: corxfm   ( 6, 6 )
       real(wp) :: dlt
       real(wp) :: dltctr
@@ -24094,12 +24029,6 @@ contains
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: nevflg = 3
-      integer(ip), parameter :: evlfln = 25
-      integer(ip), parameter :: evlobs = 1
-      integer(ip), parameter :: evltrg = 2
-      integer(ip), parameter :: evlctr = 3
-      integer(ip), parameter :: maxl = 36
       real(wp) :: dlt
       real(wp) :: j2stat ( 6 )
       real(wp) :: s
@@ -24848,7 +24777,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: maxl = 36
       integer(ip) :: targid
       integer(ip) :: obsid
       logical :: found
@@ -25640,7 +25568,6 @@ contains
       integer(ip), intent(in) :: obs  !! Observing body.
       real(wp), intent(out) :: starg    ( 6 )  !! State of target.
       real(wp), intent(out) :: lt  !! One way light time between observer and target.
-      character(*), parameter :: rname = 'ZZSPKFZT'
       logical :: attblk ( nabcor )
       real(wp) :: xform    ( 6, 6 )
       integer(ip) :: type
@@ -28108,12 +28035,6 @@ contains
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: nevflg = 3
-      integer(ip), parameter :: evlfln = 25
-      integer(ip), parameter :: evlobs = 1
-      integer(ip), parameter :: evltrg = 2
-      integer(ip), parameter :: evlctr = 3
-      integer(ip), parameter :: maxl = 36
       real(wp) :: dlt
       real(wp) :: j2stat ( 6 )
       real(wp) :: s

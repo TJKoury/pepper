@@ -113,6 +113,14 @@ submodule (pepper_instance) pepper_dsk_files
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: ibfsiz = 10  !! size of a buffer of integers
+   integer(ip), parameter :: namlen = 6  !! length of a DSK parameter name
+   integer(ip), parameter :: ndspar = 6  !! number of DSK parameters
+   integer(ip), parameter :: toklen = 4  !! length of a token
+
 contains
 
       !>## Abstract
@@ -1208,7 +1216,6 @@ contains
       use pepper_inc_zzddhman
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     Set the length of a SPICE kernel file ID word.
@@ -9521,8 +9528,6 @@ contains
       use pepper_inc_dsktol
       implicit none
       logical :: return
-      integer(ip), parameter :: ndspar = 6
-      integer(ip), parameter :: namlen = 6
       character(namlen), parameter :: names  ( ndspar ) = &
          [ character(namlen) :: 'XFRACT', 'SGREED', 'SGPADM', 'PTMEMM', 'ANGMRG', 'LONALI' ]
       logical, parameter :: isfixd ( ndspar ) = &
@@ -9685,8 +9690,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_dsktol
       implicit none
-      integer(ip), parameter :: ndspar = 6
-      integer(ip), parameter :: namlen = 6
       character(namlen), parameter :: names  ( ndspar ) = &
          [ character(namlen) :: 'XFRACT', 'SGREED', 'SGPADM', 'PTMEMM', 'ANGMRG', 'LONALI' ]
       logical, parameter :: isfixd ( ndspar ) = &
@@ -10548,7 +10551,6 @@ contains
 
       integer(ip), parameter :: dbfsiz = 10
 
-      integer(ip), parameter :: ibfsiz = 10
 
       integer(ip), parameter :: vtbsiz = 6
 
@@ -11565,7 +11567,6 @@ contains
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
-      integer(ip), parameter :: ibfsiz = 10
       integer(ip) :: b
       integer(ip) :: e
       integer(ip) :: ibase
@@ -15045,7 +15046,6 @@ contains
       integer(ip) :: nlist  ! the number of IDs in LIST
 
 
-      integer(ip), parameter :: toklen = 4
 
       character(toklen) :: arch
       character(toklen) :: kertyp
@@ -15378,7 +15378,6 @@ contains
       integer(ip) :: nlist  ! the number of IDs in LIST
 
 
-      integer(ip), parameter :: toklen = 4
 
       character(toklen) :: arch
       character(toklen) :: kertyp

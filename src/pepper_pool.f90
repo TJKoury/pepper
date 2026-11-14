@@ -1541,6 +1541,45 @@ submodule (pepper_instance) pepper_pool
       'mDYHMS', 'mDYHMS', 'mDYHM', 'mDYH', &
       'mDY', 'mDY', 'DmY' ]
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: begin = 1  !! reading state: start
+   integer(ip), parameter :: bslash = 92  !! character code of the backslash
+   integer(ip), parameter :: q = 1  !! token class: quoted string
+   integer(ip), parameter :: nq = q      + 1  !! token class: not quoted
+   integer(ip), parameter :: bv = nq     + 1  !! token class: beginning of values ("(")
+   integer(ip), parameter :: done = begin  + 1  !! reading state: done
+   integer(ip), parameter :: intext = 1  !! text kernel section: text (comments)
+   integer(ip), parameter :: indata = intext + 1  !! text kernel section: data
+   integer(ip), parameter :: endoff = indata + 1  !! text kernel section: past the end
+   integer(ip), parameter :: ev = bv     + 1  !! token class: end of values (")")
+   integer(ip), parameter :: eq = ev     + 1  !! token class: "="
+   integer(ip), parameter :: eqp = eq     + 1  !! token class: "+="
+   integer(ip), parameter :: era = 1  !! time string component: era
+   integer(ip), parameter :: iblank = ichar( ' '   )  !! character code of a blank
+   integer(ip), parameter :: icomma = ichar( ','   )  !! character code of a comma
+   integer(ip), parameter :: iequal = ichar( '='   )  !! character code of "="
+   integer(ip), parameter :: ilparn = ichar( '('   )  !! character code of "("
+   integer(ip), parameter :: invar = done   + 1  !! reading state: in a variable's values
+   integer(ip), parameter :: iplus = ichar( '+'   )  !! character code of "+"
+   integer(ip), parameter :: iquote = ichar( ''''  )  !! character code of a quote
+   integer(ip), parameter :: irparn = ichar( ')'   )  !! character code of ")"
+   integer(ip), parameter :: itab = 9  !! character code of a tab
+   integer(ip), parameter :: itmark = ichar( '@'   )  !! character code of "@" (an epoch)
+   integer(ip), parameter :: linlen = 132  !! length of a text kernel line
+   integer(ip), parameter :: lnsize = 80  !! length of a line of text (messages, kernel lines)
+   integer(ip), parameter :: maxtkn = 64  !! maximum number of tokens of a time string
+   logical, parameter :: no = .false.  !! false
+   integer(ip), parameter :: strtyp = 1  !! kernel variable type: character
+   integer(ip), parameter :: numtyp = strtyp + 1  !! kernel variable type: numeric
+   integer(ip), parameter :: piclen = maxtkn * 5  !! length of a time picture
+   integer(ip), parameter :: tabcde = 9  !! character code of a tab
+   integer(ip), parameter :: unknwn = numtyp + 1  !! kernel variable type: not yet known
+   integer(ip), parameter :: wday = era    + 1  !! time string component: weekday
+   logical, parameter :: yes = .true.  !! true
+   integer(ip), parameter :: zone = wday   + 1  !! time string component: time zone
+
 contains
 
       !>## Detailed Input
@@ -1596,7 +1635,6 @@ contains
       use pepper_inc_zzctr
       implicit none
       integer(ip), parameter :: ctrhgh = intmax
-      integer(ip), parameter :: ctrlow = intmin
       if ( ctx%failed() ) return
 
 !
@@ -1664,7 +1702,6 @@ contains
       use pepper_constants, only: intmax, intmin
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: ctrhgh = intmax
       integer(ip), parameter :: ctrlow = intmin
       if ( ctx%failed() ) return
 
@@ -1835,8 +1872,6 @@ contains
       use pepper_constants, only: intmax, intmin
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: ctrhgh = intmax
-      integer(ip), parameter :: ctrlow = intmin
       if ( ctx%failed() ) return
 
 !
@@ -2515,8 +2550,6 @@ contains
       module procedure rdtext
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) :: maxlen
-      parameter         ( maxlen = 255 )
       integer(ip) :: maxopn
       parameter         ( maxopn =  96 )
       integer(ip) :: unit
@@ -2904,10 +2937,6 @@ contains
       module procedure cltext
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) :: maxlen
-      parameter         ( maxlen = 255 )
-      integer(ip) :: maxopn
-      parameter         ( maxopn =  96 )
       logical :: return
       integer(ip) :: unit
       integer(ip) :: number
@@ -3111,22 +3140,6 @@ contains
       parameter           ( dat = 'begindata' )
       character(*) :: txt
       parameter           ( txt = 'begintext' )
-      character(*) :: blank
-      parameter           ( blank = ' ' )
-      integer(ip) :: tabcde
-      parameter           ( tabcde = 9 )
-      integer(ip) :: mrklen
-      parameter           ( mrklen = 10 )
-      integer(ip) :: bslash
-      parameter           ( bslash = 92 )
-      integer(ip) :: lnsize
-      parameter           ( lnsize = 80 )
-      integer(ip) :: intext
-      parameter           ( intext = 1 )
-      integer(ip) :: indata
-      parameter           ( indata = intext + 1 )
-      integer(ip) :: endoff
-      parameter           ( endoff = indata + 1 )
       character(lnsize) :: first
       integer(ip) :: i
       integer(ip) :: r
@@ -3376,26 +3389,8 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
-      character(*) :: dat
-      parameter           ( dat = 'begindata' )
-      character(*) :: txt
-      parameter           ( txt = 'begintext' )
       character(*) :: blank
       parameter           ( blank = ' ' )
-      integer(ip) :: tabcde
-      parameter           ( tabcde = 9 )
-      integer(ip) :: mrklen
-      parameter           ( mrklen = 10 )
-      integer(ip) :: bslash
-      parameter           ( bslash = 92 )
-      integer(ip) :: lnsize
-      parameter           ( lnsize = 80 )
-      integer(ip) :: intext
-      parameter           ( intext = 1 )
-      integer(ip) :: indata
-      parameter           ( indata = intext + 1 )
-      integer(ip) :: endoff
-      parameter           ( endoff = indata + 1 )
       character(lnsize) :: first
       integer(ip) :: i
       integer(ip) :: r
@@ -3568,26 +3563,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
       logical :: return
-      character(*) :: dat
-      parameter           ( dat = 'begindata' )
-      character(*) :: txt
-      parameter           ( txt = 'begintext' )
-      character(*) :: blank
-      parameter           ( blank = ' ' )
-      integer(ip) :: tabcde
-      parameter           ( tabcde = 9 )
-      integer(ip) :: mrklen
-      parameter           ( mrklen = 10 )
-      integer(ip) :: bslash
-      parameter           ( bslash = 92 )
-      integer(ip) :: lnsize
-      parameter           ( lnsize = 80 )
-      integer(ip) :: intext
-      parameter           ( intext = 1 )
-      integer(ip) :: indata
-      parameter           ( indata = intext + 1 )
-      integer(ip) :: endoff
-      parameter           ( endoff = indata + 1 )
       character(lnsize) :: first
       integer(ip) :: i
       integer(ip) :: r
@@ -4124,18 +4099,8 @@ contains
       use pepper_strings, only: repmc_inplace, repmd_inplace, repmi_inplace
       implicit none
       integer(ip) :: divble
-      integer(ip) :: era
-      parameter           ( era    =  1 )
-      integer(ip) :: wday
-      parameter           ( wday   = era    + 1 )
-      integer(ip) :: zone
-      parameter           ( zone   = wday   + 1 )
       integer(ip) :: ampm
       parameter           ( ampm   = zone   + 1 )
-      integer(ip) :: system
-      parameter           ( system = ampm   + 1 )
-      integer(ip) :: nmods
-      parameter           ( nmods = system )
       integer(ip) :: lnsize
       parameter           ( lnsize = 200 )
       character(lnsize) :: messge
@@ -4663,18 +4628,6 @@ contains
       use pepper_strings, only: eqstr
       implicit none
       integer(ip) :: divble
-      integer(ip) :: era
-      parameter           ( era    =  1 )
-      integer(ip) :: wday
-      parameter           ( wday   = era    + 1 )
-      integer(ip) :: zone
-      parameter           ( zone   = wday   + 1 )
-      integer(ip) :: ampm
-      parameter           ( ampm   = zone   + 1 )
-      integer(ip) :: system
-      parameter           ( system = ampm   + 1 )
-      integer(ip) :: nmods
-      parameter           ( nmods = system )
       integer(ip) :: lnsize
       parameter           ( lnsize = 200 )
       character(lnsize) :: messge
@@ -4793,18 +4746,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip) :: divble
-      integer(ip) :: era
-      parameter           ( era    =  1 )
-      integer(ip) :: wday
-      parameter           ( wday   = era    + 1 )
-      integer(ip) :: zone
-      parameter           ( zone   = wday   + 1 )
-      integer(ip) :: ampm
-      parameter           ( ampm   = zone   + 1 )
-      integer(ip) :: system
-      parameter           ( system = ampm   + 1 )
-      integer(ip) :: nmods
-      parameter           ( nmods = system )
       integer(ip) :: lnsize
       parameter           ( lnsize = 200 )
       character(lnsize) :: messge
@@ -5364,8 +5305,6 @@ contains
       integer(ip) :: count
       parameter           ( count = ntpats )
 
-      integer(ip) :: wdsize
-      parameter           ( wdsize = 32 )
 
       integer(ip) :: i
 !
@@ -5917,14 +5856,8 @@ contains
 !     SYSTEM
 !
 
-      integer(ip) :: era
-      parameter           ( era    =  1 )
 
-      integer(ip) :: wday
-      parameter           ( wday   = era    + 1 )
 
-      integer(ip) :: zone
-      parameter           ( zone   = wday   + 1 )
 
       integer(ip) :: ampm
       parameter           ( ampm   = zone   + 1 )
@@ -6777,33 +6710,9 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: pos, posr, zzrepsub_inplace
       implicit none
-      logical :: yes
-      parameter           ( yes = .true.  )
-      logical :: no
-      parameter           ( no  = .false. )
-      integer(ip) :: lower
-      parameter           ( lower  = 1 )
-      integer(ip) :: upper
-      parameter           ( upper  = lower  + 1 )
-      integer(ip) :: mixed
-      parameter           ( mixed  = upper  + 1 )
-      integer(ip) :: full
-      parameter           ( full   = 1 )
-      integer(ip) :: short
-      parameter           ( short  = full   + 1 )
-      integer(ip) :: maxtkn
-      parameter           ( maxtkn = 64 )
-      integer(ip) :: piclen
-      parameter           ( piclen = maxtkn * 5 )
-      integer(ip) :: wdsize
-      parameter           ( wdsize = 32 )
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
-      integer(ip) :: nrecog
-      parameter           ( nrecog = 70 )
-      integer(ip) :: smwdsz
-      parameter           ( smwdsz = 12 )
       integer(ip) :: get
       integer(ip) :: next
       integer(ip) :: put
@@ -6936,33 +6845,9 @@ contains
       module procedure zzgrep
       use pepper_kinds, only: ip, wp
       implicit none
-      logical :: yes
-      parameter           ( yes = .true.  )
-      logical :: no
-      parameter           ( no  = .false. )
-      integer(ip) :: lower
-      parameter           ( lower  = 1 )
-      integer(ip) :: upper
-      parameter           ( upper  = lower  + 1 )
-      integer(ip) :: mixed
-      parameter           ( mixed  = upper  + 1 )
-      integer(ip) :: full
-      parameter           ( full   = 1 )
-      integer(ip) :: short
-      parameter           ( short  = full   + 1 )
-      integer(ip) :: maxtkn
-      parameter           ( maxtkn = 64 )
-      integer(ip) :: piclen
-      parameter           ( piclen = maxtkn * 5 )
-      integer(ip) :: wdsize
-      parameter           ( wdsize = 32 )
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
-      integer(ip) :: nrecog
-      parameter           ( nrecog = 70 )
-      integer(ip) :: smwdsz
-      parameter           ( smwdsz = 12 )
       if ( .not. allocated ( ctx%zztime ) ) allocate ( ctx%zztime )
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size )
@@ -7055,33 +6940,9 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cpos
       implicit none
-      logical :: yes
-      parameter           ( yes = .true.  )
-      logical :: no
-      parameter           ( no  = .false. )
-      integer(ip) :: lower
-      parameter           ( lower  = 1 )
-      integer(ip) :: upper
-      parameter           ( upper  = lower  + 1 )
-      integer(ip) :: mixed
-      parameter           ( mixed  = upper  + 1 )
-      integer(ip) :: full
-      parameter           ( full   = 1 )
-      integer(ip) :: short
-      parameter           ( short  = full   + 1 )
-      integer(ip) :: maxtkn
-      parameter           ( maxtkn = 64 )
-      integer(ip) :: piclen
-      parameter           ( piclen = maxtkn * 5 )
-      integer(ip) :: wdsize
-      parameter           ( wdsize = 32 )
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
-      integer(ip) :: nrecog
-      parameter           ( nrecog = 70 )
-      integer(ip) :: smwdsz
-      parameter           ( smwdsz = 12 )
       logical :: did
       integer(ip) :: from
       if ( .not. allocated ( ctx%zztime ) ) allocate ( ctx%zztime )
@@ -7199,33 +7060,9 @@ contains
       module procedure zzist
       use pepper_kinds, only: ip, wp
       implicit none
-      logical :: yes
-      parameter           ( yes = .true.  )
-      logical :: no
-      parameter           ( no  = .false. )
-      integer(ip) :: lower
-      parameter           ( lower  = 1 )
-      integer(ip) :: upper
-      parameter           ( upper  = lower  + 1 )
-      integer(ip) :: mixed
-      parameter           ( mixed  = upper  + 1 )
-      integer(ip) :: full
-      parameter           ( full   = 1 )
-      integer(ip) :: short
-      parameter           ( short  = full   + 1 )
-      integer(ip) :: maxtkn
-      parameter           ( maxtkn = 64 )
-      integer(ip) :: piclen
-      parameter           ( piclen = maxtkn * 5 )
-      integer(ip) :: wdsize
-      parameter           ( wdsize = 32 )
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
-      integer(ip) :: nrecog
-      parameter           ( nrecog = 70 )
-      integer(ip) :: smwdsz
-      parameter           ( smwdsz = 12 )
       if ( .not. allocated ( ctx%zztime ) ) allocate ( ctx%zztime )
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size )
@@ -7320,33 +7157,9 @@ contains
       module procedure zznote
       use pepper_kinds, only: ip, wp
       implicit none
-      logical :: yes
-      parameter           ( yes = .true.  )
-      logical :: no
-      parameter           ( no  = .false. )
-      integer(ip) :: lower
-      parameter           ( lower  = 1 )
-      integer(ip) :: upper
-      parameter           ( upper  = lower  + 1 )
-      integer(ip) :: mixed
-      parameter           ( mixed  = upper  + 1 )
-      integer(ip) :: full
-      parameter           ( full   = 1 )
-      integer(ip) :: short
-      parameter           ( short  = full   + 1 )
-      integer(ip) :: maxtkn
-      parameter           ( maxtkn = 64 )
-      integer(ip) :: piclen
-      parameter           ( piclen = maxtkn * 5 )
-      integer(ip) :: wdsize
-      parameter           ( wdsize = 32 )
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
-      integer(ip) :: nrecog
-      parameter           ( nrecog = 70 )
-      integer(ip) :: smwdsz
-      parameter           ( smwdsz = 12 )
       integer(ip) :: get
       integer(ip) :: next
       integer(ip) :: put
@@ -7468,33 +7281,9 @@ contains
       module procedure zzremt
       use pepper_kinds, only: ip, wp
       implicit none
-      logical :: yes
-      parameter           ( yes = .true.  )
-      logical :: no
-      parameter           ( no  = .false. )
-      integer(ip) :: lower
-      parameter           ( lower  = 1 )
-      integer(ip) :: upper
-      parameter           ( upper  = lower  + 1 )
-      integer(ip) :: mixed
-      parameter           ( mixed  = upper  + 1 )
-      integer(ip) :: full
-      parameter           ( full   = 1 )
-      integer(ip) :: short
-      parameter           ( short  = full   + 1 )
-      integer(ip) :: maxtkn
-      parameter           ( maxtkn = 64 )
-      integer(ip) :: piclen
-      parameter           ( piclen = maxtkn * 5 )
-      integer(ip) :: wdsize
-      parameter           ( wdsize = 32 )
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
-      integer(ip) :: nrecog
-      parameter           ( nrecog = 70 )
-      integer(ip) :: smwdsz
-      parameter           ( smwdsz = 12 )
       integer(ip) :: put
       integer(ip) :: i
       logical :: did
@@ -7642,33 +7431,9 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: pos, posr
       implicit none
-      logical :: yes
-      parameter           ( yes = .true.  )
-      logical :: no
-      parameter           ( no  = .false. )
-      integer(ip) :: lower
-      parameter           ( lower  = 1 )
-      integer(ip) :: upper
-      parameter           ( upper  = lower  + 1 )
-      integer(ip) :: mixed
-      parameter           ( mixed  = upper  + 1 )
-      integer(ip) :: full
-      parameter           ( full   = 1 )
-      integer(ip) :: short
-      parameter           ( short  = full   + 1 )
-      integer(ip) :: maxtkn
-      parameter           ( maxtkn = 64 )
-      integer(ip) :: piclen
-      parameter           ( piclen = maxtkn * 5 )
-      integer(ip) :: wdsize
-      parameter           ( wdsize = 32 )
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
-      integer(ip) :: nrecog
-      parameter           ( nrecog = 70 )
-      integer(ip) :: smwdsz
-      parameter           ( smwdsz = 12 )
       integer(ip) :: k
       logical :: did
       integer(ip) :: from
@@ -7871,10 +7636,6 @@ contains
       use pepper_strings, only: lx4uns, prefix, rtrim, samchi, samsbi, suffix, ucase, &
          repmc_inplace, repmi_inplace, zzinssub_inplace
       implicit none
-      logical :: yes
-      parameter           ( yes = .true.  )
-      logical :: no
-      parameter           ( no  = .false. )
       integer(ip) :: lower
       parameter           ( lower  = 1 )
       integer(ip) :: upper
@@ -7885,17 +7646,9 @@ contains
       parameter           ( full   = 1 )
       integer(ip) :: short
       parameter           ( short  = full   + 1 )
-      integer(ip) :: maxtkn
-      parameter           ( maxtkn = 64 )
-      integer(ip) :: piclen
-      parameter           ( piclen = maxtkn * 5 )
-      integer(ip) :: wdsize
-      parameter           ( wdsize = 32 )
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
-      integer(ip) :: nrecog
-      parameter           ( nrecog = 70 )
       integer(ip) :: smwdsz
       parameter           ( smwdsz = 12 )
       integer(ip) :: pfrom
@@ -8984,33 +8737,9 @@ contains
       use pepper_strings, only: nparsd, pos, prefix, suffix, ucase, repmc_inplace, repmi_inplace, &
          zzinssub_inplace, zzrepsub_inplace
       implicit none
-      logical :: yes
-      parameter           ( yes = .true.  )
-      logical :: no
-      parameter           ( no  = .false. )
-      integer(ip) :: lower
-      parameter           ( lower  = 1 )
-      integer(ip) :: upper
-      parameter           ( upper  = lower  + 1 )
-      integer(ip) :: mixed
-      parameter           ( mixed  = upper  + 1 )
-      integer(ip) :: full
-      parameter           ( full   = 1 )
-      integer(ip) :: short
-      parameter           ( short  = full   + 1 )
-      integer(ip) :: maxtkn
-      parameter           ( maxtkn = 64 )
-      integer(ip) :: piclen
-      parameter           ( piclen = maxtkn * 5 )
-      integer(ip) :: wdsize
-      parameter           ( wdsize = 32 )
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
-      integer(ip) :: nrecog
-      parameter           ( nrecog = 70 )
-      integer(ip) :: smwdsz
-      parameter           ( smwdsz = 12 )
       integer(ip) :: nsec
       integer(ip) :: p2
       integer(ip) :: nhour
@@ -9683,33 +9412,11 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: nparsi
       implicit none
-      logical :: yes
-      parameter           ( yes = .true.  )
-      logical :: no
-      parameter           ( no  = .false. )
-      integer(ip) :: lower
-      parameter           ( lower  = 1 )
-      integer(ip) :: upper
-      parameter           ( upper  = lower  + 1 )
-      integer(ip) :: mixed
-      parameter           ( mixed  = upper  + 1 )
-      integer(ip) :: full
-      parameter           ( full   = 1 )
-      integer(ip) :: short
-      parameter           ( short  = full   + 1 )
-      integer(ip) :: maxtkn
-      parameter           ( maxtkn = 64 )
-      integer(ip) :: piclen
-      parameter           ( piclen = maxtkn * 5 )
       integer(ip) :: wdsize
       parameter           ( wdsize = 32 )
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
-      integer(ip) :: nrecog
-      parameter           ( nrecog = 70 )
-      integer(ip) :: smwdsz
-      parameter           ( smwdsz = 12 )
       integer(ip) :: item
       character(wdsize) :: myerr
       integer(ip) :: ptr
@@ -10252,14 +9959,8 @@ contains
 !
 !     Parameters
 !
-      integer(ip) :: era
-      parameter           ( era    =  1 )
 
-      integer(ip) :: wday
-      parameter           ( wday   = era    + 1 )
 
-      integer(ip) :: zone
-      parameter           ( zone   = wday   + 1 )
 
       integer(ip) :: ampm
       parameter           ( ampm   = zone   + 1 )
@@ -10267,8 +9968,6 @@ contains
       integer(ip) :: system
       parameter           ( system = ampm   + 1 )
 
-      integer(ip) :: lnsize
-      parameter           ( lnsize = 80 )
 
       character(5) :: type
       character(8) :: modify   ( 5 )
@@ -10458,7 +10157,6 @@ contains
       use pepper_inc_zzctr
       implicit none
       integer(ip), parameter :: shrtln = 9
-      integer(ip), parameter :: bslash = 92
       character(shrtln), parameter :: dat = 'begindata'
       character(shrtln), parameter :: txt = 'begintext'
 !
@@ -10636,18 +10334,11 @@ contains
       use pepper_hash, only: name_hash
       use pepper_strings, only: lastpc, nparsd, rtrim
       implicit none
-      integer(ip) :: lbpool
-      parameter           ( lbpool = -5 )
 
-      integer(ip) :: linlen
-      parameter           ( linlen = 132 )
 
-      integer(ip) :: maxlen
-      parameter           ( maxlen =    32 )
 
 !     The size of the kernel pool's hash table (MAXVAR in POOL).
 !
-      integer(ip), parameter :: maxvar = 26003
 
 !
 !     Local parameters.
@@ -10658,14 +10349,8 @@ contains
 !     processing flow of a variable assignment.
 !
 
-      integer(ip) :: begin
-      parameter           ( begin  = 1 )
 
-      integer(ip) :: done
-      parameter           ( done   = begin  + 1 )
 
-      integer(ip) :: invar
-      parameter           ( invar  = done   + 1 )
 
 !
 !     Next we have the various types of tokens that can be found
@@ -10678,47 +10363,25 @@ contains
 !     EQ  --- equal sign
 !     EQP --- equal sign plus
 !
-      integer(ip) :: q
-      parameter           ( q      = 1          )
 
-      integer(ip) :: nq
-      parameter           ( nq     = q      + 1 )
 
-      integer(ip) :: bv
-      parameter           ( bv     = nq     + 1 )
 
-      integer(ip) :: ev
-      parameter           ( ev     = bv     + 1 )
 
-      integer(ip) :: eq
-      parameter           ( eq     = ev     + 1 )
 
-      integer(ip) :: eqp
-      parameter           ( eqp    = eq     + 1 )
 
 !
 !     A variable can have one of three types as we process
 !     it.  It can have an unknown type UNKNWN, STRTYP or NUMTYP.
 !
 
-      integer(ip) :: strtyp
-      parameter           ( strtyp = 1 )
 
-      integer(ip) :: numtyp
-      parameter           ( numtyp = strtyp + 1 )
 
-      integer(ip) :: unknwn
-      parameter           ( unknwn = numtyp + 1 )
 
 !
 !     The next two parameters indicate which component of a linked
 !     list node point to the previous node and the next node.
 !
-      integer(ip) :: prev
-      parameter           ( prev = 2 )
 
-      integer(ip) :: next
-      parameter           ( next = 1 )
 
 !
 !     The next collection of variables are set up in first pass
@@ -10796,15 +10459,6 @@ contains
 !
 !     Constants (SPICELIB computed them on the first call).
 !
-      integer(ip), parameter :: icomma = ichar( ','   )
-      integer(ip), parameter :: iblank = ichar( ' '   )
-      integer(ip), parameter :: iquote = ichar( ''''  )
-      integer(ip), parameter :: ilparn = ichar( '('   )
-      integer(ip), parameter :: irparn = ichar( ')'   )
-      integer(ip), parameter :: iequal = ichar( '='   )
-      integer(ip), parameter :: iplus = ichar( '+'   )
-      integer(ip), parameter :: itmark = ichar( '@'   )
-      integer(ip), parameter :: itab = 9
 
 !
 !     Below are a collection of In-line function definitions that are
@@ -11687,18 +11341,11 @@ contains
       use pepper_hash, only: name_hash
       use pepper_strings, only: lastpc, nparsd, rtrim
       implicit none
-      integer(ip) :: lbpool
-      parameter           ( lbpool = -5 )
 
-      integer(ip) :: linlen
-      parameter           ( linlen = 132 )
 
-      integer(ip) :: maxlen
-      parameter           ( maxlen = 32 )
 
 !     The size of the kernel pool's hash table (MAXVAR in POOL).
 !
-      integer(ip), parameter :: maxvar = 26003
 
 !
 !     Local parameters.
@@ -11709,14 +11356,8 @@ contains
 !     processing flow of a variable assignment.
 !
 
-      integer(ip) :: begin
-      parameter           ( begin  = 1 )
 
-      integer(ip) :: done
-      parameter           ( done   = begin  + 1 )
 
-      integer(ip) :: invar
-      parameter           ( invar  = done   + 1 )
 
 !
 !     Next we have the various types of tokens that can be found
@@ -11729,47 +11370,25 @@ contains
 !     EQ  --- equal sign
 !     EQP --- equal sign plus
 !
-      integer(ip) :: q
-      parameter           ( q      = 1          )
 
-      integer(ip) :: nq
-      parameter           ( nq     = q      + 1 )
 
-      integer(ip) :: bv
-      parameter           ( bv     = nq     + 1 )
 
-      integer(ip) :: ev
-      parameter           ( ev     = bv     + 1 )
 
-      integer(ip) :: eq
-      parameter           ( eq     = ev     + 1 )
 
-      integer(ip) :: eqp
-      parameter           ( eqp    = eq     + 1 )
 
 !
 !     A variable can have one of three types as we process
 !     it.  It can have an unknown type UNKNWN, STRTYP or NUMTYP.
 !
 
-      integer(ip) :: strtyp
-      parameter           ( strtyp = 1 )
 
-      integer(ip) :: numtyp
-      parameter           ( numtyp = strtyp + 1 )
 
-      integer(ip) :: unknwn
-      parameter           ( unknwn = numtyp + 1 )
 
 !
 !     The next two parameters indicate which component of a linked
 !     list node point to the previous node and the next node.
 !
-      integer(ip) :: prev
-      parameter           ( prev = 2 )
 
-      integer(ip) :: next
-      parameter           ( next = 1 )
 
 !
 !     The next collection of variables are set up in first pass
@@ -11843,15 +11462,6 @@ contains
 !
 !     Constants (SPICELIB computed them on the first call).
 !
-      integer(ip), parameter :: icomma = ichar( ','   )
-      integer(ip), parameter :: iblank = ichar( ' '   )
-      integer(ip), parameter :: iquote = ichar( ''''  )
-      integer(ip), parameter :: ilparn = ichar( '('   )
-      integer(ip), parameter :: irparn = ichar( ')'   )
-      integer(ip), parameter :: iequal = ichar( '='   )
-      integer(ip), parameter :: iplus = ichar( '+'   )
-      integer(ip), parameter :: itmark = ichar( '@'   )
-      integer(ip), parameter :: itab = 9
 
 !
 !     Below are a collection of In-line function definitions that are

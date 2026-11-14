@@ -209,6 +209,11 @@ submodule (pepper_instance) pepper_files
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: wdsize = 32  !! length of a word of text
+
 contains
 
       !>## Detailed Input
@@ -422,7 +427,6 @@ contains
       integer(ip), parameter :: idxtfm = idxfmt + 1
       integer(ip), parameter :: idxrbf = idxtfm + 1
       integer(ip), parameter :: kysize = 64
-      integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: nattr = 6
       character(wdsize), parameter :: defrpy = '<UNAVAILABLE>'
       character(kysize) :: keycpy
@@ -592,7 +596,6 @@ contains
       use pepper_inc_zzddhman
       implicit none
 
-      integer(ip), parameter :: wdsize = 32
 
       character(wdsize) :: strbff
       character(wdsize) :: value
@@ -1908,7 +1911,6 @@ contains
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: locsiz = 8
-      integer(ip), parameter :: numcls = 3
       integer(ip), parameter :: method = 1
       integer(ip), parameter :: arch = method + 1
       integer(ip), parameter :: bff = arch   + 1

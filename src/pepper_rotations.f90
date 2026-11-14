@@ -396,6 +396,13 @@ submodule (pepper_instance) pepper_rotations
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: alpha = 1  !! index of the first Euler angle
+   integer(ip), parameter :: beta = 2  !! index of the second Euler angle
+   integer(ip), parameter :: gamma = 3  !! index of the third Euler angle
+
 contains
 
       !>## Detailed Input
@@ -2485,9 +2492,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxmt, mxv
       implicit none
-      integer(ip), parameter :: alpha = 1
-      integer(ip), parameter :: beta = 2
-      integer(ip), parameter :: gamma = 3
       integer(ip), parameter :: dalpha = 4
       integer(ip), parameter :: dbeta = 5
       integer(ip), parameter :: dgamma = 6
@@ -2979,12 +2983,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxm, mxv
       implicit none
-      integer(ip), parameter :: alpha = 1
-      integer(ip), parameter :: beta = 2
-      integer(ip), parameter :: gamma = 3
-      integer(ip), parameter :: dalpha = 4
-      integer(ip), parameter :: dbeta = 5
-      integer(ip), parameter :: dgamma = 6
       real(wp) :: ca
       real(wp) :: d
       real(wp), parameter :: delta  ( 3, 3 ) = reshape ( &

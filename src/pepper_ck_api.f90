@@ -9,6 +9,17 @@ submodule (pepper_instance) pepper_ck_api
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: ndc = 2  !! number of double precision components of a segment descriptor
+   integer(ip), parameter :: nic = 6  !! number of integer components of a segment descriptor
+   integer(ip), parameter :: nc = ndc + ( nic + 1 )/2  !! number of characters (double precision words) a packed descriptor takes
+   integer(ip), parameter :: idlen = nc * 8  !! length of a segment identifier (NC double precision words of 8 characters)
+   integer(ip), parameter :: lnsize = 80  !! length of a line of text (messages, kernel lines)
+   integer(ip), parameter :: nd = 2  !! number of double precision components of a DAF array summary (SPK, CK, PCK: 2)
+   integer(ip), parameter :: ni = 6  !! number of integer components of a DAF array summary (SPK, CK: 6)
+
 contains
 
       !>## Detailed Input
@@ -334,11 +345,8 @@ contains
       integer(ip) :: nlist  ! the number of IDs in LIST
 
 
-      integer(ip), parameter :: lnsize = 80
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       character(lnsize) :: arch
       character(lnsize) :: kertyp
@@ -1226,10 +1234,6 @@ contains
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: ndc = 2
-      integer(ip), parameter :: nic = 6
-      integer(ip), parameter :: nc = ndc + ( nic + 1 )/2
-      integer(ip), parameter :: idlen = nc * 8
       character(idlen) :: segid
       real(wp) :: av     ( 3 )
       real(wp) :: dcd    ( ndc  )
@@ -2231,10 +2235,6 @@ contains
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: ndc = 2
-      integer(ip), parameter :: nic = 6
-      integer(ip), parameter :: nc = ndc + ( nic + 1 )/2
-      integer(ip), parameter :: idlen = nc * 8
       character(idlen) :: segid
       real(wp) :: dcd      ( ndc  )
       real(wp) :: descr    ( nc   )
@@ -2618,7 +2618,6 @@ contains
       use pepper_strings, only: eqstr
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip), parameter :: bufsiz = 100
 
@@ -2915,7 +2914,6 @@ contains
       use pepper_strings, only: eqstr
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip), parameter :: psize = 8
 
@@ -3162,7 +3160,6 @@ contains
       real(wp) :: tick_1(1)  !! one-element copy of tick (array argument)
       real(wp) :: start_1(1)  !! one-element copy of start (array argument)
 
-      integer(ip), parameter :: lbcell = -5
 
       real(wp) :: begin
       real(wp) :: buffer ( 2 )
@@ -3546,11 +3543,8 @@ contains
       use pepper_inc_ckparam
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       real(wp) :: dc     ( nd )
       real(wp) :: descr  ( 5 )
@@ -3825,7 +3819,6 @@ contains
       real(wp) :: tick_1(1)  !! one-element copy of tick (array argument)
       real(wp) :: start_1(1)  !! one-element copy of start (array argument)
 
-      integer(ip), parameter :: lbcell = -5
 
       real(wp) :: begin
       real(wp) :: buffer ( 4 )
@@ -4244,7 +4237,6 @@ contains
       implicit none
       real(wp) :: lstepc_1(1)  !! one-element copy of lstepc (array argument)
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     Number of elements in a type 6 mini-segment
@@ -5124,11 +5116,8 @@ contains
 
       character(*), parameter :: kwseg = 'SEGMENT'
 
-      integer(ip), parameter :: lnsize = 80
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       character(lnsize) :: arch
       character(lnsize) :: kertyp

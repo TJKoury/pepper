@@ -404,6 +404,28 @@ submodule (pepper_instance) pepper_records
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: nconst = 1  !! number of a generic segment's constants (SGFCON), at the start of the record
+   integer(ip), parameter :: begel1 = nconst + 1  !! index in the record of the first packet, after the constants
+   integer(ip), parameter :: dirsiz = 100  !! size of a segment's directory of epochs (every 100th epoch)
+   integer(ip), parameter :: bufsiz = dirsiz + 1  !! size of a buffer of epochs (a directory and one more)
+   integer(ip), parameter :: cntidx = 2  !! index in a record of the number of packets
+   integer(ip), parameter :: ctrlsz = 4  !! number of control words at the end of a segment
+   integer(ip), parameter :: maxrec = 129  !! maximum size of a record
+   integer(ip), parameter :: nd = 2  !! number of double precision components of a DAF array summary (SPK, CK, PCK: 2)
+   integer(ip), parameter :: ndc = 2  !! number of double precision components of a segment descriptor
+   integer(ip), parameter :: ni = 6  !! number of integer components of a DAF array summary (SPK, CK: 6)
+   integer(ip), parameter :: nic = 6  !! number of integer components of a segment descriptor
+   integer(ip), parameter :: pktidx = 3  !! index in a record of the first packet
+   integer(ip), parameter :: qavsiz = 7  !! number of components of a quaternion and angular velocity
+   integer(ip), parameter :: qsiz = 4  !! number of components of a quaternion
+   integer(ip), parameter :: sbtidx = 1  !! index in a record of the subtype
+   integer(ip), parameter :: sizidx = 1  !! index in a record of its size
+   integer(ip), parameter :: staidx = 4  !! index in a record of the first state
+   integer(ip), parameter :: statsz = 6  !! number of components of a state (position and velocity)
+
 contains
 
       !>## Detailed Input
@@ -3025,15 +3047,10 @@ contains
 !                   operates on.
 !
 
-      integer(ip), parameter :: dirsiz = 100
 
-      integer(ip), parameter :: ndc = 2
 
-      integer(ip), parameter :: nic = 6
 
-      integer(ip), parameter :: qsiz = 4
 
-      integer(ip), parameter :: qavsiz = 7
 
       integer(ip), parameter :: dtype = 1
 
@@ -3511,11 +3528,8 @@ contains
 !        DTYPE      is the data type of the segment that this routine
 !                   operates on.
 !
-      integer(ip), parameter :: dirsiz = 100
 
-      integer(ip), parameter :: ndc = 2
 
-      integer(ip), parameter :: nic = 6
 
       integer(ip), parameter :: psiz = 8
 
@@ -4207,12 +4221,7 @@ contains
       real(wp) :: nstart_1(1)  !! one-element copy of nstart (array argument)
       real(wp) :: start_1(1)  !! one-element copy of start (array argument)
       real(wp) :: lsclk_1(1)  !! one-element copy of lsclk (array argument)
-      integer(ip), parameter :: dirsiz = 100
       integer(ip), parameter :: bufsiz = 100
-      integer(ip), parameter :: nd = 2
-      integer(ip), parameter :: ni = 6
-      integer(ip), parameter :: qsiz = 4
-      integer(ip), parameter :: qavsiz = 7
       integer(ip), parameter :: dtype = 3
       integer(ip) :: icd    ( ni )
       integer(ip) :: beg
@@ -5082,9 +5091,6 @@ contains
       use pepper_inc_ck05
       use pepper_inc_ckparam
       implicit none
-      integer(ip), parameter :: nd = 2
-      integer(ip), parameter :: ni = 6
-      integer(ip), parameter :: dirsiz = 100
       integer(ip), parameter :: pbufsz = dirsiz + 1
       integer(ip), parameter :: ctrlsz = 5
       integer(ip), parameter :: parsiz = 4
@@ -6132,11 +6138,6 @@ contains
       use pepper_inc_ck06
       implicit none
       real(wp) :: lstepc_1(1)  !! one-element copy of lstepc (array argument)
-      integer(ip), parameter :: nd = 2
-      integer(ip), parameter :: ni = 6
-      integer(ip), parameter :: dirsiz = 100
-      integer(ip), parameter :: bufsiz = dirsiz + 1
-      integer(ip), parameter :: ctrlsz = 4
       integer(ip), parameter :: nsgpar = 2
       integer(ip), parameter :: c06mw0 = ( maxdeg + 1 )/2
       integer(ip), parameter :: c06mw1 = ( maxdeg + 1 )
@@ -7718,7 +7719,6 @@ contains
 !
 !     Parameters
 !
-      integer(ip), parameter :: nd = 2
 
       integer(ip), parameter :: ni = 5
 
@@ -9426,11 +9426,8 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_spkrec
       implicit none
-      integer(ip), parameter :: statsz = 6
-      integer(ip), parameter :: sizidx = 1
       integer(ip), parameter :: begidx = 2
       integer(ip), parameter :: stpidx = 3
-      integer(ip), parameter :: staidx = 4
       integer(ip) :: i
       integer(ip) :: n
       integer(ip) :: ystart
@@ -9604,7 +9601,6 @@ contains
       use pepper_inc_spkrec
       implicit none
 
-      integer(ip), parameter :: statsz = 6
 
 !
 !     Indices of input record elements:
@@ -9612,7 +9608,6 @@ contains
 !        -- size
 !        -- start of state information
 !
-      integer(ip), parameter :: sizidx = 1
 
       integer(ip), parameter :: staidx = 2
 
@@ -9784,9 +9779,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: maxrec = 129
 
-      integer(ip), parameter :: sizidx = 1
 
       integer(ip), parameter :: stridx = sizidx + 1
 
@@ -9971,9 +9964,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: maxrec = 129
 
-      integer(ip), parameter :: sizidx = 1
 
       real(wp) :: locrec ( maxrec )
       real(wp) :: work   ( maxrec * 2,  2 )
@@ -10530,22 +10521,18 @@ contains
 !
 !     Index of subtype code in record:
 !
-      integer(ip), parameter :: sbtidx = 1
 
 !
 !     Index of packet count in record:
 !
-      integer(ip), parameter :: cntidx = 2
 
 !
 !     Index at which packets start:
 !
-      integer(ip), parameter :: pktidx = 3
 
 !
 !     Maximum polynomial degree:
 !
-      integer(ip), parameter :: maxdeg = 15
 
       real(wp) :: locrec ( maxrec )
       real(wp) :: work   ( maxrec * 2,  2 )
@@ -10851,17 +10838,14 @@ contains
 !
 !     Index of subtype code in record:
 !
-      integer(ip), parameter :: sbtidx = 1
 
 !
 !     Index of packet count in record:
 !
-      integer(ip), parameter :: cntidx = 2
 
 !
 !     Index at which packets start:
 !
-      integer(ip), parameter :: pktidx = 3
 
       real(wp) :: locrec ( maxrec )
       real(wp) :: work   ( maxrec * 2,  2 )
@@ -12383,9 +12367,7 @@ contains
 
       integer(ip), parameter :: stasiz = 6
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       real(wp) :: dc       (   nd )
       real(wp) :: data     ( size )
@@ -12819,15 +12801,10 @@ contains
       use pepper_math, only: odd
       implicit none
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
-      integer(ip), parameter :: statsz = 6
 
-      integer(ip), parameter :: ctrlsz = 4
 
-      integer(ip), parameter :: staidx = 4
 
       real(wp) :: contrl ( ctrlsz  )
       real(wp) :: dc     ( nd )
@@ -13106,15 +13083,10 @@ contains
       use pepper_math, only: odd
       implicit none
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
-      integer(ip), parameter :: statsz = 6
 
-      integer(ip), parameter :: dirsiz = 100
 
-      integer(ip), parameter :: bufsiz = dirsiz + 1
 
       real(wp) :: buffer ( bufsiz )
       real(wp) :: contrl ( 2  )
@@ -13531,9 +13503,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
 !
 !     The difference between the first and last address of a type 15
@@ -13740,9 +13710,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
 !
 !     The difference between the first and last address of a type 17
@@ -13960,13 +13928,9 @@ contains
       use pepper_inc_spk18
       implicit none
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
-      integer(ip), parameter :: dirsiz = 100
 
-      integer(ip), parameter :: bufsiz = dirsiz + 1
 
       integer(ip), parameter :: ctrlsz = 3
 
@@ -14514,10 +14478,6 @@ contains
       use pepper_inc_spk19
       use pepper_inc_spkrec
       implicit none
-      integer(ip), parameter :: nd = 2
-      integer(ip), parameter :: ni = 6
-      integer(ip), parameter :: dirsiz = 100
-      integer(ip), parameter :: bufsiz = dirsiz + 1
       integer(ip), parameter :: ctrlsz = 3
       integer(ip), parameter :: s19mw0 = ( maxdeg + 1 )/2
       integer(ip), parameter :: s19mw1 = ( maxdeg + 1 )
@@ -16551,8 +16511,6 @@ contains
 !     PEPPER: SPICELIB truncated the series at 10 terms for Intel Fortran
 !     on Windows (#if) and at 11 everywhere else; 11 is used everywhere.
       integer(ip), parameter :: trunc = 11
-      real(wp), parameter :: half = 1.0_wp / 2.0_wp
-      real(wp), parameter :: eighth = 1.0_wp / 8.0_wp
       integer(ip), parameter :: npairs = 2*trunc - 2
       integer(ip), parameter :: lpair3 = npairs
       integer(ip), parameter :: lpair2 = npairs - 1
@@ -19670,7 +19628,6 @@ contains
       use pepper_strings, only: intstr, ljucrs, prefix, suffix
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: nck = 30
       integer(ip), parameter :: sclk = 1
       integer(ip), parameter :: spk = sclk   + 1
@@ -20084,9 +20041,7 @@ contains
       use pepper_inc_ckparam
       implicit none
 
-      integer(ip), parameter :: ndc = 2
 
-      integer(ip), parameter :: nic = 6
 
       real(wp) :: dcd    ( ndc )
 
@@ -22182,9 +22137,7 @@ contains
 !     Include the mnemonic values for the generic segment declarations.
 !
 
-      integer(ip), parameter :: dirsiz = 100
 
-      integer(ip), parameter :: bufsiz = dirsiz + 1
       real(wp) :: buffer ( bufsiz )
       real(wp) :: dptemp
       real(wp) :: endref
@@ -23014,7 +22967,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: maxrec = 129
 
 !
 !     Standard SPICE error handling.
@@ -23155,7 +23107,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: maxrec = 129
 
 !
 !     Standard SPICE error handling.
@@ -24207,12 +24158,10 @@ contains
 !     The number of constant values stored with a type 03 segment
 !     segment.
 !
-      integer(ip), parameter :: nconst = 1
 !
 !     The beginning location in the output record for the non-constant
 !     segment data.
 !
-      integer(ip), parameter :: begel1 = nconst + 1
 
       real(wp) :: value
 
@@ -25354,12 +25303,10 @@ contains
 !     The number of constant values stored with a type 14 segment
 !     segment.
 !
-      integer(ip), parameter :: nconst = 1
 !
 !     The beginning location in the output record for the non constant
 !     segment data.
 !
-      integer(ip), parameter :: begel1 = nconst + 1
 
       real(wp) :: value
 
@@ -25728,9 +25675,7 @@ contains
 !        NIC        is the number of integer components in an unpacked
 !                   C-kernel segment descriptor.
 !
-      integer(ip), parameter :: ndc = 2
 
-      integer(ip), parameter :: nic = 6
 
       integer(ip) :: icd    ( nic    )
       integer(ip) :: type
@@ -26013,7 +25958,6 @@ contains
 
 !     ND and NI values for a PCK file.
 !
-      integer(ip), parameter :: nd = 2
 
       integer(ip), parameter :: ni = 5
 !

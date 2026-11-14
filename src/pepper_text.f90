@@ -2929,7 +2929,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip), parameter :: lbpool = -5
 
 !
 !     Linked list parameters

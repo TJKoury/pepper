@@ -1357,6 +1357,64 @@ submodule (pepper_instance) pepper_geometry
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: altidx = 3  !! index of altitude in a coordinate bounds array
+   real(wp), parameter :: atol = 1.0e-12_wp  !! tolerance of an angle (radians)
+   character(1), parameter :: blank = ' '  !! a blank
+   integer(ip), parameter :: btsize = 10  !! size of the DSK segment buffer (bodies)
+   real(wp), parameter :: cnvlim = 1.0e-17_wp  !! convergence limit of the light time iteration
+   character(*), parameter :: dquote = '"'  !! the double quote character
+   integer(ip), parameter :: dsktrg = 2  !! target shape: DSK
+   integer(ip), parameter :: earth = 399  !! NAIF ID code of the Earth
+   integer(ip), parameter :: east = 2  !! longitude sense: positive east
+   integer(ip), parameter :: elltrg = 1  !! target shape: ellipsoid
+   integer(ip), parameter :: gt = 1  !! relation: greater than
+   integer(ip), parameter :: inner = 1  !! index of the inner bound in a bounds array
+   character(*), parameter :: iref = 'J2000'  !! inertial reference frame of computations
+   integer(ip), parameter :: j2code = 1  !! frame ID code of J2000
+   integer(ip), parameter :: kvnmln = 32  !! length of a kernel variable name
+   integer(ip), parameter :: latidx = 2  !! index of latitude in a coordinate bounds array
+   real(wp), parameter :: latmrg = 1.0e-8_wp  !! margin of latitude near the poles (radians)
+   integer(ip), parameter :: lbcell = -5  !! lower bound of a SPICE cell (its control area: elements -5 to 0)
+   integer(ip), parameter :: lnsize = 80  !! length of a line of text (messages, kernel lines)
+   integer(ip), parameter :: lonidx = 1  !! index of longitude in a coordinate bounds array
+   character(1), parameter :: lparen = '('  !! left parenthesis
+   integer(ip), parameter :: lt = -1  !! relation: less than
+   real(wp), parameter :: margin = 1.0e-12_wp  !! relative tolerance of a bound
+   integer(ip), parameter :: maxchr = 255  !! maximum character code
+   integer(ip), parameter :: maxdc = 1  !! number of double precision components of a DSK descriptor buffer
+   integer(ip), parameter :: maxic = 1  !! number of integer components of a DSK descriptor buffer
+   integer(ip), parameter :: maxitr = 10  !! maximum number of iterations
+   integer(ip), parameter :: maxlen = 32  !! length of a frame name
+   integer(ip), parameter :: minlen = 5  !! minimum length of a string
+   integer(ip), parameter :: moon = 301  !! NAIF ID code of the Moon
+   integer(ip), parameter :: msglen = 80  !! length of an error message
+   integer(ip), parameter :: north = 2  !! latitude sense: north
+   real(wp), parameter :: one = 1.0_wp  !! one
+   integer(ip), parameter :: outer = 2  !! index of the outer bound in a bounds array
+   character(*), parameter :: ovrtmp = 'BODY#_PGR_POSITIVE_LON'  !! template of the planetographic longitude sense variable
+   character(*), parameter :: pmtmp = 'BODY#_PM'  !! template of the prime meridian kernel variable
+   real(wp), parameter :: radfac = 1.1_wp  !! factor enlarging a bounding radius
+   integer(ip), parameter :: radidx = 3  !! index of radius in a coordinate bounds array
+   real(wp), parameter :: rndtol = 1.0e-14_wp  !! tolerance of round-off in arcsines
+   integer(ip), parameter :: sensln = 4  !! length of a longitude sense (EAST, WEST)
+   integer(ip), parameter :: south = 1  !! latitude sense: south
+   integer(ip), parameter :: ssb = 0  !! NAIF ID code of the solar system barycenter
+   integer(ip), parameter :: sun = 10  !! NAIF ID code of the Sun
+   real(wp), parameter :: thdt = 4.3752691e-3_wp  !! SGP4 deep space: Earth rotation rate (radians/minute)
+   real(wp), parameter :: tothrd = 2.0_wp/3.0_wp  !! two thirds
+   integer(ip), parameter :: ubel = 9  !! upper bound of an ellipse array (center, semi-major and semi-minor axes)
+   integer(ip), parameter :: ubpl = 4  !! upper bound of a plane array (normal vector and constant)
+   integer(ip), parameter :: wdsize = 32  !! length of a word of text
+   integer(ip), parameter :: west = 1  !! longitude sense: positive west
+   real(wp), parameter :: zel = 0.05490_wp  !! SGP4 deep space: lunar orbit eccentricity
+   real(wp), parameter :: zero = 0.0_wp  !! zero
+   real(wp), parameter :: zes = 0.01675_wp  !! SGP4 deep space: solar orbit eccentricity
+   real(wp), parameter :: znl = 1.5835218e-4_wp  !! SGP4 deep space: lunar mean motion (radians/minute)
+   real(wp), parameter :: zns = 1.19459e-5_wp  !! SGP4 deep space: solar mean motion (radians/minute)
+
 contains
 
       !>## Detailed Input
@@ -1788,7 +1846,6 @@ contains
       implicit none
       integer(ip), parameter :: anwrds = 22
       integer(ip), parameter :: awrds = 33
-      integer(ip), parameter :: wdsize = 32
       character(8), parameter :: anword ( anwrds ) = &
          [ character(8) :: 'HEIR', 'HONEST', 'HONOR', 'H', 'HOUR', 'HORS ', 'HOMBRE', &
            'F', 'L', 'M', 'N', 'R', 'S', 'X', 'UNIN', 'UNIM', 'ONEI', &
@@ -3056,7 +3113,6 @@ contains
       use pepper_inc_ninert
       use pepper_inc_nninrt
       implicit none
-      integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: nframe = ninert + nninrt
       integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: lbpool = -5
@@ -6226,13 +6282,10 @@ contains
       integer(ip), parameter :: next = 1
       integer(ip), parameter :: prev = 2
       integer(ip), parameter :: nil = 0
-      integer(ip), parameter :: prsize = 29
       integer(ip), parameter :: mxloop = 20
       real(wp), parameter :: half = 0.5_wp
-      real(wp), parameter :: one = 1.0_wp
       real(wp), parameter :: f3ov8 = 3.0_wp/8.0_wp
       real(wp), parameter :: f3ov2 = 1.50_wp
-      real(wp), parameter :: tothrd = 2.0_wp/3.0_wp
       real(wp), parameter :: onethd = 1.0_wp/3.0_wp
       real(wp) :: c5
       real(wp) :: f
@@ -7887,7 +7940,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     Set up the error processing.
@@ -8048,7 +8100,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     Set up the error processing.
@@ -8208,7 +8259,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     Set up the error processing.
@@ -11154,8 +11204,6 @@ contains
       use pepper_strings, only: eqstr
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: sun = 10
-      integer(ip), parameter :: maxl = 36
       character(:), allocatable :: frname
       real(wp) :: lt
       real(wp) :: lts
@@ -12285,11 +12333,8 @@ contains
       integer(ip) :: fclass_1(1)  !! one-element copy of fclass (array argument)
       integer(ip) :: idcode_1(1)  !! one-element copy of idcode (array argument)
 
-      integer(ip), parameter :: lbcell = -5
 
-      integer(ip), parameter :: kvnmln = 32
 
-      integer(ip), parameter :: bufsiz = 100
 
       character(:), allocatable :: frname
       type(string), allocatable :: kvars(:)
@@ -12725,9 +12770,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
-      character(1), parameter :: blank = ' '
 
       integer(ip), parameter :: ispace = 32
 
@@ -13230,8 +13273,6 @@ contains
       use pepper_inc_zzctr
       implicit none
       character(*), parameter :: ref = 'J2000'
-      integer(ip), parameter :: sun = 10
-      integer(ip), parameter :: maxl = 36
       real(wp) :: uavel  ( 3 )
       real(wp) :: lat
       real(wp) :: lt
@@ -14059,13 +14100,7 @@ contains
       use pepper_arrays, only: bsrchi
       use pepper_strings, only: rtrim
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: mxspec = 512
       logical :: return
-      integer(ip), parameter :: maxchr = 255
-      integer(ip), parameter :: blank = 32
-      integer(ip), parameter :: minprt = 32
-      integer(ip), parameter :: maxprt = 126
       integer(ip), parameter :: nhpos = 1
       integer(ip), parameter :: ntpos = 2
       integer(ip), parameter :: hcpos = 3
@@ -14216,15 +14251,6 @@ contains
       module procedure lxdfid
       use pepper_kinds, only: ip
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: mxspec = 512
-      integer(ip), parameter :: maxchr = 255
-      integer(ip), parameter :: blank = 32
-      integer(ip), parameter :: minprt = 32
-      integer(ip), parameter :: maxprt = 126
-      integer(ip), parameter :: nhpos = 1
-      integer(ip), parameter :: ntpos = 2
-      integer(ip), parameter :: hcpos = 3
       integer(ip) :: c
       integer(ip) :: headc  ( lbcell : maxchr )
       integer(ip) :: hl
@@ -14394,15 +14420,9 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: mxspec = 512
-      integer(ip), parameter :: maxchr = 255
       integer(ip), parameter :: blank = 32
       integer(ip), parameter :: minprt = 32
       integer(ip), parameter :: maxprt = 126
-      integer(ip), parameter :: nhpos = 1
-      integer(ip), parameter :: ntpos = 2
-      integer(ip), parameter :: hcpos = 3
       integer(ip) :: c
       integer(ip) :: headc  ( lbcell : maxchr )
       integer(ip) :: hl
@@ -14645,7 +14665,6 @@ contains
       use pepper_math, only: el2cgv, mtxv, mxv, vdist, vnorm
       implicit none
 
-      integer(ip), parameter :: ubel = 9
 
       real(wp) :: center ( 3 )
       real(wp) :: majlen
@@ -15922,7 +15941,6 @@ contains
       implicit none
       real(wp) :: rate_1(1)  !! one-element copy of rate (array argument)
 
-      integer(ip), parameter :: wdsize = 32
 
       character(1) :: type
       character(wdsize) :: item
@@ -16695,7 +16713,6 @@ contains
       module procedure prtenc
       use pepper_kinds, only: ip
       implicit none
-      integer(ip), parameter :: minlen = 5
       integer(ip), parameter :: chbase = 128
       integer(ip) :: base
       integer(ip) :: num
@@ -16809,7 +16826,6 @@ contains
       module procedure prtdec
       use pepper_kinds, only: ip
       implicit none
-      integer(ip), parameter :: minlen = 5
       integer(ip), parameter :: chbase = 128
       integer(ip) :: base
       integer(ip) :: num
@@ -18690,15 +18706,9 @@ contains
       use pepper_inc_sclk
       implicit none
       integer(ip) :: nfield_1(1)  !! one-element copy of nfield (array argument)
-      integer(ip), parameter :: errlen = 240
-      integer(ip), parameter :: namlen = 60
-      integer(ip), parameter :: msglen = 320
-      integer(ip), parameter :: initsc = 0
-      real(wp), parameter :: initid = -1.0e20_wp
       integer(ip), parameter :: nflidx = 1
       integer(ip), parameter :: offidx = nflidx + 1
       integer(ip), parameter :: modidx = offidx + 1
-      integer(ip), parameter :: nkitem = modidx
       real(wp) :: offset ( mxnfld )
       integer(ip) :: n
       character(dplen) :: cmp    ( mxnfld )
@@ -18967,7 +18977,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: posr, rtrim, ucase
       implicit none
-      integer(ip), parameter :: maxlen = 32
       logical :: return
       character(maxlen) :: tmpnam
       integer(ip) :: loc
@@ -19075,7 +19084,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: suffix
       implicit none
-      integer(ip), parameter :: maxlen = 32
       logical :: return
       character(maxlen) :: tmpnam
       integer(ip) :: loc
@@ -19992,8 +20000,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vdot, vhat, vnorm, vperp
       implicit none
-      integer(ip), parameter :: msgdim = 7
-      integer(ip), parameter :: msglen = 32
       real(wp) :: p     ( 3 )
       real(wp) :: pmag
       real(wp) :: scale
@@ -21295,9 +21301,7 @@ contains
       use pepper_math, only: el2cgv, vdist, vdot, vhat, vnorm, vsep
       use pepper_strings, only: cmprss
       implicit none
-      integer(ip), parameter :: ubel = 9
 
-      integer(ip), parameter :: ubpl = 4
 
 !
 !     Tolerance used for loop convergence.  This tolerance applies
@@ -24054,7 +24058,6 @@ contains
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
-      real(wp), parameter :: margin = 1.0e-12_wp
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -24073,7 +24076,6 @@ contains
       integer(ip) :: segfid
       integer(ip) :: segsys
       integer(ip) :: surf
-      real(wp), parameter :: pi2 = twopi
       if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
       associate ( savbid => ctx%zzdsksel_state%savbid )
       zzdsksbd = .false.
@@ -24161,7 +24163,6 @@ contains
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
-      real(wp), parameter :: margin = 1.0e-12_wp
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -24180,7 +24181,6 @@ contains
       integer(ip) :: segfid
       integer(ip) :: segsys
       integer(ip) :: surf
-      real(wp), parameter :: pi2 = twopi
       if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
       associate ( savbid => ctx%zzdsksel_state%savbid )
       zzdskbdc = nint( dskdsc(ctridx) ) == savbid
@@ -24263,7 +24263,6 @@ contains
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
-      real(wp), parameter :: margin = 1.0e-12_wp
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -24282,7 +24281,6 @@ contains
       integer(ip) :: segfid
       integer(ip) :: segsys
       integer(ip) :: surf
-      real(wp), parameter :: pi2 = twopi
       zzdsknot = .false.
 
       return
@@ -24368,7 +24366,6 @@ contains
       use pepper_arrays, only: shelli
       use pepper_inc_dskdsc
       implicit none
-      real(wp), parameter :: margin = 1.0e-12_wp
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -24387,7 +24384,6 @@ contains
       integer(ip) :: segfid
       integer(ip) :: segsys
       integer(ip) :: surf
-      real(wp), parameter :: pi2 = twopi
       if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
 !
 !     PEPPER: the surface list has room for any number of surfaces (it
@@ -24499,7 +24495,6 @@ contains
       use pepper_arrays, only: bsrchi
       use pepper_inc_dskdsc
       implicit none
-      real(wp), parameter :: margin = 1.0e-12_wp
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -24518,7 +24513,6 @@ contains
       integer(ip) :: segfid
       integer(ip) :: segsys
       integer(ip) :: surf
-      real(wp), parameter :: pi2 = twopi
       if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
 !
 !     PEPPER: the surface list has room for any number of surfaces (it
@@ -24643,7 +24637,6 @@ contains
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
-      real(wp), parameter :: margin = 1.0e-12_wp
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -24662,7 +24655,6 @@ contains
       integer(ip) :: segfid
       integer(ip) :: segsys
       integer(ip) :: surf
-      real(wp), parameter :: pi2 = twopi
       if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
       associate ( savbid => ctx%zzdsksel_state%savbid, &
                   savco1 => ctx%zzdsksel_state%savco1, &
@@ -24759,7 +24751,6 @@ contains
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
-      real(wp), parameter :: margin = 1.0e-12_wp
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -24984,7 +24975,6 @@ contains
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
-      real(wp), parameter :: margin = 1.0e-12_wp
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -25003,7 +24993,6 @@ contains
       integer(ip) :: segfid
       integer(ip) :: segsys
       integer(ip) :: surf
-      real(wp), parameter :: pi2 = twopi
       if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
       associate ( savbid => ctx%zzdsksel_state%savbid, &
                   savco1 => ctx%zzdsksel_state%savco1, &
@@ -25123,7 +25112,6 @@ contains
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
-      real(wp), parameter :: margin = 1.0e-12_wp
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -25367,7 +25355,6 @@ contains
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
-      real(wp), parameter :: margin = 1.0e-12_wp
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -25386,7 +25373,6 @@ contains
       integer(ip) :: segfid
       integer(ip) :: segsys
       integer(ip) :: surf
-      real(wp), parameter :: pi2 = twopi
       if ( .not. allocated ( ctx%zzdsksel_state ) ) allocate ( ctx%zzdsksel_state )
       associate ( savbid => ctx%zzdsksel_state%savbid, &
                   savcls => ctx%zzdsksel_state%savcls, &
@@ -25501,7 +25487,6 @@ contains
       use pepper_math, only: mxv, reclat
       use pepper_inc_dskdsc
       implicit none
-      real(wp), parameter :: margin = 1.0e-12_wp
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -26120,11 +26105,8 @@ contains
       use pepper_strings, only: ucase_inplace
       implicit none
 
-      integer(ip), parameter :: ubel = 9
 
-      integer(ip), parameter :: ubpl = 4
 
-      integer(ip), parameter :: maxitr = 10
 
       integer(ip), parameter :: typlen = 50
 
@@ -27975,12 +27957,7 @@ contains
       integer(ip), parameter :: kmo = komega + 1
       integer(ip), parameter :: kno = kmo    + 1
       integer(ip), parameter :: kepoch = kno    + 1
-      integer(ip), parameter :: nelems = kepoch
-      integer(ip), parameter :: wdsize = 32
-      integer(ip), parameter :: lnsize = 160
       integer(ip), parameter :: maxp = 37
-      integer(ip), parameter :: minp = -maxp
-      real(wp), parameter :: one = 1.0_wp
       real(wp), parameter :: ten = 10.0_wp
       real(wp), parameter :: mnpday = 1440.0_wp
       character(wdsize) :: cno
@@ -29093,7 +29070,6 @@ contains
       use pepper_math, only: mxv, reclat, ucrss, vcrss, vhat, vhatip, vrotv, vsep
       implicit none
 
-      real(wp), parameter :: margin = 1.0e-12_wp
 
       real(wp) :: cp     ( 3 )
       real(wp) :: delta
@@ -30183,7 +30159,6 @@ contains
       use pepper_math, only: cylrec, vnorm
       implicit none
 
-      real(wp), parameter :: margin = 1.0e-12_wp
 
       real(wp) :: diag   ( 3 )
       real(wp) :: hdlon
@@ -30519,7 +30494,6 @@ contains
 !
       character(*), parameter :: delim = ' /,=:'
 
-      character(*), parameter :: dquote = '"'
 
       integer(ip) :: b
       integer(ip) :: e
@@ -32106,7 +32080,6 @@ contains
 !     ATOL is a tolerance value for computing arc sine.
 !
 
-      real(wp), parameter :: atol = 1.0e-12_wp
 
 !
 !     Set an initial value to return in case of error.
@@ -32640,12 +32613,7 @@ contains
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       implicit none
-      character(*), parameter :: rname = 'ZZSFXCOR'
-      real(wp), parameter :: cnvlim = 1.0e-17_wp
-      real(wp), parameter :: rndtol = 1.0e-14_wp
       real(wp), parameter :: margin = 1.01_wp
-      integer(ip), parameter :: maxitr = 10
-      integer(ip), parameter :: j2code = 1
       real(wp) :: dist
       real(wp) :: etdiff
       real(wp) :: j2dir  ( 3 )
@@ -33530,7 +33498,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_math, only: opsgnd, reclat, vcrss, vdot, vhatip
       implicit none
-      integer(ip), parameter :: ubpl = 4
       real(wp) :: crease ( 3 )
       real(wp) :: dir    ( 3 )
       real(wp) :: dp1
@@ -33935,7 +33902,6 @@ contains
       integer(ip) :: shp1
       integer(ip) :: shp2
       logical :: attblk ( nabcor )
-      integer(ip), parameter :: spshpn = 2
       integer(ip), parameter :: point = 1
       integer(ip), parameter :: sphere = 2
       if ( .not. allocated ( ctx%zzspin_state ) ) allocate ( ctx%zzspin_state )
@@ -35413,7 +35379,6 @@ contains
       use pepper_constants, only: twopi
       use pepper_math, only: pl2nvc, ucrss, vdot, vperp, vsep
       implicit none
-      integer(ip), parameter :: ubpl = 4
 
       real(wp) :: atotal
       real(wp) :: cons
@@ -36242,15 +36207,6 @@ contains
       use pepper_strings, only: ljucrs
       use pepper_inc_zzctr
       implicit none
-      character(*), parameter :: pmtmp = 'BODY#_PM'
-      character(*), parameter :: ovrtmp = 'BODY#_PGR_POSITIVE_LON'
-      integer(ip), parameter :: earth = 399
-      integer(ip), parameter :: kvnmln = 32
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: moon = 301
-      integer(ip), parameter :: sensln = 4
-      integer(ip), parameter :: sun = 10
-      integer(ip), parameter :: maxl = 36
       character(lnsize) :: kvalue
       character(kvnmln) :: pmkvar
       character(sensln) :: pgrlon
@@ -36910,15 +36866,6 @@ contains
       use pepper_strings, only: ljucrs
       use pepper_inc_zzctr
       implicit none
-      character(*), parameter :: pmtmp = 'BODY#_PM'
-      character(*), parameter :: ovrtmp = 'BODY#_PGR_POSITIVE_LON'
-      integer(ip), parameter :: earth = 399
-      integer(ip), parameter :: kvnmln = 32
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: moon = 301
-      integer(ip), parameter :: sensln = 4
-      integer(ip), parameter :: sun = 10
-      integer(ip), parameter :: maxl = 36
       character(lnsize) :: kvalue
       character(kvnmln) :: pmkvar
       character(sensln) :: pgrlon
@@ -38122,7 +38069,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: maxl = 36
       real(wp) :: ltsrc
       real(wp) :: lttarg
       real(wp) :: r
@@ -39586,7 +39532,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: maxl = 36
 !     PEPPER: an integer (SPICELIB declared it DOUBLE PRECISION and passed it
 !     to integer arguments).
       integer(ip) :: instid
@@ -41080,15 +41025,6 @@ contains
       use pepper_strings, only: ljucrs
       use pepper_inc_zzctr
       implicit none
-      character(*), parameter :: pmtmp = 'BODY#_PM'
-      character(*), parameter :: ovrtmp = 'BODY#_PGR_POSITIVE_LON'
-      integer(ip), parameter :: earth = 399
-      integer(ip), parameter :: kvnmln = 32
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: moon = 301
-      integer(ip), parameter :: sensln = 4
-      integer(ip), parameter :: sun = 10
-      integer(ip), parameter :: maxl = 36
       character(lnsize) :: kvalue
       character(kvnmln) :: pmkvar
       character(sensln) :: pgrlon
@@ -41671,15 +41607,6 @@ contains
       use pepper_strings, only: ljucrs
       use pepper_inc_zzctr
       implicit none
-      character(*), parameter :: pmtmp = 'BODY#_PM'
-      character(*), parameter :: ovrtmp = 'BODY#_PGR_POSITIVE_LON'
-      integer(ip), parameter :: earth = 399
-      integer(ip), parameter :: kvnmln = 32
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: moon = 301
-      integer(ip), parameter :: sensln = 4
-      integer(ip), parameter :: sun = 10
-      integer(ip), parameter :: maxl = 36
       character(lnsize) :: kvalue
       character(kvnmln) :: pmkvar
       character(sensln) :: pgrlon
@@ -43329,7 +43256,6 @@ contains
       use pepper_strings, only: eqstr
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: maxl = 36
       character(:), allocatable :: frname
       real(wp) :: lt
       real(wp) :: pos    ( 3 )
@@ -43953,7 +43879,6 @@ contains
       use pepper_strings, only: eqstr
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: maxl = 36
       character(:), allocatable :: frname
       real(wp) :: alt
       real(wp) :: ettarg
@@ -45460,11 +45385,8 @@ contains
       use pepper_strings, only: rjust
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
-      character(1), parameter :: blank = ' '
 
-      character(1), parameter :: lparen = '('
 
       character(3), parameter :: rparen = '  )'
 
@@ -47407,7 +47329,6 @@ contains
       use pepper_math, only: vcrss, vhat, vhatip, vsep
       implicit none
 
-      real(wp), parameter :: margin = 1.0e-12_wp
 
       real(wp) :: cp     ( 3 )
       real(wp) :: limit
@@ -47699,11 +47620,8 @@ contains
 
       integer(ip), parameter :: none = 0
 
-      integer(ip), parameter :: lonidx = 1
 
-      integer(ip), parameter :: latidx = 2
 
-      integer(ip), parameter :: radidx = 3
 
       integer(ip), parameter :: lower = 1
 
@@ -47968,12 +47886,8 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j1950, j2000, pi, spd, twopi
       implicit none
-      real(wp), parameter :: zns = 1.19459e-5_wp
       real(wp), parameter :: c1ss = 2.9864797e-6_wp
-      real(wp), parameter :: zes = 0.01675_wp
-      real(wp), parameter :: znl = 1.5835218e-4_wp
       real(wp), parameter :: c1l = 4.7968065e-7_wp
-      real(wp), parameter :: zel = 0.05490_wp
       real(wp), parameter :: zcosis = 0.91744867_wp
       real(wp), parameter :: zsinis = 0.39785416_wp
       real(wp), parameter :: zsings = -0.98088458_wp
@@ -47986,11 +47900,7 @@ contains
       real(wp), parameter :: root44 = 7.3636953e-9_wp
       real(wp), parameter :: root52 = 1.1428639e-7_wp
       real(wp), parameter :: root54 = 2.1765803e-9_wp
-      real(wp), parameter :: thdt = 4.3752691e-3_wp
-      real(wp), parameter :: step2 = 259200.0_wp
       integer(ip), parameter :: lunar = 1
-      real(wp), parameter :: zero = 0.0_wp
-      real(wp), parameter :: one = 1.0_wp
       real(wp) :: z22
       real(wp) :: temp1
       real(wp) :: z1
@@ -48761,29 +48671,7 @@ contains
       module procedure zzdpsec
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp), parameter :: zns = 1.19459e-5_wp
-      real(wp), parameter :: c1ss = 2.9864797e-6_wp
-      real(wp), parameter :: zes = 0.01675_wp
-      real(wp), parameter :: znl = 1.5835218e-4_wp
-      real(wp), parameter :: c1l = 4.7968065e-7_wp
-      real(wp), parameter :: zel = 0.05490_wp
-      real(wp), parameter :: zcosis = 0.91744867_wp
-      real(wp), parameter :: zsinis = 0.39785416_wp
-      real(wp), parameter :: zsings = -0.98088458_wp
-      real(wp), parameter :: zcosgs = 0.1945905_wp
-      real(wp), parameter :: q22 = 1.7891679e-6_wp
-      real(wp), parameter :: q31 = 2.1460748e-6_wp
-      real(wp), parameter :: q33 = 2.2123015e-7_wp
-      real(wp), parameter :: root22 = 1.7891679e-6_wp
-      real(wp), parameter :: root32 = 3.7393792e-7_wp
-      real(wp), parameter :: root44 = 7.3636953e-9_wp
-      real(wp), parameter :: root52 = 1.1428639e-7_wp
-      real(wp), parameter :: root54 = 2.1765803e-9_wp
-      real(wp), parameter :: thdt = 4.3752691e-3_wp
       real(wp), parameter :: step2 = 259200.0_wp
-      integer(ip), parameter :: lunar = 1
-      real(wp), parameter :: zero = 0.0_wp
-      real(wp), parameter :: one = 1.0_wp
       real(wp) :: xnddt
       real(wp) :: xndot
       real(wp) :: xincl
@@ -49037,29 +48925,6 @@ contains
       module procedure zzdpper
       use pepper_kinds, only: ip, wp
       implicit none
-      real(wp), parameter :: zns = 1.19459e-5_wp
-      real(wp), parameter :: c1ss = 2.9864797e-6_wp
-      real(wp), parameter :: zes = 0.01675_wp
-      real(wp), parameter :: znl = 1.5835218e-4_wp
-      real(wp), parameter :: c1l = 4.7968065e-7_wp
-      real(wp), parameter :: zel = 0.05490_wp
-      real(wp), parameter :: zcosis = 0.91744867_wp
-      real(wp), parameter :: zsinis = 0.39785416_wp
-      real(wp), parameter :: zsings = -0.98088458_wp
-      real(wp), parameter :: zcosgs = 0.1945905_wp
-      real(wp), parameter :: q22 = 1.7891679e-6_wp
-      real(wp), parameter :: q31 = 2.1460748e-6_wp
-      real(wp), parameter :: q33 = 2.2123015e-7_wp
-      real(wp), parameter :: root22 = 1.7891679e-6_wp
-      real(wp), parameter :: root32 = 3.7393792e-7_wp
-      real(wp), parameter :: root44 = 7.3636953e-9_wp
-      real(wp), parameter :: root52 = 1.1428639e-7_wp
-      real(wp), parameter :: root54 = 2.1765803e-9_wp
-      real(wp), parameter :: thdt = 4.3752691e-3_wp
-      real(wp), parameter :: step2 = 259200.0_wp
-      integer(ip), parameter :: lunar = 1
-      real(wp), parameter :: zero = 0.0_wp
-      real(wp), parameter :: one = 1.0_wp
       real(wp) :: sghs
       real(wp) :: f2
       real(wp) :: pl
@@ -49364,9 +49229,7 @@ contains
       use pepper_constants, only: halfpi
       use pepper_math, only: reclat
       implicit none
-      integer(ip), parameter :: lt = -1
       integer(ip), parameter :: eq = 0
-      integer(ip), parameter :: gt = 1
       real(wp) :: lon
       real(wp) :: offpcl
       real(wp) :: offset ( 3 )
@@ -51177,7 +51040,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: ubel = 9
 
 !
 !     SPICE ellipses contain a center vector, a semi-major
@@ -51674,9 +51536,6 @@ contains
       use pepper_math, only: latrec
       implicit none
       real(wp), parameter :: tol = 1.0e-6_wp
-      real(wp), parameter :: tothrd = 2.0_wp/3.0_wp
-      real(wp), parameter :: zero = 0.0_wp
-      real(wp), parameter :: one = 1.0_wp
       integer(ip), parameter :: numgeo = 8
       integer(ip), parameter :: numelm = 10
       real(wp) :: eta
@@ -52589,11 +52448,8 @@ contains
       implicit none
       real(wp) :: rate_1(1)  !! one-element copy of rate (array argument)
 
-      integer(ip), parameter :: bdnmln = 36
 
-      integer(ip), parameter :: sun = 10
 
-      integer(ip), parameter :: wdsize = 32
 
       character(4) :: amorpm
       character(:), allocatable :: bodnam
@@ -53053,7 +52909,6 @@ contains
       implicit none
       real(wp), parameter :: costol = 1.0e-10_wp
       real(wp), parameter :: hsptol = 1.0e-14_wp
-      integer(ip), parameter :: ubpl = 4
       real(wp) :: a
       real(wp) :: axmag
       real(wp) :: b
@@ -53978,15 +53833,12 @@ contains
       use pepper_strings, only: nparsd, nextwd_inplace, replch_inplace
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip), parameter :: linlen = 80
 
       character(1), parameter :: comma = ','
 
-      character(1), parameter :: blank = ' '
 
-      character(1), parameter :: lparen = '('
 
       character(1), parameter :: rparen = ')'
 
@@ -54653,7 +54505,6 @@ contains
       integer(ip), parameter :: sphcl = 4
       integer(ip), parameter :: geodet = 5
       integer(ip), parameter :: plntgr = 6
-      integer(ip), parameter :: maxl = 36
       character(chsiz), parameter :: cosys ( ncosys ) = [ character(chsiz) :: &
          'RECTANGULAR',&
          'CYLINDRICAL',&
@@ -55387,7 +55238,6 @@ contains
       use pepper_inc_zzabcorr
       implicit none
 
-      character(*), parameter :: iref = 'J2000'
 
       real(wp) :: dlt
       real(wp) :: etsurf
@@ -55761,28 +55611,18 @@ contains
 
       integer(ip), parameter :: none = 0
 
-      integer(ip), parameter :: lonidx = 1
 
-      integer(ip), parameter :: latidx = 2
 
-      integer(ip), parameter :: radidx = 3
 
-      real(wp), parameter :: latmrg = 1.0e-8_wp
 
 !
 !     Element boundary indices:
 !
-      integer(ip), parameter :: west = 1
 
-      integer(ip), parameter :: east = 2
 
-      integer(ip), parameter :: south = 1
 
-      integer(ip), parameter :: north = 2
 
-      integer(ip), parameter :: inner = 1
 
-      integer(ip), parameter :: outer = 2
 
       real(wp) :: amaxr
       real(wp) :: aminr
@@ -56229,11 +56069,8 @@ contains
 
       integer(ip), parameter :: none = 0
 
-      integer(ip), parameter :: lonidx = 1
 
-      integer(ip), parameter :: latidx = 2
 
-      integer(ip), parameter :: altidx = 3
 
       integer(ip), parameter :: lower = 1
 
@@ -56242,11 +56079,8 @@ contains
 !
 !     Numeric relation codes returned by ZZPDCMPL:
 !
-      integer(ip), parameter :: lt = -1
 
-      integer(ip), parameter :: eq = 0
 
-      integer(ip), parameter :: gt = 1
 
       real(wp) :: emax
       real(wp) :: emin
@@ -56858,8 +56692,6 @@ contains
       use pepper_inc_zzsrftrn
       implicit none
       integer(ip) :: idx
-      integer(ip), parameter :: sizidx = 0
-      integer(ip), parameter :: freidx = -1
       integer(ip) :: nkvar
       integer(ip) :: node
       integer(ip) :: lookat
@@ -57078,8 +56910,6 @@ contains
       use pepper_inc_zzsrftrn
       implicit none
       integer(ip) :: idx
-      integer(ip), parameter :: sizidx = 0
-      integer(ip), parameter :: freidx = -1
       integer(ip) :: nkvar
       integer(ip) :: node
       integer(ip) :: lookat
@@ -57275,8 +57105,6 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzsrftrn
       implicit none
-      integer(ip), parameter :: sizidx = 0
-      integer(ip), parameter :: freidx = -1
       integer(ip) :: nkvar
       logical :: lupdte
       if ( .not. allocated ( ctx%zzsrftrn_state ) ) allocate ( ctx%zzsrftrn_state )
@@ -57707,9 +57535,7 @@ contains
       use pepper_math, only: pl2nvc, pl2psv, vnorm
       implicit none
 
-      integer(ip), parameter :: ubel = 9
 
-      integer(ip), parameter :: ubpl = 4
 
       real(wp) :: center ( 3 )
       real(wp) :: const
@@ -58119,9 +57945,7 @@ contains
       use pepper_math, only: el2cgv, pl2nvc, vperp
       implicit none
 
-      integer(ip), parameter :: ubel = 9
 
-      integer(ip), parameter :: ubpl = 4
 
       real(wp) :: center ( 3 )
       real(wp) :: const
@@ -59126,7 +58950,6 @@ contains
       use pepper_strings, only: nparsi
       implicit none
 
-      integer(ip), parameter :: msglen = 80
 
       character(msglen) :: errmsg
 
@@ -59463,7 +59286,6 @@ contains
       use pepper_strings, only: nparsi
       implicit none
 
-      integer(ip), parameter :: msglen = 80
 
       character(msglen) :: errmsg
 
@@ -60193,8 +60015,6 @@ contains
       use pepper_math, only: el2cgv, ucrss, vdist, vdot, vhat, vnorm, vsep
       use pepper_inc_errhnd
       implicit none
-      integer(ip), parameter :: ubel = 9
-      integer(ip), parameter :: ubpl = 4
       character(lmsgln) :: errmsg
       real(wp) :: a
       real(wp) :: apex   ( 3 )
@@ -60987,18 +60807,8 @@ contains
       use pepper_inc_dsktol
       implicit none
       integer(ip), parameter :: none = 0
-      integer(ip), parameter :: lonidx = 1
-      integer(ip), parameter :: latidx = 2
-      integer(ip), parameter :: altidx = 3
-      real(wp), parameter :: latmrg = 1.0e-8_wp
-      integer(ip), parameter :: west = 1
-      integer(ip), parameter :: east = 2
-      integer(ip), parameter :: south = 1
-      integer(ip), parameter :: north = 2
       integer(ip), parameter :: lower = 1
       integer(ip), parameter :: upper = 2
-      integer(ip), parameter :: lt = -1
-      integer(ip), parameter :: gt = 1
       real(wp) :: amnalt
       real(wp) :: amnlat
       real(wp) :: amnlon
@@ -61449,16 +61259,6 @@ contains
       use pepper_math, only: reclat, ucrss, vdist, vdot, vhat, vnorm
       use pepper_inc_dsktol
       implicit none
-      integer(ip), parameter :: lonidx = 1
-      integer(ip), parameter :: latidx = 2
-      integer(ip), parameter :: radidx = 3
-      real(wp), parameter :: radfac = 1.1_wp
-      integer(ip), parameter :: west = 1
-      integer(ip), parameter :: east = 2
-      integer(ip), parameter :: south = 1
-      integer(ip), parameter :: north = 2
-      integer(ip), parameter :: inner = 1
-      integer(ip), parameter :: outer = 2
       real(wp) :: angle
       real(wp) :: dist
       real(wp) :: eastb  ( 3 )
@@ -62348,9 +62148,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: ubel = 9
 
-      integer(ip), parameter :: ubpl = 4
 
       real(wp) :: level
       real(wp) :: lplane ( ubpl )
@@ -62759,9 +62557,7 @@ contains
       use pepper_math, only: unorm
       implicit none
 
-      integer(ip), parameter :: ubel = 9
 
-      integer(ip), parameter :: ubpl = 4
 
       real(wp) :: candpl ( ubpl )
       real(wp) :: cand   ( ubel )
@@ -63497,7 +63293,6 @@ contains
 
       character(*), parameter :: comma = ','
 
-      character(*), parameter :: dquote = '"'
 
       character(*), parameter :: equals = '='
 
@@ -64322,14 +64117,6 @@ contains
       use pepper_math, only: ucrss, vdist, vdot, vhat, vnorm, vsep
       use pepper_inc_dsktol
       implicit none
-      integer(ip), parameter :: lonidx = 1
-      integer(ip), parameter :: latidx = 2
-      integer(ip), parameter :: altidx = 3
-      real(wp), parameter :: radfac = 1.1_wp
-      integer(ip), parameter :: west = 1
-      integer(ip), parameter :: east = 2
-      integer(ip), parameter :: south = 1
-      integer(ip), parameter :: north = 2
       integer(ip), parameter :: lower = 1
       integer(ip), parameter :: upper = 2
       integer(ip), parameter :: none = 0
@@ -67722,12 +67509,8 @@ contains
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
-      real(wp), parameter :: cnvlim = 1.0e-17_wp
-      real(wp), parameter :: rndtol = 1.0e-14_wp
       real(wp), parameter :: margin = 1.001_wp
       integer(ip), parameter :: abclen = 15
-      integer(ip), parameter :: maxitr = 10
-      integer(ip), parameter :: maxl = 36
       character(:), allocatable :: frname
       character(abclen) :: loccor
       real(wp) :: etdiff
@@ -70300,9 +70083,7 @@ contains
       real(wp), parameter :: cnvlim = 1.0e-16_wp
       integer(ip), parameter :: mxcvit = 10
       integer(ip), parameter :: mxncit = 3
-      integer(ip), parameter :: bdnmln = 36
       integer(ip), parameter :: loclen = 15
-      integer(ip), parameter :: j2code = 1
       character(loclen) :: locstr
       real(wp) :: ctrpos ( 3 )
       real(wp) :: dist
@@ -71489,9 +71270,7 @@ contains
       use pepper_inc_zzocced
       implicit none
 
-      integer(ip), parameter :: ubel = 9
 
-      integer(ip), parameter :: ubpl = 4
 
 !     Tolerance value for determinant of a rotation matrix.  The
 !     determinant must differ from 1 by no more than DTOL.
@@ -71508,7 +71287,6 @@ contains
 !     Tolerance value for argument of arcsine.  The argument should
 !     have absolute value no greater than 1 + ATOL.
 !
-      real(wp), parameter :: atol = 1.0e-12_wp
 
       real(wp) :: angcmp
       real(wp) :: bigctr ( 3 )
@@ -74814,10 +74592,7 @@ contains
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: maxdc = 1
-      integer(ip), parameter :: maxic = 1
       integer(ip) :: stsize
-      integer(ip), parameter :: btsize = 10
       real(wp) :: locdc  ( maxdc )
       integer(ip) :: bix
       integer(ip) :: j
@@ -75044,10 +74819,7 @@ contains
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: maxdc = 1
-      integer(ip), parameter :: maxic = 1
       integer(ip) :: stsize
-      integer(ip), parameter :: btsize = 10
       real(wp) :: locdc  ( maxdc )
       integer(ip) :: bix
       integer(ip) :: j
@@ -75268,10 +75040,7 @@ contains
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: maxdc = 1
-      integer(ip), parameter :: maxic = 1
       integer(ip) :: stsize
-      integer(ip), parameter :: btsize = 10
       real(wp) :: locdc  ( maxdc )
       integer(ip) :: bix
       integer(ip) :: j
@@ -76101,7 +75870,6 @@ contains
       use pepper_inc_srftrn
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: bdnmln = 36
       integer(ip) :: fxcent
       integer(ip) :: fxclss
       integer(ip) :: fxtpid
@@ -77019,7 +76787,6 @@ contains
       use pepper_inc_dsktol
       use pepper_inc_zzctr
       implicit none
-      integer(ip), parameter :: bdnmln = 36
       integer(ip) :: fxcent
       integer(ip) :: fxclss
       integer(ip) :: fxtpid
@@ -78271,9 +78038,6 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
-      character(*), parameter :: rname = 'ILLUMG'
-      integer(ip), parameter :: lnsize = 80
-      integer(ip), parameter :: maxl = 36
       character(cvtlen) :: pntdef
       character(shplen) :: shpstr
       character(sublen) :: subtyp
@@ -79408,8 +79172,6 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
-      character(*), parameter :: rname = 'SRFNRM'
-      integer(ip), parameter :: bdnmln = 36
       character(cvtlen) :: lmbtyp
       character(shplen) :: shpstr
       character(sublen) :: subtyp
@@ -79826,8 +79588,6 @@ contains
       module procedure zzsuelin
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: elltrg = 1
-      integer(ip), parameter :: dsktrg = 2
       if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
       associate ( savmnr => ctx%zzsinutl_state%savmnr, &
                   savmxr => ctx%zzsinutl_state%savmxr, &
@@ -79967,8 +79727,6 @@ contains
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: elltrg = 1
-      integer(ip), parameter :: dsktrg = 2
       if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
 !
 !     PEPPER: the surface list has room for any number of surfaces (it
@@ -80134,8 +79892,6 @@ contains
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: elltrg = 1
-      integer(ip), parameter :: dsktrg = 2
       if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
 !
 !     PEPPER: the surface list has room for any number of surfaces (it
@@ -80281,8 +80037,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
       logical :: return
-      integer(ip), parameter :: elltrg = 1
-      integer(ip), parameter :: dsktrg = 2
       if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
       associate ( savmxr => ctx%zzsinutl_state%savmxr )
       maxrad = savmxr
@@ -80397,8 +80151,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
       logical :: return
-      integer(ip), parameter :: elltrg = 1
-      integer(ip), parameter :: dsktrg = 2
       if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
       associate ( savmnr => ctx%zzsinutl_state%savmnr )
       minrad = savmnr
@@ -80528,8 +80280,6 @@ contains
       module procedure zzraynp
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: elltrg = 1
-      integer(ip), parameter :: dsktrg = 2
       if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
       associate ( savmxr => ctx%zzsinutl_state%savmxr, &
                   savrad => ctx%zzsinutl_state%savrad, &
@@ -81679,9 +81429,7 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
-      character(*), parameter :: rname = 'ILLUMF'
       real(wp), parameter :: tolscl = 1.0e-10_wp
-      integer(ip), parameter :: maxl = 36
       character(cvtlen) :: pntdef
       character(shplen) :: shpstr
       character(sublen) :: subtyp
@@ -83946,8 +83694,6 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
-      character(*), parameter :: rname = 'LATSRF'
-      integer(ip), parameter :: bdnmln = 36
       character(cvtlen) :: lmbtyp
       character(shplen) :: shpstr
       character(sublen) :: subtyp
@@ -85976,8 +85722,6 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
-      character(*), parameter :: rname = 'SINCPT'
-      integer(ip), parameter :: maxl = 36
       character(cvtlen) :: pntdef
       character(shplen) :: shpstr
       character(sublen) :: subtyp
@@ -87824,10 +87568,7 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
-      character(*), parameter :: rname = 'SUBPNT'
-      real(wp), parameter :: cnvlim = 1.0e-17_wp
       integer(ip), parameter :: maxitr = 5
-      integer(ip), parameter :: maxl = 36
       character(cvtlen) :: pntdef
       character(shplen) :: shpstr
       character(tmtlen) :: trmstr
@@ -89754,11 +89495,6 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
-      character(*), parameter :: rname = 'SUBSLR'
-      real(wp), parameter :: cnvlim = 1.0e-17_wp
-      integer(ip), parameter :: maxitr = 10
-      integer(ip), parameter :: sun = 10
-      integer(ip), parameter :: maxl = 36
       character(cvtlen) :: pntdef
       character(shplen) :: shpstr
       character(sublen) :: subtyp
@@ -91349,13 +91085,11 @@ contains
       use pepper_inc_zzdsk
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
 !
 !     EXTERNAL routines
 !
 
-      real(wp), parameter :: margin = 1.0e-12_wp
 
       real(wp) :: alpha
       real(wp) :: start
@@ -93672,15 +93406,8 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
-      character(*), parameter :: rname = 'LIMBPT'
-      character(*), parameter :: iref = 'J2000'
       real(wp), parameter :: cnvlim = 1.0e-18_wp
       integer(ip), parameter :: maxitr = 5
-      integer(ip), parameter :: ssb = 0
-      integer(ip), parameter :: maxl = 36
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxivl = 1000
-      integer(ip), parameter :: ubel = 9
       character(cvtlen) :: lmbstr
       character(acllen) :: nrmloc
       character(shplen) :: shpstr
@@ -96824,14 +96551,7 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
-      character(*), parameter :: rname = 'TERMPT'
-      character(*), parameter :: iref = 'J2000'
-      real(wp), parameter :: cnvlim = 1.0e-17_wp
       integer(ip), parameter :: maxitr = 5
-      integer(ip), parameter :: ssb = 0
-      integer(ip), parameter :: maxl = 36
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxivl = 1000
       character(cvtlen) :: pntdef
       character(acllen) :: nrmloc
       character(shplen) :: shpstr

@@ -10,6 +10,13 @@ submodule (pepper_instance) pepper_numerics
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: conpos = 4  !! index of the constant in a plane array
+   real(wp), parameter :: magtol = 1.0e-14_wp  !! tolerance of a vector magnitude
+   integer(ip), parameter :: nmlpos = 1  !! index of the normal vector in a plane array
+
 contains
 
       !>## Detailed Input
@@ -7093,7 +7100,6 @@ contains
       use pepper_math, only: el2cgv, pl2nvc, pl2nvp, vdot, vnormg, vsep
       implicit none
 
-      integer(ip), parameter :: ubel = 9
 
       integer(ip) :: ubpl
       parameter           ( ubpl = 4 )
@@ -7860,8 +7866,6 @@ contains
       use pepper_math, only: pl2nvc, smsgnd, vdot, vhat, vnorm
       implicit none
 
-      integer(ip) :: ubpl
-      parameter           ( ubpl    =   4 )
 
       real(wp), parameter :: margin = 3.0_wp
 
@@ -10419,8 +10423,6 @@ contains
       use pepper_math, only: unorm
       implicit none
 
-      integer(ip) :: ubpl
-      parameter           ( ubpl    =   4 )
 
 !
 !     The contents of SPICE planes are as follows:
@@ -10437,11 +10439,7 @@ contains
 !        origin; the normal vector, scaled by the constant, is the
 !        closest point in the plane to the origin.
 !
-      integer(ip) :: nmlpos
-      parameter           ( nmlpos = 1 )
 
-      integer(ip) :: conpos
-      parameter           ( conpos = 4 )
 
       real(wp) :: mag
       real(wp) :: tmpvec ( 3 )
@@ -10604,8 +10602,6 @@ contains
       use pepper_math, only: vdot, vhat
       implicit none
 
-      integer(ip) :: ubpl
-      parameter           ( ubpl    =   4 )
 
 !
 !     The contents of SPICE planes are as follows:
@@ -10623,11 +10619,7 @@ contains
 !        closest point in the plane to the origin.
 !
 
-      integer(ip) :: nmlpos
-      parameter           ( nmlpos = 1 )
 
-      integer(ip) :: conpos
-      parameter           ( conpos = 4 )
 
       real(wp) :: tmpvec ( 3 )
 
@@ -10786,8 +10778,6 @@ contains
       use pepper_math, only: ucrss, vdot
       implicit none
 
-      integer(ip) :: ubpl
-      parameter           ( ubpl   =   4 )
 
 !
 !     The contents of SPICE planes are as follows:
@@ -10804,11 +10794,7 @@ contains
 !        origin; the normal vector, scaled by the constant, is the
 !        closest point in the plane to the origin.
 !
-      integer(ip) :: nmlpos
-      parameter           ( nmlpos = 1 )
 
-      integer(ip) :: conpos
-      parameter           ( conpos = 4 )
 
       real(wp) :: tmpvec ( 3 )
 
@@ -13212,14 +13198,10 @@ contains
       use pepper_math, only: approx, pl2nvc, vdot, vnorm
       implicit none
 
-      integer(ip) :: ubpl
-      parameter           ( ubpl   =   4 )
 
 !     Tolerance for deviation from unit length of the normal
 !     vector of the input plane.
 !
-      real(wp) :: magtol
-      parameter           ( magtol = 1.0e-14_wp )
 
       real(wp) :: const
       real(wp) :: normal ( 3 )
@@ -13442,8 +13424,6 @@ contains
       use pepper_math, only: approx, pl2nvc, vdot, vnorm
       implicit none
 
-      integer(ip) :: ubpl
-      parameter           ( ubpl   =    4 )
 
 !
 !     BOUND is used to bound the magnitudes of the numbers that we
@@ -13461,8 +13441,6 @@ contains
 !     Tolerance for deviation from unit length of the normal
 !     vector of the input plane.
 !
-      real(wp) :: magtol
-      parameter           ( magtol = 1.0e-14_wp )
 
       real(wp) :: denom
       real(wp) :: invc

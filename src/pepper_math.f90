@@ -7,6 +7,8 @@
 !> original interface are in tspice/src/legacy/pepper_legacy_math.f90.
 module pepper_math
 
+   use pepper_kinds, only: ip, wp
+
    implicit none
 
    private
@@ -24,6 +26,16 @@ module pepper_math
       vnormg, vpack, vperp, vproj, vprojg, vrel, vrelg, vrotv, vscl, vsclg,&
       vsclip, vsep, vsepg, vsub, vsubg, vtmv, vtmvg, vupack, vzero, vzerog,&
       xf2rav, xpose, xposeg, xpsgip, zzmsxf, zzrxr
+
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: dlon = 2  !! index of longitude in a coordinate vector
+   integer(ip), parameter :: dr = 1  !! index of radius in a coordinate vector
+   integer(ip), parameter :: dx = 1  !! index of x in a vector
+   integer(ip), parameter :: dy = 2  !! index of y in a vector
+   integer(ip), parameter :: dz = 3  !! index of z in a vector
+   integer(ip), parameter :: ubpl = 4  !! upper bound of a plane array (normal vector and constant)
 
 contains
 
@@ -4117,20 +4129,10 @@ contains
       real(wp), intent(in) :: z  !! Height of the point above the XY plane.
       real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
-      integer(ip) :: dx
-      parameter           ( dx     = 1 )
 
-      integer(ip) :: dy
-      parameter           ( dy     = 2 )
 
-      integer(ip) :: dz
-      parameter           ( dz     = 3 )
 
-      integer(ip) :: dr
-      parameter           ( dr     = 1 )
 
-      integer(ip) :: dlon
-      parameter           ( dlon   = 2 )
 
       jacobi (dx,dr)     =  dcos( clon )
       jacobi (dy,dr)     =  dsin( clon )
@@ -4453,20 +4455,10 @@ contains
       real(wp), intent(in) :: lat  !! Angle of the point from the XY plane in radians.
       real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
-      integer(ip) :: dx
-      parameter           ( dx   = 1 )
 
-      integer(ip) :: dy
-      parameter           ( dy   = 2 )
 
-      integer(ip) :: dz
-      parameter           ( dz   = 3 )
 
-      integer(ip) :: dr
-      parameter           ( dr   = 1 )
 
-      integer(ip) :: dlon
-      parameter           ( dlon = 2 )
 
       integer(ip), parameter :: dlat = 3
 
@@ -4793,17 +4785,9 @@ contains
       real(wp), intent(in) :: slon  !! Angle of the point from the XY plane.
       real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
-      integer(ip) :: dx
-      parameter           ( dx     = 1 )
 
-      integer(ip) :: dy
-      parameter           ( dy     = 2 )
 
-      integer(ip) :: dz
-      parameter           ( dz     = 3 )
 
-      integer(ip) :: dr
-      parameter           ( dr     = 1 )
 
       integer(ip), parameter :: dcolat = 2
 
@@ -11483,8 +11467,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: ubpl
-      parameter           ( ubpl    =   4 )
 
       real(wp), intent(in) :: plane  ( ubpl )  !! A SPICE plane.
       real(wp), intent(out) :: normal (    3 )  !! A normal vector and constant defining the
@@ -11630,8 +11612,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: ubpl
-      parameter           ( ubpl   =    4 )
 
       real(wp), intent(in) :: plane  ( ubpl )  !! A SPICE plane.
       real(wp), intent(out) :: normal (    3 )  !! A unit normal vector and point that define PLANE.
@@ -11849,8 +11829,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: ubpl
-      parameter           ( ubpl   =   4 )
 
       real(wp), intent(in) :: plane ( ubpl )  !! A SPICE plane.
       real(wp), intent(out) :: point (    3 )  !! A point in the input plane and two vectors

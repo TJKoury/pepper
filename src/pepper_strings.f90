@@ -11,6 +11,8 @@
 !> not allow.
 module pepper_strings
 
+   use pepper_kinds, only: ip, wp
+
    implicit none
 
    private
@@ -31,6 +33,18 @@ module pepper_strings
    public :: astrip_inplace, cmprss_inplace, lcase_inplace, nextwd_inplace,&
       repmc_inplace, repmd_inplace, repmi_inplace, replch_inplace,&
       ucase_inplace, zzinssub_inplace, zzrepsub_inplace
+
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   character(1), parameter :: blank = ' '  !! a blank
+   integer(ip), parameter :: ispace = 32  !! character code of a blank
+   integer(ip), parameter :: lowa = ichar ('a')  !! character code of "a"
+   integer(ip), parameter :: lowz = ichar ('z')  !! character code of "z"
+   integer(ip), parameter :: lstchr = 255  !! last character code
+   integer(ip), parameter :: shift = ichar ('A') - lowa  !! from a lower case character code to its upper case
+   integer(ip), parameter :: uppera = ichar ('A')  !! character code of "A"
+   integer(ip), parameter :: upperz = ichar ('Z')  !! character code of "Z"
 
 contains
 
@@ -3358,8 +3372,6 @@ contains
 !
 !     Character codes used for the case conversion.
 !
-      integer(ip), parameter :: uppera = ichar ('A')
-      integer(ip), parameter :: upperz = ichar ('Z')
       integer(ip), parameter :: shift = ichar ('a') - uppera
 
 !
@@ -3470,9 +3482,6 @@ contains
 !
 !     Character codes used for the case conversion.
 !
-      integer(ip), parameter :: lowa = ichar ('a')
-      integer(ip), parameter :: lowz = ichar ('z')
-      integer(ip), parameter :: shift = ichar ('A') - lowa
 
 !
 !     Find out how much space there is in the INPUT and OUTPUT strings
@@ -3936,8 +3945,6 @@ contains
       integer(ip), intent(out) :: n  !! Number of items in the list.
       character(*), intent(out) :: items ( * )  !! Items in the list, left justified.
 
-      character(1),parameter :: blank = ' '
-      integer(ip),parameter :: ispace = 32
 
       character(1) :: bchr
       character(1) :: echr
@@ -4332,8 +4339,6 @@ contains
       integer(ip), intent(out) :: n  !! Number of items in the list.
       character(*), intent(out) :: items ( * )  !! Items in the list, left justified.
 
-      character(1),parameter :: blank = ' '
-      integer(ip),parameter :: ispace = 32
 
       character(1) :: bchr
       character(1) :: echr
@@ -6057,7 +6062,6 @@ contains
       character(*), intent(out) :: next  !! The next word in the string.
       character(*), intent(out) :: rest  !! The remaining part of STRING, left-justified.
 
-      integer(ip),parameter :: ispace = 32
 
       integer(ip) :: begin
       integer(ip) :: end
@@ -9773,9 +9777,6 @@ contains
 !
 !     Character codes used for the case conversion.
 !
-      integer(ip), parameter :: lowa = ichar ('a')
-      integer(ip), parameter :: lowz = ichar ('z')
-      integer(ip), parameter :: shift = ichar ('A') - lowa
 !
 !     Move the string from IN to OUT. Step through OUT one character
 !     at a time, translating letters between 'a' and 'z' to uppercase.
@@ -11147,8 +11148,6 @@ contains
          [ 0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, 6.0_wp, &
            7.0_wp, 8.0_wp, 9.0_wp ]
 
-      integer(ip) :: maxexp
-      parameter           ( maxexp = 40 )
 
       character(2), parameter :: vaxexp(0:40) = &
          [ character(2) :: '00', '01', '02', '03', '04', '05', '06', '07', '08', '09', &
@@ -11470,7 +11469,6 @@ contains
 !
 !     Range of characters
 !
-      integer(ip),parameter :: lstchr = 255
 !     The array UVALUE contains the ICHAR values for the upper case
 !     version of each character.
 !
@@ -11615,7 +11613,6 @@ contains
       implicit none
       character(1), intent(in) :: a  !! one of the characters to check
       character(1), intent(in) :: b  !! the other character to check
-      integer(ip),parameter :: lstchr = 255
       integer(ip) :: i
       integer(ip) :: j
       integer(ip), parameter :: uvalue ( 0 : lstchr ) = &
@@ -13885,9 +13882,6 @@ contains
 
       character(*), intent(inout) :: string  !! String to convert to uppercase.
 
-      integer(ip), parameter :: lowa = ichar ('a')
-      integer(ip), parameter :: lowz = ichar ('z')
-      integer(ip), parameter :: shift = ichar ('A') - lowa
 
       integer(ip) :: i
       integer(ip) :: ich
@@ -13908,8 +13902,6 @@ contains
 
       character(*), intent(inout) :: string  !! String to convert to lowercase.
 
-      integer(ip), parameter :: uppera = ichar ('A')
-      integer(ip), parameter :: upperz = ichar ('Z')
       integer(ip), parameter :: shift = ichar ('a') - uppera
 
       integer(ip) :: i

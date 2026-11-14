@@ -9,6 +9,13 @@ submodule (pepper_instance) pepper_pck_api
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: lnsize = 80  !! length of a line of text (messages, kernel lines)
+   integer(ip), parameter :: nd = 2  !! number of double precision components of a DAF array summary (SPK, CK, PCK: 2)
+   integer(ip), parameter :: ni = 6  !! number of integer components of a DAF array summary (SPK, CK: 6)
+
 contains
 
       !>## Detailed Input
@@ -501,11 +508,8 @@ contains
       type(interval_list) :: window  ! the coverage being built
 
 
-      integer(ip), parameter :: lnsize = 80
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       character(lnsize) :: arch
       character(lnsize) :: kertyp
@@ -751,7 +755,6 @@ contains
 !     NT    component number of data type in integer portion
 !           of descriptor
 !
-      integer(ip), parameter :: nd = 2
 
       integer(ip), parameter :: ni = 5
 
@@ -1104,11 +1107,8 @@ contains
       integer(ip) :: nlist  ! the number of IDs in LIST
 
 
-      integer(ip), parameter :: lnsize = 80
 
-      integer(ip), parameter :: nd = 2
 
-      integer(ip), parameter :: ni = 6
 
       character(lnsize) :: arch
       character(lnsize) :: kertyp

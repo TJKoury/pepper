@@ -739,6 +739,16 @@ submodule (pepper_instance) pepper_ek
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: empty = 4  !! code of an empty table
+   integer(ip), parameter :: equi = 1  !! code of an equality join
+   integer(ip), parameter :: lbcell = -5  !! lower bound of a SPICE cell (its control area: elements -5 to 0)
+   integer(ip), parameter :: noneq = 2  !! code of a non-equality join
+   integer(ip), parameter :: ntypes = 4  !! number of EK data types
+   integer(ip), parameter :: typlen = 4  !! length of an EK data type name
+
 contains
 
       !>## Detailed Input
@@ -1134,7 +1144,6 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
-      integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: mxspec = 512
       integer(ip), parameter :: namlim = 32
       integer(ip) :: cdscrs ( cdscsz, mxclsg )
@@ -18831,7 +18840,6 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_ekwild
       use pepper_inc_ekqlimit
-      integer(ip), parameter :: maxcol = 10
 
       integer(ip) :: i
 
@@ -19069,7 +19077,6 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      integer(ip), parameter :: lbpool = -5
 
       integer(ip) :: cldscs ( cdscsz, 2 )
       integer(ip) :: col
@@ -20213,7 +20220,6 @@ contains
       integer(ip) :: rj_1(1)  !! one-element copy of rj (array argument)
       integer(ip) :: ntab_1(1)  !! one-element copy of ntab (array argument)
       integer(ip) :: nr_1(1)  !! one-element copy of nr (array argument)
-      integer(ip), parameter :: lbpool = -5
       integer(ip), parameter :: inisub = 32
       integer(ip), parameter :: limit1 = 250000
       character(inisub), allocatable :: cdat ( : )  !! first INISUB characters of the primary order-by column's entry in each row
@@ -22440,11 +22446,7 @@ contains
       use pepper_inc_ekqlimit
       use pepper_inc_ekquery
       use pepper_inc_eksegdsc
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: equi = 1
-      integer(ip), parameter :: noneq = 2
       integer(ip), parameter :: noluck = 3
-      integer(ip), parameter :: empty = 4
       integer(ip) :: tab
       integer(ip) :: n
       integer(ip) :: ltab
@@ -22997,12 +22999,7 @@ contains
       integer(ip) :: lrow_1(1)  !! one-element copy of lrow (array argument)
       integer(ip) :: rrvidx_1(1)  !! one-element copy of rrvidx (array argument)
       integer(ip) :: lrvidx_1(1)  !! one-element copy of lrvidx (array argument)
-      integer(ip), parameter :: lbpool = -5
       logical :: return
-      integer(ip), parameter :: equi = 1
-      integer(ip), parameter :: noneq = 2
-      integer(ip), parameter :: noluck = 3
-      integer(ip), parameter :: empty = 4
       integer(ip) :: ltab
       integer(ip) :: j
       integer(ip) :: rtab
@@ -23716,7 +23713,6 @@ contains
       use pepper_inc_ekqlimit
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: b
       integer(ip) :: best
@@ -25362,7 +25358,6 @@ contains
       integer(ip) :: nt2_1(1)  !! one-element copy of nt2 (array argument)
       integer(ip) :: nsv1_1(1)  !! one-element copy of nsv1 (array argument)
       integer(ip) :: nt1_1(1)  !! one-element copy of nt1 (array argument)
-      integer(ip), parameter :: lbpool = -5
 
       integer(ip) :: i
       integer(ip) :: offset
@@ -28257,11 +28252,6 @@ contains
       use pepper_inc_ektype
       implicit none
       integer(ip), parameter :: mxclld = 500
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: nil = 0
-      integer(ip), parameter :: ntypes = 4
-      integer(ip), parameter :: typlen = 4
       integer(ip), parameter :: short = 80
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
@@ -29496,13 +29486,6 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
-      integer(ip), parameter :: mxclld = 500
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: nil = 0
-      integer(ip), parameter :: ntypes = 4
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: short = 80
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: j
@@ -29921,14 +29904,7 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
-      integer(ip), parameter :: mxclld = 500
-      integer(ip), parameter :: lbcell = -5
       logical :: return
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: nil = 0
-      integer(ip), parameter :: ntypes = 4
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: short = 80
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
@@ -30158,13 +30134,6 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
-      integer(ip), parameter :: mxclld = 500
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: nil = 0
-      integer(ip), parameter :: ntypes = 4
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: short = 80
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: i
@@ -30574,13 +30543,6 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
-      integer(ip), parameter :: mxclld = 500
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: nil = 0
-      integer(ip), parameter :: ntypes = 4
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: short = 80
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: col
@@ -31028,13 +30990,6 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
-      integer(ip), parameter :: mxclld = 500
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: nil = 0
-      integer(ip), parameter :: ntypes = 4
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: short = 80
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: col
@@ -31292,13 +31247,6 @@ contains
       use pepper_inc_ektype
       implicit none
       integer(ip) :: cjrows_1(1)  !! one-element copy of cjrows (array argument)
-      integer(ip), parameter :: mxclld = 500
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: nil = 0
-      integer(ip), parameter :: ntypes = 4
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: short = 80
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: tab
@@ -32610,13 +32558,6 @@ contains
       use pepper_inc_ektype
       implicit none
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
-      integer(ip), parameter :: mxclld = 500
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: nil = 0
-      integer(ip), parameter :: ntypes = 4
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: short = 80
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: colptr
@@ -33367,13 +33308,6 @@ contains
       use pepper_inc_ektype
       implicit none
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
-      integer(ip), parameter :: mxclld = 500
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: nil = 0
-      integer(ip), parameter :: ntypes = 4
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: short = 80
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: colptr
@@ -34338,13 +34272,6 @@ contains
       use pepper_inc_ektype
       implicit none
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
-      integer(ip), parameter :: mxclld = 500
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: nil = 0
-      integer(ip), parameter :: ntypes = 4
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: short = 80
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: colptr
@@ -35137,13 +35064,6 @@ contains
       use pepper_inc_ektype
       implicit none
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
-      integer(ip), parameter :: mxclld = 500
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: lbpool = -5
-      integer(ip), parameter :: nil = 0
-      integer(ip), parameter :: ntypes = 4
-      integer(ip), parameter :: typlen = 4
-      integer(ip), parameter :: short = 80
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: colptr
@@ -37911,7 +37831,6 @@ contains
       use pepper_inc_ekcnamsz
       use pepper_inc_ekqlimit
       use pepper_inc_ekquery
-      integer(ip), parameter :: lbcell = -5
 
       character(cnamsz) :: column
       character(1) :: ctouch
@@ -38252,7 +38171,6 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_ektnamsz
       use pepper_inc_ektokn
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip), parameter :: long = 160
 
@@ -38663,8 +38581,6 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: short = 32
       character(tnamsz) :: alias
       character(cnamsz) :: colnam
       character(tnamsz) :: lhstab
@@ -39100,7 +39016,6 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip), parameter :: short = 32
 
@@ -39973,9 +39888,7 @@ contains
       use pepper_inc_ekqlimit
       use pepper_inc_ekquery
       use pepper_inc_ektnamsz
-      integer(ip), parameter :: lbcell = -5
 
-      integer(ip), parameter :: short = 32
 
       character(tnamsz), allocatable :: alias ( : )
       character(tnamsz) :: ltable
@@ -40893,13 +40806,11 @@ contains
       use pepper_inc_ekcnamsz
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
       integer(ip) :: room
 
 !
 !     Storage limits:
 !
-      integer(ip), parameter :: maxcol = 100
 
       character(:), allocatable :: chrbuf
       character(:), allocatable :: eqryc
@@ -41074,13 +40985,11 @@ contains
       use pepper_inc_ekqlimit
       use pepper_inc_ekquery
       use pepper_inc_ektype
-      integer(ip), parameter :: lbcell = -5
       integer(ip) :: room
       integer(ip) :: dsize
 
 !     Storage limits:
 !
-      integer(ip), parameter :: maxcol = 100
 
       character(:), allocatable :: chrbuf
 
@@ -41665,10 +41574,8 @@ contains
       use pepper_inc_ektype
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
       integer(ip) :: room
 
-      integer(ip), parameter :: ntypes = 4
 
       integer(ip), parameter :: short = 4
 
@@ -42118,7 +42025,6 @@ contains
    subroutine ekqmgr_query_room ( ctx, eqryi )
       use pepper_containers, only: grow, grow_cell
       use pepper_inc_ektnamsz, only: tnamsz
-      integer(ip), parameter :: lbcell = -5
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: eqryi ( lbcell : * )  !! the encoded query
       integer(ip) :: ntab, nsel, nord, ncns, ncnj

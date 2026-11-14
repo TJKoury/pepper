@@ -2818,6 +2818,47 @@ submodule (pepper_instance) pepper_daf
 
    implicit none
 
+
+   ! Parameters shared by this file's procedures (PEPPER: SPICELIB
+   ! declared them in each routine that used them).
+   integer(ip), parameter :: acclen = 10  !! length of a file access method name (READ, WRITE, SCRATCH, NEW)
+   real(wp), parameter :: base = 16.0_wp  !! base of the hexadecimal encoding of numbers in transfer files
+   character(*), parameter :: begarr = 'BEGIN_ARRAY'  !! transfer file: the line before an array
+   integer(ip), parameter :: bsize = 128  !! number of double precision numbers in a DAF record
+   integer(ip), parameter :: bufsiz = 1024  !! size of a buffer of double precision numbers (transfer files)
+   integer(ip), parameter :: crecl = 1000  !! length of a character record (an array's name in a transfer file)
+   integer(ip), parameter :: crlen = 1000  !! number of characters in a DAF comment record
+   integer(ip), parameter :: dprsiz = 128  !! number of double precision numbers in a DAF record
+   character(*), parameter :: endarr = 'END_ARRAY'  !! transfer file: the line after an array
+   integer(ip), parameter :: errlen = 80  !! length of an error message of a transfer conversion
+   character(1), parameter :: expchr = '^'  !! the character before the exponent of an encoded number
+   integer(ip), parameter :: fmtlen = 8  !! length of a binary file format name (e.g. BIG-IEEE)
+   integer(ip), parameter :: idlen = 8  !! length of a DAF ID word
+   integer(ip), parameter :: idwlen = 8  !! length of a file ID word (e.g. DAF/SPK)
+   integer(ip), parameter :: ifnlen = 60  !! length of a DAF or DAS internal file name
+   integer(ip), parameter :: inteoc = 4  !! character code ending the comment area (EOT)
+   integer(ip), parameter :: inteol = 0  !! character code ending a line in a comment record (NUL)
+   real(wp), parameter :: invbas = 1.0_wp/base  !! 1/BASE
+   integer(ip), parameter :: wpr = 128  !! number of words (double precision numbers) in a DAF record
+   integer(ip), parameter :: maxd = wpr  - 3  !! maximum number of double precision numbers of a summary record's summaries
+   integer(ip), parameter :: maxc = maxd * 8  !! maximum number of characters of a name record's names
+   integer(ip), parameter :: maxdig = 16  !! number of hexadecimal digits of an encoded double precision mantissa
+   integer(ip), parameter :: maxenc = 64  !! length of an encoded number in a transfer file
+   integer(ip), parameter :: maxi = maxd * 2  !! maximum number of integers of a summary record's summaries
+   integer(ip), parameter :: maxnd = 124  !! maximum number of double precision components of a summary
+   integer(ip), parameter :: maxndc = 124  !! maximum number of double precision components of a summary (packed)
+   integer(ip), parameter :: maxni = 250  !! maximum number of integer components of a summary
+   integer(ip), parameter :: maxnic = 250  !! maximum number of integer components of a summary (packed)
+   integer(ip), parameter :: maxsum = 125  !! maximum size of a summary (double precision numbers)
+   integer(ip), parameter :: mxcrec = 1000  !! number of characters of a comment record that hold comments
+   integer(ip), parameter :: nil = -1  !! null pointer of a linked list
+   character(1), parameter :: quote = ''''  !! the quote character
+   integer(ip), parameter :: rbsize = 100  !! number of records in the record buffer
+   integer(ip), parameter :: strlen = 255  !! length of a work string
+   character(*), parameter :: totarr = 'TOTAL_ARRAYS'  !! transfer file: the line with the number of arrays
+   integer(ip), parameter :: typlen = 4  !! length of a DAF file type (e.g. SPK)
+   integer(ip), parameter :: wrksiz = 64  !! number of encoded numbers in a work buffer
+
 contains
 
       !>## Detailed Input
@@ -2933,11 +2974,8 @@ contains
 
 !     Local parameters
 !
-      integer(ip), parameter :: errlen = 80
 
-      integer(ip), parameter :: maxenc = 64
 
-      integer(ip), parameter :: wrksiz = 64
       character(errlen) :: errmsg
       character(maxenc) :: work(wrksiz)
 
@@ -3387,10 +3425,6 @@ contains
       use pepper_strings, only: repmc_inplace, repmi_inplace
       implicit none
       integer(ip), parameter :: maxman = 31
-      character(1), parameter :: expchr = '^'
-      real(wp), parameter :: base = 16.0_wp
-      real(wp), parameter :: invbas = 1.0_wp/base
-      integer(ip), parameter :: maxdig = 16
       real(wp), parameter :: dpval(0:maxdig-1) = &
          [ 0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, 6.0_wp, &
            7.0_wp, 8.0_wp, 9.0_wp, 10.0_wp, 11.0_wp, 12.0_wp, 13.0_wp, &
@@ -3908,11 +3942,8 @@ contains
 
 !     Local parameters
 !
-      integer(ip), parameter :: errlen = 80
 
-      integer(ip), parameter :: maxenc = 64
 
-      integer(ip), parameter :: wrksiz = 64
       character(errlen) :: errmsg
       character(maxenc) :: work(wrksiz)
 
@@ -4834,11 +4865,8 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      character(1), parameter :: quote = ''''
 
-      integer(ip), parameter :: maxenc = 64
 
-      integer(ip), parameter :: wrksiz = 64
       character(maxenc) :: work(wrksiz)
 
       integer(ip) :: i
@@ -5090,9 +5118,7 @@ contains
 
       integer(ip), parameter :: base = 16
 
-      integer(ip), parameter :: maxdig = 16
 
-      integer(ip), parameter :: strlen = 255
       character(1), parameter :: digits(0:maxdig-1) = &
          [ character(1) :: '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', &
            'C', 'D', 'E', 'F' ]
@@ -5460,13 +5486,9 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: strlen = 255
 
-      character(1), parameter :: expchr = '^'
 
-      real(wp), parameter :: base = 16.0_wp
 
-      real(wp), parameter :: invbas = 1.0_wp/base
 
       integer(ip), parameter :: expinb = 1
 
@@ -5482,7 +5504,6 @@ contains
 
       integer(ip), parameter :: expin2 = 4
 
-      integer(ip), parameter :: maxdig = 16
 
       character(1), parameter :: digits(0:maxdig-1) = &
          [ character(1) :: '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', &
@@ -5979,11 +6000,8 @@ contains
 
 !     Local parameters
 !
-      character(1), parameter :: quote = ''''
 
-      integer(ip), parameter :: maxenc = 64
 
-      integer(ip), parameter :: wrksiz = 64
       character(maxenc) :: work(wrksiz)
 
       integer(ip) :: i
@@ -6214,8 +6232,6 @@ contains
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: frlocr = 1
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
       integer(ip), parameter :: ifnstr = 17
       integer(ip), parameter :: inlen = 4
       character(cbfsiz) :: chrbuf
@@ -6534,9 +6550,6 @@ contains
       implicit none
       integer(ip), parameter :: preftp = 603
       integer(ip), parameter :: pstftp = 297
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: idwlen = 8
-      integer(ip), parameter :: ifnlen = 60
       character(1) :: nullch
       character(fmtlen) :: locfmt
       character(idwlen) :: locidw
@@ -7711,21 +7724,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: inteoc = 4
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: arclen = 3
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: idlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: maxnd = 124
-      integer(ip), parameter :: maxni = 250
-      integer(ip), parameter :: maxsum = 125
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -8189,21 +8187,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: inteoc = 4
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: arclen = 3
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: idlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: maxnd = 124
-      integer(ip), parameter :: maxni = 250
-      integer(ip), parameter :: maxsum = 125
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -8579,21 +8562,8 @@ contains
       use pepper_strings, only: ltrim, rtrim
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: inteoc = 4
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: arclen = 3
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: idlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: maxnd = 124
-      integer(ip), parameter :: maxni = 250
-      integer(ip), parameter :: maxsum = 125
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -9117,21 +9087,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: inteoc = 4
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: arclen = 3
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: idlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: maxnd = 124
-      integer(ip), parameter :: maxni = 250
-      integer(ip), parameter :: maxsum = 125
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -9653,21 +9608,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: inteoc = 4
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: arclen = 3
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: idlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: maxnd = 124
-      integer(ip), parameter :: maxni = 250
-      integer(ip), parameter :: maxsum = 125
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -9941,21 +9881,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: inteoc = 4
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: arclen = 3
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: idlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: maxnd = 124
-      integer(ip), parameter :: maxni = 250
-      integer(ip), parameter :: maxsum = 125
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -10164,21 +10089,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: inteoc = 4
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: arclen = 3
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: idlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: maxnd = 124
-      integer(ip), parameter :: maxni = 250
-      integer(ip), parameter :: maxsum = 125
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -10334,21 +10244,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: inteoc = 4
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: arclen = 3
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: idlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: maxnd = 124
-      integer(ip), parameter :: maxni = 250
-      integer(ip), parameter :: maxsum = 125
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -10547,21 +10442,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: inteoc = 4
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: arclen = 3
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: idlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: maxnd = 124
-      integer(ip), parameter :: maxni = 250
-      integer(ip), parameter :: maxsum = 125
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -10776,21 +10656,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: inteoc = 4
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: arclen = 3
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: idlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: maxnd = 124
-      integer(ip), parameter :: maxni = 250
-      integer(ip), parameter :: maxsum = 125
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -10965,21 +10830,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: inteoc = 4
       integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: arclen = 3
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: idlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: maxnd = 124
-      integer(ip), parameter :: maxni = 250
-      integer(ip), parameter :: maxsum = 125
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -11231,21 +11082,6 @@ contains
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: inteoc = 4
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: acclen = 10
-      integer(ip), parameter :: arclen = 3
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: fmtlen = 8
-      integer(ip), parameter :: idlen = 8
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: maxnd = 124
-      integer(ip), parameter :: maxni = 250
-      integer(ip), parameter :: maxsum = 125
-      integer(ip), parameter :: maxpc = 126
-      integer(ip), parameter :: minpc = 32
-      integer(ip), parameter :: typlen = 4
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -12154,8 +11990,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       implicit none
-      integer(ip), parameter :: rbsize = 100
-      integer(ip), parameter :: rdsize = 128 * rbsize
       integer(ip) :: unit
       integer(ip) :: iostat
       integer(ip) :: bufloc
@@ -12411,8 +12245,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       implicit none
-      integer(ip), parameter :: rbsize = 100
-      integer(ip), parameter :: rdsize = 128 * rbsize
       integer(ip) :: unit
       integer(ip) :: iostat
       integer(ip) :: bufloc
@@ -12776,8 +12608,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       implicit none
-      integer(ip), parameter :: rbsize = 100
-      integer(ip), parameter :: rdsize = 128 * rbsize
       integer(ip) :: unit
       integer(ip) :: iostat
       integer(ip) :: bufloc
@@ -13034,8 +12864,6 @@ contains
       module procedure dafwdr
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: rbsize = 100
-      integer(ip), parameter :: rdsize = 128 * rbsize
       integer(ip) :: unit
       integer(ip) :: iostat
       integer(ip) :: bufloc
@@ -13228,9 +13056,7 @@ contains
       module procedure dafnrr
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: rbsize = 100
       logical :: return
-      integer(ip), parameter :: rdsize = 128 * rbsize
       integer(ip) :: unit
       integer(ip) :: iostat
       integer(ip) :: bufloc
@@ -13458,7 +13284,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: bsize = 128
 
       integer(ip) :: begr
       integer(ip) :: begw
@@ -14670,7 +14495,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: bsize = 128
 
       integer(ip) :: begr
       integer(ip) :: begw
@@ -14933,9 +14757,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip), parameter :: idwlen = 8
 
-      integer(ip), parameter :: ifnlen = 60
 
       character(idwlen) :: idword
 
@@ -15180,11 +15002,8 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip), parameter :: fmtlen = 8
 
-      integer(ip), parameter :: idwlen = 8
 
-      integer(ip), parameter :: ifnlen = 60
 
 !
 !     The parameter TAILEN determines the tail length of a DAF file
@@ -15432,7 +15251,6 @@ contains
       module procedure dafwda
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip), parameter :: bsize = 128
       integer(ip) :: begr
       integer(ip) :: begw
       integer(ip) :: endr
@@ -15708,7 +15526,6 @@ contains
 
 !     IFNLEN      is the length of a DAF internal file name.
 !
-      integer(ip), parameter :: ifnlen = 60
 
 !
 !     WPR         is the maximum number of double precision numbers
@@ -15721,13 +15538,9 @@ contains
 !                 There are two integers per double precision word,
 !                 and eight characters per word.
 !
-      integer(ip), parameter :: wpr = 128
 
-      integer(ip), parameter :: maxd = wpr  - 3
 
-      integer(ip), parameter :: maxi = maxd * 2
 
-      integer(ip), parameter :: maxc = maxd * 8
 
       character(maxc) :: crec
       character(ifnlen) :: ifname
@@ -16683,25 +16496,20 @@ contains
 
 !     IFNLEN      is the length of a DAF internal file name.
 !
-      integer(ip), parameter :: ifnlen = 60
 
 !
 !     WPR         is the maximum number of double precision
 !                 numbers per record.  WPR stands for words
 !                 per record.
 !
-      integer(ip), parameter :: wpr = 128
 
 !
 !     MAXD,       are the maximum number of double precision
 !     MAXI,       numbers, integers, and characters, respectively,
 !     MAXC        not including space reserved for control information.
 !
-      integer(ip), parameter :: maxd = wpr  - 3
 
-      integer(ip), parameter :: maxi = maxd * 2
 
-      integer(ip), parameter :: maxc = maxd * 8
 
       character(maxc) :: crec
       character(ifnlen) :: ifname
@@ -17174,20 +16982,16 @@ contains
 
 !     Length of a DAF file internal filename.
 !
-      integer(ip), parameter :: ifnlen = 60
 !
 !     Decimal value for the DAF comment area end-of-comment (EOC)
 !     marker.
 !
-      integer(ip), parameter :: inteoc = 4
 !
 !     Decimal value for the DAF comment area end-of-line (EOL) marker.
 !
-      integer(ip), parameter :: inteol = 0
 !
 !     Length of a DAF character record, in characters.
 !
-      integer(ip), parameter :: mxcrec = 1000
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
@@ -17870,7 +17674,6 @@ contains
 !
 !     Length of a DAF file internal filename.
 !
-      integer(ip), parameter :: ifnlen = 60
       character(ifnlen) :: ifname
 
       integer(ip) :: bward
@@ -18447,10 +18250,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: cpos, ncpos
       implicit none
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: inteoc = 4
-      integer(ip), parameter :: inteol = 0
-      integer(ip), parameter :: mxcrec = 1000
       character(1) :: ch
       character(ifnlen) :: ifname
       integer(ip) :: curpos
@@ -19112,17 +18911,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: arycnt = 3
-      integer(ip), parameter :: bwdptr = 2
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: fwdptr = 1
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxndc = 124
-      integer(ip), parameter :: maxnic = 250
-      integer(ip), parameter :: maxsum = 125
-      integer(ip), parameter :: nil = -1
       integer(ip) :: sumsiz
       integer(ip) :: p
       integer(ip) :: i
@@ -19570,17 +19358,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: arycnt = 3
-      integer(ip), parameter :: bwdptr = 2
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: fwdptr = 1
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxndc = 124
-      integer(ip), parameter :: maxnic = 250
-      integer(ip), parameter :: maxsum = 125
-      integer(ip), parameter :: nil = -1
       integer(ip) :: p
       if ( .not. allocated ( ctx%dafana ) ) then
          allocate ( ctx%dafana )
@@ -19763,15 +19540,7 @@ contains
       implicit none
       integer(ip), parameter :: arycnt = 3
       integer(ip), parameter :: bwdptr = 2
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
       integer(ip), parameter :: fwdptr = 1
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxndc = 124
-      integer(ip), parameter :: maxnic = 250
-      integer(ip), parameter :: maxsum = 125
-      integer(ip), parameter :: nil = -1
       integer(ip) :: cloc
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -20078,17 +19847,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: arycnt = 3
-      integer(ip), parameter :: bwdptr = 2
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: fwdptr = 1
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxndc = 124
-      integer(ip), parameter :: maxnic = 250
-      integer(ip), parameter :: maxsum = 125
-      integer(ip), parameter :: nil = -1
       integer(ip) :: p
       integer(ip) :: prev
       logical :: found
@@ -20417,13 +20175,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxndc = 124
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: maxnic = 250
-      integer(ip), parameter :: nil = -1
       integer(ip) :: i
       integer(ip) :: prev
       integer(ip) :: nextp
@@ -20844,13 +20595,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxndc = 124
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: maxnic = 250
-      integer(ip), parameter :: nil = -1
       integer(ip) :: p
       logical :: fnd
       if ( .not. allocated ( ctx%daffa ) ) then
@@ -21217,13 +20961,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxndc = 124
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: maxnic = 250
-      integer(ip), parameter :: nil = -1
       integer(ip) :: i
       integer(ip) :: prev
       integer(ip) :: nextp
@@ -21653,13 +21390,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxndc = 124
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: maxnic = 250
-      integer(ip), parameter :: nil = -1
       integer(ip) :: p
       logical :: fnd
       if ( .not. allocated ( ctx%daffa ) ) then
@@ -22034,13 +21764,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxndc = 124
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: maxnic = 250
-      integer(ip), parameter :: nil = -1
       integer(ip) :: offset
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -22243,13 +21966,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxndc = 124
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: maxnic = 250
-      integer(ip), parameter :: nil = -1
       integer(ip) :: offset
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -22509,13 +22225,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxndc = 124
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: maxnic = 250
-      integer(ip), parameter :: nil = -1
       integer(ip) :: p
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
@@ -22684,13 +22393,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxndc = 124
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: maxnic = 250
-      integer(ip), parameter :: nil = -1
       integer(ip) :: offset
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -22920,13 +22622,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxndc = 124
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: maxnic = 250
-      integer(ip), parameter :: nil = -1
       integer(ip) :: offset
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -23155,13 +22850,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxndc = 124
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: maxnic = 250
-      integer(ip), parameter :: nil = -1
       integer(ip) :: offset
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -23344,13 +23032,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
-      integer(ip), parameter :: crlen = 1000
-      integer(ip), parameter :: ifnlen = 60
-      integer(ip), parameter :: lbcell = -5
-      integer(ip), parameter :: maxndc = 124
-      integer(ip), parameter :: dprsiz = 128
-      integer(ip), parameter :: maxnic = 250
-      integer(ip), parameter :: nil = -1
       integer(ip) :: prev
       integer(ip) :: p
       logical :: fnd
@@ -23630,23 +23311,16 @@ contains
 
       character(*), parameter :: quote = ''''
 
-      character(*), parameter :: begarr = 'BEGIN_ARRAY'
 
-      character(*), parameter :: endarr = 'END_ARRAY'
 
-      character(*), parameter :: totarr = 'TOTAL_ARRAYS'
 
       character(*), parameter :: ftypid = 'DAFETF'
 
       character(*), parameter :: infoln = 'NAIF DAF ENCODED TRANSFER FILE'
 
-      integer(ip), parameter :: bufsiz = 1024
 
-      integer(ip), parameter :: crecl = 1000
 
-      integer(ip), parameter :: idwlen = 8
 
-      integer(ip), parameter :: ifnlen = 60
 
       integer(ip), parameter :: linlen = 80
       character(idwlen) :: idword
@@ -24754,7 +24428,6 @@ contains
 
       integer(ip), parameter :: bsize = 100
 
-      integer(ip), parameter :: idwlen = 8
 
       character(*), parameter :: quote = ''''
 
@@ -25352,7 +25025,6 @@ contains
 
       integer(ip), parameter :: bsize = 1024
 
-      integer(ip), parameter :: idwlen = 8
 
       character(1000) :: name     ( 2 )
       character(idwlen) :: idword
@@ -25918,23 +25590,16 @@ contains
 
 !     Local Parameters
 !
-      character(*), parameter :: begarr = 'BEGIN_ARRAY'
 
-      character(*), parameter :: endarr = 'END_ARRAY'
 
-      character(*), parameter :: totarr = 'TOTAL_ARRAYS'
 
-      integer(ip), parameter :: bufsiz = 1024
 
       integer(ip), parameter :: linlen = 255
 
       integer(ip), parameter :: errlen = 320
 
-      integer(ip), parameter :: idwlen = 8
 
-      integer(ip), parameter :: ifnlen = 60
 
-      integer(ip), parameter :: crecl = 1000
 
       integer(ip), parameter :: resrec = 0
       character(idwlen) :: idword
@@ -26524,7 +26189,6 @@ contains
    !> table may be reallocated.
    subroutine daffa_room(ctx)
       class(pepper_context), intent(inout) :: ctx  !! the context
-      integer(ip), parameter :: nil = -1
       integer(ip) :: p, prev, nextp
       logical :: open
       if (ctx%daffa%stfptr /= nil) return
@@ -26558,7 +26222,6 @@ contains
    !> none, double the table.
    subroutine dafana_room(ctx)
       class(pepper_context), intent(inout) :: ctx  !! the context
-      integer(ip), parameter :: nil = -1
       integer(ip) :: p
       logical :: open
       if (ctx%dafana%stfptr /= nil) return

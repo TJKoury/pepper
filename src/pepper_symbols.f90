@@ -112,7 +112,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nptr
@@ -262,7 +261,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nptr
@@ -413,7 +411,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nptr
@@ -567,7 +564,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: locsym
@@ -710,7 +706,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: locsym
@@ -858,7 +853,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: locsym
@@ -1014,7 +1008,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nptr
@@ -1284,7 +1277,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nptr
@@ -1555,7 +1547,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nptr
@@ -1810,7 +1801,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -1949,7 +1939,6 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -2090,7 +2079,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -2253,7 +2241,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -2432,7 +2419,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -2611,7 +2597,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -2772,7 +2757,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -2939,7 +2923,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -3105,7 +3088,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -3256,7 +3238,6 @@ contains
       use pepper_arrays, only: bsrchc, shellc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -3399,7 +3380,6 @@ contains
       use pepper_arrays, only: bsrchc, shelld
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -3544,7 +3524,6 @@ contains
       use pepper_arrays, only: bsrchc, shelli
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -3701,7 +3680,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nptr
@@ -3900,7 +3878,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nptr
@@ -4098,7 +4075,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nptr
@@ -4312,7 +4288,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nptr
@@ -4588,7 +4563,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nptr
@@ -4858,7 +4832,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nptr
@@ -5126,7 +5099,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -5333,7 +5305,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -5543,7 +5514,6 @@ contains
       use pepper_arrays, only: bsrchc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -5735,7 +5705,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nptr
@@ -5960,7 +5929,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nptr
@@ -6187,7 +6155,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nptr
@@ -6414,7 +6381,6 @@ contains
       use pepper_arrays, only: bsrchc, swapc
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -6617,7 +6583,6 @@ contains
       use pepper_arrays, only: bsrchc, swapd
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -6819,7 +6784,6 @@ contains
       use pepper_arrays, only: bsrchc, swapi
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -7005,7 +6969,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nval
@@ -7196,7 +7159,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nval
@@ -7383,7 +7345,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nval
@@ -7567,7 +7528,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nval
@@ -7755,7 +7715,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nval
@@ -7940,7 +7899,6 @@ contains
       use pepper_arrays, only: lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
       integer(ip) :: nval
@@ -8146,7 +8104,6 @@ contains
       use pepper_arrays, only: bsrchc, lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -8360,7 +8317,6 @@ contains
       use pepper_arrays, only: bsrchc, lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
@@ -8574,7 +8530,6 @@ contains
       use pepper_arrays, only: bsrchc, lstlec
       implicit none
 
-      integer(ip), parameter :: lbcell = -5
 
       integer(ip) :: nsym
 
