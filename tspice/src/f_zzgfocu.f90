@@ -132,14 +132,12 @@
 !
 !     Local variables
 !
-      DOUBLE PRECISION      ET
       DOUBLE PRECISION      NEWRAD ( 3 )
       DOUBLE PRECISION      RADII  ( 3 )
 
       INTEGER               HANDLE
       INTEGER               N
 
-      LOGICAL               OCSTAT
 
 !
 !     Save everything.
@@ -176,21 +174,6 @@
 !*    Error cases
 !*
 !*********************************************************************
-
-
-!
-!---- Case -------------------------------------------------------------
-!
-      CALL TCASE ( 'ZZGFOCU: bogus entry' )
-
-      ET = 0.D0
-
-      CALL ZZGFOCU ( 'Any',  'ALPHAx',     'point',      'ALPHAFIXED', &
-                     'BETA', 'ellipsoid',  'BETAFIXED',  'SUN', &
-                     'LT', ET, OCSTAT     )
-      CALL CHCKXC ( .TRUE., 'SPICE(BOGUSENTRY)',   OK )
-
-
 
 
 !

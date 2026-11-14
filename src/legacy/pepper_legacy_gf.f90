@@ -1,4 +1,4 @@
-!> The legacy interface's routines of the subsystem gf (90 routines):
+!> The legacy interface's routines of the subsystem gf (80 routines):
 !> SPICELIB's names and arguments, on the default context. Programs use
 !> them through [[pepper_legacy]].
 module pepper_legacy_gf
@@ -24,7 +24,6 @@ module pepper_legacy_gf
       pepper_zzgfcosd => zzgfcosd, pepper_zzgflong => zzgflong, pepper_zzgfcslv => zzgfcslv
    use pepper_legacy_context, only: legacy_context, legacy_spice
    use pepper_legacy_callbacks
-   use pepper_legacy_errsys, only: sigerr
 
    implicit none
 
@@ -37,8 +36,7 @@ module pepper_legacy_gf
       zzgfwkun, zzgfwkmo, zzgfrrin, zzgfrrdc, zzgfrrgq, zzgfrrx, zzgfudb, gfoclt, gfrfov, gfrepi, &
       gfrepu, gfrepf, gftfov, gfudb, gfuds, zzgfcoin, zzgfcog, zzgfcodc, zzgfcoex, zzgfcocg, &
       zzgfcosg, zzgfcocd, zzgfcosd, zzgflong, zzgfcslv, gfevnt, gfdist, gfilum, gfpa, gfposc, &
-      gfrr, gfsep, gfsntc, gfsubc, zzgffvu, zzgfilu, zzgfocu, zzgfspu, zzgfdiu, zzgfpau, &
-      zzgfrpwk, zzgfrru, gfrprt, zzgfcou
+      gfrr, gfsep, gfsntc, gfsubc
 
 contains
 
@@ -2177,201 +2175,5 @@ contains
       ctx => legacy_context()
       call ctx%gfsubc ( target, fixref, method, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       end subroutine gfsubc
-
-      !> Umbrella of the ZZGFFVU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzgffvu ( inst, tshape, raydir, target, tframe, abcorr, obsrvr, time, vistat )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_zzabcorr
-      use pepper_inc_zzocced
-      use pepper_inc_gf
-      implicit none
-      character(*) :: inst
-      character(*) :: tshape
-      real(wp) :: raydir ( 3 )
-      character(*) :: target
-      character(*) :: tframe
-      character(*) :: abcorr
-      character(*) :: obsrvr
-      real(wp) :: time
-      logical :: vistat
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzgffvu
-
-      !> Umbrella of the ZZGFILU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzgfilu ( method, angtyp, target, illum, fixref, abcorr, obsrvr, spoint, et, udfunc, decres, angle )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_zzabcorr
-      implicit none
-      character(*) :: method
-      character(*) :: angtyp
-      character(*) :: target
-      character(*) :: illum
-      character(*) :: fixref
-      character(*) :: abcorr
-      character(*) :: obsrvr
-      real(wp) :: spoint ( 3 )
-      real(wp) :: et
-      logical :: decres
-      real(wp) :: angle
-      external :: udfunc
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzgfilu
-
-      !> Umbrella of the ZZGFOCU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzgfocu ( occtyp, front, fshape, fframe, back, bshape, bframe, obsrvr, abcorr, time, ocstat )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_gf
-      use pepper_inc_zzabcorr
-      use pepper_inc_zzdsk
-      use pepper_inc_zzocced
-      implicit none
-      character(*) :: occtyp
-      character(*) :: front
-      character(*) :: fshape
-      character(*) :: fframe
-      character(*) :: back
-      character(*) :: bshape
-      character(*) :: bframe
-      character(*) :: obsrvr
-      character(*) :: abcorr
-      real(wp) :: time
-      logical :: ocstat
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzgfocu
-
-      !> Umbrella of the ZZGFSPU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzgfspu ( of, from, shape, frame, et, udfunc, abcorr, decres, sep, xabcr, xbod, yref, xref, xobs, xrad, xshp )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_zzabcorr
-      implicit none
-      character(*) :: of    (2)
-      character(*) :: from
-      character(*) :: shape (2)
-      character(*) :: frame (2)
-      real(wp) :: et
-      character(*) :: abcorr
-      logical :: decres
-      real(wp) :: sep
-      character(*) :: xabcr
-      integer(ip) :: xbod  (2)
-      character(*) :: yref
-      character(*) :: xref  (2)
-      integer(ip) :: xobs
-      real(wp) :: xrad  (2)
-      integer(ip) :: xshp  (2)
-      external :: udfunc
-      call sigerr( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzgfspu
-
-      !> Umbrella of the ZZGFDIU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzgfdiu ( target, abcorr, obsrvr, udfunc, et, decres, dist )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_zzabcorr
-      implicit none
-      character(*) :: target
-      character(*) :: abcorr
-      character(*) :: obsrvr
-      real(wp) :: et
-      logical :: decres
-      real(wp) :: dist
-      external :: udfunc
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzgfdiu
-
-      !> Umbrella of the ZZGFPAU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzgfpau ( target, illmn, abcorr, obsrvr, udfunc, et, decres, rvl, xtarg, xillmn, xabcor, xobs, xablk )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_zzabcorr
-      implicit none
-      character(*) :: target
-      character(*) :: illmn
-      character(*) :: abcorr
-      character(*) :: obsrvr
-      real(wp) :: et
-      logical :: decres
-      real(wp) :: rvl
-      integer(ip) :: xtarg
-      integer(ip) :: xillmn
-      character(*) :: xabcor
-      integer(ip) :: xobs
-      logical :: xablk  ( nabcor )
-      external :: udfunc
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzgfpau
-
-      !> Umbrella of the ZZGFRPWK routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzgfrpwk ( unit, total, wait, tcheck, begin, end, incr )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_zzgf
-      implicit none
-      integer(ip) :: unit
-      real(wp) :: total
-      real(wp) :: wait
-      integer(ip) :: tcheck
-      character(*) :: begin
-      character(*) :: end
-      real(wp) :: incr
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzgfrpwk
-
-      !> Umbrella of the ZZGFRRU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzgfrru ( target, abcorr, obsrvr, dt, udfunc, et, decres, rvl, xtarg, xabcor, xobs, xdt )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_zzabcorr
-      implicit none
-      character(*) :: target
-      character(*) :: abcorr
-      character(*) :: obsrvr
-      real(wp) :: et
-      real(wp) :: dt
-      logical :: decres
-      real(wp) :: rvl
-      integer(ip) :: xtarg
-      character(*) :: xabcor
-      integer(ip) :: xobs
-      real(wp) :: xdt
-      external :: udfunc
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzgfrru
-
-      !> Umbrella of the GFRPRT routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine gfrprt ( window, begmss, endmss, ivbeg, ivend, time )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_zzgf
-      implicit none
-      integer(ip), parameter :: lbcell = -5
-      real(wp) :: window ( lbcell : * )
-      character(*) :: begmss
-      character(*) :: endmss
-      real(wp) :: ivbeg
-      real(wp) :: ivend
-      real(wp) :: time
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine gfrprt
-
-      !> Umbrella of the ZZGFCOU routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzgfcou ( vecdef, method, target, et, ref, abcorr, obsrvr, dref, dvec, crdsys, crdnam, decres, crdval, crdfnd, udfunc )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_gf
-      use pepper_inc_zzgf
-      use pepper_inc_zzabcorr
-      implicit none
-      character(*) :: vecdef
-      character(*) :: method
-      character(*) :: target
-      real(wp) :: et
-      character(*) :: ref
-      character(*) :: abcorr
-      character(*) :: obsrvr
-      character(*) :: dref
-      real(wp) :: dvec   ( 3 )
-      character(*) :: crdsys
-      character(*) :: crdnam
-      logical :: decres
-      real(wp) :: crdval
-      logical :: crdfnd
-      external :: udfunc
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzgfcou
 
 end module pepper_legacy_gf

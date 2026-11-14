@@ -181,7 +181,6 @@
       DOUBLE PRECISION      PSTART ( MXPART + 1 )
       DOUBLE PRECISION      PSTOP  ( MXPART + 1 )
       DOUBLE PRECISION      TDT
-      DOUBLE PRECISION      TICKS
       DOUBLE PRECISION      TOL
       DOUBLE PRECISION      SCLKDP
       DOUBLE PRECISION      XCLKDP
@@ -191,7 +190,6 @@
 
       INTEGER               CLKID
       INTEGER               CLKTYP
-      INTEGER               FIELD ( 4 )
       INTEGER               HANDLE
       INTEGER               I
       INTEGER               IVAL
@@ -2959,8 +2957,6 @@
 
       CALL SIGERR ( SHRTMS )
 
-      CALL SC01   ( CLKID,  CLKSTR, TICKS, SCLKDP, ET, &
-                    NPARTS, PSTART, PSTOP, CLKTYP     )
       CALL SCDECD ( CLKID,  SCLKDP, CLKSTR )
       CALL SCE2C  ( CLKID,  ET,     SCLKDP )
       CALL SCE2S  ( CLKID,  ET,     CLKSTR )
@@ -2973,7 +2969,6 @@
       CALL SCID2N ( CLKID,  CLKNAM, FOUND  )
       CALL SCLD01 ( ITEM,   CLKID,  1,  N, DVALS )
       CALL SCLI01 ( ITEM,   CLKID,  1,  N, IVALS )
-      CALL SCLU01 ( 'XXX',  1,      10, N, FIELD, PSTART )
       CALL SCN2ID ( CLKNAM, CLKID,  FOUND  )
       CALL SCPARS ( CLKID,  CLKSTR, ERROR,  ERRMSG, SCLKDP )
       CALL SCPART ( CLKID,  NPARTS, PSTART, PSTOP )
@@ -2984,52 +2979,12 @@
       CALL SCTE01 ( CLKID,  SCLKDP, ET     )
       CALL SCTIKS ( CLKID,  CLKSTR, SCLKDP )
       CALL SCTK01 ( CLKID,  CLKSTR, SCLKDP )
-      CALL SCTRAN ( 'XYZ',  CLKID,  FOUND )
       CALL SCTY01 ( CLKID,  I )
       I  = SCTYPE ( CLKID )
 
 
       CALL CHCKXC ( .TRUE., SHRTMS, OK )
 
-
-!
-! --- Case: ------------------------------------------------------
-!
-      CALL TCASE ( 'SC01: call to umbrella routine' )
-
-
-!
-!     Inputs and outputs are arbitrary in this call.
-!
-      CALL SC01 ( CLKID,  CLKSTR, TICKS, SCLKDP, ET, &
-                  NPARTS, PSTART, PSTOP, CLKTYP     )
-
-      CALL CHCKXC ( .TRUE., 'SPICE(BOGUSENTRY)', OK )
-
-!
-! --- Case: ------------------------------------------------------
-!
-      CALL TCASE ( 'SCLU01: call to umbrella routine' )
-
-!
-!     Inputs and outputs are arbitrary in this call.
-!
-      CALL SCLU01 (  'XXX',  1,  10,  N,  FIELD, PSTART )
-
-      CALL CHCKXC ( .TRUE., 'SPICE(BOGUSENTRY)', OK )
-
-!
-! --- Case: ------------------------------------------------------
-!
-      CALL TCASE ( 'SCTRAN: call to umbrella routine' )
-
-!
-!     Inputs and outputs are arbitrary in this call.
-!
-      CLKID  = 1
-      CALL SCTRAN ( 'XYZ', CLKID, FOUND )
-
-      CALL CHCKXC ( .TRUE., 'SPICE(BOGUSENTRY)', OK )
 
 !
 ! --- Case: ------------------------------------------------------

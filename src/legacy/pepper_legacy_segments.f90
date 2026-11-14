@@ -1,4 +1,4 @@
-!> The legacy interface's routines of the subsystem segments (20 routines):
+!> The legacy interface's routines of the subsystem segments (16 routines):
 !> SPICELIB's names and arguments, on the default context. Programs use
 !> them through [[pepper_legacy]].
 module pepper_legacy_segments
@@ -8,13 +8,12 @@ module pepper_legacy_segments
       pepper_zzdskchk => zzdskchk
    use pepper_legacy_context, only: legacy_context, legacy_spice
    use pepper_legacy_callbacks
-   use pepper_legacy_errsys, only: sigerr
 
    implicit none
 
    private
    public :: spklef, spkuef, spksfs, pcklof, pckuof, pcksfs, cklpf, ckupf, ckbss, cksns, ckhave, &
-      zzdsklsf, zzdskusf, zzdskbss, zzdsksns, zzdskchk, spkbsr, pckbsr, ckbsr, zzdskbsr
+      zzdsklsf, zzdskusf, zzdskbss, zzdsksns, zzdskchk
 
 contains
 
@@ -279,68 +278,5 @@ contains
       ctx => legacy_context()
       call pepper_zzdskchk ( ctx, usrctr, update )
       end subroutine zzdskchk
-
-      !> Umbrella of the SPKBSR routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine spkbsr ( fname, handle, body, et, descr, ident, found )
-      use pepper_kinds, only: ip, wp
-      implicit none
-      character(*) :: fname
-      integer(ip) :: handle
-      integer(ip) :: body
-      real(wp) :: et
-      real(wp) :: descr    ( * )
-      character(*) :: ident
-      logical :: found
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine spkbsr
-
-      !> Umbrella of the PCKBSR routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine pckbsr ( fname, handle, body, et, descr, ident, found )
-      use pepper_kinds, only: ip, wp
-      implicit none
-      character(*) :: fname
-      integer(ip) :: handle
-      integer(ip) :: body
-      real(wp) :: et
-      real(wp) :: descr    ( * )
-      character(*) :: ident
-      logical :: found
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine pckbsr
-
-      !> Umbrella of the CKBSR routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine ckbsr ( fname, handle, inst, sclkdp, tol, needav, descr, segid, found )
-      use pepper_kinds, only: ip, wp
-      implicit none
-      character(*) :: fname
-      integer(ip) :: handle
-      integer(ip) :: inst
-      real(wp) :: sclkdp
-      real(wp) :: tol
-      logical :: needav
-      real(wp) :: descr    ( * )
-      character(*) :: segid
-      logical :: found
-      call sigerr ( 'SPICE(CKBOGUSENTRY)' )
-      end subroutine ckbsr
-
-      !> Umbrella of the ZZDSKBSR routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzdskbsr ( fname, bodyid, handle, cmpfun, usrctr, update, dladsc, dskdsc, found )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_dla
-      use pepper_inc_dskdsc
-      use pepper_inc_zzctr
-      implicit none
-      character(*) :: fname
-      integer(ip) :: bodyid
-      integer(ip) :: handle
-      procedure(legacy_zzdsk_compare) :: cmpfun  !! the comparison function (SPICELIB: an EXTERNAL logical function)
-      integer(ip) :: usrctr ( * )
-      logical :: update
-      integer(ip) :: dladsc ( * )
-      real(wp) :: dskdsc ( * )
-      logical :: found
-      call sigerr ( 'SPICE(DSKBOGUSENTRY)' )
-      end subroutine zzdskbsr
 
 end module pepper_legacy_segments

@@ -1,4 +1,4 @@
-!> The legacy interface's routines of the subsystem spk_api (51 routines):
+!> The legacy interface's routines of the subsystem spk_api (49 routines):
 !> SPICELIB's names and arguments, on the default context. Programs use
 !> them through [[pepper_legacy]].
 module pepper_legacy_spk_api
@@ -6,7 +6,6 @@ module pepper_legacy_spk_api
    use pepper_instance, only: pepper_context, pepper_zzcorsxf => zzcorsxf, &
       pepper_zzcvxsta => zzcvxsta, pepper_zzcvssta => zzcvssta
    use pepper_legacy_context, only: legacy_context, legacy_spice
-   use pepper_legacy_errsys, only: setmsg, sigerr
 
    implicit none
 
@@ -15,7 +14,7 @@ module pepper_legacy_spk_api
       spkpds, spks01, spks02, spks03, spks05, spks08, spks09, spks15, spks17, spks18, spks19, &
       spks20, spks21, spkuds, zzcorsxf, zzcvxsta, zzcvssta, spk14a, spk14b, spk14e, spkapo, &
       spkltc, spks10, spks12, spks13, spkssb, spkapp, spkaps, spkezp, spks14, spkacs, spkpos, &
-      spksub, spkez, spkcvo, spkezr, spkcpo, spkcvt, spkcpt, sgseqw, zzcvstat
+      spksub, spkez, spkcvo, spkezr, spkcpo, spkcvt, spkcpt
 
 contains
 
@@ -954,40 +953,5 @@ contains
       ctx => legacy_context()
       call ctx%spkcpt ( trgpos, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
       end subroutine spkcpt
-
-      !> Umbrella of the SGSEQW routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine sgseqw ( handle, descr, segid, nconst, const, npkts, pktsiz, pktdat, nrefs, refdat, idxtyp )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_sgparam
-      implicit none
-      integer(ip) :: handle
-      real(wp) :: descr  ( * )
-      character(*) :: segid
-      integer(ip) :: nconst
-      real(wp) :: const  ( * )
-      integer(ip) :: npkts
-      integer(ip) :: pktsiz ( * )
-      real(wp) :: pktdat ( * )
-      integer(ip) :: nrefs
-      real(wp) :: refdat ( * )
-      integer(ip) :: idxtyp
-      call setmsg ( 'This routine should never be called' &
-      // ' directly. It exists as an umbrella routine' &
-      // ' to maintain all of the variables for the' &
-      // ' generic segment sequential writing entry' &
-      // ' points.'                                    )
-      call sigerr ( 'SPICE(BOGUSENTRY)'                           )
-      end subroutine sgseqw
-
-      !> Umbrella of the ZZCVSTAT routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzcvstat ( et, ref, center, state )
-      use pepper_kinds, only: ip, wp
-      implicit none
-      real(wp) :: et
-      character(*) :: ref
-      integer(ip) :: center
-      real(wp) :: state ( 6 )
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzcvstat
 
 end module pepper_legacy_spk_api

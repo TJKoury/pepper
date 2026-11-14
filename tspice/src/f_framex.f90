@@ -152,17 +152,6 @@
 
       ISTRUE = .TRUE.
 
-      CALL TCASE ( 'Test the exception that should be signalled ' &
-      //           'if FRAMEX is called directly. ' )
-
-         CALL FRAMEX ( ENAME,  FRNAME, FRCODE, &
-                       CENT,   CLASS, CLSSID, FOUND )
-
-         CALL CHCKXC ( ISTRUE, 'SPICE(BOGUSENTRY)', OK )
-
-
-
-
       CALL TCASE( 'Perform check to make sure that every ' &
       //          'inertial frame is recognized. ' )
 !

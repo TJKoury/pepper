@@ -1,4 +1,4 @@
-!> The legacy interface's routines of the subsystem keeper (17 routines):
+!> The legacy interface's routines of the subsystem keeper (16 routines):
 !> SPICELIB's names and arguments, on the default context. Programs use
 !> them through [[pepper_legacy]].
 module pepper_legacy_keeper
@@ -6,13 +6,12 @@ module pepper_legacy_keeper
    use pepper_instance, only: pepper_context, pepper_zzascii => zzascii, &
       pepper_zzldker => zzldker, pepper_spice
    use pepper_legacy_context, only: legacy_context, legacy_spice
-   use pepper_legacy_errsys, only: setmsg, sigerr
 
    implicit none
 
    private
    public :: inttxt, intord, repmot, sepool, stpool, tkvrsn, zzascii, exists, zzldker, furnsh, &
-      pepper_set_in_memory, ktotal, kdata, kinfo, kclear, unload, keeper
+      pepper_set_in_memory, ktotal, kdata, kinfo, kclear, unload
 
 contains
 
@@ -256,26 +255,5 @@ contains
       spice => legacy_spice()
       call spice%unload ( file )
       end subroutine unload
-
-      !> Umbrella of the KEEPER routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine keeper ( which, kind, file, count, filtyp, handle, srcfil, found )
-      use pepper_kinds, only: ip, wp
-      implicit none
-      integer(ip) :: which
-      character(*) :: kind
-      character(*) :: file
-      integer(ip) :: count
-      character(*) :: filtyp
-      integer(ip) :: handle
-      character(*) :: srcfil
-      logical :: found
-      call setmsg ( 'The routine KEEPER is an umbrella for a ' &
-      // 'collection of entry points that manage the ' &
-      // 'loading, tracking and unloading of SPICE ' &
-      // 'kernels.  KEEPER should not be called ' &
-      // 'directly. It is likely that a programming ' &
-      // 'error has been made. ' )
-      call sigerr ( 'SPICE(BOGUSENTRY)'  )
-      end subroutine keeper
 
 end module pepper_legacy_keeper

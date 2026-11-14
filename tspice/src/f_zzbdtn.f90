@@ -3,7 +3,6 @@
       SUBROUTINE F_ZZBDTN ( OK )
       use pepper_legacy
       use pepper_inc_zzbodtrn
-      use pepper_inc_zzctr
 
 ! $ Abstract
 !
@@ -102,24 +101,13 @@
       CHARACTER*(NAMLEN)    NAME
 
       INTEGER               CODE
-      INTEGER               USRCTR ( CTRSIZ )
 
       LOGICAL               FOUND
-      LOGICAL               UPDATE
 
 !
 !     Open the test family.
 !
       CALL TOPEN ( 'F_ZZBDTN' )
-
-!
-! --- Case: ------------------------------------------------------
-!
-      CALL TCASE ( 'ZZBODTRN - SPICE(BOGUSENTRY) exception' )
-
-      CALL ZZBODTRN ( NAME, CODE, FOUND, USRCTR, UPDATE )
-
-      CALL CHCKXC ( .TRUE., 'SPICE(BOGUSENTRY)', OK )
 
 !
 ! --- Case: ------------------------------------------------------

@@ -1,4 +1,4 @@
-!> The legacy interface's routines of the subsystem ek (117 routines):
+!> The legacy interface's routines of the subsystem ek (115 routines):
 !> SPICELIB's names and arguments, on the default context. Programs use
 !> them through [[pepper_legacy]].
 module pepper_legacy_ek
@@ -32,7 +32,6 @@ module pepper_legacy_ek
       pepper_zzekpcol => zzekpcol, pepper_zzeksemc => zzeksemc, pepper_zzektres => zzektres, &
       pepper_zzekue03 => zzekue03, pepper_zzeknres => zzeknres, pepper_zzekencd => zzekencd
    use pepper_legacy_context, only: legacy_context, legacy_spice
-   use pepper_legacy_errsys, only: sigerr
 
    implicit none
 
@@ -48,8 +47,7 @@ module pepper_legacy_ek
       zzekkey, zzekad01, zzekad02, zzekad03, zzekixdl, zzekjoin, ekacec, ekaced, ekacei, eklef, &
       ekuef, ekntab, ektnam, ekccnt, ekcii, eksrch, eknelt, ekgc, ekgd, ekgi, zzekde01, zzekde02, &
       zzekde03, zzekue01, zzekue02, ekdelr, ekuced, ekucei, stcg01, stcl01, zzekcchk, zzekpcol, &
-      zzeksemc, zzektres, zzekue03, ekucec, zzeknres, ekfind, zzekencd, ekpsel, stcf01, zzekjtst, &
-      ekqmgr
+      zzeksemc, zzektres, zzekue03, ekucec, zzeknres, ekfind, zzekencd, ekpsel, stcf01
 
 contains
 
@@ -2905,86 +2903,5 @@ contains
       ctx => legacy_context()
       call ctx%stcf01 ( catnam, westra, eastra, sthdec, nthdec, nstars )
       end subroutine stcf01
-
-      !> Umbrella of the ZZEKJTST routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzekjtst ( segvec, jbase1, nt1, rb1, nr1, jbase2, nt2, rb2, nr2, njcnst, active, cpidx1, clidx1, elts1, ops, cpidx2, clidx2, elts2, sthan, stsdsc, stdtpt, dtpool, dtdscs, found, rowvec )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_ekcoldsc
-      use pepper_inc_ekjrs
-      use pepper_inc_ekopcd
-      use pepper_inc_ekqlimit
-      use pepper_inc_ekquery
-      use pepper_inc_eksegdsc
-      implicit none
-      integer(ip), parameter :: lbpool = -5
-      integer(ip) :: segvec ( * )
-      integer(ip) :: jbase1
-      integer(ip) :: nt1
-      integer(ip) :: rb1
-      integer(ip) :: nr1
-      integer(ip) :: jbase2
-      integer(ip) :: nt2
-      integer(ip) :: rb2
-      integer(ip) :: nr2
-      integer(ip) :: njcnst
-      logical :: active ( * )
-      integer(ip) :: cpidx1 ( * )
-      integer(ip) :: clidx1 ( * )
-      integer(ip) :: elts1  ( * )
-      integer(ip) :: ops    ( * )
-      integer(ip) :: cpidx2 ( * )
-      integer(ip) :: clidx2 ( * )
-      integer(ip) :: elts2  ( * )
-      integer(ip) :: sthan  ( * )
-      integer(ip) :: stsdsc ( sdscsz,          * )
-      integer(ip) :: stdtpt ( * )
-      integer(ip) :: dtpool ( 2,      lbpool : * )
-      integer(ip) :: dtdscs ( cdscsz,          * )
-      logical :: found
-      integer(ip) :: rowvec ( * )
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzekjtst
-
-      !> Umbrella of the EKQMGR routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine ekqmgr ( cindex, elment, eqryc, eqryd, eqryi, fname, row, selidx, column, handle, n, table, attdsc, ccount, found, nelt, nmrows, semerr, errmsg, cdata, ddata, idata, null )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_ekattdsc
-      use pepper_inc_ekbool
-      use pepper_inc_ekcnamsz
-      use pepper_inc_ekcoldsc
-      use pepper_inc_ekjrs
-      use pepper_inc_ekopcd
-      use pepper_inc_ekqlimit
-      use pepper_inc_ekquery
-      use pepper_inc_eksegdsc
-      use pepper_inc_ektnamsz
-      use pepper_inc_ektype
-      implicit none
-      integer(ip), parameter :: lbcell = -5
-      integer(ip) :: cindex
-      integer(ip) :: elment
-      character(*) :: eqryc
-      real(wp) :: eqryd  ( * )
-      integer(ip) :: eqryi  ( lbcell : * )
-      character(*) :: fname
-      integer(ip) :: row
-      integer(ip) :: selidx
-      character(*) :: column
-      integer(ip) :: handle
-      integer(ip) :: n
-      character(*) :: table
-      integer(ip) :: attdsc ( adscsz )
-      integer(ip) :: ccount
-      logical :: found
-      integer(ip) :: nelt
-      integer(ip) :: nmrows
-      logical :: semerr
-      character(*) :: errmsg
-      character(*) :: cdata
-      real(wp) :: ddata
-      integer(ip) :: idata
-      logical :: null
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine ekqmgr
 
 end module pepper_legacy_ek

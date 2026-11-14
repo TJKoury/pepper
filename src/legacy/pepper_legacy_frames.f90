@@ -1,4 +1,4 @@
-!> The legacy interface's routines of the subsystem frames (17 routines):
+!> The legacy interface's routines of the subsystem frames (16 routines):
 !> SPICELIB's names and arguments, on the default context. Programs use
 !> them through [[pepper_legacy]].
 module pepper_legacy_frames
@@ -8,13 +8,12 @@ module pepper_legacy_frames
       pepper_zzdynvac => zzdynvac, pepper_zzdynvad => zzdynvad, pepper_zzswfcln => zzswfcln, &
       pepper_zzswfini => zzswfini, pepper_zzgftreb => zzgftreb, pepper_zzfdat => zzfdat
    use pepper_legacy_context, only: legacy_context, legacy_spice
-   use pepper_legacy_errsys, only: setmsg, sigerr
 
    implicit none
 
    private
    public :: zzdynbid, zzdynvai, zzdynoac, zzdynoad, zzdynvac, zzdynvad, zzswfcln, zzswfini, &
-      zzgftreb, zzfdat, namfrm, frmnam, frinfo, cidfrm, cnmfrm, ccifrm, framex
+      zzgftreb, zzfdat, namfrm, frmnam, frinfo, cidfrm, cnmfrm, ccifrm
 
 contains
 
@@ -348,29 +347,5 @@ contains
       ctx => legacy_context()
       call ctx%ccifrm ( frclss, clssid, frcode, frname, cent, found )
       end subroutine ccifrm
-
-      !> Umbrella of the FRAMEX routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine framex ( cname, frname, frcode, cent, frclss, clssid, found )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_ninert
-      use pepper_inc_nninrt
-      use pepper_inc_frmtyp
-      use pepper_inc_zzctr
-      implicit none
-      character(*) :: cname
-      character(*) :: frname
-      integer(ip) :: frcode
-      integer(ip) :: cent
-      integer(ip) :: frclss
-      integer(ip) :: clssid
-      logical :: found
-      call setmsg ( 'A call has been made to the umbrella ' &
-      // 'routine FRAMEX. This routine doesn''t do ' &
-      // 'anything. It acts only as an umbrella ' &
-      // 'routine for its entry points. This call ' &
-      // 'probably indicates a misunderstanding in ' &
-      // 'programming. ' )
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine framex
 
 end module pepper_legacy_frames

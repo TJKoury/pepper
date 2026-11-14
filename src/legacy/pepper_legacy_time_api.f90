@@ -1,16 +1,15 @@
-!> The legacy interface's routines of the subsystem time_api (8 routines):
+!> The legacy interface's routines of the subsystem time_api (7 routines):
 !> SPICELIB's names and arguments, on the default context. Programs use
 !> them through [[pepper_legacy]].
 module pepper_legacy_time_api
 
    use pepper_instance, only: pepper_context
    use pepper_legacy_context, only: legacy_context, legacy_spice
-   use pepper_legacy_errsys, only: setmsg, sigerr
 
    implicit none
 
    private
-   public :: deltet, et2utc, scanpr, scan, tpictr, utc2et, timout, scanit
+   public :: deltet, et2utc, scanpr, scan, tpictr, utc2et, timout
 
 contains
 
@@ -128,26 +127,5 @@ contains
       ctx => legacy_context()
       call ctx%timout ( et, pictur, output )
       end subroutine timout
-
-      !> Umbrella of the SCANIT routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine scanit ( string, start, room, nmarks, marks, mrklen, pnters, ntokns, ident, beg, end )
-      use pepper_kinds, only: ip, wp
-      implicit none
-      character(*) :: string
-      integer(ip) :: room
-      integer(ip) :: nmarks
-      character(*) :: marks   ( * )
-      integer(ip) :: mrklen  ( * )
-      integer(ip) :: pnters  ( * )
-      integer(ip) :: start
-      integer(ip) :: ntokns
-      integer(ip) :: beg     ( * )
-      integer(ip) :: end     ( * )
-      integer(ip) :: ident   ( * )
-      call setmsg ( 'Your program has referenced the umbrella ' &
-      // 'subroutine SCANIT.  This may indicate a ' &
-      // 'programming error.'                           )
-      call sigerr ( 'SPICE(BOGUSENTRY)'                            )
-      end subroutine scanit
 
 end module pepper_legacy_time_api

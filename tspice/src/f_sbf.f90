@@ -20,12 +20,6 @@
 ! $ Declarations
 
       IMPLICIT NONE
-!
-!     PEPPER: the size of this test's surface lists (SPICELIB's MAXSRF of
-!     dsk.inc; the library's surface lists have no limit).
-!
-      INTEGER               MAXSRF
-      PARAMETER           ( MAXSRF = 100 )
 
 
       LOGICAL               OK
@@ -179,12 +173,6 @@
 !
 !     Local Parameters
 !
-      INTEGER               MAXDC
-      PARAMETER           ( MAXDC  = 1 )
-
-      INTEGER               MAXIC
-      PARAMETER           ( MAXIC  = 1 )
-
 !      INTEGER               TITLEN
 !      PARAMETER           ( TITLEN = 160 )
 
@@ -222,27 +210,18 @@
 !      CHARACTER*(TITLEN)    TITLE
 
       DOUBLE PRECISION      ANGLES ( 3, NSITES )
-      DOUBLE PRECISION      DC     ( MAXDC )
-      DOUBLE PRECISION      DSKDSC ( DSKDSZ )
-      DOUBLE PRECISION      ET
       DOUBLE PRECISION      FIRST
-      INTEGER               HANDLE
       DOUBLE PRECISION      LAT
       DOUBLE PRECISION      LAST
       DOUBLE PRECISION      LON
       DOUBLE PRECISION      LT
-      DOUBLE PRECISION      NORMAL ( 3 )
-      DOUBLE PRECISION      POINT  ( 3 )
-      DOUBLE PRECISION      RAYDIR ( 3 )
       DOUBLE PRECISION      SITPOS ( 3, NSITES )
       DOUBLE PRECISION      TOL
-      DOUBLE PRECISION      VERTEX ( 3 )
       DOUBLE PRECISION      XCTR   ( 3 )
       DOUBLE PRECISION      XDPAR  ( STSIZE * DSKDSZ )
       DOUBLE PRECISION      XDSKDS ( DSKDSZ )
       DOUBLE PRECISION      XFORM  ( 3, 3 )
       DOUBLE PRECISION      XOFF   ( 3 )
-      DOUBLE PRECISION      XPT    ( 3 )
       DOUBLE PRECISION      XRAD
 
       INTEGER               AXES   ( 3, NSITES )
@@ -251,24 +230,19 @@
       INTEGER               BTCARD
       INTEGER               CLASS
       INTEGER               CLSSID
-      INTEGER               DLADSC ( DLADSZ )
-      INTEGER               FIXFID
       INTEGER               FRMCTR
       INTEGER               HANDLS ( MAXN )
       INTEGER               I
-      INTEGER               IC     ( MAXIC )
       INTEGER               J
       INTEGER               K
       INTEGER               MAXBOD
       INTEGER               NEEDED
-      INTEGER               NSURF
       INTEGER               P
       INTEGER               PRVDSC ( DLADSZ )
       INTEGER               SEGCTR
       INTEGER               SEGFID
       INTEGER               SITFID ( NSITES )
       INTEGER               SITIDS ( NSITES )
-      INTEGER               SRFLST ( MAXSRF )
       INTEGER               STCARD
       INTEGER               SURFID
       INTEGER               UB
@@ -1621,27 +1595,6 @@
                       STOFF,  STCTR,  STRAD                  )
       CALL CHCKXC ( .TRUE., 'SPICE(SEGTABLETOOSMALL)', OK )
 
-
-
-!*********************************************************************
-!*
-!*    ZZDSKSBF Error cases
-!*
-!*********************************************************************
-
-
-!
-! --- Case: ------------------------------------------------------
-!
-      CALL TCASE ( 'Direct ZZDSKSBF call.' )
-
-      CALL ZZDSKSBF ( BODYID, NSURF,  SRFLST, ET,  FIXFID, &
-                      VERTEX, RAYDIR, POINT,  XPT, HANDLE, &
-                      DLADSC, DSKDSC, DC,     IC,  FOUND, &
-                      NORMAL                              )
-
-
-      CALL CHCKXC ( .TRUE., 'SPICE(BOGUSENTRY)', OK )
 
 
 !*********************************************************************

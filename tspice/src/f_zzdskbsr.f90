@@ -212,19 +212,6 @@
 !
 ! --- Case: ------------------------------------------------------
 !
-      CALL TCASE ( 'ZZDSKBSR error: direct call to ZZDSKBSR.' )
-
-
-      CALL ZZDSKBSR ( ' ',    1,      1,      ZZDSKBDC, DSKCTR, &
-                      UPDATE, DLADSC, DSKDSC, FOUND             )
-
-      CALL CHCKXC ( .TRUE., 'SPICE(DSKBOGUSENTRY)', OK )
-
-
-
-!
-! --- Case: ------------------------------------------------------
-!
       CALL TCASE ( 'Setup: create two DSK files, each containing ' &
       //           'data for bodies 499 and 599.'                 )
 

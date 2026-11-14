@@ -1,4 +1,4 @@
-!> The legacy interface's routines of the subsystem records (69 routines):
+!> The legacy interface's routines of the subsystem records (68 routines):
 !> SPICELIB's names and arguments, on the default context. Programs use
 !> them through [[pepper_legacy]].
 module pepper_legacy_records
@@ -7,18 +7,17 @@ module pepper_legacy_records
       pepper_zzck4d2i => zzck4d2i, pepper_zzdscm => zzdscm, pepper_zzdsin => zzdsin, &
       pepper_zzdspc => zzdspc, pepper_zzdspr => zzdspr, pepper_zzinil => zzinil
    use pepper_legacy_context, only: legacy_context, legacy_spice
-   use pepper_legacy_errsys, only: setmsg, sigerr
 
    implicit none
 
    private
-   public :: cke01, cke02, cke03, cke04, cke05, ckr01, ckr02, ckr03, ckr05, ckr06, pckr02, &
-      pckr20, sgmeta, spke01, spke02, spke03, spke08, spke09, spke12, spke13, spke14, spke17, &
-      spke18, spke19, spke20, spke21, spkr01, spkr02, spkr03, spkr05, spkr08, spkr09, spkr15, &
-      spkr17, spkr18, spkr19, spkr20, spkr21, stmp03, zzbodbry, zzck4d2i, zzdscm, zzdsin, zzdspc, &
-      zzdspr, zzinil, cke06, ckmeta, cknr04, pcke02, pcke20, prop2b, sgfcon, sgfpkt, sgfrvi, &
-      spkr12, spkr13, ckr04, pcke03, pckr03, spke05, spke15, spkr10, spkr14, ckpfs, pckmat, &
-      xxsgp4i, xxsgp4e, zzsgp4
+   public :: cke01, cke02, cke03, cke04, cke05, ckr01, ckr02, ckr03, ckr05, ckr06, pckr02, pckr20, &
+      sgmeta, spke01, spke02, spke03, spke08, spke09, spke12, spke13, spke14, spke17, spke18, &
+      spke19, spke20, spke21, spkr01, spkr02, spkr03, spkr05, spkr08, spkr09, spkr15, spkr17, &
+      spkr18, spkr19, spkr20, spkr21, stmp03, zzbodbry, zzck4d2i, zzdscm, zzdsin, zzdspc, zzdspr, &
+      zzinil, cke06, ckmeta, cknr04, pcke02, pcke20, prop2b, sgfcon, sgfpkt, sgfrvi, spkr12, &
+      spkr13, ckr04, pcke03, pckr03, spke05, spke15, spkr10, spkr14, ckpfs, pckmat, xxsgp4i, &
+      xxsgp4e
 
 contains
 
@@ -1446,23 +1445,5 @@ contains
       ctx => legacy_context()
       call ctx%xxsgp4e ( t, state )
       end subroutine xxsgp4e
-
-      !> Umbrella of the ZZSGP4 routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzsgp4 ( geophs, elems, opmode, t, state )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_zzsgp4
-      implicit none
-      real(wp) :: geophs    ( 8 )
-      real(wp) :: elems     ( 10 )
-      integer(ip) :: opmode
-      real(wp) :: t
-      real(wp) :: state     ( 6 )
-      call setmsg ( 'The routine ZZSGP4 is an umbrella for ' &
-      // 'the SGP4 initializer and propagator entry ' &
-      // 'points. Do not call ZZSGP4. It is ' &
-      // 'likely that a programming error has ' &
-      // 'been made.' )
-      call sigerr ( 'SPICE(BOGUSENTRY)'  )
-      end subroutine zzsgp4
 
 end module pepper_legacy_records

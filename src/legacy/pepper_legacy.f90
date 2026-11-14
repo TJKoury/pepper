@@ -63,7 +63,6 @@ module pepper_legacy
    use pepper_legacy_time_api
    use pepper_legacy_traceback
    use pepper_legacy_transforms
-   use pepper_legacy_umbrellas
    use pepper_legacy_writers
 
    implicit none

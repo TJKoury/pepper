@@ -1,4 +1,4 @@
-!> The legacy interface's routines of the subsystem ek_storage (111 routines):
+!> The legacy interface's routines of the subsystem ek_storage (108 routines):
 !> SPICELIB's names and arguments, on the default context. Programs use
 !> them through [[pepper_legacy]].
 module pepper_legacy_ek_storage
@@ -38,7 +38,6 @@ module pepper_legacy_ek_storage
       pepper_zzekaps => zzekaps, pepper_zzekbs01 => zzekbs01, pepper_zzekbs02 => zzekbs02, &
       pepper_zzekde04 => zzekde04, pepper_zzekrp2n => zzekrp2n
    use pepper_legacy_context, only: legacy_context, legacy_spice
-   use pepper_legacy_errsys, only: sigerr
 
    implicit none
 
@@ -54,8 +53,7 @@ module pepper_legacy_ek_storage
       zzekweed, ekopn, ekops, zzekcix1, zzekpars, zzektr23, zzektr32, zzektrdp, zzektrnk, &
       zzektrsb, zzektrsz, zzektrud, zzektrui, eknseg, zzekixlk, zzekrplk, zzektr1s, zzektrbn, &
       zzektrki, zzektrls, zzekmloc, zzektrdl, zzektrin, zzekdps, zzekff01, zzeksdsc, zzeksinf, &
-      zzektrap, ekffld, ekssum, zzekacps, zzekaps, zzekbs01, zzekbs02, zzekde04, zzekrp2n, &
-      zzeksca, zzekpage, zzekvadr
+      zzektrap, ekffld, ekssum, zzekacps, zzekaps, zzekbs01, zzekbs02, zzekde04, zzekrp2n
 
 contains
 
@@ -2058,49 +2056,5 @@ contains
       ctx => legacy_context()
       zzekrp2n = pepper_zzekrp2n ( ctx, handle, segno, recptr )
       end function zzekrp2n
-
-      !> Umbrella of the ZZEKSCA routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzeksca ( n, beg, end, idata, top )
-      use pepper_kinds, only: ip, wp
-      implicit none
-      integer(ip) :: n
-      integer(ip) :: beg
-      integer(ip) :: end
-      integer(ip) :: idata ( * )
-      integer(ip) :: top
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzeksca
-
-      !> Umbrella of the ZZEKPAGE routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzekpage ( handle, type, addrss, stat, p, pagec, paged, pagei, base, value )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_ekarch
-      use pepper_inc_ekpage
-      use pepper_inc_ektype
-      implicit none
-      integer(ip) :: handle
-      integer(ip) :: type
-      integer(ip) :: addrss
-      character(*) :: stat
-      integer(ip) :: p
-      character(*) :: pagec
-      real(wp) :: paged ( * )
-      integer(ip) :: pagei ( * )
-      integer(ip) :: base
-      integer(ip) :: value
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzekpage
-
-      !> Umbrella of the ZZEKVADR routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzekvadr ( njrs, bases, rwvidx, rwvbas, sgvbas )
-      use pepper_kinds, only: ip, wp
-      implicit none
-      integer(ip) :: njrs
-      integer(ip) :: bases  ( * )
-      integer(ip) :: rwvidx
-      integer(ip) :: rwvbas
-      integer(ip) :: sgvbas
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzekvadr
 
 end module pepper_legacy_ek_storage

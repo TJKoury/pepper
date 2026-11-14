@@ -1,4 +1,4 @@
-!> The legacy interface's routines of the subsystem rotations (20 routines):
+!> The legacy interface's routines of the subsystem rotations (19 routines):
 !> SPICELIB's names and arguments, on the default context. Programs use
 !> them through [[pepper_legacy]].
 module pepper_legacy_rotations
@@ -7,13 +7,12 @@ module pepper_legacy_rotations
       pepper_zzmobliq => zzmobliq, pepper_zzwahr => zzwahr, pepper_zzenut80 => zzenut80, &
       pepper_zzeprc76 => zzeprc76, pepper_zzdnpt => zzdnpt, pepper_zzstelab => zzstelab
    use pepper_legacy_context, only: legacy_context, legacy_spice
-   use pepper_legacy_errsys, only: sigerr
 
    implicit none
 
    private
    public :: rotate, rotmat, m2eul, eul2m, xf2eul, eul2xf, twovec, zztwovxf, irfrot, irfnum, &
-      irfnam, irfdef, zzmobliq, zzwahr, zzenut80, zzeprc76, zzdnpt, dnearp, zzstelab, chgirf
+      irfnam, irfdef, zzmobliq, zzwahr, zzenut80, zzeprc76, zzdnpt, dnearp, zzstelab
 
 contains
 
@@ -336,18 +335,5 @@ contains
       ctx => legacy_context()
       call pepper_zzstelab ( ctx, xmit, accobs, vobs, starg, scorr, dscorr )
       end subroutine zzstelab
-
-      !> Umbrella of the CHGIRF routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine chgirf ( refa, refb, rotab, name, index )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_ninert
-      implicit none
-      integer(ip) :: refa
-      integer(ip) :: refb
-      real(wp) :: rotab    ( 3,3 )
-      character(*) :: name
-      integer(ip) :: index
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine chgirf
 
 end module pepper_legacy_rotations

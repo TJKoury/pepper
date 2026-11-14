@@ -1,4 +1,4 @@
-!> The legacy interface's routines of the subsystem geometry (213 routines):
+!> The legacy interface's routines of the subsystem geometry (205 routines):
 !> SPICELIB's names and arguments, on the default context. Programs use
 !> them through [[pepper_legacy]].
 module pepper_legacy_geometry
@@ -37,7 +37,6 @@ module pepper_legacy_geometry
       pepper_zztanini => zztanini, pepper_zztansta => zztansta, pepper_zztangnt => zztangnt
    use pepper_legacy_context, only: legacy_context, legacy_spice
    use pepper_legacy_callbacks
-   use pepper_legacy_errsys, only: setmsg, sigerr
 
    implicit none
 
@@ -58,12 +57,11 @@ module pepper_legacy_geometry
       zzdpinit, zzdpsec, zzdpper, zzpdcmpl, zzpdpltc, zzpdtbox, zzraybox, zzsrfker, cgv2el, &
       dpspce, et2lst, incnsg, lx4num, rdkvar, xfmsta, zzilusta, zzinlat, zzinpdt0, zzrytrec, &
       zzsegbox, zzsrfn2c, zzsrfc2n, zzsrftrk, inedpl, pjelpl, srfc2s, srfcss, srfs2c, srfscc, &
-      zzdsksba, zzelvupy, zzinpdt, zzrytlat, edlimb, npedln, zzinvelt, zzprsmet, zzrytpdt, &
-      dskx02, srfxpt, tangpt, zzocced, zzptpl02, zzrytelt, zzdskbun, zzdsksgx, zzdskbux, zzsbfxr, &
+      zzdsksba, zzelvupy, zzinpdt, zzrytlat, edlimb, npedln, zzinvelt, zzprsmet, zzrytpdt, dskx02, &
+      srfxpt, tangpt, zzocced, zzptpl02, zzrytelt, zzdskbun, zzdsksgx, zzdskbux, zzsbfxr, &
       zzsbfxri, zzsbfnrm, dskxsi, dskxv, illumg, srfnrm, zzsuelin, zzsudski, zzraysfx, zzmaxrad, &
       zzminrad, zzraynp, illumf, ilumin, latsrf, sincpt, subpnt, subslr, zztanini, zztansta, &
-      zztangnt, limbpt, termpt, lxname, sctran, zzdsksel, zznrddp, zzsrftrn, zzdsksbf, zzsinutl, &
-      zztanutl
+      zztangnt, limbpt, termpt
 
 contains
 
@@ -4170,164 +4168,5 @@ contains
       ctx => legacy_context()
       call ctx%termpt ( method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, trmvcs )
       end subroutine termpt
-
-      !> Umbrella of the LXNAME routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine lxname ( hdchrs, tlchrs, string, first, last, idspec, nchar )
-      use pepper_kinds, only: ip, wp
-      implicit none
-      integer(ip), parameter :: lbcell = -5
-      character(*) :: hdchrs
-      character(*) :: tlchrs
-      character(*) :: string
-      integer(ip) :: first
-      integer(ip) :: idspec ( lbcell : * )
-      integer(ip) :: last
-      integer(ip) :: nchar
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine lxname
-
-      !> Umbrella of the SCTRAN routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine sctran ( clknam, clkid, found )
-      use pepper_kinds, only: ip, wp
-      implicit none
-      character(*) :: clknam
-      integer(ip) :: clkid
-      logical :: found
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine sctran
-
-      !> Umbrella of the ZZDSKSEL routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      logical function zzdsksel ( surfid, nsurf, srflst, bodyid, dclass, corsys, corpar, cor1, cor2, framid, pos, et, handle, dladsc, dskdsc )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_dskdsc
-      implicit none
-      integer(ip) :: surfid
-      integer(ip) :: nsurf
-      integer(ip) :: srflst ( * )
-      integer(ip) :: bodyid
-      integer(ip) :: dclass
-      integer(ip) :: corsys
-      real(wp) :: corpar ( * )
-      real(wp) :: cor1
-      real(wp) :: cor2
-      integer(ip) :: framid
-      real(wp) :: pos    ( 3 )
-      real(wp) :: et
-      integer(ip) :: handle
-      integer(ip) :: dladsc ( * )
-      real(wp) :: dskdsc ( * )
-      ! (a logical function in SPICELIB, as its entry points)
-      zzdsksel = .false.
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end function zzdsksel
-
-      !> Umbrella of the ZZNRDDP routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zznrddp ( ao, elems, em, omgasm, omgdot, t, xinc, xll, xlldot, xn, xnodes, xnodot, xnodp )
-      use pepper_kinds, only: ip, wp
-      implicit none
-      real(wp) :: ao
-      real(wp) :: elems ( 10 )
-      real(wp) :: em
-      real(wp) :: omgasm
-      real(wp) :: omgdot
-      real(wp) :: t
-      real(wp) :: xinc
-      real(wp) :: xll
-      real(wp) :: xlldot
-      real(wp) :: xn
-      real(wp) :: xnodes
-      real(wp) :: xnodot
-      real(wp) :: xnodp
-      call setmsg ( 'NRDDP: You called an entry which ' &
-      // 'performs no run-time function. This may ' &
-      // 'indicate a bug. Please check the documentation ' &
-      // 'for the subroutine ZZNRDDP.' )
-      call sigerr ( 'SPICE(EVILBOGUSENTRY)' )
-      end subroutine zznrddp
-
-      !> Umbrella of the ZZSRFTRN routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzsrftrn ( bodyid, srfnam, surfid, usrctr, found, update )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_srftrn
-      use pepper_inc_zzctr
-      use pepper_inc_zzsrftrn
-      implicit none
-      integer(ip) :: bodyid
-      character(*) :: srfnam
-      integer(ip) :: surfid
-      integer(ip) :: usrctr ( 2 )
-      logical :: found
-      logical :: update
-      call setmsg ( 'ZZSRFTRN is an umbrella routine. It should ' &
-      // 'never be called directly.'                   )
-      call sigerr ( 'SPICE(BOGUSENTRY)'                           )
-      end subroutine zzsrftrn
-
-      !> Umbrella of the ZZDSKSBF routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzdsksbf ( bodyid, nsurf, srflst, et, fixfid, vertex, raydir, point, xpt, handle, dladsc, dskdsc, dc, ic, found, normal )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_dla
-      use pepper_inc_dskdsc
-      use pepper_inc_zzctr
-      implicit none
-      integer(ip) :: bodyid
-      integer(ip) :: nsurf
-      integer(ip) :: srflst ( * )
-      real(wp) :: et
-      integer(ip) :: fixfid
-      real(wp) :: vertex ( 3 )
-      real(wp) :: raydir ( 3 )
-      real(wp) :: point  ( 3 )
-      real(wp) :: xpt    ( 3 )
-      integer(ip) :: handle
-      integer(ip) :: dladsc ( * )
-      real(wp) :: dskdsc ( * )
-      real(wp) :: dc     ( * )
-      integer(ip) :: ic     ( * )
-      logical :: found
-      real(wp) :: normal ( 3 )
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzdsksbf
-
-      !> Umbrella of the ZZSINUTL routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zzsinutl ( trgcde, nsurf, srflst, et, fixfid, vertex, raydir, spoint, found, minrad, maxrad, pnear, dist )
-      use pepper_kinds, only: ip, wp
-      implicit none
-      integer(ip) :: trgcde
-      integer(ip) :: nsurf
-      integer(ip) :: srflst ( * )
-      real(wp) :: et
-      integer(ip) :: fixfid
-      real(wp) :: vertex ( 3 )
-      real(wp) :: raydir ( 3 )
-      real(wp) :: spoint ( 3 )
-      logical :: found
-      real(wp) :: minrad
-      real(wp) :: maxrad
-      real(wp) :: pnear  ( 3 )
-      real(wp) :: dist
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zzsinutl
-
-      !> Umbrella of the ZZTANUTL routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine zztanutl ( curve, srcrad, shape, trgcde, nsurf, srflst, fixfid, et, plnvec, axis, angle, ocultd, point )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_zzdsk
-      implicit none
-      integer(ip) :: curve
-      real(wp) :: srcrad
-      integer(ip) :: shape
-      integer(ip) :: trgcde
-      integer(ip) :: nsurf
-      integer(ip) :: srflst ( * )
-      integer(ip) :: fixfid
-      real(wp) :: et
-      real(wp) :: plnvec ( 3 )
-      real(wp) :: axis   ( 3 )
-      real(wp) :: angle
-      logical :: ocultd
-      real(wp) :: point  ( 3 )
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine zztanutl
 
 end module pepper_legacy_geometry

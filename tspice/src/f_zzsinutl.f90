@@ -150,7 +150,6 @@
       DOUBLE PRECISION      PNEAR  ( 3 )
       DOUBLE PRECISION      RADII  ( 3 )
       DOUBLE PRECISION      RAYDIR ( 3 )
-      DOUBLE PRECISION      SPOINT ( 3 )
       DOUBLE PRECISION      TOL
       DOUBLE PRECISION      VERTEX ( 3 )
       DOUBLE PRECISION      XDIST
@@ -287,27 +286,6 @@
 !
       CALL PDPOOL ( KVNAME, 3, XRADII )
       CALL CHCKXC ( .FALSE., ' ', OK )
-
-
-
-!**********************************************************************
-!
-!     ZZSINUTL error case
-!
-!**********************************************************************
-
-
-!
-! --- Case: ------------------------------------------------------
-!
-      CALL TCASE ( 'ZZSINUTL error: direct call to ZZSINUTL.' )
-
-
-      CALL ZZSINUTL ( BODYID, NSURF,  SRFLST, ET,    FIXFID, &
-                      VERTEX, RAYDIR, SPOINT, FOUND, MINRAD, &
-                      MAXRAD, PNEAR,  DIST                  )
-
-      CALL CHCKXC ( .TRUE., 'SPICE(BOGUSENTRY)', OK )
 
 
 

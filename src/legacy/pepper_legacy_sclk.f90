@@ -1,4 +1,4 @@
-!> The legacy interface's routines of the subsystem sclk (15 routines):
+!> The legacy interface's routines of the subsystem sclk (13 routines):
 !> SPICELIB's names and arguments, on the default context. Programs use
 !> them through [[pepper_legacy]].
 module pepper_legacy_sclk
@@ -7,13 +7,12 @@ module pepper_legacy_sclk
       lib_zzhsiadd => zzhsiadd, lib_zzhsichk => zzhsichk, lib_zzpctrck => zzpctrck, &
       pepper_zzsclk => zzsclk
    use pepper_legacy_context, only: legacy_context, legacy_spice
-   use pepper_legacy_errsys, only: sigerr
 
    implicit none
 
    private
-   public :: scli01, scld01, zzscin01, zzscad01, zzscup01, zzsclk, sctk01, scfm01, scte01, &
-      scet01, scec01, scty01, scpr01, sclu01, sc01
+   public :: scli01, scld01, zzscin01, zzscad01, zzscup01, zzsclk, sctk01, scfm01, scte01, scet01, &
+      scec01, scty01, scpr01
 
 contains
 
@@ -1156,37 +1155,5 @@ contains
       ctx => legacy_context()
       call ctx%scpr01 ( sc, npartn, parbeg, parend )
       end subroutine scpr01
-
-      !> Umbrella of the SCLU01 routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine sclu01 ( name, sc, maxnv, n, ival, dval )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_sclk
-      implicit none
-      character(*) :: name
-      integer(ip) :: sc
-      integer(ip) :: maxnv
-      integer(ip) :: n
-      integer(ip) :: ival ( * )
-      real(wp) :: dval ( * )
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine sclu01
-
-      !> Umbrella of the SC01 routines: calling it directly signals SPICE(BOGUSENTRY), as in SPICELIB.
-      subroutine sc01 ( sc, clkstr, ticks, sclkdp, et, npartn, parbeg, parend, clktyp )
-      use pepper_kinds, only: ip, wp
-      use pepper_inc_zzctr
-      use pepper_inc_zzsc01
-      implicit none
-      integer(ip) :: sc
-      character(*) :: clkstr
-      real(wp) :: ticks
-      real(wp) :: sclkdp
-      real(wp) :: et
-      integer(ip) :: npartn
-      real(wp) :: parbeg ( * )
-      real(wp) :: parend ( * )
-      integer(ip) :: clktyp
-      call sigerr ( 'SPICE(BOGUSENTRY)' )
-      end subroutine sc01
 
 end module pepper_legacy_sclk

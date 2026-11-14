@@ -155,20 +155,14 @@
       DOUBLE PRECISION      BTIME
       DOUBLE PRECISION      COR1
       DOUBLE PRECISION      COR2
-      DOUBLE PRECISION      CORPAR ( NSYPAR )
       DOUBLE PRECISION      DSKDSC ( DSKDSZ )
       DOUBLE PRECISION      ET
       DOUBLE PRECISION      ETIME
-      DOUBLE PRECISION      POS    ( 3 )
 
       INTEGER               BODYID
-      INTEGER               CORSYS
-      INTEGER               DCLASS
       INTEGER               DLADSC ( DLADSZ )
-      INTEGER               FRAMID
       INTEGER               HANDLE
       INTEGER               NSURF
-      INTEGER               SURFID
       INTEGER               SRFLST ( MAXSRF )
 
       LOGICAL               ISMTCH
@@ -186,25 +180,6 @@
 !     Begin every test family with an open call.
 !
       CALL TOPEN ( 'F_ZZDSKSEL' )
-
-
-!***********************************************************************
-!
-!     ZZDSKSEL umbrella tests
-!
-!***********************************************************************
-
-!
-! --- Case: ------------------------------------------------------
-!
-      CALL TCASE ( 'Direct call to ZZDSKSEL' )
-
-      LGRETV = ZZDSKSEL ( SURFID, NSURF,  SRFLST, &
-                          BODYID, DCLASS, CORSYS, CORPAR, &
-                          COR1,   COR2,   FRAMID, POS, &
-                          ET,     HANDLE, DLADSC, DSKDSC )
-
-      CALL CHCKXC ( .TRUE., 'SPICE(BOGUSENTRY)', OK )
 
 
 !***********************************************************************

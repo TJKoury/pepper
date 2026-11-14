@@ -1,4 +1,4 @@
-!> The legacy interface's routines of the subsystem errsys (40 routines):
+!> The legacy interface's routines of the subsystem errsys (39 routines):
 !> SPICELIB's names and arguments, on the default context. Programs use
 !> them through [[pepper_legacy]].
 module pepper_legacy_errsys
@@ -11,8 +11,8 @@ module pepper_legacy_errsys
    private
    public :: sigerr, setmsg, errch, errdp, errint, errfnm, errhan, reset, getmsg, erract, errdev, &
       errprt, outmsg, failed, return, seterr, accept, allowd, getsms, putsms, getlms, putlms, &
-      getdev, putdev, getact, putact, setprt, msgsel, prtpkg, getlun, fndlun, reslun, frelun, &
-      zzshsh, zzhash, zzhash2, zzphsh, wrline, clline, byebye
+      getdev, putdev, getact, putact, setprt, msgsel, getlun, fndlun, reslun, frelun, zzshsh, &
+      zzhash, zzhash2, zzphsh, wrline, clline, byebye
 
 contains
 
@@ -360,21 +360,6 @@ contains
       ctx => legacy_context()
       msgsel = ctx%msgsel ( type )
       end function msgsel
-
-      !> Umbrella of SETPRT and MSGSEL: calling it directly is an error, as in SPICELIB.
-      !>
-      !> Legacy interface: acts on the legacy context.
-      logical function prtpkg ( short, long, expl, trace, dfault, type )
-      use pepper_kinds, only: ip, wp
-      implicit none
-      logical :: short, long, expl, trace, dfault  !! (unused)
-      character(*) :: type  !! (unused)
-      type(pepper_context), pointer :: ctx
-      ctx => legacy_context()
-      call ctx%setmsg ( 'PRTPKG:  You have called an entry point which has no run-time function; this may indicate a program bug.  Please check the PRTPKG documentation.' )
-      call ctx%sigerr ( 'SPICE(BOGUSENTRY)' )
-      prtpkg = .false.
-      end function prtpkg
 
       !> A free logical unit (error if none).
       !>

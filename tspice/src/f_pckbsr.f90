@@ -2600,17 +2600,6 @@
 
       CALL SIGERR ( SMSG )
 
-      CALL PCKBSR( ' ', 1, 1, 0.0D0, DESCR, SEGID, FOUND )
-
-      IF ( RETURN() ) THEN
-         CALL CHCKXC ( .TRUE., SMSG, OK )
-      ELSE
-         CALL CHCKXC ( .FALSE., ' ', OK )
-      END IF
-
-
-      CALL SIGERR ( SMSG )
-
       CALL PCKLOF ( ' ', HANDLE )
 
       IF ( RETURN() ) THEN
@@ -2641,16 +2630,6 @@
       ELSE
          CALL CHCKXC ( .FALSE., ' ', OK )
       END IF
-
-
-
-      CALL TCASE  ( 'Make sure an error is signaled if PCKBSR '// &
-                    'is called directly and RETURN() is .FALSE.' )
-
-
-      CALL PCKBSR( ' ', 1, 1, 0.0D0, DESCR, SEGID, FOUND )
-      CALL CHCKXC ( .TRUE., 'SPICE(BOGUSENTRY)', OK )
-
 
 
 

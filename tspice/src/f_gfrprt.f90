@@ -357,16 +357,6 @@
 !
 !---- Case -------------------------------------------------------------
 !
-      CALL TCASE ( 'Call to umbrella routine' )
-
-      CALL GFRPRT ( WINDOW, ' ', ' ', 0.D0, 1.D0, 0.5D0 )
-
-      CALL CHCKXC ( .TRUE., 'SPICE(BOGUSENTRY)', OK )
-
-
-!
-!---- Case -------------------------------------------------------------
-!
       CALL TCASE ( 'GFREPI: report message prefix is too long' )
 
       CALL GFREPI ( WINDOW, &
