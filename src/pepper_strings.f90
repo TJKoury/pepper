@@ -15,6 +15,8 @@ module pepper_strings
 
    private
 
+   ! (PEPPER) the one conversion of decimal text to double precision
+   public :: decimal_value
    public :: astrip, bedec, beint, benum, beuns, cmprss, cpos, cposr, dpstr,&
       eqchr, eqstr, esrchc, fndnwd, frstnb, frstnp, frstpc, intstr, kxtrct,&
       lastnb, lastpc, lbuild, lcase, ljucrs, ljust, lparse, lparsm, ltrim,&
@@ -12649,7 +12651,6 @@ contains
       logical :: zeroi
       logical :: ispi
       character(len(string) + 2) :: buf
-      logical :: exact
       integer(ip) :: nb
       integer(ip) :: epos
       integer :: ios
@@ -13335,24 +13336,16 @@ contains
       end if
 
 !
-!     PEPPER: the value, correctly rounded: exactly, without I/O, when the
-!     digits and the power of ten allow it (EXACT_DECIMAL: the numbers of
-!     time strings, and most of kernels'); otherwise Fortran's READ, which
-!     is slower, and serializes threads (gfortran's I/O library takes a
-!     lock for each I/O statement, internal ones too). The two can differ
-!     only for an exact tie (a decimal value halfway between two
-!     doubles): the exact path rounds to even (IEEE), READ as the
-!     compiler does (Fortran leaves it to the compiler: gfortran to
-!     even, ifx away from zero).
+!     PEPPER: the value, correctly rounded, by the library's one
+!     conversion of decimal text to double precision (DECIMAL_VALUE), so
+!     that a number gives the same double wherever it is read (text and
+!     JSON kernels, time strings, ...).
 !
-      call exact_decimal ( buf(1:nb), value, exact )
-      if ( .not. exact ) then
-         read ( buf(1:nb), *, iostat = ios ) value
-         if ( ios /= 0 .or. abs(value) > huge(value) ) then
-            error = toobig
-            ptr   = len(string) + 1
-            return
-         end if
+      call decimal_value ( buf(1:nb), value, ios )
+      if ( ios /= 0 ) then
+         error = toobig
+         ptr   = len(string) + 1
+         return
       end if
 
       x = value
@@ -13360,7 +13353,8 @@ contains
       return
       end subroutine nparsd
 
-      !> The value of a decimal number ([+-]digits[.digits][E[+-]digits]),
+      !> The value of a decimal number ([+-]digits[.digits][E[+-]digits],
+      !> the exponent letter E or D),
       !> correctly rounded, when it can be computed exactly without I/O
       !> (PEPPER; [[nparsd]]): Clinger's fast path. If the digits, without
       !> the decimal point, are an integer M of at most 2**53 and the power
@@ -13368,6 +13362,7 @@ contains
       !> exactly, and one multiplication or division (IEEE arithmetic:
       !> correctly rounded) gives the correctly rounded value. EXACT is
       !> false (VALUE undefined) otherwise, or for text of another form.
+      !> The exact path of [[decimal_value]].
       pure subroutine exact_decimal ( text, value, exact )
       use pepper_kinds, only: wp
       use, intrinsic :: iso_fortran_env, only: int64
@@ -13427,7 +13422,7 @@ contains
 !
       expo = 0
       if ( i <= n ) then
-         if ( text(i:i) /= 'E' .and. text(i:i) /= 'e' ) return
+         if ( index ( 'EeDd', text(i:i) ) == 0 ) return
          i = i + 1
          esign = 1
          if ( i <= n ) then
@@ -13459,6 +13454,30 @@ contains
          exact = .true.
       end if
       end subroutine exact_decimal
+
+      !> The value of a decimal number, correctly rounded (PEPPER): the
+      !> library's one conversion of decimal text to double precision, so a
+      !> number gives the same double wherever it is read (text kernels and
+      !> time strings through [[nparsd]], JSON kernels, DAF text transfer
+      !> files). Exactly, without I/O, when [[exact_decimal]] can (most
+      !> numbers: no lock, so threads do not wait on each other); otherwise
+      !> with Fortran's READ (list-directed: any form READ accepts). An exact
+      !> tie (a value halfway between two doubles) rounds to even on the
+      !> exact path, as READ does with gfortran (ifx's READ rounds it away
+      !> from zero; the Fortran standard leaves ties to the compiler).
+      pure subroutine decimal_value ( text, value, iostat )
+      use pepper_kinds, only: wp
+      character(*), intent(in) :: text  !! the number
+      real(wp), intent(out) :: value  !! its value (0 if IOSTAT is not 0)
+      integer, intent(out) :: iostat  !! 0, or nonzero: not a number, or beyond the range of double precision
+      logical :: exact
+      call exact_decimal ( text, value, exact )
+      iostat = 0
+      if ( exact ) return
+      read ( text, *, iostat = iostat ) value
+      if ( iostat == 0 .and. abs(value) > huge(value) ) iostat = 1  ! gfortran: an infinity, no error
+      if ( iostat /= 0 ) value = 0.0_wp
+      end subroutine decimal_value
 
       !> Parse a character string that represents a number and return
       !> the FORTRAN-truncated integer value.

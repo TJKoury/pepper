@@ -31,6 +31,7 @@ program test_daf
    call a%dafcls(handle)
    call check(.not. a%failed(), 'dafcls')
    call test_rewrite_seen()
+   call test_text_transfer()
    ! b's units for the closed file (Windows cannot delete an open file)
    call b%close_unloaded_files()
    call delete_file()
@@ -116,6 +117,81 @@ contains
       call a%dafps(2_ip, 0_ip, [1.5_wp, -2.5_wp], ic, sum)
       call check(all(sum(3:) == 7.0_wp), 'dafps: NI = 0, no integer words')
    end subroutine test_pack_unpack
+
+   !> DAFB2T writes a DAF in the old text transfer format, DAFT2B reads it
+   !> back (its doubles through decimal_value): the same summaries and data,
+   !> bit for bit, for values of every kind (fractions, large and small
+   !> exponents, negative, zero, subnormal).
+   subroutine test_text_transfer()
+      use, intrinsic :: iso_fortran_env, only: int64
+      character(*), parameter :: daf1 = 'test_daf_xfr1.daf', daf2 = 'test_daf_xfr2.daf', xfr = 'test_daf.xfr'
+      ! one double and two integers per summary: the integers are the
+      ! array's begin and end addresses (set by DAF)
+      real(wp) :: values(12, 2), r(12), sum1(2), sum2(2), dc1(1), dc2(1), data1(12), data2(12)
+      integer(ip) :: h1, h2, k, ic1(2), ic2(2)
+      integer :: unit
+      logical :: found1, found2, same
+      call remove(daf1)
+      call remove(daf2)
+      call remove(xfr)
+      call random_number(r)
+      values(:, 1) = [1.0_wp/3.0_wp, -2.0_wp/7.0_wp, acos(-1.0_wp)*1.0e10_wp, 1.0e-300_wp, -0.1_wp, 0.0_wp, &
+                      huge(1.0_wp), tiny(1.0_wp), tiny(1.0_wp)/1024.0_wp, 6.02214076e23_wp, 1.0_wp, -1.5e-7_wp]
+      values(:, 2) = (r - 0.5_wp)*10.0_wp**int(r*600 - 300)
+      call a%dafonw(daf1, 'TEST', 1_ip, 2_ip, 'PEPPER transfer test', 0_ip, h1)
+      do k = 1, 2
+         call a%dafps(1_ip, 2_ip, [values(3, k)], [0_ip, 0_ip], sum1)
+         call a%dafbna(h1, sum1, 'ARRAY')
+         call a%dafada(values(:, k), 12_ip)
+         call a%dafena()
+      end do
+      call a%dafcls(h1)
+      open (newunit=unit, file=xfr, status='new', action='write')
+      call a%dafb2t(daf1, int(unit, ip))
+      close (unit)
+      open (newunit=unit, file=xfr, status='old', action='read')
+      call a%daft2b(int(unit, ip), daf2, 0_ip)
+      close (unit)
+      call check(.not. a%failed(), 'text transfer: DAFB2T and DAFT2B')
+      call a%dafopr(daf1, h1)
+      call b%dafopr(daf2, h2)
+      call a%dafbfs(h1)
+      call b%dafbfs(h2)
+      same = .true.
+      do k = 1, 2
+         call a%daffna(found1)
+         call b%daffna(found2)
+         same = same .and. found1 .and. found2
+         if (.not. same) exit
+         call a%dafgs(sum1)
+         call b%dafgs(sum2)
+         call a%dafus(sum1, 1_ip, 2_ip, dc1, ic1)
+         call b%dafus(sum2, 1_ip, 2_ip, dc2, ic2)
+         call a%dafgda(h1, ic1(1), ic1(2), data1)
+         call b%dafgda(h2, ic2(1), ic2(2), data2)
+         same = same .and. transfer(dc1(1), 0_int64) == transfer(dc2(1), 0_int64) &
+                .and. all(transfer(data2, 0_int64, 12) == transfer(values(:, k), 0_int64, 12)) &
+                .and. all(transfer(data1, 0_int64, 12) == transfer(values(:, k), 0_int64, 12))
+      end do
+      call a%daffna(found1)
+      call b%daffna(found2)
+      call check(same .and. .not. found1 .and. .not. found2 .and. .not. a%failed() .and. .not. b%failed(), &
+                 'text transfer: the same summaries and data, bit for bit')
+      call a%dafcls(h1)
+      call b%dafcls(h2)
+      call b%close_unloaded_files()
+      call remove(daf1)
+      call remove(daf2)
+      call remove(xfr)
+   end subroutine test_text_transfer
+
+   !> Remove a file if it exists.
+   subroutine remove(name)
+      character(*), intent(in) :: name  !! the file
+      integer :: unit, ios
+      open (newunit=unit, file=name, status='old', iostat=ios)
+      if (ios == 0) close (unit, status='delete')
+   end subroutine remove
 
    !> The summary's integer components (the array number and its length).
    subroutine array_of(ctx, k, n)

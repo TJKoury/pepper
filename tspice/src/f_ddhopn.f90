@@ -2,7 +2,6 @@
 
       SUBROUTINE F_DDHOPN ( OK )
       use pepper_legacy, pepper_legacy_exists => exists
-      use pepper_legacy, pepper_legacy_exists => exists
       use pepper_inc_zzddhman
 
 ! $ Abstract

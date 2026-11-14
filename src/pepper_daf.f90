@@ -25347,6 +25347,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
       module procedure daft2b
       use pepper_kinds, only: ip, wp
+      use pepper_strings, only: decimal_value
       implicit none
 
       integer(ip), parameter :: bsize = 1024
@@ -25479,7 +25480,7 @@ contains
 
          end if
 
-         read (text,*,iostat=iostat) ( dc(i), i = 1, nd     )
+         call read_doubles ( nd, dc, iostat )
 
          if ( iostat /= 0 ) then
 
@@ -25538,7 +25539,7 @@ contains
 
             else
 
-               read (text,*,iostat=iostat) ( buffer(i), i = 1, chunk )
+               call read_doubles ( chunk, buffer, iostat )
 
                if ( iostat /= 0 ) then
 
@@ -25657,6 +25658,69 @@ contains
       call dafcls ( ctx, handle )
 
       return
+
+      contains
+
+      !> Read N doubles from the text file as a list-directed READ does
+      !> (PEPPER): from the next line on, as many lines as they take, the
+      !> rest of the last line ignored; values separated by blanks or
+      !> commas, R*C for R copies of C, a slash ending the input. Each value
+      !> is converted by the library's one conversion of decimal text,
+      !> DECIMAL_VALUE (a list-directed READ of doubles converts them
+      !> itself).
+      subroutine read_doubles ( n, values, iostat )
+         integer(ip), intent(in) :: n  !! how many values
+         real(wp), intent(inout) :: values(*)  !! the values (those after a slash: unchanged)
+         integer(ip), intent(out) :: iostat  !! 0, or the error of a READ or of a value
+         character(4096) :: line
+         real(wp) :: x
+         integer(ip) :: k, p, q, star, r, ios
+         integer :: dios
+         iostat = 0
+         k = 0
+         do while ( k < n )
+            read ( text, '(A)', iostat = ios ) line
+            if ( ios /= 0 ) then
+               iostat = ios
+               return
+            end if
+            p = 1
+            do while ( k < n )
+               do while ( p <= len_trim(line) )  ! the separators
+                  if ( index ( ' ,' // achar(9), line(p:p) ) == 0 ) exit
+                  p = p + 1
+               end do
+               if ( p > len_trim(line) ) exit  ! the next line
+               if ( line(p:p) == '/' ) return
+               q = p
+               do while ( q <= len_trim(line) )
+                  if ( index ( ' ,/' // achar(9), line(q:q) ) /= 0 ) exit
+                  q = q + 1
+               end do
+               r = 1
+               star = index ( line(p:q-1), '*' )
+               if ( star > 0 ) then
+                  read ( line(p:p+star-2), *, iostat = ios ) r
+                  if ( ios /= 0 .or. r < 1 ) then
+                     iostat = max ( ios, 1 )
+                     return
+                  end if
+                  p = p + star
+               end if
+               call decimal_value ( line(p:q-1), x, dios )
+               if ( dios /= 0 ) then
+                  iostat = dios
+                  return
+               end if
+               do while ( r > 0 .and. k < n )
+                  k = k + 1
+                  values(k) = x
+                  r = r - 1
+               end do
+               p = q
+            end do
+         end do
+      end subroutine read_doubles
       end procedure daft2b
 
       !>## Detailed Input

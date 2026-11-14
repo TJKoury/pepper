@@ -282,8 +282,11 @@ The syntax is standard JSON plus `//` comments and trailing commas.
 `//` lines. `--reverse` converts JSON back to a text kernel, for SPICELIB and
 other toolkits.
 
-Numbers are correctly rounded in both formats, so a `.tpc` and its `.json`
-give the same pool. The parser is `src/pepper_json.f90`; the design is in
+Numbers are correctly rounded in both formats, by the one conversion of
+decimal text to double precision that the library uses everywhere
+(`decimal_value` in `src/pepper_strings.f90`: text and JSON kernels, time
+strings, DAF text transfer files), so a `.tpc` and its `.json` give the same
+pool with any compiler. The parser is `src/pepper_json.f90`; the design is in
 `plans/json_kernels_plan.md`.
 
 ## Prepared queries

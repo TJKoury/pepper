@@ -393,6 +393,7 @@ contains
          'MSG = ''it''''s''', &
          'REPLACED = 1', 'REPLACED = ''x''', &
          'ODD/NAME.1 = -0.5', &
+         'TIES = ( 7301834565921220E1 47569951541313700 1.3271244004193938E+11 1E300 )', &
          '\begintext'])
       call write_file('test_json_eq.json', [character(80) :: &
          '// the same as test_json_eq.tpc', '{', &
@@ -405,7 +406,8 @@ contains
          '  "EPOCHS": ["@1972-JAN-1", "@1999-JUL-1", 10],', &
          '  "MSG": "it''s",', &
          '  "REPLACED": 1, "REPLACED": "x",', &
-         '  "ODD/NAME.1": -0.5', '}'])
+         '  "ODD/NAME.1": -0.5,', &
+         '  "TIES": [7301834565921220E1, 47569951541313700, 1.3271244004193938E+11, 1E300]', '}'])
       call tpc%furnsh('test_json_eq.tls')
       call tpc%furnsh('test_json_eq.tpc')
       call json%furnsh('test_json_eq.tls')
@@ -431,6 +433,15 @@ contains
          end if
          call check(same, 'equivalence: the variable '//names(k)%s)
       end do
+      ! exact ties (values halfway between two doubles) round to even in
+      ! both, whatever the compiler's READ would do
+      call ct%pool_values('TIES', dv, found)
+      call cj%pool_values('TIES', jdv, jfound)
+      call check(found .and. jfound, 'equivalence: TIES')
+      if (found .and. jfound) then
+         call check(dv(1) == 73018345659212192.0_wp .and. jdv(1) == dv(1) .and. &
+                    dv(2) == 47569951541313696.0_wp .and. jdv(2) == dv(2), 'equivalence: ties round to even in both')
+      end if
       call ct%destroy()
       call cj%destroy()
       call tpc%destroy()

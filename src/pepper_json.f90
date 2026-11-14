@@ -33,6 +33,7 @@ module pepper_json
 
    use pepper_kinds, only: ip, wp
    use pepper_containers, only: string
+   use pepper_strings, only: decimal_value
 
    implicit none
 
@@ -390,10 +391,12 @@ contains
             p = p + 1
          end do
       end if
-      read (text(b:p - 1), *, iostat=ios) x
-      ! The text is a JSON number (checked above), so READ can only fail on its
-      ! range: gfortran gives an infinity, ifx an error
-      if (ios /= 0 .or. abs(x) > huge(x)) then
+      ! The value by the library's one conversion of decimal text to double
+      ! precision (as text kernels' NPARSD), so a number gives the same double
+      ! in a text kernel and in a JSON kernel.
+      call decimal_value(text(b:p - 1), x, ios)
+      ! the text is a JSON number (checked above): only its range can fail
+      if (ios /= 0) then
          call fail(c, 'SPICE(NUMBEREXPECTED)', 'the number "'//text(b:p - 1)//'" is beyond the range '// &
                    'of double precision', c%line)
          return
