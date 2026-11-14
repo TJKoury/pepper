@@ -4,14 +4,14 @@
 !> [[legacy_spice]], for the routines that change the kernels.
 module pepper_legacy_context
 
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance_module, only: pepper_instance, pepper_context
 
    implicit none
 
    private
    public :: legacy_context, legacy_spice
 
-   type(pepper_spice), target, save :: default_spice  !! the default instance
+   type(pepper_instance), target, save :: default_spice  !! the default instance
    logical, save :: initialized = .false.  !! the default instance's context has its legacy settings
 
 contains
@@ -41,7 +41,7 @@ contains
    !> The default instance, for the legacy procedures that change the
    !> kernels (its context, legacy_context, has the legacy settings first).
    function legacy_spice() result(spice)
-      type(pepper_spice), pointer :: spice  !! the default instance
+      type(pepper_instance), pointer :: spice  !! the default instance
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
       spice => default_spice

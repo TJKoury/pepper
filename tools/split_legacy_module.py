@@ -50,14 +50,14 @@ def top_level(lines):
 
 
 def hoist_instance_use(body):
-    """BODY without the routines' USE of pepper_instance, and the entities
+    """BODY without the routines' USE of pepper_instance_module, and the entities
     they import ([local name => ]name), for one USE of the module: the
-    compiler reads pepper_instance's module file (its context type has
+    compiler reads pepper_instance_module's module file (its context type has
     hundreds of type-bound procedures) for every USE of it, so a USE in each
     of a thousand routines took gigabytes of RAM (ifx: more than 16 GB)."""
     out, items, i = [], {}, 0
     while i < len(body):
-        m = re.match(r'\s*use\s+pepper_instance\s*,\s*only\s*:(.*)$', body[i], re.I)
+        m = re.match(r'\s*use\s+pepper_instance_module\s*,\s*only\s*:(.*)$', body[i], re.I)
         if not m:
             out.append(body[i])
             i += 1
@@ -71,7 +71,7 @@ def hoist_instance_use(body):
             if x:
                 local = x.split('=>')[0].strip()
                 if items.get(local, x) != x:
-                    raise SystemExit(f'pepper_instance: {local} is {items[local]} and {x}')
+                    raise SystemExit(f'pepper_instance_module: {local} is {items[local]} and {x}')
                 items[local] = x
         i += 1
     return out, list(items.values())
@@ -123,7 +123,7 @@ def main():
     cb_spec = strip_blank(lines[i_cb + 1:i_contains])
     ctx_body = strip_blank(lines[i_contains + 1:i_bridges])
     cb_body = strip_blank(lines[i_bridges:i_sections])
-    instance_use = next(l for l in lines[:i_ctx] if 'use pepper_instance, only: pepper_context,' in l)
+    instance_use = next(l for l in lines[:i_ctx] if 'use pepper_instance_module, only: pepper_context,' in l)
     callbacks = [x.strip() for x in instance_use.split('only:')[1].split(',') if x.strip() != 'pepper_context']
 
     # the sections: [(subsystem, lines)]
@@ -143,7 +143,7 @@ def main():
         '!> [[legacy_spice]], for the routines that change the kernels.',
         'module pepper_legacy_context',
         '',
-        '   use pepper_instance, only: pepper_spice, pepper_context',
+        '   use pepper_instance_module, only: pepper_instance, pepper_context',
         '',
         '   implicit none',
         '',
@@ -170,8 +170,8 @@ def main():
         'module pepper_legacy_callbacks',
         '',
         '   use pepper_kinds, only: ip, wp',
-        '   use pepper_instance, only: pepper_context',
-        *wrap('use pepper_instance, only: ', callbacks),
+        '   use pepper_instance_module, only: pepper_context',
+        *wrap('use pepper_instance_module, only: ', callbacks),
         '',
         '   implicit none',
         '',
@@ -209,7 +209,7 @@ def main():
                 o = owner.get(n.lower())
                 if o and o != name and n.lower() not in local:
                     called.setdefault(o, set()).add(n.lower())
-        uses = wrap('use pepper_instance, only: ', instance) if instance else []
+        uses = wrap('use pepper_instance_module, only: ', instance) if instance else []
         text = '\n'.join(x.split('!')[0] for x in body).lower()
         if re.search(r'\blegacy_(context|spice)\b', text):
             uses.append('   use pepper_legacy_context, only: legacy_context, legacy_spice')

@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_time
 
-   use pepper_instance, only: pepper_context, pepper_zzcvpool => zzcvpool, &
+   use pepper_instance_module, only: pepper_context, pepper_zzcvpool => zzcvpool, &
       pepper_zzutcpm => zzutcpm, pepper_zzvststr => zzvststr, pepper_zzvsbstr => zzvsbstr, &
       pepper_zzprscor => zzprscor, pepper_zzvalcor => zzvalcor, pepper_zzcorepc => zzcorepc
    use pepper_legacy_context, only: legacy_context, legacy_spice

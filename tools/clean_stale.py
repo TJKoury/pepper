@@ -107,21 +107,21 @@ def main() -> int:
             a.unlink()
             print(f"clean_stale: removed {a.relative_to(ROOT)} (older than {len(newer)} of its "
                   f"objects, e.g. {newer[0].name})")
-    # A module that uses pepper_instance keeps an old .mod after its own
-    # source is unchanged and pepper_instance changed (seen after failed
+    # A module that uses pepper_instance_module keeps an old .mod after its own
+    # source is unchanged and pepper_instance_module changed (seen after failed
     # builds): its users then see an old layout of pepper_context. Remove the
-    # build products of the modules (other than pepper_instance) that use
-    # it and whose .mod is older than pepper_instance.mod.
+    # build products of the modules (other than pepper_instance_module) that use
+    # it and whose .mod is older than pepper_instance_module.mod.
     import re as _re
     users = {}
     for src in (ROOT / "src").rglob("*.[fF]90"):
         text = src.read_text(errors="ignore")
-        if _re.search(r"^\s*use\s+pepper_instance\b", text, _re.M | _re.I):
+        if _re.search(r"^\s*use\s+pepper_instance_module\b", text, _re.M | _re.I):
             for m in _re.finditer(r"^\s*module\s+(?!procedure|subroutine|function)(\w+)\s*$", text, _re.M | _re.I):
                 users[m.group(1).lower()] = src
     stale_mods = 0
     for d in [*(ROOT / "build").glob("gfortran_*"), *(ROOT / "tspice" / "build").glob("gfortran_*")]:
-        inst = d / "pepper_instance.mod"
+        inst = d / "pepper_instance_module.mod"
         if not inst.exists():
             continue
         for name, src in users.items():
@@ -133,7 +133,7 @@ def main() -> int:
                         f.unlink()
                 stale_mods += 1
     if stale_mods:
-        print(f"clean_stale: removed {stale_mods} module files older than pepper_instance.mod")
+        print(f"clean_stale: removed {stale_mods} module files older than pepper_instance_module.mod")
     # fpm does not relink the executables (tests, examples) when only the
     # library changed: remove those older than the newest library source, so
     # that it links them again.

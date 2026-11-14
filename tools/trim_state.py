@@ -95,13 +95,13 @@ _INTENTS = None
 
 def intents() -> dict:
     """Procedure name -> list of the intents of its arguments (in order),
-    from the interfaces in pepper_instance and the procedures of the
+    from the interfaces in pepper_instance_module and the procedures of the
     stateless modules."""
     global _INTENTS
     if _INTENTS is not None:
         return _INTENTS
     _INTENTS = {}
-    files = [SRC / "pepper_instance.f90"] + sorted(SRC.glob("pepper_[ams]*.f90")) + \
+    files = [SRC / "pepper_instance_module.f90"] + sorted(SRC.glob("pepper_[ams]*.f90")) + \
         [SRC / "pepper_errors.f90", SRC / "pepper_hash.f90"]
     for f in files:
         text = f.read_text(encoding="ascii")

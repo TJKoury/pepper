@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_frames
 
-   use pepper_instance, only: pepper_context, pepper_zzdynbid => zzdynbid, &
+   use pepper_instance_module, only: pepper_context, pepper_zzdynbid => zzdynbid, &
       pepper_zzdynvai => zzdynvai, pepper_zzdynoac => zzdynoac, pepper_zzdynoad => zzdynoad, &
       pepper_zzdynvac => zzdynvac, pepper_zzdynvad => zzdynvad, pepper_zzswfcln => zzswfcln, &
       pepper_zzswfini => zzswfini, pepper_zzgftreb => zzgftreb, pepper_zzfdat => zzfdat

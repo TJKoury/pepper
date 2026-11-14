@@ -5,7 +5,7 @@ variables), for tools/modularize_ctx.py.
 An umbrella is split into one procedure per entry point. Each gets a copy
 of the umbrella's declarations (minus its arguments, which are declared in
 the interface). The saved variables that are real state (modules.UMBRELLAS)
-become components of a derived type held in pepper_spice; the procedure
+become components of a derived type held in pepper_instance; the procedure
 accesses them through an ASSOCIATE block, so its code is unchanged. All
 other saved variables become ordinary local variables.
 """
@@ -257,7 +257,7 @@ class Umbrella:
             if n not in params:
                 params.add(n)
                 todo.extend(v for v in values[n] if v in values)
-        holder = "pepper_context (one per thread)" if self.where == "context" else "pepper_spice"
+        holder = "pepper_context (one per thread)" if self.where == "context" else "pepper_instance"
         from document_procedures import abstract
         purpose = abstract(self.lines)
         out = ([f"!> {line}" for line in purpose] + ["!>"] if purpose else []) + \

@@ -21,7 +21,7 @@
 !> by a query may make queries of its own (pepper_programmatic). Cases outside the fast path (a chain longer than SPKGEO's 20
 !> links, missing data, the relativistic correction) are evaluated by the
 !> SPICELIB routines, with their errors.
-submodule (pepper_instance) pepper_queries
+submodule (pepper_instance_module) pepper_queries
 
    implicit none
 

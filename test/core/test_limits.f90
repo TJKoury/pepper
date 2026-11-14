@@ -11,14 +11,14 @@
 program test_limits
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context, zzprsmet, zzelvupy, zzekspsh, zzekspop, zzeksrd, zzeksupd, zzekstop, zzekscln
+   use pepper_instance_module, only: pepper_instance, pepper_context, zzprsmet, zzelvupy, zzekspsh, zzekspop, zzeksrd, zzeksupd, zzekstop, zzekscln
    use pepper_test_kernels, only: write_lsk, write_spk, kernel_name, delete_file, circle_state, &
       write_tk_frames, frame_name, write_body_names, body_name
 
    implicit none
 
    character(*), parameter :: prefix = 'test_limits_'
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context), pointer :: ctx  !! the instance's context (it loads the kernels)
    integer :: failures = 0
 
@@ -1587,7 +1587,7 @@ contains
    !> 64 queries 60 SPKs in turn, twice; the setting has a minimum of 4.
    subroutine test_open_files()
       integer(ip), parameter :: n = 60, first = 940001
-      type(pepper_spice), target :: spice2
+      type(pepper_instance), target :: spice2
       type(pepper_context), pointer :: ctx2  !! the instance's context (it loads the kernels)
       real(wp) :: state(6), lt, err
       integer(ip) :: i, pass

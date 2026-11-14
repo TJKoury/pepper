@@ -3,7 +3,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance]]). Moved here from src/spicelib by
+!> [[pepper_instance_module]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_pool.f90.
 !>
@@ -1406,7 +1406,7 @@
 !>     The remaining local variables...
 !>
 !>     Set up the definition of our in-line functions.
-submodule (pepper_instance) pepper_pool
+submodule (pepper_instance_module) pepper_pool
 
    implicit none
 
@@ -13928,7 +13928,7 @@ contains
 !
 !     PEPPER: each context keeps its own watches,
 !     checked against the instance's log of the pool's changes (see
-!     swpool_context in pepper_instance): contexts do not take each
+!     swpool_context in pepper_instance_module): contexts do not take each
 !     other's notices, and a watch set while other contexts read the
 !     pool changes nothing they use. A notice is posted for any update
 !     of a watched variable (loaded, set or deleted) since the last
@@ -14208,7 +14208,7 @@ contains
 !
 !     PEPPER: each context keeps its own watches,
 !     checked against the instance's log of the pool's changes (see
-!     swpool_context in pepper_instance): contexts do not take each
+!     swpool_context in pepper_instance_module): contexts do not take each
 !     other's notices, and a watch set while other contexts read the
 !     pool changes nothing they use. A notice is posted for any update
 !     of a watched variable (loaded, set or deleted) since the last
@@ -16779,7 +16779,7 @@ contains
 !
 !     PEPPER: each context keeps its own watches,
 !     checked against the instance's log of the pool's changes (see
-!     swpool_context in pepper_instance): contexts do not take each
+!     swpool_context in pepper_instance_module): contexts do not take each
 !     other's notices, and a watch set while other contexts read the
 !     pool changes nothing they use. A notice is posted for any update
 !     of a watched variable (loaded, set or deleted) since the last

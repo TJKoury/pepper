@@ -8,7 +8,7 @@ module pepper_test_kernels
 
    use pepper_kinds, only: ip, wp
    use pepper_constants, only: twopi
-   use pepper_instance, only: pepper_context
+   use pepper_instance_module, only: pepper_context
 
    implicit none
 

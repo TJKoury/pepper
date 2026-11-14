@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_symbols
 
-   use pepper_instance, only: pepper_context
+   use pepper_instance_module, only: pepper_context
    use pepper_legacy_context, only: legacy_context, legacy_spice
 
    implicit none

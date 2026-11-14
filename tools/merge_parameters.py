@@ -145,7 +145,7 @@ def merge(text: str):
 
 
 def newest_build() -> Path:
-    mods = sorted(ROOT.glob("build/gfortran_*/pepper_instance.mod"), key=lambda p: p.stat().st_mtime)
+    mods = sorted(ROOT.glob("build/gfortran_*/pepper_instance_module.mod"), key=lambda p: p.stat().st_mtime)
     return mods[-1].parent if mods else None
 
 

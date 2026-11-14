@@ -210,7 +210,7 @@ Done.
 
 - `src/pepper_programmatic.f90`: the registries, the virtual SPK files,
   the frames' definitions, the providers' calls; the provider types and
-  the instance's methods in `pepper_instance`; SPKPVN's type 100, ROTGET's
+  the instance's methods in `pepper_instance_module`; SPKPVN's type 100, ROTGET's
   and FRMGET's class 7, KCLEAR, CLPOOL.
 - A frame of class 7 without a provider (one defined by a frame kernel,
   say) signals SPICE(UNKNOWNFRAMETYPE), as any class PEPPER cannot

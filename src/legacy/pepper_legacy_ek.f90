@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_ek
 
-   use pepper_instance, only: pepper_context, pepper_zzekac01 => zzekac01, &
+   use pepper_instance_module, only: pepper_context, pepper_zzekac01 => zzekac01, &
       pepper_zzekac02 => zzekac02, pepper_zzekac03 => zzekac03, pepper_zzekac04 => zzekac04, &
       pepper_zzekac05 => zzekac05, pepper_zzekac06 => zzekac06, pepper_zzekad04 => zzekad04, &
       pepper_zzekad05 => zzekad05, pepper_zzekad06 => zzekad06, pepper_zzekde05 => zzekde05, &
@@ -26,7 +26,7 @@ module pepper_legacy_ek
       pepper_zzekiic1 => zzekiic1, pepper_zzekiid1 => zzekiid1, pepper_zzekiii1 => zzekiii1, &
       pepper_zzekjprp => zzekjprp, pepper_zzekjnxt => zzekjnxt, pepper_zzekkey => zzekkey, &
       pepper_zzekad01 => zzekad01, pepper_zzekad02 => zzekad02, pepper_zzekad03 => zzekad03, &
-      pepper_zzekixdl => zzekixdl, pepper_zzekjoin => zzekjoin, pepper_spice, &
+      pepper_zzekixdl => zzekixdl, pepper_zzekjoin => zzekjoin, pepper_instance, &
       pepper_zzekde01 => zzekde01, pepper_zzekde02 => zzekde02, pepper_zzekde03 => zzekde03, &
       pepper_zzekue01 => zzekue01, pepper_zzekue02 => zzekue02, pepper_zzekcchk => zzekcchk, &
       pepper_zzekpcol => zzekpcol, pepper_zzeksemc => zzeksemc, pepper_zzektres => zzektres, &
@@ -2133,7 +2133,7 @@ contains
       implicit none
       character(*) :: fname  !! Name of EK file to load.
       integer(ip) :: handle  !! File handle of loaded EK file.
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%eklef ( fname, handle )
       end subroutine eklef
@@ -2158,7 +2158,7 @@ contains
       use pepper_inc_ektype
       implicit none
       integer(ip) :: handle  !! Handle of EK file.
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%ekuef ( handle )
       end subroutine ekuef

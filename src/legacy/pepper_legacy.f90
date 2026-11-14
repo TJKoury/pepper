@@ -3,7 +3,7 @@
 !> SPICELIB uses this module (`use pepper_legacy`) instead of declaring
 !> SPICELIB's functions itself; NAIF's test suite (tspice) runs through it.
 !>
-!> Each routine calls the module API (pepper_instance) with the default
+!> Each routine calls the module API (pepper_instance_module) with the default
 !> context, [[legacy_context]], or for the routines that change the kernels
 !> (FURNSH, LDPOOL, BODDEF, ...) the default instance, [[legacy_spice]],
 !> whose errors are signaled in the same context. The error routines (SIGERR,

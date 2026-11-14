@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_spk_callbacks
 
-   use pepper_instance, only: pepper_context, pepper_zzspkflt => zzspkflt, &
+   use pepper_instance_module, only: pepper_context, pepper_zzspkflt => zzspkflt, &
       pepper_zzspkfao => zzspkfao, pepper_zzspkfap => zzspkfap, pepper_zzspkfat => zzspkfat, &
       pepper_zzspkfzo => zzspkfzo, pepper_zzspkfzt => zzspkfzt
    use pepper_legacy_context, only: legacy_context, legacy_spice

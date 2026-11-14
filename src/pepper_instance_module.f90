@@ -1,6 +1,6 @@
 !> The SPICE instance and the per-thread context.
 !>
-!> All PEPPER state belongs to an instance, type([[pepper_spice]]): the loaded
+!> All PEPPER state belongs to an instance, type([[pepper_instance]]): the loaded
 !> kernels, the kernel pool, the file tables, the names defined with
 !> boddef. The kernels are changed through the instance: spice%furnsh,
 !> unload, kclear, ldpool, clpool, the pool's setters (pcpool, pdpool,
@@ -16,7 +16,7 @@
 !> the instance must outlive its contexts (spice%destroy() and
 !> ctx%destroy() release them before they go out of scope):
 !>```fortran
-!>     type(pepper_spice), target :: spice
+!>     type(pepper_instance), target :: spice
 !>     type(pepper_context) :: ctx
 !>     call spice%furnsh('kernels.tm')
 !>     if (spice%failed()) ...
@@ -33,7 +33,7 @@
 !> with ctx%getmsg and clears the error with ctx%reset(). SPICELIB's own
 !> settings (action DEFAULT, device SCREEN) can be set with ctx%erract and
 !> ctx%errdev, as the legacy interface in tspice/src/legacy does.
-module pepper_instance
+module pepper_instance_module
 
    use, intrinsic :: iso_fortran_env, only: error_unit, int64
    use pepper_kinds, only: ip, wp
@@ -52,7 +52,7 @@ module pepper_instance
 
    private
 
-   public :: pepper_spice, pepper_context
+   public :: pepper_instance, pepper_context
    public :: state_query, rotation_query
 
    !> Number of entries the kernel pool's change log keeps; when it is full,
@@ -77,7 +77,7 @@ module pepper_instance
       [character(7) :: 'ABORT', 'REPORT', 'RETURN', 'IGNORE', 'DEFAULT']
 
    !> A SPICE instance: the state shared by all its contexts.
-   type :: pepper_spice
+   type :: pepper_instance
       private
       !> Incremented by every change of the loaded kernels or the kernel
       !> pool; caches in contexts are valid while it is unchanged.
@@ -218,12 +218,12 @@ module pepper_instance
       procedure, non_overridable :: ckupf => spice_ckupf
       procedure, non_overridable :: eklef => spice_eklef
       procedure, non_overridable :: ekuef => spice_ekuef
-   end type pepper_spice
+   end type pepper_instance
 
    !> The per-thread state for using an instance.
    type :: pepper_context
       private
-      type(pepper_spice), pointer :: spice => null()  !! the instance
+      type(pepper_instance), pointer :: spice => null()  !! the instance
       ! Error status, messages and settings (SPICELIB's error handling).
       logical :: failure = .false.  !! an error was signaled (and not reset)
       logical :: messages_allowed = .true.  !! the long message may be changed (ACCEPT, ALLOWD)
@@ -1849,7 +1849,7 @@ module pepper_instance
       !> Adding a body again replaces its registration. Errors are signaled
       !> in the instance's context.
       module subroutine spice_add_ephemeris ( this, body, center, frame, tbeg, tend, provider )
-         class(pepper_spice), target, intent(inout) :: this  !! the instance
+         class(pepper_instance), target, intent(inout) :: this  !! the instance
          integer(ip), intent(in) :: body  !! the body's ID code
          integer(ip), intent(in) :: center  !! the ID code of its center of motion
          character(*), intent(in) :: frame  !! the frame of the states
@@ -1861,7 +1861,7 @@ module pepper_instance
       !> Remove a programmatic ephemeris (PEPPER): the body's other segments
       !> (files) apply again. No error if the body has none.
       module subroutine spice_remove_ephemeris ( this, body )
-         class(pepper_spice), target, intent(inout) :: this  !! the instance
+         class(pepper_instance), target, intent(inout) :: this  !! the instance
          integer(ip), intent(in) :: body  !! the body's ID code
       end subroutine spice_remove_ephemeris
 
@@ -1873,7 +1873,7 @@ module pepper_instance
       !> are refused (SPICE(FRAMEEXISTS)). Errors are signaled in the
       !> instance's context.
       module subroutine spice_add_frame ( this, name, code, center, provider )
-         class(pepper_spice), target, intent(inout) :: this  !! the instance
+         class(pepper_instance), target, intent(inout) :: this  !! the instance
          character(*), intent(in) :: name  !! the frame's name
          integer(ip), intent(in) :: code  !! its ID code
          integer(ip), intent(in) :: center  !! the ID code of its center
@@ -1883,7 +1883,7 @@ module pepper_instance
       !> Remove a programmatic frame and its definition from the kernel pool
       !> (PEPPER). No error if there is no such programmatic frame.
       module subroutine spice_remove_frame ( this, name )
-         class(pepper_spice), target, intent(inout) :: this  !! the instance
+         class(pepper_instance), target, intent(inout) :: this  !! the instance
          character(*), intent(in) :: name  !! the frame's name
       end subroutine spice_remove_frame
 
@@ -20871,7 +20871,7 @@ contains
    !> units are reserved). Applies to the contexts that have not opened a
    !> file yet; set it before creating contexts.
    subroutine set_max_open_files(this, n)
-      class(pepper_spice), intent(inout) :: this  !! the instance
+      class(pepper_instance), intent(inout) :: this  !! the instance
       integer(ip), intent(in) :: n  !! the number of files (at least 4)
       this%open_files_limit = max(n, 4_ip)
    end subroutine set_max_open_files
@@ -20879,7 +20879,7 @@ contains
    !> The number of files each context keeps open at the same time (see
    !> [[set_max_open_files]]).
    pure integer(ip) function max_open_files(this) result(n)
-      class(pepper_spice), intent(in) :: this  !! the instance
+      class(pepper_instance), intent(in) :: this  !! the instance
       n = this%open_files_limit
    end function max_open_files
 
@@ -20892,14 +20892,14 @@ contains
    !> size, once per instance. FURNSH's `in_memory` argument overrides this
    !> for one call. Files already loaded are not changed.
    subroutine set_in_memory(this, flag)
-      class(pepper_spice), intent(inout) :: this  !! the instance
+      class(pepper_instance), intent(inout) :: this  !! the instance
       logical, intent(in) :: flag  !! read binary kernels into memory
       this%in_memory = flag
    end subroutine set_in_memory
 
    !> The memory used by the binary kernels loaded in memory (bytes).
    pure integer(int64) function kernel_memory(this) result(bytes)
-      class(pepper_spice), intent(in) :: this  !! the instance
+      class(pepper_instance), intent(in) :: this  !! the instance
       integer(ip) :: k
       bytes = 0
       if (.not. allocated(this%zzddhman)) return
@@ -20912,7 +20912,7 @@ contains
 
    !> A new context for this instance.
    function new_context(this) result(ctx)
-      class(pepper_spice), target, intent(in) :: this  !! the instance (must have the target
+      class(pepper_instance), target, intent(in) :: this  !! the instance (must have the target
                                                        !! attribute)
       type(pepper_context) :: ctx
       ctx%spice => this
@@ -20926,7 +20926,7 @@ contains
    !> thread that loads the kernels (as the only context of a serial
    !> program, or of SPICELIB's interface).
    function instance_context(this) result(ctx)
-      class(pepper_spice), target, intent(inout) :: this  !! the instance (must have the target
+      class(pepper_instance), target, intent(inout) :: this  !! the instance (must have the target
                                                           !! attribute)
       type(pepper_context), pointer :: ctx  !! the instance's context
       if (.not. allocated(this%own)) allocate (this%own)
@@ -20937,7 +20937,7 @@ contains
    !> True if an error has been signaled in the instance's context (by a
    !> change of the kernels) and not reset.
    logical function instance_failed(this)
-      class(pepper_spice), intent(in) :: this  !! the instance
+      class(pepper_instance), intent(in) :: this  !! the instance
       instance_failed = .false.
       if (allocated(this%own)) instance_failed = this%own%failed()
    end function instance_failed
@@ -20957,7 +20957,7 @@ contains
    !> whole into memory: the file, or every binary kernel a meta-kernel
    !> lists (default: the instance's choice, [[set_in_memory]]).
    subroutine spice_furnsh(this, file, in_memory)
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: file  !! SPICE kernel file (text or binary).
       logical, intent(in), optional :: in_memory  !! read binary kernels whole into memory
       type(pepper_context), pointer :: ctx
@@ -20975,7 +20975,7 @@ contains
    !> kernels of the program); errors are signaled in the instance's
    !> context (see [[instance_context]]).
    subroutine spice_unload(this, file)
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: file  !! The name of a kernel to unload.
       type(pepper_context), pointer :: ctx
       ctx => this%context()
@@ -20990,7 +20990,7 @@ contains
    !> kernels of the program); errors are signaled in the instance's
    !> context (see [[instance_context]]).
    subroutine spice_kclear(this)
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       type(pepper_context), pointer :: ctx
       ctx => this%context()
       call kclear(ctx)
@@ -21010,7 +21010,7 @@ contains
    !> goes out of scope or is deallocated, but not one declared in a main
    !> program (or a module), which lives until the program ends.
    subroutine spice_destroy(this)
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       integer(ip) :: generation, file_generation, close_generation, segment_epoch, boddef_epoch
       integer(int64) :: pool_changes
       call this%kclear()
@@ -21034,7 +21034,7 @@ contains
    contains
       !> The instance's default values (its allocatable components deallocated).
       subroutine reset_spice(spice)
-         type(pepper_spice), intent(out) :: spice  !! the instance
+         type(pepper_instance), intent(out) :: spice  !! the instance
       end subroutine reset_spice
    end subroutine spice_destroy
 
@@ -21049,7 +21049,7 @@ contains
    !> context (see [[instance_context]]).
    subroutine spice_ldpool(this, fname)
       use pepper_inc_zzctr
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: fname  !! Name of the text kernel file.
       type(pepper_context), pointer :: ctx
       ctx => this%context()
@@ -21064,7 +21064,7 @@ contains
    !> context (see [[instance_context]]).
    subroutine spice_clpool(this)
       use pepper_inc_zzctr
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       type(pepper_context), pointer :: ctx
       ctx => this%context()
       call clpool(ctx)
@@ -21078,7 +21078,7 @@ contains
    !> context (see [[instance_context]]).
    subroutine spice_pcpool(this, name, n, cvals)
       use pepper_inc_zzctr
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: name  !! The kernel pool name to associate with CVALS.
       integer(ip), intent(in) :: n  !! The number of values to insert.
       character(*), intent(in) :: cvals     ( * )  !! An array of strings to insert into the
@@ -21096,7 +21096,7 @@ contains
    !> context (see [[instance_context]]).
    subroutine spice_pdpool(this, name, n, values)
       use pepper_inc_zzctr
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: name  !! The kernel pool name to associate with VALUES.
       integer(ip), intent(in) :: n  !! The number of values to insert.
       real(wp), intent(in) :: values    ( * )  !! An array of values to insert into the kernel
@@ -21114,7 +21114,7 @@ contains
    !> context (see [[instance_context]]).
    subroutine spice_pipool(this, name, n, ivals)
       use pepper_inc_zzctr
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: name  !! The kernel pool name to associate with IVALS.
       integer(ip), intent(in) :: n  !! The number of values to insert.
       integer(ip), intent(in) :: ivals     ( * )  !! An array of integers to insert into the
@@ -21132,7 +21132,7 @@ contains
    !> context (see [[instance_context]]).
    subroutine spice_lmpool(this, cvals, n)
       use pepper_inc_zzctr
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       integer(ip), intent(in) :: n  !! The number of entries in CVALS.
       character(*), intent(in) :: cvals     ( * )  !! An array that contains a SPICE text kernel
       type(pepper_context), pointer :: ctx
@@ -21147,7 +21147,7 @@ contains
    !> context (see [[instance_context]]).
    subroutine spice_dvpool(this, name)
       use pepper_inc_zzctr
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: name  !! Name of the variable to be deleted.
       type(pepper_context), pointer :: ctx
       ctx => this%context()
@@ -21161,7 +21161,7 @@ contains
    !> kernels of the program); errors are signaled in the instance's
    !> context (see [[instance_context]]).
    subroutine spice_boddef(this, name, code)
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: name  !! Common name of some body.
       integer(ip), intent(in) :: code  !! Integer code for that body.
       type(pepper_context), pointer :: ctx
@@ -21176,7 +21176,7 @@ contains
    !> kernels of the program); errors are signaled in the instance's
    !> context (see [[instance_context]]).
    subroutine spice_spklef(this, fname, handle)
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: fname  !! Name of the file to be loaded.
       integer(ip), intent(out) :: handle  !! Loaded file's handle.
       type(pepper_context), pointer :: ctx
@@ -21191,7 +21191,7 @@ contains
    !> kernels of the program); errors are signaled in the instance's
    !> context (see [[instance_context]]).
    subroutine spice_spkuef(this, handle)
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       integer(ip), intent(in) :: handle  !! Handle of file to be unloaded
       type(pepper_context), pointer :: ctx
       ctx => this%context()
@@ -21206,7 +21206,7 @@ contains
    !> kernels of the program); errors are signaled in the instance's
    !> context (see [[instance_context]]).
    subroutine spice_pcklof(this, fname, handle)
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: fname  !! Name of the file to be loaded.
       integer(ip), intent(out) :: handle  !! Loaded file's handle.
       type(pepper_context), pointer :: ctx
@@ -21221,7 +21221,7 @@ contains
    !> kernels of the program); errors are signaled in the instance's
    !> context (see [[instance_context]]).
    subroutine spice_pckuof(this, handle)
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       integer(ip), intent(in) :: handle  !! Handle of file to be unloaded
       type(pepper_context), pointer :: ctx
       ctx => this%context()
@@ -21236,7 +21236,7 @@ contains
    !> kernels of the program); errors are signaled in the instance's
    !> context (see [[instance_context]]).
    subroutine spice_cklpf(this, fname, handle)
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: fname  !! Name of the CK file to be loaded.
       integer(ip), intent(out) :: handle  !! Loaded file's handle.
       type(pepper_context), pointer :: ctx
@@ -21251,7 +21251,7 @@ contains
    !> kernels of the program); errors are signaled in the instance's
    !> context (see [[instance_context]]).
    subroutine spice_ckupf(this, handle)
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       integer(ip), intent(in) :: handle  !! Handle of CK file to be unloaded
       type(pepper_context), pointer :: ctx
       ctx => this%context()
@@ -21275,7 +21275,7 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: fname  !! Name of EK file to load.
       integer(ip), intent(out) :: handle  !! File handle of loaded EK file.
       type(pepper_context), pointer :: ctx
@@ -21302,7 +21302,7 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
-      class(pepper_spice), target, intent(inout) :: this  !! the instance
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
       integer(ip), intent(in) :: handle  !! Handle of EK file.
       type(pepper_context), pointer :: ctx
       ctx => this%context()
@@ -21312,7 +21312,7 @@ contains
    !> The instance this context belongs to.
    function instance(this) result(spice)
       class(pepper_context), intent(in) :: this  !! the context
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => this%spice
    end function instance
 
@@ -21448,7 +21448,7 @@ contains
    !> The length of file_name's result: the length of the file's name, 1
    !> if there is no file with the handle.
    pure integer function file_name_length(spice, handle) result(n)
-      type(pepper_spice), intent(in) :: spice  !! the instance
+      type(pepper_instance), intent(in) :: spice  !! the instance
       integer(ip), intent(in) :: handle  !! the handle
       integer(ip) :: i
       n = 1
@@ -21460,7 +21460,7 @@ contains
    !> The name of the file with a DAF or DAS handle, whole (blank if no
    !> file has the handle).
    pure function file_name(spice, handle) result(name)
-      type(pepper_spice), intent(in) :: spice  !! the instance
+      type(pepper_instance), intent(in) :: spice  !! the instance
       integer(ip), intent(in) :: handle  !! the handle
       character(file_name_length(spice, handle)) :: name  !! the file name
       integer(ip) :: i
@@ -21645,7 +21645,7 @@ contains
    !> handle when they next use their unit tables, and a later open of the
    !> file is not refused because such a unit is still connected to it.
    subroutine file_closed(spice, name)
-      type(pepper_spice), intent(inout) :: spice  !! the instance
+      type(pepper_instance), intent(inout) :: spice  !! the instance
       character(*), intent(in) :: name  !! name of the file
       call spice%closed_files%set(name, 1_ip)
       spice%close_generation = spice%close_generation + 1
@@ -21654,7 +21654,7 @@ contains
    !> Record a change of a kernel pool variable (name blank: of every
    !> variable, e.g. by CLPOOL), for the watches of the contexts.
    subroutine pool_changed(spice, name)
-      type(pepper_spice), intent(inout) :: spice  !! the instance
+      type(pepper_instance), intent(inout) :: spice  !! the instance
       character(*), intent(in) :: name  !! the variable changed, or blank
       spice%pool_changes = spice%pool_changes + 1
       if (name == ' ' .or. spice%nchanged == change_log_size) then
@@ -21809,7 +21809,7 @@ contains
 
    !> True if a file of this name was closed through this instance before.
    logical function was_closed(spice, name)
-      type(pepper_spice), intent(in) :: spice  !! the instance
+      type(pepper_instance), intent(in) :: spice  !! the instance
       character(*), intent(in) :: name  !! name of the file
       integer(ip) :: value
       call spice%closed_files%get(name, value, was_closed)
@@ -21824,7 +21824,7 @@ contains
    !> not know (SPICE(EXTERNALOPEN), SPICE(FILEOPENCONFLICT)); with several
    !> instances and contexts, one process opens a kernel on several units.
    logical function opened_by_pepper(spice, name)
-      type(pepper_spice), intent(in) :: spice  !! the instance
+      type(pepper_instance), intent(in) :: spice  !! the instance
       character(*), intent(in) :: name  !! name of the file
       integer :: unit, ios
       opened_by_pepper = was_closed(spice, name)
@@ -22556,4 +22556,4 @@ contains
       end do
    end function upper
 
-end module pepper_instance
+end module pepper_instance_module

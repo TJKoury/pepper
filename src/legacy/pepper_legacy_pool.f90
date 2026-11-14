@@ -3,13 +3,13 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_pool
 
-   use pepper_instance, only: pepper_context, pepper_zzctruin => zzctruin, &
+   use pepper_instance_module, only: pepper_context, pepper_zzctruin => zzctruin, &
       pepper_zzctrsin => zzctrsin, pepper_zzctrinc => zzctrinc, pepper_zzctrchk => zzctrchk, &
       pepper_zztknerr => zztknerr, pepper_zzmkpc => zzmkpc, pepper_zzrept => zzrept, &
       pepper_zztpats => zztpats, pepper_zzcmbt => zzcmbt, pepper_zzgrep => zzgrep, &
       pepper_zzispt => zzispt, pepper_zzist => zzist, pepper_zznote => zznote, &
       pepper_zzremt => zzremt, pepper_zzsubt => zzsubt, pepper_zztokns => zztokns, &
-      pepper_zzunpck => zzunpck, pepper_zzvalt => zzvalt, pepper_spice, &
+      pepper_zzunpck => zzunpck, pepper_zzvalt => zzvalt, pepper_instance, &
       pepper_zzpctrck => zzpctrck
    use pepper_legacy_context, only: legacy_context, legacy_spice
 
@@ -509,7 +509,7 @@ contains
       use pepper_hash, only: name_hash
       use pepper_inc_zzctr
       implicit none
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%clpool (  )
       end subroutine clpool
@@ -524,7 +524,7 @@ contains
       use pepper_inc_zzctr
       implicit none
       character(*) :: fname  !! Name of the text kernel file.
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%ldpool ( fname )
       end subroutine ldpool
@@ -700,7 +700,7 @@ contains
       character(*) :: name  !! The kernel pool name to associate with CVALS.
       integer(ip) :: n  !! The number of values to insert.
       character(*) :: cvals     ( * )  !! An array of strings to insert into the kernel pool.
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%pcpool ( name, n, cvals )
       end subroutine pcpool
@@ -717,7 +717,7 @@ contains
       character(*) :: name  !! The kernel pool name to associate with VALUES.
       integer(ip) :: n  !! The number of values to insert.
       real(wp) :: values    ( * )  !! An array of values to insert into the kernel pool.
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%pdpool ( name, n, values )
       end subroutine pdpool
@@ -734,7 +734,7 @@ contains
       character(*) :: name  !! The kernel pool name to associate with IVALS.
       integer(ip) :: n  !! The number of values to insert.
       integer(ip) :: ivals     ( * )  !! An array of integers to insert into the pool.
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%pipool ( name, n, ivals )
       end subroutine pipool
@@ -750,7 +750,7 @@ contains
       implicit none
       integer(ip) :: n  !! The number of entries in CVALS.
       character(*) :: cvals     ( * )  !! An array that contains a SPICE text kernel
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%lmpool ( cvals, n )
       end subroutine lmpool
@@ -780,7 +780,7 @@ contains
       use pepper_inc_zzctr
       implicit none
       character(*) :: name  !! Name of the variable to be deleted.
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%dvpool ( name )
       end subroutine dvpool

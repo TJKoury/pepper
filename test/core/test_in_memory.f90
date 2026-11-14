@@ -8,7 +8,7 @@ program test_in_memory
 
    use, intrinsic :: iso_fortran_env, only: int64
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance_module, only: pepper_instance, pepper_context
    use pepper_test_kernels, only: write_spk, delete_file
 
    implicit none
@@ -21,7 +21,7 @@ program test_in_memory
    character(*), parameter :: spk_big = 'test_in_memory_big.bsp'  !! the SPK in big-endian format
    integer(ip), parameter :: body = 1001, center = 399
    integer(ip), parameter :: nq = 1000  !! epochs compared
-   type(pepper_spice), target :: from_file, in_memory
+   type(pepper_instance), target :: from_file, in_memory
    type(pepper_context), pointer :: f, m
    type(pepper_context) :: m2
    integer(int64) :: size_bytes

@@ -3,8 +3,8 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_keeper
 
-   use pepper_instance, only: pepper_context, pepper_zzascii => zzascii, &
-      pepper_zzldker => zzldker, pepper_spice
+   use pepper_instance_module, only: pepper_context, pepper_zzascii => zzascii, &
+      pepper_zzldker => zzldker, pepper_instance
    use pepper_legacy_context, only: legacy_context, legacy_spice
 
    implicit none
@@ -166,7 +166,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
       character(*) :: file  !! SPICE kernel file (text or binary).
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%furnsh ( file )
       end subroutine furnsh
@@ -177,7 +177,7 @@ contains
       subroutine pepper_set_in_memory ( flag )
       implicit none
       logical, intent(in) :: flag  !! read binary kernels into memory
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%set_in_memory ( flag )
       end subroutine pepper_set_in_memory
@@ -239,7 +239,7 @@ contains
       subroutine kclear (  )
       use pepper_kinds, only: ip
       implicit none
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%kclear (  )
       end subroutine kclear
@@ -251,7 +251,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
       character(*) :: file  !! The name of a kernel to unload.
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%unload ( file )
       end subroutine unload

@@ -12,13 +12,13 @@
 program bench_queries
    use, intrinsic :: iso_fortran_env, only: int64
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context, state_query, rotation_query
+   use pepper_instance_module, only: pepper_instance, pepper_context, state_query, rotation_query
    implicit none
    integer(ip), parameter :: nq = 200000  !! epochs per operation
    real(wp), parameter :: year = 365.25_wp*86400.0_wp
    character(*), parameter :: kernels(6) = [character(26) :: 'naif0012.tls', 'pck00011.tpc', &
       'de421.bsp', 'earth_latest_high_prec.bpc', 'moon_pa_de440_200625.bpc', 'moon_de440_250416.tf']
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context), pointer :: ctx
    character(1024) :: kdir
    real(wp), allocatable :: rnd(:), seq(:)

@@ -5,11 +5,11 @@
 program test_pool
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance_module, only: pepper_instance, pepper_context
 
    implicit none
 
-   type(pepper_spice), target :: spice, other
+   type(pepper_instance), target :: spice, other
    type(pepper_context), pointer :: ctx  !! spice's own context (it loads the kernels)
    type(pepper_context), pointer :: ctx2  !! other's own context
    integer :: failures = 0

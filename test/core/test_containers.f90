@@ -6,7 +6,7 @@ program test_containers
 
    use pepper_kinds, only: ip, wp
    use pepper_containers, only: string, string_map, int_map, grow, grown_capacity, grow_cell, lnkgrow
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance_module, only: pepper_instance, pepper_context
 
    implicit none
 
@@ -294,7 +294,7 @@ contains
    !> linked like the old ones.
    subroutine test_lnkgrow()
       integer(ip), parameter :: lbpool = -5
-      type(pepper_spice), target :: spice
+      type(pepper_instance), target :: spice
       type(pepper_context) :: ctx
       integer(ip), allocatable :: pool(:, :)
       integer(ip) :: a(6), b(4), node, i, n
@@ -362,7 +362,7 @@ contains
    !> control area and the intervals of a window when it grows it, and
    !> the window routines see the new size.
    subroutine test_grow_cell()
-      type(pepper_spice), target :: spice
+      type(pepper_instance), target :: spice
       type(pepper_context) :: ctx
       real(wp), allocatable :: w(:)
       integer(ip) :: i

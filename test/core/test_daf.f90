@@ -4,7 +4,7 @@
 program test_daf
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance_module, only: pepper_instance, pepper_context
 
    implicit none
 
@@ -12,7 +12,7 @@ program test_daf
    ! The summaries: one double, and four integers: the array number, its
    ! length, and (filled in by DAF) the begin and end addresses.
    integer(ip), parameter :: nd = 1, ni = 4
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context) :: a, b
    integer(ip) :: handle
    integer :: failures = 0

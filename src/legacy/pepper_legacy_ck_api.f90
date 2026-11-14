@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_ck_api
 
-   use pepper_instance, only: pepper_context, pepper_zzckcv01 => zzckcv01, &
+   use pepper_instance_module, only: pepper_context, pepper_zzckcv01 => zzckcv01, &
       pepper_zzckcv02 => zzckcv02, pepper_zzckcv03 => zzckcv03, pepper_zzckcv04 => zzckcv04, &
       pepper_zzckcv05 => zzckcv05, pepper_zzckcv06 => zzckcv06
    use pepper_legacy_context, only: legacy_context, legacy_spice

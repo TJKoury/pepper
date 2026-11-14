@@ -9,13 +9,13 @@ program test_gf
 
    use pepper_kinds, only: ip, wp
    use pepper_constants, only: twopi
-   use pepper_instance, only: pepper_spice, pepper_context, gf_scalar
+   use pepper_instance_module, only: pepper_instance, pepper_context, gf_scalar
 
    implicit none
 
    character(*), parameter :: spk = 'test_gf.bsp'
    integer(ip), parameter :: lbcell = -5, mw = 200, nw = 15
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context), pointer :: a  !! the instance's context (it loads the kernels)
    type(pepper_context) :: b
    integer :: failures = 0

@@ -17,7 +17,7 @@
 !>   may call providers in turn; the routines on these paths are recursive,
 !>   and more than MAX_PROVIDER_DEPTH nested provider calls (a provider that
 !>   depends on itself) signal SPICE(RECURSIONTOODEEP).
-submodule (pepper_instance) pepper_programmatic
+submodule (pepper_instance_module) pepper_programmatic
 
    implicit none
 

@@ -11,7 +11,7 @@ SPICELIB's callbacks use saved state, which is in the context now). For each
 callback this writes
 
 - an abstract interface with the context, in the "callbacks" region of
-  src/pepper_instance.f90 (the dummy procedures of the module procedures are
+  src/pepper_instance_module.f90 (the dummy procedures of the module procedures are
   declared with it: modules.PROCEDURE_ARGS);
 - for the legacy interface, in the callbacks section of
   src/legacy/pepper_legacy_callbacks.f90 (this tool no longer writes it:
@@ -32,7 +32,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from modules import CALLBACKS  # noqa: E402
 
-INSTANCE = ROOT / "src" / "pepper_instance.f90"
+INSTANCE = ROOT / "src" / "pepper_instance_module.f90"
 LEGACY = ROOT / "tspice" / "src" / "legacy" / "pepper_legacy_callbacks.f90"
 
 
@@ -108,7 +108,7 @@ def legacy_module() -> str:
            "! one context and is not for concurrent use, so module variables are fine.",
            "module pepper_legacy_callbacks", "",
            "   use pepper_kinds, only: ip, wp",
-           "   use pepper_instance, only: pepper_context, " + ", ".join(CALLBACKS), "",
+           "   use pepper_instance_module, only: pepper_context, " + ", ".join(CALLBACKS), "",
            "   implicit none", "", "   private", ""]
     for name in CALLBACKS:
         out.append(f"   public :: legacy_{name}, current_{name}, bridge_{name}")

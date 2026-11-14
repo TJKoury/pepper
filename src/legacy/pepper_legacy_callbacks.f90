@@ -5,8 +5,8 @@
 module pepper_legacy_callbacks
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_context
-   use pepper_instance, only: zzdsk_compare, zzspk_state, zzsfx_near, zzsfx_maxrad, zzsfx_rayx, &
+   use pepper_instance_module, only: pepper_context
+   use pepper_instance_module, only: zzdsk_compare, zzspk_state, zzsfx_near, zzsfx_maxrad, zzsfx_rayx, &
       zztan_cond, gf_step, gf_refine, gf_rep_init, gf_rep_update, gf_rep_final, gf_bail, gf_cond, &
       gf_ref, gf_boolean, gf_decr, gf_decr_x, gf_scalar
 

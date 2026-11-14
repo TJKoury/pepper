@@ -1,12 +1,12 @@
-!> Unit tests of pepper_instance: error handling in contexts.
+!> Unit tests of pepper_instance_module: error handling in contexts.
 program test_context
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance_module, only: pepper_instance, pepper_context
 
    implicit none
 
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    integer :: failures = 0
 
    call test_native()
@@ -236,7 +236,7 @@ contains
    !> external opens (SPICE(EXTERNALOPEN) before; found by PepperyPy).
    subroutine test_shared_files()
       use pepper_test_kernels, only: write_spk, circle_state, delete_file
-      type(pepper_spice), target :: other
+      type(pepper_instance), target :: other
       type(pepper_context) :: c1, c2
       character(*), parameter :: spk = 'test_context_shared.bsp'
       real(wp) :: state(6), lt
@@ -271,7 +271,7 @@ contains
    !> instance's kernels, pool and memory go, and both can be used again.
    subroutine test_destroy()
       use pepper_test_kernels, only: write_spk, circle_state, delete_file
-      type(pepper_spice), target :: inst
+      type(pepper_instance), target :: inst
       type(pepper_context) :: c
       character(*), parameter :: spk = 'test_context_destroy.bsp'
       real(wp) :: state(6), lt, values(1)

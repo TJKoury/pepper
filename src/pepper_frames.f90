@@ -2,7 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance]]). Moved here from src/spicelib by
+!> [[pepper_instance_module]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_frames.f90.
 !>
@@ -289,7 +289,7 @@
 !>     attributes in the built-in frame attributes arrays IDCODE, NAME,
 !>     CENTER, TYPE, and TYPEID.
 
-submodule (pepper_instance) pepper_frames
+submodule (pepper_instance_module) pepper_frames
 
    implicit none
 
@@ -5152,7 +5152,7 @@ contains
    !> specification expression, not a deferred length: gfortran keeps
    !> the length of a deferred-length result in a static variable at the
    !> call site, which is not thread-safe (see text_length in
-   !> [[pepper_instance]]).
+   !> [[pepper_instance_module]]).
    pure function int_text ( i ) result ( text )
       use pepper_strings, only: intstr
       integer(ip), intent(in) :: i  !! the integer

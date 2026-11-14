@@ -5,7 +5,7 @@
 program test_strings_inplace
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance_module, only: pepper_instance, pepper_context
    use pepper_strings, only: astrip, cmprss, lcase, nextwd, replch, repmc, ucase, zzinssub, &
       zzrepsub, astrip_inplace, cmprss_inplace, lcase_inplace, nextwd_inplace, repmc_inplace, &
       repmd_inplace, repmi_inplace, replch_inplace, ucase_inplace, zzinssub_inplace, &
@@ -16,7 +16,7 @@ program test_strings_inplace
    integer, parameter :: ntrials = 20000  ! random strings per routine
    character(*), parameter :: alphabet = '  aZ#@b(),.~' // achar(9)  ! characters of the random strings
 
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context) :: ctx
    integer :: failures = 0
    integer :: trial

@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_sclk
 
-   use pepper_instance, only: pepper_context, lib_zzhsiini => zzhsiini, lib_zzhsiavl => zzhsiavl, &
+   use pepper_instance_module, only: pepper_context, lib_zzhsiini => zzhsiini, lib_zzhsiavl => zzhsiavl, &
       lib_zzhsiadd => zzhsiadd, lib_zzhsichk => zzhsichk, lib_zzpctrck => zzpctrck, &
       pepper_zzsclk => zzsclk
    use pepper_legacy_context, only: legacy_context, legacy_spice

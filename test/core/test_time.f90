@@ -6,13 +6,13 @@
 program test_time
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context, zztpats
+   use pepper_instance_module, only: pepper_instance, pepper_context, zztpats
    use pepper_arrays, only: orderc
 
    implicit none
 
    character(*), parameter :: lsk = 'test_time.tls'
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context), pointer :: a  !! the instance's context (it loads the kernels)
    type(pepper_context) :: b
    integer :: failures = 0

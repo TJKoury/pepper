@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_dynamic
 
-   use pepper_instance, only: pepper_context, pepper_zzdynfrm => zzdynfrm, &
+   use pepper_instance_module, only: pepper_context, pepper_zzdynfrm => zzdynfrm, &
       pepper_zzdynrot => zzdynrot
    use pepper_legacy_context, only: legacy_context, legacy_spice
 

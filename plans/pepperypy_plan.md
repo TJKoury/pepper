@@ -48,7 +48,7 @@ Python      pepperypy  (SpiceyPy's API; Spice and Context classes)
               │ Cython extension modules (cdef extern from "pepper.h")
 C ABI       pepper_capi  (bind(c) shims: handles, C strings, error codes)
               │
-Fortran     PEPPER  (pepper_spice, pepper_context)
+Fortran     PEPPER  (pepper_instance, pepper_context)
 ```
 
 ### The C interface (`capi/`, in this repository)
@@ -117,7 +117,7 @@ PepperyPy: C, C++, Julia, Rust or MATLAB programs would use the same one.
   `pepper_reset(ctx)`. A context's error action is RETURN from the start
   (PEPPER's default), so nothing is set at import.
 - **Generated:** the shims come from a generator (`tools/gen_capi.py`), not
-  by hand. It reads the procedures' interfaces in `pepper_instance.f90`
+  by hand. It reads the procedures' interfaces in `pepper_instance_module.f90`
   (names, intents, kinds, `!!` docs), and a table of the C signatures for
   what Fortran does not say: the sizes of assumed-size arguments, output
   string lengths. A hand-written shim is the exception (callbacks,
@@ -473,7 +473,7 @@ What was built, and where it differs from the design above.
   the library; the header is `include/pepper.h`; `capi/test_capi.c` is its C
   test (`pixi run -e python test-capi`).
 - **The generator** (`tools/gen_capi.py`) reads the interfaces themselves
-  (`pepper_instance.f90`; the pure procedures of `pepper_math`,
+  (`pepper_instance_module.f90`; the pure procedures of `pepper_math`,
   `pepper_strings`, `pepper_arrays`; the constants) rather than a table of
   signatures: 831 procedures (618 of contexts, 16 of instances, 197
   pure), with the kinds of arguments it knows (scalars, strings, fixed and

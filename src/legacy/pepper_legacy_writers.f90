@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_writers
 
-   use pepper_instance, only: pepper_context, pepper_zzck4i2d => zzck4i2d
+   use pepper_instance_module, only: pepper_context, pepper_zzck4i2d => zzck4i2d
    use pepper_legacy_context, only: legacy_context, legacy_spice
 
    implicit none

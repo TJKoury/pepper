@@ -112,7 +112,7 @@ pixi run -e python py-test-spiceypy  # SpiceyPy's own test suite, against Pepper
 
 ## Usage
 
-All state belongs to an instance (`type(pepper_spice)`): loaded kernels, the
+All state belongs to an instance (`type(pepper_instance)`): loaded kernels, the
 kernel pool, file tables, the names defined with `boddef`. The kernels are
 changed through the instance: `spice%furnsh`, `unload`, `kclear`, `ldpool`,
 `clpool`, the pool's setters (`pcpool`, `pdpool`, `pipool`, `lmpool`,
@@ -127,10 +127,9 @@ the context. A context finds the changes of the kernels on its next call. A
 serial program can also query through the instance's own context.
 
 ```fortran
-use pepper_kinds, only: wp
-use pepper_instance, only: pepper_spice, pepper_context
+use pepper_module  ! PEPPER's public interface
 
-type(pepper_spice), target :: spice
+type(pepper_instance), target :: spice
 type(pepper_context) :: ctx
 real(wp) :: et, state(6), lt
 
@@ -298,7 +297,7 @@ states are 1.5 to 4 times faster (`pepper_vs_spicelib.md`, "Prepared
 queries"):
 
 ```fortran
-use pepper_instance, only: state_query, rotation_query
+use pepper_module, only: state_query, rotation_query
 
 type(state_query) :: q
 type(rotation_query) :: r
@@ -324,7 +323,7 @@ frame transformations, GF searches, prepared queries). See
 `plans/programmatic_plan.md`.
 
 ```fortran
-use pepper_instance, only: ephemeris_provider, frame_provider, pepper_context
+use pepper_module, only: ephemeris_provider, frame_provider, pepper_context
 
 type, extends(ephemeris_provider) :: my_orbit
    !! your provider type: its components hold the orbit data

@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_orientation
 
-   use pepper_instance, only: pepper_context, pepper_zzdynfid => zzdynfid, &
+   use pepper_instance_module, only: pepper_context, pepper_zzdynfid => zzdynfid, &
       pepper_zznamfrm => zznamfrm, pepper_zznofcon => zznofcon, pepper_zzswffet => zzswffet, &
       pepper_zzteme => zzteme, pepper_zzswfxfm => zzswfxfm
    use pepper_legacy_context, only: legacy_context, legacy_spice

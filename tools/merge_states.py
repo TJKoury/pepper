@@ -31,7 +31,7 @@ starting as zero), then SPICELIB's DATA values. In the merged module:
   that two include modules define with different values is imported under
   an alias (zzsrftrn_nroom => nroom).
 
-It also replaces the generated block of use statements in pepper_instance
+It also replaces the generated block of use statements in pepper_instance_module
 and the allocate/init blocks in the submodules. The old modules are then
 removed with git rm.
 """
@@ -417,7 +417,7 @@ def main():
     w("!> The saved state of SPICELIB's routines: one derived type for each")
     w("!> routine (or umbrella routine with its entry points) whose saved")
     w("!> variables are real state. Each is an allocatable component of")
-    w("!> pepper_spice (the state of the instance, e.g. the kernel pool) or of")
+    w("!> pepper_instance (the state of the instance, e.g. the kernel pool) or of")
     w("!> pepper_context (the state of a computation in progress), allocated on")
     w("!> first use.")
     w("!>")
@@ -519,8 +519,8 @@ def main():
     w("end module pepper_states")
     (SRC / "pepper_states.f90").write_text("\n".join(out) + "\n")
 
-    # pepper_instance: one use statement
-    inst = SRC / "pepper_instance.f90"
+    # pepper_instance_module: one use statement
+    inst = SRC / "pepper_instance_module.f90"
     text = inst.read_text()
     first = "   ! The state types of the subsystems (generated modules pepper_state_*).\n"
     last = "   ! <<< generated state modules\n"

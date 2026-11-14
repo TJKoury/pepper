@@ -6,7 +6,7 @@ module pepper_capi
    use, intrinsic :: iso_c_binding
    use pepper_kinds, only: ip, wp
    use pepper_containers, only: string
-   use pepper_instance, only: pepper_spice
+   use pepper_instance_module, only: pepper_instance
    use pepper_capi_core
    use pepper_math
    use pepper_strings, only: astrip, bedec, beint, benum, beuns, cmprss, cpos, cposr, dpstr, eqchr, eqstr, esrchc, fndnwd, frstnb, frstnp, frstpc, intstr, lastnb, lastpc, lbuild, lcase, ljucrs, ljust, ltrim, lx4uns, lxqstr, matchi, matchw, nblen, nbwid, ncpos, ncposr, nechr, nextwd, nparsd, nparsi, nthwd, parsqs, pcwid, pos, posr, quote, replch, replwd, repmc, rjust, rtrim, samch, samchi, samsbi, samsub, shiftl, shiftr, sigdgt, ucase, wdcnt, wdindx
@@ -10528,7 +10528,7 @@ contains
       type(c_ptr), value :: spice  !! the instance
       character(kind=c_char), intent(in) :: name(*)  !! Common name of some body.
       integer(c_int), value :: code  !! Integer code for that body.
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       character(:), allocatable :: f_name
       s_ => spice_of(spice)
       call c_to_f(name, f_name)
@@ -10541,7 +10541,7 @@ contains
       type(c_ptr), value :: spice  !! the instance
       character(kind=c_char), intent(in) :: fname(*)  !! Name of the CK file to be loaded.
       integer(c_int), intent(out) :: handle  !! Loaded file's handle.
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       character(:), allocatable :: f_fname
       s_ => spice_of(spice)
       call c_to_f(fname, f_fname)
@@ -10553,7 +10553,7 @@ contains
    integer(c_int) function c_pepper_spice_ckupf ( spice, handle ) bind(c, name='pepper_spice_ckupf')
       type(c_ptr), value :: spice  !! the instance
       integer(c_int), value :: handle  !! Handle of CK file to be unloaded
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       s_ => spice_of(spice)
       call s_%ckupf(handle)
       c_pepper_spice_ckupf = spice_status(s_)
@@ -10562,7 +10562,7 @@ contains
    !> C interface of `clpool`: Remove all kernel variables from the kernel pool.
    integer(c_int) function c_pepper_spice_clpool ( spice ) bind(c, name='pepper_spice_clpool')
       type(c_ptr), value :: spice  !! the instance
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       s_ => spice_of(spice)
       call s_%clpool()
       c_pepper_spice_clpool = spice_status(s_)
@@ -10572,7 +10572,7 @@ contains
    integer(c_int) function c_pepper_spice_dvpool ( spice, name ) bind(c, name='pepper_spice_dvpool')
       type(c_ptr), value :: spice  !! the instance
       character(kind=c_char), intent(in) :: name(*)  !! Name of the variable to be deleted.
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       character(:), allocatable :: f_name
       s_ => spice_of(spice)
       call c_to_f(name, f_name)
@@ -10585,7 +10585,7 @@ contains
       type(c_ptr), value :: spice  !! the instance
       character(kind=c_char), intent(in) :: fname(*)  !! Name of EK file to load.
       integer(c_int), intent(out) :: handle  !! File handle of loaded EK file.
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       character(:), allocatable :: f_fname
       s_ => spice_of(spice)
       call c_to_f(fname, f_fname)
@@ -10597,7 +10597,7 @@ contains
    integer(c_int) function c_pepper_spice_ekuef ( spice, handle ) bind(c, name='pepper_spice_ekuef')
       type(c_ptr), value :: spice  !! the instance
       integer(c_int), value :: handle  !! Handle of EK file.
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       s_ => spice_of(spice)
       call s_%ekuef(handle)
       c_pepper_spice_ekuef = spice_status(s_)
@@ -10606,7 +10606,7 @@ contains
    !> C interface of `kclear`: Clear the KEEPER subsystem: unload all kernels, clear the kernel pool, and re-initialize the subsystem.
    integer(c_int) function c_pepper_spice_kclear ( spice ) bind(c, name='pepper_spice_kclear')
       type(c_ptr), value :: spice  !! the instance
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       s_ => spice_of(spice)
       call s_%kclear()
       c_pepper_spice_kclear = spice_status(s_)
@@ -10616,7 +10616,7 @@ contains
    integer(c_int) function c_pepper_spice_ldpool ( spice, fname ) bind(c, name='pepper_spice_ldpool')
       type(c_ptr), value :: spice  !! the instance
       character(kind=c_char), intent(in) :: fname(*)  !! Name of the text kernel file.
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       character(:), allocatable :: f_fname
       s_ => spice_of(spice)
       call c_to_f(fname, f_fname)
@@ -10629,7 +10629,7 @@ contains
       type(c_ptr), value :: spice  !! the instance
       character(kind=c_char), intent(in) :: fname(*)  !! Name of the file to be loaded.
       integer(c_int), intent(out) :: handle  !! Loaded file's handle.
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       character(:), allocatable :: f_fname
       s_ => spice_of(spice)
       call c_to_f(fname, f_fname)
@@ -10641,7 +10641,7 @@ contains
    integer(c_int) function c_pepper_spice_pckuof ( spice, handle ) bind(c, name='pepper_spice_pckuof')
       type(c_ptr), value :: spice  !! the instance
       integer(c_int), value :: handle  !! Handle of file to be unloaded
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       s_ => spice_of(spice)
       call s_%pckuof(handle)
       c_pepper_spice_pckuof = spice_status(s_)
@@ -10651,7 +10651,7 @@ contains
    integer(c_int) function c_pepper_spice_remove_ephemeris ( spice, body ) bind(c, name='pepper_spice_remove_ephemeris')
       type(c_ptr), value :: spice  !! the instance
       integer(c_int), value :: body  !! the body's ID code
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       s_ => spice_of(spice)
       call s_%remove_ephemeris(body)
       c_pepper_spice_remove_ephemeris = spice_status(s_)
@@ -10661,7 +10661,7 @@ contains
    integer(c_int) function c_pepper_spice_remove_frame ( spice, name ) bind(c, name='pepper_spice_remove_frame')
       type(c_ptr), value :: spice  !! the instance
       character(kind=c_char), intent(in) :: name(*)  !! the frame's name
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       character(:), allocatable :: f_name
       s_ => spice_of(spice)
       call c_to_f(name, f_name)
@@ -10674,7 +10674,7 @@ contains
       type(c_ptr), value :: spice  !! the instance
       character(kind=c_char), intent(in) :: fname(*)  !! Name of the file to be loaded.
       integer(c_int), intent(out) :: handle  !! Loaded file's handle.
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       character(:), allocatable :: f_fname
       s_ => spice_of(spice)
       call c_to_f(fname, f_fname)
@@ -10686,7 +10686,7 @@ contains
    integer(c_int) function c_pepper_spice_spkuef ( spice, handle ) bind(c, name='pepper_spice_spkuef')
       type(c_ptr), value :: spice  !! the instance
       integer(c_int), value :: handle  !! Handle of file to be unloaded
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       s_ => spice_of(spice)
       call s_%spkuef(handle)
       c_pepper_spice_spkuef = spice_status(s_)
@@ -10696,7 +10696,7 @@ contains
    integer(c_int) function c_pepper_spice_unload ( spice, file ) bind(c, name='pepper_spice_unload')
       type(c_ptr), value :: spice  !! the instance
       character(kind=c_char), intent(in) :: file(*)  !! The name of a kernel to unload.
-      type(pepper_spice), pointer :: s_
+      type(pepper_instance), pointer :: s_
       character(:), allocatable :: f_file
       s_ => spice_of(spice)
       call c_to_f(file, f_file)

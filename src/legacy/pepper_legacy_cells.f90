@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_cells
 
-   use pepper_instance, only: pepper_context, pepper_zzwninsd => zzwninsd
+   use pepper_instance_module, only: pepper_context, pepper_zzwninsd => zzwninsd
    use pepper_legacy_context, only: legacy_context, legacy_spice
 
    implicit none

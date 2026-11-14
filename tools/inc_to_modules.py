@@ -13,7 +13,7 @@ IMPLICIT NONE and the declarations; an INCLUDE may stand anywhere in the
 specification part). A unit that already uses the module gets no second USE.
 
 Scoping units: program, module, (module) subroutine/function, MODULE
-PROCEDURE bodies and the interface bodies of pepper_instance. Statement
+PROCEDURE bodies and the interface bodies of pepper_instance_module. Statement
 continuations (&) of the unit's header and of USE statements are respected.
 The .inc files themselves are left for the caller to delete.
 """

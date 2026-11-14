@@ -7,7 +7,7 @@ program test_spk
 
    use pepper_kinds, only: ip, wp
    use pepper_constants, only: clight
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance_module, only: pepper_instance, pepper_context
 
    implicit none
 
@@ -17,7 +17,7 @@ program test_spk
    integer(ip), parameter :: body = 1000
    real(wp), parameter :: p0(3) = [1.0e6_wp, 2.0e6_wp, 3.0e6_wp]
    real(wp), parameter :: v(3) = [10.0_wp, -20.0_wp, 5.0_wp]
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context), pointer :: a  !! the instance's context (it loads the kernels)
    type(pepper_context) :: b
    integer :: failures = 0

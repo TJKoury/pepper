@@ -2,7 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance]]). Moved here from src/spicelib by
+!> [[pepper_instance_module]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_time_api.f90.
 !>
@@ -332,7 +332,7 @@
 !>        Edited the header to comply with NAIF standard.
 !>
 !>-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT)
-submodule (pepper_instance) pepper_time_api
+submodule (pepper_instance_module) pepper_time_api
 
    implicit none
 

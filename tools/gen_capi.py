@@ -3,7 +3,7 @@
 interfaces (plans/pepperypy_plan.md).
 
 Reads:
-  src/pepper_instance.f90   the context's procedures (their interfaces) and
+  src/pepper_instance_module.f90   the context's procedures (their interfaces) and
                             the instance's (spice_*)
   src/pepper_math.f90       the pure math procedures
   src/pepper_constants.f90  the constants (dpr, rpd, ...)
@@ -237,7 +237,7 @@ HEADER = re.compile(r'^\s*(?:recursive\s+)?module\s+(?:(integer\(ip\)|real\(wp\)
 
 def parse_context_interfaces():
     """The context's procedures: binding name -> Proc."""
-    lines = join_continuations((ROOT / 'src/pepper_instance.f90').read_text().split('\n'))
+    lines = join_continuations((ROOT / 'src/pepper_instance_module.f90').read_text().split('\n'))
     start = next(i for i, l in enumerate(lines) if re.match(r'\s*type :: pepper_context', l))
     end = next(i for i, l in enumerate(lines) if i > start and re.match(r'\s*end type pepper_context', l))
     binds = {}
@@ -282,7 +282,7 @@ def parse_context_interfaces():
 
 def parse_spice_methods():
     """The instance's procedures (spice_*): name -> Proc."""
-    lines = join_continuations((ROOT / 'src/pepper_instance.f90').read_text().split('\n'))
+    lines = join_continuations((ROOT / 'src/pepper_instance_module.f90').read_text().split('\n'))
     procs = {}
     for i, l in enumerate(lines):
         m = re.match(r'^\s*(?:module\s+)?subroutine spice_(\w+)\s*\(([^)]*)\)', l)
@@ -610,7 +610,7 @@ def fortran_shim(p):
     elif p.owner == 'spice':
         dummies.append('spice')
         decls.append('type(c_ptr), value :: spice  !! the instance')
-        locs.append('type(pepper_spice), pointer :: s_')
+        locs.append('type(pepper_instance), pointer :: s_')
         pre.append('s_ => spice_of(spice)')
     allargs = p.args + ([p.result] if p.result else [])
     for a in allargs:
@@ -1151,7 +1151,7 @@ def main():
            '   use, intrinsic :: iso_c_binding',
            '   use pepper_kinds, only: ip, wp',
            '   use pepper_containers, only: string',
-           '   use pepper_instance, only: pepper_spice',
+           '   use pepper_instance_module, only: pepper_instance',
            '   use pepper_capi_core',
            '   use pepper_math',
            '   use pepper_strings, only: ' + ', '.join(sorted(p.impl for p in wrapped.values()

@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_bodies
 
-   use pepper_instance, only: pepper_context, pepper_zzidmap => zzidmap, &
+   use pepper_instance_module, only: pepper_context, pepper_zzidmap => zzidmap, &
       pepper_zzhashi => zzhashi, pepper_zzhscini => zzhscini, pepper_zzhscadd => zzhscadd, &
       pepper_zzhscchk => zzhscchk, pepper_zzhscavl => zzhscavl, pepper_zzhscinf => zzhscinf, &
       pepper_zzhsiini => zzhsiini, pepper_zzhsiadd => zzhsiadd, pepper_zzhsichk => zzhsichk, &
@@ -11,7 +11,7 @@ module pepper_legacy_bodies
       pepper_zzbodker => zzbodker, pepper_zzbodget => zzbodget, pepper_zzbodlst => zzbodlst, &
       pepper_zzbodn2c => zzbodn2c, pepper_zzbodc2n => zzbodc2n, pepper_zzboddef => zzboddef, &
       pepper_zzbodkik => zzbodkik, pepper_zzbodrst => zzbodrst, pepper_zzbctrck => zzbctrck, &
-      pepper_spice, pepper_zzbods2c => zzbods2c, pepper_zzbodvcd => zzbodvcd
+      pepper_instance, pepper_zzbods2c => zzbods2c, pepper_zzbodvcd => zzbodvcd
    use pepper_legacy_context, only: legacy_context, legacy_spice
 
    implicit none
@@ -552,7 +552,7 @@ contains
       implicit none
       character(*) :: name  !! Common name of some body.
       integer(ip) :: code  !! Integer code for that body.
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%boddef ( name, code )
       end subroutine boddef

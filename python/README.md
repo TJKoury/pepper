@@ -277,7 +277,7 @@ Python      pepperypy  (SpiceyPy's API; Spice, Context, cells, _compat.py)
               │ Cython extension module (_core.pyx; cdef extern from "pepper.h")
 C ABI       PEPPER's C interface (src/capi, include/pepper.h)
               │
-Fortran     PEPPER (pepper_spice, pepper_context)
+Fortran     PEPPER (pepper_instance, pepper_context)
 ```
 
 - The C interface and the Cython wrappers are generated from PEPPER's

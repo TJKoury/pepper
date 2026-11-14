@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_segments
 
-   use pepper_instance, only: pepper_spice, pepper_context, pepper_zzdsklsf => zzdsklsf, &
+   use pepper_instance_module, only: pepper_instance, pepper_context, pepper_zzdsklsf => zzdsklsf, &
       pepper_zzdskusf => zzdskusf, pepper_zzdskbss => zzdskbss, pepper_zzdsksns => zzdsksns, &
       pepper_zzdskchk => zzdskchk
    use pepper_legacy_context, only: legacy_context, legacy_spice
@@ -26,7 +26,7 @@ contains
       implicit none
       character(*) :: fname  !! Name of the file to be loaded.
       integer(ip) :: handle  !! Loaded file's handle.
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%spklef ( fname, handle )
       end subroutine spklef
@@ -39,7 +39,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip) :: handle  !! Handle of file to be unloaded
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%spkuef ( handle )
       end subroutine spkuef
@@ -74,7 +74,7 @@ contains
       implicit none
       character(*) :: fname  !! Name of the file to be loaded.
       integer(ip) :: handle  !! Loaded file's handle.
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%pcklof ( fname, handle )
       end subroutine pcklof
@@ -87,7 +87,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip) :: handle  !! Handle of file to be unloaded
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%pckuof ( handle )
       end subroutine pckuof
@@ -121,7 +121,7 @@ contains
       implicit none
       character(*) :: fname  !! Name of the CK file to be loaded.
       integer(ip) :: handle  !! Loaded file's handle.
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%cklpf ( fname, handle )
       end subroutine cklpf
@@ -134,7 +134,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip) :: handle  !! Handle of CK file to be unloaded
-      type(pepper_spice), pointer :: spice
+      type(pepper_instance), pointer :: spice
       spice => legacy_spice()
       call spice%ckupf ( handle )
       end subroutine ckupf

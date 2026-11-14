@@ -18,7 +18,7 @@ program bench_limits
    use, intrinsic :: iso_fortran_env, only: int64
    use pepper_kinds, only: ip, wp
    use pepper_constants, only: rpd
-   use pepper_instance, only: pepper_spice, pepper_context, zzbodrst
+   use pepper_instance_module, only: pepper_instance, pepper_context, zzbodrst
    use pepper_test_kernels, only: write_lsk, write_spk, write_pool_kernel, write_body_names, &
       write_tk_frames, kernel_name, delete_file, body_name, frame_name, circle_state
 
@@ -34,7 +34,7 @@ program bench_limits
    integer(ip), parameter :: first_frame = 1600001  !! ID of the first TK frame
    real(wp), parameter :: radius = 1.0e6_wp  !! radius of the SPK circles (km)
 
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context), pointer :: ctx  !! the instance's context (it loads the kernels)
    integer(ip) :: nspk, nvars, nnames, nframes, ncontexts, nqueries
    integer :: failures = 0

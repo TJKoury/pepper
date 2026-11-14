@@ -14,7 +14,7 @@ program bench_compare
 
    use, intrinsic :: iso_fortran_env, only: int64
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance_module, only: pepper_instance, pepper_context
    use pepper_test_kernels, only: write_spk, write_pool_kernel, write_body_names, &
       write_tk_frames, kernel_name, body_name, frame_name
 
@@ -31,7 +31,7 @@ program bench_compare
    character(*), parameter :: real_kernels(6) = [character(26) :: 'naif0012.tls', 'pck00011.tpc', &
       'de421.bsp', 'earth_latest_high_prec.bpc', 'moon_pa_de440_200625.bpc', 'moon_de440_250416.tf']
 
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context), pointer :: ctx
    character(1024) :: kdir, wdir
    real(wp), allocatable :: ets(:)

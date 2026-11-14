@@ -101,8 +101,8 @@ Map what the rest of the library calls in EK. It is probably little beyond:
 - loading and unloading (`furnsh`/`unload` through `eklef`/`ekuef`, and
   `kclear`);
 - the star catalog routines;
-- the EK state in `pepper_states` and `pepper_instance`: the EK file and
+- the EK state in `pepper_states` and `pepper_instance_module`: the EK file and
   segment tables, and the query state per context.
 
 That map gives the boundary of a separate package or feature, and shows
-whether `pepper_instance`'s type-bound procedures for EK can move with it.
+whether `pepper_instance_module`'s type-bound procedures for EK can move with it.

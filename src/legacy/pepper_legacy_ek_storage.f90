@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_ek_storage
 
-   use pepper_instance, only: pepper_context, pepper_zzekcdsc => zzekcdsc, &
+   use pepper_instance_module, only: pepper_context, pepper_zzekcdsc => zzekcdsc, &
       pepper_zzekcnam => zzekcnam, pepper_zzekgei => zzekgei, pepper_zzekgrs => zzekgrs, &
       pepper_zzekordc => zzekordc, pepper_zzekordd => zzekordd, pepper_zzekordi => zzekordi, &
       pepper_zzekpdec => zzekpdec, pepper_zzekpgch => zzekpgch, pepper_zzekqini => zzekqini, &

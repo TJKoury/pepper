@@ -1,10 +1,9 @@
 !> Benchmark: the cost of a kernel pool lookup (gdpool) and of a watch
 !> (swpool + cvpool) in a context.
 program bench_pool
-   use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_module, only: ip, wp, pepper_instance, pepper_context
    implicit none
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context), pointer :: ctx  !! the instance's context (it loads the kernels)
    ctx => spice%context()
    call spice%pdpool('BENCH_X', 3_ip, [1.0_wp, 2.0_wp, 3.0_wp])

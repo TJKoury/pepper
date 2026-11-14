@@ -1,7 +1,7 @@
 !> The saved state of SPICELIB's routines: one derived type for each
 !> routine (or umbrella routine with its entry points) whose saved
 !> variables are real state. Each is an allocatable component of
-!> [[pepper_spice]] (the state of the instance, e.g. the kernel pool) or of
+!> [[pepper_instance]] (the state of the instance, e.g. the kernel pool) or of
 !> [[pepper_context]] (the state of a computation in progress), allocated on
 !> first use.
 !>
@@ -171,7 +171,7 @@ module pepper_states
    !> reference frames.
    !>
    !> The saved variables of SPICELIB's CHGIRF routines (entry points irfrot,
-   !> irfnum, irfnam, irfdef), held in [[pepper_spice]] (and, for some variables,
+   !> irfnum, irfnam, irfdef), held in [[pepper_instance]] (and, for some variables,
    !> in [[pepper_context]]).
    type, public :: chgirf_state
       integer(ip) :: dframe = 0  !! the default inertial frame (set by [[irfdef]]; 0: none)
@@ -190,7 +190,7 @@ module pepper_states
    !>
    !> SPICELIB's CKBSR (entry points cklpf, ckupf, ckbss, cksns, ckhave):
    !> the loaded CK files and the index of their segments by instrument,
-   !> held in [[pepper_spice]].
+   !> held in [[pepper_instance]].
    !>
    !> PEPPER: SPICELIB found an instrument's segments when it was first
    !> searched for, reading the summaries of every loaded file, and kept
@@ -340,7 +340,7 @@ module pepper_states
    !>
    !> The saved variables of SPICELIB's DAFAH routines (entry points dafopr,
    !> dafopw, dafonw, dafopn, dafcls, dafhsf, dafhlu, dafluh, dafhfn, daffnh,
-   !> dafhof, dafsih), held in [[pepper_spice]].
+   !> dafhof, dafsih), held in [[pepper_instance]].
    !>
    !> PEPPER: SPICELIB's file table was four parallel arrays of FTSIZE
    !> (5000) entries, plus a set (FHLIST) of the same handles; it is an
@@ -617,7 +617,7 @@ module pepper_states
    !>
    !> The saved variables of SPICELIB's DASFM routines (entry points dasopr,
    !> dasopw, dasonw, dasopn, dasops, dasllc, dashfs, dasufs, dashlu, dasluh,
-   !> dashfn, dasfnh, dashof, dassih, dasham), held in [[pepper_spice]].
+   !> dashfn, dasfnh, dashof, dassih, dasham), held in [[pepper_instance]].
    !>
    !> PEPPER: SPICELIB's file table was parallel arrays of FTSIZE (5000)
    !> entries linked into a list (most recently opened first, searched
@@ -848,7 +848,7 @@ module pepper_states
    !> routines.
    !>
    !> The saved variables of SPICELIB's DSKTOL routines (entry points dskgtl,
-   !> dskstl), held in [[pepper_spice]].
+   !> dskstl), held in [[pepper_instance]].
    type, public :: dsktol_state
       real(wp) :: dppars ( ndspar ) = [ xfract, sgreed, sgpadm, ptmemm, angmrg, lonali ]  !! the values of the DSK tolerance and margin parameters
    end type dsktol_state
@@ -990,7 +990,7 @@ module pepper_states
    !>
    !> The saved variables of SPICELIB's EKQMGR routines (entry points eklef,
    !> ekuef, ekntab, ektnam, ekccnt, ekcii, eksrch, eknelt, ekgc, ekgd, ekgi),
-   !> held in [[pepper_spice]] (and, for some variables, in [[pepper_context]]).
+   !> held in [[pepper_instance]] (and, for some variables, in [[pepper_context]]).
    !>
    !> PEPPER: the five linked list pools and their parallel arrays grow
    !> when a file is loaded (EKLEF), allocated by [[init_ekqmgr_state]]
@@ -1492,7 +1492,7 @@ module pepper_states
    !> an application program.
    !>
    !> The saved variables of SPICELIB's KEEPER routines (entry points furnsh,
-   !> ktotal, kdata, kinfo, kclear, unload), held in [[pepper_spice]].
+   !> ktotal, kdata, kinfo, kclear, unload), held in [[pepper_instance]].
    !>
    !> PEPPER: SPICELIB's table was four parallel arrays of MAXFIL (5300)
    !> entries, with names of at most FILSIZ (255) characters; it is an
@@ -1628,7 +1628,7 @@ module pepper_states
    !>
    !> SPICELIB's PCKBSR (entry points pcklof, pckuof, pcksfs): the loaded
    !> binary PCK files and the index of their segments by body, held in
-   !> [[pepper_spice]].
+   !> [[pepper_instance]].
    !>
    !> PEPPER: the segments are indexed when a file is loaded (SPICELIB:
    !> found per body at its first query, in per-context tables of 20 bodies
@@ -1704,7 +1704,7 @@ module pepper_states
    !> The saved variables of SPICELIB's POOL routines (entry points clpool,
    !> ldpool, rtpool, expool, wrpool, swpool, cvpool, gcpool, gdpool, gipool,
    !> dtpool, pcpool, pdpool, pipool, lmpool, szpool, dvpool, gnpool, dwpool,
-   !> zzvupool, zzpctrck), held in [[pepper_spice]].
+   !> zzvupool, zzpctrck), held in [[pepper_instance]].
    !>
    !> PEPPER: SPICELIB kept the names in a hash table of MAXVAR (26003)
    !> entries and the values in linked lists of MAXVAL (400000) numbers and
@@ -1803,7 +1803,7 @@ module pepper_states
    !> Open and read the contents of a SPICE ASCII kernel file.
    !>
    !> The saved variables of SPICELIB's RDKER routines (entry points rdknew,
-   !> rdkdat, rdklin), held in [[pepper_spice]].
+   !> rdkdat, rdklin), held in [[pepper_instance]].
    type, public :: rdker_state
       character(:), allocatable :: file  !! the text kernel being read (PEPPER: any length; SPICELIB's
                                           !! held FILSIZ, 255, characters)
@@ -1822,7 +1822,7 @@ module pepper_states
    !> Read the next line of text from a text file.
    !>
    !> The saved variables of SPICELIB's [[rdtext]] routines (entry points rdtext,
-   !> cltext), held in [[pepper_spice]].
+   !> cltext), held in [[pepper_instance]].
    type, public :: rdtext_state
       integer(ip) :: units ( maxopn ) = 0  !! units of the files open for reading
       !> PEPPER: the files are read as streams of bytes, split into lines by
@@ -2143,7 +2143,7 @@ module pepper_states
    !>
    !> SPICELIB's SPKBSR (entry points spklef, spkuef, spksfs): the loaded
    !> SPK files and the index of their segments by body, held in
-   !> [[pepper_spice]].
+   !> [[pepper_instance]].
    !>
    !> PEPPER: the segments are indexed when a file is loaded (SPICELIB:
    !> found per body at its first query, reading the summaries of every
@@ -2730,7 +2730,7 @@ module pepper_states
    !> enabled.
    !>
    !> The saved variables of SPICELIB's [[tcheck]] routines (entry points tcheck,
-   !> tparch, tchckd), held in [[pepper_spice]].
+   !> tparch, tchckd), held in [[pepper_instance]].
    type, public :: tcheck_state
       logical :: dochck = .false.  !! check the components of parsed times (set by [[tparch]])
    end type tcheck_state
@@ -2795,7 +2795,7 @@ module pepper_states
    !> Expand an abbreviated year to a full year specification.
    !>
    !> The saved variables of SPICELIB's [[texpyr]] routines (entry points texpyr,
-   !> tsetyr), held in [[pepper_spice]].
+   !> tsetyr), held in [[pepper_instance]].
    type, public :: texpyr_state
       integer(ip) :: centry = 1900  !! the century assumed for two-digit years
       integer(ip) :: lbound = 1969  !! the lower bound of the 100-year window for two-digit years
@@ -2810,7 +2810,7 @@ module pepper_states
    !> input strings.
    !>
    !> The saved variables of SPICELIB's [[timdef]] routines (entry points timdef),
-   !> held in [[pepper_spice]].
+   !> held in [[pepper_instance]].
    type, public :: timdef_state
       character(timdef_wdsize) :: defzon = ' '  !! setting: the default time zone, as UTC+HR[:MN] (blank when a system is set)
       character(timdef_wdsize) :: defsys = 'UTC'  !! setting: the default time system (UTC, TDB, TDT or TT; blank when a zone is set)
@@ -3365,7 +3365,7 @@ module pepper_states
    !>
    !> The saved variables of SPICELIB's ZZDDHMAN routines (entry points
    !> zzddhopn, zzddhcls, zzddhhlu, zzddhunl, zzddhnfo, zzddhisn, zzddhfnh,
-   !> zzddhluh), held in [[pepper_spice]] (and, for some variables, in
+   !> zzddhluh), held in [[pepper_instance]] (and, for some variables, in
    !> [[pepper_context]]).
    !>
    !> PEPPER: SPICELIB's file table was eight parallel arrays of FTSIZE
@@ -3538,7 +3538,7 @@ module pepper_states
    !>
    !> SPICELIB's ZZDSKBSR (entry points zzdsklsf, zzdskusf, zzdskbss,
    !> zzdsksns, zzdskchk): the loaded DSK files and the index of their
-   !> segments by central body, held in [[pepper_spice]].
+   !> segments by central body, held in [[pepper_instance]].
    !>
    !> PEPPER: the segments are indexed when a file is loaded (SPICELIB:
    !> found per body at its first search, in per-context tables of 100
@@ -6150,7 +6150,7 @@ contains
 
    !> The ID as text, for surface_key. (Not a deferred-length result:
    !> gfortran keeps that length in a static variable at the call site,
-   !> which is not thread-safe; see text_length in [[pepper_instance]].)
+   !> which is not thread-safe; see text_length in [[pepper_instance_module]].)
    pure function id_text(id) result(t)
       integer(ip), intent(in) :: id  !! the ID
       character(id_text_length(id)) :: t

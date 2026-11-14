@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Move SPICELIB routines that need the context (they signal errors) from
-src/spicelib into a submodule of pepper_instance, with the legacy wrappers
+src/spicelib into a submodule of pepper_instance_module, with the legacy wrappers
 that keep the original external procedures.
 
     python tools/modularize_ctx.py [--dry-run] MODULE ...
@@ -9,7 +9,7 @@ that keep the original external procedures.
 For each MODULE (a key of modules.CONTEXT_MODULES, e.g. pepper_cells):
 
 - src/<MODULE>.f90 (.F90 if a routine is preprocessed) is written:
-  ``submodule (pepper_instance) <MODULE>``, with each routine as a
+  ``submodule (pepper_instance_module) <MODULE>``, with each routine as a
   ``module procedure``. Its text is kept, except that
     * the context is the new first argument ``ctx``: calls of SPICELIB's
       error routines become ``ctx%sigerr(...)`` etc., ``return()`` and
@@ -19,7 +19,7 @@ For each MODULE (a key of modules.CONTEXT_MODULES, e.g. pepper_cells):
       with ``use``, and constant functions become constants (``pi``);
     * the declarations of the arguments (now in the interface) and of the
       called functions are removed, as is the "$ Brief_I/O" section.
-- In src/pepper_instance.f90, between the "generated" markers: the
+- In src/pepper_instance_module.f90, between the "generated" markers: the
   interface of each routine (``module subroutine/function``, with intents
   and ``!!`` comments from the Brief_I/O table and a ``!>`` docstring from
   the Abstract); a type-bound procedure of pepper_context for each routine
@@ -34,7 +34,7 @@ Umbrella routines (modules.UMBRELLAS; see tools/umbrella.py): each entry
 point (and the umbrella routine itself, unless it only signals BOGUSENTRY)
 becomes a module procedure. The saved variables listed as state become the
 components of a type in a generated module src/pepper_state_<name>.f90,
-held in pepper_spice (or pepper_context) as an allocatable component, and
+held in pepper_instance (or pepper_context) as an allocatable component, and
 the procedures access them through ASSOCIATE.
 
 A routine may call only: the error routines, routines of earlier (or the
@@ -56,7 +56,7 @@ from modules import MODULES, CONSTANTS, CONTEXT_MODULES, UMBRELLAS, ALLOWED_LEGA
 from add_intents import table as io_table, has_brief_io  # noqa: E402
 from document_procedures import abstract, descriptions, leftover_text  # noqa: E402
 
-INSTANCE = SRC / "pepper_instance.f90"
+INSTANCE = SRC / "pepper_instance_module.f90"
 ERROR_CALLS = ["sigerr", "setmsg", "errch", "errdp", "errint", "errfnm", "errhan", "reset",
                "getmsg", "erract"]
 ERROR_FUNCS = ["failed", "return"]
@@ -406,10 +406,10 @@ def wrapper(r) -> str:
         out += [r.lines[i] for i in range(r.stmts[0].first, r.stmts[0].last + 1)]
     procs = []   # (the legacy form of the callbacks comes from pepper_legacy_callbacks)
     if r.name.startswith("zz"):
-        out.append(f"      use pepper_instance, only: pepper_context, pepper_{r.name} => {r.name}"
+        out.append(f"      use pepper_instance_module, only: pepper_context, pepper_{r.name} => {r.name}"
                    + "".join(f", {x}" for x in procs))
     else:
-        out.append("      use pepper_instance, only: pepper_context"
+        out.append("      use pepper_instance_module, only: pepper_context"
                    + "".join(f", {x}" for x in procs))
     out.append("      use pepper_legacy_context, only: legacy_context")
     for s in r.spec:
@@ -593,10 +593,10 @@ def generate(mod: str, dry_run: bool) -> list:
     body = (f"!> {DOCS[mod]}\n!>\n"
             "!> The procedures keep SPICELIB's names and documentation; the context is\n"
             "!> their first argument (interfaces and type-bound procedures in\n"
-            f"!> pepper_instance). Moved here from src/spicelib by\n"
+            f"!> pepper_instance_module). Moved here from src/spicelib by\n"
             f"!> tools/modularize_ctx.py; the external procedures with the original\n"
             f"!> interface are in tspice/src/legacy/{legacy_name(mod)}.\n"
-            f"submodule (pepper_instance) {mod}\n\n   implicit none\n\ncontains\n\n"
+            f"submodule (pepper_instance_module) {mod}\n\n   implicit none\n\ncontains\n\n"
             + "\n\n".join(procs) + f"\n\nend submodule {mod}\n")
     text = INSTANCE.read_text(encoding="ascii")
     publics = [r.name for r in routines if r.name.startswith("zz")]

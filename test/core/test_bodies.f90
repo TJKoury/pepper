@@ -5,11 +5,11 @@
 program test_bodies
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context, zzbodrst
+   use pepper_instance_module, only: pepper_instance, pepper_context, zzbodrst
 
    implicit none
 
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context), pointer :: a  !! the instance's context (it loads the kernels)
    type(pepper_context) :: b
    integer :: failures = 0

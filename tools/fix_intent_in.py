@@ -11,7 +11,7 @@ argument). SPICELIB's Brief_I/O tables call some arguments inputs that the
 routine changes (e.g. the EK segment descriptors, updated in place by the
 column writers): the code is right and the table is not. For each error the
 argument becomes intent(inout) in the procedure's interface in
-src/pepper_instance.f90 (and in the procedure itself if it declares its
+src/pepper_instance_module.f90 (and in the procedure itself if it declares its
 arguments, the full MODULE SUBROUTINE form), with a note in its !! comment.
 Repeats until the build has no such errors; prints what it changed.
 """
@@ -55,7 +55,7 @@ def make_inout(text: str, proc: str, arg: str, indent: str) -> tuple:
 
 
 def main() -> int:
-    inst = ROOT / "src" / "pepper_instance.f90"
+    inst = ROOT / "src" / "pepper_instance_module.f90"
     done = set()
     for _ in range(50):
         hits = ERR.findall(build())

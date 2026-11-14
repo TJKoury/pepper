@@ -4,14 +4,14 @@
 program test_outputs
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context, gf_scalar
+   use pepper_instance_module, only: pepper_instance, pepper_context, gf_scalar
    use pepper_containers, only: string
    use pepper_test_kernels, only: write_spk
    use pepper_windows, only: interval_list, window_to_cell, cell_to_window, set_to_cell, cell_to_set
 
    implicit none
 
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context), pointer :: ctx  !! the instance's own context
    integer :: failures = 0
 

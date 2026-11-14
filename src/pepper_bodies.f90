@@ -3,7 +3,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance]]). Moved here from src/spicelib by
+!> [[pepper_instance_module]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_bodies.f90.
 !>
@@ -1625,7 +1625,7 @@
 !>
 !>     Flag indicating whether valid kernel POOL defined mappings
 !>     were successfully fetched from the POOL.
-submodule (pepper_instance) pepper_bodies
+submodule (pepper_instance_module) pepper_bodies
 
    implicit none
 
@@ -11018,7 +11018,7 @@ contains
       !> Append a name/code pair to the instance's record of definitions.
       subroutine record_boddef ( spice, name, code )
       use pepper_containers, only: grow
-      type(pepper_spice), intent(inout) :: spice  !! the instance
+      type(pepper_instance), intent(inout) :: spice  !! the instance
       character(*), intent(in) :: name  !! common name of some body
       integer(ip), intent(in) :: code  !! integer code for that body
       integer(ip) :: n

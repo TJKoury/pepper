@@ -3,7 +3,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance]]). Moved here from src/spicelib by
+!> [[pepper_instance_module]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_daf.f90.
 !>
@@ -2814,7 +2814,7 @@
 !>     Note that the routines DAFGS, DAFGN, DAFRS, DAFRN, and DAFWS do
 !>     not modify the state table; they merely act on the current array
 !>     in the DAF that is at the head of the active list.
-submodule (pepper_instance) pepper_daf
+submodule (pepper_instance_module) pepper_daf
 
    implicit none
 

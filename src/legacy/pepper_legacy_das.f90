@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_das
 
-   use pepper_instance, only: pepper_context, pepper_zzdasgrd => zzdasgrd, &
+   use pepper_instance_module, only: pepper_context, pepper_zzdasgrd => zzdasgrd, &
       pepper_zzdasgri => zzdasgri, pepper_zzdasnfr => zzdasnfr, pepper_zzdasrfr => zzdasrfr
    use pepper_legacy_context, only: legacy_context, legacy_spice
 

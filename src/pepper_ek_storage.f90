@@ -2,7 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance]]). Moved here from src/spicelib by
+!> [[pepper_instance_module]]). Moved here from src/spicelib by
 !> tools/modularize_ctx.py; the external procedures with the original
 !> interface are in tspice/src/legacy/pepper_legacy_ek_storage.f90.
 !>
@@ -487,7 +487,7 @@
 !>     Base address of first segment vector
 !>
 !>     End Include Section:  EK Join Row Set Parameters
-submodule (pepper_instance) pepper_ek_storage
+submodule (pepper_instance_module) pepper_ek_storage
 
    implicit none
 

@@ -1,7 +1,7 @@
 !> Providers for test_programmatic.
 module test_programmatic_providers
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_context, ephemeris_provider, frame_provider
+   use pepper_instance_module, only: pepper_context, ephemeris_provider, frame_provider
    implicit none
    private
    public :: linear_motion, spinning_frame, fixed_frame, refusing, failing, linear_state_of, spin_xform
@@ -255,7 +255,7 @@ end module test_programmatic_providers
 program test_programmatic
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context, state_query, rotation_query, &
+   use pepper_instance_module, only: pepper_instance, pepper_context, state_query, rotation_query, &
       ephemeris_procedure
    use test_programmatic_providers
 
@@ -268,7 +268,7 @@ program test_programmatic
    real(wp), parameter :: spin_rate = deg/86400.0_wp  !! one degree per day
    integer(ip), parameter :: spin_code = 1400300, child_code = 1400301, topo_code = 1400302, &
                              const_code = 1400303
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context), pointer :: ctx
    type(pepper_context) :: ctx2
    type(linear_motion) :: m9001, m9003a, m9003b, m9003c, m9005, m9006

@@ -19,7 +19,7 @@ program test_parallel
    use, intrinsic :: iso_fortran_env, only: int64
    use pepper_kinds, only: ip, wp
    use pepper_constants, only: twopi
-   use pepper_instance, only: pepper_spice, pepper_context, ephemeris_procedure, frame_procedure
+   use pepper_instance_module, only: pepper_instance, pepper_context, ephemeris_procedure, frame_procedure
    !$ use omp_lib, only: omp_get_thread_num, omp_get_max_threads
 
    implicit none
@@ -31,8 +31,8 @@ program test_parallel
    integer, parameter :: nepoch = 2000  !! number of query epochs
    integer, parameter :: nres = 6 + 1 + 3 + 1 + 9 + 9 + 1 + 6 + 9 + 6  !! results per epoch
    integer, parameter :: nthreads = 4
-   type(pepper_spice), target :: spice
-   type(pepper_spice), target :: memspice  !! the same kernels, the SPK in memory
+   type(pepper_instance), target :: spice
+   type(pepper_instance), target :: memspice  !! the same kernels, the SPK in memory
    type(pepper_context), pointer :: setup  !! the instance's context (it loads the kernels)
    type(pepper_context) :: serial
    ! allocatable: fixed-size arrays this large (2 MB) are on the stack with

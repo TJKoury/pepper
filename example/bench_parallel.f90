@@ -7,9 +7,7 @@
 !> The library has no OpenMP; only this program uses it.
 program bench_parallel
 
-   use pepper_kinds, only: ip, wp
-   use pepper_constants, only: twopi
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_module, only: ip, wp, twopi, pepper_instance, pepper_context
    !$ use omp_lib, only: omp_get_wtime
 
    implicit none
@@ -19,7 +17,7 @@ program bench_parallel
    character(*), parameter :: fk = 'bench_parallel.tf'
    integer, parameter :: nepoch = 200000
    integer, parameter :: threads(4) = [1, 2, 4, 8]
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context), pointer :: setup  !! the instance's context (it loads the kernels)
    real(wp) :: et(nepoch), sums(8), t0, t1, base
    integer :: i, k

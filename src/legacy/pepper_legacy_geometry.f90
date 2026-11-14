@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_geometry
 
-   use pepper_instance, only: pepper_context, pepper_zzasryel => zzasryel, &
+   use pepper_instance_module, only: pepper_context, pepper_zzasryel => zzasryel, &
       pepper_zzbquad => zzbquad, pepper_zzchrlat => zzchrlat, pepper_zzcputim => zzcputim, &
       pepper_zzcxbrut => zzcxbrut, pepper_zzdiv => zzdiv, pepper_zzdskbbl => zzdskbbl, &
       pepper_zzdsksbi => zzdsksbi, pepper_zzdsksbr => zzdsksbr, pepper_zzdsksbd => zzdsksbd, &

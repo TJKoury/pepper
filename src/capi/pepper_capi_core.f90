@@ -23,7 +23,7 @@ module pepper_capi_core
    use, intrinsic :: iso_c_binding
    use pepper_kinds, only: ip, wp
    use pepper_containers, only: string
-   use pepper_instance, only: pepper_spice, pepper_context, state_query, rotation_query, &
+   use pepper_instance_module, only: pepper_instance, pepper_context, state_query, rotation_query, &
                               ephemeris_provider, frame_provider, gf_scalar
    implicit none
    ! Public: the bind(c) procedures must stay global symbols at any
@@ -199,7 +199,7 @@ contains
    !> The instance of a handle.
    function spice_of ( handle ) result(s)
       type(c_ptr), intent(in) :: handle  !! the handle ([[pepper_spice_new]])
-      type(pepper_spice), pointer :: s  !! the instance
+      type(pepper_instance), pointer :: s  !! the instance
       call c_f_pointer(handle, s)
    end function spice_of
 
@@ -212,7 +212,7 @@ contains
    !> The status a shim of a kernel change returns: 1 if an error was
    !> signaled in the instance.
    integer(c_int) function spice_status ( s )
-      type(pepper_spice), intent(in) :: s  !! the instance
+      type(pepper_instance), intent(in) :: s  !! the instance
       spice_status = merge(1_c_int, 0_c_int, s%failed())
    end function spice_status
 
@@ -311,7 +311,7 @@ contains
    !> [[pepper_spice_free]], after its contexts.
    function pepper_spice_new () result(handle) bind(c, name='pepper_spice_new')
       type(c_ptr) :: handle  !! the instance
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       allocate (s)
       handle = c_loc(s)
    end function pepper_spice_new
@@ -320,7 +320,7 @@ contains
    !> contexts must have been freed.
    subroutine pepper_spice_free ( handle ) bind(c, name='pepper_spice_free')
       type(c_ptr), value :: handle  !! the instance
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       if (.not. c_associated(handle)) return
       s => spice_of(handle)
       call s%kclear()
@@ -332,7 +332,7 @@ contains
    function pepper_context_new ( spice ) result(handle) bind(c, name='pepper_context_new')
       type(c_ptr), value :: spice  !! the instance
       type(c_ptr) :: handle  !! the context
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       type(capi_context), pointer :: c
       s => spice_of(spice)
       allocate (c)
@@ -376,7 +376,7 @@ contains
    subroutine pepper_spice_set_in_memory ( spice, flag ) bind(c, name='pepper_spice_set_in_memory')
       type(c_ptr), value :: spice  !! the instance
       integer(c_int), value :: flag  !! 1: in memory; 0: read records as needed
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       s => spice_of(spice)
       call s%set_in_memory(flag /= 0)
    end subroutine pepper_spice_set_in_memory
@@ -385,7 +385,7 @@ contains
    function pepper_spice_kernel_memory ( spice ) result(bytes) bind(c, name='pepper_spice_kernel_memory')
       type(c_ptr), value :: spice  !! the instance
       integer(c_int64_t) :: bytes  !! the memory
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       s => spice_of(spice)
       bytes = s%kernel_memory()
    end function pepper_spice_kernel_memory
@@ -395,7 +395,7 @@ contains
    subroutine pepper_spice_set_max_open_files ( spice, n ) bind(c, name='pepper_spice_set_max_open_files')
       type(c_ptr), value :: spice  !! the instance
       integer(c_int), value :: n  !! the number of files
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       s => spice_of(spice)
       call s%set_max_open_files(n)
    end subroutine pepper_spice_set_max_open_files
@@ -404,7 +404,7 @@ contains
    function pepper_spice_max_open_files ( spice ) result(n) bind(c, name='pepper_spice_max_open_files')
       type(c_ptr), value :: spice  !! the instance
       integer(c_int) :: n  !! the number of files
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       s => spice_of(spice)
       n = s%max_open_files()
    end function pepper_spice_max_open_files
@@ -416,7 +416,7 @@ contains
       type(c_ptr), value :: spice  !! the instance
       character(kind=c_char), intent(in) :: file(*)  !! the kernel
       integer(c_int), value :: in_memory  !! 1, 0 or -1
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       character(:), allocatable :: f_file
       s => spice_of(spice)
       call c_to_f(file, f_file)
@@ -436,7 +436,7 @@ contains
       integer(c_int), value :: n  !! the number of strings
       integer(c_int), value :: width  !! the width of each string in the block
       character(kind=c_char), intent(in) :: cvals(*)  !! the strings
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       character(:), allocatable :: f_name, f_cvals(:)
       s => spice_of(spice)
       call c_to_f(name, f_name)
@@ -452,7 +452,7 @@ contains
       integer(c_int), value :: n  !! the number of lines
       integer(c_int), value :: width  !! the width of each line in the block
       character(kind=c_char), intent(in) :: cvals(*)  !! the lines
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       character(:), allocatable :: f_cvals(:)
       s => spice_of(spice)
       call c_to_f_array(cvals, n, width, f_cvals)
@@ -466,7 +466,7 @@ contains
       character(kind=c_char), intent(in) :: name(*)  !! the variable
       integer(c_int), value :: n  !! the number of values
       real(c_double), intent(in) :: values(*)  !! the values
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       character(:), allocatable :: f_name
       s => spice_of(spice)
       call c_to_f(name, f_name)
@@ -480,7 +480,7 @@ contains
       character(kind=c_char), intent(in) :: name(*)  !! the variable
       integer(c_int), value :: n  !! the number of values
       integer(c_int), intent(in) :: ivals(*)  !! the values
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       character(:), allocatable :: f_name
       s => spice_of(spice)
       call c_to_f(name, f_name)
@@ -549,7 +549,7 @@ contains
       character(kind=c_char), intent(in) :: option(*)  !! 'SHORT', 'EXPLAIN' or 'LONG'
       integer(c_int), value :: size  !! the size of the buffer
       character(kind=c_char), intent(out) :: msg(*)  !! the message
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       type(pepper_context), pointer :: own
       character(:), allocatable :: f_option
       character(len=max(size - 1, 1)) :: f_msg
@@ -563,7 +563,7 @@ contains
    !> Clear the error status and the messages of the instance.
    subroutine pepper_spice_reset ( spice ) bind(c, name='pepper_spice_reset')
       type(c_ptr), value :: spice  !! the instance
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       type(pepper_context), pointer :: own
       s => spice_of(spice)
       own => s%context()
@@ -780,7 +780,7 @@ contains
       real(c_double), value :: tend  !! end of the coverage
       type(c_funptr), value :: fn  !! the state function ([[pepper_state_fn]])
       type(c_ptr), value :: user  !! its data
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       character(:), allocatable :: f_frame
       s => spice_of(spice)
       call c_to_f(frame, f_frame)
@@ -799,7 +799,7 @@ contains
       integer(c_int), value :: center  !! the ID code of its center
       type(c_funptr), value :: fn  !! the transformation function ([[pepper_xform_fn]])
       type(c_ptr), value :: user  !! its data
-      type(pepper_spice), pointer :: s
+      type(pepper_instance), pointer :: s
       character(:), allocatable :: f_name
       s => spice_of(spice)
       call c_to_f(name, f_name)

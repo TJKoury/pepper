@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_files
 
-   use pepper_instance, only: pepper_context, pepper_zzplatfm => zzplatfm, &
+   use pepper_instance_module, only: pepper_context, pepper_zzplatfm => zzplatfm, &
       pepper_zzpltchk => zzpltchk, pepper_zzftpstr => zzftpstr, pepper_zzftpchk => zzftpchk, &
       pepper_zzrbrkst => zzrbrkst, pepper_zzddhini => zzddhini, pepper_zzgetbff => zzgetbff, &
       pepper_zzddhgsd => zzddhgsd, pepper_zzddhmnm => zzddhmnm, pepper_zzddhppf => zzddhppf, &

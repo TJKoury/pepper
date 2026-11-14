@@ -68,7 +68,7 @@ def fix_one(path: Path, line_no: int, dummy: str, notes: list) -> bool:
     actual = [a.strip() for a in split_top(m.group(2))]
     ints = intents().get(proc)
     # the interface's argument names, to find the position of the dummy
-    text = (ROOT / "src" / "pepper_instance.f90").read_text() + "".join(
+    text = (ROOT / "src" / "pepper_instance_module.f90").read_text() + "".join(
         f.read_text() for f in (ROOT / "src").glob("pepper_[ams]*.f90"))
     hm = re.search(rf"(?:subroutine|function)\s+{proc}\s*\(([^)]*)\)", text, re.I)
     if not ints or not hm:
@@ -105,7 +105,7 @@ def fix_one(path: Path, line_no: int, dummy: str, notes: list) -> bool:
             # an argument of a "module procedure": declared in its interface
             mp = re.match(r"\s*module procedure (\w+)", lines[a])
             if mp:
-                inst = (ROOT / "src" / "pepper_instance.f90").read_text()
+                inst = (ROOT / "src" / "pepper_instance_module.f90").read_text()
                 im = re.search(rf"module (?:\S+ )?(?:subroutine|function) {mp.group(1)} \((.*?)end "
                                rf"(?:subroutine|function) {mp.group(1)}", inst, re.S | re.I)
                 if im:

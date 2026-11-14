@@ -7,13 +7,13 @@ program test_frames
 
    use pepper_kinds, only: ip, wp
    use pepper_constants, only: rpd
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance_module, only: pepper_instance, pepper_context
 
    implicit none
 
    character(*), parameter :: fk = 'test_frames.tf'
    integer(ip), parameter :: tkid = 1500001
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context), pointer :: a  !! the instance's context (it loads the kernels)
    type(pepper_context) :: b
    integer :: failures = 0

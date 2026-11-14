@@ -14,14 +14,14 @@
 program test_queries
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context, state_query, rotation_query
+   use pepper_instance_module, only: pepper_instance, pepper_context, state_query, rotation_query
 
    implicit none
 
    character(*), parameter :: spk = 'test_queries.bsp', tk = 'test_queries.tk'
    real(wp), parameter :: pi = acos(-1.0_wp)
    real(wp), parameter :: t0 = 0.0_wp, t1 = 4.0e6_wp  !! coverage of the SPK
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context), pointer :: ctx
    integer :: failures = 0
 

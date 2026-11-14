@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_records
 
-   use pepper_instance, only: pepper_context, pepper_zzbodbry => zzbodbry, &
+   use pepper_instance_module, only: pepper_context, pepper_zzbodbry => zzbodbry, &
       pepper_zzck4d2i => zzck4d2i, pepper_zzdscm => zzdscm, pepper_zzdsin => zzdsin, &
       pepper_zzdspc => zzdspc, pepper_zzdspr => zzdspr, pepper_zzinil => zzinil
    use pepper_legacy_context, only: legacy_context, legacy_spice

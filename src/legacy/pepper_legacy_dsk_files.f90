@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_dsk_files
 
-   use pepper_instance, only: pepper_context, pepper_zzsizeok => zzsizeok, &
+   use pepper_instance_module, only: pepper_context, pepper_zzsizeok => zzsizeok, &
       pepper_zzckspk => zzckspk, pepper_zzvrtplt => zzvrtplt, pepper_zzvoxcvo => zzvoxcvo, &
       pepper_zzvox2id => zzvox2id, pepper_zztrvlnk => zztrvlnk, pepper_zzuntngl => zzuntngl, &
       pepper_zzinilnk => zzinilnk, pepper_zzgetvox => zzgetvox, pepper_zzaddlnk => zzaddlnk, &

@@ -8,7 +8,7 @@ What was built:
   and `spice%kernel_memory()` (bytes held); the legacy routine
   `PEPPER_SET_IN_MEMORY(FLAG)`, and in tspice's legacy layer only, the
   environment variable `PEPPER_IN_MEMORY=1`;
-- `daf_load_image` and `daf_image_slot` (pepper_instance.f90), the image in
+- `daf_load_image` and `daf_image_slot` (pepper_instance_module.f90), the image in
   `ddh_file` (pepper_states.f90), the hooks in DAFGDA and ZZDAFGDR
   (pepper_daf.F90) and in ZZLDKER (pepper_keeper.F90; if the image cannot be
   made, the file is unloaded again and the error stays);

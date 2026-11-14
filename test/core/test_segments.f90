@@ -5,7 +5,7 @@
 program test_segments
 
    use pepper_kinds, only: ip, wp
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance_module, only: pepper_instance, pepper_context
 
    implicit none
 
@@ -15,7 +15,7 @@ program test_segments
    ! (body, center, frame, type, and the begin and end addresses).
    integer(ip), parameter :: nd = 2, ni = 6
    integer(ip), parameter :: body = 399
-   type(pepper_spice), target :: spice
+   type(pepper_instance), target :: spice
    type(pepper_context), pointer :: a  !! the instance's context (it loads the kernels)
    type(pepper_context) :: b
    integer(ip) :: h1, h2

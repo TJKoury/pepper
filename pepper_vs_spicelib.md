@@ -52,7 +52,7 @@ PEPPER puts that state into two kinds of objects:
 
 | Object | Holds | Shared by |
 |---|---|---|
-| Instance, `type(pepper_spice)` | The loaded kernels, the kernel pool, the file tables, the BODDEF names | All the threads that use it |
+| Instance, `type(pepper_instance)` | The loaded kernels, the kernel pool, the file tables, the BODDEF names | All the threads that use it |
 | Context, `type(pepper_context)` | The error status and messages, the caches, the open files | One thread |
 
 The instance changes the kernels (`spice%furnsh`, `spice%unload`,
@@ -63,7 +63,7 @@ first and then query from any number of threads; the kernels must not change
 while other threads query.
 
 ```fortran
-type(pepper_spice), target :: spice
+type(pepper_instance), target :: spice
 type(pepper_context) :: ctx
 
 call spice%furnsh('kernels.tm')

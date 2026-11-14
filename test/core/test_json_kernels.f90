@@ -4,7 +4,7 @@ program test_json_kernels
 
    use pepper_kinds, only: ip, wp
    use pepper_containers, only: string
-   use pepper_instance, only: pepper_spice, pepper_context
+   use pepper_instance_module, only: pepper_instance, pepper_context
    use pepper_json, only: json_assignment, json_kernel_parse, json_numeric, json_character
    use pepper_test_kernels, only: write_spk, write_lsk, delete_file
 
@@ -211,7 +211,7 @@ contains
    !> Every kind of value a JSON kernel's variable can have, through
    !> FURNSH and the kernel pool.
    subroutine test_values()
-      type(pepper_spice), target :: spice
+      type(pepper_instance), target :: spice
       type(pepper_context) :: c
       type(string), allocatable :: sv(:)
       logical :: found
@@ -376,7 +376,7 @@ contains
    !> The same data as a text kernel and as a JSON kernel give the same
    !> pool.
    subroutine test_equivalence()
-      type(pepper_spice), target :: tpc, json
+      type(pepper_instance), target :: tpc, json
       type(pepper_context) :: ct, cj
       type(string), allocatable :: names(:), jnames(:), sv(:), jsv(:)
       real(wp), allocatable :: dv(:), jdv(:)
@@ -457,7 +457,7 @@ contains
    !> Files named *.json (any case) are JSON kernels; others are text
    !> kernels.
    subroutine test_extension()
-      type(pepper_spice), target :: spice
+      type(pepper_instance), target :: spice
       type(pepper_context) :: c
       real(wp), allocatable :: v(:)
       logical :: found
@@ -480,7 +480,7 @@ contains
    !> Errors from the loader, and nothing of a kernel with an error is
    !> loaded.
    subroutine test_errors_atomic()
-      type(pepper_spice), target :: spice
+      type(pepper_instance), target :: spice
       type(pepper_context) :: c
       type(pepper_context), pointer :: own
       real(wp), allocatable :: v(:)
@@ -526,7 +526,7 @@ contains
 
    !> Load a kernel with an error, and check the error.
    subroutine load_error(spice, text, code)
-      type(pepper_spice), target, intent(inout) :: spice  !! the instance
+      type(pepper_instance), target, intent(inout) :: spice  !! the instance
       character(*), intent(in) :: text  !! the kernel
       character(*), intent(in) :: code  !! the expected short message
       type(pepper_context), pointer :: own
@@ -542,7 +542,7 @@ contains
 
    !> A JSON kernel's changes reach watches, body names and frames.
    subroutine test_watches_bodies_frames()
-      type(pepper_spice), target :: spice
+      type(pepper_instance), target :: spice
       type(pepper_context) :: c
       logical :: update, found
       integer(ip) :: code
@@ -574,7 +574,7 @@ contains
 
    !> KEEPER: kdata, ktotal, unload and kclear with JSON kernels.
    subroutine test_keeper()
-      type(pepper_spice), target :: spice
+      type(pepper_instance), target :: spice
       type(pepper_context) :: c
       real(wp), allocatable :: v(:)
       logical :: found
@@ -619,7 +619,7 @@ contains
    !> Meta-kernels: a JSON meta-kernel (with path symbols) listing text,
    !> JSON and SPK files, and a text meta-kernel listing a JSON kernel.
    subroutine test_meta()
-      type(pepper_spice), target :: spice
+      type(pepper_instance), target :: spice
       type(pepper_context) :: c
       real(wp), allocatable :: v(:)
       real(wp) :: state(6), lt

@@ -133,7 +133,7 @@ def main():
         '!> SPICELIB uses this module (`use pepper_legacy`) instead of declaring',
         '!> SPICELIB\'s functions itself; NAIF\'s test suite (tspice) runs through it.',
         '!>',
-        '!> Each routine calls the module API (pepper_instance) with the default',
+        '!> Each routine calls the module API (pepper_instance_module) with the default',
         '!> context, [[legacy_context]], or for the routines that change the kernels',
         '!> (FURNSH, LDPOOL, BODDEF, ...) the default instance, [[legacy_spice]],',
         '!> whose errors are signaled in the same context. The error routines (SIGERR,',
@@ -154,8 +154,8 @@ def main():
             seen.add(key)
             out.append('   ' + key)
     out += ['', '   implicit none', '', '   ! The module API\'s entities this module uses are not part of its interface.',
-            '   private :: pepper_spice, pepper_context, ip, wp']
-    imported = re.search(r'only:\s*(.*)', next(u for u in cb_uses if 'pepper_instance' in u)).group(1)
+            '   private :: pepper_instance, pepper_context, ip, wp']
+    imported = re.search(r'only:\s*(.*)', next(u for u in cb_uses if 'pepper_instance_module' in u)).group(1)
     names = [x.strip() for x in imported.split(',') if x.strip() and x.strip() != 'pepper_context']
     out.append('   private :: ' + ', '.join(names))
     out.append('   ! The callbacks\' bridges (pepper_legacy_callbacks, merged here)')

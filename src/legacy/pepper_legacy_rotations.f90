@@ -3,7 +3,7 @@
 !> them through [[pepper_legacy]].
 module pepper_legacy_rotations
 
-   use pepper_instance, only: pepper_context, pepper_zztwovxf => zztwovxf, &
+   use pepper_instance_module, only: pepper_context, pepper_zztwovxf => zztwovxf, &
       pepper_zzmobliq => zzmobliq, pepper_zzwahr => zzwahr, pepper_zzenut80 => zzenut80, &
       pepper_zzeprc76 => zzeprc76, pepper_zzdnpt => zzdnpt, pepper_zzstelab => zzstelab
    use pepper_legacy_context, only: legacy_context, legacy_spice
