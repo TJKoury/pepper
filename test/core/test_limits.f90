@@ -139,6 +139,20 @@ contains
       call spice%unload(tk)
       call ctx%gdpool('TEST_LIMITS_X', 1_ip, 2_ip, n, values, found)
       call check(.not. found, 'long paths: unload of the text kernel')
+      ! an error in the text kernel: its message names the kernel whole
+      ! (SPICELIB's ZZRVAR held the name in 255 characters)
+      open (newunit=unit, file=tk, status='replace', action='write')
+      write (unit, '(a)') '\begindata', 'TEST_LIMITS_Y 1.5', '\begintext'
+      close (unit)
+      call spice%furnsh(tk)
+      call check(ctx%failed() .and. index(ctx%message('LONG'), tk) > 0, &
+                 'long paths: an error in the text kernel names it whole')
+      call ctx%reset()
+      call spice%unload(tk)
+      call ctx%reset()
+      open (newunit=unit, file=tk, status='replace', action='write')  ! valid again, for the meta-kernel
+      write (unit, '(a)') '\begindata', 'TEST_LIMITS_X = ( 1.5, 2.5 )', '\begintext'
+      close (unit)
 
       ! A meta-kernel: the SPK through a path symbol whose value has 300
       ! characters, and the text kernel by its long name; both strings

@@ -8920,7 +8920,6 @@ contains
       integer(ip), parameter :: bufsiz = 100
       integer(ip), parameter :: ctrlsz = 3
       integer(ip), parameter :: dirsiz = 100
-      integer(ip), parameter :: filsiz = 255
       integer(ip), parameter :: pktszs ( 0 : s19nst-1 ) = &
          [ s19ps0, s19ps1, s19ps2 ]
       integer(ip) :: npad
@@ -8944,7 +8943,6 @@ contains
       integer(ip) :: minnpk
       integer(ip) :: nintvl
       integer(ip) :: minndr
-      character(filsiz) :: spk
       integer(ip) :: isel
       real(wp) :: ivlbeg
       integer(ip) :: begidx
@@ -9445,12 +9443,11 @@ contains
 !
 !           This code should not be reached.
 !
-            call dafhfn ( ctx, handle, spk )
 
             call ctx%setmsg ( 'Input file: #. Segment address range: ' &
             //            '#:#. Structural error found: NREAD ' &
             //            'is #; end time of interval # is #.'      )
-            call ctx%errch  ( '#', spk                                  )
+            call ctx%errch  ( '#', file_name ( ctx%spice, handle ) )
             call ctx%errint ( '#', baddr                                )
             call ctx%errint ( '#', eaddr                                )
             call ctx%errint  ( '#', nread                                )
@@ -9517,12 +9514,11 @@ contains
 !
 !           This code should not be reached.
 !
-            call dafhfn ( ctx, handle, spk )
 
             call ctx%setmsg ( 'Input file: #. Segment address range: ' &
             //            '#:#. Structural error found: last epoch ' &
             //            'is #; end time of interval # is #.'      )
-            call ctx%errch  ( '#', spk                                  )
+            call ctx%errch  ( '#', file_name ( ctx%spice, handle ) )
             call ctx%errint ( '#', baddr                                )
             call ctx%errint ( '#', eaddr                                )
             call ctx%errdp  ( '#', data(nread)                          )
@@ -9967,13 +9963,12 @@ contains
 !              implies the first epoch of the interval is greater than
 !              END.
 !
-               call dafhfn ( ctx, handle, spk )
 
                call ctx%setmsg ( 'Input file: #. Segment address range: ' &
                //            '#:#. Structural error found: no epochs ' &
                //            'in final input interval exceed END. ' &
                //            'Interval index is #; END is #.'          )
-               call ctx%errch  ( '#', spk                                  )
+               call ctx%errch  ( '#', file_name ( ctx%spice, handle ) )
                call ctx%errint ( '#', baddr                                )
                call ctx%errint ( '#', eaddr                                )
                call ctx%errint ( '#', endidx                               )
@@ -10032,12 +10027,11 @@ contains
 !              implies the first epoch of the interval is greater than
 !              END.
 !
-               call dafhfn ( ctx, handle, spk )
 
                call ctx%setmsg ( 'Input file: #. Segment address range: ' &
                //            '#:#. BEPIDX = #; EEPIDX = #; NPKT = #.' &
                //            'Interval index is #; END is #.'          )
-               call ctx%errch  ( '#', spk                                  )
+               call ctx%errch  ( '#', file_name ( ctx%spice, handle ) )
                call ctx%errint ( '#', baddr                                )
                call ctx%errint ( '#', eaddr                                )
                call ctx%errint ( '#', bepidx                               )

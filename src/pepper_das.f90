@@ -3069,7 +3069,6 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_inc_das
       implicit none
-      integer(ip), parameter :: filsiz = 255
       character(nwc) :: chrrec
       character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       integer(ip) :: intamh
@@ -3252,7 +3251,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_das
       implicit none
-      integer(ip), parameter :: filsiz = 255
       character(nwc) :: chrrec
       character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       integer(ip) :: intamh
@@ -4218,7 +4216,6 @@ contains
       implicit none
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: filen = 255
       integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
@@ -4864,7 +4861,6 @@ contains
       implicit none
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: filen = 255
       integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
@@ -5430,7 +5426,6 @@ contains
       implicit none
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: filen = 255
       integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
@@ -5947,7 +5942,6 @@ contains
       implicit none
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: filen = 255
       integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
@@ -6982,7 +6976,6 @@ contains
       implicit none
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: filen = 255
       integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
@@ -7515,7 +7508,6 @@ contains
       implicit none
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: filen = 255
       integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
@@ -7841,7 +7833,6 @@ contains
       implicit none
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: filen = 255
       integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
@@ -8172,7 +8163,6 @@ contains
       implicit none
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: filen = 255
       integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
@@ -8387,7 +8377,6 @@ contains
       implicit none
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: filen = 255
       integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
@@ -8651,7 +8640,6 @@ contains
       implicit none
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: filen = 255
       integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
@@ -8867,7 +8855,6 @@ contains
       implicit none
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: filen = 255
       integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
@@ -9064,7 +9051,6 @@ contains
       implicit none
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: filen = 255
       integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
@@ -9324,7 +9310,6 @@ contains
       implicit none
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: filen = 255
       integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60
@@ -9588,7 +9573,6 @@ contains
       implicit none
       integer(ip), parameter :: lbcell = -5
       integer(ip), parameter :: recl = 1024
-      integer(ip), parameter :: filen = 255
       integer(ip), parameter :: acclen = 10
       integer(ip), parameter :: idwlen = 8
       integer(ip), parameter :: ifnlen = 60

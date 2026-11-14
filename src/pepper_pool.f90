@@ -3121,8 +3121,6 @@ contains
       parameter           ( bslash = 92 )
       integer(ip) :: lnsize
       parameter           ( lnsize = 80 )
-      integer(ip) :: filsiz
-      parameter           ( filsiz = 255 )
       integer(ip) :: intext
       parameter           ( intext = 1 )
       integer(ip) :: indata
@@ -3392,8 +3390,6 @@ contains
       parameter           ( bslash = 92 )
       integer(ip) :: lnsize
       parameter           ( lnsize = 80 )
-      integer(ip) :: filsiz
-      parameter           ( filsiz = 255 )
       integer(ip) :: intext
       parameter           ( intext = 1 )
       integer(ip) :: indata
@@ -3586,8 +3582,6 @@ contains
       parameter           ( bslash = 92 )
       integer(ip) :: lnsize
       parameter           ( lnsize = 80 )
-      integer(ip) :: filsiz
-      parameter           ( filsiz = 255 )
       integer(ip) :: intext
       parameter           ( intext = 1 )
       integer(ip) :: indata
@@ -10726,8 +10720,6 @@ contains
       integer(ip) :: next
       parameter           ( next = 1 )
 
-      integer(ip) :: filsiz
-      parameter           ( filsiz = 255 )
 !
 !     The next collection of variables are set up in first pass
 !     through this routine.  They would be parameters if FORTRAN
@@ -10738,7 +10730,7 @@ contains
       character(linlen) :: cval  ! PEPPER: a string value is no longer than its line
       integer(ip) :: ncval
       character(linlen) :: name
-      character(filsiz) :: file
+      character(:), allocatable :: file  !! the kernel's name (PEPPER: any length)
 
       character(255) :: error
 
@@ -11049,7 +11041,7 @@ contains
 !
             if ( count < 3 ) then
 
-               call rdklin ( ctx, file, number   )
+               call kernel_location ( file, number )
                call ctx%setmsg ( 'A kernel variable was not properly ' &
                //            'formed on line # of the file #. ' &
                //            'Such an assignment should have the ' &
@@ -11078,7 +11070,7 @@ contains
 !
                at = begs(1) + badat
 
-               call rdklin ( ctx, file, number   )
+               call kernel_location ( file, number )
                r1 = rtrim  ( file )
 
                call ctx%setmsg ( 'There is a non-printing character ' &
@@ -11120,7 +11112,7 @@ contains
 !
             if ( isbad(dirctv) ) then
 
-               call rdklin ( ctx, file, number   )
+               call kernel_location ( file, number )
                call ctx%setmsg ( 'A kernel variable was not properly ' &
                //            'formed on line # of the file #. ' &
                //            'Such an assignment should have the ' &
@@ -11246,7 +11238,7 @@ contains
 !
                   call ps%remove ( nameat )
 
-                  call rdklin ( ctx, file, number )
+                  call kernel_location ( file, number )
                   r1 = rtrim  ( file         )
 
                   call ctx%setmsg ( 'The first item following the ' &
@@ -11276,7 +11268,7 @@ contains
 !
                   call ps%remove ( nameat )
 
-                  call rdklin ( ctx, file,  number )
+                  call kernel_location ( file, number )
                   r1 = rtrim  ( varnam        )
                   r2 = rtrim  ( file          )
 
@@ -11305,7 +11297,7 @@ contains
 !
                   call ps%remove ( nameat )
 
-                  call rdklin ( ctx, file,  number )
+                  call kernel_location ( file, number )
                   r1 = rtrim  ( file          )
 
                   call ctx%setmsg ( 'There is a quoted string with ' &
@@ -11360,7 +11352,7 @@ contains
 !
                   call ps%remove ( nameat )
 
-                  call rdklin ( ctx, file,  number )
+                  call kernel_location ( file, number )
                   r1 = rtrim  ( varnam        )
                   r2 = rtrim  ( file          )
 
@@ -11395,7 +11387,7 @@ contains
 !
                      call ps%remove ( nameat )
 
-                     call rdklin( ctx, file,   number )
+                     call kernel_location ( file, number )
                      r1 = rtrim ( varnam        )
                      r2 = rtrim ( file          )
 
@@ -11426,7 +11418,7 @@ contains
 !
                      call ps%remove ( nameat )
 
-                     call rdklin ( ctx, file, number )
+                     call kernel_location ( file, number )
                      r1 = rtrim  ( file )
 
                      lstnb = len_trim(error)
@@ -11453,7 +11445,7 @@ contains
 
                      call ps%remove ( nameat )
 
-                     call rdklin ( ctx, file, number )
+                     call kernel_location ( file, number )
 
                      lstnb = len_trim(error)
 
@@ -11510,7 +11502,7 @@ contains
 
          call ps%remove ( nameat )
 
-         call rdklin ( ctx, file,  number )
+         call kernel_location ( file, number )
          r1 = rtrim  ( file          )
 
          call ctx%setmsg ( 'The first item following the ' &
@@ -11533,6 +11525,23 @@ contains
 !
 
       return
+
+      contains
+
+      !> The name of the kernel being read, whole, and the number of the
+      !> line just read (RDKLIN's, in a variable of the name's length;
+      !> PEPPER: SPICELIB's was 255 characters).
+      subroutine kernel_location ( kernel, line )
+         character(:), allocatable, intent(out) :: kernel  !! the kernel's name
+         integer(ip), intent(out) :: line  !! the line's number
+         integer(ip) :: n
+         n = 1
+         if ( allocated ( ctx%spice%rdker ) ) then
+            if ( allocated ( ctx%spice%rdker%file ) ) n = max ( 1, len ( ctx%spice%rdker%file ) )
+         end if
+         allocate ( character(n) :: kernel )
+         call rdklin ( ctx, kernel, line )
+      end subroutine kernel_location
       end procedure zzrvar
 
       !>## Abstract
@@ -11762,8 +11771,6 @@ contains
       integer(ip) :: next
       parameter           ( next = 1 )
 
-      integer(ip) :: filsiz
-      parameter           ( filsiz = 255 )
 !
 !     The next collection of variables are set up in first pass
 !     through this routine.  They would be parameters if FORTRAN
