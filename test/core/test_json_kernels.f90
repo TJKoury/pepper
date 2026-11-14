@@ -193,7 +193,10 @@ contains
          buffer = texts(k)
          read (buffer, *) x
          if (ok) ok = items(1)%n == 1 .and. items(1)%kind == json_numeric
-         if (ok) ok = transfer(items(1)%numbers(1), 0_8) == transfer(x, 0_8)
+         ! bit for bit, but for the sign of a zero: compilers differ there
+         ! (ifx's READ gives +0 for -0; the library keeps -0), and -0 == +0
+         if (ok) ok = transfer(items(1)%numbers(1), 0_8) == transfer(x, 0_8) .or. &
+                      (items(1)%numbers(1) == 0.0_wp .and. x == 0.0_wp)
          call check(ok, 'numbers: '//trim(texts(k))//' (the same bits as READ)')
       end do
       call json_kernel_parse('{"X": [-0, 1e-400, 1e400]}', items, n, ok, short, long, line)

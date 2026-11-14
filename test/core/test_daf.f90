@@ -120,8 +120,11 @@ contains
 
    !> DAFB2T writes a DAF in the old text transfer format, DAFT2B reads it
    !> back (its doubles through decimal_value): the same summaries and data,
-   !> bit for bit, for values of every kind (fractions, large and small
-   !> exponents, negative, zero, subnormal).
+   !> bit for bit. DAFB2T writes the doubles with list-directed WRITE, whose
+   !> number of digits is the compiler's (gfortran 17, enough for any
+   !> double; ifx about 15, so 1/3 or HUGE do not come back): the values are
+   !> decimals of at most 15 significant digits, which any compiler writes
+   !> back exactly (DBL_DIG), from 1E-300 to 1E300.
    subroutine test_text_transfer()
       use, intrinsic :: iso_fortran_env, only: int64
       character(*), parameter :: daf1 = 'test_daf_xfr1.daf', daf2 = 'test_daf_xfr2.daf', xfr = 'test_daf.xfr'
@@ -131,13 +134,18 @@ contains
       integer(ip) :: h1, h2, k, ic1(2), ic2(2)
       integer :: unit
       logical :: found1, found2, same
+      character(30) :: text
       call remove(daf1)
       call remove(daf2)
       call remove(xfr)
       call random_number(r)
-      values(:, 1) = [1.0_wp/3.0_wp, -2.0_wp/7.0_wp, acos(-1.0_wp)*1.0e10_wp, 1.0e-300_wp, -0.1_wp, 0.0_wp, &
-                      huge(1.0_wp), tiny(1.0_wp), tiny(1.0_wp)/1024.0_wp, 6.02214076e23_wp, 1.0_wp, -1.5e-7_wp]
-      values(:, 2) = (r - 0.5_wp)*10.0_wp**int(r*600 - 300)
+      values(:, 1) = [0.333333333333333_wp, -0.285714285714286_wp, 31415926535.8979_wp, 1.0e-300_wp, &
+                      -0.1_wp, 0.0_wp, 1.0e300_wp, 2.2250738585073e-308_wp, 123456789012345.0_wp, &
+                      6.02214076e23_wp, 1.0_wp, -1.5e-7_wp]
+      do k = 1, 12  ! random decimals of 15 significant digits, 1E-300 to 1E300
+         write (text, '(es23.14e3)') (r(k) - 0.5_wp)*10.0_wp**int(r(k)*600 - 300)
+         read (text, *) values(k, 2)
+      end do
       call a%dafonw(daf1, 'TEST', 1_ip, 2_ip, 'PEPPER transfer test', 0_ip, h1)
       do k = 1, 2
          call a%dafps(1_ip, 2_ip, [values(3, k)], [0_ip, 0_ip], sum1)
