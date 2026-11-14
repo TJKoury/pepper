@@ -38,20 +38,11 @@ program bench_parallel
    do k = 1, size(threads)
       t0 = wtime()
       sums = 0.0_wp
+      ! each thread's work in a procedure, whose context is private to the
+      ! thread (a BLOCK's variables in the main program are shared by the
+      ! threads with ifx, as the main program's own are)
       !$omp parallel num_threads(threads(k)) reduction(+:sums)
-      block
-         type(pepper_context) :: ctx
-         real(wp) :: res(30)
-         character(40) :: utc
-         integer :: j
-         ctx = spice%new_context()
-         !$omp do schedule(static)
-         do j = 1, nepoch
-            call queries(ctx, et(j), res, utc)
-            sums(1) = sums(1) + res(1)
-         end do
-         !$omp end do
-      end block
+      call thread_queries(sums)
       !$omp end parallel
       t1 = wtime()
       if (k == 1) base = t1 - t0
@@ -70,6 +61,22 @@ contains
       wtime = real(c, wp)/real(r, wp)
       !$ wtime = omp_get_wtime()
    end function wtime
+
+   !> One thread's share of the epochs, through a context of its own.
+   subroutine thread_queries(sums)
+      real(wp), intent(inout) :: sums(8)  !! checksums of the results (thread's share)
+      type(pepper_context) :: ctx
+      real(wp) :: res(30)
+      character(40) :: utc
+      integer :: j
+      ctx = spice%new_context()
+      !$omp do schedule(static)
+      do j = 1, nepoch
+         call queries(ctx, et(j), res, utc)
+         sums(1) = sums(1) + res(1)
+      end do
+      !$omp end do
+   end subroutine thread_queries
 
    !> The queries for one epoch through a context.
    subroutine queries(ctx, t, res, utc)

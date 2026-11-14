@@ -147,7 +147,7 @@ jobs:
           fpm test --compiler ifx
 
       - name: Parallel test (OpenMP)
-        run: fpm test test_parallel --compiler ifx --flag -qopenmp
+        run: fpm test test_parallel --compiler ifx --flag "-qopenmp -traceback -g"
 
       - name: tspice
         working-directory: tspice

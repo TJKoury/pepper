@@ -12649,6 +12649,7 @@ contains
       logical :: zeroi
       logical :: ispi
       character(len(string) + 2) :: buf
+      logical :: exact
       integer(ip) :: nb
       integer(ip) :: epos
       integer :: ios
@@ -13333,17 +13334,127 @@ contains
          end if
       end if
 
-      read ( buf(1:nb), *, iostat = ios ) value
-      if ( ios /= 0 .or. abs(value) > huge(value) ) then
-         error = toobig
-         ptr   = len(string) + 1
-         return
+!
+!     PEPPER: the value, correctly rounded: exactly, without I/O, when the
+!     digits and the power of ten allow it (EXACT_DECIMAL: the numbers of
+!     time strings, and most of kernels'); otherwise Fortran's READ, which
+!     is slower, and serializes threads (gfortran's I/O library takes a
+!     lock for each I/O statement, internal ones too).
+!
+      call exact_decimal ( buf(1:nb), value, exact )
+      if ( .not. exact ) then
+         read ( buf(1:nb), *, iostat = ios ) value
+         if ( ios /= 0 .or. abs(value) > huge(value) ) then
+            error = toobig
+            ptr   = len(string) + 1
+            return
+         end if
       end if
 
       x = value
 
       return
       end subroutine nparsd
+
+      !> The value of a decimal number ([+-]digits[.digits][E[+-]digits]),
+      !> correctly rounded, when it can be computed exactly without I/O
+      !> (PEPPER; [[nparsd]]): Clinger's fast path. If the digits, without
+      !> the decimal point, are an integer M of at most 2**53 and the power
+      !> of ten is 10**K with |K| <= 22, both M and 10**|K| are doubles
+      !> exactly, and one multiplication or division (IEEE arithmetic:
+      !> correctly rounded) gives the correctly rounded value. EXACT is
+      !> false (VALUE undefined) otherwise, or for text of another form.
+      pure subroutine exact_decimal ( text, value, exact )
+      use pepper_kinds, only: wp
+      use, intrinsic :: iso_fortran_env, only: int64
+      character(*), intent(in) :: text  !! the number
+      real(wp), intent(out) :: value  !! its value, if EXACT
+      logical, intent(out) :: exact  !! VALUE is the number, correctly rounded
+      integer(int64), parameter :: max_exact = 2_int64**53  !! integers exact as doubles
+      real(wp), parameter :: tens(0:22) = [ 1.0e0_wp, 1.0e1_wp, 1.0e2_wp, 1.0e3_wp, 1.0e4_wp, &
+         1.0e5_wp, 1.0e6_wp, 1.0e7_wp, 1.0e8_wp, 1.0e9_wp, 1.0e10_wp, 1.0e11_wp, 1.0e12_wp, &
+         1.0e13_wp, 1.0e14_wp, 1.0e15_wp, 1.0e16_wp, 1.0e17_wp, 1.0e18_wp, 1.0e19_wp, &
+         1.0e20_wp, 1.0e21_wp, 1.0e22_wp ]  !! the powers of ten that are doubles exactly
+      integer(int64) :: m
+      integer :: i, k, n, d, scale, expo, esign
+      logical :: point, digits, edigits
+      real(wp) :: sgn
+      exact = .false.
+      value = 0.0_wp
+      n = len(text)
+      i = 1
+      sgn = 1.0_wp
+      if ( n == 0 ) return
+      if ( text(1:1) == '+' .or. text(1:1) == '-' ) then
+         if ( text(1:1) == '-' ) sgn = -1.0_wp
+         i = 2
+      end if
+!
+!     The digits: M, and the power of ten SCALE they are shifted by (the
+!     digits after the point, less the trailing zeros dropped from M).
+!
+      m = 0
+      scale = 0
+      point = .false.
+      digits = .false.
+      do while ( i <= n )
+         if ( text(i:i) == '.' ) then
+            if ( point ) return
+            point = .true.
+         else if ( text(i:i) >= '0' .and. text(i:i) <= '9' ) then
+            d = ichar(text(i:i)) - ichar('0')
+            digits = .true.
+            if ( m <= ( max_exact - d ) / 10 ) then
+               m = 10*m + d
+               if ( point ) scale = scale - 1
+            else if ( d == 0 ) then
+               if ( .not. point ) scale = scale + 1  ! a zero M cannot hold
+            else
+               return  ! more significant digits than a double holds exactly
+            end if
+         else
+            exit
+         end if
+         i = i + 1
+      end do
+      if ( .not. digits ) return
+!
+!     The exponent.
+!
+      expo = 0
+      if ( i <= n ) then
+         if ( text(i:i) /= 'E' .and. text(i:i) /= 'e' ) return
+         i = i + 1
+         esign = 1
+         if ( i <= n ) then
+            if ( text(i:i) == '+' .or. text(i:i) == '-' ) then
+               if ( text(i:i) == '-' ) esign = -1
+               i = i + 1
+            end if
+         end if
+         edigits = .false.
+         do while ( i <= n )
+            if ( text(i:i) < '0' .or. text(i:i) > '9' ) return
+            if ( expo > 9999 ) return  ! far out of range: READ decides
+            expo = 10*expo + ( ichar(text(i:i)) - ichar('0') )
+            edigits = .true.
+            i = i + 1
+         end do
+         if ( .not. edigits ) return
+         expo = esign*expo
+      end if
+      k = scale + expo
+      if ( m == 0 ) then
+         value = sgn*0.0_wp
+         exact = .true.
+      else if ( k >= 0 .and. k <= 22 ) then
+         value = sgn*( real(m, wp)*tens(k) )
+         exact = .true.
+      else if ( k < 0 .and. k >= -22 ) then
+         value = sgn*( real(m, wp)/tens(-k) )
+         exact = .true.
+      end if
+      end subroutine exact_decimal
 
       !> Parse a character string that represents a number and return
       !> the FORTRAN-truncated integer value.

@@ -145,6 +145,11 @@ if (ctx%failed()) ...
 Load kernels first, then query from any number of threads, one context per
 thread (see `test/core/test_parallel.f90`). The kernels must not be changed
 while other threads use contexts of the instance (nothing checks this).
+Declare each thread's context as a local variable of a procedure that the
+threads call (with OpenMP: a procedure called in the parallel region), not
+in the main program or in a `BLOCK` of the main program: such variables are
+shared by the threads (ifx gives a main program's `BLOCK` variables the
+main program's implicit SAVE), and threads sharing a context crash.
 
 A context is released when it goes out of scope, and an instance likewise.
 Variables of a main program or a module live until the program ends, so to

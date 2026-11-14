@@ -87,35 +87,11 @@ program test_parallel
       par = 0.0_wp
       parutc = ' '
       errors = 0
-      !$omp parallel num_threads(nthreads) private(i) reduction(+:errors)
-      block
-         type(pepper_context) :: ctx
-         integer :: k
-         if (pass <= 2) then
-            ctx = spice%new_context()
-         else
-            ctx = memspice%new_context()  ! the SPK in memory
-         end if
-         ! odd passes forward, even passes backward; dynamic scheduling interleaves the
-         ! threads' epochs (and so the contexts' caches see different
-         ! sequences of queries than the serial run)
-         !$omp do schedule(dynamic, 7)
-         do k = 1, nepoch
-            i = merge(k, nepoch + 1 - k, mod(pass, 2) == 1)
-            call queries(ctx, et(i), mod(i, 2) == 0, par(:, i), parutc(i))
-         end do
-         !$omp end do
-         if (ctx%failed()) then
-            errors = errors + 1
-            block
-               character(1840) :: msg
-               call ctx%getmsg('LONG', msg)
-               !$omp critical (report)
-               print '(2a)', '   error: ', trim(msg)
-               !$omp end critical (report)
-            end block
-         end if
-      end block
+      ! the threads' work in a procedure: its context is a local variable,
+      ! private to each thread (a variable of a BLOCK in the main program is
+      ! shared: ifx gives it the main program's implicit SAVE)
+      !$omp parallel num_threads(nthreads) reduction(+:errors)
+      call thread_queries(pass, errors)
       !$omp end parallel
       call check(errors == 0, 'no errors in the parallel queries')
       nbad = count(any(par /= ref, dim=1) .or. parutc /= refutc)
@@ -135,6 +111,38 @@ program test_parallel
    print '(a)', 'test_parallel: all checks passed'
 
 contains
+
+   !> One thread's share of a pass of parallel queries: a context of its
+   !> own (of the instance with the SPK on disk, passes 1 and 2, or in
+   !> memory, passes 3 and 4) and the epochs the OpenMP loop gives it. Odd
+   !> passes go forward, even passes backward; dynamic scheduling
+   !> interleaves the threads' epochs (and so the contexts' caches see
+   !> different sequences of queries than the serial run).
+   subroutine thread_queries(pass, errors)
+      integer, intent(in) :: pass  !! the pass (1 to 4)
+      integer, intent(inout) :: errors  !! incremented if the context failed
+      type(pepper_context) :: ctx
+      character(1840) :: msg
+      integer :: i, k
+      if (pass <= 2) then
+         ctx = spice%new_context()
+      else
+         ctx = memspice%new_context()  ! the SPK in memory
+      end if
+      !$omp do schedule(dynamic, 7)
+      do k = 1, nepoch
+         i = merge(k, nepoch + 1 - k, mod(pass, 2) == 1)
+         call queries(ctx, et(i), mod(i, 2) == 0, par(:, i), parutc(i))
+      end do
+      !$omp end do
+      if (ctx%failed()) then
+         errors = errors + 1
+         call ctx%getmsg('LONG', msg)
+         !$omp critical (report)
+         print '(2a)', '   error: ', trim(msg)
+         !$omp end critical (report)
+      end if
+   end subroutine thread_queries
 
    !> The queries for one epoch, through one context: states and positions
    !> with aberration corrections, in J2000 and in the TK frame, rotations,
