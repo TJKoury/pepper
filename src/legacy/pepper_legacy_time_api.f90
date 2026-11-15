@@ -40,7 +40,8 @@ contains
       character(*) :: utcstr  !! Output time string, UTC.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%et2utc ( et, format, prec, utcstr )
+      ! PEPPER: format is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%et2utc ( et, (format), prec, utcstr )
       end subroutine et2utc
 
       !> Prepare recognized markers and auxiliary arrays for the
@@ -95,7 +96,8 @@ contains
       character(*) :: errmsg  !! a diagnostic returned if SAMPLE cannot be parsed
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%tpictr ( sample, pictur, ok, errmsg )
+      ! PEPPER: sample is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%tpictr ( (sample), pictur, ok, errmsg )
       end subroutine tpictr
 
       !> Convert an input time from Calendar or Julian Date format, UTC,
@@ -125,7 +127,8 @@ contains
       character(*) :: output  !! A string representation of the input epoch.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%timout ( et, pictur, output )
+      ! PEPPER: pictur is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%timout ( et, (pictur), output )
       end subroutine timout
 
 end module pepper_legacy_time_api

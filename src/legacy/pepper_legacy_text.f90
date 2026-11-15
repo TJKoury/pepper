@@ -26,7 +26,8 @@ contains
       character(*) :: outstr  !! Cycled string.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%cyclec ( instr, dir, ncycle, outstr )
+      ! PEPPER: instr, dir are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%cyclec ( (instr), (dir), ncycle, outstr )
       end subroutine cyclec
 
       !> Replace a marker with a double precision number.
@@ -42,7 +43,8 @@ contains
       character(*) :: out  !! Output string.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%repmd ( in, marker, value, sigdig, out )
+      ! PEPPER: in, marker are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%repmd ( (in), (marker), value, sigdig, out )
       end subroutine repmd
 
       !> Replace a marker with an integer.
@@ -57,7 +59,8 @@ contains
       character(*) :: out  !! Output string.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%repmi ( in, marker, value, out )
+      ! PEPPER: in, marker are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%repmi ( (in), (marker), value, out )
       end subroutine repmi
 
       !> Replace the substring (LEFT:RIGHT) with a string of any length.
@@ -73,7 +76,8 @@ contains
       character(*) :: out  !! Resulting string.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%repsub ( in, left, right, string, out )
+      ! PEPPER: in, string are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%repsub ( (in), left, right, (string), out )
       end subroutine repsub
 
       !> Remove the substring (LEFT:RIGHT) from a character string.
@@ -88,7 +92,8 @@ contains
       character(*) :: out  !! Output string.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%remsub ( in, left, right, out )
+      ! PEPPER: in is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%remsub ( (in), left, right, out )
       end subroutine remsub
 
       !> Insert a substring into a character string at a specified
@@ -104,7 +109,8 @@ contains
       character(*) :: out  !! Output string.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%inssub ( in, sub, loc, out )
+      ! PEPPER: in, sub are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%inssub ( (in), (sub), loc, out )
       end subroutine inssub
 
       !> Shift the contents of a character string to the left or right.
@@ -122,7 +128,8 @@ contains
       character(*) :: out  !! Shifted string.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%shiftc ( in, dir, nshift, fillc, out )
+      ! PEPPER: in, dir, fillc are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%shiftc ( (in), (dir), nshift, (fillc), out )
       end subroutine shiftc
 
       !> Validate an ID string: check for non-printing characters
@@ -168,7 +175,8 @@ contains
       character(*) :: errmsg  !! A descriptive error message.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%hx2int ( string, number, error, errmsg )
+      ! PEPPER: string is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%hx2int ( (string), number, error, errmsg )
       end subroutine hx2int
 
       !> Find a given identifier, which consists of an integer array,
@@ -208,7 +216,8 @@ contains
       logical :: found  !! Markers found?
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%locln ( unit, bmark, emark, line, bline, eline, found )
+      ! PEPPER: bmark, emark are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%locln ( unit, (bmark), (emark), line, bline, eline, found )
       end subroutine locln
 
 end module pepper_legacy_text

@@ -150,7 +150,8 @@ contains
       real(wp) :: dlt  !! Derivative of light time with respect to time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkltc ( targ, et, ref, abcorr, stobs, starg, lt, dlt )
+      ! PEPPER: stobs is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkltc ( targ, et, ref, abcorr, (stobs), starg, lt, dlt )
       end subroutine zzspklt1
 
       !> Return the position of a target body relative to an observer,
@@ -169,7 +170,8 @@ contains
       real(wp) :: lt  !! One way light time between observer and target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkapo ( targ, et, ref, sobs, abcorr, ptarg, lt )
+      ! PEPPER: sobs is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkapo ( targ, et, ref, (sobs), abcorr, ptarg, lt )
       end subroutine zzspkpa1
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -211,7 +213,8 @@ contains
       real(wp) :: dlt  !! Derivative of light time with respect to time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkaps ( targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+      ! PEPPER: stobs, accobs are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkaps ( targ, et, ref, abcorr, (stobs), (accobs), starg, lt, dlt )
       end subroutine zzspkas1
 
       !> Return the position of a target body relative to an observing
@@ -379,7 +382,8 @@ contains
       real(wp) :: dlt  !! Derivative of light time with respect to time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkltc ( targ, et, ref, abcorr, stobs, starg, lt, dlt )
+      ! PEPPER: stobs is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkltc ( targ, et, ref, abcorr, (stobs), starg, lt, dlt )
       end subroutine zzspklt0
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -421,7 +425,8 @@ contains
       real(wp) :: dlt  !! Derivative of light time with respect to time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkaps ( targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+      ! PEPPER: stobs, accobs are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkaps ( targ, et, ref, abcorr, (stobs), (accobs), starg, lt, dlt )
       end subroutine zzspkas0
 
       !> Return the state (position and velocity) of a target body
@@ -564,7 +569,8 @@ contains
       real(wp) :: lt  !! One way light time between observer and target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkapo ( targ, et, ref, sobs, abcorr, ptarg, lt )
+      ! PEPPER: sobs is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkapo ( targ, et, ref, (sobs), abcorr, ptarg, lt )
       end subroutine zzspkpa0
 
       !> Return the position of a target body relative to an observing

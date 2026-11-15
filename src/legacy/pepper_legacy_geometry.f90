@@ -145,7 +145,9 @@ contains
       real(wp) :: lt  !! One way light time between target and observer.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%azlcpo ( method, target, et, abcorr, azccw, elplsz, obspos, obsctr, obsref, azlsta, lt )
+      ! PEPPER: obspos is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%azlcpo ( method, target, et, abcorr, azccw, elplsz, (obspos), obsctr, obsref, &
+         azlsta, lt )
       end subroutine azlcpo
 
       !> Return a set containing the frame IDs of all built-in frames of a
@@ -194,7 +196,8 @@ contains
       real(wp) :: state   ( 6 )  !! State of orbiting body at ET.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%conics ( elts, et, state )
+      ! PEPPER: elts is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%conics ( (elts), et, state )
       end subroutine conics
 
       !> Delete a file.
@@ -252,7 +255,8 @@ contains
       real(wp) :: rotate ( 2, 2 )  !! A rotation used as the similarity transformation.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%diags2 ( symmat, diag, rotate )
+      ! PEPPER: symmat is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%diags2 ( (symmat), diag, rotate )
       end subroutine diags2
 
       !> Calculate the derivative with respect to the angle of rotation
@@ -288,7 +292,8 @@ contains
       real(wp) :: values ( * )  !! The double precision values for the numbers.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%dxtrct ( keywd, maxwds, string, nfound, parsed, values )
+      ! PEPPER: keywd is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%dxtrct ( (keywd), maxwds, string, nfound, parsed, values )
       end subroutine dxtrct
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
@@ -323,7 +328,8 @@ contains
       real(wp) :: state  (  6 )  !! Evaluated state
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%evsgp4 ( et, geophs, elems, state )
+      ! PEPPER: geophs, elems are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%evsgp4 ( et, (geophs), (elems), state )
       end subroutine evsgp4
 
       !> Return the location within the set array of the NTH element within
@@ -461,7 +467,8 @@ contains
       real(wp) :: emissn  !! Emission angle at the surface point.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%illum ( target, et, abcorr, obsrvr, spoint, phase, solar, emissn )
+      ! PEPPER: spoint is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%illum ( target, et, abcorr, obsrvr, (spoint), phase, solar, emissn )
       end subroutine illum
 
       !> Return the matrix that transforms vectors from one specified
@@ -493,7 +500,8 @@ contains
       character(*) :: error  !! Error message if something went wrong.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%iso2utc ( tstrng, utcstr, error )
+      ! PEPPER: tstrng is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%iso2utc ( (tstrng), utcstr, error )
       end subroutine iso2utc
 
       !> Determine whether a named file is currently open.
@@ -539,7 +547,8 @@ contains
       character(*) :: set  ( lbcell:* )  !! Items in the list, validated, left justified.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%lparss ( list, delims, set )
+      ! PEPPER: list, delims are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%lparss ( (list), (delims), set )
       end subroutine lparss
 
       !> Compute L_s, the planetocentric longitude of the sun, as seen
@@ -670,7 +679,8 @@ contains
       real(wp) :: dist  !! Distance of input point to ellipse.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%npelpt ( point, ellips, pnear, dist )
+      ! PEPPER: point, ellips are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%npelpt ( (point), (ellips), pnear, dist )
       end subroutine npelpt
 
       !> Determine the set of osculating conic orbital elements that
@@ -687,7 +697,8 @@ contains
       real(wp) :: elts   ( 8 )  !! Equivalent conic elements.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%oscelt ( state, et, mu, elts )
+      ! PEPPER: state is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%oscelt ( (state), et, mu, elts )
       end subroutine oscelt
 
       !> Solve the time of flight equation MA = D + (D**3) / 3
@@ -727,7 +738,8 @@ contains
       character(*) :: buffer  !! The response typed by a user.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%prompt ( dspmsg, buffer )
+      ! PEPPER: dspmsg is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%prompt ( (dspmsg), buffer )
       end subroutine prompt
 
       !> Parse a string as a double precision number, encapsulating error
@@ -800,7 +812,8 @@ contains
       logical :: eof  !! End-of-file indicator.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%rdnbl ( file, line, eof )
+      ! PEPPER: file is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%rdnbl ( (file), line, eof )
       end subroutine rdnbl
 
       !> Replace a marker with the text representation of a
@@ -817,7 +830,8 @@ contains
       character(*) :: out  !! Output string.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%repmct ( in, marker, value, rtcase, out )
+      ! PEPPER: in, marker, rtcase are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%repmct ( (in), (marker), value, (rtcase), out )
       end subroutine repmct
 
       !> Replace a marker with the text representation of a logical value.
@@ -833,7 +847,8 @@ contains
       character(*) :: out  !! Output string.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%repml ( in, marker, value, rtcase, out )
+      ! PEPPER: in, marker, rtcase are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%repml ( (in), (marker), value, (rtcase), out )
       end subroutine repml
 
       !> Transform a vector to a new reference frame rotated by ANGLE
@@ -850,7 +865,8 @@ contains
       real(wp) :: vout  ( 3 )  !! Resulting vector expressed in the new frame.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%rotvec ( v1, angle, iaxis, vout )
+      ! PEPPER: v1 is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%rotvec ( (v1), angle, iaxis, vout )
       end subroutine rotvec
 
       !> Convert a character representation of a type 1 spacecraft clock
@@ -868,7 +884,8 @@ contains
       real(wp) :: ticks  !! Number of ticks represented by the clock count.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%scps01 ( sc, clkstr, error, msg, ticks )
+      ! PEPPER: clkstr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%scps01 ( sc, (clkstr), error, msg, ticks )
       end subroutine scps01
 
       !> Convert an SCLK name string to a NAIF integer code.
@@ -934,7 +951,8 @@ contains
       integer(ip) :: center  !! Center of state.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkpv ( handle, descr, et, ref, state, center )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkpv ( handle, (descr), et, ref, state, center )
       end subroutine spkpv
 
       !> Convert planetocentric latitude and longitude of a surface
@@ -969,7 +987,8 @@ contains
       logical :: found  !! Flag indicating if U points at the ellipsoid.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%surfpt ( positn, u, a, b, c, point, found )
+      ! PEPPER: positn, u are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%surfpt ( (positn), (u), a, b, c, point, found )
       end subroutine surfpt
 
       !> Find the state transformation from a base frame to the
@@ -988,7 +1007,8 @@ contains
       real(wp) :: xform  ( 6, 6 )  !! Output state transformation matrix.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%twovxf ( axdef, indexa, plndef, indexp, xform )
+      ! PEPPER: axdef, plndef are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%twovxf ( (axdef), indexa, (plndef), indexp, xform )
       end subroutine twovxf
 
       !> Calculate the first derivative of a caller-specified scalar
@@ -1042,7 +1062,8 @@ contains
       real(wp) :: extpt  ( 3 )  !! Point on ellipse where extremum is achieved.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzasryel ( ctx, extrem, ellips, vertex, dir, angle, extpt )
+      ! PEPPER: ellips, vertex, dir are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzasryel ( ctx, extrem, (ellips), (vertex), (dir), angle, extpt )
       end subroutine zzasryel
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -1114,7 +1135,8 @@ contains
       logical :: isbrck  !! Logical flag indicating whether root is bracketed.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzcxbrut ( ctx, apex, axis, angle, endpt1, endpt2, xpt, isbrck )
+      ! PEPPER: apex, axis, endpt1, endpt2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzcxbrut ( ctx, (apex), (axis), angle, (endpt1), (endpt2), xpt, isbrck )
       end subroutine zzcxbrut
 
       !> Safely calculate the value NUMR/DENOM, avoiding the possibility
@@ -1452,7 +1474,8 @@ contains
       real(wp) :: trmpts ( 3, npts )  !! Terminator point set.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzedterm ( ctx, type, a, b, c, srcrad, srcpos, npts, trmpts )
+      ! PEPPER: srcpos is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzedterm ( ctx, type, a, b, c, srcrad, (srcpos), npts, trmpts )
       end subroutine zzedterm
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -1473,7 +1496,8 @@ contains
       real(wp) :: point  ( 3 )  !! Terminator point.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzedtmpt ( ctx, umbral, a, b, c, r, axis, plnvec, point )
+      ! PEPPER: axis, plnvec are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzedtmpt ( ctx, umbral, a, b, c, r, (axis), (plnvec), point )
       end subroutine zzedtmpt
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -1544,7 +1568,8 @@ contains
       character(*) :: error  !! String describing error.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzgetelm ( ctx, frstyr, lines, epoch, elems, ok, error )
+      ! PEPPER: lines is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzgetelm ( ctx, frstyr, (lines), epoch, elems, ok, error )
       end subroutine zzgetelm
 
       !> Constants assignments equivalent to 21 July 2006 "getgravconst"
@@ -1593,7 +1618,8 @@ contains
       real(wp) :: axis   ( 3 )  !! Instrument FOV axis vector.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzhullax ( ctx, inst, n, bounds, axis )
+      ! PEPPER: bounds is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzhullax ( ctx, inst, n, (bounds), axis )
       end subroutine zzhullax
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -1647,7 +1673,8 @@ contains
       real(wp) :: xpt    ( 3 )  !! Intersection point, if NXPTS = 1.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzinrypl ( ctx, vertex, udir, uplnml, const, maxd, nxpts, xpt )
+      ! PEPPER: vertex, udir, uplnml are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzinrypl ( ctx, (vertex), (udir), (uplnml), const, maxd, nxpts, xpt )
       end subroutine zzinrypl
 
       !> Create a bounding box for a latitudinal volume element.
@@ -1664,7 +1691,8 @@ contains
       real(wp) :: radius  !! Radius of box.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzlatbox ( ctx, bounds, center, lr, lt, lz, radius )
+      ! PEPPER: bounds is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzlatbox ( ctx, (bounds), center, lr, lt, lz, radius )
       end subroutine zzlatbox
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -1735,7 +1763,8 @@ contains
       real(wp) :: radius  !! Radius of box.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzrecbox ( ctx, bounds, center, lx, ly, lz, radius )
+      ! PEPPER: bounds is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzrecbox ( ctx, (bounds), center, lx, ly, lz, radius )
       end subroutine zzrecbox
 
       !> Given a vector, return a transformation matrix that maps from the
@@ -1750,7 +1779,8 @@ contains
       real(wp) :: m ( 3, 3 )  !! Base frame to RTN frame rotation matrix.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzrtnmat ( ctx, v, m )
+      ! PEPPER: v is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzrtnmat ( ctx, (v), m )
       end subroutine zzrtnmat
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -1768,7 +1798,8 @@ contains
       logical :: found  !! Flag indicating whether intersection exists.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzryxsph ( ctx, vertex, udir, r, xpt, found )
+      ! PEPPER: vertex, udir are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzryxsph ( ctx, (vertex), (udir), r, xpt, found )
       end subroutine zzryxsph
 
       !> Routine to calculate the dot terms for the secular perturbation
@@ -1794,7 +1825,9 @@ contains
       real(wp) :: xndot  !! Time rate of change of XN
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzsecprt ( ctx, isynfl, dg, del, xni, omegao, atime, omgdot, xli, xfact, xldot, xndot, xnddt )
+      ! PEPPER: dg, del are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzsecprt ( ctx, isynfl, (dg), (del), xni, omegao, atime, omgdot, xli, xfact, &
+         xldot, xndot, xnddt )
       end subroutine zzsecprt
 
       !> Compute the angular separation between two spherical or
@@ -1861,7 +1894,10 @@ contains
       current_zzsfx_maxrad => udmaxr
       outer_udrayx => current_zzsfx_rayx
       current_zzsfx_rayx => udrayx
-      call pepper_zzsfxcor ( ctx, bridge_zzsfx_near, bridge_zzsfx_maxrad, bridge_zzsfx_rayx, trgcde, et, abcorr, uselt, usecn, usestl, xmit, fixref, obscde, dfrcde, dclass, dcentr, dvec, spoint, trgepc, srfvec, found )
+      ! PEPPER: dvec is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzsfxcor ( ctx, bridge_zzsfx_near, bridge_zzsfx_maxrad, bridge_zzsfx_rayx, &
+         trgcde, et, abcorr, uselt, usecn, usestl, xmit, fixref, obscde, dfrcde, dclass, dcentr, &
+         (dvec), spoint, trgepc, srfvec, found )
       current_zzsfx_near => outer_udnear
       current_zzsfx_maxrad => outer_udmaxr
       current_zzsfx_rayx => outer_udrayx
@@ -1883,7 +1919,8 @@ contains
       real(wp) :: maxp   ( 3 )  !! Point where maximum latitude is attained.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzsglatx ( ctx, p1, p2, minlat, minp, maxlat, maxp )
+      ! PEPPER: p1, p2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzsglatx ( ctx, (p1), (p2), minlat, minp, maxlat, maxp )
       end subroutine zzsglatx
 
       !> Check/initialize the quantities describing an angular separation
@@ -1927,7 +1964,8 @@ contains
       real(wp) :: lt  !! One way light time between observer and target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkapp ( targ, et, ref, sobs, abcorr, starg, lt )
+      ! PEPPER: sobs is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkapp ( targ, et, ref, (sobs), abcorr, starg, lt )
       end subroutine zzspkap0
 
       !> **Deprecated:** This routine has been superseded by SPKAPS. This
@@ -1946,7 +1984,8 @@ contains
       real(wp) :: lt  !! One way light time between observer and target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkapp ( targ, et, ref, sobs, abcorr, starg, lt )
+      ! PEPPER: sobs is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkapp ( targ, et, ref, (sobs), abcorr, starg, lt )
       end subroutine zzspkap1
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -2023,7 +2062,8 @@ contains
       real(wp) :: grdxyz  ( 3 )  !! Coordinates of point in voxel grid coordinates.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zztogrid ( ctx, modxyz, voxori, voxsiz, grdxyz )
+      ! PEPPER: modxyz, voxori are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zztogrid ( ctx, (modxyz), (voxori), voxsiz, grdxyz )
       end subroutine zztogrid
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -2172,7 +2212,8 @@ contains
       real(wp) :: bounds ( 3, * )  !! FOV boundary vectors.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%getfvn ( inst, room, shape, frame, bsight, n, bounds )
+      ! PEPPER: inst is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%getfvn ( (inst), room, shape, frame, bsight, n, bounds )
       end subroutine getfvn
 
       !> Scan a string from a specified starting position for the
@@ -2208,7 +2249,8 @@ contains
       real(wp) :: elts   ( *  )  !! Extended set of classical conic elements.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%oscltx ( state, et, mu, elts )
+      ! PEPPER: state is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%oscltx ( (state), et, mu, elts )
       end subroutine oscltx
 
       !> Convert planetographic coordinates to rectangular coordinates.
@@ -2246,7 +2288,8 @@ contains
       real(wp) :: alt  !! Altitude of the point above reference spheroid.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%recpgr ( body, rectan, re, f, lon, lat, alt )
+      ! PEPPER: rectan is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%recpgr ( body, (rectan), re, f, lon, lat, alt )
       end subroutine recpgr
 
       !> Find semi-axis vectors of an ellipse generated by two arbitrary
@@ -2262,7 +2305,8 @@ contains
       real(wp) :: sminor ( 3 )  !! Semi-minor axis of ellipse.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%saelgv ( vec1, vec2, smajor, sminor )
+      ! PEPPER: vec1, vec2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%saelgv ( (vec1), (vec2), smajor, sminor )
       end subroutine saelgv
 
       !> Parse a character representation of spacecraft clock time and
@@ -2280,7 +2324,8 @@ contains
       real(wp) :: sclkdp  !! Encoded representation of the clock count.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%scpars ( sc, sclkch, error, msg, sclkdp )
+      ! PEPPER: sclkch is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%scpars ( sc, (sclkch), error, msg, sclkdp )
       end subroutine scpars
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
@@ -2340,7 +2385,8 @@ contains
       logical :: found  !! Flag indicating whether intercept state was found.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%surfpv ( stvrtx, stdir, a, b, c, stx, found )
+      ! PEPPER: stvrtx, stdir are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%surfpv ( (stvrtx), (stdir), a, b, c, stx, found )
       end subroutine surfpv
 
       !> Write a line of text to standard output.
@@ -2435,7 +2481,8 @@ contains
       integer(ip) :: voxlst ( 3, * )  !! List of voxels intersected by ray.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%xdda ( vertex, raydir, grdext, maxnvx, nvx, voxlst )
+      ! PEPPER: grdext is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%xdda ( vertex, raydir, (grdext), maxnvx, nvx, voxlst )
       end subroutine xdda
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -2494,7 +2541,8 @@ contains
       real(wp) :: axis   ( 3 )  !! Instrument FOV axis vector.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzfovaxi ( ctx, inst, n, bounds, axis )
+      ! PEPPER: bounds is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzfovaxi ( ctx, inst, n, (bounds), axis )
       end subroutine zzfovaxi
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -2553,7 +2601,8 @@ contains
       real(wp) :: xnodes  !! Perturbed argument of ascending node
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzdpsec ( ctx, xll, omgasm, xnodes, em, xinc, xn, t, elems, omgdot )
+      ! PEPPER: elems is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzdpsec ( ctx, xll, omgasm, xnodes, em, xinc, xn, t, (elems), omgdot )
       end subroutine zzdpsec
 
       !> Entrances for lunar-solar periodics
@@ -2626,7 +2675,8 @@ contains
       real(wp) :: radius  !! Radius of box.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzpdtbox ( ctx, bounds, corpar, center, lr, lt, lz, radius )
+      ! PEPPER: bounds is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzpdtbox ( ctx, (bounds), corpar, center, lr, lt, lz, radius )
       end subroutine zzpdtbox
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -2645,7 +2695,8 @@ contains
       logical :: found  !! Flag indicating whether intercept was found.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzraybox ( ctx, vertex, raydir, boxori, extent, xpt, found )
+      ! PEPPER: vertex, raydir, boxori, extent are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzraybox ( ctx, (vertex), (raydir), (boxori), (extent), xpt, found )
       end subroutine zzraybox
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -2729,7 +2780,8 @@ contains
       real(wp) :: ellips ( ubel )  !! The SPICE ellipse defined by the input vectors.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%cgv2el ( center, vec1, vec2, ellips )
+      ! PEPPER: center, vec1, vec2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%cgv2el ( (center), (vec1), (vec2), ellips )
       end subroutine cgv2el
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
@@ -2746,7 +2798,8 @@ contains
       real(wp) :: state  ( 6  )  !! State vector at ET.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%dpspce ( et, geophs, elems, state )
+      ! PEPPER: geophs, elems are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%dpspce ( et, (geophs), (elems), state )
       end subroutine dpspce
 
       !> Compute the local solar time for a given ephemeris epoch ET
@@ -2767,7 +2820,8 @@ contains
       character(*) :: ampm  !! String giving time on A.M./ P.M. scale
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%et2lst ( et, body, lon, type, hr, mn, sc, time, ampm )
+      ! PEPPER: type is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%et2lst ( et, body, lon, (type), hr, mn, sc, time, ampm )
       end subroutine et2lst
 
       !> Compute the points of intersection of a specified nappe of a cone
@@ -2787,7 +2841,8 @@ contains
       real(wp) :: xpt2   ( 3 )  !! Second intersection point, if it exists.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%incnsg ( apex, axis, angle, endpt1, endpt2, nxpts, xpt1, xpt2 )
+      ! PEPPER: apex, axis, endpt1, endpt2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%incnsg ( (apex), (axis), angle, (endpt1), (endpt2), nxpts, xpt1, xpt2 )
       end subroutine incnsg
 
       !> Scan a string from a specified starting position for the
@@ -2838,7 +2893,8 @@ contains
       real(wp) :: ostate(6)  !! Converted output state.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%xfmsta ( istate, icosys, ocosys, body, ostate )
+      ! PEPPER: istate is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%xfmsta ( (istate), icosys, ocosys, body, ostate )
       end subroutine xfmsta
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -2866,7 +2922,9 @@ contains
       real(wp) :: emista ( 2 )  !! Emission angle state.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzilusta ( ctx, method, target, illum, et, fixref, abcorr, obsrvr, spoint, normal, phssta, incsta, emista )
+      ! PEPPER: spoint, normal are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzilusta ( ctx, method, target, illum, et, fixref, abcorr, obsrvr, (spoint), &
+         (normal), phssta, incsta, emista )
       end subroutine zzilusta
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -2927,7 +2985,8 @@ contains
       real(wp) :: xpt    ( 3 )  !! Intercept.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzrytrec ( ctx, vertex, raydir, bounds, margin, nxpts, xpt )
+      ! PEPPER: vertex, raydir, bounds are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzrytrec ( ctx, (vertex), (raydir), (bounds), margin, nxpts, xpt )
       end subroutine zzrytrec
 
       !> Create a bounding box for a DSK segment volume element.
@@ -3023,7 +3082,8 @@ contains
       logical :: found  !! Flag indicating whether ellipse was found.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%inedpl ( a, b, c, plane, ellips, found )
+      ! PEPPER: plane is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%inedpl ( a, b, c, (plane), ellips, found )
       end subroutine inedpl
 
       !> Project an ellipse onto a plane, orthogonally.
@@ -3039,7 +3099,8 @@ contains
       real(wp) :: elout ( ubel )  !! A SPICE ellipse resulting from the projection.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%pjelpl ( elin, plane, elout )
+      ! PEPPER: elin, plane are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%pjelpl ( (elin), (plane), elout )
       end subroutine pjelpl
 
       !> Translate a surface ID code, together with a body ID code, to the
@@ -3073,7 +3134,8 @@ contains
       logical :: isname  !! Flag indicating whether output is a surface name.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%srfcss ( code, bodstr, srfstr, isname )
+      ! PEPPER: bodstr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%srfcss ( code, (bodstr), srfstr, isname )
       end subroutine srfcss
 
       !> Translate a surface string, together with a body string, to the
@@ -3199,7 +3261,8 @@ contains
       real(wp) :: xpt    ( 3 )  !! Intercept.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzrytlat ( ctx, vertex, raydir, bounds, margin, nxpts, xpt )
+      ! PEPPER: vertex, raydir, bounds are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzrytlat ( ctx, (vertex), (raydir), (bounds), margin, nxpts, xpt )
       end subroutine zzrytlat
 
       !> Find the limb of a triaxial ellipsoid, viewed from a specified
@@ -3217,7 +3280,8 @@ contains
       real(wp) :: limb   ( ubel )  !! Limb of ellipsoid as seen from viewing point.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%edlimb ( a, b, c, viewpt, limb )
+      ! PEPPER: viewpt is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%edlimb ( a, b, c, (viewpt), limb )
       end subroutine edlimb
 
       !> Find nearest point on a triaxial ellipsoid to a specified line,
@@ -3236,7 +3300,8 @@ contains
       real(wp) :: dist  !! Distance of ellipsoid from line
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%npedln ( a, b, c, linept, linedr, pnear, dist )
+      ! PEPPER: linept, linedr are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%npedln ( a, b, c, (linept), (linedr), pnear, dist )
       end subroutine npedln
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -3283,7 +3348,9 @@ contains
       character(*) :: trmtyp  !! Terminator type.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzprsmet ( ctx, bodyid, method, mxnsrf, shape, subtyp, pri, nsurf, srflst, pntdef, trmtyp )
+      ! PEPPER: method is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzprsmet ( ctx, bodyid, (method), mxnsrf, shape, subtyp, pri, nsurf, srflst, &
+         pntdef, trmtyp )
       end subroutine zzprsmet
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -3304,7 +3371,8 @@ contains
       real(wp) :: xpt    ( 3 )  !! Intercept.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzrytpdt ( ctx, vertex, raydir, bounds, corpar, margin, nxpts, xpt )
+      ! PEPPER: vertex, raydir, bounds are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzrytpdt ( ctx, (vertex), (raydir), (bounds), corpar, margin, nxpts, xpt )
       end subroutine zzrytpdt
 
       !> Determine the plate ID and body-fixed coordinates of the
@@ -3328,7 +3396,8 @@ contains
       logical :: found  !! Flag indicating whether intercept exists.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%dskx02 ( handle, dladsc, vertex, raydir, plid, xpt, found )
+      ! PEPPER: vertex, raydir are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%dskx02 ( handle, dladsc, (vertex), (raydir), plid, xpt, found )
       end subroutine dskx02
 
       !> **Deprecated:** This routine has been superseded by the SPICELIB
@@ -3355,7 +3424,9 @@ contains
       logical :: found  !! Flag indicating whether intercept was found.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%srfxpt ( method, target, et, abcorr, obsrvr, dref, dvec, spoint, dist, trgepc, obspos, found )
+      ! PEPPER: dvec is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%srfxpt ( method, target, et, abcorr, obsrvr, dref, (dvec), spoint, dist, trgepc, &
+         obspos, found )
       end subroutine srfxpt
 
       !> Compute, for a given observer, ray emanating from the observer,
@@ -3387,7 +3458,9 @@ contains
       real(wp) :: srfvec ( 3 )  !! Vector from observer to surface point SRFPT.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%tangpt ( method, target, et, fixref, abcorr, corloc, obsrvr, dref, dvec, tanpt, alt, range, srfpt, trgepc, srfvec )
+      ! PEPPER: dvec is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%tangpt ( method, target, et, fixref, abcorr, corloc, obsrvr, dref, (dvec), tanpt, &
+         alt, range, srfpt, trgepc, srfvec )
       end subroutine tangpt
 
       !> Indicate whether one triaxial ellipsoid is occulted by another as
@@ -3431,7 +3504,8 @@ contains
       logical :: found  !! Found flag.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzptpl02 ( ctx, handle, dladsc, dskdsc, point, plid, plate, verts, found )
+      ! PEPPER: point is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzptpl02 ( ctx, handle, dladsc, dskdsc, (point), plid, plate, verts, found )
       end subroutine zzptpl02
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -3452,7 +3526,8 @@ contains
       real(wp) :: xpt    ( 3 )  !! Intercept.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzrytelt ( ctx, vertex, raydir, dskdsc, margin, nxpts, xpt )
+      ! PEPPER: vertex, raydir, dskdsc are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzrytelt ( ctx, (vertex), (raydir), (dskdsc), margin, nxpts, xpt )
       end subroutine zzrytelt
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -3485,7 +3560,9 @@ contains
       real(wp) :: normal ( 3 )  !! Outward unit normal vector at surface point.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzdskbun ( ctx, bodyid, nsurf, srflst, et, fixfid, nseg, hanbuf, dlabuf, dskbuf, offbuf, ctrbuf, radbuf, point, normal )
+      ! PEPPER: point is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzdskbun ( ctx, bodyid, nsurf, srflst, et, fixfid, nseg, hanbuf, dlabuf, dskbuf, &
+         offbuf, ctrbuf, radbuf, (point), normal )
       end subroutine zzdskbun
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -3509,7 +3586,9 @@ contains
       logical :: found  !! Found flag.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzdsksgx ( ctx, handle, dladsc, dtype, et, vertex, raydir, xpt, dc, ic, found )
+      ! PEPPER: vertex, raydir are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzdsksgx ( ctx, handle, dladsc, dtype, et, (vertex), (raydir), xpt, dc, ic, &
+         found )
       end subroutine zzdsksgx
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -3548,7 +3627,9 @@ contains
       logical :: found  !! Found flag. True if and only if intercept exists.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzdskbux ( ctx, bodyid, nsurf, srflst, et, fixfid, nseg, hanbuf, dlabuf, dskbuf, offbuf, ctrbuf, radbuf, vertex, raydir, xpt, segidx, dc, ic, found )
+      ! PEPPER: vertex, raydir are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzdskbux ( ctx, bodyid, nsurf, srflst, et, fixfid, nseg, hanbuf, dlabuf, dskbuf, &
+         offbuf, ctrbuf, radbuf, (vertex), (raydir), xpt, segidx, dc, ic, found )
       end subroutine zzdskbux
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -3573,7 +3654,8 @@ contains
       logical :: found  !! Found flag. True if intercept exists.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzsbfxr ( ctx, bodyid, nsurf, srflst, et, fixfid, vertex, raydir, xpt, found )
+      ! PEPPER: vertex, raydir are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzsbfxr ( ctx, bodyid, nsurf, srflst, et, fixfid, (vertex), (raydir), xpt, found )
       end subroutine zzsbfxr
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -3603,7 +3685,9 @@ contains
       logical :: found  !! Found flag. True if intercept exists.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzsbfxri ( ctx, bodyid, nsurf, srflst, et, fixfid, vertex, raydir, xpt, handle, dladsc, dskdsc, dc, ic, found )
+      ! PEPPER: vertex, raydir are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzsbfxri ( ctx, bodyid, nsurf, srflst, et, fixfid, (vertex), (raydir), xpt, &
+         handle, dladsc, dskdsc, dc, ic, found )
       end subroutine zzsbfxri
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -3626,7 +3710,8 @@ contains
       real(wp) :: normal ( 3 )  !! Unit length outward normal at input point.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzsbfnrm ( ctx, bodyid, nsurf, srflst, et, fixfid, point, normal )
+      ! PEPPER: point is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzsbfnrm ( ctx, bodyid, nsurf, srflst, et, fixfid, (point), normal )
       end subroutine zzsbfnrm
 
       !> Compute a ray-surface intercept using data provided by
@@ -3662,7 +3747,9 @@ contains
       logical :: found  !! Found flag.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%dskxsi ( pri, target, nsurf, srflst, et, fixref, vertex, raydir, maxd, maxi, xpt, handle, dladsc, dskdsc, dc, ic, found )
+      ! PEPPER: vertex, raydir are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%dskxsi ( pri, target, nsurf, srflst, et, fixref, (vertex), (raydir), maxd, maxi, &
+         xpt, handle, dladsc, dskdsc, dc, ic, found )
       end subroutine dskxsi
 
       !> Compute ray-surface intercepts for a set of rays, using data
@@ -3716,7 +3803,9 @@ contains
       real(wp) :: emissn  !! Emission angle at the surface point.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%illumg ( method, target, ilusrc, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn )
+      ! PEPPER: spoint is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%illumg ( method, target, ilusrc, et, fixref, abcorr, obsrvr, (spoint), trgepc, &
+         srfvec, phase, incdnc, emissn )
       end subroutine illumg
 
       !> Map array of surface points on a specified target body to
@@ -3788,7 +3877,8 @@ contains
       logical :: found  !! Found flag. .TRUE. if intercept exists.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzraysfx ( ctx, vertex, raydir, et, spoint, found )
+      ! PEPPER: vertex, raydir are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzraysfx ( ctx, (vertex), (raydir), et, spoint, found )
       end subroutine zzraysfx
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -3834,7 +3924,8 @@ contains
       real(wp) :: dist  !! Distance between near point and ray.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzraynp ( ctx, vertex, raydir, et, pnear, dist )
+      ! PEPPER: vertex, raydir are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzraynp ( ctx, (vertex), (raydir), et, pnear, dist )
       end subroutine zzraynp
 
       !> Compute the illumination angles---phase, incidence, and
@@ -3868,7 +3959,9 @@ contains
       logical :: lit  !! Illumination flag (.TRUE. = illuminated).
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%illumf ( method, target, ilusrc, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn, visibl, lit )
+      ! PEPPER: spoint is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%illumf ( method, target, ilusrc, et, fixref, abcorr, obsrvr, (spoint), trgepc, &
+         srfvec, phase, incdnc, emissn, visibl, lit )
       end subroutine illumf
 
       !> Find the illumination angles (phase, solar incidence, and
@@ -3894,7 +3987,9 @@ contains
       real(wp) :: emissn  !! Emission angle at the surface point.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%ilumin ( method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn )
+      ! PEPPER: spoint is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%ilumin ( method, target, et, fixref, abcorr, obsrvr, (spoint), trgepc, srfvec, &
+         phase, incdnc, emissn )
       end subroutine ilumin
 
       !> Map array of planetocentric longitude/latitude coordinate pairs
@@ -3947,7 +4042,9 @@ contains
       logical :: found  !! Flag indicating whether intercept was found.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sincpt ( method, target, et, fixref, abcorr, obsrvr, dref, dvec, spoint, trgepc, srfvec, found )
+      ! PEPPER: dvec is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sincpt ( method, target, et, fixref, abcorr, obsrvr, dref, (dvec), spoint, trgepc, &
+         srfvec, found )
       end subroutine sincpt
 
       !> Compute the rectangular coordinates of the sub-observer point on
@@ -4130,7 +4227,9 @@ contains
       real(wp) :: tangts ( 3, * )  !! Tangent vectors emanating from the observer.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%limbpt ( method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, tangts )
+      ! PEPPER: refvec is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%limbpt ( method, target, et, fixref, abcorr, corloc, obsrvr, (refvec), rolstp, &
+         ncuts, schstp, soltol, maxn, npts, points, epochs, tangts )
       end subroutine limbpt
 
       !> Find terminator points on a target body. The caller specifies
@@ -4166,7 +4265,9 @@ contains
       real(wp) :: trmvcs ( 3, * )  !! Terminator vectors emanating from the observer.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%termpt ( method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, trmvcs )
+      ! PEPPER: refvec is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%termpt ( method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, (refvec), &
+         rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, trmvcs )
       end subroutine termpt
 
 end module pepper_legacy_geometry

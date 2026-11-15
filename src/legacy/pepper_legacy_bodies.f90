@@ -92,7 +92,8 @@ contains
       logical :: new  !! Flag indicting if item was added
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzhscadd ( ctx, hedlst, collst, items, item, itemat, new )
+      ! PEPPER: item is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzhscadd ( ctx, hedlst, collst, items, (item), itemat, new )
       end subroutine zzhscadd
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -341,9 +342,9 @@ contains
          nornam(i) = ker%nornam(i)%s
          codes(i)  = ker%codes(i)
       end do
-      call pepper_zzbodini ( ctx, names, nornam, codes, nvals, nroom, &
-                             bnmlst, bnmpol, bnmnms, bnmidx, &
-                             bidlst, bidpol, bidids, bididx )
+      ! PEPPER: names, nornam, codes are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzbodini ( ctx, (names), (nornam), (codes), nvals, nroom, bnmlst, bnmpol, bnmnms, &
+         bnmidx, bidlst, bidpol, bidids, bididx )
       if ( ctx%failed() ) return
       extker = .true.
       end subroutine zzbodker
@@ -590,7 +591,8 @@ contains
       logical :: found  !! Translation success flag.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzbods2c ( ctx, usrctr, savnam, savcde, savfnd, name, code, found )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzbods2c ( ctx, usrctr, savnam, savcde, savfnd, (name), code, found )
       end subroutine zzbods2c
 
       !> SPICE Private routine intended solely for the support of SPICE

@@ -188,7 +188,8 @@ contains
       real(wp) :: state ( 6 )  !! State of the object described by EQEL.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%eqncpv ( et, epoch, eqel, rapol, decpol, state )
+      ! PEPPER: eqel is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%eqncpv ( et, epoch, (eqel), rapol, decpol, state )
       end subroutine eqncpv
 
       !> Scale a point so that it lies on the surface of a specified
@@ -206,7 +207,8 @@ contains
       real(wp) :: ep ( 3 )  !! Point on ellipsoid.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%edpnt ( p, a, b, c, ep )
+      ! PEPPER: p is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%edpnt ( (p), a, b, c, ep )
       end subroutine edpnt
 
       !> Return the unique point on an ellipsoid's surface where the
@@ -223,7 +225,8 @@ contains
       real(wp) :: point  ( 3 )  !! Point where outward normal is parallel to NORMAL.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%ednmpt ( a, b, c, normal, point )
+      ! PEPPER: normal is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%ednmpt ( a, b, c, (normal), point )
       end subroutine ednmpt
 
       !> Solve the time of flight equation MA = E - e sin(E) for the
@@ -279,7 +282,8 @@ contains
       real(wp) :: df  !! Interpolated function's derivative at X.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%hrmint ( n, xvals, yvals, x, work, f, df )
+      ! PEPPER: xvals is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%hrmint ( n, (xvals), yvals, x, work, f, df )
       end subroutine hrmint
 
       !> Evaluate a Lagrange interpolating polynomial for a specified
@@ -319,7 +323,8 @@ contains
       real(wp) :: dp  !! Polynomial derivative at X.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%lgrind ( n, xvals, yvals, work, x, p, dp )
+      ! PEPPER: xvals, yvals are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%lgrind ( n, (xvals), (yvals), work, x, p, dp )
       end subroutine lgrind
 
       !> Evaluate a Lagrange interpolating polynomial for a specified
@@ -356,7 +361,8 @@ contains
       real(wp) :: itgrlp  !! Integral evaluated at X.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%chbigr ( degp, cp, x2s, x, p, itgrlp )
+      ! PEPPER: x2s is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%chbigr ( degp, cp, (x2s), x, p, itgrlp )
       end subroutine chbigr
 
       !> Find the intersection of an ellipse and a plane.
@@ -376,7 +382,8 @@ contains
       real(wp) :: xpt2   ( 3 )  !! Intersection points.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%inelpl ( ellips, plane, nxpts, xpt1, xpt2 )
+      ! PEPPER: ellips, plane are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%inelpl ( (ellips), (plane), nxpts, xpt1, xpt2 )
       end subroutine inelpl
 
       !> Find the intersection of a ray and a plane.
@@ -394,7 +401,8 @@ contains
       real(wp) :: xpt    (    3 )  !! Intersection point, if NXPTS = 1.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%inrypl ( vertex, dir, plane, nxpts, xpt )
+      ! PEPPER: vertex, dir, plane are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%inrypl ( (vertex), (dir), (plane), nxpts, xpt )
       end subroutine inrypl
 
       !> Construct the inverse of a 3x3 matrix with orthogonal columns and
@@ -411,7 +419,8 @@ contains
       real(wp) :: mit ( 3, 3 )  !! M after transposition and scaling of rows.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%invort ( m, mit )
+      ! PEPPER: m is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%invort ( (m), mit )
       end subroutine invort
 
       !> Return the inverse of a state transformation matrix.
@@ -424,7 +433,8 @@ contains
       real(wp) :: invmat ( 6, 6 )  !! The inverse of MAT.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%invstm ( mat, invmat )
+      ! PEPPER: mat is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%invstm ( (mat), invmat )
       end subroutine invstm
 
       !> Indicate whether a 3x3 matrix is a rotation matrix.
@@ -481,7 +491,8 @@ contains
       real(wp) :: q ( 0 : 3 )  !! A unit quaternion representing R.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%m2q ( r, q )
+      ! PEPPER: r is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%m2q ( (r), q )
       end subroutine m2q
 
       !> Find the nearest point on a line to a specified point, and find
@@ -498,7 +509,8 @@ contains
       real(wp) :: dist  !! Distance between POINT and PNEAR.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%nplnpt ( linpt, lindir, point, pnear, dist )
+      ! PEPPER: linpt, lindir, point are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%nplnpt ( (linpt), (lindir), (point), pnear, dist )
       end subroutine nplnpt
 
       !> Find the nearest point on a line segment to a given point.
@@ -514,7 +526,8 @@ contains
       real(wp) :: dist  !! Distance between PNEAR and POINT.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%npsgpt ( ep1, ep2, point, pnear, dist )
+      ! PEPPER: ep1, ep2, point are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%npsgpt ( (ep1), (ep2), (point), pnear, dist )
       end subroutine npsgpt
 
       !> Make a SPICE plane from a normal vector and a constant.
@@ -530,7 +543,8 @@ contains
       real(wp) :: plane  ( ubpl )  !! An array representing the plane.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%nvc2pl ( normal, konst, plane )
+      ! PEPPER: normal is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%nvc2pl ( (normal), konst, plane )
       end subroutine nvc2pl
 
       !> Make a SPICE plane from a normal vector and a point.
@@ -546,7 +560,8 @@ contains
       real(wp) :: plane  ( ubpl )  !! An array representing the plane.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%nvp2pl ( normal, point, plane )
+      ! PEPPER: normal, point are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%nvp2pl ( (normal), (point), plane )
       end subroutine nvp2pl
 
       !> Make a SPICE plane from a point and two spanning vectors.
@@ -563,7 +578,8 @@ contains
       real(wp) :: plane ( ubpl )  !! An array representing the plane.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%psv2pl ( point, span1, span2, plane )
+      ! PEPPER: point, span1, span2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%psv2pl ( (point), (span1), (span2), plane )
       end subroutine psv2pl
 
       !> Compute the total area of a collection of triangular plates.
@@ -595,7 +611,8 @@ contains
       real(wp) :: dist  !! Distance between PNEAR and POINT.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%pltnp ( point, v1, v2, v3, pnear, dist )
+      ! PEPPER: point, v1, v2, v3 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%pltnp ( (point), (v1), (v2), (v3), pnear, dist )
       end subroutine pltnp
 
       !> Compute the volume of a three-dimensional region bounded by a
@@ -630,7 +647,8 @@ contains
       real(wp) :: dfdt  ( ndim )  !! Derivative vector.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%qderiv ( ndim, f0, f2, delta, dfdt )
+      ! PEPPER: f0, f2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%qderiv ( ndim, (f0), (f2), delta, dfdt )
       end subroutine qderiv
 
       !> Compute the axis of the rotation given by an input matrix
@@ -645,7 +663,8 @@ contains
       real(wp) :: angle  !! Angle through which the rotation is performed.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%raxisa ( matrix, axis, angle )
+      ! PEPPER: matrix is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%raxisa ( (matrix), axis, angle )
       end subroutine raxisa
 
       !> Find the roots of a quadratic equation.
@@ -709,7 +728,8 @@ contains
       real(wp) :: vout  (    3 )  !! Vector resulting from projection.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%vprjp ( vin, plane, vout )
+      ! PEPPER: vin, plane are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%vprjp ( (vin), (plane), vout )
       end subroutine vprjp
 
       !> Find the vector in a specified plane that maps to a specified
@@ -728,7 +748,8 @@ contains
       logical :: found  !! Flag indicating whether VOUT could be calculated.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%vprjpi ( vin, projpl, invpl, vout, found )
+      ! PEPPER: vin, projpl, invpl are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%vprjpi ( (vin), (projpl), (invpl), vout, found )
       end subroutine vprjpi
 
       !> Correct the apparent position of an object for stellar
@@ -745,7 +766,8 @@ contains
                                 !! corrected for stellar aberration.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%stelab ( pobj, vobs, appobj )
+      ! PEPPER: pobj, vobs are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%stelab ( (pobj), (vobs), appobj )
       end subroutine stelab
 
       !> Correct the position of a target for the stellar aberration
@@ -762,7 +784,8 @@ contains
       real(wp) :: corpos ( 3 )  !! Corrected position of the object.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%stlabx ( pobj, vobs, corpos )
+      ! PEPPER: pobj, vobs are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%stlabx ( (pobj), (vobs), corpos )
       end subroutine stlabx
 
       !> Transpose the square blocks within a matrix.
@@ -778,7 +801,8 @@ contains
       real(wp) :: btmat ( nrow, ncol )  !! the result of transposing the blocks of BMAT
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%xposbl ( bmat, nrow, ncol, bsize, btmat )
+      ! PEPPER: bmat is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%xposbl ( (bmat), nrow, ncol, bsize, btmat )
       end subroutine xposbl
 
 end module pepper_legacy_numerics

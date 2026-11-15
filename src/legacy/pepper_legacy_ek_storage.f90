@@ -99,7 +99,8 @@ contains
       integer(ip) :: coldsc ( cdscsz )  !! Descriptor for specified column.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzekcdsc ( ctx, handle, segdsc, column, coldsc )
+      ! PEPPER: segdsc is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzekcdsc ( ctx, handle, (segdsc), column, coldsc )
       end subroutine zzekcdsc
 
       !> Look up the name of a column, given the column's descriptor.
@@ -401,7 +402,9 @@ contains
       character(*) :: errmsg  !! Scan error description.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzekscan ( ctx, query, maxntk, maxnum, ntoken, tokens, lxbegs, lxends, values, numvls, chrbuf, chbegs, chends, scnerr, errmsg )
+      ! PEPPER: query is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzekscan ( ctx, (query), maxntk, maxnum, ntoken, tokens, lxbegs, lxends, values, &
+         numvls, chrbuf, chbegs, chends, scnerr, errmsg )
       end subroutine zzekscan
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -490,7 +493,8 @@ contains
       character(*) :: errmsg  !! Error message.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzektcnv ( ctx, timstr, et, error, errmsg )
+      ! PEPPER: timstr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzektcnv ( ctx, (timstr), et, error, errmsg )
       end subroutine zzektcnv
 
       !> Locate the first occurrence of a specified token in a tokenized
@@ -594,7 +598,8 @@ contains
       integer(ip) :: descr  ( * )  !! Descriptor for value.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzekinqc ( ctx, value, length, lexbeg, lexend, eqryi, eqryc, descr )
+      ! PEPPER: value is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzekinqc ( ctx, (value), length, lexbeg, lexend, eqryi, eqryc, descr )
       end subroutine zzekinqc
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -929,7 +934,9 @@ contains
       integer(ip) :: ival  !! RHS integer value.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzekqcon ( ctx, eqryi, eqryc, eqryd, n, cnstyp, ltname, ltidx, lcname, lcidx, opcode, rtname, rtidx, rcname, rcidx, dtype, cbeg, cend, dval, ival )
+      ! PEPPER: eqryc is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzekqcon ( ctx, eqryi, (eqryc), eqryd, n, cnstyp, ltname, ltidx, lcname, lcidx, &
+         opcode, rtname, rtidx, rcname, rcidx, dtype, cbeg, cend, dval, ival )
       end subroutine zzekqcon
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -953,7 +960,8 @@ contains
       integer(ip) :: sense  !! Code giving order sense for Nth column.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzekqord ( ctx, eqryi, eqryc, n, table, tabidx, column, colidx, sense )
+      ! PEPPER: eqryc is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzekqord ( ctx, eqryi, (eqryc), n, table, tabidx, column, colidx, sense )
       end subroutine zzekqord
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -978,7 +986,8 @@ contains
       integer(ip) :: colidx  !! Index of column in TABLE, if known.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzekqsel ( ctx, eqryi, eqryc, n, lxbeg, lxend, table, tabidx, column, colidx )
+      ! PEPPER: eqryc is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzekqsel ( ctx, eqryi, (eqryc), n, lxbeg, lxend, table, tabidx, column, colidx )
       end subroutine zzekqsel
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -998,7 +1007,8 @@ contains
       character(*) :: alias  !! Alias of Nth table in FROM clause.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzekqtab ( ctx, eqryi, eqryc, n, table, alias )
+      ! PEPPER: eqryc is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzekqtab ( ctx, eqryi, (eqryc), n, table, alias )
       end subroutine zzekqtab
 
       !> Read a column entry from a specified record in a class 9 column.
@@ -1027,7 +1037,8 @@ contains
       logical :: isnull  !! Flag indicating whether column entry is null.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzekrd09 ( ctx, handle, segdsc, coldsc, recno, cvlen, cval, isnull )
+      ! PEPPER: segdsc, coldsc are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzekrd09 ( ctx, handle, (segdsc), (coldsc), recno, cvlen, cval, isnull )
       end subroutine zzekrd09
 
       !> Set the companion pointer of a specified EK record.
@@ -1177,7 +1188,9 @@ contains
       n = nint ( real ( eqryi(-1), wp ), ip )
       allocate ( qi(lbcell:n) )
       qi = eqryi(lbcell:n)
-      call pepper_zzeknrml ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, qi, eqryc, eqryd, error, prserr )
+      ! PEPPER: query, chrbuf are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzeknrml ( ctx, (query), ntoken, lxbegs, lxends, tokens, values, numvls, &
+         (chrbuf), chbegs, chends, qi, eqryc, eqryd, error, prserr )
       if ( ubound ( qi, 1, kind=ip ) > n ) then
          if ( qi(0) > n .and. .not. ctx%failed() ) then
             call ctx%setmsg ( 'The encoded query has # elements; the size of the cell is #.' )
@@ -1474,7 +1487,9 @@ contains
       n = nint ( real ( eqryi(-1), wp ), ip )
       allocate ( qi(lbcell:n) )
       qi = eqryi(lbcell:n)
-      call pepper_zzekpars ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, qi, eqryc, eqryd, error, prserr )
+      ! PEPPER: query, chrbuf are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzekpars ( ctx, (query), ntoken, lxbegs, lxends, tokens, values, numvls, &
+         (chrbuf), chbegs, chends, qi, eqryc, eqryd, error, prserr )
       if ( ubound ( qi, 1, kind=ip ) > n ) then
          if ( qi(0) > n .and. .not. ctx%failed() ) then
             call ctx%setmsg ( 'The encoded query has # elements; the size of the cell is #.' )
@@ -1658,7 +1673,8 @@ contains
       integer(ip) :: recptr  !! Record pointer.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzekixlk ( ctx, handle, coldsc, key, recptr )
+      ! PEPPER: coldsc is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzekixlk ( ctx, handle, (coldsc), key, recptr )
       end subroutine zzekixlk
 
       !> Look up the record pointer of an EK record having a specified
@@ -1676,7 +1692,8 @@ contains
       integer(ip) :: recptr  !! Record pointer.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzekrplk ( ctx, handle, segdsc, n, recptr )
+      ! PEPPER: segdsc is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzekrplk ( ctx, handle, (segdsc), n, recptr )
       end subroutine zzekrplk
 
       !> One-shot tree load:  insert an entire array into an empty
@@ -1945,7 +1962,8 @@ contains
       integer(ip) :: base  !! DAS base address of page.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzekacps ( ctx, handle, segdsc, type, n, p, base )
+      ! PEPPER: segdsc is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzekacps ( ctx, handle, (segdsc), type, n, p, base )
       end subroutine zzekacps
 
       !> Allocate a data page for a specified EK segment.
@@ -1963,7 +1981,8 @@ contains
       integer(ip) :: base  !! DAS base address of page.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzekaps ( ctx, handle, segdsc, type, new, p, base )
+      ! PEPPER: segdsc is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzekaps ( ctx, handle, (segdsc), type, new, p, base )
       end subroutine zzekaps
 
       !> Start a new type 1 segment in an E-kernel.
@@ -2038,7 +2057,8 @@ contains
       integer(ip) :: recptr  !! Record pointer.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzekde04 ( ctx, handle, segdsc, coldsc, recptr )
+      ! PEPPER: coldsc is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzekde04 ( ctx, handle, segdsc, (coldsc), recptr )
       end subroutine zzekde04
 
       !> Find the EK record number corresponding to a specified record

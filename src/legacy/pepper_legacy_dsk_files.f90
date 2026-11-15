@@ -66,7 +66,8 @@ contains
       character(*) :: kertyp  !! The type of the kernel file.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%getfat ( file, arch, kertyp )
+      ! PEPPER: file is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%getfat ( (file), arch, kertyp )
       end subroutine getfat
 
       !> Compute the outward-pointing, unit normal vector at a point on
@@ -83,7 +84,8 @@ contains
       real(wp) :: normal ( 3 )  !! Outward pointing unit normal to ellipsoid at POINT.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%surfnm ( a, b, c, point, normal )
+      ! PEPPER: point is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%surfnm ( a, b, c, (point), normal )
       end subroutine surfnm
 
       !> Locate the point on the surface of an ellipsoid that is nearest
@@ -102,7 +104,8 @@ contains
       real(wp) :: alt  !! Altitude of POSITN above the ellipsoid.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%nearpt ( positn, a, b, c, npoint, alt )
+      ! PEPPER: positn is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%nearpt ( (positn), a, b, c, npoint, alt )
       end subroutine nearpt
 
       !> Convert from rectangular coordinates to geodetic coordinates.
@@ -119,7 +122,8 @@ contains
       real(wp) :: alt  !! Altitude of the point above reference spheroid.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%recgeo ( rectan, re, f, lon, lat, alt )
+      ! PEPPER: rectan is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%recgeo ( (rectan), re, f, lon, lat, alt )
       end subroutine recgeo
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -163,7 +167,8 @@ contains
       integer(ip) :: cgof1d  !! 1-D voxel offset relative to coarse voxel.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzvoxcvo ( ctx, vixyz, nvox, cgrscl, cgxyz, cgoff, cgof1d )
+      ! PEPPER: vixyz, nvox are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzvoxcvo ( ctx, (vixyz), (nvox), cgrscl, cgxyz, cgoff, cgof1d )
       end subroutine zzvoxcvo
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -257,7 +262,8 @@ contains
       integer(ip) :: voxcor     ( 3 )  !! 3-Index of voxel location with the voxel grid.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzgetvox ( ctx, voxsiz, voxori, nvox, xyz, inbox, voxcor )
+      ! PEPPER: nvox is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzgetvox ( ctx, voxsiz, voxori, (nvox), xyz, inbox, voxcor )
       end subroutine zzgetvox
 
       !> SPICE Private routine intended solely for the support of SPICE

@@ -34,6 +34,13 @@ source-form = "default"
 # (pepper_programmatic); Intel Fortran's counterpart is -recursive
 # (/recursive on Windows).
 #
+# Intel Fortran's default floating-point model is "fast": it reassociates
+# and rewrites expressions that SPICELIB writes in a careful order (VPROJ
+# scales its vectors so that 1e300-long vectors do not overflow; the fast
+# model undoes that and returns Inf/NaN). -fp-model precise (/fp:precise)
+# keeps the source's arithmetic. gfortran needs no option (it does not
+# reassociate without -ffast-math).
+#
 # The library needs no large stack (its largest frame is about 64 KB), nor
 # do the tests. NAIF's tspice test code does on Windows (tspice/fpm.toml).
 #
@@ -44,10 +51,10 @@ source-form = "default"
 # NAIF's tspice test code does need the option (tspice/fpm.toml).
 [features]
 platform.gfortran.flags = "-frecursive"
-platform.ifx.flags = "-recursive"
-platform.ifort.flags = "-recursive"
-platform.windows.ifx.flags = "/recursive"
-platform.windows.ifort.flags = "/recursive"
+platform.ifx.flags = "-recursive -fp-model precise"
+platform.ifort.flags = "-recursive -fp-model precise"
+platform.windows.ifx.flags = "/recursive /fp:precise"
+platform.windows.ifort.flags = "/recursive /fp:precise"
 
 [profiles]
 default = ["platform"]

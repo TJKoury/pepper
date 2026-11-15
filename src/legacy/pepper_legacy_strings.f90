@@ -27,7 +27,8 @@ contains
       character(1) :: asciib  !! First ASCII character in range to be stripped.
       character(1) :: asciie  !! Last ASCII character in range to be stripped.
       character(*) :: outstr  !! Output (stripped) string.
-      call pepper_astrip ( instr, asciib, asciie, outstr )
+      ! PEPPER: instr, asciib, asciie are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_astrip ( (instr), (asciib), (asciie), outstr )
       end subroutine astrip
 
       !> Determine whether a string represents a decimal number.
@@ -87,7 +88,8 @@ contains
       integer(ip) :: n  !! Maximum consecutive occurrences of DELIM.
       character(*) :: input  !! Input string.
       character(*) :: output  !! Compressed string.
-      call pepper_cmprss ( delim, n, input, output )
+      ! PEPPER: delim, input are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_cmprss ( (delim), n, (input), output )
       end subroutine cmprss
 
       !> Find the first occurrence in a string of a character belonging
@@ -218,7 +220,8 @@ contains
       character(*) :: wordsq  !! String containing a sequence of words.
       logical :: found  !! .TRUE. if the keyword is found in the string.
       character(*) :: substr  !! String from end of KEYWD to beginning of first TERMS item found.
-      call pepper_kxtrct ( keywd, terms, nterms, wordsq, found, substr )
+      ! PEPPER: keywd is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_kxtrct ( (keywd), terms, nterms, wordsq, found, substr )
       end subroutine kxtrct
 
       !> Return the index of the last non-blank character in
@@ -259,7 +262,8 @@ contains
       integer(ip) :: n  !! Number of items in the list.
       character(*) :: delim  !! String used to delimit items.
       character(*) :: list  !! List of items delimited by DELIM.
-      call pepper_lbuild ( items, n, delim, list )
+      ! PEPPER: delim is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_lbuild ( items, n, (delim), list )
       end subroutine lbuild
 
       !> Convert the characters in a string to lowercase.
@@ -274,7 +278,8 @@ contains
       integer(ip), parameter :: uppera = ichar ('A')
       integer(ip), parameter :: upperz = ichar ('Z')
       integer(ip), parameter :: shift = ichar ('a') - uppera
-      call pepper_lcase ( in, out )
+      ! PEPPER: in is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_lcase ( (in), out )
       end subroutine lcase
 
       !> Left-justify, uppercase, and space-compress a character string.
@@ -290,7 +295,8 @@ contains
       integer(ip), parameter :: lowa = ichar ('a')
       integer(ip), parameter :: lowz = ichar ('z')
       integer(ip), parameter :: shift = ichar ('A') - lowa
-      call pepper_ljucrs ( n, input, output )
+      ! PEPPER: input is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_ljucrs ( n, (input), output )
       end subroutine ljucrs
 
       !> Left-justify a character string.
@@ -302,7 +308,8 @@ contains
       implicit none
       character(*) :: input  !! Input character string.
       character(*) :: output  !! Output character string, left justified.
-      call pepper_ljust ( input, output )
+      ! PEPPER: input is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_ljust ( (input), output )
       end subroutine ljust
 
       !> Parse a list of items delimited by a single character.
@@ -321,7 +328,8 @@ contains
       parameter           ( blank = ' ' )
       integer(ip) :: ispace
       parameter           ( ispace = 32 )
-      call pepper_lparse ( list, delim, nmax, n, items )
+      ! PEPPER: list, delim are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_lparse ( (list), (delim), nmax, n, items )
       end subroutine lparse
 
       !> Parse a list of items separated by multiple delimiters.
@@ -340,7 +348,8 @@ contains
       parameter           ( blank = ' ' )
       integer(ip) :: ispace
       parameter           ( ispace = 32 )
-      call pepper_lparsm ( list, delims, nmax, n, items )
+      ! PEPPER: list, delims are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_lparsm ( (list), (delims), nmax, n, items )
       end subroutine lparsm
 
       !> Return the maximum of 1 and the location of the first non-blank
@@ -454,7 +463,8 @@ contains
       character(*) :: rest  !! The remaining part of STRING, left-justified.
       integer(ip) :: ispace
       parameter           ( ispace = 32 )
-      call pepper_nextwd ( string, next, rest )
+      ! PEPPER: string is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_nextwd ( (string), next, rest )
       end subroutine nextwd
 
       !> Return the Nth word in a character string, and its location
@@ -469,7 +479,8 @@ contains
       integer(ip) :: nth  !! Index of the word to be returned.
       character(*) :: word  !! The NTH word in STRING.
       integer(ip) :: loc  !! Location of WORD in STRING.
-      call pepper_nthwd ( string, nth, word, loc )
+      ! PEPPER: string is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_nthwd ( (string), nth, word, loc )
       end subroutine nthwd
 
       !> Parse a quoted string token.
@@ -487,7 +498,8 @@ contains
       logical :: error  !! Logical error flag.
       character(*) :: errmsg  !! Message indicating whether errors have occurred.
       integer(ip) :: ptr  !! Position in string where an error occurred.
-      call pepper_parsqs ( string, qchar, value, length, error, errmsg, ptr )
+      ! PEPPER: string, qchar are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_parsqs ( (string), (qchar), value, length, error, errmsg, ptr )
       end subroutine parsqs
 
       !> Determine the printable width of a character array.
@@ -540,7 +552,8 @@ contains
       character(*) :: pref  !! Prefix.
       integer(ip) :: spaces  !! Number of spaces separating prefix and suffix.
       character(*) :: string  !! Suffix on input, string on output.
-      call pepper_prefix ( pref, spaces, string )
+      ! PEPPER: pref is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_prefix ( (pref), spaces, string )
       end subroutine prefix
 
       !> Enclose (quote) the non-blank part of a character string
@@ -555,7 +568,8 @@ contains
       character(1) :: left  !! Left delimiter.
       character(1) :: right  !! Right delimiter.
       character(*) :: out  !! Output (quoted) string.
-      call pepper_quote ( in, left, right, out )
+      ! PEPPER: in, left, right are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_quote ( (in), (left), (right), out )
       end subroutine quote
 
       !> Replace all occurrences of a single character with a second
@@ -570,7 +584,8 @@ contains
       character(1) :: old  !! Character to be replaced.
       character(1) :: new  !! Replacement character.
       character(*) :: outstr  !! Output string.
-      call pepper_replch ( instr, old, new, outstr )
+      ! PEPPER: instr, old, new are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_replch ( (instr), (old), (new), outstr )
       end subroutine replch
 
       !> Replace the Nth word in a string with a new word.
@@ -584,7 +599,8 @@ contains
       integer(ip) :: nth  !! Number of the word to be replaced.
       character(*) :: new  !! Replacement word.
       character(*) :: outstr  !! Output string.
-      call pepper_replwd ( instr, nth, new, outstr )
+      ! PEPPER: instr, new are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_replwd ( (instr), nth, (new), outstr )
       end subroutine replwd
 
       !> Replace a marker with a character string.
@@ -598,7 +614,8 @@ contains
       character(*) :: marker  !! Marker to be replaced.
       character(*) :: value  !! Replacement string.
       character(*) :: out  !! Output string.
-      call pepper_repmc ( in, marker, value, out )
+      ! PEPPER: in, marker, value are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_repmc ( (in), (marker), (value), out )
       end subroutine repmc
 
       !> Right justify a character string.
@@ -610,7 +627,8 @@ contains
       implicit none
       character(*) :: input  !! Input character string.
       character(*) :: output  !! Output character string, right justified.
-      call pepper_rjust ( input, output )
+      ! PEPPER: input is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_rjust ( (input), output )
       end subroutine rjust
 
       !> Return the maximum of 1 and the location of the last non-blank
@@ -686,7 +704,8 @@ contains
       integer(ip) :: nshift  !! Number of times to shift.
       character(1) :: fillc  !! Character to fill spaces left vacant.
       character(*) :: out  !! Shifted string.
-      call pepper_shiftl ( in, nshift, fillc, out )
+      ! PEPPER: in, fillc are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_shiftl ( (in), nshift, (fillc), out )
       end subroutine shiftl
 
       !> Shift the contents of a character string to the right.
@@ -702,7 +721,8 @@ contains
       integer(ip) :: nshift  !! Number of times to shift.
       character(1) :: fillc  !! Character to fill spaces left vacant.
       character(*) :: out  !! Shifted string.
-      call pepper_shiftr ( in, nshift, fillc, out )
+      ! PEPPER: in, fillc are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_shiftr ( (in), nshift, (fillc), out )
       end subroutine shiftr
 
       !> Retain only the significant digits in a numeric string.
@@ -714,7 +734,8 @@ contains
       implicit none
       character(*) :: in  !! Input numeric string.
       character(*) :: out  !! Numeric string, with insignificant digits removed.
-      call pepper_sigdgt ( in, out )
+      ! PEPPER: in is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_sigdgt ( (in), out )
       end subroutine sigdgt
 
       !> Add a suffix to a character string.
@@ -727,7 +748,8 @@ contains
       character(*) :: suff  !! Suffix.
       integer(ip) :: spaces  !! Number of spaces separating prefix and suffix.
       character(*) :: string  !! Prefix on input, string on output.
-      call pepper_suffix ( suff, spaces, string )
+      ! PEPPER: suff is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_suffix ( (suff), spaces, string )
       end subroutine suffix
 
       !> Convert the characters in a string to uppercase.
@@ -742,7 +764,8 @@ contains
       integer(ip), parameter :: lowa = ichar ('a')
       integer(ip), parameter :: lowz = ichar ('z')
       integer(ip), parameter :: shift = ichar ('A') - lowa
-      call pepper_ucase ( in, out )
+      ! PEPPER: in is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_ucase ( (in), out )
       end subroutine ucase
 
       !> Return the number of words in a string.
@@ -781,7 +804,8 @@ contains
       character(*) :: sub  !! Substring to be inserted.
       integer(ip) :: loc  !! Position at which substring is to be inserted.
       character(*) :: out  !! Output string.
-      call pepper_zzinssub ( in, sub, loc, out )
+      ! PEPPER: in, sub are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzinssub ( (in), (sub), loc, out )
       end subroutine zzinssub
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -798,7 +822,8 @@ contains
       integer(ip) :: right  !! Ends of substring to be replaced.
       character(*) :: string  !! Replacement string.
       character(*) :: out  !! Resulting string.
-      call pepper_zzrepsub ( in, left, right, string, out )
+      ! PEPPER: in, string are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzrepsub ( (in), left, right, (string), out )
       end subroutine zzrepsub
 
       !> Convert an integer to an equivalent character string.
@@ -944,7 +969,8 @@ contains
       real(wp) :: x  !! Double precision value parsed from STRING.
       character(*) :: error  !! Message indicating whether errors have occurred.
       integer(ip) :: ptr  !! Position in string where an error occurred.
-      call pepper_nparsd ( string, x, error, ptr )
+      ! PEPPER: string is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_nparsd ( (string), x, error, ptr )
       end subroutine nparsd
 
       !> Parse a character string that represents a number and return
@@ -960,7 +986,8 @@ contains
       integer(ip) :: n  !! Translated integer value of STRING.
       character(*) :: error  !! Message indicating what errors have occurred.
       integer(ip) :: pnter  !! Position in character string where an error occurred.
-      call pepper_nparsi ( string, n, error, pnter )
+      ! PEPPER: string is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_nparsi ( (string), n, error, pnter )
       end subroutine nparsi
 
       !> Scan a string from a specified starting position for the

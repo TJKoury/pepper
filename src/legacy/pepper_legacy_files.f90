@@ -36,7 +36,8 @@ contains
       character(*) :: value  !! String containing the requested information.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzplatfm ( ctx, key, value )
+      ! PEPPER: key is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzplatfm ( ctx, (key), value )
       end subroutine zzplatfm
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -105,7 +106,8 @@ contains
       logical :: bkpres  !! Logical indicating if either bracket is present.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzrbrkst ( ctx, string, lftend, rgtend, substr, length, bkpres )
+      ! PEPPER: string, lftend, rgtend are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzrbrkst ( ctx, (string), (lftend), (rgtend), substr, length, bkpres )
       end subroutine zzrbrkst
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -162,7 +164,8 @@ contains
       character(*) :: label  !! Corresponding label for the CLASS/ID pair.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzddhgsd ( ctx, class, id, label )
+      ! PEPPER: class is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzddhgsd ( ctx, (class), id, label )
       end subroutine zzddhgsd
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -210,7 +213,8 @@ contains
       character(*) :: type  !! The type of the file.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%idw2at ( idword, arch, type )
+      ! PEPPER: idword is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%idw2at ( (idword), arch, type )
       end subroutine idw2at
 
       !> SPICE Private routine intended solely for the support of SPICE

@@ -92,7 +92,9 @@ contains
       logical :: found  !! Flag indicating if coordinate was computed.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzgfcoq ( ctx, vecdef, method, trgid, et, ref, abcorr, obsid, dref, dvec, crdsys, ctrid, re, f, crdnam, value, found )
+      ! PEPPER: dvec is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzgfcoq ( ctx, vecdef, method, trgid, et, ref, abcorr, obsid, dref, (dvec), &
+         crdsys, ctrid, re, f, crdnam, value, found )
       end subroutine zzgfcoq
 
       !> SPICE private routine intended solely for the support of SPICE
@@ -479,7 +481,8 @@ contains
       character(*) :: abcorr  !! Aberration correction flag.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzgfspin ( ctx, of, from, shape, frame, abcorr )
+      ! PEPPER: of, from, frame, abcorr are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzgfspin ( ctx, (of), (from), shape, (frame), (abcorr) )
       end subroutine zzgfspin
 
       !> Computes whether or not the angular separation between SVBOD1 and
@@ -561,7 +564,9 @@ contains
       logical :: found  !! Flag indicating whether state was found.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzgfssin ( ctx, method, trgid, et, fixref, abcorr, obsid, dref, dctr, dvec, radii, state, found )
+      ! PEPPER: dvec, radii are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzgfssin ( ctx, method, trgid, et, fixref, abcorr, obsid, dref, dctr, (dvec), &
+         (radii), state, found )
       end subroutine zzgfssin
 
       !> SPICE private routine intended solely for the support of SPICE
@@ -585,7 +590,8 @@ contains
       real(wp) :: state  ( 6 )  !! State used to define coordinates.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzgfssob ( ctx, method, trgid, et, fixref, abcorr, obsid, radii, state )
+      ! PEPPER: radii is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzgfssob ( ctx, method, trgid, et, fixref, abcorr, obsid, (radii), state )
       end subroutine zzgfssob
 
       !> SPICE private routine intended solely for the support of SPICE
@@ -721,7 +727,10 @@ contains
       current_gf_rep_final => udrepf
       outer_udbail => current_gf_bail
       current_gf_bail => udbail
-      call ctx%gffove ( inst, tshape, raydir, target, tframe, abcorr, obsrvr, tol, bridge_gf_step, bridge_gf_refine, rpt, bridge_gf_rep_init, bridge_gf_rep_update, bridge_gf_rep_final, bail, bridge_gf_bail, cnfine, result )
+      ! PEPPER: raydir is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%gffove ( inst, tshape, (raydir), target, tframe, abcorr, obsrvr, tol, &
+         bridge_gf_step, bridge_gf_refine, rpt, bridge_gf_rep_init, bridge_gf_rep_update, &
+         bridge_gf_rep_final, bail, bridge_gf_bail, cnfine, result )
       current_gf_step => outer_udstep
       current_gf_refine => outer_udrefn
       current_gf_rep_init => outer_udrepi
@@ -868,7 +877,9 @@ contains
       logical :: found  !! Flag indicating if state was computed.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzgfcost ( ctx, vecdef, method, trgid, et, ref, abcorr, obsid, dref, dctr, dvec, radii, state, found )
+      ! PEPPER: dvec, radii are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzgfcost ( ctx, vecdef, method, trgid, et, ref, abcorr, obsid, dref, dctr, &
+         (dvec), (radii), state, found )
       end subroutine zzgfcost
 
       !> Initialize the GF distance constraint search utilities.
@@ -1402,7 +1413,8 @@ contains
       real(wp) :: result ( lbcell : * )  !! SPICE window containing results.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%gfrfov ( inst, raydir, rframe, abcorr, obsrvr, step, cnfine, result )
+      ! PEPPER: raydir is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%gfrfov ( inst, (raydir), rframe, abcorr, obsrvr, step, cnfine, result )
       end subroutine gfrfov
 
       !> Initialize a search progress report.
@@ -1759,7 +1771,11 @@ contains
       current_gf_rep_final => udrepf
       outer_udbail => current_gf_bail
       current_gf_bail => udbail
-      call pepper_zzgflong ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, crdsys, crdnam, relate, refval, tol, adjust, bridge_gf_step, bridge_gf_refine, rpt, bridge_gf_rep_init, bridge_gf_rep_update, bridge_gf_rep_final, bail, bridge_gf_bail, mw, nw, work, cnfine, result )
+      ! PEPPER: dvec is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzgflong ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, (dvec), &
+         crdsys, crdnam, relate, refval, tol, adjust, bridge_gf_step, bridge_gf_refine, rpt, &
+         bridge_gf_rep_init, bridge_gf_rep_update, bridge_gf_rep_final, bail, bridge_gf_bail, mw, &
+         nw, work, cnfine, result )
       current_gf_step => outer_udstep
       current_gf_refine => outer_udrefn
       current_gf_rep_init => outer_udrepi
@@ -1824,7 +1840,11 @@ contains
       current_gf_rep_final => udrepf
       outer_udbail => current_gf_bail
       current_gf_bail => udbail
-      call pepper_zzgfcslv ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, crdsys, crdnam, relate, refval, tol, adjust, bridge_gf_step, bridge_gf_refine, rpt, bridge_gf_rep_init, bridge_gf_rep_update, bridge_gf_rep_final, bail, bridge_gf_bail, mw, nw, work, cnfine, result )
+      ! PEPPER: dvec is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzgfcslv ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, (dvec), &
+         crdsys, crdnam, relate, refval, tol, adjust, bridge_gf_step, bridge_gf_refine, rpt, &
+         bridge_gf_rep_init, bridge_gf_rep_update, bridge_gf_rep_final, bail, bridge_gf_bail, mw, &
+         nw, work, cnfine, result )
       current_gf_step => outer_udstep
       current_gf_refine => outer_udrefn
       current_gf_rep_init => outer_udrepi
@@ -1960,7 +1980,9 @@ contains
       real(wp) :: result ( lbcell : * )  !! SPICE window containing results.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%gfilum ( method, angtyp, target, illmn, fixref, abcorr, obsrvr, spoint, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+      ! PEPPER: spoint is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%gfilum ( method, angtyp, target, illmn, fixref, abcorr, obsrvr, (spoint), relate, &
+         refval, adjust, step, cnfine, mw, nw, work, result )
       end subroutine gfilum
 
       !> Determine time intervals for which a specified constraint
@@ -2136,7 +2158,9 @@ contains
       real(wp) :: result ( lbcell : * )  !! SPICE window containing results.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%gfsntc ( target, fixref, method, abcorr, obsrvr, dref, dvec, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
+      ! PEPPER: dvec is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%gfsntc ( target, fixref, method, abcorr, obsrvr, dref, (dvec), crdsys, coord, &
+         relate, refval, adjust, step, cnfine, mw, nw, work, result )
       end subroutine gfsntc
 
       !> Determine time intervals for which a coordinate of an

@@ -75,7 +75,8 @@ contains
       logical :: found  !! "Found" flag.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzdynoac ( ctx, frname, frcode, item, maxn, n, values, found )
+      ! PEPPER: frname, item are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzdynoac ( ctx, (frname), frcode, (item), maxn, n, values, found )
       end subroutine zzdynoac
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -118,7 +119,8 @@ contains
       character(*) :: values  ( * )  !! Output kernel variable.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzdynvac ( ctx, frname, frcode, item, maxn, n, values )
+      ! PEPPER: frname, item are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzdynvac ( ctx, (frname), frcode, (item), maxn, n, values )
       end subroutine zzdynvac
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -323,7 +325,8 @@ contains
       logical :: found  !! .TRUE. if the requested information is available.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%cnmfrm ( cname, frcode, frname, found )
+      ! PEPPER: cname is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%cnmfrm ( (cname), frcode, frname, found )
       end subroutine cnmfrm
 
       !> Return the frame name, frame ID, and center associated with

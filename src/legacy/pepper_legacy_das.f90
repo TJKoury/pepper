@@ -590,7 +590,8 @@ contains
       character(nwc) :: record  !! DAS character record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%dasioc ( action, unit, recno, record )
+      ! PEPPER: action is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%dasioc ( (action), unit, recno, record )
       end subroutine dasioc
 
       !> Perform Fortran reads and writes of DAS double precision records.

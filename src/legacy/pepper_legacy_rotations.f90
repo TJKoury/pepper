@@ -45,7 +45,8 @@ contains
       real(wp) :: mout  ( 3,3 )  !! Resulting rotated matrix [ANGLE]      * M1 IAXIS
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%rotmat ( m1, angle, iaxis, mout )
+      ! PEPPER: m1 is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%rotmat ( (m1), angle, iaxis, mout )
       end subroutine rotmat
 
       !> Factor a rotation matrix as a product of three rotations about
@@ -65,7 +66,8 @@ contains
       real(wp) :: angle1  !! Third, second, and first Euler angles, in radians.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%m2eul ( r, axis3, axis2, axis1, angle3, angle2, angle1 )
+      ! PEPPER: r is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%m2eul ( (r), axis3, axis2, axis1, angle3, angle2, angle1 )
       end subroutine m2eul
 
       !> Construct a rotation matrix from a set of Euler angles.
@@ -102,7 +104,8 @@ contains
       logical :: unique  !! Indicates if EULANG is a unique representation.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%xf2eul ( xform, axisa, axisb, axisc, eulang, unique )
+      ! PEPPER: xform is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%xf2eul ( (xform), axisa, axisb, axisc, eulang, unique )
       end subroutine xf2eul
 
       !> Compute a state transformation from an Euler angle factorization
@@ -119,7 +122,8 @@ contains
       real(wp) :: eulang ( 6 )  !! An array of Euler angles and their derivatives.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%eul2xf ( eulang, axisa, axisb, axisc, xform )
+      ! PEPPER: eulang is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%eul2xf ( (eulang), axisa, axisb, axisc, xform )
       end subroutine eul2xf
 
       !> Find the transformation to the right-handed frame having a
@@ -137,7 +141,8 @@ contains
       real(wp) :: mout   ( 3,3 )  !! Output rotation matrix.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%twovec ( axdef, indexa, plndef, indexp, mout )
+      ! PEPPER: axdef, plndef are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%twovec ( (axdef), indexa, (plndef), indexp, mout )
       end subroutine twovec
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -154,7 +159,8 @@ contains
       real(wp) :: xform  ( 6, 6 )  !! Output state transformation matrix.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zztwovxf ( ctx, axdef, indexa, plndef, indexp, xform )
+      ! PEPPER: axdef, plndef are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zztwovxf ( ctx, (axdef), indexa, (plndef), indexp, xform )
       end subroutine zztwovxf
 
       !> Compute the matrix needed to rotate vectors between two
@@ -295,7 +301,8 @@ contains
       logical :: found  !! Tells whether DNEAR is degenerate.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzdnpt ( ctx, state, nearp, a, b, c, dnear, dalt, found )
+      ! PEPPER: state, nearp are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzdnpt ( ctx, (state), (nearp), a, b, c, dnear, dalt, found )
       end subroutine zzdnpt
 
       !> Compute the state (position and velocity) of an ellipsoid surface
@@ -314,7 +321,8 @@ contains
       logical :: found  !! Flag that indicates whether DNEAR is degenerate.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%dnearp ( state, a, b, c, dnear, dalt, found )
+      ! PEPPER: state is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%dnearp ( (state), a, b, c, dnear, dalt, found )
       end subroutine dnearp
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -333,7 +341,8 @@ contains
       real(wp) :: dscorr ( 3 )  !! Stellar aberration correction for velocity.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzstelab ( ctx, xmit, accobs, vobs, starg, scorr, dscorr )
+      ! PEPPER: accobs, vobs, starg are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzstelab ( ctx, xmit, (accobs), (vobs), (starg), scorr, dscorr )
       end subroutine zzstelab
 
 end module pepper_legacy_rotations

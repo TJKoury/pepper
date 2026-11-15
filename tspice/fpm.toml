@@ -35,10 +35,10 @@ source-form = "default"
 platform.gfortran.flags = "-frecursive -fallow-argument-mismatch"
 # Intel: RECL= in bytes, as in NAIF's ifort builds: NAIF's test code opens
 # binary files with RECL=1024 (the library computes RECL= itself)
-platform.ifx.flags = "-recursive -assume byterecl"
-platform.ifort.flags = "-recursive -assume byterecl"
-platform.windows.ifx.flags = "/recursive /assume:byterecl"
-platform.windows.ifort.flags = "/recursive /assume:byterecl"
+platform.ifx.flags = "-recursive -fp-model precise -assume byterecl"
+platform.ifort.flags = "-recursive -fp-model precise -assume byterecl"
+platform.windows.ifx.flags = "/recursive /fp:precise /assume:byterecl"
+platform.windows.ifort.flags = "/recursive /fp:precise /assume:byterecl"
 # NAIF's test programs have local arrays of up to 1.5 MB (on the stack with
 # -frecursive); Windows' default stack is 1 MB (MSVC, Intel) or 2 MB
 # (MinGW gfortran): 64 MB there

@@ -57,7 +57,8 @@ contains
       character(*) :: out  !! Output string.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%repmot ( in, marker, value, rtcase, out )
+      ! PEPPER: in, marker, rtcase are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%repmot ( (in), (marker), value, (rtcase), out )
       end subroutine repmot
 
       !> Retrieve the string starting at the FIDX element of the kernel
@@ -77,7 +78,8 @@ contains
       logical :: found  !! flag indicating success or failure of request
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sepool ( item, fidx, contin, string, size, lidx, found )
+      ! PEPPER: item, contin are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sepool ( (item), fidx, (contin), string, size, lidx, found )
       end subroutine sepool
 
       !> Retrieve the Nth string from a kernel pool variable, where the
@@ -96,7 +98,8 @@ contains
       logical :: found  !! Flag indicating success or failure of request.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%stpool ( item, nth, contin, nthstr, size, found )
+      ! PEPPER: item, contin are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%stpool ( (item), nth, (contin), nthstr, size, found )
       end subroutine stpool
 
       !> Return the latest version string of a given item such as the
@@ -109,7 +112,8 @@ contains
       character(*) :: verstr  !! Version string.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%tkvrsn ( item, verstr )
+      ! PEPPER: item is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%tkvrsn ( (item), verstr )
       end subroutine tkvrsn
 
       !> Returns a string indicating the line terminators of an ASCII file
@@ -127,7 +131,8 @@ contains
       character(*) :: termin  !! The deduced terminator ID.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzascii ( ctx, file, line, check, termin )
+      ! PEPPER: file is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzascii ( ctx, (file), line, check, termin )
       end subroutine zzascii
 
       !> Determine whether a file exists.
@@ -156,7 +161,8 @@ contains
       integer(ip) :: handle  !! The handle associated with the loaded kernel.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzldker ( ctx, file, nofile, filtyp, handle )
+      ! PEPPER: file, nofile are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzldker ( ctx, (file), (nofile), filtyp, handle )
       end subroutine zzldker
 
       !> Load one or more SPICE kernels into a program.
@@ -212,7 +218,8 @@ contains
       logical :: found  !! .TRUE. if the specified file could be located.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%kdata ( which, kind, file, filtyp, srcfil, handle, found )
+      ! PEPPER: kind is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%kdata ( which, (kind), file, filtyp, srcfil, handle, found )
       end subroutine kdata
 
       !> Return information about a specific kernel
@@ -228,7 +235,8 @@ contains
       logical :: found  !! .TRUE. if the specified file could be located.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%kinfo ( file, filtyp, srcfil, handle, found )
+      ! PEPPER: file is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%kinfo ( (file), filtyp, srcfil, handle, found )
       end subroutine kinfo
 
       !> Clear the KEEPER subsystem: unload all kernels, clear the kernel

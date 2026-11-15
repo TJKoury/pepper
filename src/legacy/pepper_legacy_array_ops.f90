@@ -28,7 +28,8 @@ contains
       character(*) :: array    ( * )  !! Array to be cycled/cycled array.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%cyacip ( nelt, dir, ncycle, array )
+      ! PEPPER: dir is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%cyacip ( nelt, (dir), ncycle, array )
       end subroutine cyacip
 
       !> Cycle the elements of a double precision array forward
@@ -76,7 +77,8 @@ contains
       character(*) :: out      ( * )  !! Cycled array.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%cyclac ( array, nelt, dir, ncycle, out )
+      ! PEPPER: dir is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%cyclac ( array, nelt, (dir), ncycle, out )
       end subroutine cyclac
 
       !> Cycle the elements of a double precision array forward

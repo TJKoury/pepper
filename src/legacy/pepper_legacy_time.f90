@@ -149,7 +149,8 @@ contains
       character(*) :: str  !! a string representing X as prescribed by PICTUR
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%dpfmt ( x, pictur, str )
+      ! PEPPER: pictur is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%dpfmt ( x, (pictur), str )
       end subroutine dpfmt
 
       !> Take a double precision number and convert it to an
@@ -165,7 +166,8 @@ contains
       character(*) :: string  !! A character string representation of X
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%dpstrf ( x, sigdig, format, string )
+      ! PEPPER: format is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%dpstrf ( x, sigdig, (format), string )
       end subroutine dpstrf
 
       !> Replace a marker in a string with a formatted double precision
@@ -183,7 +185,8 @@ contains
       character(*) :: out  !! Output string.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%repmf ( in, marker, value, sigdig, format, out )
+      ! PEPPER: in, marker, format are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%repmf ( (in), (marker), value, sigdig, (format), out )
       end subroutine repmf
 
       !> Convert Year Month and Day on the Julian Calendar
@@ -262,7 +265,8 @@ contains
       character(*) :: value  !! Value associated with the default item.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%timdef ( action, item, value )
+      ! PEPPER: action, item are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%timdef ( (action), (item), value )
       end subroutine timdef
 
       !> Transform time from one uniform scale to another. The uniform

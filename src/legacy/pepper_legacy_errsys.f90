@@ -126,7 +126,8 @@ contains
       character(*) :: msg  !! the message
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%getmsg ( option, msg )
+      ! PEPPER: option is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%getmsg ( (option), msg )
       end subroutine getmsg
 
       !> Get or set the error action.
@@ -139,7 +140,8 @@ contains
       character(*) :: action  !! the action
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%erract ( op, action )
+      ! PEPPER: op is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%erract ( (op), action )
       end subroutine erract
 
       !> Get or set the error output device.
@@ -152,7 +154,8 @@ contains
       character(*) :: device  !! the device
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%errdev ( op, device )
+      ! PEPPER: op is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%errdev ( (op), device )
       end subroutine errdev
 
       !> Get or set the parts of the error reports.
@@ -165,7 +168,8 @@ contains
       character(*) :: list  !! the list of report parts
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%errprt ( op, list )
+      ! PEPPER: op is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%errprt ( (op), list )
       end subroutine errprt
 
       !> Write an error report.

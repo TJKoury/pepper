@@ -18,7 +18,8 @@ contains
       implicit none
       character(*) :: msg  !! A short error message.
       character(*) :: expl  !! The explanation of the short error message.
-      call pepper_expln ( msg, expl )
+      ! PEPPER: msg is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_expln ( (msg), expl )
       end subroutine expln
 
 end module pepper_legacy_errors

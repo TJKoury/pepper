@@ -39,7 +39,8 @@ contains
       ctx => legacy_context()
       outer => current_zzspk_state
       current_zzspk_state => trgsub
-      call pepper_zzspkflt ( ctx, bridge_zzspk_state, et, ref, abcorr, stobs, starg, lt, dlt )
+      ! PEPPER: stobs is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzspkflt ( ctx, bridge_zzspk_state, et, ref, abcorr, (stobs), starg, lt, dlt )
       current_zzspk_state => outer
       end subroutine zzspkflt
 
@@ -94,7 +95,9 @@ contains
       ctx => legacy_context()
       outer => current_zzspk_state
       current_zzspk_state => trgsub
-      call pepper_zzspkfap ( ctx, bridge_zzspk_state, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+      ! PEPPER: stobs, accobs are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzspkfap ( ctx, bridge_zzspk_state, et, ref, abcorr, (stobs), (accobs), starg, &
+         lt, dlt )
       current_zzspk_state => outer
       end subroutine zzspkfap
 

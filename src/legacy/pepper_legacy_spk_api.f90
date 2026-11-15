@@ -460,7 +460,8 @@ contains
       real(wp) :: corxfm ( 6, 6 )  !! Corrected state transformation matrix.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzcorsxf ( ctx, xmit, dlt, xform, corxfm )
+      ! PEPPER: xform is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzcorsxf ( ctx, xmit, dlt, (xform), corxfm )
       end subroutine zzcorsxf
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -564,7 +565,8 @@ contains
       real(wp) :: lt  !! One way light time between observer and target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkapo ( targ, et, ref, sobs, abcorr, ptarg, lt )
+      ! PEPPER: sobs is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkapo ( targ, et, ref, (sobs), abcorr, ptarg, lt )
       end subroutine spkapo
 
       !> Return the state (position and velocity) of a target body
@@ -586,7 +588,8 @@ contains
       real(wp) :: dlt  !! Derivative of light time with respect to time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkltc ( targ, et, ref, abcorr, stobs, starg, lt, dlt )
+      ! PEPPER: stobs is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkltc ( targ, et, ref, abcorr, (stobs), starg, lt, dlt )
       end subroutine spkltc
 
       !> Extract a subset of the data in a type 10 SPK segment into a new
@@ -674,7 +677,8 @@ contains
       real(wp) :: lt  !! One way light time between observer and target.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkapp ( targ, et, ref, sobs, abcorr, starg, lt )
+      ! PEPPER: sobs is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkapp ( targ, et, ref, (sobs), abcorr, starg, lt )
       end subroutine spkapp
 
       !> Return the state (position and velocity) of a target body
@@ -700,7 +704,8 @@ contains
       real(wp) :: dlt  !! Derivative of light time with respect to time.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkaps ( targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
+      ! PEPPER: stobs, accobs are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkaps ( targ, et, ref, abcorr, (stobs), (accobs), starg, lt, dlt )
       end subroutine spkaps
 
       !> Return the position of a target body relative to an observing
@@ -851,7 +856,9 @@ contains
       real(wp) :: lt  !! One way light time between target and observer.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkcvo ( target, et, outref, refloc, abcorr, obssta, obsepc, obsctr, obsref, state, lt )
+      ! PEPPER: obssta is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkcvo ( target, et, outref, refloc, abcorr, (obssta), obsepc, obsctr, obsref, &
+         state, lt )
       end subroutine spkcvo
 
       !> Return the state (position and velocity) of a target body
@@ -898,7 +905,8 @@ contains
       real(wp) :: lt  !! One way light time between target and observer.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkcpo ( target, et, outref, refloc, abcorr, obspos, obsctr, obsref, state, lt )
+      ! PEPPER: obspos is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkcpo ( target, et, outref, refloc, abcorr, (obspos), obsctr, obsref, state, lt )
       end subroutine spkcpo
 
       !> Return the state, relative to a specified observer, of a target
@@ -925,7 +933,9 @@ contains
       real(wp) :: lt  !! One way light time between target and observer.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkcvt ( trgsta, trgepc, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
+      ! PEPPER: trgsta is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkcvt ( (trgsta), trgepc, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, &
+         state, lt )
       end subroutine spkcvt
 
       !> Return the state, relative to a specified observer, of a target
@@ -951,7 +961,8 @@ contains
       real(wp) :: lt  !! One way light time between target and observer.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkcpt ( trgpos, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
+      ! PEPPER: trgpos is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkcpt ( (trgpos), trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
       end subroutine spkcpt
 
 end module pepper_legacy_spk_api

@@ -80,7 +80,8 @@ contains
       logical :: update  !! Update flag.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzctrchk ( ctx, newctr, oldctr, update )
+      ! PEPPER: newctr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzctrchk ( ctx, (newctr), oldctr, update )
       end subroutine zzctrchk
 
       !> Set the long error message equal to a standard I/O error message
@@ -110,7 +111,8 @@ contains
       logical :: eof  !! End-of-file indicator.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%rdtext ( file, line, eof )
+      ! PEPPER: file is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%rdtext ( (file), line, eof )
       end subroutine rdtext
 
       !> Close a text file currently opened by RDTEXT.
@@ -178,7 +180,8 @@ contains
       logical :: status  !! Status flag
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zztknerr ( ctx, templt, string, token, error, status )
+      ! PEPPER: templt, string, token are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zztknerr ( ctx, (templt), (string), (token), error, status )
       end subroutine zztknerr
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -196,7 +199,8 @@ contains
       character(*) :: pattrn  !! Decimal pattern
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzmkpc ( ctx, pictur, b, e, mark, pattrn )
+      ! PEPPER: mark, pattrn are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzmkpc ( ctx, pictur, b, e, (mark), (pattrn) )
       end subroutine zzmkpc
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -230,7 +234,8 @@ contains
       character(*) :: error  !! Diagnostic message if .NOT. OK.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%tcheck ( tvec, type, mods, modify, ok, error )
+      ! PEPPER: type is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%tcheck ( tvec, (type), mods, modify, ok, error )
       end subroutine tcheck
 
       !> Restrict the set of strings that are recognized by SPICE time
@@ -324,7 +329,8 @@ contains
       character(*) :: error  !! A diagnostic message if STRING couldn't be parsed
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%tpartv ( string, tvec, ntvec, type, modify, mods, yabbrv, succes, pictur, error )
+      ! PEPPER: string is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%tpartv ( (string), tvec, ntvec, type, modify, mods, yabbrv, succes, pictur, error )
       end subroutine tpartv
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -445,7 +451,8 @@ contains
       character(*) :: error  !! A diagnostic message
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      zztokns = pepper_zztokns ( ctx, string, error )
+      ! PEPPER: string is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      zztokns = pepper_zztokns ( ctx, (string), error )
       end function zztokns
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -465,7 +472,8 @@ contains
       logical :: yabbrv  !! has the year been abbreviated.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      zzunpck = pepper_zzunpck ( ctx, string, yabbrv, tvec, e, transl, pic, error )
+      ! PEPPER: string is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      zzunpck = pepper_zzunpck ( ctx, (string), yabbrv, tvec, e, transl, pic, error )
       end function zzunpck
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -497,7 +505,8 @@ contains
       character(*) :: errmsg  !! Descriptive error message.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%tparse ( string, sp2000, errmsg )
+      ! PEPPER: string is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%tparse ( (string), sp2000, errmsg )
       end subroutine tparse
 
       !> Remove all kernel variables from the kernel pool. Watches
@@ -629,7 +638,8 @@ contains
       character(*) :: cvals     ( * )  !! Values associated with NAME.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%gcpool ( name, start, room, n, cvals, found )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%gcpool ( (name), start, room, n, cvals, found )
       end subroutine gcpool
 
       !> Return the d.p. value of a kernel variable from the kernel pool.
@@ -685,7 +695,8 @@ contains
       character(*) :: type  !! Type of the variable 'C', 'N', 'X'
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%dtpool ( name, found, n, type )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%dtpool ( (name), found, n, type )
       end subroutine dtpool
 
       !> Provide toolkit programmers a method for programmatically
@@ -801,7 +812,8 @@ contains
       character(*) :: cvals     ( * )  !! Kernel pool variables whose names match NAME.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%gnpool ( name, start, room, n, cvals, found )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%gnpool ( (name), start, room, n, cvals, found )
       end subroutine gnpool
 
       !> Delete a name from the list of agents to notify whenever a member

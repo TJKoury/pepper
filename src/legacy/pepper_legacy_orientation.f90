@@ -99,7 +99,8 @@ contains
       integer(ip) :: frcode  !! Frame ID code.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zznamfrm ( ctx, usrctr, savnam, savcde, frname, frcode )
+      ! PEPPER: frname is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zznamfrm ( ctx, usrctr, savnam, savcde, (frname), frcode )
       end subroutine zznamfrm
 
       !> SPICE Private routine intended solely for the support of SPICE
@@ -273,7 +274,8 @@ contains
       integer(ip) :: center  !! Center of state.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkpvn ( handle, descr, et, ref, state, center )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkpvn ( handle, (descr), et, ref, state, center )
       end subroutine spkpvn
 
       !> SPICE Private routine intended solely for the support of SPICE

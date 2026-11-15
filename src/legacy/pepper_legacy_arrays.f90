@@ -150,7 +150,8 @@ contains
       character(*) :: value  !! Character string value to be placed in ARRAY.
       integer(ip) :: ndim  !! The number of elements in ARRAY.
       character(*) :: array ( * )  !! Character string array which is to be filled.
-      call pepper_fillc ( value, ndim, array )
+      ! PEPPER: value is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_fillc ( (value), ndim, array )
       end subroutine fillc
 
       !> Fill a double precision array with a specified value.

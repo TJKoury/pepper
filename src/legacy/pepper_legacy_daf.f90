@@ -50,7 +50,8 @@ contains
       character(*) :: errmsg  !! A descriptive error message.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%hx2dp ( string, number, error, errmsg )
+      ! PEPPER: string is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%hx2dp ( (string), number, error, errmsg )
       end subroutine hx2dp
 
       !> Read N encoded d.p. numbers from a text file, decoding them

@@ -184,7 +184,8 @@ contains
       logical :: found  !! Flag indicating whether record was found.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%ckr05 ( handle, descr, sclkdp, tol, needav, record, found )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%ckr05 ( handle, (descr), sclkdp, tol, needav, record, found )
       end subroutine ckr05
 
       !> Read a single CK data record from a segment of type 6
@@ -205,7 +206,8 @@ contains
       logical :: found  !! Flag indicating whether record was found.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%ckr06 ( handle, descr, sclkdp, tol, needav, record, found )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%ckr06 ( handle, (descr), sclkdp, tol, needav, record, found )
       end subroutine ckr06
 
       !> Read a single PCK data record from a segment of type 2
@@ -221,7 +223,8 @@ contains
       real(wp) :: record   ( * )  !! Data record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%pckr02 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%pckr02 ( handle, (descr), et, record )
       end subroutine pckr02
 
       !> Read a single PCK data record from a segment of type 20
@@ -237,7 +240,8 @@ contains
       real(wp) :: record   ( * )  !! Data record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%pckr20 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%pckr20 ( handle, (descr), et, record )
       end subroutine pckr20
 
       !> Obtain the value of a specified generic segment meta data item.
@@ -466,7 +470,8 @@ contains
       real(wp) :: record   ( * )  !! Data record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkr01 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkr01 ( handle, (descr), et, record )
       end subroutine spkr01
 
       !> Read a single SPK data record from a segment of type 2
@@ -482,7 +487,8 @@ contains
       real(wp) :: record   ( * )  !! Data record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkr02 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkr02 ( handle, (descr), et, record )
       end subroutine spkr02
 
       !> Read a single SPK data record from a segment of type 3
@@ -498,7 +504,8 @@ contains
       real(wp) :: record   ( * )  !! Data record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkr03 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkr03 ( handle, (descr), et, record )
       end subroutine spkr03
 
       !> Read a single SPK data record from a segment of type 5
@@ -514,7 +521,8 @@ contains
       real(wp) :: record   ( * )  !! Data record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkr05 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkr05 ( handle, (descr), et, record )
       end subroutine spkr05
 
       !> Read a single SPK data record from a segment of type 8
@@ -531,7 +539,8 @@ contains
       real(wp) :: record   ( * )  !! Data record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkr08 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkr08 ( handle, (descr), et, record )
       end subroutine spkr08
 
       !> Read a single SPK data record from a segment of type 9
@@ -548,7 +557,8 @@ contains
       real(wp) :: record   ( * )  !! Data record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkr09 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkr09 ( handle, (descr), et, record )
       end subroutine spkr09
 
       !> Read a single SPK data record from a segment of type 15
@@ -564,7 +574,8 @@ contains
       real(wp) :: record(*)  !! Data record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkr15 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkr15 ( handle, (descr), et, record )
       end subroutine spkr15
 
       !> Read a single SPK data record from a segment of type 17
@@ -580,7 +591,8 @@ contains
       real(wp) :: record(*)  !! Data record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkr17 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkr17 ( handle, (descr), et, record )
       end subroutine spkr17
 
       !> Read a single SPK data record from a segment of type 18
@@ -597,7 +609,8 @@ contains
       real(wp) :: record   ( * )  !! Data record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkr18 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkr18 ( handle, (descr), et, record )
       end subroutine spkr18
 
       !> Read a single SPK data record from a segment of type 19
@@ -615,7 +628,8 @@ contains
       real(wp) :: record   ( * )  !! Data record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkr19 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkr19 ( handle, (descr), et, record )
       end subroutine spkr19
 
       !> Read a single SPK data record from a segment of type 20
@@ -631,7 +645,8 @@ contains
       real(wp) :: record   ( * )  !! Data record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkr20 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkr20 ( handle, (descr), et, record )
       end subroutine spkr20
 
       !> Read a single SPK data record from a segment of type 21
@@ -648,7 +663,8 @@ contains
       real(wp) :: record   ( * )  !! Data record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkr21 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkr21 ( handle, (descr), et, record )
       end subroutine spkr21
 
       !> Compute the values of the Stumpff functions C_0 through C_3 at
@@ -910,7 +926,13 @@ contains
       integer(ip) :: irez  !! Resonance flags: 0-none, 1-one day, 2-half day
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzdsin ( ctx, geophs, cosim, emsq, argpo, s1, s2, s3, s4, s5, sinim, ss1, ss2, ss3, ss4, ss5, sz1, sz3, sz11, sz13, sz21, sz23, sz31, sz33, t, tc, gsto, mo, mdot, no, nodeo, nodedot, xpidot, z1, z3, z11, z13, z21, z23, z31, z33, ecco, eccsq, eccm, argpm, inclm, mm, xn, nodem, irez, atime, d2201, d2211, d3210, d3222, d4410, d4422, d5220, d5232, d5421, d5433, dedt, didt, dmdt, dndt, dnodt, domdt, del1, del2, del3, xfact, xlamo, xli, xni )
+      ! PEPPER: geophs is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzdsin ( ctx, (geophs), cosim, emsq, argpo, s1, s2, s3, s4, s5, sinim, ss1, ss2, &
+         ss3, ss4, ss5, sz1, sz3, sz11, sz13, sz21, sz23, sz31, sz33, t, tc, gsto, mo, mdot, no, &
+         nodeo, nodedot, xpidot, z1, z3, z11, z13, z21, z23, z31, z33, ecco, eccsq, eccm, argpm, &
+         inclm, mm, xn, nodem, irez, atime, d2201, d2211, d3210, d3222, d4410, d4422, d5220, d5232, &
+         d5421, d5433, dedt, didt, dmdt, dndt, dnodt, domdt, del1, del2, del3, xfact, xlamo, xli, &
+         xni )
       end subroutine zzdsin
 
       !> This subroutine provides deep space contributions to mean
@@ -1067,7 +1089,9 @@ contains
       real(wp) :: gsto  !! GST at time of observation.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call pepper_zzinil ( ctx, geophs, opmode, ecco, epoch, inclo, no, ainv, ao, con41, con42, cosio, cosio2, eccsq, omeosq, posq, rp, rteosq, sinio, gsto )
+      ! PEPPER: geophs is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_zzinil ( ctx, (geophs), opmode, ecco, epoch, inclo, no, ainv, ao, con41, con42, &
+         cosio, cosio2, eccsq, omeosq, posq, rp, rteosq, sinio, gsto )
       end subroutine zzinil
 
       !> Evaluate a single data record from a type 6 CK segment.
@@ -1166,7 +1190,8 @@ contains
       real(wp) :: pvprop ( 6 )  !! The propagated state.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%prop2b ( gm, pvinit, dt, pvprop )
+      ! PEPPER: pvinit is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%prop2b ( gm, (pvinit), dt, pvprop )
       end subroutine prop2b
 
       !> Fetch from the constants partition of a generic segment the
@@ -1307,7 +1332,8 @@ contains
       real(wp) :: record   ( * )  !! Data record associated with epoch ET.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%pckr03 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%pckr03 ( handle, (descr), et, record )
       end subroutine pckr03
 
       !> Evaluate a single SPK data record from a segment of type 5
@@ -1354,7 +1380,8 @@ contains
       real(wp) :: record   ( * )  !! Data record.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%spkr10 ( handle, descr, et, record )
+      ! PEPPER: descr is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%spkr10 ( handle, (descr), et, record )
       end subroutine spkr10
 
       !> Read a single data record from a type 14 SPK segment.

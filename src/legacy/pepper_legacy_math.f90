@@ -44,7 +44,8 @@ contains
       real(wp) :: axis  ( 3 )  !! Rotation axis.
       real(wp) :: angle  !! Rotation angle, in radians.
       real(wp) :: r     ( 3, 3 )  !! Rotation matrix corresponding to AXIS and ANGLE.
-      call pepper_axisar ( axis, angle, r )
+      ! PEPPER: axis is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_axisar ( (axis), angle, r )
       end subroutine axisar
 
       !> Convert from range, azimuth and elevation of a point to
@@ -112,7 +113,8 @@ contains
       integer(ip) :: nderiv  !! The number of derivatives to compute.
       real(wp) :: partdp ( 3, 0:* )  !! Workspace provided for computing derivatives.
       real(wp) :: dpdxs  (    0:* )  !! Array of the derivatives of the polynomial.
-      call pepper_chbder ( cp, degp, x2s, x, nderiv, partdp, dpdxs )
+      ! PEPPER: x2s is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_chbder ( cp, degp, (x2s), x, nderiv, partdp, dpdxs )
       end subroutine chbder
 
       !> Return the value of a polynomial and its derivative, evaluated at
@@ -130,7 +132,8 @@ contains
       real(wp) :: x  !! Value for which the polynomial is to be evaluated
       real(wp) :: p  !! Value of the polynomial at X
       real(wp) :: dpdx  !! Value of the derivative of the polynomial at X
-      call pepper_chbint ( cp, degp, x2s, x, p, dpdx )
+      ! PEPPER: x2s is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_chbint ( cp, degp, (x2s), x, p, dpdx )
       end subroutine chbint
 
       !> Return the value of a polynomial evaluated at the input X using
@@ -146,7 +149,8 @@ contains
       real(wp) :: x2s ( 2 )  !! Transformation parameters of polynomial.
       real(wp) :: x  !! Value for which the polynomial is to be evaluated.
       real(wp) :: p  !! Value of the polynomial at X.
-      call pepper_chbval ( cp, degp, x2s, x, p )
+      ! PEPPER: x2s is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_chbval ( cp, degp, (x2s), x, p )
       end subroutine chbval
 
       !> Convert from cylindrical to latitudinal coordinates.
@@ -306,7 +310,8 @@ contains
       real(wp) :: s1   ( 6 )  !! Left hand state for cross product and derivative.
       real(wp) :: s2   ( 6 )  !! Right hand state for cross product and derivative.
       real(wp) :: sout ( 6 )  !! Unit vector and derivative of the cross product.
-      call pepper_ducrss ( s1, s2, sout )
+      ! PEPPER: s1, s2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_ducrss ( (s1), (s2), sout )
       end subroutine ducrss
 
       !> Compute the cross product of two 3-dimensional vectors
@@ -320,7 +325,8 @@ contains
       real(wp) :: s1   ( 6 )  !! Left hand state for cross product and derivative.
       real(wp) :: s2   ( 6 )  !! Right hand state for cross product and derivative.
       real(wp) :: sout ( 6 )  !! State associated with cross product of positions.
-      call pepper_dvcrss ( s1, s2, sout )
+      ! PEPPER: s1, s2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_dvcrss ( (s1), (s2), sout )
       end subroutine dvcrss
 
       !> Compute the derivative of the dot product of two double
@@ -348,7 +354,8 @@ contains
       real(wp) :: sout ( 6 )  !! Unit vector S1 / |S1|, and its time derivative.
       integer(ip), parameter :: pos = 1
       integer(ip), parameter :: vel = 4
-      call pepper_dvhat ( s1, sout )
+      ! PEPPER: s1 is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_dvhat ( (s1), sout )
       end subroutine dvhat
 
        !> Calculate the derivative of the norm of a 3-vector.
@@ -380,7 +387,8 @@ contains
       integer(ip), parameter :: ctrpos = 1
       integer(ip), parameter :: majpos = 4
       integer(ip), parameter :: minpos = 7
-      call pepper_el2cgv ( ellips, center, smajor, sminor )
+      ! PEPPER: ellips is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_el2cgv ( (ellips), center, smajor, sminor )
       end subroutine el2cgv
 
       !> Determine whether an integer is even.
@@ -462,7 +470,8 @@ contains
       real(wp) :: e3    ( 3 )  !! Third edge of the tetrahedral angle
       logical :: found  !! Indicates whether V lies in the solid angle
       real(wp) :: scale  !! Scale times V is in the triangle E1,E2,E3
-      call pepper_insang ( v, e1, e2, e3, found, scale )
+      ! PEPPER: v, e1, e2, e3 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_insang ( (v), (e1), (e2), (e3), found, scale )
       end subroutine insang
 
       !> Generate the inverse of a 3x3 matrix.
@@ -475,7 +484,8 @@ contains
       real(wp) :: m    ( 3,3 )  !! Matrix to be inverted.
       real(wp) :: mout ( 3,3 )  !! Inverted matrix (M)**-1. If M is singular, then MOUT will
                                        !! be the zero matrix.
-      call pepper_invert ( m, mout )
+      ! PEPPER: m is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_invert ( (m), mout )
       end subroutine invert
 
       !> Convert from latitudinal coordinates to cylindrical coordinates.
@@ -533,7 +543,8 @@ contains
       implicit none
       real(wp) :: m1   ( 3, 3 )  !! Input matrix.
       real(wp) :: mout ( 3, 3 )  !! Output matrix equal to M1.
-      call pepper_mequ ( m1, mout )
+      ! PEPPER: m1 is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_mequ ( (m1), mout )
       end subroutine mequ
 
       !> Set one double precision matrix of arbitrary size equal to
@@ -548,7 +559,8 @@ contains
       integer(ip) :: nc  !! Column dimension of M1 (and also MOUT).
       real(wp) :: m1   ( nr,nc )  !! Input matrix.
       real(wp) :: mout ( nr,nc )  !! Output matrix equal to M1.
-      call pepper_mequg ( m1, nr, nc, mout )
+      ! PEPPER: m1 is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_mequg ( (m1), nr, nc, mout )
       end subroutine mequg
 
       !> Multiply the transpose of a 3x3 matrix and a 3x3 matrix.
@@ -562,7 +574,8 @@ contains
       real(wp) :: m2   ( 3,3 )  !! 3x3 double precision matrix.
       real(wp) :: mout ( 3,3 )  !! 3x3 double precision matrix which is the product (M1**T) *
                                        !! M2.
-      call pepper_mtxm ( m1, m2, mout )
+      ! PEPPER: m1, m2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_mtxm ( (m1), (m2), mout )
       end subroutine mtxm
 
       !> Multiply the transpose of a matrix with another matrix,
@@ -581,7 +594,8 @@ contains
                                              !! multiplied.
       real(wp) :: m2   ( nr1r2,nc2 )  !! Right-hand matrix to be multiplied.
       real(wp) :: mout ( nc1,  nc2 )  !! Product matrix M1**T * M2.
-      call pepper_mtxmg ( m1, m2, nc1, nr1r2, nc2, mout )
+      ! PEPPER: m1, m2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_mtxmg ( (m1), (m2), nc1, nr1r2, nc2, mout )
       end subroutine mtxmg
 
       !> Multiply the transpose of a 3x3 matrix on the left with a vector
@@ -596,7 +610,8 @@ contains
       real(wp) :: vin    (   3 )  !! 3-dimensional double precision vector.
       real(wp) :: vout   (   3 )  !! 3-dimensional double precision vector. VOUT is the
                                         !! product M**T * VIN.
-      call pepper_mtxv ( m, vin, vout )
+      ! PEPPER: m, vin are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_mtxv ( (m), (vin), vout )
       end subroutine mtxv
 
       !> Multiply the transpose of a matrix and a vector of
@@ -613,7 +628,8 @@ contains
                                              !! multiplied.
       real(wp) :: v2   ( nr1r2     )  !! Right-hand vector to be multiplied.
       real(wp) :: vout (       nc1 )  !! Product vector M1**T * V2.
-      call pepper_mtxvg ( m1, v2, nc1, nr1r2, vout )
+      ! PEPPER: m1, v2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_mtxvg ( (m1), (v2), nc1, nr1r2, vout )
       end subroutine mtxvg
 
       !> Multiply two 3x3 matrices.
@@ -626,7 +642,8 @@ contains
       real(wp) :: m1   ( 3,3 )  !! 3x3 double precision matrix.
       real(wp) :: m2   ( 3,3 )  !! 3x3 double precision matrix.
       real(wp) :: mout ( 3,3 )  !! The 3x3 double precision matrix product M1*M2.
-      call pepper_mxm ( m1, m2, mout )
+      ! PEPPER: m1, m2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_mxm ( (m1), (m2), mout )
       end subroutine mxm
 
       !> Multiply two double precision matrices of arbitrary size.
@@ -642,7 +659,8 @@ contains
       real(wp) :: m1   ( nr1,   nc1r2 )  !! NR1   x NC1R2 double precision matrix.
       real(wp) :: m2   ( nc1r2, nc2   )  !! NC1R2 x NC2   double precision matrix.
       real(wp) :: mout ( nr1,   nc2   )  !! NR1 x NC2 double precision matrix.
-      call pepper_mxmg ( m1, m2, nr1, nc1r2, nc2, mout )
+      ! PEPPER: m1, m2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_mxmg ( (m1), (m2), nr1, nc1r2, nc2, mout )
       end subroutine mxmg
 
       !> Multiply a 3x3 matrix and the transpose of another 3x3 matrix.
@@ -655,7 +673,8 @@ contains
       real(wp) :: m1   ( 3,3 )  !! 3x3 double precision matrix.
       real(wp) :: m2   ( 3,3 )  !! 3x3 double precision matrix.
       real(wp) :: mout ( 3,3 )  !! The product M1 times transpose of M2.
-      call pepper_mxmt ( m1, m2, mout )
+      ! PEPPER: m1, m2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_mxmt ( (m1), (m2), mout )
       end subroutine mxmt
 
       !> Multiply a matrix and the transpose of a matrix, both of
@@ -673,7 +692,8 @@ contains
       real(wp) :: m2   ( nr2,nc1c2 )  !! Right-hand matrix whose transpose is to be
                                              !! multiplied.
       real(wp) :: mout ( nr1,nr2   )  !! Product matrix M1 * M2**T.
-      call pepper_mxmtg ( m1, m2, nr1, nc1c2, nr2, mout )
+      ! PEPPER: m1, m2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_mxmtg ( (m1), (m2), nr1, nc1c2, nr2, mout )
       end subroutine mxmtg
 
       !> Multiply a 3x3 double precision matrix with a 3-dimensional
@@ -688,7 +708,8 @@ contains
       real(wp) :: vin    (    3 )  !! 3-dimensional double precision vector.
       real(wp) :: vout   (    3 )  !! 3-dimensional double precision vector. VOUT is the
                                           !! product M*VIN.
-      call pepper_mxv ( m, vin, vout )
+      ! PEPPER: m, vin are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_mxv ( (m), (vin), vout )
       end subroutine mxv
 
       !> Multiply a matrix and a vector of arbitrary size.
@@ -703,7 +724,8 @@ contains
       real(wp) :: m1   ( nr1,nc1r2 )  !! Left-hand matrix to be multiplied.
       real(wp) :: v2   (     nc1r2 )  !! Right-hand vector to be multiplied.
       real(wp) :: vout ( nr1       )  !! Product vector M1*V2.
-      call pepper_mxvg ( m1, v2, nr1, nc1r2, vout )
+      ! PEPPER: m1, v2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_mxvg ( (m1), (v2), nr1, nc1r2, vout )
       end subroutine mxvg
 
       !> Determine whether an integer is odd.
@@ -759,7 +781,8 @@ contains
                                    !! represented by PLANE.
       integer(ip), parameter :: nmlpos = 1
       integer(ip), parameter :: conpos = 4
-      call pepper_pl2nvc ( plane, normal, konst )
+      ! PEPPER: plane is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_pl2nvc ( (plane), normal, konst )
       end subroutine pl2nvc
 
       !> Return a unit normal vector and point that define a specified
@@ -775,7 +798,8 @@ contains
       real(wp) :: plane  ( ubpl )  !! A SPICE plane.
       real(wp) :: normal (    3 )  !! A unit normal vector and point that define PLANE.
       real(wp) :: point  (    3 )  !! A unit normal vector and point that define PLANE.
-      call pepper_pl2nvp ( plane, normal, point )
+      ! PEPPER: plane is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_pl2nvp ( (plane), normal, point )
       end subroutine pl2nvp
 
       !> Return a point and two orthogonal spanning vectors that generate
@@ -795,7 +819,8 @@ contains
                                             !! the input plane.
       real(wp) :: span2 (    3 )  !! A point in the input plane and two vectors spanning
                                             !! the input plane.
-      call pepper_pl2psv ( plane, point, span1, span2 )
+      ! PEPPER: plane is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_pl2psv ( (plane), point, span1, span2 )
       end subroutine pl2psv
 
       !> Expand a triangular plate by a specified amount. The expanded
@@ -810,7 +835,8 @@ contains
       real(wp) :: iverts ( 3, 3 )  !! Vertices of the plate to be expanded.
       real(wp) :: delta  !! Fraction by which the plate is to be expanded.
       real(wp) :: overts ( 3, 3 )  !! Vertices of the expanded plate.
-      call pepper_pltexp ( iverts, delta, overts )
+      ! PEPPER: iverts is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_pltexp ( (iverts), delta, overts )
       end subroutine pltexp
 
       !> Compute an outward normal vector of a triangular plate.
@@ -825,7 +851,8 @@ contains
       real(wp) :: v2     ( 3 )  !! Vertices of a plate.
       real(wp) :: v3     ( 3 )  !! Vertices of a plate.
       real(wp) :: normal ( 3 )  !! Plate's outward normal vector.
-      call pepper_pltnrm ( v1, v2, v3, normal )
+      ! PEPPER: v1, v2, v3 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_pltnrm ( (v1), (v2), (v3), normal )
       end subroutine pltnrm
 
       !> Compute the value of a polynomial and its first
@@ -854,7 +881,8 @@ contains
       implicit none
       real(wp) :: q ( 0 : 3 )  !! A unit quaternion.
       real(wp) :: r ( 3,  3 )  !! A rotation matrix corresponding to Q.
-      call pepper_q2m ( q, r )
+      ! PEPPER: q is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_q2m ( (q), r )
       end subroutine q2m
 
       !> Derive angular velocity from a unit quaternion and its derivative
@@ -868,7 +896,8 @@ contains
       real(wp) :: q    ( 0 : 3 )  !! Unit SPICE quaternion.
       real(wp) :: dq   ( 0 : 3 )  !! Derivative of Q with respect to time.
       real(wp) :: av   ( 3 )  !! Angular velocity defined by Q and DQ.
-      call pepper_qdq2av ( q, dq, av )
+      ! PEPPER: q, dq are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_qdq2av ( (q), (dq), av )
       end subroutine qdq2av
 
       !> Multiply two quaternions.
@@ -881,7 +910,8 @@ contains
       real(wp) :: q1   ( 0 : 3 )  !! First SPICE quaternion factor.
       real(wp) :: q2   ( 0 : 3 )  !! Second SPICE quaternion factor.
       real(wp) :: qout ( 0 : 3 )  !! Product of Q1 and Q2.
-      call pepper_qxq ( q1, q2, qout )
+      ! PEPPER: q1, q2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_qxq ( (q1), (q2), qout )
       end subroutine qxq
 
       !> Convert from range, right ascension, and declination to
@@ -910,7 +940,8 @@ contains
       real(wp) :: rot    ( 3, 3 )  !! Rotation matrix.
       real(wp) :: av     ( 3    )  !! Angular velocity vector.
       real(wp) :: xform  ( 6, 6 )  !! State transformation associated with ROT and AV.
-      call pepper_rav2xf ( rot, av, xform )
+      ! PEPPER: rot, av are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_rav2xf ( (rot), (av), xform )
       end subroutine rav2xf
 
       !> Convert rectangular coordinates of a point to range, azimuth and
@@ -927,7 +958,8 @@ contains
       real(wp) :: range  !! Distance of the point from the origin.
       real(wp) :: az  !! Azimuth in radians.
       real(wp) :: el  !! Elevation in radians.
-      call pepper_recazl ( rectan, azccw, elplsz, range, az, el )
+      ! PEPPER: rectan is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_recazl ( (rectan), azccw, elplsz, range, az, el )
       end subroutine recazl
 
       !> Convert from rectangular to cylindrical coordinates.
@@ -941,7 +973,8 @@ contains
       real(wp) :: r  !! Distance of the point from Z axis.
       real(wp) :: clon  !! Angle (radians) of the point from XZ plane
       real(wp) :: z  !! Height of the point above XY plane.
-      call pepper_reccyl ( rectan, r, clon, z )
+      ! PEPPER: rectan is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_reccyl ( (rectan), r, clon, z )
       end subroutine reccyl
 
       !> Convert from rectangular coordinates to latitudinal coordinates.
@@ -955,7 +988,8 @@ contains
       real(wp) :: radius  !! Distance of a point from the origin.
       real(wp) :: lon  !! Longitude of point in radians.
       real(wp) :: lat  !! Latitude of point in radians.
-      call pepper_reclat ( rectan, radius, lon, lat )
+      ! PEPPER: rectan is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_reclat ( (rectan), radius, lon, lat )
       end subroutine reclat
 
       !> Convert rectangular coordinates to range, right ascension,
@@ -970,7 +1004,8 @@ contains
       real(wp) :: range  !! Distance of the point from the origin.
       real(wp) :: ra  !! Right ascension in radians.
       real(wp) :: dec  !! Declination in radians.
-      call pepper_recrad ( rectan, range, ra, dec )
+      ! PEPPER: rectan is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_recrad ( (rectan), range, ra, dec )
       end subroutine recrad
 
       !> Convert from rectangular coordinates to spherical coordinates.
@@ -984,7 +1019,8 @@ contains
       real(wp) :: r  !! Distance of the point from the origin.
       real(wp) :: colat  !! Angle of the point from the Z-axis (radians)
       real(wp) :: slon  !! Longitude of the point (radians).
-      call pepper_recsph ( rectan, r, colat, slon )
+      ! PEPPER: rectan is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_recsph ( (rectan), r, colat, slon )
       end subroutine recsph
 
       !> Adjust the columns of a matrix that is "nearly" a rotation
@@ -1105,7 +1141,8 @@ contains
       real(wp) :: v1   ( 3 )  !! Left vector for cross product.
       real(wp) :: v2   ( 3 )  !! Right vector for cross product.
       real(wp) :: vout ( 3 )  !! Normalized cross product of V1 and V2.
-      call pepper_ucrss ( v1, v2, vout )
+      ! PEPPER: v1, v2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_ucrss ( (v1), (v2), vout )
       end subroutine ucrss
 
       !> Normalize a double precision 3-vector and return its magnitude.
@@ -1118,7 +1155,8 @@ contains
       real(wp) :: v1   ( 3 )  !! Vector to be normalized.
       real(wp) :: vout ( 3 )  !! Unit vector V1 / |V1|.
       real(wp) :: vmag  !! Magnitude of V1, i.e. |V1|.
-      call pepper_unorm ( v1, vout, vmag )
+      ! PEPPER: v1 is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_unorm ( (v1), vout, vmag )
       end subroutine unorm
 
       !> Normalize a double precision vector of arbitrary dimension and
@@ -1133,7 +1171,8 @@ contains
       real(wp) :: v1   ( ndim )  !! Vector to be normalized.
       real(wp) :: vout ( ndim )  !! Unit vector V1 / ||V1||.
       real(wp) :: vmag  !! Magnitude of V1, i.e. ||V1||.
-      call pepper_unormg ( v1, ndim, vout, vmag )
+      ! PEPPER: v1 is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_unormg ( (v1), ndim, vout, vmag )
       end subroutine unormg
 
       !> Add two double precision 3-dimensional vectors.
@@ -1146,7 +1185,8 @@ contains
       real(wp) :: v1   ( 3 )  !! First vector to be added.
       real(wp) :: v2   ( 3 )  !! Second vector to be added.
       real(wp) :: vout ( 3 )  !! Sum vector, V1 + V2.
-      call pepper_vadd ( v1, v2, vout )
+      ! PEPPER: v1, v2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vadd ( (v1), (v2), vout )
       end subroutine vadd
 
       !> Add two vectors of arbitrary dimension.
@@ -1160,7 +1200,8 @@ contains
       real(wp) :: v1   ( ndim )  !! First vector to be added.
       real(wp) :: v2   ( ndim )  !! Second vector to be added.
       real(wp) :: vout ( ndim )  !! Sum vector, V1 + V2.
-      call pepper_vaddg ( v1, v2, ndim, vout )
+      ! PEPPER: v1, v2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vaddg ( (v1), (v2), ndim, vout )
       end subroutine vaddg
 
       !> Compute the cross product of two 3-dimensional vectors.
@@ -1173,7 +1214,8 @@ contains
       real(wp) :: v1   ( 3 )  !! Left hand vector for cross product.
       real(wp) :: v2   ( 3 )  !! Right hand vector for cross product.
       real(wp) :: vout ( 3 )  !! Cross product V1 x V2.
-      call pepper_vcrss ( v1, v2, vout )
+      ! PEPPER: v1, v2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vcrss ( (v1), (v2), vout )
       end subroutine vcrss
 
       !> Return the distance between two three-dimensional vectors.
@@ -1237,7 +1279,8 @@ contains
       implicit none
       real(wp) :: vin   ( 3 )  !! Double precision 3-dimensional vector.
       real(wp) :: vout  ( 3 )  !! Double precision 3-dimensional vector set equal to VIN.
-      call pepper_vequ ( vin, vout )
+      ! PEPPER: vin is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vequ ( (vin), vout )
       end subroutine vequ
 
       !> Make one double precision vector of arbitrary dimension equal
@@ -1251,7 +1294,8 @@ contains
       integer(ip) :: ndim  !! Dimension of VIN (and also VOUT).
       real(wp) :: vin   ( ndim )  !! Double precision n-dimensional vector.
       real(wp) :: vout  ( ndim )  !! Double precision n-dimensional vector set equal to VIN.
-      call pepper_vequg ( vin, ndim, vout )
+      ! PEPPER: vin is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vequg ( (vin), ndim, vout )
       end subroutine vequg
 
       !> Find the unit vector along a double precision 3-dimensional
@@ -1264,7 +1308,8 @@ contains
       implicit none
       real(wp) :: v1   ( 3 )  !! Vector to be normalized.
       real(wp) :: vout ( 3 )  !! Unit vector V1 / |V1|.
-      call pepper_vhat ( v1, vout )
+      ! PEPPER: v1 is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vhat ( (v1), vout )
       end subroutine vhat
 
       !> Find the unit vector along a double precision vector of
@@ -1278,7 +1323,8 @@ contains
       integer(ip) :: ndim  !! Dimension of V1 (and also VOUT).
       real(wp) :: v1   ( ndim )  !! Vector to be normalized.
       real(wp) :: vout ( ndim )  !! Unit vector along V1.
-      call pepper_vhatg ( v1, ndim, vout )
+      ! PEPPER: v1 is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vhatg ( (v1), ndim, vout )
       end subroutine vhatg
 
       !> Scale a three-dimensional vector to unit length.
@@ -1305,7 +1351,8 @@ contains
       real(wp) :: b  !! Coefficient of V2.
       real(wp) :: v2  ( 3 )  !! Vector in 3-space.
       real(wp) :: sum ( 3 )  !! Linear vector combination A*V1 + B*V2.
-      call pepper_vlcom ( a, v1, b, v2, sum )
+      ! PEPPER: v1, v2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vlcom ( a, (v1), b, (v2), sum )
       end subroutine vlcom
 
       !> Compute the vector linear combination of three double precision
@@ -1323,7 +1370,8 @@ contains
       real(wp) :: c  !! Coefficient of V3.
       real(wp) :: v3  ( 3 )  !! Vector in 3-space.
       real(wp) :: sum ( 3 )  !! Linear vector combination A*V1 + B*V2 + C*V3.
-      call pepper_vlcom3 ( a, v1, b, v2, c, v3, sum )
+      ! PEPPER: v1, v2, v3 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vlcom3 ( a, (v1), b, (v2), c, (v3), sum )
       end subroutine vlcom3
 
       !> Compute a vector linear combination of two double precision
@@ -1340,7 +1388,8 @@ contains
       real(wp) :: b  !! Coefficient of V2.
       real(wp) :: v2  ( n )  !! Vector in N-space.
       real(wp) :: sum ( n )  !! Linear vector combination A*V1 + B*V2.
-      call pepper_vlcomg ( n, a, v1, b, v2, sum )
+      ! PEPPER: v1, v2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vlcomg ( n, a, (v1), b, (v2), sum )
       end subroutine vlcomg
 
       !> Negate a double precision vector of arbitrary dimension.
@@ -1353,7 +1402,8 @@ contains
       integer(ip) :: ndim  !! Dimension of VIN (and also VOUT).
       real(wp) :: vin   ( ndim )  !! n-dimensional vector to be negated.
       real(wp) :: vout  ( ndim )  !! Negated vector -V1.
-      call pepper_vminug ( vin, ndim, vout )
+      ! PEPPER: vin is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vminug ( (vin), ndim, vout )
       end subroutine vminug
 
       !> Negate a double precision 3-dimensional vector.
@@ -1365,7 +1415,8 @@ contains
       implicit none
       real(wp) :: v1   ( 3 )  !! Vector to be negated.
       real(wp) :: vout ( 3 )  !! Negated vector -V1.
-      call pepper_vminus ( v1, vout )
+      ! PEPPER: v1 is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vminus ( (v1), vout )
       end subroutine vminus
 
       !> Compute the magnitude of a double precision 3-dimensional
@@ -1418,7 +1469,8 @@ contains
       real(wp) :: a ( 3 )  !! The vector whose orthogonal component is sought.
       real(wp) :: b ( 3 )  !! The vector used as the orthogonal reference.
       real(wp) :: p ( 3 )  !! The component of A orthogonal to B.
-      call pepper_vperp ( a, b, p )
+      ! PEPPER: a, b are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vperp ( (a), (b), p )
       end subroutine vperp
 
       !> Compute the projection of one 3-dimensional vector onto another
@@ -1432,7 +1484,8 @@ contains
       real(wp) :: a ( 3 )  !! The vector to be projected.
       real(wp) :: b ( 3 )  !! The vector onto which A is to be projected.
       real(wp) :: p ( 3 )  !! The projection of A onto B.
-      call pepper_vproj ( a, b, p )
+      ! PEPPER: a, b are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vproj ( (a), (b), p )
       end subroutine vproj
 
       !> Compute the projection of one vector onto another vector. All
@@ -1447,7 +1500,8 @@ contains
       real(wp) :: a ( ndim )  !! The vector to be projected.
       real(wp) :: b ( ndim )  !! The vector onto which A is to be projected.
       real(wp) :: p ( ndim )  !! The projection of A onto B.
-      call pepper_vprojg ( a, b, ndim, p )
+      ! PEPPER: a, b are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vprojg ( (a), (b), ndim, p )
       end subroutine vprojg
 
       !> Return the relative difference between two 3-dimensional vectors.
@@ -1488,7 +1542,8 @@ contains
       real(wp) :: axis ( 3 )  !! Axis of the rotation.
       real(wp) :: theta  !! Angle of rotation (radians).
       real(wp) :: r    ( 3 )  !! Result of rotating V about AXIS by THETA.
-      call pepper_vrotv ( v, axis, theta, r )
+      ! PEPPER: v, axis are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vrotv ( (v), (axis), theta, r )
       end subroutine vrotv
 
       !> Multiply a scalar and a double precision 3-dimensional vector.
@@ -1501,7 +1556,8 @@ contains
       real(wp) :: s  !! Scalar to multiply a vector.
       real(wp) :: v1   ( 3 )  !! Vector to be multiplied.
       real(wp) :: vout ( 3 )  !! Product vector, S * V1.
-      call pepper_vscl ( s, v1, vout )
+      ! PEPPER: v1 is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vscl ( s, (v1), vout )
       end subroutine vscl
 
       !> Multiply a scalar and a double precision vector of arbitrary
@@ -1516,7 +1572,8 @@ contains
       real(wp) :: s  !! Scalar to multiply a vector.
       real(wp) :: v1   ( ndim )  !! Vector to be multiplied.
       real(wp) :: vout ( ndim )  !! Product vector, S * V1.
-      call pepper_vsclg ( s, v1, ndim, vout )
+      ! PEPPER: v1 is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vsclg ( s, (v1), ndim, vout )
       end subroutine vsclg
 
       !> Multiply a scalar and a 3-dimensional double precision vector,
@@ -1572,7 +1629,8 @@ contains
       real(wp) :: v1   ( 3 )  !! First vector (minuend).
       real(wp) :: v2   ( 3 )  !! Second vector (subtrahend).
       real(wp) :: vout ( 3 )  !! Difference vector, V1 - V2.
-      call pepper_vsub ( v1, v2, vout )
+      ! PEPPER: v1, v2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vsub ( (v1), (v2), vout )
       end subroutine vsub
 
       !> Compute the difference between two double precision vectors of
@@ -1587,7 +1645,8 @@ contains
       real(wp) :: v1   ( ndim )  !! First vector (minuend).
       real(wp) :: v2   ( ndim )  !! Second vector (subtrahend).
       real(wp) :: vout ( ndim )  !! Difference vector, V1 - V2.
-      call pepper_vsubg ( v1, v2, ndim, vout )
+      ! PEPPER: v1, v2 are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vsubg ( (v1), (v2), ndim, vout )
       end subroutine vsubg
 
       !> Multiply the transpose of a 3-dimensional column vector,
@@ -1631,7 +1690,8 @@ contains
       real(wp) :: x  !! Scalar components of the vector.
       real(wp) :: y  !! Scalar components of the vector.
       real(wp) :: z  !! Scalar components of the vector.
-      call pepper_vupack ( v, x, y, z )
+      ! PEPPER: v is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_vupack ( (v), x, y, z )
       end subroutine vupack
 
       !> Indicate whether a 3-vector is the zero vector.
@@ -1668,7 +1728,8 @@ contains
       real(wp) :: xform  ( 6, 6 )  !! is a state transformation matrix.
       real(wp) :: rot    ( 3, 3 )  !! is the rotation associated with XFORM.
       real(wp) :: av     ( 3    )  !! is the angular velocity associated with XFORM.
-      call pepper_xf2rav ( xform, rot, av )
+      ! PEPPER: xform is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_xf2rav ( (xform), rot, av )
       end subroutine xf2rav
 
       !> Transpose a 3x3 matrix.
@@ -1680,7 +1741,8 @@ contains
       implicit none
       real(wp) :: m1   ( 3,3 )  !! 3x3 matrix to be transposed.
       real(wp) :: mout ( 3,3 )  !! Transpose of M1.
-      call pepper_xpose ( m1, mout )
+      ! PEPPER: m1 is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call pepper_xpose ( (m1), mout )
       end subroutine xpose
 
       !> Transpose a matrix of arbitrary size (the matrix

@@ -31,7 +31,8 @@ contains
       character(*) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sydelc ( name, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sydelc ( (name), tabsym, tabptr, tabval )
       end subroutine sydelc
 
       !> Delete a symbol from a double precision symbol table. The symbol
@@ -48,7 +49,8 @@ contains
       real(wp) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sydeld ( name, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sydeld ( (name), tabsym, tabptr, tabval )
       end subroutine sydeld
 
       !> Delete a symbol from an integer symbol table. The symbol
@@ -65,7 +67,8 @@ contains
       integer(ip) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sydeli ( name, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sydeli ( (name), tabsym, tabptr, tabval )
       end subroutine sydeli
 
       !> Return the dimension of a particular symbol in a character symbol
@@ -138,7 +141,8 @@ contains
       character(*) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sydupc ( name, copy, tabsym, tabptr, tabval )
+      ! PEPPER: name, copy are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sydupc ( (name), (copy), tabsym, tabptr, tabval )
       end subroutine sydupc
 
       !> Create a duplicate of a symbol within a double precision symbol
@@ -157,7 +161,8 @@ contains
       real(wp) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sydupd ( name, copy, tabsym, tabptr, tabval )
+      ! PEPPER: name, copy are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sydupd ( (name), (copy), tabsym, tabptr, tabval )
       end subroutine sydupd
 
       !> Create a duplicate of a symbol within an integer symbol table.
@@ -176,7 +181,8 @@ contains
       integer(ip) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sydupi ( name, copy, tabsym, tabptr, tabval )
+      ! PEPPER: name, copy are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sydupi ( (name), (copy), tabsym, tabptr, tabval )
       end subroutine sydupi
 
       !> Fetch the Nth symbol in a character symbol table.
@@ -253,7 +259,8 @@ contains
       logical :: found  !! .TRUE. if the symbol NAME is in the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sygetc ( name, tabsym, tabptr, tabval, n, values, found )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sygetc ( (name), tabsym, tabptr, tabval, n, values, found )
       end subroutine sygetc
 
       !> Return the dimension and associated values for a particular
@@ -323,7 +330,8 @@ contains
       logical :: found  !! .TRUE. if the Nth value of the symbol exists.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%synthc ( name, nth, tabsym, tabptr, tabval, value, found )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%synthc ( (name), nth, tabsym, tabptr, tabval, value, found )
       end subroutine synthc
 
       !> Return the Nth component of a particular symbol in a double
@@ -389,7 +397,8 @@ contains
       character(*) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%syordc ( name, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%syordc ( (name), tabsym, tabptr, tabval )
       end subroutine syordc
 
       !> Order the components of a single symbol in a double precision
@@ -406,7 +415,8 @@ contains
       real(wp) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%syordd ( name, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%syordd ( (name), tabsym, tabptr, tabval )
       end subroutine syordd
 
       !> Order the components of a single symbol in an integer symbol
@@ -423,7 +433,8 @@ contains
       integer(ip) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%syordi ( name, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%syordi ( (name), tabsym, tabptr, tabval )
       end subroutine syordi
 
       !> Pop a value associated with a particular symbol in a character
@@ -443,7 +454,8 @@ contains
       logical :: found  !! .TRUE. if the symbol exists, .FALSE. otherwise.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sypopc ( name, tabsym, tabptr, tabval, value, found )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sypopc ( (name), tabsym, tabptr, tabval, value, found )
       end subroutine sypopc
 
       !> Pop a value associated with a particular symbol in a double
@@ -463,7 +475,8 @@ contains
       logical :: found  !! .TRUE. if the symbol exists, .FALSE. otherwise.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sypopd ( name, tabsym, tabptr, tabval, value, found )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sypopd ( (name), tabsym, tabptr, tabval, value, found )
       end subroutine sypopd
 
       !> Pop a value associated with a particular symbol in an integer
@@ -483,7 +496,8 @@ contains
       logical :: found  !! .TRUE. if the symbol exists, .FALSE. otherwise.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sypopi ( name, tabsym, tabptr, tabval, value, found )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sypopi ( (name), tabsym, tabptr, tabval, value, found )
       end subroutine sypopi
 
       !> Set the values of a particular symbol in a character symbol table.
@@ -503,7 +517,8 @@ contains
       character(*) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%syputc ( name, values, n, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%syputc ( (name), values, n, tabsym, tabptr, tabval )
       end subroutine syputc
 
       !> Set the values of a particular symbol in a double precision
@@ -523,7 +538,8 @@ contains
       real(wp) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%syputd ( name, values, n, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%syputd ( (name), values, n, tabsym, tabptr, tabval )
       end subroutine syputd
 
       !> Set the values of a particular symbol in an integer symbol table.
@@ -543,7 +559,8 @@ contains
       integer(ip) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%syputi ( name, values, n, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%syputi ( (name), values, n, tabsym, tabptr, tabval )
       end subroutine syputi
 
       !> Select a subset of the values associated with a particular
@@ -569,7 +586,8 @@ contains
       logical :: found  !! .TRUE. if the subset of values exists.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%syselc ( name, begin, end, tabsym, tabptr, tabval, values, found )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%syselc ( (name), begin, end, tabsym, tabptr, tabval, values, found )
       end subroutine syselc
 
       !> Select a subset of the values associated with a particular
@@ -640,7 +658,8 @@ contains
       character(*) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sysetc ( name, value, tabsym, tabptr, tabval )
+      ! PEPPER: name, value are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sysetc ( (name), (value), tabsym, tabptr, tabval )
       end subroutine sysetc
 
       !> Set the value of a particular symbol in a double precision symbol
@@ -659,7 +678,8 @@ contains
       real(wp) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sysetd ( name, value, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sysetd ( (name), value, tabsym, tabptr, tabval )
       end subroutine sysetd
 
       !> Set the value of a particular symbol in an integer symbol table.
@@ -678,7 +698,8 @@ contains
       integer(ip) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%syseti ( name, value, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%syseti ( (name), value, tabsym, tabptr, tabval )
       end subroutine syseti
 
       !> Transpose two values associated with a particular symbol in a
@@ -697,7 +718,8 @@ contains
       character(*) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sytrnc ( name, idx1, idx2, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sytrnc ( (name), idx1, idx2, tabsym, tabptr, tabval )
       end subroutine sytrnc
 
       !> Transpose two values associated with a particular symbol in a
@@ -716,7 +738,8 @@ contains
       real(wp) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sytrnd ( name, idx1, idx2, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sytrnd ( (name), idx1, idx2, tabsym, tabptr, tabval )
       end subroutine sytrnd
 
       !> Transpose two values associated with a particular symbol in an
@@ -735,7 +758,8 @@ contains
       integer(ip) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sytrni ( name, idx1, idx2, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sytrni ( (name), idx1, idx2, tabsym, tabptr, tabval )
       end subroutine sytrni
 
       !> Enqueue a value onto a particular symbol in a character
@@ -754,7 +778,8 @@ contains
       character(*) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%syenqc ( name, value, tabsym, tabptr, tabval )
+      ! PEPPER: name, value are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%syenqc ( (name), (value), tabsym, tabptr, tabval )
       end subroutine syenqc
 
       !> Enqueue a value onto a particular symbol in a double precision
@@ -773,7 +798,8 @@ contains
       real(wp) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%syenqd ( name, value, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%syenqd ( (name), value, tabsym, tabptr, tabval )
       end subroutine syenqd
 
       !> Enqueue a value onto a particular symbol in an integer
@@ -792,7 +818,8 @@ contains
       integer(ip) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%syenqi ( name, value, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%syenqi ( (name), value, tabsym, tabptr, tabval )
       end subroutine syenqi
 
       !> Push a value onto a particular symbol in a character symbol table.
@@ -811,7 +838,8 @@ contains
       character(*) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sypshc ( name, value, tabsym, tabptr, tabval )
+      ! PEPPER: name, value are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sypshc ( (name), (value), tabsym, tabptr, tabval )
       end subroutine sypshc
 
       !> Push a value onto a particular symbol in a double precision
@@ -830,7 +858,8 @@ contains
       real(wp) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sypshd ( name, value, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sypshd ( (name), value, tabsym, tabptr, tabval )
       end subroutine sypshd
 
       !> Push a value onto a particular symbol in an integer symbol table.
@@ -849,7 +878,8 @@ contains
       integer(ip) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%sypshi ( name, value, tabsym, tabptr, tabval )
+      ! PEPPER: name is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%sypshi ( (name), value, tabsym, tabptr, tabval )
       end subroutine sypshi
 
       !> Rename an existing symbol in a character symbol table.
@@ -866,7 +896,8 @@ contains
       character(*) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%syrenc ( old, new, tabsym, tabptr, tabval )
+      ! PEPPER: old, new are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%syrenc ( (old), (new), tabsym, tabptr, tabval )
       end subroutine syrenc
 
       !> Rename an existing symbol in a double precision symbol table.
@@ -883,7 +914,8 @@ contains
       real(wp) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%syrend ( old, new, tabsym, tabptr, tabval )
+      ! PEPPER: old, new are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%syrend ( (old), (new), tabsym, tabptr, tabval )
       end subroutine syrend
 
       !> Rename an existing symbol in an integer symbol table.
@@ -900,7 +932,8 @@ contains
       integer(ip) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%syreni ( old, new, tabsym, tabptr, tabval )
+      ! PEPPER: old, new are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%syreni ( (old), (new), tabsym, tabptr, tabval )
       end subroutine syreni
 
 end module pepper_legacy_symbols

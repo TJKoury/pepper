@@ -315,7 +315,8 @@ contains
       character(*) :: cell ( lbcell:* )  !! The cell to which ITEM will be appended.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%appndc ( item, cell )
+      ! PEPPER: item is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%appndc ( (item), cell )
       end subroutine appndc
 
       !> Append an item to a double precision cell.
@@ -405,7 +406,8 @@ contains
       character(*) :: a        ( lbcell:* )  !! Insertion set.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%insrtc ( item, a )
+      ! PEPPER: item is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%insrtc ( (item), a )
       end subroutine insrtc
 
       !> Insert an item into a double precision set.
@@ -450,7 +452,8 @@ contains
       character(*) :: a       ( lbcell:* )  !! Removal set.
       type(pepper_context), pointer :: ctx
       ctx => legacy_context()
-      call ctx%removc ( item, a )
+      ! PEPPER: item is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
+      call ctx%removc ( (item), a )
       end subroutine removc
 
       !> Remove an item from a double precision set.
