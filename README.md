@@ -115,6 +115,11 @@ pixi run -e python py-test-spiceypy  # SpiceyPy's own test suite, against Pepper
 
 ## Usage
 
+**Guides:** [Getting ephemeris data into PEPPER](guides/ephemeris_data.md):
+SPICE kernels, providers (your code computes the states), programmatic
+kernels (your states, PEPPER interpolates), and kernel loaders (files in
+other formats), with examples.
+
 All state belongs to an instance (`type(pepper_instance)`): loaded kernels, the
 kernel pool, file tables, the names defined with `boddef`. The kernels are
 changed through the instance: `spice%furnsh`, `unload`, `kclear`, `ldpool`,
@@ -346,7 +351,8 @@ Bodies and frames can come from the program instead of kernel files: a
 provider computes the states or the orientation, and the body or frame is
 then used everywhere one from a kernel is (states with any correction,
 frame transformations, GF searches, prepared queries). See
-`plans/programmatic_plan.md`.
+`plans/programmatic_plan.md`, and the guide
+[Getting ephemeris data into PEPPER](guides/ephemeris_data.md).
 
 ```fortran
 use pepper_module, only: ephemeris_provider, frame_provider, pepper_context
@@ -396,8 +402,9 @@ like an SPK file: states and GF searches, SPKCOV and SPKOBJ by its name,
 KDATA (type SPK), UNLOAD and KCLEAR. A **kernel loader** does the same for a
 file format SPICE does not know: FURNSH hands it the file, it fills a
 builder, and the file is then an SPK in memory. PEPPER has no loader for
-any real format; loaders are separate libraries. See
-`plans/external_loaders_plan.md`.
+any real format; loaders are separate libraries. The guide
+[Getting ephemeris data into PEPPER](guides/ephemeris_data.md) explains
+all of it with examples; the design is in `plans/external_loaders_plan.md`.
 
 ```fortran
 use pepper_module, only: kernel_builder, kernel_loader
