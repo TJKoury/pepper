@@ -315,6 +315,7 @@ call spice%unload('my_trajectory')
 
 ```fortran
 call spice%write_kernel('my_trajectory', 'my_trajectory.bsp')
+call spice%write_kernel('my_trajectory', 'my_trajectory.bsp', text_file='my_trajectory.tk')   ! with its body names
 ```
 
 The file is an ordinary SPK (types 9 and 13): SPICE, CSPICE, SpiceyPy and
@@ -709,9 +710,21 @@ call spice%unload('my_frame_data')                ! the frame is gone
   It exists while the kernel is loaded. The name and code must not be those
   of another frame (SPICE(FRAMEEXISTS)), except the same frame from another
   kernel or from `add_frame`.
-- **Not writable yet:** `write_kernel` refuses a kernel with frames
-  (SPICE(NOTWRITABLE)). Writing a `.bc` with its clock and frame kernels is
-  a planned addition.
+- **Coverage:** `ctx%ck_coverage(kernel_name, frame_code, .false.,
+  'SEGMENT', 0.0_wp, 'TDB', intervals)` (and CKCOV) gives the tables' spans
+  by the kernel's name; `ctx%ck_objects(kernel_name, codes)` (and CKOBJ)
+  the frames that have tables. A table's CK ID is its frame's code, and its
+  times are ET in both 'TDB' and 'SCLK'.
+- **Saving as SPICE files:** `spice%write_kernel(name, spk_file,
+  ck_file='my_frames.bc', text_file='my_frames.tf')` writes the tables as CK
+  type 5 segments, and a text kernel with what a CK needs: a clock per frame
+  (a type 1 SCLK, one tick a TDB second, ID -|frame code|) and the frame's
+  definition (a CK frame). The kernel's body names go in the text kernel
+  too. SPICE, and PEPPER, then load the three files (`spk_file` may be
+  `' '` for a kernel of frames only) and give the same orientations: exactly
+  when no epoch is before J2000, else to rounding (the CK's ticks are then
+  shifted, since they cannot be negative). A kernel with a frame computed
+  by code (`kb%add_frame`) cannot be written (SPICE(NOTWRITABLE)).
 
 Errors: SPICE(INVALIDDEGREE), SPICE(UNSUPPORTEDINTERP) (another method, or
 Hermite without `av`), SPICE(ZEROQUATERNION), SPICE(NOTAROTATION) (a matrix
@@ -800,7 +813,7 @@ search of SPICE decides, with every source taking part as a loaded file:
 | SPICE kernels | `pepper_spice_furnsh(spice, file, in_memory)` | `spice.furnsh(path, in_memory=None)` |
 | Providers | `pepper_spice_add_ephemeris(spice, body, center, frame, tbeg, tend, fn, user)` | `spice.add_ephemeris(body, center, frame, tbeg, tend, provider)` |
 | Programmatic kernels | `pepper_builder_new`, `pepper_builder_spk` (type 9 or 13), `pepper_builder_define_body`, `pepper_spice_load_kernel` | `KernelBuilder` (`spk_hermite`, `spk_lagrange`, `define_body`), `spice.load_kernel(name, kb)` |
-| Save as SPK | `pepper_spice_write_kernel` | `spice.write_kernel(name, file)` |
+| Save as SPICE files | `pepper_spice_write_kernel(spice, name, file, ck_file, text_file)` | `spice.write_kernel(name, file, ck_file=None, text_file=None)` |
 | Kernel loaders | not yet | not yet |
 | Models in a kernel | not yet | not yet |
 | Frames: providers | `pepper_spice_add_frame` | `spice.add_frame(...)` |
@@ -859,7 +872,8 @@ call furnsh('track.csveph')                ! the legacy FURNSH
 | `spice%add_frame(name, code, center, provider)`, `spice%remove_frame(name)` | the program's frame providers |
 | `kb%set_format(text)`, `kb%clear()`, `kb%nsegments()` | describe, empty, count |
 | `spice%load_kernel(name, kb, keep)` | load a builder as a kernel |
-| `spice%write_kernel(name, file)` | write a kernel built in memory to an SPK file |
+| `spice%write_kernel(name, file, ck_file, text_file)` | write a kernel built in memory to SPICE files: an SPK, a CK of its rotation tables, a text kernel of their clocks and frame definitions and of its body names |
+| `ctx%ck_coverage(file_or_kernel, code, needav, level, tol, timsys, intervals)`, `ctx%ck_objects(file_or_kernel, ids)` | coverage and frames of a CK file, or of a kernel's rotation tables |
 | `spice%add_loader(name, loader, extensions, replace)` | register a kernel loader |
 | `spice%remove_loader(name)`, `spice%loader(name, ptr)` | remove one, access one |
 | `ctx%kernel_format(file, loader, format, found)` | the loader and description of a kernel |
@@ -885,7 +899,7 @@ the complete rules of how a loader is chosen.
 | SPICE(BLANKNAMEASSIGNED) | `define_body` with a blank name |
 | SPICE(NOSUCHKERNEL) | `write_kernel` of a name no kernel built in memory has |
 | SPICE(FILEEXISTS) | `write_kernel` to a file that exists |
-| SPICE(NOTWRITABLE) | `write_kernel` of a kernel that holds a provider or frames |
+| SPICE(NOTWRITABLE) | `write_kernel` of a kernel that holds a provider (an ephemeris or a frame computed by code), or of rotation tables without `ck_file` and `text_file` |
 | SPICE(FRAMEEXISTS) | a frame's name or code is another frame's |
 | SPICE(ZEROQUATERNION), SPICE(NOTAROTATION) | a rotation table's bad quaternion or matrix |
 | SPICE(NOFILEFORKERNEL) | an operation that needs a file (such as reading its comments through a unit) on a kernel built in memory |

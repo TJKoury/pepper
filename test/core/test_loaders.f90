@@ -85,6 +85,7 @@ program test_loaders
    call test_models()
    call test_frames()
    call test_frame_files()
+   call test_write_frames()
 
    call spice%kclear()
    call ref%kclear()
@@ -1258,6 +1259,106 @@ contains
       call spice%remove_loader('SIMPLE')
    end subroutine test_frame_files
 
+   !> Rotation tables: coverage by the kernel's name (CK_COVERAGE,
+   !> CK_OBJECTS), and written to SPICE files (an SPK, a CK, a text kernel
+   !> with the clocks, frame definitions and body names) that load into
+   !> another instance with the same states, orientations and names.
+   subroutine test_write_frames()
+      real(wp), parameter :: w = 1.0e-3_wp
+      type(kernel_builder) :: kb
+      real(wp), allocatable :: cover(:, :)
+      integer(ip), allocatable :: ids(:)
+      real(wp) :: q(4, n), av(3, n), en(n), rot(3, 3), rot2(3, 3), xf(6, 6), xf2(6, 6), s(6), s2(6), lt, t
+      integer(ip) :: code
+      integer :: k
+      logical :: same
+
+      do k = 1, n
+         call ctx%m2q(spin_matrix(w, epochs(k)), q(:, k))
+         av(:, k) = [0.0_wp, 0.0_wp, w]
+      end do
+      call kb%spk_hermite(ctx, sc, 399_ip, 'J2000', epochs, states, 7_ip)
+      call kb%define_body(ctx, 'SC_W', sc)
+      call kb%frame_rotations(ctx, 'TEST_W', 1400200_ip, 399_ip, 'J2000', epochs, q, 7_ip)
+      call kb%frame_rotations(ctx, 'TEST_WH', 1400201_ip, 399_ip, 'J2000', epochs, q, 7_ip, av=av, &
+                              method='HERMITE', tbeg=600.0_wp, tend=6000.0_wp)
+      call spice%load_kernel('writable', kb)
+      call check_ok(ctx, 'a kernel of a segment, a name and rotation tables')
+
+      ! coverage by the kernel's name
+      call ctx%ck_coverage('writable', 1400201_ip, .false., 'SEGMENT', 0.0_wp, 'TDB', cover)
+      call check(size(cover, 2) == 1, 'CK_COVERAGE by the kernel''s name: one interval')
+      if (size(cover, 2) == 1) call check(cover(1, 1) == 600.0_wp .and. cover(2, 1) == 6000.0_wp, &
+                                           'CK_COVERAGE by the kernel''s name: the table''s bounds')
+      call ctx%ck_objects('writable', ids)
+      call check(size(ids) == 2, 'CK_OBJECTS by the kernel''s name: two frames')
+      if (size(ids) == 2) call check(ids(1) == 1400200 .and. ids(2) == 1400201, 'CK_OBJECTS: the frames'' codes')
+
+      ! written: an SPK, a CK, a text kernel
+      call spice%write_kernel('writable', 'test_loaders_w.bsp')
+      call check_error(ctx, 'SPICE(NOTWRITABLE)', 'rotation tables need ck_file and text_file')
+      call spice%write_kernel('writable', 'test_loaders_w.bsp', ck_file='test_loaders_w.bc', &
+                              text_file='test_loaders_w.tf')
+      call check_ok(ctx, 'write_kernel: SPK, CK and text kernel')
+      call spice%write_kernel('writable', ' ', ck_file='test_loaders_w.bc', text_file='test_loaders_w2.tf')
+      call check_error(ctx, 'SPICE(FILEEXISTS)', 'write_kernel does not write over the CK')
+      call other%furnsh('test_loaders_w.tf')
+      call other%furnsh('test_loaders_w.bsp')
+      call other%furnsh('test_loaders_w.bc')
+      call check_ok(octx, 'the written files load (SPICE''s CK path, with the written clocks)')
+      same = .true.
+      do k = 1, 301
+         t = 600.0_wp + 5400.0_wp*real(k - 1, wp)/300.0_wp
+         call ctx%pxform('J2000', 'TEST_W', t, rot)
+         call octx%pxform('J2000', 'TEST_W', t, rot2)
+         same = same .and. all(rot == rot2)
+         call ctx%sxform('J2000', 'TEST_WH', t, xf)
+         call octx%sxform('J2000', 'TEST_WH', t, xf2)
+         same = same .and. all(xf == xf2)
+      end do
+      call check_ok(octx, 'the written frames'' queries')
+      call check(same, 'the written CK: the same rotations and transformations, bitwise')
+      call octx%spkezr('SC_W', 1000.0_wp, 'J2000', 'NONE', 'EARTH', s2, lt)
+      call ctx%spkezr('SC_W', 1000.0_wp, 'J2000', 'NONE', 'EARTH', s, lt)
+      call check_ok(octx, 'the written body name')
+      call check(all(s == s2), 'the written SPK and name: the same state')
+      call octx%ck_coverage('test_loaders_w.bc', 1400201_ip, .false., 'SEGMENT', 0.0_wp, 'TDB', cover)
+      call check_ok(octx, 'CKCOV of the written CK')
+      if (size(cover, 2) == 1) then
+         call check(abs(cover(1, 1) - 600.0_wp) < 1.0e-9_wp .and. abs(cover(2, 1) - 6000.0_wp) < 1.0e-9_wp, &
+                    'CKCOV of the written CK, in TDB (through its clock)')
+      else
+         call check(.false., 'CKCOV of the written CK: one interval')
+      end if
+      call other%kclear()
+      call spice%unload('writable')
+      call ctx%namfrm('TEST_W', code)
+      call check(code == 0, 'UNLOAD of the kernel: its frames are gone')
+
+      ! epochs before J2000: the written CK's ticks are shifted
+      en = epochs - 1.0e5_wp
+      do k = 1, n
+         call ctx%m2q(spin_matrix(w, en(k)), q(:, k))
+      end do
+      call kb%frame_rotations(ctx, 'TEST_WN', 1400202_ip, 399_ip, 'J2000', en, q, 7_ip)
+      call spice%load_kernel('early', kb)
+      call spice%write_kernel('early', ' ', ck_file='test_loaders_wn.bc', text_file='test_loaders_wn.tf')
+      call check_ok(ctx, 'write_kernel of rotations before J2000')
+      call other%furnsh('test_loaders_wn.tf')
+      call other%furnsh('test_loaders_wn.bc')
+      same = .true.
+      do k = 1, 101
+         t = en(1) + (en(n) - en(1))*real(k - 1, wp)/100.0_wp
+         call ctx%pxform('J2000', 'TEST_WN', t, rot)
+         call octx%pxform('J2000', 'TEST_WN', t, rot2)
+         same = same .and. maxval(abs(rot - rot2)) < 1.0e-13_wp
+      end do
+      call check_ok(octx, 'the shifted CK''s queries')
+      call check(same, 'the shifted CK: the same rotations, to rounding')
+      call other%kclear()
+      call spice%unload('early')
+   end subroutine test_write_frames
+
    !> A small text kernel (one variable).
    subroutine write_text_kernel(file)
       character(*), intent(in) :: file  !! the file
@@ -1302,6 +1403,12 @@ contains
       call delete_file('test_loaders_frames.bsp')
       call delete_file('test_loaders_vars.tpc')
       call delete_file('test_loaders_fr.sim')
+      call delete_file('test_loaders_w.bsp')
+      call delete_file('test_loaders_w.bc')
+      call delete_file('test_loaders_w.tf')
+      call delete_file('test_loaders_w2.tf')
+      call delete_file('test_loaders_wn.bc')
+      call delete_file('test_loaders_wn.tf')
    end subroutine delete_files
 
 end program test_loaders

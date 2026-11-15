@@ -12,10 +12,14 @@ same body, removed with the kernel; SPKCOV and SPKOBJ by the kernel's name;
 with ET tags in a DAF built in memory, evaluated by CKR05/CKE05 through a
 `rotation_table` frame provider: no clock) and `kb%add_frame` (a frame
 provider owned by the kernel); programmatic frames have owners, kernels of
-one frame coexist (the last that has data answers). Not yet: the binary
-test format (phase 3); writing frames to a `.bc` (with an SCLK and a frame
-kernel); a frame-coverage query; frame definitions owned by a kernel (4c);
-all of these in the C interface and PepperyPy.
+one frame coexist (the last that has data answers). CKCOV/CKOBJ by a
+kernel's name report its rotation tables; `write_kernel(name, file,
+ck_file, text_file)` writes them as a CK (ticks = ET, shifted to be
+non-negative if an epoch is before J2000) and a text kernel (a type 1 SCLK
+per frame, the CK frame definitions, the body names), checked with CSPICE.
+Not yet: the binary test format (phase 3); frame definitions owned by a
+kernel (4c); the frame features in the C interface and PepperyPy (except
+`write_kernel`'s new arguments, which they have).
 
 What was built:
 - `src/pepper_loaders.f90` (a submodule of `pepper_instance_module`): the

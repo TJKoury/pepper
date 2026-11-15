@@ -472,7 +472,11 @@ call spice%furnsh('sc_ephem.txt', loader='MYFORMAT')               ! by name
   interpolated by SPICE's CK type 5 routines on a table held in memory (no
   clock); `kb%add_frame(ctx, name, code, center, provider)` a frame
   computed by code. Both are defined while the kernel is loaded; loaders use
-  them for files of frame data. See the guide's "Reference frames".
+  them for files of frame data. CKCOV and CKOBJ (`ck_coverage`,
+  `ck_objects`) report the tables by the kernel's name, and
+  `write_kernel(name, file, ck_file, text_file)` writes them as a CK with a
+  text kernel of their clocks and frame definitions, which SPICE loads. See
+  the guide's "Reference frames".
 - **Body names a kernel defines:** `kb%define_body(ctx, name, code)`. While
   the kernel is loaded, the name works everywhere a body name does
   (`spkezr('SPACECRAFT1', ...)`, BODN2C, BODC2N); when it is unloaded

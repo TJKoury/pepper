@@ -595,6 +595,19 @@ cdef class Spice(_SpiceRoutines):
             if pepper_spice_lmpool(self._ptr, n, width, block):
                 self._raise()
 
+    def write_kernel(self, name, file, ck_file=None, text_file=None):
+        """Write a kernel built in memory to SPICE files: an SPK (`file`;
+        '' for none) and, for its rotation tables, a CK (`ck_file`) and a text
+        kernel (`text_file`) with their clocks, frame definitions and the
+        kernel's body names. The files must not exist."""
+        self._check()
+        cdef bytes bn = _b(name), bf = _b(file)
+        cdef bytes bc = _b(ck_file) if ck_file is not None else b''
+        cdef bytes bt = _b(text_file) if text_file is not None else b''
+        with self._lock:
+            if pepper_spice_write_kernel(self._ptr, bn, bf, bc, bt):
+                self._raise()
+
     def load_kernel(self, name, KernelBuilder builder, keep=False):
         """Load a KernelBuilder as a kernel named `name`, with no file: an
         SPK in memory, used like an SPK file (queries, spkcov and spkobj by
@@ -1074,6 +1087,12 @@ cdef inline Context _context():
 def furnsh(path, in_memory=None):
     """Load kernels into the current instance (see Spice.furnsh)."""
     _instance().furnsh(path, in_memory)
+
+
+def write_kernel(name, file, ck_file=None, text_file=None):
+    """Write a kernel built in memory of the current instance to SPICE files
+    (see Spice.write_kernel)."""
+    _instance().write_kernel(name, file, ck_file, text_file)
 
 
 def load_kernel(name, builder, keep=False):

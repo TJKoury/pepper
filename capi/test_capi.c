@@ -165,7 +165,7 @@ int main(void) {
               ld_len == 0 && fm_len == 6 && strncmp(fm, "C TEST", 6) == 0, "kernel_format");
         const char *bsp = "test_capi_kernel.bsp";
         remove(bsp);
-        CHECK(pepper_spice_write_kernel(spice, "capi_kernel", bsp) == 0, "write_kernel");
+        CHECK(pepper_spice_write_kernel(spice, "capi_kernel", bsp, NULL, NULL) == 0, "write_kernel");
         void *other = pepper_spice_new();
         void *octx = pepper_context_new(other);
         CHECK(pepper_spice_furnsh(other, bsp, -1) == 0, "the written SPK loads");

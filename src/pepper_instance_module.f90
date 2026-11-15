@@ -2403,6 +2403,31 @@ module pepper_instance_module
          integer(ip), intent(in) :: owner  !! the kernel's handle
       end subroutine register_owned_frame
 
+      !> The rotation tables a kernel built in memory has for a frame (its
+      !> code, which is the tables' CK ID code): their coverage, in ET
+      !> (CKCOV, CK_COVERAGE by the kernel's name). `is_kernel` is false if
+      !> no kernel built in memory has the name (then it is a file) (PEPPER).
+      module subroutine kernel_frame_tables ( ctx, name, code, is_kernel, tbeg, tend )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: name  !! the kernel's name
+         integer(ip), intent(in) :: code  !! the frame's code
+         logical, intent(out) :: is_kernel  !! a kernel built in memory has the name
+         real(wp), allocatable, intent(out) :: tbeg(:)  !! the tables' coverage: starts
+         real(wp), allocatable, intent(out) :: tend(:)  !! ends
+      end subroutine kernel_frame_tables
+
+      !> The codes of the frames whose rotation tables a kernel built in
+      !> memory has (CKOBJ, CK_OBJECTS by the kernel's name); `is_kernel` as
+      !> for [[kernel_frame_tables]] (PEPPER).
+      module subroutine kernel_frame_codes ( ctx, name, is_kernel, codes )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: name  !! the kernel's name
+         logical, intent(out) :: is_kernel  !! a kernel built in memory has the name
+         integer(ip), allocatable, intent(out) :: codes(:)  !! the frames' codes (with repeats)
+      end subroutine kernel_frame_codes
+
       !> Remove the programmatic frames a kernel owns (its handle): UNLOAD,
       !> KCLEAR. A frame's definition leaves the kernel pool when no other
       !> registration of it remains (PEPPER).
@@ -2554,12 +2579,33 @@ module pepper_instance_module
       end subroutine spice_load_kernel
 
       !> Write a kernel built in memory (by [[spice_load_kernel]] or a
-      !> kernel loader) to an SPK file (PEPPER). The file must not exist.
-      module subroutine spice_write_kernel ( this, name, file )
+      !> kernel loader) to SPICE kernel files (PEPPER), which SPICE (and
+      !> PEPPER) load to give the same states, orientations and names:
+      !>
+      !> - `file`: an SPK file of its segments (blank: none, for a kernel of
+      !>   frames only);
+      !> - `ck_file`: a CK file of its rotation tables
+      !>   ([[kb_frame_quaternions]]), CK type 5 segments;
+      !> - `text_file`: a text kernel with what the CK needs and the kernel
+      !>   defines: for each frame of rotation tables, a type 1 SCLK (one
+      !>   tick a TDB second, ID -|frame code|) and the frame's definition
+      !>   (a CK frame, class 3, CK ID the frame's code); and the body names
+      !>   ([[kb_define_body]]) as NAIF_BODY_NAME/CODE assignments (`+=`).
+      !>
+      !> The CK's time tags are the tables' ET epochs (ticks), shifted by a
+      !> whole number of seconds if an epoch is before J2000 (ticks cannot
+      !> be negative): then its orientations agree to rounding, else
+      !> exactly. A kernel with rotation tables needs `ck_file` and
+      !> `text_file`; a kernel with programmatic ephemerides or frames
+      !> (models, computed by code) cannot be written (SPICE(NOTWRITABLE)).
+      !> The files must not exist (SPICE(FILEEXISTS)).
+      module subroutine spice_write_kernel ( this, name, file, ck_file, text_file )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
          character(*), intent(in) :: name  !! the kernel's name (as loaded)
-         character(*), intent(in) :: file  !! the SPK file to write
+         character(*), intent(in) :: file  !! the SPK file to write (blank: none)
+         character(*), intent(in), optional :: ck_file  !! the CK file of the rotation tables
+         character(*), intent(in), optional :: text_file  !! the text kernel: SCLKs, frame definitions, body names
       end subroutine spice_write_kernel
 
       !> Register a kernel loader (PEPPER): a reader of a file format SPICE

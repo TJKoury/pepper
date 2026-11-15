@@ -10812,21 +10812,6 @@ contains
       c_pepper_spice_unload = spice_status(s_)
    end function c_pepper_spice_unload
 
-   !> C interface of `write_kernel`: Write a kernel built in memory (by [[spice_load_kernel]] or a kernel loader) to an SPK file (PEPPER).
-   integer(c_int) function c_pepper_spice_write_kernel ( spice, name, file ) bind(c, name='pepper_spice_write_kernel')
-      type(c_ptr), value :: spice  !! the instance
-      character(kind=c_char), intent(in) :: name(*)  !! the kernel's name (as loaded)
-      character(kind=c_char), intent(in) :: file(*)  !! the SPK file to write
-      type(pepper_instance), pointer :: s_
-      character(:), allocatable :: f_name
-      character(:), allocatable :: f_file
-      s_ => spice_of(spice)
-      call c_to_f(name, f_name)
-      call c_to_f(file, f_file)
-      call s_%write_kernel(f_name, f_file)
-      c_pepper_spice_write_kernel = spice_status(s_)
-   end function c_pepper_spice_write_kernel
-
    !> C interface of `approx`: Return .TRUE.
    integer(c_int) function c_pepper_approx ( x, y, tol, fresult ) bind(c, name='pepper_approx')
       real(c_double), value :: x  !! Double precision numbers.

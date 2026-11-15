@@ -6921,13 +6921,6 @@ def unload(filename):
     :param filename: The name of a kernel to unload."""
     return _instance().unload(filename)
 
-def write_kernel(name, file):
-    """Write a kernel built in memory (by `spice_load_kernel` or a kernel loader) to an SPK file (PEPPER). The file must not exist.
-    
-    :param name: the kernel's name (as loaded)
-    :param file: the SPK file to write"""
-    return _instance().write_kernel(name, file)
-
 def approx(x, y, tol):
     """Return .TRUE. if two double precision numbers are equal to within some tolerance.
     

@@ -151,6 +151,11 @@ int pepper_builder_nsegments(void *builder);
 /* A kernel loaded under the same name is replaced; the builder is emptied
    unless keep is 1. Errors in the instance (pepper_spice_getmsg). */
 int pepper_spice_load_kernel(void *spice, const char *name, void *builder, int keep);
+/* An SPK (file; "" for none), and for rotation tables a CK (ck_file) and a
+   text kernel (text_file: clocks, frame definitions, body names); NULL or ""
+   for none. */
+int pepper_spice_write_kernel(void *spice, const char *name, const char *file, const char *ck_file,
+                              const char *text_file);
 
 /* ---- Prepared queries (one context at a time) ---- */
 
@@ -1445,8 +1450,6 @@ int pepper_spice_spklef(void *spice, const char *fname, int *handle);
 int pepper_spice_spkuef(void *spice, int handle);
 /* unload: Unload a SPICE kernel. */
 int pepper_spice_unload(void *spice, const char *file);
-/* write_kernel: Write a kernel built in memory (by [[spice_load_kernel]] or a kernel loader) to an SPK file (PEPPER). */
-int pepper_spice_write_kernel(void *spice, const char *name, const char *file);
 /* approx: Return .TRUE. */
 int pepper_approx(double x, double y, double tol, int *fresult);
 /* astrip: Remove from a character string all characters which fall between specified starting and ending characters, inclusive. */

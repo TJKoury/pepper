@@ -904,6 +904,47 @@ contains
    !> (`spice%load_kernel`): used like an SPK file (queries, SPKCOV, KDATA,
    !> UNLOAD). A kernel loaded under the same name is replaced. The builder
    !> is emptied, unless `keep` is 1. Errors are signaled in the instance.
+   integer(c_int) function pepper_spice_write_kernel ( spice, name, file, ck_file, text_file ) &
+         bind(c, name='pepper_spice_write_kernel')
+      type(c_ptr), value :: spice  !! the instance
+      character(kind=c_char), intent(in) :: name(*)  !! the kernel's name
+      character(kind=c_char), intent(in) :: file(*)  !! the SPK file ("" for none)
+      type(c_ptr), value :: ck_file  !! the CK file of the rotation tables (NULL or "" for none)
+      type(c_ptr), value :: text_file  !! the text kernel: clocks, frame definitions, body names (NULL or "" for none)
+      type(pepper_instance), pointer :: s
+      character(:), allocatable :: f_name, f_file, f_ck, f_text
+      s => spice_of(spice)
+      call c_to_f(name, f_name)
+      call c_to_f(file, f_file)
+      call optional_string(ck_file, f_ck)
+      call optional_string(text_file, f_text)
+      if (f_ck == ' ' .and. f_text == ' ') then
+         call s%write_kernel(f_name, f_file)
+      else
+         call s%write_kernel(f_name, f_file, ck_file=f_ck, text_file=f_text)
+      end if
+      pepper_spice_write_kernel = spice_status(s)
+   contains
+      !> The Fortran string of an optional C string (blank if NULL).
+      subroutine optional_string ( ptr, fstr )
+         type(c_ptr), intent(in) :: ptr  !! the C string, or NULL
+         character(:), allocatable, intent(out) :: fstr  !! the string
+         character(kind=c_char), pointer :: chars(:)
+         if (.not. c_associated(ptr)) then
+            fstr = ' '
+            return
+         end if
+         call c_f_pointer(ptr, chars, [huge(1)])
+         call c_to_f(chars, fstr)
+         if (len(fstr) == 0) fstr = ' '
+      end subroutine optional_string
+   end function pepper_spice_write_kernel
+
+   !> Write a kernel built in memory to SPICE files (`spice%write_kernel`):
+   !> an SPK (`file`; "" for none), and for its rotation tables a CK
+   !> (`ck_file`) with a text kernel (`text_file`) of their clocks, frame
+   !> definitions and the kernel's body names. Errors are signaled in the
+   !> instance.
    integer(c_int) function pepper_spice_load_kernel ( spice, name, builder, keep ) &
          bind(c, name='pepper_spice_load_kernel')
       type(c_ptr), value :: spice  !! the instance

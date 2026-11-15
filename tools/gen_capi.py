@@ -53,6 +53,7 @@ EXCLUDE_CTX = {
 EXCLUDE_SPICE = {'furnsh', 'pcpool', 'pdpool', 'pipool', 'lmpool', 'add_ephemeris', 'add_frame',
                  'destroy',  # (destroy: the lifetime is pepper_spice_free's, Spice.close's)
                  'load_kernel',  # hand-written (the builder: pepper_builder_*, KernelBuilder)
+                 'write_kernel',  # hand-written (its optional ck_file and text_file)
                  'remove_loader'}  # kernel loaders are Fortran types: not registered from C or Python
 # Shims generated, Python wrappers written by hand (_core.pyx).
 NO_PYTHON = {'kclear', 'remove_ephemeris', 'remove_frame'}

@@ -151,6 +151,11 @@ int pepper_builder_nsegments(void *builder);
 /* A kernel loaded under the same name is replaced; the builder is emptied
    unless keep is 1. Errors in the instance (pepper_spice_getmsg). */
 int pepper_spice_load_kernel(void *spice, const char *name, void *builder, int keep);
+/* An SPK (file; "" for none), and for rotation tables a CK (ck_file) and a
+   text kernel (text_file: clocks, frame definitions, body names); NULL or ""
+   for none. */
+int pepper_spice_write_kernel(void *spice, const char *name, const char *file, const char *ck_file,
+                              const char *text_file);
 
 /* ---- Prepared queries (one context at a time) ---- */
 

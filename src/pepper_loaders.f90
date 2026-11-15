@@ -394,6 +394,59 @@ contains
       end associate
    end procedure kb_add_frame
 
+   !> The rotation tables of a kernel built in memory, for a frame (PEPPER).
+   module procedure kernel_frame_tables
+      implicit none
+      integer(ip) :: k, i, owner
+      allocate ( tbeg(0), tend(0) )
+      call kernel_owner ( ctx, name, is_kernel, owner )
+      if ( .not. is_kernel ) return
+      do k = 1, ctx%spice%nprovided_frames
+         associate ( f => ctx%spice%provided_frames(k) )
+            if ( f%owner /= owner .or. f%code /= code ) cycle
+            select type ( p => f%provider )
+            type is ( rotation_table )
+               do i = 1, p%nseg
+                  tbeg = [ tbeg, p%tbeg(i) ]
+                  tend = [ tend, p%tend(i) ]
+               end do
+            end select
+         end associate
+      end do
+   end procedure kernel_frame_tables
+
+   !> The frames of the rotation tables of a kernel built in memory (PEPPER).
+   module procedure kernel_frame_codes
+      implicit none
+      integer(ip) :: k, owner
+      allocate ( codes(0) )
+      call kernel_owner ( ctx, name, is_kernel, owner )
+      if ( .not. is_kernel ) return
+      do k = 1, ctx%spice%nprovided_frames
+         associate ( f => ctx%spice%provided_frames(k) )
+            if ( f%owner /= owner ) cycle
+            select type ( p => f%provider )
+            type is ( rotation_table )
+               codes = [ codes, f%code ]
+            end select
+         end associate
+      end do
+   end procedure kernel_frame_codes
+
+   !> Whether NAME is a kernel built in memory, and its handle (the owner of
+   !> what it defines).
+   subroutine kernel_owner ( ctx, name, is_kernel, owner )
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! the kernel's name
+      logical, intent(out) :: is_kernel  !! a kernel built in memory has the name
+      integer(ip), intent(out) :: owner  !! its handle
+      integer(ip) :: k
+      owner = 0
+      k = synthetic_named ( ctx, name )
+      is_kernel = k > 0
+      if ( is_kernel ) owner = ctx%spice%zzddhman%files(k)%handle
+   end subroutine kernel_owner
+
    !> The rotation of a frame of rotation tables (PEPPER): the last table
    !> that covers ET, evaluated by CKR05 and CKE05 (ET as the time tag).
    module procedure rotation_table_rotation
@@ -1126,17 +1179,18 @@ contains
       rec = transfer ( c, rec )
    end subroutine file_record
 
-   !> Write a kernel built in memory to an SPK file (PEPPER).
+   !> Write a kernel built in memory to SPICE kernel files (PEPPER).
    module procedure spice_write_kernel
       implicit none
       type(pepper_context), pointer :: ctx
-      integer(ip) :: i, k, r, nrec
-      integer :: lun, ios
-      logical :: exists_already
+      character(:), allocatable :: kname
+      integer(ip) :: i, k, owner, ck
+      logical :: tables, models
 
       ctx => this%context()
       if ( ctx%failed() ) return
-      i = loaded_under ( ctx, trim ( adjustl ( name ) ) )
+      kname = trim ( adjustl ( name ) )
+      i = loaded_under ( ctx, kname )
       k = 0
       if ( i > 0 ) then
          if ( this%keeper%kernels(i)%type == 'SPK' ) k = this%zzddhman%find ( this%keeper%kernels(i)%handle )
@@ -1151,52 +1205,298 @@ contains
          call ctx%sigerr ( 'SPICE(NOSUCHKERNEL)' )
          return
       end if
-      if ( any ( this%provided_spk(1:this%nprovided_spk)%owner == this%zzddhman%files(k)%handle ) .or. &
-           any ( this%provided_frames(1:this%nprovided_frames)%owner == this%zzddhman%files(k)%handle ) ) then
+      owner = this%zzddhman%files(k)%handle
+
+!     What it has: models (not writable), rotation tables.
+      models = any ( this%provided_spk(1:this%nprovided_spk)%owner == owner )
+      tables = .false.
+      do i = 1, this%nprovided_frames
+         if ( this%provided_frames(i)%owner /= owner ) cycle
+         select type ( p => this%provided_frames(i)%provider )
+         type is ( rotation_table )
+            tables = .true.
+         class default
+            models = .true.
+         end select
+      end do
+      if ( models ) then
          call ctx%setmsg ( 'The kernel ''#'' has programmatic ephemerides or ' &
-         //            'frames (computed by code, or rotation tables, which an ' &
-         //            'SPK file cannot hold): it cannot be written to an SPK file.' )
+         //            'frames (computed by code, not stored): it cannot be ' &
+         //            'written to SPICE kernel files.' )
          call ctx%errch  ( '#', name )
          call ctx%sigerr ( 'SPICE(NOTWRITABLE)' )
          return
       end if
-      inquire ( file = file, exist = exists_already )
-      if ( exists_already ) then
-         call ctx%setmsg ( 'The file ''#'' exists; the kernel ''#'' is not ' &
-         //            'written over it.' )
+      if ( tables ) then
+         if ( .not. ( present ( ck_file ) .and. present ( text_file ) ) ) then
+            call ctx%setmsg ( 'The kernel ''#'' has rotation tables: write them ' &
+            //            'with ck_file (the CK) and text_file (its clocks and ' &
+            //            'frame definitions).' )
+            call ctx%errch  ( '#', name )
+            call ctx%sigerr ( 'SPICE(NOTWRITABLE)' )
+            return
+         end if
+         if ( ck_file == ' ' .or. text_file == ' ' ) then
+            call ctx%setmsg ( 'The CK file or the text kernel for the rotation ' &
+            //            'tables of the kernel ''#'' is blank.' )
+            call ctx%errch  ( '#', name )
+            call ctx%sigerr ( 'SPICE(BLANKFILENAME)' )
+            return
+         end if
+      end if
+
+!     The files must not exist.
+      if ( file /= ' ' ) call not_there ( file )
+      if ( tables ) call not_there ( ck_file )
+      if ( present ( text_file ) ) then
+         if ( text_file /= ' ' ) call not_there ( text_file )
+      end if
+      if ( ctx%failed() ) return
+
+      if ( file /= ' ' ) then
+         call write_image ( ctx, this%zzddhman%files(k)%image, file )
+         if ( ctx%failed() ) return
+      end if
+      if ( tables ) then
+         ck = synthetic_named ( ctx, rotations_name ( owner ) )
+         call write_rotations ( ctx, this%zzddhman%files(ck)%handle, ck_file, text_file, owner )
+      else if ( present ( text_file ) ) then
+         if ( text_file /= ' ' ) call write_text_kernel ( ctx, text_file, owner, 0.0_wp )
+      end if
+
+   contains
+
+      !> Signal SPICE(FILEEXISTS) if F exists.
+      subroutine not_there ( f )
+         character(*), intent(in) :: f  !! the file
+         logical :: there
+         if ( ctx%failed() ) return
+         inquire ( file = f, exist = there )
+         if ( there ) then
+            call ctx%setmsg ( 'The file ''#'' exists; the kernel ''#'' is not ' &
+            //            'written over it.' )
+            call ctx%errch  ( '#', f )
+            call ctx%errch  ( '#', name )
+            call ctx%sigerr ( 'SPICE(FILEEXISTS)' )
+         end if
+      end subroutine not_there
+
+   end procedure spice_write_kernel
+
+   !> Write a DAF image to a file (a new direct-access file of 1024-byte
+   !> records).
+   subroutine write_image ( ctx, image, file )
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: image(:)  !! the image
+      character(*), intent(in) :: file  !! the file
+      integer(ip) :: r, nrec
+      integer :: lun, ios
+      nrec = size ( image, kind=ip ) / 128
+      open ( newunit = lun, file = file, access = 'DIRECT', recl = record_length(), &
+             status = 'NEW', iostat = ios )
+      if ( ios /= 0 ) then
+         call ctx%setmsg ( 'The file ''#'' could not be created (IOSTAT #).' )
          call ctx%errch  ( '#', file )
-         call ctx%errch  ( '#', name )
-         call ctx%sigerr ( 'SPICE(FILEEXISTS)' )
+         call ctx%errint ( '#', int ( ios, ip ) )
+         call ctx%sigerr ( 'SPICE(FILEOPENFAIL)' )
          return
       end if
-      associate ( image => this%zzddhman%files(k)%image )
-         nrec = size ( image, kind=ip ) / 128
-         open ( newunit = lun, file = file, access = 'DIRECT', recl = record_length(), &
-                status = 'NEW', iostat = ios )
-         if ( ios /= 0 ) then
-            call ctx%setmsg ( 'The file ''#'' could not be created (IOSTAT #).' )
-            call ctx%errch  ( '#', file )
-            call ctx%errint ( '#', int ( ios, ip ) )
-            call ctx%sigerr ( 'SPICE(FILEOPENFAIL)' )
-            return
+      do r = 1, nrec
+         write ( lun, rec = r, iostat = ios ) image(128*(r-1)+1:128*r)
+         if ( ios /= 0 ) exit
+      end do
+      if ( ios /= 0 ) then
+         close ( lun, status = 'DELETE' )
+         call ctx%setmsg ( 'The file ''#'' could not be written (record #, ' &
+         //            'IOSTAT #); it has been deleted.' )
+         call ctx%errch  ( '#', file )
+         call ctx%errint ( '#', r )
+         call ctx%errint ( '#', int ( ios, ip ) )
+         call ctx%sigerr ( 'SPICE(FILEWRITEFAILED)' )
+         return
+      end if
+      close ( lun )
+   end subroutine write_image
+
+   !> The packet size of a CK type 5 subtype.
+   pure integer(ip) function ck05_packet_size ( subtype ) result ( packsz )
+      use pepper_inc_ck05, only: c05tp0, c05tp1, c05tp2, c05ps0, c05ps1, c05ps2, c05ps3
+      integer(ip), intent(in) :: subtype  !! the subtype
+      select case ( subtype )
+      case ( c05tp0 )
+         packsz = c05ps0
+      case ( c05tp1 )
+         packsz = c05ps1
+      case ( c05tp2 )
+         packsz = c05ps2
+      case default
+         packsz = c05ps3
+      end select
+   end function ck05_packet_size
+
+   !> Write a kernel's rotation tables (the DAF of handle CKH) as a CK file,
+   !> and its text kernel. The CK's ticks are the epochs less T0: 0 if no
+   !> epoch is before J2000 (the data as it is), else the whole second at or
+   !> below the earliest epoch (every time tag shifted).
+   subroutine write_rotations ( ctx, ckh, ck_file, text_file, owner )
+      use pepper_spk_packing, only: ck05_data
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      integer(ip), intent(in) :: ckh  !! the handle of the DAF of the rotation tables
+      character(*), intent(in) :: ck_file  !! the CK file
+      character(*), intent(in) :: text_file  !! the text kernel
+      integer(ip), intent(in) :: owner  !! the kernel's handle
+      !> A segment read from the DAF.
+      type :: read_segment
+         real(wp) :: dc(2) = 0.0_wp  !! its times
+         integer(ip) :: ic(4) = 0  !! its integer components but the addresses
+         character(:), allocatable :: ident  !! its name
+         real(wp), allocatable :: data(:)  !! its data (then with the shifted times)
+      end type read_segment
+      type(read_segment), allocatable, target :: rs(:), tmp(:)
+      type(image_segment), allocatable :: segs(:)
+      real(wp), allocatable :: image(:)
+      real(wp) :: sum(sumsiz), dc(2), t0, emin
+      integer(ip) :: ic(6), nseg, k, n, nints, packsz, subtype, istart, lend
+      character(namsiz) :: segname
+      logical :: fnd
+
+!     The segments: their descriptors, names and data.
+      nseg = 0
+      allocate ( rs(4) )
+      emin = huge ( 1.0_wp )
+      call dafbfs ( ctx, ckh )
+      call daffna ( ctx, fnd )
+      do while ( fnd .and. .not. ctx%failed() )
+         call dafgs ( ctx, sum )
+         call dafus ( ctx, sum, spk_nd, spk_ni, dc, ic )
+         call dafgn ( ctx, segname )
+         if ( nseg == size ( rs ) ) then
+            allocate ( tmp(2*nseg) )
+            tmp(1:nseg) = rs(1:nseg)
+            call move_alloc ( tmp, rs )
          end if
-         do r = 1, nrec
-            write ( lun, rec = r, iostat = ios ) image(128*(r-1)+1:128*r)
-            if ( ios /= 0 ) exit
-         end do
-         if ( ios /= 0 ) then
-            close ( lun, status = 'DELETE' )
-            call ctx%setmsg ( 'The file ''#'' could not be written (record #, ' &
-            //            'IOSTAT #); it has been deleted.' )
-            call ctx%errch  ( '#', file )
-            call ctx%errint ( '#', r )
-            call ctx%errint ( '#', int ( ios, ip ) )
-            call ctx%sigerr ( 'SPICE(FILEWRITEFAILED)' )
-            return
+         nseg = nseg + 1
+         rs(nseg)%dc = dc
+         rs(nseg)%ic = ic(1:4)
+         rs(nseg)%ident = trim ( segname )
+         allocate ( rs(nseg)%data(ic(6) - ic(5) + 1) )
+         call dafgda ( ctx, ckh, ic(5), ic(6), rs(nseg)%data )
+         if ( ctx%failed() ) return
+         lend = size ( rs(nseg)%data, kind=ip )
+         n = nint ( rs(nseg)%data(lend), ip )
+         packsz = ck05_packet_size ( nint ( rs(nseg)%data(lend-3), ip ) )
+         emin = min ( emin, rs(nseg)%data(n*packsz + 1) )
+         call daffna ( ctx, fnd )
+      end do
+      if ( ctx%failed() ) return
+
+      t0 = 0.0_wp
+      if ( emin < 0.0_wp ) t0 = real ( floor ( emin ), wp )
+
+!     The epochs and interval starts less T0.
+      allocate ( segs(nseg) )
+      do k = 1, nseg
+         if ( t0 /= 0.0_wp ) then
+            associate ( d => rs(k)%data )
+               lend = size ( d, kind=ip )
+               n = nint ( d(lend), ip )
+               nints = nint ( d(lend-1), ip )
+               subtype = nint ( d(lend-3), ip )
+               packsz = ck05_packet_size ( subtype )
+               istart = n*packsz + n + ( n - 1 )/100 + 1
+               d = ck05_data ( subtype, nint ( d(lend-2), ip ), d(n*packsz+1:n*packsz+n) - t0, &
+                               d(1:n*packsz), d(lend-4), d(istart:istart+nints-1) - t0 )
+            end associate
+            rs(k)%dc = rs(k)%dc - t0
          end if
-         close ( lun )
-      end associate
-   end procedure spice_write_kernel
+         segs(k)%dc = rs(k)%dc
+         segs(k)%ic = rs(k)%ic
+         segs(k)%ident = rs(k)%ident
+         segs(k)%data => rs(k)%data
+      end do
+      call daf_image ( ctx, 'PEPPER ROTATIONS', 'DAF/CK  ', segs, image )
+      if ( ctx%failed() ) return
+      call write_image ( ctx, image, ck_file )
+      if ( ctx%failed() ) return
+      call write_text_kernel ( ctx, text_file, owner, t0 )
+   end subroutine write_rotations
+
+   !> Write the text kernel of a kernel: for each frame of rotation tables
+   !> it owns, a type 1 SCLK (ticks: TDB seconds less T0) and the frame's
+   !> CK definition; then its body names.
+   subroutine write_text_kernel ( ctx, file, owner, t0 )
+      use pepper_strings, only: intstr
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      character(*), intent(in) :: file  !! the text kernel
+      integer(ip), intent(in) :: owner  !! the kernel's handle
+      real(wp), intent(in) :: t0  !! the TDB epoch of tick 0
+      character(*), parameter :: q = ''''  !! a quote
+      character(16) :: scode, sclk, scenter
+      character(32) :: st0
+      integer(ip) :: i
+      integer :: lun, ios
+      logical :: names
+      open ( newunit = lun, file = file, status = 'NEW', action = 'WRITE', iostat = ios )
+      if ( ios /= 0 ) then
+         call ctx%setmsg ( 'The file ''#'' could not be created (IOSTAT #).' )
+         call ctx%errch  ( '#', file )
+         call ctx%errint ( '#', int ( ios, ip ) )
+         call ctx%sigerr ( 'SPICE(FILEOPENFAIL)' )
+         return
+      end if
+      write ( st0, '(es24.16e3)' ) t0
+      write ( lun, '(a)' ) 'KPL/FK'
+      write ( lun, '(a)' ) ''
+      write ( lun, '(a)' ) 'Written by PEPPER (write_kernel): the clocks and frame definitions of'
+      write ( lun, '(a)' ) 'the rotation tables of a kernel built in memory, and its body names.'
+      write ( lun, '(a)' ) 'Each frame''s CK ID is its frame code; its clock (SCLK ID -|code|)'
+      write ( lun, '(a)' ) 'counts TDB seconds from the epoch in its coefficients, one tick a'
+      write ( lun, '(a)' ) 'second.'
+      write ( lun, '(a)' ) ''
+      write ( lun, '(a)' ) '\begindata'
+      write ( lun, '(a)' ) ''
+      do i = 1, ctx%spice%nprovided_frames
+         associate ( f => ctx%spice%provided_frames(i) )
+            if ( f%owner /= owner ) cycle
+            select type ( p => f%provider )
+            type is ( rotation_table )
+               call intstr ( f%code, scode )
+               call intstr ( abs ( f%code ), sclk )
+               call intstr ( f%center, scenter )
+               write ( lun, '(a)' ) 'FRAME_' // f%name // ' = ' // trim ( scode )
+               write ( lun, '(a)' ) 'FRAME_' // trim ( scode ) // '_NAME = ' // q // f%name // q
+               write ( lun, '(a)' ) 'FRAME_' // trim ( scode ) // '_CLASS = 3'
+               write ( lun, '(a)' ) 'FRAME_' // trim ( scode ) // '_CLASS_ID = ' // trim ( scode )
+               write ( lun, '(a)' ) 'FRAME_' // trim ( scode ) // '_CENTER = ' // trim ( scenter )
+               write ( lun, '(a)' ) 'CK_' // trim ( scode ) // '_SCLK = -' // trim ( sclk )
+               write ( lun, '(a)' ) 'CK_' // trim ( scode ) // '_SPK = ' // trim ( scenter )
+               write ( lun, '(a)' ) 'SCLK_KERNEL_ID = ( @2000-01-01/12:00:00 )'
+               write ( lun, '(a)' ) 'SCLK_DATA_TYPE_' // trim ( sclk ) // ' = ( 1 )'
+               write ( lun, '(a)' ) 'SCLK01_TIME_SYSTEM_' // trim ( sclk ) // ' = ( 1 )'
+               write ( lun, '(a)' ) 'SCLK01_N_FIELDS_' // trim ( sclk ) // ' = ( 1 )'
+               write ( lun, '(a)' ) 'SCLK01_MODULI_' // trim ( sclk ) // ' = ( 1000000000000000 )'
+               write ( lun, '(a)' ) 'SCLK01_OFFSETS_' // trim ( sclk ) // ' = ( 0 )'
+               write ( lun, '(a)' ) 'SCLK01_OUTPUT_DELIM_' // trim ( sclk ) // ' = ( 1 )'
+               write ( lun, '(a)' ) 'SCLK_PARTITION_START_' // trim ( sclk ) // ' = ( 0.0 )'
+               write ( lun, '(a)' ) 'SCLK_PARTITION_END_' // trim ( sclk ) // ' = ( 1.0D15 )'
+               write ( lun, '(a)' ) 'SCLK01_COEFFICIENTS_' // trim ( sclk ) // ' = ( 0.0 ' // &
+                                    trim ( adjustl ( st0 ) ) // ' 1.0 )'
+               write ( lun, '(a)' ) ''
+            end select
+         end associate
+      end do
+      names = .false.
+      do i = 1, ctx%spice%boddef_count
+         if ( ctx%spice%boddef_owners(i) /= owner ) cycle
+         call intstr ( ctx%spice%boddef_codes(i), scode )
+         write ( lun, '(a)' ) 'NAIF_BODY_NAME += ' // q // ctx%spice%boddef_names(i)%s // q
+         write ( lun, '(a)' ) 'NAIF_BODY_CODE += ' // trim ( scode )
+         names = .true.
+      end do
+      if ( names ) write ( lun, '(a)' ) ''
+      write ( lun, '(a)' ) '\begintext'
+      close ( lun )
+   end subroutine write_text_kernel
 
    ! ----------------------------------------------------------------------
    ! Kernel loaders
