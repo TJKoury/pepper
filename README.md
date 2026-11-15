@@ -11,11 +11,12 @@
 
 PEPPER provides tools for computing planetary ephemerides, positions, pointing, events, and rotations, leveraging modern Fortran features for high performance and maintainability. It can be thought of as a modern, thread-safe reimagining and replacement for [SPICELIB](https://naif.jpl.nasa.gov/naif/toolkit.html), the Fortran 77 SPICE library that has been developed by NASA's [NAIF](https://naif.jpl.nasa.gov/naif/) for decades. PEPPER aims not to rewrite the SPICELIB code from scratch or convert it into another language, but to modernize, improve, and add new features to it while maintaining compatibility with existing SPICELIB applications and tools.
 
-PEPPER can be used from three languages:
+PEPPER can be used from four environments:
 
-- **Fortran:** the library itself, with SPICELIB's routines as methods of an instance (`spice%furnsh`) and of its per-thread contexts (`ctx%spkezr`).
+- **Fortran:** the library itself, with SPICELIB's routines as methods of an instance (`spice%furnsh`, `spice%furnsh_memory`) and of its per-thread contexts (`ctx%spkezr`).
 - **C and C++:** a C interface (`include/pepper.h`), generated from the Fortran interfaces (see [The C interface](#the-c-interface)).
 - **Python:** [PepperyPy](python/README.md), with [SpiceyPy](https://github.com/AndrewAnnex/SpiceyPy)'s API, so SpiceyPy programs run with `import pepperypy as spice`, 3 to 5 times faster and safe to call from several threads (see [Python: PepperyPy](#python-pepperypy)).
+- **WebAssembly (Browser, Node.js, WASI):** an isomorphic `wasm32-wasip1-threads` sequential module (`dist/isomorphic/module.wasm`) speaking [SpaceDataStandards.org](https://spacedatastandards.org) FlatBuffers (`$OEM`, `$AEM`, `$FRM`, `$TIM`, `$EVL`, `$MBL`, `$NCD`, `$OMM`) and compatible with [`space-data-module-sdk`](https://digitalarsenal.github.io/space-data-module-sdk/) and `web/wasm.html` (see [WebAssembly & SpaceDataStandards.org](#webassembly--spacedatastandardsorg)).
 
 PEPPER is fast:
 
@@ -108,6 +109,14 @@ pixi run -e python test-capi    # the C test of the C interface
 pixi run -e python gen-capi     # regenerate the C interface and the wrappers
 pixi run -e python py-bench     # speed against SpiceyPy
 pixi run -e python py-test-spiceypy  # SpiceyPy's own test suite, against PepperyPy
+```
+
+The WebAssembly module and browser workbench build and test with Node.js (or `pixi run wasm-*`):
+
+```bash
+npm run build:wasm   # or: pixi run wasm-build — compile dist/isomorphic/module.wasm + web/wasm/*
+npm run test:wasm    # or: pixi run wasm-test  — SDK compliance, propagator conformance, SDS physics & headless browser e2e
+npm run serve:wasm   # or: pixi run wasm-serve — serve web/wasm.html with COOP/COEP headers on http://127.0.0.1:8787/wasm.html
 ```
 
 ## Usage
@@ -475,6 +484,8 @@ pepper_runtime_init();
 void *spice = pepper_spice_new();
 void *ctx = pepper_context_new(spice);          /* one per thread */
 pepper_spice_furnsh(spice, "kernels.tm", -1);
+/* Or load DAF/text/JSON kernels directly from memory (zero filesystem I/O):
+   pepper_spice_furnsh_memory(spice, "de440s.bsp", bytes, nbytes); */
 double et, state[6], lt;
 pepper_str2et(ctx, "2026 NOV 8 12:00", &et);
 if (pepper_spkezr(ctx, "MOON", et, "J2000", "LT+S", "EARTH", state, &lt)) {
@@ -484,6 +495,75 @@ if (pepper_spkezr(ctx, "MOON", et, "J2000", "LT+S", "EARTH", state, &lt)) {
 }
 pepper_context_free(ctx);
 pepper_spice_free(spice);
+```
+
+## WebAssembly & SpaceDataStandards.org
+
+`wasm/build.mjs` compiles all Fortran modules in `src/` with LLVM Flang 21 (`--target=wasm32-unknown-wasi`), links them with a native WASI Flang runtime (`libflang_rt.wasi.a`) and the C++ FlatBuffer bridge (`wasm/pepper_module.cpp`), embeds the `$PLG` manifest (`plugin-manifest.json`), and emits:
+
+- `dist/isomorphic/module.wasm` — isomorphic sequential WASI module (`threadModel: "wasi-sequential"`, `invokeSurfaces: ["direct", "command"]`, `runtimeTargets: ["browser", "wasmedge"]`) compatible with [`space-data-module-sdk`](https://digitalarsenal.github.io/space-data-module-sdk/).
+- `dist/guest-link/` — guest-link object and metadata for multi-module composition.
+- `web/wasm.html` — self-contained browser astrodynamics workbench (zero external CDN requests) served with `Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp` via `wasm/serve.mjs` (or `web/coi-serviceworker.js` on static hosts).
+
+Binary DAF kernels (`.bsp`, `.bpc`, `.bc`), ASCII text kernels (`.tls`, `.tpc`, `.tf`, `.ti`, `.tsc`), and `.json` kernels load directly from memory via `spice%furnsh_memory` / `pepper_spice_furnsh_memory` without touching a WASI filesystem.
+
+### SpaceDataStandards.org methods
+
+| Method ID | Input Port(s) | Output Port | Description |
+|---|---|---|---|
+| `furnish_kernels` | `kernels` (`$MBL`) | `descriptors` (`$NCD`) | Load NAIF binary DAF, text, or JSON kernels from a Module Bundle into resident memory and emit Native Container Descriptors. |
+| `describe_kernel` | `kernel` (`$MBL`) | `descriptor` (`$NCD`) | Inspect a kernel's format, internal file name, comments, segment coverage, and SHA-256 without mutating the resident instance. |
+| `compute_ephemeris` | `request` (`$OEM`), optional `kernels` (`$MBL`) | `ephemeris` (`$OEM`) | Evaluate state vectors via `SPKEZR` over uniform (`STEP_SIZE`) or explicit epochs (`NONE`, `LT`, `LT+S`, `CN`, `CN+S`, `XLT`, `XLT+S`, `XCN`, `XCN+S`). |
+| `compute_attitude` | `request` (`$AEM`), optional `kernels` (`$MBL`) | `attitude` (`$AEM`) | Evaluate frame orientation quaternions (`Q1, Q2, Q3, QC`) and angular velocities (`deg/s`) via `SXFORM`, `XF2RAV`, and `M2Q`. |
+| `transform_frame` | `request` (`$FRM`), optional `kernels` (`$MBL`) | `result` (`$FRM`) | Geodetic `LLA_TO_PCPF` / `PCPF_TO_LLA` (`GEOREC`/`RECGEO`), 6-DOF `STATE_TRANSFORM` (`SXFORM`), `STATE_REPRESENTATION_CONVERT` (`OSCELT`/`CONICS`), and `COMPUTE_TRANSFORM` (`3×3` / `6×6` matrices). |
+| `convert_time` | `request` (`$TIM`), optional `kernels` (`$MBL`) | `result` (`$TIM`) | Convert across `UTC`, `TAI`, `TT`, `TDB`, `TCB`, `TCG`, `GPS`, and `A1` in `ISO8601`, `JULIAN_DATE`, `MODIFIED_JULIAN_DATE`, `UNIX_SECONDS`, and `GPS_SECONDS` (`STR2ET`, `UNITIM`, `DELTET`). |
+| `locate_events` | `request` (`$EVL`), optional `kernels` (`$MBL`) | `report` (`$EVL`) | Geometry Finder searches (`APSIDES`, `ECLIPSE`, and `PARAMETER_CONDITION` via `GFDIST`, `GFOCLT`, `GFSEP`, `GFPA`, `GFRR`). |
+| `ingest_omm` | `omm` (`$OMM`) | — | Stream CCSDS Orbit Mean-Elements Messages into the `orbpro_propagator_abi.h` propagator state (`plugin_init_omm`, `plugin_init_elements`, `plugin_init_ephemeris`, `plugin_propagate`, `plugin_propagate_batch`). |
+
+```js
+import fs from "node:fs/promises";
+import { createBrowserModuleHarness } from "space-data-module-sdk/host/browser-module";
+import { encodeModuleBundle, ModuleBundleEntryRole, ModulePayloadEncoding } from "space-data-module-sdk/bundle";
+
+// In browsers, `loadModule({ wasmSource })` from "space-data-module-sdk/host/isomorphic"
+// delegates to `createBrowserModuleHarness`; on Node/WasmEdge it accepts a file path.
+const mod = await createBrowserModuleHarness({
+  wasmSource: new Uint8Array(await fs.readFile("dist/isomorphic/module.wasm")),
+});
+
+const mbl = encodeModuleBundle({
+  entries: [
+    {
+      entryId: "naif0012.tls",
+      role: ModuleBundleEntryRole.AUXILIARY,
+      sectionName: "naif0012.tls",
+      mediaType: "text/plain",
+      payloadEncoding: ModulePayloadEncoding.RAW_BYTES,
+      payload: await fs.readFile("web/wasm/kernels/naif0012.tls"),
+    },
+  ],
+});
+
+const res = await mod.invoke({
+  methodId: "furnish_kernels",
+  inputs: [
+    {
+      portId: "kernels",
+      typeRef: { schemaName: "MBL.fbs", fileIdentifier: "$MBL", rootTypeName: "MBL", wireFormat: "flatbuffer" },
+      payload: mbl,
+    },
+  ],
+});
+```
+
+### Building, Checking & Serving
+
+```bash
+npm run build:wasm        # or: pixi run wasm-build
+npm run check:wasm        # space-data-module check (--manifest + --wasm)
+npm run conformance:wasm  # space-data-module conformance propagator (12/12 executable checks)
+npm run test:wasm         # or: pixi run wasm-test (Node + WasmEdge + headless Chromium e2e)
+npm run serve:wasm        # or: pixi run wasm-serve (http://127.0.0.1:8787/wasm.html)
 ```
 
 ### Other projects

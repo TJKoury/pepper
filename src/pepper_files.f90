@@ -4680,6 +4680,23 @@ contains
       rchar = rtrim ( fname )
 
 !
+!     PEPPER: in-memory binary kernels (furnsh_memory) have no OS file;
+!     match their virtual name directly in the file table.
+!
+      do i = 1, ft%nft
+         if ( allocated ( ft%files(i)%raw_records ) ) then
+            if ( ft%files(i)%name == fname( 1:rchar ) ) then
+               exists = .true.
+               opened = .false.
+               found  = .true.
+               handle = ft%files(i)%handle
+               mnm    = ft%files(i)%mnm
+               return
+            end if
+         end if
+      end do
+
+!
 !     Now INQUIRE on the input file FNAME.
 !
       inquire ( file   = fname( 1:rchar ), &

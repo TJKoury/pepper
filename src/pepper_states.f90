@@ -1502,6 +1502,9 @@ module pepper_states
       character(typlen) :: type = ' '  !! SPK, CK, PCK, DSK, EK, TEXT or META
       integer(ip) :: handle = 0  !! handle of the kernel (0 for a text kernel)
       integer(ip) :: source = 0  !! index of the meta-kernel it was loaded from (0: loaded directly)
+      !> Source text when loaded from memory ([[spice_furnsh_memory]]), so
+      !> [[unload]] can reload remaining in-memory text kernels without a file.
+      character(:), allocatable :: memory_text
    end type keeper_kernel
 
    !> The kernels loaded through FURNSH, in load order.
@@ -3405,6 +3408,9 @@ module pepper_states
       !> DAF word address `a` is `image(a)`. Written when the file is loaded,
       !> read by all contexts, freed with the entry.
       real(wp), allocatable :: image(:)
+      !> Raw 1024-byte records when loaded directly from a byte buffer in
+      !> memory ([[spice_furnsh_memory]]), with no OS file.
+      character(len=1024), allocatable :: raw_records(:)
    end type ddh_file
 
    !> The file table: the files in increasing order of abs(handle) (the
@@ -5585,6 +5591,7 @@ contains
       to%handle = from%handle
       to%source = from%source
       call move_alloc(from%name, to%name)
+      call move_alloc(from%memory_text, to%memory_text)
    end subroutine move_kernel
 
    !> Set the initial values of a new [[limbpt_state]]: SPICELIB's DATA
@@ -6084,6 +6091,7 @@ contains
       to%mnm = from%mnm
       call move_alloc(from%name, to%name)
       call move_alloc(from%image, to%image)
+      call move_alloc(from%raw_records, to%raw_records)
    end subroutine move_file
 
    !> Set the initial values of a new [[zzdsksbf_state]]: SPICELIB's DATA
