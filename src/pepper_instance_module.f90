@@ -131,7 +131,8 @@ module pepper_instance_module
       integer :: last_unit = 1  !! the unit FNDLUN gave last
       integer(ip) :: hash_divisor = -1  !! divisor of ZZHASH (set by ZZSHSH; -1: not set)
       type(string_map) :: closed_files  !! names of the files closed so far (the values are unused)
-      ! The state of the subsystems (allocated when first used).
+      ! The state of the subsystems (allocated by the instance's own context,
+      ! [[allocate_states]], before the contexts query).
       ! >>> generated state components (tools/modularize_ctx.py)
       ! --- pepper_pool
       type(rdtext_state), allocatable :: rdtext  !! state of [[rdtext]]
@@ -20931,8 +20932,63 @@ contains
       type(pepper_context), pointer :: ctx  !! the instance's context
       if (.not. allocated(this%own)) allocate (this%own)
       this%own%spice => this
+      call allocate_states(this)
       ctx => this%own
    end function instance_context
+
+   !> Allocate the states of the instance's subsystems that are not yet
+   !> allocated, with their initial values.
+   !>
+   !> The instance's own context ([[instance_context]]) does this, so every
+   !> method that changes the kernels does it, in the loading thread, before
+   !> the contexts query. A context's routines would otherwise allocate a
+   !> state the first time they need it, and two threads that do so at once
+   !> allocate it twice (with ifx: "allocatable array is already allocated").
+   !> The routines' own allocations remain, for an instance used before any
+   !> kernel is loaded.
+   subroutine allocate_states(spice)
+      use pepper_inc_dla, only: dladsz
+      use pepper_inc_dskdsc, only: dskdsz
+      type(pepper_instance), intent(inout) :: spice  !! the instance
+      if (.not. allocated(spice%rdtext)) then
+         allocate (spice%rdtext)
+         spice%rdtext%lstfil = ' '
+      end if
+      if (.not. allocated(spice%rdker)) then
+         allocate (spice%rdker)
+         spice%rdker%file = ' '
+      end if
+      if (.not. allocated(spice%tcheck)) allocate (spice%tcheck)
+      if (.not. allocated(spice%texpyr)) allocate (spice%texpyr)
+      if (.not. allocated(spice%pool)) allocate (spice%pool)
+      if (.not. allocated(spice%zzddhman)) allocate (spice%zzddhman)
+      if (.not. allocated(spice%dafah)) allocate (spice%dafah)
+      if (.not. allocated(spice%dasfm)) allocate (spice%dasfm)
+      if (.not. allocated(spice%dsktol)) allocate (spice%dsktol)
+      if (.not. allocated(spice%spkbsr)) then
+         allocate (spice%spkbsr)
+         call spice%spkbsr%index%init(5_ip, 6_ip)
+      end if
+      if (.not. allocated(spice%pckbsr)) then
+         allocate (spice%pckbsr)
+         call spice%pckbsr%index%init(5_ip, 5_ip)
+      end if
+      if (.not. allocated(spice%ckbsr)) then
+         allocate (spice%ckbsr)
+         call spice%ckbsr%index%init(5_ip, 6_ip)
+      end if
+      if (.not. allocated(spice%zzdskbsr)) then
+         allocate (spice%zzdskbsr)
+         call spice%zzdskbsr%index%init(dskdsz, dladsz)
+      end if
+      if (.not. allocated(spice%keeper)) allocate (spice%keeper)
+      if (.not. allocated(spice%timdef_state)) allocate (spice%timdef_state)
+      if (.not. allocated(spice%chgirf_state)) allocate (spice%chgirf_state)
+      if (.not. allocated(spice%ekqmgr)) then
+         allocate (spice%ekqmgr)
+         call init_ekqmgr_state(spice%ekqmgr)
+      end if
+   end subroutine allocate_states
 
    !> True if an error has been signaled in the instance's context (by a
    !> change of the kernels) and not reset.
