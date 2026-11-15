@@ -348,11 +348,14 @@ contains
       type(provided_frame), intent(in) :: f  !! the frame
       character(16) :: scode
       call intstr ( f%code, scode )
+      ! the source the pool records for these variables
+      ctx%spice%pool%setter = '(add_frame)'
       call pipool ( ctx, 'FRAME_' // f%name, 1, [ f%code ] )
       call pcpool ( ctx, 'FRAME_' // trim(scode) // '_NAME', 1, [ f%name ] )
       call pipool ( ctx, 'FRAME_' // trim(scode) // '_CLASS', 1, [ prgmtc ] )
       call pipool ( ctx, 'FRAME_' // trim(scode) // '_CLASS_ID', 1, [ f%code ] )
       call pipool ( ctx, 'FRAME_' // trim(scode) // '_CENTER', 1, [ f%center ] )
+      deallocate ( ctx%spice%pool%setter )
    end subroutine write_frame_definition
 
    !> Forget every programmatic frame (KCLEAR) (PEPPER).

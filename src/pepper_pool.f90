@@ -10787,6 +10787,11 @@ contains
 
             end if
 
+            ! PEPPER: the source of the assignment (the kernel, and the line where
+            ! the assignment begins)
+            call kernel_location ( file, number )
+            call ps%note_source ( nameat, file, number )
+
 !
 !           If this is a vector, the next thing on the line will be a
 !           left parenthesis. Otherwise, assume that this is a scalar.
@@ -11784,6 +11789,9 @@ contains
                end if
 
             end if
+
+            ! PEPPER: the source of the assignment (the buffer of LMPOOL, and its line)
+            call ps%note_source ( nameat, '(LMPOOL)', linnum - 1 )
 
 !
 !           If this is a vector, the next thing on the line will be a
@@ -14550,6 +14558,251 @@ contains
       end associate
       end procedure pool_strings
 
+      !> Where the values of a kernel variable came from (PEPPER).
+      module procedure pool_sources
+      use pepper_kinds, only: ip
+      implicit none
+      integer(ip) :: i
+      integer(ip) :: k
+      integer(ip) :: n
+      found = .false.
+      n = 0
+      associate ( ps => ctx%spice%pool )
+      if ( .not. ctx%failed() ) then
+         if ( ps%first ) call zzpini ( ctx, ps )
+         i = ps%find ( name )
+         if ( i > 0 ) then
+            found = .true.
+            n = ps%vars(i)%nfrom
+         end if
+      end if
+      allocate ( sources(n), lines(n) )
+      if ( present ( first ) ) allocate ( first(n) )
+      do k = 1, n
+         associate ( a => ps%vars(i)%from(k) )
+            sources(k)%s = ps%sources(a%source)%s
+            lines(k) = a%line
+            if ( present ( first ) ) first(k) = a%first
+         end associate
+      end do
+      end associate
+      end procedure pool_sources
+
+      !> The kernel variables that a source assigned (PEPPER).
+      module procedure pool_defined_by
+      use pepper_kinds, only: ip
+      use pepper_containers, only: grow
+      implicit none
+      integer(ip) :: id
+      integer(ip) :: k
+      integer(ip) :: n
+      logical :: known
+      allocate ( names(0) )
+      if ( ctx%failed() ) return
+      associate ( ps => ctx%spice%pool )
+      if ( ps%first ) call zzpini ( ctx, ps )
+      call ps%source_index%get ( trim(source), id, known )
+      if ( .not. known ) return
+      n = 0
+      do k = 1, ps%nslots
+         if ( .not. allocated ( ps%vars(k)%name ) ) cycle
+         if ( ps%vars(k)%nfrom == 0 ) cycle
+         if ( any ( ps%vars(k)%from(1:ps%vars(k)%nfrom)%source == id ) ) then
+            n = n + 1
+            call grow ( names, n )
+            names(n)%s = ps%vars(k)%name
+         end if
+      end do
+      names = names(1:n)
+      end associate
+      end procedure pool_defined_by
+
+      !> Write the kernel pool as a JSON kernel (PEPPER).
+      module procedure pool_write_json
+      use pepper_kinds, only: ip, wp
+      implicit none
+      integer(ip), parameter :: wrap = 100  !! longest line of values before an array is written on several lines
+      character(:), allocatable :: line
+      character(:), allocatable :: comment
+      character(:), allocatable :: item
+      integer(ip) :: k
+      integer(ip) :: j
+      integer(ip) :: last
+      integer(ip) :: iostat
+      logical :: several
+      if ( ctx%failed() ) return
+      associate ( ps => ctx%spice%pool )
+      if ( ps%first ) call zzpini ( ctx, ps )
+      ! the last variable written (no comma after it)
+      last = 0
+      do k = 1, ps%nslots
+         if ( allocated ( ps%vars(k)%name ) ) then
+            if ( ps%vars(k)%n > 0 ) last = k
+         end if
+      end do
+      write ( unit, '(a)', iostat=iostat ) '// The kernel pool (pool_write_json): each variable''s sources and lines'
+      if ( iostat == 0 ) write ( unit, '(a)', iostat=iostat ) '{'
+      do k = 1, ps%nslots
+         if ( iostat /= 0 ) exit
+         if ( .not. allocated ( ps%vars(k)%name ) ) cycle
+         associate ( v => ps%vars(k) )
+         ! the comment: the sources of the assignments in effect
+         comment = ''
+         do j = 1, v%nfrom
+            if ( j > 1 ) comment = comment // '; '
+            comment = comment // ps%sources(v%from(j)%source)%s
+            if ( v%from(j)%line > 0 ) then
+               call append_integer ( comment, ' line ', int ( v%from(j)%line, int64 ) )
+            end if
+         end do
+         if ( v%n == 0 ) then
+            ! a JSON kernel cannot give a variable no values
+            write ( unit, '(a)', iostat=iostat ) '    // ' // v%name // ': no values (' // comment // ')'
+            cycle
+         end if
+         call json_string ( v%name, item )
+         line = '    ' // item // ': '
+         ! the values, on the line if they fit
+         several = .false.
+         if ( v%n > 1 ) then
+            line = line // '['
+            do j = 1, v%n
+               call value_text ( v, j, item )
+               if ( j > 1 ) then
+                  if ( len ( line ) + len ( item ) + 2 > wrap ) then
+                     several = .true.
+                     exit
+                  end if
+                  line = line // ', '
+               end if
+               line = line // item
+            end do
+         end if
+         if ( several ) then
+            ! one value per line, the comment after the opening bracket
+            call json_string ( v%name, item )
+            write ( unit, '(a)', iostat=iostat ) '    ' // item // ': [  // ' // comment
+            do j = 1, v%n
+               if ( iostat /= 0 ) exit
+               call value_text ( v, j, item )
+               if ( j < v%n ) item = item // ','
+               write ( unit, '(a)', iostat=iostat ) '        ' // item
+            end do
+            line = '    ]'
+            if ( k /= last ) line = line // ','
+            if ( iostat == 0 ) write ( unit, '(a)', iostat=iostat ) line
+         else
+            if ( v%n > 1 ) then
+               line = line // ']'
+            else
+               call value_text ( v, 1_ip, item )
+               line = line // item
+            end if
+            if ( k /= last ) line = line // ','
+            write ( unit, '(a)', iostat=iostat ) line // '  // ' // comment
+         end if
+         end associate
+      end do
+      if ( iostat == 0 ) write ( unit, '(a)', iostat=iostat ) '}'
+      if ( iostat /= 0 ) then
+         call ioerr ( ctx, 'writing the kernel pool as a JSON kernel', ' ', iostat )
+         call ctx%sigerr ( 'SPICE(WRITEERROR)' )
+      end if
+      end associate
+
+      contains
+
+      !> Value j of a variable, as JSON: a number that reads back exactly, or a
+      !> string.
+      subroutine value_text ( v, j, text )
+         type(pool_variable), intent(in) :: v  !! the variable
+         integer(ip), intent(in) :: j  !! the value's index
+         character(:), allocatable, intent(out) :: text  !! the value as JSON
+         if ( v%kind == pool_numeric ) then
+            call number_text ( v%dvals(j), text )
+         else
+            call json_string ( v%cvals(j)%s, text )
+         end if
+      end subroutine value_text
+
+      !> A number as JSON, with the fewest significant digits (15 to 17) that
+      !> read back to the same number, without trailing zeros (1.5E-3,
+      !> 0.25 as 2.5E-1, 1.25 without an exponent); a whole number of up to 15
+      !> digits without a fraction or exponent.
+      subroutine number_text ( x, text )
+         real(wp), intent(in) :: x  !! the number
+         character(:), allocatable, intent(out) :: text  !! the number as JSON
+         character(40) :: buffer
+         character(16) :: form
+         character(:), allocatable :: mantissa
+         real(wp) :: back
+         integer :: digits
+         integer :: ios
+         integer :: e
+         integer :: exponent
+         if ( x == aint ( x ) .and. abs ( x ) < 1.0e15_wp ) then
+            write ( buffer, '(i0)' ) int ( x, int64 )
+            text = trim ( buffer )
+            return
+         end if
+         do digits = 15, 17
+            write ( form, '(a,i0,a)' ) '(es30.', digits - 1, 'e3)'
+            write ( buffer, form ) x
+            read ( buffer, *, iostat=ios ) back
+            if ( ios == 0 .and. back == x ) exit
+         end do
+         ! d.dddd000E+00n: the mantissa without its trailing zeros, the
+         ! exponent without its leading zeros (none if it is 0)
+         buffer = adjustl ( buffer )
+         e = index ( buffer, 'E' )
+         mantissa = buffer(1:e-1)
+         do while ( mantissa(len(mantissa):) == '0' )
+            mantissa = mantissa(1:len(mantissa)-1)
+         end do
+         if ( mantissa(len(mantissa):) == '.' ) mantissa = mantissa // '0'
+         read ( buffer(e+1:), * ) exponent
+         if ( exponent == 0 ) then
+            text = mantissa
+         else
+            write ( buffer, '(a,i0)' ) 'E', exponent
+            text = mantissa // trim ( buffer )
+         end if
+      end subroutine number_text
+
+      !> A string as JSON: in quotes, with `"`, `\` and the control
+      !> characters escaped.
+      subroutine json_string ( s, text )
+         character(*), intent(in) :: s  !! the string
+         character(:), allocatable, intent(out) :: text  !! the string as JSON
+         character(6) :: hex
+         integer :: i
+         integer :: c
+         text = '"'
+         do i = 1, len ( s )
+            c = iachar ( s(i:i) )
+            if ( s(i:i) == '"' .or. s(i:i) == '\' ) then
+               text = text // '\' // s(i:i)
+            else if ( c < 32 ) then
+               write ( hex, '(a,z4.4)' ) '\u', c
+               text = text // hex
+            else
+               text = text // s(i:i)
+            end if
+         end do
+         text = text // '"'
+      end subroutine json_string
+
+      !> Append a label and an integer to a text.
+      subroutine append_integer ( text, label, n )
+         character(:), allocatable, intent(inout) :: text  !! the text
+         character(*), intent(in) :: label  !! the label
+         integer(int64), intent(in) :: n  !! the integer
+         character(24) :: buffer
+         write ( buffer, '(i0)' ) n
+         text = text // label // trim ( buffer )
+      end subroutine append_integer
+      end procedure pool_write_json
+
       !>## Detailed Input
       !>
       !>     NAME     is the name of the variable whose values are to be
@@ -15468,6 +15721,12 @@ contains
       call zzctrinc ( ctx, ps%subctr )
       call ps%create ( name, nameat )
       call ps%clear_values ( nameat )
+      ! PEPPER: the source of the assignment
+      if ( allocated ( ps%setter ) ) then
+         call ps%note_source ( nameat, ps%setter, 0_ip )
+      else
+         call ps%note_source ( nameat, '(PCPOOL)', 0_ip )
+      end if
       do i = 1, n
          call ps%add_string ( nameat, cvals(i) )
       end do
@@ -15699,6 +15958,12 @@ contains
       call zzctrinc ( ctx, ps%subctr )
       call ps%create ( name, nameat )
       call ps%clear_values ( nameat )
+      ! PEPPER: the source of the assignment
+      if ( allocated ( ps%setter ) ) then
+         call ps%note_source ( nameat, ps%setter, 0_ip )
+      else
+         call ps%note_source ( nameat, '(PDPOOL)', 0_ip )
+      end if
       do i = 1, n
          call ps%add_number ( nameat, values(i) )
       end do
@@ -15930,6 +16195,12 @@ contains
       call zzctrinc ( ctx, ps%subctr )
       call ps%create ( name, nameat )
       call ps%clear_values ( nameat )
+      ! PEPPER: the source of the assignment
+      if ( allocated ( ps%setter ) ) then
+         call ps%note_source ( nameat, ps%setter, 0_ip )
+      else
+         call ps%note_source ( nameat, '(PIPOOL)', 0_ip )
+      end if
       do i = 1, n
          call ps%add_number ( nameat, real( ivals(i), wp ) )
       end do
@@ -17013,6 +17284,7 @@ contains
          associate (a => items(k))
             call ps%create(a%name, at, found)
             if (found .and. .not. a%append) call ps%clear_values(at)
+            call ps%note_source(at, fname, a%line)
             if (a%kind == json_numeric) then
                do j = 1, a%n
                   call ps%add_number(at, a%numbers(j))

@@ -288,6 +288,29 @@ strings, DAF text transfer files), so a `.tpc` and its `.json` give the same
 pool with any compiler. The parser is `src/pepper_json.f90`; the design is in
 `plans/json_kernels_plan.md`.
 
+### Where the pool's values came from
+
+The kernel pool remembers the source of each assignment in effect: the
+kernel file and the line where the assignment begins, or a tag for the
+values a program set (`(PDPOOL)`, `(PCPOOL)`, `(PIPOOL)`, `(LMPOOL)` with its
+buffer's line, `(add_frame)`). An `=` replaces a variable's sources, a `+=`
+adds one, so when several kernels define a variable, its sources say which
+one won (or which ones it combines).
+
+```fortran
+type(string), allocatable :: sources(:), names(:)
+integer(ip), allocatable :: lines(:)
+
+call ctx%pool_sources('BODY399_RADII', sources, lines, found)  ! which kernels, which lines
+call ctx%pool_defined_by('pck00011.tpc', names)                ! what that kernel defined
+call ctx%pool_write_json(unit)                                 ! the whole pool, as a JSON kernel
+```
+
+`pool_write_json` writes one `"NAME": value` per variable with a `//`
+comment naming its sources; the file loads back as a JSON kernel with the
+same values (the numbers are written with the digits they need to read back
+exactly).
+
 ## Prepared queries
 
 A state or frame query can be resolved once (names, aberration correction,

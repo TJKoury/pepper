@@ -774,6 +774,9 @@ module pepper_instance_module
       procedure, non_overridable :: pool_values
       procedure, non_overridable :: pool_integers
       procedure, non_overridable :: pool_strings
+      procedure, non_overridable :: pool_sources
+      procedure, non_overridable :: pool_defined_by
+      procedure, non_overridable :: pool_write_json
       procedure, non_overridable :: gdpool
       procedure, non_overridable :: gipool
       procedure, non_overridable :: dtpool
@@ -4374,6 +4377,52 @@ module pepper_instance_module
          type(string), allocatable, intent(out) :: values(:)  !! its values (size 0 if not found)
          logical, intent(out) :: found  !! the variable is in the pool and of character type
       end subroutine pool_strings
+
+      !> Where the values of a kernel variable came from (PEPPER): the
+      !> assignments in effect, in order, with the source of each, the line
+      !> where it begins, and the index of its first value. An `=` assignment
+      !> replaces the values, so it is the first one; each `+=` (or `"+NAME"`
+      !> of a JSON kernel) that followed adds one.
+      !>
+      !> The source is the kernel file, named as it was loaded (with
+      !> [[spice_furnsh]], or listed in a meta-kernel), or a tag for the values
+      !> set by a program: `(PCPOOL)`, `(PDPOOL)`, `(PIPOOL)`, `(LMPOOL)` (its
+      !> line is the line of the buffer), `(add_frame)` (the definition of a
+      !> programmatic frame, [[spice_add_frame]]). [[pool_defined_by]] is the
+      !> reverse.
+      module subroutine pool_sources ( ctx, name, sources, lines, found, first )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: name  !! the name of the variable
+         type(string), allocatable, intent(out) :: sources(:)  !! the source of each assignment (size 0 if not found)
+         integer(ip), allocatable, intent(out) :: lines(:)  !! the line where each begins (0 for PCPOOL, PDPOOL, PIPOOL, add_frame)
+         logical, intent(out) :: found  !! the variable is in the pool
+         integer(ip), allocatable, intent(out), optional :: first(:)  !! the index of the first value each gave
+      end subroutine pool_sources
+
+      !> The kernel variables that a source assigned (PEPPER; the reverse of
+      !> [[pool_sources]]): the variables with an assignment in effect from
+      !> it, in the order of [[gnpool]]. A variable that a later `=` from
+      !> another source replaced is not among them.
+      module subroutine pool_defined_by ( ctx, source, names )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         character(*), intent(in) :: source  !! the kernel file, named as it was loaded, or a tag such as (PDPOOL)
+         type(string), allocatable, intent(out) :: names(:)  !! the variables it assigned
+      end subroutine pool_defined_by
+
+      !> Write the kernel pool as a JSON kernel (PEPPER; the JSON counterpart
+      !> of [[wrpool]]): one `"NAME": value` per variable, in the order of
+      !> [[gnpool]], each with a `//` comment naming its sources and lines
+      !> ([[pool_sources]]). Loading the file ([[spice_furnsh]], as a `*.json`
+      !> kernel) gives the same variables and values: the numbers are written
+      !> with as many digits as they need to read back exactly (integers
+      !> without a fraction), and times as the numbers they became.
+      module subroutine pool_write_json ( ctx, unit )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         integer(ip), intent(in) :: unit  !! the unit of the file: open for formatted sequential writing
+      end subroutine pool_write_json
 
       !> Return one string value of a character kernel variable, of any
       !> length (PEPPER; [[gcpool]] truncates to the length of its output).

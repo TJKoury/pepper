@@ -1690,13 +1690,26 @@ module pepper_states
    integer(ip), parameter, public :: pool_numeric = 1  !! a numeric pool variable
    integer(ip), parameter, public :: pool_character = 2  !! a character pool variable
 
+   !> One assignment in effect of a kernel pool variable (PEPPER): where it
+   !> came from, and the values it gave.
+   type, public :: pool_assignment
+      integer(ip) :: source = 0  !! the source (index in the pool's [[pool_state]]%sources)
+      integer(ip) :: line = 0  !! the line where the assignment begins (0: none, e.g. PDPOOL)
+      integer(ip) :: first = 1  !! the index of the first value it gave
+   end type pool_assignment
+
    !> A kernel pool variable: its name and values, of any length and number.
+   !>
+   !> PEPPER: with the assignments in effect, in order: one after `=` (which
+   !> replaces the values), one more for each `+=` (which appends).
    type, public :: pool_variable
       character(:), allocatable :: name  !! the name (unallocated: a free slot)
       integer(ip) :: kind = pool_none  !! pool_none, pool_numeric or pool_character
       integer(ip) :: n = 0  !! number of values
       real(wp), allocatable :: dvals(:)  !! the numeric values (1 to n)
       type(string), allocatable :: cvals(:)  !! the character values (1 to n)
+      type(pool_assignment), allocatable :: from(:)  !! the assignments in effect (1 to nfrom)
+      integer(ip) :: nfrom = 0  !! number of assignments in effect
    end type pool_variable
 
    !> Maintain a pool of variables read from SPICE ASCII kernel files.
@@ -1723,6 +1736,13 @@ module pepper_states
       integer(ip) :: subctr ( ctrsiz ) = 0  !! pool state counter (changes when the pool changes)
       character(mrklen) :: begdat = ' '  !! the begin-data marker of text kernels
       character(mrklen) :: begtxt = ' '  !! the begin-text marker of text kernels
+      ! PEPPER: the sources of the assignments ([[pool_note_source]])
+      type(string_map) :: source_index  !! index of each source, by name
+      type(string), allocatable :: sources(:)  !! the sources (1 to nsources): kernel files, or tags such as (PDPOOL)
+      integer(ip) :: nsources = 0  !! number of sources
+      !> The source that PCPOOL, PDPOOL and PIPOOL record, if set (by the
+      !> programmatic frames); otherwise their own name, e.g. (PDPOOL).
+      character(:), allocatable :: setter
    contains
       procedure :: find => pool_find
       procedure :: create => pool_create
@@ -1731,6 +1751,7 @@ module pepper_states
       procedure :: add_number => pool_add_number
       procedure :: add_string => pool_add_string
       procedure :: clear => pool_clear
+      procedure :: note_source => pool_note_source
    end type pool_state
 
    ! ------------------------------------------------------------------ PROP2B
@@ -5668,6 +5689,7 @@ contains
       integer(ip), intent(in) :: i  !! the slot
       self%vars(i)%kind = pool_none
       self%vars(i)%n = 0
+      self%vars(i)%nfrom = 0
       if (allocated(self%vars(i)%dvals)) deallocate (self%vars(i)%dvals)
       if (allocated(self%vars(i)%cvals)) deallocate (self%vars(i)%cvals)
    end subroutine pool_clear_values
@@ -5712,10 +5734,41 @@ contains
          if (allocated(self%vars(i)%cvals)) deallocate (self%vars(i)%cvals)
          self%vars(i)%kind = pool_none
          self%vars(i)%n = 0
+         self%vars(i)%nfrom = 0
       end do
       self%nslots = 0
       self%nfree = 0
+      call self%source_index%clear(keep=.true.)
+      self%nsources = 0
    end subroutine pool_clear
+
+   !> Record an assignment of the variable in slot i (PEPPER): call it after
+   !> the variable is created and, for `=`, its values cleared, before the
+   !> assignment adds its values. The assignment's first value is the
+   !> variable's next one.
+   pure subroutine pool_note_source(self, i, source, line)
+      class(pool_state), intent(inout) :: self  !! the pool
+      integer(ip), intent(in) :: i  !! the slot
+      character(*), intent(in) :: source  !! the source: a kernel file, or a tag such as (PDPOOL)
+      integer(ip), intent(in) :: line  !! the line where the assignment begins (0: none)
+      integer(ip) :: id, existing
+      ! the source's index, added if new
+      call self%source_index%insert(trim(source), self%nsources + 1, existing)
+      if (existing > 0) then
+         id = existing
+      else
+         self%nsources = self%nsources + 1
+         id = self%nsources
+         call grow(self%sources, id)
+         self%sources(id)%s = trim(source)
+      end if
+      associate (v => self%vars(i))
+         if (.not. allocated(v%from)) allocate (v%from(2))
+         if (v%nfrom == size(v%from)) v%from = [v%from, v%from]
+         v%nfrom = v%nfrom + 1
+         v%from(v%nfrom) = pool_assignment(source=id, line=line, first=v%n + 1)
+      end associate
+   end subroutine pool_note_source
 
    !> Move a pool variable (its name and values without copying).
    pure subroutine move_variable(from, to)
@@ -5726,6 +5779,8 @@ contains
       call move_alloc(from%name, to%name)
       call move_alloc(from%dvals, to%dvals)
       call move_alloc(from%cvals, to%cvals)
+      to%nfrom = from%nfrom
+      call move_alloc(from%from, to%from)
    end subroutine move_variable
 
    !> Set the initial values of a new [[sc01_state]]: SPICELIB's DATA

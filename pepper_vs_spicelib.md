@@ -636,6 +636,11 @@ fastest time of each operation).
   treat it as a text kernel. SPICELIB cannot read it; `tools/tk2json.py
   --reverse` converts it to a text kernel. A JSON kernel with an error
   loads nothing, where a text kernel keeps the variables before the error.
+- **The sources of the pool's variables.** The pool records which kernel
+  (and line), or which routine (PDPOOL, LMPOOL, ...), made each assignment
+  in effect: `pool_sources` and `pool_defined_by` query it, and
+  `pool_write_json` writes the pool as a JSON kernel with the sources in
+  comments. SPICELIB keeps no such record. (Not in the legacy interface.)
 - **A kernel open on several units.** Each context reads the kernels
   through units of its own, and each instance loads its own: one process
   opens a file on several units. SPICELIB refuses to load a file that is
