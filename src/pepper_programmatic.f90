@@ -31,18 +31,46 @@ contains
    ! Ephemerides
    ! ----------------------------------------------------------------------
 
-   !> Add a programmatic ephemeris (PEPPER).
+   !> Add a programmatic ephemeris (PEPPER): it replaces the program's
+   !> earlier one of the body (not a kernel's: [[kb_add_ephemeris]]).
    module procedure spice_add_ephemeris
-      use pepper_containers, only: grow
       implicit none
       type(pepper_context), pointer :: ctx
+      ctx => this%context()
+      if ( ctx%failed() ) return
+      call register_ephemeris ( ctx, body, center, frame, tbeg, tend, provider, 0_ip, virtual_ident, .true. )
+   end procedure spice_add_ephemeris
+
+   !> Register a programmatic ephemeris owned by a kernel (PEPPER).
+   module procedure register_owned_ephemeris
+      implicit none
+      call register_ephemeris ( ctx, body, center, frame, tbeg, tend, provider, owner, ident, .false. )
+   end procedure register_owned_ephemeris
+
+   !> Register a programmatic ephemeris: check it, add its virtual file (one
+   !> segment, of type 100) to the SPK segment index (as SPKLEF indexes a
+   !> file's segments, so with the priority of a file loaded now), and keep
+   !> the provider. OWNER 0 (the program's, spice_add_ephemeris) replaces
+   !> the program's earlier ephemeris of the body (REPLACE); a kernel's
+   !> (OWNER its handle) does not.
+   subroutine register_ephemeris ( ctx, body, center, frame, tbeg, tend, provider, owner, ident, replace )
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      integer(ip), intent(in) :: body  !! the body
+      integer(ip), intent(in) :: center  !! its center
+      character(*), intent(in) :: frame  !! the frame of the states
+      real(wp), intent(in) :: tbeg  !! start of the coverage
+      real(wp), intent(in) :: tend  !! end of the coverage
+      class(ephemeris_provider), intent(in) :: provider  !! the source of the states
+      integer(ip), intent(in) :: owner  !! the kernel's handle (0: the program)
+      character(*), intent(in) :: ident  !! the segment identifier
+      logical, intent(in) :: replace  !! replace the program's earlier ephemeris of the body
       type(provided_ephemeris), allocatable :: tmp(:)
       real(wp) :: descr(5)
       integer(ip) :: frcode
       integer(ip) :: handle
       integer(ip) :: ic(6)
       integer(ip) :: n
-      ctx => this%context()
+      associate ( this => ctx%spice )
       if ( ctx%failed() ) return
       call namfrm ( ctx, frame, frcode )
       if ( ctx%failed() ) return
@@ -71,10 +99,10 @@ contains
          return
       end if
 !
-!     A body added again: its registration is replaced (and becomes the
-!     most recent).
+!     The program's ephemeris of a body added again: its registration is
+!     replaced (and becomes the most recent).
 !
-      call remove_ephemeris_entry ( ctx, body )
+      if ( replace ) call remove_ephemeris_entry ( ctx, body )
 !
 !     The virtual file: one segment, of type 100, in the SPK segment index
 !     (as SPKLEF indexes a file's segments).
@@ -86,7 +114,7 @@ contains
       call dafps ( ctx, 2, 6, [ tbeg, tend ], ic, descr )
       if ( ctx%failed() ) return
       this%segment_epoch = this%segment_epoch + 1
-      call this%spkbsr%index%add ( handle, body, tbeg, tend, descr, ic, virtual_ident )
+      call this%spkbsr%index%add ( handle, body, tbeg, tend, descr, ic, ident )
       call this%spkbsr%index%add_file ( handle )
 !
 !     The registration.
@@ -104,12 +132,15 @@ contains
       this%provided_spk(n)%tbeg   = tbeg
       this%provided_spk(n)%tend   = tend
       this%provided_spk(n)%handle = handle
+      this%provided_spk(n)%owner  = owner
       if ( allocated ( this%provided_spk(n)%provider ) ) deallocate ( this%provided_spk(n)%provider )
       allocate ( this%provided_spk(n)%provider, source=provider )
       this%nprovided_spk = n
-   end procedure spice_add_ephemeris
+      end associate
+   end subroutine register_ephemeris
 
-   !> Remove a programmatic ephemeris (PEPPER).
+   !> Remove a programmatic ephemeris (PEPPER): the program's of the body
+   !> (not a kernel's, which goes with its kernel).
    module procedure spice_remove_ephemeris
       implicit none
       type(pepper_context), pointer :: ctx
@@ -118,35 +149,52 @@ contains
       call remove_ephemeris_entry ( ctx, body )
    end procedure spice_remove_ephemeris
 
-   !> Remove a body's programmatic ephemeris, if it has one: its virtual
-   !> file leaves the segment index.
+   !> Remove the program's programmatic ephemeris of a body, if it has one.
    subroutine remove_ephemeris_entry ( ctx, body )
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: body  !! the body
       integer(ip) :: i
-      integer(ip) :: j
-      associate ( sp => ctx%spice )
-      do i = 1, sp%nprovided_spk
-         if ( sp%provided_spk(i)%body == body ) then
-            sp%segment_epoch = sp%segment_epoch + 1
-            if ( sp%spkbsr%index%ndescr > 0 ) call sp%spkbsr%index%remove_file ( sp%provided_spk(i)%handle )
-            do j = i, sp%nprovided_spk - 1
-               sp%provided_spk(j)%body   = sp%provided_spk(j+1)%body
-               sp%provided_spk(j)%center = sp%provided_spk(j+1)%center
-               sp%provided_spk(j)%frame  = sp%provided_spk(j+1)%frame
-               sp%provided_spk(j)%tbeg   = sp%provided_spk(j+1)%tbeg
-               sp%provided_spk(j)%tend   = sp%provided_spk(j+1)%tend
-               sp%provided_spk(j)%handle = sp%provided_spk(j+1)%handle
-               call move_alloc ( sp%provided_spk(j+1)%provider, sp%provided_spk(j)%provider )
-            end do
-            if ( allocated ( sp%provided_spk(sp%nprovided_spk)%provider ) ) &
-               deallocate ( sp%provided_spk(sp%nprovided_spk)%provider )
-            sp%nprovided_spk = sp%nprovided_spk - 1
+      do i = 1, ctx%spice%nprovided_spk
+         if ( ctx%spice%provided_spk(i)%body == body .and. ctx%spice%provided_spk(i)%owner == 0 ) then
+            call remove_entry_at ( ctx, i )
             return
          end if
       end do
-      end associate
    end subroutine remove_ephemeris_entry
+
+   !> Remove the programmatic ephemerides a kernel owns (PEPPER).
+   module procedure remove_owned_ephemerides
+      implicit none
+      integer(ip) :: i
+      if ( owner == 0 ) return
+      do i = ctx%spice%nprovided_spk, 1, -1
+         if ( ctx%spice%provided_spk(i)%owner == owner ) call remove_entry_at ( ctx, i )
+      end do
+   end procedure remove_owned_ephemerides
+
+   !> Remove registration I: its virtual file leaves the segment index.
+   subroutine remove_entry_at ( ctx, i )
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: i  !! the registration
+      integer(ip) :: j
+      associate ( sp => ctx%spice )
+      sp%segment_epoch = sp%segment_epoch + 1
+      if ( sp%spkbsr%index%ndescr > 0 ) call sp%spkbsr%index%remove_file ( sp%provided_spk(i)%handle )
+      do j = i, sp%nprovided_spk - 1
+         sp%provided_spk(j)%body   = sp%provided_spk(j+1)%body
+         sp%provided_spk(j)%center = sp%provided_spk(j+1)%center
+         sp%provided_spk(j)%frame  = sp%provided_spk(j+1)%frame
+         sp%provided_spk(j)%tbeg   = sp%provided_spk(j+1)%tbeg
+         sp%provided_spk(j)%tend   = sp%provided_spk(j+1)%tend
+         sp%provided_spk(j)%handle = sp%provided_spk(j+1)%handle
+         sp%provided_spk(j)%owner  = sp%provided_spk(j+1)%owner
+         call move_alloc ( sp%provided_spk(j+1)%provider, sp%provided_spk(j)%provider )
+      end do
+      if ( allocated ( sp%provided_spk(sp%nprovided_spk)%provider ) ) &
+         deallocate ( sp%provided_spk(sp%nprovided_spk)%provider )
+      sp%nprovided_spk = sp%nprovided_spk - 1
+      end associate
+   end subroutine remove_entry_at
 
    !> Remove every programmatic ephemeris (KCLEAR) (PEPPER).
    module procedure clear_provided_ephemerides

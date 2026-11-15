@@ -374,7 +374,10 @@ call ctx%pxform('MY_FRAME', 'J2000', et, rot)
   it was added: it overrides files loaded before and is overridden by files
   loaded after, within its coverage.
 - `remove_ephemeris` and `remove_frame` remove one; `kclear` removes all
-  (`clpool` keeps the frames, as it keeps the loaded files).
+  (`clpool` keeps the frames, as it keeps the loaded files). A kernel can
+  own programmatic ephemerides too (a file loader's, for a file that holds a
+  model: "Kernels built in memory and kernel loaders" below); those go
+  with their kernel, and `remove_ephemeris` does not remove them.
 - Providers are called from any context, so from several threads at once:
   they must not change shared data.
 - A provider may make queries through the context it is given (states,
@@ -447,6 +450,15 @@ call spice%furnsh('sc_ephem.txt', loader='MYFORMAT')               ! by name
   `spice%furnsh` for now.
 - **`kernel_format(file, loader, format, found)`** tells which loader read a
   kernel, and the builder's description (`set_format`).
+- **A file that holds a model,** not states (elements and a propagator, say):
+  the loader reads it into a provider of its own (an `ephemeris_provider`,
+  as `add_ephemeris` takes) and adds it with `kb%add_ephemeris(ctx, body,
+  center, frame, tbeg, tend, provider)`. Queries call the provider's
+  `state` at any epoch. It belongs to the kernel: SPKCOV and SPKOBJ report
+  it by the kernel's name, UNLOAD and KCLEAR remove it, and kernels of the
+  same body coexist (the last loaded first; unloading it restores the
+  earlier), where `add_ephemeris` replaces the body's earlier registration.
+  `write_kernel` refuses such a kernel (there are no states to write).
 - **Body names a kernel defines:** `kb%define_body(ctx, name, code)`. While
   the kernel is loaded, the name works everywhere a body name does
   (`spkezr('SPACECRAFT1', ...)`, BODN2C, BODC2N); when it is unloaded

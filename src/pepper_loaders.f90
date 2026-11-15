@@ -65,6 +65,66 @@ contains
                          tbeg, tend, ident, adapt )
    end procedure kb_spk_hermite
 
+   !> Add a programmatic ephemeris to the kernel (PEPPER): kept until the
+   !> builder is loaded, then registered (owned by the kernel) until it is
+   !> unloaded.
+   module procedure kb_add_ephemeris
+      implicit none
+      type(builder_provider), allocatable :: tmp(:)
+      integer(ip) :: k
+      if ( ctx%failed() ) return
+      if ( tbeg > tend ) then
+         call ctx%setmsg ( 'The coverage of the programmatic ephemeris of ' &
+         //            'body # starts at #, after its end, #.' )
+         call ctx%errint ( '#', body )
+         call ctx%errdp  ( '#', tbeg )
+         call ctx%errdp  ( '#', tend )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)' )
+         return
+      end if
+      if ( body == center ) then
+         call ctx%setmsg ( 'The body # of a programmatic ephemeris is its ' &
+         //            'own center.' )
+         call ctx%errint ( '#', body )
+         call ctx%sigerr ( 'SPICE(BODYANDCENTERSAME)' )
+         return
+      end if
+      if ( .not. allocated ( this%providers ) ) allocate ( this%providers(2) )
+      if ( this%nprov == size ( this%providers ) ) then
+         allocate ( tmp(2*size ( this%providers )) )
+         do k = 1, this%nprov
+            call move_provider ( this%providers(k), tmp(k) )
+         end do
+         call move_alloc ( tmp, this%providers )
+      end if
+      this%nprov = this%nprov + 1
+      associate ( p => this%providers(this%nprov) )
+         p%body = body
+         p%center = center
+         p%frame = trim ( adjustl ( frame ) )
+         p%tbeg = tbeg
+         p%tend = tend
+         p%ident = 'PROGRAMMATIC EPHEMERIS'
+         if ( present ( ident ) ) p%ident = trim ( ident )
+         if ( allocated ( p%provider ) ) deallocate ( p%provider )
+         allocate ( p%provider, source = provider )
+      end associate
+   end procedure kb_add_ephemeris
+
+   !> Move a builder's programmatic ephemeris (its allocatable parts
+   !> without copying).
+   subroutine move_provider ( from, to )
+      type(builder_provider), intent(inout) :: from  !! the ephemeris moved
+      type(builder_provider), intent(inout) :: to  !! the ephemeris replaced
+      to%body = from%body
+      to%center = from%center
+      to%tbeg = from%tbeg
+      to%tend = from%tend
+      call move_alloc ( from%frame, to%frame )
+      call move_alloc ( from%ident, to%ident )
+      call move_alloc ( from%provider, to%provider )
+   end subroutine move_provider
+
    !> Define a body name of the kernel (PEPPER): kept until the builder is
    !> loaded, then defined (owned by the kernel) until it is unloaded.
    module procedure kb_define_body
@@ -100,12 +160,14 @@ contains
       if ( allocated ( this%body_names ) ) deallocate ( this%body_names )
       if ( allocated ( this%body_codes ) ) deallocate ( this%body_codes )
       this%nbodies = 0
+      if ( allocated ( this%providers ) ) deallocate ( this%providers )
+      this%nprov = 0
    end procedure kb_clear
 
    !> The number of segments (PEPPER).
    module procedure kb_nsegments
       implicit none
-      kb_nsegments = this%nseg
+      kb_nsegments = this%nseg + this%nprov
    end procedure kb_nsegments
 
    !> Check a segment as SPKW09 (TYPE 9) or SPKW13 (TYPE 13) does, adapt a
@@ -379,7 +441,8 @@ contains
 
    !> Make the DAF image of a builder, register it in the handle manager's
    !> table as a DAF built in memory named NAME, and load it as an SPK
-   !> (SPKLEF), then define its body names (owned by the kernel). The
+   !> (SPKLEF), then define its body names and register its programmatic
+   !> ephemerides (owned by the kernel). The
    !> builder is emptied once it is loaded; on an error nothing is loaded,
    !> and the builder is unchanged.
    subroutine load_builder ( ctx, name, kb, handle )
@@ -392,6 +455,21 @@ contains
       integer(ip) :: k, h2, bff
 
       handle = 0
+!     The frames of the programmatic ephemeris, checked before anything is
+!     registered (the table segments' are checked by make_image).
+      do k = 1, kb%nprov
+         call namfrm ( ctx, kb%providers(k)%frame, h2 )
+         if ( ctx%failed() ) return
+         if ( h2 == 0 ) then
+            call ctx%setmsg ( 'The frame ''#'' of the programmatic ephemeris of ' &
+            //            'body # (kernel ''#'') is not recognized.' )
+            call ctx%errch  ( '#', kb%providers(k)%frame )
+            call ctx%errint ( '#', kb%providers(k)%body )
+            call ctx%errch  ( '#', name )
+            call ctx%sigerr ( 'SPICE(UNKNOWNFRAME)' )
+            return
+         end if
+      end do
       call make_image ( ctx, name, kb, image )
       if ( ctx%failed() ) return
 
@@ -430,6 +508,16 @@ contains
 !     The body names the kernel defines, owned by it.
       do k = 1, kb%nbodies
          call owned_boddef ( ctx, kb%body_names(k)%s, kb%body_codes(k), handle )
+         if ( ctx%failed() ) return
+      end do
+
+!     Its programmatic ephemerides, owned by it: after its table segments
+!     in the segment search's priority.
+      do k = 1, kb%nprov
+         associate ( p => kb%providers(k) )
+            call register_owned_ephemeris ( ctx, p%body, p%center, p%frame, p%tbeg, p%tend, &
+                                            p%provider, handle, p%ident )
+         end associate
          if ( ctx%failed() ) return
       end do
       call kb%clear()
@@ -576,6 +664,14 @@ contains
          //            'name ''#''.' )
          call ctx%errch  ( '#', name )
          call ctx%sigerr ( 'SPICE(NOSUCHKERNEL)' )
+         return
+      end if
+      if ( any ( this%provided_spk(1:this%nprovided_spk)%owner == this%zzddhman%files(k)%handle ) ) then
+         call ctx%setmsg ( 'The kernel ''#'' has programmatic ephemerides ' &
+         //            '(their states are computed by code, not stored): ' &
+         //            'it cannot be written to an SPK file.' )
+         call ctx%errch  ( '#', name )
+         call ctx%sigerr ( 'SPICE(NOTWRITABLE)' )
          return
       end if
       inquire ( file = file, exist = exists_already )
@@ -936,7 +1032,10 @@ contains
       implicit none
       integer(ip) :: k
       associate ( kk => ctx%spice%keeper%kernels(i) )
-         if ( kk%type == 'SPK' ) call remove_owned_boddefs ( ctx, kk%handle )
+         if ( kk%type == 'SPK' ) then
+            call remove_owned_boddefs ( ctx, kk%handle )
+            call remove_owned_ephemerides ( ctx, kk%handle )
+         end if
          if ( .not. allocated ( kk%loader ) ) return
          if ( kk%loader == ' ' ) return
          k = find_loader ( ctx%spice, kk%loader )

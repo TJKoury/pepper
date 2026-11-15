@@ -17,6 +17,11 @@
 !>     ...
 !>     END_DATA
 !>
+!> A model instead of rows: `CIRCULAR = r w phase t0 t1` makes the loader
+!> add a programmatic ephemeris (add_ephemeris: a circle of radius r km,
+!> angular rate w rad/s, phase at ET 0, from t0 to t1), computed by
+!> circle_orbit at any epoch, for the OBJECT, CENTER and FRAME set before.
+!>
 !> Each block is a segment; the header's keys may change between blocks
 !> (a block uses the values set before it; BOUNDS applies to one block).
 !> Blocks that share an epoch are a discontinuity (the later block wins
@@ -28,13 +33,23 @@ module pepper_test_loader
 
    use pepper_kinds, only: ip, wp
    use pepper_containers, only: string
-   use pepper_instance_module, only: kernel_loader, kernel_builder, pepper_context
+   use pepper_instance_module, only: kernel_loader, kernel_builder, pepper_context, ephemeris_provider
 
    implicit none
 
    private
 
-   public :: simple_loader, write_simple
+   public :: simple_loader, write_simple, circle_orbit
+
+   !> The model of the test format's CIRCULAR line: a circle in the xy
+   !> plane (the evaluator a loader gives add_ephemeris).
+   type, extends(ephemeris_provider) :: circle_orbit
+      real(wp) :: r = 0.0_wp  !! the radius (km)
+      real(wp) :: w = 0.0_wp  !! the angular rate (rad/s)
+      real(wp) :: phase = 0.0_wp  !! the phase at ET 0 (rad)
+   contains
+      procedure :: state => circle_orbit_state
+   end type circle_orbit
 
    !> The loader of the test format.
    type, extends(kernel_loader) :: simple_loader
@@ -165,6 +180,18 @@ contains
                call error('INTERPOLATION is not a method and a degree')
                exit
             end if
+         case ('CIRCULAR')
+            read (value, *, iostat=ios) row(1:5)
+            if (ios /= 0) then
+               call error('CIRCULAR is not five numbers')
+               exit
+            end if
+            if (body == 0) then
+               call error('the body '//objname//' is not known (and no OBJECT_CODE defines it)')
+               exit
+            end if
+            call kb%add_ephemeris(ctx, body, center, frame, row(4), row(5), &
+                                  circle_orbit(r=row(1), w=row(2), phase=row(3)), ident='SIMPLE CIRCULAR')
          case ('ADAPT')
             adapt = trim(value) == 'YES'
          case ('BOUNDS')
@@ -262,6 +289,20 @@ contains
       end subroutine keep
 
    end subroutine simple_load
+
+   !> The state on the circle at ET.
+   subroutine circle_orbit_state(self, ctx, body, et, state, found)
+      class(circle_orbit), intent(in) :: self  !! the model
+      class(pepper_context), intent(inout) :: ctx  !! the context of the query
+      integer(ip), intent(in) :: body  !! the body
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp), intent(out) :: state(6)  !! the state
+      logical, intent(out) :: found  !! a state is available
+      real(wp) :: a
+      a = self%phase + self%w*et
+      state = [self%r*cos(a), self%r*sin(a), 0.0_wp, -self%r*self%w*sin(a), self%r*self%w*cos(a), 0.0_wp]
+      found = .not. ctx%failed() .and. body /= 0
+   end subroutine circle_orbit_state
 
    !> A file of the test format starts with SIMPLE_EPHEMERIS.
    logical function simple_detect(self, file, head) result(accept)

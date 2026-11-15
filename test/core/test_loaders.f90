@@ -12,6 +12,12 @@
 !>   unsupported interpolation; discontinuities, gaps, bounds; the
 !>   loader's kept data and unload callbacks; meta-kernels with
 !>   KERNEL_LOADERS.
+!> - Programmatic ephemerides a kernel owns (add_ephemeris): a file that
+!>   holds a model (the test format's CIRCULAR), its states computed by the
+!>   loader's evaluator; coverage and objects by the kernel's name; kernels
+!>   of the same body coexist (the last loaded first; unloading it restores
+!>   the earlier), with the program's add_ephemeris too; write_kernel
+!>   refuses; an unknown frame loads nothing; KCLEAR removes them.
 !> - Body names a kernel defines (define_body): usable while it is
 !>   loaded, in contexts made before the load too; removed by UNLOAD and
 !>   KCLEAR, an earlier BODDEF of the name in effect again; the latest
@@ -23,7 +29,7 @@ program test_loaders
 
    use pepper_module, only: ip, wp, pepper_instance, pepper_context, kernel_builder, kernel_loader
    use pepper_test_kernels, only: circle_state, delete_file
-   use pepper_test_loader, only: simple_loader, write_simple
+   use pepper_test_loader, only: simple_loader, write_simple, circle_orbit
 
    implicit none
 
@@ -70,6 +76,7 @@ program test_loaders
    call test_file_errors()
    call test_meta_kernel()
    call test_names()
+   call test_models()
 
    call spice%kclear()
    call ref%kclear()
@@ -949,6 +956,117 @@ contains
       call spice%remove_loader('SIMPLE')
    end subroutine test_names
 
+   !> Files that hold a model: programmatic ephemerides owned by kernels.
+   subroutine test_models()
+      type(simple_loader) :: ld
+      type(kernel_builder) :: kb
+      real(wp), allocatable :: cover(:, :)
+      integer(ip), allocatable :: ids(:)
+      character(:), allocatable :: loader, format
+      real(wp) :: s(6)
+      integer(ip) :: count
+      logical :: ok, found
+
+      call spice%add_loader('SIMPLE', ld, extensions=['.sim'])
+      call write_model('test_loaders_ma.sim', 'OBJECT = -10001', 'CIRCULAR = 7000.0 1.0e-6 0.3 0.0 8940.0')
+      call write_model('test_loaders_mb.sim', 'OBJECT = -10001', 'CIRCULAR = 8000.0 1.0e-6 0.3 0.0 8940.0')
+      call spice%furnsh('test_loaders_ma.sim')
+      call check_ok(ctx, 'a file that holds a model')
+      call state_of(ctx, sc, 399_ip, 1234.5_wp, s, ok)
+      call check(ok .and. maxval(abs(s - circle_state(radius, 0.3_wp, 1234.5_wp))) < 1.0e-9_wp, &
+                 'the model''s state, computed at the epoch')
+      call ctx%kernel_format('test_loaders_ma.sim', loader, format, found)
+      call check(found .and. loader == 'SIMPLE', 'the model''s kernel: kernel_format')
+      call ctx%spk_coverage('test_loaders_ma.sim', sc, cover)
+      call check(size(cover, 2) == 1, 'the model''s coverage by the kernel''s name')
+      if (size(cover, 2) == 1) call check(cover(1, 1) == 0.0_wp .and. cover(2, 1) == 8940.0_wp, &
+                                           'the model''s coverage')
+      call ctx%spk_objects('test_loaders_ma.sim', ids)
+      call check(size(ids) == 1, 'the model''s body by the kernel''s name')
+      if (size(ids) == 1) call check(ids(1) == sc, 'the model''s body')
+      call state_of(ctx, sc, 399_ip, 9000.0_wp, s, ok)
+      call check(.not. ok, 'no state outside the model''s coverage')
+
+      ! two files of the same body: the last loaded first, the earlier back after its unload
+      call spice%furnsh('test_loaders_mb.sim')
+      call state_of(ctx, sc, 399_ip, 0.0_wp, s, ok)
+      call check(ok .and. abs(s(1) - 8000.0_wp*cos(0.3_wp)) < 1.0e-9_wp, 'the later file''s model')
+      ! the program's add_ephemeris of the body, later still
+      call spice%add_ephemeris(sc, 399_ip, 'J2000', 0.0_wp, 8940.0_wp, circle_orbit(r=9000.0_wp, w=1.0e-6_wp))
+      call state_of(ctx, sc, 399_ip, 0.0_wp, s, ok)
+      call check(ok .and. abs(s(1) - 9000.0_wp) < 1.0e-9_wp, 'the program''s ephemeris, added last')
+      call spice%remove_ephemeris(sc)
+      call state_of(ctx, sc, 399_ip, 0.0_wp, s, ok)
+      call check(ok .and. abs(s(1) - 8000.0_wp*cos(0.3_wp)) < 1.0e-9_wp, &
+                 'remove_ephemeris removes the program''s only, not a kernel''s')
+      call spice%unload('test_loaders_mb.sim')
+      call state_of(ctx, sc, 399_ip, 0.0_wp, s, ok)
+      call check(ok .and. abs(s(1) - 7000.0_wp*cos(0.3_wp)) < 1.0e-9_wp, 'UNLOAD: the earlier file''s model again')
+
+      call spice%write_kernel('test_loaders_ma.sim', 'test_loaders_model.bsp')
+      call check_error(ctx, 'SPICE(NOTWRITABLE)', 'write_kernel of a kernel with a model')
+      call spice%unload('test_loaders_ma.sim')
+      call state_of(ctx, sc, 399_ip, 0.0_wp, s, ok)
+      call check(.not. ok, 'UNLOAD removes the model')
+
+      ! rows and a model in one file
+      ! (a model for -10002, then rows for -10001: a block uses the OBJECT set last)
+      call write_simple('test_loaders_mix.sim', [character(60) :: 'OBJECT = -10002', 'CENTER = 399', &
+                        'FRAME = J2000', 'CIRCULAR = 7000.0 1.0e-6 0.3 0.0 8940.0', &
+                        'INTERPOLATION = HERMITE 7', 'OBJECT = -10001'], epochs, states, [1], [n])
+      call spice%furnsh('test_loaders_mix.sim')
+      call state_of(ctx, sc - 1, 399_ip, 100.0_wp, s, ok)
+      call check(ok .and. maxval(abs(s - circle_state(radius, 0.3_wp, 100.0_wp))) < 1.0e-9_wp, &
+                 'rows and a model in one file: the model''s body')
+      call state_of(ctx, sc, 399_ip, 100.0_wp, s, ok)
+      call check(ok, 'rows and a model in one file: the rows'' body')
+      call ctx%spk_objects('test_loaders_mix.sim', ids)
+      call check(size(ids) == 2, 'rows and a model in one file: both bodies')
+      call spice%unload('test_loaders_mix.sim')
+
+      ! an unknown frame: nothing loaded
+      call write_model('test_loaders_mbad.sim', 'OBJECT = -10001', 'CIRCULAR = 7000.0 1.0e-6 0.3 0.0 8940.0', &
+                       'NOSUCHFRAME')
+      call spice%furnsh('test_loaders_mbad.sim')
+      call check_error(ctx, 'SPICE(UNKNOWNFRAME)', 'a model in an unknown frame')
+      call ctx%ktotal('ALL', count)
+      call check(count == 0, 'a model in an unknown frame loads nothing')
+
+      ! a programmatic kernel with a model; KCLEAR removes it
+      call kb%add_ephemeris(ctx, sc, 399_ip, 'J2000', 0.0_wp, 100.0_wp, circle_orbit(r=7000.0_wp, w=1.0e-6_wp))
+      call kb%add_ephemeris(ctx, sc, 399_ip, 'J2000', 10.0_wp, 0.0_wp, circle_orbit(r=7000.0_wp))
+      call check_error(ctx, 'SPICE(BADDESCRTIMES)', 'a model''s coverage ending before it starts')
+      call check(kb%nsegments() == 1, 'the builder counts the model as a segment')
+      call spice%load_kernel('model', kb)
+      call state_of(ctx, sc, 399_ip, 50.0_wp, s, ok)
+      call check(ok, 'a programmatic kernel''s model')
+      call spice%add_ephemeris(sc - 5, 399_ip, 'J2000', 0.0_wp, 1.0_wp, circle_orbit(r=1.0_wp))
+      call spice%kclear()
+      call state_of(ctx, sc, 399_ip, 50.0_wp, s, ok)
+      call check(.not. ok, 'KCLEAR removes a kernel''s model')
+      call spice%remove_loader('SIMPLE')
+   end subroutine test_models
+
+   !> A file of the test format with only a model.
+   subroutine write_model(file, object, model, frame)
+      character(*), intent(in) :: file  !! the file
+      character(*), intent(in) :: object  !! the OBJECT line
+      character(*), intent(in) :: model  !! the CIRCULAR line
+      character(*), intent(in), optional :: frame  !! the frame (default J2000)
+      integer :: lun
+      open (newunit=lun, file=file, status='REPLACE', action='WRITE')
+      write (lun, '(a)') 'SIMPLE_EPHEMERIS'
+      write (lun, '(a)') object
+      write (lun, '(a)') 'CENTER = 399'
+      if (present(frame)) then
+         write (lun, '(2a)') 'FRAME = ', frame
+      else
+         write (lun, '(a)') 'FRAME = J2000'
+      end if
+      write (lun, '(a)') model
+      close (lun)
+   end subroutine write_model
+
    !> Delete the test's files.
    subroutine delete_files()
       call delete_file(ref_bsp)
@@ -973,6 +1091,11 @@ contains
       call delete_file('test_loaders_none.bsp')
       call delete_file('test_loaders_n1.sim')
       call delete_file('test_loaders_n2.sim')
+      call delete_file('test_loaders_ma.sim')
+      call delete_file('test_loaders_mb.sim')
+      call delete_file('test_loaders_mix.sim')
+      call delete_file('test_loaders_mbad.sim')
+      call delete_file('test_loaders_model.bsp')
    end subroutine delete_files
 
 end program test_loaders

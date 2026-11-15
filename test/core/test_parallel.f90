@@ -194,13 +194,15 @@ contains
          e(i) = 1.0e4_wp*(i - 1)
          st(:, i) = body_state(9300, e(i))
       end do
-      call write_simple(sim, [character(40) :: 'OBJECT = 9300', 'CENTER = 1000', 'FRAME = J2000', &
+      ! with a model (body 9301: a programmatic ephemeris the kernel owns)
+      call write_simple(sim, [character(48) :: 'OBJECT = 9301', 'CENTER = 1000', 'FRAME = J2000', &
+                                              'CIRCULAR = 20000.0 2.0e-6 0.5 0.0 3.0e6', 'OBJECT = 9300', &
                                               'INTERPOLATION = HERMITE 9'], e, st, [1], [nrow])
       call spice%add_loader('SIMPLE', ld, extensions=['.sim'])
       call spice%furnsh(sim)
       call check(.not. setup%failed(), 'a file read by a kernel loader')
 
-      allocate (bref(6*(nthreads + 1), nepoch), bpar(6*(nthreads + 1), nepoch))
+      allocate (bref(6*(nthreads + 2), nepoch), bpar(6*(nthreads + 2), nepoch))
       do i = 1, nepoch
          call built_queries(serial, et(i), bref(:, i))
       end do
@@ -274,6 +276,7 @@ contains
          call ctx%spkgeo(int(9200 + b, ip), t, 'J2000', 1000_ip, res(6*(b - 1) + 1:6*b), lt)
       end do
       call ctx%spkgeo(9300_ip, t, 'J2000', 1000_ip, res(6*nthreads + 1:6*nthreads + 6), lt)
+      call ctx%spkgeo(9301_ip, t, 'J2000', 1000_ip, res(6*nthreads + 7:6*nthreads + 12), lt)
    end subroutine built_queries
 
    !> One thread's lookups of the names of the kernels built in memory

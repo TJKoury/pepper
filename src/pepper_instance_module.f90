@@ -1881,6 +1881,10 @@ module pepper_instance_module
       real(wp) :: tend = 0.0_wp  !! end of its coverage
       integer(ip) :: handle = 0  !! the handle of its virtual SPK file
       class(ephemeris_provider), allocatable :: provider  !! the source of its states
+      !> The kernel it belongs to (the handle of a kernel built in memory,
+      !> [[kb_add_ephemeris]]), removed with it; 0: the program's
+      !> ([[spice_add_ephemeris]]).
+      integer(ip) :: owner = 0
    end type provided_ephemeris
 
    !> A programmatic frame (instance state; its definition is in the kernel
@@ -1899,8 +1903,9 @@ module pepper_instance_module
       !> of it is kept) at the epochs of [TBEG, TEND]. The body enters the SPK
       !> segment search as a file loaded now: it overrides the files loaded
       !> before (and is overridden by those loaded after) at those epochs.
-      !> Adding a body again replaces its registration. Errors are signaled
-      !> in the instance's context.
+      !> Adding a body again replaces its registration (the program's, not a
+      !> kernel's: [[kb_add_ephemeris]]). Errors are signaled in the
+      !> instance's context.
       module subroutine spice_add_ephemeris ( this, body, center, frame, tbeg, tend, provider )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
@@ -1913,7 +1918,9 @@ module pepper_instance_module
       end subroutine spice_add_ephemeris
 
       !> Remove a programmatic ephemeris (PEPPER): the body's other segments
-      !> (files) apply again. No error if the body has none.
+      !> (files) apply again. No error if the body has none. Only the
+      !> program's ([[spice_add_ephemeris]]): one a kernel owns
+      !> ([[kb_add_ephemeris]]) goes with its kernel (UNLOAD, KCLEAR).
       module subroutine spice_remove_ephemeris ( this, body )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
@@ -2054,9 +2061,23 @@ module pepper_instance_module
       real(wp), allocatable :: data(:)  !! the segment's data (pepper_spk_packing)
    end type builder_segment
 
+   !> A programmatic ephemeris in a [[kernel_builder]]: registered when the
+   !> builder is loaded, owned by the kernel ([[kb_add_ephemeris]]).
+   type :: builder_provider
+      integer(ip) :: body = 0  !! the body
+      integer(ip) :: center = 0  !! its center of motion
+      character(:), allocatable :: frame  !! the frame of its states (a name, resolved at the load)
+      real(wp) :: tbeg = 0.0_wp  !! start of its coverage
+      real(wp) :: tend = 0.0_wp  !! end of its coverage
+      character(:), allocatable :: ident  !! its segment identifier
+      class(ephemeris_provider), allocatable :: provider  !! the source of its states
+   end type builder_provider
+
    !> The contents of a kernel made in memory: SPK segments added from
-   !> arrays, loaded by [[spice_load_kernel]] (a programmatic kernel), or by
-   !> FURNSH for a file a [[kernel_loader]] read.
+   !> arrays, programmatic ephemerides (states computed by a provider,
+   !> [[kb_add_ephemeris]]) and body names ([[kb_define_body]]), loaded by
+   !> [[spice_load_kernel]] (a programmatic kernel), or by FURNSH for a file
+   !> a [[kernel_loader]] read.
    !>
    !> A builder does not depend on an instance: it can be filled in any
    !> thread (each thread its own builder), while other threads query.
@@ -2071,7 +2092,10 @@ module pepper_instance_module
       type(string), allocatable :: body_names(:)  !! the body names the kernel defines ([[kb_define_body]])
       integer(ip), allocatable :: body_codes(:)  !! their codes
       integer(ip) :: nbodies = 0  !! number of body names
+      type(builder_provider), allocatable :: providers(:)  !! the programmatic ephemerides ([[kb_add_ephemeris]])
+      integer(ip) :: nprov = 0  !! number of programmatic ephemerides
    contains
+      procedure :: add_ephemeris => kb_add_ephemeris
       procedure :: define_body => kb_define_body
       procedure :: spk_lagrange => kb_spk_lagrange
       procedure :: spk_hermite => kb_spk_hermite
@@ -2172,6 +2196,66 @@ module pepper_instance_module
          character(*), intent(in), optional :: ident  !! the segment identifier (default: blank)
          logical, intent(in), optional :: adapt  !! adapt the degree of a short segment (default: false)
       end subroutine kb_spk_hermite
+
+      !> Add a programmatic ephemeris to the kernel a builder makes
+      !> (PEPPER): a segment whose states come from `provider` (an
+      !> [[ephemeris_provider]]: its `state` computes the state of `body`
+      !> relative to `center` in `frame` at any epoch of [tbeg, tend]), not
+      !> from a table. A kernel loader uses it for a file that holds a
+      !> model rather than states (elements and a propagator): the loader
+      !> reads the file and puts what it read in the provider's components.
+      !>
+      !> When the builder is loaded, the ephemeris is registered as
+      !> [[spice_add_ephemeris]] registers one, but owned by the kernel: it
+      !> takes part in the segment search with the kernel's priority (after
+      !> the kernel's own table segments), SPKCOV and SPKOBJ report it by
+      !> the kernel's name, and UNLOAD and KCLEAR remove it with the kernel.
+      !> Unlike [[spice_add_ephemeris]], it does not replace another
+      !> ephemeris of the same body: kernels of the same body coexist, the
+      !> last loaded first, as SPK files do. The builder keeps a copy of the
+      !> provider; the provider is called from any context, so from several
+      !> threads at once, and must not change shared data. A kernel with a
+      !> programmatic ephemeris cannot be written to an SPK file
+      !> ([[spice_write_kernel]]).
+      !>
+      !> The checks are those of [[spice_add_ephemeris]] (SPICE(BADDESCRTIMES),
+      !> SPICE(BODYANDCENTERSAME)), except the frame's, which is checked when
+      !> the builder is loaded (SPICE(UNKNOWNFRAME)).
+      module subroutine kb_add_ephemeris ( this, ctx, body, center, frame, tbeg, tend, provider, ident )
+         implicit none
+         class(kernel_builder), intent(inout) :: this  !! the builder
+         class(pepper_context), intent(inout) :: ctx  !! a context, for the errors (any; its instance is not used)
+         integer(ip), intent(in) :: body  !! the body
+         integer(ip), intent(in) :: center  !! its center of motion
+         character(*), intent(in) :: frame  !! the frame of the states
+         real(wp), intent(in) :: tbeg  !! start of the coverage (TDB seconds past J2000)
+         real(wp), intent(in) :: tend  !! end of the coverage
+         class(ephemeris_provider), intent(in) :: provider  !! the source of the states (copied)
+         character(*), intent(in), optional :: ident  !! the segment identifier (default: PROGRAMMATIC EPHEMERIS)
+      end subroutine kb_add_ephemeris
+
+      !> Register a programmatic ephemeris owned by a kernel built in memory
+      !> (its handle), from a builder being loaded (PEPPER).
+      module subroutine register_owned_ephemeris ( ctx, body, center, frame, tbeg, tend, provider, owner, ident )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         integer(ip), intent(in) :: body  !! the body
+         integer(ip), intent(in) :: center  !! its center
+         character(*), intent(in) :: frame  !! the frame
+         real(wp), intent(in) :: tbeg  !! start of the coverage
+         real(wp), intent(in) :: tend  !! end of the coverage
+         class(ephemeris_provider), intent(in) :: provider  !! the source of the states
+         integer(ip), intent(in) :: owner  !! the kernel's handle
+         character(*), intent(in) :: ident  !! the segment identifier
+      end subroutine register_owned_ephemeris
+
+      !> Remove the programmatic ephemerides a kernel owns (its handle):
+      !> UNLOAD, KCLEAR (PEPPER).
+      module subroutine remove_owned_ephemerides ( ctx, owner )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         integer(ip), intent(in) :: owner  !! the kernel's handle
+      end subroutine remove_owned_ephemerides
 
       !> Define a body name of the kernel a builder makes (PEPPER): while the
       !> kernel is loaded, `name` translates to `code` and `code` to `name`
@@ -21125,7 +21209,9 @@ contains
    !> first (step 2 would see the kernel built from it).
    !>
    !> A file a loader reads becomes an SPK held in memory (the loader fills
-   !> a [[kernel_builder]]), named after the file: queries, SPKCOV and
+   !> a [[kernel_builder]]: segments from the file's rows, programmatic
+   !> ephemerides for a file that holds a model, [[kb_add_ephemeris]], and
+   !> body names, [[kb_define_body]]), named after the file: queries, SPKCOV and
    !> SPKOBJ by the file's name, KDATA and KINFO (type SPK),
    !> [[kernel_format]] (the loader's name and the kernel's description),
    !> UNLOAD and KCLEAR (which call the loader's `unload`), like an SPK

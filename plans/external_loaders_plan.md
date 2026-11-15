@@ -3,8 +3,12 @@
 **Status:** phases 1 and 2 implemented (2026-11-15), programmatic
 kernels in the C interface and PepperyPy, and phase 3's `define_body`
 (body names owned by a kernel: BODDEF records with an owner, removed when
-the kernel is unloaded, every context rebuilding its name tables). Not yet:
-the binary test format (phase 3), phases 4–5.
+the kernel is unloaded, every context rebuilding its name tables), and
+phase 4 as `kb%add_ephemeris` (a provider owned by the kernel: the
+registration of `add_ephemeris` with an owner, not replacing another of the
+same body, removed with the kernel; SPKCOV and SPKOBJ by the kernel's name;
+`write_kernel` refuses it). Not yet: the binary test format (phase 3), phase
+5, and both in the C interface and PepperyPy.
 
 What was built:
 - `src/pepper_loaders.f90` (a submodule of `pepper_instance_module`): the
