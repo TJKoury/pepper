@@ -2550,8 +2550,7 @@ contains
       module procedure rdtext
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) :: maxopn
-      parameter         ( maxopn =  96 )
+      integer(ip), parameter :: maxopn = 96  !! maximum number of text files open at once
       integer(ip) :: unit
       integer(ip) :: number
       integer(ip) :: iostat
@@ -3130,10 +3129,8 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
-      character(*) :: dat
-      parameter           ( dat = 'begindata' )
-      character(*) :: txt
-      parameter           ( txt = 'begintext' )
+      character(*), parameter :: dat = 'begindata'  !! the marker that begins a data section of a text kernel
+      character(*), parameter :: txt = 'begintext'  !! the marker that begins a text section of a text kernel
       character(lnsize) :: first
       integer(ip) :: i
       integer(ip) :: r
@@ -3380,8 +3377,7 @@ contains
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
-      character(*) :: blank
-      parameter           ( blank = ' ' )
+      character(*), parameter :: blank = ' '  !! a blank
       character(lnsize) :: first
       integer(ip) :: i
       integer(ip) :: r
@@ -4084,10 +4080,8 @@ contains
       use pepper_strings, only: repmc_inplace, repmd_inplace, repmi_inplace
       implicit none
       integer(ip) :: divble
-      integer(ip) :: ampm
-      parameter           ( ampm   = zone   + 1 )
-      integer(ip) :: lnsize
-      parameter           ( lnsize = 200 )
+      integer(ip), parameter :: ampm = zone + 1  !! time string component: AM/PM
+      integer(ip), parameter :: lnsize = 200  !! length of the error message
       character(lnsize) :: messge
       character(10), parameter :: mnames ( 12 ) = &
          [ character(10) :: 'January', 'February', 'March', 'April', 'May', 'June', &
@@ -4612,8 +4606,7 @@ contains
       use pepper_strings, only: eqstr
       implicit none
       integer(ip) :: divble
-      integer(ip) :: lnsize
-      parameter           ( lnsize = 200 )
+      integer(ip), parameter :: lnsize = 200  !! length of the error message
       character(lnsize) :: messge
       character(10), parameter :: mnames ( 12 ) = &
          [ character(10) :: 'January', 'February', 'March', 'April', 'May', 'June', &
@@ -4729,8 +4722,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
       integer(ip) :: divble
-      integer(ip) :: lnsize
-      parameter           ( lnsize = 200 )
+      integer(ip), parameter :: lnsize = 200  !! length of the error message
       character(lnsize) :: messge
       character(10), parameter :: mnames ( 12 ) = &
          [ character(10) :: 'January', 'February', 'March', 'April', 'May', 'June', &
@@ -5282,8 +5274,7 @@ contains
       use pepper_kinds, only: ip
       implicit none
 
-      integer(ip) :: count
-      parameter           ( count = ntpats )
+      integer(ip), parameter :: count = ntpats  !! number of the known time patterns
 
 
       integer(ip) :: i
@@ -5839,14 +5830,11 @@ contains
 
 
 
-      integer(ip) :: ampm
-      parameter           ( ampm   = zone   + 1 )
+      integer(ip), parameter :: ampm = zone + 1  !! time string component: AM/PM
 
-      integer(ip) :: system
-      parameter           ( system = ampm   + 1 )
+      integer(ip), parameter :: system = ampm + 1  !! time string component: time system
 
-      integer(ip) :: nmods
-      parameter           ( nmods = system )
+      integer(ip), parameter :: nmods = system  !! number of time string components (modifiers included)
 
       integer(ip) :: begs ( nmods )
       integer(ip) :: ends ( nmods )
@@ -5862,8 +5850,7 @@ contains
 !     The number of known time patterns NKNOWN comes from the include
 !     file timepars.inc
 !
-      integer(ip) :: wdsize
-      parameter           ( wdsize = 12 )
+      integer(ip), parameter :: wdsize = 12  !! length of the representation of a time string
 
       character(wdsize) :: rep
 
@@ -7616,21 +7603,15 @@ contains
       use pepper_strings, only: lx4uns, prefix, rtrim, samchi, samsbi, suffix, ucase, &
          repmc_inplace, repmi_inplace, zzinssub_inplace
       implicit none
-      integer(ip) :: lower
-      parameter           ( lower  = 1 )
-      integer(ip) :: upper
-      parameter           ( upper  = lower  + 1 )
-      integer(ip) :: mixed
-      parameter           ( mixed  = upper  + 1 )
-      integer(ip) :: full
-      parameter           ( full   = 1 )
-      integer(ip) :: short
-      parameter           ( short  = full   + 1 )
+      integer(ip), parameter :: lower = 1  !! case of month and weekday names: lower case
+      integer(ip), parameter :: upper = lower + 1  !! case of month and weekday names: upper case
+      integer(ip), parameter :: mixed = upper + 1  !! case of month and weekday names: mixed case
+      integer(ip), parameter :: full = 1  !! form of month and weekday names: full
+      integer(ip), parameter :: short = full + 1  !! form of month and weekday names: abbreviated
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
-      integer(ip) :: smwdsz
-      parameter           ( smwdsz = 12 )
+      integer(ip), parameter :: smwdsz = 12  !! length of a special token
       integer(ip) :: pfrom
       integer(ip) :: pnext
       character(smwdsz) :: spcial
@@ -9392,8 +9373,7 @@ contains
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: nparsi
       implicit none
-      integer(ip) :: wdsize
-      parameter           ( wdsize = 32 )
+      integer(ip), parameter :: wdsize = 32  !! length of a word of the error message
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
@@ -9942,11 +9922,9 @@ contains
 
 
 
-      integer(ip) :: ampm
-      parameter           ( ampm   = zone   + 1 )
+      integer(ip), parameter :: ampm = zone + 1  !! time string component: AM/PM
 
-      integer(ip) :: system
-      parameter           ( system = ampm   + 1 )
+      integer(ip), parameter :: system = ampm + 1  !! time string component: time system
 
 
       character(5) :: type

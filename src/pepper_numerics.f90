@@ -2485,11 +2485,9 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
 
-      integer(ip) :: dx
-      parameter           ( dx     = 1 )
+      integer(ip), parameter :: dx = 1  !! row of the partial derivatives of X
 
-      integer(ip) :: dy
-      parameter           ( dy     = 2 )
+      integer(ip), parameter :: dy = 2  !! row of the partial derivatives of Y
 
       integer(ip), parameter :: dz = 3
 
@@ -7101,8 +7099,7 @@ contains
       implicit none
 
 
-      integer(ip) :: ubpl
-      parameter           ( ubpl = 4 )
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
 
       real(wp), parameter :: seplim = 1.0e-9_wp
 

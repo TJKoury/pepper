@@ -2933,8 +2933,7 @@ contains
 !
 !     Linked list parameters
 !
-      integer(ip) :: next
-      parameter           ( next = 1 )
+      integer(ip), parameter :: next = 1  !! row of a node's forward pointer in the linked list
 
       integer(ip), parameter :: prev = 2
 

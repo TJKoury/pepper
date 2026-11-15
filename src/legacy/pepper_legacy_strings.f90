@@ -173,8 +173,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
       character(*) :: string  !! Input character string.
-      integer(ip) :: ispace
-      parameter           ( ispace = 32 )
       frstnb = pepper_frstnb ( string )
       end function frstnb
 
@@ -233,8 +231,6 @@ contains
       use pepper_kinds, only: ip
       implicit none
       character(*) :: string  !! Input character string.
-      integer(ip) :: ispace
-      parameter           ( ispace = 32 )
       lastnb = pepper_lastnb ( string )
       end function lastnb
 
@@ -324,10 +320,6 @@ contains
       integer(ip) :: nmax  !! Maximum number of items to return.
       integer(ip) :: n  !! Number of items in the list.
       character(*) :: items ( * )  !! Items in the list, left justified.
-      character(1) :: blank
-      parameter           ( blank = ' ' )
-      integer(ip) :: ispace
-      parameter           ( ispace = 32 )
       ! PEPPER: list, delim are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
       call pepper_lparse ( (list), (delim), nmax, n, items )
       end subroutine lparse
@@ -344,10 +336,6 @@ contains
       integer(ip) :: nmax  !! Maximum number of items to return.
       integer(ip) :: n  !! Number of items in the list.
       character(*) :: items ( * )  !! Items in the list, left justified.
-      character(1) :: blank
-      parameter           ( blank = ' ' )
-      integer(ip) :: ispace
-      parameter           ( ispace = 32 )
       ! PEPPER: list, delims are passed as copies: a SPICELIB caller may pass its output variable (in-place use)
       call pepper_lparsm ( (list), (delims), nmax, n, items )
       end subroutine lparsm
@@ -461,8 +449,6 @@ contains
       character(*) :: string  !! Input character string.
       character(*) :: next  !! The next word in the string.
       character(*) :: rest  !! The remaining part of STRING, left-justified.
-      integer(ip) :: ispace
-      parameter           ( ispace = 32 )
       ! PEPPER: string is passed as a copy: a SPICELIB caller may pass its output variable (in-place use)
       call pepper_nextwd ( (string), next, rest )
       end subroutine nextwd
@@ -890,8 +876,6 @@ contains
       implicit none
       character(1) :: a  !! one of the characters to check
       character(1) :: b  !! the other character to check
-      integer(ip) :: lstchr
-      parameter           ( lstchr = 255 )
       eqchr = pepper_eqchr ( a, b )
       end function eqchr
 
@@ -905,8 +889,6 @@ contains
       implicit none
       character(1) :: a  !! one of the characters to check
       character(1) :: b  !! the other character to check
-      integer(ip) :: lstchr
-      parameter           ( lstchr = 255 )
       nechr = pepper_nechr ( a, b )
       end function nechr
 

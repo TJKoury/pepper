@@ -188,8 +188,7 @@ contains
       subroutine locati ( id, idsz, list, pool, at, presnt )
       use pepper_kinds, only: ip
       implicit none
-      integer(ip) :: lbpool
-      parameter ( lbpool = -5 )
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
       integer(ip) :: id   (            * )  !! An array of integers that comprise an identifier.
       integer(ip) :: idsz  !! The number of integer components per identifier.
       integer(ip) :: list ( idsz,      * )  !! A list of known identifiers.

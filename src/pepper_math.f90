@@ -4791,8 +4791,7 @@ contains
 
       integer(ip), parameter :: dcolat = 2
 
-      integer(ip) :: dlon
-      parameter           ( dlon   = 3 )
+      integer(ip), parameter :: dlon = 3  !! column of the partial derivatives with respect to longitude
 
       real(wp) :: ccolat
       real(wp) :: clong

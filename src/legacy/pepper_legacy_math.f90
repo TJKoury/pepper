@@ -234,16 +234,6 @@ contains
       real(wp) :: clon  !! Angle of the point from the XZ plane in radians.
       real(wp) :: z  !! Height of the point above the XY plane.
       real(wp) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
-      integer(ip) :: dx
-      parameter           ( dx     = 1 )
-      integer(ip) :: dy
-      parameter           ( dy     = 2 )
-      integer(ip) :: dz
-      parameter           ( dz     = 3 )
-      integer(ip) :: dr
-      parameter           ( dr     = 1 )
-      integer(ip) :: dlon
-      parameter           ( dlon   = 2 )
       call pepper_drdcyl ( r, clon, z, jacobi )
       end subroutine drdcyl
 
@@ -259,16 +249,6 @@ contains
       real(wp) :: lon  !! Angle of the point from the XZ plane in radians.
       real(wp) :: lat  !! Angle of the point from the XY plane in radians.
       real(wp) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
-      integer(ip) :: dx
-      parameter           ( dx   = 1 )
-      integer(ip) :: dy
-      parameter           ( dy   = 2 )
-      integer(ip) :: dz
-      parameter           ( dz   = 3 )
-      integer(ip) :: dr
-      parameter           ( dr   = 1 )
-      integer(ip) :: dlon
-      parameter           ( dlon = 2 )
       integer(ip), parameter :: dlat = 3
       call pepper_drdlat ( r, lon, lat, jacobi )
       end subroutine drdlat
@@ -285,17 +265,7 @@ contains
       real(wp) :: colat  !! Angle of the point from the positive Z-axis.
       real(wp) :: slon  !! Angle of the point from the XY plane.
       real(wp) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
-      integer(ip) :: dx
-      parameter           ( dx     = 1 )
-      integer(ip) :: dy
-      parameter           ( dy     = 2 )
-      integer(ip) :: dz
-      parameter           ( dz     = 3 )
-      integer(ip) :: dr
-      parameter           ( dr     = 1 )
       integer(ip), parameter :: dcolat = 2
-      integer(ip) :: dlon
-      parameter           ( dlon   = 3 )
       call pepper_drdsph ( r, colat, slon, jacobi )
       end subroutine drdsph
 
@@ -772,8 +742,7 @@ contains
       use pepper_math, only: pepper_pl2nvc => pl2nvc
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) :: ubpl
-      parameter           ( ubpl    =   4 )
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
       real(wp) :: plane  ( ubpl )  !! A SPICE plane.
       real(wp) :: normal (    3 )  !! A normal vector and constant defining the geometric
                                              !! plane represented by PLANE.
@@ -793,8 +762,7 @@ contains
       use pepper_math, only: pepper_pl2nvp => pl2nvp
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) :: ubpl
-      parameter           ( ubpl   =    4 )
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
       real(wp) :: plane  ( ubpl )  !! A SPICE plane.
       real(wp) :: normal (    3 )  !! A unit normal vector and point that define PLANE.
       real(wp) :: point  (    3 )  !! A unit normal vector and point that define PLANE.
@@ -810,8 +778,7 @@ contains
       use pepper_math, only: pepper_pl2psv => pl2psv
       use pepper_kinds, only: ip, wp
       implicit none
-      integer(ip) :: ubpl
-      parameter           ( ubpl   =   4 )
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
       real(wp) :: plane ( ubpl )  !! A SPICE plane.
       real(wp) :: point (    3 )  !! A point in the input plane and two vectors spanning
                                             !! the input plane.
