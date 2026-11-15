@@ -99,6 +99,9 @@ pixi run -e coverage coverage      # test coverage of src/ (unit tests): build/c
 pixi run -e coverage coverage-all  # the same with NAIF's test suite (tspice) too
 ```
 
+The same tests with Intel Fortran (ifx), as the CI runs them, on any machine
+with Docker: `tools/ifx_docker/ifx.sh` (see `tools/ifx_docker/README.md`).
+
 PepperyPy, the Python interface, and the C interface build with
 meson-python in the `python` environment:
 
