@@ -997,6 +997,7 @@ module pepper_instance_module
       procedure, non_overridable :: kernel_data
       procedure, non_overridable :: kernel_info
       procedure, non_overridable :: kernel_format
+      procedure, non_overridable :: loader_names
       ! --- end pepper_keeper
       ! --- pepper_time
       procedure, non_overridable :: badkpv
@@ -2668,6 +2669,14 @@ module pepper_instance_module
          character(:), allocatable, intent(out) :: format  !! the description (blank if none)
          logical, intent(out) :: found  !! a kernel has this name
       end subroutine kernel_format
+
+      !> The names of the kernel loaders registered on the context's instance
+      !> ([[spice_add_loader]]), in the order of registration (PEPPER).
+      module subroutine loader_names ( ctx, names )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the context
+         type(string), allocatable, intent(out) :: names(:)  !! the loaders' names (upper case)
+      end subroutine loader_names
 
       !> The registered loader FURNSH uses for `file` (not a SPICE binary
       !> kernel) when no loader is named: the longest extension that ends

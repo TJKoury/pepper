@@ -813,11 +813,13 @@ search of SPICE decides, with every source taking part as a loaded file:
 | SPICE kernels | `pepper_spice_furnsh(spice, file, in_memory)` | `spice.furnsh(path, in_memory=None)` |
 | Providers | `pepper_spice_add_ephemeris(spice, body, center, frame, tbeg, tend, fn, user)` | `spice.add_ephemeris(body, center, frame, tbeg, tend, provider)` |
 | Programmatic kernels | `pepper_builder_new`, `pepper_builder_spk` (type 9 or 13), `pepper_builder_define_body`, `pepper_spice_load_kernel` | `KernelBuilder` (`spk_hermite`, `spk_lagrange`, `define_body`), `spice.load_kernel(name, kb)` |
-| Save as SPICE files | `pepper_spice_write_kernel(spice, name, file, ck_file, text_file)` | `spice.write_kernel(name, file, ck_file=None, text_file=None)` |
-| Kernel loaders | not yet | not yet |
-| Models in a kernel | not yet | not yet |
+| Models in a kernel | `pepper_builder_add_ephemeris(ctx, kb, body, center, frame, tbeg, tend, fn, user, ident)` | `kb.add_ephemeris(body, center, frame, tbeg, tend, provider)` |
 | Frames: providers | `pepper_spice_add_frame` | `spice.add_frame(...)` |
-| Frames: tables and models in a kernel | not yet | not yet |
+| Frames: tables in a kernel | `pepper_builder_frame_rotations(ctx, kb, name, code, center, base, n, epochs, quats, rots, degree, av, method, inverse, bounds, tbeg, tend, ident)` | `kb.frame_rotations(name, code, center, base, epochs, rotations, degree, av=None, method='LAGRANGE', ...)` (`rotations`: (n, 4) quaternions or (n, 3, 3) matrices) |
+| Frames: models in a kernel | `pepper_builder_add_frame(ctx, kb, name, code, center, fn, user)` | `kb.add_frame(name, code, center, provider)` |
+| Save as SPICE files | `pepper_spice_write_kernel(spice, name, file, ck_file, text_file)` | `spice.write_kernel(name, file, ck_file=None, text_file=None)` |
+| Kernel loaders | `pepper_spice_add_loader(spice, name, n, width, exts, load, detect, unload, user, replace)`, `pepper_spice_remove_loader`, `pepper_loader_names` | `spice.add_loader(name, loader, extensions=None, replace=False)` with a `KernelLoader`, `spice.remove_loader(name)`, `spice.loaders()` |
+| `furnsh` with a named loader | `pepper_spice_furnsh_loader(spice, file, in_memory, loader)` | `spice.furnsh(path, loader='NAME')` |
 
 Python, a programmatic kernel from NumPy arrays:
 
@@ -837,8 +839,69 @@ state, lt = spice.context().spkezr('MY_SC', ets[10], 'J2000', 'NONE', 'EARTH')
 spice.write_kernel('my_trajectory', 'my_trajectory.bsp')
 ```
 
-Kernel loaders are Fortran types, so they cannot be registered from C or
-Python yet; the plan (`plans/external_loaders_plan.md`) has this as a to-do.
+A kernel loader in Python: subclass `KernelLoader` (or any object with
+`load`, and optionally `detect` and `unload`):
+
+```python
+import numpy as np
+from pepperypy import KernelLoader
+
+class CsvLoader(KernelLoader):
+    def load(self, ctx, kb, file):          # ctx: a Context of the instance; kb: the file's builder
+        rows = np.loadtxt(file, delimiter=',')
+        kb.spk_hermite(-10001, 399, 'J2000', rows[:, 0], rows[:, 1:7], 7)
+        kb.define_body('MY_SC', -10001)
+
+    def detect(self, file, head):           # head: the file's first bytes
+        return head.startswith(b'#CSVEPH')
+
+spice.add_loader('CSV', CsvLoader(), extensions=['.csveph'])
+spice.furnsh('track.csveph')
+spice.furnsh('track.txt', loader='CSV')
+```
+
+An exception in `load` loads nothing of the file; `furnsh` raises a
+`CallbackError` whose cause is that exception. The instance keeps the loader
+object (and the providers of the kernels' builders) alive while they are
+registered or loaded.
+
+A kernel loader in C: a `load` function that fills the builder with the
+`pepper_builder_*` functions, signaling its errors in the context it is
+given (a context of the instance, made for the call), and returning 0:
+
+```c
+static int my_load(void *ctx, void *user, void *kb, const char *file) {
+    /* read file into ets[n], states[n][6] ... */
+    if (pepper_builder_spk(ctx, kb, 13, -10001, 399, "J2000", n, ets, &states[0][0], 7, 0, 0, 0, "", 0))
+        return 1;
+    return 0;
+}
+
+pepper_spice_add_loader(spice, "MYFMT", 1, 7, ".myeph", my_load, NULL, NULL, NULL, 0);
+pepper_spice_furnsh(spice, "track.myeph", -1);
+```
+
+A loader written in Fortran (a loader library, such as one for FreeFlyer
+files) is used from C when it is linked into the same program as the PEPPER
+library it registers with: the library exports a registration function that
+takes the instance's handle,
+
+```fortran
+integer(c_int) function myfmt_register(spice) bind(c, name='myfmt_register')
+   use pepper_capi_core, only: spice_of, spice_status
+   type(c_ptr), value :: spice
+   type(pepper_instance), pointer :: s
+   s => spice_of(spice)
+   call s%add_loader('MYFMT', myfmt_loader(), extensions=['.myeph'])
+   myfmt_register = spice_status(s)
+end function
+```
+
+and the C program calls `myfmt_register(spice)`. PepperyPy has its own copy
+of the PEPPER library inside its extension module, so a separately built
+Fortran loader library cannot be registered on a PepperyPy instance; from
+Python, write the loader in Python (above), or build the Fortran loader into
+PepperyPy.
 
 The legacy interface (SPICELIB's routines, `use pepper_legacy`) works on a
 default instance, `legacy_spice()` (module `pepper_legacy_context`). A

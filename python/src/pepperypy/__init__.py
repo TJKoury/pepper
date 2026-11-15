@@ -22,7 +22,7 @@ from .cells import (SpiceCell, SPICEDOUBLE_CELL, SPICEINT_CELL, SPICECHAR_CELL, 
 from ._core import *  # noqa: F401,F403  (the generated functions)
 from ._core import (Spice, Context, StateQuery, RotationQuery, ContextInUseError,  # noqa: F401
                     CallbackError, current_instance, current_context, default_instance,
-                    KernelBuilder, load_kernel)
+                    KernelBuilder, KernelLoader, load_kernel, add_loader)
 from ._compat import *  # noqa: F401,F403
 from ._compat import KernelPool  # noqa: F401
 from .utils import support_types as stypes  # noqa: F401  (SpiceyPy's name)

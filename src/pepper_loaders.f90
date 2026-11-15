@@ -1683,6 +1683,16 @@ contains
       end associate
    end procedure kernel_format
 
+   !> The names of the registered loaders (PEPPER).
+   module procedure loader_names
+      implicit none
+      integer(ip) :: k
+      allocate ( names(ctx%spice%nloaders) )
+      do k = 1, ctx%spice%nloaders
+         names(k)%s = ctx%spice%loaders(k)%name
+      end do
+   end procedure loader_names
+
    !> The loader FURNSH uses for a file no loader is named for (PEPPER).
    module procedure match_kernel_loader
       implicit none

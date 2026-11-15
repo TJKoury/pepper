@@ -151,6 +151,39 @@ int pepper_builder_nsegments(void *builder);
 /* A kernel loaded under the same name is replaced; the builder is emptied
    unless keep is 1. Errors in the instance (pepper_spice_getmsg). */
 int pepper_spice_load_kernel(void *spice, const char *name, void *builder, int keep);
+/* A programmatic ephemeris or frame in a builder (owned by the kernel once
+   loaded; user valid while it is loaded); ident "" for the default. */
+int pepper_builder_add_ephemeris(void *ctx, void *builder, int body, int center, const char *frame,
+                                 double tbeg, double tend, pepper_state_fn fn, void *user, const char *ident);
+int pepper_builder_add_frame(void *ctx, void *builder, const char *name, int code, int center,
+                             pepper_xform_fn fn, void *user);
+/* A table of rotations from base to the frame at the n epochs (ET):
+   quaternions double[n][4] (scalar first; rots NULL) or matrices, n
+   column-major 3x3 (quats NULL); av NULL or double[n][3] (rad/s, in base);
+   method "" (Lagrange), "LAGRANGE" or "HERMITE"; inverse 1: from the frame
+   to base; bounds 1: coverage [tbeg, tend]; ident "" for the default. */
+int pepper_builder_frame_rotations(void *ctx, void *builder, const char *name, int code, int center,
+                                   const char *base, int n, const double *epochs, const double *quats,
+                                   const double *rots, int degree, const double *av, const char *method,
+                                   int inverse, int bounds, double tbeg, double tend, const char *ident);
+
+/* ---- Kernel loaders written in C ---- */
+
+/* load: fill builder from file (pepper_builder_*), errors in ctx (a context
+   of the instance for this call); return 0. detect: nonzero to read file by
+   its first nhead bytes. unload: the file's kernel is unloaded. */
+typedef int (*pepper_load_fn)(void *ctx, void *user, void *builder, const char *file);
+typedef int (*pepper_detect_fn)(void *user, const char *file, const char *head, int nhead);
+typedef void (*pepper_unload_fn)(void *user, const char *file);
+/* n extensions of width characters each (NUL-padded); detect and unload may
+   be NULL; user valid while registered; replace 1: replace. */
+int pepper_spice_add_loader(void *spice, const char *name, int n, int width, const char *exts,
+                            pepper_load_fn load, pepper_detect_fn detect, pepper_unload_fn unload,
+                            void *user, int replace);
+int pepper_spice_remove_loader(void *spice, const char *name);
+/* FURNSH with a named loader (it reads the file, overriding every other
+   choice); loader "" : FURNSH chooses. in_memory: 1, 0 or -1. */
+int pepper_spice_furnsh_loader(void *spice, const char *file, int in_memory, const char *loader);
 /* An SPK (file; "" for none), and for rotation tables a CK (ck_file) and a
    text kernel (text_file: clocks, frame definitions, body names); NULL or ""
    for none. */
@@ -830,6 +863,8 @@ int pepper_ktotal(void *ctx, const char *kind, int *count);
 int pepper_lgrind(void *ctx, int n, const double *xvals, const double *yvals, double *work, double x, double *p, double *dp);
 /* limb_points: Limb points on a target body, without a limit on their number (PEPPER; [[limbpt]] without MAXN). */
 int pepper_limb_points(void *ctx, const char *method, const char *target, double et, const char *fixref, const char *abcorr, const char *corloc, const char *obsrvr, const double *refvec, double rolstp, int ncuts, double schstp, double soltol, const int **npts, int *npts_n, const double **points, int *points_rows, int *points_cols, const double **epochs, int *epochs_n, const double **tangts, int *tangts_rows, int *tangts_cols);
+/* loader_names: The names of the kernel loaders registered on the context's instance ([[spice_add_loader]]), in the order of registration (PEPPER). */
+int pepper_loader_names(void *ctx, const char **names, int *names_n);
 /* lspcn: Compute L_s, the planetocentric longitude of the sun, as seen from a specified body. */
 int pepper_lspcn(void *ctx, const char *body, double et, const char *abcorr, double *fresult);
 /* ltime: Compute the transmission (or reception) time of a signal at a specified target, given the reception (or transmission) time at a specified observer. */

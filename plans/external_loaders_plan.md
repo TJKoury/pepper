@@ -648,9 +648,19 @@ Each phase with its tests (`pixi run test`, `test-parallel` many times,
   `kernel_format` are generated. Kernel loaders are not registered from C
   or Python (they are Fortran types; `remove_loader` is not wrapped
   either), so FURNSH's `loader` argument is not in the C interface.
-- **To do: kernel loaders in the C interface and PepperyPy.** The goal is
-  for the whole loader feature to work there too, not only programmatic
-  kernels:
+- **Done (2026-11-15): kernel loaders in the C interface and PepperyPy.**
+  C: `pepper_spice_add_loader` (load, detect and unload functions with
+  user data; `capi_loader`, which gives the C load function a context of the
+  instance made for the call and copies its errors), `pepper_spice_remove_loader`,
+  `pepper_loader_names`, `pepper_spice_furnsh_loader`; the builder's
+  `pepper_builder_add_ephemeris`, `_add_frame`, `_frame_rotations`.
+  PepperyPy: `KernelLoader`, `Spice.add_loader`, `remove_loader`, `loaders`,
+  `furnsh(loader=)`; `KernelBuilder.add_ephemeris`, `add_frame`,
+  `frame_rotations`. A Fortran loader library is registered from C by a
+  function it exports (taking the instance's handle, `spice_of`), if it is
+  linked into the same program as PEPPER; not on a PepperyPy instance,
+  whose PEPPER is inside its extension module (that needs PEPPER as a shared
+  library, or the loader built into PepperyPy). The original to-do:
   - FURNSH's `loader` argument in `pepper_spice_furnsh` and PepperyPy's
     `furnsh(path, loader=...)` (and `KERNEL_LOADERS` already works through
     them);

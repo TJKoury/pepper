@@ -28,7 +28,7 @@ module pepper_capi_core
    use pepper_kinds, only: ip, wp
    use pepper_containers, only: string
    use pepper_instance_module, only: pepper_instance, pepper_context, state_query, rotation_query, &
-                              ephemeris_provider, frame_provider, gf_scalar, kernel_builder
+                              ephemeris_provider, frame_provider, gf_scalar, kernel_builder, kernel_loader
    implicit none
    ! Public: the bind(c) procedures must stay global symbols at any
    ! optimization level.
@@ -74,6 +74,19 @@ module pepper_capi_core
    contains
       procedure :: state => capi_ephemeris_state
    end type capi_ephemeris
+
+   !> A kernel loader whose reading is done by C functions
+   !> ([[pepper_spice_add_loader]]).
+   type, extends(kernel_loader) :: capi_loader
+      type(c_funptr) :: load_fn = c_null_funptr  !! the reader ([[pepper_load_fn]])
+      type(c_funptr) :: detect_fn = c_null_funptr  !! the detection ([[pepper_detect_fn]]), or null
+      type(c_funptr) :: unload_fn = c_null_funptr  !! the unload callback ([[pepper_unload_fn]]), or null
+      type(c_ptr) :: user = c_null_ptr  !! the caller's data
+   contains
+      procedure :: load => capi_loader_load
+      procedure :: detect => capi_loader_detect
+      procedure :: unload => capi_loader_unload
+   end type capi_loader
 
    !> A programmatic frame whose transformations come from a C function.
    type, extends(frame_provider) :: capi_frame
@@ -128,6 +141,34 @@ module pepper_capi_core
          real(c_double), intent(out) :: xform(6, 6)  !! the transformation
          integer(c_int), intent(out) :: relative  !! the ID code of the frame transformed to
       end function pepper_xform_fn
+
+      !> A kernel loader's reader: fill `builder` from `file` with the
+      !> `pepper_builder_*` functions; errors in `ctx`. Returns 0 if the file
+      !> was read.
+      integer(c_int) function pepper_load_fn ( ctx, user, builder, file ) bind(c)
+         import :: c_ptr, c_int, c_char
+         type(c_ptr), value :: ctx  !! a context of the instance, for this call
+         type(c_ptr), value :: user  !! the caller's data
+         type(c_ptr), value :: builder  !! the builder to fill
+         character(kind=c_char), intent(in) :: file(*)  !! the file
+      end function pepper_load_fn
+
+      !> A kernel loader's detection: nonzero to read `file`, by its first
+      !> `nhead` bytes `head` (not NUL-terminated).
+      integer(c_int) function pepper_detect_fn ( user, file, head, nhead ) bind(c)
+         import :: c_ptr, c_int, c_char
+         type(c_ptr), value :: user  !! the caller's data
+         character(kind=c_char), intent(in) :: file(*)  !! the file
+         character(kind=c_char), intent(in) :: head(*)  !! its first bytes
+         integer(c_int), value :: nhead  !! their number
+      end function pepper_detect_fn
+
+      !> A kernel loader's unload callback: the kernel of `file` is unloaded.
+      subroutine pepper_unload_fn ( user, file ) bind(c)
+         import :: c_ptr, c_char
+         type(c_ptr), value :: user  !! the caller's data
+         character(kind=c_char), intent(in) :: file(*)  !! the file
+      end subroutine pepper_unload_fn
    end interface
 
    public :: c_to_f, c_to_f_array, f_to_c, status_of, spice_status, context_of, spice_of
@@ -770,6 +811,284 @@ contains
       relative = 0
       found = fn(handle, self%user, frame, et, xform, relative) /= 0
    end subroutine capi_frame_transform
+
+   ! ----------------------------------------------------------------------
+   ! Kernel loaders written in C, and the builder's providers and frames
+   ! ----------------------------------------------------------------------
+
+   !> Register a kernel loader written in C (`spice%add_loader`): FURNSH
+   !> calls `load_fn` for the files it chooses the loader for (by name with
+   !> [[pepper_spice_furnsh_loader]] or KERNEL_LOADERS, by one of the `n`
+   !> extensions in `exts` (`width` characters each), or by `detect_fn`).
+   !> `load_fn(ctx, user, builder, file)` fills `builder` with the
+   !> `pepper_builder_*` functions, signals its errors in `ctx` (a context
+   !> of the instance, for this call), and returns 0 (else, with no error
+   !> signaled, SPICE(LOADERFAILED)); nothing of the file is loaded after an
+   !> error. `detect_fn(user, file, head, nhead)` (NULL: none) returns
+   !> nonzero to read a file by its first `nhead` bytes; `unload_fn(user,
+   !> file)` (NULL: none) is called when the file's kernel is unloaded.
+   !> `user` must stay valid while the loader is registered. `replace` 1:
+   !> replace a loader with the name or the extensions.
+   integer(c_int) function pepper_spice_add_loader ( spice, name, n, width, exts, load_fn, detect_fn, &
+         unload_fn, user, replace ) bind(c, name='pepper_spice_add_loader')
+      type(c_ptr), value :: spice  !! the instance
+      character(kind=c_char), intent(in) :: name(*)  !! the loader's name
+      integer(c_int), value :: n  !! the number of extensions
+      integer(c_int), value :: width  !! the width of each extension in the block
+      character(kind=c_char), intent(in) :: exts(*)  !! the extensions
+      type(c_funptr), value :: load_fn  !! the reader ([[pepper_load_fn]])
+      type(c_funptr), value :: detect_fn  !! the detection ([[pepper_detect_fn]]), or NULL
+      type(c_funptr), value :: unload_fn  !! the unload callback ([[pepper_unload_fn]]), or NULL
+      type(c_ptr), value :: user  !! the caller's data
+      integer(c_int), value :: replace  !! 1: replace
+      type(pepper_instance), pointer :: s
+      character(:), allocatable :: f_name, f_exts(:)
+      s => spice_of(spice)
+      call c_to_f(name, f_name)
+      if (n > 0) then
+         call c_to_f_array(exts, n, width, f_exts)
+         call s%add_loader(f_name, capi_loader(load_fn=load_fn, detect_fn=detect_fn, unload_fn=unload_fn, &
+                                               user=user), extensions=f_exts, replace=replace /= 0)
+      else
+         call s%add_loader(f_name, capi_loader(load_fn=load_fn, detect_fn=detect_fn, unload_fn=unload_fn, &
+                                               user=user), replace=replace /= 0)
+      end if
+      pepper_spice_add_loader = spice_status(s)
+   end function pepper_spice_add_loader
+
+   !> Remove a kernel loader (`spice%remove_loader`).
+   integer(c_int) function pepper_spice_remove_loader ( spice, name ) bind(c, name='pepper_spice_remove_loader')
+      type(c_ptr), value :: spice  !! the instance
+      character(kind=c_char), intent(in) :: name(*)  !! the loader's name
+      type(pepper_instance), pointer :: s
+      character(:), allocatable :: f_name
+      s => spice_of(spice)
+      call c_to_f(name, f_name)
+      call s%remove_loader(f_name)
+      pepper_spice_remove_loader = spice_status(s)
+   end function pepper_spice_remove_loader
+
+   !> Load a kernel with a named kernel loader (FURNSH's `loader`: the
+   !> registered loader with that name reads the file, overriding every
+   !> other choice); `in_memory` as in [[pepper_spice_furnsh]].
+   integer(c_int) function pepper_spice_furnsh_loader ( spice, file, in_memory, loader ) &
+         bind(c, name='pepper_spice_furnsh_loader')
+      type(c_ptr), value :: spice  !! the instance
+      character(kind=c_char), intent(in) :: file(*)  !! the file
+      integer(c_int), value :: in_memory  !! 1, 0 or -1
+      character(kind=c_char), intent(in) :: loader(*)  !! the loader's name ("" : FURNSH chooses)
+      type(pepper_instance), pointer :: s
+      character(:), allocatable :: f_file, f_loader
+      s => spice_of(spice)
+      call c_to_f(file, f_file)
+      call c_to_f(loader, f_loader)
+      if (len(f_loader) == 0) f_loader = ' '
+      if (in_memory < 0) then
+         call s%furnsh(f_file, loader=f_loader)
+      else
+         call s%furnsh(f_file, in_memory=in_memory /= 0, loader=f_loader)
+      end if
+      pepper_spice_furnsh_loader = spice_status(s)
+   end function pepper_spice_furnsh_loader
+
+   !> [[kernel_loader]]'s load of the C interface: calls the C function with
+   !> a context of the instance made for the call (its errors become the
+   !> instance's) and a builder that becomes FURNSH's.
+   subroutine capi_loader_load ( self, ctx, kb, file )
+      class(capi_loader), intent(inout) :: self  !! the loader
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      type(kernel_builder), intent(inout) :: kb  !! the builder to fill
+      character(*), intent(in) :: file  !! the file
+      procedure(pepper_load_fn), pointer :: fn
+      type(kernel_builder), target :: local
+      type(capi_context), pointer :: tmp
+      type(pepper_instance), pointer :: s
+      character(1840) :: short, long
+      integer(c_int) :: st
+      s => ctx%instance()
+      allocate (tmp)
+      tmp%pepper_context = s%new_context()
+      tmp%self = c_loc(tmp)
+      call c_f_procpointer(self%load_fn, fn)
+      st = fn(tmp%self, self%user, c_loc(local), trim(file)//c_null_char)
+      if (tmp%failed()) then
+         call tmp%getmsg('SHORT', short)
+         call tmp%getmsg('LONG', long)
+         call ctx%setmsg(trim(long))
+         call ctx%sigerr(trim(short))
+      else if (st /= 0) then
+         call ctx%setmsg('The kernel loader (C) returned an error for the file ''#''.')
+         call ctx%errch('#', file)
+         call ctx%sigerr('SPICE(LOADERFAILED)')
+      else
+         kb = local
+      end if
+      deallocate (tmp)
+   end subroutine capi_loader_load
+
+   !> [[kernel_loader]]'s detect of the C interface.
+   logical function capi_loader_detect ( self, file, head ) result ( accept )
+      class(capi_loader), intent(in) :: self  !! the loader
+      character(*), intent(in) :: file  !! the file
+      character(*), intent(in) :: head  !! its first bytes
+      procedure(pepper_detect_fn), pointer :: fn
+      accept = .false.
+      if (.not. c_associated(self%detect_fn)) return
+      call c_f_procpointer(self%detect_fn, fn)
+      accept = fn(self%user, trim(file)//c_null_char, head, int(len(head), c_int)) /= 0
+   end function capi_loader_detect
+
+   !> [[kernel_loader]]'s unload of the C interface.
+   subroutine capi_loader_unload ( self, file )
+      class(capi_loader), intent(inout) :: self  !! the loader
+      character(*), intent(in) :: file  !! the file unloaded
+      procedure(pepper_unload_fn), pointer :: fn
+      if (.not. c_associated(self%unload_fn)) return
+      call c_f_procpointer(self%unload_fn, fn)
+      call fn(self%user, trim(file)//c_null_char)
+   end subroutine capi_loader_unload
+
+   !> Add a programmatic ephemeris to a builder (`kernel_builder%add_ephemeris`):
+   !> `fn(ctx, user, body, et, state)` as for [[pepper_spice_add_ephemeris]];
+   !> owned by the kernel once loaded. `ident` "" for the default. `user`
+   !> must stay valid while the kernel is loaded.
+   integer(c_int) function pepper_builder_add_ephemeris ( ctx, builder, body, center, frame, tbeg, tend, &
+         fn, user, ident ) bind(c, name='pepper_builder_add_ephemeris')
+      type(c_ptr), value :: ctx  !! a context (for the errors)
+      type(c_ptr), value :: builder  !! the builder
+      integer(c_int), value :: body  !! the body
+      integer(c_int), value :: center  !! its center
+      character(kind=c_char), intent(in) :: frame(*)  !! the frame of the states
+      real(c_double), value :: tbeg  !! start of the coverage
+      real(c_double), value :: tend  !! end of the coverage
+      type(c_funptr), value :: fn  !! the state function ([[pepper_state_fn]])
+      type(c_ptr), value :: user  !! its data
+      character(kind=c_char), intent(in) :: ident(*)  !! the segment identifier ("" : the default)
+      type(capi_context), pointer :: c
+      type(kernel_builder), pointer :: kb
+      character(:), allocatable :: f_frame, f_ident
+      c => context_of(ctx)
+      call c_f_pointer(builder, kb)
+      call c_to_f(frame, f_frame)
+      call c_to_f(ident, f_ident)
+      if (len(f_ident) == 0) then
+         call kb%add_ephemeris(c, int(body, ip), int(center, ip), f_frame, tbeg, tend, capi_ephemeris(fn=fn, user=user))
+      else
+         call kb%add_ephemeris(c, int(body, ip), int(center, ip), f_frame, tbeg, tend, capi_ephemeris(fn=fn, user=user), &
+                               ident=f_ident)
+      end if
+      pepper_builder_add_ephemeris = status_of(c)
+   end function pepper_builder_add_ephemeris
+
+   !> Add a programmatic frame to a builder (`kernel_builder%add_frame`):
+   !> `fn(ctx, user, frame, et, xform, relative)` as for
+   !> [[pepper_spice_add_frame]]; owned by the kernel once loaded. `user`
+   !> must stay valid while the kernel is loaded.
+   integer(c_int) function pepper_builder_add_frame ( ctx, builder, name, code, center, fn, user ) &
+         bind(c, name='pepper_builder_add_frame')
+      type(c_ptr), value :: ctx  !! a context (for the errors)
+      type(c_ptr), value :: builder  !! the builder
+      character(kind=c_char), intent(in) :: name(*)  !! the frame's name
+      integer(c_int), value :: code  !! its ID code
+      integer(c_int), value :: center  !! its center
+      type(c_funptr), value :: fn  !! the transformation function ([[pepper_xform_fn]])
+      type(c_ptr), value :: user  !! its data
+      type(capi_context), pointer :: c
+      type(kernel_builder), pointer :: kb
+      character(:), allocatable :: f_name
+      c => context_of(ctx)
+      call c_f_pointer(builder, kb)
+      call c_to_f(name, f_name)
+      call kb%add_frame(c, f_name, int(code, ip), int(center, ip), capi_frame(fn=fn, user=user))
+      pepper_builder_add_frame = status_of(c)
+   end function pepper_builder_add_frame
+
+   !> Add a table of rotations to a builder (`kernel_builder%frame_rotations`):
+   !> a frame NAME (CODE, CENTER) whose rotations from BASE are, at the `n`
+   !> `epochs`, the quaternions `quats` (`double[n][4]`, SPICE's, scalar
+   !> first; `rots` NULL) or the matrices `rots` (`n` column-major 3x3;
+   !> `quats` NULL). `av`: NULL or `double[n][3]`, the angular velocities
+   !> (rad/s, in BASE). `method`: "" (Lagrange), "LAGRANGE" or "HERMITE".
+   !> `inverse` 1: the rotations are from the frame to BASE. `bounds` 1: the
+   !> coverage is [tbeg, tend]. `ident` "" for the default.
+   integer(c_int) function pepper_builder_frame_rotations ( ctx, builder, name, code, center, base, n, epochs, &
+         quats, rots, degree, av, method, inverse, bounds, tbeg, tend, ident ) &
+         bind(c, name='pepper_builder_frame_rotations')
+      type(c_ptr), value :: ctx  !! a context (for the errors)
+      type(c_ptr), value :: builder  !! the builder
+      character(kind=c_char), intent(in) :: name(*)  !! the frame's name
+      integer(c_int), value :: code  !! its ID code
+      integer(c_int), value :: center  !! its center
+      character(kind=c_char), intent(in) :: base(*)  !! the frame the rotations are relative to
+      integer(c_int), value :: n  !! the number of epochs
+      real(c_double), intent(in) :: epochs(*)  !! the epochs (ET)
+      type(c_ptr), value :: quats  !! the quaternions (n rows of 4), or NULL
+      type(c_ptr), value :: rots  !! the matrices (n column-major 3x3), or NULL
+      integer(c_int), value :: degree  !! the degree (odd)
+      type(c_ptr), value :: av  !! the angular velocities (n rows of 3), or NULL
+      character(kind=c_char), intent(in) :: method(*)  !! "", "LAGRANGE" or "HERMITE"
+      integer(c_int), value :: inverse  !! 1: from the frame to BASE
+      integer(c_int), value :: bounds  !! 1: the coverage is [tbeg, tend]
+      real(c_double), value :: tbeg  !! start of the coverage (with bounds)
+      real(c_double), value :: tend  !! end of the coverage (with bounds)
+      character(kind=c_char), intent(in) :: ident(*)  !! the segment identifier ("" : the default)
+      type(capi_context), pointer :: c
+      type(kernel_builder), pointer :: kb
+      character(:), allocatable :: f_name, f_base, f_method, f_ident
+      real(c_double), pointer :: q(:, :), r(:, :, :), w(:, :)
+      real(wp), allocatable :: qq(:, :)
+      integer(ip) :: m, k
+      c => context_of(ctx)
+      call c_f_pointer(builder, kb)
+      call c_to_f(name, f_name)
+      call c_to_f(base, f_base)
+      call c_to_f(method, f_method)
+      if (len(f_method) == 0) f_method = 'LAGRANGE'
+      call c_to_f(ident, f_ident)
+      if (len(f_ident) == 0) f_ident = 'ROTATIONS'
+      m = max(0_ip, int(n, ip))
+      if (c_associated(quats)) then
+         call c_f_pointer(quats, q, [4_ip, m])
+         qq = q
+      else if (c_associated(rots)) then
+         call c_f_pointer(rots, r, [3_ip, 3_ip, m])
+         allocate (qq(4, m))
+         do k = 1, m
+            call c%m2q(r(:, :, k), qq(:, k))
+            if (c%failed()) then
+               pepper_builder_frame_rotations = status_of(c)
+               return
+            end if
+         end do
+      else
+         call c%setmsg('The rotations of the frame ''#'' are missing (quats and rots are NULL).')
+         call c%errch('#', f_name)
+         call c%sigerr('SPICE(NULLPOINTER)')
+         pepper_builder_frame_rotations = status_of(c)
+         return
+      end if
+      if (c_associated(av)) then
+         call c_f_pointer(av, w, [3_ip, m])
+         if (bounds /= 0) then
+            call kb%frame_rotations(c, f_name, int(code, ip), int(center, ip), f_base, epochs(1:m), qq, &
+                                    int(degree, ip), av=w, method=f_method, inverse=inverse /= 0, &
+                                    tbeg=tbeg, tend=tend, ident=f_ident)
+         else
+            call kb%frame_rotations(c, f_name, int(code, ip), int(center, ip), f_base, epochs(1:m), qq, &
+                                    int(degree, ip), av=w, method=f_method, inverse=inverse /= 0, ident=f_ident)
+         end if
+      else
+         if (bounds /= 0) then
+            call kb%frame_rotations(c, f_name, int(code, ip), int(center, ip), f_base, epochs(1:m), qq, &
+                                    int(degree, ip), method=f_method, inverse=inverse /= 0, &
+                                    tbeg=tbeg, tend=tend, ident=f_ident)
+         else
+            call kb%frame_rotations(c, f_name, int(code, ip), int(center, ip), f_base, epochs(1:m), qq, &
+                                    int(degree, ip), method=f_method, inverse=inverse /= 0, ident=f_ident)
+         end if
+      end if
+      pepper_builder_frame_rotations = status_of(c)
+   end function pepper_builder_frame_rotations
 
    ! ----------------------------------------------------------------------
    ! Kernels built in memory (kernel_builder, spice%load_kernel)

@@ -8061,6 +8061,22 @@ cdef class _ContextRoutines(_ContextBase):
             self._leave()
         return _copy1(NPY_INT32, _c_npts, _c_npts_n), _copy2(NPY_DOUBLE, _c_points, _c_points_rows, _c_points_cols), _copy1(NPY_DOUBLE, _c_epochs, _c_epochs_n), _copy2(NPY_DOUBLE, _c_tangts, _c_tangts_rows, _c_tangts_cols)
 
+    def loader_names(self):
+        """The names of the kernel loaders registered on the context's instance (`spice_add_loader`), in the order of registration (PEPPER).
+        
+        :return: the loaders' names (upper case)"""
+        cdef const char *_c_names = NULL
+        cdef int _c_names_n = 0
+        cdef int _st = 0
+        self._enter()
+        try:
+            _st = pepper_loader_names(self._ptr, &_c_names, &_c_names_n)
+            if _st:
+                self._raise()
+        finally:
+            self._leave()
+        return _slist(_c_names, _c_names_n)
+
     def lspcn(self, body, et, abcorr):
         """Compute L_s, the planetocentric longitude of the sun, as seen from a specified body.
         

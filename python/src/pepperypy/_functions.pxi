@@ -3510,6 +3510,12 @@ def limb_points(method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rols
     :return: the number of points of each cut (size 0 after an error); the limb points, shape (3, n) (n = 0 after an error); the epochs of the points; the tangent vectors from the observer to the points, shape (3, n)"""
     return _context().limb_points(method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol)
 
+def loader_names():
+    """The names of the kernel loaders registered on the context's instance (`spice_add_loader`), in the order of registration (PEPPER).
+    
+    :return: the loaders' names (upper case)"""
+    return _context().loader_names()
+
 def lspcn(body, et, abcorr):
     """Compute L_s, the planetocentric longitude of the sun, as seen from a specified body.
     

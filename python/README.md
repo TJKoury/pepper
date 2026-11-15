@@ -221,8 +221,13 @@ kernel is loaded (removed with it). `tbeg`/`tend` set coverage bounds inside the
 the degree of a segment too short for it, and a kernel loaded under a name
 in use replaces it (`keep=True` keeps the builder's segments). A builder
 belongs to no instance: threads can fill builders while others query.
-Kernel loaders for other file formats are Fortran types, so they cannot be
-registered from Python.
+`kb.add_ephemeris` and `kb.add_frame` add Python providers to the kernel,
+and `kb.frame_rotations(name, code, center, base, epochs, rotations, degree)`
+a frame from rotations at epochs ((n, 4) quaternions or (n, 3, 3) matrices).
+Kernel loaders can be written in Python: a `KernelLoader` subclass with
+`load(ctx, kb, file)` (and optionally `detect`, `unload`), registered with
+`spice.add_loader(name, loader, extensions=[...])`; `spice.furnsh(path,
+loader='NAME')` names one. See the [guide](../guides/ephemeris_data.md#from-c-and-python).
 
 ## Speed
 

@@ -5,6 +5,9 @@ cdef extern from "pepper.h" nogil:
     ctypedef void (*pepper_bool_fn)(void *ctx, void *user, double et, int *value) noexcept
     ctypedef int (*pepper_state_fn)(void *ctx, void *user, int body, double et, double *state) noexcept
     ctypedef int (*pepper_xform_fn)(void *ctx, void *user, int frame, double et, double *xform, int *relative) noexcept
+    ctypedef int (*pepper_load_fn)(void *ctx, void *user, void *builder, const char *file) noexcept
+    ctypedef int (*pepper_detect_fn)(void *user, const char *file, const char *head, int nhead) noexcept
+    ctypedef void (*pepper_unload_fn)(void *user, const char *file) noexcept
     void _gfortran_set_options(int num, int options[])
     void *pepper_spice_new()
     void pepper_spice_free(void *spice)
@@ -41,6 +44,12 @@ cdef extern from "pepper.h" nogil:
     void pepper_builder_clear(void *builder)
     int pepper_builder_nsegments(void *builder)
     int pepper_spice_load_kernel(void *spice, const char *name, void *builder, int keep)
+    int pepper_builder_add_ephemeris(void *ctx, void *builder, int body, int center, const char *frame, double tbeg, double tend, pepper_state_fn fn, void *user, const char *ident)
+    int pepper_builder_add_frame(void *ctx, void *builder, const char *name, int code, int center, pepper_xform_fn fn, void *user)
+    int pepper_builder_frame_rotations(void *ctx, void *builder, const char *name, int code, int center, const char *base, int n, const double *epochs, const double *quats, const double *rots, int degree, const double *av, const char *method, int inverse, int bounds, double tbeg, double tend, const char *ident)
+    int pepper_spice_add_loader(void *spice, const char *name, int n, int width, const char *exts, pepper_load_fn load, pepper_detect_fn detect, pepper_unload_fn unload, void *user, int replace)
+    int pepper_spice_remove_loader(void *spice, const char *name)
+    int pepper_spice_furnsh_loader(void *spice, const char *file, int in_memory, const char *loader)
     int pepper_spice_write_kernel(void *spice, const char *name, const char *file, const char *ck_file, const char *text_file)
     int pepper_prepare_state(void *ctx, const char *target, const char *observer, const char *frame, const char *abcorr, void **query)
     void pepper_state_query_free(void *query)
@@ -378,6 +387,7 @@ cdef extern from "pepper.h" nogil:
     int pepper_ktotal(void *ctx, const char *kind, int *count)
     int pepper_lgrind(void *ctx, int n, const double *xvals, const double *yvals, double *work, double x, double *p, double *dp)
     int pepper_limb_points(void *ctx, const char *method, const char *target, double et, const char *fixref, const char *abcorr, const char *corloc, const char *obsrvr, const double *refvec, double rolstp, int ncuts, double schstp, double soltol, const int **npts, int *npts_n, const double **points, int *points_rows, int *points_cols, const double **epochs, int *epochs_n, const double **tangts, int *tangts_rows, int *tangts_cols)
+    int pepper_loader_names(void *ctx, const char **names, int *names_n)
     int pepper_lspcn(void *ctx, const char *body, double et, const char *abcorr, double *fresult)
     int pepper_ltime(void *ctx, double etobs, int obs, const char *dir, int targ, double *ettarg, double *elapsd)
     int pepper_lun2fn(void *ctx, int lunit, int filnam_size, char *filnam)

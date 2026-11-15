@@ -5633,6 +5633,20 @@ contains
       c_pepper_limb_points = status_of(c_)
    end function c_pepper_limb_points
 
+   !> C interface of `loader_names`: The names of the kernel loaders registered on the context's instance ([[spice_add_loader]]), in the order of registration (PEPPER).
+   integer(c_int) function c_pepper_loader_names ( ctx, names, names_n ) bind(c, name='pepper_loader_names')
+      type(c_ptr), value :: ctx  !! the context
+      type(c_ptr), intent(out) :: names  !! the loaders' names (upper case) (in the context, each NUL-terminated)
+      integer(c_int), intent(out) :: names_n  !! the number of strings
+      type(capi_context), pointer :: c_
+      type(string), allocatable :: f_names(:)
+      c_ => context_of(ctx)
+      call c_%loader_names(f_names)
+      if (.not. allocated(f_names)) allocate (f_names(0))
+      call set_strings_result(c_, 1, f_names, names, names_n)
+      c_pepper_loader_names = status_of(c_)
+   end function c_pepper_loader_names
+
    !> C interface of `lspcn`: Compute L_s, the planetocentric longitude of the sun, as seen from a specified body.
    integer(c_int) function c_pepper_lspcn ( ctx, body, et, abcorr, fresult ) bind(c, name='pepper_lspcn')
       type(c_ptr), value :: ctx  !! the context
