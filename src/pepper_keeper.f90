@@ -4061,7 +4061,6 @@ contains
       logical :: paths
       logical :: single
       logical :: update
-      if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
       associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded, &
                   known => ctx%spice%keeper%known, &
@@ -4102,7 +4101,6 @@ contains
       !     PEPPER: ZZDDHF2H may keep its result for the file during the
       !     load (GETFAT and ZZDDHOPN check the same file; see zzddhman_state).
       !
-      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       ctx%spice%zzddhman%reuse_f2h = .true.
       call zzldker ( ctx, file, nofile, thstyp, myhand )
       ctx%spice%zzddhman%reuse_f2h = .false.
@@ -4281,7 +4279,6 @@ contains
          !     PEPPER: ZZDDHF2H may keep its result for the file during the
          !     load (GETFAT and ZZDDHOPN check the same file; see zzddhman_state).
          !
-         if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
          ctx%spice%zzddhman%reuse_f2h = .true.
          call zzldker( ctx, fil2ld, nofile, thstyp, myhand )
          ctx%spice%zzddhman%reuse_f2h = .false.
@@ -4660,7 +4657,6 @@ contains
       logical :: paths
       logical :: single
       logical :: update
-      if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
       associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded )
       if ( loaded == 0 ) then
@@ -5064,7 +5060,6 @@ contains
       logical :: paths
       logical :: single
       logical :: update
-      if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
       associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded )
       file   = ' '
@@ -5460,7 +5455,6 @@ contains
       logical :: paths
       logical :: single
       logical :: update
-      if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
       associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded )
       filtyp = ' '
@@ -5500,7 +5494,6 @@ contains
       class(pepper_context), intent(in) :: ctx  !! the context
       integer(ip) :: j
       n = 1
-      if ( .not. allocated ( ctx%spice%keeper ) ) return
       associate ( kt => ctx%spice%keeper )
       do j = 1, kt%loaded
          n = max ( n, len ( kt%kernels(j)%name, ip ) )
@@ -5768,7 +5761,6 @@ contains
       logical :: paths
       logical :: single
       logical :: update
-      if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
       associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded )
       if ( ctx%failed() ) return
@@ -6333,7 +6325,6 @@ contains
       logical :: paths
       logical :: single
       logical :: update
-      if ( .not. allocated ( ctx%spice%keeper ) ) allocate ( ctx%spice%keeper )
       associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded, &
                   known => ctx%spice%keeper%known )

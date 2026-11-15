@@ -5880,7 +5880,6 @@ contains
       logical :: platok
       integer(ip) :: findex
       integer(ip) :: uindex
-      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       call units_ready ( ctx )
       call units_check ( ctx )
       associate ( ft => ctx%spice%zzddhman, &
@@ -6739,7 +6738,6 @@ contains
       logical :: platok
       integer(ip) :: findex
       integer(ip) :: uindex
-      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       call units_ready ( ctx )
       call units_check ( ctx )
       associate ( ft => ctx%spice%zzddhman, &
@@ -7056,7 +7054,6 @@ contains
       logical :: platok
       integer(ip) :: findex
       integer(ip) :: uindex
-      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       call units_ready ( ctx )
       call units_check ( ctx )
       associate ( ft => ctx%spice%zzddhman, &
@@ -7401,7 +7398,6 @@ contains
       logical :: platok
       integer(ip) :: findex
       integer(ip) :: uindex
-      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       call units_ready ( ctx )
       call units_check ( ctx )
       associate ( ft => ctx%spice%zzddhman, &
@@ -7643,7 +7639,6 @@ contains
       logical :: platok
       integer(ip) :: findex
       integer(ip) :: uindex
-      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       call units_ready ( ctx )
       call units_check ( ctx )
       associate ( ft => ctx%spice%zzddhman, &
@@ -7805,7 +7800,6 @@ contains
       logical :: platok
       integer(ip) :: findex
       integer(ip) :: uindex
-      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       call units_ready ( ctx )
       call units_check ( ctx )
       associate ( ft => ctx%spice%zzddhman, &
@@ -7954,7 +7948,6 @@ contains
       logical :: platok
       integer(ip) :: findex
       integer(ip) :: uindex
-      if ( .not. allocated ( ctx%spice%zzddhman ) ) allocate ( ctx%spice%zzddhman )
       call units_ready ( ctx )
       call units_check ( ctx )
       associate ( ft => ctx%spice%zzddhman, &

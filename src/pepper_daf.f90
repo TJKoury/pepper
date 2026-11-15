@@ -7745,7 +7745,6 @@ contains
       integer(ip) :: iostat
       integer(ip) :: lun
       logical :: found
-      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
       if ( ctx%failed() ) return
@@ -8208,7 +8207,6 @@ contains
       integer(ip) :: iostat
       integer(ip) :: lun
       logical :: found
-      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
       if ( ctx%failed() ) return
@@ -8585,7 +8583,6 @@ contains
       integer(ip) :: iostat
       integer(ip) :: lun
       logical :: found
-      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
       if ( ctx%failed() ) return
@@ -9108,7 +9105,6 @@ contains
       integer(ip) :: iostat
       integer(ip) :: lun
       logical :: found
-      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
       if ( ctx%failed() ) return
@@ -9629,7 +9625,6 @@ contains
       integer(ip) :: iostat
       integer(ip) :: lun
       logical :: found
-      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
       if ( ctx%failed() ) return
@@ -9902,7 +9897,6 @@ contains
       integer(ip) :: iostat
       integer(ip) :: lun
       logical :: found
-      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
       if ( ctx%failed() ) return
@@ -10852,7 +10846,6 @@ contains
       integer(ip) :: iostat
       integer(ip) :: lun
       logical :: found
-      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah )
       if ( ctx%failed() ) return
 
@@ -11104,7 +11097,6 @@ contains
       integer(ip) :: iostat
       integer(ip) :: lun
       logical :: found
-      if ( .not. allocated ( ctx%spice%dafah ) ) allocate ( ctx%spice%dafah )
       associate ( ft => ctx%spice%dafah )
       if ( ctx%failed() ) return
 
@@ -26196,7 +26188,7 @@ contains
       prev = nil
       do while (p /= nil)
          open = .false.
-         if (allocated(ctx%spice%dafah)) open = ctx%spice%dafah%find(ctx%daffa%stfh(p)) > 0
+         open = ctx%spice%dafah%find(ctx%daffa%stfh(p)) > 0
          if (open) then
             prev = p
             p = ctx%daffa%stpool(p)
@@ -26228,7 +26220,7 @@ contains
       p = ctx%dafana%sthead
       do while (p /= nil)
          open = .false.
-         if (allocated(ctx%spice%dafah)) open = ctx%spice%dafah%find(ctx%dafana%stfh(p)) > 0
+         open = ctx%spice%dafah%find(ctx%dafana%stfh(p)) > 0
          if (.not. open .or. .not. ctx%dafana%staddg(p)) return
          p = ctx%dafana%stpool(p)
       end do

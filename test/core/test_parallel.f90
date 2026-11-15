@@ -9,7 +9,9 @@
 !> with a second instance that has the SPK in memory (FURNSH's in_memory:
 !> the threads read one shared copy; a copy of the file, since a file can be
 !> loaded by one instance at a time). Every result must be identical
-!> (bitwise) to the serial one.
+!> (bitwise) to the serial one. Last, threads query an instance that has
+!> loaded nothing (built-in frames and body names): its first use is by
+!> the threads, at once.
 !>
 !> The library has no OpenMP; only this test uses it (`pixi run
 !> test-parallel` builds with -fopenmp). Built without OpenMP, the "parallel"
@@ -33,6 +35,9 @@ program test_parallel
    integer, parameter :: nthreads = 4
    type(pepper_instance), target :: spice
    type(pepper_instance), target :: memspice  !! the same kernels, the SPK in memory
+   type(pepper_instance), target :: empty  !! no kernels: first used by the threads
+   type(pepper_instance), target :: empty_ref  !! no kernels: the serial reference
+   real(wp) :: eref(10)
    type(pepper_context), pointer :: setup  !! the instance's context (it loads the kernels)
    type(pepper_context) :: serial
    ! allocatable: fixed-size arrays this large (2 MB) are on the stack with
@@ -99,6 +104,18 @@ program test_parallel
       call check(nbad == 0, 'parallel results identical to the serial ones')
    end do
 
+   ! an instance that has loaded nothing, first used by all the threads at
+   ! once (no context may create a part of the instance)
+   serial = empty_ref%new_context()
+   call builtin_queries(serial, eref)
+   call check(.not. serial%failed(), 'built-in queries without kernels')
+   errors = 0
+   !$omp parallel num_threads(nthreads) reduction(+:errors)
+   call thread_builtin_queries(errors)
+   !$omp end parallel
+   call check(errors == 0, 'parallel built-in queries without kernels identical to the serial ones')
+   serial = spice%new_context()
+
    call spice%kclear()
    call memspice%kclear()
    call serial%close_unloaded_files()  ! (Windows cannot delete an open file)
@@ -143,6 +160,38 @@ contains
          !$omp end critical (report)
       end if
    end subroutine thread_queries
+
+   !> One thread's built-in queries (no kernels): a context of its own of
+   !> the instance that has loaded nothing.
+   subroutine thread_builtin_queries(errors)
+      integer, intent(inout) :: errors  !! incremented if a result differs or the context failed
+      type(pepper_context) :: ctx
+      real(wp) :: res(10)
+      integer :: k
+      ctx = empty%new_context()
+      do k = 1, 50
+         call builtin_queries(ctx, res)
+         if (ctx%failed() .or. any(res /= eref)) then
+            errors = errors + 1
+            exit
+         end if
+      end do
+      call ctx%destroy()
+   end subroutine thread_builtin_queries
+
+   !> Queries that need no kernel: a rotation between built-in inertial
+   !> frames, and a built-in body name.
+   subroutine builtin_queries(ctx, res)
+      type(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(out) :: res(10)  !! the rotation (9) and the body code
+      real(wp) :: rot(3, 3)
+      integer(ip) :: code
+      logical :: found
+      call ctx%pxform('J2000', 'ECLIPJ2000', 1.0e8_wp, rot)
+      res(1:9) = reshape(rot, [9])
+      call ctx%bodn2c('EARTH', code, found)
+      res(10) = merge(real(code, wp), -1.0_wp, found)
+   end subroutine builtin_queries
 
    !> The queries for one epoch, through one context: states and positions
    !> with aberration corrections, in J2000 and in the TK frame, rotations,

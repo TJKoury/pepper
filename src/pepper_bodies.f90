@@ -6027,7 +6027,6 @@ contains
 !
       if ( ctx%failed() ) return
       call ker%clear ( )
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       iname     = ctx%spice%pool%find ( nbn )
       plfind(1) = .false.
       if ( iname > 0 ) plfind(1) = ctx%spice%pool%vars(iname)%kind == pool_character

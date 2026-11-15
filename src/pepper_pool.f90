@@ -2557,10 +2557,7 @@ contains
       integer(ip) :: iostat
       integer(ip) :: i
       logical :: same
-      if ( .not. allocated ( ctx%spice%rdtext ) ) then
-         allocate ( ctx%spice%rdtext )
-         ctx%spice%rdtext%lstfil = ' '
-      end if
+      if ( .not. allocated ( ctx%spice%rdtext%lstfil ) ) ctx%spice%rdtext%lstfil = ' '
       associate ( units => ctx%spice%rdtext%units, &
                   n => ctx%spice%rdtext%n, &
                   lstunt => ctx%spice%rdtext%lstunt, &
@@ -2943,10 +2940,7 @@ contains
       integer(ip) :: iostat
       integer(ip) :: i
       logical :: same
-      if ( .not. allocated ( ctx%spice%rdtext ) ) then
-         allocate ( ctx%spice%rdtext )
-         ctx%spice%rdtext%lstfil = ' '
-      end if
+      if ( .not. allocated ( ctx%spice%rdtext%lstfil ) ) ctx%spice%rdtext%lstfil = ' '
       associate ( units => ctx%spice%rdtext%units, &
                   n => ctx%spice%rdtext%n, &
                   lstunt => ctx%spice%rdtext%lstunt, &
@@ -3144,10 +3138,7 @@ contains
       integer(ip) :: i
       integer(ip) :: r
       logical :: end
-      if ( .not. allocated ( ctx%spice%rdker ) ) then
-         allocate ( ctx%spice%rdker )
-         ctx%spice%rdker%file = ' '
-      end if
+      if ( .not. allocated ( ctx%spice%rdker%file ) ) ctx%spice%rdker%file = ' '
       associate ( linnum => ctx%spice%rdker%linnum, &
                   status => ctx%spice%rdker%status, &
                   frstim => ctx%spice%rdker%frstim, &
@@ -3395,10 +3386,7 @@ contains
       integer(ip) :: i
       integer(ip) :: r
       logical :: end
-      if ( .not. allocated ( ctx%spice%rdker ) ) then
-         allocate ( ctx%spice%rdker )
-         ctx%spice%rdker%file = ' '
-      end if
+      if ( .not. allocated ( ctx%spice%rdker%file ) ) ctx%spice%rdker%file = ' '
       associate ( linnum => ctx%spice%rdker%linnum, &
                   status => ctx%spice%rdker%status, &
                   begdat => ctx%spice%rdker%begdat, &
@@ -3567,10 +3555,7 @@ contains
       integer(ip) :: i
       integer(ip) :: r
       logical :: end
-      if ( .not. allocated ( ctx%spice%rdker ) ) then
-         allocate ( ctx%spice%rdker )
-         ctx%spice%rdker%file = ' '
-      end if
+      if ( .not. allocated ( ctx%spice%rdker%file ) ) ctx%spice%rdker%file = ' '
       associate ( linnum => ctx%spice%rdker%linnum )
       kernel = ctx%spice%rdker%file
       number = linnum
@@ -4130,7 +4115,6 @@ contains
       integer(ip) :: year
       logical :: modtru
       divble(year,i) = max ( 0, 1 + ((iabs(year)/i)*i) - iabs(year) )
-      if ( .not. allocated ( ctx%spice%tcheck ) ) allocate ( ctx%spice%tcheck )
       associate ( dochck => ctx%spice%tcheck%dochck )
       if ( .not. dochck ) then
          ok    = .true.
@@ -4657,7 +4641,6 @@ contains
       integer(ip) :: year
       logical :: modtru
       divble(year,i) = max ( 0, 1 + ((iabs(year)/i)*i) - iabs(year) )
-      if ( .not. allocated ( ctx%spice%tcheck ) ) allocate ( ctx%spice%tcheck )
       associate ( dochck => ctx%spice%tcheck%dochck )
       dochck = eqstr( type, 'YES' )
 
@@ -4775,7 +4758,6 @@ contains
       integer(ip) :: year
       logical :: modtru
       divble(year,i) = max ( 0, 1 + ((iabs(year)/i)*i) - iabs(year) )
-      if ( .not. allocated ( ctx%spice%tcheck ) ) allocate ( ctx%spice%tcheck )
       associate ( dochck => ctx%spice%tcheck%dochck )
       if ( dochck ) then
          type = 'YES'
@@ -4988,7 +4970,6 @@ contains
       module procedure texpyr
       use pepper_kinds, only: ip
       implicit none
-      if ( .not. allocated ( ctx%spice%texpyr ) ) allocate ( ctx%spice%texpyr )
       associate ( centry => ctx%spice%texpyr%centry, &
                   lbound => ctx%spice%texpyr%lbound )
       if ( year >= 100 .or. year < 0 ) return
@@ -5170,7 +5151,6 @@ contains
       module procedure tsetyr
       use pepper_kinds, only: ip
       implicit none
-      if ( .not. allocated ( ctx%spice%texpyr ) ) allocate ( ctx%spice%texpyr )
       associate ( centry => ctx%spice%texpyr%centry, &
                   lbound => ctx%spice%texpyr%lbound )
       if ( year > 0 ) then
@@ -11190,9 +11170,7 @@ contains
          integer(ip), intent(out) :: line  !! the line's number
          integer(ip) :: n
          n = 1
-         if ( allocated ( ctx%spice%rdker ) ) then
-            if ( allocated ( ctx%spice%rdker%file ) ) n = max ( 1, len ( ctx%spice%rdker%file ) )
-         end if
+         if ( allocated ( ctx%spice%rdker%file ) ) n = max ( 1, len ( ctx%spice%rdker%file ) )
          allocate ( character(n) :: kernel )
          call rdklin ( ctx, kernel, line )
       end subroutine kernel_location
@@ -12410,7 +12388,6 @@ contains
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
 !
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
@@ -12791,7 +12768,6 @@ contains
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
 !
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
@@ -12998,7 +12974,6 @@ contains
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
 !
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
@@ -13289,7 +13264,6 @@ contains
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
 !
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
@@ -13578,7 +13552,6 @@ contains
 !     longer than 132 characters (a long name or string value) cannot be
 !     read back whole: text kernel lines are limited to 132 characters.
 !
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
       write ( unit, '(1X,A)', iostat=iostat ) ps%begdat
@@ -14420,7 +14393,6 @@ contains
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
 !
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
@@ -14462,7 +14434,6 @@ contains
       value = ''
       found = .false.
       if ( present ( n ) ) n = 0
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
@@ -14486,7 +14457,6 @@ contains
       integer(ip) :: k
       integer(ip) :: n
       allocate ( names(0) )
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
@@ -14509,7 +14479,6 @@ contains
       implicit none
       integer(ip) :: i
       found = .false.
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) then
          allocate ( values(0) )
@@ -14537,7 +14506,6 @@ contains
       integer(ip) :: i
       integer(ip) :: k
       found = .false.
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) then
          allocate ( values(0) )
@@ -14583,7 +14551,6 @@ contains
       integer(ip) :: i
       integer(ip) :: k
       found = .false.
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) then
          allocate ( values(0) )
@@ -14797,7 +14764,6 @@ contains
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
 !
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
@@ -15029,7 +14995,6 @@ contains
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
 !
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
@@ -15280,7 +15245,6 @@ contains
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
 !
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
@@ -15521,7 +15485,6 @@ contains
 !
       if ( n <= 0 ) return
       if ( ctx%failed() ) return
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ps%first ) call zzpini ( ctx, ps )
       call zzctrinc ( ctx, ps%subctr )
@@ -15753,7 +15716,6 @@ contains
 !
       if ( n <= 0 ) return
       if ( ctx%failed() ) return
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ps%first ) call zzpini ( ctx, ps )
       call zzctrinc ( ctx, ps%subctr )
@@ -15985,7 +15947,6 @@ contains
 !
       if ( n <= 0 ) return
       if ( ctx%failed() ) return
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ps%first ) call zzpini ( ctx, ps )
       call zzctrinc ( ctx, ps%subctr )
@@ -16151,7 +16112,6 @@ contains
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
 !
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
@@ -16439,7 +16399,6 @@ contains
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
 !
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
@@ -16657,7 +16616,6 @@ contains
 !     in which they were created; SPICELIB's was the order of its hash
 !     table).
 !
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       associate ( ps => ctx%spice%pool )
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
@@ -16928,7 +16886,6 @@ contains
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
-      if ( .not. allocated ( ctx%spice%pool ) ) allocate ( ctx%spice%pool )
       if ( ctx%failed() ) return
       call zzctrchk ( ctx, ctx%spice%pool%subctr, usrctr, update )
       end procedure zzpctrck

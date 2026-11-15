@@ -4299,7 +4299,6 @@ contains
       integer(ip) :: prvtyp
       integer(ip) :: type
       logical :: found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
@@ -4921,7 +4920,6 @@ contains
       integer(ip) :: prvtyp
       integer(ip) :: type
       logical :: found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
@@ -5464,7 +5462,6 @@ contains
       integer(ip) :: prvtyp
       integer(ip) :: type
       logical :: found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
@@ -5957,7 +5954,6 @@ contains
       integer(ip) :: prvtyp
       integer(ip) :: type
       logical :: found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
@@ -6386,7 +6382,6 @@ contains
       integer(ip) :: prvtyp
       integer(ip) :: type
       logical :: found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
@@ -6941,7 +6936,6 @@ contains
       integer(ip) :: prvtyp
       integer(ip) :: type
       logical :: found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
@@ -7448,7 +7442,6 @@ contains
       integer(ip) :: prvtyp
       integer(ip) :: type
       logical :: found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
@@ -7751,7 +7744,6 @@ contains
       integer(ip) :: prvtyp
       integer(ip) :: type
       logical :: found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
@@ -8055,7 +8047,6 @@ contains
       integer(ip) :: prvtyp
       integer(ip) :: type
       logical :: found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
@@ -8244,7 +8235,6 @@ contains
       integer(ip) :: prvtyp
       integer(ip) :: type
       logical :: found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
@@ -8482,7 +8472,6 @@ contains
       integer(ip) :: prvtyp
       integer(ip) :: type
       logical :: found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
@@ -8672,7 +8661,6 @@ contains
       integer(ip) :: prvtyp
       integer(ip) :: type
       logical :: found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
@@ -8844,7 +8832,6 @@ contains
       integer(ip) :: prvtyp
       integer(ip) :: type
       logical :: found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
@@ -9080,7 +9067,6 @@ contains
       integer(ip) :: prvtyp
       integer(ip) :: type
       logical :: found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
@@ -9319,7 +9305,6 @@ contains
       integer(ip) :: prvtyp
       integer(ip) :: type
       logical :: found
-      if ( .not. allocated ( ctx%spice%dasfm ) ) allocate ( ctx%spice%dasfm )
       associate ( ft => ctx%spice%dasfm )
       if ( ctx%failed() ) return
 
@@ -21430,7 +21415,6 @@ contains
 !     PEPPER: look the handle up in the DAS file table (SPICELIB copied
 !     the set of all open handles, DASHOF, on each call).
 !
-      if ( .not. allocated ( ctx%spice%dasfm ) ) return
       if ( ctx%spice%dasfm%find ( handle ) == 0 ) return
 
 !

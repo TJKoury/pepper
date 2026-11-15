@@ -28269,8 +28269,15 @@ contains
       logical :: nulsok
       integer(ip) :: nseg
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
+!
+!        PEPPER: the instance's EK tables are created here (and in
+!        EKUEF), complete, by the loading thread: the queries never
+!        create or initialize them.
+!
          allocate ( ctx%spice%ekqmgr )
          call init_ekqmgr_state ( ctx%spice%ekqmgr )
+         call ekqmgr_lnkini ( ctx )
+         ctx%spice%ekqmgr%first = .false.
       end if
       if ( .not. allocated ( ctx%ekqmgr_query ) ) then
          allocate ( ctx%ekqmgr_query )
@@ -29494,8 +29501,15 @@ contains
       integer(ip) :: k
       integer(ip) :: next
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
+!
+!        PEPPER: the instance's EK tables are created here (and in
+!        EKUEF), complete, by the loading thread: the queries never
+!        create or initialize them.
+!
          allocate ( ctx%spice%ekqmgr )
          call init_ekqmgr_state ( ctx%spice%ekqmgr )
+         call ekqmgr_lnkini ( ctx )
+         ctx%spice%ekqmgr%first = .false.
       end if
       if ( .not. allocated ( ctx%ekqmgr_query ) ) then
          allocate ( ctx%ekqmgr_query )
@@ -29908,8 +29922,11 @@ contains
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
-         allocate ( ctx%spice%ekqmgr )
-         call init_ekqmgr_state ( ctx%spice%ekqmgr )
+      !        PEPPER: no E-kernel has been loaded (EKLEF creates the
+      !        instance's EK tables; a query never changes them).
+         if ( ctx%failed() ) return
+         n = 0
+         return
       end if
       associate ( ftpool => ctx%spice%ekqmgr%ftpool, &
                   fthead => ctx%spice%ekqmgr%fthead, &
@@ -29919,19 +29936,7 @@ contains
                   dtpool => ctx%spice%ekqmgr%dtpool, &
                   ctpool => ctx%spice%ekqmgr%ctpool, &
                   first => ctx%spice%ekqmgr%first )
-      if ( first ) then
-!
-!        Initialize the file table pool, segment table pool, column
-!        descriptor pool, column table pool, and table list pool.
-!
-         call ekqmgr_lnkini ( ctx )
-
-         fthead = 0
-         tbhead = 0
-
-         first  = .false.
-
-      end if
+      ! PEPPER: the tables are initialized by EKLEF (a query never changes them).
 !
 !     Return the number of loaded tables.
 !
@@ -30138,8 +30143,12 @@ contains
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: i
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
-         allocate ( ctx%spice%ekqmgr )
-         call init_ekqmgr_state ( ctx%spice%ekqmgr )
+      !        PEPPER: no E-kernel has been loaded (EKLEF creates the
+      !        instance's EK tables; a query never changes them).
+         if ( ctx%failed() ) return
+         call ctx%setmsg ( 'No E-kernels are currently loaded.' )
+         call ctx%sigerr ( 'SPICE(NOLOADEDFILES)' )
+         return
       end if
       if ( .not. allocated ( ctx%ekqmgr_query ) ) then
          allocate ( ctx%ekqmgr_query )
@@ -30158,19 +30167,7 @@ contains
                   fnd => ctx%ekqmgr_query%fnd )
       if ( ctx%failed() ) return
 
-      if ( first ) then
-!
-!        Initialize the file table pool, segment table pool, column
-!        descriptor pool, column table pool, and table list pool.
-!
-         call ekqmgr_lnkini ( ctx )
-
-         fthead = 0
-         tbhead = 0
-
-         first  = .false.
-
-      end if
+      ! PEPPER: the tables are initialized by EKLEF (a query never changes them).
 
 !
 !     There nothing to fetch if no files are loaded.  A sure
@@ -30547,8 +30544,13 @@ contains
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: col
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
-         allocate ( ctx%spice%ekqmgr )
-         call init_ekqmgr_state ( ctx%spice%ekqmgr )
+      !        PEPPER: no E-kernel has been loaded (EKLEF creates the
+      !        instance's EK tables; a query never changes them).
+         if ( ctx%failed() ) return
+         call ctx%setmsg ( 'The table # is not currently loaded.' )
+         call ctx%errch  ( '#', table )
+         call ctx%sigerr ( 'SPICE(TABLENOTLOADED)' )
+         return
       end if
       if ( .not. allocated ( ctx%ekqmgr_query ) ) then
          allocate ( ctx%ekqmgr_query )
@@ -30568,23 +30570,7 @@ contains
                   fnd => ctx%ekqmgr_query%fnd )
       if ( ctx%failed() ) return
 
-!
-!     On the first pass through this routine, initialize the tables,
-!     if it hasn't been done yet.
-!
-      if ( first ) then
-!
-!        Initialize the file table pool, segment table pool, column
-!        descriptor pool, column table pool, and table list pool.
-!
-         call ekqmgr_lnkini ( ctx )
-
-         fthead = 0
-         tbhead = 0
-
-         first  = .false.
-
-      end if
+      ! PEPPER: the tables are initialized by EKLEF (a query never changes them).
 
 !
 !     Find the table.  If there's no match, the number of loaded columns
@@ -30995,8 +30981,13 @@ contains
       integer(ip) :: col
       integer(ip) :: i
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
-         allocate ( ctx%spice%ekqmgr )
-         call init_ekqmgr_state ( ctx%spice%ekqmgr )
+      !        PEPPER: no E-kernel has been loaded (EKLEF creates the
+      !        instance's EK tables; a query never changes them).
+         if ( ctx%failed() ) return
+         call ctx%setmsg ( 'The table # is not currently loaded.' )
+         call ctx%errch  ( '#', table )
+         call ctx%sigerr ( 'SPICE(TABLENOTLOADED)' )
+         return
       end if
       if ( .not. allocated ( ctx%ekqmgr_query ) ) then
          allocate ( ctx%ekqmgr_query )
@@ -31024,23 +31015,7 @@ contains
                   fnd => ctx%ekqmgr_query%fnd )
       if ( ctx%failed() ) return
 
-!
-!     On the first pass through this routine, initialize the tables,
-!     if it hasn't been done yet.
-!
-      if ( first ) then
-!
-!        Initialize the file table pool, segment table pool, column
-!        descriptor pool, column table pool, and table list pool.
-!
-         call ekqmgr_lnkini ( ctx )
-
-         fthead = 0
-         tbhead = 0
-
-         first  = .false.
-
-      end if
+      ! PEPPER: the tables are initialized by EKLEF (a query never changes them).
 
 !
 !     Find the table.  If there's no match, the number of loaded columns
@@ -31297,8 +31272,12 @@ contains
       integer(ip) :: keydsc ( cdscsz )
       integer(ip) :: ncns, ncnj
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
-         allocate ( ctx%spice%ekqmgr )
-         call init_ekqmgr_state ( ctx%spice%ekqmgr )
+      !        PEPPER: no E-kernel has been loaded (EKLEF creates the
+      !        instance's EK tables; a query never changes them).
+         if ( ctx%failed() ) return
+         call ctx%setmsg ( 'No E-kernels are currently loaded.' )
+         call ctx%sigerr ( 'SPICE(NOLOADEDFILES)' )
+         return
       end if
       if ( .not. allocated ( ctx%ekqmgr_query ) ) then
          allocate ( ctx%ekqmgr_query )
@@ -31390,19 +31369,7 @@ contains
       errmsg  =   ' '
       nmrows  =   0
 
-      if ( first ) then
-!
-!        Initialize the file table pool, segment table pool, column
-!        descriptor pool, column table pool, and table list pool.
-!
-         call ekqmgr_lnkini ( ctx )
-
-         fthead = 0
-         tbhead = 0
-
-         first  = .false.
-
-      end if
+      ! PEPPER: the tables are initialized by EKLEF (a query never changes them).
 
 !
 !     Read some of our favorite things from the query.  We need:
@@ -32571,8 +32538,12 @@ contains
       integer(ip), allocatable :: segvec ( : )
       integer(ip) :: rowidx
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
-         allocate ( ctx%spice%ekqmgr )
-         call init_ekqmgr_state ( ctx%spice%ekqmgr )
+      !        PEPPER: no E-kernel has been loaded (EKLEF creates the
+      !        instance's EK tables; a query never changes them).
+         if ( ctx%failed() ) return
+         call ctx%setmsg ( 'No E-kernels are currently loaded.' )
+         call ctx%sigerr ( 'SPICE(NOLOADEDFILES)' )
+         return
       end if
       if ( .not. allocated ( ctx%ekqmgr_query ) ) then
          allocate ( ctx%ekqmgr_query )
@@ -33324,8 +33295,12 @@ contains
       integer(ip), allocatable :: segvec ( : )
       integer(ip) :: rowidx
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
-         allocate ( ctx%spice%ekqmgr )
-         call init_ekqmgr_state ( ctx%spice%ekqmgr )
+      !        PEPPER: no E-kernel has been loaded (EKLEF creates the
+      !        instance's EK tables; a query never changes them).
+         if ( ctx%failed() ) return
+         call ctx%setmsg ( 'No E-kernels are currently loaded.' )
+         call ctx%sigerr ( 'SPICE(NOLOADEDFILES)' )
+         return
       end if
       if ( .not. allocated ( ctx%ekqmgr_query ) ) then
          allocate ( ctx%ekqmgr_query )
@@ -34287,8 +34262,12 @@ contains
       integer(ip), allocatable :: segvec ( : )
       integer(ip) :: rowidx
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
-         allocate ( ctx%spice%ekqmgr )
-         call init_ekqmgr_state ( ctx%spice%ekqmgr )
+      !        PEPPER: no E-kernel has been loaded (EKLEF creates the
+      !        instance's EK tables; a query never changes them).
+         if ( ctx%failed() ) return
+         call ctx%setmsg ( 'No E-kernels are currently loaded.' )
+         call ctx%sigerr ( 'SPICE(NOLOADEDFILES)' )
+         return
       end if
       if ( .not. allocated ( ctx%ekqmgr_query ) ) then
          allocate ( ctx%ekqmgr_query )
@@ -35079,8 +35058,12 @@ contains
       integer(ip), allocatable :: segvec ( : )
       integer(ip) :: rowidx
       if ( .not. allocated ( ctx%spice%ekqmgr ) ) then
-         allocate ( ctx%spice%ekqmgr )
-         call init_ekqmgr_state ( ctx%spice%ekqmgr )
+      !        PEPPER: no E-kernel has been loaded (EKLEF creates the
+      !        instance's EK tables; a query never changes them).
+         if ( ctx%failed() ) return
+         call ctx%setmsg ( 'No E-kernels are currently loaded.' )
+         call ctx%sigerr ( 'SPICE(NOLOADEDFILES)' )
+         return
       end if
       if ( .not. allocated ( ctx%ekqmgr_query ) ) then
          allocate ( ctx%ekqmgr_query )

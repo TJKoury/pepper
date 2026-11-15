@@ -131,42 +131,43 @@ module pepper_instance_module
       integer :: last_unit = 1  !! the unit FNDLUN gave last
       integer(ip) :: hash_divisor = -1  !! divisor of ZZHASH (set by ZZSHSH; -1: not set)
       type(string_map) :: closed_files  !! names of the files closed so far (the values are unused)
-      ! The state of the subsystems (allocated by the instance's own context,
-      ! [[allocate_states]], before the contexts query).
+      ! The state of the subsystems: always present, so that a context
+      ! never creates any part of the instance (a query only reads it). The
+      ! EK query manager's tables are the exception: EKLEF creates them.
       ! >>> generated state components (tools/modularize_ctx.py)
       ! --- pepper_pool
-      type(rdtext_state), allocatable :: rdtext  !! state of [[rdtext]]
-      type(rdker_state), allocatable :: rdker  !! state of RDKER
-      type(tcheck_state), allocatable :: tcheck  !! state of [[tcheck]]
-      type(texpyr_state), allocatable :: texpyr  !! state of [[texpyr]]
-      type(pool_state), allocatable :: pool  !! state of POOL
+      type(rdtext_state) :: rdtext  !! state of [[rdtext]]
+      type(rdker_state) :: rdker  !! state of RDKER
+      type(tcheck_state) :: tcheck  !! state of [[tcheck]]
+      type(texpyr_state) :: texpyr  !! state of [[texpyr]]
+      type(pool_state) :: pool  !! state of POOL
       ! --- end pepper_pool
       ! --- pepper_files
-      type(zzddhman_state), allocatable :: zzddhman  !! state of ZZDDHMAN
+      type(zzddhman_state) :: zzddhman  !! state of ZZDDHMAN
       ! --- end pepper_files
       ! --- pepper_daf
-      type(dafah_state), allocatable :: dafah  !! state of DAFAH
+      type(dafah_state) :: dafah  !! state of DAFAH
       ! --- end pepper_daf
       ! --- pepper_das
-      type(dasfm_state), allocatable :: dasfm  !! state of DASFM
+      type(dasfm_state) :: dasfm  !! state of DASFM
       ! --- end pepper_das
       ! --- pepper_dsk_files
-      type(dsktol_state), allocatable :: dsktol  !! state of DSKTOL
+      type(dsktol_state) :: dsktol  !! state of DSKTOL
       ! --- end pepper_dsk_files
       ! --- pepper_segments
-      type(spkbsr_state), allocatable :: spkbsr  !! state of SPKBSR
-      type(pckbsr_state), allocatable :: pckbsr  !! state of PCKBSR
-      type(ckbsr_state), allocatable :: ckbsr  !! state of CKBSR
-      type(zzdskbsr_state), allocatable :: zzdskbsr  !! state of ZZDSKBSR
+      type(spkbsr_state) :: spkbsr  !! state of SPKBSR
+      type(pckbsr_state) :: pckbsr  !! state of PCKBSR
+      type(ckbsr_state) :: ckbsr  !! state of CKBSR
+      type(zzdskbsr_state) :: zzdskbsr  !! state of ZZDSKBSR
       ! --- end pepper_segments
       ! --- pepper_keeper
-      type(keeper_state), allocatable :: keeper  !! state of KEEPER
+      type(keeper_state) :: keeper  !! state of KEEPER
       ! --- end pepper_keeper
       ! --- pepper_time
-      type(timdef_state), allocatable :: timdef_state  !! state of [[timdef]]
+      type(timdef_state) :: timdef_state  !! state of [[timdef]]
       ! --- end pepper_time
       ! --- pepper_rotations
-      type(chgirf_state), allocatable :: chgirf_state  !! state of CHGIRF
+      type(chgirf_state) :: chgirf_state  !! state of CHGIRF
       ! --- end pepper_rotations
       ! --- pepper_ek
       type(ekqmgr_state), allocatable :: ekqmgr  !! state of EKQMGR
@@ -20903,7 +20904,6 @@ contains
       class(pepper_instance), intent(in) :: this  !! the instance
       integer(ip) :: k
       bytes = 0
-      if (.not. allocated(this%zzddhman)) return
       do k = 1, this%zzddhman%nft
          if (allocated(this%zzddhman%files(k)%image)) &
             bytes = bytes + storage_size(this%zzddhman%files(k)%image, int64)/8* &
@@ -20932,63 +20932,8 @@ contains
       type(pepper_context), pointer :: ctx  !! the instance's context
       if (.not. allocated(this%own)) allocate (this%own)
       this%own%spice => this
-      call allocate_states(this)
       ctx => this%own
    end function instance_context
-
-   !> Allocate the states of the instance's subsystems that are not yet
-   !> allocated, with their initial values.
-   !>
-   !> The instance's own context ([[instance_context]]) does this, so every
-   !> method that changes the kernels does it, in the loading thread, before
-   !> the contexts query. A context's routines would otherwise allocate a
-   !> state the first time they need it, and two threads that do so at once
-   !> allocate it twice (with ifx: "allocatable array is already allocated").
-   !> The routines' own allocations remain, for an instance used before any
-   !> kernel is loaded.
-   subroutine allocate_states(spice)
-      use pepper_inc_dla, only: dladsz
-      use pepper_inc_dskdsc, only: dskdsz
-      type(pepper_instance), intent(inout) :: spice  !! the instance
-      if (.not. allocated(spice%rdtext)) then
-         allocate (spice%rdtext)
-         spice%rdtext%lstfil = ' '
-      end if
-      if (.not. allocated(spice%rdker)) then
-         allocate (spice%rdker)
-         spice%rdker%file = ' '
-      end if
-      if (.not. allocated(spice%tcheck)) allocate (spice%tcheck)
-      if (.not. allocated(spice%texpyr)) allocate (spice%texpyr)
-      if (.not. allocated(spice%pool)) allocate (spice%pool)
-      if (.not. allocated(spice%zzddhman)) allocate (spice%zzddhman)
-      if (.not. allocated(spice%dafah)) allocate (spice%dafah)
-      if (.not. allocated(spice%dasfm)) allocate (spice%dasfm)
-      if (.not. allocated(spice%dsktol)) allocate (spice%dsktol)
-      if (.not. allocated(spice%spkbsr)) then
-         allocate (spice%spkbsr)
-         call spice%spkbsr%index%init(5_ip, 6_ip)
-      end if
-      if (.not. allocated(spice%pckbsr)) then
-         allocate (spice%pckbsr)
-         call spice%pckbsr%index%init(5_ip, 5_ip)
-      end if
-      if (.not. allocated(spice%ckbsr)) then
-         allocate (spice%ckbsr)
-         call spice%ckbsr%index%init(5_ip, 6_ip)
-      end if
-      if (.not. allocated(spice%zzdskbsr)) then
-         allocate (spice%zzdskbsr)
-         call spice%zzdskbsr%index%init(dskdsz, dladsz)
-      end if
-      if (.not. allocated(spice%keeper)) allocate (spice%keeper)
-      if (.not. allocated(spice%timdef_state)) allocate (spice%timdef_state)
-      if (.not. allocated(spice%chgirf_state)) allocate (spice%chgirf_state)
-      if (.not. allocated(spice%ekqmgr)) then
-         allocate (spice%ekqmgr)
-         call init_ekqmgr_state(spice%ekqmgr)
-      end if
-   end subroutine allocate_states
 
    !> True if an error has been signaled in the instance's context (by a
    !> change of the kernels) and not reset.
@@ -21508,7 +21453,6 @@ contains
       integer(ip), intent(in) :: handle  !! the handle
       integer(ip) :: i
       n = 1
-      if (.not. allocated(spice%zzddhman)) return
       i = spice%zzddhman%find(handle)
       if (i > 0) n = len(spice%zzddhman%files(i)%name)
    end function file_name_length
@@ -21521,7 +21465,6 @@ contains
       character(file_name_length(spice, handle)) :: name  !! the file name
       integer(ip) :: i
       name = ' '
-      if (.not. allocated(spice%zzddhman)) return
       i = spice%zzddhman%find(handle)
       if (i > 0) name = spice%zzddhman%files(i)%name
    end function file_name
@@ -21537,7 +21480,7 @@ contains
       if (.not. this%messages_allowed) return
       ! the name, whole, from the handle manager's file table
       i = 0
-      if (allocated(this%spice%zzddhman)) i = this%spice%zzddhman%find(handle)
+      i = this%spice%zzddhman%find(handle)
       if (i > 0) then
          call this%errch(marker, file_name(this%spice, handle))
       else
@@ -21583,7 +21526,7 @@ contains
       ! when needed), so that no I/O buffer of the runtime library holds old
       ! data: all except locked units and scratch files (which would be
       ! deleted). (A context that wrote is current, so its units stay open.)
-      if (allocated(ctx%zzddhman_units) .and. allocated(ctx%spice%zzddhman)) then
+      if (allocated(ctx%zzddhman_units)) then
          block
             integer(ip) :: k, f
             integer :: ios
@@ -21611,7 +21554,6 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: handle  !! the handle of the DAF
       k = 0
-      if (.not. allocated(ctx%spice%zzddhman)) return
       associate (ft => ctx%spice%zzddhman)
          if (handle /= ctx%img_handle .or. ctx%img_changes /= ft%changes) then
             ctx%img_handle = handle
@@ -21647,7 +21589,6 @@ contains
       real(wp), allocatable :: image(:)
       character(recl) :: chrbuf
       if (ctx%failed()) return
-      if (.not. allocated(ctx%spice%zzddhman)) return
       k = ctx%spice%zzddhman%find(handle)
       if (k == 0) return
       if (allocated(ctx%spice%zzddhman%files(k)%image)) return
@@ -21903,9 +21844,7 @@ contains
       associate (u => ctx%zzddhman_units)
          do k = 1, u%nut
             if (u%uthan(k) == 0) cycle
-            if (allocated(ctx%spice%zzddhman)) then
-               if (ctx%spice%zzddhman%find(u%uthan(k)) > 0) cycle
-            end if
+            if (ctx%spice%zzddhman%find(u%uthan(k)) > 0) cycle
             close (unit=u%utlun(k), iostat=ios)
             u%uthan(k) = 0
             u%utcst(k) = 0

@@ -79,10 +79,7 @@ contains
 !     The virtual file: one segment, of type 100, in the SPK segment index
 !     (as SPKLEF indexes a file's segments).
 !
-      if ( .not. allocated ( this%spkbsr ) ) then
-         allocate ( this%spkbsr )
-         call this%spkbsr%index%init ( 5_ip, 6_ip )
-      end if
+      if ( this%spkbsr%index%ndescr == 0 ) call this%spkbsr%index%init ( 5_ip, 6_ip )
       handle = this%next_virtual_handle
       this%next_virtual_handle = this%next_virtual_handle - 1
       ic = [ body, center, frcode, virtual_type, 0_ip, 0_ip ]
@@ -132,7 +129,7 @@ contains
       do i = 1, sp%nprovided_spk
          if ( sp%provided_spk(i)%body == body ) then
             sp%segment_epoch = sp%segment_epoch + 1
-            if ( allocated ( sp%spkbsr ) ) call sp%spkbsr%index%remove_file ( sp%provided_spk(i)%handle )
+            if ( sp%spkbsr%index%ndescr > 0 ) call sp%spkbsr%index%remove_file ( sp%provided_spk(i)%handle )
             do j = i, sp%nprovided_spk - 1
                sp%provided_spk(j)%body   = sp%provided_spk(j+1)%body
                sp%provided_spk(j)%center = sp%provided_spk(j+1)%center
@@ -159,7 +156,7 @@ contains
       if ( sp%nprovided_spk == 0 ) return
       sp%segment_epoch = sp%segment_epoch + 1
       do i = 1, sp%nprovided_spk
-         if ( allocated ( sp%spkbsr ) ) call sp%spkbsr%index%remove_file ( sp%provided_spk(i)%handle )
+         if ( sp%spkbsr%index%ndescr > 0 ) call sp%spkbsr%index%remove_file ( sp%provided_spk(i)%handle )
       end do
       deallocate ( sp%provided_spk )
       sp%nprovided_spk = 0

@@ -4396,7 +4396,6 @@ contains
       integer(ip) :: j
       integer(ip) :: loc
       integer(ip) :: p
-      if ( .not. allocated ( ctx%spice%chgirf_state ) ) allocate ( ctx%spice%chgirf_state )
       associate ( dframe => ctx%spice%chgirf_state%dframe )
       if ( ctx%failed() ) return
 
@@ -4905,7 +4904,6 @@ contains
       integer(ip) :: j
       integer(ip) :: loc
       integer(ip) :: p
-      if ( .not. allocated ( ctx%spice%chgirf_state ) ) allocate ( ctx%spice%chgirf_state )
       associate ( dframe => ctx%spice%chgirf_state%dframe )
       if ( ctx%failed() ) return
 

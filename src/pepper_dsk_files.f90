@@ -1375,10 +1375,8 @@ contains
 !
       kept = .false.
       if ( .not. opened ) then
-         if ( allocated ( ctx%spice%zzddhman ) ) then
-            if ( ctx%spice%zzddhman%kept_f2h ( file ) ) then
-               kept = ctx%spice%zzddhman%f2h_word_ok
-            end if
+         if ( ctx%spice%zzddhman%kept_f2h ( file ) ) then
+            kept = ctx%spice%zzddhman%f2h_word_ok
          end if
       end if
 
@@ -9532,7 +9530,6 @@ contains
          [ character(namlen) :: 'XFRACT', 'SGREED', 'SGPADM', 'PTMEMM', 'ANGMRG', 'LONALI' ]
       logical, parameter :: isfixd ( ndspar ) = &
          [ .false., .false., .false., .false., .true., .true. ]
-      if ( .not. allocated ( ctx%spice%dsktol ) ) allocate ( ctx%spice%dsktol )
       associate ( dppars => ctx%spice%dsktol%dppars )
       if (  ( keywrd < 1 ) .or. ( keywrd > ndspar )  ) then
 
@@ -9694,7 +9691,6 @@ contains
          [ character(namlen) :: 'XFRACT', 'SGREED', 'SGPADM', 'PTMEMM', 'ANGMRG', 'LONALI' ]
       logical, parameter :: isfixd ( ndspar ) = &
          [ .false., .false., .false., .false., .true., .true. ]
-      if ( .not. allocated ( ctx%spice%dsktol ) ) allocate ( ctx%spice%dsktol )
       associate ( dppars => ctx%spice%dsktol%dppars )
       if ( ctx%failed() ) return
 

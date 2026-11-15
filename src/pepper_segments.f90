@@ -2642,10 +2642,8 @@ contains
 !     searched first, as in SPICELIB.
 !
       if ( ctx%failed() ) return
-      if ( .not. allocated ( ctx%spice%spkbsr ) ) then
-         allocate ( ctx%spice%spkbsr )
+      if ( ctx%spice%spkbsr%index%ndescr == 0 ) &
          call ctx%spice%spkbsr%index%init ( 5_ip, 6_ip )
-      end if
       call load_daf_file ( ctx, ctx%spice%spkbsr%index, fname, 2_ip, 6_ip, handle )
       return
       end procedure spklef
@@ -2830,7 +2828,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
       if ( ctx%failed() ) return
-      if ( .not. allocated ( ctx%spice%spkbsr ) ) return
+      if ( ctx%spice%spkbsr%index%ndescr == 0 ) return
       call unload_daf_file ( ctx, ctx%spice%spkbsr%index, handle )
       return
       end procedure spkuef
@@ -3083,13 +3081,11 @@ contains
       implicit none
       found = .false.
       if ( ctx%failed() ) return
-      if ( allocated ( ctx%spice%spkbsr ) ) then
-         if ( ctx%spice%spkbsr%index%nfiles > 0 ) then
-            if ( .not. allocated ( ctx%spkbsr_cache ) ) allocate ( ctx%spkbsr_cache )
-            call find_segment ( ctx, ctx%spice%spkbsr%index, ctx%spkbsr_cache%reuse, &
-                                body, et, handle, descr, ident, found )
-            return
-         end if
+      if ( ctx%spice%spkbsr%index%nfiles > 0 ) then
+         if ( .not. allocated ( ctx%spkbsr_cache ) ) allocate ( ctx%spkbsr_cache )
+         call find_segment ( ctx, ctx%spice%spkbsr%index, ctx%spkbsr_cache%reuse, &
+                             body, et, handle, descr, ident, found )
+         return
       end if
       call ctx%setmsg ( 'At least one SPK file needs to be loaded '   // &
                         'by SPKLEF before beginning a search.'        )
@@ -3215,10 +3211,8 @@ contains
 !     searched first, as in SPICELIB.
 !
       if ( ctx%failed() ) return
-      if ( .not. allocated ( ctx%spice%pckbsr ) ) then
-         allocate ( ctx%spice%pckbsr )
+      if ( ctx%spice%pckbsr%index%ndescr == 0 ) &
          call ctx%spice%pckbsr%index%init ( 5_ip, 5_ip )
-      end if
       call load_daf_file ( ctx, ctx%spice%pckbsr%index, fname, 2_ip, 5_ip, handle )
       return
       end procedure pcklof
@@ -3314,7 +3308,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
       if ( ctx%failed() ) return
-      if ( .not. allocated ( ctx%spice%pckbsr ) ) return
+      if ( ctx%spice%pckbsr%index%ndescr == 0 ) return
       call unload_daf_file ( ctx, ctx%spice%pckbsr%index, handle )
       return
       end procedure pckuof
@@ -3475,7 +3469,7 @@ contains
       implicit none
       found = .false.
       if ( ctx%failed() ) return
-      if ( .not. allocated ( ctx%spice%pckbsr ) ) return
+      if ( ctx%spice%pckbsr%index%ndescr == 0 ) return
       if ( ctx%spice%pckbsr%index%nfiles == 0 ) return
       if ( .not. allocated ( ctx%pckbsr_cache ) ) allocate ( ctx%pckbsr_cache )
       call find_segment ( ctx, ctx%spice%pckbsr%index, ctx%pckbsr_cache%reuse, &
@@ -3719,10 +3713,8 @@ contains
 !     again is searched first, as in SPICELIB.
 !
       if ( ctx%failed() ) return
-      if ( .not. allocated ( ctx%spice%ckbsr ) ) then
-         allocate ( ctx%spice%ckbsr )
+      if ( ctx%spice%ckbsr%index%ndescr == 0 ) &
          call ctx%spice%ckbsr%index%init ( 5_ip, 6_ip )
-      end if
       call load_daf_file ( ctx, ctx%spice%ckbsr%index, fname, 2_ip, 6_ip, handle )
       return
       end procedure cklpf
@@ -3898,7 +3890,7 @@ contains
       use pepper_kinds, only: ip, wp
       implicit none
       if ( ctx%failed() ) return
-      if ( .not. allocated ( ctx%spice%ckbsr ) ) return
+      if ( ctx%spice%ckbsr%index%ndescr == 0 ) return
       call unload_daf_file ( ctx, ctx%spice%ckbsr%index, handle )
       return
       end procedure ckupf
@@ -4052,10 +4044,6 @@ contains
       cs%avneed = needav
       cs%reqt   = sclkdp
       cs%savtol = tol
-      if ( .not. allocated ( ctx%spice%ckbsr ) ) then
-         call no_ck_files ( ctx )
-         return
-      end if
       if ( ctx%spice%ckbsr%index%nfiles == 0 ) then
          call no_ck_files ( ctx )
          return
@@ -4559,7 +4547,7 @@ contains
       implicit none
       found = .false.
       if ( ctx%failed() ) return
-      if ( allocated ( ctx%spice%ckbsr ) ) found = ctx%spice%ckbsr%index%nfiles > 0
+      found = ctx%spice%ckbsr%index%nfiles > 0
       return
       end procedure ckhave
 
@@ -4669,10 +4657,8 @@ contains
       use pepper_inc_zzctr
       implicit none
       if ( ctx%failed() ) return
-      if ( .not. allocated ( ctx%spice%zzdskbsr ) ) then
-         allocate ( ctx%spice%zzdskbsr )
+      if ( ctx%spice%zzdskbsr%index%ndescr == 0 ) &
          call ctx%spice%zzdskbsr%index%init ( int ( dskdsz, ip ), int ( dladsz, ip ) )
-      end if
       if ( ctx%spice%zzdskbsr%pass1 ) then
          call zzctrsin ( ctx, ctx%spice%zzdskbsr%dskctr )
          ctx%spice%zzdskbsr%pass1 = .false.
@@ -4780,7 +4766,7 @@ contains
       use pepper_inc_zzctr
       implicit none
       if ( ctx%failed() ) return
-      if ( .not. allocated ( ctx%spice%zzdskbsr ) ) return
+      if ( ctx%spice%zzdskbsr%index%ndescr == 0 ) return
       if ( ctx%spice%zzdskbsr%pass1 ) then
          call zzctrsin ( ctx, ctx%spice%zzdskbsr%dskctr )
          ctx%spice%zzdskbsr%pass1 = .false.
@@ -4883,16 +4869,14 @@ contains
       if ( .not. allocated ( ctx%zzdskbsr_cache ) ) allocate ( ctx%zzdskbsr_cache )
       if ( ctx%failed() ) return
       ctx%zzdskbsr_cache%active = .false.
-      if ( allocated ( ctx%spice%zzdskbsr ) ) then
-         if ( ctx%spice%zzdskbsr%index%nfiles > 0 ) then
-            associate ( cs => ctx%zzdskbsr_cache, ix => ctx%spice%zzdskbsr%index )
-            cs%active = .true.
-            cs%epoch  = ctx%spice%segment_epoch
-            cs%list   = ix%list ( bodyid )
-            cs%pos    = ix%count ( cs%list )
-            end associate
-            return
-         end if
+      if ( ctx%spice%zzdskbsr%index%nfiles > 0 ) then
+         associate ( cs => ctx%zzdskbsr_cache, ix => ctx%spice%zzdskbsr%index )
+         cs%active = .true.
+         cs%epoch  = ctx%spice%segment_epoch
+         cs%list   = ix%list ( bodyid )
+         cs%pos    = ix%count ( cs%list )
+         end associate
+         return
       end if
       call ctx%setmsg ( 'At least one DSK file must have been loaded ' &
       //            'by ZZDSKLSF before a search can be started.' )
@@ -5179,10 +5163,6 @@ contains
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
-      if ( .not. allocated ( ctx%spice%zzdskbsr ) ) then
-         allocate ( ctx%spice%zzdskbsr )
-         call ctx%spice%zzdskbsr%index%init ( int ( dskdsz, ip ), int ( dladsz, ip ) )
-      end if
       if ( ctx%failed() ) return
       call zzctrchk ( ctx, ctx%spice%zzdskbsr%dskctr, usrctr, update )
       return

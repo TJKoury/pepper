@@ -97743,9 +97743,7 @@ contains
          call init_zzdsksbf_state ( ctx%zzdsksbf_state )
       end if
       n = 0
-      if ( allocated ( ctx%spice%zzdskbsr ) ) then
-         n = ctx%spice%zzdskbsr%index%count ( ctx%spice%zzdskbsr%index%list ( bodyid ) )
-      end if
+      n = ctx%spice%zzdskbsr%index%count ( ctx%spice%zzdskbsr%index%list ( bodyid ) )
       associate ( st => ctx%zzdsksbf_state )
          need = max ( 16_ip, st%stfree - 1 + n )
          call grow ( st%sthan, need )

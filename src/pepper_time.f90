@@ -6425,7 +6425,6 @@ contains
       character(wdsize) :: myitem
       character(wdsize) :: myactn
       real(wp) :: moff
-      if ( .not. allocated ( ctx%spice%timdef_state ) ) allocate ( ctx%spice%timdef_state )
       associate ( defzon => ctx%spice%timdef_state%defzon, &
                   defsys => ctx%spice%timdef_state%defsys, &
                   defcal => ctx%spice%timdef_state%defcal, &
