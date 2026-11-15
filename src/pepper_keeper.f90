@@ -3261,7 +3261,7 @@ contains
       character(wdsize) :: arch
       character(wdsize) :: mytype
       character(:), allocatable :: fmt  ! PEPPER: the description of a kernel made by a loader
-      integer(ip) :: k  ! PEPPER: the kernel loader (0: none; -1: PEPPER's own loaders)
+      integer(ip) :: k  ! PEPPER: the kernel loader (0: none; -1: PEPPER's own loading, loader='PEPPER')
 
       if ( ctx%failed() ) return
 
@@ -3271,9 +3271,11 @@ contains
 !     instead of anything else: no check that the file exists, of its
 !     architecture (a SPICE binary kernel is given to it too), of its
 !     extension, or of the other loaders' detect. The loader alone
-!     decides, and reports its own errors. A name of PEPPER's own loaders
-!     (SPK, CK, PCK, DSK, EK, TEXT, JSON, META) that no registered loader
-!     has (k = -1) means the file is loaded as without loaders.
+!     decides, and reports its own errors. The name PEPPER (k = -1) means
+!     PEPPER's own loading: the file is loaded as without kernel loaders
+!     (SPICE's kernels by their ID word, JSON kernels by their extension,
+!     else text kernels and meta-kernels), and registered loaders are not
+!     asked. Any other name no loader has: SPICE(UNKNOWNLOADER).
 !
       if ( present ( used   ) ) used   = ' '
       if ( present ( format ) ) format = ' '

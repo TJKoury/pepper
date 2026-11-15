@@ -629,7 +629,9 @@ cdef class Spice(_SpiceRoutines):
         `in_memory`: read binary kernels whole into memory (default: the
         instance's choice, `set_in_memory`). `loader`: the name of a
         registered kernel loader (`add_loader`) that reads the file(s),
-        overriding every other choice.
+        overriding every other choice; 'PEPPER': PEPPER's own loading (SPICE
+        and JSON kernels, registered loaders not asked), e.g. for a
+        meta-kernel whose extension a loader also has.
 
         https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/spicelib/furnsh.html"""
         self._check()

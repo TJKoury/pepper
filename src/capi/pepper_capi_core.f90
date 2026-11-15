@@ -870,7 +870,8 @@ contains
 
    !> Load a kernel with a named kernel loader (FURNSH's `loader`: the
    !> registered loader with that name reads the file, overriding every
-   !> other choice); `in_memory` as in [[pepper_spice_furnsh]].
+   !> other choice; "PEPPER": PEPPER's own loading, registered loaders not
+   !> asked; "": FURNSH chooses); `in_memory` as in [[pepper_spice_furnsh]].
    integer(c_int) function pepper_spice_furnsh_loader ( spice, file, in_memory, loader ) &
          bind(c, name='pepper_spice_furnsh_loader')
       type(c_ptr), value :: spice  !! the instance

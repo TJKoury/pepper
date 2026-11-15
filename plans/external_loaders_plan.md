@@ -47,9 +47,10 @@ What was built:
 Differences from the plan below:
 - The test format is the simple text one (with `OBJECT_CODE` for a name the
   file defines); its binary form (phase 3) is not done.
-- A reserved name given as `loader=` makes FURNSH load the file as it does
-  without loaders; it does not force text over JSON (`TEXT` and `JSON` are
-  not distinguished).
+- One reserved name, `PEPPER` (2026-11-15): `loader='PEPPER'` is PEPPER's
+  own loading (as without loaders; registered loaders not asked); it
+  cannot be registered. The former reserved names (SPK, CK, PCK, DSK, EK,
+  TEXT, JSON, META) are ordinary names.
 - `load_kernel` copies the builder's data into the DAF image (one copy),
   then empties the builder; with `keep` it is not emptied.
 - A file a loader read, loaded again, is read again (a second kernel, with
@@ -178,8 +179,7 @@ call spice%loader(name, ptr)          ! a pointer to the instance's copy (class(
 ```
 
 - `name`: what `furnsh(..., loader=)` and meta-kernels refer to. It is
-  case-insensitive (stored in upper case). `SPK`, `CK`, `PCK`, `DSK`, `EK`,
-  `TEXT`, `JSON` and `META` are reserved (D3).
+  case-insensitive (stored in upper case). `PEPPER` is reserved (D3).
 - `loader`: any extension of `kernel_loader`. The instance keeps a copy
   (`class(kernel_loader), allocatable`, as it keeps providers), so the
   loader can keep data from its loads (R12).
@@ -340,9 +340,9 @@ Resolution order (R1):
 1. **`loader=` given**: the registered loader with that name reads the
    file, overriding everything else: no check that the file exists, of
    its type (even a DAF), its extension, or detection; the loader reports
-   its own errors. A reserved name no loader is registered under loads
-   the file as without loaders (steps 2 and 5; it does not choose the
-   type). Any other name: SPICE(UNKNOWNLOADER).
+   its own errors. `loader='PEPPER'` loads the file as without loaders
+   (steps 2 and 5; registered loaders not asked). Any other name no loader
+   has: SPICE(UNKNOWNLOADER).
 2. **A DAF or DAS file** (GETFAT's ID word): the built-in loaders. A real
    SPICE binary file is never handed to a registered loader by extension or
    detection; its ID word is unambiguous.
@@ -438,9 +438,8 @@ New short messages:
 - SPICE(LOADERCONFLICT): a name or extension registered twice without
   `replace`.
 
-(SPICE(RESERVEDLOADERNAME) was dropped, 2026-11-15: any name can be
-registered, and a registered loader has precedence over a reserved
-name's meaning.)
+- SPICE(RESERVEDLOADERNAME): `add_loader` with the name PEPPER (FURNSH's
+  name for PEPPER's own loading).
 
 Each loader has its own, documented in its library. The builder's are those
 of the SPK writers.
@@ -454,10 +453,10 @@ of the SPK writers.
   which clashes with Windows drive letters and with existing names. Or
   none at all, relying on extensions and detection.
 - **D3. Reserved names** for the built-in loaders. As built (2026-11-15):
-  a reserved name means "PEPPER's own loading, as without loaders" (it does
-  not force a type), and only when no registered loader has the name: a
-  named, registered loader overrides everything, the reserved names
-  included.
+  one name, `PEPPER`, PEPPER's own loading (as without loaders: SPICE's
+  kernels by their ID word, JSON kernels by their extension, text kernels
+  and meta-kernels), not registrable. It exists for a SPICE text kernel or
+  meta-kernel whose extension a registered loader also has.
 - **D4. SPICE binary files are never claimed** by registered extensions or
   detection (resolution step 2).
 - **D5. The loader object is copied into the instance**, so it can keep
@@ -564,7 +563,7 @@ nanoseconds and six `real64`. It tests a loader doing its own binary I/O
 - **Names** (R14): `spkezr('SC_ONE', ...)` works while the file is loaded
   and not after UNLOAD.
 - **Resolution** (R1): by `loader=`, by extension, by detection with an
-  unrelated extension (`.txt`), a reserved name forcing a built-in loader,
+  unrelated extension (`.txt`), `loader='PEPPER'` keeping the loaders off,
   a DAF never claimed, conflicts and replacement; in meta-kernels
   (extensions and `KERNEL_LOADERS`) and through the legacy FURNSH.
 - **Kernel table**: KDATA/KINFO type `SPK`, `kernel_format`, KTOTAL,

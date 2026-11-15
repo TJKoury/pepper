@@ -449,12 +449,10 @@ call spice%furnsh('sc_ephem.txt', loader='MYFORMAT')               ! by name
   4. Else the loaders' `detect`, the most recently registered first.
   5. Else the text and JSON readers, as before.
 
-  A name of PEPPER's own loaders (SPK, CK, PCK, DSK, EK, TEXT, JSON, META)
-  that no loader is registered under makes FURNSH load the file as without
-  loaders (steps 2 and 5: the name does not choose the type); a registered
-  loader with such a name takes its place. Any other unknown name is
-  SPICE(UNKNOWNLOADER). `loader=` is only in the Fortran method
-  `spice%furnsh` for now.
+  `loader='PEPPER'` is PEPPER's own loading (steps 2 and 5, registered
+  loaders not asked): for a SPICE text kernel or meta-kernel whose
+  extension a loader also has. PEPPER cannot be a loader's name; any other
+  name no loader has is SPICE(UNKNOWNLOADER).
 - **`kernel_format(file, loader, format, found)`** tells which loader read a
   kernel, and the builder's description (`set_format`).
 - **A file that holds a model,** not states (elements and a propagator, say):

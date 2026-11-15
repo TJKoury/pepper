@@ -41,9 +41,11 @@ submodule (pepper_instance_module) pepper_loaders
    integer(ip), parameter :: namsiz = 8*sumsiz  !! the size of a segment name (characters)
    integer(ip), parameter :: per_record = (128 - 3)/sumsiz  !! summaries in a summary record (25)
    integer(ip), parameter :: head_size = 4096  !! the bytes of a file given to the loaders' detect
-   integer(ip), parameter :: nreserved = 8  !! the number of reserved loader names
-   character(4), parameter :: reserved(nreserved) = &
-      [character(4) :: 'SPK', 'CK', 'PCK', 'DSK', 'EK', 'TEXT', 'JSON', 'META']  !! PEPPER's own loaders
+   !> The name FURNSH's `loader` (and KERNEL_LOADERS) gives PEPPER's own
+   !> loading: SPICE's kernels and JSON kernels, chosen as without kernel
+   !> loaders (registered loaders are not asked). No loader can be
+   !> registered under it.
+   character(*), parameter :: own_loader = 'PEPPER'
 
    !> A segment of a DAF image: its descriptor's components but the
    !> addresses, its identifier, and its data (pointed to, not copied).
@@ -1533,6 +1535,14 @@ contains
          call ctx%sigerr ( 'SPICE(BLANKSTRING)' )
          return
       end if
+      if ( uname == own_loader ) then
+         call ctx%setmsg ( 'The name ''#'' is FURNSH''s name for PEPPER''s own ' &
+         //            'loading (SPICE kernels and JSON kernels): a kernel ' &
+         //            'loader cannot have it.' )
+         call ctx%errch  ( '#', name )
+         call ctx%sigerr ( 'SPICE(RESERVEDLOADERNAME)' )
+         return
+      end if
       allocate ( exts(0) )
       if ( present ( extensions ) ) then
          deallocate ( exts )
@@ -1761,13 +1771,12 @@ contains
       uname = upper ( trim ( adjustl ( name ) ) )
       k = 0
       if ( ctx%failed() ) return
-!     A registered loader first, whatever its name.
-      k = find_loader ( ctx%spice, uname )
-      if ( k > 0 ) return
-      if ( any ( reserved == uname ) ) then
+!     PEPPER: PEPPER's own loading (k = -1).
+      if ( uname == own_loader ) then
          k = -1
          return
       end if
+      k = find_loader ( ctx%spice, uname )
       if ( k == 0 ) then
          call ctx%setmsg ( 'The kernel loader ''#'' named for the file ''#'' ' &
          //            'is not registered.' )

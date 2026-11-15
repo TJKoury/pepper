@@ -182,7 +182,8 @@ int pepper_spice_add_loader(void *spice, const char *name, int n, int width, con
                             void *user, int replace);
 int pepper_spice_remove_loader(void *spice, const char *name);
 /* FURNSH with a named loader (it reads the file, overriding every other
-   choice); loader "" : FURNSH chooses. in_memory: 1, 0 or -1. */
+   choice); "PEPPER": PEPPER's own loading (SPICE and JSON kernels,
+   registered loaders not asked); "": FURNSH chooses. in_memory: 1, 0 or -1. */
 int pepper_spice_furnsh_loader(void *spice, const char *file, int in_memory, const char *loader);
 /* An SPK (file; "" for none), and for rotation tables a CK (ck_file) and a
    text kernel (text_file: clocks, frame definitions, body names); NULL or ""

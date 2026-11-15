@@ -523,11 +523,14 @@ Without `loader=`:
 
 Other names given as `loader=`:
 
-- **`SPK`, `CK`, `PCK`, `DSK`, `EK`, `TEXT`, `JSON`, `META`**, when no loader
-  is registered under the name, mean "load as without loaders" (steps 2 and
-  5). They do not choose the type: a `.json` file is still read as JSON.
-  Their use is to keep registered loaders from claiming a file. A loader
-  registered under one of these names takes its place.
+- **`loader='PEPPER'`** is PEPPER's own loading: the file is loaded as
+  without loaders (steps 1, 2 and 5): a SPICE binary kernel by its ID word,
+  a `*.json` file as a JSON kernel, anything else as a text kernel or
+  meta-kernel. Registered loaders are not asked. Use it for a SPICE text
+  kernel or meta-kernel whose extension a loader also has, such as a
+  meta-kernel named `mission.txt` while a loader is registered for `.txt`.
+  No loader can be registered under the name PEPPER
+  (SPICE(RESERVEDLOADERNAME)).
 - **Any other name** no loader has: SPICE(UNKNOWNLOADER), and nothing is
   loaded.
 
@@ -952,6 +955,7 @@ the complete rules of how a loader is chosen.
 |---|---|
 | SPICE(NOSUCHFILE) | `furnsh` of a file that does not exist (without `loader=`) |
 | SPICE(UNKNOWNLOADER) | `loader=` or `KERNEL_LOADERS` names no registered loader |
+| SPICE(RESERVEDLOADERNAME) | `add_loader` with the name PEPPER |
 | SPICE(LOADERCONFLICT) | a loader name or extension registered twice without `replace` |
 | SPICE(BADKERNELLOADERS) | `KERNEL_LOADERS` with an odd number of values |
 | SPICE(TOOFEWSTATES), SPICE(INVALIDDEGREE), SPICE(TIMESOUTOFORDER), SPICE(BADDESCRTIMES), SPICE(SEGIDTOOLONG), SPICE(NONPRINTABLECHARS) | a builder segment fails SPKW09's or SPKW13's checks |
@@ -985,7 +989,8 @@ A loader's own errors are its library's (e.g. SPICE(BADCSVFILE) above).
   longest match among loaders), or that `detect` accepts the file's first
   bytes. `kernel_format` tells which loader read a kernel.
 - **A text kernel is taken by a loader.** A loader's extension or `detect`
-  claimed it: give `loader='TEXT'` (PEPPER's own loading) for that file.
+  claimed it: give `loader='PEPPER'` (PEPPER's own loading) for that file,
+  or in a meta-kernel name it with `KERNEL_LOADERS = ( 'the_file', 'PEPPER' )`.
 - **States differ slightly from another tool's at times between the
   rows.** Interpolation differs between tools (window placement, the method
   at the ends). At the rows the states match within rounding; check the

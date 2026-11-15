@@ -7,7 +7,7 @@
 !>   more segments than one summary record holds; write_kernel; the
 !>   builder's checks and adapt; an unknown frame at the load.
 !> - A kernel loader, for the made-up format of pepper_test_loader: FURNSH
-!>   by extension, by detection, by name; reserved names; conflicts; SPICE
+!>   by extension, by detection, by name; loader=PEPPER; conflicts; SPICE
 !>   binary files never claimed; errors with the line, loading nothing;
 !>   unsupported interpolation; discontinuities, gaps, bounds; the
 !>   loader's kept data and unload callbacks; meta-kernels with
@@ -410,7 +410,7 @@ contains
       call spice%unload(sim_b)
    end subroutine test_loader
 
-   !> How FURNSH chooses: by name, reserved names, conflicts, SPICE files
+   !> How FURNSH chooses: by name, PEPPER's own loading, conflicts, SPICE files
    !> never claimed, unknown loaders.
    subroutine test_choice()
       type(simple_loader) :: quiet
@@ -431,22 +431,27 @@ contains
       call check(same_states(ctx, rctx, sc, epochs(1), epochs(n), 101), 'loader=: the states')
       call spice%unload(sim_c)
 
-      ! a reserved name: PEPPER's own loaders (a text kernel, here)
-      call spice%furnsh(sim_a, loader='TEXT')
-      call check_ok(ctx, 'FURNSH with a reserved loader name')
+      ! PEPPER: PEPPER's own loading, registered loaders not asked (sim_a's
+      ! extension, .sim, is SIMPLE's: here it is read as a text kernel)
+      call spice%furnsh(sim_a, loader='pepper')
+      call check_ok(ctx, 'FURNSH with loader=PEPPER')
       call ctx%kdata(1_ip, 'ALL', file, filtyp, srcfil, handle, found)
-      call check(found .and. filtyp == 'TEXT', 'a reserved name: loaded by PEPPER''s own loaders')
+      call check(found .and. filtyp == 'TEXT', 'loader=PEPPER: PEPPER''s own loading, the loaders not asked')
       call spice%unload(sim_a)
+      call spice%add_loader('Pepper', quiet)
+      call check_error(ctx, 'SPICE(RESERVEDLOADERNAME)', 'PEPPER cannot be registered')
 
       call spice%furnsh(sim_a, loader='nope')
       call check_error(ctx, 'SPICE(UNKNOWNLOADER)', 'an unknown loader')
+      call spice%furnsh(sim_a, loader='TEXT')
+      call check_error(ctx, 'SPICE(UNKNOWNLOADER)', 'TEXT is not a name of PEPPER''s (no loader has it)')
 
-      ! a registered loader named like PEPPER's own takes its place
+      ! the former reserved names are ordinary names
       call spice%add_loader('text', quiet)
-      call check_ok(ctx, 'a loader may have a reserved name')
+      call check_ok(ctx, 'a loader named TEXT')
       call spice%furnsh(sim_a, loader='TEXT')
       call ctx%kernel_format(sim_a, loader, format, found)
-      call check(found .and. loader == 'TEXT', 'loader=: the registered TEXT loader over PEPPER''s own')
+      call check(found .and. loader == 'TEXT', 'loader=: the loader named TEXT')
       call spice%unload(sim_a)
       call spice%remove_loader('TEXT')
 
