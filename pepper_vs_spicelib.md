@@ -651,7 +651,10 @@ fastest time of each operation).
   SPKW13 now write their data through the same packing routines
   (`pepper_spk_packing`), unchanged. (Loaders registered by a program also
   apply to the legacy FURNSH; the new routines are not in the legacy
-  interface.)
+  interface.) A kernel built in memory can define body names
+  (`define_body`): they are BODDEF definitions owned by the kernel, removed
+  when it is unloaded, where SPICELIB's BODDEF definitions are permanent
+  (KCLEAR keeps them, in PEPPER too).
 - **A kernel open on several units.** Each context reads the kernels
   through units of its own, and each instance loads its own: one process
   opens a file on several units. SPICELIB refuses to load a file that is

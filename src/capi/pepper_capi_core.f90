@@ -853,6 +853,26 @@ contains
       pepper_builder_spk = status_of(c)
    end function pepper_builder_spk
 
+   !> Define a body name of the kernel a builder makes: `name` translates to
+   !> `code` while the kernel is loaded, and the definition is removed when
+   !> it is unloaded (`kernel_builder%define_body`). Errors are signaled in
+   !> `ctx`, any context.
+   integer(c_int) function pepper_builder_define_body ( ctx, builder, name, code ) &
+         bind(c, name='pepper_builder_define_body')
+      type(c_ptr), value :: ctx  !! a context (for the errors)
+      type(c_ptr), value :: builder  !! the builder
+      character(kind=c_char), intent(in) :: name(*)  !! the body's name
+      integer(c_int), value :: code  !! its NAIF ID code
+      type(capi_context), pointer :: c
+      type(kernel_builder), pointer :: kb
+      character(:), allocatable :: f_name
+      c => context_of(ctx)
+      call c_f_pointer(builder, kb)
+      call c_to_f(name, f_name)
+      call kb%define_body(c, f_name, int(code, ip))
+      pepper_builder_define_body = status_of(c)
+   end function pepper_builder_define_body
+
    !> Set the description of the kernel a builder makes (`kernel_format`).
    subroutine pepper_builder_set_format ( builder, text ) bind(c, name='pepper_builder_set_format')
       type(c_ptr), value :: builder  !! the builder

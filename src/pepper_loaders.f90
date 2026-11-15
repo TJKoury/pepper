@@ -64,6 +64,26 @@ contains
                          tbeg, tend, ident, adapt )
    end procedure kb_spk_hermite
 
+   !> Define a body name of the kernel (PEPPER): kept until the builder is
+   !> loaded, then defined (owned by the kernel) until it is unloaded.
+   module procedure kb_define_body
+      use pepper_containers, only: grow
+      implicit none
+      if ( ctx%failed() ) return
+      if ( name == ' ' ) then
+         call ctx%setmsg ( 'An attempt to assign the code, #, to a blank ' &
+         //            'string was made (a kernel builder''s define_body).' )
+         call ctx%errint ( '#', code )
+         call ctx%sigerr ( 'SPICE(BLANKNAMEASSIGNED)' )
+         return
+      end if
+      this%nbodies = this%nbodies + 1
+      call grow ( this%body_names, this%nbodies )
+      call grow ( this%body_codes, this%nbodies )
+      this%body_names(this%nbodies)%s = trim ( adjustl ( name ) )
+      this%body_codes(this%nbodies) = code
+   end procedure kb_define_body
+
    !> Set the description of the kernel (PEPPER).
    module procedure kb_set_format
       implicit none
@@ -76,6 +96,9 @@ contains
       if ( allocated ( this%segments ) ) deallocate ( this%segments )
       this%nseg = 0
       if ( allocated ( this%format ) ) deallocate ( this%format )
+      if ( allocated ( this%body_names ) ) deallocate ( this%body_names )
+      if ( allocated ( this%body_codes ) ) deallocate ( this%body_codes )
+      this%nbodies = 0
    end procedure kb_clear
 
    !> The number of segments (PEPPER).
@@ -355,8 +378,9 @@ contains
 
    !> Make the DAF image of a builder, register it in the handle manager's
    !> table as a DAF built in memory named NAME, and load it as an SPK
-   !> (SPKLEF). The builder is emptied once it is loaded; on an error
-   !> nothing is loaded, and the builder is unchanged.
+   !> (SPKLEF), then define its body names (owned by the kernel). The
+   !> builder is emptied once it is loaded; on an error nothing is loaded,
+   !> and the builder is unchanged.
    subroutine load_builder ( ctx, name, kb, handle )
       class(pepper_context), intent(inout) :: ctx  !! the instance's context
       character(*), intent(in) :: name  !! the kernel's name
@@ -401,6 +425,12 @@ contains
          handle = 0
          return
       end if
+
+!     The body names the kernel defines, owned by it.
+      do k = 1, kb%nbodies
+         call owned_boddef ( ctx, kb%body_names(k)%s, kb%body_codes(k), handle )
+         if ( ctx%failed() ) return
+      end do
       call kb%clear()
    end subroutine load_builder
 
@@ -905,11 +935,13 @@ contains
       end do
    end procedure meta_kernel_loader
 
-   !> A loader's unload callback (PEPPER).
+   !> A kernel removed from the KEEPER table: the body names it defined are
+   !> removed, and its loader's unload callback is called (PEPPER).
    module procedure notify_kernel_unloaded
       implicit none
       integer(ip) :: k
       associate ( kk => ctx%spice%keeper%kernels(i) )
+         if ( kk%type == 'SPK' ) call remove_owned_boddefs ( ctx, kk%handle )
          if ( .not. allocated ( kk%loader ) ) return
          if ( kk%loader == ' ' ) return
          k = find_loader ( ctx%spice, kk%loader )

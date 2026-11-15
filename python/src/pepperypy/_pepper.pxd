@@ -36,6 +36,7 @@ cdef extern from "pepper.h" nogil:
     void *pepper_builder_new()
     void pepper_builder_free(void *builder)
     int pepper_builder_spk(void *ctx, void *builder, int type, int body, int center, const char *frame, int n, const double *epochs, const double *states, int degree, int bounds, double tbeg, double tend, const char *ident, int adapt)
+    int pepper_builder_define_body(void *ctx, void *builder, const char *name, int code)
     void pepper_builder_set_format(void *builder, const char *text)
     void pepper_builder_clear(void *builder)
     int pepper_builder_nsegments(void *builder)

@@ -435,6 +435,14 @@ call spice%furnsh('sc_ephem.txt', loader='MYFORMAT')               ! by name
   reserved; given as `loader=`, FURNSH loads the file as without loaders.
 - **`kernel_format(file, loader, format, found)`** tells which loader read a
   kernel, and the builder's description (`set_format`).
+- **Body names a kernel defines:** `kb%define_body(ctx, name, code)`. While
+  the kernel is loaded, the name works everywhere a body name does
+  (`spkezr('SPACECRAFT1', ...)`, BODN2C, BODC2N); when it is unloaded
+  (UNLOAD, KCLEAR, replaced) the definition goes with it, and an earlier one
+  of the same name (BODDEF's, another kernel's) is in effect again. The
+  latest definition wins, and names from the kernel pool
+  (`NAIF_BODY_NAME`/`CODE`) take precedence, as over BODDEF's. (KCLEAR keeps
+  the program's own BODDEF names, as in SPICELIB.)
 - **Only SPICE's interpolations.** A loader maps the file's method to type 9
   or 13, or signals an error; it does not substitute another method.
 

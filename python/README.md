@@ -216,7 +216,8 @@ spice.write_kernel('my_trajectory', 'my_trajectory.bsp')
 ctx.kernel_format('my_trajectory')                      # ('', '(programmatic)')
 ```
 
-`tbeg`/`tend` set coverage bounds inside the epochs, `adapt=True` lowers
+`kb.define_body('SPACECRAFT1', -10001)` defines a body name while the
+kernel is loaded (removed with it). `tbeg`/`tend` set coverage bounds inside the epochs, `adapt=True` lowers
 the degree of a segment too short for it, and a kernel loaded under a name
 in use replaces it (`keep=True` keeps the builder's segments). A builder
 belongs to no instance: threads can fill builders while others query.

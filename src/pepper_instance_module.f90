@@ -95,10 +95,12 @@ module pepper_instance_module
       !> Incremented by every change of the loaded kernels or the kernel
       !> pool; caches in contexts are valid while it is unchanged.
       integer(ip) :: generation = 0
-      ! Body names defined by the program (boddef), in order of definition.
-      ! Each context applies them to its own name tables (see pepper_bodies).
+      ! Body names defined by the program (boddef), and by kernels built in
+      ! memory (kernel_builder's define_body), in order of definition. Each
+      ! context applies them to its own name tables (see pepper_bodies).
       type(string), allocatable :: boddef_names(:)  !! names defined with boddef (any length)
       integer(ip), allocatable :: boddef_codes(:)  !! their codes
+      integer(ip), allocatable :: boddef_owners(:)  !! the handle of the kernel that defined each (0: the program)
       integer(ip) :: boddef_count = 0  !! number of definitions recorded
       integer(ip) :: boddef_epoch = 0  !! changed by every definition and by a reset
       !> Incremented by every write of a record to a DAF or DAS file; contexts
@@ -2066,7 +2068,11 @@ module pepper_instance_module
       type(builder_segment), allocatable :: segments(:)  !! the segments (1 to nseg are used)
       integer(ip) :: nseg = 0  !! number of segments
       character(:), allocatable :: format  !! the kernel's description ([[kb_set_format]])
+      type(string), allocatable :: body_names(:)  !! the body names the kernel defines ([[kb_define_body]])
+      integer(ip), allocatable :: body_codes(:)  !! their codes
+      integer(ip) :: nbodies = 0  !! number of body names
    contains
+      procedure :: define_body => kb_define_body
       procedure :: spk_lagrange => kb_spk_lagrange
       procedure :: spk_hermite => kb_spk_hermite
       procedure :: set_format => kb_set_format
@@ -2163,6 +2169,43 @@ module pepper_instance_module
          character(*), intent(in), optional :: ident  !! the segment identifier (default: blank)
          logical, intent(in), optional :: adapt  !! adapt the degree of a short segment (default: false)
       end subroutine kb_spk_hermite
+
+      !> Define a body name of the kernel a builder makes (PEPPER): while the
+      !> kernel is loaded, `name` translates to `code` and `code` to `name`
+      !> (BODN2C, BODC2N, and every query that takes a name), as BODDEF
+      !> would; when the kernel is unloaded (UNLOAD, KCLEAR, replaced) the
+      !> definition is removed, and an earlier one of the same name or code
+      !> (BODDEF's, another kernel's) is in effect again. A later definition
+      !> of a name, by BODDEF or another kernel, takes precedence, and names
+      !> from the kernel pool (NAIF_BODY_NAME/CODE) take precedence over all
+      !> of them, as over BODDEF's. SPICE(BLANKNAMEASSIGNED) for a blank name.
+      module subroutine kb_define_body ( this, ctx, name, code )
+         implicit none
+         class(kernel_builder), intent(inout) :: this  !! the builder
+         class(pepper_context), intent(inout) :: ctx  !! a context, for the errors (any; its instance is not used)
+         character(*), intent(in) :: name  !! the body's name
+         integer(ip), intent(in) :: code  !! its NAIF ID code
+      end subroutine kb_define_body
+
+      !> Add a body name/code pair defined by a kernel built in memory, owned
+      !> by it (its handle): BODDEF's definition, removed with
+      !> [[remove_owned_boddefs]] when the kernel is unloaded (PEPPER).
+      module subroutine owned_boddef ( ctx, name, code, owner )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         character(*), intent(in) :: name  !! the body's name
+         integer(ip), intent(in) :: code  !! its NAIF ID code
+         integer(ip), intent(in) :: owner  !! the handle of the kernel that defines it
+      end subroutine owned_boddef
+
+      !> Remove the body name/code pairs a kernel defined ([[owned_boddef]]):
+      !> every context rebuilds its name tables from the built-in names and
+      !> the definitions that remain, in their order (PEPPER).
+      module subroutine remove_owned_boddefs ( ctx, owner )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         integer(ip), intent(in) :: owner  !! the handle of the kernel unloaded
+      end subroutine remove_owned_boddefs
 
       !> Set the description of the kernel a builder makes (shown by
       !> [[kernel_format]]), e.g. the file format and its version (PEPPER).
@@ -2337,9 +2380,9 @@ module pepper_instance_module
          character(:), allocatable, intent(out) :: name  !! the loader's name (blank: none)
       end subroutine meta_kernel_loader
 
-      !> Call the unload callback of the loader of kernel `i` of the
-      !> KEEPER table, if it has one and it is still registered (UNLOAD,
-      !> KCLEAR) (PEPPER).
+      !> Kernel `i` of the KEEPER table is removed (UNLOAD, KCLEAR): remove
+      !> the body names it defined, and call the unload callback of its
+      !> loader, if it has one and it is still registered (PEPPER).
       module subroutine notify_kernel_unloaded ( ctx, i )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context

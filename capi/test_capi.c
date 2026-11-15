@@ -152,9 +152,11 @@ int main(void) {
         pepper_reset(ctx);
         CHECK(pepper_builder_nsegments(kb) == 1, "builder: one segment");
         pepper_builder_set_format(kb, "C TEST");
+        CHECK(pepper_builder_define_body(ctx, kb, "CAPI_SC", -998) == 0, "builder_define_body");
         CHECK(pepper_spice_load_kernel(spice, "capi_kernel", kb, 0) == 0, "load_kernel");
         CHECK(pepper_builder_nsegments(kb) == 0, "load_kernel empties the builder");
-        CHECK(pepper_spkezr(ctx, "-998", ets[10], "J2000", "NONE", "EARTH", state, &lt) == 0, "spkezr of the kernel");
+        CHECK(pepper_spkezr(ctx, "CAPI_SC", ets[10], "J2000", "NONE", "EARTH", state, &lt) == 0,
+              "spkezr of the kernel, by the name it defines");
         CHECK(fabs(state[0] - sts[10][0]) < 1e-9 && fabs(state[4] - sts[10][4]) < 1e-12, "the kernel's state %g %g",
               state[0], state[4]);
         const char *ld, *fm;
@@ -178,6 +180,8 @@ int main(void) {
         pepper_context_free(octx);
         pepper_spice_free(other);
         CHECK(pepper_spice_unload(spice, "capi_kernel") == 0, "unload of the kernel");
+        int code2, found3;
+        CHECK(pepper_bodn2c(ctx, "CAPI_SC", &code2, &found3) == 0 && !found3, "the kernel's name is gone");
         pepper_builder_free(kb);
         remove(bsp);
     }

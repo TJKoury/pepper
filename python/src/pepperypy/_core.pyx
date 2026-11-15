@@ -415,6 +415,21 @@ cdef class KernelBuilder:
         degree); the arguments are those of `spk_lagrange`."""
         self._add(13, body, center, frame, epochs, states, degree, tbeg, tend, ident, adapt, ctx)
 
+    def define_body(self, name, int code, ctx=None):
+        """Define a body name of the kernel: while it is loaded, `name`
+        translates to `code` (bodn2c, spkezr, ...); when it is unloaded the
+        definition is removed, and an earlier one of the name (boddef's,
+        another kernel's) is in effect again. Names from the kernel pool take
+        precedence, as over boddef's."""
+        cdef _ContextBase c = (current_context() if ctx is None else ctx)
+        cdef bytes b = _b(name)
+        c._enter()
+        try:
+            if pepper_builder_define_body(c._ptr, self._ptr, b, code):
+                c._raise()
+        finally:
+            c._leave()
+
     def set_format(self, text):
         """The kernel's description (`kernel_format`)."""
         cdef bytes b = _b(text)

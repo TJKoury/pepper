@@ -212,6 +212,18 @@ contains
       !$omp end parallel
       call check(errs == 0 .and. all(bpar == bref), &
                  'parallel queries of the kernels built in memory identical to the serial ones')
+      ! the kernels' body names, looked up by every thread; then one kernel unloaded
+      errs = 0
+      !$omp parallel num_threads(nthreads) reduction(+:errs)
+      call thread_built_names(nthreads, .true., errs)
+      !$omp end parallel
+      call check(errs == 0, 'the kernels'' body names in every thread')
+      call spice%unload('built_1')
+      errs = 0
+      !$omp parallel num_threads(nthreads) reduction(+:errs)
+      call thread_built_names(nthreads, .false., errs)
+      !$omp end parallel
+      call check(errs == 0, 'an unloaded kernel''s name gone in every thread')
       call spice%unload(sim)
       call spice%remove_loader('SIMPLE')
    end subroutine built_kernels
@@ -233,6 +245,7 @@ contains
       end do
       call kb%spk_hermite(ctx, int(9200 + t, ip), 1000_ip, 'J2000', e(1:nrow/2 + 1), st(:, 1:nrow/2 + 1), 7_ip)
       call kb%spk_lagrange(ctx, int(9200 + t, ip), 1000_ip, 'J2000', e(nrow/2 + 1:), st(:, nrow/2 + 1:), 8_ip)
+      call kb%define_body(ctx, 'BUILT_'//achar(iachar('0') + t), int(9200 + t, ip))
       if (ctx%failed() .or. kb%nsegments() /= 2) errs = errs + 1
       call ctx%destroy()
    end subroutine fill_builder
@@ -262,6 +275,30 @@ contains
       end do
       call ctx%spkgeo(9300_ip, t, 'J2000', 1000_ip, res(6*nthreads + 1:6*nthreads + 6), lt)
    end subroutine built_queries
+
+   !> One thread's lookups of the names of the kernels built in memory
+   !> (BUILT_1 is gone once its kernel is unloaded). A new context, and the
+   !> setup context's instance's tables changed by loads and unloads.
+   subroutine thread_built_names(n, loaded1, errs)
+      integer, intent(in) :: n  !! the number of kernels
+      logical, intent(in) :: loaded1  !! the kernel of BUILT_1 is loaded
+      integer, intent(inout) :: errs  !! incremented on a wrong result
+      type(pepper_context) :: ctx
+      integer(ip) :: code
+      logical :: found, expected
+      integer :: b, k
+      ctx = spice%new_context()
+      do k = 1, 50
+         do b = 1, n
+            call ctx%bodn2c('BUILT_'//achar(iachar('0') + b), code, found)
+            expected = b > 1 .or. loaded1
+            if (found .neqv. expected) errs = errs + 1
+            if (found .and. code /= 9200 + b) errs = errs + 1
+         end do
+      end do
+      if (ctx%failed()) errs = errs + 1
+      call ctx%destroy()
+   end subroutine thread_built_names
 
    !> One thread's queries of the kernels built in memory.
    subroutine thread_built_queries(bpar, errs)

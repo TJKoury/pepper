@@ -166,3 +166,21 @@ def test_builders_filled_by_threads(spice):
     c = spice.context()
     for k in range(4):
         assert np.allclose(c.spkgeo(-10010 - k, et[5], 'J2000', 399)[0], (1 + k) * st[5], rtol=1e-13)
+
+
+def test_define_body(spice):
+    """A kernel's body names: usable while it is loaded, removed with it."""
+    et, st = circle()
+    c = spice.context()
+    spice.boddef('PY_SC', -5)
+    kb = KernelBuilder()
+    kb.define_body('PY_SC', -10001)
+    kb.spk_hermite(-10001, 399, 'J2000', et, st, 7)
+    spice.load_kernel('named', kb)
+    assert c.bodn2c('PY_SC') == -10001
+    state, lt = c.spkezr('PY_SC', et[10], 'J2000', 'NONE', 'EARTH')
+    assert np.allclose(state, st[10], rtol=1e-12)
+    spice.unload('named')
+    assert c.bodn2c('PY_SC') == -5          # the boddef again
+    with pytest.raises(SpiceyError, match='BLANKNAMEASSIGNED'):
+        kb.define_body(' ', -10002)

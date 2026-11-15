@@ -5,6 +5,8 @@
 !>     SIMPLE_EPHEMERIS
 !>     # a comment
 !>     OBJECT = -10001              (a NAIF ID code, or a name)
+!>     OBJECT_CODE = -10001         (optional: the code of OBJECT's name, which
+!>                                   the kernel then defines: define_body)
 !>     CENTER = 399
 !>     FRAME = J2000
 !>     INTERPOLATION = HERMITE 7    (LAGRANGE n or HERMITE n)
@@ -63,7 +65,7 @@ contains
       integer(ip) :: body, center, degree, nline, nrow, total
       integer :: lun, ios, eq
       logical :: in_data, adapt, have_bounds, found
-      character(:), allocatable :: frame
+      character(:), allocatable :: frame, objname
 
       open (newunit=lun, file=file, status='OLD', action='READ', iostat=ios)
       if (ios /= 0) then
@@ -75,6 +77,7 @@ contains
       body = 0
       center = 0
       frame = ' '
+      objname = ' '
       method = ' '
       degree = 0
       adapt = .false.
@@ -134,14 +137,26 @@ contains
             if (ios == 0) then
                if (trim(key) == 'OBJECT') body = nint(row(1), ip)
                if (trim(key) == 'CENTER') center = nint(row(1), ip)
+            else if (trim(key) == 'OBJECT') then
+               ! a name: known already, or defined by the file (OBJECT_CODE)
+               objname = trim(value)
+               call ctx%bodn2c(objname, body, found)
+               if (.not. found) body = 0
             else
-               if (trim(key) == 'OBJECT') call ctx%bodn2c(trim(value), body, found)
-               if (trim(key) == 'CENTER') call ctx%bodn2c(trim(value), center, found)
+               call ctx%bodn2c(trim(value), center, found)
                if (.not. found) then
                   call error('the body '//trim(value)//' is not known')
                   exit
                end if
             end if
+         case ('OBJECT_CODE')
+            read (value, *, iostat=ios) row(1)
+            if (ios /= 0 .or. objname == ' ') then
+               call error('OBJECT_CODE is not a code, or no OBJECT name precedes it')
+               exit
+            end if
+            body = nint(row(1), ip)
+            call kb%define_body(ctx, objname, body)
          case ('FRAME')
             frame = trim(value)
          case ('INTERPOLATION')
@@ -190,6 +205,10 @@ contains
       !> the file names (any other method is an error).
       subroutine add_block()
          total = total + nrow
+         if (body == 0) then
+            call error('the body '//objname//' is not known (and no OBJECT_CODE defines it)')
+            return
+         end if
          select case (trim(method))
          case ('LAGRANGE')
             if (have_bounds) then

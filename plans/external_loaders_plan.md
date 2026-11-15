@@ -1,7 +1,10 @@
 # Kernel loaders for other file formats: plan
 
-**Status:** phases 1 and 2 implemented (2026-11-15), and programmatic
-kernels in the C interface and PepperyPy; phases 3–5 not yet.
+**Status:** phases 1 and 2 implemented (2026-11-15), programmatic
+kernels in the C interface and PepperyPy, and phase 3's `define_body`
+(body names owned by a kernel: BODDEF records with an owner, removed when
+the kernel is unloaded, every context rebuilding its name tables). Not yet:
+the binary test format (phase 3), phases 4–5.
 
 What was built:
 - `src/pepper_loaders.f90` (a submodule of `pepper_instance_module`): the
@@ -27,8 +30,8 @@ What was built:
   kernels queried by threads in `test_parallel`.
 
 Differences from the plan below:
-- The test format is the simple text one; its binary form and
-  `define_body` (phase 3) are not done.
+- The test format is the simple text one (with `OBJECT_CODE` for a name the
+  file defines); its binary form (phase 3) is not done.
 - A reserved name given as `loader=` makes FURNSH load the file as it does
   without loaders; it does not force text over JSON (`TEXT` and `JSON` are
   not distinguished).

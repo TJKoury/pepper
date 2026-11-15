@@ -12,6 +12,10 @@
 !>   unsupported interpolation; discontinuities, gaps, bounds; the
 !>   loader's kept data and unload callbacks; meta-kernels with
 !>   KERNEL_LOADERS.
+!> - Body names a kernel defines (define_body): usable while it is
+!>   loaded, in contexts made before the load too; removed by UNLOAD and
+!>   KCLEAR, an earlier BODDEF of the name in effect again; the latest
+!>   kernel wins; the kernel pool's names take precedence.
 !> - The round trip: test format -> kernel -> .bsp file -> test format
 !>   (from the SPK's segments) -> kernel: the same states, bitwise, and
 !>   the same rows.
@@ -65,6 +69,7 @@ program test_loaders
    call test_discontinuities()
    call test_file_errors()
    call test_meta_kernel()
+   call test_names()
 
    call spice%kclear()
    call ref%kclear()
@@ -855,6 +860,76 @@ contains
       call spice%remove_loader('NOSNIFF')
    end subroutine test_meta_kernel
 
+   !> Body names defined by kernels (define_body): from a loader's file and
+   !> from a programmatic kernel.
+   subroutine test_names()
+      type(simple_loader) :: ld
+      type(kernel_builder) :: kb
+      type(pepper_context) :: pre
+      character(64) :: name
+      real(wp) :: s(6), lt
+      integer(ip) :: code
+      logical :: found
+
+      call spice%add_loader('SIMPLE', ld, extensions=['.sim'])
+      pre = spice%new_context()  ! made, and its name tables built, before the loads
+      call pre%bodn2c('EARTH', code, found)
+      call spice%boddef('SC_ONE', -5_ip)  ! the program's own definition of the name
+      call write_simple('test_loaders_n1.sim', [character(40) :: 'OBJECT = SC_ONE', 'OBJECT_CODE = -10001', &
+                        'CENTER = 399', 'FRAME = J2000', 'INTERPOLATION = HERMITE 7'], epochs, states, [1], [n])
+      call write_simple('test_loaders_n2.sim', [character(40) :: 'OBJECT = SC_ONE', 'OBJECT_CODE = -10002', &
+                        'CENTER = 399', 'FRAME = J2000', 'INTERPOLATION = HERMITE 7'], epochs, states, [1], [n])
+      call spice%furnsh('test_loaders_n1.sim')
+      call check_ok(ctx, 'a file that defines a body name')
+      call pre%bodn2c('SC_ONE', code, found)
+      call check(found .and. code == -10001, 'the kernel''s name, in a context made before the load')
+      call pre%bodc2n(-10001_ip, name, found)
+      call check(found .and. name == 'SC_ONE', 'the kernel''s code to name')
+      call pre%spkezr('SC_ONE', 1000.0_wp, 'J2000', 'NONE', 'EARTH', s, lt)
+      call check_ok(pre, 'SPKEZR by the kernel''s name')
+      call check(maxval(abs(s - circle_state(radius, 0.3_wp, 1000.0_wp))) < 1.0e-6_wp, 'the state by the name')
+
+      call spice%furnsh('test_loaders_n2.sim')
+      call pre%bodn2c('SC_ONE', code, found)
+      call check(found .and. code == -10002, 'the latest kernel''s definition wins')
+      call spice%unload('test_loaders_n2.sim')
+      call pre%bodn2c('SC_ONE', code, found)
+      call check(found .and. code == -10001, 'UNLOAD: the earlier kernel''s definition again')
+      call pre%bodc2n(-10002_ip, name, found)
+      call check(.not. found, 'UNLOAD: the code''s name is gone')
+
+      ! the kernel pool's names take precedence
+      call spice%pcpool('NAIF_BODY_NAME', 1_ip, ['SC_ONE'])
+      call spice%pipool('NAIF_BODY_CODE', 1_ip, [-77_ip])
+      call pre%bodn2c('SC_ONE', code, found)
+      call check(found .and. code == -77, 'the kernel pool''s name over the kernel''s')
+      call spice%dvpool('NAIF_BODY_NAME')
+      call spice%dvpool('NAIF_BODY_CODE')
+
+      call spice%unload('test_loaders_n1.sim')
+      call pre%bodn2c('SC_ONE', code, found)
+      call check(found .and. code == -5, 'UNLOAD: the program''s BODDEF again')
+      call pre%bodc2n(-10001_ip, name, found)
+      call check(.not. found, 'UNLOAD: no name for the kernel''s code')
+
+      ! a programmatic kernel's names; KCLEAR removes them, not BODDEF's
+      call kb%define_body(ctx, 'PROG_SC', -10003_ip)
+      call kb%define_body(ctx, ' ', -10004_ip)
+      call check_error(ctx, 'SPICE(BLANKNAMEASSIGNED)', 'a blank name')
+      call kb%spk_hermite(ctx, -10003_ip, 399_ip, 'J2000', epochs, states, 7_ip)
+      call spice%load_kernel('named', kb)
+      call ctx%bodn2c('PROG_SC', code, found)
+      call check(found .and. code == -10003, 'a programmatic kernel''s name')
+      call spice%furnsh('test_loaders_n1.sim')
+      call spice%kclear()
+      call pre%bodn2c('PROG_SC', code, found)
+      call check(.not. found, 'KCLEAR removes the kernels'' names')
+      call pre%bodn2c('SC_ONE', code, found)
+      call check(found .and. code == -5, 'KCLEAR keeps the program''s BODDEF')
+      call pre%destroy()
+      call spice%remove_loader('SIMPLE')
+   end subroutine test_names
+
    !> Delete the test's files.
    subroutine delete_files()
       call delete_file(ref_bsp)
@@ -877,6 +952,8 @@ contains
       call delete_file('test_loaders_bounds.sim')
       call delete_file('test_loaders_short.sim')
       call delete_file('test_loaders_none.bsp')
+      call delete_file('test_loaders_n1.sim')
+      call delete_file('test_loaders_n2.sim')
    end subroutine delete_files
 
 end program test_loaders
