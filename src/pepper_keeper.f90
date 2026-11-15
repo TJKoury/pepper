@@ -3265,20 +3265,15 @@ contains
 
       if ( ctx%failed() ) return
 
-      if ( .not. exists( ctx, file ) ) then
-
-         call ctx%setmsg ( nofile )
-         call ctx%errch  ( '#', file )
-         call ctx%errch  ( '#', 'could not be located.' )
-         call ctx%sigerr ( 'SPICE(NOSUCHFILE)'  )
-         return
-
-      end if
-
 !
-!     PEPPER: a kernel loader named by FURNSH's LOADER argument (or the
-!     meta-kernel's KERNEL_LOADERS) reads the file; a name of PEPPER's
-!     own loaders (k = -1) means the file is loaded as without loaders.
+!     PEPPER: a registered kernel loader named by FURNSH's LOADER argument
+!     (or the meta-kernel's KERNEL_LOADERS) reads the file, before and
+!     instead of anything else: no check that the file exists, of its
+!     architecture (a SPICE binary kernel is given to it too), of its
+!     extension, or of the other loaders' detect. The loader alone
+!     decides, and reports its own errors. A name of PEPPER's own loaders
+!     (SPK, CK, PCK, DSK, EK, TEXT, JSON, META) that no registered loader
+!     has (k = -1) means the file is loaded as without loaders.
 !
       if ( present ( used   ) ) used   = ' '
       if ( present ( format ) ) format = ' '
@@ -3292,6 +3287,16 @@ contains
       if ( k > 0 ) then
          call load_with_loader ( )
          return
+      end if
+
+      if ( .not. exists( ctx, file ) ) then
+
+         call ctx%setmsg ( nofile )
+         call ctx%errch  ( '#', file )
+         call ctx%errch  ( '#', 'could not be located.' )
+         call ctx%sigerr ( 'SPICE(NOSUCHFILE)'  )
+         return
+
       end if
 
 !

@@ -424,8 +424,27 @@ contains
 
       call spice%furnsh(sim_a, loader='nope')
       call check_error(ctx, 'SPICE(UNKNOWNLOADER)', 'an unknown loader')
+
+      ! a registered loader named like PEPPER's own takes its place
       call spice%add_loader('text', quiet)
-      call check_error(ctx, 'SPICE(RESERVEDLOADERNAME)', 'a reserved name cannot be registered')
+      call check_ok(ctx, 'a loader may have a reserved name')
+      call spice%furnsh(sim_a, loader='TEXT')
+      call ctx%kernel_format(sim_a, loader, format, found)
+      call check(found .and. loader == 'TEXT', 'loader=: the registered TEXT loader over PEPPER''s own')
+      call spice%unload(sim_a)
+      call spice%remove_loader('TEXT')
+
+      ! a named loader overrides every other choice: another loader's
+      ! extension, and the check that the file exists (the loader reports it)
+      call spice%furnsh(sim_a, loader='NOSNIFF')
+      call ctx%kernel_format(sim_a, loader, format, found)
+      call check(found .and. loader == 'NOSNIFF', 'loader=: over another loader''s extension')
+      call spice%unload(sim_a)
+      call spice%furnsh('test_loaders_missing.sim', loader='NOSNIFF')
+      call check_error(ctx, 'SPICE(FILEOPENFAILED)', 'loader=: the loader, not FURNSH, reports a missing file')
+      call spice%furnsh('test_loaders_missing.sim')
+      call check_error(ctx, 'SPICE(NOSUCHFILE)', 'without loader=: FURNSH reports a missing file')
+
       call spice%add_loader('SIMPLE', quiet)
       call check_error(ctx, 'SPICE(LOADERCONFLICT)', 'a name registered twice')
       call spice%add_loader('OTHER', quiet, extensions=['.SIM'])

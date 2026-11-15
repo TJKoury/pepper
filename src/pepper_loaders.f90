@@ -18,10 +18,11 @@
 !> - **Kernel loaders** ([[kernel_loader]], [[spice_add_loader]]) read
 !>   formats SPICE does not know: FURNSH (ZZLDKER) chooses one for a file
 !>   by name (its `loader` argument, or the meta-kernel variable
-!>   `KERNEL_LOADERS`), by extension, or by the loader's `detect`; the
-!>   loader fills a builder, which is loaded as a kernel named after the
-!>   file. SPICE's binary kernels (DAF, DAS) are never given to a loader
-!>   except by name.
+!>   `KERNEL_LOADERS`: the named, registered loader reads the file before
+!>   and instead of any other choice or check), by extension, or by the
+!>   loader's `detect`; the loader fills a builder, which is loaded as a
+!>   kernel named after the file. Unnamed, SPICE's binary kernels (DAF,
+!>   DAS) are never given to a loader. The rules: [[spice_furnsh]].
 submodule (pepper_instance_module) pepper_loaders
 
    use pepper_spk_packing, only: spk09_data, spk13_data
@@ -650,14 +651,6 @@ contains
          call ctx%sigerr ( 'SPICE(BLANKSTRING)' )
          return
       end if
-      if ( any ( reserved == uname ) ) then
-         call ctx%setmsg ( 'The name ''#'' is the name of one of PEPPER''s ' &
-         //            'own loaders (SPK, CK, PCK, DSK, EK, TEXT, JSON, ' &
-         //            'META): a kernel loader cannot have it.' )
-         call ctx%errch  ( '#', name )
-         call ctx%sigerr ( 'SPICE(RESERVEDLOADERNAME)' )
-         return
-      end if
       allocate ( exts(0) )
       if ( present ( extensions ) ) then
          deallocate ( exts )
@@ -876,11 +869,13 @@ contains
       uname = upper ( trim ( adjustl ( name ) ) )
       k = 0
       if ( ctx%failed() ) return
+!     A registered loader first, whatever its name.
+      k = find_loader ( ctx%spice, uname )
+      if ( k > 0 ) return
       if ( any ( reserved == uname ) ) then
          k = -1
          return
       end if
-      k = find_loader ( ctx%spice, uname )
       if ( k == 0 ) then
          call ctx%setmsg ( 'The kernel loader ''#'' named for the file ''#'' ' &
          //            'is not registered.' )

@@ -2082,8 +2082,11 @@ module pepper_instance_module
 
    !> A reader of a file format SPICE does not know, registered with
    !> [[spice_add_loader]]: FURNSH gives it the files it chooses it for
-   !> (by name, by extension, or by `detect`), and it fills a
-   !> [[kernel_builder]] with the file's data.
+   !> (by name, which overrides everything else; by extension; or by
+   !> `detect`: [[spice_furnsh]]), and it fills a [[kernel_builder]] with
+   !> the file's data. Named by FURNSH's `loader`, it is given the file
+   !> without any check (that it exists, what it is): `load` reports the
+   !> errors, e.g. a file it cannot open or read.
    !>
    !> Loaders run only inside FURNSH, UNLOAD and KCLEAR, on the instance,
    !> while no queries run. The instance keeps its own copy of the loader
@@ -2271,17 +2274,25 @@ module pepper_instance_module
          character(*), intent(in) :: file  !! the SPK file to write
       end subroutine spice_write_kernel
 
-      !> Register a kernel loader (PEPPER). FURNSH uses it for a file when
-      !> its `loader` argument (or the meta-kernel variable
-      !> `KERNEL_LOADERS`) names it, when the file name ends with one of
-      !> `extensions` (the longest match), or when its `detect` accepts the
-      !> file; SPICE's binary kernels (DAF, DAS) are never given to a
-      !> loader except by name. The instance keeps a copy of `loader`.
+      !> Register a kernel loader (PEPPER): a reader of a file format SPICE
+      !> does not know. FURNSH uses it for a file (the rules:
+      !> [[spice_furnsh]]):
       !>
-      !> A name or extension already registered signals
+      !> - when FURNSH's `loader` argument, or the meta-kernel variable
+      !>   `KERNEL_LOADERS`, names it: then it reads the file whatever the
+      !>   file is, before any other choice or check;
+      !> - else, for a file that is not a SPICE binary kernel (DAF, DAS),
+      !>   when the file name ends with one of `extensions` (the longest
+      !>   match among all loaders), or when its `detect` accepts the file
+      !>   (the most recently registered loader first).
+      !>
+      !> The instance keeps a copy of `loader` ([[spice_loader]] gives
+      !> access to it). A name or extension already registered signals
       !> SPICE(LOADERCONFLICT), unless `replace` (the old loader is
-      !> replaced); a name of PEPPER's own loaders (SPK, CK, PCK, DSK, EK,
-      !> TEXT, JSON, META) signals SPICE(RESERVEDLOADERNAME).
+      !> replaced, or the extension moves to this loader). Any name may be
+      !> registered: a loader named like one of PEPPER's own (SPK, CK, PCK,
+      !> DSK, EK, TEXT, JSON, META) takes the place of that name's meaning
+      !> in `loader` and `KERNEL_LOADERS`.
       module subroutine spice_add_loader ( this, name, loader, extensions, replace )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
@@ -2324,9 +2335,11 @@ module pepper_instance_module
          logical, intent(out) :: found  !! a kernel has this name
       end subroutine kernel_format
 
-      !> The registered loader FURNSH uses for `file`, when no loader is
-      !> named: the longest extension match, else the first `detect`
-      !> (the most recently registered first); 0 if none (PEPPER).
+      !> The registered loader FURNSH uses for `file` (not a SPICE binary
+      !> kernel) when no loader is named: the longest extension that ends
+      !> the file name (case-insensitive), else the first `detect` that
+      !> accepts the file's first 4096 bytes, the most recently registered
+      !> loader first; 0 if none (PEPPER; [[spice_furnsh]]).
       module subroutine match_kernel_loader ( ctx, file, k )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -2334,9 +2347,12 @@ module pepper_instance_module
          integer(ip), intent(out) :: k  !! the loader's index (0: none)
       end subroutine match_kernel_loader
 
-      !> The registered loader named `name` (FURNSH's `loader`, or
-      !> `KERNEL_LOADERS`): its index, or -1 for a name of PEPPER's own
-      !> loaders; SPICE(UNKNOWNLOADER) if no loader has the name (PEPPER).
+      !> The loader named `name` (FURNSH's `loader`, or `KERNEL_LOADERS`;
+      !> case-insensitive): the index of the registered loader with the
+      !> name, which has precedence; else -1 for a name of PEPPER's own
+      !> loaders (SPK, CK, PCK, DSK, EK, TEXT, JSON, META: the file is loaded
+      !> as without loaders); else SPICE(UNKNOWNLOADER) (PEPPER;
+      !> [[spice_furnsh]]).
       module subroutine find_kernel_loader ( ctx, file, name, k )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -8031,6 +8047,13 @@ module pepper_instance_module
       !> SPICE Private routine intended solely for the support of SPICE
       !> routines.  Users should not call this routine directly due
       !> to the volatile nature of this routine.
+      !>
+      !> PEPPER: chooses the loader of FILE (the rules: [[spice_furnsh]]): a
+      !> registered kernel loader named by `loader`, before any check of the
+      !> file; else SPICE's binary kernels by their ID word; else a
+      !> registered loader by extension or `detect`; else the text readers.
+      !> A file a kernel loader reads is loaded as an SPK built in memory
+      !> (FILTYP 'SPK').
       module subroutine zzldker ( ctx, file, nofile, filtyp, handle, loader, used, format )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8038,7 +8061,8 @@ module pepper_instance_module
          character(*), intent(in) :: nofile  !! A message to issue if FILE cannot be located
          character(*), intent(out) :: filtyp  !! The type of kernel.
          integer(ip), intent(out) :: handle  !! The handle associated with the loaded kernel.
-         character(*), intent(in), optional :: loader  !! PEPPER: the loader to use (blank: chosen by the file)
+         character(*), intent(in), optional :: loader  !! PEPPER: the registered loader that reads FILE, before anything else
+                                                       !! (a reserved name: PEPPER's own loaders; blank: chosen by the file)
          character(:), allocatable, intent(out), optional :: used  !! PEPPER: the kernel loader that read the file (blank: none)
          character(:), allocatable, intent(out), optional :: format  !! PEPPER: the description of a kernel built by a loader
       end subroutine zzldker
@@ -8050,12 +8074,19 @@ module pepper_instance_module
       !> PEPPER: a file named `*.json` (in any case) is a JSON kernel (see
       !> [[pepper_json]]), a text kernel or meta-kernel.
       !>
+      !> PEPPER: kernel loaders ([[spice_add_loader]]) read other file
+      !> formats: `loader` names the one that reads FILE, overriding every
+      !> other choice; without it FURNSH chooses (SPICE's binary kernels, a
+      !> loader's extension, a loader's `detect`, the text readers). The
+      !> rules are in [[spice_furnsh]], the method programs call.
+      !>
       !> FILSIZ     P   Maximum file name length.
       module subroutine furnsh ( ctx, file, loader )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: file  !! SPICE kernel file (text or binary).
-         character(*), intent(in), optional :: loader  !! PEPPER: the kernel loader for FILE ([[spice_add_loader]])
+         character(*), intent(in), optional :: loader  !! PEPPER: the registered kernel loader that reads FILE, overriding
+                                                       !! every other choice ([[spice_furnsh]]; blank or absent: FURNSH chooses)
       end subroutine furnsh
 
       !> Return the number of kernels of a specified type that are
@@ -21056,17 +21087,76 @@ contains
    !> whole into memory: the file, or every binary kernel a meta-kernel
    !> lists (default: the instance's choice, [[set_in_memory]]).
    !>
-   !> PEPPER: `loader` names a kernel loader ([[spice_add_loader]]) to read
-   !> the file, which is then a kernel in memory, used like an SPK. Without
-   !> it, a registered loader reads a file with one of its extensions, or
-   !> one its `detect` accepts (SPICE's binary kernels excepted). A name of
-   !> PEPPER's own loaders (SPK, CK, PCK, DSK, EK, TEXT, JSON, META) makes
-   !> FURNSH load the file as it does without loaders.
+   !>## Which loader reads the file (PEPPER)
+   !>
+   !> With `loader` (not blank): the name of a kernel loader registered with
+   !> [[spice_add_loader]] (case-insensitive). That loader reads the file,
+   !> and nothing else decides: FURNSH does not check that the file exists,
+   !> what it is (a SPICE binary kernel is given to the loader too), its
+   !> extension, or the other loaders' `detect`. The loader reports its own
+   !> errors. A registered loader has precedence over every name, the names
+   !> of PEPPER's own loaders included.
+   !>
+   !> - A name of PEPPER's own loaders, `SPK`, `CK`, `PCK`, `DSK`, `EK`,
+   !>   `TEXT`, `JSON` or `META`, that no registered loader has: the file is
+   !>   loaded as without kernel loaders (the steps 2 and 5 below). The
+   !>   name does not choose the type: the file's ID word does (binary
+   !>   kernels), and its extension (`*.json`: JSON kernel; else a text
+   !>   kernel). Its use: to keep registered loaders (their extensions and
+   !>   `detect`) from reading the file.
+   !> - Any other name: SPICE(UNKNOWNLOADER), and nothing is loaded.
+   !>
+   !> Without `loader` (or blank), FURNSH chooses:
+   !>
+   !> 1. The file must exist (SPICE(NOSUCHFILE)).
+   !> 2. A SPICE binary kernel (DAF or DAS: SPK, CK, binary PCK, DSK, EK,
+   !>    known by the ID word of its first record) is loaded by PEPPER;
+   !>    registered loaders are not asked, whatever their extensions.
+   !> 3. Else a registered loader with an extension that ends the file
+   !>    name reads it (case-insensitive; the longest match, so `.oem.xml`
+   !>    is chosen over `.xml`).
+   !> 4. Else the registered loaders' `detect` (on the file's first 4096
+   !>    bytes), the most recently registered first: the first that
+   !>    accepts reads it.
+   !> 5. Else the file is a JSON kernel (`*.json`, any case) or a text
+   !>    kernel or meta-kernel.
+   !>
+   !> A file a loader read that is loaded again goes to steps 3 and 4
+   !> first (step 2 would see the kernel built from it).
+   !>
+   !> A file a loader reads becomes an SPK held in memory (the loader fills
+   !> a [[kernel_builder]]), named after the file: queries, SPKCOV and
+   !> SPKOBJ by the file's name, KDATA and KINFO (type SPK),
+   !> [[kernel_format]] (the loader's name and the kernel's description),
+   !> UNLOAD and KCLEAR (which call the loader's `unload`), like an SPK
+   !> file. `in_memory` does not apply to it. If the loader signals an
+   !> error, or its data fails the builder's checks (an unknown frame, too
+   !> few states, ...), nothing of the file is loaded. Loaded again, the
+   !> file is read again: a second kernel (UNLOAD removes the last).
+   !>
+   !> `loader` applies to `file` only. For a meta-kernel it is the loader of
+   !> the meta-kernel itself; the files it lists are chosen by the steps
+   !> above, unless the meta-kernel's variable `KERNEL_LOADERS` names their
+   !> loaders: pairs of a file (as written in `KERNELS_TO_LOAD`, or with its
+   !> path symbols replaced) and a loader's name, with the rules of
+   !> `loader` (SPICE(BADKERNELLOADERS) for an odd number of values):
+   !>
+   !>```
+   !>     KERNELS_TO_LOAD = ( '$K/naif0012.tls', '$K/sc_ephem.txt' )
+   !>     KERNEL_LOADERS  = ( '$K/sc_ephem.txt', 'MYFORMAT' )
+   !>```
+   !>
+   !> The `loader` argument is only in this method: the legacy FURNSH, the
+   !> C interface (`pepper_spice_furnsh`) and PepperyPy's `furnsh` do not
+   !> have it (in the legacy FURNSH, loaders registered on the default
+   !> instance are still chosen by steps 3 and 4 and by `KERNEL_LOADERS`;
+   !> C and Python cannot register loaders).
    subroutine spice_furnsh(this, file, in_memory, loader)
       class(pepper_instance), target, intent(inout) :: this  !! the instance
       character(*), intent(in) :: file  !! SPICE kernel file (text or binary).
       logical, intent(in), optional :: in_memory  !! read binary kernels whole into memory
-      character(*), intent(in), optional :: loader  !! the kernel loader for the file ([[spice_add_loader]])
+      character(*), intent(in), optional :: loader  !! the registered kernel loader that reads the file, overriding
+                                                    !! every other choice (see above; blank or absent: FURNSH chooses)
       type(pepper_context), pointer :: ctx
       logical :: saved
       ctx => this%context()

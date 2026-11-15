@@ -426,13 +426,25 @@ call spice%furnsh('sc_ephem.txt', loader='MYFORMAT')               ! by name
   `detect(self, file, head)` (accept a file by its first 4 KB) and
   `unload(self, file)` (free what the loader kept). The instance keeps its
   own copy of the loader; `spice%loader(name, ptr)` gives access to it.
-- **How FURNSH chooses:** `loader=` (or the meta-kernel variable
-  `KERNEL_LOADERS`, pairs of a file of `KERNELS_TO_LOAD` and a loader's
-  name); then SPICE's binary kernels, which are never given to a loader by
-  extension or detection; then the longest registered extension; then the
-  loaders' `detect`; then the text and JSON readers, as before. The names
-  of PEPPER's own loaders (SPK, CK, PCK, DSK, EK, TEXT, JSON, META) are
-  reserved; given as `loader=`, FURNSH loads the file as without loaders.
+- **How FURNSH chooses** (in full in `spice_furnsh`'s documentation):
+  1. `loader=` (or the meta-kernel variable `KERNEL_LOADERS`, pairs of a
+     file of `KERNELS_TO_LOAD` and a loader's name): the registered loader
+     with that name reads the file, overriding everything else. FURNSH
+     makes no check of the file (that it exists, what it is, its
+     extension); the loader reports its own errors.
+  2. Else SPICE's binary kernels (DAF, DAS), by their ID word: PEPPER
+     loads them; they are never given to a loader by extension or
+     detection.
+  3. Else the longest registered extension that ends the file name.
+  4. Else the loaders' `detect`, the most recently registered first.
+  5. Else the text and JSON readers, as before.
+
+  A name of PEPPER's own loaders (SPK, CK, PCK, DSK, EK, TEXT, JSON, META)
+  that no loader is registered under makes FURNSH load the file as without
+  loaders (steps 2 and 5: the name does not choose the type); a registered
+  loader with such a name takes its place. Any other unknown name is
+  SPICE(UNKNOWNLOADER). `loader=` is only in the Fortran method
+  `spice%furnsh` for now.
 - **`kernel_format(file, loader, format, found)`** tells which loader read a
   kernel, and the builder's description (`set_format`).
 - **Body names a kernel defines:** `kb%define_body(ctx, name, code)`. While

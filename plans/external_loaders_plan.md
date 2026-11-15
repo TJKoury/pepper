@@ -322,10 +322,12 @@ its arrays with no file and no callback, e.g.
 `spice%furnsh(file, in_memory, loader)` gets a new optional `loader`.
 Resolution order (R1):
 
-1. **`loader=` given**: that loader, with no detection
-   (SPICE(UNKNOWNLOADER) if no loader has that name). The reserved names
-   force a built-in loader, e.g. `loader='TEXT'` for a text kernel named
-   `*.json`.
+1. **`loader=` given**: the registered loader with that name reads the
+   file, overriding everything else: no check that the file exists, of
+   its type (even a DAF), its extension, or detection; the loader reports
+   its own errors. A reserved name no loader is registered under loads
+   the file as without loaders (steps 2 and 5; it does not choose the
+   type). Any other name: SPICE(UNKNOWNLOADER).
 2. **A DAF or DAS file** (GETFAT's ID word): the built-in loaders. A real
    SPICE binary file is never handed to a registered loader by extension or
    detection; its ID word is unambiguous.
@@ -419,8 +421,11 @@ New short messages:
 - SPICE(UNKNOWNLOADER): `loader=` or `KERNEL_LOADERS` names no registered
   loader;
 - SPICE(LOADERCONFLICT): a name or extension registered twice without
-  `replace`;
-- SPICE(RESERVEDLOADERNAME): a reserved name.
+  `replace`.
+
+(SPICE(RESERVEDLOADERNAME) was dropped, 2026-11-15: any name can be
+registered, and a registered loader has precedence over a reserved
+name's meaning.)
 
 Each loader has its own, documented in its library. The builder's are those
 of the SPK writers.
@@ -433,8 +438,11 @@ of the SPK writers.
   alternative is a prefix inside `KERNELS_TO_LOAD` (`'MYFORMAT:file'`),
   which clashes with Windows drive letters and with existing names. Or
   none at all, relying on extensions and detection.
-- **D3. Reserved names** for the built-in loaders, so `loader=` can force
-  one.
+- **D3. Reserved names** for the built-in loaders. As built (2026-11-15):
+  a reserved name means "PEPPER's own loading, as without loaders" (it does
+  not force a type), and only when no registered loader has the name: a
+  named, registered loader overrides everything, the reserved names
+  included.
 - **D4. SPICE binary files are never claimed** by registered extensions or
   detection (resolution step 2).
 - **D5. The loader object is copied into the instance**, so it can keep
@@ -625,8 +633,23 @@ Each phase with its tests (`pixi run test`, `test-parallel` many times,
   `kernel_format` are generated. Kernel loaders are not registered from C
   or Python (they are Fortran types; `remove_loader` is not wrapped
   either), so FURNSH's `loader` argument is not in the C interface.
-  Loaders written in Python would need callbacks through the C API, a
-  separate decision.
+- **To do: kernel loaders in the C interface and PepperyPy.** The goal is
+  for the whole loader feature to work there too, not only programmatic
+  kernels:
+  - FURNSH's `loader` argument in `pepper_spice_furnsh` and PepperyPy's
+    `furnsh(path, loader=...)` (and `KERNEL_LOADERS` already works through
+    them);
+  - registering loaders: a loader written in C (a function that fills a
+    builder through `pepper_builder_*`, with optional `detect` and
+    `unload` functions and user data, as the programmatic providers take
+    function pointers) and in Python (a class with `load(ctx, kb, file)`,
+    `detect`, `unload`, called through those C callbacks, under the GIL);
+  - Fortran loader libraries (FreeFlyer, OEM) usable from C and Python: an
+    entry point each library exports to register its loader on an
+    instance handle (e.g. `pepper_freeflyer_register(spice)`), so a Python
+    program can use them without writing a loader;
+  - `remove_loader`, a list of the registered loaders, and their kept data
+    (through the loader's own API).
 - More builder segment types: 2/3 (Chebyshev, for compact fits), 8/12
   (equally spaced), 10 (two-line elements), 18/19, 21.
 
