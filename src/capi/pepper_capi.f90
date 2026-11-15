@@ -9,7 +9,7 @@ module pepper_capi
    use pepper_instance_module, only: pepper_instance
    use pepper_capi_core
    use pepper_math
-   use pepper_strings, only: astrip, bedec, beint, benum, beuns, cmprss, cpos, cposr, dpstr, eqchr, eqstr, esrchc, fndnwd, frstnb, frstnp, frstpc, intstr, lastnb, lastpc, lbuild, lcase, ljucrs, ljust, ltrim, lx4uns, lxqstr, matchi, matchw, nblen, nbwid, ncpos, ncposr, nechr, nextwd, nparsd, nparsi, nthwd, parsqs, pcwid, pos, posr, quote, replch, replwd, repmc, rjust, rtrim, samch, samchi, samsbi, samsub, shiftl, shiftr, sigdgt, ucase, wdcnt, wdindx
+   use pepper_strings, only: astrip, bedec, beint, benum, beuns, cmprss, cpos, cposr, decimal_value, dpstr, eqchr, eqstr, esrchc, fndnwd, frstnb, frstnp, frstpc, intstr, lastnb, lastpc, lbuild, lcase, ljucrs, ljust, ltrim, lx4uns, lxqstr, matchi, matchw, nblen, nbwid, ncpos, ncposr, nechr, nextwd, nparsd, nparsi, nthwd, parsqs, pcwid, pos, posr, quote, replch, replwd, repmc, rjust, rtrim, samch, samchi, samsbi, samsub, shiftl, shiftr, sigdgt, ucase, wdcnt, wdindx
    use pepper_arrays, only: bschoc, bschoi, bsrchc, bsrchd, bsrchi, isrchc, isrchd, isrchi, lstcld, lstcli, lstlec, lstled, lstlei, lstltc, lstltd, lstlti, maxac, maxad, maxai, minac, minad, minai, prodad, prodai, sameai, sumad, sumai, swapd, swapi, touchd, touchi, touchl
    implicit none
 
@@ -5436,6 +5436,32 @@ contains
       c_pepper_kernel_data = status_of(c_)
    end function c_pepper_kernel_data
 
+   !> C interface of `kernel_format`: The loader and the description of a loaded kernel (PEPPER): for a file read by a kernel loader, the loader's name and the builder's description; for a programmatic kernel, a blank loader and its description (`(programmatic)` if none was set); for SPICE's own kernels, blanks.
+   integer(c_int) function c_pepper_kernel_format ( ctx, file, loader, loader_len, format, format_len, &
+         found ) bind(c, name='pepper_kernel_format')
+      type(c_ptr), value :: ctx  !! the context
+      character(kind=c_char), intent(in) :: file(*)  !! the kernel (as loaded)
+      type(c_ptr), intent(out) :: loader  !! the loader's name (blank if none) (in the context)
+      integer(c_int), intent(out) :: loader_len  !! its length
+      type(c_ptr), intent(out) :: format  !! the description (blank if none) (in the context)
+      integer(c_int), intent(out) :: format_len  !! its length
+      integer(c_int), intent(out) :: found  !! a kernel has this name
+      type(capi_context), pointer :: c_
+      character(:), allocatable :: f_file
+      character(:), allocatable :: f_loader
+      character(:), allocatable :: f_format
+      logical :: f_found
+      c_ => context_of(ctx)
+      call c_to_f(file, f_file)
+      call c_%kernel_format(f_file, f_loader, f_format, f_found)
+      if (.not. allocated(f_loader)) f_loader = ''
+      call set_string_result(c_, 1, f_loader, loader, loader_len)
+      if (.not. allocated(f_format)) f_format = ''
+      call set_string_result(c_, 2, f_format, format, format_len)
+      found = merge(1_c_int, 0_c_int, f_found)
+      c_pepper_kernel_format = status_of(c_)
+   end function c_pepper_kernel_format
+
    !> C interface of `kernel_info`: The data of a kernel loaded through FURNSH, with file names of any length (PEPPER; [[kinfo]], which truncates to its arguments' lengths).
    integer(c_int) function c_pepper_kernel_info ( ctx, file, filtyp, filtyp_len, source, source_len, handle, &
          found ) bind(c, name='pepper_kernel_info')
@@ -6318,6 +6344,24 @@ contains
       c_pepper_pltvol = status_of(c_)
    end function c_pepper_pltvol
 
+   !> C interface of `pool_defined_by`: The kernel variables that a source assigned (PEPPER; the reverse of [[pool_sources]]): the variables with an assignment in effect from it, in the order of [[gnpool]].
+   integer(c_int) function c_pepper_pool_defined_by ( ctx, source, names, names_n ) bind(c, &
+         name='pepper_pool_defined_by')
+      type(c_ptr), value :: ctx  !! the context
+      character(kind=c_char), intent(in) :: source(*)  !! the kernel file, named as it was loaded, or a tag such as (PDPOOL)
+      type(c_ptr), intent(out) :: names  !! the variables it assigned (in the context, each NUL-terminated)
+      integer(c_int), intent(out) :: names_n  !! the number of strings
+      type(capi_context), pointer :: c_
+      character(:), allocatable :: f_source
+      type(string), allocatable :: f_names(:)
+      c_ => context_of(ctx)
+      call c_to_f(source, f_source)
+      call c_%pool_defined_by(f_source, f_names)
+      if (.not. allocated(f_names)) allocate (f_names(0))
+      call set_strings_result(c_, 1, f_names, names, names_n)
+      c_pepper_pool_defined_by = status_of(c_)
+   end function c_pepper_pool_defined_by
+
    !> C interface of `pool_integers`: All the values of a numeric kernel variable, rounded to integers (PEPPER; [[gipool]] with the size taken from the pool).
    integer(c_int) function c_pepper_pool_integers ( ctx, name, values, values_n, found ) bind(c, &
          name='pepper_pool_integers')
@@ -6355,6 +6399,60 @@ contains
       call set_strings_result(c_, 1, f_names, names, names_n)
       c_pepper_pool_names = status_of(c_)
    end function c_pepper_pool_names
+
+   !> C interface of `pool_sources`: Where the values of a kernel variable came from (PEPPER): the assignments in effect, in order, with the source of each, the line where it begins, and the index of its first value.
+   integer(c_int) function c_pepper_pool_sources ( ctx, name, sources, sources_n, lines, lines_n, found, first, &
+         first_n ) bind(c, name='pepper_pool_sources')
+      type(c_ptr), value :: ctx  !! the context
+      character(kind=c_char), intent(in) :: name(*)  !! the name of the variable
+      type(c_ptr), intent(out) :: sources  !! the source of each assignment (size 0 if not found) (in the context, each NUL-terminated)
+      integer(c_int), intent(out) :: sources_n  !! the number of strings
+      type(c_ptr), intent(out) :: lines  !! the line where each begins (0 for PCPOOL, PDPOOL, PIPOOL, add_frame) (in the context)
+      integer(c_int), intent(out) :: lines_n  !! its size
+      integer(c_int), intent(out) :: found  !! the variable is in the pool
+      type(c_ptr), intent(out) :: first  !! the index of the first value each gave (in the context)
+      integer(c_int), intent(out) :: first_n  !! its size
+      type(capi_context), pointer :: c_
+      character(:), allocatable :: f_name
+      type(string), allocatable :: f_sources(:)
+      integer(ip), allocatable :: f_lines(:)
+      logical :: f_found
+      integer(ip), allocatable :: f_first(:)
+      c_ => context_of(ctx)
+      call c_to_f(name, f_name)
+      call c_%pool_sources(f_name, f_sources, f_lines, f_found, f_first)
+      if (.not. allocated(f_sources)) allocate (f_sources(0))
+      call set_strings_result(c_, 1, f_sources, sources, sources_n)
+      if (.not. allocated(f_lines)) allocate (f_lines(0))
+      call set_int_result(c_, 1, f_lines, lines, lines_n)
+      found = merge(1_c_int, 0_c_int, f_found)
+      if (.not. allocated(f_first)) allocate (f_first(0))
+      call set_int_result(c_, 2, f_first, first, first_n)
+      c_pepper_pool_sources = status_of(c_)
+   end function c_pepper_pool_sources
+
+   !> C interface of `pool_string`: Return one string value of a character kernel variable, of any length (PEPPER; [[gcpool]] truncates to the length of its output).
+   integer(c_int) function c_pepper_pool_string ( ctx, name, nth, value, value_len, found, n ) bind(c, &
+         name='pepper_pool_string')
+      type(c_ptr), value :: ctx  !! the context
+      character(kind=c_char), intent(in) :: name(*)  !! the name of the variable
+      integer(c_int), value :: nth  !! the index of the value
+      type(c_ptr), intent(out) :: value  !! the value (empty if not found) (in the context)
+      integer(c_int), intent(out) :: value_len  !! its length
+      integer(c_int), intent(out) :: found  !! the variable is a character variable with an NTH value
+      integer(c_int), intent(out) :: n  !! the number of values of the variable (0 if it is not a character variable)
+      type(capi_context), pointer :: c_
+      character(:), allocatable :: f_name
+      character(:), allocatable :: f_value
+      logical :: f_found
+      c_ => context_of(ctx)
+      call c_to_f(name, f_name)
+      call c_%pool_string(f_name, nth, f_value, f_found, n)
+      if (.not. allocated(f_value)) f_value = ''
+      call set_string_result(c_, 1, f_value, value, value_len)
+      found = merge(1_c_int, 0_c_int, f_found)
+      c_pepper_pool_string = status_of(c_)
+   end function c_pepper_pool_string
 
    !> C interface of `pool_strings`: All the values of a character kernel variable, each of any length (PEPPER; [[gcpool]] with the size taken from the pool).
    integer(c_int) function c_pepper_pool_strings ( ctx, name, values, values_n, found ) bind(c, &
@@ -6397,6 +6495,16 @@ contains
       found = merge(1_c_int, 0_c_int, f_found)
       c_pepper_pool_values = status_of(c_)
    end function c_pepper_pool_values
+
+   !> C interface of `pool_write_json`: Write the kernel pool as a JSON kernel (PEPPER; the JSON counterpart of [[wrpool]]): one `"NAME": value` per variable, in the order of [[gnpool]], each with a `//` comment naming its sources and lines ([[pool_sources]]).
+   integer(c_int) function c_pepper_pool_write_json ( ctx, unit ) bind(c, name='pepper_pool_write_json')
+      type(c_ptr), value :: ctx  !! the context
+      integer(c_int), value :: unit  !! the unit of the file: open for formatted sequential writing
+      type(capi_context), pointer :: c_
+      c_ => context_of(ctx)
+      call c_%pool_write_json(unit)
+      c_pepper_pool_write_json = status_of(c_)
+   end function c_pepper_pool_write_json
 
    !> C interface of `prompt`: Prompt a user for keyboard input.
    integer(c_int) function c_pepper_prompt ( ctx, dspmsg, buffer_size, buffer ) bind(c, name='pepper_prompt')
@@ -10704,6 +10812,21 @@ contains
       c_pepper_spice_unload = spice_status(s_)
    end function c_pepper_spice_unload
 
+   !> C interface of `write_kernel`: Write a kernel built in memory (by [[spice_load_kernel]] or a kernel loader) to an SPK file (PEPPER).
+   integer(c_int) function c_pepper_spice_write_kernel ( spice, name, file ) bind(c, name='pepper_spice_write_kernel')
+      type(c_ptr), value :: spice  !! the instance
+      character(kind=c_char), intent(in) :: name(*)  !! the kernel's name (as loaded)
+      character(kind=c_char), intent(in) :: file(*)  !! the SPK file to write
+      type(pepper_instance), pointer :: s_
+      character(:), allocatable :: f_name
+      character(:), allocatable :: f_file
+      s_ => spice_of(spice)
+      call c_to_f(name, f_name)
+      call c_to_f(file, f_file)
+      call s_%write_kernel(f_name, f_file)
+      c_pepper_spice_write_kernel = spice_status(s_)
+   end function c_pepper_spice_write_kernel
+
    !> C interface of `approx`: Return .TRUE.
    integer(c_int) function c_pepper_approx ( x, y, tol, fresult ) bind(c, name='pepper_approx')
       real(c_double), value :: x  !! Double precision numbers.
@@ -11021,6 +11144,17 @@ contains
       fresult = f_fresult
       c_pepper_dcbrt = 0_c_int
    end function c_pepper_dcbrt
+
+   !> C interface of `decimal_value`: The value of a decimal number, correctly rounded (PEPPER): the library's one conversion of decimal text to double precision, so a number gives the same double wherever it is read (text kernels and time strings through [[nparsd]], JSON kernels, DAF text transfer files).
+   integer(c_int) function c_pepper_decimal_value ( text, value, iostat ) bind(c, name='pepper_decimal_value')
+      character(kind=c_char), intent(in) :: text(*)  !! the number
+      real(c_double), intent(out) :: value  !! its value (0 if IOSTAT is not 0)
+      integer(c_int), intent(out) :: iostat  !! 0, or nonzero: not a number, or beyond the range of double precision
+      character(:), allocatable :: f_text
+      call c_to_f(text, f_text)
+      call decimal_value(f_text, value, iostat)
+      c_pepper_decimal_value = 0_c_int
+   end function c_pepper_decimal_value
 
    !> C interface of `det`: Compute the determinant of a double precision 3x3 matrix.
    integer(c_int) function c_pepper_det ( m1, fresult ) bind(c, name='pepper_det')

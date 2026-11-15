@@ -128,6 +128,27 @@ int pepper_spice_add_ephemeris(void *spice, int body, int center, const char *fr
 int pepper_spice_add_frame(void *spice, const char *name, int code, int center,
                            pepper_xform_fn fn, void *user);
 
+/* ---- Kernels built in memory ---- */
+
+/* A builder belongs to no instance: fill it from any thread (errors in ctx,
+   any context), load it as a kernel with no file, used like an SPK file.
+   type: 9 (Lagrange) or 13 (Hermite, odd degree); epochs double[n] (TDB,
+   increasing); states double[n][6] (km, km/s); bounds 1: the coverage is
+   [tbeg, tend], else the epochs' span; ident "" for none; adapt 1: a
+   segment too short for its degree has it lowered (one state is dropped).
+   Kernel loaders (Fortran types) cannot be registered from C. */
+void *pepper_builder_new(void);
+void pepper_builder_free(void *builder);
+int pepper_builder_spk(void *ctx, void *builder, int type, int body, int center, const char *frame,
+                       int n, const double *epochs, const double *states, int degree,
+                       int bounds, double tbeg, double tend, const char *ident, int adapt);
+void pepper_builder_set_format(void *builder, const char *text);
+void pepper_builder_clear(void *builder);
+int pepper_builder_nsegments(void *builder);
+/* A kernel loaded under the same name is replaced; the builder is emptied
+   unless keep is 1. Errors in the instance (pepper_spice_getmsg). */
+int pepper_spice_load_kernel(void *spice, const char *name, void *builder, int keep);
+
 /* ---- Prepared queries (one context at a time) ---- */
 
 int pepper_prepare_state(void *ctx, const char *target, const char *observer, const char *frame,

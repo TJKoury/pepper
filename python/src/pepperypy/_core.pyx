@@ -346,6 +346,93 @@ cdef class _ContextBase:
             self._ptr = NULL
 
 
+# ----------------------------------------------------------------------
+# Kernels built in memory
+
+
+cdef class KernelBuilder:
+    """SPK segments made from arrays, loaded as a kernel with no file
+    (`Spice.load_kernel`). The interpolation is SPICE's: Lagrange (SPK type
+    9) or Hermite (type 13, odd degree). A builder belongs to no instance:
+    each thread can fill its own while others query. Frames are resolved
+    when it is loaded.
+
+        kb = KernelBuilder()
+        kb.spk_hermite(-10001, 399, 'J2000', ets, states, 7)
+        spice.load_kernel('my_trajectory', kb)
+        spice.write_kernel('my_trajectory', 'my_trajectory.bsp')
+    """
+
+    cdef void *_ptr
+
+    def __cinit__(self):
+        self._ptr = pepper_builder_new()
+
+    def __dealloc__(self):
+        if self._ptr != NULL:
+            pepper_builder_free(self._ptr)
+            self._ptr = NULL
+
+    def _add(self, int type, int body, int center, frame, epochs, states, int degree,
+             tbeg, tend, ident, adapt, ctx):
+        cdef cnp.ndarray e = np.ascontiguousarray(np.atleast_1d(epochs), dtype=np.float64).reshape(-1)
+        cdef cnp.ndarray s = np.ascontiguousarray(states, dtype=np.float64)
+        if s.ndim == 1 and s.shape[0] == 6:
+            s = s.reshape(1, 6)
+        if s.ndim != 2 or s.shape[1] != 6 or s.shape[0] != e.shape[0]:
+            raise ValueError(f'states must be an (n, 6) array for n = {e.shape[0]} epochs, '
+                             f'not {np.shape(states)}')
+        cdef int bounds = 0 if (tbeg is None and tend is None) else 1
+        cdef double tb = 0.0, te = 0.0
+        if bounds:
+            tb = float(tbeg) if tbeg is not None else float(e[0])
+            te = float(tend) if tend is not None else float(e[e.shape[0] - 1])
+        cdef _ContextBase c = (current_context() if ctx is None else ctx)
+        cdef bytes bf = _b(frame), bi = _b(ident)
+        c._enter()
+        try:
+            if pepper_builder_spk(c._ptr, self._ptr, type, body, center, bf, <int>e.shape[0],
+                                  <const double*>cnp.PyArray_DATA(e), <const double*>cnp.PyArray_DATA(s),
+                                  degree, bounds, tb, te, bi, 1 if adapt else 0):
+                c._raise()
+        finally:
+            c._leave()
+
+    def spk_lagrange(self, int body, int center, frame, epochs, states, int degree,
+                     tbeg=None, tend=None, ident='', adapt=False, ctx=None):
+        """Add an SPK segment of type 9 (Lagrange interpolation): `states`
+        is an (n, 6) array (km, km/s) at the n `epochs` (TDB seconds past
+        J2000, increasing). `tbeg`, `tend`: the coverage, inside the epochs
+        (default: their span). `adapt`: a segment too short for its degree
+        has its degree lowered (two states make a Hermite cubic, one state is
+        dropped). Errors are raised through `ctx` (default: the calling
+        thread's context of the current instance)."""
+        self._add(9, body, center, frame, epochs, states, degree, tbeg, tend, ident, adapt, ctx)
+
+    def spk_hermite(self, int body, int center, frame, epochs, states, int degree,
+                    tbeg=None, tend=None, ident='', adapt=False, ctx=None):
+        """Add an SPK segment of type 13 (Hermite interpolation, odd
+        degree); the arguments are those of `spk_lagrange`."""
+        self._add(13, body, center, frame, epochs, states, degree, tbeg, tend, ident, adapt, ctx)
+
+    def set_format(self, text):
+        """The kernel's description (`kernel_format`)."""
+        cdef bytes b = _b(text)
+        pepper_builder_set_format(self._ptr, b)
+
+    def clear(self):
+        """Remove the segments."""
+        pepper_builder_clear(self._ptr)
+
+    def nsegments(self):
+        """The number of segments."""
+        return pepper_builder_nsegments(self._ptr)
+
+    def __len__(self):
+        return pepper_builder_nsegments(self._ptr)
+
+
+
 include "_spice_methods.pxi"
 
 
@@ -491,6 +578,18 @@ cdef class Spice(_SpiceRoutines):
         block, n, width = _strblock(cvals)
         with self._lock:
             if pepper_spice_lmpool(self._ptr, n, width, block):
+                self._raise()
+
+    def load_kernel(self, name, KernelBuilder builder, keep=False):
+        """Load a KernelBuilder as a kernel named `name`, with no file: an
+        SPK in memory, used like an SPK file (queries, spkcov and spkobj by
+        its name, kdata, unload). A kernel loaded under the same name is
+        replaced. The builder is emptied, unless `keep`. `write_kernel`
+        writes it to an SPK file."""
+        self._check()
+        cdef bytes b = _b(name)
+        with self._lock:
+            if pepper_spice_load_kernel(self._ptr, b, builder._ptr, 1 if keep else 0):
                 self._raise()
 
     def set_in_memory(self, flag):
@@ -960,6 +1059,12 @@ cdef inline Context _context():
 def furnsh(path, in_memory=None):
     """Load kernels into the current instance (see Spice.furnsh)."""
     _instance().furnsh(path, in_memory)
+
+
+def load_kernel(name, builder, keep=False):
+    """Load a KernelBuilder as a kernel into the current instance (see
+    Spice.load_kernel)."""
+    _instance().load_kernel(name, builder, keep)
 
 
 def kclear():

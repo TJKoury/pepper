@@ -7841,6 +7841,29 @@ cdef class _ContextRoutines(_ContextBase):
             self._leave()
         return _found('kernel_data', (_sn(_c_file, _c_file_len), _sn(_c_filtyp, _c_filtyp_len), _sn(_c_source, _c_source_len), _c_handle), _c_found != 0)
 
+    def kernel_format(self, file):
+        """The loader and the description of a loaded kernel (PEPPER): for a file read by a kernel loader, the loader's name and the builder's description; for a programmatic kernel, a blank loader and its description (`(programmatic)` if none was set); for SPICE's own kernels, blanks. `found` is false if no kernel has this name.
+        
+        :param file: the kernel (as loaded)
+        :return: the loader's name (blank if none); the description (blank if none)
+            (found: NotFoundError if not found, or the flag returned last with no_found_check)"""
+        cdef const char *_c_loader = NULL
+        cdef int _c_loader_len = 0
+        cdef const char *_c_format = NULL
+        cdef int _c_format_len = 0
+        cdef int _c_found = 0
+        cdef int _st = 0
+        cdef bytes _b_file = _b(file)
+        cdef const char *_c_file = _b_file
+        self._enter()
+        try:
+            _st = pepper_kernel_format(self._ptr, _c_file, &_c_loader, &_c_loader_len, &_c_format, &_c_format_len, &_c_found)
+            if _st:
+                self._raise()
+        finally:
+            self._leave()
+        return _found('kernel_format', (_sn(_c_loader, _c_loader_len), _sn(_c_format, _c_format_len)), _c_found != 0)
+
     def kernel_info(self, file):
         """The data of a kernel loaded through FURNSH, with file names of any length (PEPPER; `kinfo`, which truncates to its arguments' lengths).
         
@@ -9122,6 +9145,25 @@ cdef class _ContextRoutines(_ContextBase):
             self._leave()
         return _c_fresult
 
+    def pool_defined_by(self, source):
+        """The kernel variables that a source assigned (PEPPER; the reverse of `pool_sources`): the variables with an assignment in effect from it, in the order of `gnpool`. A variable that a later `=` from another source replaced is not among them.
+        
+        :param source: the kernel file, named as it was loaded, or a tag such as (PDPOOL)
+        :return: the variables it assigned"""
+        cdef const char *_c_names = NULL
+        cdef int _c_names_n = 0
+        cdef int _st = 0
+        cdef bytes _b_source = _b(source)
+        cdef const char *_c_source = _b_source
+        self._enter()
+        try:
+            _st = pepper_pool_defined_by(self._ptr, _c_source, &_c_names, &_c_names_n)
+            if _st:
+                self._raise()
+        finally:
+            self._leave()
+        return _slist(_c_names, _c_names_n)
+
     def pool_integers(self, name):
         """All the values of a numeric kernel variable, rounded to integers (PEPPER; `gipool` with the size taken from the pool).
         
@@ -9161,6 +9203,55 @@ cdef class _ContextRoutines(_ContextBase):
         finally:
             self._leave()
         return _slist(_c_names, _c_names_n)
+
+    def pool_sources(self, name):
+        """Where the values of a kernel variable came from (PEPPER): the assignments in effect, in order, with the source of each, the line where it begins, and the index of its first value. An `=` assignment replaces the values, so it is the first one; each `+=` (or `'+NAME'` of a JSON kernel) that followed adds one.
+        
+        :param name: the name of the variable
+        :return: the source of each assignment (size 0 if not found); the line where each begins (0 for PCPOOL, PDPOOL, PIPOOL, add_frame); the index of the first value each gave
+            (found: NotFoundError if not found, or the flag returned last with no_found_check)"""
+        cdef const char *_c_sources = NULL
+        cdef int _c_sources_n = 0
+        cdef const int *_c_lines = NULL
+        cdef int _c_lines_n = 0
+        cdef int _c_found = 0
+        cdef const int *_c_first = NULL
+        cdef int _c_first_n = 0
+        cdef int _st = 0
+        cdef bytes _b_name = _b(name)
+        cdef const char *_c_name = _b_name
+        self._enter()
+        try:
+            _st = pepper_pool_sources(self._ptr, _c_name, &_c_sources, &_c_sources_n, &_c_lines, &_c_lines_n, &_c_found, &_c_first, &_c_first_n)
+            if _st:
+                self._raise()
+        finally:
+            self._leave()
+        return _found('pool_sources', (_slist(_c_sources, _c_sources_n), _copy1(NPY_INT32, _c_lines, _c_lines_n), _copy1(NPY_INT32, _c_first, _c_first_n)), _c_found != 0)
+
+    def pool_string(self, name, nth):
+        """Return one string value of a character kernel variable, of any length (PEPPER; `gcpool` truncates to the length of its output).
+        
+        :param name: the name of the variable
+        :param nth: the index of the value
+        :return: the value (empty if not found); the number of values of the variable (0 if it is not a character variable)
+            (found: NotFoundError if not found, or the flag returned last with no_found_check)"""
+        cdef int _c_nth = nth
+        cdef const char *_c_value = NULL
+        cdef int _c_value_len = 0
+        cdef int _c_found = 0
+        cdef int _c_n = 0
+        cdef int _st = 0
+        cdef bytes _b_name = _b(name)
+        cdef const char *_c_name = _b_name
+        self._enter()
+        try:
+            _st = pepper_pool_string(self._ptr, _c_name, _c_nth, &_c_value, &_c_value_len, &_c_found, &_c_n)
+            if _st:
+                self._raise()
+        finally:
+            self._leave()
+        return _found('pool_string', (_sn(_c_value, _c_value_len), _c_n), _c_found != 0)
 
     def pool_strings(self, name):
         """All the values of a character kernel variable, each of any length (PEPPER; `gcpool` with the size taken from the pool).
@@ -9203,6 +9294,21 @@ cdef class _ContextRoutines(_ContextBase):
         finally:
             self._leave()
         return _found('pool_values', (_copy1(NPY_DOUBLE, _c_values, _c_values_n),), _c_found != 0)
+
+    def pool_write_json(self, unit):
+        """Write the kernel pool as a JSON kernel (PEPPER; the JSON counterpart of `wrpool`): one `'NAME': value` per variable, in the order of `gnpool`, each with a `//` comment naming its sources and lines (`pool_sources`). Loading the file (`spice_furnsh`, as a `*.json` kernel) gives the same variables and values: the numbers are written with as many digits as they need to read back exactly (integers without a fraction), and times as the numbers they became.
+        
+        :param unit: the unit of the file: open for formatted sequential writing"""
+        cdef int _c_unit = unit
+        cdef int _st = 0
+        self._enter()
+        try:
+            _st = pepper_pool_write_json(self._ptr, _c_unit)
+            if _st:
+                self._raise()
+        finally:
+            self._leave()
+        return None
 
     def prompt(self, dspmsg):
         """Prompt a user for keyboard input.

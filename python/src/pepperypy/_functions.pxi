@@ -3423,6 +3423,14 @@ def kernel_data(which, kind):
         (found: NotFoundError if not found, or the flag returned last with no_found_check)"""
     return _context().kernel_data(which, kind)
 
+def kernel_format(file):
+    """The loader and the description of a loaded kernel (PEPPER): for a file read by a kernel loader, the loader's name and the builder's description; for a programmatic kernel, a blank loader and its description (`(programmatic)` if none was set); for SPICE's own kernels, blanks. `found` is false if no kernel has this name.
+    
+    :param file: the kernel (as loaded)
+    :return: the loader's name (blank if none); the description (blank if none)
+        (found: NotFoundError if not found, or the flag returned last with no_found_check)"""
+    return _context().kernel_format(file)
+
 def kernel_info(file):
     """The data of a kernel loaded through FURNSH, with file names of any length (PEPPER; `kinfo`, which truncates to its arguments' lengths).
     
@@ -3985,6 +3993,13 @@ def pltvol(vrtces, plates):
     :return: the result"""
     return _context().pltvol(vrtces, plates)
 
+def pool_defined_by(source):
+    """The kernel variables that a source assigned (PEPPER; the reverse of `pool_sources`): the variables with an assignment in effect from it, in the order of `gnpool`. A variable that a later `=` from another source replaced is not among them.
+    
+    :param source: the kernel file, named as it was loaded, or a tag such as (PDPOOL)
+    :return: the variables it assigned"""
+    return _context().pool_defined_by(source)
+
 def pool_integers(name):
     """All the values of a numeric kernel variable, rounded to integers (PEPPER; `gipool` with the size taken from the pool).
     
@@ -3999,6 +4014,23 @@ def pool_names(template_):
     :param template_: the template
     :return: the matching names"""
     return _context().pool_names(template_)
+
+def pool_sources(name):
+    """Where the values of a kernel variable came from (PEPPER): the assignments in effect, in order, with the source of each, the line where it begins, and the index of its first value. An `=` assignment replaces the values, so it is the first one; each `+=` (or `'+NAME'` of a JSON kernel) that followed adds one.
+    
+    :param name: the name of the variable
+    :return: the source of each assignment (size 0 if not found); the line where each begins (0 for PCPOOL, PDPOOL, PIPOOL, add_frame); the index of the first value each gave
+        (found: NotFoundError if not found, or the flag returned last with no_found_check)"""
+    return _context().pool_sources(name)
+
+def pool_string(name, nth):
+    """Return one string value of a character kernel variable, of any length (PEPPER; `gcpool` truncates to the length of its output).
+    
+    :param name: the name of the variable
+    :param nth: the index of the value
+    :return: the value (empty if not found); the number of values of the variable (0 if it is not a character variable)
+        (found: NotFoundError if not found, or the flag returned last with no_found_check)"""
+    return _context().pool_string(name, nth)
 
 def pool_strings(name):
     """All the values of a character kernel variable, each of any length (PEPPER; `gcpool` with the size taken from the pool).
@@ -4015,6 +4047,12 @@ def pool_values(name):
     :return: its values (size 0 if not found)
         (found: NotFoundError if not found, or the flag returned last with no_found_check)"""
     return _context().pool_values(name)
+
+def pool_write_json(unit):
+    """Write the kernel pool as a JSON kernel (PEPPER; the JSON counterpart of `wrpool`): one `'NAME': value` per variable, in the order of `gnpool`, each with a `//` comment naming its sources and lines (`pool_sources`). Loading the file (`spice_furnsh`, as a `*.json` kernel) gives the same variables and values: the numbers are written with as many digits as they need to read back exactly (integers without a fraction), and times as the numbers they became.
+    
+    :param unit: the unit of the file: open for formatted sequential writing"""
+    return _context().pool_write_json(unit)
 
 def prompt(dspmsg):
     """Prompt a user for keyboard input.
@@ -6883,6 +6921,13 @@ def unload(filename):
     :param filename: The name of a kernel to unload."""
     return _instance().unload(filename)
 
+def write_kernel(name, file):
+    """Write a kernel built in memory (by `spice_load_kernel` or a kernel loader) to an SPK file (PEPPER). The file must not exist.
+    
+    :param name: the kernel's name (as loaded)
+    :param file: the SPK file to write"""
+    return _instance().write_kernel(name, file)
+
 def approx(x, y, tol):
     """Return .TRUE. if two double precision numbers are equal to within some tolerance.
     
@@ -7313,6 +7358,19 @@ def dcbrt(x):
     cdef int _st = 0
     pepper_dcbrt(_c_x, &_c_fresult)
     return _c_fresult
+
+def decimal_value(text):
+    """The value of a decimal number, correctly rounded (PEPPER): the library's one conversion of decimal text to double precision, so a number gives the same double wherever it is read (text kernels and time strings through `nparsd`, JSON kernels, DAF text transfer files). Exactly, without I/O, when `exact_decimal` can (most numbers: no lock, so threads do not wait on each other); otherwise with Fortran's READ (list-directed: any form READ accepts). An exact tie (a value halfway between two doubles) rounds to even on the exact path, as READ does with gfortran (ifx's READ rounds it away from zero; the Fortran standard leaves ties to the compiler).
+    
+    :param text: the number
+    :return: its value (0 if IOSTAT is not 0); 0, or nonzero: not a number, or beyond the range of double precision"""
+    cdef double _c_value = 0
+    cdef int _c_iostat = 0
+    cdef int _st = 0
+    cdef bytes _b_text = _b(text)
+    cdef const char *_c_text = _b_text
+    pepper_decimal_value(_c_text, &_c_value, &_c_iostat)
+    return _c_value, _c_iostat
 
 def det(m1):
     """Compute the determinant of a double precision 3x3 matrix.

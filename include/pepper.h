@@ -128,6 +128,27 @@ int pepper_spice_add_ephemeris(void *spice, int body, int center, const char *fr
 int pepper_spice_add_frame(void *spice, const char *name, int code, int center,
                            pepper_xform_fn fn, void *user);
 
+/* ---- Kernels built in memory ---- */
+
+/* A builder belongs to no instance: fill it from any thread (errors in ctx,
+   any context), load it as a kernel with no file, used like an SPK file.
+   type: 9 (Lagrange) or 13 (Hermite, odd degree); epochs double[n] (TDB,
+   increasing); states double[n][6] (km, km/s); bounds 1: the coverage is
+   [tbeg, tend], else the epochs' span; ident "" for none; adapt 1: a
+   segment too short for its degree has it lowered (one state is dropped).
+   Kernel loaders (Fortran types) cannot be registered from C. */
+void *pepper_builder_new(void);
+void pepper_builder_free(void *builder);
+int pepper_builder_spk(void *ctx, void *builder, int type, int body, int center, const char *frame,
+                       int n, const double *epochs, const double *states, int degree,
+                       int bounds, double tbeg, double tend, const char *ident, int adapt);
+void pepper_builder_set_format(void *builder, const char *text);
+void pepper_builder_clear(void *builder);
+int pepper_builder_nsegments(void *builder);
+/* A kernel loaded under the same name is replaced; the builder is emptied
+   unless keep is 1. Errors in the instance (pepper_spice_getmsg). */
+int pepper_spice_load_kernel(void *spice, const char *name, void *builder, int keep);
+
 /* ---- Prepared queries (one context at a time) ---- */
 
 int pepper_prepare_state(void *ctx, const char *target, const char *observer, const char *frame,
@@ -785,6 +806,8 @@ int pepper_kdata(void *ctx, int which, const char *kind, int file_size, char *fi
 int pepper_kepleq(void *ctx, double ml, double h, double k, double *fresult);
 /* kernel_data: The data of the nth kernel of a kind loaded through FURNSH, with file names of any length (PEPPER; [[kdata]], which truncates to its arguments' lengths). */
 int pepper_kernel_data(void *ctx, int which, const char *kind, const char **file, int *file_len, const char **filtyp, int *filtyp_len, const char **source, int *source_len, int *handle, int *found);
+/* kernel_format: The loader and the description of a loaded kernel (PEPPER): for a file read by a kernel loader, the loader's name and the builder's description; for a programmatic kernel, a blank loader and its description (`(programmatic)` if none was set); for SPICE's own kernels, blanks. */
+int pepper_kernel_format(void *ctx, const char *file, const char **loader, int *loader_len, const char **format, int *format_len, int *found);
 /* kernel_info: The data of a kernel loaded through FURNSH, with file names of any length (PEPPER; [[kinfo]], which truncates to its arguments' lengths). */
 int pepper_kernel_info(void *ctx, const char *file, const char **filtyp, int *filtyp_len, const char **source, int *source_len, int *handle, int *found);
 /* kinfo: Return information about a specific kernel. */
@@ -887,14 +910,22 @@ int pepper_pltar(void *ctx, int nv, const double *vrtces, int np, const int *pla
 int pepper_pltnp(void *ctx, const double *point, const double *v1, const double *v2, const double *v3, double *pnear, double *dist);
 /* pltvol: Compute the volume of a three-dimensional region bounded by a collection of triangular plates. */
 int pepper_pltvol(void *ctx, int nv, const double *vrtces, int np, const int *plates, double *fresult);
+/* pool_defined_by: The kernel variables that a source assigned (PEPPER; the reverse of [[pool_sources]]): the variables with an assignment in effect from it, in the order of [[gnpool]]. */
+int pepper_pool_defined_by(void *ctx, const char *source, const char **names, int *names_n);
 /* pool_integers: All the values of a numeric kernel variable, rounded to integers (PEPPER; [[gipool]] with the size taken from the pool). */
 int pepper_pool_integers(void *ctx, const char *name, const int **values, int *values_n, int *found);
 /* pool_names: The names of the kernel variables that match a template (wildcards * and %, case-insensitive, as [[gnpool]]), of any length, in the order of [[gnpool]] (PEPPER). */
 int pepper_pool_names(void *ctx, const char *template_, const char **names, int *names_n);
+/* pool_sources: Where the values of a kernel variable came from (PEPPER): the assignments in effect, in order, with the source of each, the line where it begins, and the index of its first value. */
+int pepper_pool_sources(void *ctx, const char *name, const char **sources, int *sources_n, const int **lines, int *lines_n, int *found, const int **first, int *first_n);
+/* pool_string: Return one string value of a character kernel variable, of any length (PEPPER; [[gcpool]] truncates to the length of its output). */
+int pepper_pool_string(void *ctx, const char *name, int nth, const char **value, int *value_len, int *found, int *n);
 /* pool_strings: All the values of a character kernel variable, each of any length (PEPPER; [[gcpool]] with the size taken from the pool). */
 int pepper_pool_strings(void *ctx, const char *name, const char **values, int *values_n, int *found);
 /* pool_values: All the values of a numeric kernel variable (PEPPER; [[gdpool]] with the size taken from the pool). */
 int pepper_pool_values(void *ctx, const char *name, const double **values, int *values_n, int *found);
+/* pool_write_json: Write the kernel pool as a JSON kernel (PEPPER; the JSON counterpart of [[wrpool]]): one `"NAME": value` per variable, in the order of [[gnpool]], each with a `//` comment naming its sources and lines ([[pool_sources]]). */
+int pepper_pool_write_json(void *ctx, int unit);
 /* prompt: Prompt a user for keyboard input. */
 int pepper_prompt(void *ctx, const char *dspmsg, int buffer_size, char *buffer);
 /* prop2b: Compute the state of a massless body at time t_0 + DT by applying the two-body force model to a given central mass and a given body state at time t_0. */
@@ -1411,6 +1442,8 @@ int pepper_spice_spklef(void *spice, const char *fname, int *handle);
 int pepper_spice_spkuef(void *spice, int handle);
 /* unload: Unload a SPICE kernel. */
 int pepper_spice_unload(void *spice, const char *file);
+/* write_kernel: Write a kernel built in memory (by [[spice_load_kernel]] or a kernel loader) to an SPK file (PEPPER). */
+int pepper_spice_write_kernel(void *spice, const char *name, const char *file);
 /* approx: Return .TRUE. */
 int pepper_approx(double x, double y, double tol, int *fresult);
 /* astrip: Remove from a character string all characters which fall between specified starting and ending characters, inclusive. */
@@ -1459,6 +1492,8 @@ int pepper_cylrec(double r, double clon, double z, double *rectan);
 int pepper_cylsph(double r, double clon, double z, double *radius, double *colat, double *slon);
 /* dcbrt: Return the cube root of a double precision number. */
 int pepper_dcbrt(double x, double *fresult);
+/* decimal_value: The value of a decimal number, correctly rounded (PEPPER): the library's one conversion of decimal text to double precision, so a number gives the same double wherever it is read (text kernels and time strings through [[nparsd]], JSON kernels, DAF text transfer files). */
+int pepper_decimal_value(const char *text, double *value, int *iostat);
 /* det: Compute the determinant of a double precision 3x3 matrix. */
 int pepper_det(const double *m1, double *fresult);
 /* dpstr: Take a double precision number and convert it to an equivalent character string representation (base 10). */

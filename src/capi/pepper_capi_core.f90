@@ -15,6 +15,10 @@
 !> - Results of any size (an allocatable result in Fortran) stay in buffers
 !>   of the context; the shim returns a pointer to them and their size,
 !>   valid until the next call through the context.
+!> - A kernel builder (`pepper_builder_new`) is an opaque pointer too: SPK
+!>   segments added from arrays, loaded as a kernel with no file
+!>   (`pepper_spice_load_kernel`). Kernel loaders (Fortran types) cannot be
+!>   registered from C.
 !> - Arrays: a matrix is column-major (Fortran's order); a list of vectors
 !>   (a window, states, points) is an array of rows (C's `[n][k]`, the
 !>   memory of Fortran's `(k, n)`).
@@ -24,7 +28,7 @@ module pepper_capi_core
    use pepper_kinds, only: ip, wp
    use pepper_containers, only: string
    use pepper_instance_module, only: pepper_instance, pepper_context, state_query, rotation_query, &
-                              ephemeris_provider, frame_provider, gf_scalar
+                              ephemeris_provider, frame_provider, gf_scalar, kernel_builder
    implicit none
    ! Public: the bind(c) procedures must stay global symbols at any
    ! optimization level.
@@ -766,6 +770,135 @@ contains
       relative = 0
       found = fn(handle, self%user, frame, et, xform, relative) /= 0
    end subroutine capi_frame_transform
+
+   ! ----------------------------------------------------------------------
+   ! Kernels built in memory (kernel_builder, spice%load_kernel)
+   ! ----------------------------------------------------------------------
+
+   !> A new, empty kernel builder. It belongs to no instance: fill it from
+   !> any thread, load it with [[pepper_spice_load_kernel]], free it with
+   !> [[pepper_builder_free]].
+   function pepper_builder_new () result(handle) bind(c, name='pepper_builder_new')
+      type(c_ptr) :: handle  !! the builder
+      type(kernel_builder), pointer :: kb
+      allocate (kb)
+      handle = c_loc(kb)
+   end function pepper_builder_new
+
+   !> Free a kernel builder.
+   subroutine pepper_builder_free ( handle ) bind(c, name='pepper_builder_free')
+      type(c_ptr), value :: handle  !! the builder
+      type(kernel_builder), pointer :: kb
+      if (.not. c_associated(handle)) return
+      call c_f_pointer(handle, kb)
+      deallocate (kb)
+   end subroutine pepper_builder_free
+
+   !> Add an SPK segment to a builder: `type` 9 (Lagrange) or 13 (Hermite,
+   !> odd degree). `states` is `double[n][6]` (km, km/s), `epochs`
+   !> `double[n]` (TDB seconds past J2000, increasing). With `bounds` 1,
+   !> the coverage is [tbeg, tend] (inside the epochs), else the epochs'
+   !> span. `ident` is the segment identifier ("" for none). `adapt` 1: a
+   !> segment too short for its degree has its degree lowered (one state
+   !> is dropped). Errors are signaled in `ctx`, any context (the builder
+   !> belongs to no instance).
+   integer(c_int) function pepper_builder_spk ( ctx, builder, type, body, center, frame, n, epochs, states, &
+         degree, bounds, tbeg, tend, ident, adapt ) bind(c, name='pepper_builder_spk')
+      type(c_ptr), value :: ctx  !! a context (for the errors)
+      type(c_ptr), value :: builder  !! the builder
+      integer(c_int), value :: type  !! 9 or 13
+      integer(c_int), value :: body  !! the body
+      integer(c_int), value :: center  !! its center
+      character(kind=c_char), intent(in) :: frame(*)  !! the frame (resolved at the load)
+      integer(c_int), value :: n  !! the number of states
+      real(c_double), intent(in) :: epochs(*)  !! the epochs (n)
+      real(c_double), intent(in) :: states(6, *)  !! the states (n rows of 6)
+      integer(c_int), value :: degree  !! the degree of the polynomials
+      integer(c_int), value :: bounds  !! 1: the coverage is [tbeg, tend]
+      real(c_double), value :: tbeg  !! start of the coverage (with bounds)
+      real(c_double), value :: tend  !! end of the coverage (with bounds)
+      character(kind=c_char), intent(in) :: ident(*)  !! the segment identifier
+      integer(c_int), value :: adapt  !! 1: adapt a short segment
+      type(capi_context), pointer :: c
+      type(kernel_builder), pointer :: kb
+      character(:), allocatable :: f_frame, f_ident
+      integer(ip) :: m
+      c => context_of(ctx)
+      call c_f_pointer(builder, kb)
+      call c_to_f(frame, f_frame)
+      call c_to_f(ident, f_ident)
+      m = max(0_ip, int(n, ip))
+      select case (type)
+      case (9)
+         if (bounds /= 0) then
+            call kb%spk_lagrange(c, int(body, ip), int(center, ip), f_frame, epochs(1:m), states(:, 1:m), &
+                                 int(degree, ip), tbeg=tbeg, tend=tend, ident=f_ident, adapt=adapt /= 0)
+         else
+            call kb%spk_lagrange(c, int(body, ip), int(center, ip), f_frame, epochs(1:m), states(:, 1:m), &
+                                 int(degree, ip), ident=f_ident, adapt=adapt /= 0)
+         end if
+      case (13)
+         if (bounds /= 0) then
+            call kb%spk_hermite(c, int(body, ip), int(center, ip), f_frame, epochs(1:m), states(:, 1:m), &
+                                int(degree, ip), tbeg=tbeg, tend=tend, ident=f_ident, adapt=adapt /= 0)
+         else
+            call kb%spk_hermite(c, int(body, ip), int(center, ip), f_frame, epochs(1:m), states(:, 1:m), &
+                                int(degree, ip), ident=f_ident, adapt=adapt /= 0)
+         end if
+      case default
+         call c%setmsg('A kernel builder''s segments are of SPK type 9 (Lagrange) or 13 (Hermite), not #.')
+         call c%errint('#', int(type, ip))
+         call c%sigerr('SPICE(UNSUPPORTEDINTERP)')
+      end select
+      pepper_builder_spk = status_of(c)
+   end function pepper_builder_spk
+
+   !> Set the description of the kernel a builder makes (`kernel_format`).
+   subroutine pepper_builder_set_format ( builder, text ) bind(c, name='pepper_builder_set_format')
+      type(c_ptr), value :: builder  !! the builder
+      character(kind=c_char), intent(in) :: text(*)  !! the description
+      type(kernel_builder), pointer :: kb
+      character(:), allocatable :: f_text
+      call c_f_pointer(builder, kb)
+      call c_to_f(text, f_text)
+      call kb%set_format(f_text)
+   end subroutine pepper_builder_set_format
+
+   !> Empty a builder.
+   subroutine pepper_builder_clear ( builder ) bind(c, name='pepper_builder_clear')
+      type(c_ptr), value :: builder  !! the builder
+      type(kernel_builder), pointer :: kb
+      call c_f_pointer(builder, kb)
+      call kb%clear()
+   end subroutine pepper_builder_clear
+
+   !> The number of segments in a builder.
+   integer(c_int) function pepper_builder_nsegments ( builder ) bind(c, name='pepper_builder_nsegments')
+      type(c_ptr), value :: builder  !! the builder
+      type(kernel_builder), pointer :: kb
+      call c_f_pointer(builder, kb)
+      pepper_builder_nsegments = int(kb%nsegments(), c_int)
+   end function pepper_builder_nsegments
+
+   !> Load a builder as a kernel named `name`, with no file
+   !> (`spice%load_kernel`): used like an SPK file (queries, SPKCOV, KDATA,
+   !> UNLOAD). A kernel loaded under the same name is replaced. The builder
+   !> is emptied, unless `keep` is 1. Errors are signaled in the instance.
+   integer(c_int) function pepper_spice_load_kernel ( spice, name, builder, keep ) &
+         bind(c, name='pepper_spice_load_kernel')
+      type(c_ptr), value :: spice  !! the instance
+      character(kind=c_char), intent(in) :: name(*)  !! the kernel's name
+      type(c_ptr), value :: builder  !! the builder
+      integer(c_int), value :: keep  !! 1: keep the builder's segments
+      type(pepper_instance), pointer :: s
+      type(kernel_builder), pointer :: kb
+      character(:), allocatable :: f_name
+      s => spice_of(spice)
+      call c_f_pointer(builder, kb)
+      call c_to_f(name, f_name)
+      call s%load_kernel(f_name, kb, keep=keep /= 0)
+      pepper_spice_load_kernel = spice_status(s)
+   end function pepper_spice_load_kernel
 
    !> Add a programmatic body whose states come from a C function (see
    !> `spice%add_ephemeris`). `user` must stay valid until the body is

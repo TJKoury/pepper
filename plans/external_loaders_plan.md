@@ -1,6 +1,7 @@
 # Kernel loaders for other file formats: plan
 
-**Status:** phases 1 and 2 implemented (2026-11-15); phases 3–5 not yet.
+**Status:** phases 1 and 2 implemented (2026-11-15), and programmatic
+kernels in the C interface and PepperyPy; phases 3–5 not yet.
 
 What was built:
 - `src/pepper_loaders.f90` (a submodule of `pepper_instance_module`): the
@@ -614,10 +615,15 @@ Each phase with its tests (`pixi run test`, `test-parallel` many times,
 
 ### Later
 
-- PepperyPy and the C interface: programmatic kernels from NumPy arrays
-  (no callbacks needed), and `furnsh(..., loader=)` with the Fortran
-  loaders. Registering loaders written in Python would need callbacks
-  through the C API, a separate decision.
+- PepperyPy and the C interface: **done for programmatic kernels**
+  (2026-11-15): `pepper_builder_*` and `pepper_spice_load_kernel` in C
+  (`src/capi/pepper_capi_core.f90`), `KernelBuilder` and
+  `Spice.load_kernel` in PepperyPy, from NumPy arrays; `write_kernel` and
+  `kernel_format` are generated. Kernel loaders are not registered from C
+  or Python (they are Fortran types; `remove_loader` is not wrapped
+  either), so FURNSH's `loader` argument is not in the C interface.
+  Loaders written in Python would need callbacks through the C API, a
+  separate decision.
 - More builder segment types: 2/3 (Chebyshev, for compact fits), 8/12
   (equally spaced), 10 (two-line elements), 18/19, 21.
 

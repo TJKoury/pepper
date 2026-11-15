@@ -131,6 +131,57 @@ int main(void) {
     CHECK(states[1][0] == 7010.0 && states[1][2] == 30.0, "query state %g %g", states[1][0], states[1][2]);
     pepper_state_query_free(q);
 
+    /* a kernel built in memory: Hermite segment on a circle, loaded with no
+       file, written to an SPK, the file loaded by another instance */
+    {
+        enum { NS = 120 };
+        static double ets[NS], sts[NS][6];
+        for (int k = 0; k < NS; k++) {
+            double a = 1e-3 * 60.0 * k;
+            ets[k] = 60.0 * k;
+            sts[k][0] = 7000.0 * cos(a); sts[k][1] = 7000.0 * sin(a); sts[k][2] = 0.0;
+            sts[k][3] = -7.0 * sin(a);   sts[k][4] = 7.0 * cos(a);    sts[k][5] = 0.0;
+        }
+        void *kb = pepper_builder_new();
+        CHECK(pepper_builder_spk(ctx, kb, 13, -998, 399, "J2000", NS, ets, &sts[0][0], 7, 0, 0.0, 0.0,
+                                 "CAPI", 0) == 0, "builder_spk (Hermite)");
+        CHECK(pepper_builder_spk(ctx, kb, 7, -998, 399, "J2000", NS, ets, &sts[0][0], 7, 0, 0.0, 0.0,
+                                 "", 0) == 1, "builder_spk of an unknown type");
+        pepper_getmsg(ctx, "SHORT", sizeof msg, msg);
+        CHECK(strcmp(msg, "SPICE(UNSUPPORTEDINTERP)") == 0, "short message '%s'", msg);
+        pepper_reset(ctx);
+        CHECK(pepper_builder_nsegments(kb) == 1, "builder: one segment");
+        pepper_builder_set_format(kb, "C TEST");
+        CHECK(pepper_spice_load_kernel(spice, "capi_kernel", kb, 0) == 0, "load_kernel");
+        CHECK(pepper_builder_nsegments(kb) == 0, "load_kernel empties the builder");
+        CHECK(pepper_spkezr(ctx, "-998", ets[10], "J2000", "NONE", "EARTH", state, &lt) == 0, "spkezr of the kernel");
+        CHECK(fabs(state[0] - sts[10][0]) < 1e-9 && fabs(state[4] - sts[10][4]) < 1e-12, "the kernel's state %g %g",
+              state[0], state[4]);
+        const char *ld, *fm;
+        int ld_len, fm_len, found2;
+        CHECK(pepper_kernel_format(ctx, "capi_kernel", &ld, &ld_len, &fm, &fm_len, &found2) == 0 && found2 &&
+              ld_len == 0 && fm_len == 6 && strncmp(fm, "C TEST", 6) == 0, "kernel_format");
+        const char *bsp = "test_capi_kernel.bsp";
+        remove(bsp);
+        CHECK(pepper_spice_write_kernel(spice, "capi_kernel", bsp) == 0, "write_kernel");
+        void *other = pepper_spice_new();
+        void *octx = pepper_context_new(other);
+        CHECK(pepper_spice_furnsh(other, bsp, -1) == 0, "the written SPK loads");
+        int same = 1;
+        for (int k = 0; k < 500; k++) {
+            double t = ets[NS - 1] * k / 499.0, s1[6], s2[6], lt1, lt2;
+            pepper_spkgeo(ctx, -998, t, "J2000", 399, s1, &lt1);
+            pepper_spkgeo(octx, -998, t, "J2000", 399, s2, &lt2);
+            for (int j = 0; j < 6; j++) same = same && s1[j] == s2[j];
+        }
+        CHECK(same && !pepper_failed(ctx) && !pepper_failed(octx), "the written SPK: the same states, bitwise");
+        pepper_context_free(octx);
+        pepper_spice_free(other);
+        CHECK(pepper_spice_unload(spice, "capi_kernel") == 0, "unload of the kernel");
+        pepper_builder_free(kb);
+        remove(bsp);
+    }
+
     /* a math routine without a context */
     double r[9];
     double axis[3] = {0.0, 0.0, 1.0};

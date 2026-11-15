@@ -228,3 +228,21 @@ cdef class _SpiceRoutines(_SpiceBase):
             if _st:
                 self._raise()
         return None
+
+    def write_kernel(self, name, file):
+        """Write a kernel built in memory (by `spice_load_kernel` or a kernel loader) to an SPK file (PEPPER). The file must not exist.
+        
+        :param name: the kernel's name (as loaded)
+        :param file: the SPK file to write"""
+        cdef int _st = 0
+        cdef bytes _b_name = _b(name)
+        cdef bytes _b_file = _b(file)
+        cdef const char *_c_name = _b_name
+        cdef const char *_c_file = _b_file
+        self._check()
+        with self._lock:
+            with nogil:
+                _st = pepper_spice_write_kernel(self._ptr, _c_name, _c_file)
+            if _st:
+                self._raise()
+        return None
