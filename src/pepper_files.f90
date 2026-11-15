@@ -4854,8 +4854,12 @@ contains
 !        and will skip INQUIRE. In all other cases we will do INQUIRE
 !        and check UNITs.
 !
-         if (   mnm /= 0.0_wp                               .and. &
-              ( mnm /= ft%files(i)%mnm .and. ft%files(i)%method == read )     ) then
+!
+!        PEPPER: a DAF built in memory has no file: it is not this one.
+!
+         if ( ft%files(i)%synthetic .or. &
+              ( mnm /= 0.0_wp                               .and. &
+              ( mnm /= ft%files(i)%mnm .and. ft%files(i)%method == read ) ) ) then
 
 !
 !           These files are not the same file. Clear IOSTAT and set
@@ -6058,6 +6062,40 @@ contains
 
       end if
 
+!
+!     PEPPER: a DAF built in memory (a kernel with no file behind it) is
+!     found by its name (the most recently loaded, if several); it can
+!     only be read.
+!
+      if ( ( accmet == read  ) .or. &
+           ( accmet == write )      ) then
+         do i = nft, 1, -1
+            if ( .not. ft%files(i)%synthetic ) cycle
+            if ( ft%files(i)%name /= locfnm ) cycle
+            if ( accmet /= read ) then
+               call ctx%setmsg ( 'The kernel ''#'' was built in memory: ' &
+               //            'it has no file, and it cannot be opened ' &
+               //            'for # access.' )
+               call ctx%errch  ( '#', locfnm          )
+               call ctx%errch  ( '#', stramh(accmet)  )
+               call ctx%sigerr ( 'SPICE(FILEOPENCONFLICT)' )
+               return
+            end if
+            if ( filarc /= ft%files(i)%arch ) then
+               call ctx%setmsg ( 'The attempt to load file ''#'' as a # ' &
+               //            'has failed because it is already loaded ' &
+               //            'as a #.'                                 )
+               call ctx%errch  ( '#', locfnm                               )
+               call ctx%errch  ( '#', strarc(filarc)                       )
+               call ctx%errch  ( '#', strarc(ft%files(i)%arch)             )
+               call ctx%sigerr ( 'SPICE(FILARCMISMATCH)'                   )
+               return
+            end if
+            handle = ft%files(i)%handle
+            return
+         end do
+      end if
+
       mnm = 0.0_wp
 
 !
@@ -7115,6 +7153,20 @@ contains
          call ctx%setmsg ( 'There is no file loaded with handle = #' )
          call ctx%errint ( '#', handle                               )
          call ctx%sigerr ( 'SPICE(NOSUCHHANDLE)'                     )
+         return
+      end if
+
+!
+!     PEPPER: a DAF built in memory has no file, so it has no unit.
+!
+      if ( ft%files(findex)%synthetic ) then
+         unit = 0
+         call ctx%setmsg ( 'The kernel ''#'' (handle #) was built in ' &
+         //            'memory: it has no file, and this operation ' &
+         //            'needs one.' )
+         call ctx%errch  ( '#', ft%files(findex)%name )
+         call ctx%errint ( '#', handle                )
+         call ctx%sigerr ( 'SPICE(NOFILEFORKERNEL)'   )
          return
       end if
 

@@ -19240,6 +19240,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 05-AUG-1993 (NJB) (JML) (WLT)
       module procedure spkw09
       use pepper_kinds, only: ip, wp
+      use pepper_spk_packing, only: spk09_data, spk_data_size
       implicit none
 
 
@@ -19488,15 +19489,11 @@ contains
 !        +-----------------------+
 !
 
-      call dafada ( ctx, states,  n*statsz )
-      call dafada ( ctx, epochs,  n        )
-
-      do i = 1,   (n-1) / dirsiz
-         call dafada ( ctx,  epochs( dirsiz*i ),  1  )
-      end do
-
-      call dafada ( ctx, [ real(degree, wp) ], 1 )
-      call dafada ( ctx, [ real(n, wp) ], 1 )
+!
+!     PEPPER: the data is made by spk09_data (pepper_spk_packing), which the
+!     kernel builder uses too.
+!
+      call dafada ( ctx, spk09_data ( states(:, 1:n), epochs(1:n), degree ), spk_data_size ( n ) )
 
 !
 !     As long as nothing went wrong, end the segment.
@@ -20942,6 +20939,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 20-MAR-2000 (NJB)
       module procedure spkw13
       use pepper_kinds, only: ip, wp
+      use pepper_spk_packing, only: spk13_data, spk_data_size
       implicit none
 
 
@@ -21173,15 +21171,11 @@ contains
 !        +-----------------------+
 !
 
-      call dafada ( ctx, states,  n*statsz )
-      call dafada ( ctx, epochs,  n        )
-
-      do i = 1,   (n-1) / dirsiz
-         call dafada ( ctx,  epochs( dirsiz*i ),  1  )
-      end do
-
-      call dafada ( ctx, [ real( winsiz - 1, wp) ], 1 )
-      call dafada ( ctx, [ real( n, wp         ) ], 1 )
+!
+!     PEPPER: the data is made by spk13_data (pepper_spk_packing), which the
+!     kernel builder uses too.
+!
+      call dafada ( ctx, spk13_data ( states(:, 1:n), epochs(1:n), degree ), spk_data_size ( n ) )
 
 !
 !     As long as nothing went wrong, end the segment.

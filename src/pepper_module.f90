@@ -12,6 +12,8 @@
 !>   SPICELIB's cells ([[pepper_windows]]);
 !> * what programmatic ephemerides and frames are built from: the provider
 !>   types, and the queries passed to them;
+!> * kernels built in memory and kernel loaders: type([[kernel_builder]])
+!>   and the abstract type([[kernel_loader]]);
 !> * the interfaces of the procedures a program passes to the GF searches
 !>   (step, refinement, progress report, interrupt check, user-defined
 !>   functions).
@@ -36,6 +38,8 @@ module pepper_module
       ! programmatic ephemerides and frames
       ephemeris_provider, frame_provider, ephemeris_procedure, frame_procedure, &
       state_query, rotation_query, &
+      ! kernels built in memory and kernel loaders
+      kernel_builder, kernel_loader, &
       ! the procedures passed to the GF searches
       gf_step, gf_refine, gf_rep_init, gf_rep_update, gf_rep_final, gf_bail, &
       gf_scalar, gf_decr_x, gf_boolean

@@ -386,6 +386,58 @@ call ctx%pxform('MY_FRAME', 'J2000', et, rot)
   can be nested (its queries reach bodies or frames of the same provider
   type) must be `recursive`.
 
+## Kernels built in memory and kernel loaders
+
+A program can make an SPK from its own arrays, with no file, and load it
+like an SPK file: states and GF searches, SPKCOV and SPKOBJ by its name,
+KDATA (type SPK), UNLOAD and KCLEAR. A **kernel loader** does the same for a
+file format SPICE does not know: FURNSH hands it the file, it fills a
+builder, and the file is then an SPK in memory. PEPPER has no loader for
+any real format; loaders are separate libraries. See
+`plans/external_loaders_plan.md`.
+
+```fortran
+use pepper_module, only: kernel_builder, kernel_loader
+
+type(kernel_builder) :: kb
+call kb%spk_hermite(ctx, -10001, 399, 'J2000', epochs, states, 7)   ! SPK type 13
+call kb%spk_lagrange(ctx, -10002, 399, 'J2000', epochs, states, 8)  ! SPK type 9
+call spice%load_kernel('my_trajectory', kb)       ! a kernel with no file
+call spice%write_kernel('my_trajectory', 'my_trajectory.bsp')       ! to a real SPK
+
+call spice%add_loader('MYFORMAT', my_loader, extensions=['.myeph'])
+call spice%furnsh('sc.myeph')                      ! by extension
+call spice%furnsh('sc_ephem.txt', loader='MYFORMAT')               ! by name
+```
+
+- **The builder** takes states at epochs and uses SPICE's interpolation:
+  Lagrange (SPK type 9) or Hermite (type 13, odd degrees), with SPKW09's and
+  SPKW13's checks and short error messages. `tbeg` and `tend` set coverage
+  bounds inside the epochs. With `adapt`, a segment too short for its degree
+  has its degree lowered (two states make a Hermite cubic, one state is
+  dropped). It does not depend on an instance: threads can fill builders
+  while others query. Frames are resolved when the builder is loaded.
+- **`load_kernel(name, kb, keep)`** loads a builder under a name. A name in
+  use is replaced (unloaded first; the new kernel has the highest
+  priority). The builder is emptied, unless `keep`. An error, such as an
+  unknown frame, loads nothing.
+- **A loader** extends `kernel_loader` with `load(self, ctx, kb, file)`:
+  read the file, fill the builder, signal errors in `ctx`. Optional:
+  `detect(self, file, head)` (accept a file by its first 4 KB) and
+  `unload(self, file)` (free what the loader kept). The instance keeps its
+  own copy of the loader; `spice%loader(name, ptr)` gives access to it.
+- **How FURNSH chooses:** `loader=` (or the meta-kernel variable
+  `KERNEL_LOADERS`, pairs of a file of `KERNELS_TO_LOAD` and a loader's
+  name); then SPICE's binary kernels, which are never given to a loader by
+  extension or detection; then the longest registered extension; then the
+  loaders' `detect`; then the text and JSON readers, as before. The names
+  of PEPPER's own loaders (SPK, CK, PCK, DSK, EK, TEXT, JSON, META) are
+  reserved; given as `loader=`, FURNSH loads the file as without loaders.
+- **`kernel_format(file, loader, format, found)`** tells which loader read a
+  kernel, and the builder's description (`set_format`).
+- **Only SPICE's interpolations.** A loader maps the file's method to type 9
+  or 13, or signals an error; it does not substitute another method.
+
 ## Results of any size
 
 SPICELIB makes the caller size every output array, and fails (or truncates)

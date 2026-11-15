@@ -3260,6 +3260,8 @@ contains
       character(wdsize) :: versn
       character(wdsize) :: arch
       character(wdsize) :: mytype
+      character(:), allocatable :: fmt  ! PEPPER: the description of a kernel made by a loader
+      integer(ip) :: k  ! PEPPER: the kernel loader (0: none; -1: PEPPER's own loaders)
 
       if ( ctx%failed() ) return
 
@@ -3271,6 +3273,38 @@ contains
          call ctx%sigerr ( 'SPICE(NOSUCHFILE)'  )
          return
 
+      end if
+
+!
+!     PEPPER: a kernel loader named by FURNSH's LOADER argument (or the
+!     meta-kernel's KERNEL_LOADERS) reads the file; a name of PEPPER's
+!     own loaders (k = -1) means the file is loaded as without loaders.
+!
+      if ( present ( used   ) ) used   = ' '
+      if ( present ( format ) ) format = ' '
+      k = 0
+      if ( present ( loader ) ) then
+         if ( loader /= ' ' ) then
+            call find_kernel_loader ( ctx, file, loader, k )
+            if ( ctx%failed() ) return
+         end if
+      end if
+      if ( k > 0 ) then
+         call load_with_loader ( )
+         return
+      end if
+
+!
+!     PEPPER: a file a kernel loader read is loaded again (GETFAT would
+!     see the kernel built from it): the loader reads it again.
+!
+      if ( k == 0 .and. synthetic_named ( ctx, file ) > 0 ) then
+         call match_kernel_loader ( ctx, file, k )
+         if ( ctx%failed() ) return
+         if ( k > 0 ) then
+            call load_with_loader ( )
+            return
+         end if
       end if
 
       call getfat ( ctx, file, arch, mytype )
@@ -3397,6 +3431,19 @@ contains
       else
 
 !
+!        PEPPER: a file that is not a SPICE binary kernel may be one a
+!        registered kernel loader reads (its extension, or its detect).
+!
+         if ( k == 0 ) then
+            call match_kernel_loader ( ctx, file, k )
+            if ( ctx%failed() ) return
+            if ( k > 0 ) then
+               call load_with_loader ( )
+               return
+            end if
+         end if
+
+!
 !        PEPPER: SPICELIB checked here (ZZASCII) that the file's line
 !        terminators were the platform's, and signaled
 !        SPICE(INCOMPATIBLEEOL) otherwise. The text reader (RDTEXT) reads
@@ -3422,6 +3469,16 @@ contains
       return
 
       contains
+
+      !> PEPPER: load the file with registered kernel loader K: an SPK
+      !> built in memory, named FILE.
+      subroutine load_with_loader ( )
+         call run_kernel_loader ( ctx, k, file, handle, fmt )
+         if ( ctx%failed() ) return
+         filtyp = 'SPK'
+         if ( present ( used   ) ) used   = ctx%spice%loaders(k)%name
+         if ( present ( format ) ) format = fmt
+      end subroutine load_with_loader
 
       !> Unload a DAF that was just loaded but could not be read into
       !> memory, keeping the error that was signaled.
@@ -4061,6 +4118,11 @@ contains
       logical :: paths
       logical :: single
       logical :: update
+      type(string), allocatable :: kload(:)  ! PEPPER: the meta-kernel's KERNEL_LOADERS
+      character(:), allocatable :: raw  ! PEPPER: the file as written in KERNELS_TO_LOAD
+      character(:), allocatable :: lname  ! PEPPER: the loader KERNEL_LOADERS names for it
+      character(:), allocatable :: used  ! PEPPER: the kernel loader that read a file
+      character(:), allocatable :: fmt  ! PEPPER: the description of a kernel made by a loader
       associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded, &
                   known => ctx%spice%keeper%known, &
@@ -4102,12 +4164,13 @@ contains
       !     load (GETFAT and ZZDDHOPN check the same file; see zzddhman_state).
       !
       ctx%spice%zzddhman%reuse_f2h = .true.
-      call zzldker ( ctx, file, nofile, thstyp, myhand )
+      call zzldker ( ctx, file, nofile, thstyp, myhand, loader, used, fmt )
       ctx%spice%zzddhman%reuse_f2h = .false.
 
       if ( ctx%failed() ) return
 
-      call kt%add ( keeper_kernel ( name = trim ( file ), type = thstyp, handle = myhand, source = 0 ) )
+      call kt%add ( keeper_kernel ( name = trim ( file ), type = thstyp, handle = myhand, source = 0, &
+                                    loader = used, format = fmt ) )
       cursrc = loaded
 
        call cvpool ( ctx, 'FURNSH', update )
@@ -4176,6 +4239,14 @@ contains
       kt%kernels(loaded)%type = 'META'
 
 !
+!     PEPPER: the kernel loaders the meta-kernel names for its files
+!     (KERNEL_LOADERS: pairs of a file, as written in KERNELS_TO_LOAD,
+!     and a loader's name; see spice_add_loader).
+!
+      call meta_kernel_loaders ( ctx, file, kload )
+      if ( ctx%failed() ) return
+
+!
 !     Now load all kernels specified in the KERNELS_TO_LOAD variable.
 !
       filnum = 1
@@ -4198,6 +4269,7 @@ contains
 !        Resolve any path symbols that may be present.
 !        Make sure we have room to load at least one more file.
 !
+         raw = trim ( fil2ld )
          if ( paths ) then
 
             start  = 1
@@ -4280,7 +4352,8 @@ contains
          !     load (GETFAT and ZZDDHOPN check the same file; see zzddhman_state).
          !
          ctx%spice%zzddhman%reuse_f2h = .true.
-         call zzldker( ctx, fil2ld, nofile, thstyp, myhand )
+         call meta_kernel_loader ( kload, raw, trim ( fil2ld ), lname )
+         call zzldker( ctx, fil2ld, nofile, thstyp, myhand, lname, used, fmt )
          ctx%spice%zzddhman%reuse_f2h = .false.
 
          if ( ctx%failed() ) return
@@ -4328,7 +4401,8 @@ contains
 !        Add the latest file loaded to our database of loaded
 !        files.
 !
-         call kt%add ( keeper_kernel ( name = fil2ld, type = thstyp, handle = myhand, source = cursrc ) )
+         call kt%add ( keeper_kernel ( name = fil2ld, type = thstyp, handle = myhand, source = cursrc, &
+                                       loader = used, format = fmt ) )
 
 !
 !        Get the name of the next file to load.
@@ -4346,6 +4420,7 @@ contains
       do i = 1, nknown
          call dvpool ( ctx, known(i) )
       end do
+      call dvpool ( ctx, 'KERNEL_LOADERS' )
 
       call cvpool ( ctx, 'FURNSH', update )
 
@@ -5794,6 +5869,7 @@ contains
             call zzdskusf ( ctx, kt%kernels(i)%handle )
 
          end if
+         call notify_kernel_unloaded ( ctx, i )  ! PEPPER: a kernel loader's callback
 
       end do
 
@@ -6558,6 +6634,7 @@ contains
 
                end if
 
+               call notify_kernel_unloaded ( ctx, j )  ! PEPPER: a kernel loader's callback
                call kt%remove ( j )
 
 !
@@ -6595,6 +6672,7 @@ contains
 !
 !     Remove the I'th kernel from our local database.
 !
+      call notify_kernel_unloaded ( ctx, i )  ! PEPPER: a kernel loader's callback
       call kt%remove ( i )
 
 !
@@ -6635,6 +6713,7 @@ contains
                   do j = 1, nknown
                      call dvpool ( ctx, known(j) )
                   end do
+                  call dvpool ( ctx, 'KERNEL_LOADERS' )
 
                   call cvpool ( ctx, 'FURNSH', update )
 

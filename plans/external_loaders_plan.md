@@ -1,6 +1,41 @@
 # Kernel loaders for other file formats: plan
 
-**Status:** proposed (2026-11-15). No code yet.
+**Status:** phases 1 and 2 implemented (2026-11-15); phases 3–5 not yet.
+
+What was built:
+- `src/pepper_loaders.f90` (a submodule of `pepper_instance_module`): the
+  builder (`kernel_builder`: `spk_lagrange`, `spk_hermite`, `set_format`,
+  `clear`, `nsegments`; `adapt`), programmatic kernels (`load_kernel`,
+  `write_kernel`), the registry (`add_loader`, `remove_loader`, `loader`),
+  `kernel_format`, and the choice of a loader for FURNSH;
+- `src/pepper_spk_packing.f90`: the data of SPK types 9 and 13, used by the
+  builder and by SPKW09 and SPKW13;
+- DAFs built in memory: `ddh_file%synthetic`; ZZDDHOPN finds them by name
+  (the most recent, if several), ZZDDHF2H skips them, ZZDDHHLU refuses a
+  unit for them (SPICE(NOFILEFORKERNEL)); ZZDAFGFR, ZZDAFGSR and DAFRCR
+  read their file, summary and name records from the image; DAFEC and
+  `daf_comments` give no comments; GETFAT reports them as DAFs of their
+  type (so SPKCOV, SPKOBJ, CKCOV work by name);
+- FURNSH's `loader` argument, ZZLDKER's resolution, `KERNEL_LOADERS`, the
+  unload callbacks in UNLOAD and KCLEAR; `keeper_kernel%loader` and
+  `%format`;
+- the tests: `test/core/test_loaders.f90` with a made-up format
+  (`test/core/pepper_test_loader.f90`: a header of `KEY = value` lines,
+  blocks of `et x y z vx vy vz` rows), including the round trip format ->
+  kernel -> .bsp -> format -> kernel; builders filled by threads and
+  kernels queried by threads in `test_parallel`.
+
+Differences from the plan below:
+- The test format is the simple text one; its binary form and
+  `define_body` (phase 3) are not done.
+- A reserved name given as `loader=` makes FURNSH load the file as it does
+  without loaders; it does not force text over JSON (`TEXT` and `JSON` are
+  not distinguished).
+- `load_kernel` copies the builder's data into the DAF image (one copy),
+  then empties the builder; with `keep` it is not emptied.
+- A file a loader read, loaded again, is read again (a second kernel, with
+  its own handle); UNLOAD removes the last one, as for any file loaded
+  twice.
 
 Let a program attach **loaders** to an instance: objects that read a file
 format SPICE does not know and turn it into ordinary kernel data at load
