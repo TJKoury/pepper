@@ -15,11 +15,14 @@ auto-tests = true
 auto-examples = true
 
 [fortran]
-# SPICELIB is legacy F77 code (converted to free form): implicit typing and
-# external procedures without interfaces. "default" lets the compiler pick
-# the source form from the file extension (.f90: free form).
-implicit-typing = true
-implicit-external = true
+# No implicit typing, and no calls of procedures without an explicit
+# interface: gfortran gets -fimplicit-none and -Werror=implicit-interface
+# (fpm adds nothing for Intel Fortran). These apply to the library's sources
+# only: fpm uses each package's own settings, and NAIF's tspice test code,
+# still F77 in style, keeps both (tspice/fpm.toml). "default" lets the
+# compiler pick the source form from the file extension (.f90: free form).
+implicit-typing = false
+implicit-external = false
 source-form = "default"
 
 # Compiler options, applied through the default profile (also with --profile
