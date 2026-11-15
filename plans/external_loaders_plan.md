@@ -7,8 +7,15 @@ the kernel is unloaded, every context rebuilding its name tables), and
 phase 4 as `kb%add_ephemeris` (a provider owned by the kernel: the
 registration of `add_ephemeris` with an owner, not replacing another of the
 same body, removed with the kernel; SPKCOV and SPKOBJ by the kernel's name;
-`write_kernel` refuses it). Not yet: the binary test format (phase 3), phase
-5, and both in the C interface and PepperyPy.
+`write_kernel` refuses it). Frames (2026-11-15): `kb%frame_rotations`
+(rotations at ET epochs, quaternions or matrices, as a CK type 5 segment
+with ET tags in a DAF built in memory, evaluated by CKR05/CKE05 through a
+`rotation_table` frame provider: no clock) and `kb%add_frame` (a frame
+provider owned by the kernel); programmatic frames have owners, kernels of
+one frame coexist (the last that has data answers). Not yet: the binary
+test format (phase 3); writing frames to a `.bc` (with an SCLK and a frame
+kernel); a frame-coverage query; frame definitions owned by a kernel (4c);
+all of these in the C interface and PepperyPy.
 
 What was built:
 - `src/pepper_loaders.f90` (a submodule of `pepper_instance_module`): the

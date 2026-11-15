@@ -26,7 +26,7 @@ program test_parallel
    use pepper_constants, only: twopi
    use pepper_instance_module, only: pepper_instance, pepper_context, ephemeris_procedure, frame_procedure, &
                                      kernel_builder
-   use pepper_test_loader, only: simple_loader, write_simple
+   use pepper_test_loader, only: simple_loader, write_simple, spin_frame, spin_matrix
    !$ use omp_lib, only: omp_get_thread_num, omp_get_max_threads
 
    implicit none
@@ -228,7 +228,67 @@ contains
       call check(errs == 0, 'an unloaded kernel''s name gone in every thread')
       call spice%unload(sim)
       call spice%remove_loader('SIMPLE')
+      call built_frames()
    end subroutine built_kernels
+
+   !> Frames of a kernel built in memory, queried by the threads: a table
+   !> of rotations (CK type 5's interpolation on a DAF in memory) and a
+   !> model (a frame provider the kernel owns).
+   subroutine built_frames()
+      type(kernel_builder) :: kb
+      real(wp) :: e(nrow), q(4, nrow)
+      real(wp), allocatable :: fref(:, :), fpar(:, :)
+      integer :: i, errs
+      do i = 1, nrow
+         e(i) = 1.0e4_wp*(i - 1)
+         call setup%m2q(spin_matrix(2.0e-5_wp, e(i)), q(:, i))
+      end do
+      call kb%frame_rotations(setup, 'PAR_TABLE', 1400600_ip, 1000_ip, 'J2000', e, q, 7_ip)
+      call kb%add_frame(setup, 'PAR_MODEL', 1400601_ip, 1000_ip, spin_frame(rate=3.0e-5_wp))
+      call spice%load_kernel('built_frames', kb)
+      call check(.not. setup%failed(), 'a kernel of frames')
+      allocate (fref(45, nepoch), fpar(45, nepoch))
+      do i = 1, nepoch
+         call frame_queries(serial, et(i), fref(:, i))
+      end do
+      call check(.not. serial%failed(), 'serial queries of the kernel''s frames')
+      fpar = 0.0_wp
+      errs = 0
+      !$omp parallel num_threads(nthreads) reduction(+:errs)
+      call thread_frame_queries(fpar, errs)
+      !$omp end parallel
+      call check(errs == 0 .and. all(fpar == fref), &
+                 'parallel queries of the kernel''s frames identical to the serial ones')
+      call spice%unload('built_frames')
+   end subroutine built_frames
+
+   !> The transformations of the kernel's frames at one epoch.
+   subroutine frame_queries(ctx, t, res)
+      type(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: t  !! the epoch
+      real(wp), intent(out) :: res(45)  !! a 6x6 transformation and a rotation
+      real(wp) :: xf(6, 6), rot(3, 3)
+      call ctx%sxform('J2000', 'PAR_TABLE', t, xf)
+      call ctx%pxform('PAR_MODEL', 'J2000', t, rot)
+      res(1:36) = reshape(xf, [36])
+      res(37:45) = reshape(rot, [9])
+   end subroutine frame_queries
+
+   !> One thread's queries of the kernel's frames.
+   subroutine thread_frame_queries(fpar, errs)
+      real(wp), intent(inout) :: fpar(:, :)  !! the results (each thread its epochs)
+      integer, intent(inout) :: errs  !! incremented if the context failed
+      type(pepper_context) :: ctx
+      integer :: k
+      ctx = spice%new_context()
+      !$omp do schedule(dynamic, 5)
+      do k = 1, nepoch
+         call frame_queries(ctx, et(k), fpar(:, k))
+      end do
+      !$omp end do
+      if (ctx%failed()) errs = errs + 1
+      call ctx%destroy()
+   end subroutine thread_frame_queries
 
    !> Fill builder `t` (one thread's): a body 9200+t on a circle around
    !> body 1000, Hermite then Lagrange segments. A context of the thread's

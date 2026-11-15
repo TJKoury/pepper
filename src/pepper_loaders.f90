@@ -45,6 +45,15 @@ submodule (pepper_instance_module) pepper_loaders
    character(4), parameter :: reserved(nreserved) = &
       [character(4) :: 'SPK', 'CK', 'PCK', 'DSK', 'EK', 'TEXT', 'JSON', 'META']  !! PEPPER's own loaders
 
+   !> A segment of a DAF image: its descriptor's components but the
+   !> addresses, its identifier, and its data (pointed to, not copied).
+   type :: image_segment
+      real(wp) :: dc(2) = 0.0_wp  !! the double precision components
+      integer(ip) :: ic(4) = 0  !! the integer components before the addresses
+      character(:), allocatable :: ident  !! the segment identifier
+      real(wp), pointer, contiguous :: data(:) => null()  !! the data
+   end type image_segment
+
 contains
 
    ! ----------------------------------------------------------------------
@@ -125,6 +134,316 @@ contains
       call move_alloc ( from%provider, to%provider )
    end subroutine move_provider
 
+   !> Add a table of rotations to the kernel, as quaternions (PEPPER).
+   module procedure kb_frame_quaternions
+      implicit none
+      call add_rotation_table ( this, ctx, name, code, center, base, epochs, quats, degree, &
+                                av, method, inverse, tbeg, tend, ident )
+   end procedure kb_frame_quaternions
+
+   !> Add a table of rotations to the kernel, as rotation matrices
+   !> (PEPPER): converted to quaternions (M2Q).
+   module procedure kb_frame_matrices
+      implicit none
+      real(wp), allocatable :: q(:, :)
+      integer(ip) :: k
+      if ( ctx%failed() ) return
+      if ( size ( rots, 1 ) /= 3 .or. size ( rots, 2 ) /= 3 .or. size ( rots, 3 ) /= size ( epochs ) ) then
+         call ctx%setmsg ( 'The rotation matrices of the frame ''#'' must be an ' &
+         //            'array of 3 by 3 by the number of epochs (#).' )
+         call ctx%errch  ( '#', name )
+         call ctx%errint ( '#', int ( size ( epochs ), ip ) )
+         call ctx%sigerr ( 'SPICE(INVALIDSIZE)' )
+         return
+      end if
+      allocate ( q(4, size ( epochs )) )
+      do k = 1, size ( epochs, kind=ip )
+         call m2q ( ctx, rots(:, :, k), q(:, k) )
+         if ( ctx%failed() ) return
+      end do
+      call add_rotation_table ( this, ctx, name, code, center, base, epochs, q, degree, &
+                                av, method, inverse, tbeg, tend, ident )
+   end procedure kb_frame_matrices
+
+   !> Check a table of rotations as CKW05 does, make its quaternions'
+   !> signs continuous, pack it as a CK type 5 segment (ET tags, a rate of
+   !> 1, one interpolation interval), and add it to the builder.
+   subroutine add_rotation_table ( this, ctx, name, code, center, base, epochs, quats, degree, &
+                                   av, method, inverse, tbeg, tend, ident )
+      use pepper_math, only: qxq, vdistg
+      use pepper_spk_packing, only: ck05_data
+      use pepper_inc_ck05, only: c05tp0, c05tp1, c05tp3, c05ps0, c05ps1, c05ps3
+      class(kernel_builder), intent(inout) :: this  !! the builder
+      class(pepper_context), intent(inout) :: ctx  !! the context, for the errors
+      character(*), intent(in) :: name  !! the frame's name
+      integer(ip), intent(in) :: code  !! its ID code
+      integer(ip), intent(in) :: center  !! its center
+      character(*), intent(in) :: base  !! the frame the rotations are relative to
+      real(wp), intent(in) :: epochs(:)  !! the epochs
+      real(wp), intent(in) :: quats(:, :)  !! the quaternions (4, n)
+      integer(ip), intent(in) :: degree  !! the degree
+      real(wp), intent(in), optional :: av(:, :)  !! the angular velocities (3, n)
+      character(*), intent(in), optional :: method  !! LAGRANGE or HERMITE
+      logical, intent(in), optional :: inverse  !! the rotations are from the frame to BASE
+      real(wp), intent(in), optional :: tbeg  !! start of the coverage
+      real(wp), intent(in), optional :: tend  !! end of the coverage
+      character(*), intent(in), optional :: ident  !! the segment identifier
+      integer(ip), parameter :: maxdeg = 23  !! CK type 5's largest degree
+      type(builder_frame_table), allocatable :: tmp(:)
+      real(wp), allocatable :: q(:, :), packets(:)
+      real(wp) :: dq(4), first, last
+      character(:), allocatable :: meth
+      integer(ip) :: n, k, subtype, packsz, winsiz
+      logical :: hermite, with_av
+
+      if ( ctx%failed() ) return
+      n = size ( epochs, kind=ip )
+      if ( name == ' ' ) then
+         call ctx%setmsg ( 'The name of the frame # is blank.' )
+         call ctx%errint ( '#', code )
+         call ctx%sigerr ( 'SPICE(BLANKSTRING)' )
+         return
+      end if
+      if ( size ( quats, 1 ) /= 4 .or. size ( quats, 2 ) /= n ) then
+         call ctx%setmsg ( 'The quaternions of the frame ''#'' must be an array ' &
+         //            'of 4 by the number of epochs (#).' )
+         call ctx%errch  ( '#', name )
+         call ctx%errint ( '#', n )
+         call ctx%sigerr ( 'SPICE(INVALIDSIZE)' )
+         return
+      end if
+      with_av = present ( av )
+      if ( with_av ) then
+         if ( size ( av, 1 ) /= 3 .or. size ( av, 2 ) /= n ) then
+            call ctx%setmsg ( 'The angular velocities of the frame ''#'' must be an ' &
+            //            'array of 3 by the number of epochs (#).' )
+            call ctx%errch  ( '#', name )
+            call ctx%errint ( '#', n )
+            call ctx%sigerr ( 'SPICE(INVALIDSIZE)' )
+            return
+         end if
+      end if
+      if ( n < 1 ) then
+         call ctx%setmsg ( 'The frame ''#'' has no rotations.' )
+         call ctx%errch  ( '#', name )
+         call ctx%sigerr ( 'SPICE(TOOFEWSTATES)' )
+         return
+      end if
+      do k = 2, n
+         if ( epochs(k) <= epochs(k-1) ) then
+            call ctx%setmsg ( 'EPOCH # having index # is not greater than its ' &
+            //            'predecessor #.' )
+            call ctx%errdp  ( '#', epochs(k) )
+            call ctx%errint ( '#', k )
+            call ctx%errdp  ( '#', epochs(k-1) )
+            call ctx%sigerr ( 'SPICE(TIMESOUTOFORDER)' )
+            return
+         end if
+      end do
+      do k = 1, n
+         if ( all ( quats(:, k) == 0.0_wp ) ) then
+            call ctx%setmsg ( 'The quaternion at index # of the frame ''#'' is zero.' )
+            call ctx%errint ( '#', k )
+            call ctx%errch  ( '#', name )
+            call ctx%sigerr ( 'SPICE(ZEROQUATERNION)' )
+            return
+         end if
+      end do
+      meth = 'LAGRANGE'
+      if ( present ( method ) ) meth = upper ( trim ( adjustl ( method ) ) )
+      hermite = meth == 'HERMITE'
+      if ( .not. hermite .and. meth /= 'LAGRANGE' ) then
+         call ctx%setmsg ( 'The interpolation ''#'' of the frame ''#'' is not one ' &
+         //            'PEPPER supports (LAGRANGE or HERMITE).' )
+         call ctx%errch  ( '#', meth )
+         call ctx%errch  ( '#', name )
+         call ctx%sigerr ( 'SPICE(UNSUPPORTEDINTERP)' )
+         return
+      end if
+      if ( hermite .and. .not. with_av ) then
+         call ctx%setmsg ( 'Hermite interpolation of the frame ''#'' needs the ' &
+         //            'angular velocities.' )
+         call ctx%errch  ( '#', name )
+         call ctx%sigerr ( 'SPICE(UNSUPPORTEDINTERP)' )
+         return
+      end if
+      if ( degree < 1 .or. degree > maxdeg ) then
+         call ctx%setmsg ( 'The interpolating polynomials have degree #; the valid ' &
+         //            'degree range is [1, #]' )
+         call ctx%errint ( '#', degree )
+         call ctx%errint ( '#', maxdeg )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)' )
+         return
+      end if
+      if ( hermite ) then
+         winsiz = ( degree + 1 ) / 2
+      else
+         winsiz = degree + 1
+      end if
+      if ( mod ( winsiz, 2 ) /= 0 .or. ( hermite .and. mod ( degree, 2 ) == 0 ) ) then
+         call ctx%setmsg ( 'The degree # of the rotations of the frame ''#'' gives ' &
+         //            'an interpolation window of odd size; CK type 5 needs an ' &
+         //            'even window (an odd degree for Lagrange; 3, 7, 11, 15, 19 ' &
+         //            'or 23 for Hermite).' )
+         call ctx%errint ( '#', degree )
+         call ctx%errch  ( '#', name )
+         call ctx%sigerr ( 'SPICE(INVALIDDEGREE)' )
+         return
+      end if
+      first = epochs(1)
+      last = epochs(n)
+      if ( present ( tbeg ) ) first = tbeg
+      if ( present ( tend ) ) last = tend
+      if ( first > last .or. first < epochs(1) .or. last > epochs(n) ) then
+         call ctx%setmsg ( 'The coverage [#, #] of the rotations of the frame ''#'' ' &
+         //            'is not within their epochs [#, #].' )
+         call ctx%errdp  ( '#', first )
+         call ctx%errdp  ( '#', last )
+         call ctx%errch  ( '#', name )
+         call ctx%errdp  ( '#', epochs(1) )
+         call ctx%errdp  ( '#', epochs(n) )
+         call ctx%sigerr ( 'SPICE(BADDESCRTIMES)' )
+         return
+      end if
+
+!     The quaternions, from BASE to the frame (CK's C-matrix), their signs
+!     continuous.
+      q = quats
+      if ( present ( inverse ) ) then
+         if ( inverse ) q(2:4, :) = -q(2:4, :)
+      end if
+      do k = 2, n
+         if ( vdistg ( q(:, k-1), -q(:, k), 4 ) < vdistg ( q(:, k-1), q(:, k), 4 ) ) q(:, k) = -q(:, k)
+      end do
+
+!     The packets.
+      if ( hermite ) then
+         subtype = c05tp0
+         packsz = c05ps0
+      else if ( with_av ) then
+         subtype = c05tp3
+         packsz = c05ps3
+      else
+         subtype = c05tp1
+         packsz = c05ps1
+      end if
+      allocate ( packets(packsz*n) )
+      do k = 1, n
+         packets(packsz*(k-1)+1:packsz*(k-1)+4) = q(:, k)
+         if ( subtype == c05tp3 ) then
+            packets(packsz*(k-1)+5:packsz*k) = av(:, k)
+         else if ( subtype == c05tp0 ) then
+            ! dq/dt from the angular velocity: QDQ2AV's AV = -2 vec(q* dq),
+            ! so dq = -q (0, av) / 2
+            call qxq ( q(:, k), [ 0.0_wp, av(:, k) ], dq )
+            packets(packsz*(k-1)+5:packsz*k) = -0.5_wp*dq
+         end if
+      end do
+
+      if ( .not. allocated ( this%tables ) ) allocate ( this%tables(2) )
+      if ( this%ntab == size ( this%tables ) ) then
+         allocate ( tmp(2*size ( this%tables )) )
+         tmp(1:this%ntab) = this%tables(1:this%ntab)
+         call move_alloc ( tmp, this%tables )
+      end if
+      this%ntab = this%ntab + 1
+      associate ( t => this%tables(this%ntab) )
+         t%name = upper ( trim ( adjustl ( name ) ) )
+         t%code = code
+         t%center = center
+         t%base = trim ( adjustl ( base ) )
+         t%avflag = .true.   ! subtype 1 derives the angular velocity from the interpolation
+         t%tbeg = first
+         t%tend = last
+         t%ident = 'ROTATIONS'
+         if ( present ( ident ) ) t%ident = trim ( ident )
+         t%data = ck05_data ( subtype, winsiz, epochs, packets, 1.0_wp, [ epochs(1) ] )
+      end associate
+   end subroutine add_rotation_table
+
+   !> Add a programmatic frame to the kernel (PEPPER).
+   module procedure kb_add_frame
+      implicit none
+      type(builder_frame), allocatable :: tmp(:)
+      integer(ip) :: k
+      if ( ctx%failed() ) return
+      if ( name == ' ' ) then
+         call ctx%setmsg ( 'The name of the programmatic frame # is blank.' )
+         call ctx%errint ( '#', code )
+         call ctx%sigerr ( 'SPICE(BLANKSTRING)' )
+         return
+      end if
+      if ( .not. allocated ( this%frames ) ) allocate ( this%frames(2) )
+      if ( this%nframes == size ( this%frames ) ) then
+         allocate ( tmp(2*size ( this%frames )) )
+         do k = 1, this%nframes
+            tmp(k)%code = this%frames(k)%code
+            tmp(k)%center = this%frames(k)%center
+            call move_alloc ( this%frames(k)%name, tmp(k)%name )
+            call move_alloc ( this%frames(k)%provider, tmp(k)%provider )
+         end do
+         call move_alloc ( tmp, this%frames )
+      end if
+      this%nframes = this%nframes + 1
+      associate ( f => this%frames(this%nframes) )
+         f%name = upper ( trim ( adjustl ( name ) ) )
+         f%code = code
+         f%center = center
+         if ( allocated ( f%provider ) ) deallocate ( f%provider )
+         allocate ( f%provider, source = provider )
+      end associate
+   end procedure kb_add_frame
+
+   !> The rotation of a frame of rotation tables (PEPPER): the last table
+   !> that covers ET, evaluated by CKR05 and CKE05 (ET as the time tag).
+   module procedure rotation_table_rotation
+      use pepper_inc_ckparam, only: ckmrsz
+      implicit none
+      real(wp) :: record(ckmrsz), cmat(3, 3), av(3), clkout
+      integer(ip) :: s
+      rotate = 0.0_wp
+      relative = 0
+      found = .false.
+      if ( ctx%failed() .or. frame == 0 ) return
+      do s = self%nseg, 1, -1
+         if ( et < self%tbeg(s) .or. et > self%tend(s) ) cycle
+         call ckr05 ( ctx, self%handle, self%descr(:, s), et, 0.0_wp, .false., record, found )
+         if ( ctx%failed() ) return
+         if ( .not. found ) cycle
+         call cke05 ( ctx, .false., record, cmat, av, clkout )
+         if ( ctx%failed() ) return
+         rotate = transpose ( cmat )   ! the C-matrix is from the base to the frame
+         relative = self%bases(s)
+         return
+      end do
+   end procedure rotation_table_rotation
+
+   !> The state transformation of a frame of rotation tables (PEPPER), as
+   !> CKFXFM makes it from the C-matrix and the angular velocity.
+   module procedure rotation_table_transform
+      use pepper_inc_ckparam, only: ckmrsz
+      use pepper_math, only: rav2xf
+      implicit none
+      real(wp) :: record(ckmrsz), cmat(3, 3), av(3), clkout, ref2in(6, 6)
+      integer(ip) :: s
+      xform = 0.0_wp
+      relative = 0
+      found = .false.
+      if ( ctx%failed() .or. frame == 0 ) return
+      do s = self%nseg, 1, -1
+         if ( et < self%tbeg(s) .or. et > self%tend(s) ) cycle
+         call ckr05 ( ctx, self%handle, self%descr(:, s), et, 0.0_wp, .true., record, found )
+         if ( ctx%failed() ) return
+         if ( .not. found ) cycle
+         call cke05 ( ctx, .true., record, cmat, av, clkout )
+         if ( ctx%failed() ) return
+         call rav2xf ( cmat, av, ref2in )
+         call invstm ( ctx, ref2in, xform )
+         relative = self%bases(s)
+         return
+      end do
+   end procedure rotation_table_transform
+
    !> Define a body name of the kernel (PEPPER): kept until the builder is
    !> loaded, then defined (owned by the kernel) until it is unloaded.
    module procedure kb_define_body
@@ -162,12 +481,16 @@ contains
       this%nbodies = 0
       if ( allocated ( this%providers ) ) deallocate ( this%providers )
       this%nprov = 0
+      if ( allocated ( this%tables ) ) deallocate ( this%tables )
+      this%ntab = 0
+      if ( allocated ( this%frames ) ) deallocate ( this%frames )
+      this%nframes = 0
    end procedure kb_clear
 
    !> The number of segments (PEPPER).
    module procedure kb_nsegments
       implicit none
-      kb_nsegments = this%nseg + this%nprov
+      kb_nsegments = this%nseg + this%nprov + this%ntab + this%nframes
    end procedure kb_nsegments
 
    !> Check a segment as SPKW09 (TYPE 9) or SPKW13 (TYPE 13) does, adapt a
@@ -441,52 +764,31 @@ contains
 
    !> Make the DAF image of a builder, register it in the handle manager's
    !> table as a DAF built in memory named NAME, and load it as an SPK
-   !> (SPKLEF), then define its body names and register its programmatic
-   !> ephemerides (owned by the kernel). The
-   !> builder is emptied once it is loaded; on an error nothing is loaded,
-   !> and the builder is unchanged.
+   !> (SPKLEF); then define its body names, register its programmatic
+   !> ephemerides, and its frames: the rotation tables (a CK type 5 DAF
+   !> built in memory, evaluated by [[rotation_table]] providers) and the
+   !> programmatic frames, all owned by the kernel. The builder is emptied
+   !> once it is loaded; on an error nothing is loaded (the checks that can
+   !> fail come first), and the builder is unchanged.
    subroutine load_builder ( ctx, name, kb, handle )
       class(pepper_context), intent(inout) :: ctx  !! the instance's context
       character(*), intent(in) :: name  !! the kernel's name
-      type(kernel_builder), intent(inout) :: kb  !! the builder (emptied)
+      type(kernel_builder), intent(inout), target :: kb  !! the builder (emptied)
       integer(ip), intent(out) :: handle  !! the handle of the SPK
+      type(image_segment), allocatable :: segs(:)
       real(wp), allocatable :: image(:)
-      character(len=8) :: bffstr
-      integer(ip) :: k, h2, bff
+      integer(ip), allocatable :: bases(:)
+      integer(ip) :: k, h2
 
       handle = 0
-!     The frames of the programmatic ephemeris, checked before anything is
-!     registered (the table segments' are checked by make_image).
-      do k = 1, kb%nprov
-         call namfrm ( ctx, kb%providers(k)%frame, h2 )
-         if ( ctx%failed() ) return
-         if ( h2 == 0 ) then
-            call ctx%setmsg ( 'The frame ''#'' of the programmatic ephemeris of ' &
-            //            'body # (kernel ''#'') is not recognized.' )
-            call ctx%errch  ( '#', kb%providers(k)%frame )
-            call ctx%errint ( '#', kb%providers(k)%body )
-            call ctx%errch  ( '#', name )
-            call ctx%sigerr ( 'SPICE(UNKNOWNFRAME)' )
-            return
-         end if
-      end do
-      call make_image ( ctx, name, kb, image )
+      call check_builder ( ctx, name, kb, bases )
       if ( ctx%failed() ) return
-
-      call zzplatfm ( ctx, 'FILE_FORMAT', bffstr )
+      call spk_segments ( ctx, name, kb, segs )
       if ( ctx%failed() ) return
-      bff = ltli3e
-      if ( bffstr == 'BIG-IEEE' ) bff = bigi3e
-
-      associate ( ft => ctx%spice%zzddhman )
-         ft%next = ft%next + 1
-         handle = ft%next
-         call ft%add ( ddh_file ( handle = handle, method = ddh_read, arch = ddh_daf, &
-                                  bff = bff, mnm = 0.0_wp, name = name ) )
-         k = ft%nft
-         call move_alloc ( image, ft%files(k)%image )
-         ft%files(k)%synthetic = .true.
-      end associate
+      call daf_image ( ctx, name, 'DAF/SPK ', segs, image )
+      if ( ctx%failed() ) return
+      call register_image ( ctx, name, image, handle )
+      if ( ctx%failed() ) return
 
       call spklef ( ctx, name, h2 )
       if ( ctx%failed() .or. h2 /= handle ) then
@@ -520,46 +822,230 @@ contains
          end associate
          if ( ctx%failed() ) return
       end do
+
+!     Its frames, owned by it: the rotation tables, then the programmatic
+!     frames.
+      if ( kb%ntab > 0 ) call load_rotation_tables ( ctx, kb, handle, bases )
+      if ( ctx%failed() ) return
+      do k = 1, kb%nframes
+         associate ( f => kb%frames(k) )
+            call register_owned_frame ( ctx, f%name, f%code, f%center, f%provider, handle )
+         end associate
+         if ( ctx%failed() ) return
+      end do
       call kb%clear()
    end subroutine load_builder
 
-   !> The DAF image of a builder: a native SPK file, record by record.
-   !>
-   !> Record 1 is the file record; then a summary record and its name
-   !> record for every 25 segments; then the segments' data, in order.
-   !> Frames are resolved here (SPICE(INVALIDREFFRAME) for an unknown one).
-   subroutine make_image ( ctx, name, kb, image )
+   !> The checks of a builder that need the instance, made before anything
+   !> is registered: the frames of its programmatic ephemerides, the base
+   !> frames of its rotation tables (BASES, their codes), and the names and
+   !> codes of its frames (against the frames known, and among themselves).
+   subroutine check_builder ( ctx, name, kb, bases )
+      use pepper_strings, only: ucase
       class(pepper_context), intent(inout) :: ctx  !! the instance's context
-      character(*), intent(in) :: name  !! the kernel's name (its internal file name)
+      character(*), intent(in) :: name  !! the kernel's name
       type(kernel_builder), intent(in) :: kb  !! the builder
-      real(wp), allocatable, intent(out) :: image(:)  !! the image
-      integer(ip), allocatable :: frcode(:)
-      character(1024) :: namrec
-      real(wp) :: sum(sumsiz)
-      integer(ip) :: nsr, first_data, nwords, nrec, i, r, m, rec, addr, len_data
-      integer(ip), allocatable :: baddr(:), eaddr(:)
-
-      allocate ( frcode(kb%nseg), baddr(kb%nseg), eaddr(kb%nseg) )
-      do i = 1, kb%nseg
-         call namfrm ( ctx, kb%segments(i)%frame, frcode(i) )
+      integer(ip), allocatable, intent(out) :: bases(:)  !! the codes of the tables' base frames
+      type(string), allocatable :: fnames(:)
+      integer(ip), allocatable :: fcodes(:)
+      integer(ip) :: k, j, n, code
+      allocate ( bases(kb%ntab) )
+      do k = 1, kb%nprov
+         call namfrm ( ctx, kb%providers(k)%frame, code )
          if ( ctx%failed() ) return
-         if ( frcode(i) == 0 ) then
-            call ctx%setmsg ( 'The reference frame # of segment # of the ' &
-            //            'kernel ''#'' is not supported.' )
-            call ctx%errch  ( '#', kb%segments(i)%frame )
-            call ctx%errint ( '#', i )
+         if ( code == 0 ) then
+            call ctx%setmsg ( 'The frame ''#'' of the programmatic ephemeris of ' &
+            //            'body # (kernel ''#'') is not recognized.' )
+            call ctx%errch  ( '#', kb%providers(k)%frame )
+            call ctx%errint ( '#', kb%providers(k)%body )
             call ctx%errch  ( '#', name )
-            call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)' )
+            call ctx%sigerr ( 'SPICE(UNKNOWNFRAME)' )
             return
          end if
       end do
+      do k = 1, kb%ntab
+         call namfrm ( ctx, kb%tables(k)%base, bases(k) )
+         if ( ctx%failed() ) return
+         if ( bases(k) == 0 ) then
+            call ctx%setmsg ( 'The base frame ''#'' of the rotations of frame ''#'' ' &
+            //            '(kernel ''#'') is not recognized.' )
+            call ctx%errch  ( '#', kb%tables(k)%base )
+            call ctx%errch  ( '#', kb%tables(k)%name )
+            call ctx%errch  ( '#', name )
+            call ctx%sigerr ( 'SPICE(UNKNOWNFRAME)' )
+            return
+         end if
+      end do
+!     The frames' names and codes: each as SPICE_ADD_FRAME checks it, and
+!     one name for one code within the builder.
+      n = kb%ntab + kb%nframes
+      allocate ( fnames(n), fcodes(n) )
+      do k = 1, n
+         if ( k <= kb%ntab ) then
+            fnames(k)%s = upper ( kb%tables(k)%name )
+            fcodes(k) = kb%tables(k)%code
+         else
+            fnames(k)%s = upper ( kb%frames(k-kb%ntab)%name )
+            fcodes(k) = kb%frames(k-kb%ntab)%code
+         end if
+         call check_frame_definition ( ctx, fnames(k)%s, fcodes(k) )
+         if ( ctx%failed() ) return
+         do j = 1, k - 1
+            if ( ( fnames(j)%s == fnames(k)%s ) .neqv. ( fcodes(j) == fcodes(k) ) ) then
+               call ctx%setmsg ( 'The kernel ''#'' defines the frame ''#'' (#) and ' &
+               //            'the frame ''#'' (#): one name, one code.' )
+               call ctx%errch  ( '#', name )
+               call ctx%errch  ( '#', fnames(j)%s )
+               call ctx%errint ( '#', fcodes(j) )
+               call ctx%errch  ( '#', fnames(k)%s )
+               call ctx%errint ( '#', fcodes(k) )
+               call ctx%sigerr ( 'SPICE(FRAMEEXISTS)' )
+               return
+            end if
+         end do
+      end do
+   end subroutine check_builder
+
+   !> The SPK segments of a builder, with their frames resolved
+   !> (SPICE(INVALIDREFFRAME) for an unknown one).
+   subroutine spk_segments ( ctx, name, kb, segs )
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      character(*), intent(in) :: name  !! the kernel's name
+      type(kernel_builder), intent(in), target :: kb  !! the builder
+      type(image_segment), allocatable, intent(out) :: segs(:)  !! the segments
+      integer(ip) :: i, frcode
+      allocate ( segs(kb%nseg) )
+      do i = 1, kb%nseg
+         associate ( s => kb%segments(i) )
+            call namfrm ( ctx, s%frame, frcode )
+            if ( ctx%failed() ) return
+            if ( frcode == 0 ) then
+               call ctx%setmsg ( 'The reference frame # of segment # of the ' &
+               //            'kernel ''#'' is not supported.' )
+               call ctx%errch  ( '#', s%frame )
+               call ctx%errint ( '#', i )
+               call ctx%errch  ( '#', name )
+               call ctx%sigerr ( 'SPICE(INVALIDREFFRAME)' )
+               return
+            end if
+            segs(i)%dc = [ s%tbeg, s%tend ]
+            segs(i)%ic = [ s%body, s%center, frcode, s%type ]
+            segs(i)%ident = s%ident
+            segs(i)%data => s%data
+         end associate
+      end do
+   end subroutine spk_segments
+
+   !> The rotation tables of a builder: a CK type 5 DAF built in memory
+   !> (named after the kernel's handle; ET as its time tags), and a
+   !> [[rotation_table]] frame for each frame code, owned by the kernel.
+   subroutine load_rotation_tables ( ctx, kb, owner, bases )
+      use pepper_strings, only: intstr
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      type(kernel_builder), intent(in), target :: kb  !! the builder
+      integer(ip), intent(in) :: owner  !! the kernel's handle
+      integer(ip), intent(in) :: bases(:)  !! the codes of the tables' base frames
+      type(image_segment), allocatable :: segs(:)
+      type(rotation_table) :: rt
+      real(wp), allocatable :: image(:), descrs(:, :)
+      character(:), allocatable :: ckname
+      logical, allocatable :: done(:)
+      integer(ip) :: k, j, h, h2
+      allocate ( segs(kb%ntab), done(kb%ntab) )
+      do k = 1, kb%ntab
+         associate ( t => kb%tables(k) )
+            segs(k)%dc = [ t%tbeg, t%tend ]
+            segs(k)%ic = [ t%code, bases(k), 5_ip, merge ( 1_ip, 0_ip, t%avflag ) ]
+            segs(k)%ident = t%ident
+            segs(k)%data => t%data
+         end associate
+      end do
+      ckname = rotations_name ( owner )
+      call daf_image ( ctx, ckname, 'DAF/CK  ', segs, image, descrs )
+      if ( ctx%failed() ) return
+      call register_image ( ctx, ckname, image, h )
+      if ( ctx%failed() ) return
+      call dafopr ( ctx, ckname, h2 )
+      if ( ctx%failed() ) return
+      done = .false.
+      do k = 1, kb%ntab
+         if ( done(k) ) cycle
+         rt = rotation_table ()
+         rt%handle = h
+         allocate ( rt%descr(5, kb%ntab), rt%tbeg(kb%ntab), rt%tend(kb%ntab), rt%bases(kb%ntab) )
+         do j = k, kb%ntab
+            if ( kb%tables(j)%code /= kb%tables(k)%code ) cycle
+            done(j) = .true.
+            rt%nseg = rt%nseg + 1
+            rt%descr(:, rt%nseg) = descrs(:, j)
+            rt%tbeg(rt%nseg) = kb%tables(j)%tbeg
+            rt%tend(rt%nseg) = kb%tables(j)%tend
+            rt%bases(rt%nseg) = bases(j)
+         end do
+         call register_owned_frame ( ctx, kb%tables(k)%name, kb%tables(k)%code, kb%tables(k)%center, rt, owner )
+         if ( ctx%failed() ) return
+      end do
+   end subroutine load_rotation_tables
+
+   !> The name of the DAF of a kernel's rotation tables (its handle makes it
+   !> unique; it is not a kernel of its own).
+   pure function rotations_name ( owner ) result ( name )
+      integer(ip), intent(in) :: owner  !! the kernel's handle
+      character(40) :: name  !! the name
+      write ( name, '(a, i0)' ) 'PEPPER ROTATIONS OF KERNEL ', owner
+   end function rotations_name
+
+   !> Register a DAF image in the handle manager's table, as a DAF built in
+   !> memory named NAME (its image moved in); HANDLE its new handle.
+   subroutine register_image ( ctx, name, image, handle )
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      character(*), intent(in) :: name  !! its name
+      real(wp), allocatable, intent(inout) :: image(:)  !! the image (moved)
+      integer(ip), intent(out) :: handle  !! its handle
+      character(len=8) :: bffstr
+      integer(ip) :: k, bff
+      handle = 0
+      call zzplatfm ( ctx, 'FILE_FORMAT', bffstr )
+      if ( ctx%failed() ) return
+      bff = ltli3e
+      if ( bffstr == 'BIG-IEEE' ) bff = bigi3e
+      associate ( ft => ctx%spice%zzddhman )
+         ft%next = ft%next + 1
+         handle = ft%next
+         call ft%add ( ddh_file ( handle = handle, method = ddh_read, arch = ddh_daf, &
+                                  bff = bff, mnm = 0.0_wp, name = trim ( name ) ) )
+         k = ft%nft
+         call move_alloc ( image, ft%files(k)%image )
+         ft%files(k)%synthetic = .true.
+      end associate
+   end subroutine register_image
+
+   !> The DAF image of segments (ND 2, NI 6: SPK or CK): a native file,
+   !> record by record. Record 1 is the file record; then a summary record
+   !> and its name record for every 25 segments; then the segments' data, in
+   !> order. DESCRS: the segments' descriptors (with their addresses).
+   subroutine daf_image ( ctx, name, idword, segs, image, descrs )
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      character(*), intent(in) :: name  !! the DAF's name (its internal file name)
+      character(8), intent(in) :: idword  !! the ID word ('DAF/SPK ', 'DAF/CK  ')
+      type(image_segment), intent(in) :: segs(:)  !! the segments
+      real(wp), allocatable, intent(out) :: image(:)  !! the image
+      real(wp), allocatable, intent(out), optional :: descrs(:, :)  !! the descriptors (5, size(segs))
+      character(1024) :: namrec
+      real(wp) :: sum(sumsiz)
+      integer(ip) :: nseg, nsr, first_data, nwords, nrec, i, r, m, rec, addr, j
+      integer(ip), allocatable :: baddr(:), eaddr(:)
+
+      nseg = size ( segs, kind=ip )
+      allocate ( baddr(nseg), eaddr(nseg) )
+      if ( present ( descrs ) ) allocate ( descrs(sumsiz, nseg) )
 
 !     The layout: summary and name records first, then the data.
-      nsr = max ( 1_ip, ( kb%nseg + per_record - 1 ) / per_record )
+      nsr = max ( 1_ip, ( nseg + per_record - 1 ) / per_record )
       first_data = ( 2*nsr + 1 )*128 + 1
       nwords = 0
-      do i = 1, kb%nseg
-         nwords = nwords + size ( kb%segments(i)%data, kind=ip )
+      do i = 1, nseg
+         nwords = nwords + size ( segs(i)%data, kind=ip )
       end do
       nrec = 2*nsr + 1 + ( nwords + 127 ) / 128
       allocate ( image(128*nrec) )
@@ -567,18 +1053,17 @@ contains
 
 !     The data.
       addr = first_data
-      do i = 1, kb%nseg
-         len_data = size ( kb%segments(i)%data, kind=ip )
+      do i = 1, nseg
          baddr(i) = addr
-         eaddr(i) = addr + len_data - 1
-         image(baddr(i):eaddr(i)) = kb%segments(i)%data
+         eaddr(i) = addr + size ( segs(i)%data, kind=ip ) - 1
+         image(baddr(i):eaddr(i)) = segs(i)%data
          addr = eaddr(i) + 1
       end do
 
 !     The summary records (2, 4, ...) and their name records (3, 5, ...).
       do r = 1, nsr
          rec = 2*r
-         m = min ( per_record, kb%nseg - ( r - 1 )*per_record )
+         m = min ( per_record, nseg - ( r - 1 )*per_record )
          if ( r < nsr ) then
             image(128*(rec-1)+1) = real ( rec + 2, wp )
          else
@@ -592,27 +1077,27 @@ contains
          image(128*(rec-1)+3) = real ( max ( m, 0_ip ), wp )
          namrec = ' '
          do i = 1, m
-            k_segment: associate ( s => kb%segments((r-1)*per_record + i), &
-                                   j => (r-1)*per_record + i )
-               call dafps ( ctx, spk_nd, spk_ni, [ s%tbeg, s%tend ], &
-                            [ s%body, s%center, frcode(j), s%type, baddr(j), eaddr(j) ], sum )
-               image(128*(rec-1)+3+(i-1)*sumsiz+1 : 128*(rec-1)+3+i*sumsiz) = sum
-               namrec((i-1)*namsiz+1:i*namsiz) = s%ident
-            end associate k_segment
+            j = (r-1)*per_record + i
+            call dafps ( ctx, spk_nd, spk_ni, segs(j)%dc, [ segs(j)%ic, baddr(j), eaddr(j) ], sum )
+            image(128*(rec-1)+3+(i-1)*sumsiz+1 : 128*(rec-1)+3+i*sumsiz) = sum
+            if ( present ( descrs ) ) descrs(:, j) = sum
+            namrec((i-1)*namsiz+1:i*namsiz) = segs(j)%ident
          end do
          image(128*rec+1:128*rec+128) = transfer ( namrec, image(1:128) )
       end do
 
 !     The file record.
-      call file_record ( ctx, name, 2_ip, 2*nsr, addr, image(1:128) )
-   end subroutine make_image
+      call file_record ( ctx, name, idword, 2_ip, 2*nsr, addr, image(1:128) )
+   end subroutine daf_image
 
-   !> The file record of a native SPK (as ZZDAFNFR writes it): ID word,
-   !> ND, NI, internal file name, forward and backward pointers, the free
-   !> address, the binary file format, and the FTP validation string.
-   subroutine file_record ( ctx, name, fward, bward, free, rec )
+   !> The file record of a native DAF of ND 2, NI 6 (as ZZDAFNFR writes it):
+   !> ID word, ND, NI, internal file name, forward and backward pointers,
+   !> the free address, the binary file format, and the FTP validation
+   !> string.
+   subroutine file_record ( ctx, name, idword, fward, bward, free, rec )
       class(pepper_context), intent(inout) :: ctx  !! the context
-      character(*), intent(in) :: name  !! the kernel's name (the internal file name, cut to 60 characters)
+      character(*), intent(in) :: name  !! the DAF's name (the internal file name, cut to 60 characters)
+      character(8), intent(in) :: idword  !! the ID word
       integer(ip), intent(in) :: fward  !! the first summary record
       integer(ip), intent(in) :: bward  !! the last summary record
       integer(ip), intent(in) :: free  !! the first free address
@@ -628,7 +1113,7 @@ contains
       call zzftpstr ( ctx, tststr, lftbkt, rgtbkt, delim )
       ifname = name
       c = repeat ( char(0), 1024 )
-      c(1:8) = 'DAF/SPK '
+      c(1:8) = idword
       c(9:12) = transfer ( spk_nd, word )
       c(13:16) = transfer ( spk_ni, word )
       c(17:76) = ifname
@@ -666,10 +1151,11 @@ contains
          call ctx%sigerr ( 'SPICE(NOSUCHKERNEL)' )
          return
       end if
-      if ( any ( this%provided_spk(1:this%nprovided_spk)%owner == this%zzddhman%files(k)%handle ) ) then
-         call ctx%setmsg ( 'The kernel ''#'' has programmatic ephemerides ' &
-         //            '(their states are computed by code, not stored): ' &
-         //            'it cannot be written to an SPK file.' )
+      if ( any ( this%provided_spk(1:this%nprovided_spk)%owner == this%zzddhman%files(k)%handle ) .or. &
+           any ( this%provided_frames(1:this%nprovided_frames)%owner == this%zzddhman%files(k)%handle ) ) then
+         call ctx%setmsg ( 'The kernel ''#'' has programmatic ephemerides or ' &
+         //            'frames (computed by code, or rotation tables, which an ' &
+         //            'SPK file cannot hold): it cannot be written to an SPK file.' )
          call ctx%errch  ( '#', name )
          call ctx%sigerr ( 'SPICE(NOTWRITABLE)' )
          return
@@ -1035,6 +1521,10 @@ contains
          if ( kk%type == 'SPK' ) then
             call remove_owned_boddefs ( ctx, kk%handle )
             call remove_owned_ephemerides ( ctx, kk%handle )
+            call remove_owned_frames ( ctx, kk%handle )
+            ! the DAF of its rotation tables, if it has one
+            k = synthetic_named ( ctx, rotations_name ( kk%handle ) )
+            if ( k > 0 ) call dafcls ( ctx, ctx%spice%zzddhman%files(k)%handle )
          end if
          if ( .not. allocated ( kk%loader ) ) return
          if ( kk%loader == ' ' ) return

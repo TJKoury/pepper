@@ -25,6 +25,7 @@ Contents:
 - [2. Providers: your code computes the states](#2-providers-your-code-computes-the-states)
 - [3. Programmatic kernels: your states, PEPPER interpolates](#3-programmatic-kernels-your-states-pepper-interpolates)
 - [4. Kernel loaders: files in other formats](#4-kernel-loaders-files-in-other-formats)
+- [Reference frames](#reference-frames)
 - [Body names](#body-names)
 - [Priority when sources overlap](#priority-when-sources-overlap)
 - [Threads](#threads)
@@ -610,6 +611,132 @@ call spice%unload('track.csveph')
 - `spice%write_kernel(file, 'track.bsp')` converts it to a real SPK (unless
   it holds a model).
 
+## Reference frames
+
+Frames (how a frame is oriented, relative to another, at each time) come
+in the same four ways:
+
+| | You have | Use | |
+|---|---|---|---|
+| 1 | frame kernels, CK, PCK files; or a frame's definition (fixed, two-vector, of date, Euler, product, body-fixed rotation models) | `furnsh`, or the definition's keywords set from code (`lmpool`, `pcpool`, ...) or in a JSON kernel | SPICE's own |
+| 2 | code that computes the orientation at any time | `spice%add_frame(name, code, center, provider)` | a `frame_provider` |
+| 3 | rotations at epochs (matrices or quaternions) | `kb%frame_rotations(...)`, `load_kernel` | PEPPER interpolates |
+| 4 | files in other formats | a loader that calls `kb%frame_rotations` (tables) or `kb%add_frame` (a model) | `furnsh` |
+
+### Frames from parameters (1)
+
+A frame defined by a few keywords needs no file and no code. For example,
+an Earth–Moon rotating frame, its X axis toward the Moon and its Y axis
+along the Moon's velocity, as a JSON kernel:
+
+```json
+{
+  "FRAME_EARTH_MOON_ROT":          1400001,
+  "FRAME_1400001_NAME":            "EARTH_MOON_ROT",
+  "FRAME_1400001_CLASS":           5,
+  "FRAME_1400001_CLASS_ID":        1400001,
+  "FRAME_1400001_CENTER":          399,
+  "FRAME_1400001_RELATIVE":        "J2000",
+  "FRAME_1400001_DEF_STYLE":       "PARAMETERIZED",
+  "FRAME_1400001_FAMILY":          "TWO-VECTOR",
+  "FRAME_1400001_PRI_AXIS":        "X",
+  "FRAME_1400001_PRI_VECTOR_DEF":  "OBSERVER_TARGET_POSITION",
+  "FRAME_1400001_PRI_OBSERVER":    "EARTH",
+  "FRAME_1400001_PRI_TARGET":      "MOON",
+  "FRAME_1400001_PRI_ABCORR":      "NONE",
+  "FRAME_1400001_SEC_AXIS":        "Y",
+  "FRAME_1400001_SEC_VECTOR_DEF":  "OBSERVER_TARGET_VELOCITY",
+  "FRAME_1400001_SEC_OBSERVER":    "EARTH",
+  "FRAME_1400001_SEC_TARGET":      "MOON",
+  "FRAME_1400001_SEC_ABCORR":      "NONE",
+  "FRAME_1400001_SEC_FRAME":       "J2000"
+}
+```
+
+The same keywords can be set at run time with `spice%lmpool(lines)`. They
+stay in the kernel pool until `clpool`, `kclear` or `dvpool`. NAIF's Frames
+Required Reading describes every definition style.
+
+### Frames computed by code (2)
+
+```fortran
+type(frame_procedure) :: spin
+
+spin%f => my_spin                ! subroutine my_spin(ctx, frame, et, xform, relative, found)
+call spice%add_frame('MY_SPIN', 1400002, 399, spin)
+call ctx%pxform('J2000', 'MY_SPIN', et, rot)
+```
+
+The provider's `transform` gives the 6x6 state transformation from the frame
+to the frame it is relative to (`relative`, an ID code), as a TK frame's
+rotation does. Optionally, `rotation` gives a faster 3x3 for PXFORM. The
+rules are those of ephemeris providers (thread safety, queries inside,
+`found`). `remove_frame(name)` removes it.
+
+### Rotations at epochs (3)
+
+```fortran
+real(wp) :: epochs(n), quats(4, n)     ! or rots(3, 3, n)
+
+call kb%frame_rotations(ctx, 'MY_FRAME', 1400100, 399, 'J2000', epochs, quats, 7)
+call spice%load_kernel('my_frame_data', kb)
+call ctx%pxform('J2000', 'MY_FRAME', et, rot)     ! interpolated
+call spice%unload('my_frame_data')                ! the frame is gone
+```
+
+- **The rotations** map vectors from the base frame (here J2000) to the new
+  frame: `v_frame = R v_base`, so `pxform('J2000', 'MY_FRAME', et)` is R.
+  Give them as 3x3 matrices (`rots(3, 3, n)`) or as SPICE quaternions
+  (scalar first, `quats(4, n)`). Quaternion signs need not be continuous.
+  Pass `inverse = .true.` if yours map from the frame to the base.
+- **No clock:** the epochs are ET. PEPPER stores the table as a CK type 5
+  segment with ET as its time tags, held in memory, and evaluates it with
+  SPICE's CK type 5 routines, so the interpolation is SPICE's.
+- **Interpolation:** `method = 'LAGRANGE'` (default) or `'HERMITE'`. The
+  window must have an even size: an odd degree for Lagrange (1, 3, ...,
+  23); 3, 7, 11, 15, 19 or 23 for Hermite.
+- **Angular velocities**, optional: `av(3, n)`, the frame's angular velocity
+  relative to the base, in the base's coordinates (rad/s). Hermite needs
+  them, and is then much more accurate between the rows. Without them,
+  SXFORM's derivative comes from the interpolation.
+- **Coverage:** `tbeg`, `tend` (inside the epochs; default their span).
+  Outside it the frame has no orientation and queries fail. With several
+  tables of one frame, in one kernel or several, the last loaded that covers
+  the epoch answers. A later kernel can therefore override part of the
+  time, and the earlier one shows through elsewhere.
+- **The frame** has the name, ID code and center you give. Use codes from
+  1400000 on for your own frames, as NAIF suggests for programmatic ones.
+  It exists while the kernel is loaded. The name and code must not be those
+  of another frame (SPICE(FRAMEEXISTS)), except the same frame from another
+  kernel or from `add_frame`.
+- **Not writable yet:** `write_kernel` refuses a kernel with frames
+  (SPICE(NOTWRITABLE)). Writing a `.bc` with its clock and frame kernels is
+  a planned addition.
+
+Errors: SPICE(INVALIDDEGREE), SPICE(UNSUPPORTEDINTERP) (another method, or
+Hermite without `av`), SPICE(ZEROQUATERNION), SPICE(NOTAROTATION) (a matrix
+that is not a rotation), SPICE(INVALIDSIZE), SPICE(TIMESOUTOFORDER),
+SPICE(BADDESCRTIMES); at the load, SPICE(UNKNOWNFRAME) (the base) and
+SPICE(FRAMEEXISTS).
+
+### Frames from files (4)
+
+A loader adds frames to its builder as it adds segments: `kb%frame_rotations`
+for a file of rotations, and `kb%add_frame(ctx, name, code, center, provider)`
+for a file that holds an orientation model (the loader's own
+`frame_provider`, holding what it read). The frames go away when the file is
+unloaded.
+
+```fortran
+! in a loader's load(): a table, then a model
+call kb%frame_rotations(ctx, 'SC_ATTITUDE', -10001000, -10001, 'J2000', epochs, quats, 7)
+call kb%add_frame(ctx, 'SPIN_MODEL', 1400200, 399, my_spin_model(rate))
+```
+
+`spice%add_frame` for a frame that a kernel defines is allowed: the
+program's registration is the latest, and `remove_frame` removes only the
+program's.
+
 ## Body names
 
 Bodies are found by name or by NAIF ID code. Names come from:
@@ -676,6 +803,8 @@ search of SPICE decides, with every source taking part as a loaded file:
 | Save as SPK | `pepper_spice_write_kernel` | `spice.write_kernel(name, file)` |
 | Kernel loaders | not yet | not yet |
 | Models in a kernel | not yet | not yet |
+| Frames: providers | `pepper_spice_add_frame` | `spice.add_frame(...)` |
+| Frames: tables and models in a kernel | not yet | not yet |
 
 Python, a programmatic kernel from NumPy arrays:
 
@@ -725,6 +854,9 @@ call furnsh('track.csveph')                ! the legacy FURNSH
 | `kb%spk_lagrange(...)` | add a Lagrange (type 9) segment |
 | `kb%add_ephemeris(ctx, body, center, frame, tbeg, tend, provider, ident)` | add a provider owned by the kernel |
 | `kb%define_body(ctx, name, code)` | define a body name owned by the kernel |
+| `kb%frame_rotations(ctx, name, code, center, base, epochs, quats_or_rots, degree, av, method, inverse, tbeg, tend, ident)` | add a table of rotations: a frame defined by the kernel |
+| `kb%add_frame(ctx, name, code, center, provider)` | add a frame provider owned by the kernel |
+| `spice%add_frame(name, code, center, provider)`, `spice%remove_frame(name)` | the program's frame providers |
 | `kb%set_format(text)`, `kb%clear()`, `kb%nsegments()` | describe, empty, count |
 | `spice%load_kernel(name, kb, keep)` | load a builder as a kernel |
 | `spice%write_kernel(name, file)` | write a kernel built in memory to an SPK file |
@@ -753,7 +885,9 @@ the complete rules of how a loader is chosen.
 | SPICE(BLANKNAMEASSIGNED) | `define_body` with a blank name |
 | SPICE(NOSUCHKERNEL) | `write_kernel` of a name no kernel built in memory has |
 | SPICE(FILEEXISTS) | `write_kernel` to a file that exists |
-| SPICE(NOTWRITABLE) | `write_kernel` of a kernel that holds a provider |
+| SPICE(NOTWRITABLE) | `write_kernel` of a kernel that holds a provider or frames |
+| SPICE(FRAMEEXISTS) | a frame's name or code is another frame's |
+| SPICE(ZEROQUATERNION), SPICE(NOTAROTATION) | a rotation table's bad quaternion or matrix |
 | SPICE(NOFILEFORKERNEL) | an operation that needs a file (such as reading its comments through a unit) on a kernel built in memory |
 | SPICE(NOEPHEMERISDATA) | a provider returned `found = .false.` |
 | SPICE(RECURSIONTOODEEP) | providers nested more than 50 deep |

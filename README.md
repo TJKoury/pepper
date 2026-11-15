@@ -466,6 +466,13 @@ call spice%furnsh('sc_ephem.txt', loader='MYFORMAT')               ! by name
   same body coexist (the last loaded first; unloading it restores the
   earlier), where `add_ephemeris` replaces the body's earlier registration.
   `write_kernel` refuses such a kernel (there are no states to write).
+- **Frames a kernel defines:** `kb%frame_rotations(ctx, name, code,
+  center, base, epochs, quats, degree)` (or 3x3 matrices) gives a new
+  frame from rotations at ET epochs relative to a base frame (e.g. J2000),
+  interpolated by SPICE's CK type 5 routines on a table held in memory (no
+  clock); `kb%add_frame(ctx, name, code, center, provider)` a frame
+  computed by code. Both are defined while the kernel is loaded; loaders use
+  them for files of frame data. See the guide's "Reference frames".
 - **Body names a kernel defines:** `kb%define_body(ctx, name, code)`. While
   the kernel is loaded, the name works everywhere a body name does
   (`spkezr('SPACECRAFT1', ...)`, BODN2C, BODC2N); when it is unloaded

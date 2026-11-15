@@ -1,5 +1,5 @@
-!> The data of SPK segments of types 9 and 13, as arrays (PEPPER; no
-!> SPICELIB counterpart).
+!> The data of SPK segments of types 9 and 13, and of CK segments of type
+!> 5, as arrays (PEPPER; no SPICELIB counterpart).
 !>
 !> SPKW09 and SPKW13 write these arrays to an SPK file, and the kernel
 !> builder ([[kernel_builder]]) puts them in a DAF made in memory, so the
@@ -11,6 +11,13 @@
 !>        type 9:  the degree of the Lagrange polynomials, the number of states
 !>        type 13: the window size (half the degree + 1) minus 1, the number of states
 !>
+!> A CK type 5 segment's data (CK Required Reading) is:
+!>
+!>     packets (PACKSZ per epoch), epochs, every 100th epoch (a directory),
+!>     the start times of the interpolation intervals, every 100th of them,
+!>     then five control words: the clock rate, the subtype, the window
+!>     size, the number of intervals, the number of packets
+!>
 !> The procedures have no state and do no checks: the writers and the
 !> builder check their inputs first.
 module pepper_spk_packing
@@ -21,7 +28,7 @@ module pepper_spk_packing
 
    private
 
-   public :: spk09_data, spk13_data, spk_data_size
+   public :: spk09_data, spk13_data, spk_data_size, ck05_data
 
    integer(ip), parameter :: dirsiz = 100  !! a directory entry every DIRSIZ epochs
    integer(ip), parameter :: statsz = 6  !! components of a state
@@ -75,5 +82,35 @@ contains
       data(k + 1) = control
       data(k + 2) = real(n, wp)
    end subroutine pack_segment
+
+   !> The data of a CK segment of type 5 (CKW05's layout).
+   pure function ck05_data(subtype, winsiz, epochs, packets, rate, starts) result(data)
+      integer(ip), intent(in) :: subtype  !! the subtype (0 to 3)
+      integer(ip), intent(in) :: winsiz  !! the interpolation window size
+      real(wp), intent(in) :: epochs(:)  !! the epochs (n; encoded SCLK, or ET)
+      real(wp), intent(in) :: packets(:)  !! the packets (packsz*n)
+      real(wp), intent(in) :: rate  !! the clock rate (seconds per tick)
+      real(wp), intent(in) :: starts(:)  !! the start times of the interpolation intervals
+      real(wp), allocatable :: data(:)  !! the segment's data
+      integer(ip) :: n, nints, k, i
+      n = size(epochs, kind=ip)
+      nints = size(starts, kind=ip)
+      allocate (data(size(packets) + n + (n - 1)/dirsiz + nints + (nints - 1)/dirsiz + 5))
+      k = size(packets, kind=ip)
+      data(1:k) = packets
+      data(k + 1:k + n) = epochs
+      k = k + n
+      do i = 1, (n - 1)/dirsiz
+         data(k + i) = epochs(dirsiz*i)
+      end do
+      k = k + (n - 1)/dirsiz
+      data(k + 1:k + nints) = starts
+      k = k + nints
+      do i = 1, (nints - 1)/dirsiz
+         data(k + i) = starts(dirsiz*i)
+      end do
+      k = k + (nints - 1)/dirsiz
+      data(k + 1:k + 5) = [rate, real(subtype, wp), real(winsiz, wp), real(nints, wp), real(n, wp)]
+   end function ck05_data
 
 end module pepper_spk_packing

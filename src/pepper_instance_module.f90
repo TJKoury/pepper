@@ -1894,7 +1894,29 @@ module pepper_instance_module
       integer(ip) :: center = 0  !! its center
       character(:), allocatable :: name  !! its name (upper case)
       class(frame_provider), allocatable :: provider  !! the source of its orientation
+      !> The kernel it belongs to (the handle of a kernel built in memory:
+      !> [[kb_add_frame]], [[kb_frame_quaternions]]), removed with it; 0:
+      !> the program's ([[spice_add_frame]]).
+      integer(ip) :: owner = 0
    end type provided_frame
+
+   !> A frame whose orientation is a table of rotations at ET epochs, built
+   !> in memory (PEPPER; [[kb_frame_quaternions]]): the table is a CK type
+   !> 5 segment, with ET as its time tags (a clock rate of 1), in a DAF
+   !> built in memory, evaluated by SPICE's CKR05 and CKE05 (so with CK
+   !> type 5's interpolation). Several segments: the last that covers the
+   !> epoch.
+   type, extends(frame_provider) :: rotation_table
+      integer(ip) :: handle = 0  !! the handle of the DAF of the segments
+      integer(ip) :: nseg = 0  !! number of segments
+      integer(ip), allocatable :: bases(:)  !! the frame each segment's rotations are relative to
+      real(wp), allocatable :: descr(:, :)  !! their descriptors (5, nseg)
+      real(wp), allocatable :: tbeg(:)  !! their coverage: start
+      real(wp), allocatable :: tend(:)  !! end
+   contains
+      procedure :: transform => rotation_table_transform
+      procedure :: rotation => rotation_table_rotation
+   end type rotation_table
 
    interface
 
@@ -2061,6 +2083,29 @@ module pepper_instance_module
       real(wp), allocatable :: data(:)  !! the segment's data (pepper_spk_packing)
    end type builder_segment
 
+   !> A table of rotations in a [[kernel_builder]] (a CK type 5 segment's
+   !> data, ET tags): one segment of a frame defined by the kernel.
+   type :: builder_frame_table
+      character(:), allocatable :: name  !! the frame's name
+      integer(ip) :: code = 0  !! its ID code
+      integer(ip) :: center = 0  !! its center
+      character(:), allocatable :: base  !! the frame the rotations are relative to (resolved at the load)
+      logical :: avflag = .false.  !! the segment has angular velocities
+      real(wp) :: tbeg = 0.0_wp  !! start of its coverage
+      real(wp) :: tend = 0.0_wp  !! end of its coverage
+      character(:), allocatable :: ident  !! the segment identifier
+      real(wp), allocatable :: data(:)  !! the segment's data (pepper_spk_packing's ck05_data)
+   end type builder_frame_table
+
+   !> A programmatic frame in a [[kernel_builder]] (a provider): registered
+   !> when the builder is loaded, owned by the kernel ([[kb_add_frame]]).
+   type :: builder_frame
+      character(:), allocatable :: name  !! the frame's name
+      integer(ip) :: code = 0  !! its ID code
+      integer(ip) :: center = 0  !! its center
+      class(frame_provider), allocatable :: provider  !! the source of its orientation
+   end type builder_frame
+
    !> A programmatic ephemeris in a [[kernel_builder]]: registered when the
    !> builder is loaded, owned by the kernel ([[kb_add_ephemeris]]).
    type :: builder_provider
@@ -2094,7 +2139,15 @@ module pepper_instance_module
       integer(ip) :: nbodies = 0  !! number of body names
       type(builder_provider), allocatable :: providers(:)  !! the programmatic ephemerides ([[kb_add_ephemeris]])
       integer(ip) :: nprov = 0  !! number of programmatic ephemerides
+      type(builder_frame_table), allocatable :: tables(:)  !! the frames' rotation tables ([[kb_frame_quaternions]])
+      integer(ip) :: ntab = 0  !! number of rotation tables
+      type(builder_frame), allocatable :: frames(:)  !! the programmatic frames ([[kb_add_frame]])
+      integer(ip) :: nframes = 0  !! number of programmatic frames
    contains
+      procedure :: kb_frame_quaternions
+      procedure :: kb_frame_matrices
+      generic :: frame_rotations => kb_frame_quaternions, kb_frame_matrices
+      procedure :: add_frame => kb_add_frame
       procedure :: add_ephemeris => kb_add_ephemeris
       procedure :: define_body => kb_define_body
       procedure :: spk_lagrange => kb_spk_lagrange
@@ -2233,6 +2286,157 @@ module pepper_instance_module
          class(ephemeris_provider), intent(in) :: provider  !! the source of the states (copied)
          character(*), intent(in), optional :: ident  !! the segment identifier (default: PROGRAMMATIC EPHEMERIS)
       end subroutine kb_add_ephemeris
+
+      !> Add a table of rotations to the kernel a builder makes, as
+      !> quaternions (PEPPER): a frame NAME (ID code CODE, center CENTER)
+      !> whose orientation relative to BASE (e.g. J2000) is given at ET
+      !> epochs; PEPPER interpolates it (CK type 5's interpolation, with ET
+      !> as its time tags: no clock). Loaded, the frame is defined while the
+      !> kernel is (as [[spice_add_frame]] defines one, owned by the kernel):
+      !> PXFORM, SXFORM and every query that takes a frame use it.
+      !>
+      !> The rotations: `quats(:, k)` is the SPICE quaternion (scalar first)
+      !> of the rotation matrix R that maps vectors from BASE to the frame
+      !> at `epochs(k)` (v_frame = R v_base: R = PXFORM(BASE, NAME)); with
+      !> `inverse`, of the matrix from the frame to BASE. Signs need not be
+      !> continuous (they are made so). `av(:, k)`, optional: the angular
+      !> velocity of the frame relative to BASE, in BASE's coordinates
+      !> (rad/s), as a CK has it; without it, the angular velocity
+      !> (SXFORM's derivative) is that of the interpolated rotation.
+      !>
+      !> `method`: 'LAGRANGE' (default; CK type 5 subtype 1, or 3 with `av`)
+      !> or 'HERMITE' (needs `av`: subtype 0). The interpolation window
+      !> must have an even size, so the degree is odd for Lagrange (1, 3,
+      !> ..., 23) and 3, 7, 11, 15, 19 or 23 for Hermite (SPICE(INVALIDDEGREE)
+      !> otherwise). `tbeg` and `tend`: the coverage, inside the epochs
+      !> (default: their span). Several tables of a frame: the last added
+      !> that covers an epoch. Outside the coverage the frame has no
+      !> orientation (FRMGET's no-data error).
+      !>
+      !> Errors (in `ctx`): SPICE(INVALIDSIZE) (arrays of the wrong shape),
+      !> SPICE(TIMESOUTOFORDER), SPICE(BADDESCRTIMES), SPICE(ZEROQUATERNION),
+      !> SPICE(INVALIDDEGREE), SPICE(UNSUPPORTEDINTERP) (a method other than
+      !> LAGRANGE or HERMITE, or HERMITE without `av`), SPICE(BLANKSTRING)
+      !> (a blank name). The frame's name, code and base are checked when
+      !> the builder is loaded (SPICE(FRAMEEXISTS), SPICE(UNKNOWNFRAME)).
+      module subroutine kb_frame_quaternions ( this, ctx, name, code, center, base, epochs, quats, degree, &
+                                               av, method, inverse, tbeg, tend, ident )
+         implicit none
+         class(kernel_builder), intent(inout) :: this  !! the builder
+         class(pepper_context), intent(inout) :: ctx  !! a context, for the errors (any; its instance is not used)
+         character(*), intent(in) :: name  !! the frame's name
+         integer(ip), intent(in) :: code  !! its ID code
+         integer(ip), intent(in) :: center  !! its center (a body's ID code)
+         character(*), intent(in) :: base  !! the frame the rotations are relative to
+         real(wp), intent(in) :: epochs(:)  !! the epochs (TDB seconds past J2000), increasing
+         real(wp), intent(in) :: quats(:, :)  !! the quaternions (4, size(epochs)): from BASE to the frame
+         integer(ip), intent(in) :: degree  !! the degree of the interpolation (odd)
+         real(wp), intent(in), optional :: av(:, :)  !! the angular velocities (3, size(epochs)), rad/s, in BASE
+         character(*), intent(in), optional :: method  !! 'LAGRANGE' (default) or 'HERMITE'
+         logical, intent(in), optional :: inverse  !! the rotations are from the frame to BASE
+         real(wp), intent(in), optional :: tbeg  !! start of the coverage (default: the first epoch)
+         real(wp), intent(in), optional :: tend  !! end of the coverage (default: the last epoch)
+         character(*), intent(in), optional :: ident  !! the segment identifier
+      end subroutine kb_frame_quaternions
+
+      !> Add a table of rotations to the kernel a builder makes, as 3x3
+      !> rotation matrices (PEPPER): `rots(:, :, k)` maps vectors from BASE
+      !> to the frame (or, with `inverse`, from the frame to BASE) at
+      !> `epochs(k)`. Otherwise as [[kb_frame_quaternions]] (the matrices
+      !> are converted to quaternions, M2Q).
+      module subroutine kb_frame_matrices ( this, ctx, name, code, center, base, epochs, rots, degree, &
+                                            av, method, inverse, tbeg, tend, ident )
+         implicit none
+         class(kernel_builder), intent(inout) :: this  !! the builder
+         class(pepper_context), intent(inout) :: ctx  !! a context, for the errors
+         character(*), intent(in) :: name  !! the frame's name
+         integer(ip), intent(in) :: code  !! its ID code
+         integer(ip), intent(in) :: center  !! its center
+         character(*), intent(in) :: base  !! the frame the rotations are relative to
+         real(wp), intent(in) :: epochs(:)  !! the epochs, increasing
+         real(wp), intent(in) :: rots(:, :, :)  !! the rotation matrices (3, 3, size(epochs)): from BASE to the frame
+         integer(ip), intent(in) :: degree  !! the degree of the interpolation (odd)
+         real(wp), intent(in), optional :: av(:, :)  !! the angular velocities (3, size(epochs))
+         character(*), intent(in), optional :: method  !! 'LAGRANGE' (default) or 'HERMITE'
+         logical, intent(in), optional :: inverse  !! the rotations are from the frame to BASE
+         real(wp), intent(in), optional :: tbeg  !! start of the coverage
+         real(wp), intent(in), optional :: tend  !! end of the coverage
+         character(*), intent(in), optional :: ident  !! the segment identifier
+      end subroutine kb_frame_matrices
+
+      !> Add a programmatic frame to the kernel a builder makes (PEPPER): a
+      !> frame whose orientation comes from `provider` (a [[frame_provider]],
+      !> as [[spice_add_frame]] takes), for a file that holds an orientation
+      !> model. Loaded, it is defined as [[spice_add_frame]] defines one,
+      !> owned by the kernel: UNLOAD and KCLEAR remove it. Kernels that
+      !> define the same frame (the same name and code) coexist: the last
+      !> loaded whose provider has the orientation at an epoch gives it.
+      !> The name and code are checked when the builder is loaded.
+      module subroutine kb_add_frame ( this, ctx, name, code, center, provider )
+         implicit none
+         class(kernel_builder), intent(inout) :: this  !! the builder
+         class(pepper_context), intent(inout) :: ctx  !! a context, for the errors
+         character(*), intent(in) :: name  !! the frame's name
+         integer(ip), intent(in) :: code  !! its ID code
+         integer(ip), intent(in) :: center  !! its center
+         class(frame_provider), intent(in) :: provider  !! the source of its orientation (copied)
+      end subroutine kb_add_frame
+
+      !> Check a frame definition as [[spice_add_frame]] does (a blank name;
+      !> a name or code of another frame: SPICE(FRAMEEXISTS)) (PEPPER).
+      module subroutine check_frame_definition ( ctx, name, code )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         character(*), intent(in) :: name  !! the frame's name
+         integer(ip), intent(in) :: code  !! its ID code
+      end subroutine check_frame_definition
+
+      !> Register a programmatic frame owned by a kernel built in memory
+      !> (its handle), from a builder being loaded (PEPPER).
+      module subroutine register_owned_frame ( ctx, name, code, center, provider, owner )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         character(*), intent(in) :: name  !! the frame's name
+         integer(ip), intent(in) :: code  !! its ID code
+         integer(ip), intent(in) :: center  !! its center
+         class(frame_provider), intent(in) :: provider  !! the source of its orientation
+         integer(ip), intent(in) :: owner  !! the kernel's handle
+      end subroutine register_owned_frame
+
+      !> Remove the programmatic frames a kernel owns (its handle): UNLOAD,
+      !> KCLEAR. A frame's definition leaves the kernel pool when no other
+      !> registration of it remains (PEPPER).
+      module subroutine remove_owned_frames ( ctx, owner )
+         implicit none
+         class(pepper_context), intent(inout) :: ctx  !! the instance's context
+         integer(ip), intent(in) :: owner  !! the kernel's handle
+      end subroutine remove_owned_frames
+
+      !> The state transformation of a frame of rotation tables, from the
+      !> frame to its base (PEPPER).
+      recursive module subroutine rotation_table_transform ( self, ctx, frame, et, xform, relative, found )
+         implicit none
+         class(rotation_table), intent(in) :: self  !! the frame's tables
+         class(pepper_context), intent(inout) :: ctx  !! the context of the query
+         integer(ip), intent(in) :: frame  !! the frame's ID code
+         real(wp), intent(in) :: et  !! the epoch
+         real(wp), intent(out) :: xform(6, 6)  !! the transformation from the frame to RELATIVE
+         integer(ip), intent(out) :: relative  !! the base frame
+         logical, intent(out) :: found  !! a table covers ET
+      end subroutine rotation_table_transform
+
+      !> The rotation of a frame of rotation tables, from the frame to its
+      !> base (PEPPER).
+      recursive module subroutine rotation_table_rotation ( self, ctx, frame, et, rotate, relative, found )
+         implicit none
+         class(rotation_table), intent(in) :: self  !! the frame's tables
+         class(pepper_context), intent(inout) :: ctx  !! the context of the query
+         integer(ip), intent(in) :: frame  !! the frame's ID code
+         real(wp), intent(in) :: et  !! the epoch
+         real(wp), intent(out) :: rotate(3, 3)  !! the rotation from the frame to RELATIVE
+         integer(ip), intent(out) :: relative  !! the base frame
+         logical, intent(out) :: found  !! a table covers ET
+      end subroutine rotation_table_rotation
 
       !> Register a programmatic ephemeris owned by a kernel built in memory
       !> (its handle), from a builder being loaded (PEPPER).

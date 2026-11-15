@@ -18,6 +18,12 @@
 !>   of the same body coexist (the last loaded first; unloading it restores
 !>   the earlier), with the program's add_ephemeris too; write_kernel
 !>   refuses; an unknown frame loads nothing; KCLEAR removes them.
+!> - Frames a kernel defines: tables of rotations at ET epochs
+!>   (frame_rotations: quaternions or matrices, Lagrange or Hermite, with
+!>   or without angular velocities), interpolated as CK type 5; models
+!>   (add_frame); from a loader's file. PXFORM and SXFORM against the
+!>   exact rotation; several kernels of one frame (the last that covers an
+!>   epoch); the program's add_frame with them; errors; UNLOAD and KCLEAR.
 !> - Body names a kernel defines (define_body): usable while it is
 !>   loaded, in contexts made before the load too; removed by UNLOAD and
 !>   KCLEAR, an earlier BODDEF of the name in effect again; the latest
@@ -29,7 +35,7 @@ program test_loaders
 
    use pepper_module, only: ip, wp, pepper_instance, pepper_context, kernel_builder, kernel_loader
    use pepper_test_kernels, only: circle_state, delete_file
-   use pepper_test_loader, only: simple_loader, write_simple, circle_orbit
+   use pepper_test_loader, only: simple_loader, write_simple, circle_orbit, spin_frame, spin_matrix
 
    implicit none
 
@@ -77,6 +83,8 @@ program test_loaders
    call test_meta_kernel()
    call test_names()
    call test_models()
+   call test_frames()
+   call test_frame_files()
 
    call spice%kclear()
    call ref%kclear()
@@ -1067,6 +1075,201 @@ contains
       close (lun)
    end subroutine write_model
 
+   !> Frames defined by programmatic kernels: rotation tables and models.
+   subroutine test_frames()
+      real(wp), parameter :: w = 1.0e-3_wp  !! the spin rate of the test frames (rad/s)
+      type(kernel_builder) :: kb, kb2
+      type(spin_frame) :: model
+      real(wp) :: q(4, n), q2(4, n), m(3, 3, n), mt(3, 3, n), av(3, n), rot(3, 3), rot2(3, 3)
+      real(wp) :: xf(6, 6), exact(3, 3), t, err, derr, herr, nerr
+      integer(ip) :: code, count, k
+      logical :: ok
+
+      do k = 1, n
+         m(:, :, k) = spin_matrix(w, epochs(k))
+         mt(:, :, k) = transpose(m(:, :, k))
+         call ctx%m2q(m(:, :, k), q(:, k))
+         av(:, k) = [0.0_wp, 0.0_wp, w]
+      end do
+      q2 = q
+      q2(:, 2:n:2) = -q2(:, 2:n:2)   ! signs not continuous: made so by the builder
+
+      ! a table of quaternions (Lagrange), of matrices, and with angular velocities (Hermite)
+      call kb%frame_rotations(ctx, 'TEST_SPIN_Q', 1400100_ip, 399_ip, 'J2000', epochs, q2, 7_ip)
+      call kb%frame_rotations(ctx, 'TEST_SPIN_M', 1400101_ip, 399_ip, 'J2000', epochs, m, 7_ip)
+      call kb%frame_rotations(ctx, 'TEST_SPIN_I', 1400102_ip, 399_ip, 'J2000', epochs, mt, 7_ip, inverse=.true.)
+      call kb%frame_rotations(ctx, 'TEST_SPIN_H', 1400103_ip, 399_ip, 'J2000', epochs, q, 7_ip, av=av, &
+                              method='hermite')
+      call kb%frame_rotations(ctx, 'TEST_SPIN_A', 1400104_ip, 399_ip, 'J2000', epochs, q, 7_ip, av=av)
+      call kb%add_frame(ctx, 'TEST_SPIN_MODEL', 1400105_ip, 399_ip, spin_frame(rate=w))
+      call check_ok(ctx, 'tables of rotations and a model added')
+      call check(kb%nsegments() == 6, 'the builder counts the tables and the model')
+      call spice%load_kernel('frames', kb)
+      call check_ok(ctx, 'a kernel of frames')
+
+      ! PXFORM and SXFORM against the exact rotation, at the rows and between them
+      err = 0.0_wp
+      herr = 0.0_wp
+      derr = 0.0_wp
+      do k = 1, 300
+         t = epochs(1) + (epochs(n) - epochs(1))*real(k - 1, wp)/299.0_wp
+         exact = spin_matrix(w, t)
+         call ctx%pxform('J2000', 'TEST_SPIN_Q', t, rot)
+         err = max(err, maxval(abs(rot - exact)))
+         call ctx%sxform('J2000', 'TEST_SPIN_H', t, xf)
+         herr = max(herr, maxval(abs(xf(1:3, 1:3) - exact)))
+         derr = max(derr, maxval(abs(xf(4:6, 1:3) - w*reshape([-sin(w*t), -cos(w*t), 0.0_wp, cos(w*t), &
+                                                                  -sin(w*t), 0.0_wp, 0.0_wp, 0.0_wp, 0.0_wp], [3, 3]))))
+      end do
+      nerr = 0.0_wp
+      do k = 1, n
+         call ctx%pxform('J2000', 'TEST_SPIN_Q', epochs(k), rot)
+         nerr = max(nerr, maxval(abs(rot - m(:, :, k))))
+      end do
+      call check_ok(ctx, 'PXFORM and SXFORM of the frames')
+      if (err > 1.0e-8_wp .or. herr > 1.0e-12_wp .or. derr > 1.0e-12_wp .or. nerr > 1.0e-14_wp) &
+         print '(a, 4es10.2)', '   errors ', err, herr, derr, nerr
+      call check(nerr < 1.0e-14_wp, 'the rotation at the table''s epochs')
+      call check(err < 1.0e-8_wp, 'Lagrange interpolation (degree 7, 0.06 rad between rows): within 1e-8')
+      call check(herr < 1.0e-12_wp, 'Hermite interpolation (with the rates): within 1e-12')
+      call check(derr < 1.0e-12_wp, 'the angular velocity of Hermite interpolation (from the given rates)')
+      call ctx%sxform('J2000', 'TEST_SPIN_Q', 1000.0_wp, xf)
+      call check(maxval(abs(xf(4:6, 1:3) - w*reshape([-sin(w*1000.0_wp), -cos(w*1000.0_wp), 0.0_wp, &
+                 cos(w*1000.0_wp), -sin(w*1000.0_wp), 0.0_wp, 0.0_wp, 0.0_wp, 0.0_wp], [3, 3]))) < 1.0e-10_wp, &
+                 'the angular velocity of Lagrange interpolation (from the interpolation)')
+      call ctx%pxform('J2000', 'TEST_SPIN_Q', 1234.5_wp, rot)
+      call ctx%pxform('J2000', 'TEST_SPIN_M', 1234.5_wp, rot2)
+      call check(all(rot == rot2), 'matrices and quaternions: the same rotations')
+      call ctx%pxform('J2000', 'TEST_SPIN_I', 1234.5_wp, rot2)
+      call check(all(rot == rot2), 'inverse: the same rotations')
+      call ctx%pxform('J2000', 'TEST_SPIN_MODEL', 1234.5_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(w, 1234.5_wp))) < 1.0e-15_wp, 'a model frame (add_frame)')
+      call ctx%pxform('J2000', 'TEST_SPIN_Q', epochs(n) + 1.0_wp, rot)
+      call check(ctx%failed(), 'no rotation outside the table''s coverage')
+      call ctx%reset()
+      call spice%write_kernel('frames', 'test_loaders_frames.bsp')
+      call check_error(ctx, 'SPICE(NOTWRITABLE)', 'write_kernel of a kernel of frames')
+
+      ! a second kernel of TEST_SPIN_Q, over part of the time, spinning faster
+      do k = 1, n
+         call ctx%m2q(spin_matrix(2.0_wp*w, epochs(k)), q(:, k))
+      end do
+      call kb2%frame_rotations(ctx, 'TEST_SPIN_Q', 1400100_ip, 399_ip, 'J2000', epochs, q, 7_ip, &
+                               tbeg=3000.0_wp, tend=6000.0_wp)
+      call spice%load_kernel('frames2', kb2)
+      call ctx%pxform('J2000', 'TEST_SPIN_Q', 4000.0_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(2.0_wp*w, 4000.0_wp))) < 1.0e-12_wp, 'the later kernel where it has data')
+      call ctx%pxform('J2000', 'TEST_SPIN_Q', 1000.0_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(w, 1000.0_wp))) < 1.0e-12_wp, 'the earlier kernel outside it')
+      ! the program's add_frame of the frame, the latest
+      model%rate = 3.0_wp*w
+      call spice%add_frame('TEST_SPIN_Q', 1400100_ip, 399_ip, model)
+      call check_ok(ctx, 'the program''s add_frame of a kernel''s frame')
+      call ctx%pxform('J2000', 'TEST_SPIN_Q', 1000.0_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(3.0_wp*w, 1000.0_wp))) < 1.0e-15_wp, 'the program''s frame, added last')
+      call spice%remove_frame('TEST_SPIN_Q')
+      call ctx%pxform('J2000', 'TEST_SPIN_Q', 4000.0_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(2.0_wp*w, 4000.0_wp))) < 1.0e-12_wp, &
+                 'remove_frame removes the program''s only')
+      call spice%unload('frames2')
+      call ctx%pxform('J2000', 'TEST_SPIN_Q', 4000.0_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(w, 4000.0_wp))) < 1.0e-12_wp, 'UNLOAD: the earlier kernel''s frame again')
+
+      ! the definitions survive a rebuild of the pool (a text kernel unloaded)
+      call write_text_kernel('test_loaders_vars.tpc')
+      call spice%furnsh('test_loaders_vars.tpc')
+      call spice%unload('test_loaders_vars.tpc')
+      call ctx%pxform('J2000', 'TEST_SPIN_MODEL', 1234.5_wp, rot)
+      call check_ok(ctx, 'the kernel''s frames after the pool is rebuilt')
+
+      call spice%unload('frames')
+      call ctx%namfrm('TEST_SPIN_Q', code)
+      call check(code == 0, 'UNLOAD: the frame is gone')
+      call ctx%namfrm('TEST_SPIN_MODEL', code)
+      call check(code == 0, 'UNLOAD: the model frame is gone')
+
+      ! errors
+      call kb%frame_rotations(ctx, 'X', 1400110_ip, 399_ip, 'J2000', epochs, q, 6_ip)
+      call check_error(ctx, 'SPICE(INVALIDDEGREE)', 'an even Lagrange degree')
+      call kb%frame_rotations(ctx, 'X', 1400110_ip, 399_ip, 'J2000', epochs, q, 5_ip, av=av, method='HERMITE')
+      call check_error(ctx, 'SPICE(INVALIDDEGREE)', 'a Hermite degree with an odd window')
+      call kb%frame_rotations(ctx, 'X', 1400110_ip, 399_ip, 'J2000', epochs, q, 7_ip, method='HERMITE')
+      call check_error(ctx, 'SPICE(UNSUPPORTEDINTERP)', 'Hermite without angular velocities')
+      call kb%frame_rotations(ctx, 'X', 1400110_ip, 399_ip, 'J2000', epochs, q, 7_ip, method='SPLINE')
+      call check_error(ctx, 'SPICE(UNSUPPORTEDINTERP)', 'an unsupported interpolation')
+      q2 = q
+      q2(:, 5) = 0.0_wp
+      call kb%frame_rotations(ctx, 'X', 1400110_ip, 399_ip, 'J2000', epochs, q2, 7_ip)
+      call check_error(ctx, 'SPICE(ZEROQUATERNION)', 'a zero quaternion')
+      call kb%frame_rotations(ctx, 'X', 1400110_ip, 399_ip, 'J2000', epochs, q(:, 1:3), 7_ip)
+      call check_error(ctx, 'SPICE(INVALIDSIZE)', 'quaternions of the wrong shape')
+      call kb%frame_rotations(ctx, 'X', 1400110_ip, 399_ip, 'NO_SUCH_BASE', epochs, q, 7_ip)
+      call spice%load_kernel('bad', kb)
+      call check_error(ctx, 'SPICE(UNKNOWNFRAME)', 'an unknown base frame, at the load')
+      call kb%clear()
+      call kb%frame_rotations(ctx, 'IAU_EARTH', 1400111_ip, 399_ip, 'J2000', epochs, q, 7_ip)
+      call kb%frame_rotations(ctx, 'TEST_OK', 1400112_ip, 399_ip, 'J2000', epochs, q, 7_ip)
+      call spice%load_kernel('bad', kb)
+      call check_error(ctx, 'SPICE(FRAMEEXISTS)', 'a built-in frame''s name')
+      call ctx%namfrm('TEST_OK', code)
+      call ctx%ktotal('ALL', count)
+      call check(code == 0 .and. count == 0, 'a failed load of frames defines nothing')
+      call kb%clear()
+
+      ! KCLEAR removes a kernel's frames
+      call kb%frame_rotations(ctx, 'TEST_K', 1400113_ip, 399_ip, 'J2000', epochs, q, 7_ip)
+      call spice%load_kernel('k', kb)
+      call ctx%namfrm('TEST_K', code)
+      ok = code == 1400113
+      call spice%kclear()
+      call ctx%namfrm('TEST_K', code)
+      call check(ok .and. code == 0, 'KCLEAR removes a kernel''s frames')
+   end subroutine test_frames
+
+   !> Frames from a loader's file: a table of rotations and a model.
+   subroutine test_frame_files()
+      real(wp), parameter :: w = 1.0e-3_wp
+      type(simple_loader) :: ld
+      real(wp) :: q(4), rot(3, 3)
+      integer(ip) :: code
+      integer :: lun, k
+      call spice%add_loader('SIMPLE', ld, extensions=['.sim'])
+      open (newunit=lun, file='test_loaders_fr.sim', status='REPLACE', action='WRITE')
+      write (lun, '(a)') 'SIMPLE_EPHEMERIS'
+      write (lun, '(a)') 'ROTATING_FRAME = FILE_SPIN 1400120 399 J2000'
+      write (lun, '(a)') 'ROTATION_INTERPOLATION = LAGRANGE 7'
+      write (lun, '(a)') 'BEGIN_ROTATIONS'
+      do k = 1, n
+         call ctx%m2q(spin_matrix(w, epochs(k)), q)
+         write (lun, '(5es25.16e3)') epochs(k), q
+      end do
+      write (lun, '(a)') 'END_ROTATIONS'
+      write (lun, '(a)') 'SPIN_FRAME = FILE_MODEL 1400121 399 J2000 1.0e-3'
+      close (lun)
+      call spice%furnsh('test_loaders_fr.sim')
+      call check_ok(ctx, 'a file of frames')
+      call ctx%pxform('J2000', 'FILE_SPIN', 1234.5_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(w, 1234.5_wp))) < 1.0e-12_wp, 'a file''s table of rotations')
+      call ctx%pxform('J2000', 'FILE_MODEL', 1234.5_wp, rot)
+      call check(maxval(abs(rot - spin_matrix(w, 1234.5_wp))) < 1.0e-15_wp, 'a file''s model frame')
+      call spice%unload('test_loaders_fr.sim')
+      call ctx%namfrm('FILE_SPIN', code)
+      call check(code == 0, 'UNLOAD of the file: its frames are gone')
+      call spice%remove_loader('SIMPLE')
+   end subroutine test_frame_files
+
+   !> A small text kernel (one variable).
+   subroutine write_text_kernel(file)
+      character(*), intent(in) :: file  !! the file
+      integer :: lun
+      open (newunit=lun, file=file, status='REPLACE', action='WRITE')
+      write (lun, '(a)') 'KPL/PCK'
+      write (lun, '(a)') '\begindata'
+      write (lun, '(a)') 'TEST_LOADERS_VAR = 1'
+      write (lun, '(a)') '\begintext'
+      close (lun)
+   end subroutine write_text_kernel
+
    !> Delete the test's files.
    subroutine delete_files()
       call delete_file(ref_bsp)
@@ -1096,6 +1299,9 @@ contains
       call delete_file('test_loaders_mix.sim')
       call delete_file('test_loaders_mbad.sim')
       call delete_file('test_loaders_model.bsp')
+      call delete_file('test_loaders_frames.bsp')
+      call delete_file('test_loaders_vars.tpc')
+      call delete_file('test_loaders_fr.sim')
    end subroutine delete_files
 
 end program test_loaders

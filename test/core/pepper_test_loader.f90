@@ -22,6 +22,15 @@
 !> angular rate w rad/s, phase at ET 0, from t0 to t1), computed by
 !> circle_orbit at any epoch, for the OBJECT, CENTER and FRAME set before.
 !>
+!> Frames: `ROTATING_FRAME = name code center base` starts a frame,
+!> `ROTATION_INTERPOLATION = LAGRANGE 7` (or HERMITE n) sets its method, and
+!> a block BEGIN_ROTATIONS ... END_ROTATIONS has rows `et q0 q1 q2 q3`
+!> (the quaternion from the base to the frame), optionally followed by the
+!> angular velocity (3 more numbers), a table of rotations
+!> (frame_rotations). `SPIN_FRAME = name code center base rate` is a model:
+!> a frame spinning about the base's Z axis at `rate` rad/s (spin_frame,
+!> add_frame).
+!>
 !> Each block is a segment; the header's keys may change between blocks
 !> (a block uses the values set before it; BOUNDS applies to one block).
 !> Blocks that share an epoch are a discontinuity (the later block wins
@@ -33,13 +42,24 @@ module pepper_test_loader
 
    use pepper_kinds, only: ip, wp
    use pepper_containers, only: string
-   use pepper_instance_module, only: kernel_loader, kernel_builder, pepper_context, ephemeris_provider
+   use pepper_instance_module, only: kernel_loader, kernel_builder, pepper_context, ephemeris_provider, &
+                                     frame_provider
 
    implicit none
 
    private
 
-   public :: simple_loader, write_simple, circle_orbit
+   public :: simple_loader, write_simple, circle_orbit, spin_frame, spin_matrix
+
+   !> The model of the test format's SPIN_FRAME line: a frame turning about
+   !> its base frame's Z axis, by `rate*et` (the evaluator a loader gives
+   !> add_frame).
+   type, extends(frame_provider) :: spin_frame
+      real(wp) :: rate = 0.0_wp  !! the spin rate (rad/s)
+      integer(ip) :: base = 1  !! the base frame's code (J2000)
+   contains
+      procedure :: transform => spin_frame_transform
+   end type spin_frame
 
    !> The model of the test format's CIRCULAR line: a circle in the xy
    !> plane (the evaluator a loader gives add_ephemeris).
@@ -79,8 +99,13 @@ contains
       real(wp) :: row(7), bounds(2)
       integer(ip) :: body, center, degree, nline, nrow, total
       integer :: lun, ios, eq
-      logical :: in_data, adapt, have_bounds, found
+      logical :: in_data, adapt, have_bounds, found, in_rot
       character(:), allocatable :: frame, objname
+      character(64) :: fname, fbase
+      character(16) :: rmethod
+      integer(ip) :: fcode, fcenter, rdegree, ncol
+      real(wp), allocatable :: rq(:, :), rav(:, :), rep(:)
+      real(wp) :: rrow(8), srate
 
       open (newunit=lun, file=file, status='OLD', action='READ', iostat=ios)
       if (ios /= 0) then
@@ -94,6 +119,13 @@ contains
       frame = ' '
       objname = ' '
       method = ' '
+      fname = ' '
+      fbase = ' '
+      rmethod = 'LAGRANGE'
+      rdegree = 7
+      fcode = 0
+      fcenter = 0
+      in_rot = .false.
       degree = 0
       adapt = .false.
       have_bounds = .false.
@@ -115,6 +147,40 @@ contains
          end if
          line = adjustl(line)
          if (line == ' ' .or. line(1:1) == '#') cycle
+         if (in_rot) then
+            if (line == 'END_ROTATIONS') then
+               call add_rotations()
+               if (ctx%failed()) exit
+               in_rot = .false.
+               cycle
+            end if
+            if (nrow == 0) then
+               ! the first row tells whether the rows have angular velocities
+               read (line, *, iostat=ios) rrow(1:8)
+               ncol = merge(8, 5, ios == 0)
+            end if
+            read (line, *, iostat=ios) rrow(1:ncol)
+            if (ios /= 0) then
+               call error('a rotation row is not 5 (or 8) numbers')
+               exit
+            end if
+            nrow = nrow + 1
+            if (nrow > size(rep)) call grow_rotations()
+            rep(nrow) = rrow(1)
+            rq(:, nrow) = rrow(2:5)
+            if (ncol == 8) rav(:, nrow) = rrow(6:8)
+            cycle
+         end if
+         if (line == 'BEGIN_ROTATIONS') then
+            if (fname == ' ') then
+               call error('BEGIN_ROTATIONS with no ROTATING_FRAME before it')
+               exit
+            end if
+            in_rot = .true.
+            nrow = 0
+            allocate (rep(16), rq(4, 16), rav(3, 16))
+            cycle
+         end if
          if (in_data) then
             if (line == 'END_DATA') then
                call add_block()
@@ -192,6 +258,29 @@ contains
             end if
             call kb%add_ephemeris(ctx, body, center, frame, row(4), row(5), &
                                   circle_orbit(r=row(1), w=row(2), phase=row(3)), ident='SIMPLE CIRCULAR')
+         case ('ROTATING_FRAME')
+            read (value, *, iostat=ios) fname, fcode, fcenter, fbase
+            if (ios /= 0) then
+               call error('ROTATING_FRAME is not a name, a code, a center and a base frame')
+               exit
+            end if
+         case ('ROTATION_INTERPOLATION')
+            read (value, *, iostat=ios) rmethod, rdegree
+            if (ios /= 0) then
+               call error('ROTATION_INTERPOLATION is not a method and a degree')
+               exit
+            end if
+         case ('SPIN_FRAME')
+            read (value, *, iostat=ios) fname, fcode, fcenter, fbase, srate
+            if (ios /= 0) then
+               call error('SPIN_FRAME is not a name, a code, a center, a base frame and a rate')
+               exit
+            end if
+            block
+               integer(ip) :: bcode
+               call ctx%namfrm(trim(fbase), bcode)
+               call kb%add_frame(ctx, trim(fname), fcode, fcenter, spin_frame(rate=srate, base=bcode))
+            end block
          case ('ADAPT')
             adapt = trim(value) == 'YES'
          case ('BOUNDS')
@@ -208,8 +297,8 @@ contains
       end do
       close (lun)
       if (ctx%failed()) return
-      if (in_data) then
-         call error('the last block has no END_DATA')
+      if (in_data .or. in_rot) then
+         call error('the last block has no END_DATA or END_ROTATIONS')
          return
       end if
       call kb%set_format('SIMPLE_EPHEMERIS (test format)')
@@ -263,6 +352,30 @@ contains
          end select
       end subroutine add_block
 
+      !> Add the block of rotations just read as a table of the frame.
+      subroutine add_rotations()
+         if (ncol == 8) then
+            call kb%frame_rotations(ctx, trim(fname), fcode, fcenter, trim(fbase), rep(1:nrow), rq(:, 1:nrow), &
+                                    rdegree, av=rav(:, 1:nrow), method=rmethod)
+         else
+            call kb%frame_rotations(ctx, trim(fname), fcode, fcenter, trim(fbase), rep(1:nrow), rq(:, 1:nrow), &
+                                    rdegree, method=rmethod)
+         end if
+         deallocate (rep, rq, rav)
+      end subroutine add_rotations
+
+      !> Make room for more rotations.
+      subroutine grow_rotations()
+         real(wp), allocatable :: e(:), q(:, :), w(:, :)
+         allocate (e(2*size(rep)), q(4, 2*size(rep)), w(3, 2*size(rep)))
+         e(1:nrow - 1) = rep(1:nrow - 1)
+         q(:, 1:nrow - 1) = rq(:, 1:nrow - 1)
+         w(:, 1:nrow - 1) = rav(:, 1:nrow - 1)
+         call move_alloc(e, rep)
+         call move_alloc(q, rq)
+         call move_alloc(w, rav)
+      end subroutine grow_rotations
+
       !> Make room for more rows.
       subroutine grow_rows()
          real(wp), allocatable :: e(:), s(:, :)
@@ -289,6 +402,41 @@ contains
       end subroutine keep
 
    end subroutine simple_load
+
+   !> The matrix from the base frame to the spinning frame at ET (a rotation
+   !> of the axes by RATE*ET about Z: ROTATE's).
+   pure function spin_matrix(rate, et) result(m)
+      real(wp), intent(in) :: rate  !! the spin rate (rad/s)
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp) :: m(3, 3)
+      real(wp) :: c, s
+      c = cos(rate*et)
+      s = sin(rate*et)
+      m = reshape([c, -s, 0.0_wp, s, c, 0.0_wp, 0.0_wp, 0.0_wp, 1.0_wp], [3, 3])
+   end function spin_matrix
+
+   !> The state transformation from the spinning frame to its base:
+   !> [R 0; dR/dt R], R the transpose of spin_matrix.
+   subroutine spin_frame_transform(self, ctx, frame, et, xform, relative, found)
+      class(spin_frame), intent(in) :: self  !! the model
+      class(pepper_context), intent(inout) :: ctx  !! the context of the query
+      integer(ip), intent(in) :: frame  !! the frame's code
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp), intent(out) :: xform(6, 6)  !! the transformation from the frame to RELATIVE
+      integer(ip), intent(out) :: relative  !! the base frame
+      logical, intent(out) :: found  !! always
+      real(wp) :: r(3, 3), dr(3, 3), c, s
+      c = cos(self%rate*et)
+      s = sin(self%rate*et)
+      r = transpose(spin_matrix(self%rate, et))
+      dr = self%rate*reshape([-s, c, 0.0_wp, -c, -s, 0.0_wp, 0.0_wp, 0.0_wp, 0.0_wp], [3, 3])
+      xform = 0.0_wp
+      xform(1:3, 1:3) = r
+      xform(4:6, 4:6) = r
+      xform(4:6, 1:3) = dr
+      relative = self%base
+      found = .not. ctx%failed() .and. frame /= 0
+   end subroutine spin_frame_transform
 
    !> The state on the circle at ET.
    subroutine circle_orbit_state(self, ctx, body, et, state, found)
