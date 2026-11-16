@@ -1009,6 +1009,17 @@ async function main() {
     rawLinkedPath,
   ]);
 
+  if (process.env.PEPPER_WASM_OPT === "1") {
+    const optimizedPath = path.join(buildDir, "module.optimized.wasm");
+    await execFileAsync("wasm-opt", [
+      "-Oz", "--enable-threads", "--enable-bulk-memory",
+      "--enable-mutable-globals", "--enable-sign-ext",
+      "--enable-nontrapping-float-to-int",
+      rawLinkedPath, "-o", optimizedPath,
+    ]);
+    await fsp.rename(optimizedPath, rawLinkedPath);
+  }
+
   const rawWasmBytes = new Uint8Array(await fsp.readFile(rawLinkedPath));
   const wasmBytes = appendWasmCustomSection(
     rawWasmBytes,
