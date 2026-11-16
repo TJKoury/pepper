@@ -137,8 +137,9 @@ async function ensureWasiFlangRuntime(flangDir, tc) {
   }
   const cacheDir = path.join(ROOT, ".cache", "flang-wasm");
   const archivePath = path.join(cacheDir, "libflang_rt.wasi.a");
+  const runtimeSizeMarker = path.join(cacheDir, ".pepper-runtime-findloc-oz-v1");
   const wasm32ModMarkerCheck = path.join(flangDir, "include", "flang", ".pepper-wasm32-mods-v1");
-  if (fs.existsSync(archivePath) && fs.existsSync(wasm32ModMarkerCheck)) {
+  if (fs.existsSync(archivePath) && fs.existsSync(wasm32ModMarkerCheck) && fs.existsSync(runtimeSizeMarker)) {
     return archivePath;
   }
 
@@ -372,10 +373,11 @@ async function ensureWasiFlangRuntime(flangDir, tc) {
     const isC = src.endsWith(".c");
     const obj = path.join(outDir, `${path.basename(src)}.o`);
     objs.push(obj);
-    if (fs.existsSync(obj)) return;
+    const isFindloc = path.basename(src) === "findloc.cpp";
+    if (fs.existsSync(obj) && (!isFindloc || fs.existsSync(runtimeSizeMarker))) return;
     await execFileAsync(isC ? tc.clang : tc.clangxx, [
       ...tc.toolchainArgs,
-      "-O2",
+      isFindloc ? "-Oz" : "-O2",
       "-mbulk-memory",
       "-fno-exceptions",
       ...(isC ? ["-std=c11"] : ["-std=c++17", "-fno-rtti", "-Wno-c++11-narrowing"]),
@@ -395,6 +397,7 @@ async function ensureWasiFlangRuntime(flangDir, tc) {
     : "ar";
   await fsp.rm(archivePath, { force: true });
   await execFileAsync(arBin, ["rcs", archivePath, ...objs.sort()]);
+  await fsp.writeFile(runtimeSizeMarker, "findloc.cpp: -Oz\n");
   return archivePath;
 }
 
@@ -990,7 +993,7 @@ async function main() {
     "-fno-exceptions",
     "-Wl,-O2",
     "-Wl,--gc-sections",
-    "-Wl,--strip-debug",
+    "-Wl,--strip-all",
     "-Wl,--initial-memory=67108864",
     "-Wl,--max-memory=2147483648",
     "-Wl,-z,stack-size=4194304",
