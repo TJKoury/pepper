@@ -2,9 +2,7 @@
 !> numerical routines.
 !>
 !> The procedures keep SPICELIB's names, arguments and documentation. They
-!> have no saved state and do not signal SPICE errors. Moved here from
-!> src/spicelib by tools/modularize.py; the external procedures with the
-!> original interface are in tspice/src/legacy/pepper_legacy_math.f90.
+!> have no saved state and do not signal SPICE errors.
 module pepper_math
 
    use pepper_kinds, only: ip, wp
