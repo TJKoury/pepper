@@ -9762,10 +9762,6 @@ contains
       logical, intent(out) :: found  !! Translation success flag.
 
 !
-!     SPICE functions.
-!
-
-!
 !     Local variables.
 !
       logical :: update

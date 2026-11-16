@@ -1926,6 +1926,13 @@ submodule (pepper_instance_module) pepper_gf
    integer(ip), parameter :: lnsize = 80  !! length of a line of text (messages, kernel lines)
    integer(ip), parameter :: maxcln = 80  !! length of a relation name
    integer(ip), parameter :: maxop = 6  !! length of a relational operator
+   ! The maximum number of search loop iterations to execute.
+   ! The default refinement method is bisection, a very slow
+   ! method to convergence. Since 2**1000 ~ 10**301,
+   ! 1000 loop iterations represents enough effort to assume
+   ! either the search will not converge or that the refinement
+   ! function operates slower than would bisection, in which
+   ! case the user should use the default GFREFN function.
    integer(ip), parameter :: mxloop = 1000  !! maximum number of iterations of the root finding loop
    logical, parameter :: nobail = .false.  !! interrupt handling: off
    logical, parameter :: norpt = .false.  !! progress reporting: off
@@ -4705,7 +4712,6 @@ contains
 
 !
 !     Look up the instrument parameters.
-!
 !
 !     PEPPER: the instrument frame name is saved at the length of its
 !     kernel variable's value (SPICELIB: 32 characters).
@@ -7985,10 +7991,6 @@ contains
       real(wp), intent(out) :: value  !! Value of phase angle.
 
 !
-!     SPICELIB functions.
-!
-
-!
 !     Local Variables.
 !
       real(wp) :: lt
@@ -8264,10 +8266,6 @@ contains
       integer(ip), intent(in) :: obs  !! Observer body ID
       character(*), intent(in) :: abcorr  !! Aberration correction flag
       real(wp), intent(out) :: value  !! Value of range rate between objects
-
-!
-!     SPICELIB functions.
-!
 
 !
 !     Local Variables.
@@ -8605,10 +8603,6 @@ contains
       implicit none
 
 
-!
-!     SPICELIB functions.
-!
-
       real(wp) :: begin
       real(wp) :: curtim
       real(wp) :: diff
@@ -8632,15 +8626,6 @@ contains
 
       integer(ip) :: nloop
 
-!
-!     The maximum number of search loop iterations to execute.
-!     The default refinement method is bisection, a very slow
-!     method to convergence. Since 2**1000 ~ 10**301,
-!     1000 loop iterations represents enough effort to assume
-!     either the search will not converge or that the refinement
-!     function operates slower than would bisection, in which
-!     case the user should use the default GFREFN function.
-!
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
       logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
@@ -9420,15 +9405,6 @@ contains
 
       integer(ip) :: nloop
 
-!
-!     The maximum number of search loop iterations to execute.
-!     The default refinement method is bisection, a very slow
-!     method to convergence. Since 2**1000 ~ 10**301,
-!     1000 loop iterations represents enough effort to assume
-!     either the search will not converge or that the refinement
-!     function operates slower than would bisection, in which
-!     case the user should use the default GFREFN function.
-!
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
       logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
@@ -10033,10 +10009,6 @@ contains
       real(wp), intent(out) :: value  !! Value of angular separation between objects
 
 !
-!     SPICELIB functions.
-!
-
-!
 !     Local Variables.
 !
       real(wp) :: ang1
@@ -10047,11 +10019,6 @@ contains
       real(wp) :: range2
       real(wp) :: theta
       real(wp) :: lt
-
-!
-!     ATOL is a tolerance value for computing arc sine.
-!
-
 
 !
 !     Standard SPICE error handling.
@@ -17509,10 +17476,6 @@ contains
       character(*), intent(in) :: obsrvr  !! Name or ID of the observer.
       real(wp), intent(in) :: et  !! Time of the observation (seconds past J2000).
       integer(ip), intent(out) :: ocltid  !! Occultation identification code.
-
-!
-!     External routines
-!
 
       character(:), allocatable :: back
       character(:), allocatable :: bname
@@ -25238,22 +25201,6 @@ contains
       logical :: ok
 
 !
-!     Interrupt handler:
-!
-
-!
-!     Routines to set step size, refine transition times
-!     and report work:
-!
-
-!     Geometric quantity  bail switch:
-!
-
-!
-!     Progress report switch:
-!
-
-!
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
@@ -26103,25 +26050,6 @@ contains
       real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
       real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
-
-!
-!     External routines
-!
-!     Interrupt handler:
-!
-
-!
-!     Routines to set step size, refine transition times
-!     and report work:
-!
-
-!
-!     Geometric quantity  bail switch:
-!
-
-!
-!     Progress report switch:
-!
 
       real(wp) :: tol
       logical :: ok
@@ -28483,10 +28411,6 @@ contains
 
 
 !
-!     SPICELIB functions.
-!
-
-!
 !     Local variables.
 !
 
@@ -29486,10 +29410,6 @@ contains
       use pepper_inc_zzholdd
       implicit none
 
-
-!
-!     SPICELIB functions.
-!
 
 !
 !     Local variables.
@@ -38362,16 +38282,6 @@ contains
 !     External functions
 !
 
-!
-!     Interrupt indicator function:
-!
-
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
-
-
       integer(ip), parameter :: qnpars = 3
 
 
@@ -39638,16 +39548,6 @@ contains
 !     External functions
 !
 
-!
-!     Interrupt indicator function:
-!
-
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
-
-
       integer(ip), parameter :: qnpars = 8
 
 
@@ -40696,12 +40596,6 @@ contains
       integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
       real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
       real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
-
-
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
 
 
       integer(ip), parameter :: qnpars = 4
@@ -42588,15 +42482,6 @@ contains
       real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
-
-
-
-
-
       real(wp) :: tol
       logical :: ok
 
@@ -43638,12 +43523,6 @@ contains
       integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
       real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
       real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
-
-
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
 
 
       integer(ip), parameter :: qnpars = 3
@@ -44768,12 +44647,6 @@ contains
       integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
       real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array containing workspace windows.
       real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
-
-
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
 
 
       integer(ip), parameter :: qnpars = 8
@@ -46272,15 +46145,6 @@ contains
       real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
-
-
-
-
-
       real(wp) :: tol
       logical :: ok
 
@@ -47524,15 +47388,6 @@ contains
       integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
       real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
       real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
-
-
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
-
-
-
 
 
       real(wp) :: tol

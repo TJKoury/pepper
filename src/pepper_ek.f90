@@ -30092,7 +30092,6 @@ contains
 !           Now that the mess has been arranged, tell the user what the
 !           problem was.
 !
-!
 !           PEPPER: TABLE_LIST_FULL, DESCRIPTOR_TABLE_FULL and
 !           ATTRIBUTE_TABLE_FULL cannot occur: EKQMGR_ROOM made room
 !           for the whole file before it was loaded.
@@ -41946,10 +41945,6 @@ contains
 
       integer(ip) :: room
 
-!
-!     Storage limits:
-!
-
       character(:), allocatable :: chrbuf
       character(:), allocatable :: eqryc
 
@@ -41973,7 +41968,6 @@ contains
 
 !
 !     Initialize the encoded query each time, for safety.
-!
 !
 !     PEPPER: the buffers are sized from the query: it has at most one
 !     token, and one number, per character, and its strings and names fit
@@ -42136,9 +42130,6 @@ contains
       integer(ip) :: room
       integer(ip) :: dsize
 
-!     Storage limits:
-!
-
       character(:), allocatable :: chrbuf
 
       real(wp), allocatable :: numvls ( : )
@@ -42158,7 +42149,6 @@ contains
 
 !
 !     Initialize the encoded query each time, for safety.
-!
 !
 !     PEPPER: the scanner's buffers are sized from the query (at most one
 !     token per character); the encoded query keeps the sizes its caller
@@ -42770,7 +42760,6 @@ contains
 
 !
 !     Initialize the encoded query each time, for safety.
-!
 !
 !     PEPPER: the encoded query is sized from the query (see EKFIND).
 !

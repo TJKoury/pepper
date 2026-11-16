@@ -10701,22 +10701,6 @@ contains
       real(wp), intent(inout) :: record   ( * )  !! Record from a type 18 SPK segment valid for ET. (PEPPER: its packets are transposed in place.)
       real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
 
-!
-!     Index of subtype code in record:
-!
-
-!
-!     Index of packet count in record:
-!
-
-!
-!     Index at which packets start:
-!
-
-!
-!     Maximum polynomial degree:
-!
-
       real(wp) :: locrec ( maxrec )
       real(wp) :: work   ( maxrec * 2,  2 )
       real(wp) :: vbuff  ( 6 )
@@ -11023,18 +11007,6 @@ contains
       real(wp), intent(in) :: et  !! Epoch for which a state is desired.
       real(wp), intent(inout) :: record   ( * )  !! Record from a type 19 SPK segment valid for ET. (PEPPER: its packets are transposed in place.)
       real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
-
-!
-!     Index of subtype code in record:
-!
-
-!
-!     Index of packet count in record:
-!
-
-!
-!     Index at which packets start:
-!
 
       real(wp) :: locrec ( maxrec )
       real(wp) :: work   ( maxrec * 2,  2 )
@@ -17690,10 +17662,6 @@ contains
       integer(ip) :: lsflg
 
 !
-!     SPICELIB routines.
-!
-
-!
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
@@ -18270,10 +18238,6 @@ contains
       real(wp) :: zns
 
 !
-!     SPICELIB routines.
-!
-
-!
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
@@ -18800,10 +18764,6 @@ contains
       integer(ip) :: iretn
 
 !
-!     SPICELIB routines.
-!
-
-!
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
@@ -19248,10 +19208,6 @@ contains
       real(wp) :: zns
 
 !
-!     SPICELIB routines.
-!
-
-!
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return
@@ -19571,10 +19527,6 @@ contains
       real(wp) :: xke
 
       integer(ip) :: ids70
-
-!
-!     SPICELIB routines.
-!
 
 !
 !     Standard SPICE error handling.
@@ -22261,9 +22213,6 @@ contains
       integer(ip), intent(in) :: last  !! The index of the last constant value to fetch.
       real(wp), intent(out) :: values ( * )  !! The constant values that were requested.
 
-!     Include the mnemonic values for the generic segment declarations.
-!
-
       integer(ip) :: b
       integer(ip) :: base
       integer(ip) :: e
@@ -22479,9 +22428,6 @@ contains
       integer(ip), intent(in) :: last  !! The index of the last data packet to fetch.
       real(wp), intent(out) :: values  ( * )  !! The data packets that have been fetched.
       integer(ip), intent(out) :: ends    ( * )  !! An array of pointers to the ends of the packets.
-
-!     Include the mnemonic values.
-!
 
       real(wp) :: dtemp(2)
 
@@ -22817,10 +22763,6 @@ contains
       logical, intent(out) :: found  !! A flag indicating whether values for X were found.
       real(wp) :: myvalu_1(1)  !! one-element copy of myvalu (array argument)
 
-!     Include the mnemonic values for the generic segment declarations.
-!
-
-
       real(wp) :: buffer ( bufsiz )
       real(wp) :: dptemp
       real(wp) :: endref
@@ -22845,7 +22787,6 @@ contains
       logical :: done
       logical :: isdirv
       logical :: myfnd
-!     Initial Values
 !
 !     Constants (SPICELIB computed them on the first call).
 !
@@ -24877,14 +24818,6 @@ contains
       real(wp), intent(out) :: record   ( * )  !! Data record associated with epoch ET.
       integer(ip) :: ends_1(1)  !! one-element copy of ends (array argument)
 
-!     The number of constant values stored with a type 03 segment
-!     segment.
-!
-!
-!     The beginning location in the output record for the non-constant
-!     segment data.
-!
-
       real(wp) :: value
 
       integer(ip) :: ends
@@ -26051,9 +25984,6 @@ contains
       real(wp), intent(out) :: record   ( * )  !! The desired type 14 SPK record.
       integer(ip) :: ends_1(1)  !! one-element copy of ends (array argument)
 
-!     The number of constant values stored with a type 14 segment
-!     segment.
-!
 !
 !     The beginning location in the output record for the non constant
 !     segment data.
@@ -26431,14 +26361,6 @@ contains
       real(wp), intent(out) :: av     ( 3    )  !! Angular velocity vector.
       real(wp), intent(out) :: clkout  !! Output spacecraft clock time.
       logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
-
-!        NDC        is the number of double precision components in an
-!                   unpacked C-kernel segment descriptor.
-!
-!        NIC        is the number of integer components in an unpacked
-!                   C-kernel segment descriptor.
-!
-
 
       integer(ip) :: icd    ( nic    )
       integer(ip) :: type

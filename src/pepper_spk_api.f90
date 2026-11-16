@@ -1405,9 +1405,6 @@ contains
       integer(ip), intent(in) :: last  !! The index of the last reference value to fetch.
       real(wp), intent(out) :: values ( * )  !! The reference values that were requested.
 
-!     Include the mnemonic values for the generic segment declarations.
-!
-
       real(wp) :: buffer ( 2 )
 
       integer(ip) :: b
@@ -4544,7 +4541,6 @@ contains
 !
 !     Release the file.
 !
-!
 !     PEPPER: a kernel built in memory has also the programmatic
 !     ephemerides it owns (kernel_builder's add_ephemeris).
 !
@@ -6883,7 +6879,6 @@ contains
 !
 !     Release the file.
 !
-!
 !     PEPPER: a kernel built in memory has also the programmatic
 !     ephemerides it owns (kernel_builder's add_ephemeris).
 !
@@ -7012,9 +7007,6 @@ contains
       real(wp), intent(in) :: first  !! The first epoch for which the segment is valid.
       real(wp), intent(in) :: last  !! The last  epoch for which the segment is valid.
       real(wp), intent(out) :: descr ( * )  !! An SPK segment descriptor.
-
-!     ND and NI values for an SPK file.
-!
 
 !
 !     Length of a calender string.
@@ -11139,10 +11131,6 @@ contains
       integer(ip), intent(out) :: baddrs  !! Beginning DAF address of the segment.
       integer(ip), intent(out) :: eaddrs  !! Ending DAF address of the segment.
 
-!     Values of ND and NI for SPK files.
-!
-
-
       real(wp) :: dppart ( nd )
 
       integer(ip) :: ipart  ( ni )
@@ -12627,16 +12615,10 @@ contains
       real(wp), intent(in) :: last  !! The last epoch for which the segment is valid.
       integer(ip), intent(in) :: chbdeg  !! The degree of the Chebyshev Polynomial used.
 
-!     DAF ND and NI values for SPK files.
-!
-
 !
 !     Length of an SPK descriptor.
 !
       integer(ip), parameter :: ndescr = nd + (ni+1)/2
-!
-!     Length of a state.
-!
 !
 !     The type of this segment
 !
@@ -14577,9 +14559,6 @@ contains
       integer(ip) :: dummy_1(1)  !! one-element copy of dummy (array argument)
 
       integer(ip), parameter :: wdsize = 40
-!
-!     DAF ND and NI values for SPK files.
-!
 
 
 !
@@ -17613,13 +17592,7 @@ contains
 !     Reference frame name size. See CHGIRF.
 !
       integer(ip), parameter :: frmsiz = 16
-!
-!     DAF ND and NI values for SPK files.
-!
 
-!
-!     Length of a state.
-!
       character(frmsiz) :: myfram
 
       real(wp) :: begtim

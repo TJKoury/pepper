@@ -6278,10 +6278,6 @@ contains
 
       logical :: inbox
 
-!     Required for f2c use on Linux, all local variables
-!     to static.
-!
-
 !
 !     Standard SPICE error handling.
 !

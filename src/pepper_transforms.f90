@@ -769,16 +769,6 @@ contains
       real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
       real(wp), intent(out) :: xform ( 6, 6 )  !! a state transformation matrix
 
-!
-!     SPICE functions
-!
-
-
-
-!
-!     The root of all reference frames is J2000 (Frame ID = 1).
-!
-
       character(lmsgln) :: errmsg
 
       real(wp) :: tempxf( 6, 6 )
@@ -1316,16 +1306,6 @@ contains
       integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
       real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
       real(wp), intent(out) :: rotate ( 3, 3 )  !! a rotation matrix
-
-!
-!     SPICE functions
-!
-
-
-
-!
-!     The root of all reference frames is J2000 (Frame ID = 1).
-!
 
       character(lmsgln) :: errmsg
 

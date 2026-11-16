@@ -616,24 +616,6 @@ contains
       real(wp), intent(out) :: record  ( * )  !! The pointing record.
       real(wp) :: n_1(1)  !! one-element copy of n (array argument)
 
-!        NDC        is the number of double precision components in an
-!                   unpacked C-kernel segment descriptor.
-!
-!        NIC        is the number of integer components in an unpacked
-!                   C-kernel segment descriptor.
-!
-!        QSIZ       is the number of double precision numbers making up
-!                   the quaternion portion of a pointing record.
-!
-!        QAVSIZ     is the number of double precision numbers making up
-!                   the quaternion and angular velocity portion of a
-!                   pointing record.
-!
-
-
-
-
-
       integer(ip) :: icd    ( nic )
       integer(ip) :: nrec
       integer(ip) :: beg
@@ -2375,12 +2357,6 @@ contains
       integer(ip), parameter :: dtype = 6
 
 
-!
-!     Mini-segment control area size:
-!
-
-
-
       real(wp) :: buffer ( bufsiz )
       real(wp) :: dc     ( nd )
       real(wp) :: dpdata ( 1  )
@@ -3026,12 +3002,6 @@ contains
 
 
       integer(ip), parameter :: dtype = 6
-
-
-!
-!     Mini-segment control area size:
-!
-
 
 
       real(wp) :: buffer ( bufsiz )
@@ -3842,14 +3812,6 @@ contains
       integer(ip), intent(out) :: nrec  !! The number of records in the segment.
       real(wp) :: n_1(1)  !! one-element copy of n (array argument)
 
-!        NDC        is the number of double precision components in an
-!                   unpacked C-kernel descriptor.
-!
-!        NIC        is the number of integer components in an unpacked
-!                   C-kernel descriptor.
-!
-
-
       integer(ip) :: icd  ( nic )
 
       real(wp) :: dcd  ( ndc )
@@ -4222,18 +4184,6 @@ contains
       integer(ip), intent(in) :: handle  !! The handle of the CK file containing the segment.
       real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 2 segment.
       integer(ip), intent(out) :: nrec  !! The number of records in the segment.
-
-!        NDC        is the number of double precision components in an
-!                   unpacked C-kernel descriptor.
-!
-!        NIC        is the number of integer components in an unpacked
-!                   C-kernel descriptor.
-!
-!        DTYPE      is the data type.
-!
-
-
-
 
       integer(ip) :: beg
       integer(ip) :: end
@@ -5221,14 +5171,7 @@ contains
       integer(ip), intent(out) :: handle  !! The handle of the opened CK file.
 
       character(*), parameter :: type = 'CK'
-!
-!     DAF ND and NI values for CK files.
-!
 
-
-!
-!     Length of a DAF comment record, in characters.
-!
 
       integer(ip) :: ncomr
 
@@ -8339,26 +8282,9 @@ contains
       real(wp), intent(in) :: begtim  !! The segment coverage start encoded SCLK time
 
 !
-!     DAF ND and NI values for CK files and length of a DAF descriptor.
-!
-
-
-
-!
 !     The number of generic segment constants in a type 4 CK segment.
 !
       integer(ip), parameter :: nconst = 0
-
-!
-!     The integer codes of the first and last printable ASCII
-!     characters.
-!
-
-
-!
-!     The maximum number of characters allowed in a CK segment
-!     identifier.
-!
 
       real(wp) :: dcd    ( nd )
       real(wp) :: dcoeff
@@ -8668,18 +8594,8 @@ contains
       real(wp), intent(in) :: endtim  !! The segment coverage end encoded SCLK time.
 
 !
-!     SPICELIB functions.
-!
-
-!
 !     Local parameters.
 !
-
-!
-!     DAF ND and NI values for CK files and length of a DAF descriptor.
-!
-
-
 
 !
 !     Local variables.
@@ -9288,10 +9204,6 @@ contains
 
 
 
-!
-!     Packet structure parameters
-!
-
       real(wp) :: dc     ( nd )
       real(wp) :: descr  ( dscsiz )
 
@@ -9691,7 +9603,6 @@ contains
 !        +----------------------------+
 !        | Number of packets          |
 !        +----------------------------+
-!
 !
 !     PEPPER: the data is made by ck05_data (pepper_spk_packing), which the
 !     kernel builder uses too.
@@ -10341,10 +10252,6 @@ contains
 
       integer(ip), parameter :: dtype = 6
 
-
-!
-!     Packet structure parameters
-!
 
       real(wp) :: dc     ( nd )
       real(wp) :: descr  ( dscsiz )
@@ -12208,9 +12115,6 @@ contains
 !
 
       integer(ip), parameter :: ni = 5
-!
-!     Length of a DAF comment record, in characters.
-!
 
       integer(ip) :: ncomr
 
@@ -12901,24 +12805,11 @@ contains
       real(wp), intent(in) :: cdata (*)  !! Array of Chebyshev coefficients.
       real(wp), intent(in) :: btime  !! Begin time of first logical record.
 
-!     DTYPE is the PCK data type.
-!
-!
-!     NS is the size of a packed PCK segment descriptor.
-!
-!
-!     ND is the number of double precision components in an PCK
-!     segment descriptor. PCK uses ND = 2.
-!
 !
 !     NI is the number of integer components in an PCK segment
 !     descriptor. PCK uses NI = 5.
 !
       integer(ip), parameter :: ni = 5
-!
-!     SIDLEN is the maximum number of characters allowed in an
-!     PCK segment identifier.
-!
 
       character(sidlen) :: etstr
       character(sidlen) :: netstr
@@ -13501,24 +13392,10 @@ contains
       integer(ip), parameter :: dtype = 20
 
 !
-!     ND is the number of double precision components in a PCK
-!     segment descriptor. PCK uses ND = 2.
-!
-
-!
 !     NI is the number of integer components in a PCK segment
 !     descriptor. PCK uses NI = 5.
 !
       integer(ip), parameter :: ni = 5
-
-!
-!     NS is the size of a packed PCK segment descriptor.
-!
-
-!
-!     SIDLEN is the maximum number of characters allowed in an
-!     PCK segment identifier.
-!
 
       character(sidlen) :: etstr
       character(sidlen) :: netstr
@@ -14555,9 +14432,6 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
 
-!     IFNLEN      is the length of a DAF internal file name.
-!
-
       character(ifnlen) :: ifname
 
       integer(ip) :: bward
@@ -14746,13 +14620,6 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
       integer(ip), intent(in) :: unit  !! Logical unit connected to text file.
-
-!     IFNLEN      is the length of a DAF internal file name.
-!
-!     MAXCPR      is the maximum number of characters per DAF record and
-!                 hence the maximum comment line length.
-!
-
 
       character(ifnlen) :: ifname
       character(maxcpr) :: line
@@ -16534,15 +16401,6 @@ contains
 
       character(*), parameter :: type = 'SPK'
 
-!
-!     DAF ND and NI values for SPK files.
-!
-
-
-!
-!     Length of a DAF comment record, in characters.
-!
-
       integer(ip) :: ncomr
 
 !
@@ -17325,24 +17183,6 @@ contains
       real(wp), intent(in) :: cdata (*)  !! Array of Chebyshev coefficients.
       real(wp), intent(in) :: btime  !! Begin time of first logical record.
 
-!     DTYPE is the SPK data type.
-!
-!
-!     ND is the number of double precision components in an SPK
-!     segment descriptor. SPK uses ND = 2.
-!
-!
-!     NI is the number of integer components in an SPK segment
-!     descriptor. SPK uses NI = 6.
-!
-!
-!     NS is the size of a packed SPK segment descriptor.
-!
-!
-!     SIDLEN is the maximum number of characters allowed in an
-!     SPK segment identifier.
-!
-
       character(sidlen) :: etstr
       character(sidlen) :: netstr
 
@@ -17982,21 +17822,6 @@ contains
 !     DTYPE is the SPK data type.
 !
       integer(ip), parameter :: dtype = 3
-!
-!     ND is the number of double precision components in an SPK
-!     segment descriptor. SPK uses ND = 2.
-!
-!
-!     NI is the number of integer components in an SPK segment
-!     descriptor. SPK uses NI = 6.
-!
-!
-!     NS is the size of a packed SPK segment descriptor.
-!
-!
-!     SIDLEN is the maximum number of characters allowed in an
-!     SPK segment identifier.
-!
 
       character(sidlen) :: etstr
       character(sidlen) :: netstr
@@ -21908,22 +21733,10 @@ contains
       real(wp), intent(in) :: j2  !! Central body J2.
       real(wp), intent(in) :: radius  !! Equatorial radius of central body.
 
-!     Segment descriptor size
-!
-
-!
-!     Segment identifier size
-!
-
 !
 !     SPK data type
 !
       integer(ip), parameter :: type = 15
-
-!
-!     Range of printing characters
-!
-
 
 !
 !     Number of items in a segment
@@ -22504,22 +22317,10 @@ contains
       real(wp), intent(in) :: rapol  !! Right Ascension of the reference plane's pole.
       real(wp), intent(in) :: decpol  !! Declination of the reference plane's pole.
 
-!     Segment descriptor size
-!
-
-!
-!     Segment identifier size
-!
-
 !
 !     SPK data type
 !
       integer(ip), parameter :: type = 17
-
-!
-!     Range of printing characters
-!
-
 
 !
 !     Number of items in a segment
@@ -24453,25 +24254,6 @@ contains
 !
       integer(ip), parameter :: dtype = 20
 
-!
-!     ND is the number of double precision components in an SPK
-!     segment descriptor. SPK uses ND = 2.
-!
-
-!
-!     NI is the number of integer components in an SPK segment
-!     descriptor. SPK uses NI = 6.
-!
-
-!
-!     NS is the size of a packed SPK segment descriptor.
-!
-
-!
-!     SIDLEN is the maximum number of characters allowed in an
-!     SPK segment identifier.
-!
-
       character(sidlen) :: etstr
       character(sidlen) :: netstr
 
@@ -26247,10 +26029,6 @@ contains
       real(wp), intent(in) :: sclkdp( * )  !! The SCLK times associated with the data packets.
 
 !
-!     Spicelib functions.
-!
-
-!
 !     Local parameters.
 !
 
@@ -26905,10 +26683,6 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: binary  !! Name of an existing binary SPK or CK file.
       integer(ip), intent(in) :: unit  !! Logical unit connected to a text file.
-
-!     IFNLEN is the length of a DAF internal file name.
-!
-
 
       integer(ip) :: handle
       integer(ip) :: iostat

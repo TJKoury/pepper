@@ -2985,10 +2985,6 @@ contains
       integer(ip), intent(in) :: n  !! Number of integers to read and decode.
       integer(ip), intent(out) :: data(*)  !! List of decoded integers.
 
-!     Local parameters
-!
-
-
       character(errlen) :: errmsg
       character(maxenc) :: work(wrksiz)
 
@@ -3970,10 +3966,6 @@ contains
       integer(ip), intent(in) :: unit  !! Fortran unit number of input text file.
       integer(ip), intent(in) :: n  !! Number of d.p. numbers to read and decode.
       real(wp), intent(out) :: data(*)  !! List of decoded d.p. numbers.
-
-!     Local parameters
-!
-
 
       character(errlen) :: errmsg
       character(maxenc) :: work(wrksiz)
@@ -6066,10 +6058,6 @@ contains
       integer(ip), intent(in) :: n  !! Number of d.p. numbers to encode and write.
       real(wp), intent(in) :: data(*)  !! List of d.p. numbers to encode and write.
 
-!     Local parameters
-!
-
-
       character(maxenc) :: work(wrksiz)
 
       integer(ip) :: i
@@ -7861,7 +7849,6 @@ contains
 !
 !     Initialize the handle list, if necessary.
 !
-!
 !     Attempt to open the file; perform any appropriate checks.
 !
       call zzddhopn ( ctx, fname, 'READ', 'DAF', handle )
@@ -8331,9 +8318,7 @@ contains
 !
 !     Initialize the handle list, if necessary.
 !
-!
 !     Check to see if there is room in the file table.
-!
 !
 !     PEPPER: the file table grows as needed; SPICELIB signaled
 !     SPICE(DAFFTFULL) here when it had FTSIZE (5000) DAFs.
@@ -8718,9 +8703,7 @@ contains
 !
 !     Initialize the handle list, if necessary.
 !
-!
 !     Check to see if there is room in the file table.
-!
 !
 !     PEPPER: the file table grows as needed; SPICELIB signaled
 !     SPICE(DAFFTFULL) here when it had FTSIZE (5000) DAFs.
@@ -9246,9 +9229,7 @@ contains
 !
 !     Initialize the handle list, if necessary.
 !
-!
 !     Check to see if there is room in the file table.
-!
 !
 !     PEPPER: the file table grows as needed; SPICELIB signaled
 !     SPICE(DAFFTFULL) here when it had FTSIZE (5000) DAFs.
@@ -9771,7 +9752,6 @@ contains
 
 !
 !     Initialize the handle list, if necessary.
-!
 !
 !     Is this file even open? If so, decrement the number of links
 !     to the file. If the number of links drops to zero, physically
@@ -11284,7 +11264,6 @@ contains
 
 !
 !     Initialize the handle list, if necessary.
-!
 !
 !     Get an upper case, left-justified copy of ACCESS.
 !
@@ -15816,24 +15795,6 @@ contains
       integer(ip), intent(in) :: handle  !! Handle of a DAF file opened for writing.
       integer(ip), intent(in) :: resv  !! Number of records to reserve.
 
-!     IFNLEN      is the length of a DAF internal file name.
-!
-
-!
-!     WPR         is the maximum number of double precision numbers
-!                 (words) per record.
-!
-!     MAXD,       are the maximum number of double precision
-!     MAXI,       numbers, integers, and characters, respectively,
-!     MAXC        per record, not including space reserved for
-!                 control information (3 dp numbers are reserved).
-!                 There are two integers per double precision word,
-!                 and eight characters per word.
-!
-
-
-
-
       character(maxc) :: crec
       character(ifnlen) :: ifname
 
@@ -16177,7 +16138,6 @@ contains
 !
 !        Retrieve a logical unit for this handle.  This has the
 !        side-effect of locking this UNIT to HANDLE.
-!
 !
 !        PEPPER: a DAF built in memory has no file: the record is in its
 !        image.
@@ -16831,23 +16791,6 @@ contains
       integer(ip), intent(in) :: handle  !! DAF, opened for writing.
       integer(ip), intent(in) :: resv  !! Number of records to remove.
 
-!     IFNLEN      is the length of a DAF internal file name.
-!
-
-!
-!     WPR         is the maximum number of double precision
-!                 numbers per record.  WPR stands for words
-!                 per record.
-!
-
-!
-!     MAXD,       are the maximum number of double precision
-!     MAXI,       numbers, integers, and characters, respectively,
-!     MAXC        not including space reserved for control information.
-!
-
-
-
       character(maxc) :: crec
       character(ifnlen) :: ifname
 
@@ -17327,18 +17270,6 @@ contains
       integer(ip), intent(in) :: n  !! Number of comments to put into the comment area.
       character(*), intent(in) :: buffer(*)  !! Buffer of comments to put into the comment area.
 
-!     Length of a DAF file internal filename.
-!
-!
-!     Decimal value for the DAF comment area end-of-comment (EOC)
-!     marker.
-!
-!
-!     Decimal value for the DAF comment area end-of-line (EOL) marker.
-!
-!
-!     Length of a DAF character record, in characters.
-!
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
@@ -17374,7 +17305,6 @@ contains
 
       logical :: empty
       logical :: found
-!     Initial values
 !
 !     Constants (SPICELIB computed them on the first call).
 !
@@ -18024,10 +17954,6 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: handle  !! The handle of a binary DAF opened for writing.
 
-!     Local parameters
-!
-!     Length of a DAF file internal filename.
-!
       character(ifnlen) :: ifname
 
       integer(ip) :: bward
@@ -18703,7 +18629,6 @@ contains
 !
 !     Convert the DAF handle to its corresponding Fortran logical
 !     unit number for reading the comment records.
-!
 !
 !     PEPPER: a DAF built in memory has no comments.
 !

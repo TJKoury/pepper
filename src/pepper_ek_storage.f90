@@ -3137,9 +3137,6 @@ contains
       character(*), intent(inout) :: eqryc  !! Character component of query.
       real(wp), intent(inout) :: eqryd ( * )  !! D.p. component of query.
 
-!     Minimum upper bound for the integer cell of an encoded query:
-!
-
       integer(ip) :: i
 
 !
@@ -3149,7 +3146,6 @@ contains
 
 !
 !     Check sizes:
-!
 !
 !     PEPPER: no minimum sizes. The callers size the encoded query from
 !     the query (its integer part grows as it is written; the numbers and
@@ -3732,7 +3728,6 @@ contains
 !     file in order to determine which part of the data will
 !     be written to addresses previously written to, and which
 !     part will be appended.
-!
 !
 !     PEPPER: the scratch DAS is opened when the stack first goes past
 !     the in-memory part (SPICELIB: on the first push).
@@ -18895,7 +18890,6 @@ contains
 !
 !     Initialize the encoded query each time, for safety.
 !
-!
 !     PEPPER: the encoded query is initialized at the sizes the caller
 !     allocated (SPICELIB: EQIMIN and MAXQNM); its integer part grows as
 !     it is written.
@@ -21567,10 +21561,6 @@ contains
       integer(ip), intent(in) :: tree  !! Root of tree.
       integer(ip), intent(in) :: node  !! Node of interest.
       integer(ip) :: value_1(1)  !! one-element copy of the result (array argument)
-
-!
-!     Other functions
-!
 
       integer(ip) :: addrss
 

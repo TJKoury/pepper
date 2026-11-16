@@ -11,9 +11,36 @@ submodule (pepper_instance_module) pepper_array_ops
 
    ! Parameters shared by this file's procedures (PEPPER: SPICELIB
    ! declared them in each routine that used them).
+   !
+   ! The control area contains 3 elements.  They are:
+   !
+   !    The "size" of the pool, that is, the number
+   !    of nodes in the pool.
+   !
+   !    The number of free nodes in the pool.
+   !
+   !    The "free pointer," which is the column index of the first free
+   !    node.
+   !
+   ! Parameters defining the row and column indices of these control
+   ! elements are given below.
+   !
+   ! Each assigned node consists of a backward pointer and a forward
+   ! pointer.
+   !
+   !    +-------------+       +-------------+       +-------------+
+   !    |  forward--> |       |  forward--> |       |  forward--> |
+   !    +-------------+  ...  +-------------+  ...  +-------------+
+   !    | <--backward |       | <--backward |       | <--backward |
+   !    +-------------+       +-------------+       +-------------+
+   !
+   !        node 1                 node I              node SIZE
    integer(ip), parameter :: bckwrd = 2  !! row of the backward pointers of a linked list pool
    integer(ip), parameter :: forwrd = 1  !! row of the forward pointers of a linked list pool
    integer(ip), parameter :: frecol = -1  !! column of the head of the free list (in row FREROW)
+   ! Free nodes say that that's what they are.  The way they say it
+   ! is by containing the value FREE in their backward pointers.
+   ! Needless to say, FREE is a value that cannot be a valid pointer.
    integer(ip), parameter :: free = 0  !! backward pointer of a node that is free (not in a list)
    integer(ip), parameter :: frerow = 1  !! row of the head of the free list (in column FRECOL)
    integer(ip), parameter :: nfrcol = 0  !! column of the number of free nodes (in row NFRROW)
@@ -4429,46 +4456,6 @@ contains
 
 
 !
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
-
-!
 !     Discovery check-in is used in place of standard SPICE error
 !     handling.
 !
@@ -4625,46 +4612,6 @@ contains
       integer(ip), intent(in) :: tail  !! Head and tail nodes of a sublist to be freed.
       integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
       integer(ip) :: count
       integer(ip) :: next
@@ -4955,46 +4902,6 @@ contains
       integer(ip), intent(in) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
 
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
-
       integer(ip) :: prev
 
 !
@@ -5202,46 +5109,6 @@ contains
       integer(ip), intent(in) :: list  !! Node in the list to be inserted.
       integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
       integer(ip) :: next
       integer(ip) :: head
@@ -5481,46 +5348,6 @@ contains
       integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
 
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
-
       integer(ip) :: head
       integer(ip) :: prev
       integer(ip) :: tail
@@ -5708,46 +5535,6 @@ contains
                                                              !! output.
 
 
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
-
       integer(ip) :: i
 
 !
@@ -5883,46 +5670,6 @@ contains
 
 
 !
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
-
-!
 !     Grab the number of free nodes from the control area.
 !
       lnknfn  =  pool ( nfrrow, nfrcol )
@@ -6053,45 +5800,6 @@ contains
       integer(ip), intent(in) :: pool ( 2,  lbpool :  *  )  !! A doubly linked list pool.
       integer(ip), intent(in) :: node  !! Number of an allocated node.
 
-
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
 !
 !     If the node is out of range, something's very wrong.
@@ -6258,46 +5966,6 @@ contains
 
 
 !
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
-
-!
 !     If the node is out of range, something's very wrong.
 !
       if (      ( node < 1                       ) &
@@ -6413,46 +6081,6 @@ contains
       integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
       integer(ip), intent(in) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
 !
 !     Grab the pool size from the control area.
@@ -6579,46 +6207,6 @@ contains
       integer(ip), intent(in) :: node  !! Number of a node.
       integer(ip), intent(in) :: pool (  2,  lbpool : *  )  !! A doubly linked list pool.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
       integer(ip) :: next
 
@@ -6807,46 +6395,6 @@ contains
       integer(ip), intent(in) :: tail  !! Head and tail nodes of a sublist to be extracted.
       integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
       integer(ip) :: next
       integer(ip) :: node

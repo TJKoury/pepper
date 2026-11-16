@@ -11,6 +11,20 @@ submodule (pepper_instance_module) pepper_numerics
 
    ! Parameters shared by this file's procedures (PEPPER: SPICELIB
    ! declared them in each routine that used them).
+   !
+   ! The contents of SPICE planes are as follows:
+   !
+   !    Elements NMLPOS through NMLPOS + 2 contain a unit normal
+   !    vector for the plane.
+   !
+   !    Element CONPOS contains a constant for the plane;  every point
+   !    X in the plane satisfies
+   !
+   !       < X, PLANE(NMLPOS) >  =  PLANE(CONPOS).
+   !
+   !    The plane constant is the distance of the plane from the
+   !    origin; the normal vector, scaled by the constant, is the
+   !    closest point in the plane to the origin.
    integer(ip), parameter :: conpos = 4  !! index of the constant in a plane array
    real(wp), parameter :: magtol = 1.0e-14_wp  !! tolerance of a vector magnitude
    integer(ip), parameter :: nmlpos = 1  !! index of the normal vector in a plane array
@@ -3370,10 +3384,6 @@ contains
       real(wp), intent(in) :: rapol  !! Right Ascension of the pole of the reference plane
       real(wp), intent(in) :: decpol  !! Declination of the pole of the reference plane
       real(wp), intent(out) :: state ( 6 )  !! State of the object described by EQEL.
-
-!
-!     SPICELIB Functions.
-!
 
       real(wp) :: a
       real(wp) :: b
@@ -10738,23 +10748,6 @@ contains
       real(wp), intent(out) :: plane  ( ubpl )  !! An array representing the plane.
 
 
-!
-!     The contents of SPICE planes are as follows:
-!
-!        Elements NMLPOS through NMLPOS + 2 contain a unit normal
-!        vector for the plane.
-!
-!        Element CONPOS contains a constant for the plane;  every point
-!        X in the plane satisfies
-!
-!           < X, PLANE(NMLPOS) >  =  PLANE(CONPOS).
-!
-!        The plane constant is the distance of the plane from the
-!        origin; the normal vector, scaled by the constant, is the
-!        closest point in the plane to the origin.
-!
-
-
       real(wp) :: mag
       real(wp) :: tmpvec ( 3 )
 
@@ -10924,24 +10917,6 @@ contains
       real(wp), intent(out) :: plane  ( ubpl )  !! An array representing the plane.
 
 
-!
-!     The contents of SPICE planes are as follows:
-!
-!        Elements NMLPOS through NMLPOS + 2 contain a unit normal
-!        vector for the plane.
-!
-!        Element CONPOS contains a constant for the plane;  every point
-!        X in the plane satisfies
-!
-!           < X, PLANE(NMLPOS) >  =  PLANE(CONPOS).
-!
-!        The plane constant is the distance of the plane from the
-!        origin; the normal vector, scaled by the constant, is the
-!        closest point in the plane to the origin.
-!
-
-
-
       real(wp) :: tmpvec ( 3 )
 
 !
@@ -11109,23 +11084,6 @@ contains
       real(wp), intent(in) :: span2 (    3 )  !! A point and two spanning vectors defining a
                                               !! plane.
       real(wp), intent(out) :: plane ( ubpl )  !! An array representing the plane.
-
-
-!
-!     The contents of SPICE planes are as follows:
-!
-!        Elements NMLPOS through NMLPOS + 2 contain a unit normal
-!        vector for the plane.
-!
-!        Element CONPOS contains a constant for the plane;  every point
-!        X in the plane satisfies
-!
-!           < X, PLANE(NMLPOS) >  =  PLANE(CONPOS).
-!
-!        The plane constant is the distance of the plane from the
-!        origin; the normal vector, scaled by the constant, is the
-!        closest point in the plane to the origin.
-!
 
 
       real(wp) :: tmpvec ( 3 )
@@ -13623,10 +13581,6 @@ contains
       real(wp), intent(out) :: vout  (    3 )  !! Vector resulting from projection.
 
 
-!     Tolerance for deviation from unit length of the normal
-!     vector of the input plane.
-!
-
       real(wp) :: const
       real(wp) :: normal ( 3 )
 
@@ -13870,11 +13824,6 @@ contains
 !     BOUND is chosen somewhat arbitrarily....
 !
       real(wp), parameter :: bound = 10.0_wp
-
-!
-!     Tolerance for deviation from unit length of the normal
-!     vector of the input plane.
-!
 
       real(wp) :: denom
       real(wp) :: invc

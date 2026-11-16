@@ -1442,10 +1442,6 @@ contains
       logical, intent(out) :: update  !! .TRUE. if variables for AGENT have been updated
 
 !
-!     SPICELIB functions.
-!
-
-!
 !     Standard SPICE error handling.
 !
       if ( ctx%failed() ) return

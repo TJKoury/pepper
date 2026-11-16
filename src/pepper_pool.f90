@@ -1542,6 +1542,24 @@ submodule (pepper_instance_module) pepper_pool
 
    ! Parameters shared by this file's procedures (PEPPER: SPICELIB
    ! declared them in each routine that used them).
+   !
+   ! Below are a collection of enumerated lists that are used
+   ! to discern what part of the processing we are in and what
+   ! kind of entity we are dealing with.  First the overall
+   ! processing flow of a variable assignment.
+   !
+   ! Next we have the various types of tokens that can be found
+   ! in the parsing of an input line
+   !
+   ! Q   --- quoted (or protected tokens)
+   ! NQ  --- unquoted tokens
+   ! BV  --- beginning of a vector
+   ! EV  --- ending of a vector
+   ! EQ  --- equal sign
+   ! EQP --- equal sign plus
+   !
+   ! A variable can have one of three types as we process
+   ! it.  It can have an unknown type UNKNWN, STRTYP or NUMTYP.
    integer(ip), parameter :: begin = 1  !! reading state: start
    integer(ip), parameter :: bslash = 92  !! character code of the backslash
    integer(ip), parameter :: q = 1  !! token class: quoted string
@@ -5922,10 +5940,6 @@ contains
       logical, intent(out) :: succes  !! A logical indicating whether STRING was parsed.
       character(*), intent(out) :: pictur  !! A time format picture associated with STRING
       character(*), intent(out) :: error  !! A diagnostic message if STRING couldn't be parsed
-
-!
-!     Private Functions
-!
 
 !
 !     Parameters
@@ -10466,49 +10480,6 @@ contains
 !
 
 !
-!     Local parameters.
-!
-!     Below are a collection of enumerated lists that are used
-!     to discern what part of the processing we are in and what
-!     kind of entity we are dealing with.  First the overall
-!     processing flow of a variable assignment.
-!
-
-
-
-
-!
-!     Next we have the various types of tokens that can be found
-!     in the parsing of an input line
-!
-!     Q   --- quoted (or protected tokens)
-!     NQ  --- unquoted tokens
-!     BV  --- beginning of a vector
-!     EV  --- ending of a vector
-!     EQ  --- equal sign
-!     EQP --- equal sign plus
-!
-
-
-
-
-
-
-!
-!     A variable can have one of three types as we process
-!     it.  It can have an unknown type UNKNWN, STRTYP or NUMTYP.
-!
-
-
-
-
-!
-!     The next two parameters indicate which component of a linked
-!     list node point to the previous node and the next node.
-!
-
-
-!
 !     The next collection of variables are set up in first pass
 !     through this routine.  They would be parameters if FORTRAN
 !     allowed us to do this in a standard way.
@@ -11481,49 +11452,6 @@ contains
 
 !     The size of the kernel pool's hash table (MAXVAR in POOL).
 !
-
-!
-!     Local parameters.
-!
-!     Below are a collection of enumerated lists that are used
-!     to discern what part of the processing we are in and what
-!     kind of entity we are dealing with.  First the overall
-!     processing flow of a variable assignment.
-!
-
-
-
-
-!
-!     Next we have the various types of tokens that can be found
-!     in the parsing of an input line
-!
-!     Q   --- quoted (or protected tokens)
-!     NQ  --- unquoted tokens
-!     BV  --- beginning of a vector
-!     EV  --- ending of a vector
-!     EQ  --- equal sign
-!     EQP --- equal sign plus
-!
-
-
-
-
-
-
-!
-!     A variable can have one of three types as we process
-!     it.  It can have an unknown type UNKNWN, STRTYP or NUMTYP.
-!
-
-
-
-
-!
-!     The next two parameters indicate which component of a linked
-!     list node point to the previous node and the next node.
-!
-
 
 !
 !     The next collection of variables are set up in first pass
@@ -13743,7 +13671,6 @@ contains
 !     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
-!
 !
 !     The variables are written in the order of their slots (the order
 !     in which they were created). PEPPER: a name is padded to MAXLEN
@@ -16041,7 +15968,6 @@ contains
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
 !
-!
 !     PEPPER: names have any length (SPICELIB signaled SPICE(BADVARNAME)
 !     for more than 32 characters), and there is no limit on the number
 !     of values (SPICE(NOMOREROOM), SPICE(KERNELPOOLFULL)).
@@ -16286,7 +16212,6 @@ contains
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
 !
-!
 !     PEPPER: names have any length (SPICELIB signaled SPICE(BADVARNAME)
 !     for more than 32 characters), and there is no limit on the number
 !     of values (SPICE(NOMOREROOM), SPICE(KERNELPOOLFULL)).
@@ -16530,7 +16455,6 @@ contains
 !     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
-!
 !
 !     PEPPER: names have any length (SPICELIB signaled SPICE(BADVARNAME)
 !     for more than 32 characters), and there is no limit on the number
@@ -17234,7 +17158,6 @@ contains
 !     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
-!
 !
 !     The variables are searched in the order of their slots (the order
 !     in which they were created; SPICELIB's was the order of its hash

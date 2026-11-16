@@ -3216,10 +3216,6 @@ contains
       character(*), intent(out) :: type  !! The type of the file.
 
 !
-!     Spicelib Routines
-!
-
-!
 !     Set the length of a SPICE file ID word.
 !
       integer(ip), parameter :: idwlen = 8
@@ -4821,7 +4817,6 @@ contains
 !     and then INQUIRE on every file in the table.  To do this, we
 !     need a unit. Get one.
 !
-!
 !     PEPPER: during a load, the result for this file may have been kept
 !     by the previous call (see zzddhman_state): it is not in the table.
 !
@@ -4911,7 +4906,6 @@ contains
 !        file, we will declare that these files are not the same file
 !        and will skip INQUIRE. In all other cases we will do INQUIRE
 !        and check UNITs.
-!
 !
 !        PEPPER: a DAF built in memory has no file: it is not this one.
 !
@@ -6374,7 +6368,6 @@ contains
 
 !
 !     (PEPPER: the filename was trimmed when LOCFNM was set.)
-!
 !
 !     If we have made it this far, then we're ready to perform the
 !     appropriate open.  First get the handle ready.

@@ -1034,6 +1034,35 @@ submodule (pepper_instance_module) pepper_das
    integer(ip), parameter :: nwd = 128  !! number of double precision numbers in a DAS record
    integer(ip), parameter :: nwi = 256  !! number of integers in a DAS record
    integer(ip), parameter :: rngbas = 2  !! index in a directory record before the address ranges
+   ! The parameter TAILEN determines the tail length of a DAS file
+   ! record.  This is the number of bytes (characters) that
+   ! occupy the portion of the file record that follows the
+   ! integer holding the first free address.  For environments
+   ! with a 32 bit word length, 1 byte characters, and DAS
+   ! record sizes of 1024 bytes, we have:
+   !
+   !       8 bytes - IDWORD
+   !      60 bytes - IFNAME
+   !       4 bytes - NRESVR (32 bit integer)
+   !       4 bytes - NRESVC (32 bit integer)
+   !       4 bytes - NCOMR  (32 bit integer)
+   !     + 4 bytes - NCOMC  (32 bit integer)
+   !      ---------
+   !      84 bytes - (All file records utilize this space.)
+   !
+   ! So the size of the remaining portion (or tail) of the DAS
+   ! file record for computing environments as described above
+   ! would be:
+   !
+   !    1024 bytes - DAS record size
+   !  -    8 bytes - DAS Binary File Format Word
+   !  -   84 bytes - (from above)
+   !   ------------
+   !     932 bytes - DAS file record tail length
+   !
+   ! Note: environments that do not have a 32 bit word length,
+   ! 1 byte characters, and a DAS record size of 1024 bytes, will
+   ! require the adjustment of this parameter.
    integer(ip), parameter :: tailen = 932  !! length of the unused tail of the file record
    character(*), parameter :: tcblks = 'TOTAL_CHARACTER_BLOCKS'  !! transfer file: the line with the number of character blocks
    character(*), parameter :: tcmblk = 'TOTAL_COMMENT_BLOCKS'  !! transfer file: the line with the number of comment blocks
@@ -4406,7 +4435,6 @@ contains
 !     This file has no entry in the file table. We need to
 !     create a new entry. See whether there's room for it.
 !
-!
 !     PEPPER: the file table grows as needed; SPICELIB signaled
 !     SPICE(DASFTFULL) here when it had FTSIZE (5000) DASs.
 !
@@ -5617,7 +5645,6 @@ contains
 !
 !     The file can be opened only if there is room for another file.
 !
-!
 !     PEPPER: the file table grows as needed; SPICELIB signaled
 !     SPICE(DASFTFULL) here when it had FTSIZE (5000) DASs.
 !
@@ -6063,7 +6090,6 @@ contains
 !
 !     The file can be opened only if there is room for another file.
 !
-!
 !     PEPPER: the file table grows as needed; SPICELIB signaled
 !     SPICE(DASFTFULL) here when it had FTSIZE (5000) DASs.
 !
@@ -6485,7 +6511,6 @@ contains
 
 !
 !     The file can be opened only if there is room for another file.
-!
 !
 !     PEPPER: the file table grows as needed; SPICELIB signaled
 !     SPICE(DASFTFULL) here when it had FTSIZE (5000) DASs.
@@ -15009,17 +15034,6 @@ contains
       integer(ip), parameter :: int = 3
 
 !
-!     Words per data record, for each data type:
-!
-
-
-
-!
-!     Directory pointer locations (backward and forward):
-!
-
-
-!
 !     Directory address range locations
 !
       integer(ip), parameter :: chrrng = 3
@@ -15027,10 +15041,6 @@ contains
       integer(ip), parameter :: dprng = chrrng + 2
 
       integer(ip), parameter :: intrng = dprng  + 2
-
-!
-!     Location of first type descriptor
-!
 
       integer(ip) :: descr
       integer(ip) :: dirrec ( nwi )
@@ -15772,25 +15782,10 @@ contains
                                     !! the specified file.
 
 !
-!     Words per data record, for each data type:
-!
-
-
-
-!
 !     Data type parameters
 !
       integer(ip), parameter :: char = 1
 
-
-!
-!     Directory pointer locations (backward and forward):
-!
-
-
-!
-!     Location of first type descriptor
-!
 
       character(nwc) :: recc
 
@@ -16241,12 +16236,6 @@ contains
       integer(ip), intent(in) :: n  !! Number of comment records to remove.
 
 !
-!     Words per data record, for each data type:
-!
-
-
-
-!
 !     Data type parameters
 !
       integer(ip), parameter :: char = 1
@@ -16256,10 +16245,6 @@ contains
 !     Directory pointer location (forward):
 !
       integer(ip), parameter :: fwdloc = 1
-
-!
-!     Location of first type descriptor
-!
 
       character(nwc) :: recc
 
@@ -16716,19 +16701,6 @@ contains
 
 
       integer(ip), parameter :: dir = 4
-
-!
-!     Directory pointer locations (backward and forward):
-!
-
-
-!
-!     Directory address range location base
-!
-
-!
-!     Location of first type descriptor
-!
 
       character(nwc) :: crec
       character(nwc) :: savec
@@ -22319,38 +22291,6 @@ contains
 
 
 
-!
-!     The parameter TAILEN determines the tail length of a DAS file
-!     record.  This is the number of bytes (characters) that
-!     occupy the portion of the file record that follows the
-!     integer holding the first free address.  For environments
-!     with a 32 bit word length, 1 byte characters, and DAS
-!     record sizes of 1024 bytes, we have:
-!
-!           8 bytes - IDWORD
-!          60 bytes - IFNAME
-!           4 bytes - NRESVR (32 bit integer)
-!           4 bytes - NRESVC (32 bit integer)
-!           4 bytes - NCOMR  (32 bit integer)
-!         + 4 bytes - NCOMC  (32 bit integer)
-!          ---------
-!          84 bytes - (All file records utilize this space.)
-!
-!     So the size of the remaining portion (or tail) of the DAS
-!     file record for computing environments as described above
-!     would be:
-!
-!        1024 bytes - DAS record size
-!      -    8 bytes - DAS Binary File Format Word
-!      -   84 bytes - (from above)
-!       ------------
-!         932 bytes - DAS file record tail length
-!
-!     Note: environments that do not have a 32 bit word length,
-!     1 byte characters, and a DAS record size of 1024 bytes, will
-!     require the adjustment of this parameter.
-!
-
       character(fmtlen) :: format
       character(idwlen) :: locidw
       character(ifnlen) :: locifn
@@ -22609,22 +22549,6 @@ contains
       integer(ip), intent(in) :: n  !! Number of comments to put into the comment area.
       character(*), intent(in) :: buffer(*)  !! Buffer of lines to be put into the comment area.
 
-!     Length of a DAS character record, in characters.
-!
-!
-!     Maximum and minimum decimal values for the printable ASCII
-!     characters.
-!
-
-!
-!     Decimal value for the DAS comment area end-of-line (EOL) marker.
-!
-!
-!     Length of a DAS file ID word.
-!
-!
-!     Length of a DAS file internal filename.
-!
       character(mxcrec) :: crecrd
       character(idwlen) :: idword
       character(ifnlen) :: ifname
@@ -22644,7 +22568,6 @@ contains
       integer(ip) :: rinuse
       integer(ip) :: space
 
-!     Initial values
 !
 !     Constants (SPICELIB computed them on the first call).
 !
@@ -23279,22 +23202,6 @@ contains
       logical, intent(in) :: insbln  !! A flag indicating whether to insert a blank line.
       integer(ip), intent(in) :: handle  !! Handle of a DAS file opened with write access.
 
-!     Set the value for the maximum length of a text line.
-!
-!
-!     Set the length of a DAS file ID word.
-!
-!
-!     Set the length of a DAS file internal filename.
-!
-!
-!     Set the size of the comment buffer.
-!
-!
-!     Maximum and minimum decimal values for the printable ASCII
-!     characters.
-!
-
       character(linlen) :: combuf(bufsiz)
       character(idwlen) :: idword
       character(ifnlen) :: ifname
@@ -23750,13 +23657,6 @@ contains
       class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), intent(in) :: handle  !! The handle of a binary DAS file opened for writing.
 
-!     Local parameters
-!
-!     Length of a DAS file ID word.
-!
-!
-!     Length of a DAS file internal filename.
-!
       character(idwlen) :: idword
       character(ifnlen) :: ifname
 
@@ -24626,11 +24526,6 @@ contains
       integer(ip), intent(in) :: comlun  !! Logical unit of an opened text file.
       logical, intent(out) :: comnts  !! Logical flag, indicating comments were found.
 
-!     Set the value for the maximum length of a text line.
-!
-!
-!     Set the size of the comment buffer.
-!
       character(linlen) :: combuf(bufsiz)
 
       integer(ip) :: numcom
@@ -24870,26 +24765,9 @@ contains
 !
       integer(ip), parameter :: linlen = 80
 !
-!     Length of a character buffer array element.
-!
-!
-!     Length of a DAS file ID word.
-!
-!
-!     Length of a DAS internal filename.
-!
-!
-!     Length of a DAS comment record, in characters.
-!
-!
 !     Size of the character, double precision, and integer data buffers.
 !
       integer(ip), parameter :: bufsiz = 1024
-!
-!     Beginning and ending string positions for reading/writing
-!     character data from/to a DAS file using the character data
-!     buffer.
-!
 
       character(cbflen) :: cbuffr(bufsiz)
       character(crlen) :: crecrd

@@ -494,11 +494,6 @@ contains
       integer(ip), intent(out) :: idcode  !! Body ID code.
       integer(ip) :: idcode_1(1)  !! one-element copy of idcode (array argument)
 
-!
-!     TEMPLN is the length of the keyword template, minus
-!     the sum of the lengths of the two substitution markers ('#').
-!
-
       character(:), allocatable :: bodnam
       character(1) :: dtype
       character(:), allocatable :: kvname
@@ -514,7 +509,6 @@ contains
 !     to look up.
 !
 !     Convert the frame code to a string.
-!
 !
 !     PEPPER: the kernel variable names have any length (SPICELIB:
 !     32 characters, VARNAMETOOLONG); the lookup is shared by the
@@ -784,11 +778,6 @@ contains
       integer(ip), intent(out) :: n  !! Number of returned values.
       integer(ip), intent(out) :: values  ( * )  !! Output kernel variable.
 
-!
-!     TEMPLN is the length of the keyword template, minus
-!     the sum of the lengths of the two substitution markers ('#').
-!
-
       character(1) :: dtype
       character(:), allocatable :: kvname
 
@@ -804,7 +793,6 @@ contains
 !     to look up.
 !
 !     Convert the frame code to a string.
-!
 !
 !     PEPPER: the kernel variable names have any length (SPICELIB:
 !     32 characters, VARNAMETOOLONG); the lookup is shared by the
@@ -1035,11 +1023,6 @@ contains
       character(*), intent(out) :: values  ( * )  !! Output kernel variable.
       logical, intent(out) :: found  !! "Found" flag.
 
-!
-!     TEMPLN is the length of the keyword template, minus
-!     the sum of the lengths of the two substitution markers ('#').
-!
-
       character(1) :: dtype
       character(:), allocatable :: kvname
 
@@ -1058,7 +1041,6 @@ contains
 !     to look up.
 !
 !     Convert the frame code to a string.
-!
 !
 !     PEPPER: the kernel variable names have any length (SPICELIB:
 !     32 characters, VARNAMETOOLONG); the lookup is shared by the
@@ -1291,11 +1273,6 @@ contains
       real(wp), intent(out) :: values  ( * )  !! Output kernel variable.
       logical, intent(out) :: found  !! "Found" flag.
 
-!
-!     TEMPLN is the length of the keyword template, minus
-!     the sum of the lengths of the two substitution markers ('#').
-!
-
       character(1) :: dtype
       character(:), allocatable :: kvname
 
@@ -1314,7 +1291,6 @@ contains
 !     to look up.
 !
 !     Convert the frame code to a string.
-!
 !
 !     PEPPER: the kernel variable names have any length (SPICELIB:
 !     32 characters, VARNAMETOOLONG); the lookup is shared by the
@@ -1714,11 +1690,6 @@ contains
       integer(ip), intent(out) :: n  !! Number of returned values.
       real(wp), intent(out) :: values  ( * )  !! Output kernel variable.
 
-!
-!     TEMPLN is the length of the keyword template, minus
-!     the sum of the lengths of the two substitution markers ('#').
-!
-
       character(1) :: dtype
       character(:), allocatable :: kvname
 
@@ -1734,7 +1705,6 @@ contains
 !     to look up.
 !
 !     Convert the frame code to a string.
-!
 !
 !     PEPPER: the kernel variable names have any length (SPICELIB:
 !     32 characters, VARNAMETOOLONG); the lookup is shared by the
@@ -4070,7 +4040,6 @@ contains
 !
 !           The ID wasn't in the hash, see if we can find this frame in
 !           the kernel pool.
-!
 !
 !           PEPPER: the name of any length.
 !

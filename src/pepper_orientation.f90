@@ -2876,11 +2876,6 @@ contains
       integer(ip), intent(out) :: idcode  !! Output kernel variable.
       integer(ip) :: idcode_1(1)  !! one-element copy of idcode (array argument)
 
-!
-!     TEMPLN is the length of the keyword template, minus
-!     the sum of the lengths of the two substitution markers ('#').
-!
-
       character(:), allocatable :: outnam
       character(1) :: dtype
       character(:), allocatable :: kvname
@@ -2896,7 +2891,6 @@ contains
 !     to look up.
 !
 !     Convert the frame code to a string.
-!
 !
 !     PEPPER: the kernel variable names have any length (SPICELIB:
 !     32 characters, VARNAMETOOLONG); the lookup is shared by the
@@ -3213,10 +3207,6 @@ contains
       integer(ip), intent(inout) :: savcde  !! Frame ID code saved by the caller.
       character(*), intent(in) :: frname  !! Frame name.
       integer(ip), intent(out) :: frcode  !! Frame ID code.
-
-!
-!     SPICE functions.
-!
 
 !
 !     Local variables.
@@ -4497,7 +4487,6 @@ contains
 
 !
 !     Compute room for the output data.
-!
 !
 !     PEPPER: the size of the base frame arrays is NROOM if given (the
 !     library's arrays grow); MAXBAS otherwise.
@@ -6252,29 +6241,6 @@ contains
       integer(ip), intent(out) :: ref  !! Frame ID of the base reference.
       logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
 
-!        NDC        is the number of double precision components in an
-!                   unpacked C-kernel segment descriptor.
-!
-!        NIC        is the number of integer components in an unpacked
-!                   C-kernel segment descriptor.
-!
-!        NC         is the number of components in a packed C-kernel
-!                   descriptor.  All DAF summaries have this formulaic
-!                   relationship between the number of its integer and
-!                   double precision components and the number of packed
-!                   components.
-!
-!        IDLEN      is the length of the C-kernel segment identifier.
-!                   All DAF names have this formulaic relationship
-!                   between the number of summary components and
-!                   the length of the name (You will notice that
-!                   a name and a summary have the same length in bytes.)
-!
-
-
-
-
-
       integer(ip) :: handle
       integer(ip) :: icd      ( nic  )
       integer(ip) :: sclkid
@@ -6654,29 +6620,6 @@ contains
       real(wp), intent(out) :: xform  ( 6, 6 )  !! Transformation from CK frame to frame REF.
       integer(ip), intent(out) :: ref  !! Frame ID of the base reference.
       logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
-
-!        NDC        is the number of double precision components in an
-!                   unpacked C-kernel segment descriptor.
-!
-!        NIC        is the number of integer components in an unpacked
-!                   C-kernel segment descriptor.
-!
-!        NC         is the number of components in a packed C-kernel
-!                   descriptor.  All DAF summaries have this formulaic
-!                   relationship between the number of its integer and
-!                   double precision components and the number of packed
-!                   components.
-!
-!        IDLEN      is the length of the C-kernel segment identifier.
-!                   All DAF names have this formulaic relationship
-!                   between the number of summary components and
-!                   the length of the name (You will notice that
-!                   a name and a summary have the same length in bytes.)
-!
-
-
-
-
 
       integer(ip) :: handle
       integer(ip) :: icd      ( nic  )

@@ -12627,7 +12627,6 @@ contains
 !     by looking the corresponding frame ID and frame class
 !     assignments.
 !
-!
 !     PEPPER: the names are fetched once, at full length (SPICELIB fetched
 !     them 100 at a time with GNPOOL, into 32-character buffers).
 !
@@ -32803,10 +32802,6 @@ contains
       character(*), intent(in) :: ref  !! Reference frame of the angular separation
 
 !
-!     SPICELIB functions.
-!
-
-!
 !     Local Variables.
 !
       real(wp) :: ang1
@@ -32817,11 +32812,6 @@ contains
       real(wp) :: range2
       real(wp) :: theta
       real(wp) :: lt
-
-!
-!     ATOL is a tolerance value for computing arc sine.
-!
-
 
 !
 !     Set an initial value to return in case of error.
@@ -35732,7 +35722,6 @@ contains
 !
 !           For all state transitions, record the last point found
 !           by the state function.
-!
 !
 !           PEPPER: the window and the points grow (SPICELIB signaled
 !           SPICE(ARRAYTOOSMALL) when POINTS had SIZED(RESULT) points).
@@ -43524,7 +43513,6 @@ contains
 !     Read the partition start and stop times (in ticks) for this
 !     mission. Error if there are too many of them.
 !
-!
 !     PEPPER: the partitions go to arrays of the clock's size (SPICELIB
 !     used arrays of MXPART, 9999, and SPICE(TOOMANYPARTS) for more).
 !
@@ -46036,10 +46024,6 @@ contains
       character(*), intent(in) :: frame2  !! Reference frame of second target.
       character(*), intent(in) :: obsrvr  !! Observing body name.
       character(*), intent(in) :: abcorr  !! Aberration corrections flag.
-
-!
-!     SPICELIB functions.
-!
 
       character(5) :: ref
 
@@ -56751,15 +56735,6 @@ contains
 
 
 
-!
-!     Element boundary indices:
-!
-
-
-
-
-
-
       real(wp) :: amaxr
       real(wp) :: aminr
       real(wp) :: amaxlt
@@ -57216,12 +57191,6 @@ contains
       integer(ip), parameter :: lower = 1
 
       integer(ip), parameter :: upper = 2
-
-!
-!     Numeric relation codes returned by ZZPDCMPL:
-!
-
-
 
       real(wp) :: emax
       real(wp) :: emin
@@ -72647,11 +72616,6 @@ contains
 !     norms must differ from 1 by no more than NTOL.
 !
       real(wp), parameter :: ntol = 1.0e-14_wp
-
-!
-!     Tolerance value for argument of arcsine.  The argument should
-!     have absolute value no greater than 1 + ATOL.
-!
 
       real(wp) :: angcmp
       real(wp) :: bigctr ( 3 )
@@ -92680,11 +92644,6 @@ contains
       real(wp), allocatable, intent(inout) :: points ( :, : )  !! Array of tangent points. Grows (PEPPER).
 
 
-!
-!     EXTERNAL routines
-!
-
-
       real(wp) :: alpha
       real(wp) :: start
       real(wp) :: finish
@@ -95479,7 +95438,6 @@ contains
       first  = .false.
 
 !
-!
 !     Check NCUTS; there must be room for at least one limb point
 !     for each cut. NCUTS may not be negative.
 !
@@ -95562,7 +95520,6 @@ contains
 
       if ( ctx%failed() ) return
 
-!
 !
 !     Check NCUTS; there must be room for at least one limb point
 !     for each cut. NCUTS may not be negative.
@@ -98732,7 +98689,6 @@ contains
 !
       first  = .false.
 
-!
 !
 !     Check NCUTS; there must be room for at least one terminator point
 !     for each cut. NCUTS may not be negative.
