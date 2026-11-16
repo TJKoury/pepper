@@ -7231,10 +7231,10 @@ contains
             added_ddh = .true.
          end if
 
+         tmp_han = 0_ip
          if ( mytype == '?' ) then
             call dafopr ( ctx, locfnm, tmp_han )
             if ( .not. ctx%failed() ) call zzckspk ( ctx, tmp_han, mytype )
-            call dafcls ( ctx, tmp_han )
          end if
 
          if ( .not. ctx%failed() ) then
@@ -7249,6 +7249,21 @@ contains
                call ctx%errch  ( '#', mytype )
                call ctx%errch  ( '#', locfnm )
                call ctx%sigerr ( 'SPICE(UNKNOWNKERNELTYPE)' )
+            end if
+         end if
+
+         ! Keep the discovery reference alive while the typed loader opens
+         ! the memory image. Closing its last reference removes the bytes.
+         if ( tmp_han /= 0_ip ) then
+            if ( ctx%failed() ) then
+               short_err = short_text ( ctx )
+               long_err  = long_text ( ctx )
+               call ctx%reset()
+               call dafcls ( ctx, tmp_han )
+               call ctx%setmsg ( long_err )
+               call ctx%sigerr ( short_err )
+            else
+               call dafcls ( ctx, tmp_han )
             end if
          end if
 
