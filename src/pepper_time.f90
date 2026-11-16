@@ -205,6 +205,11 @@ submodule (pepper_instance_module) pepper_time
 
 contains
 
+      !> Determine if a kernel pool variable is present and if so
+      !> that it has the correct size and type.
+      !>
+      !> The function returns .FALSE. if the kernel pool variable is OK.
+      !>
       !>## Detailed Input
       !>
       !>     CALLER   is the name of the routine calling this routine
@@ -700,6 +705,8 @@ contains
       return
       end function badkpv
 
+      !> Parse a string as an integer, encapsulating error handling.
+      !>
       !>## Detailed Input
       !>
       !>     STRING   is a string representing a numeric value. Commas and
@@ -882,6 +889,10 @@ contains
       return
       end subroutine prsint
 
+      !> Take a measurement X, the units associated with
+      !> X, and units to which X should be converted; return Y ---
+      !> the value of the measurement in the output units.
+      !>
       !>## Detailed Input
       !>
       !>     X        is a number representing a measurement in the units
@@ -1256,16 +1267,14 @@ contains
 
       end subroutine convrt
 
-      !>## Abstract
+      !> Determine whether or not any of the POOL variables that are to be
+      !> watched and have AGENT on their distribution list have been
+      !> updated, but do the full watcher check only if the POOL state
+      !> counter has changed.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Determine whether or not any of the POOL variables that are to be
-      !>     watched and have AGENT on their distribution list have been
-      !>     updated, but do the full watcher check only if the POOL state
-      !>     counter has changed.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1455,13 +1464,11 @@ contains
 
       end subroutine zzcvpool
 
-      !>## Abstract
+      !> Parse a substring of the form ::UTC[+/-]1-12:0-59
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Parse a substring of the form ::UTC[+/-]1-12:0-59
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1633,15 +1640,15 @@ contains
       return
       end subroutine zzutcpm
 
-      !>## Abstract
+      !> The function returns the exponent associated with X.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Set up the virtual string associated with X and return the
+      !> exponent associated with X when represented in scientific
+      !> notation.
       !>
-      !>     Set up the virtual string associated with X and return the
-      !>     exponent associated with X when represented in scientific
-      !>     notation.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1761,14 +1768,12 @@ contains
       end associate
       end subroutine zzvststr
 
-      !>## Abstract
+      !> Return the character from the specified SLOT of a virtual
+      !> decimal string.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the character from the specified SLOT of a virtual
-      !>     decimal string.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -2080,6 +2085,9 @@ contains
       end associate
       end subroutine zzvsbstr
 
+      !> Create a formatted string that represents a double precision
+      !> number, using a format picture.
+      !>
       !>## Detailed Input
       !>
       !>     X        is any double precision number.
@@ -2658,6 +2666,9 @@ contains
       return
       end subroutine dpfmt
 
+      !> Take a double precision number and convert it to an
+      !> equivalent formatted character string representation (base 10).
+      !>
       !>## Detailed Input
       !>
       !>     X        is a double precision number.
@@ -2969,6 +2980,9 @@ contains
 
       end subroutine dpstrf
 
+      !> Replace a marker in a string with a formatted double precision
+      !> value.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is an arbitrary character string.
@@ -3321,6 +3335,9 @@ contains
       return
       end subroutine repmf
 
+      !> Convert Year Month and Day on the Julian Calendar
+      !> to the Gregorian Calendar
+      !>
       !>## Detailed Input
       !>
       !>     YEAR     is an integer representing the year of an epoch, E, in
@@ -3729,6 +3746,9 @@ contains
       end associate
       end subroutine jul2gr
 
+      !> Convert Year Month and Day on the  Gregorian Calendar
+      !> to the Julian Calendar
+      !>
       !>## Detailed Input
       !>
       !>     YEAR     is an integer representing the year of an epoch, E, in
@@ -4065,6 +4085,10 @@ contains
       end associate
       end subroutine gr2jul
 
+      !> Convert from an ephemeris epoch measured in seconds past
+      !> the epoch of J2000 to a calendar string format using a
+      !> formal calendar free of leapseconds.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is an epoch measured in ephemeris seconds
@@ -4611,6 +4635,9 @@ contains
       end associate
       end subroutine etcal
 
+      !> Transform a time vector from one representation and system
+      !> to another.
+      !>
       !>## Detailed Input
       !>
       !>     TVEC     is called a time vector. It is an array of double
@@ -6190,6 +6217,9 @@ contains
       end associate
       end subroutine ttrans
 
+      !> Set and retrieve the defaults associated with calendar
+      !> input strings.
+      !>
       !>## Detailed Input
       !>
       !>     ACTION   is a word that specifies whether TIMDEF sets the
@@ -6587,6 +6617,12 @@ contains
       end associate
       end subroutine timdef
 
+      !> Transform time from one uniform scale to another. The uniform
+      !> time scales are TAI, GPS, TT, TDT, TDB, ET, JED, JDTDB, JDTDT.
+      !>
+      !> The function returns the d.p. in OUTSYS that is equivalent to the
+      !> EPOCH on the INSYS time scale.
+      !>
       !>## Detailed Input
       !>
       !>     EPOCH    is an epoch relative to the INSYS time scale.
@@ -7175,6 +7211,10 @@ contains
       end associate
       end function unitim
 
+      !> Convert a string representing an epoch to a double precision
+      !> value representing the number of TDB seconds past the J2000
+      !> epoch corresponding to the input epoch.
+      !>
       !>## Detailed Input
       !>
       !>     TIMSTR   is a string representing an epoch. Virtually all
@@ -8497,13 +8537,11 @@ contains
       end associate
       end subroutine str2et
 
-      !>## Abstract
+      !> Parse an aberration correction string; return attributes.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Parse an aberration correction string; return attributes.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8710,14 +8748,12 @@ contains
       return
       end subroutine zzprscor
 
-      !>## Abstract
+      !> Validate an aberration correction string suitable for use by
+      !> the SPK system; return attributes.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Validate an aberration correction string suitable for use by
-      !>     the SPK system; return attributes.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8888,14 +8924,12 @@ contains
       return
       end subroutine zzvalcor
 
-      !>## Abstract
+      !> Compute an aberration corrected epoch, given an aberration
+      !> correction specification, an epoch, and a light time.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Compute an aberration corrected epoch, given an aberration
-      !>     correction specification, an epoch, and a light time.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>

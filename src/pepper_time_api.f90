@@ -336,6 +336,8 @@ submodule (pepper_instance_module) pepper_time_api
 
 contains
 
+      !> Return the value of Delta ET (ET-UTC) for an input epoch.
+      !>
       !>## Detailed Input
       !>
       !>     EPOCH    is the epoch at which "delta ET" is to be computed.
@@ -501,7 +503,6 @@ contains
       !>
       !>        Multiple FOUND flags and a bevy of new error messages
       !>        were implemented to cope with this unfortunate oversight.
-
       module subroutine deltet ( ctx, epoch, eptype, delta )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase
@@ -711,6 +712,9 @@ contains
          end subroutine read_constants
       end subroutine deltet
 
+      !> Convert an input time from ephemeris seconds past J2000
+      !> to Calendar, Day-of-Year, or Julian Date format, UTC.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the input epoch, ephemeris seconds past J2000.
@@ -1055,7 +1059,6 @@ contains
       !>               before supplying it to DPSTRF. This integer
       !>               `anchors' the first significant digit of the input
       !>               value in the units place.
-
       module subroutine et2utc ( ctx, et, format, prec, utcstr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, prefix, suffix, ucase
@@ -1414,6 +1417,9 @@ contains
       end associate
       end subroutine et2utc
 
+      !> Prepare recognized markers and auxiliary arrays for the
+      !> routine [[scan]].
+      !>
       !>## Detailed Input
       !>
       !>     NMARKS   is the number of recognized marks that will be
@@ -1910,6 +1916,10 @@ contains
       return
       end subroutine scanpr
 
+      !> Scan a string and return the beginnings and ends of recognized
+      !> and unrecognized substrings. The full collection of these
+      !> substrings partitions the string.
+      !>
       !>## Detailed Input
       !>
       !>     STRING   is any character string that is to be scanned
@@ -2443,6 +2453,9 @@ contains
       return
       end subroutine scan
 
+      !> Create a time format picture suitable for use by the routine
+      !> [[timout]] from a given sample time string.
+      !>
       !>## Detailed Input
       !>
       !>     SAMPLE   is a representative time string that to use
@@ -2674,6 +2687,9 @@ contains
       return
       end subroutine tpictr
 
+      !> Convert an input time from Calendar or Julian Date format, UTC,
+      !> to ephemeris seconds past J2000.
+      !>
       !>## Detailed Input
       !>
       !>     UTCSTR   is an input time string, containing a Calendar or Julian
@@ -3126,6 +3142,10 @@ contains
 
       end subroutine utc2et
 
+      !> Convert an input epoch represented in TDB seconds past the TDB
+      !> epoch of J2000 to a character string formatted to the
+      !> specifications of a user's format picture.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a double precision representation of time in seconds

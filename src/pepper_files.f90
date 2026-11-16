@@ -214,6 +214,9 @@ submodule (pepper_instance_module) pepper_files
 
 contains
 
+      !> Return platform ID and various attributes of the intended
+      !> environment
+      !>
       !>## Detailed Input
       !>
       !>     KEY         is a string value that indicates which platform
@@ -533,14 +536,12 @@ contains
          end function exists
       end subroutine platform_system
 
-      !>## Abstract
+      !> Validate the runtime environment against values assumed by the
+      !> current toolkit source package.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Validate the runtime environment against values assumed by the
-      !>     current toolkit source package.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -667,6 +668,8 @@ contains
 
       end subroutine zzpltchk
 
+      !> Retrieve the components of the FTP validation string.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -983,6 +986,9 @@ contains
       end associate
       end subroutine zzftpstr
 
+      !> Check a character string that may contain the FTP validation
+      !> string for FTP based errors.
+      !>
       !>## Detailed Input
       !>
       !>     STRING     is a string read in directly from a binary file.  This
@@ -1270,6 +1276,9 @@ contains
       end associate
       end subroutine zzftpchk
 
+      !> Extract from a string the last instance of a substring bracketed
+      !> by specified left and right strings .
+      !>
       !>## Detailed Input
       !>
       !>     STRING     is a string to be searched for a substring bracketed
@@ -1462,13 +1471,11 @@ contains
       return
       end subroutine zzrbrkst
 
-      !>## Abstract
+      !> Initialize ZZDDHMAN data structures.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Initialize ZZDDHMAN data structures.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1674,13 +1681,11 @@ contains
       return
       end subroutine zzddhini
 
-      !>## Abstract
+      !> Fetch binary file format.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Fetch binary file format.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1838,13 +1843,11 @@ contains
       return
       end subroutine zzgetbff
 
-      !>## Abstract
+      !> Retrieve string definitions for various CLASS and ID pairs.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Retrieve string definitions for various CLASS and ID pairs.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1981,14 +1984,15 @@ contains
       end associate
       end subroutine zzddhgsd
 
-      !>## Abstract
+      !> The function returns a unique enough DP number computed
+      !> using the contents of the file attached to the UNIT.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Return a unique enough DP number ("Magic NuMber") computed
+      !> using the contents of the file attached to the specified unit.
       !>
-      !>     Return a unique enough DP number ("Magic NuMber") computed
-      !>     using the contents of the file attached to the specified unit.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -2284,14 +2288,12 @@ contains
       end associate
       end function zzddhmnm
 
-      !>## Abstract
+      !> Prepare preexisting binary file for entry into the handle
+      !> table.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Prepare preexisting binary file for entry into the handle
-      !>     table.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3041,6 +3043,9 @@ contains
       end associate
       end subroutine zzddhppf
 
+      !> Extract the architecture and type of a SPICE binary kernel file
+      !> from a file ID word.
+      !>
       !>## Detailed Input
       !>
       !>     IDWORD   is the ID word from a SPICE binary kernel file or a
@@ -3377,13 +3382,11 @@ contains
 
       end subroutine idw2at
 
-      !>## Abstract
+      !> Convert integers from one binary file format to another.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Convert integers from one binary file format to another.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4108,13 +4111,11 @@ contains
       end associate
       end subroutine zzxlatei
 
-      !>## Abstract
+      !> Identify VAX DAF file format.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Identify VAX DAF file format.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4498,13 +4499,11 @@ contains
       return
       end subroutine zzddhivf
 
-      !>## Abstract
+      !> Convert filename to a handle.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Convert filename to a handle.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5015,14 +5014,12 @@ contains
 
       end subroutine zzddhf2h
 
-      !>## Abstract
+      !> Manage augmentation of the handle to logical unit request counter
+      !> and the cost column in the unit table.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Manage augmentation of the handle to logical unit request counter
-      !>     and the cost column in the unit table.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5130,14 +5127,12 @@ contains
       return
       end subroutine zzddhrcm
 
-      !>## Abstract
+      !> Get or prepare an entry in the unit table to receive a new
+      !> file.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Get or prepare an entry in the unit table to receive a new
-      !>     file.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5392,13 +5387,11 @@ contains
          end function size_of_table
       end subroutine zzddhgtu
 
-      !>## Abstract
+      !> Remove an entry from the unit table.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Remove an entry from the unit table.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5579,13 +5572,13 @@ contains
       return
       end subroutine zzddhrmu
 
-      !>## Abstract
+      !> This function return the number of locked units in the unit table.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Retrieve the number of locked units in the unit table.
       !>
-      !>     Retrieve the number of locked units in the unit table.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5660,14 +5653,12 @@ contains
       return
       end function zzddhclu
 
-      !>## Abstract
+      !> Return the integer code for the native binary file format
+      !> of the host system.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the integer code for the native binary file format
-      !>     of the host system.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5778,13 +5769,11 @@ contains
       end associate
       end subroutine zzddhnfc
 
-      !>## Abstract
+      !> Load a new direct access file.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Load a new direct access file.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6727,13 +6716,11 @@ contains
       end associate
       end subroutine zzddhopn
 
-      !>## Abstract
+      !> Close the file associated with HANDLE.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Close the file associated with HANDLE.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7069,14 +7056,12 @@ contains
       end associate
       end subroutine zzddhcls
 
-      !>## Abstract
+      !> Return the logical unit associated with a handle, in the event
+      !> the handle is not connected to a unit, connect it to one.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the logical unit associated with a handle, in the event
-      !>     the handle is not connected to a unit, connect it to one.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7447,13 +7432,11 @@ contains
       end associate
       end subroutine zzddhhlu
 
-      !>## Abstract
+      !> Unlock a logical unit from the specified handle.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Unlock a logical unit from the specified handle.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7678,13 +7661,11 @@ contains
       end associate
       end subroutine zzddhunl
 
-      !>## Abstract
+      !> Get information about the file attached to HANDLE.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Get information about the file attached to HANDLE.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7869,14 +7850,12 @@ contains
       end associate
       end subroutine zzddhnfo
 
-      !>## Abstract
+      !> Determine whether the file attached to HANDLE is uses the
+      !> binary file format native to the system.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine whether the file attached to HANDLE is uses the
-      !>     binary file format native to the system.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8028,13 +8007,11 @@ contains
       end associate
       end subroutine zzddhisn
 
-      !>## Abstract
+      !> Retrieve handle associated with filename.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Retrieve handle associated with filename.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8191,13 +8168,11 @@ contains
       end associate
       end subroutine zzddhfnh
 
-      !>## Abstract
+      !> Return the handle associated with a logical unit.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the handle associated with a logical unit.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>

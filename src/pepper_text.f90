@@ -10,6 +10,8 @@ submodule (pepper_instance_module) pepper_text
 
 contains
 
+      !> Cycle the contents of a character string to the left or right.
+      !>
       !>## Detailed Input
       !>
       !>     DIR      is the direction in which the characters in the
@@ -291,6 +293,8 @@ contains
       return
       end subroutine cyclec
 
+      !> Replace a marker with a double precision number.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is an arbitrary character string.
@@ -594,6 +598,8 @@ contains
       return
       end subroutine repmd
 
+      !> Replace a marker with an integer.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is an arbitrary character string.
@@ -843,6 +849,8 @@ contains
       return
       end subroutine repmi
 
+      !> Replace the substring (LEFT:RIGHT) with a string of any length.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is an arbitrary character string.
@@ -1108,6 +1116,8 @@ contains
       return
       end subroutine repsub
 
+      !> Remove the substring (LEFT:RIGHT) from a character string.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is an input character string, from which a substring
@@ -1297,6 +1307,9 @@ contains
       return
       end subroutine remsub
 
+      !> Insert a substring into a character string at a specified
+      !> location.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is an input character string, into which a substring
@@ -1611,6 +1624,10 @@ contains
       return
       end subroutine inssub
 
+      !> Shift the contents of a character string to the left or right.
+      !> Characters moved past the beginning or end of the string are
+      !> lost. Vacant spaces are filled with a specified character.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is the input character string.
@@ -1757,6 +1774,9 @@ contains
       return
       end subroutine shiftc
 
+      !> Validate an ID string: check for non-printing characters
+      !> or excessive non-blank length.
+      !>
       !>## Detailed Input
       !>
       !>     CLASS    is a descriptive string indicating the type of
@@ -1980,6 +2000,11 @@ contains
       return
       end subroutine chckid
 
+      !> Count the characters in a group of lines in a text file.
+      !>
+      !> The function returns the number of characters in a group of lines
+      !> in a text file.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is a logical unit that has been connected to a
@@ -2223,6 +2248,9 @@ contains
       return
       end function countc
 
+      !> Convert a signed hexadecimal string representation of an integer
+      !> to its equivalent integer.
+      !>
       !>## Detailed Input
       !>
       !>     STRING   is the hexadecimal string to be converted to an integer.
@@ -2741,6 +2769,11 @@ contains
       return
       end subroutine hx2int
 
+      !> Find a given identifier, which consists of an integer array,
+      !> within a list of such identifiers, or insert the identifier
+      !> into the list. Return the location of the identifier and a flag
+      !> indicating whether or not the identifier was already present.
+      !>
       !>## Detailed Input
       !>
       !>     ID       is an integer array that serves as an identifier
@@ -3207,6 +3240,8 @@ contains
 
       end subroutine locati
 
+      !> Locate a group of lines in a text file delimited by markers.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is a logical unit that has been connected to a

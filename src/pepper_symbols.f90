@@ -9,6 +9,9 @@ submodule (pepper_instance_module) pepper_symbols
 
 contains
 
+      !> Delete a symbol from a character symbol table. The symbol and its
+      !> associated values are deleted.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol to be deleted from the symbol
@@ -165,6 +168,9 @@ contains
       return
       end subroutine sydelc
 
+      !> Delete a symbol from a double precision symbol table. The symbol
+      !> and its associated values are deleted.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol to be deleted from the symbol
@@ -320,6 +326,9 @@ contains
       return
       end subroutine sydeld
 
+      !> Delete a symbol from an integer symbol table. The symbol
+      !> and its associated values are deleted.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol to be deleted from the symbol
@@ -476,6 +485,13 @@ contains
       return
       end subroutine sydeli
 
+      !> Return the dimension of a particular symbol in a character symbol
+      !> table. If the symbol is not found, the function returns the value
+      !> zero.
+      !>
+      !> The function returns the dimension of the symbol NAME. If NAME is
+      !> not in the symbol table, the function returns the value zero.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose dimension is to be
@@ -622,6 +638,13 @@ contains
       return
       end function sydimc
 
+      !> Return the dimension of a particular symbol in a double precision
+      !> symbol table. If the symbol is not found, the function returns the
+      !> value zero.
+      !>
+      !> The function returns the dimension of the symbol NAME. If NAME is
+      !> not in the symbol table, the function returns the value zero.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose dimension is to be
@@ -770,6 +793,13 @@ contains
       return
       end function sydimd
 
+      !> Return the dimension of a particular symbol in an integer symbol
+      !> table. If the symbol is not found, the function returns the
+      !> value zero.
+      !>
+      !> The function returns the dimension of the symbol NAME. If NAME is
+      !> not in the symbol table, the function returns the value zero.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose dimension is to be
@@ -923,6 +953,10 @@ contains
       return
       end function sydimi
 
+      !> Create a duplicate of a symbol within a character symbol table.
+      !> If a symbol with the new name already exists, its components
+      !> are replaced.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol to be duplicated.
@@ -1198,6 +1232,10 @@ contains
       return
       end subroutine sydupc
 
+      !> Create a duplicate of a symbol within a double precision symbol
+      !> table. If a symbol with the new name already exists, its
+      !> components are replaced.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol to be duplicated.
@@ -1474,6 +1512,10 @@ contains
       return
       end subroutine sydupd
 
+      !> Create a duplicate of a symbol within an integer symbol table.
+      !> If a symbol with the new name already exists, its components
+      !> are replaced.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol to be duplicated.
@@ -1751,6 +1793,8 @@ contains
       return
       end subroutine sydupi
 
+      !> Fetch the Nth symbol in a character symbol table.
+      !>
       !>## Detailed Input
       !>
       !>     NTH      is the index of the symbol to be fetched. If the NTH
@@ -1898,6 +1942,8 @@ contains
       return
       end subroutine syfetc
 
+      !> Fetch the Nth symbol in a double precision symbol table.
+      !>
       !>## Detailed Input
       !>
       !>     NTH      is the index of the symbol to be fetched. If the NTH
@@ -2044,6 +2090,8 @@ contains
       return
       end subroutine syfetd
 
+      !> Fetch the Nth symbol in an integer symbol table.
+      !>
       !>## Detailed Input
       !>
       !>     NTH      is the index of the symbol to be fetched. If the NTH
@@ -2192,6 +2240,9 @@ contains
       return
       end subroutine syfeti
 
+      !> Return the dimension and associated values for a particular
+      !> symbol.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose components are to be
@@ -2376,6 +2427,9 @@ contains
       return
       end subroutine sygetc
 
+      !> Return the dimension and associated values for a particular
+      !> symbol.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose components are to be
@@ -2563,6 +2617,9 @@ contains
       return
       end subroutine sygetd
 
+      !> Return the dimension and associated values for a particular
+      !> symbol.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose components are to be
@@ -2750,6 +2807,9 @@ contains
       return
       end subroutine sygeti
 
+      !> Return the Nth value associated with a particular symbol in a
+      !> character symbol table.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose Nth associated value
@@ -2923,6 +2983,9 @@ contains
       return
       end subroutine synthc
 
+      !> Return the Nth component of a particular symbol in a double
+      !> precision symbol table.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose Nth component is to be
@@ -3098,6 +3161,9 @@ contains
       return
       end subroutine synthd
 
+      !> Return the Nth component of a particular symbol in an integer
+      !> symbol table.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose Nth component is to be
@@ -3272,6 +3338,10 @@ contains
       return
       end subroutine synthi
 
+      !> Order the components of a single symbol in a character symbol
+      !> table. The components are ordered according to the ASCII collating
+      !> sequence.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose components are to be
@@ -3414,6 +3484,9 @@ contains
       return
       end subroutine syordc
 
+      !> Order the components of a single symbol in a double precision
+      !> symbol table. The components are sorted in increasing order.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose components are to be
@@ -3562,6 +3635,9 @@ contains
       return
       end subroutine syordd
 
+      !> Order the components of a single symbol in an integer symbol
+      !> table. The components are sorted in increasing order.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose components are to be
@@ -3712,6 +3788,10 @@ contains
       return
       end subroutine syordi
 
+      !> Pop a value associated with a particular symbol in a character
+      !> symbol table. The first value associated with the symbol is
+      !> removed, and subsequent values are moved forward.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated value is to
@@ -3910,6 +3990,10 @@ contains
       return
       end subroutine sypopc
 
+      !> Pop a value associated with a particular symbol in a double
+      !> precision symbol table. The first value associated with the
+      !> symbol is removed, and subsequent values are moved forward.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated value is to
@@ -4116,6 +4200,10 @@ contains
       return
       end subroutine sypopd
 
+      !> Pop a value associated with a particular symbol in an integer
+      !> symbol table. The first value associated with the symbol is
+      !> removed, and subsequent values are moved forward.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated value is to
@@ -4321,6 +4409,10 @@ contains
       return
       end subroutine sypopi
 
+      !> Set the values of a particular symbol in a character symbol table.
+      !> If the symbol already exists, the previous values associated with
+      !> it are removed, otherwise a new symbol is created.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated values are
@@ -4587,6 +4679,10 @@ contains
       return
       end subroutine syputc
 
+      !> Set the values of a particular symbol in a double precision
+      !> symbol table. If the symbol already exists, the previous values
+      !> associated with it are removed, otherwise a new symbol is created.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated values are
@@ -4871,6 +4967,10 @@ contains
       return
       end subroutine syputd
 
+      !> Set the values of a particular symbol in an integer symbol table.
+      !> If the symbol already exists, the previous values associated with
+      !> it are removed, otherwise a new symbol is created.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated values are to
@@ -5148,6 +5248,9 @@ contains
       return
       end subroutine syputi
 
+      !> Select a subset of the values associated with a particular
+      !> symbol in a character symbol table.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose subset of associated
@@ -5365,6 +5468,9 @@ contains
       return
       end subroutine syselc
 
+      !> Select a subset of the values associated with a particular
+      !> symbol in a double precision symbol table.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose subset of associated
@@ -5581,6 +5687,9 @@ contains
       return
       end subroutine syseld
 
+      !> Select a subset of the values associated with a particular
+      !> symbol in an integer symbol table.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose subset of associated
@@ -5800,6 +5909,10 @@ contains
       return
       end subroutine syseli
 
+      !> Set the value of a particular symbol in a character symbol table.
+      !> If the symbol already exists, the previous values associated with
+      !> it are removed, otherwise a new symbol is created.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated value is to
@@ -6035,6 +6148,10 @@ contains
       return
       end subroutine sysetc
 
+      !> Set the value of a particular symbol in a double precision symbol
+      !> table. If the symbol already exists, the previous values
+      !> associated with it are removed, otherwise a new symbol is created.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated value is to
@@ -6266,6 +6383,10 @@ contains
       return
       end subroutine sysetd
 
+      !> Set the value of a particular symbol in an integer symbol table.
+      !> If the symbol already exists, the previous values associated with
+      !> it are removed, otherwise a new symbol is created.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated value is to
@@ -6499,6 +6620,9 @@ contains
       return
       end subroutine syseti
 
+      !> Transpose two values associated with a particular symbol in a
+      !> character symbol table.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated values are to
@@ -6703,6 +6827,9 @@ contains
       return
       end subroutine sytrnc
 
+      !> Transpose two values associated with a particular symbol in a
+      !> double precision symbol table.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated values are
@@ -6914,6 +7041,9 @@ contains
       return
       end subroutine sytrnd
 
+      !> Transpose two values associated with a particular symbol in an
+      !> integer symbol table.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol whose associated values are
@@ -7122,6 +7252,10 @@ contains
       return
       end subroutine sytrni
 
+      !> Enqueue a value onto a particular symbol in a character
+      !> symbol table. If the symbol is not in the table, a new one
+      !> is created.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol onto which the value is to
@@ -7314,6 +7448,10 @@ contains
       return
       end subroutine syenqc
 
+      !> Enqueue a value onto a particular symbol in a double precision
+      !> symbol table. If the symbol is not in the table, a new one
+      !> is created.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol onto which the value is to
@@ -7511,6 +7649,10 @@ contains
       return
       end subroutine syenqd
 
+      !> Enqueue a value onto a particular symbol in an integer
+      !> symbol table. If the symbol is not in the table, a new one
+      !> is created.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol onto which the value is to
@@ -7704,6 +7846,10 @@ contains
       return
       end subroutine syenqi
 
+      !> Push a value onto a particular symbol in a character symbol table.
+      !> The previous value(s) associated with the symbol is extended at
+      !> the front. A new symbol is created if necessary.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol onto which the value is to
@@ -7894,6 +8040,10 @@ contains
       return
       end subroutine sypshc
 
+      !> Push a value onto a particular symbol in a double precision
+      !> symbol table. The previous value(s) associated with the symbol
+      !> is extended at the front. A new symbol is created if necessary.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol onto which the value is to
@@ -8088,6 +8238,10 @@ contains
       return
       end subroutine sypshd
 
+      !> Push a value onto a particular symbol in an integer symbol table.
+      !> The previous value(s) associated with the symbol is extended at
+      !> the front. A new symbol is created if necessary.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the symbol onto which the value is to
@@ -8279,6 +8433,8 @@ contains
       return
       end subroutine sypshi
 
+      !> Rename an existing symbol in a character symbol table.
+      !>
       !>## Detailed Input
       !>
       !>     OLD      is the name of the symbol to be renamed. If OLD is
@@ -8501,6 +8657,8 @@ contains
       return
       end subroutine syrenc
 
+      !> Rename an existing symbol in a double precision symbol table.
+      !>
       !>## Detailed Input
       !>
       !>     OLD      is the name of the symbol to be renamed. If OLD is
@@ -8721,6 +8879,8 @@ contains
       return
       end subroutine syrend
 
+      !> Rename an existing symbol in an integer symbol table.
+      !>
       !>## Detailed Input
       !>
       !>     OLD      is the name of the symbol to be renamed. If OLD is

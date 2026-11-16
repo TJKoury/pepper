@@ -16,6 +16,12 @@ submodule (pepper_instance_module) pepper_cells
 
 contains
 
+      !> Return the base value used to encode unsigned integer values
+      !> in character strings.
+      !>
+      !> The function returns the base value used to encode unsigned
+      !> integer values in character strings.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -375,6 +381,10 @@ contains
       return
       end function chbase
 
+      !> Encode a nonnegative integer number into a character string
+      !> as the expansion of the number in base [[chbase]] (a function of
+      !> the size of the available character set).
+      !>
       !>## Detailed Input
       !>
       !>     NUMBER   is an arbitrary nonnegative integer.
@@ -536,6 +546,8 @@ contains
       return
       end subroutine enchar
 
+      !> Decode a character string encoded by [[enchar]].
+      !>
       !>## Detailed Input
       !>
       !>     STRING   is a character string previously encoded by ENCHAR.
@@ -659,6 +671,10 @@ contains
       return
       end subroutine dechar
 
+      !> Set the long error message so as to indicate the number of excess
+      !> elements encountered by a routine operating on cells or on data
+      !> structures based on cells.
+      !>
       !>## Detailed Input
       !>
       !>     NUMBER   is the number of excess elements encountered.
@@ -836,6 +852,10 @@ contains
       return
       end subroutine excess
 
+      !> Return the cardinality (number of elements) of a character cell.
+      !>
+      !> The function returns the cardinality of the input cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -1002,6 +1022,11 @@ contains
       return
       end function cardc
 
+      !> Return the cardinality (number of elements) of a double
+      !> precision cell.
+      !>
+      !> The function returns the cardinality of the input cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -1163,6 +1188,10 @@ contains
       return
       end function cardd
 
+      !> Return the cardinality (number of elements) of an integer cell.
+      !>
+      !> The function returns the cardinality of the input cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -1324,6 +1353,10 @@ contains
       return
       end function cardi
 
+      !> Return the size (maximum cardinality) of a character cell.
+      !>
+      !> The function returns the size of the input cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -1476,6 +1509,11 @@ contains
       return
       end function sizec
 
+      !> Return the size (maximum cardinality) of a double precision
+      !> cell.
+      !>
+      !> The function returns the size of the input cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -1623,6 +1661,10 @@ contains
       return
       end function sized
 
+      !> Return the size (maximum cardinality) of an integer cell.
+      !>
+      !> The function returns the size of the input cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -1770,6 +1812,8 @@ contains
       return
       end function sizei
 
+      !> Set the cardinality of a character cell.
+      !>
       !>## Detailed Input
       !>
       !>     CARD     is the cardinality of (number of elements in) the
@@ -1924,6 +1968,8 @@ contains
       return
       end subroutine scardc
 
+      !> Set the cardinality of a double precision cell.
+      !>
       !>## Detailed Input
       !>
       !>     CARD     is the cardinality of (number of elements in) the
@@ -2073,6 +2119,8 @@ contains
       return
       end subroutine scardd
 
+      !> Set the cardinality of an integer cell.
+      !>
       !>## Detailed Input
       !>
       !>     CARD     is the cardinality of (number of elements in) the
@@ -2222,6 +2270,8 @@ contains
       return
       end subroutine scardi
 
+      !> Set the size (maximum cardinality) of a character cell.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the size (maximum number of elements) of the cell.
@@ -2377,6 +2427,8 @@ contains
       return
       end subroutine ssizec
 
+      !> Set the size (maximum cardinality) of a double precision cell.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the size (maximum number of elements) of the cell.
@@ -2532,6 +2584,8 @@ contains
       return
       end subroutine ssized
 
+      !> Set the size (maximum cardinality) of an integer cell.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the size (maximum number of elements) of the cell.
@@ -2687,6 +2741,8 @@ contains
       return
       end subroutine ssizei
 
+      !> Create a valid set from a character set array.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the maximum cardinality (number of elements)
@@ -2852,6 +2908,8 @@ contains
       return
       end subroutine validc
 
+      !> Create a valid set from a double precision set array.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the maximum cardinality (number of elements)
@@ -3020,6 +3078,8 @@ contains
       return
       end subroutine validd
 
+      !> Create a valid set from an integer set array.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the maximum cardinality (number of elements)
@@ -3185,6 +3245,8 @@ contains
       return
       end subroutine validi
 
+      !> Append an item to a character cell.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is a character string which is to be appended to CELL.
@@ -3325,6 +3387,8 @@ contains
       return
       end subroutine appndc
 
+      !> Append an item to a double precision cell.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is a double precision value which is to be appended to
@@ -3541,6 +3605,8 @@ contains
       return
       end subroutine appndd
 
+      !> Append an item to an integer cell.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an integer value which is to be appended to CELL.
@@ -3756,6 +3822,8 @@ contains
       return
       end subroutine appndi
 
+      !> Copy the contents of a character cell to another cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -3945,6 +4013,8 @@ contains
       return
       end subroutine copyc
 
+      !> Copy the contents of a double precision cell to another cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -4080,6 +4150,8 @@ contains
       return
       end subroutine copyd
 
+      !> Copy the contents of an integer cell to another cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -4215,6 +4287,8 @@ contains
       return
       end subroutine copyi
 
+      !> Insert an item into a character set.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be inserted into the specified
@@ -4496,6 +4570,8 @@ contains
       return
       end subroutine insrtc
 
+      !> Insert an item into a double precision set.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be inserted into the specified
@@ -4748,6 +4824,8 @@ contains
       return
       end subroutine insrtd
 
+      !> Insert an item into an integer set.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be inserted into the specified
@@ -4999,6 +5077,8 @@ contains
       return
       end subroutine insrti
 
+      !> Remove an item from a character set.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be removed from the specified set.
@@ -5224,6 +5304,8 @@ contains
       return
       end subroutine removc
 
+      !> Remove an item from a double precision set.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be removed from the specified set.
@@ -5451,6 +5533,8 @@ contains
       return
       end subroutine removd
 
+      !> Remove an item from an integer set.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be removed from the specified set.
@@ -5672,6 +5756,10 @@ contains
       return
       end subroutine removi
 
+      !> Determine whether an item is an element of a character set.
+      !>
+      !> The function returns .TRUE. if ITEM is an element of set A.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which may or may not be an element of the
@@ -5867,6 +5955,11 @@ contains
       return
       end function elemc
 
+      !> Determine whether an item is an element of a double
+      !> precision set.
+      !>
+      !> The function returns .TRUE. if ITEM is an element of set A.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which may or may not be an element of the
@@ -6054,6 +6147,10 @@ contains
       return
       end function elemd
 
+      !> Determine whether an item is an element of an integer set.
+      !>
+      !> The function returns .TRUE. if ITEM is an element of set A.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which may or may not be an element of
@@ -6237,6 +6334,11 @@ contains
       return
       end function elemi
 
+      !> Return the ordinal position of a given item in a set. If the
+      !> item does not appear in the set, return zero.
+      !>
+      !> The function returns the ordinal position of ITEM within the SET.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is a string to be located within a character set.
@@ -6398,6 +6500,11 @@ contains
       return
       end function ordc
 
+      !> Return the ordinal position of a given item in a set. If the
+      !> item does not appear in the set, return zero.
+      !>
+      !> The function returns the ordinal position of ITEM within the SET.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is a double precision value to be located within a set.
@@ -6557,6 +6664,11 @@ contains
       return
       end function ordd
 
+      !> Return the ordinal position of a given item in a set. If the
+      !> item does not appear in the set, return zero.
+      !>
+      !> The function returns the ordinal position of ITEM within the SET.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an integer value to be located within a set.
@@ -6714,6 +6826,10 @@ contains
       return
       end function ordi
 
+      !> Compare two character sets, as indicated by a relational operator.
+      !>
+      !> The function returns the result of the comparison: A (OP) B.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -7274,6 +7390,11 @@ contains
       return
       end function setc
 
+      !> Compare two double precision sets, as indicated by a relational
+      !> operator.
+      !>
+      !> The function returns the result of the comparison: A (OP) B.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -7834,6 +7955,10 @@ contains
       return
       end function setd
 
+      !> Compare two integer sets, as indicated by a relational operator.
+      !>
+      !> The function returns the result of the comparison: A (OP) B.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -8394,6 +8519,8 @@ contains
       return
       end function seti
 
+      !> Compute the union of two character sets to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -8667,6 +8794,9 @@ contains
       return
       end subroutine unionc
 
+      !> Compute the union of two double precision sets to form a third
+      !> set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -8914,6 +9044,8 @@ contains
       return
       end subroutine uniond
 
+      !> Compute the union of two integer sets to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -9160,6 +9292,8 @@ contains
       return
       end subroutine unioni
 
+      !> Intersect two character sets to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -9405,6 +9539,8 @@ contains
       return
       end subroutine interc
 
+      !> Intersect two double precision sets to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -9623,6 +9759,8 @@ contains
       return
       end subroutine interd
 
+      !> Intersect two integer sets to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -9841,6 +9979,8 @@ contains
       return
       end subroutine interi
 
+      !> Take the difference of two character sets to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -10103,6 +10243,9 @@ contains
       return
       end subroutine diffc
 
+      !> Take the difference of two double precision sets to form
+      !> a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -10339,6 +10482,8 @@ contains
       return
       end subroutine diffd
 
+      !> Take the difference of two integer sets to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -10576,6 +10721,9 @@ contains
       return
       end subroutine diffi
 
+      !> Take the symmetric difference of two character sets to form
+      !> a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -10850,6 +10998,9 @@ contains
       return
       end subroutine sdiffc
 
+      !> Take the symmetric difference of two double precision sets
+      !> to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -11095,6 +11246,9 @@ contains
       return
       end subroutine sdiffd
 
+      !> Take the symmetric difference of two integer sets to form
+      !> a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -11340,6 +11494,8 @@ contains
       return
       end subroutine sdiffi
 
+      !> Insert an interval into a double precision window.
+      !>
       !>## Detailed Input
       !>
       !>      LEFT,
@@ -11629,6 +11785,11 @@ contains
       return
       end subroutine zzwninsd
 
+      !> Return the cardinality (number of intervals) of a double
+      !> precision window.
+      !>
+      !> The function returns the cardinality of the input window.
+      !>
       !>## Detailed Input
       !>
       !>     WINDOW   is a window containing zero or more intervals.
@@ -11809,6 +11970,9 @@ contains
       return
       end function wncard
 
+      !> Determine the complement of a double precision window with
+      !> respect to the interval [LEFT,RIGHT].
+      !>
       !>## Detailed Input
       !>
       !>     LEFT,
@@ -12049,6 +12213,8 @@ contains
       return
       end subroutine wncomd
 
+      !> Contract each of the intervals of a double precision window.
+      !>
       !>## Detailed Input
       !>
       !>     LEFT     is the amount to be added to the left endpoint of each
@@ -12179,6 +12345,9 @@ contains
       return
       end subroutine wncond
 
+      !> Place the difference of two double precision windows into
+      !> a third window.
+      !>
       !>## Detailed Input
       !>
       !>     A,
@@ -12560,6 +12729,11 @@ contains
       return
       end subroutine wndifd
 
+      !> Determine whether a point is an element of a double precision
+      !> window.
+      !>
+      !> The function returns .TRUE. if POINT is an element of WINDOW.
+      !>
       !>## Detailed Input
       !>
       !>     POINT    is a point, which may or may not be contained in one of
@@ -12698,6 +12872,8 @@ contains
       return
       end function wnelmd
 
+      !> Expand each of the intervals of a double precision window.
+      !>
       !>## Detailed Input
       !>
       !>     LEFT     is the amount to be subtracted from the left endpoint of
@@ -12892,6 +13068,9 @@ contains
       return
       end subroutine wnexpd
 
+      !> Extract the left or right endpoints from a double precision
+      !> window.
+      !>
       !>## Detailed Input
       !>
       !>     SIDE     indicates whether the left or right endpoints of the
@@ -13049,6 +13228,8 @@ contains
       return
       end subroutine wnextd
 
+      !> Fetch a particular interval from a double precision window.
+      !>
       !>## Detailed Input
       !>
       !>     WINDOW   is a window containing zero or more intervals.
@@ -13246,6 +13427,9 @@ contains
       return
       end subroutine wnfetd
 
+      !> Fill small gaps between adjacent intervals of a double precision
+      !> window.
+      !>
       !>## Detailed Input
       !>
       !>     SMLGAP   is the limiting measure of the small gaps to be filled.
@@ -13526,6 +13710,8 @@ contains
       return
       end subroutine wnfild
 
+      !> Filter (remove) small intervals from a double precision window.
+      !>
       !>## Detailed Input
       !>
       !>     SMLINT   is the limiting measure of the small intervals to be
@@ -13787,6 +13973,11 @@ contains
       return
       end subroutine wnfltd
 
+      !> Determine whether an interval is included in a double precision
+      !> window.
+      !>
+      !> The function returns .TRUE. if POINT is an element of WINDOW.
+      !>
       !>## Detailed Input
       !>
       !>     LEFT,
@@ -13931,6 +14122,8 @@ contains
       return
       end function wnincd
 
+      !> Insert an interval into a double precision window.
+      !>
       !>## Detailed Input
       !>
       !>     LEFT,
@@ -14320,7 +14513,9 @@ contains
       return
       end subroutine wninsd
 
-      !> Insert an interval into a window being built (PEPPER).
+      !> Insert an interval into a window being built (PEPPER): [[wninsd]]
+      !> for an [[interval_list]], which grows as needed. Signals
+      !> SPICE(BADENDPOINTS), as [[wninsd]], if LEFT > RIGHT.
       module subroutine insert_interval ( ctx, left, right, window )
       use pepper_kinds, only: wp
       implicit none
@@ -14339,6 +14534,9 @@ contains
       call window%insert ( left, right )
       end subroutine insert_interval
 
+      !> Place the intersection of two double precision windows into
+      !> a third window.
+      !>
       !>## Detailed Input
       !>
       !>     A,
@@ -14562,6 +14760,10 @@ contains
       return
       end subroutine wnintd
 
+      !> Compare two double precision windows.
+      !>
+      !> The function returns the result of comparison: A (OP) B.
+      !>
       !>## Detailed Input
       !>
       !>     A,
@@ -14881,6 +15083,8 @@ contains
       return
       end function wnreld
 
+      !> Summarize the contents of a double precision window.
+      !>
       !>## Detailed Input
       !>
       !>     WINDOW   is a window containing zero or more intervals.
@@ -15254,6 +15458,9 @@ contains
       return
       end subroutine wnsumd
 
+      !> Place the union of two double precision windows into a third
+      !> window.
+      !>
       !>## Detailed Input
       !>
       !>     A,
@@ -15518,6 +15725,9 @@ contains
       return
       end subroutine wnunid
 
+      !> Form a valid double precision window from the contents
+      !> of a window array.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the size of the window to be validated. This is the

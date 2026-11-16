@@ -9,6 +9,8 @@ submodule (pepper_instance_module) pepper_dsk_write
 
 contains
 
+      !> Write a type 2 segment to a DSK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the DAS file handle associated with a DSK file.

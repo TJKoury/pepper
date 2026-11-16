@@ -1637,6 +1637,9 @@ submodule (pepper_instance_module) pepper_bodies
 
 contains
 
+      !> The default SPICE body/ID mapping assignments available
+      !> to the SPICE library.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -4303,13 +4306,13 @@ contains
       return
       end subroutine zzidmap
 
-      !>## Abstract
+      !> The function returns the hash value associated with N.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> This function returns the hash value corresponding to an integer.
       !>
-      !>     This function returns the hash value corresponding to an integer.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4398,13 +4401,11 @@ contains
       return
       end function zzhashi
 
-      !>## Abstract
+      !> Initialize an add-only character hash.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Initialize an add-only character hash.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4517,14 +4518,12 @@ contains
       return
       end subroutine zzhscini
 
-      !>## Abstract
+      !> Find or add, if not present, an item to an add-only character
+      !> hash.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Find or add, if not present, an item to an add-only character
-      !>     hash.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4744,13 +4743,11 @@ contains
       return
       end subroutine zzhscadd
 
-      !>## Abstract
+      !> Find an item in an add-only character hash.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Find an item in an add-only character hash.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4865,13 +4862,11 @@ contains
       return
       end subroutine zzhscchk
 
-      !>## Abstract
+      !> Get room available in an add-only character hash.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Get room available in an add-only character hash.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4938,13 +4933,11 @@ contains
       return
       end subroutine zzhscavl
 
-      !>## Abstract
+      !> Get information about an add-only character hash.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Get information about an add-only character hash.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5094,13 +5087,11 @@ contains
       return
       end subroutine zzhscinf
 
-      !>## Abstract
+      !> Initialize an add-only integer hash.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Initialize an add-only integer hash.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5203,14 +5194,12 @@ contains
       return
       end subroutine zzhsiini
 
-      !>## Abstract
+      !> Find or add, if not present, an item to an add-only integer
+      !> hash.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Find or add, if not present, an item to an add-only integer
-      !>     hash.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5441,13 +5430,11 @@ contains
       return
       end subroutine zzhsiadd
 
-      !>## Abstract
+      !> Find an item in an add-only integer hash.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Find an item in an add-only integer hash.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5576,13 +5563,11 @@ contains
       return
       end subroutine zzhsichk
 
-      !>## Abstract
+      !> Get room available in an add-only integer hash.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Get room available in an add-only integer hash.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5647,13 +5632,11 @@ contains
       return
       end subroutine zzhsiavl
 
-      !>## Abstract
+      !> Get information about an add-only integer hash.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Get information about an add-only integer hash.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5801,15 +5784,13 @@ contains
       return
       end subroutine zzhsiinf
 
-      !>## Abstract
+      !> Initialize the name-based and ID-based hashes used for efficient
+      !> access to body-name mapping arrays. This routine should be called
+      !> by ZZBODTRN and ZZBODKER only.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Initialize the name-based and ID-based hashes used for efficient
-      !>     access to body-name mapping arrays. This routine should be called
-      !>     by ZZBODTRN and ZZBODKER only.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6082,15 +6063,16 @@ contains
       return
       end subroutine zzbodini
 
-      !>## Abstract
+      !> PEPPER: fills KER (SPICELIB returned arrays of NROOM entries and
+      !> their hash tables; see [[body_names]]).
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> This routine processes the kernel pool vectors NAIF_BODY_NAME
+      !> and NAIF_BODY_CODE into the lists and hashes required by ZZBODTRN
+      !> to successfully compute code-name mappings.
       !>
-      !>     This routine processes the kernel pool vectors NAIF_BODY_NAME
-      !>     and NAIF_BODY_CODE into the lists and hashes required by ZZBODTRN
-      !>     to successfully compute code-name mappings.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       module subroutine zzbodker ( ctx, ker )
       use pepper_kinds, only: ip
       use pepper_strings, only: ljucrs
@@ -6199,13 +6181,11 @@ contains
          end subroutine normalize
       end subroutine zzbodker
 
-      !>## Abstract
+      !> Retrieve a copy of the built-in body name-code mapping lists.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Retrieve a copy of the built-in body name-code mapping lists.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6273,7 +6253,6 @@ contains
       !>        contains the default mapping list.
       !>
       !>-    SPICELIB Version 2.0.0, 23-AUG-2002 (FST)
-
       module subroutine zzbodget ( ctx, room, names, nornam, codes, nvals )
       use pepper_kinds, only: ip
       use pepper_strings, only: cmprss_inplace, ucase_inplace
@@ -6347,6 +6326,10 @@ contains
       end associate
       end subroutine zzbodget
 
+      !> Output the complete list of built-in body/ID mappings to
+      !> some output device. Thw routine generates 2 lists: one
+      !> sorted by ID number, one sorted by name.
+      !>
       !>## Detailed Input
       !>
       !>     DEVICE         identifies the device to receive the
@@ -6552,13 +6535,11 @@ contains
       end associate
       end subroutine zzbodlst
 
-      !>## Abstract
+      !> Translate a body name to the corresponding SPICE integer code.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Translate a body name to the corresponding SPICE integer code.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6893,6 +6874,9 @@ contains
       end associate
       end subroutine zzbodn2c
 
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       module subroutine zzbodc2n ( ctx, code, name, found )
       use pepper_kinds, only: ip
       implicit none
@@ -6905,186 +6889,184 @@ contains
       if ( found ) name = full
       end subroutine zzbodc2n
 
-!> PEPPER: the name of a body from its ID code, of any length (the body of
-!> [[zzbodc2n]], which copies the name into its fixed-length argument).
-      !>
-      !>## Abstract
-      !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Translate the integer code of a body into a common name for
-      !>     that body.
-      !>
-      !>## Detailed Input
-      !>
-      !>     CODE       is an integer code for a body ---
-      !>                a planet, satellite, barycenter, spacecraft,
-      !>                asteroid, comet, or other ephemeris object.
-      !>
-      !>## Detailed Output
-      !>
-      !>     NAME       is the common name of the body identified by CODE.
-      !>                If CODE has more than one translation, then the
-      !>                most recently defined NAME corresponding to CODE
-      !>                is returned.  The routine returns NAME in the exact
-      !>                format (case and blanks) as used when defining
-      !>                the name/code pair.
-      !>
-      !>     FOUND      returns as true if NAME has a translation.
-      !>                Otherwise, FOUND returns as false.
-      !>
-      !>## Parameters
-      !>
-      !>     MAXL       is the maximum length of a body name.  Defined in
-      !>                the include file 'zzbodtrn.inc'.
-      !>
-      !>## Exceptions
-      !>
-      !>     Errors may be signaled by routines in the call tree of this
-      !>     routine.
-      !>
-      !>## Files
-      !>
-      !>     None.
-      !>
-      !>## Particulars
-      !>
-      !>     ZZBODC2N is one of three related entry points,
-      !>
-      !>        ZZBODN2C      Body name to code
-      !>
-      !>        ZZBODC2N      Body code to name
-      !>
-      !>        ZZBODDEF      Body name/code definition
-      !>
-      !>     ZZBODN2C and ZZBODC2N perform translations between body names
-      !>     and their corresponding integer codes used in SPK and PCK files
-      !>     and associated routines.  A default set of name/code
-      !>     pairs are automatically defined during the first call to
-      !>     any of the entry points.  Additional name/code pairs may
-      !>     be defined via ZZBODDEF.
-      !>
-      !>     For the case in which multiple names map to a single code, a
-      !>     ZZBODC2N call returns the name last assigned to that code - a
-      !>     LIFO situation.
-      !>
-      !>## Examples
-      !>
-      !>     See Examples section of ZZBODTRN umbrella header.
-      !>
-      !>## Restrictions
-      !>
-      !>     None.
-      !>
-      !>## Literature References
-      !>
-      !>     None.
-      !>
-      !>## Author and Institution
-      !>
-      !>     N.J. Bachman   (JPL)
-      !>     J.E. McLean    (JPL)
-      !>     B.V. Semenov   (JPL)
-      !>     M.J. Spencer   (JPL)
-      !>     W.L. Taber     (JPL)
-      !>     F.S. Turner    (JPL)
-      !>     E.D. Wright    (JPL)
-      !>
-      !>## Version
-      !>
-      !>-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
-      !>
-      !>        Changed to use name and ID-based hashes instead of the order
-      !>        arrays.
-      !>
-      !>        Changed to keep track of the POOL's and ZZBODTRN internal
-      !>        state using state counters.
-      !>
-      !>        Changed to call ZZCVPOOL to bypass watcher look-ups if the
-      !>        POOL counter did not change.
-      !>
-      !>-    SPICELIB Version 4.1.0, 05-MAR-2009 (NJB)
-      !>
-      !>        Bug fix: this routine now keeps track of whether its
-      !>        kernel pool look-up succeeded. If not, a kernel pool
-      !>        lookup is attempted on the next call to any entry
-      !>        point that calls ZZBODKER.
-      !>
-      !>-    SPICELIB Version 4.0.0, 23-AUG-2002 (FST)
-      !>
-      !>        Cleaned up module header and source code.  See the Revisions
-      !>        section of ZZBODTRN for detailed update information.
-      !>
-      !>-    SPICELIB Version 3.2.0, 19-JUL-2002 (EDW)
-      !>
-      !>        Added logic to enforce the precedence masking.
-      !>
-      !>-    SPICELIB Version 3.1.0, 5-SEP-2001 (EDW)
-      !>
-      !>        Added logic to ensure the routine returns the NAME string
-      !>        in the same format as when defined (case and space).
-      !>        Added logic to handle error response in ZZBODINI.
-      !>
-      !>        To improve clarity, the BEGXX block initialization now
-      !>        exists in the include file zzbodtrn.inc.
-      !>
-      !>        Removed the comments concerning the 851, 852, ... temporary
-      !>        codes.
-      !>
-      !>        Set the WNAMES assignment to NAIF_BODY_CODE, NAIF_BODY_NAME
-      !>        as a DATA statement.
-      !>
-      !>        Edited headers, removed typos and bad grammar, clarified
-      !>        descriptions.
-      !>
-      !>-    SPICELIB Version 3.0.0, 29-MAR-2000 (WLT)
-      !>
-      !>        The ID codes for Cluster 1, 2, 3 and 4 were added.  The
-      !>        ID coded for Pluto Express were removed.  The ID codes
-      !>        for Pluto-Kuiper Express, Pluto-Kuiper Express Simulation
-      !>        and Contour were added.
-      !>
-      !>-    SPICELIB Version 2.0.0, 21-JAN-1999 (EDW)
-      !>
-      !>        Added code to use the external name/ID kernel.
-      !>
-      !>-    SPICELIB Version 1.1.0, 29-FEB-1996 (WLT)
-      !>
-      !>        Added the id-code for Comet Hyakutake, Comet Hale-Bopp.
-      !>
-      !>-    SPICELIB Version 1.0.0, 25-SEP-1995 (BVS)
-      !>
-      !>        Renamed to ZZBODC2N (BVS)
-      !>
-      !>-    Beta Version 1.0.0, 29-APR-1994 (MJS)
-      !>
-      !>        SPICELIB symbol tables are no longer used. Instead, two order
-      !>        vectors are used to index the NAMES and CODES arrays.
-      !>
-      !>-    MOSPICE  Version 2.0.1, 10-MAR-1992 (WLT)
-      !>
-      !>        Comment section for permuted index source lines was added
-      !>        following the header.
-      !>
-      !>-    MOSPICE  Version 2.0.0, 15-JUL-1991 (WLT)
-      !>
-      !>       The body id's for the Uranian satellites discovered by Voyager
-      !>       were modified to conform to those established by the IAU
-      !>       nomenclature committee.  In addition the id's for Gaspra and
-      !>       Ida were added.
-      !>
-      !>-    MOSPICE  Version 1.0.0,  7-MAR-1991 (WLT)
-      !>
-      !>       Checks to see the input integer code can be represented
-      !>       as a character string were removed along with the exceptions
-      !>       associated with these checks.  It is now the responsibility
-      !>       of a maintenance programmer to make sure MAXL is large
-      !>       enough to allow any integer to be converted to a string
-      !>       representation.
-      !>
-      !>-    GLLSPICE Version 1.0.0, 28-JUN-1990 (JEM)
+!> The name of a body from its ID code, of any length (PEPPER; the
+!> body of [[zzbodc2n]], which truncates to its argument's length).
+!>
+!> Translate the integer code of a body into a common name for
+!> that body.
+!>
+!> SPICE Private routine intended solely for the support of SPICE
+!> routines.  Users should not call this routine directly due
+!> to the volatile nature of this routine.
+!>
+!>## Detailed Input
+!>
+!>     CODE       is an integer code for a body ---
+!>                a planet, satellite, barycenter, spacecraft,
+!>                asteroid, comet, or other ephemeris object.
+!>
+!>## Detailed Output
+!>
+!>     NAME       is the common name of the body identified by CODE.
+!>                If CODE has more than one translation, then the
+!>                most recently defined NAME corresponding to CODE
+!>                is returned.  The routine returns NAME in the exact
+!>                format (case and blanks) as used when defining
+!>                the name/code pair.
+!>
+!>     FOUND      returns as true if NAME has a translation.
+!>                Otherwise, FOUND returns as false.
+!>
+!>## Parameters
+!>
+!>     MAXL       is the maximum length of a body name.  Defined in
+!>                the include file 'zzbodtrn.inc'.
+!>
+!>## Exceptions
+!>
+!>     Errors may be signaled by routines in the call tree of this
+!>     routine.
+!>
+!>## Files
+!>
+!>     None.
+!>
+!>## Particulars
+!>
+!>     ZZBODC2N is one of three related entry points,
+!>
+!>        ZZBODN2C      Body name to code
+!>
+!>        ZZBODC2N      Body code to name
+!>
+!>        ZZBODDEF      Body name/code definition
+!>
+!>     ZZBODN2C and ZZBODC2N perform translations between body names
+!>     and their corresponding integer codes used in SPK and PCK files
+!>     and associated routines.  A default set of name/code
+!>     pairs are automatically defined during the first call to
+!>     any of the entry points.  Additional name/code pairs may
+!>     be defined via ZZBODDEF.
+!>
+!>     For the case in which multiple names map to a single code, a
+!>     ZZBODC2N call returns the name last assigned to that code - a
+!>     LIFO situation.
+!>
+!>## Examples
+!>
+!>     See Examples section of ZZBODTRN umbrella header.
+!>
+!>## Restrictions
+!>
+!>     None.
+!>
+!>## Literature References
+!>
+!>     None.
+!>
+!>## Author and Institution
+!>
+!>     N.J. Bachman   (JPL)
+!>     J.E. McLean    (JPL)
+!>     B.V. Semenov   (JPL)
+!>     M.J. Spencer   (JPL)
+!>     W.L. Taber     (JPL)
+!>     F.S. Turner    (JPL)
+!>     E.D. Wright    (JPL)
+!>
+!>## Version
+!>
+!>-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
+!>
+!>        Changed to use name and ID-based hashes instead of the order
+!>        arrays.
+!>
+!>        Changed to keep track of the POOL's and ZZBODTRN internal
+!>        state using state counters.
+!>
+!>        Changed to call ZZCVPOOL to bypass watcher look-ups if the
+!>        POOL counter did not change.
+!>
+!>-    SPICELIB Version 4.1.0, 05-MAR-2009 (NJB)
+!>
+!>        Bug fix: this routine now keeps track of whether its
+!>        kernel pool look-up succeeded. If not, a kernel pool
+!>        lookup is attempted on the next call to any entry
+!>        point that calls ZZBODKER.
+!>
+!>-    SPICELIB Version 4.0.0, 23-AUG-2002 (FST)
+!>
+!>        Cleaned up module header and source code.  See the Revisions
+!>        section of ZZBODTRN for detailed update information.
+!>
+!>-    SPICELIB Version 3.2.0, 19-JUL-2002 (EDW)
+!>
+!>        Added logic to enforce the precedence masking.
+!>
+!>-    SPICELIB Version 3.1.0, 5-SEP-2001 (EDW)
+!>
+!>        Added logic to ensure the routine returns the NAME string
+!>        in the same format as when defined (case and space).
+!>        Added logic to handle error response in ZZBODINI.
+!>
+!>        To improve clarity, the BEGXX block initialization now
+!>        exists in the include file zzbodtrn.inc.
+!>
+!>        Removed the comments concerning the 851, 852, ... temporary
+!>        codes.
+!>
+!>        Set the WNAMES assignment to NAIF_BODY_CODE, NAIF_BODY_NAME
+!>        as a DATA statement.
+!>
+!>        Edited headers, removed typos and bad grammar, clarified
+!>        descriptions.
+!>
+!>-    SPICELIB Version 3.0.0, 29-MAR-2000 (WLT)
+!>
+!>        The ID codes for Cluster 1, 2, 3 and 4 were added.  The
+!>        ID coded for Pluto Express were removed.  The ID codes
+!>        for Pluto-Kuiper Express, Pluto-Kuiper Express Simulation
+!>        and Contour were added.
+!>
+!>-    SPICELIB Version 2.0.0, 21-JAN-1999 (EDW)
+!>
+!>        Added code to use the external name/ID kernel.
+!>
+!>-    SPICELIB Version 1.1.0, 29-FEB-1996 (WLT)
+!>
+!>        Added the id-code for Comet Hyakutake, Comet Hale-Bopp.
+!>
+!>-    SPICELIB Version 1.0.0, 25-SEP-1995 (BVS)
+!>
+!>        Renamed to ZZBODC2N (BVS)
+!>
+!>-    Beta Version 1.0.0, 29-APR-1994 (MJS)
+!>
+!>        SPICELIB symbol tables are no longer used. Instead, two order
+!>        vectors are used to index the NAMES and CODES arrays.
+!>
+!>-    MOSPICE  Version 2.0.1, 10-MAR-1992 (WLT)
+!>
+!>        Comment section for permuted index source lines was added
+!>        following the header.
+!>
+!>-    MOSPICE  Version 2.0.0, 15-JUL-1991 (WLT)
+!>
+!>       The body id's for the Uranian satellites discovered by Voyager
+!>       were modified to conform to those established by the IAU
+!>       nomenclature committee.  In addition the id's for Gaspra and
+!>       Ida were added.
+!>
+!>-    MOSPICE  Version 1.0.0,  7-MAR-1991 (WLT)
+!>
+!>       Checks to see the input integer code can be represented
+!>       as a character string were removed along with the exceptions
+!>       associated with these checks.  It is now the responsibility
+!>       of a maintenance programmer to make sure MAXL is large
+!>       enough to allow any integer to be converted to a string
+!>       representation.
+!>
+!>-    GLLSPICE Version 1.0.0, 28-JUN-1990 (JEM)
       module subroutine body_name_of ( ctx, code, name, found )
       use pepper_kinds, only: ip
       use pepper_inc_zzbodtrn
@@ -7676,14 +7658,12 @@ contains
       end associate
       end subroutine zzboddef_apply
 
-      !>## Abstract
+      !> This routine executes the kernel pool read instructions
+      !> if necessary.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     This routine executes the kernel pool read instructions
-      !>     if necessary.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8034,14 +8014,12 @@ contains
       end associate
       end subroutine zzbodrst_apply
 
-      !>## Abstract
+      !> Check and update the ZZBODTRN state counter tracked by a caller
+      !> (user) routine.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Check and update the ZZBODTRN state counter tracked by a caller
-      !>     (user) routine.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8238,6 +8216,9 @@ contains
       end associate
       end subroutine zzbctrck
 
+      !> Translate the name of a body or object to the corresponding SPICE
+      !> integer ID code.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of a body or object, such as a planet,
@@ -8467,6 +8448,9 @@ contains
 
       end subroutine bodn2c
 
+      !> Translate the SPICE integer code of a body into a common name
+      !> for that body.
+      !>
       !>## Detailed Input
       !>
       !>     CODE     is an integer code for a body ---
@@ -8679,6 +8663,9 @@ contains
 
       end subroutine bodc2n
 
+      !> Translate a string containing a body name or ID code to an
+      !> integer code.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is a string containing the name or ID code of a
@@ -8937,6 +8924,10 @@ contains
       return
       end subroutine bods2c
 
+      !> Translate a body ID code to either the corresponding name
+      !> or if no name to ID code mapping exists, the string
+      !> representation of the body ID value.
+      !>
       !>## Detailed Input
       !>
       !>     CODE     is the integer code for a body: planet, satellite,
@@ -9152,6 +9143,9 @@ contains
 
       end subroutine bodc2s
 
+      !> Define a body name/ID code pair for later translation via
+      !> [[bodn2c]] or [[bodc2n]].
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is an arbitrary name of a body which could be
@@ -9398,6 +9392,12 @@ contains
 
       end subroutine boddef
 
+      !> Determine whether values exist for some item for any body
+      !> in the kernel pool.
+      !>
+      !> The function returns .TRUE. if ITEM is in the kernel pool, .FALSE.
+      !> otherwise.
+      !>
       !>## Detailed Input
       !>
       !>     BODY     is the ID code of the body for which the item is
@@ -9547,16 +9547,14 @@ contains
       return
       end function bodfnd
 
-      !>## Abstract
+      !> Translate a string containing a body name or ID code to an
+      !> integer code, but bypass calling BODS2C and return saved values
+      !> provided by the caller if the name is the same as the saved name
+      !> and the ZZBODTRN state did not change.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Translate a string containing a body name or ID code to an
-      !>     integer code, but bypass calling BODS2C and return saved values
-      !>     provided by the caller if the name is the same as the saved name
-      !>     and the ZZBODTRN state did not change.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9824,17 +9822,15 @@ contains
 
       end subroutine zzbods2c
 
-      !>## Abstract
+      !> Fetch from the kernel pool the double precision values of an item
+      !> associated with a body, where the body is specified by an integer
+      !> ID code. Perform lookup only if kernel variable or kernel pool
+      !> state has changed; otherwise, bypass kernel pool lookup and
+      !> return input values.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Fetch from the kernel pool the double precision values of an item
-      !>     associated with a body, where the body is specified by an integer
-      !>     ID code. Perform lookup only if kernel variable or kernel pool
-      !>     state has changed; otherwise, bypass kernel pool lookup and
-      !>     return input values.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -10106,14 +10102,12 @@ contains
       return
       end subroutine zzbodvcd
 
-      !>## Abstract
+      !> **Deprecated:** This routine has been superseded by [[bodvcd]] and
+      !> [[bodvrd]]. This routine is supported for purposes of backward
+      !> compatibility only.
       !>
-      !>     Deprecated: This routine has been superseded by BODVCD and
-      !>     BODVRD. This routine is supported for purposes of backward
-      !>     compatibility only.
-      !>
-      !>     Return the values of some item for any body in the
-      !>     kernel pool.
+      !> Return the values of some item for any body in the
+      !> kernel pool.
       !>
       !>## Detailed Input
       !>
@@ -10319,6 +10313,10 @@ contains
       return
       end subroutine bodvar
 
+      !> Fetch from the kernel pool the double precision values
+      !> of an item associated with a body, where the body is
+      !> specified by an integer ID code.
+      !>
       !>## Detailed Input
       !>
       !>     BODYID   is the NAIF integer ID code for a body of interest.
@@ -10637,6 +10635,9 @@ contains
       return
       end subroutine bodvcd
 
+      !> Fetch from the kernel pool the double precision values
+      !> of an item associated with a body.
+      !>
       !>## Detailed Input
       !>
       !>     BODYNM   is the name of the body for which ITEM is requested.
@@ -11044,7 +11045,11 @@ contains
       end associate
       end subroutine bodvrd
 
-      !> All the values of a body constant, the body given by name (PEPPER).
+      !> All the values of a body constant, the body given by name (PEPPER;
+      !> [[bodvrd]] with the size taken from the pool). Bound as the generic
+      !> `body_values`.
+      !>
+      !> The errors are those of [[bodvrd]], except SPICE(ARRAYTOOSMALL).
       module subroutine body_values_by_name ( ctx, body, item, values )
       use pepper_kinds, only: ip
       implicit none
@@ -11074,7 +11079,10 @@ contains
       end subroutine body_values_by_name
 
       !> All the values of a body constant, the body given by its ID code
-      !> (PEPPER).
+      !> (PEPPER; [[bodvcd]] with the size taken from the pool). Bound as the
+      !> generic `body_values`.
+      !>
+      !> The errors are those of [[bodvcd]], except SPICE(ARRAYTOOSMALL).
       module subroutine body_values_by_code ( ctx, body, item, values )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr
@@ -11120,6 +11128,10 @@ contains
 
       !> Add a name/code pair to the defined names (SPICELIB's [[zzboddef]]). The
       !> pair is recorded in the instance, so that all its contexts see it.
+      !>
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       module subroutine zzboddef ( ctx, name, code )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11134,8 +11146,9 @@ contains
       ctx%zzbodtrn%boddef_count = ctx%spice%boddef_count
       end subroutine zzboddef
 
-      !> PEPPER: a name/code pair defined by a kernel built in memory, owned
-      !> by its handle (kernel_builder's define_body).
+      !> Add a body name/code pair defined by a kernel built in memory, owned
+      !> by it (its handle): BODDEF's definition, removed with
+      !> [[remove_owned_boddefs]] when the kernel is unloaded (PEPPER).
       module subroutine owned_boddef ( ctx, name, code, owner )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -11151,6 +11164,10 @@ contains
       ctx%zzbodtrn%boddef_count = ctx%spice%boddef_count
       end subroutine owned_boddef
 
+      !> Remove the body name/code pairs a kernel defined ([[owned_boddef]]):
+      !> every context rebuilds its name tables from the built-in names and
+      !> the definitions that remain, in their order (PEPPER).
+      !>
       !> PEPPER: remove the pairs a kernel defined. The record loses them
       !> and the epoch changes while the count drops, so every context's
       !> next look (sync_boddefs) rebuilds its tables from the built-in
@@ -11182,6 +11199,10 @@ contains
 
       !> Reset the defined names to the built-in names (SPICELIB's
       !> [[zzbodrst]]), in the instance and so for all its contexts.
+      !>
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       module subroutine zzbodrst ( ctx )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context

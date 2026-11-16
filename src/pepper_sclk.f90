@@ -505,6 +505,8 @@ submodule (pepper_instance_module) pepper_sclk
 
 contains
 
+      !> Look up integer type 1 SCLK data from the kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME,
@@ -914,6 +916,8 @@ contains
       return
       end subroutine scli01
 
+      !> Look up double precision type 1 SCLK data from the kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME,
@@ -1390,13 +1394,11 @@ contains
       return
       end subroutine scld01
 
-      !>## Abstract
+      !> Initialize the SCLK type 1 database.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Initialize the SCLK type 1 database.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       module subroutine zzscin01 ( ctx )
       use pepper_kinds, only: ip
       use pepper_inc_zzsc01
@@ -1418,13 +1420,11 @@ contains
       return
       end subroutine zzscin01
 
-      !>## Abstract
+      !> Add to the SCLK type 01 database data for a specified SCLK.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Add to the SCLK type 01 database data for a specified SCLK.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1745,14 +1745,12 @@ contains
       return
       end subroutine zzscad01
 
-      !>## Abstract
+      !> If necessary, update the SCLK type 01 database and associated
+      !> SCLK parameters.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     If necessary, update the SCLK type 01 database and associated
-      !>     SCLK parameters.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       module subroutine zzscup01 ( ctx, sc )
       use pepper_kinds, only: ip
       use pepper_inc_zzsc01
@@ -1808,14 +1806,14 @@ contains
       return
       end subroutine zzscup01
 
-      !>## Abstract
+      !> The function returns TRUE is SCLK information is available.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Determine whether or not an SCLK kernel is available for mapping
+      !> ET to Ticks and back again for a particular C-kernel ID.
       !>
-      !>     Determine whether or not an SCLK kernel is available for mapping
-      !>     ET to Ticks and back again for a particular C-kernel ID.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -2025,6 +2023,9 @@ contains
       end associate
       end function zzsclk
 
+      !> Convert a character representation of a type 1 spacecraft clock
+      !> count to ticks.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF spacecraft identification code. See the
@@ -2508,6 +2509,9 @@ contains
       end associate
       end subroutine sctk01
 
+      !> Convert a number of ticks to an equivalent type 1 spacecraft clock
+      !> string.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF spacecraft identification code. See the
@@ -2962,6 +2966,9 @@ contains
       end associate
       end subroutine scfm01
 
+      !> Convert encoded type 1 spacecraft clock (`ticks') to ephemeris
+      !> seconds past J2000 (ET).
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF ID code for a spacecraft, one of whose
@@ -3453,6 +3460,9 @@ contains
       end associate
       end subroutine scte01
 
+      !> Convert ephemeris seconds past J2000 (ET) to discrete encoded
+      !> type 1 spacecraft clock (`ticks').
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF ID code for a spacecraft, one of whose
@@ -3990,6 +4000,10 @@ contains
       end associate
       end subroutine scet01
 
+      !> Convert ephemeris seconds past J2000 (ET) to continuous encoded
+      !> type 1 spacecraft clock (`ticks').  The output value need not be
+      !> integral.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF ID code for a spacecraft, one of whose
@@ -4458,6 +4472,9 @@ contains
       end associate
       end subroutine scec01
 
+      !> Return the type of a specified clock. The clock need not be
+      !> type 1.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF ID code for a spacecraft clock.
@@ -4700,6 +4717,8 @@ contains
       end associate
       end subroutine scty01
 
+      !> Return partition data for a specified type 1 clock.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF ID code for a spacecraft clock.

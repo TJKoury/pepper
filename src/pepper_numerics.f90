@@ -17,6 +17,12 @@ submodule (pepper_instance_module) pepper_numerics
 
 contains
 
+      !> Return the inverse hyperbolic cosine of a double precision
+      !> argument.
+      !>
+      !> The function returns the inverse hyperbolic cosine of a double
+      !> precision number.
+      !>
       !>## Detailed Input
       !>
       !>     X        is any double precision number greater than or equal to
@@ -135,14 +141,14 @@ contains
       return
       end function dacosh
 
-      !>## Abstract
+      !> Compute arc cosine of a bracketed argument.
       !>
-      !>     Compute arc cosine of a bracketed argument.
+      !> The function returns the arc cosine of ARG.
       !>
-      !>     This routine produces a SPICE error if the |argument| exceeds
-      !>     1.D0 by more than TOL. If ARG exceeds 1.D0, the argument is
-      !>     evaluated as if it equaled 1.D0, if ARG is less than -1.,
-      !>     the argument is evaluated as if it equaled -1.D0.
+      !> This routine produces a SPICE error if the |argument| exceeds
+      !> 1.D0 by more than TOL. If ARG exceeds 1.D0, the argument is
+      !> evaluated as if it equaled 1.D0, if ARG is less than -1.,
+      !> the argument is evaluated as if it equaled -1.D0.
       !>
       !>## Detailed Input
       !>
@@ -263,14 +269,14 @@ contains
       return
       end function dacosn
 
-      !>## Abstract
+      !> Compute arc sine of a bracketed argument.
       !>
-      !>     Compute arc sine of a bracketed argument.
+      !> The function returns the arc sine of ARG.
       !>
-      !>     This routine produces a SPICE error if the |argument| exceeds
-      !>     1.D0 by more than TOL. If ARG exceeds 1.D0, the argument is
-      !>     evaluated as if it equaled 1.D0, if ARG is less than -1.,
-      !>     the argument is evaluated as if it equaled -1.D0.
+      !> This routine produces a SPICE error if the |argument| exceeds
+      !> 1.D0 by more than TOL. If ARG exceeds 1.D0, the argument is
+      !> evaluated as if it equaled 1.D0, if ARG is less than -1.,
+      !> the argument is evaluated as if it equaled -1.D0.
       !>
       !>## Detailed Input
       !>
@@ -391,6 +397,12 @@ contains
       return
       end function dasine
 
+      !> Return the inverse hyperbolic tangent of a double precision
+      !> argument.
+      !>
+      !> The function returns the inverse hyperbolic tangent of a double
+      !> precision number.
+      !>
       !>## Detailed Input
       !>
       !>     X        is any double precision.
@@ -507,6 +519,9 @@ contains
       return
       end function datanh
 
+      !> Compute the Jacobian matrix of the transformation from
+      !> rectangular to azimuth/elevation coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     X,
@@ -947,6 +962,9 @@ contains
       return
       end subroutine dazldr
 
+      !> Compute the Jacobian matrix of the transformation from
+      !> rectangular to cylindrical coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     X,
@@ -1291,6 +1309,9 @@ contains
       return
       end subroutine dcyldr
 
+      !> Compute the Jacobian matrix of the transformation from
+      !> rectangular to latitudinal coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     X,
@@ -1636,6 +1657,9 @@ contains
       return
       end subroutine dlatdr
 
+      !> Compute the Jacobian matrix of the transformation from
+      !> azimuth/elevation to rectangular coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     RANGE    is the distance from the origin of the input point
@@ -2166,6 +2190,9 @@ contains
       return
       end subroutine drdazl
 
+      !> Compute the Jacobian matrix of the transformation from geodetic
+      !> to rectangular coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     LON      is the geodetic longitude of point (radians).
@@ -2745,6 +2772,9 @@ contains
       return
       end subroutine drdgeo
 
+      !> Compute the Jacobian matrix of the transformation from
+      !> rectangular to spherical coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     X,
@@ -3091,6 +3121,10 @@ contains
       return
       end subroutine dsphdr
 
+      !> Compute the state (position and velocity) of an object whose
+      !> trajectory is described via equinoctial elements relative to some
+      !> fixed plane (usually the equatorial plane of some planet).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch (ephemeris time) at which the state
@@ -3626,6 +3660,10 @@ contains
       return
       end subroutine eqncpv
 
+      !> Scale a point so that it lies on the surface of a specified
+      !> triaxial ellipsoid that is centered at the origin and aligned
+      !> with the Cartesian coordinate axes.
+      !>
       !>## Detailed Input
       !>
       !>     P        is a non-zero point in three-dimensional space.
@@ -3826,6 +3864,9 @@ contains
       return
       end subroutine edpnt
 
+      !> Return the unique point on an ellipsoid's surface where the
+      !> outward normal direction is a given vector.
+      !>
       !>## Detailed Input
       !>
       !>     A        is the length of the semi-axis of the ellipsoid
@@ -4216,6 +4257,10 @@ contains
 
       end subroutine ednmpt
 
+      !> Solve the time of flight equation MA = E - e sin(E) for the
+      !> elliptic eccentric anomaly E, given mean anomaly the MA and
+      !> the eccentricity ECC.
+      !>
       !>## Detailed Input
       !>
       !>     MA       is the elliptic mean anomaly of an orbiting body at
@@ -4508,6 +4553,10 @@ contains
       return
       end subroutine elltof
 
+      !> Evaluate, at a specified point, a Hermite interpolating polynomial
+      !> for a specified set of equally spaced abscissa values and
+      !> corresponding pairs of function and function derivative values.
+      !>
       !>## Detailed Input
       !>
       !>     N        is the number of points defining the polynomial.
@@ -4893,6 +4942,9 @@ contains
       return
       end subroutine hrmesp
 
+      !> Evaluate a Hermite interpolating polynomial at a specified
+      !> abscissa value.
+      !>
       !>## Detailed Input
       !>
       !>     N        is the number of points defining the polynomial.
@@ -5268,6 +5320,14 @@ contains
       return
       end subroutine hrmint
 
+      !> Evaluate a Lagrange interpolating polynomial for a specified
+      !> set of coordinate pairs whose first components are equally
+      !> spaced, at a specified abscissa value.
+      !>
+      !> The function returns the value at X of the unique polynomial of
+      !> degree N-1 that fits the points in the plane defined by FIRST,
+      !> STEP, and YVALS.
+      !>
       !>## Detailed Input
       !>
       !>     N        is the number of points defining the polynomial. The
@@ -5657,6 +5717,10 @@ contains
       return
       end function lgresp
 
+      !> Evaluate a Lagrange interpolating polynomial, for a specified
+      !> set of coordinate pairs, at a specified abscissa value. Return
+      !> both the value of the polynomial and its derivative.
+      !>
       !>## Detailed Input
       !>
       !>     N        is the number of points defining the polynomial.
@@ -6008,6 +6072,13 @@ contains
       return
       end subroutine lgrind
 
+      !> Evaluate a Lagrange interpolating polynomial for a specified
+      !> set of coordinate pairs, at a specified abscissa value.
+      !>
+      !> The function returns the value at X of the unique polynomial of
+      !> degree N-1 that fits the points in the plane defined by XVALS and
+      !> YVALS.
+      !>
       !>## Detailed Input
       !>
       !>     N        is the number of points defining the polynomial.
@@ -6332,6 +6403,11 @@ contains
       return
       end function lgrint
 
+      !> Evaluate an indefinite integral of a Chebyshev expansion at a
+      !> specified point X and return the value of the input expansion at
+      !> X as well. The constant of integration is selected to make the
+      !> integral zero when X equals the abscissa value X2S(1).
+      !>
       !>## Detailed Input
       !>
       !>     DEGP     is the degree of the input Chebyshev expansion.
@@ -6997,6 +7073,8 @@ contains
       return
       end subroutine chbigr
 
+      !> Find the intersection of an ellipse and a plane.
+      !>
       !>## Detailed Input
       !>
       !>     ELLIPS   is a SPICE ellipse. The ellipse is allowed to
@@ -7500,6 +7578,8 @@ contains
       return
       end subroutine inelpl
 
+      !> Find the intersection of a ray and a plane.
+      !>
       !>## Detailed Input
       !>
       !>     VERTEX,
@@ -8227,6 +8307,11 @@ contains
       return
       end subroutine inrypl
 
+      !> Construct the inverse of a 3x3 matrix with orthogonal columns and
+      !> non-zero column norms using a numerically stable algorithm. The
+      !> rows of the output matrix are the columns of the input matrix
+      !> divided by the length squared of the corresponding columns.
+      !>
       !>## Detailed Input
       !>
       !>     M        is a 3x3 matrix.
@@ -8475,6 +8560,8 @@ contains
       return
       end subroutine invort
 
+      !> Return the inverse of a state transformation matrix.
+      !>
       !>## Detailed Input
       !>
       !>     MAT      is a state transformation matrix for converting states
@@ -8714,6 +8801,10 @@ contains
       return
       end subroutine invstm
 
+      !> Indicate whether a 3x3 matrix is a rotation matrix.
+      !>
+      !> The function returns .TRUE. if and only if M is a rotation matrix.
+      !>
       !>## Detailed Input
       !>
       !>     M        is a 3x3 matrix to be tested.
@@ -8945,6 +9036,12 @@ contains
       return
       end function isrot
 
+      !> Solve the equinoctial version of Kepler's equation.
+      !>
+      !> The function returns the solution to the equinoctial version of
+      !> Kepler's equation, given the mean longitude and the h and k
+      !> components of the equinoctial elements.
+      !>
       !>## Detailed Input
       !>
       !>     ML       is the mean longitude of some body following two body
@@ -9121,6 +9218,12 @@ contains
       return
       end function kepleq
 
+      !> Solve the equation X = < EVEC, U(X) > where U(X) is the unit
+      !> vector [ COS(X), SIN(X) ] and  < , > denotes the two-dimensional
+      !> dot product.
+      !>
+      !> The function returns the solution to X = < EVEC, U(X) >
+      !>
       !>## Detailed Input
       !>
       !>     EVEC     is any two dimensional vector whose magnitude is
@@ -9369,6 +9472,9 @@ contains
       return
       end function kpsolv
 
+      !> Find a unit quaternion corresponding to a specified rotation
+      !> matrix.
+      !>
       !>## Detailed Input
       !>
       !>     R        is a rotation matrix.
@@ -9942,6 +10048,9 @@ contains
       return
       end subroutine m2q
 
+      !> Find the nearest point on a line to a specified point, and find
+      !> the distance between the two points.
+      !>
       !>## Detailed Input
       !>
       !>     LINPT,
@@ -10088,6 +10197,8 @@ contains
       return
       end subroutine nplnpt
 
+      !> Find the nearest point on a line segment to a given point.
+      !>
       !>## Detailed Input
       !>
       !>     EP1,
@@ -10301,6 +10412,8 @@ contains
       return
       end subroutine npsgpt
 
+      !> Make a SPICE plane from a normal vector and a constant.
+      !>
       !>## Detailed Input
       !>
       !>     NORMAL,
@@ -10649,6 +10762,8 @@ contains
       return
       end subroutine nvc2pl
 
+      !> Make a SPICE plane from a normal vector and a point.
+      !>
       !>## Detailed Input
       !>
       !>     NORMAL,
@@ -10823,6 +10938,8 @@ contains
       return
       end subroutine nvp2pl
 
+      !> Make a SPICE plane from a point and two spanning vectors.
+      !>
       !>## Detailed Input
       !>
       !>     POINT,
@@ -11010,6 +11127,10 @@ contains
       return
       end subroutine psv2pl
 
+      !> Compute the total area of a collection of triangular plates.
+      !>
+      !> The function returns the total area of the set of plates.
+      !>
       !>## Detailed Input
       !>
       !>     NV       is the number of vertices comprising the plate
@@ -11316,6 +11437,8 @@ contains
       return
       end function pltar
 
+      !> Find the nearest point on a triangular plate to a given point.
+      !>
       !>## Detailed Input
       !>
       !>     POINT    is an arbitrary point in 3-dimensional space.
@@ -11664,6 +11787,12 @@ contains
       return
       end subroutine pltnp
 
+      !> Compute the volume of a three-dimensional region bounded by a
+      !> collection of triangular plates.
+      !>
+      !> The function returns the volume of the spatial region bounded
+      !> by the plates.
+      !>
       !>## Detailed Input
       !>
       !>     NV       is the number of vertices comprising the plate
@@ -12171,6 +12300,11 @@ contains
       return
       end function pltvol
 
+      !> Estimate the derivative of a function by finding the derivative
+      !> of a quadratic approximating function. This derivative estimate
+      !> is equivalent to that found by computing the average of forward
+      !> and backward differences.
+      !>
       !>## Detailed Input
       !>
       !>     NDIM     is the dimension of the function to be
@@ -12345,6 +12479,9 @@ contains
       return
       end subroutine qderiv
 
+      !> Compute the axis of the rotation given by an input matrix
+      !> and the angle of the rotation about that axis.
+      !>
       !>## Detailed Input
       !>
       !>     MATRIX   is a 3x3 rotation matrix in double precision.
@@ -12757,6 +12894,8 @@ contains
 
       end subroutine raxisa
 
+      !> Find the roots of a quadratic equation.
+      !>
       !>## Detailed Input
       !>
       !>     A,
@@ -13047,6 +13186,9 @@ contains
       return
       end subroutine rquad
 
+      !> Compute the integer quotient and non-negative remainder
+      !> of NUM and DENOM.
+      !>
       !>## Detailed Input
       !>
       !>     NUM      is the numerator of a quotient
@@ -13157,6 +13299,9 @@ contains
       return
       end subroutine rmaind
 
+      !> Compute the integer quotient and non-negative remainder
+      !> of NUM and DENOM.
+      !>
       !>## Detailed Input
       !>
       !>     NUM      is the numerator of a quotient
@@ -13258,6 +13403,8 @@ contains
       return
       end subroutine rmaini
 
+      !> Project a vector onto a specified plane, orthogonally.
+      !>
       !>## Detailed Input
       !>
       !>     VIN      is a 3-vector that is to be orthogonally projected
@@ -13473,6 +13620,9 @@ contains
       return
       end subroutine vprjp
 
+      !> Find the vector in a specified plane that maps to a specified
+      !> vector in another plane under orthogonal projection.
+      !>
       !>## Detailed Input
       !>
       !>     VIN,
@@ -13810,6 +13960,9 @@ contains
       return
       end subroutine vprjpi
 
+      !> Correct the apparent position of an object for stellar
+      !> aberration.
+      !>
       !>## Detailed Input
       !>
       !>     POBJ     is the position (x, y, z, km) of an object with
@@ -14168,6 +14321,10 @@ contains
       return
       end subroutine stelab
 
+      !> Correct the position of a target for the stellar aberration
+      !> effect on radiation transmitted from a specified observer to
+      !> the target.
+      !>
       !>## Detailed Input
       !>
       !>     POBJ     is the cartesian position vector of an object with
@@ -14456,6 +14613,8 @@ contains
       return
       end subroutine stlabx
 
+      !> Transpose the square blocks within a matrix.
+      !>
       !>## Detailed Input
       !>
       !>     NROW     is the number of rows in the input matrix.

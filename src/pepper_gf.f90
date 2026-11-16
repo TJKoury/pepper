@@ -1941,6 +1941,10 @@ submodule (pepper_instance_module) pepper_gf
 
 contains
 
+      !> Serve as a placeholder for an interrupt detection function.
+      !>
+      !> The function returns the value .FALSE. in all cases.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -2102,6 +2106,9 @@ contains
       return
       end function gfbail
 
+      !> Override the default GF convergence value used in the high
+      !> level GF routines.
+      !>
       !>## Detailed Input
       !>
       !>     VALUE    is the scalar double precision value to use as the GF
@@ -2397,13 +2404,11 @@ contains
 
       end subroutine gfstol
 
-      !>## Abstract
+      !> Return the value of a specified coordinate of a vector.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Return the value of a specified coordinate of a vector.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -2946,14 +2951,12 @@ contains
       end associate
       end subroutine zzgfcoq
 
-      !>## Abstract
+      !> Return the signs of a Cartesian velocity vector's coordinates
+      !> when the velocity is transformed to a given coordinate system.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Return the signs of a Cartesian velocity vector's coordinates
-      !>     when the velocity is transformed to a given coordinate system.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3591,14 +3594,12 @@ contains
       return
       end subroutine zzgfcprx
 
-      !>## Abstract
+      !> Return the distance between two ephemeris objects, optionally
+      !> corrected for light time and stellar aberration.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the distance between two ephemeris objects, optionally
-      !>     corrected for light time and stellar aberration.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3719,14 +3720,12 @@ contains
       return
       end subroutine zzgfdiq
 
-      !>## Abstract
+      !> Display a character string at a position at the first column on
+      !> the previous line on the screen.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Display a character string at a position at the first column on
-      !>     the previous line on the screen.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3917,6 +3916,9 @@ contains
       return
       end subroutine zzgfdsps
 
+      !> Perform initialization functions for visibility state
+      !> determination.
+      !>
       !>## Detailed Input
       !>
       !>     INST       indicates the name of the instrument, such as a
@@ -5073,6 +5075,8 @@ contains
       end associate
       end subroutine zzgffvin
 
+      !> Indicate whether the target is currently in the instrument FOV.
+      !>
       !>## Detailed Input
       !>
       !>     TIME       is the epoch of interest in TDB seconds past the
@@ -5638,6 +5642,8 @@ contains
       end associate
       end subroutine zzgffvst
 
+      !> Initialize the GF illumination angle constraint search utilities.
+      !>
       !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining
@@ -6087,6 +6093,9 @@ contains
       end associate
       end subroutine zzgfilin
 
+      !> Indicate whether a specified illumination angle is decreasing at
+      !> a specified time.
+      !>
       !>## Detailed Input
       !>
       !>     UDFUNC   is a placeholder subroutine argument. This argument is
@@ -6239,6 +6248,8 @@ contains
       end associate
       end subroutine zzgfildc
 
+      !> Return the specified illumination angle at a specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the time, expressed as seconds past J2000 TDB, at
@@ -6351,6 +6362,9 @@ contains
       end associate
       end subroutine zzgfilgq
 
+      !> Perform initialization functions for occultation state
+      !> determination.
+      !>
       !>## Detailed Input
       !>
       !>     OCCTYP   indicates the type of occultation that is to be found.
@@ -7253,6 +7267,8 @@ contains
       end associate
       end subroutine zzgfocin
 
+      !> See if the object is currently occulted.
+      !>
       !>## Detailed Input
       !>
       !>     TIME     is the epoch of interest in TDB seconds past the
@@ -7858,14 +7874,12 @@ contains
       end associate
       end subroutine zzgfocst
 
-      !>## Abstract
+      !> Compute the apparent phase angle for a target, observer,
+      !> illuminator set of ephemeris objects.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Compute the apparent phase angle for a target, observer,
-      !>     illuminator set of ephemeris objects.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8052,13 +8066,11 @@ contains
 
       end subroutine zzgfpaq
 
-      !>## Abstract
+      !> Set reference value in the GF sub-system.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Set reference value in the GF sub-system.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8129,13 +8141,11 @@ contains
 
       end subroutine zzgfref
 
-      !>## Abstract
+      !> Compute the apparent range rate between two ephemeris objects.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Compute the apparent range rate between two ephemeris objects.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8290,18 +8300,16 @@ contains
 
       end subroutine zzgfrrq
 
-      !>## Abstract
+      !> This routine is a root finding general purpose event location
+      !> routine. Most of the HARD work has been delegated to other
+      !> routines (In particular, how the dynamic step size is chosen).
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Sister routine to ZZGFSOLVX. Copy any edits to ZZGFSOLV or
+      !> ZZGFSOLVX to the sister routine.
       !>
-      !>     This routine is a root finding general purpose event location
-      !>     routine. Most of the HARD work has been delegated to other
-      !>     routines (In particular, how the dynamic step size is chosen).
-      !>
-      !>     Sister routine to ZZGFSOLVX. Copy any edits to ZZGFSOLV or
-      !>     ZZGFSOLVX to the sister routine.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9074,18 +9082,16 @@ contains
       return
       end subroutine zzgfsolv
 
-      !>## Abstract
+      !> This routine is a root finding general purpose event location
+      !> routine. Most of the HARD work has been delegated to other
+      !> routines (In particular, how the dynamic step size is chosen).
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Sister routine to ZZGFSOLV. Copy any edits to ZZGFSOLV or
+      !> ZZGFSOLVX to the sister routine.
       !>
-      !>     This routine is a root finding general purpose event location
-      !>     routine. Most of the HARD work has been delegated to other
-      !>     routines (In particular, how the dynamic step size is chosen).
-      !>
-      !>     Sister routine to ZZGFSOLV. Copy any edits to ZZGFSOLV or
-      !>     ZZGFSOLVX to the sister routine.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9866,13 +9872,11 @@ contains
       return
       end subroutine zzgfsolvx
 
-      !>## Abstract
+      !> Compute the angular separation between the limbs of two objects.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Compute the angular separation between the limbs of two objects.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -10120,6 +10124,9 @@ contains
       return
       end subroutine zzgfspq
 
+      !> This routine initializes variables that describe an angular
+      !> separation event of interest for solution by [[zzgfsolv]].
+      !>
       !>## Detailed Input
       !>
       !>     OF       the string array naming the bodies whose angular
@@ -10591,6 +10598,9 @@ contains
       end associate
       end subroutine zzgfspin
 
+      !> Computes whether or not the angular separation between SVBOD1 and
+      !> SVBOD2 is decreasing at time ET.
+      !>
       !>## Detailed Input
       !>
       !>     ET       time in seconds past J2000 at which one wishes to
@@ -10757,6 +10767,9 @@ contains
       end associate
       end subroutine zzgfspdc
 
+      !> Determine the angular separation between the limbs of the two
+      !> bodies.
+      !>
       !>## Detailed Input
       !>
       !>     ET       time in ephemeris seconds past J2000 when the
@@ -10864,6 +10877,8 @@ contains
       end associate
       end subroutine zzgfspgq
 
+      !> Retrieve values set in [[zzgfspin]].
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -10993,14 +11008,12 @@ contains
       end associate
       end subroutine zzgfspx
 
-      !>## Abstract
+      !> Return the state of a ray-target surface intercept point used to
+      !> define coordinates referenced in a GF search.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Return the state of a ray-target surface intercept point used to
-      !>     define coordinates referenced in a GF search.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -11829,14 +11842,12 @@ contains
       end associate
       end subroutine zzgfssin
 
-      !>## Abstract
+      !> Return the state of a sub-observer point used to define
+      !> coordinates referenced in a GF search.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Return the state of a sub-observer point used to define
-      !>     coordinates referenced in a GF search.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -12573,14 +12584,12 @@ contains
       end associate
       end subroutine zzgfssob
 
-      !>## Abstract
+      !> This routine determines if the value of the scalar quantity
+      !> function is less than a previously defined reference value.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     This routine determines if the value of the scalar quantity
-      !>     function is less than a previously defined reference value.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -12712,14 +12721,12 @@ contains
 
       end subroutine zzgfudlt
 
-      !>## Abstract
+      !> Determine those intervals of the first window that are
+      !> properly contained in an interval of the second.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine those intervals of the first window that are
-      !>     properly contained in an interval of the second.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -13025,6 +13032,9 @@ contains
       return
       end subroutine zzgfwsts
 
+      !> Determine if a specified ray is within the field-of-view (FOV) of
+      !> a specified instrument at a given time.
+      !>
       !>## Detailed Input
       !>
       !>     INST     indicates the name of an instrument, such as a
@@ -13440,6 +13450,9 @@ contains
       return
       end subroutine fovray
 
+      !> Determine if a specified ephemeris object is within the
+      !> field-of-view (FOV) of a specified instrument at a given time.
+      !>
       !>## Detailed Input
       !>
       !>     INST     indicates the name of an instrument, such as a
@@ -13998,6 +14011,11 @@ contains
       end associate
       end subroutine fovtrg
 
+      !> Determine time intervals when a specified target body or ray
+      !> intersects the space bounded by the field-of-view (FOV) of a
+      !> specified instrument. Report progress and handle interrupts if so
+      !> commanded.
+      !>
       !>## Detailed Input
       !>
       !>     INST     is a string indicates the name of an instrument, such as
@@ -15490,6 +15508,10 @@ contains
       return
       end subroutine gffove
 
+      !> Determine time intervals when an observer sees one target
+      !> occulted by another. Report progress and handle interrupts
+      !> if so commanded.
+      !>
       !>## Detailed Input
       !>
       !>     OCCTYP   indicates the type of occultation that is to be found.
@@ -16751,14 +16773,12 @@ contains
       return
       end subroutine gfocce
 
-      !>## Abstract
+      !> Determine the occultation condition (not occulted, partially
+      !> occulted, etc.) of one target relative to another target as seen
+      !> by an observer at a given time.
       !>
-      !>     Determine the occultation condition (not occulted, partially
-      !>     occulted, etc.) of one target relative to another target as seen
-      !>     by an observer at a given time.
-      !>
-      !>     The surfaces of the target bodies may be represented by triaxial
-      !>     ellipsoids, points, or by topographic data provided by DSK files.
+      !> The surfaces of the target bodies may be represented by triaxial
+      !> ellipsoids, points, or by topographic data provided by DSK files.
       !>
       !>## Detailed Input
       !>
@@ -17792,6 +17812,11 @@ contains
       return
       end subroutine occult
 
+      !> Compute the apparent phase angle for a target, observer,
+      !> illuminator set of ephemeris objects.
+      !>
+      !> The function returns the value of phase angle.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the time in ephemeris seconds past J2000 TDB at which
@@ -18392,14 +18417,12 @@ contains
       end associate
       end function phaseq
 
-      !>## Abstract
+      !> Return a state vector used to define coordinates referenced in a
+      !> GF search.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Return a state vector used to define coordinates referenced in a
-      !>     GF search.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -18753,6 +18776,8 @@ contains
       return
       end subroutine zzgfcost
 
+      !> Initialize the GF distance constraint search utilities.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET     is the name of a target body. Optionally, you may
@@ -18930,6 +18955,9 @@ contains
       end associate
       end subroutine zzgfdiin
 
+      !> Indicate whether the observer-target distance is decreasing at a
+      !> specified time.
+      !>
       !>## Detailed Input
       !>
       !>     ET         is the time, expressed as seconds past J2000 TDB, at
@@ -19044,6 +19072,9 @@ contains
       end associate
       end subroutine zzgfdidc
 
+      !> Return the distance between the target and observer
+      !> at a specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET         is the time, expressed as seconds past J2000 TDB, at
@@ -19129,6 +19160,9 @@ contains
       end associate
       end subroutine zzgfdigq
 
+      !> This is the initialization entry point used for describing
+      !> the event that is to be solved for by [[zzgfsolv]].
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   the string name of a target body.  Optionally, you may
@@ -19370,6 +19404,9 @@ contains
       end associate
       end subroutine zzgfpain
 
+      !> Computes whether or not the phase angle between the observer
+      !> and the target is decreasing at time ET.
+      !>
       !>## Detailed Input
       !>
       !>     ET         the time in ephemeris seconds past J2000 TDB at which
@@ -19545,6 +19582,9 @@ contains
       end associate
       end subroutine zzgfpadc
 
+      !> Determine the phase angle between the centers of the two
+      !> bodies.
+      !>
       !>## Detailed Input
       !>
       !>     ET         the time in ephemeris seconds past J2000 TDB at which
@@ -19618,6 +19658,8 @@ contains
       end associate
       end subroutine zzgfpagq
 
+      !> Retrieve values set in [[zzgfpain]].
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -19713,19 +19755,17 @@ contains
       end associate
       end subroutine zzgfpax
 
-      !>## Abstract
+      !> This routine determines time intervals when the value of some
+      !> geometric quantity related to one or more objects and an observer
+      !> satisfies a user specified constraint within time intervals
+      !> specified by the window CNFINE.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
+      !> Sister routine to ZZGFRELX. Copy any edits to ZZGFREL or ZZGFRELX
+      !> to the sister routine.
       !>
-      !>     This routine determines time intervals when the value of some
-      !>     geometric quantity related to one or more objects and an observer
-      !>     satisfies a user specified constraint within time intervals
-      !>     specified by the window CNFINE.
-      !>
-      !>     Sister routine to ZZGFRELX. Copy any edits to ZZGFREL or ZZGFRELX
-      !>     to the sister routine.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -20739,19 +20779,17 @@ contains
       end associate
       end subroutine zzgfrel
 
-      !>## Abstract
+      !> This routine determines time intervals when the value of some
+      !> geometric quantity related to one or more objects and an observer
+      !> satisfies a user specified constraint within time intervals
+      !> specified by the window CNFINE.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
+      !> Sister routine to ZZGFREL. Copy any edits to ZZGFREL or ZZGFRELX
+      !> to the sister routine.
       !>
-      !>     This routine determines time intervals when the value of some
-      !>     geometric quantity related to one or more objects and an observer
-      !>     satisfies a user specified constraint within time intervals
-      !>     specified by the window CNFINE.
-      !>
-      !>     Sister routine to ZZGFREL. Copy any edits to ZZGFREL or ZZGFRELX
-      !>     to the sister routine.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -21778,6 +21816,9 @@ contains
       end associate
       end subroutine zzgfrelx
 
+      !> Initialize the work progress utility. This is required prior to
+      !> use of the routine that performs the actual reporting.
+      !>
       !>## Detailed Input
       !>
       !>     TOTAL      is a measure of the total amount of work to be done
@@ -21973,6 +22014,9 @@ contains
       end associate
       end subroutine zzgftswk
 
+      !> Let the work reporter know that an increment of work has just
+      !> been completed.
+      !>
       !>## Detailed Input
       !>
       !>     INCR       is some amount of work that has been completed since
@@ -22101,6 +22145,8 @@ contains
       end associate
       end subroutine zzgfwkin
 
+      !> Adjust the frequency with which work progress is reported.
+      !>
       !>## Detailed Input
       !>
       !>     WAIT       is the minimum duration between reports in seconds. If
@@ -22243,6 +22289,8 @@ contains
       end associate
       end subroutine zzgfwkad
 
+      !> Set the output unit for the progress report.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT           Logical unit of a text file open for write access.
@@ -22318,6 +22366,8 @@ contains
       end associate
       end subroutine zzgfwkun
 
+      !> Return saved progress report parameters.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -22420,6 +22470,9 @@ contains
       end associate
       end subroutine zzgfwkmo
 
+      !> This is the initialization entry point used for describing
+      !> the event that is to be solved for by [[zzgfsolv]].
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   the string name of a target body.  Optionally, you may
@@ -22664,6 +22717,9 @@ contains
       end associate
       end subroutine zzgfrrin
 
+      !> Computes whether or not the range rate between the observer
+      !> and the target is decreasing at time ET.
+      !>
       !>## Detailed Input
       !>
       !>     ET         time in seconds past J2000 at which to calculate
@@ -22810,6 +22866,9 @@ contains
       end associate
       end subroutine zzgfrrdc
 
+      !> Determine the range rate between the centers of the two
+      !> bodies.
+      !>
       !>## Detailed Input
       !>
       !>     ET         time in ephemeris seconds past J2000 when the range
@@ -22884,6 +22943,8 @@ contains
       end associate
       end subroutine zzgfrrgq
 
+      !> Retrieve values set in [[zzgfrrin]].
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -22970,15 +23031,13 @@ contains
       end associate
       end subroutine zzgfrrx
 
-      !>## Abstract
+      !> Routine to determine time intervals when a user defined boolean
+      !> function returns true. Report progress and handle interrupts
+      !> if so commanded.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Routine to determine time intervals when a user defined boolean
-      !>     function returns true. Report progress and handle interrupts
-      !>     if so commanded.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -23519,13 +23578,11 @@ contains
       return
       end subroutine zzgfudb
 
-      !>## Abstract
+      !> Determine time intervals when an observer sees one target body
+      !> occulted by, or in transit across, another.
       !>
-      !>     Determine time intervals when an observer sees one target body
-      !>     occulted by, or in transit across, another.
-      !>
-      !>     The surfaces of the target bodies may be represented by triaxial
-      !>     ellipsoids or by topographic data provided by DSK files.
+      !> The surfaces of the target bodies may be represented by triaxial
+      !> ellipsoids or by topographic data provided by DSK files.
       !>
       !>## Detailed Input
       !>
@@ -25240,6 +25297,10 @@ contains
       return
       end subroutine gfoclt
 
+      !> Determine time intervals when a specified ray intersects the
+      !> space bounded by the field-of-view (FOV) of a specified
+      !> instrument.
+      !>
       !>## Detailed Input
       !>
       !>     INST     indicates the name of an instrument, such as a
@@ -26105,6 +26166,8 @@ contains
       return
       end subroutine gfrfov
 
+      !> Initialize a search progress report.
+      !>
       !>## Detailed Input
       !>
       !>     WINDOW   is the name of a constraint window. This is the window
@@ -26337,6 +26400,9 @@ contains
       end associate
       end subroutine gfrepi
 
+      !> Tell the progress reporting system how far a search has
+      !> progressed.
+      !>
       !>## Detailed Input
       !>
       !>     IVBEG,
@@ -26539,6 +26605,8 @@ contains
       end associate
       end subroutine gfrepu
 
+      !> Finish a progress report.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -26664,6 +26732,10 @@ contains
       end associate
       end subroutine gfrepf
 
+      !> Determine time intervals when a specified ephemeris object
+      !> intersects the space bounded by the field-of-view (FOV) of a
+      !> specified instrument.
+      !>
       !>## Detailed Input
       !>
       !>     INST     indicates the name of an instrument, such as a
@@ -27515,6 +27587,8 @@ contains
       end associate
       end subroutine gftfov
 
+      !> Perform a GF search on a user defined boolean quantity.
+      !>
       !>## Detailed Input
       !>
       !>     UDFUNS   is the routine that returns the value of the scalar
@@ -28456,6 +28530,8 @@ contains
       return
       end subroutine gfudb
 
+      !> Perform a GF search on a user defined scalar quantity.
+      !>
       !>## Detailed Input
       !>
       !>     UDFUNS   is the routine that returns the value of the scalar
@@ -29501,6 +29577,8 @@ contains
 
       end subroutine gfuds
 
+      !> Initialize a coordinate search.
+      !>
       !>## Detailed Input
       !>
       !>     VECDEF   every coordinate computed by this routine is a
@@ -30284,6 +30362,9 @@ contains
       end associate
       end subroutine zzgfcoin
 
+      !> Compute the coordinate defined by the last call to [[zzgfcoin]] is at
+      !> the specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
@@ -30408,6 +30489,9 @@ contains
       end associate
       end subroutine zzgfcog
 
+      !> Indicate whether the coordinate defined by the last call to
+      !> [[zzgfcoin]] is decreasing at the specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
@@ -30590,6 +30674,9 @@ contains
       end associate
       end subroutine zzgfcodc
 
+      !> Indicate whether the state of coordinate defined by the last call
+      !> to [[zzgfcoin]] is computable at the specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
@@ -30718,6 +30805,9 @@ contains
       end associate
       end subroutine zzgfcoex
 
+      !> Compute the cosine of the coordinate defined by the last call to
+      !> [[zzgfcoin]] is at the specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
@@ -30842,6 +30932,9 @@ contains
       end associate
       end subroutine zzgfcocg
 
+      !> Compute the sine of the coordinate defined by the last call to
+      !> [[zzgfcoin]] is at the specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
@@ -30966,6 +31059,9 @@ contains
       end associate
       end subroutine zzgfcosg
 
+      !> Indicate whether the cosine of the coordinate defined by the
+      !> last call to [[zzgfcoin]] is decreasing at the specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
@@ -31207,6 +31303,9 @@ contains
       end associate
       end subroutine zzgfcocd
 
+      !> Indicate whether the sine of the coordinate defined by the
+      !> last call to [[zzgfcoin]] is decreasing at the specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
@@ -31444,15 +31543,13 @@ contains
       end associate
       end subroutine zzgfcosd
 
-      !>## Abstract
+      !> This routine determines time windows when the longitude
+      !> or right ascension of a specified vector satisfies a specified
+      !> mathematical condition.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     This routine determines time windows when the longitude
-      !>     or right ascension of a specified vector satisfies a specified
-      !>     mathematical condition.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -34037,6 +34134,8 @@ contains
       end associate
       end subroutine zzgflong
 
+      !> Perform a coordinate search.
+      !>
       !>## Detailed Input
       !>
       !>     VECDEF     Every coordinate computed by this routine is a
@@ -34983,6 +35082,9 @@ contains
       end associate
       end subroutine zzgfcslv
 
+      !> Determine time intervals when a specified geometric quantity
+      !> satisfies a specified mathematical condition.
+      !>
       !>## Detailed Input
       !>
       !>     UDSTEP   is the name of the user specified routine that computes a
@@ -37087,6 +37189,9 @@ contains
       end associate
       end subroutine gfevnt
 
+      !> Determine time intervals over which a specified constraint on
+      !> observer-target distance is met.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may supply
@@ -38351,6 +38456,10 @@ contains
       return
       end subroutine gfdist
 
+      !> Determine time intervals over which a specified constraint on
+      !> the observed phase, solar incidence, or emission angle at
+      !> a specified target body surface point is met.
+      !>
       !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining the
@@ -39658,6 +39767,10 @@ contains
       return
       end subroutine gfilum
 
+      !> Determine time intervals for which a specified constraint
+      !> on the phase angle between an illumination source, a target,
+      !> and observer body centers is met.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may supply
@@ -40679,6 +40792,9 @@ contains
 
       end subroutine gfpa
 
+      !> Determine time intervals for which a coordinate of an
+      !> observer-target position vector satisfies a numerical constraint.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may supply
@@ -42577,6 +42693,9 @@ contains
 
       end subroutine gfposc
 
+      !> Determine time intervals for which a specified constraint
+      !> on the observer-target range rate is met.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may supply
@@ -43600,6 +43719,10 @@ contains
 
       end subroutine gfrr
 
+      !> Determine time intervals when the angular separation between
+      !> the position vectors of two target bodies relative to an observer
+      !> satisfies a numerical relationship.
+      !>
       !>## Detailed Input
       !>
       !>     TARG1    is the string naming the first body of interest. You can
@@ -44734,6 +44857,10 @@ contains
       return
       end subroutine gfsep
 
+      !> Determine time intervals for which a coordinate of a
+      !> surface intercept position vector satisfies a numerical
+      !> constraint.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   is the string name of a target body. Optionally, you may
@@ -46235,6 +46362,9 @@ contains
 
       end subroutine gfsntc
 
+      !> Determine time intervals for which a coordinate of an
+      !> subpoint position vector satisfies a numerical constraint.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   is the string name of a target body. Optionally, you may
@@ -47491,7 +47621,13 @@ contains
 
       end subroutine gfsubc
 
-      !> The cells of a GF search with windows as arrays (PEPPER).
+      !> The cells of a GF search with windows as arrays (PEPPER): the
+      !> confinement window as a cell, and a result cell and work windows
+      !> of a size that the search cannot exceed. The GF solver finds at
+      !> most one transition per STEP in each confinement interval, so no
+      !> window holds more than B = sum (ceiling(length/STEP) + 2) intervals;
+      !> the cells have room for 2B. Signals SPICE(INSUFFICIENTMEMORY) if
+      !> they cannot be allocated.
       module subroutine gf_cells ( ctx, cnfine, step, cnf, res, mw, work )
       use, intrinsic :: iso_fortran_env, only: int64
       use pepper_kinds, only: ip, wp
@@ -47552,7 +47688,14 @@ contains
       end if
       end subroutine gf_cells
 
-      !> A GF search on the observer-target distance, with windows as arrays (PEPPER).
+      !> A GF search on the observer-target distance (PEPPER; [[gfdist]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfdist]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_distance ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
@@ -47582,7 +47725,14 @@ contains
       call cell_to_window ( res, result )
       end subroutine gf_distance
 
-      !> A GF search on a coordinate of a position vector, with windows as arrays (PEPPER).
+      !> A GF search on a coordinate of a position vector (PEPPER; [[gfposc]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfposc]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_position ( ctx, target, frame, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
@@ -47615,7 +47765,14 @@ contains
       call cell_to_window ( res, result )
       end subroutine gf_position
 
-      !> A GF search on a coordinate of a sub-observer point, with windows as arrays (PEPPER).
+      !> A GF search on a coordinate of a sub-observer point (PEPPER; [[gfsubc]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfsubc]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_subpoint ( ctx, target, fixref, method, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
@@ -47649,7 +47806,14 @@ contains
       call cell_to_window ( res, result )
       end subroutine gf_subpoint
 
-      !> A GF search on a coordinate of a surface intercept vector, with windows as arrays (PEPPER).
+      !> A GF search on a coordinate of a surface intercept vector (PEPPER; [[gfsntc]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfsntc]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_intercept ( ctx, target, fixref, method, abcorr, obsrvr, dref, dvec, crdsys, coord, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
@@ -47685,7 +47849,14 @@ contains
       call cell_to_window ( res, result )
       end subroutine gf_intercept
 
-      !> A GF search on the angular separation of two bodies, with windows as arrays (PEPPER).
+      !> A GF search on the angular separation of two bodies (PEPPER; [[gfsep]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfsep]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_separation ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
@@ -47720,7 +47891,14 @@ contains
       call cell_to_window ( res, result )
       end subroutine gf_separation
 
-      !> A GF search on occultations or transits, with windows as arrays (PEPPER).
+      !> A GF search on occultations or transits (PEPPER; [[gfoclt]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfoclt]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_occultation ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
@@ -47752,7 +47930,14 @@ contains
       call cell_to_window ( res, result )
       end subroutine gf_occultation
 
-      !> A GF search on an illumination angle, with windows as arrays (PEPPER).
+      !> A GF search on an illumination angle (PEPPER; [[gfilum]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfilum]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_illumination ( ctx, method, angtyp, target, illmn, fixref, abcorr, obsrvr, spoint, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
@@ -47787,7 +47972,14 @@ contains
       call cell_to_window ( res, result )
       end subroutine gf_illumination
 
-      !> A GF search on the phase angle, with windows as arrays (PEPPER).
+      !> A GF search on the phase angle (PEPPER; [[gfpa]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfpa]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_phase ( ctx, target, illmn, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
@@ -47818,7 +48010,14 @@ contains
       call cell_to_window ( res, result )
       end subroutine gf_phase
 
-      !> A GF search on the range rate, with windows as arrays (PEPPER).
+      !> A GF search on the range rate (PEPPER; [[gfrr]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfrr]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_range_rate ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
@@ -47848,7 +48047,14 @@ contains
       call cell_to_window ( res, result )
       end subroutine gf_range_rate
 
-      !> A GF search on a target in an instrument field of view, with windows as arrays (PEPPER).
+      !> A GF search on a target in an instrument field of view (PEPPER; [[gftfov]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gftfov]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_target_in_fov ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
@@ -47876,7 +48082,14 @@ contains
       call cell_to_window ( res, result )
       end subroutine gf_target_in_fov
 
-      !> A GF search on a ray in an instrument field of view, with windows as arrays (PEPPER).
+      !> A GF search on a ray in an instrument field of view (PEPPER; [[gfrfov]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfrfov]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_ray_in_fov ( ctx, inst, raydir, rframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
@@ -47903,7 +48116,14 @@ contains
       call cell_to_window ( res, result )
       end subroutine gf_ray_in_fov
 
-      !> A GF search on a user-defined scalar quantity, with windows as arrays (PEPPER).
+      !> A GF search on a user-defined scalar quantity (PEPPER; [[gfuds]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfuds]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_user_scalar ( ctx, udfuns, udqdec, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
@@ -47932,7 +48152,14 @@ contains
       call cell_to_window ( res, result )
       end subroutine gf_user_scalar
 
-      !> A GF search on a user-defined boolean quantity, with windows as arrays (PEPPER).
+      !> A GF search on a user-defined boolean quantity (PEPPER; [[gfudb]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfudb]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_user_boolean ( ctx, udfuns, udfunb, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
@@ -47956,7 +48183,16 @@ contains
       call cell_to_window ( res, result )
       end subroutine gf_user_boolean
 
-      !> A GF search on a geometric quantity, with the caller's step and refinement routines, with windows as arrays (PEPPER).
+      !> A GF search on a geometric quantity, with the caller's step and refinement routines (PEPPER; [[gfevnt]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfevnt]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      !> STEP is not used by the search: give the smallest step that UDSTEP
+      !> returns (a smaller one may give SPICE(WINDOWEXCESS)).
       module subroutine gf_event ( ctx, udstep, udrefn, gquant, qnpars, qpnams, qcpars, qdpars, qipars, qlpars, op, refval, tol, adjust, step, cnfine, rpt, udrepi, udrepu, udrepf, bail, udbail, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window

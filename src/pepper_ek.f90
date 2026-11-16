@@ -749,6 +749,8 @@ submodule (pepper_instance_module) pepper_ek
 
 contains
 
+      !> Start a new segment in an E-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file that is open for writing.
@@ -1288,6 +1290,9 @@ contains
       end associate
       end subroutine ekbseg
 
+      !> Add a new, empty record to a specified E-kernel segment at
+      !> a specified index.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of an EK open for write access.
@@ -1706,6 +1711,9 @@ contains
       return
       end subroutine ekinsr
 
+      !> Check whether a file is a type 1 star catalog and return the
+      !> catalog's table name if it is.
+      !>
       !>## Detailed Input
       !>
       !>     CATFNM   is the name of the catalog file.
@@ -1956,6 +1964,8 @@ contains
       end associate
       end subroutine stcc01
 
+      !> Add an entire class 1 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -2347,6 +2357,8 @@ contains
       return
       end subroutine zzekac01
 
+      !> Add an entire class 2 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -2739,6 +2751,8 @@ contains
       return
       end subroutine zzekac02
 
+      !> Add an entire class 3 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -3230,6 +3244,8 @@ contains
       return
       end subroutine zzekac03
 
+      !> Add an entire class 4 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -3701,6 +3717,8 @@ contains
       return
       end subroutine zzekac04
 
+      !> Add an entire class 5 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -4172,6 +4190,8 @@ contains
       return
       end subroutine zzekac05
 
+      !> Add an entire class 6 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -4770,6 +4790,9 @@ contains
       return
       end subroutine zzekac06
 
+      !> Add a column entry to a specified record in a class 4 column.
+      !> The entries of class 4 columns are arrays of integer values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -5115,6 +5138,9 @@ contains
       return
       end subroutine zzekad04
 
+      !> Add a column entry to a specified record in a class 5 column.
+      !> The entries of class 5 columns are arrays of d.p. values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -5463,6 +5489,10 @@ contains
       return
       end subroutine zzekad05
 
+      !> Add a column entry to a specified record in a class 6 column.
+      !> The entries of class 6 columns are arrays of character string
+      !> values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is the handle of an EK file that is open for write
@@ -5943,6 +5973,8 @@ contains
       end associate
       end subroutine zzekad06
 
+      !> Delete a specified class 5 column entry from an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -6194,6 +6226,8 @@ contains
       return
       end subroutine zzekde05
 
+      !> Delete a specified class 6 column entry from an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -6442,6 +6476,11 @@ contains
       return
       end subroutine zzekde06
 
+      !> Return the size of a specified column entry.
+      !>
+      !> The function returns the number of elements in the specified
+      !> column entry.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -6600,6 +6639,8 @@ contains
       return
       end function zzekesiz
 
+      !> Return the data pointer for a specified EK column entry.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -6725,6 +6766,8 @@ contains
       return
       end subroutine zzekgcdp
 
+      !> Initialize a new type 1 EK segment to allow fast loading.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is the handle of an EK file open for write access.
@@ -6903,6 +6946,8 @@ contains
       return
       end subroutine zzekif01
 
+      !> Initialize a new type 2 EK segment to allow fast loading.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is the handle of an EK file open for write access.
@@ -7066,6 +7111,9 @@ contains
       return
       end subroutine zzekif02
 
+      !> Read a column entry from a specified record in a class 1 column.
+      !> Class 1 columns contain scalar integer values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -7247,6 +7295,9 @@ contains
       return
       end subroutine zzekrd01
 
+      !> Read a column entry from a specified record in a class 2 column.
+      !> Class 2 columns contain scalar double precision values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -7420,6 +7471,9 @@ contains
       return
       end subroutine zzekrd02
 
+      !> Read a column entry from a specified record in a class 3 column.
+      !> Class 3 columns contain scalar character values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -7743,6 +7797,10 @@ contains
       return
       end subroutine zzekrd03
 
+      !> Read a specified element range from a column entry in a specified
+      !> record in a class 4 column.  Class 4 columns have integer arrays
+      !> as column entries.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -8063,6 +8121,10 @@ contains
       return
       end subroutine zzekrd04
 
+      !> Read a specified element range from a column entry in a specified
+      !> record in a class 5 column.  Class 5 columns have d.p. arrays
+      !> as column entries.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -8388,6 +8450,10 @@ contains
       return
       end subroutine zzekrd05
 
+      !> Read a specified element range from a column entry in a specified
+      !> record in a class 6 column.  Class 6 columns have character arrays
+      !> as column entries.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -8853,6 +8919,9 @@ contains
       return
       end subroutine zzekrd06
 
+      !> Read a column entry from a specified record in a class 7 column.
+      !> Class 7 columns contain fixed-count, scalar integer values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -9041,6 +9110,10 @@ contains
       return
       end subroutine zzekrd07
 
+      !> Read a column entry from a specified record in a class 8 column.
+      !> Class 8 columns contain fixed-count, scalar, double precision
+      !> values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -9229,6 +9302,8 @@ contains
       return
       end subroutine zzekrd08
 
+      !> Set the data pointer for a specified EK column entry.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -9367,6 +9442,8 @@ contains
       return
       end subroutine zzekscdp
 
+      !> Write a character array out to a contiguous set of EK pages.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -9566,6 +9643,8 @@ contains
       return
       end subroutine zzekwpac
 
+      !> Write an integer array out to a contiguous set of EK pages.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -9719,6 +9798,8 @@ contains
       return
       end subroutine zzekwpai
 
+      !> Write a logical array out to a contiguous set of EK pages.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -9885,6 +9966,9 @@ contains
       return
       end subroutine zzekwpal
 
+      !> Append a new, empty record at the end of a specified E-kernel
+      !> segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of an EK open for write access.
@@ -10295,6 +10379,8 @@ contains
       return
       end subroutine ekappr
 
+      !> Initialize a new E-kernel segment to allow fast writing.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file open for write access. A new
@@ -10868,6 +10954,8 @@ contains
       return
       end subroutine ekifld
 
+      !> Read data from a character column in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is an EK file handle. The file may be open for read or
@@ -11337,6 +11425,9 @@ contains
       return
       end subroutine ekrcec
 
+      !> Read data from a double precision column in a specified EK
+      !> record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is an EK file handle. The file may be open for read or
@@ -11574,6 +11665,8 @@ contains
       return
       end subroutine ekrced
 
+      !> Read data from an integer column in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is an EK file handle. The file may be open for read or
@@ -11812,7 +11905,8 @@ contains
       end subroutine ekrcei
 
       !> All the values of a double precision or time column entry of an EK
-      !> record (PEPPER).
+      !> record (PEPPER; [[ekrced]] with the size of the entry). Bound as the
+      !> generic `ek_values`.
       module subroutine ek_values_real ( ctx, handle, segno, recno, column, values, isnull )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -11843,7 +11937,9 @@ contains
       end if
       end subroutine ek_values_real
 
-      !> All the values of an integer column entry of an EK record (PEPPER).
+      !> All the values of an integer column entry of an EK record (PEPPER;
+      !> [[ekrcei]] with the size of the entry). Bound as the generic
+      !> `ek_values`.
       module subroutine ek_values_int ( ctx, handle, segno, recno, column, values, isnull )
       use pepper_kinds, only: ip
       implicit none
@@ -11874,8 +11970,10 @@ contains
       end if
       end subroutine ek_values_int
 
-      !> All the values of a character column entry of an EK record, each
-      !> of its full length (PEPPER).
+      !> All the values of a character column entry of an EK record, each of
+      !> its full length (PEPPER; [[ekrcec]] with the size of the entry).
+      !> Bound as the generic `ek_values`. Values of fixed-length columns
+      !> are returned without their trailing blanks.
       module subroutine ek_values_str ( ctx, handle, segno, recno, column, values, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
@@ -11976,6 +12074,8 @@ contains
       end if
       end subroutine ek_entry_size
 
+      !> Add an entire class 7 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -12266,6 +12366,8 @@ contains
       return
       end subroutine zzekac07
 
+      !> Add an entire class 8 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -12557,6 +12659,8 @@ contains
       return
       end subroutine zzekac08
 
+      !> Add an entire class 9 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -12885,6 +12989,9 @@ contains
       return
       end subroutine zzekac09
 
+      !> Read scalar data from a character column in a specified EK
+      !> record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -13105,6 +13212,9 @@ contains
       return
       end subroutine zzekrsc
 
+      !> Read scalar data from a double precision column in a specified EK
+      !> record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -13310,6 +13420,8 @@ contains
       return
       end subroutine zzekrsd
 
+      !> Read scalar data from an integer column in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -13520,6 +13632,8 @@ contains
       return
       end subroutine zzekrsi
 
+      !> Update a specified class 4 column entry in an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -13630,6 +13744,8 @@ contains
       return
       end subroutine zzekue04
 
+      !> Update a specified class 5 column entry in an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -13740,6 +13856,8 @@ contains
       return
       end subroutine zzekue05
 
+      !> Update a specified class 6 column entry in an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -13854,6 +13972,8 @@ contains
       return
       end subroutine zzekue06
 
+      !> Add an entire character column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file that is open for writing.
@@ -14342,6 +14462,8 @@ contains
       return
       end subroutine ekaclc
 
+      !> Add an entire double precision column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file that is open for writing.
@@ -14829,6 +14951,8 @@ contains
       return
       end subroutine ekacld
 
+      !> Add an entire integer column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file that is open for writing.
@@ -15315,6 +15439,13 @@ contains
       return
       end subroutine ekacli
 
+      !> Compare two column entry elements, and return the relation of the
+      !> first to the second:  LT, EQ, or GT.
+      !>
+      !> The function returns a parameter indicating the order relation
+      !> satisfied by the input arguments.  Possible values are LT, EQ,
+      !> and GT.
+      !>
       !>## Detailed Input
       !>
       !>     HANS           is an array containing file handles of two EKs
@@ -15822,6 +15953,12 @@ contains
       return
       end function zzekecmp
 
+      !> Compare a specified scalar EK column entry with a scalar value.
+      !>
+      !> The function returns .TRUE. if and only if the specified column
+      !> entry and input value of the corresponding data type satisfy the
+      !> relation specified by the input argument OP.
+      !>
       !>## Detailed Input
       !>
       !>     OP             is an integer code representing a binary relational
@@ -16322,6 +16459,10 @@ contains
       return
       end function zzekscmp
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified character EK column having a type 1 index, using
+      !> dictionary ordering on character data values and record pointers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -16648,6 +16789,10 @@ contains
       return
       end subroutine zzekerc1
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified d.p. EK column having a type 1 index, using
+      !> dictionary ordering on d.p. data values and record pointers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -16974,6 +17119,10 @@ contains
       return
       end subroutine zzekerd1
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified integer EK column having a type 1 index, using
+      !> dictionary ordering on integer data values and record pointers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -17300,6 +17449,9 @@ contains
       return
       end subroutine zzekeri1
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed character EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -17550,6 +17702,9 @@ contains
       return
       end subroutine zzekllec
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed double precision EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -17800,6 +17955,9 @@ contains
       return
       end subroutine zzeklled
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed integer EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -18050,6 +18208,9 @@ contains
       return
       end subroutine zzekllei
 
+      !> Find the last column value less than a specified key,
+      !> for a specified, indexed character EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -18297,6 +18458,9 @@ contains
       return
       end subroutine zzeklltc
 
+      !> Find the last column value less than a specified key,
+      !> for a specified, indexed double precision EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -18543,6 +18707,9 @@ contains
       return
       end subroutine zzeklltd
 
+      !> Find the last column value less than a specified key,
+      !> for a specified, indexed integer EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -18790,6 +18957,12 @@ contains
       return
       end subroutine zzekllti
 
+      !> Compare two EK rows, using as the order relation dictionary
+      !> ordering on a specified list of columns.
+      !>
+      !> The function returns .TRUE. if and only if the two rows
+      !> satisfy the order relation specified by the input arguments.
+      !>
       !>## Detailed Input
       !>
       !>     OP             is an integer code representing a binary operator
@@ -19085,6 +19258,12 @@ contains
       return
       end function zzekrcmp
 
+      !> Determine whether a specified row in an EK file satisfies
+      !> a specified set of constraints.
+      !>
+      !> The function returns .TRUE. if and only if the specified
+      !> EK row satisfies the input constraints.
+      !>
       !>## Detailed Input
       !>
       !>     NCNSTR         is the number of input constraints against which
@@ -19304,6 +19483,12 @@ contains
       return
       end function zzekrmch
 
+      !> Compare two row vectors, using dictionary ordering on a
+      !> specified list of columns as the order relation.
+      !>
+      !> The function returns .TRUE. if and only if the two rows
+      !> satisfy the order relation specified by the input arguments.
+      !>
       !>## Detailed Input
       !>
       !>     OP             is an integer code representing a binary operator
@@ -19665,6 +19850,12 @@ contains
       return
       end function zzekvcmp
 
+      !> Determine whether a vector of constraints involving comparisons of
+      !> specified EK column elements is satisfied.
+      !>
+      !> The function returns .TRUE. if and only if all of the relational
+      !> constraints specified by the input arguments are satisfied.
+      !>
       !>## Detailed Input
       !>
       !>     NCNSTR         is the number of input join constraints.   Each
@@ -20083,6 +20274,15 @@ contains
       return
       end function zzekvmch
 
+      !> Find the ordinal position of the row, in an specified EK segment,
+      !> whose value in a specified column is the last last element less
+      !> than or equal to a specified value, where the order relation is
+      !> given by an order vector in a specified DAS file.
+      !>
+      !> The function returns the index of the last order vector element
+      !> that points to an array element that is less than or equal to
+      !> the input value of the same data type as the column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is the file handle of the EK containing the
@@ -20264,6 +20464,15 @@ contains
       return
       end function zzekille
 
+      !> Find the ordinal position of the row, in an specified EK segment,
+      !> whose value in a specified column is the last last element less
+      !> than a specified value, where the order relation is given by an
+      !> order vector in a specified DAS file.
+      !>
+      !> The function returns the index of the last order vector element
+      !> that points to an array element that is less than the input
+      !> value of the same data type as the column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is the file handle of the EK containing the
@@ -20444,6 +20653,9 @@ contains
       return
       end function zzekillt
 
+      !> Sort the row vectors of a join row set union, given an order
+      !> relation defined by a set of qualified order-by columns.
+      !>
       !>## Detailed Input
       !>
       !>     NJRS,
@@ -21371,6 +21583,10 @@ contains
       return
       end subroutine zzekjsrt
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed character EK column, using dictionary
+      !> ordering on character data values and record pointers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK that is open for read or
@@ -21566,6 +21782,10 @@ contains
       return
       end subroutine zzeklerc
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed d.p. EK column, using dictionary
+      !> ordering on d.p. data values and record pointers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -21762,6 +21982,10 @@ contains
       return
       end subroutine zzeklerd
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed integer EK column, using dictionary
+      !> ordering on integer data values and record pointers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -21958,6 +22182,9 @@ contains
       return
       end subroutine zzekleri
 
+      !> Find the ordinal position of a specified record in a specified,
+      !> indexed EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -22182,6 +22409,10 @@ contains
       return
       end subroutine zzekfrx
 
+      !> Insert into a type 1 EK index a record pointer associated with a
+      !> character key.  The key and record pointer determine the insertion
+      !> point via dictionary ordering on (value, record pointer) pairs.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -22373,6 +22604,10 @@ contains
       return
       end subroutine zzekiic1
 
+      !> Insert into a type 1 EK index a record pointer associated with a
+      !> d.p. key.  The key and record pointer determine the insertion
+      !> point via dictionary ordering on (value, record pointer) pairs.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -22564,6 +22799,10 @@ contains
       return
       end subroutine zzekiid1
 
+      !> Insert into a type 1 EK index a record pointer associated with an
+      !> integer key.  The key and record pointer determine the insertion
+      !> point via dictionary ordering on (value, record pointer) pairs.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -22751,14 +22990,12 @@ contains
       return
       end subroutine zzekiii1
 
-      !>## Abstract
+      !> Prepare to test a set of candidate row vectors, all corresponding
+      !> to the same segment vector, against join constraints.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Prepare to test a set of candidate row vectors, all corresponding
-      !>     to the same segment vector, against join constraints.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -23437,14 +23674,12 @@ contains
       end associate
       end subroutine zzekjprp
 
-      !>## Abstract
+      !> Return row vectors resulting from the join of two collections
+      !> of row vectors from two join row sets.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return row vectors resulting from the join of two collections
-      !>     of row vectors from two join row sets.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -24024,6 +24259,9 @@ contains
       end associate
       end subroutine zzekjnxt
 
+      !> Determine the key column to use when searching an EK segment
+      !> for rows matching query constraints.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is the handle of the EK file containing the
@@ -24629,6 +24867,9 @@ contains
       return
       end subroutine zzekkey
 
+      !> Add a column entry to a class 1 column in a specified EK record.
+      !> Class 1 columns contain scalar, integer values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -24926,6 +25167,9 @@ contains
       return
       end subroutine zzekad01
 
+      !> Add a column entry to a specified record in a class 2 column.
+      !> Class 2 columns contain scalar double precision values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -25217,6 +25461,9 @@ contains
       return
       end subroutine zzekad02
 
+      !> Add a column entry to a class 3 column in a specified EK record.
+      !> Class 3 columns contain scalar, character values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -25577,6 +25824,9 @@ contains
       return
       end subroutine zzekad03
 
+      !> Update an EK column index to reflect deletion of a record
+      !> specified by a record pointer.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a handle of an EK file open for write access.
@@ -25717,6 +25967,9 @@ contains
       return
       end subroutine zzekixdl
 
+      !> Perform join of two EK join row sets, subject to a specified set
+      !> of EK join constraints, yielding an EK join row set.
+      !>
       !>## Detailed Input
       !>
       !>     JBASE1         is the EK scratch area base address of the first
@@ -26265,6 +26518,8 @@ contains
       return
       end subroutine zzekjoin
 
+      !> Add data to a character column in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file open for write access.
@@ -27054,6 +27309,8 @@ contains
       return
       end subroutine ekacec
 
+      !> Add data to an double precision column in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file open for write access.
@@ -27784,6 +28041,8 @@ contains
       return
       end subroutine ekaced
 
+      !> Add data to an integer column in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file open for write access.
@@ -28516,6 +28775,8 @@ contains
       return
       end subroutine ekacei
 
+      !> Load an EK file, making it accessible to the EK readers.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a binary EK file to be loaded.
@@ -29904,6 +30165,10 @@ contains
       end associate
       end subroutine eklef
 
+      !> Unload an EK file, making its contents inaccessible to the
+      !> EK reader routines, and clearing space in order to allow other
+      !> EK files to be loaded.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle returned by EKLEF.
@@ -30397,6 +30662,8 @@ contains
       end associate
       end subroutine ekuef
 
+      !> Return the number of loaded EK tables.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -30571,6 +30838,8 @@ contains
       end associate
       end subroutine ekntab
 
+      !> Return the name of a specified, loaded table.
+      !>
       !>## Detailed Input
       !>
       !>     N        is the index of the table whose name is desired.
@@ -30836,6 +31105,9 @@ contains
       end associate
       end subroutine ektnam
 
+      !> Return the number of distinct columns in a specified, currently
+      !> loaded table.
+      !>
       !>## Detailed Input
       !>
       !>     TABLE    is the name of a currently loaded table. Case
@@ -31247,6 +31519,9 @@ contains
       end associate
       end subroutine ekccnt
 
+      !> Return attribute information about a column belonging to a loaded
+      !> EK table, specifying the column by table and index.
+      !>
       !>## Detailed Input
       !>
       !>     TABLE    is the name of a loaded EK table. Case is not
@@ -31737,6 +32012,8 @@ contains
       end associate
       end subroutine ekcii
 
+      !> Search for EK events matching a specified set of constraints.
+      !>
       !>## Detailed Input
       !>
       !>     EQRYI,
@@ -32702,6 +32979,9 @@ contains
       end associate
       end subroutine eksrch
 
+      !> Return the number of elements in a specified column entry in
+      !> the current row.
+      !>
       !>## Detailed Input
       !>
       !>     SELIDX   is the SELECT clause index of the column to
@@ -33306,6 +33586,9 @@ contains
       end associate
       end subroutine eknelt
 
+      !> Return an element of an entry in a column of character
+      !> type in a specified row.
+      !>
       !>## Detailed Input
       !>
       !>     SELIDX   is the SELECT clause index of the column to
@@ -34121,6 +34404,9 @@ contains
       end associate
       end subroutine ekgc
 
+      !> Return an element of an entry in a column of double precision
+      !> or `time' type in a specified row.
+      !>
       !>## Detailed Input
       !>
       !>     SELIDX   is the SELECT clause index of the column to
@@ -35095,6 +35381,9 @@ contains
       end associate
       end subroutine ekgd
 
+      !> Return an element of an entry in a column of integer
+      !> type in a specified row.
+      !>
       !>## Detailed Input
       !>
       !>     SELIDX   is the SELECT clause index of the column to
@@ -35897,6 +36186,8 @@ contains
       end associate
       end subroutine ekgi
 
+      !> Delete a specified class 1 column entry from an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -36116,6 +36407,8 @@ contains
       return
       end subroutine zzekde01
 
+      !> Delete a specified class 2 column entry from an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -36336,6 +36629,8 @@ contains
       return
       end subroutine zzekde02
 
+      !> Delete a specified class 3 column entry from an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -36609,6 +36904,8 @@ contains
       return
       end subroutine zzekde03
 
+      !> Update a specified class 1 column entry in an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -36870,6 +37167,8 @@ contains
       return
       end subroutine zzekue01
 
+      !> Update a specified class 2 column entry in an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -37132,6 +37431,8 @@ contains
       return
       end subroutine zzekue02
 
+      !> Delete a specified record from a specified E-kernel segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of an EK open for write access.
@@ -37451,6 +37752,8 @@ contains
       return
       end subroutine ekdelr
 
+      !> Update a double precision column entry in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle attached to an EK open for
@@ -37719,6 +38022,8 @@ contains
       return
       end subroutine ekuced
 
+      !> Update an integer column entry in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle attached to an EK open for
@@ -37983,6 +38288,8 @@ contains
       return
       end subroutine ekucei
 
+      !> Get data for a single star from a SPICE type 1 star catalog.
+      !>
       !>## Detailed Input
       !>
       !>     INDEX    is the index of the star in the list of stars
@@ -38229,6 +38536,9 @@ contains
       return
       end subroutine stcg01
 
+      !> Load SPICE type 1 star catalog and return the catalog's
+      !> table name.
+      !>
       !>## Detailed Input
       !>
       !>     CATFNM   is the name of the catalog file.
@@ -38394,13 +38704,11 @@ contains
       return
       end subroutine stcl01
 
-      !>## Abstract
+      !> Check and resolve a specified column name in an encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Check and resolve a specified column name in an encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -38748,15 +39056,13 @@ contains
       return
       end subroutine zzekcchk
 
-      !>## Abstract
+      !> Given an encoded query, parse the name of a column appearing in
+      !> that query, returning full particulars concerning the column and
+      !> its parent table.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Given an encoded query, parse the name of a column appearing in
-      !>     that query, returning full particulars concerning the column and
-      !>     its parent table.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -39167,13 +39473,11 @@ contains
       return
       end subroutine zzekpcol
 
-      !>## Abstract
+      !> Semantically check an encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Semantically check an encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -39623,13 +39927,11 @@ contains
       end associate
       end subroutine zzeksemc
 
-      !>## Abstract
+      !> Resolve time values in an encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Resolve time values in an encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -39901,6 +40203,8 @@ contains
       return
       end subroutine zzektres
 
+      !> Update a specified class 3 column entry in an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -40022,6 +40326,8 @@ contains
       return
       end subroutine zzekue03
 
+      !> Update a character column entry in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle attached to an EK open for
@@ -40525,14 +40831,12 @@ contains
       return
       end subroutine ekucec
 
-      !>## Abstract
+      !> Resolve and semantically check table names, aliases, and column
+      !> names in an encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Resolve and semantically check table names, aliases, and column
-      !>     names in an encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -40929,6 +41233,8 @@ contains
 
       end subroutine zzeknres
 
+      !> Find E-kernel data that satisfy a set of constraints.
+      !>
       !>## Detailed Input
       !>
       !>     QUERY    is a character string that specifies a set of EK
@@ -41674,6 +41980,8 @@ contains
       return
       end subroutine ekfind
 
+      !> Convert an EK query to encoded form.
+      !>
       !>## Detailed Input
       !>
       !>     QUERY          is an EK query, starting after the FROM keyword.
@@ -41856,6 +42164,9 @@ contains
       return
       end subroutine zzekencd
 
+      !> Parse the SELECT clause of an EK query, returning full particulars
+      !> concerning each selected item.
+      !>
       !>## Detailed Input
       !>
       !>     QUERY    is a character string containing an EK query.
@@ -42447,6 +42758,9 @@ contains
       return
       end subroutine ekpsel
 
+      !> Search through a type 1 star catalog and return the number of
+      !> stars within a specified RA - DEC rectangle.
+      !>
       !>## Detailed Input
       !>
       !>     CATNAM   is name of the catalog data table. This name is

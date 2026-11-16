@@ -1297,6 +1297,11 @@ submodule (pepper_instance_module) pepper_spk_api
 
 contains
 
+      !> Fetch from the references partition of a generic segment
+      !> the double precision numbers from FIRST to LAST. The
+      !> segment is identified by a DAF file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF file opened for reading
@@ -1539,6 +1544,9 @@ contains
 
       end subroutine sgfref
 
+      !> Begin writing a generic segment that will contain fixed size data
+      !> packets.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF file opened with write access.
@@ -1935,6 +1943,9 @@ contains
       end associate
       end subroutine sgbwfs
 
+      !> Begin writing a generic segment that will contain variable size
+      !> data packets.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF file opened with write access.
@@ -2312,6 +2323,9 @@ contains
       end associate
       end subroutine sgbwvs
 
+      !> Write one or more fixed size data packets to the generic segment
+      !> currently being written to the DAF file associated with HANDLE.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF file opened with write access.
@@ -2780,6 +2794,10 @@ contains
       end associate
       end subroutine sgwfpk
 
+      !> Write one or more variable size data packets to the generic
+      !> segment currently being written to the DAF file associated with
+      !> HANDLE.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF file opened with write access.
@@ -3317,6 +3335,8 @@ contains
       end associate
       end subroutine sgwvpk
 
+      !> End the generic segment in the DAF file associated with HANDLE.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF file opened with write access.
@@ -3851,6 +3871,9 @@ contains
       end associate
       end subroutine sgwes
 
+      !> Find the coverage window for a specified ephemeris object in a
+      !> specified SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     SPKFNM   is the name of an SPK file.
@@ -4382,6 +4405,13 @@ contains
       end do
       end subroutine spkcov
 
+      !> The coverage of an object in an SPK file (PEPPER; [[spkcov]]
+      !> without a window cell).
+      !>
+      !> The result is a window as an array: each column an interval
+      !> [start, stop] (TDB seconds past J2000), sorted and disjoint
+      !> ([[pepper_windows]]). The errors are those of [[spkcov]],
+      !> without SPICE(WINDOWEXCESS).
       module subroutine spk_coverage ( ctx, file, body, intervals )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -4528,6 +4558,9 @@ contains
       return
       end subroutine spk_coverage
 
+      !> Compute the geometric state (position and velocity) of a target
+      !> body relative to an observing body.
+      !>
       !>## Detailed Input
       !>
       !>     TARG     is the standard NAIF ID code for a target body.
@@ -5509,6 +5542,9 @@ contains
       end associate
       end subroutine spkgeo
 
+      !> Compute the geometric position of a target body relative to an
+      !> observing body.
+      !>
       !>## Detailed Input
       !>
       !>     TARG     is the standard NAIF ID code for a target body.
@@ -6368,6 +6404,8 @@ contains
       end associate
       end subroutine spkgps
 
+      !> Find the set of ID codes of all objects in a specified SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     SPKFNM   is the name of an SPK file.
@@ -6708,6 +6746,8 @@ contains
       end do
       end subroutine spkobj
 
+      !> The objects of an SPK file (PEPPER; [[spkobj]] without a set
+      !> cell): their ID codes, sorted, without duplicates.
       module subroutine spk_objects ( ctx, file, ids )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: append_id, sort_unique
@@ -6853,6 +6893,9 @@ contains
       return
       end subroutine spk_objects
 
+      !> Perform routine error checks and if all check pass, pack the
+      !> descriptor for an SPK segment
+      !>
       !>## Detailed Input
       !>
       !>     BODY     is the NAIF ID code for the body of the segment.
@@ -7077,6 +7120,9 @@ contains
 
       end subroutine spkpds
 
+      !> Extract a subset of the data in a SPK segment of type 1
+      !> into a new segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -7276,6 +7322,9 @@ contains
       return
       end subroutine spks01
 
+      !> Extract a subset of the data in a SPK segment of type 2
+      !> into a new segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -7463,6 +7512,9 @@ contains
       return
       end subroutine spks02
 
+      !> Extract a subset of the data in a SPK segment of type 3 (Chebyshev
+      !> polynomials, position and velocity) into a new segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -7653,6 +7705,9 @@ contains
       return
       end subroutine spks03
 
+      !> Extract a subset of the data in an SPK segment of type 5
+      !> into a new segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -7867,6 +7922,9 @@ contains
       return
       end subroutine spks05
 
+      !> Extract a subset of the data in an SPK segment of type 8
+      !> into a new segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -8102,6 +8160,9 @@ contains
       return
       end subroutine spks08
 
+      !> Extract a subset of the data in an SPK segment of type 9
+      !> into a new segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -8360,6 +8421,9 @@ contains
       return
       end subroutine spks09
 
+      !> Extract a subset of the data in an SPK segment of type 15
+      !> into a new segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -8493,6 +8557,9 @@ contains
       return
       end subroutine spks15
 
+      !> Extract a subset of the data in an SPK segment of type 17
+      !> into a new segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -8626,6 +8693,9 @@ contains
       return
       end subroutine spks17
 
+      !> Extract a subset of the data in an SPK segment of type 18
+      !> into a new segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -8928,6 +8998,9 @@ contains
       return
       end subroutine spks18
 
+      !> Extract a subset of the data in an SPK segment of type 19
+      !> into a new segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -10535,6 +10608,9 @@ contains
       end associate
       end subroutine spks19
 
+      !> Extract a subset of the data in a SPK segment of type 20
+      !> into a new segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -10728,6 +10804,9 @@ contains
       return
       end subroutine spks20
 
+      !> Extract a subset of the data in a SPK segment of type 21
+      !> into a new segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -10936,6 +11015,8 @@ contains
       return
       end subroutine spks21
 
+      !> Unpack the contents of an SPK segment descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     DESCR    is an SPK segment descriptor.
@@ -11086,6 +11167,9 @@ contains
 
       end subroutine spkuds
 
+      !> Correct a state transformation matrix for the rate of change of
+      !> light time.
+      !>
       !>## Detailed Input
       !>
       !>     XMIT           is a logical flag indicating the sense of
@@ -11461,14 +11545,12 @@ contains
 
       end subroutine zzcorsxf
 
-      !>## Abstract
+      !> Compute target state relative to its center of motion at
+      !> a specified time, in a specified reference frame.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Compute target state relative to its center of motion at
-      !>     a specified time, in a specified reference frame.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -11629,14 +11711,12 @@ contains
       end associate
       end subroutine zzcvxsta
 
-      !>## Abstract
+      !> Save an object's state and the center, time, and frame associated
+      !> with the state.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Save an object's state and the center, time, and frame associated
-      !>     with the state.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -11735,6 +11815,8 @@ contains
       end associate
       end subroutine zzcvssta
 
+      !> Add data to a type 14 SPK segment associated with HANDLE.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -12213,6 +12295,9 @@ contains
 
       end subroutine spk14a
 
+      !> Begin a type 14 SPK segment in the SPK file associated with
+      !> HANDLE.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -12600,6 +12685,9 @@ contains
 
       end subroutine spk14b
 
+      !> End the type 14 SPK segment currently being written to the SPK
+      !> file associated with HANDLE.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -12889,6 +12977,9 @@ contains
 
       end subroutine spk14e
 
+      !> Return the position of a target body relative to an observer,
+      !> optionally corrected for light time and stellar aberration.
+      !>
       !>## Detailed Input
       !>
       !>     TARG     is the NAIF ID code for a target body. The target
@@ -13630,6 +13721,10 @@ contains
       end associate
       end subroutine spkapo
 
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time,
+      !> expressed relative to an inertial reference frame.
+      !>
       !>## Detailed Input
       !>
       !>     TARG     is the NAIF ID code for a target body. The target
@@ -14380,6 +14475,9 @@ contains
       end associate
       end subroutine spkltc
 
+      !> Extract a subset of the data in a type 10 SPK segment into a new
+      !> type 10 segment.
+      !>
       !>## Detailed Input
       !>
       !>     SRCHAN   is the handle of the SPK file containing the source
@@ -14590,6 +14688,9 @@ contains
 
       end subroutine spks10
 
+      !> Extract a subset of the data in an SPK segment of type 12
+      !> into a new segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -14709,6 +14810,9 @@ contains
       return
       end subroutine spks12
 
+      !> Extract a subset of the data in an SPK segment of type 13
+      !> into a new segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -14828,6 +14932,9 @@ contains
       return
       end subroutine spks13
 
+      !> Return the state (position and velocity) of a target body
+      !> relative to the solar system barycenter.
+      !>
       !>## Detailed Input
       !>
       !>     TARG     is the standard NAIF ID code for a target body.
@@ -14984,15 +15091,13 @@ contains
       return
       end subroutine spkssb
 
-      !>## Abstract
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
+      !> routine [[spkaps]]. This routine is supported for purposes of
+      !> backward compatibility only.
       !>
-      !>     Deprecated: This routine has been superseded by the SPICELIB
-      !>     routine SPKAPS. This routine is supported for purposes of
-      !>     backward compatibility only.
-      !>
-      !>     Return the state (position and velocity) of a target body
-      !>     relative to an observer, optionally corrected for light time and
-      !>     stellar aberration.
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time and
+      !> stellar aberration.
       !>
       !>## Detailed Input
       !>
@@ -15836,19 +15941,17 @@ contains
       end associate
       end subroutine spkapp
 
-      !>## Abstract
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer specified by its state and
+      !> acceleration relative to the solar system barycenter. The
+      !> returned state may be optionally corrected for light time
+      !> and stellar aberration. All input and output vectors are
+      !> expressed relative to an inertial reference frame.
       !>
-      !>     Return the state (position and velocity) of a target body
-      !>     relative to an observer specified by its state and
-      !>     acceleration relative to the solar system barycenter. The
-      !>     returned state may be optionally corrected for light time
-      !>     and stellar aberration. All input and output vectors are
-      !>     expressed relative to an inertial reference frame.
+      !> This routine supersedes SPKAPP.
       !>
-      !>     This routine supersedes SPKAPP.
-      !>
-      !>     SPICE users normally should call the high-level API routines
-      !>     SPKEZR or SPKEZ rather than this routine.
+      !> SPICE users normally should call the high-level API routines
+      !> SPKEZR or SPKEZ rather than this routine.
       !>
       !>## Detailed Input
       !>
@@ -16482,6 +16585,10 @@ contains
       end associate
       end subroutine spkaps
 
+      !> Return the position of a target body relative to an observing
+      !> body, optionally corrected for light time (planetary aberration)
+      !> and stellar aberration.
+      !>
       !>## Detailed Input
       !>
       !>     TARG     is the NAIF ID code for a target body. The target
@@ -17394,6 +17501,9 @@ contains
       end associate
       end subroutine spkezp
 
+      !> Extract a subset of the data in a type 14 SPK segment into a new
+      !> type 14 segment.
+      !>
       !>## Detailed Input
       !>
       !>     SRCHAN   is the handle of the SPK file containing the source
@@ -17598,17 +17708,15 @@ contains
 
       end subroutine spks14
 
-      !>## Abstract
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time,
+      !> expressed relative to an inertial reference frame. An input
+      !> subroutine provides the state of the target relative to its
+      !> center of motion.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the state (position and velocity) of a target body
-      !>     relative to an observer, optionally corrected for light time,
-      !>     expressed relative to an inertial reference frame. An input
-      !>     subroutine provides the state of the target relative to its
-      !>     center of motion.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -18198,6 +18306,11 @@ contains
       end associate
       end subroutine zzspkflt
 
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time
+      !> and stellar aberration, expressed relative to an inertial
+      !> reference frame.
+      !>
       !>## Detailed Input
       !>
       !>     TARG     is the NAIF ID code for a target body. The target
@@ -18750,6 +18863,10 @@ contains
       end associate
       end subroutine spkacs
 
+      !> Return the position of a target body relative to an observing
+      !> body, optionally corrected for light time (planetary aberration)
+      !> and stellar aberration.
+      !>
       !>## Detailed Input
       !>
       !>     TARG     is the name of a target body. Optionally, you may
@@ -19247,6 +19364,9 @@ contains
       end associate
       end subroutine spkpos
 
+      !> Extract a subset of the data in an SPK segment into a
+      !> separate segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -19577,17 +19697,15 @@ contains
       return
       end subroutine spksub
 
-      !>## Abstract
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time and
+      !> stellar aberration, expressed relative to an inertial reference
+      !> frame. An input subroutine provides the state of the observer
+      !> relative to its center of motion.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the state (position and velocity) of a target body
-      !>     relative to an observer, optionally corrected for light time and
-      !>     stellar aberration, expressed relative to an inertial reference
-      !>     frame. An input subroutine provides the state of the observer
-      !>     relative to its center of motion.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -20007,19 +20125,17 @@ contains
       end associate
       end subroutine zzspkfao
 
-      !>## Abstract
+      !> Given the state and acceleration of an observer relative to the
+      !> solar system barycenter, return the state (position and velocity)
+      !> of a target body relative to the observer, optionally corrected
+      !> for light time and stellar aberration. All input and output
+      !> vectors are expressed relative to an inertial reference frame. An
+      !> input subroutine provides the state of the target relative to its
+      !> center of motion.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Given the state and acceleration of an observer relative to the
-      !>     solar system barycenter, return the state (position and velocity)
-      !>     of a target body relative to the observer, optionally corrected
-      !>     for light time and stellar aberration. All input and output
-      !>     vectors are expressed relative to an inertial reference frame. An
-      !>     input subroutine provides the state of the target relative to its
-      !>     center of motion.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -20445,6 +20561,10 @@ contains
       end associate
       end subroutine zzspkfap
 
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observing body, optionally corrected for light
+      !> time (planetary aberration) and stellar aberration.
+      !>
       !>## Detailed Input
       !>
       !>     TARG     is the NAIF ID code for a target body. The target
@@ -21642,17 +21762,15 @@ contains
       end associate
       end subroutine spkez
 
-      !>## Abstract
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observer, optionally corrected for light time and
+      !> stellar aberration, expressed relative to an inertial reference
+      !> frame. An input subroutine provides the state of the target
+      !> relative to its center of motion.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the state (position and velocity) of a target body
-      !>     relative to an observer, optionally corrected for light time and
-      !>     stellar aberration, expressed relative to an inertial reference
-      !>     frame. An input subroutine provides the state of the target
-      !>     relative to its center of motion.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -22058,17 +22176,15 @@ contains
       end associate
       end subroutine zzspkfat
 
-      !>## Abstract
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observing body, optionally corrected for light
+      !> time (planetary aberration) and stellar aberration. An input
+      !> subroutine provides the state of the observer relative to its
+      !> center of motion.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Return the state (position and velocity) of a target body
-      !>     relative to an observing body, optionally corrected for light
-      !>     time (planetary aberration) and stellar aberration. An input
-      !>     subroutine provides the state of the observer relative to its
-      !>     center of motion.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -22980,6 +23096,11 @@ contains
       end associate
       end subroutine zzspkfzo
 
+      !> Return the state of a specified target relative to an "observer,"
+      !> where the observer has constant velocity in a specified reference
+      !> frame. The observer's state is provided by the calling program
+      !> rather than by loaded SPK files.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may
@@ -24562,6 +24683,10 @@ contains
       end associate
       end subroutine spkcvo
 
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observing body, optionally corrected for light
+      !> time (planetary aberration) and stellar aberration.
+      !>
       !>## Detailed Input
       !>
       !>     TARG     is the name of a target body. Optionally, you may
@@ -25115,17 +25240,15 @@ contains
       end associate
       end subroutine spkezr
 
-      !>## Abstract
+      !> Return the state (position and velocity) of a target body
+      !> relative to an observing body, optionally corrected for light
+      !> time (planetary aberration) and stellar aberration. An input
+      !> subroutine provides the state of the target relative to its
+      !> center of motion.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the state (position and velocity) of a target body
-      !>     relative to an observing body, optionally corrected for light
-      !>     time (planetary aberration) and stellar aberration. An input
-      !>     subroutine provides the state of the target relative to its
-      !>     center of motion.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -26025,6 +26148,11 @@ contains
       end associate
       end subroutine zzspkfzt
 
+      !> Return the state of a specified target relative to an "observer,"
+      !> where the observer has constant position in a specified reference
+      !> frame. The observer's position is provided by the calling program
+      !> rather than by loaded SPK files.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may
@@ -27307,6 +27435,11 @@ contains
       return
       end subroutine spkcpo
 
+      !> Return the state, relative to a specified observer, of a target
+      !> having constant velocity in a specified reference frame. The
+      !> target's state is provided by the calling program rather than by
+      !> loaded SPK files.
+      !>
       !>## Detailed Input
       !>
       !>     TRGSTA   is the geometric state of a target moving at constant
@@ -28587,6 +28720,11 @@ contains
       end associate
       end subroutine spkcvt
 
+      !> Return the state, relative to a specified observer, of a target
+      !> having constant position in a specified reference frame. The
+      !> target's position is provided by the calling program rather than
+      !> by loaded SPK files.
+      !>
       !>## Detailed Input
       !>
       !>     TRGPOS   is the fixed (constant) geometric position of a

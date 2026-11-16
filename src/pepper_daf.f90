@@ -2859,6 +2859,9 @@ submodule (pepper_instance_module) pepper_daf
 
 contains
 
+      !> Read N encoded integers from a text file, decoding them into
+      !> their equivalent integers.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for a previously opened text
@@ -3084,6 +3087,10 @@ contains
       return
       end subroutine rdenci
 
+      !> Convert a string representing a double precision number in a
+      !> base 16 "scientific notation" into its equivalent double
+      !> precision number.
+      !>
       !>## Detailed Input
       !>
       !>     STRING   is a character string containing a base 16 "scientific
@@ -3824,6 +3831,9 @@ contains
       end associate
       end subroutine hx2dp
 
+      !> Read N encoded d.p. numbers from a text file, decoding them
+      !> into their equivalent d.p. numbers.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for a previously opened text
@@ -4063,6 +4073,8 @@ contains
       return
       end subroutine rdencd
 
+      !> Open a new text file for subsequent write access.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of the new text file to be opened.
@@ -4365,6 +4377,8 @@ contains
       return
       end subroutine txtopn
 
+      !> Open a text file for read access.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of the text file to be opened.
@@ -4695,6 +4709,8 @@ contains
       return
       end subroutine txtopr
 
+      !> Encode and write integers to a text file.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for a previously opened text
@@ -4976,6 +4992,8 @@ contains
       return
       end subroutine wrenci
 
+      !> Convert an integer to an equivalent signed hexadecimal string.
+      !>
       !>## Detailed Input
       !>
       !>     NUMBER   is the integer to be converted.
@@ -5252,6 +5270,9 @@ contains
       return
       end subroutine int2hx
 
+      !> Convert a double precision number to an equivalent character
+      !> string using a base 16 "scientific notation."
+      !>
       !>## Detailed Input
       !>
       !>     NUMBER   is the double precision number to be converted to a
@@ -5835,6 +5856,8 @@ contains
       return
       end subroutine dp2hx
 
+      !> Encode and write d.p. numbers to a text file.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for a previously opened text
@@ -6123,13 +6146,11 @@ contains
       return
       end subroutine wrencd
 
-      !>## Abstract
+      !> Read the contents of the file record of a DAF.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read the contents of the file record of a DAF.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6478,6 +6499,8 @@ contains
       end associate
       end subroutine zzdafgfr
 
+      !> Write the file record to a new DAF file.
+      !>
       !>## Detailed Input
       !>
       !>     LUN        is a logical unit number of a DAF whose first record is
@@ -6734,13 +6757,11 @@ contains
       end associate
       end subroutine zzdafnfr
 
-      !>## Abstract
+      !> Read a data record from a DAF.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read a data record from a DAF.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7002,13 +7023,11 @@ contains
       end associate
       end subroutine zzdafgdr
 
-      !>## Abstract
+      !> Read a summary/descriptor record from a DAF.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read a summary/descriptor record from a DAF.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7422,6 +7441,8 @@ contains
       end associate
       end subroutine zzdafgsr
 
+      !> Open a DAF for subsequent read requests.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the file name of a DAF to be opened for read
@@ -7885,6 +7906,8 @@ contains
       end associate
       end subroutine dafopr
 
+      !> Open a DAF for subsequent write requests.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a DAF to be opened with write access.
@@ -8348,6 +8371,8 @@ contains
       end associate
       end subroutine dafopw
 
+      !> Open a new DAF for subsequent write requests.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a new DAF to be created (and
@@ -8908,13 +8933,11 @@ contains
       end associate
       end subroutine dafonw
 
-      !>## Abstract
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
+      !> routine [[dafonw]]. NAIF supports this routine only to provide
+      !> backward compatibility.
       !>
-      !>     Deprecated: This routine has been superseded by the SPICELIB
-      !>     routine DAFONW. NAIF supports this routine only to provide
-      !>     backward compatibility.
-      !>
-      !>     Open a new DAF for subsequent write requests.
+      !> Open a new DAF for subsequent write requests.
       !>
       !>## Detailed Input
       !>
@@ -9391,6 +9414,8 @@ contains
       end associate
       end subroutine dafopn
 
+      !> Close the DAF associated with a given handle.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a previously opened DAF file.
@@ -9756,6 +9781,8 @@ contains
       end associate
       end subroutine dafcls
 
+      !> Return the summary format associated with a handle.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a previously opened
@@ -10021,6 +10048,8 @@ contains
       end associate
       end subroutine dafhsf
 
+      !> Return the logical unit associated with a handle.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a previously opened
@@ -10216,6 +10245,8 @@ contains
       return
       end subroutine dafhlu
 
+      !> Return the handle associated with a logical unit.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the logical unit to which a DAF has been
@@ -10398,6 +10429,8 @@ contains
       return
       end subroutine dafluh
 
+      !> Return the name of the file associated with a handle.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a previously opened
@@ -10583,6 +10616,8 @@ contains
       return
       end subroutine dafhfn
 
+      !> Return handle associated with a file name.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a previously opened DAF file.
@@ -10815,6 +10850,9 @@ contains
       return
       end subroutine daffnh
 
+      !> Return a SPICE set containing the handles of all currently
+      !> open DAFS.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -10989,6 +11027,9 @@ contains
       end associate
       end subroutine dafhof
 
+      !> Signal an error if a DAF file handle does not designate a DAF
+      !> that is open for a specified type of access.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a DAF handle to validate. For HANDLE to be
@@ -11283,6 +11324,9 @@ contains
       end associate
       end subroutine dafsih
 
+      !> Convert a record/word pair to its equivalent address within
+      !> a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     RECNO,
@@ -11382,6 +11426,9 @@ contains
       return
       end subroutine dafrwa
 
+      !> Convert an address within a DAF to its equivalent
+      !> record/word representation.
+      !>
       !>## Detailed Input
       !>
       !>     ADDR     is an arbitrary address within a DAF.
@@ -11480,6 +11527,9 @@ contains
       return
       end subroutine dafarw
 
+      !> Pack (assemble) an array summary from its double precision and
+      !> integer components.
+      !>
       !>## Detailed Input
       !>
       !>     ND       is the number of double precision components in
@@ -11747,6 +11797,9 @@ contains
       return
       end subroutine dafps
 
+      !> Unpack an array summary into its double precision and integer
+      !> components.
+      !>
       !>## Detailed Input
       !>
       !>     SUM      is an array summary. This identifies the contents and
@@ -12007,6 +12060,9 @@ contains
       return
       end subroutine dafus
 
+      !> Read a portion of the contents of a double precision record in a
+      !> DAF file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF.
@@ -12257,6 +12313,8 @@ contains
       end associate
       end subroutine dafgdr
 
+      !> Read a portion of the contents of a summary record in a DAF file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF.
@@ -12522,12 +12580,10 @@ contains
       end associate
       end subroutine dafgsr
 
-      !>## Abstract
-      !>
-      !>     Read a portion of the contents of a double precision record in a
-      !>     DAF file.
-      !>     Obsolete: This routine has been superseded by DAFGDR, and it is
-      !>     supported for purposes of backwards compatibility only.
+      !> Read a portion of the contents of a double precision record in a
+      !> DAF file.
+      !> **Obsolete:** This routine has been superseded by [[dafgdr]], and it is
+      !> supported for purposes of backwards compatibility only.
       !>
       !>## Detailed Input
       !>
@@ -12908,6 +12964,9 @@ contains
       end associate
       end subroutine dafrdr
 
+      !> Write or rewrite the contents of a double precision record in
+      !> a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF.
@@ -13117,6 +13176,8 @@ contains
       end associate
       end subroutine dafwdr
 
+      !> Return the number of reads and requests fielded by [[dafrdr]].
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -13247,6 +13308,9 @@ contains
       end associate
       end subroutine dafnrr
 
+      !> Read the double precision data bounded by two addresses within
+      !> a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF.
@@ -13550,14 +13614,12 @@ contains
       return
       end subroutine dafgda
 
-      !>## Abstract
+      !> Convert double precision values from one binary file format
+      !> to another.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Convert double precision values from one binary file format
-      !>     to another.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -14502,14 +14564,12 @@ contains
       end associate
       end subroutine zzxlated
 
-      !>## Abstract
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
+      !> routines [[dafgda]] and [[dafgsr]]. This routine is supported for purposes
+      !> of backward compatibility only.
       !>
-      !>     Deprecated: This routine has been superseded by the SPICELIB
-      !>     routines DAFGDA and DAFGSR. This routine is supported for purposes
-      !>     of backward compatibility only.
-      !>
-      !>     Read the double precision data bounded by two addresses within
-      !>     a DAF.
+      !> Read the double precision data bounded by two addresses within
+      !> a DAF.
       !>
       !>## Detailed Input
       !>
@@ -14771,6 +14831,8 @@ contains
       return
       end subroutine dafrda
 
+      !> Read the contents of the file record of a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle assigned to a DAF file opened for
@@ -14991,6 +15053,8 @@ contains
       return
       end subroutine dafrfr
 
+      !> Write or rewrite the contents of the file record of a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF file opened for
@@ -15328,6 +15392,9 @@ contains
       return
       end subroutine dafwfr
 
+      !> Write or rewrite the double precision data bounded by two
+      !> addresses within a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF.
@@ -15525,6 +15592,9 @@ contains
       end associate
       end subroutine dafwda
 
+      !> Add a specified number of reserved records to a Double Precision
+      !> Array File (DAF).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF file that has
@@ -15930,6 +16000,8 @@ contains
       return
       end subroutine dafarr
 
+      !> Read the contents of a character record from a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF.
@@ -16119,6 +16191,9 @@ contains
       return
       end subroutine dafrcr
 
+      !> Write or rewrite the contents of a character record to
+      !> a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF.
@@ -16278,6 +16353,8 @@ contains
       return
       end subroutine dafwcr
 
+      !> Reorder the arrays in a DAF according to a given order vector.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF that has been opened for
@@ -16595,6 +16672,9 @@ contains
       return
       end subroutine dafra
 
+      !> Remove a specified number of reserved records from a Double
+      !> Precision Array File (DAF).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF that has been
@@ -16912,6 +16992,10 @@ contains
       return
       end subroutine dafrrr
 
+      !> Add comments from a buffer of character strings to the comment
+      !> area of a binary DAF file, appending them to any comments which
+      !> are already present in the file's comment area.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a binary DAF which has been opened
@@ -17696,6 +17780,9 @@ contains
       return
       end subroutine dafac
 
+      !> Delete the entire comment area of a previously opened binary
+      !> DAF attached to HANDLE.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a binary DAF that is to have its entire
@@ -17960,6 +18047,8 @@ contains
       return
       end subroutine dafdc
 
+      !> Extract comments from the comment area of a binary DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a binary DAF which has been opened
@@ -18966,7 +19055,11 @@ contains
       end associate
       end subroutine dafec
 
-      !> All the comment lines of a DAF, each of any length (PEPPER).
+      !> All the comment lines of a DAF, each of any length (PEPPER; [[dafec]]
+      !> without a buffer). It reads the comment area directly: it does not
+      !> change the position of [[dafec]] in the file.
+      !>
+      !> The errors are those of [[dafec]], without SPICE(COMMENTTOOLONG).
       module subroutine daf_comments ( ctx, handle, lines )
       use pepper_kinds, only: ip
       implicit none
@@ -19030,7 +19123,9 @@ contains
       call split_comment_lines ( text(1:eoc-1), lines )
       end subroutine daf_comments
 
-      !> Split a comment area's text into lines (PEPPER).
+      !> Split a comment area's text into lines at its end-of-line marks
+      !> (NUL) (PEPPER; used by [[daf_comments]] and [[das_comments]]). Text
+      !> after the last mark is a line too.
       pure module subroutine split_comment_lines ( text, lines )
       use pepper_kinds, only: ip
       implicit none
@@ -19060,6 +19155,8 @@ contains
       end do
       end subroutine split_comment_lines
 
+      !> Begin a new array in a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF opened for write access
@@ -19519,6 +19616,9 @@ contains
       end associate
       end subroutine dafbna
 
+      !> Add one or more double precision words of data to the newest
+      !> array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     DATA     is an arbitrary number of double precision words to
@@ -19686,6 +19786,8 @@ contains
       end associate
       end subroutine dafada
 
+      !> End the addition of data to the newest array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -19990,6 +20092,9 @@ contains
       end associate
       end subroutine dafena
 
+      !> Select a DAF that already has a new array in progress as the
+      !> one to continue adding data to.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF that is open for write
@@ -20211,6 +20316,8 @@ contains
       end associate
       end subroutine dafcad
 
+      !> Begin a forward search for arrays in a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF on which a forward
@@ -20625,6 +20732,8 @@ contains
       end associate
       end subroutine dafbfs
 
+      !> Find the next (forward) array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -21001,6 +21110,8 @@ contains
       end associate
       end subroutine daffna
 
+      !> Begin a backward search for arrays in a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF on which a backward
@@ -21409,6 +21520,8 @@ contains
       end associate
       end subroutine dafbbs
 
+      !> Find the previous (backward) array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -21799,6 +21912,9 @@ contains
       end associate
       end subroutine daffpa
 
+      !> Return (get) the summary for the current array in the current
+      !> DAF.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -22128,6 +22244,8 @@ contains
       end associate
       end subroutine dafgs
 
+      !> Return (get) the name for the current array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -22349,6 +22467,8 @@ contains
       end associate
       end subroutine dafgn
 
+      !> Return (get) the handle of the DAF currently being searched.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -22551,6 +22671,8 @@ contains
       end associate
       end subroutine dafgh
 
+      !> Change the summary for the current array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     SUM      is the new summary for the current array. This
@@ -22789,6 +22911,8 @@ contains
       end associate
       end subroutine dafrs
 
+      !> Replace the name for the current array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the new name for the current array.
@@ -23017,6 +23141,8 @@ contains
       end associate
       end subroutine dafrn
 
+      !> Write a new summary for the current array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     SUM      is the new summary for the current array. This
@@ -23231,6 +23357,9 @@ contains
       end associate
       end subroutine dafws
 
+      !> Select a DAF that already has a search in progress as the
+      !> one to continue searching.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF in which either a forward
@@ -23408,6 +23537,9 @@ contains
       end associate
       end subroutine dafcs
 
+      !> Convert the contents of a binary DAF file to an equivalent DAF
+      !> transfer file.
+      !>
       !>## Detailed Input
       !>
       !>     BINFIL   is the name of a binary DAF file which is to be converted
@@ -24119,13 +24251,11 @@ contains
       return
       end subroutine dafbt
 
-      !>## Abstract
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
+      !> routine [[daftb]]. NAIF supports this routine only to provide backward
+      !> compatibility.
       !>
-      !>     Deprecated: This routine has been superseded by the SPICELIB
-      !>     routine DAFTB. NAIF supports this routine only to provide backward
-      !>     compatibility.
-      !>
-      !>     Convert an ASCII (text) DAF to an equivalent binary DAF.
+      !> Convert an ASCII (text) DAF to an equivalent binary DAF.
       !>
       !>## Detailed Input
       !>
@@ -24308,13 +24438,11 @@ contains
       return
       end subroutine dafa2b
 
-      !>## Abstract
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
+      !> routine [[dafbt]]. NAIF supports this routine only to provide backward
+      !> compatibility.
       !>
-      !>     Deprecated: This routine has been superseded by the SPICELIB
-      !>     routine DAFBT. NAIF supports this routine only to provide backward
-      !>     compatibility.
-      !>
-      !>     Convert a binary DAF to an equivalent ASCII (text) DAF.
+      !> Convert a binary DAF to an equivalent ASCII (text) DAF.
       !>
       !>## Detailed Input
       !>
@@ -24490,14 +24618,12 @@ contains
       return
       end subroutine dafb2a
 
-      !>## Abstract
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
+      !> routine [[dafbt]]. NAIF supports this routine only to provide backward
+      !> compatibility.
       !>
-      !>     Deprecated: This routine has been superseded by the SPICELIB
-      !>     routine DAFBT. NAIF supports this routine only to provide backward
-      !>     compatibility.
-      !>
-      !>     Write the contents of a binary DAF to a text file opened by
-      !>     the calling program.
+      !> Write the contents of a binary DAF to a text file opened by
+      !> the calling program.
       !>
       !>## Detailed Input
       !>
@@ -25070,14 +25196,12 @@ contains
       return
       end subroutine dafb2t
 
-      !>## Abstract
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
+      !> routine [[daftb]]. NAIF supports this routine only to provide backward
+      !> compatibility.
       !>
-      !>     Deprecated: This routine has been superseded by the SPICELIB
-      !>     routine DAFTB. NAIF supports this routine only to provide backward
-      !>     compatibility.
-      !>
-      !>     Reconstruct a binary DAF from a text file opened by
-      !>     the calling program.
+      !> Reconstruct a binary DAF from a text file opened by
+      !> the calling program.
       !>
       !>## Detailed Input
       !>
@@ -25706,6 +25830,9 @@ contains
       end subroutine read_doubles
       end subroutine daft2b
 
+      !> Convert the contents of an DAF transfer file into an equivalent
+      !> binary DAF file.
+      !>
       !>## Detailed Input
       !>
       !>     XFRLUN   is the Fortran logical unit number of a previously opened

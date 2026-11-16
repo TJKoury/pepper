@@ -2427,6 +2427,9 @@ submodule (pepper_instance_module) pepper_segments
 
 contains
 
+      !> Load an ephemeris file for use by the readers. Return that file's
+      !> handle, to be used by other SPK routines to refer to the file.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is a string containing the name of the file to be loaded.
@@ -2649,6 +2652,9 @@ contains
       return
       end subroutine spklef
 
+      !> Unload an ephemeris file so that it will no longer be searched by
+      !> the readers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle assigned to the file upon loading.
@@ -2836,6 +2842,11 @@ contains
       return
       end subroutine spkuef
 
+      !> Search through loaded SPK files to find the highest-priority
+      !> segment applicable to the body and time specified and buffer
+      !> searched segments in the process, to attempt to avoid re-reading
+      !> files.
+      !>
       !>## Detailed Input
       !>
       !>     BODY     is the NAIF integer code of an ephemeris object,
@@ -3104,6 +3115,10 @@ contains
       return
       end subroutine spksfs
 
+      !> Load a binary PCK file for use by the readers. Return the
+      !> handle of the loaded file which is used by other PCK routines to
+      !> refer to the file.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the character name of the file to be loaded.
@@ -3231,6 +3246,9 @@ contains
       return
       end subroutine pcklof
 
+      !> Unload a binary PCK file so that it will no longer be searched by
+      !> the readers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle assigned to the PCK file upon
@@ -3329,6 +3347,10 @@ contains
       return
       end subroutine pckuof
 
+      !> Search through loaded files to find the first segment applicable
+      !> to the body and time specified. Buffer searched segments in the
+      !> process, to attempt to avoid re-reading files.
+      !>
       !>## Detailed Input
       !>
       !>     BODY     is the NAIF integer code of an ephemeris object,
@@ -3500,6 +3522,10 @@ contains
       return
       end subroutine pcksfs
 
+      !> Load a CK pointing file for use by the CK readers. Return that
+      !> file's handle, to be used by other CK routines to refer to the
+      !> file.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a C-kernel file to be loaded.
@@ -3745,6 +3771,9 @@ contains
       return
       end subroutine cklpf
 
+      !> Unload a CK pointing file so that it will no longer be searched
+      !> by the readers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle assigned to the CK file upon
@@ -3923,6 +3952,9 @@ contains
       return
       end subroutine ckupf
 
+      !> Initiate search through loaded files to find segments applicable
+      !> to the spacecraft instrument and time specified.
+      !>
       !>## Detailed Input
       !>
       !>     INST     is the NAIF ID of an instrument.
@@ -4104,6 +4136,11 @@ contains
          end subroutine no_ck_files
       end subroutine ckbss
 
+      !> Search through loaded files to find a segment matching the
+      !> requested instrument, time, and need for angular velocity,
+      !> buffering segment descriptors, identifiers, and handles in the
+      !> process to minimize file reads.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -4460,6 +4497,8 @@ contains
       end associate
       end subroutine cksns
 
+      !> Determine whether or not any C-kernels are currently loaded.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -4593,6 +4632,10 @@ contains
       return
       end subroutine ckhave
 
+      !> Load a DSK shape file for use by the DSK readers.  Return that
+      !> file's handle, to be used by other DSK routines to refer to the
+      !> file.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME      is the name of a DSK file to be loaded.
@@ -4734,6 +4777,9 @@ contains
       return
       end subroutine zzdsklsf
 
+      !> Unload a DSK shape file so that it will no longer be searched
+      !> by the readers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE     Integer handle assigned to the file upon loading.
@@ -4827,6 +4873,9 @@ contains
       return
       end subroutine zzdskusf
 
+      !> Initiate search through loaded files to find segments
+      !> satisfying search criteria.
+      !>
       !>## Detailed Input
       !>
       !>     BODYID     is the integer ID code of the body for which a search
@@ -4935,6 +4984,11 @@ contains
       return
       end subroutine zzdskbss
 
+      !> Search through loaded files to find a segment matching the
+      !> requested body, time, and need for angular velocity.
+      !> Buffer segment descriptors, identifiers, and handles in the
+      !> process to minimize file reads.
+      !>
       !>## Detailed Input
       !>
       !>     CMPFUN
@@ -5122,6 +5176,10 @@ contains
       return
       end subroutine zzdsksns
 
+      !> Indicate to a calling routine whether any DSK load or unload
+      !> operations have occurred since the local state counter had
+      !> a particular, caller-supplied value.
+      !>
       !>## Detailed Input
       !>
       !>     USRCTR    is, on input, the value of a counter maintained by

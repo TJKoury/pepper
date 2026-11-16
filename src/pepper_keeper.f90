@@ -540,6 +540,9 @@ submodule (pepper_instance_module) pepper_keeper
 
 contains
 
+      !> Convert an integer to an equivalent written phrase.
+      !> For example, convert 121 to 'ONE HUNDRED TWENTY-ONE'.
+      !>
       !>## Detailed Input
       !>
       !>     N        is any integer (less than 10**12 in absolute value).
@@ -789,6 +792,9 @@ contains
       return
       end subroutine inttxt
 
+      !> Convert an integer to an equivalent written ordinal phrase.
+      !> For example, convert 121 to 'ONE HUNDRED TWENTY-FIRST'.
+      !>
       !>## Detailed Input
       !>
       !>     N        is an integer (less than 10**12 in absolute value).
@@ -974,6 +980,9 @@ contains
       return
       end subroutine intord
 
+      !> Replace a marker with the text representation of an ordinal
+      !> number.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is an arbitrary character string.
@@ -1306,6 +1315,10 @@ contains
       return
       end subroutine repmot
 
+      !> Retrieve the string starting at the FIDX element of the kernel
+      !> pool variable, where the string may be continued across several
+      !> components of the kernel pool variable.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is the name of a kernel pool variable for which
@@ -1708,6 +1721,10 @@ contains
       end subroutine get_part
       end subroutine sepool
 
+      !> Retrieve the Nth string from a kernel pool variable, where the
+      !> string may be continued across several components of the kernel
+      !> pool variable.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is the name of a kernel pool variable for which
@@ -2120,6 +2137,9 @@ contains
       end subroutine get_part
       end subroutine stpool
 
+      !> Return the latest version string of a given item such as the
+      !> Toolkit or a routine name.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is the item for which a version string is to be returned.
@@ -2357,6 +2377,11 @@ contains
       return
       end subroutine tkvrsn
 
+      !> Returns a string indicating the line terminators of an ASCII file
+      !> and, if requested, stops execution if the terminator does match
+      !> the one that is native to the platform on which the toolkit was
+      !> compiled.
+      !>
       !>## Detailed Input
       !>
       !>     FILE       the name of the ASCII file to scan for a line
@@ -2857,6 +2882,11 @@ contains
       return
       end subroutine zzascii
 
+      !> Determine whether a file exists.
+      !>
+      !> The function returns the value .TRUE. if the file exists, .FALSE.
+      !> otherwise.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of the file in question. This may be any
@@ -3091,14 +3121,19 @@ contains
       return
       end function exists
 
-      !>## Abstract
+      !> PEPPER: chooses the loader of FILE (the rules: [[spice_furnsh]]): a
+      !> registered kernel loader named by `loader`, before any check of the
+      !> file; else SPICE's binary kernels by their ID word; else a
+      !> registered loader by extension or `detect`; else the text readers.
+      !> A file a kernel loader reads is loaded as an SPK built in memory
+      !> (FILTYP 'SPK').
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Determine the architecture and type of a file and load
+      !> the file into the appropriate SPICE subsystem
       !>
-      !>     Determine the architecture and type of a file and load
-      !>     the file into the appropriate SPICE subsystem
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3566,6 +3601,21 @@ contains
 
       end subroutine zzldker
 
+      !> Load one or more SPICE kernels into a program. Lines of text
+      !> kernels and meta-kernels have at most 132 characters; a longer
+      !> line is cut without an error (see Restrictions).
+      !>
+      !> PEPPER: a file named `*.json` (in any case) is a JSON kernel (see
+      !> [[pepper_json]]), a text kernel or meta-kernel.
+      !>
+      !> PEPPER: kernel loaders ([[spice_add_loader]]) read other file
+      !> formats: `loader` names the one that reads FILE, overriding every
+      !> other choice, or is PEPPER for PEPPER's own loading (registered
+      !> loaders not asked); without it FURNSH chooses (SPICE's binary
+      !> kernels, a loader's extension, a loader's `detect`, the text
+      !> readers). The rules are in [[spice_furnsh]], the method programs
+      !> call.
+      !>
       !>## Detailed Input
       !>
       !>     FILE     is a SPICE kernel file. The file may be either binary
@@ -4514,6 +4564,9 @@ contains
          end subroutine get_file_name
       end subroutine furnsh
 
+      !> Return the number of kernels of a specified type that are
+      !> currently loaded via the FURNSH interface.
+      !>
       !>## Detailed Input
       !>
       !>     KIND     is a list of types of kernels to count when computing
@@ -4866,6 +4919,9 @@ contains
       end associate
       end subroutine ktotal
 
+      !> Return data for the nth kernel that is among a list of specified
+      !> kernel types.
+      !>
       !>## Detailed Input
       !>
       !>     WHICH    is the number of the kernel to fetch (matching the type
@@ -5311,6 +5367,8 @@ contains
       end associate
       end subroutine kdata
 
+      !> Return information about a specific kernel
+      !>
       !>## Detailed Input
       !>
       !>     FILE     is the name of a kernel file for which KEEPER
@@ -5662,7 +5720,8 @@ contains
       end function longest_kernel_name
 
       !> The data of the nth kernel of a kind loaded through FURNSH, with
-      !> file names of any length (PEPPER).
+      !> file names of any length (PEPPER; [[kdata]], which truncates to its
+      !> arguments' lengths).
       module subroutine kernel_data ( ctx, which, kind, file, filtyp, source, handle, found )
       use pepper_kinds, only: ip
       implicit none
@@ -5684,7 +5743,8 @@ contains
       end subroutine kernel_data
 
       !> The data of a kernel loaded through FURNSH, with file names of any
-      !> length (PEPPER).
+      !> length (PEPPER; [[kinfo]], which truncates to its arguments'
+      !> lengths).
       module subroutine kernel_info ( ctx, file, filtyp, source, handle, found )
       use pepper_kinds, only: ip
       implicit none
@@ -5701,6 +5761,10 @@ contains
       source = trim ( s )
       end subroutine kernel_info
 
+      !> Clear the KEEPER subsystem: unload all kernels, clear the kernel
+      !> pool, and re-initialize the subsystem. Existing watches on kernel
+      !> variables are retained.
+      !>
       !>## Detailed Input
       !>
       !>     None. This routine operates by side effects. See $Particulars
@@ -6007,6 +6071,8 @@ contains
       end associate
       end subroutine kclear
 
+      !> Unload a SPICE kernel.
+      !>
       !>## Detailed Input
       !>
       !>     FILE     is the name of a file to unload. This file

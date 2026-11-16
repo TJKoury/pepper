@@ -40,6 +40,8 @@ submodule (pepper_instance_module) pepper_writers
 
 contains
 
+      !> Close an open CK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the CK file that is to be closed.
@@ -377,6 +379,10 @@ contains
 
       end subroutine ckcls
 
+      !> Return a specified pointing instance from a CK type 01 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -714,6 +720,10 @@ contains
       return
       end subroutine ckgr01
 
+      !> Return a specified pointing instance from a CK type 03 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -1148,6 +1158,10 @@ contains
       return
       end subroutine ckgr03
 
+      !> Return a specified pointing record from a CK type 04 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -1462,6 +1476,10 @@ contains
 
       end subroutine ckgr04
 
+      !> Return a specified pointing instance from a CK type 05 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -1848,6 +1866,9 @@ contains
       return
       end subroutine ckgr05
 
+      !> Return a specified pointing record from a type 6 CK segment, given
+      !> the CK file's handle and the segment's descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -2544,6 +2565,10 @@ contains
       return
       end subroutine ckgr06
 
+      !> Return the mini-segment control parameters, mini-segment interval
+      !> bounds, and last epoch for a specified mini-segment in a type 6
+      !> CK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -3142,6 +3167,9 @@ contains
       return
       end subroutine ckmp06
 
+      !> Return the number of mini-segments in a type 6 CK segment, given
+      !> the handle of the type 6 CK file and the segment's descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -3607,6 +3635,10 @@ contains
       return
       end subroutine cknm06
 
+      !> Return the number of pointing instances in a CK type 01 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -3862,6 +3894,10 @@ contains
       return
       end subroutine cknr01
 
+      !> Return the number of pointing records in a CK type 02 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -4276,6 +4312,10 @@ contains
       return
       end subroutine cknr02
 
+      !> Return the number of pointing instances in a CK type 03 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -4628,6 +4668,10 @@ contains
       return
       end subroutine cknr03
 
+      !> Return the number of pointing instances in a CK type 05 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -4861,6 +4905,8 @@ contains
       return
       end subroutine cknr05
 
+      !> Open a new CK file, returning the handle of the opened file.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of the CK file to be opened.
@@ -5204,6 +5250,8 @@ contains
       return
       end subroutine ckopn
 
+      !> Add a type 1 segment to a C-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the CK file to which the segment will
@@ -6043,6 +6091,8 @@ contains
       return
       end subroutine ckw01
 
+      !> Write a type 2 segment to a C-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the CK file to which the segment will
@@ -6974,6 +7024,8 @@ contains
       return
       end subroutine ckw02
 
+      !> Add a type 3 segment to a C-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the CK file to which the segment will
@@ -8035,6 +8087,9 @@ contains
       return
       end subroutine ckw03
 
+      !> Begin a type CK04 segment in the DAF file associated with
+      !> HANDLE. See also [[ckw04a]] and [[ckw04e]].
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a CK file that has been
@@ -8389,6 +8444,9 @@ contains
 
       end subroutine ckw04b
 
+      !> End the type 04 CK segment currently being written to the DAF
+      !> file associated with HANDLE. See also [[ckw04b]] and [[ckw04e]].
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an CK file that has been
@@ -8666,6 +8724,8 @@ contains
 
       end subroutine ckw04e
 
+      !> Write a type 5 segment to a CK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a CK file that has been
@@ -9630,6 +9690,8 @@ contains
       return
       end subroutine ckw05
 
+      !> Write a type 6 segment to a CK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a CK file that has been opened
@@ -10993,6 +11055,9 @@ contains
       return
       end subroutine ckw06
 
+      !> Add data to a type 03 PCK segment in the binary PCK file
+      !> associated with HANDLE. See also [[pck03b]] and [[pck03e]].
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a PCK file that has been
@@ -11315,6 +11380,9 @@ contains
 
       end subroutine pck03a
 
+      !> End the type 03 PCK segment currently being written to the binary
+      !> PCK file associated with HANDLE. See also [[pck03b]] and [[pck03a]].
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a binary PCK file that has been
@@ -11601,6 +11669,8 @@ contains
 
       end subroutine pck03e
 
+      !> Close an open PCK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the PCK file that is to be closed.
@@ -11872,6 +11942,8 @@ contains
 
       end subroutine pckcls
 
+      !> Create a new PCK file, returning the handle of the opened file.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the PCK file to be created.
@@ -12150,6 +12222,9 @@ contains
       return
       end subroutine pckopn
 
+      !> Perform routine error checks and if all checks pass, pack the
+      !> descriptor for a PCK segment
+      !>
       !>## Detailed Input
       !>
       !>     BODY     is the NAIF ID code for the body of the segment.
@@ -12355,6 +12430,8 @@ contains
 
       end subroutine pckpds
 
+      !> Unpack the contents of a PCK segment descriptor
+      !>
       !>## Detailed Input
       !>
       !>     DESCR    is a PCK segment descriptor.
@@ -12493,6 +12570,10 @@ contains
 
       end subroutine pckuds
 
+      !> Write a type 2 segment to a PCK binary file given the file
+      !> handle, body-fixed frame class ID, frame, time range covered by
+      !> the segment, and the Chebyshev polynomial coefficients.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the DAF handle of an PCK file to which a type 2
@@ -13026,6 +13107,8 @@ contains
       return
       end subroutine pckw02
 
+      !> Write a type 20 segment to a PCK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the DAF handle of a PCK file to which a type 20
@@ -13686,6 +13769,10 @@ contains
       return
       end subroutine pckw20
 
+      !> Store text from a text file in the comment area of a binary SPK
+      !> or CK file, appending it to whatever text may already have
+      !> been stored there.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle assigned to the binary SPK or CK file
@@ -14310,6 +14397,8 @@ contains
       return
       end subroutine spcac
 
+      !> Empty the comment area of a binary SPK or CK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle assigned to the binary SPK or CK file
@@ -14477,6 +14566,9 @@ contains
       return
       end subroutine spcdc
 
+      !> Extract the text from the comment area of a binary SPK or CK file
+      !> and write it to a text file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle assigned to the binary SPK or CK file
@@ -14765,6 +14857,8 @@ contains
       return
       end subroutine spcec
 
+      !> Open a new SPK or CK file for subsequent write requests.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a new SPK or CK file to be created.
@@ -14915,6 +15009,9 @@ contains
       return
       end subroutine spcopn
 
+      !> Read the first line of text from the comment area
+      !> of a binary SPK or CK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle assigned to the binary SPK or CK file
@@ -15219,6 +15316,10 @@ contains
       end associate
       end subroutine spcrfl
 
+      !> Continue reading lines from the comment area of a binary
+      !> SPK or CK file specified by the most recent call to
+      !> the routine [[spcrfl]].
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -15607,6 +15708,8 @@ contains
       end associate
       end subroutine spcrnl
 
+      !> Close an open SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the SPK file that is to be closed.
@@ -15861,6 +15964,8 @@ contains
 
       end subroutine spkcls
 
+      !> Open an existing SPK file for subsequent write.
+      !>
       !>## Detailed Input
       !>
       !>     FILE     is the name of an existing SPK file to which
@@ -16173,6 +16278,8 @@ contains
 
       end subroutine spkopa
 
+      !> Create a new SPK file, returning the handle of the opened file.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of the new SPK file to be created.
@@ -16438,6 +16545,8 @@ contains
       return
       end subroutine spkopn
 
+      !> Write a type 1 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -16822,6 +16931,8 @@ contains
       return
       end subroutine spkw01
 
+      !> Write a type 2 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the DAF handle of an SPK file to which a type 2
@@ -17447,6 +17558,8 @@ contains
       return
       end subroutine spkw02
 
+      !> Write a type 3 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the DAF handle of an SPK file to which a type 3
@@ -18096,6 +18209,10 @@ contains
       return
       end subroutine spkw03
 
+      !> Write an SPK segment of type 5 given a time-ordered set of
+      !> discrete states and epochs, and the gravitational parameter
+      !> of a central body.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file
@@ -18556,6 +18673,8 @@ contains
       return
       end subroutine spkw05
 
+      !> Write a type 8 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -19146,6 +19265,8 @@ contains
       return
       end subroutine spkw08
 
+      !> Write a type 9 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -19770,6 +19891,9 @@ contains
       return
       end subroutine spkw09
 
+      !> Write an SPK type 10 segment to the file specified by
+      !> the input HANDLE.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been opened
@@ -20326,6 +20450,8 @@ contains
 
       end subroutine spkw10
 
+      !> Write a type 12 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -20895,6 +21021,8 @@ contains
       return
       end subroutine spkw12
 
+      !> Write a type 13 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -21489,6 +21617,8 @@ contains
       return
       end subroutine spkw13
 
+      !> Write an SPK segment of type 15 given a type 15 data record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -21960,6 +22090,8 @@ contains
       return
       end subroutine spkw15
 
+      !> Write an SPK segment of type 17 given a type 17 data record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -22461,6 +22593,8 @@ contains
       return
       end subroutine spkw17
 
+      !> Write a type 18 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been opened
@@ -22977,6 +23111,8 @@ contains
       return
       end subroutine spkw18
 
+      !> Write a type 19 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an SPK file that has been opened
@@ -23948,6 +24084,8 @@ contains
       return
       end subroutine spkw19
 
+      !> Write a type 20 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the DAF handle of an SPK file to which a type 20
@@ -24561,6 +24699,8 @@ contains
       return
       end subroutine spkw20
 
+      !> Write a type 21 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -25047,19 +25187,17 @@ contains
       return
       end subroutine spkw21
 
-      !>## Abstract
+      !> This is the routine that packs a set integer numbers into a
+      !> single double precision number.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Its current specific use is to "compress" seven integer numbers
+      !> representing numbers of polynomial coefficients in a logical
+      !> type 4 CK record into a single DP number stored in a physical
+      !> type 4 CK record in a file.
       !>
-      !>     This is the routine that packs a set integer numbers into a
-      !>     single double precision number.
-      !>
-      !>     Its current specific use is to "compress" seven integer numbers
-      !>     representing numbers of polynomial coefficients in a logical
-      !>     type 4 CK record into a single DP number stored in a physical
-      !>     type 4 CK record in a file.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -25164,6 +25302,10 @@ contains
       return
       end subroutine zzck4i2d
 
+      !> Return a specified pointing instance from a CK type 02 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -25627,6 +25769,9 @@ contains
       return
       end subroutine ckgr02
 
+      !> Add data to a type 4 CK segment currently being written to
+      !> the file associated with HANDLE. See also [[ckw04b]] and [[ckw04e]].
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a CK file in which a CK type 4
@@ -26182,6 +26327,9 @@ contains
 
       end subroutine ckw04a
 
+      !> Begin a type 03 PCK segment in the binary PCK file associated with
+      !> HANDLE. See also [[pck03a]] and [[pck03e]].
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a PCK file that has been
@@ -26561,6 +26709,10 @@ contains
 
       end subroutine pck03b
 
+      !> Convert the contents of a binary SPK or CK file to text,
+      !> including comments if present, and write them to a text file
+      !> opened by the calling program.
+      !>
       !>## Detailed Input
       !>
       !>     BINARY   is the name of an existing binary SPK or CK file
@@ -26760,6 +26912,9 @@ contains
       return
       end subroutine spcb2t
 
+      !> Reconstruct a binary SPK or CK file including comments
+      !> from a text file opened by the calling program.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the logical unit connected to an existing text
@@ -27075,6 +27230,9 @@ contains
       return
       end subroutine spct2b
 
+      !> Convert a text (ASCII) format SPK or CK file to an equivalent
+      !> binary file, including comments.
+      !>
       !>## Detailed Input
       !>
       !>     TEXT     is the name of an existing text format SPK or CK
@@ -27231,6 +27389,9 @@ contains
       return
       end subroutine spca2b
 
+      !> Convert a binary SPK or CK file to an equivalent text (ASCII)
+      !> file, including the comment area.
+      !>
       !>## Detailed Input
       !>
       !>     BINARY   is the name of an existing binary SPK or CK file

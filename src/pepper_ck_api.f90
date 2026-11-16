@@ -20,6 +20,8 @@ submodule (pepper_instance_module) pepper_ck_api
 
 contains
 
+      !> Find the set of ID codes of all objects in a specified CK file.
+      !>
       !>## Detailed Input
       !>
       !>     CKFNM    is the name of a C-kernel.
@@ -339,6 +341,8 @@ contains
       end do
       end subroutine ckobj
 
+      !> The objects of a CK file (PEPPER; [[ckobj]] without a set cell):
+      !> their ID codes, sorted, without duplicates.
       module subroutine ck_objects ( ctx, file, ids )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: append_id, sort_unique
@@ -490,6 +494,8 @@ contains
       return
       end subroutine ck_objects
 
+      !> Get pointing (attitude) for a specified spacecraft clock time.
+      !>
       !>## Detailed Input
       !>
       !>     INST     is the NAIF integer ID for the instrument, spacecraft, or
@@ -1381,6 +1387,9 @@ contains
       end associate
       end subroutine ckgp
 
+      !> Get pointing (attitude) and angular velocity for a specified
+      !> spacecraft clock time.
+      !>
       !>## Detailed Input
       !>
       !>     INST     is the NAIF integer ID for the instrument, spacecraft,
@@ -2477,13 +2486,11 @@ contains
       end associate
       end subroutine ckgpav
 
-      !>## Abstract
+      !> Determine the "window" of coverage of a type 01 C-kernel segment.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine the "window" of coverage of a type 01 C-kernel segment.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -2791,13 +2798,11 @@ contains
       return
       end subroutine zzckcv01
 
-      !>## Abstract
+      !> Determine the "window" of coverage of a type 02 C-kernel segment.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine the "window" of coverage of a type 02 C-kernel segment.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3039,13 +3044,11 @@ contains
       return
       end subroutine zzckcv02
 
-      !>## Abstract
+      !> Determine the "window" of coverage of a type 03 C-kernel segment.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine the "window" of coverage of a type 03 C-kernel segment.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3435,13 +3438,11 @@ contains
       return
       end subroutine zzckcv03
 
-      !>## Abstract
+      !> Determine the "window" of coverage of a type 04 C-kernel segment.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine the "window" of coverage of a type 04 C-kernel segment.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3686,13 +3687,11 @@ contains
       return
       end subroutine zzckcv04
 
-      !>## Abstract
+      !> Determine the "window" of coverage of a type 05 C-kernel segment.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine the "window" of coverage of a type 05 C-kernel segment.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4113,13 +4112,11 @@ contains
       return
       end subroutine zzckcv05
 
-      !>## Abstract
+      !> Determine the "window" of coverage of a type 06 C-kernel segment.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine the "window" of coverage of a type 06 C-kernel segment.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4496,6 +4493,9 @@ contains
       return
       end subroutine zzckcv06
 
+      !> Find the coverage window for a specified object in a specified CK
+      !> file.
+      !>
       !>## Detailed Input
       !>
       !>     CKFNM    is the name of a C-kernel.
@@ -5145,6 +5145,14 @@ contains
       end do
       end subroutine ckcov
 
+      !> The coverage of an object in a CK file (PEPPER; [[ckcov]] without
+      !> a window cell).
+      !>
+      !> The result is a window as an array: each column an interval
+      !> [start, stop] (TDB seconds past J2000), sorted and disjoint
+      !> ([[pepper_windows]]). The errors are those of [[ckcov]],
+      !> without SPICE(WINDOWEXCESS). With TIMSYS = 'SCLK' the times are
+      !> encoded spacecraft clock ticks.
       module subroutine ck_coverage ( ctx, file, inst, needav, level, tol, timsys, intervals )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr

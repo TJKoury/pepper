@@ -426,6 +426,10 @@ submodule (pepper_instance_module) pepper_records
 
 contains
 
+      !> Evaluate a pointing record returned by [[ckr01]] from a CK data type 1
+      !> segment. Return the C-matrix and optionally the angular velocity
+      !> vector associated with the time CLKOUT.
+      !>
       !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. when angular velocity data is requested.
@@ -753,6 +757,10 @@ contains
       return
       end subroutine cke01
 
+      !> Evaluate a pointing record returned by [[ckr02]] from a CK data type 2
+      !> segment. Return the C-matrix and angular velocity vector
+      !> associated with the time CLKOUT.
+      !>
       !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
@@ -1075,6 +1083,10 @@ contains
       return
       end subroutine cke02
 
+      !> Evaluate a pointing record returned by [[ckr03]] from a CK type 3
+      !> segment. Return the C-matrix and angular velocity vector
+      !> associated with the time CLKOUT.
+      !>
       !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
@@ -1556,6 +1568,10 @@ contains
       return
       end subroutine cke03
 
+      !> Evaluate a pointing record returned by [[ckr04]] from a CK type 4
+      !> segment. Return the C-matrix and angular velocity vector
+      !> associated with the time CLKOUT.
+      !>
       !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
@@ -1917,6 +1933,8 @@ contains
 
       end subroutine cke04
 
+      !> Evaluate a single data record from a type 5 CK segment.
+      !>
       !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
@@ -2764,6 +2782,8 @@ contains
       return
       end subroutine cke05
 
+      !> Read a pointing record from a CK segment, data type 1.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle of the CK file containing the
@@ -3326,6 +3346,8 @@ contains
       return
       end subroutine ckr01
 
+      !> Read a pointing record from a CK segment, data type 2.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle of the CK file containing the
@@ -3963,6 +3985,8 @@ contains
       return
       end subroutine ckr02
 
+      !> Read a pointing record from a CK segment, data type 3.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle of the CK file containing the
@@ -4956,6 +4980,9 @@ contains
       end associate
       end subroutine ckr03
 
+      !> Read a single CK data record from a segment of type 05
+      !> (MEX/Rosetta Attitude file interpolation).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -5976,6 +6003,9 @@ contains
       end associate
       end subroutine ckr05
 
+      !> Read a single CK data record from a segment of type 6
+      !> (ESOC/DDID Piecewise Interpolation).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -7512,6 +7542,9 @@ contains
       end associate
       end subroutine ckr06
 
+      !> Read a single PCK data record from a segment of type 2
+      !> (Chebyshev, 3-vector only).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -7853,6 +7886,9 @@ contains
       return
       end subroutine pckr02
 
+      !> Read a single PCK data record from a segment of type 20
+      !> (Chebyshev, derivative coefficients only).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -8147,6 +8183,8 @@ contains
       return
       end subroutine pckr20
 
+      !> Obtain the value of a specified generic segment meta data item.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF opened for reading that
@@ -8604,6 +8642,9 @@ contains
       end associate
       end subroutine sgmeta
 
+      !> Evaluate a single SPK data record from a segment of type 1
+      !> (Difference Lines).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, at which a state vector is to
@@ -8883,6 +8924,9 @@ contains
       return
       end subroutine spke01
 
+      !> Evaluate a single data record from an PCK or SPK segment of type
+      !> 2 (Chebyshev Polynomials, 3 components).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch at which a state vector or Euler angle
@@ -9118,6 +9162,9 @@ contains
       return
       end subroutine spke02
 
+      !> Evaluate a single SPK data record from a segment of type 3
+      !> (Chebyshev Polynomials, position and velocity).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch at which a state vector or Euler angle
@@ -9358,6 +9405,10 @@ contains
       return
       end subroutine spke03
 
+      !> Evaluate a single SPK data record from a segment of type 8
+      !> (equally spaced discrete states, interpolated by Lagrange
+      !> polynomials).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, at which a state vector is to
@@ -9554,6 +9605,9 @@ contains
       return
       end subroutine spke08
 
+      !> Evaluate a single SPK data record from a segment of type 9
+      !> (discrete states, evaluated by Lagrange interpolation).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, at which a state vector is to
@@ -9749,6 +9803,8 @@ contains
       return
       end subroutine spke09
 
+      !> Evaluate a single data record from a type 12 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch for which a state vector is desired.
@@ -9942,6 +9998,8 @@ contains
       return
       end subroutine spke12
 
+      !> Evaluate a single data record from a type 13 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch for which a state vector is desired.
@@ -10124,6 +10182,8 @@ contains
       return
       end subroutine spke13
 
+      !> Evaluate a single data record from a type 14 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch for which a state vector is desired.
@@ -10282,6 +10342,9 @@ contains
 
       end subroutine spke14
 
+      !> Evaluate a single SPK data record from a segment of type 17
+      !> (Equinoctial Elements).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, specified as ephemeris seconds past
@@ -10502,6 +10565,8 @@ contains
       return
       end subroutine spke17
 
+      !> Evaluate a single data record from a type 18 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch for which a state vector is desired.
@@ -10808,6 +10873,8 @@ contains
       return
       end subroutine spke18
 
+      !> Evaluate a single data record from a type 19 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch for which a state vector is desired,
@@ -11170,6 +11237,9 @@ contains
       return
       end subroutine spke19
 
+      !> Evaluate a single data record from an SPK or PCK segment of type
+      !> 20 (Chebyshev polynomials, velocity only).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch at which a state vector or Euler angle
@@ -11391,6 +11461,9 @@ contains
       return
       end subroutine spke20
 
+      !> Evaluate a single SPK data record from a segment of type 21
+      !> (Extended Difference Lines).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is an epoch at which a state vector is to be
@@ -11710,6 +11783,9 @@ contains
       return
       end subroutine spke21
 
+      !> Read a single SPK data record from a segment of type 1
+      !> (Difference Lines).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -11933,6 +12009,9 @@ contains
       return
       end subroutine spkr01
 
+      !> Read a single SPK data record from a segment of type 2
+      !> (Chebyshev, position only).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -12144,6 +12223,9 @@ contains
       return
       end subroutine spkr02
 
+      !> Read a single SPK data record from a segment of type 3
+      !> (Chebyshev coefficients, position and velocity).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -12366,6 +12448,9 @@ contains
       return
       end subroutine spkr03
 
+      !> Read a single SPK data record from a segment of type 5
+      !> ( two body propagation between discrete state vectors ).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -12812,6 +12897,10 @@ contains
       return
       end subroutine spkr05
 
+      !> Read a single SPK data record from a segment of type 8
+      !> (equally spaced discrete states, interpolated by Lagrange
+      !> polynomials).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -13100,6 +13189,10 @@ contains
       return
       end subroutine spkr08
 
+      !> Read a single SPK data record from a segment of type 9
+      !> (Unequally spaced discrete states, interpolated by Lagrange
+      !> polynomials).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -13532,6 +13625,9 @@ contains
       return
       end subroutine spkr09
 
+      !> Read a single SPK data record from a segment of type 15
+      !> (Precessing Conic Propagation).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -13731,6 +13827,9 @@ contains
       return
       end subroutine spkr15
 
+      !> Read a single SPK data record from a segment of type 17
+      !> (Equinoctial Elements).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -13944,6 +14043,9 @@ contains
       return
       end subroutine spkr17
 
+      !> Read a single SPK data record from a segment of type 18
+      !> (MEX/Rosetta Orbit file interpolation).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -14500,6 +14602,9 @@ contains
       return
       end subroutine spkr18
 
+      !> Read a single SPK data record from a segment of type 19
+      !> (ESOC/DDID Piecewise Interpolation).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -15654,6 +15759,9 @@ contains
       end associate
       end subroutine spkr19
 
+      !> Read a single SPK data record from a segment of type 20
+      !> (Chebyshev, velocity coefficients only).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -15951,6 +16059,9 @@ contains
       return
       end subroutine spkr20
 
+      !> Read a single SPK data record from a segment of type 21
+      !> (Extended Difference Lines).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -16229,6 +16340,9 @@ contains
       return
       end subroutine spkr21
 
+      !> Compute the values of the Stumpff functions C_0 through C_3 at
+      !> a specified point.
+      !>
       !>## Detailed Input
       !>
       !>     X        is the argument to use in each of the Stumpff functions
@@ -16888,15 +17002,16 @@ contains
       end associate
       end subroutine stmp03
 
-      !>## Abstract
+      !> The function returns the NAIF integer ID code of the barycenter,
+      !> if any, associated with BODY.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Return the barycenter code associated with a body belonging to
+      !> a planetary system.  For other bodies, simply return the
+      !> input ID code.
       !>
-      !>     Return the barycenter code associated with a body belonging to
-      !>     a planetary system.  For other bodies, simply return the
-      !>     input ID code.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -17063,19 +17178,17 @@ contains
       return
       end function zzbodbry
 
-      !>## Abstract
+      !> This is the routine that unpacks a set integer numbers stored in
+      !> a single double precision number.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Its current specific use is to "uncompress" seven integer numbers
+      !> representing numbers of polynomial coefficients in a logical
+      !> type 4 CK record from a single DP number stored in a physical
+      !> type 4 CK record in a file.
       !>
-      !>     This is the routine that unpacks a set integer numbers stored in
-      !>     a single double precision number.
-      !>
-      !>     Its current specific use is to "uncompress" seven integer numbers
-      !>     representing numbers of polynomial coefficients in a logical
-      !>     type 4 CK record from a single DP number stored in a physical
-      !>     type 4 CK record in a file.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -17175,13 +17288,13 @@ contains
 
       end subroutine zzck4d2i
 
-      !>## Abstract
+      !> This subroutine provides deep space common items used by both the
+      !> secular and periodics subroutines.
       !>
-      !>     This subroutine provides deep space common items used by both the
-      !>     secular and periodics subroutines.
+      !> See Detailed_input and Detailed_Output.
       !>
-      !>     This routine previously had the name DPPER, but the functions
-      !>     inside weren't well organized.
+      !> This routine previously had the name DPPER, but the functions
+      !> inside weren't well organized.
       !>
       !>## Detailed Input
       !>
@@ -17771,6 +17884,12 @@ contains
       return
       end subroutine zzdscm
 
+      !> This Subroutine provides Deep Space contributions to Mean
+      !> Motion Dot due to geopotential resonance with half day and one
+      !> day orbits.
+      !>
+      !> See Detailed_input and Detailed_Output.
+      !>
       !>## Detailed Input
       !>
       !>    COSIM       COS of mean inclination.
@@ -18436,6 +18555,14 @@ contains
       return
       end subroutine zzdsin
 
+      !> This subroutine provides deep space contributions to mean
+      !> elements for perturbing third body. These effects have been
+      !> averaged over one revolution of the sun and moon. For earth
+      !> resonance effects, the effects have been averaged over NO
+      !> revolutions of the satellite.
+      !>
+      !> See Detailed_input and Detailed_Output.
+      !>
       !>## Detailed Input
       !>
       !>     D2201      D coefficients
@@ -18863,6 +18990,13 @@ contains
       return
       end subroutine zzdspc
 
+      !> Provide deep space long period periodic contributions to the mean
+      !> elements. By design, these periodics are zero at epoch. This used
+      !> to be dscom which included initialization, but it's really a
+      !> recurring function.
+      !>
+      !> See Detailed_input and Detailed_Output.
+      !>
       !>## Detailed Input
       !>
       !>     OPMODE     Flag indicating which technique
@@ -19265,6 +19399,12 @@ contains
       return
       end subroutine zzdspr
 
+      !> This subroutine initializes the SGP4 propagator. All the
+      !> initialization is consolidated here instead of having multiple
+      !> loops inside other routines.
+      !>
+      !> See Detailed_input and Detailed_Output.
+      !>
       !>## Detailed Input
       !>
       !>     GEOPYS         Gephysical constants array.
@@ -19544,6 +19684,8 @@ contains
       return
       end subroutine zzinil
 
+      !> Evaluate a single data record from a type 6 CK segment.
+      !>
       !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
@@ -19835,6 +19977,10 @@ contains
       return
       end subroutine cke06
 
+      !> Return (depending upon the user's request) the ID code of either
+      !> the spacecraft or spacecraft clock associated with a C-Kernel ID
+      !> code.
+      !>
       !>## Detailed Input
       !>
       !>     CKID     is the ID code for some object whose attitude
@@ -20337,6 +20483,10 @@ contains
       end associate
       end subroutine ckmeta
 
+      !> Return the number of pointing records in a CK type 04 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -20553,6 +20703,9 @@ contains
 
       end subroutine cknr04
 
+      !> Evaluate a single PCK data record from a segment of type 2
+      !> (Chebyshev Polynomials, position only).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is an epoch, at which the Euler angles are to
@@ -20697,6 +20850,9 @@ contains
       return
       end subroutine pcke02
 
+      !> Evaluate a single PCK data record from a segment of type 20
+      !> (Chebyshev Polynomials, rotation derivative only).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is an epoch at which the Euler angles state is to be
@@ -20919,6 +21075,10 @@ contains
       return
       end subroutine pcke20
 
+      !> Compute the state of a massless body at time t_0 + DT by applying
+      !> the two-body force model to a given central mass and a given body
+      !> state at time t_0.
+      !>
       !>## Detailed Input
       !>
       !>     GM       is the gravitational constant G times the mass M of the
@@ -21986,6 +22146,10 @@ contains
       end associate
       end subroutine prop2b
 
+      !> Fetch from the constants partition of a generic segment the
+      !> double precision numbers from FIRST to LAST. The segment is
+      !> identified by a DAF file handle and segment descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF opened for reading that
@@ -22155,6 +22319,10 @@ contains
 
       end subroutine sgfcon
 
+      !> Fetch the data packets indexed from FIRST to LAST from the
+      !> packet partition of a generic segment. The segment is
+      !> identified by a DAF file handle and segment descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF opened for reading that
@@ -22502,6 +22670,10 @@ contains
 
       end subroutine sgfpkt
 
+      !> Find the reference value associated with the value X and its
+      !> index in a generic segment. The segment is identified by a DAF
+      !> file handle and segment descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF open for reading
@@ -23352,6 +23524,8 @@ contains
 
       end subroutine sgfrvi
 
+      !> Read a single data record from a type 12 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the open SPK file which contains
@@ -23491,6 +23665,8 @@ contains
       return
       end subroutine spkr12
 
+      !> Read a single data record from a type 13 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the open SPK file which contains
@@ -23636,6 +23812,8 @@ contains
       return
       end subroutine spkr13
 
+      !> Read a single data record from a type 4 CK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle of the CK file containing the
@@ -24271,6 +24449,10 @@ contains
 
       end subroutine ckr04
 
+      !> Evaluate a single PCK data record from a segment of type 03
+      !> (Variable width Chebyshev Polynomials for RA, DEC, and W) to
+      !> obtain a state transformation matrix.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, at which a state transformation
@@ -24573,6 +24755,8 @@ contains
       return
       end subroutine pcke03
 
+      !> Read a single PCK data record from a segment of type 03.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle for a type 03 PCK segment.
@@ -24745,6 +24929,9 @@ contains
 
       end subroutine pckr03
 
+      !> Evaluate a single SPK data record from a segment of type 5
+      !> (two body propagation between discrete state vectors).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, specified as ephemeris seconds past
@@ -24996,6 +25183,9 @@ contains
       return
       end subroutine spke05
 
+      !> Evaluate a single SPK data record from a segment of type 15
+      !> (Precessing Conic Propagation).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, specified as ephemeris seconds past
@@ -25533,6 +25723,9 @@ contains
       return
       end subroutine spke15
 
+      !> Read a single SPK data record from a segment of type 10
+      !> (NORAD two line element sets).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -25735,6 +25928,8 @@ contains
       return
       end subroutine spkr10
 
+      !> Read a single data record from a type 14 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the open SPK file which contains the
@@ -25910,6 +26105,8 @@ contains
 
       end subroutine spkr14
 
+      !> Evaluate pointing data from a segment for a given time.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -26346,6 +26543,10 @@ contains
       return
       end subroutine ckpfs
 
+      !> Return the name of an inertial reference frame and the 6 x 6
+      !> state transformation matrix from that frame to the body fixed
+      !> frame of a given body at a specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     BODY     is the integer ID code of the body for which the
@@ -26718,6 +26919,8 @@ contains
       return
       end subroutine pckmat
 
+      !> This subroutine initializes variables for SGP4.
+      !>
       !>## Detailed Input
       !>
       !>     GEOPHS   is a collection of 8 geophysical constants needed
@@ -27470,6 +27673,13 @@ contains
       end associate
       end subroutine xxsgp4i
 
+      !> This procedure is the SGP4 prediction model from Space Command.
+      !> This is an updated and combined version of SGP4 and SDP4
+      !> originally published separately in Spacetrack report #3 [1].
+      !> This version follows the methodology from the 2006 AIAA
+      !> Vallado paper [4] describing the history and development of
+      !> the code.
+      !>
       !>## Detailed Input
       !>
       !>     T        is the time in minutes from the elements epoch

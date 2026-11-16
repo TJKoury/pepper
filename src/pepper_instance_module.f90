@@ -1921,14 +1921,6 @@ module pepper_instance_module
 
    interface
 
-      !> Add a programmatic ephemeris (PEPPER; plans/programmatic_plan.md): the
-      !> states of BODY relative to CENTER in FRAME come from PROVIDER (a copy
-      !> of it is kept) at the epochs of [TBEG, TEND]. The body enters the SPK
-      !> segment search as a file loaded now: it overrides the files loaded
-      !> before (and is overridden by those loaded after) at those epochs.
-      !> Adding a body again replaces its registration (the program's, not a
-      !> kernel's: [[kb_add_ephemeris]]). Errors are signaled in the
-      !> instance's context.
       module subroutine spice_add_ephemeris ( this, body, center, frame, tbeg, tend, provider )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
@@ -1940,23 +1932,12 @@ module pepper_instance_module
          class(ephemeris_provider), intent(in) :: provider  !! the source of the states
       end subroutine spice_add_ephemeris
 
-      !> Remove a programmatic ephemeris (PEPPER): the body's other segments
-      !> (files) apply again. No error if the body has none. Only the
-      !> program's ([[spice_add_ephemeris]]): one a kernel owns
-      !> ([[kb_add_ephemeris]]) goes with its kernel (UNLOAD, KCLEAR).
       module subroutine spice_remove_ephemeris ( this, body )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
          integer(ip), intent(in) :: body  !! the body's ID code
       end subroutine spice_remove_ephemeris
 
-      !> Add a programmatic frame (PEPPER; plans/programmatic_plan.md): a frame of
-      !> class 7 whose orientation comes from PROVIDER (a copy of it is kept).
-      !> The frame's definition (name, ID code, class, center) is written into
-      !> the kernel pool, so no frame kernel is needed. Adding a frame again
-      !> (the same code) replaces it; the names and codes of built-in frames
-      !> are refused (SPICE(FRAMEEXISTS)). Errors are signaled in the
-      !> instance's context.
       module subroutine spice_add_frame ( this, name, code, center, provider )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
@@ -1966,15 +1947,12 @@ module pepper_instance_module
          class(frame_provider), intent(in) :: provider  !! the source of its orientation
       end subroutine spice_add_frame
 
-      !> Remove a programmatic frame and its definition from the kernel pool
-      !> (PEPPER). No error if there is no such programmatic frame.
       module subroutine spice_remove_frame ( this, name )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
          character(*), intent(in) :: name  !! the frame's name
       end subroutine spice_remove_frame
 
-      !> The state of [[ephemeris_procedure]]: its procedure's.
       recursive module subroutine ephemeris_procedure_state ( self, ctx, body, et, state, found )
          implicit none
          class(ephemeris_procedure), intent(in) :: self  !! the provider
@@ -1985,7 +1963,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! a state is available at ET
       end subroutine ephemeris_procedure_state
 
-      !> The transformation of [[frame_procedure]]: its procedure's.
       recursive module subroutine frame_procedure_transform ( self, ctx, frame, et, xform, relative, found )
          implicit none
          class(frame_procedure), intent(in) :: self  !! the provider
@@ -1997,8 +1974,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! the transformation is available at ET
       end subroutine frame_procedure_transform
 
-      !> A [[frame_provider]]'s rotation: by default, the rotation block of
-      !> its `transform`.
       recursive module subroutine frame_provider_rotation ( self, ctx, frame, et, rotate, relative, found )
          implicit none
          class(frame_provider), intent(in) :: self  !! the provider
@@ -2010,8 +1985,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! the rotation is available at ET
       end subroutine frame_provider_rotation
 
-      !> The state of a programmatic ephemeris's virtual segment (SPKPVN's
-      !> type 100): its provider's, at ET (PEPPER).
       recursive module subroutine provided_state ( ctx, handle, et, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2020,7 +1993,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state(6)  !! the state relative to the registered center
       end subroutine provided_state
 
-      !> The rotation of a programmatic frame (ROTGET's class 7) (PEPPER).
       recursive module subroutine provided_rotation ( ctx, frame, et, rotate, outfrm, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2031,8 +2003,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! a rotation is available
       end subroutine provided_rotation
 
-      !> The state transformation of a programmatic frame (FRMGET's class 7)
-      !> (PEPPER).
       recursive module subroutine provided_transform ( ctx, frame, et, xform, outfrm, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2043,22 +2013,16 @@ module pepper_instance_module
          logical, intent(out) :: found  !! a transformation is available
       end subroutine provided_transform
 
-      !> Remove every programmatic ephemeris (KCLEAR) (PEPPER).
       module subroutine clear_provided_ephemerides ( ctx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
       end subroutine clear_provided_ephemerides
 
-      !> Forget every programmatic frame (KCLEAR, before it empties the
-      !> kernel pool) (PEPPER).
       module subroutine clear_provided_frames ( ctx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
       end subroutine clear_provided_frames
 
-      !> Write the definitions of the programmatic frames into the kernel
-      !> pool (CLPOOL, after it empties the pool: programmatic frames are
-      !> registrations, like loaded files, not kernel variables) (PEPPER).
       module subroutine write_provided_frames ( ctx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2200,15 +2164,6 @@ module pepper_instance_module
 
    interface
 
-      !> Add an SPK segment of type 9 (Lagrange interpolation) to a kernel
-      !> builder (PEPPER).
-      !>
-      !> The checks are SPKW09's, with its short error messages, except the
-      !> frame's, which is checked when the builder is loaded. With
-      !> `adapt`, a segment with too few states for its degree is not an
-      !> error: its degree is lowered to what the states allow; two states
-      !> make a Hermite segment (type 13, a cubic from the velocities); a
-      !> single state is dropped (it covers no interval).
       module subroutine kb_spk_lagrange ( this, ctx, body, center, frame, epochs, states, degree, &
                                           tbeg, tend, ident, adapt )
          implicit none
@@ -2226,14 +2181,6 @@ module pepper_instance_module
          logical, intent(in), optional :: adapt  !! adapt the degree of a short segment (default: false)
       end subroutine kb_spk_lagrange
 
-      !> Add an SPK segment of type 13 (Hermite interpolation) to a kernel
-      !> builder (PEPPER).
-      !>
-      !> The checks are SPKW13's, with its short error messages (the degree
-      !> is odd), except the frame's, which is checked when the builder is
-      !> loaded. With `adapt`, a segment with too few states for its
-      !> degree is not an error: its degree is lowered to what the states
-      !> allow; a single state is dropped (it covers no interval).
       module subroutine kb_spk_hermite ( this, ctx, body, center, frame, epochs, states, degree, &
                                          tbeg, tend, ident, adapt )
          implicit none
@@ -2251,30 +2198,6 @@ module pepper_instance_module
          logical, intent(in), optional :: adapt  !! adapt the degree of a short segment (default: false)
       end subroutine kb_spk_hermite
 
-      !> Add a programmatic ephemeris to the kernel a builder makes
-      !> (PEPPER): a segment whose states come from `provider` (an
-      !> [[ephemeris_provider]]: its `state` computes the state of `body`
-      !> relative to `center` in `frame` at any epoch of [tbeg, tend]), not
-      !> from a table. A kernel loader uses it for a file that holds a
-      !> model rather than states (elements and a propagator): the loader
-      !> reads the file and puts what it read in the provider's components.
-      !>
-      !> When the builder is loaded, the ephemeris is registered as
-      !> [[spice_add_ephemeris]] registers one, but owned by the kernel: it
-      !> takes part in the segment search with the kernel's priority (after
-      !> the kernel's own table segments), SPKCOV and SPKOBJ report it by
-      !> the kernel's name, and UNLOAD and KCLEAR remove it with the kernel.
-      !> Unlike [[spice_add_ephemeris]], it does not replace another
-      !> ephemeris of the same body: kernels of the same body coexist, the
-      !> last loaded first, as SPK files do. The builder keeps a copy of the
-      !> provider; the provider is called from any context, so from several
-      !> threads at once, and must not change shared data. A kernel with a
-      !> programmatic ephemeris cannot be written to an SPK file
-      !> ([[spice_write_kernel]]).
-      !>
-      !> The checks are those of [[spice_add_ephemeris]] (SPICE(BADDESCRTIMES),
-      !> SPICE(BODYANDCENTERSAME)), except the frame's, which is checked when
-      !> the builder is loaded (SPICE(UNKNOWNFRAME)).
       module subroutine kb_add_ephemeris ( this, ctx, body, center, frame, tbeg, tend, provider, ident )
          implicit none
          class(kernel_builder), intent(inout) :: this  !! the builder
@@ -2288,38 +2211,6 @@ module pepper_instance_module
          character(*), intent(in), optional :: ident  !! the segment identifier (default: PROGRAMMATIC EPHEMERIS)
       end subroutine kb_add_ephemeris
 
-      !> Add a table of rotations to the kernel a builder makes, as
-      !> quaternions (PEPPER): a frame NAME (ID code CODE, center CENTER)
-      !> whose orientation relative to BASE (e.g. J2000) is given at ET
-      !> epochs; PEPPER interpolates it (CK type 5's interpolation, with ET
-      !> as its time tags: no clock). Loaded, the frame is defined while the
-      !> kernel is (as [[spice_add_frame]] defines one, owned by the kernel):
-      !> PXFORM, SXFORM and every query that takes a frame use it.
-      !>
-      !> The rotations: `quats(:, k)` is the SPICE quaternion (scalar first)
-      !> of the rotation matrix R that maps vectors from BASE to the frame
-      !> at `epochs(k)` (v_frame = R v_base: R = PXFORM(BASE, NAME)); with
-      !> `inverse`, of the matrix from the frame to BASE. Signs need not be
-      !> continuous (they are made so). `av(:, k)`, optional: the angular
-      !> velocity of the frame relative to BASE, in BASE's coordinates
-      !> (rad/s), as a CK has it; without it, the angular velocity
-      !> (SXFORM's derivative) is that of the interpolated rotation.
-      !>
-      !> `method`: 'LAGRANGE' (default; CK type 5 subtype 1, or 3 with `av`)
-      !> or 'HERMITE' (needs `av`: subtype 0). The interpolation window
-      !> must have an even size, so the degree is odd for Lagrange (1, 3,
-      !> ..., 23) and 3, 7, 11, 15, 19 or 23 for Hermite (SPICE(INVALIDDEGREE)
-      !> otherwise). `tbeg` and `tend`: the coverage, inside the epochs
-      !> (default: their span). Several tables of a frame: the last added
-      !> that covers an epoch. Outside the coverage the frame has no
-      !> orientation (FRMGET's no-data error).
-      !>
-      !> Errors (in `ctx`): SPICE(INVALIDSIZE) (arrays of the wrong shape),
-      !> SPICE(TIMESOUTOFORDER), SPICE(BADDESCRTIMES), SPICE(ZEROQUATERNION),
-      !> SPICE(INVALIDDEGREE), SPICE(UNSUPPORTEDINTERP) (a method other than
-      !> LAGRANGE or HERMITE, or HERMITE without `av`), SPICE(BLANKSTRING)
-      !> (a blank name). The frame's name, code and base are checked when
-      !> the builder is loaded (SPICE(FRAMEEXISTS), SPICE(UNKNOWNFRAME)).
       module subroutine kb_frame_quaternions ( this, ctx, name, code, center, base, epochs, quats, degree, &
                                                av, method, inverse, tbeg, tend, ident )
          implicit none
@@ -2340,11 +2231,6 @@ module pepper_instance_module
          character(*), intent(in), optional :: ident  !! the segment identifier
       end subroutine kb_frame_quaternions
 
-      !> Add a table of rotations to the kernel a builder makes, as 3x3
-      !> rotation matrices (PEPPER): `rots(:, :, k)` maps vectors from BASE
-      !> to the frame (or, with `inverse`, from the frame to BASE) at
-      !> `epochs(k)`. Otherwise as [[kb_frame_quaternions]] (the matrices
-      !> are converted to quaternions, M2Q).
       module subroutine kb_frame_matrices ( this, ctx, name, code, center, base, epochs, rots, degree, &
                                             av, method, inverse, tbeg, tend, ident )
          implicit none
@@ -2365,14 +2251,6 @@ module pepper_instance_module
          character(*), intent(in), optional :: ident  !! the segment identifier
       end subroutine kb_frame_matrices
 
-      !> Add a programmatic frame to the kernel a builder makes (PEPPER): a
-      !> frame whose orientation comes from `provider` (a [[frame_provider]],
-      !> as [[spice_add_frame]] takes), for a file that holds an orientation
-      !> model. Loaded, it is defined as [[spice_add_frame]] defines one,
-      !> owned by the kernel: UNLOAD and KCLEAR remove it. Kernels that
-      !> define the same frame (the same name and code) coexist: the last
-      !> loaded whose provider has the orientation at an epoch gives it.
-      !> The name and code are checked when the builder is loaded.
       module subroutine kb_add_frame ( this, ctx, name, code, center, provider )
          implicit none
          class(kernel_builder), intent(inout) :: this  !! the builder
@@ -2383,8 +2261,6 @@ module pepper_instance_module
          class(frame_provider), intent(in) :: provider  !! the source of its orientation (copied)
       end subroutine kb_add_frame
 
-      !> Check a frame definition as [[spice_add_frame]] does (a blank name;
-      !> a name or code of another frame: SPICE(FRAMEEXISTS)) (PEPPER).
       module subroutine check_frame_definition ( ctx, name, code )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -2392,8 +2268,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: code  !! its ID code
       end subroutine check_frame_definition
 
-      !> Register a programmatic frame owned by a kernel built in memory
-      !> (its handle), from a builder being loaded (PEPPER).
       module subroutine register_owned_frame ( ctx, name, code, center, provider, owner )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -2404,10 +2278,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: owner  !! the kernel's handle
       end subroutine register_owned_frame
 
-      !> The rotation tables a kernel built in memory has for a frame (its
-      !> code, which is the tables' CK ID code): their coverage, in ET
-      !> (CKCOV, CK_COVERAGE by the kernel's name). `is_kernel` is false if
-      !> no kernel built in memory has the name (then it is a file) (PEPPER).
       module subroutine kernel_frame_tables ( ctx, name, code, is_kernel, tbeg, tend )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2418,9 +2288,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: tend(:)  !! ends
       end subroutine kernel_frame_tables
 
-      !> The codes of the frames whose rotation tables a kernel built in
-      !> memory has (CKOBJ, CK_OBJECTS by the kernel's name); `is_kernel` as
-      !> for [[kernel_frame_tables]] (PEPPER).
       module subroutine kernel_frame_codes ( ctx, name, is_kernel, codes )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2429,17 +2296,12 @@ module pepper_instance_module
          integer(ip), allocatable, intent(out) :: codes(:)  !! the frames' codes (with repeats)
       end subroutine kernel_frame_codes
 
-      !> Remove the programmatic frames a kernel owns (its handle): UNLOAD,
-      !> KCLEAR. A frame's definition leaves the kernel pool when no other
-      !> registration of it remains (PEPPER).
       module subroutine remove_owned_frames ( ctx, owner )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context
          integer(ip), intent(in) :: owner  !! the kernel's handle
       end subroutine remove_owned_frames
 
-      !> The state transformation of a frame of rotation tables, from the
-      !> frame to its base (PEPPER).
       recursive module subroutine rotation_table_transform ( self, ctx, frame, et, xform, relative, found )
          implicit none
          class(rotation_table), intent(in) :: self  !! the frame's tables
@@ -2451,8 +2313,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! a table covers ET
       end subroutine rotation_table_transform
 
-      !> The rotation of a frame of rotation tables, from the frame to its
-      !> base (PEPPER).
       recursive module subroutine rotation_table_rotation ( self, ctx, frame, et, rotate, relative, found )
          implicit none
          class(rotation_table), intent(in) :: self  !! the frame's tables
@@ -2464,8 +2324,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! a table covers ET
       end subroutine rotation_table_rotation
 
-      !> Register a programmatic ephemeris owned by a kernel built in memory
-      !> (its handle), from a builder being loaded (PEPPER).
       module subroutine register_owned_ephemeris ( ctx, body, center, frame, tbeg, tend, provider, owner, ident )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -2479,23 +2337,12 @@ module pepper_instance_module
          character(*), intent(in) :: ident  !! the segment identifier
       end subroutine register_owned_ephemeris
 
-      !> Remove the programmatic ephemerides a kernel owns (its handle):
-      !> UNLOAD, KCLEAR (PEPPER).
       module subroutine remove_owned_ephemerides ( ctx, owner )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context
          integer(ip), intent(in) :: owner  !! the kernel's handle
       end subroutine remove_owned_ephemerides
 
-      !> Define a body name of the kernel a builder makes (PEPPER): while the
-      !> kernel is loaded, `name` translates to `code` and `code` to `name`
-      !> (BODN2C, BODC2N, and every query that takes a name), as BODDEF
-      !> would; when the kernel is unloaded (UNLOAD, KCLEAR, replaced) the
-      !> definition is removed, and an earlier one of the same name or code
-      !> (BODDEF's, another kernel's) is in effect again. A later definition
-      !> of a name, by BODDEF or another kernel, takes precedence, and names
-      !> from the kernel pool (NAIF_BODY_NAME/CODE) take precedence over all
-      !> of them, as over BODDEF's. SPICE(BLANKNAMEASSIGNED) for a blank name.
       module subroutine kb_define_body ( this, ctx, name, code )
          implicit none
          class(kernel_builder), intent(inout) :: this  !! the builder
@@ -2504,9 +2351,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: code  !! its NAIF ID code
       end subroutine kb_define_body
 
-      !> Add a body name/code pair defined by a kernel built in memory, owned
-      !> by it (its handle): BODDEF's definition, removed with
-      !> [[remove_owned_boddefs]] when the kernel is unloaded (PEPPER).
       module subroutine owned_boddef ( ctx, name, code, owner )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -2515,37 +2359,28 @@ module pepper_instance_module
          integer(ip), intent(in) :: owner  !! the handle of the kernel that defines it
       end subroutine owned_boddef
 
-      !> Remove the body name/code pairs a kernel defined ([[owned_boddef]]):
-      !> every context rebuilds its name tables from the built-in names and
-      !> the definitions that remain, in their order (PEPPER).
       module subroutine remove_owned_boddefs ( ctx, owner )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context
          integer(ip), intent(in) :: owner  !! the handle of the kernel unloaded
       end subroutine remove_owned_boddefs
 
-      !> Set the description of the kernel a builder makes (shown by
-      !> [[kernel_format]]), e.g. the file format and its version (PEPPER).
       module subroutine kb_set_format ( this, text )
          implicit none
          class(kernel_builder), intent(inout) :: this  !! the builder
          character(*), intent(in) :: text  !! the description
       end subroutine kb_set_format
 
-      !> Empty a kernel builder, to reuse it (PEPPER).
       module subroutine kb_clear ( this )
          implicit none
          class(kernel_builder), intent(inout) :: this  !! the builder
       end subroutine kb_clear
 
-      !> The number of segments in a kernel builder (PEPPER).
       module integer(ip) function kb_nsegments ( this )
          implicit none
          class(kernel_builder), intent(in) :: this  !! the builder
       end function kb_nsegments
 
-      !> The default `detect` of a [[kernel_loader]]: it accepts no file,
-      !> so the loader is used only by name or by its extensions (PEPPER).
       module logical function kernel_loader_detect ( self, file, head )
          implicit none
          class(kernel_loader), intent(in) :: self  !! the loader
@@ -2553,26 +2388,12 @@ module pepper_instance_module
          character(*), intent(in) :: head  !! the start of the file: its first `len(head)` bytes (at most 4096; fewer for a short file)
       end function kernel_loader_detect
 
-      !> The default `unload` of a [[kernel_loader]]: nothing to free
-      !> (PEPPER).
       module subroutine kernel_loader_unload ( self, file )
          implicit none
          class(kernel_loader), intent(inout) :: self  !! the loader
          character(*), intent(in) :: file  !! the file unloaded
       end subroutine kernel_loader_unload
 
-      !> Load a kernel builder as a kernel named `name`: a programmatic
-      !> kernel, with no file (PEPPER).
-      !>
-      !> The kernel is an SPK held in memory, used exactly like an SPK
-      !> file: queries, coverage (SPKCOV, SPKOBJ by its name), KDATA and
-      !> KINFO (type SPK), UNLOAD and KCLEAR. Loaded under a name in use
-      !> (a kernel or a file), it replaces the old kernel, which is
-      !> unloaded once the new one has loaded; the new one has the highest
-      !> priority. The builder's data is moved into the instance (the
-      !> builder is then empty) unless `keep` is true (it is copied). An
-      !> error, e.g. an unknown frame, loads nothing and keeps the old
-      !> kernel of the name.
       module subroutine spice_load_kernel ( this, name, kb, keep )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
@@ -2581,27 +2402,6 @@ module pepper_instance_module
          logical, intent(in), optional :: keep  !! copy the builder's data instead of moving it
       end subroutine spice_load_kernel
 
-      !> Write a kernel built in memory (by [[spice_load_kernel]] or a
-      !> kernel loader) to SPICE kernel files (PEPPER), which SPICE (and
-      !> PEPPER) load to give the same states, orientations and names:
-      !>
-      !> - `file`: an SPK file of its segments (blank: none, for a kernel of
-      !>   frames only);
-      !> - `ck_file`: a CK file of its rotation tables
-      !>   ([[kb_frame_quaternions]]), CK type 5 segments;
-      !> - `text_file`: a text kernel with what the CK needs and the kernel
-      !>   defines: for each frame of rotation tables, a type 1 SCLK (one
-      !>   tick a TDB second, ID -|frame code|) and the frame's definition
-      !>   (a CK frame, class 3, CK ID the frame's code); and the body names
-      !>   ([[kb_define_body]]) as NAIF_BODY_NAME/CODE assignments (`+=`).
-      !>
-      !> The CK's time tags are the tables' ET epochs (ticks), shifted by a
-      !> whole number of seconds if an epoch is before J2000 (ticks cannot
-      !> be negative): then its orientations agree to rounding, else
-      !> exactly. A kernel with rotation tables needs `ck_file` and
-      !> `text_file`; a kernel with programmatic ephemerides or frames
-      !> (models, computed by code) cannot be written (SPICE(NOTWRITABLE)).
-      !> The files must not exist (SPICE(FILEEXISTS)).
       module subroutine spice_write_kernel ( this, name, file, ck_file, text_file )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
@@ -2611,24 +2411,6 @@ module pepper_instance_module
          character(*), intent(in), optional :: text_file  !! the text kernel: SCLKs, frame definitions, body names
       end subroutine spice_write_kernel
 
-      !> Register a kernel loader (PEPPER): a reader of a file format SPICE
-      !> does not know. FURNSH uses it for a file (the rules:
-      !> [[spice_furnsh]]):
-      !>
-      !> - when FURNSH's `loader` argument, or the meta-kernel variable
-      !>   `KERNEL_LOADERS`, names it: then it reads the file whatever the
-      !>   file is, before any other choice or check;
-      !> - else, for a file that is not a SPICE binary kernel (DAF, DAS),
-      !>   when the file name ends with one of `extensions` (the longest
-      !>   match among all loaders), or when its `detect` accepts the file
-      !>   (the most recently registered loader first).
-      !>
-      !> The instance keeps a copy of `loader` ([[spice_loader]] gives
-      !> access to it). A name or extension already registered signals
-      !> SPICE(LOADERCONFLICT), unless `replace` (the old loader is
-      !> replaced, or the extension moves to this loader). The name PEPPER
-      !> is FURNSH's for PEPPER's own loading, and cannot be registered
-      !> (SPICE(RESERVEDLOADERNAME)); any other name can.
       module subroutine spice_add_loader ( this, name, loader, extensions, replace )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
@@ -2638,18 +2420,12 @@ module pepper_instance_module
          logical, intent(in), optional :: replace  !! replace a loader with this name or these extensions
       end subroutine spice_add_loader
 
-      !> Remove a kernel loader (PEPPER). The kernels it loaded stay loaded
-      !> (their data is the instance's); their unload callbacks are then
-      !> not called. Nothing happens if no loader has this name.
       module subroutine spice_remove_loader ( this, name )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
          character(*), intent(in) :: name  !! the loader's name
       end subroutine spice_remove_loader
 
-      !> A pointer to the instance's copy of a registered loader, e.g. to
-      !> read what it kept from its loads (PEPPER); null if no loader has
-      !> this name. It is valid until loaders are added or removed.
       module subroutine spice_loader ( this, name, ptr )
          implicit none
          class(pepper_instance), target, intent(inout) :: this  !! the instance
@@ -2657,11 +2433,6 @@ module pepper_instance_module
          class(kernel_loader), pointer, intent(out) :: ptr  !! the loader
       end subroutine spice_loader
 
-      !> The loader and the description of a loaded kernel (PEPPER): for a
-      !> file read by a kernel loader, the loader's name and the builder's
-      !> description; for a programmatic kernel, a blank loader and its
-      !> description (`(programmatic)` if none was set); for SPICE's own
-      !> kernels, blanks. `found` is false if no kernel has this name.
       module subroutine kernel_format ( ctx, file, loader, format, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2671,19 +2442,12 @@ module pepper_instance_module
          logical, intent(out) :: found  !! a kernel has this name
       end subroutine kernel_format
 
-      !> The names of the kernel loaders registered on the context's instance
-      !> ([[spice_add_loader]]), in the order of registration (PEPPER).
       module subroutine loader_names ( ctx, names )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          type(string), allocatable, intent(out) :: names(:)  !! the loaders' names (upper case)
       end subroutine loader_names
 
-      !> The registered loader FURNSH uses for `file` (not a SPICE binary
-      !> kernel) when no loader is named: the longest extension that ends
-      !> the file name (case-insensitive), else the first `detect` that
-      !> accepts the file's first 4096 bytes, the most recently registered
-      !> loader first; 0 if none (PEPPER; [[spice_furnsh]]).
       module subroutine match_kernel_loader ( ctx, file, k )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -2691,11 +2455,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: k  !! the loader's index (0: none)
       end subroutine match_kernel_loader
 
-      !> The loader named `name` (FURNSH's `loader`, or `KERNEL_LOADERS`;
-      !> case-insensitive): -1 for PEPPER (PEPPER's own loading: the file is
-      !> loaded as without kernel loaders), else the index of the registered
-      !> loader with the name, else SPICE(UNKNOWNLOADER) (PEPPER;
-      !> [[spice_furnsh]]).
       module subroutine find_kernel_loader ( ctx, file, name, k )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -2704,8 +2463,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: k  !! the loader's index (-1: PEPPER, PEPPER's own loading)
       end subroutine find_kernel_loader
 
-      !> Load `file` with registered loader `k` (ZZLDKER): run the loader,
-      !> then load its builder as an SPK in memory named `file` (PEPPER).
       module subroutine run_kernel_loader ( ctx, k, file, handle, format )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -2715,11 +2472,6 @@ module pepper_instance_module
          character(:), allocatable, intent(out) :: format  !! the kernel's description
       end subroutine run_kernel_loader
 
-      !> The meta-kernel variable KERNEL_LOADERS (FURNSH, loading the
-      !> meta-kernel `file`): pairs of a file, as written in
-      !> KERNELS_TO_LOAD, and a kernel loader's name; size 0 if it is not
-      !> set. SPICE(BADKERNELLOADERS) for an odd number of values
-      !> (PEPPER).
       module subroutine meta_kernel_loaders ( ctx, file, pairs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -2727,10 +2479,6 @@ module pepper_instance_module
          type(string), allocatable, intent(out) :: pairs(:)  !! the values of KERNEL_LOADERS
       end subroutine meta_kernel_loaders
 
-      !> The loader KERNEL_LOADERS names for a file of KERNELS_TO_LOAD
-      !> (as written, `raw`, or with its path symbols replaced,
-      !> `expanded`); blank if none (the last pair for the file wins)
-      !> (PEPPER).
       module subroutine meta_kernel_loader ( pairs, raw, expanded, name )
          implicit none
          type(string), intent(in) :: pairs(:)  !! the values of KERNEL_LOADERS
@@ -2739,11 +2487,6 @@ module pepper_instance_module
          character(:), allocatable, intent(out) :: name  !! the loader's name (blank: none)
       end subroutine meta_kernel_loader
 
-      !> Kernel `i` of the KEEPER table is removed (UNLOAD, KCLEAR): remove
-      !> what a kernel built in memory defined (body names, ephemerides,
-      !> frames, the DAF of its rotation tables), unless another KEEPER
-      !> entry still has its handle, and call the unload callback of its
-      !> loader, if it has one and it is still registered (PEPPER).
       module subroutine notify_kernel_unloaded ( ctx, i, clearing )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -2763,21 +2506,11 @@ module pepper_instance_module
 
    interface
 
-      !> Return the base value used to encode unsigned integer values
-      !> in character strings.
-      !>
-      !> The function returns the base value used to encode unsigned
-      !> integer values in character strings.
       module integer(ip) function chbase ( ctx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
       end function chbase
 
-      !> Encode a nonnegative integer number into a character string
-      !> as the expansion of the number in base [[chbase]] (a function of
-      !> the size of the available character set).
-      !>
-      !> MINLEN     P   Minimum length of string.
       module subroutine enchar ( ctx, number, string )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2785,7 +2518,6 @@ module pepper_instance_module
          character(*), intent(out) :: string  !! Encoded string.
       end subroutine enchar
 
-      !> Decode a character string encoded by [[enchar]].
       module subroutine dechar ( ctx, string, number )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2793,9 +2525,6 @@ module pepper_instance_module
          character(*), intent(in) :: string  !! Encoded character string.
       end subroutine dechar
 
-      !> Set the long error message so as to indicate the number of excess
-      !> elements encountered by a routine operating on cells or on data
-      !> structures based on cells.
       module subroutine excess ( ctx, number, struct )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2803,9 +2532,6 @@ module pepper_instance_module
          character(*), intent(in) :: struct  !! Name of the data structure.
       end subroutine excess
 
-      !> Return the cardinality (number of elements) of a character cell.
-      !>
-      !> The function returns the cardinality of the input cell.
       module integer(ip) function cardc ( ctx, cell )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2813,10 +2539,6 @@ module pepper_instance_module
          character(*), intent(in) :: cell  ( lbcell:* )  !! Input cell.
       end function cardc
 
-      !> Return the cardinality (number of elements) of a double
-      !> precision cell.
-      !>
-      !> The function returns the cardinality of the input cell.
       module integer(ip) function cardd ( ctx, cell )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2824,9 +2546,6 @@ module pepper_instance_module
          real(wp), intent(in) :: cell  ( lbcell:* )  !! Input cell.
       end function cardd
 
-      !> Return the cardinality (number of elements) of an integer cell.
-      !>
-      !> The function returns the cardinality of the input cell.
       module integer(ip) function cardi ( ctx, cell )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2834,9 +2553,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: cell  ( lbcell:* )  !! Input cell.
       end function cardi
 
-      !> Return the size (maximum cardinality) of a character cell.
-      !>
-      !> The function returns the size of the input cell.
       module integer(ip) function sizec ( ctx, cell )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2844,10 +2560,6 @@ module pepper_instance_module
          character(*), intent(in) :: cell   ( lbcell:* )  !! Input cell.
       end function sizec
 
-      !> Return the size (maximum cardinality) of a double precision
-      !> cell.
-      !>
-      !> The function returns the size of the input cell.
       module integer(ip) function sized ( ctx, cell )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2855,9 +2567,6 @@ module pepper_instance_module
          real(wp), intent(in) :: cell   ( lbcell:* )  !! Input cell.
       end function sized
 
-      !> Return the size (maximum cardinality) of an integer cell.
-      !>
-      !> The function returns the size of the input cell.
       module integer(ip) function sizei ( ctx, cell )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2865,7 +2574,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: cell  ( lbcell: * )  !! Input cell.
       end function sizei
 
-      !> Set the cardinality of a character cell.
       module subroutine scardc ( ctx, card, cell )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2874,7 +2582,6 @@ module pepper_instance_module
          character(*), intent(inout) :: cell   ( lbcell:* )  !! The cell.
       end subroutine scardc
 
-      !> Set the cardinality of a double precision cell.
       module subroutine scardd ( ctx, card, cell )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2883,7 +2590,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: cell   ( lbcell:* )  !! The cell.
       end subroutine scardd
 
-      !> Set the cardinality of an integer cell.
       module subroutine scardi ( ctx, card, cell )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2892,7 +2598,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: cell   ( lbcell:* )  !! The cell.
       end subroutine scardi
 
-      !> Set the size (maximum cardinality) of a character cell.
       module subroutine ssizec ( ctx, size, cell )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2901,7 +2606,6 @@ module pepper_instance_module
          character(*), intent(inout) :: cell   ( lbcell:* )  !! The cell.
       end subroutine ssizec
 
-      !> Set the size (maximum cardinality) of a double precision cell.
       module subroutine ssized ( ctx, size, cell )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2910,7 +2614,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: cell   ( lbcell:* )  !! The cell.
       end subroutine ssized
 
-      !> Set the size (maximum cardinality) of an integer cell.
       module subroutine ssizei ( ctx, size, cell )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2919,7 +2622,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: cell   ( lbcell:* )  !! The cell.
       end subroutine ssizei
 
-      !> Create a valid set from a character set array.
       module subroutine validc ( ctx, size, n, a )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2929,7 +2631,6 @@ module pepper_instance_module
          character(*), intent(inout) :: a      ( lbcell:* )  !! Set to be validated.
       end subroutine validc
 
-      !> Create a valid set from a double precision set array.
       module subroutine validd ( ctx, size, n, a )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2939,7 +2640,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: a       ( lbcell:* )  !! Set to be validated.
       end subroutine validd
 
-      !> Create a valid set from an integer set array.
       module subroutine validi ( ctx, size, n, a )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2949,7 +2649,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: a       ( lbcell:* )  !! Set to be validated.
       end subroutine validi
 
-      !> Append an item to a character cell.
       module subroutine appndc ( ctx, item, cell )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2959,7 +2658,6 @@ module pepper_instance_module
                                                            !! appended.
       end subroutine appndc
 
-      !> Append an item to a double precision cell.
       module subroutine appndd ( ctx, item, cell )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2968,7 +2666,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: cell ( lbcell:* )  !! The cell to which ITEM will be appended.
       end subroutine appndd
 
-      !> Append an item to an integer cell.
       module subroutine appndi ( ctx, item, cell )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2978,7 +2675,6 @@ module pepper_instance_module
                                                           !! appended.
       end subroutine appndi
 
-      !> Copy the contents of a character cell to another cell.
       module subroutine copyc ( ctx, cell, copy )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2987,7 +2683,6 @@ module pepper_instance_module
          character(*), intent(inout) :: copy     ( lbcell:* )  !! New cell.
       end subroutine copyc
 
-      !> Copy the contents of a double precision cell to another cell.
       module subroutine copyd ( ctx, cell, copy )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -2996,7 +2691,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: copy     ( lbcell:* )  !! New cell.
       end subroutine copyd
 
-      !> Copy the contents of an integer cell to another cell.
       module subroutine copyi ( ctx, cell, copy )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3005,7 +2699,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: copy     ( lbcell:* )  !! New cell.
       end subroutine copyi
 
-      !> Insert an item into a character set.
       module subroutine insrtc ( ctx, item, a )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3014,7 +2707,6 @@ module pepper_instance_module
          character(*), intent(inout) :: a        ( lbcell:* )  !! Insertion set.
       end subroutine insrtc
 
-      !> Insert an item into a double precision set.
       module subroutine insrtd ( ctx, item, a )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3023,7 +2715,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: a     ( lbcell:* )  !! Insertion set.
       end subroutine insrtd
 
-      !> Insert an item into an integer set.
       module subroutine insrti ( ctx, item, a )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3032,7 +2723,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: a        ( lbcell:* )  !! Insertion set.
       end subroutine insrti
 
-      !> Remove an item from a character set.
       module subroutine removc ( ctx, item, a )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3041,7 +2731,6 @@ module pepper_instance_module
          character(*), intent(inout) :: a       ( lbcell:* )  !! Removal set.
       end subroutine removc
 
-      !> Remove an item from a double precision set.
       module subroutine removd ( ctx, item, a )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3050,7 +2739,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: a        ( lbcell:* )  !! Removal set.
       end subroutine removd
 
-      !> Remove an item from an integer set.
       module subroutine removi ( ctx, item, a )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3059,9 +2747,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: a        ( lbcell:* )  !! Removal set.
       end subroutine removi
 
-      !> Determine whether an item is an element of a character set.
-      !>
-      !> The function returns .TRUE. if ITEM is an element of set A.
       module logical function elemc ( ctx, item, a )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3070,10 +2755,6 @@ module pepper_instance_module
          character(*), intent(in) :: a      ( lbcell:* )  !! Set to be tested.
       end function elemc
 
-      !> Determine whether an item is an element of a double
-      !> precision set.
-      !>
-      !> The function returns .TRUE. if ITEM is an element of set A.
       module logical function elemd ( ctx, item, a )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3082,9 +2763,6 @@ module pepper_instance_module
          real(wp), intent(in) :: a      ( lbcell:* )  !! Set to be tested.
       end function elemd
 
-      !> Determine whether an item is an element of an integer set.
-      !>
-      !> The function returns .TRUE. if ITEM is an element of set A.
       module logical function elemi ( ctx, item, a )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3093,10 +2771,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: a      ( lbcell:* )  !! Set to be tested.
       end function elemi
 
-      !> Return the ordinal position of a given item in a set. If the
-      !> item does not appear in the set, return zero.
-      !>
-      !> The function returns the ordinal position of ITEM within the SET.
       module integer(ip) function ordc ( ctx, item, set )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3105,10 +2779,6 @@ module pepper_instance_module
          character(*), intent(in) :: set ( lbcell:* )  !! A set to search for a given item.
       end function ordc
 
-      !> Return the ordinal position of a given item in a set. If the
-      !> item does not appear in the set, return zero.
-      !>
-      !> The function returns the ordinal position of ITEM within the SET.
       module integer(ip) function ordd ( ctx, item, set )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3117,10 +2787,6 @@ module pepper_instance_module
          real(wp), intent(in) :: set ( lbcell:* )  !! A set to search for a given item.
       end function ordd
 
-      !> Return the ordinal position of a given item in a set. If the
-      !> item does not appear in the set, return zero.
-      !>
-      !> The function returns the ordinal position of ITEM within the SET.
       module integer(ip) function ordi ( ctx, item, set )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3129,9 +2795,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: set ( lbcell:* )  !! A set to search for a given item.
       end function ordi
 
-      !> Compare two character sets, as indicated by a relational operator.
-      !>
-      !> The function returns the result of the comparison: A (OP) B.
       module logical function setc ( ctx, a, op, b )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3141,10 +2804,6 @@ module pepper_instance_module
          character(*), intent(in) :: b      ( lbcell:* )  !! Second set.
       end function setc
 
-      !> Compare two double precision sets, as indicated by a relational
-      !> operator.
-      !>
-      !> The function returns the result of the comparison: A (OP) B.
       module logical function setd ( ctx, a, op, b )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3154,9 +2813,6 @@ module pepper_instance_module
          real(wp), intent(in) :: b      ( lbcell:* )  !! Second set.
       end function setd
 
-      !> Compare two integer sets, as indicated by a relational operator.
-      !>
-      !> The function returns the result of the comparison: A (OP) B.
       module logical function seti ( ctx, a, op, b )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3166,7 +2822,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: b      ( lbcell:* )  !! Second set.
       end function seti
 
-      !> Compute the union of two character sets to form a third set.
       module subroutine unionc ( ctx, a, b, c )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3176,8 +2831,6 @@ module pepper_instance_module
          character(*), intent(inout) :: c      ( lbcell:* )  !! Union of A and B.
       end subroutine unionc
 
-      !> Compute the union of two double precision sets to form a third
-      !> set.
       module subroutine uniond ( ctx, a, b, c )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3187,7 +2840,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: c      ( lbcell:* )  !! Union of A and B.
       end subroutine uniond
 
-      !> Compute the union of two integer sets to form a third set.
       module subroutine unioni ( ctx, a, b, c )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3197,7 +2849,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: c      ( lbcell:* )  !! Union of A and B.
       end subroutine unioni
 
-      !> Intersect two character sets to form a third set.
       module subroutine interc ( ctx, a, b, c )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3207,7 +2858,6 @@ module pepper_instance_module
          character(*), intent(inout) :: c      ( lbcell:* )  !! Intersection of A and B.
       end subroutine interc
 
-      !> Intersect two double precision sets to form a third set.
       module subroutine interd ( ctx, a, b, c )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3217,7 +2867,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: c      ( lbcell:* )  !! Intersection of A and B.
       end subroutine interd
 
-      !> Intersect two integer sets to form a third set.
       module subroutine interi ( ctx, a, b, c )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3227,7 +2876,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: c      ( lbcell:* )  !! Intersection of A and B.
       end subroutine interi
 
-      !> Take the difference of two character sets to form a third set.
       module subroutine diffc ( ctx, a, b, c )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3237,8 +2885,6 @@ module pepper_instance_module
          character(*), intent(inout) :: c      ( lbcell:* )  !! Difference of A and B.
       end subroutine diffc
 
-      !> Take the difference of two double precision sets to form
-      !> a third set.
       module subroutine diffd ( ctx, a, b, c )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3248,7 +2894,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: c      ( lbcell:* )  !! Difference of A and B.
       end subroutine diffd
 
-      !> Take the difference of two integer sets to form a third set.
       module subroutine diffi ( ctx, a, b, c )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3258,8 +2903,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: c      ( lbcell:* )  !! Difference of A and B.
       end subroutine diffi
 
-      !> Take the symmetric difference of two character sets to form
-      !> a third set.
       module subroutine sdiffc ( ctx, a, b, c )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3269,8 +2912,6 @@ module pepper_instance_module
          character(*), intent(inout) :: c      ( lbcell:* )  !! Symmetric difference of A and B.
       end subroutine sdiffc
 
-      !> Take the symmetric difference of two double precision sets
-      !> to form a third set.
       module subroutine sdiffd ( ctx, a, b, c )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3280,8 +2921,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: c      ( lbcell:* )  !! Symmetric difference of A and B.
       end subroutine sdiffd
 
-      !> Take the symmetric difference of two integer sets to form
-      !> a third set.
       module subroutine sdiffi ( ctx, a, b, c )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3291,7 +2930,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: c      ( lbcell:* )  !! Symmetric difference of A and B.
       end subroutine sdiffi
 
-      !> Insert an interval into a double precision window.
       module subroutine zzwninsd ( ctx, left, right, context, window )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3302,10 +2940,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: window    ( lbcell:* )  !! Input, output window.
       end subroutine zzwninsd
 
-      !> Return the cardinality (number of intervals) of a double
-      !> precision window.
-      !>
-      !> The function returns the cardinality of the input window.
       module integer(ip) function wncard ( ctx, window )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3313,8 +2947,6 @@ module pepper_instance_module
          real(wp), intent(in) :: window  ( lbcell:* )  !! Input window.
       end function wncard
 
-      !> Determine the complement of a double precision window with
-      !> respect to the interval [LEFT,RIGHT].
       module subroutine wncomd ( ctx, left, right, window, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3326,7 +2958,6 @@ module pepper_instance_module
                                                          !! [LEFT,RIGHT].
       end subroutine wncomd
 
-      !> Contract each of the intervals of a double precision window.
       module subroutine wncond ( ctx, left, right, window )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3336,8 +2967,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be contracted.
       end subroutine wncond
 
-      !> Place the difference of two double precision windows into
-      !> a third window.
       module subroutine wndifd ( ctx, a, b, c )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3347,10 +2976,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: c        ( lbcell:* )  !! Difference of A and B.
       end subroutine wndifd
 
-      !> Determine whether a point is an element of a double precision
-      !> window.
-      !>
-      !> The function returns .TRUE. if POINT is an element of WINDOW.
       module logical function wnelmd ( ctx, point, window )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3359,7 +2984,6 @@ module pepper_instance_module
          real(wp), intent(in) :: window      ( lbcell:* )  !! Input window.
       end function wnelmd
 
-      !> Expand each of the intervals of a double precision window.
       module subroutine wnexpd ( ctx, left, right, window )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3369,8 +2993,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be expanded.
       end subroutine wnexpd
 
-      !> Extract the left or right endpoints from a double precision
-      !> window.
       module subroutine wnextd ( ctx, side, window )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3379,7 +3001,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be extracted.
       end subroutine wnextd
 
-      !> Fetch a particular interval from a double precision window.
       module subroutine wnfetd ( ctx, window, n, left, right )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3390,8 +3011,6 @@ module pepper_instance_module
          real(wp), intent(out) :: right  !! Left, right endpoints of the Nth interval.
       end subroutine wnfetd
 
-      !> Fill small gaps between adjacent intervals of a double precision
-      !> window.
       module subroutine wnfild ( ctx, smlgap, window )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3400,7 +3019,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be filled.
       end subroutine wnfild
 
-      !> Filter (remove) small intervals from a double precision window.
       module subroutine wnfltd ( ctx, smlint, window )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3409,10 +3027,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be filtered.
       end subroutine wnfltd
 
-      !> Determine whether an interval is included in a double precision
-      !> window.
-      !>
-      !> The function returns .TRUE. if POINT is an element of WINDOW.
       module logical function wnincd ( ctx, left, right, window )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3422,7 +3036,6 @@ module pepper_instance_module
          real(wp), intent(in) :: window      ( lbcell:* )  !! Input window.
       end function wnincd
 
-      !> Insert an interval into a double precision window.
       module subroutine wninsd ( ctx, left, right, window )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3432,9 +3045,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: window    ( lbcell:* )  !! Input, output window.
       end subroutine wninsd
 
-      !> Insert an interval into a window being built (PEPPER): [[wninsd]]
-      !> for an [[interval_list]], which grows as needed. Signals
-      !> SPICE(BADENDPOINTS), as [[wninsd]], if LEFT > RIGHT.
       module subroutine insert_interval ( ctx, left, right, window )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3443,8 +3053,6 @@ module pepper_instance_module
          type(interval_list), intent(inout) :: window  !! the window
       end subroutine insert_interval
 
-      !> Place the intersection of two double precision windows into
-      !> a third window.
       module subroutine wnintd ( ctx, a, b, c )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3454,9 +3062,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: c        ( lbcell:* )  !! Intersection of A and B.
       end subroutine wnintd
 
-      !> Compare two double precision windows.
-      !>
-      !> The function returns the result of comparison: A (OP) B.
       module logical function wnreld ( ctx, a, op, b )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3466,7 +3071,6 @@ module pepper_instance_module
          real(wp), intent(in) :: b        ( lbcell:* )  !! Second window.
       end function wnreld
 
-      !> Summarize the contents of a double precision window.
       module subroutine wnsumd ( ctx, window, meas, avg, stddev, idxsml, idxlon )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3479,8 +3083,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: idxlon  !! Locations of shortest, longest intervals.
       end subroutine wnsumd
 
-      !> Place the union of two double precision windows into a third
-      !> window.
       module subroutine wnunid ( ctx, a, b, c )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3490,8 +3092,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: c        ( lbcell:* )  !! Union of A and B.
       end subroutine wnunid
 
-      !> Form a valid double precision window from the contents
-      !> of a window array.
       module subroutine wnvald ( ctx, size, n, window )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3506,20 +3106,12 @@ module pepper_instance_module
    ! --- pepper_numerics
    interface
 
-      !> Return the inverse hyperbolic cosine of a double precision
-      !> argument.
-      !>
-      !> The function returns the inverse hyperbolic cosine of a double
-      !> precision number.
       module real(wp) function dacosh ( ctx, x )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: x  !! Number whose inverse hyperbolic cosine is desired.
       end function dacosh
 
-      !> Compute arc cosine of a bracketed argument.
-      !>
-      !> The function returns the arc cosine of ARG.
       module real(wp) function dacosn ( ctx, arg, tol )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3527,9 +3119,6 @@ module pepper_instance_module
          real(wp), intent(in) :: tol  !! Tolerance.
       end function dacosn
 
-      !> Compute arc sine of a bracketed argument.
-      !>
-      !> The function returns the arc sine of ARG.
       module real(wp) function dasine ( ctx, arg, tol )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3537,19 +3126,12 @@ module pepper_instance_module
          real(wp), intent(in) :: tol  !! Tolerance.
       end function dasine
 
-      !> Return the inverse hyperbolic tangent of a double precision
-      !> argument.
-      !>
-      !> The function returns the inverse hyperbolic tangent of a double
-      !> precision number.
       module real(wp) function datanh ( ctx, x )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: x  !! Number whose inverse hyperbolic tangent is desired.
       end function datanh
 
-      !> Compute the Jacobian matrix of the transformation from
-      !> rectangular to azimuth/elevation coordinates.
       module subroutine dazldr ( ctx, x, y, z, azccw, elplsz, jacobi )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3561,8 +3143,6 @@ module pepper_instance_module
          real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
       end subroutine dazldr
 
-      !> Compute the Jacobian matrix of the transformation from
-      !> rectangular to cylindrical coordinates.
       module subroutine dcyldr ( ctx, x, y, z, jacobi )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3572,8 +3152,6 @@ module pepper_instance_module
          real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
       end subroutine dcyldr
 
-      !> Compute the Jacobian matrix of the transformation from
-      !> rectangular to latitudinal coordinates.
       module subroutine dlatdr ( ctx, x, y, z, jacobi )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3583,8 +3161,6 @@ module pepper_instance_module
          real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
       end subroutine dlatdr
 
-      !> Compute the Jacobian matrix of the transformation from
-      !> azimuth/elevation to rectangular coordinates.
       module subroutine drdazl ( ctx, range, az, el, azccw, elplsz, jacobi )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3596,8 +3172,6 @@ module pepper_instance_module
          real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
       end subroutine drdazl
 
-      !> Compute the Jacobian matrix of the transformation from geodetic
-      !> to rectangular coordinates.
       module subroutine drdgeo ( ctx, lon, lat, alt, re, f, jacobi )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3609,8 +3183,6 @@ module pepper_instance_module
          real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
       end subroutine drdgeo
 
-      !> Compute the Jacobian matrix of the transformation from
-      !> rectangular to spherical coordinates.
       module subroutine dsphdr ( ctx, x, y, z, jacobi )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3620,9 +3192,6 @@ module pepper_instance_module
          real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
       end subroutine dsphdr
 
-      !> Compute the state (position and velocity) of an object whose
-      !> trajectory is described via equinoctial elements relative to some
-      !> fixed plane (usually the equatorial plane of some planet).
       module subroutine eqncpv ( ctx, et, epoch, eqel, rapol, decpol, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3634,9 +3203,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state ( 6 )  !! State of the object described by EQEL.
       end subroutine eqncpv
 
-      !> Scale a point so that it lies on the surface of a specified
-      !> triaxial ellipsoid that is centered at the origin and aligned
-      !> with the Cartesian coordinate axes.
       module subroutine edpnt ( ctx, p, a, b, c, ep )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3647,8 +3213,6 @@ module pepper_instance_module
          real(wp), intent(out) :: ep ( 3 )  !! Point on ellipsoid.
       end subroutine edpnt
 
-      !> Return the unique point on an ellipsoid's surface where the
-      !> outward normal direction is a given vector.
       module subroutine ednmpt ( ctx, a, b, c, normal, point )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3659,9 +3223,6 @@ module pepper_instance_module
          real(wp), intent(out) :: point  ( 3 )  !! Point where outward normal is parallel to NORMAL.
       end subroutine ednmpt
 
-      !> Solve the time of flight equation MA = E - e sin(E) for the
-      !> elliptic eccentric anomaly E, given mean anomaly the MA and
-      !> the eccentricity ECC.
       module subroutine elltof ( ctx, ma, ecc, e )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3670,9 +3231,6 @@ module pepper_instance_module
          real(wp), intent(out) :: e  !! Elliptic eccentric anomaly.
       end subroutine elltof
 
-      !> Evaluate, at a specified point, a Hermite interpolating polynomial
-      !> for a specified set of equally spaced abscissa values and
-      !> corresponding pairs of function and function derivative values.
       module subroutine hrmesp ( ctx, n, first, step, yvals, x, work, f, df )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3686,8 +3244,6 @@ module pepper_instance_module
          real(wp), intent(out) :: df  !! Interpolated function's derivative at X.
       end subroutine hrmesp
 
-      !> Evaluate a Hermite interpolating polynomial at a specified
-      !> abscissa value.
       module subroutine hrmint ( ctx, n, xvals, yvals, x, work, f, df )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3700,13 +3256,6 @@ module pepper_instance_module
          real(wp), intent(out) :: df  !! Interpolated function's derivative at X.
       end subroutine hrmint
 
-      !> Evaluate a Lagrange interpolating polynomial for a specified
-      !> set of coordinate pairs whose first components are equally
-      !> spaced, at a specified abscissa value.
-      !>
-      !> The function returns the value at X of the unique polynomial of
-      !> degree N-1 that fits the points in the plane defined by FIRST,
-      !> STEP, and YVALS.
       module real(wp) function lgresp ( ctx, n, first, step, yvals, work, x )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3718,9 +3267,6 @@ module pepper_instance_module
          real(wp), intent(in) :: x  !! Point at which to interpolate the polynomial.
       end function lgresp
 
-      !> Evaluate a Lagrange interpolating polynomial, for a specified
-      !> set of coordinate pairs, at a specified abscissa value. Return
-      !> both the value of the polynomial and its derivative.
       module subroutine lgrind ( ctx, n, xvals, yvals, work, x, p, dp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3733,12 +3279,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dp  !! Polynomial derivative at X.
       end subroutine lgrind
 
-      !> Evaluate a Lagrange interpolating polynomial for a specified
-      !> set of coordinate pairs, at a specified abscissa value.
-      !>
-      !> The function returns the value at X of the unique polynomial of
-      !> degree N-1 that fits the points in the plane defined by XVALS and
-      !> YVALS.
       module real(wp) function lgrint ( ctx, n, xvals, yvals, work, x )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3749,10 +3289,6 @@ module pepper_instance_module
          real(wp), intent(in) :: x  !! Point at which to interpolate the polynomial.
       end function lgrint
 
-      !> Evaluate an indefinite integral of a Chebyshev expansion at a
-      !> specified point X and return the value of the input expansion at
-      !> X as well. The constant of integration is selected to make the
-      !> integral zero when X equals the abscissa value X2S(1).
       module subroutine chbigr ( ctx, degp, cp, x2s, x, p, itgrlp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3764,7 +3300,6 @@ module pepper_instance_module
          real(wp), intent(out) :: itgrlp  !! Integral evaluated at X.
       end subroutine chbigr
 
-      !> Find the intersection of an ellipse and a plane.
       module subroutine inelpl ( ctx, ellips, plane, nxpts, xpt1, xpt2 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3777,7 +3312,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xpt2   ( 3 )  !! Intersection points.
       end subroutine inelpl
 
-      !> Find the intersection of a ray and a plane.
       module subroutine inrypl ( ctx, vertex, dir, plane, nxpts, xpt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3789,10 +3323,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xpt    (    3 )  !! Intersection point, if NXPTS = 1.
       end subroutine inrypl
 
-      !> Construct the inverse of a 3x3 matrix with orthogonal columns and
-      !> non-zero column norms using a numerically stable algorithm. The
-      !> rows of the output matrix are the columns of the input matrix
-      !> divided by the length squared of the corresponding columns.
       module subroutine invort ( ctx, m, mit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3800,7 +3330,6 @@ module pepper_instance_module
          real(wp), intent(out) :: mit ( 3, 3 )  !! M after transposition and scaling of rows.
       end subroutine invort
 
-      !> Return the inverse of a state transformation matrix.
       module subroutine invstm ( ctx, mat, invmat )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3808,9 +3337,6 @@ module pepper_instance_module
          real(wp), intent(out) :: invmat ( 6, 6 )  !! The inverse of MAT.
       end subroutine invstm
 
-      !> Indicate whether a 3x3 matrix is a rotation matrix.
-      !>
-      !> The function returns .TRUE. if and only if M is a rotation matrix.
       module logical function isrot ( ctx, m, ntol, dtol )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3820,11 +3346,6 @@ module pepper_instance_module
                                        !! are the unitized columns of M.
       end function isrot
 
-      !> Solve the equinoctial version of Kepler's equation.
-      !>
-      !> The function returns the solution to the equinoctial version of
-      !> Kepler's equation, given the mean longitude and the h and k
-      !> components of the equinoctial elements.
       module real(wp) function kepleq ( ctx, ml, h, k )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3833,19 +3354,12 @@ module pepper_instance_module
          real(wp), intent(in) :: k  !! k component of equinoctial elements.
       end function kepleq
 
-      !> Solve the equation X = < EVEC, U(X) > where U(X) is the unit
-      !> vector [ COS(X), SIN(X) ] and  < , > denotes the two-dimensional
-      !> dot product.
-      !>
-      !> The function returns the solution to X = < EVEC, U(X) >
       module real(wp) function kpsolv ( ctx, evec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: evec ( 2 )  !! A 2-vector whose magnitude is less than 1.
       end function kpsolv
 
-      !> Find a unit quaternion corresponding to a specified rotation
-      !> matrix.
       module subroutine m2q ( ctx, r, q )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3853,8 +3367,6 @@ module pepper_instance_module
          real(wp), intent(out) :: q ( 0 : 3 )  !! A unit quaternion representing R.
       end subroutine m2q
 
-      !> Find the nearest point on a line to a specified point, and find
-      !> the distance between the two points.
       module subroutine nplnpt ( ctx, linpt, lindir, point, pnear, dist )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3865,7 +3377,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dist  !! Distance between POINT and PNEAR.
       end subroutine nplnpt
 
-      !> Find the nearest point on a line segment to a given point.
       module subroutine npsgpt ( ctx, ep1, ep2, point, pnear, dist )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3876,7 +3387,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dist  !! Distance between PNEAR and POINT.
       end subroutine npsgpt
 
-      !> Make a SPICE plane from a normal vector and a constant.
       module subroutine nvc2pl ( ctx, normal, konst, plane )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3886,7 +3396,6 @@ module pepper_instance_module
          real(wp), intent(out) :: plane  ( ubpl )  !! An array representing the plane.
       end subroutine nvc2pl
 
-      !> Make a SPICE plane from a normal vector and a point.
       module subroutine nvp2pl ( ctx, normal, point, plane )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3896,7 +3405,6 @@ module pepper_instance_module
          real(wp), intent(out) :: plane  ( ubpl )  !! An array representing the plane.
       end subroutine nvp2pl
 
-      !> Make a SPICE plane from a point and two spanning vectors.
       module subroutine psv2pl ( ctx, point, span1, span2, plane )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3910,9 +3418,6 @@ module pepper_instance_module
          real(wp), intent(out) :: plane ( ubpl )  !! An array representing the plane.
       end subroutine psv2pl
 
-      !> Compute the total area of a collection of triangular plates.
-      !>
-      !> The function returns the total area of the set of plates.
       module real(wp) function pltar ( ctx, nv, vrtces, np, plates )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3922,7 +3427,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: plates ( 3, np )  !! Array of plates.
       end function pltar
 
-      !> Find the nearest point on a triangular plate to a given point.
       module subroutine pltnp ( ctx, point, v1, v2, v3, pnear, dist )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3934,11 +3438,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dist  !! Distance between PNEAR and POINT.
       end subroutine pltnp
 
-      !> Compute the volume of a three-dimensional region bounded by a
-      !> collection of triangular plates.
-      !>
-      !> The function returns the volume of the spatial region bounded
-      !> by the plates.
       module real(wp) function pltvol ( ctx, nv, vrtces, np, plates )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3948,10 +3447,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: plates ( 3, np )  !! Array of plates.
       end function pltvol
 
-      !> Estimate the derivative of a function by finding the derivative
-      !> of a quadratic approximating function. This derivative estimate
-      !> is equivalent to that found by computing the average of forward
-      !> and backward differences.
       module subroutine qderiv ( ctx, ndim, f0, f2, delta, dfdt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3962,8 +3457,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dfdt  ( ndim )  !! Derivative vector.
       end subroutine qderiv
 
-      !> Compute the axis of the rotation given by an input matrix
-      !> and the angle of the rotation about that axis.
       module subroutine raxisa ( ctx, matrix, axis, angle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3972,7 +3465,6 @@ module pepper_instance_module
          real(wp), intent(out) :: angle  !! Angle through which the rotation is performed.
       end subroutine raxisa
 
-      !> Find the roots of a quadratic equation.
       module subroutine rquad ( ctx, a, b, c, root1, root2 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3983,8 +3475,6 @@ module pepper_instance_module
          real(wp), intent(out) :: root2 ( 2 )  !! Root built from negative discriminant term.
       end subroutine rquad
 
-      !> Compute the integer quotient and non-negative remainder
-      !> of NUM and DENOM.
       module subroutine rmaind ( ctx, num, denom, q, rem )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -3994,8 +3484,6 @@ module pepper_instance_module
          real(wp), intent(out) :: rem  !! Remainder of the quotient NUM/DENOM.
       end subroutine rmaind
 
-      !> Compute the integer quotient and non-negative remainder
-      !> of NUM and DENOM.
       module subroutine rmaini ( ctx, num, denom, q, rem )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4005,9 +3493,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: rem  !! Remainder of the quotient NUM/DENOM.
       end subroutine rmaini
 
-      !> Project a vector onto a specified plane, orthogonally.
-      !>
-      !> UBPL       P   SPICE plane upper bound.
       module subroutine vprjp ( ctx, vin, plane, vout )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4017,10 +3502,6 @@ module pepper_instance_module
          real(wp), intent(out) :: vout  (    3 )  !! Vector resulting from projection.
       end subroutine vprjp
 
-      !> Find the vector in a specified plane that maps to a specified
-      !> vector in another plane under orthogonal projection.
-      !>
-      !> UBPL       P   SPICE plane upper bound.
       module subroutine vprjpi ( ctx, vin, projpl, invpl, vout, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4032,8 +3513,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether VOUT could be calculated.
       end subroutine vprjpi
 
-      !> Correct the apparent position of an object for stellar
-      !> aberration.
       module subroutine stelab ( ctx, pobj, vobs, appobj )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4045,9 +3524,6 @@ module pepper_instance_module
                                                 !! the observer, corrected for stellar aberration.
       end subroutine stelab
 
-      !> Correct the position of a target for the stellar aberration
-      !> effect on radiation transmitted from a specified observer to
-      !> the target.
       module subroutine stlabx ( ctx, pobj, vobs, corpos )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4058,7 +3534,6 @@ module pepper_instance_module
          real(wp), intent(out) :: corpos ( 3 )  !! Corrected position of the object.
       end subroutine stlabx
 
-      !> Transpose the square blocks within a matrix.
       module subroutine xposbl ( ctx, bmat, nrow, ncol, bsize, btmat )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4076,8 +3551,6 @@ module pepper_instance_module
    ! --- pepper_array_ops
    interface
 
-      !> Cycle the elements of a character array forward or backward
-      !> in place.
       module subroutine cyacip ( ctx, nelt, dir, ncycle, array )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4087,8 +3560,6 @@ module pepper_instance_module
          character(*), intent(inout) :: array    ( * )  !! Array to be cycled/cycled array.
       end subroutine cyacip
 
-      !> Cycle the elements of a double precision array forward
-      !> or backward in place.
       module subroutine cyadip ( ctx, nelt, dir, ncycle, array )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4098,8 +3569,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: array    ( * )  !! Array to be cycled/cycled array.
       end subroutine cyadip
 
-      !> Cycle the elements of an integer array forward or backward
-      !> in place.
       module subroutine cyaiip ( ctx, nelt, dir, ncycle, array )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4109,7 +3578,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: array    ( * )  !! Array to be cycled/cycled array.
       end subroutine cyaiip
 
-      !> Cycle the elements of a character array forward or backward.
       module subroutine cyclac ( ctx, array, nelt, dir, ncycle, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4120,8 +3588,6 @@ module pepper_instance_module
          character(*), intent(out) :: out      ( * )  !! Cycled array.
       end subroutine cyclac
 
-      !> Cycle the elements of a double precision array forward
-      !> or backward.
       module subroutine cyclad ( ctx, array, nelt, dir, ncycle, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4132,7 +3598,6 @@ module pepper_instance_module
          real(wp), intent(out) :: out      ( * )  !! Cycled array.
       end subroutine cyclad
 
-      !> Cycle the elements of an integer array forward or backward.
       module subroutine cyclai ( ctx, array, nelt, dir, ncycle, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4143,8 +3608,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: out      ( * )  !! Cycled array.
       end subroutine cyclai
 
-      !> Insert one or more elements into a character array at the
-      !> indicated location.
       module subroutine inslac ( ctx, elts, ne, loc, array, na )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4155,8 +3618,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
       end subroutine inslac
 
-      !> Insert one or more elements into a double precision array at
-      !> the indicated location.
       module subroutine inslad ( ctx, elts, ne, loc, array, na )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4167,8 +3628,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
       end subroutine inslad
 
-      !> Insert one or more elements into an integer array at
-      !> the indicated location.
       module subroutine inslai ( ctx, elts, ne, loc, array, na )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4179,8 +3638,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
       end subroutine inslai
 
-      !> Remove one or more elements from a character array at the
-      !> indicated location.
       module subroutine remlac ( ctx, ne, loc, array, na )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4190,8 +3647,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
       end subroutine remlac
 
-      !> Remove one or more elements from a double precision array at the
-      !> indicated location.
       module subroutine remlad ( ctx, ne, loc, array, na )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4201,8 +3656,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
       end subroutine remlad
 
-      !> Remove one or more elements from an integer array at the
-      !> indicated location.
       module subroutine remlai ( ctx, ne, loc, array, na )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4212,8 +3665,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
       end subroutine remlai
 
-      !> Swap (exchange) two non-intersecting groups of contiguous
-      !> elements of a character array.
       module subroutine swapac ( ctx, n, locn, m, locm, array )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4224,8 +3675,6 @@ module pepper_instance_module
          character(*), intent(inout) :: array  ( * )  !! The array.
       end subroutine swapac
 
-      !> Swap (exchange) two non-intersecting groups of contiguous
-      !> elements of a double precision array.
       module subroutine swapad ( ctx, n, locn, m, locm, array )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4236,8 +3685,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: array  ( * )  !! The array.
       end subroutine swapad
 
-      !> Swap (exchange) two non-intersecting groups of contiguous
-      !> elements of an integer array.
       module subroutine swapai ( ctx, n, locn, m, locm, array )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4248,9 +3695,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: array  ( * )  !! The array.
       end subroutine swapai
 
-      !> Pack the contents of a CHARACTER array. That is, take
-      !> a set of arbitrarily spaced elements from an input array,
-      !> and make them adjacent elements in an output array.
       module subroutine packac ( ctx, in, pack, npack, maxout, nout, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4262,9 +3706,6 @@ module pepper_instance_module
          character(*), intent(out) :: out     ( * )  !! Output array.
       end subroutine packac
 
-      !> Pack the contents of a double precision array. That is,
-      !> take a set of arbitrarily spaced elements from an input
-      !> array, and make them adjacent elements in an output array.
       module subroutine packad ( ctx, in, pack, npack, maxout, nout, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4276,9 +3717,6 @@ module pepper_instance_module
          real(wp), intent(out) :: out     ( * )  !! Output array.
       end subroutine packad
 
-      !> Pack the contents of an integer array. That is,
-      !> take a set of arbitrarily spaced elements from an input
-      !> array, and make them adjacent elements in an output array.
       module subroutine packai ( ctx, in, pack, npack, maxout, nout, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4290,9 +3728,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: out     ( * )  !! Output array.
       end subroutine packai
 
-      !> Allocate a node in a doubly linked list pool.
-      !>
-      !> LBPOOL     P   Lower bound of pool column indices.
       module subroutine lnkan ( ctx, pool, new )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4301,7 +3736,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: new  !! Number of new node that was allocated.
       end subroutine lnkan
 
-      !> Free a specified sublist in a list.
       module subroutine lnkfsl ( ctx, head, tail, pool )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4311,12 +3745,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
       end subroutine lnkfsl
 
-      !> Return the head node of the list containing a specified node.
-      !>
-      !> LBPOOL     P   Lower bound of pool column indices.
-      !>
-      !> The function returns the number of the head node of the list
-      !> containing NODE.
       module integer(ip) function lnkhl ( ctx, node, pool )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4325,10 +3753,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
       end function lnkhl
 
-      !> Insert the list containing a specified node into a another list,
-      !> following a specified node.
-      !>
-      !> LBPOOL     P   Lower bound of pool column indices.
       module subroutine lnkila ( ctx, prev, list, pool )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4338,10 +3762,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
       end subroutine lnkila
 
-      !> Insert the list containing a specified node into a another list,
-      !> preceding a specified node.
-      !>
-      !> LBPOOL     P   Lower bound of pool column indices.
       module subroutine lnkilb ( ctx, list, next, pool )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4351,9 +3771,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
       end subroutine lnkilb
 
-      !> Initialize a doubly linked list pool.
-      !>
-      !> LBPOOL     P   Lower bound of pool column indices.
       module subroutine lnkini ( ctx, size, pool )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4363,11 +3780,6 @@ module pepper_instance_module
                                                                 !! output.
       end subroutine lnkini
 
-      !> Return the number of free nodes in a doubly linked list pool.
-      !>
-      !> LBPOOL     P   Lower bound of pool column indices.
-      !>
-      !> The function returns the number of free nodes in the pool.
       module integer(ip) function lnknfn ( ctx, pool )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4375,13 +3787,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
       end function lnknfn
 
-      !> Find the node following a specified node in a doubly linked list
-      !> pool.
-      !>
-      !> LBPOOL     P   Lower bound of pool column indices.
-      !>
-      !> The function returns the number of the successor of the node
-      !> indicated by NODE.
       module integer(ip) function lnknxt ( ctx, node, pool )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4390,13 +3795,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: node  !! Number of an allocated node.
       end function lnknxt
 
-      !> Find the node preceding a specified node in a doubly linked list
-      !> pool.
-      !>
-      !> LBPOOL     P   Lower bound of pool column indices.
-      !>
-      !> The function returns the number of the predecessor of the node
-      !> indicated by NODE.
       module integer(ip) function lnkprv ( ctx, node, pool )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4405,11 +3803,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: node  !! Number of an allocated node.
       end function lnkprv
 
-      !> Return the size of a doubly linked list pool.
-      !>
-      !> LBPOOL     P   Lower bound of pool column indices.
-      !>
-      !> The function returns the size of the pool.
       module integer(ip) function lnksiz ( ctx, pool )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4417,12 +3810,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
       end function lnksiz
 
-      !> Return the tail node of the list containing a specified node.
-      !>
-      !> LBPOOL     P   Lower bound of pool column indices.
-      !>
-      !> The function returns the number of the tail node of the list
-      !> containing NODE.
       module integer(ip) function lnktl ( ctx, node, pool )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4431,7 +3818,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: pool (  2,  lbpool : *  )  !! A doubly linked list pool.
       end function lnktl
 
-      !> Extract a specified sublist from a list.
       module subroutine lnkxsl ( ctx, head, tail, pool )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4446,7 +3832,6 @@ module pepper_instance_module
    ! --- pepper_text
    interface
 
-      !> Cycle the contents of a character string to the left or right.
       module subroutine cyclec ( ctx, instr, dir, ncycle, outstr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4456,9 +3841,6 @@ module pepper_instance_module
          character(*), intent(out) :: outstr  !! Cycled string.
       end subroutine cyclec
 
-      !> Replace a marker with a double precision number.
-      !>
-      !> MAXLDP     P   Maximum length of a DP number.
       module subroutine repmd ( ctx, in, marker, value, sigdig, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4469,9 +3851,6 @@ module pepper_instance_module
          character(*), intent(out) :: out  !! Output string.
       end subroutine repmd
 
-      !> Replace a marker with an integer.
-      !>
-      !> MAXLI      P   Maximum length of an integer.
       module subroutine repmi ( ctx, in, marker, value, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4481,7 +3860,6 @@ module pepper_instance_module
          character(*), intent(out) :: out  !! Output string.
       end subroutine repmi
 
-      !> Replace the substring (LEFT:RIGHT) with a string of any length.
       module subroutine repsub ( ctx, in, left, right, string, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4492,7 +3870,6 @@ module pepper_instance_module
          character(*), intent(out) :: out  !! Resulting string.
       end subroutine repsub
 
-      !> Remove the substring (LEFT:RIGHT) from a character string.
       module subroutine remsub ( ctx, in, left, right, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4502,8 +3879,6 @@ module pepper_instance_module
          character(*), intent(out) :: out  !! Output string.
       end subroutine remsub
 
-      !> Insert a substring into a character string at a specified
-      !> location.
       module subroutine inssub ( ctx, in, sub, loc, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4513,9 +3888,6 @@ module pepper_instance_module
          character(*), intent(out) :: out  !! Output string.
       end subroutine inssub
 
-      !> Shift the contents of a character string to the left or right.
-      !> Characters moved past the beginning or end of the string are
-      !> lost. Vacant spaces are filled with a specified character.
       module subroutine shiftc ( ctx, in, dir, nshift, fillc, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4526,8 +3898,6 @@ module pepper_instance_module
          character(*), intent(out) :: out  !! Shifted string.
       end subroutine shiftc
 
-      !> Validate an ID string: check for non-printing characters
-      !> or excessive non-blank length.
       module subroutine chckid ( ctx, class, maxlen, id )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4536,10 +3906,6 @@ module pepper_instance_module
          character(*), intent(in) :: id  !! The ID string to be validated.
       end subroutine chckid
 
-      !> Count the characters in a group of lines in a text file.
-      !>
-      !> The function returns the number of characters in a group of lines
-      !> in a text file.
       module integer(ip) function countc ( ctx, unit, bline, eline, line )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4549,8 +3915,6 @@ module pepper_instance_module
          character(*), intent(inout) :: line  !! Workspace.
       end function countc
 
-      !> Convert a signed hexadecimal string representation of an integer
-      !> to its equivalent integer.
       module subroutine hx2int ( ctx, string, number, error, errmsg )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4560,10 +3924,6 @@ module pepper_instance_module
          character(*), intent(out) :: errmsg  !! A descriptive error message.
       end subroutine hx2int
 
-      !> Find a given identifier, which consists of an integer array,
-      !> within a list of such identifiers, or insert the identifier
-      !> into the list. Return the location of the identifier and a flag
-      !> indicating whether or not the identifier was already present.
       module subroutine locati ( ctx, id, idsz, list, pool, at, presnt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4578,7 +3938,6 @@ module pepper_instance_module
          logical, intent(out) :: presnt  !! Flag indicating if ID was already in LIST.
       end subroutine locati
 
-      !> Locate a group of lines in a text file delimited by markers.
       module subroutine locln ( ctx, unit, bmark, emark, line, bline, eline, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4601,9 +3960,6 @@ module pepper_instance_module
 
    interface
 
-      !> Set counter array to the initial values for the user routines.
-      !>
-      !> CTRSIZ     P   Counter array size.
       module subroutine zzctruin ( ctx, oldctr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4611,10 +3967,6 @@ module pepper_instance_module
                                                         !! values.
       end subroutine zzctruin
 
-      !> Set counter array to the initial values for the subsystem
-      !> routines.
-      !>
-      !> CTRSIZ     P   Counter array size.
       module subroutine zzctrsin ( ctx, oldctr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4622,18 +3974,12 @@ module pepper_instance_module
                                                         !! subsystem values
       end subroutine zzctrsin
 
-      !> Increment counter array.
-      !>
-      !> CTRSIZ     P   Counter array size.
       module subroutine zzctrinc ( ctx, oldctr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(inout) :: oldctr ( ctrsiz )  !! Counter array to be incremented.
       end subroutine zzctrinc
 
-      !> Check and update, if needed, counter array.
-      !>
-      !> CTRSIZ     P   Counter array size.
       module subroutine zzctrchk ( ctx, newctr, oldctr, update )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4642,9 +3988,6 @@ module pepper_instance_module
          logical, intent(out) :: update  !! Update flag.
       end subroutine zzctrchk
 
-      !> Set the long error message equal to a standard I/O error message
-      !> composed from an action, the name of a file, and a value of
-      !> IOSTAT.
       module subroutine ioerr ( ctx, action, file, iostat )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4653,10 +3996,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: iostat  !! The value of IOSTAT returned by ACTION.
       end subroutine ioerr
 
-      !> Read the next line of text from a text file.
-      !>
-      !> MAXOPN     P   Maximum number of open files.
-      !> MAXLEN     P   Maximum file name length.
       module subroutine rdtext ( ctx, file, line, eof )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4665,21 +4004,18 @@ module pepper_instance_module
          logical, intent(out) :: eof  !! End-of-file indicator.
       end subroutine rdtext
 
-      !> Close a text file currently opened by [[rdtext]].
       module subroutine cltext ( ctx, file )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: file  !! Text file to be closed.
       end subroutine cltext
 
-      !> Open and initialize a SPICE ASCII kernel file.
       module subroutine rdknew ( ctx, kernel )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: kernel  !! Kernel file.
       end subroutine rdknew
 
-      !> Read the next line of data from a SPICE ASCII kernel file.
       module subroutine rdkdat ( ctx, line, eof )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4687,8 +4023,6 @@ module pepper_instance_module
          logical, intent(out) :: eof  !! End of file indicator.
       end subroutine rdkdat
 
-      !> Return the name of file and line number of the last line read by
-      !> the entry point [[rdkdat]].
       module subroutine rdklin ( ctx, kernel, number )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4696,9 +4030,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: number  !! The line number of the last line read in the file.
       end subroutine rdklin
 
-      !> SPICE private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zztknerr ( ctx, templt, string, token, error, status )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4709,9 +4040,6 @@ module pepper_instance_module
          logical, intent(out) :: status  !! Status flag
       end subroutine zztknerr
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzmkpc ( ctx, pictur, b, e, mark, pattrn )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4722,11 +4050,6 @@ module pepper_instance_module
          character(*), intent(in) :: pattrn  !! Decimal pattern
       end subroutine zzmkpc
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns TRUE if a replacement is performed
       module logical function zzrept ( ctx, sub, replac, l2r )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4735,9 +4058,6 @@ module pepper_instance_module
          logical, intent(in) :: l2r  !! use left to right scanning if L2R is TRUE.
       end function zzrept
 
-      !> Determine whether the components of a time vector are in the
-      !> "usual" range for the components, if component checking is
-      !> enabled.
       module subroutine tcheck ( ctx, tvec, type, mods, modify, ok, error )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4749,42 +4069,30 @@ module pepper_instance_module
          character(*), intent(out) :: error  !! Diagnostic message if .NOT. OK.
       end subroutine tcheck
 
-      !> Restrict the set of strings that are recognized by SPICE time
-      !> parsing routines to those that have standard values for all time
-      !> components.
       module subroutine tparch ( ctx, type )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: type  !! String: Use 'YES' to restrict time inputs.
       end subroutine tparch
 
-      !> Determine whether component checking is enabled for time strings.
       module subroutine tchckd ( ctx, type )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(out) :: type  !! Answer to the question: "Is checking enabled?"
       end subroutine tchckd
 
-      !> Expand an abbreviated year to a full year specification.
       module subroutine texpyr ( ctx, year )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(inout) :: year  !! The year of some epoch abbreviated/expanded.
       end subroutine texpyr
 
-      !> Set the lower bound on the 100 year range.
       module subroutine tsetyr ( ctx, year )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: year  !! Lower bound on the 100 year interval of expansion
       end subroutine tsetyr
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> COUNT      P   The number of patterns built in to this routine.
-      !> The function returns .TRUE. if the initialization is successful.
       module logical function zztpats ( ctx, room, nknown, known, meanng )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4795,12 +4103,6 @@ module pepper_instance_module
          character(*), intent(out) :: meanng ( * )  !! The meaning associated with the patterns.
       end function zztpats
 
-      !> Parse the components of a time string and return a vector of the
-      !> components of that string. Also return an array of any modifiers
-      !> present in the input string; these may alter the interpretation
-      !> of the components.
-      !>
-      !> The function returns
       module subroutine tpartv ( ctx, string, tvec, ntvec, type, modify, mods, yabbrv, succes, pictur, error )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4816,11 +4118,6 @@ module pepper_instance_module
          character(*), intent(out) :: error  !! A diagnostic message if STRING couldn't be parsed
       end subroutine tpartv
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns TRUE is a combination was performed.
       module logical function zzcmbt ( ctx, string, letter, l2r )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4829,20 +4126,12 @@ module pepper_instance_module
          logical, intent(in) :: l2r  !! If TRUE scan left to right, else scan right to left
       end function zzcmbt
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module logical function zzgrep ( ctx, string )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(out) :: string  !! The current representation of tokenized time
       end function zzgrep
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns TRUE if a pair is found.
       module logical function zzispt ( ctx, string, b, e )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4851,24 +4140,12 @@ module pepper_instance_module
          integer(ip), intent(out) :: e  !! the ending of the last matching token.
       end function zzispt
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> LETTER     I
-      !>
-      !> The function returns
       module logical function zzist ( ctx, letter )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(1), intent(in) :: letter
       end function zzist
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns TRUE if the token is located.
       module logical function zznote ( ctx, letter, b, e )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4877,22 +4154,12 @@ module pepper_instance_module
          integer(ip), intent(out) :: e  !! is the end of the token.
       end function zznote
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns TRUE if any tokens are removed.
       module logical function zzremt ( ctx, letter )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(1), intent(in) :: letter  !! token to remove from the internal representation.
       end function zzremt
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns TRUE is a substitution is performed.
       module logical function zzsubt ( ctx, string, transl, l2r )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4901,11 +4168,6 @@ module pepper_instance_module
          logical, intent(in) :: l2r  !! direction to scan internal representation.
       end function zzsubt
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns TRUE is STRING can be tokenized.
       module logical function zztokns ( ctx, string, error )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4913,11 +4175,6 @@ module pepper_instance_module
          character(*), intent(out) :: error  !! A diagnostic message
       end function zztokns
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns TRUE if the string was unpacked completely.
       module logical function zzunpck ( ctx, string, yabbrv, tvec, e, transl, pic, error )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4930,11 +4187,6 @@ module pepper_instance_module
          logical, intent(in) :: yabbrv  !! has the year been abbreviated.
       end function zzunpck
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns TRUE if any substitutions are performed.
       module logical function zzvalt ( ctx, string, b, e, letter )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4944,8 +4196,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: e  !! Upper bound of value range
       end function zzvalt
 
-      !> Parse a time string and return seconds past the J2000 epoch
-      !> on a formal calendar.
       module subroutine tparse ( ctx, string, sp2000, errmsg )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4954,22 +4204,12 @@ module pepper_instance_module
          character(*), intent(out) :: errmsg  !! Descriptive error message.
       end subroutine tparse
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> PEPPER: initializes the pool state PS (SPICELIB passed the arrays).
       module subroutine zzpini ( ctx, ps )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          type(pool_state), intent(inout) :: ps  !! the kernel pool
       end subroutine zzpini
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> PEPPER: stores into the pool state PS (SPICELIB passed the arrays).
       module subroutine zzrvar ( ctx, ps, varnam, eof )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4978,11 +4218,6 @@ module pepper_instance_module
          logical, intent(out) :: eof  !! if TRUE end of input file has been reached.
       end subroutine zzrvar
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> PEPPER: stores into the pool state PS (SPICELIB passed the arrays).
       module subroutine zzrvbf ( ctx, buffer, bsize, linnum, ps, varnam, eof )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -4994,29 +4229,17 @@ module pepper_instance_module
          logical, intent(out) :: eof  !! if TRUE end of input file has been reached.
       end subroutine zzrvbf
 
-      !> Remove all kernel variables from the kernel pool. Watches
-      !> on kernel variables are retained.
-      !>
-      !> None.
       module subroutine clpool ( ctx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
       end subroutine clpool
 
-      !> Load the variables contained in a NAIF ASCII kernel file into the
-      !> kernel pool. Lines have at most 132 characters; a longer line is
-      !> cut without an error (see Restrictions).
-      !>
-      !> PEPPER: a file named `*.json` (in any case) is a JSON kernel (see
-      !> [[pepper_json]]), loaded atomically: on an error nothing in it is
-      !> loaded.
       module subroutine ldpool ( ctx, fname )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: fname  !! Name of the text kernel file.
       end subroutine ldpool
 
-      !> Return the value of a kernel variable from the kernel pool.
       module subroutine rtpool ( ctx, name, n, values, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5026,8 +4249,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if variable is in pool.
       end subroutine rtpool
 
-      !> Confirm the existence of a numeric kernel variable in the kernel
-      !> pool.
       module subroutine expool ( ctx, name, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5035,10 +4256,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. when the variable is in the pool.
       end subroutine expool
 
-      !> Write to a specified unit a set of "keyword = value" assignments
-      !> for all currently defined kernel variables. The assignments
-      !> constitute a text kernel from which the current state of the
-      !> kernel pool can be restored.
       module subroutine wrpool ( ctx, unit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5046,8 +4263,6 @@ module pepper_instance_module
                                           !! written.
       end subroutine wrpool
 
-      !> Add a name to the list of agents to notify whenever a member of
-      !> a list of kernel variables is updated.
       module subroutine swpool ( ctx, agent, nnames, names )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5057,8 +4272,6 @@ module pepper_instance_module
          character(*), intent(in) :: agent  !! The name of an agent to be notified after updates.
       end subroutine swpool
 
-      !> Indicate whether or not any watched kernel variables that have a
-      !> specified agent on their notification list have been updated.
       module subroutine cvpool ( ctx, agent, update )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5066,9 +4279,6 @@ module pepper_instance_module
          logical, intent(out) :: update  !! .TRUE. if variables for AGENT have been updated.
       end subroutine cvpool
 
-      !> The names of the kernel variables that match a template (wildcards
-      !> * and %, case-insensitive, as [[gnpool]]), of any length, in the order
-      !> of [[gnpool]] (PEPPER).
       module subroutine pool_names ( ctx, template, names )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5076,8 +4286,6 @@ module pepper_instance_module
          type(string), allocatable, intent(out) :: names(:)  !! the matching names
       end subroutine pool_names
 
-      !> All the values of a numeric kernel variable (PEPPER; [[gdpool]] with
-      !> the size taken from the pool).
       module subroutine pool_values ( ctx, name, values, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5086,10 +4294,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! the variable is in the pool and numeric
       end subroutine pool_values
 
-      !> All the values of a numeric kernel variable, rounded to integers
-      !> (PEPPER; [[gipool]] with the size taken from the pool).
-      !>
-      !> A value outside the range of integers signals SPICE(INTOUTOFRANGE).
       module subroutine pool_integers ( ctx, name, values, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5098,8 +4302,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! the variable is in the pool and numeric
       end subroutine pool_integers
 
-      !> All the values of a character kernel variable, each of any length
-      !> (PEPPER; [[gcpool]] with the size taken from the pool).
       module subroutine pool_strings ( ctx, name, values, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5108,18 +4310,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! the variable is in the pool and of character type
       end subroutine pool_strings
 
-      !> Where the values of a kernel variable came from (PEPPER): the
-      !> assignments in effect, in order, with the source of each, the line
-      !> where it begins, and the index of its first value. An `=` assignment
-      !> replaces the values, so it is the first one; each `+=` (or `"+NAME"`
-      !> of a JSON kernel) that followed adds one.
-      !>
-      !> The source is the kernel file, named as it was loaded (with
-      !> [[spice_furnsh]], or listed in a meta-kernel), or a tag for the values
-      !> set by a program: `(PCPOOL)`, `(PDPOOL)`, `(PIPOOL)`, `(LMPOOL)` (its
-      !> line is the line of the buffer), `(add_frame)` (the definition of a
-      !> programmatic frame, [[spice_add_frame]]). [[pool_defined_by]] is the
-      !> reverse.
       module subroutine pool_sources ( ctx, name, sources, lines, found, first )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5130,10 +4320,6 @@ module pepper_instance_module
          integer(ip), allocatable, intent(out), optional :: first(:)  !! the index of the first value each gave
       end subroutine pool_sources
 
-      !> The kernel variables that a source assigned (PEPPER; the reverse of
-      !> [[pool_sources]]): the variables with an assignment in effect from
-      !> it, in the order of [[gnpool]]. A variable that a later `=` from
-      !> another source replaced is not among them.
       module subroutine pool_defined_by ( ctx, source, names )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5141,21 +4327,12 @@ module pepper_instance_module
          type(string), allocatable, intent(out) :: names(:)  !! the variables it assigned
       end subroutine pool_defined_by
 
-      !> Write the kernel pool as a JSON kernel (PEPPER; the JSON counterpart
-      !> of [[wrpool]]): one `"NAME": value` per variable, in the order of
-      !> [[gnpool]], each with a `//` comment naming its sources and lines
-      !> ([[pool_sources]]). Loading the file ([[spice_furnsh]], as a `*.json`
-      !> kernel) gives the same variables and values: the numbers are written
-      !> with as many digits as they need to read back exactly (integers
-      !> without a fraction), and times as the numbers they became.
       module subroutine pool_write_json ( ctx, unit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: unit  !! the unit of the file: open for formatted sequential writing
       end subroutine pool_write_json
 
-      !> Return one string value of a character kernel variable, of any
-      !> length (PEPPER; [[gcpool]] truncates to the length of its output).
       module subroutine pool_string ( ctx, name, nth, value, found, n )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5166,8 +4343,6 @@ module pepper_instance_module
          integer(ip), intent(out), optional :: n  !! the number of values of the variable (0 if it is not a character variable)
       end subroutine pool_string
 
-      !> Return the character value of a kernel variable from the
-      !> kernel pool.
       module subroutine gcpool ( ctx, name, start, room, n, cvals, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5179,7 +4354,6 @@ module pepper_instance_module
          character(*), intent(out) :: cvals     ( * )  !! Values associated with NAME.
       end subroutine gcpool
 
-      !> Return the d.p. value of a kernel variable from the kernel pool.
       module subroutine gdpool ( ctx, name, start, room, n, values, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5191,8 +4365,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: room  !! The largest number of values to return.
       end subroutine gdpool
 
-      !> Return the integer value of a kernel variable from the
-      !> kernel pool.
       module subroutine gipool ( ctx, name, start, room, n, ivals, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5204,7 +4376,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: ivals     ( * )  !! Values associated with NAME.
       end subroutine gipool
 
-      !> Return the data about a kernel pool variable.
       module subroutine dtpool ( ctx, name, found, n, type )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5214,8 +4385,6 @@ module pepper_instance_module
          character(*), intent(out) :: type  !! Type of the variable 'C', 'N', 'X'
       end subroutine dtpool
 
-      !> Provide toolkit programmers a method for programmatically
-      !> inserting character data into the kernel pool.
       module subroutine pcpool ( ctx, name, n, cvals )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5225,8 +4394,6 @@ module pepper_instance_module
                                                       !! kernel pool.
       end subroutine pcpool
 
-      !> Provide toolkit programmers a method for programmatically
-      !> inserting double precision data into the kernel pool.
       module subroutine pdpool ( ctx, name, n, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5236,8 +4403,6 @@ module pepper_instance_module
                                                   !! pool.
       end subroutine pdpool
 
-      !> Provide toolkit programmers a method for programmatically
-      !> inserting integer data into the kernel pool.
       module subroutine pipool ( ctx, name, n, ivals )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5247,8 +4412,6 @@ module pepper_instance_module
                                                      !! pool.
       end subroutine pipool
 
-      !> Load the variables contained in an internal buffer into the
-      !> kernel pool.
       module subroutine lmpool ( ctx, cvals, n )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5256,7 +4419,6 @@ module pepper_instance_module
          character(*), intent(in) :: cvals     ( * )  !! An array that contains a SPICE text kernel
       end subroutine lmpool
 
-      !> Return the kernel pool size limitations.
       module subroutine szpool ( ctx, name, n, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5265,14 +4427,12 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if NAME is recognized.
       end subroutine szpool
 
-      !> Delete a variable from the kernel pool.
       module subroutine dvpool ( ctx, name )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: name  !! Name of the variable to be deleted.
       end subroutine dvpool
 
-      !> Return names of kernel variables matching a specified template.
       module subroutine gnpool ( ctx, name, start, room, n, cvals, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5285,19 +4445,12 @@ module pepper_instance_module
                                                        !! NAME.
       end subroutine gnpool
 
-      !> Delete a name from the list of agents to notify whenever a member
-      !> of a list of kernel variables is updated.
       module subroutine dwpool ( ctx, agent )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: agent  !! The name of an agent to be notified after updates.
       end subroutine dwpool
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> CTRSIZ     P   Dimension of the counter array
       module subroutine zzpctrck ( ctx, usrctr, update )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5316,10 +4469,6 @@ module pepper_instance_module
 
    interface
 
-      !> The default SPICE body/ID mapping assignments available
-      !> to the SPICE library.
-      !>
-      !> NPERM      P   Number of name/ID mappings.
       module subroutine zzidmap ( ctx, bltcod, bltnam )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5327,11 +4476,6 @@ module pepper_instance_module
          character(maxl), intent(out) :: bltnam(nperm)  !! List of default names.
       end subroutine zzidmap
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns the hash value associated with N.
       module integer(ip) function zzhashi ( ctx, n, m )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5339,11 +4483,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: m  !! Divisor used for the hash function
       end function zzhashi
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> LBPOOL     P   Collision list array lower bound
       module subroutine zzhscini ( ctx, hashsz, hedlst, collst )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5353,11 +4492,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: collst  ( lbpool : * )  !! Hash node collision list
       end subroutine zzhscini
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> LBPOOL     P   Collision list array lower bound
       module subroutine zzhscadd ( ctx, hedlst, collst, items, item, itemat, new )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5370,11 +4504,6 @@ module pepper_instance_module
          logical, intent(out) :: new  !! Flag indicting if item was added
       end subroutine zzhscadd
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> LBPOOL     P   Collision list array lower bound
       module subroutine zzhscchk ( ctx, hedlst, collst, items, item, itemat )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5386,11 +4515,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: itemat  !! Item index in node collision and item lists
       end subroutine zzhscchk
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> LBPOOL     P   Collision list array lower bound
       module subroutine zzhscavl ( ctx, collst, avail )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5399,11 +4523,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: avail  !! Room available in the hash
       end subroutine zzhscavl
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> LBPOOL     P   Collision list array lower bound
       module subroutine zzhscinf ( ctx, hedlst, collst, items, item, avail )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5415,11 +4534,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: avail  !! parameter Value
       end subroutine zzhscinf
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> LBPOOL     P   Collision list array lower bound
       module subroutine zzhsiini ( ctx, hashsz, hedlst, collst )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5429,11 +4543,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: collst  ( lbpool : * )  !! Hash node collision list
       end subroutine zzhsiini
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> LBPOOL     P   Collision list array lower bound
       module subroutine zzhsiadd ( ctx, hedlst, collst, items, item, itemat, new )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5446,11 +4555,6 @@ module pepper_instance_module
          logical, intent(out) :: new  !! Flag indicting if item was added
       end subroutine zzhsiadd
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> LBPOOL     P   Collision list array lower bound
       module subroutine zzhsichk ( ctx, hedlst, collst, items, item, itemat )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5462,11 +4566,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: itemat  !! Item index in node collision and item lists
       end subroutine zzhsichk
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> LBPOOL     P   Collision list array lower bound
       module subroutine zzhsiavl ( ctx, collst, avail )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5475,11 +4574,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: avail  !! Room available in the hash
       end subroutine zzhsiavl
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> LBPOOL     P   Collision list array lower bound
       module subroutine zzhsiinf ( ctx, hedlst, collst, items, param, avail )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5491,12 +4585,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: avail  !! parameter Value
       end subroutine zzhsiinf
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> LBPOOL     P   Lower bound of hash pool arrays
-      !> MAXL       P   Maximum length of body name strings
       module subroutine zzbodini ( ctx, names, nornam, codes, nvals, maxval, bnmlst, bnmpol, bnmnms, bnmidx, bidlst, bidpol, bidids, bididx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5522,21 +4610,12 @@ module pepper_instance_module
                                                             !! array
       end subroutine zzbodini
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> PEPPER: fills KER (SPICELIB returned arrays of NROOM entries and
-      !> their hash tables; see [[body_names]]).
       module subroutine zzbodker ( ctx, ker )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          type(body_names), intent(inout) :: ker  !! the names and codes from the kernel pool
       end subroutine zzbodker
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzbodget ( ctx, room, names, nornam, codes, nvals )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5547,9 +4626,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: nvals  !! Length of NAMES, NORNAM, CODES, and ORDNOM arrays.
       end subroutine zzbodget
 
-      !> Output the complete list of built-in body/ID mappings to
-      !> some output device. Thw routine generates 2 lists: one
-      !> sorted by ID number, one sorted by name.
       module subroutine zzbodlst ( ctx, device, reqst )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5557,11 +4633,6 @@ module pepper_instance_module
          character(*), intent(in) :: reqst  !! Data list name to output.
       end subroutine zzbodlst
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> MAXL       P   Max name length.
       module subroutine zzbodn2c ( ctx, name, code, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5570,11 +4641,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! True if translated, otherwise false.
       end subroutine zzbodn2c
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> MAXL       P   Max name length.
       module subroutine zzbodc2n ( ctx, code, name, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5583,8 +4649,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! True if translated, otherwise false.
       end subroutine zzbodc2n
 
-      !> The name of a body from its ID code, of any length (PEPPER; the
-      !> body of [[zzbodc2n]], which truncates to its argument's length).
       module subroutine body_name_of ( ctx, code, name, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5593,12 +4657,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! the code has a name
       end subroutine body_name_of
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> MAXL       P   Max name length and max number of digits in code.
-      !> MAXP       P   Maximum number of name/code pair definitions.
       module subroutine zzboddef ( ctx, name, code )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5606,31 +4664,16 @@ module pepper_instance_module
          integer(ip), intent(in) :: code  !! Integer code for that body.
       end subroutine zzboddef
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> None.
       module subroutine zzbodkik ( ctx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
       end subroutine zzbodkik
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> None.
       module subroutine zzbodrst ( ctx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
       end subroutine zzbodrst
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> CTRSIZ     P   Dimension of the counter array
       module subroutine zzbctrck ( ctx, usrctr, update )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5639,10 +4682,6 @@ module pepper_instance_module
          logical, intent(out) :: update  !! Flag indicating if input counter was updated
       end subroutine zzbctrck
 
-      !> Translate the name of a body or object to the corresponding SPICE
-      !> integer ID code.
-      !>
-      !> MAXL       P   Maximum length of NAME string.
       module subroutine bodn2c ( ctx, name, code, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5651,10 +4690,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if translated, otherwise false.
       end subroutine bodn2c
 
-      !> Translate the SPICE integer code of a body into a common name
-      !> for that body.
-      !>
-      !> MAXL       P   Maximum length of NAME string.
       module subroutine bodc2n ( ctx, code, name, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5663,8 +4698,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if translated, otherwise false.
       end subroutine bodc2n
 
-      !> Translate a string containing a body name or ID code to an
-      !> integer code.
       module subroutine bods2c ( ctx, name, code, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5673,9 +4706,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether translation succeeded.
       end subroutine bods2c
 
-      !> Translate a body ID code to either the corresponding name
-      !> or if no name to ID code mapping exists, the string
-      !> representation of the body ID value.
       module subroutine bodc2s ( ctx, code, name )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5683,10 +4713,6 @@ module pepper_instance_module
          character(*), intent(out) :: name  !! String corresponding to CODE.
       end subroutine bodc2s
 
-      !> Define a body name/ID code pair for later translation via
-      !> [[bodn2c]] or [[bodc2n]].
-      !>
-      !> MAXL       P   Maximum length of NAME string.
       module subroutine boddef ( ctx, name, code )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5694,11 +4720,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: code  !! Integer code for that body.
       end subroutine boddef
 
-      !> Determine whether values exist for some item for any body
-      !> in the kernel pool.
-      !>
-      !> The function returns .TRUE. if ITEM is in the kernel pool, .FALSE.
-      !> otherwise.
       module logical function bodfnd ( ctx, body, item )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5706,11 +4727,6 @@ module pepper_instance_module
          character(*), intent(in) :: item  !! Item to find ('RADII', 'NUT_AMP_RA', etc.).
       end function bodfnd
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> CTRSIZ     P   Counter array size.
       module subroutine zzbods2c ( ctx, usrctr, savnam, savcde, savfnd, name, code, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5724,9 +4740,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Translation success flag.
       end subroutine zzbods2c
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzbodvcd ( ctx, bodyid, item, maxn, varctr, n, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5738,9 +4751,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: values ( * )  !! Array of double precision values.
       end subroutine zzbodvcd
 
-      !> **Deprecated:** This routine has been superseded by [[bodvcd]] and
-      !> [[bodvrd]]. This routine is supported for purposes of backward
-      !> compatibility only.
       module subroutine bodvar ( ctx, body, item, dim, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5750,9 +4760,6 @@ module pepper_instance_module
          real(wp), intent(out) :: values  ( * )  !! Values.
       end subroutine bodvar
 
-      !> Fetch from the kernel pool the double precision values
-      !> of an item associated with a body, where the body is
-      !> specified by an integer ID code.
       module subroutine bodvcd ( ctx, bodyid, item, maxn, dim, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5764,8 +4771,6 @@ module pepper_instance_module
          real(wp), intent(out) :: values  ( * )  !! Values.
       end subroutine bodvcd
 
-      !> Fetch from the kernel pool the double precision values
-      !> of an item associated with a body.
       module subroutine bodvrd ( ctx, bodynm, item, maxn, dim, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5777,11 +4782,6 @@ module pepper_instance_module
          real(wp), intent(out) :: values  ( * )  !! Values.
       end subroutine bodvrd
 
-      !> All the values of a body constant, the body given by name (PEPPER;
-      !> [[bodvrd]] with the size taken from the pool). Bound as the generic
-      !> `body_values`.
-      !>
-      !> The errors are those of [[bodvrd]], except SPICE(ARRAYTOOSMALL).
       module subroutine body_values_by_name ( ctx, body, item, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5790,11 +4790,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: values(:)  !! the values (size 0 after an error)
       end subroutine body_values_by_name
 
-      !> All the values of a body constant, the body given by its ID code
-      !> (PEPPER; [[bodvcd]] with the size taken from the pool). Bound as the
-      !> generic `body_values`.
-      !>
-      !> The errors are those of [[bodvcd]], except SPICE(ARRAYTOOSMALL).
       module subroutine body_values_by_code ( ctx, body, item, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5813,8 +4808,6 @@ module pepper_instance_module
 
    interface
 
-      !> Return platform ID and various attributes of the intended
-      !> environment
       module subroutine zzplatfm ( ctx, key, value )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5822,16 +4815,12 @@ module pepper_instance_module
          character(*), intent(out) :: value  !! String containing the requested information.
       end subroutine zzplatfm
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzpltchk ( ctx, ok )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          logical, intent(out) :: ok  !! Logical indicating the runtime environment is ok.
       end subroutine zzpltchk
 
-      !> Retrieve the components of the FTP validation string.
       module subroutine zzftpstr ( ctx, tstcom, lend, rend, delim )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5841,8 +4830,6 @@ module pepper_instance_module
          character(*), intent(out) :: delim  !! Delimiter that separates the pieces of TSTCOM.
       end subroutine zzftpstr
 
-      !> Check a character string that may contain the FTP validation
-      !> string for FTP based errors.
       module subroutine zzftpchk ( ctx, string, ftperr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5850,8 +4837,6 @@ module pepper_instance_module
          logical, intent(out) :: ftperr  !! Logical indicating if FTP corruption occurred.
       end subroutine zzftpchk
 
-      !> Extract from a string the last instance of a substring bracketed
-      !> by specified left and right strings .
       module subroutine zzrbrkst ( ctx, string, lftend, rgtend, substr, length, bkpres )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5863,9 +4848,6 @@ module pepper_instance_module
          logical, intent(out) :: bkpres  !! Logical indicating if either bracket is present.
       end subroutine zzrbrkst
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhini ( ctx, natbff, supbff, numsup, stramh, strarc, strbff )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5878,18 +4860,12 @@ module pepper_instance_module
          character(*), intent(out) :: strbff ( * )  !! List of labels for BFF ID codes
       end subroutine zzddhini
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzgetbff ( ctx, bffid )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(out) :: bffid  !! Binary file format code for this system.
       end subroutine zzgetbff
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhgsd ( ctx, class, id, label )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5898,21 +4874,12 @@ module pepper_instance_module
          character(*), intent(out) :: label  !! Corresponding label for the CLASS/ID pair.
       end subroutine zzddhgsd
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns a unique enough DP number computed
-      !> using the contents of the file attached to the UNIT.
       module real(wp) function zzddhmnm ( ctx, unit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: unit  !! Logical unit attached to a file.
       end function zzddhmnm
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhppf ( ctx, unit, arch, bff )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5921,8 +4888,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: bff  !! Integer code indicating the binary file format.
       end subroutine zzddhppf
 
-      !> Extract the architecture and type of a SPICE binary kernel file
-      !> from a file ID word.
       module subroutine idw2at ( ctx, idword, arch, type )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5931,9 +4896,6 @@ module pepper_instance_module
          character(*), intent(out) :: type  !! The type of the file.
       end subroutine idw2at
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzxlatei ( ctx, inbff, input, space, output )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5943,9 +4905,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: output ( * )  !! Translated integer values.
       end subroutine zzxlatei
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhivf ( ctx, nsum, bff, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5954,9 +4913,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Logical indicating that BFF was determined.
       end subroutine zzddhivf
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhf2h ( ctx, fname, ft, utcst, uthan, utlck, utlun, nut, exists, opened, handle, found, mnm, tabsiz )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5975,9 +4931,6 @@ module pepper_instance_module
          integer(ip), intent(in), optional :: tabsiz  !! PEPPER: size of the unit table (default UTSIZE, 23)
       end subroutine zzddhf2h
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhrcm ( ctx, nut, utcst, reqcnt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -5986,9 +4939,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: reqcnt  !! Value of the HLU request counter.
       end subroutine zzddhrcm
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhgtu ( ctx, utcst, uthan, utlck, utlun, nut, uindex, tabsiz )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6001,9 +4951,6 @@ module pepper_instance_module
          integer(ip), intent(in), optional :: tabsiz  !! PEPPER: size of the unit table (default UTSIZE, 23)
       end subroutine zzddhgtu
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhrmu ( ctx, uindex, nft, utcst, uthan, utlck, utlun, nut )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6016,11 +4963,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: nut  !! Number of entries in the unit table.
       end subroutine zzddhrmu
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> This function return the number of locked units in the unit table.
       module integer(ip) function zzddhclu ( ctx, utlck, nut )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6028,18 +4970,12 @@ module pepper_instance_module
          integer(ip), intent(in) :: nut  !! Number of entries in the unit table.
       end function zzddhclu
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhnfc ( ctx, natbff )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(out) :: natbff  !! Native binary file format code.
       end subroutine zzddhnfc
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhopn ( ctx, fname, method, arch, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6049,9 +4985,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Handle assigned to file.
       end subroutine zzddhopn
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhcls ( ctx, handle, arch, kill )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6060,9 +4993,6 @@ module pepper_instance_module
          logical, intent(in) :: kill  !! Logical indicating whether to delete the file.
       end subroutine zzddhcls
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhhlu ( ctx, handle, arch, lock, unit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6072,9 +5002,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: unit  !! Corresponding logical unit.
       end subroutine zzddhhlu
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhunl ( ctx, handle, arch )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6082,9 +5009,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: handle  !! File handle assigned to the file to unlock.
       end subroutine zzddhunl
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhnfo ( ctx, handle, fname, intarc, intbff, intamh, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6096,9 +5020,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Logical that indicates if HANDLE was found.
       end subroutine zzddhnfo
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhisn ( ctx, handle, native, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6107,9 +5028,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Indicates if HANDLE is currently attached to file.
       end subroutine zzddhisn
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhfnh ( ctx, fname, handle, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6118,9 +5036,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Logical indicating whether HANDLE was located.
       end subroutine zzddhfnh
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzddhluh ( ctx, unit, handle, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6136,8 +5051,6 @@ module pepper_instance_module
 
    interface
 
-      !> Read N encoded integers from a text file, decoding them into
-      !> their equivalent integers.
       module subroutine rdenci ( ctx, unit, n, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6146,11 +5059,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: data(*)  !! List of decoded integers.
       end subroutine rdenci
 
-      !> Convert a string representing a double precision number in a
-      !> base 16 "scientific notation" into its equivalent double
-      !> precision number.
-      !>
-      !> MAXMAN     P   Maximum number of digits in a hex mantissa.
       module subroutine hx2dp ( ctx, string, number, error, errmsg )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6160,8 +5068,6 @@ module pepper_instance_module
          character(*), intent(out) :: errmsg  !! A descriptive error message.
       end subroutine hx2dp
 
-      !> Read N encoded d.p. numbers from a text file, decoding them
-      !> into their equivalent d.p. numbers.
       module subroutine rdencd ( ctx, unit, n, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6170,7 +5076,6 @@ module pepper_instance_module
          real(wp), intent(out) :: data(*)  !! List of decoded d.p. numbers.
       end subroutine rdencd
 
-      !> Open a new text file for subsequent write access.
       module subroutine txtopn ( ctx, fname, unit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6178,7 +5083,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: unit  !! Logical unit.
       end subroutine txtopn
 
-      !> Open a text file for read access.
       module subroutine txtopr ( ctx, fname, unit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6186,7 +5090,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: unit  !! Logical unit.
       end subroutine txtopr
 
-      !> Encode and write integers to a text file.
       module subroutine wrenci ( ctx, unit, n, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6195,7 +5098,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: data(*)  !! List of integers to be encoded and written.
       end subroutine wrenci
 
-      !> Convert an integer to an equivalent signed hexadecimal string.
       module subroutine int2hx ( ctx, number, string, length )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6204,10 +5106,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: length  !! The length of the hexadecimal string produced.
       end subroutine int2hx
 
-      !> Convert a double precision number to an equivalent character
-      !> string using a base 16 "scientific notation."
-      !>
-      !> STRLEN     P   Max number of characters allowed in output string.
       module subroutine dp2hx ( ctx, number, hxstr, hxssiz )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6216,7 +5114,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: hxssiz  !! Length of the character string produced.
       end subroutine dp2hx
 
-      !> Encode and write d.p. numbers to a text file.
       module subroutine wrencd ( ctx, unit, n, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6225,9 +5122,6 @@ module pepper_instance_module
          real(wp), intent(in) :: data(*)  !! List of d.p. numbers to encode and write.
       end subroutine wrencd
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzdafgfr ( ctx, handle, idword, nd, ni, ifname, fward, bward, free, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6242,7 +5136,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Logical indicating whether the record was found.
       end subroutine zzdafgfr
 
-      !> Write the file record to a new DAF file.
       module subroutine zzdafnfr ( ctx, lun, idword, nd, ni, ifname, fward, bward, free, format )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6257,9 +5150,6 @@ module pepper_instance_module
          character(*), intent(in) :: format  !! File binary format identifier string.
       end subroutine zzdafnfr
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzdafgdr ( ctx, handle, recno, dprec, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6269,9 +5159,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Logical indicating whether the record was found.
       end subroutine zzdafgdr
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzdafgsr ( ctx, handle, recno, nd, ni, dprec, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6283,7 +5170,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Logical indicating whether the record was found.
       end subroutine zzdafgsr
 
-      !> Open a DAF for subsequent read requests.
       module subroutine dafopr ( ctx, fname, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6291,7 +5177,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
       end subroutine dafopr
 
-      !> Open a DAF for subsequent write requests.
       module subroutine dafopw ( ctx, fname, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6299,7 +5184,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
       end subroutine dafopw
 
-      !> Open a new DAF for subsequent write requests.
       module subroutine dafonw ( ctx, fname, ftype, nd, ni, ifname, resv, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6312,9 +5196,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
       end subroutine dafonw
 
-      !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine [[dafonw]]. NAIF supports this routine only to provide
-      !> backward compatibility.
       module subroutine dafopn ( ctx, fname, nd, ni, ifname, resv, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6326,14 +5207,12 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
       end subroutine dafopn
 
-      !> Close the DAF associated with a given handle.
       module subroutine dafcls ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of DAF to be closed.
       end subroutine dafcls
 
-      !> Return the summary format associated with a handle.
       module subroutine dafhsf ( ctx, handle, nd, ni )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6342,7 +5221,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: handle  !! Handle of a DAF file.
       end subroutine dafhsf
 
-      !> Return the logical unit associated with a handle.
       module subroutine dafhlu ( ctx, handle, unit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6350,7 +5228,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: unit  !! Corresponding logical unit.
       end subroutine dafhlu
 
-      !> Return the handle associated with a logical unit.
       module subroutine dafluh ( ctx, unit, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6358,7 +5235,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: unit  !! Logical unit connected to a DAF.
       end subroutine dafluh
 
-      !> Return the name of the file associated with a handle.
       module subroutine dafhfn ( ctx, handle, fname )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6366,7 +5242,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: handle  !! Handle of a DAF file.
       end subroutine dafhfn
 
-      !> Return handle associated with a file name.
       module subroutine daffnh ( ctx, fname, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6374,8 +5249,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Corresponding DAF file handle.
       end subroutine daffnh
 
-      !> Return a SPICE set containing the handles of all currently
-      !> open DAFS.
       module subroutine dafhof ( ctx, fhset )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6385,8 +5258,6 @@ module pepper_instance_module
                                                            !! open DAFS.
       end subroutine dafhof
 
-      !> Signal an error if a DAF file handle does not designate a DAF
-      !> that is open for a specified type of access.
       module subroutine dafsih ( ctx, handle, access )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6394,8 +5265,6 @@ module pepper_instance_module
          character(*), intent(in) :: access  !! String indicating access type.
       end subroutine dafsih
 
-      !> Convert a record/word pair to its equivalent address within
-      !> a DAF.
       module subroutine dafrwa ( ctx, recno, wordno, addr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6404,8 +5273,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: addr  !! Corresponding address.
       end subroutine dafrwa
 
-      !> Convert an address within a DAF to its equivalent
-      !> record/word representation.
       module subroutine dafarw ( ctx, addr, recno, wordno )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6414,8 +5281,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: addr  !! Address within DAF.
       end subroutine dafarw
 
-      !> Pack (assemble) an array summary from its double precision and
-      !> integer components.
       module subroutine dafps ( ctx, nd, ni, dc, ic, sum )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6426,8 +5291,6 @@ module pepper_instance_module
          real(wp), intent(out) :: sum      ( * )  !! Array summary.
       end subroutine dafps
 
-      !> Unpack an array summary into its double precision and integer
-      !> components.
       module subroutine dafus ( ctx, sum, nd, ni, dc, ic )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6438,8 +5301,6 @@ module pepper_instance_module
          real(wp), intent(in) :: sum      ( * )  !! Array summary.
       end subroutine dafus
 
-      !> Read a portion of the contents of a double precision record in a
-      !> DAF file.
       module subroutine dafgdr ( ctx, handle, recno, begin, end, data, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6451,7 +5312,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if record is found.
       end subroutine dafgdr
 
-      !> Read a portion of the contents of a summary record in a DAF file.
       module subroutine dafgsr ( ctx, handle, recno, begin, end, data, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6463,10 +5323,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if record is found.
       end subroutine dafgsr
 
-      !> Read a portion of the contents of a double precision record in a
-      !> DAF file.
-      !> **Obsolete:** This routine has been superseded by [[dafgdr]], and it is
-      !> supported for purposes of backwards compatibility only.
       module subroutine dafrdr ( ctx, handle, recno, begin, end, data, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6478,8 +5334,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if record is found.
       end subroutine dafrdr
 
-      !> Write or rewrite the contents of a double precision record in
-      !> a DAF.
       module subroutine dafwdr ( ctx, handle, recno, drec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6488,7 +5342,6 @@ module pepper_instance_module
          real(wp), intent(in) :: drec     ( 128 )  !! Contents of record.
       end subroutine dafwdr
 
-      !> Return the number of reads and requests fielded by [[dafrdr]].
       module subroutine dafnrr ( ctx, reads, reqs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6496,8 +5349,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: reqs  !! Reads, requests in this execution.
       end subroutine dafnrr
 
-      !> Read the double precision data bounded by two addresses within
-      !> a DAF.
       module subroutine dafgda ( ctx, handle, baddr, eaddr, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6507,9 +5358,6 @@ module pepper_instance_module
          real(wp), intent(out) :: data     ( * )  !! Data contained between BADDR and EADDR.
       end subroutine dafgda
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzxlated ( ctx, inbff, input, space, output )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6519,9 +5367,6 @@ module pepper_instance_module
          real(wp), intent(out) :: output ( * )  !! Translated d.p. values.
       end subroutine zzxlated
 
-      !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routines [[dafgda]] and [[dafgsr]]. This routine is supported for purposes
-      !> of backward compatibility only.
       module subroutine dafrda ( ctx, handle, begin, end, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6531,7 +5376,6 @@ module pepper_instance_module
          real(wp), intent(out) :: data     ( * )  !! Data contained between BEGIN and END.
       end subroutine dafrda
 
-      !> Read the contents of the file record of a DAF.
       module subroutine dafrfr ( ctx, handle, nd, ni, ifname, fward, bward, free )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6544,7 +5388,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: free  !! Free address pointer.
       end subroutine dafrfr
 
-      !> Write or rewrite the contents of the file record of a DAF.
       module subroutine dafwfr ( ctx, handle, nd, ni, ifname, fward, bward, free )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6557,8 +5400,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: free  !! Free address pointer.
       end subroutine dafwfr
 
-      !> Write or rewrite the double precision data bounded by two
-      !> addresses within a DAF.
       module subroutine dafwda ( ctx, handle, begin, end, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6568,8 +5409,6 @@ module pepper_instance_module
          real(wp), intent(in) :: data     ( * )  !! Data to be stored between BEGIN and END.
       end subroutine dafwda
 
-      !> Add a specified number of reserved records to a Double Precision
-      !> Array File (DAF).
       module subroutine dafarr ( ctx, handle, resv )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6577,7 +5416,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: resv  !! Number of records to reserve.
       end subroutine dafarr
 
-      !> Read the contents of a character record from a DAF.
       module subroutine dafrcr ( ctx, handle, recno, crec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6586,8 +5424,6 @@ module pepper_instance_module
          character(*), intent(out) :: crec  !! Character record.
       end subroutine dafrcr
 
-      !> Write or rewrite the contents of a character record to
-      !> a DAF.
       module subroutine dafwcr ( ctx, handle, recno, crec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6596,7 +5432,6 @@ module pepper_instance_module
          character(*), intent(in) :: crec  !! Character record.
       end subroutine dafwcr
 
-      !> Reorder the arrays in a DAF according to a given order vector.
       module subroutine dafra ( ctx, handle, iorder, n )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6605,8 +5440,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: n  !! Dimension of IORDER.
       end subroutine dafra
 
-      !> Remove a specified number of reserved records from a Double
-      !> Precision Array File (DAF).
       module subroutine dafrrr ( ctx, handle, resv )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6614,9 +5447,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: resv  !! Number of records to remove.
       end subroutine dafrrr
 
-      !> Add comments from a buffer of character strings to the comment
-      !> area of a binary DAF file, appending them to any comments which
-      !> are already present in the file's comment area.
       module subroutine dafac ( ctx, handle, n, buffer )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6625,15 +5455,12 @@ module pepper_instance_module
          character(*), intent(in) :: buffer(*)  !! Buffer of comments to put into the comment area.
       end subroutine dafac
 
-      !> Delete the entire comment area of a previously opened binary
-      !> DAF attached to HANDLE.
       module subroutine dafdc ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! The handle of a binary DAF opened for writing.
       end subroutine dafdc
 
-      !> Extract comments from the comment area of a binary DAF.
       module subroutine dafec ( ctx, handle, bufsiz, n, buffer, done )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6644,11 +5471,6 @@ module pepper_instance_module
          logical, intent(out) :: done  !! Indicates whether all comments have been extracted.
       end subroutine dafec
 
-      !> All the comment lines of a DAF, each of any length (PEPPER; [[dafec]]
-      !> without a buffer). It reads the comment area directly: it does not
-      !> change the position of [[dafec]] in the file.
-      !>
-      !> The errors are those of [[dafec]], without SPICE(COMMENTTOOLONG).
       module subroutine daf_comments ( ctx, handle, lines )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6656,7 +5478,6 @@ module pepper_instance_module
          type(string), allocatable, intent(out) :: lines(:)  !! the comment lines (size 0 after an error)
       end subroutine daf_comments
 
-      !> Begin a new array in a DAF.
       module subroutine dafbna ( ctx, handle, sum, name )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6665,8 +5486,6 @@ module pepper_instance_module
          character(*), intent(in) :: name  !! Name of new array.
       end subroutine dafbna
 
-      !> Add one or more double precision words of data to the newest
-      !> array in the current DAF.
       module subroutine dafada ( ctx, data, n )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6674,103 +5493,83 @@ module pepper_instance_module
          integer(ip), intent(in) :: n  !! Number of elements in DATA.
       end subroutine dafada
 
-      !> End the addition of data to the newest array in the current DAF.
-      !>
-      !> None.
       module subroutine dafena ( ctx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
       end subroutine dafena
 
-      !> Select a DAF that already has a new array in progress as the
-      !> one to continue adding data to.
       module subroutine dafcad ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of DAF to continue adding data to.
       end subroutine dafcad
 
-      !> Begin a forward search for arrays in a DAF.
       module subroutine dafbfs ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of file to be searched.
       end subroutine dafbfs
 
-      !> Find the next (forward) array in the current DAF.
       module subroutine daffna ( ctx, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          logical, intent(out) :: found  !! .TRUE. if an array was found.
       end subroutine daffna
 
-      !> Begin a backward search for arrays in a DAF.
       module subroutine dafbbs ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of DAF to be searched.
       end subroutine dafbbs
 
-      !> Find the previous (backward) array in the current DAF.
       module subroutine daffpa ( ctx, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          logical, intent(out) :: found  !! .TRUE. if an array was found.
       end subroutine daffpa
 
-      !> Return (get) the summary for the current array in the current
-      !> DAF.
       module subroutine dafgs ( ctx, sum )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(out) :: sum    ( * )  !! Summary for current array.
       end subroutine dafgs
 
-      !> Return (get) the name for the current array in the current DAF.
       module subroutine dafgn ( ctx, name )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(out) :: name  !! Name of current array.
       end subroutine dafgn
 
-      !> Return (get) the handle of the DAF currently being searched.
       module subroutine dafgh ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(out) :: handle  !! Handle for current DAF.
       end subroutine dafgh
 
-      !> Change the summary for the current array in the current DAF.
       module subroutine dafrs ( ctx, sum )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: sum    ( * )  !! New summary for current array.
       end subroutine dafrs
 
-      !> Replace the name for the current array in the current DAF.
       module subroutine dafrn ( ctx, name )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: name  !! New name for current array.
       end subroutine dafrn
 
-      !> Write a new summary for the current array in the current DAF.
       module subroutine dafws ( ctx, sum )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: sum    ( * )  !! New summary for current array in the current DAF.
       end subroutine dafws
 
-      !> Select a DAF that already has a search in progress as the
-      !> one to continue searching.
       module subroutine dafcs ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of DAF to continue searching.
       end subroutine dafcs
 
-      !> Convert the contents of a binary DAF file to an equivalent DAF
-      !> transfer file.
       module subroutine dafbt ( ctx, binfil, xfrlun )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6778,9 +5577,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: xfrlun  !! Logical unit of a previously opened file.
       end subroutine dafbt
 
-      !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine [[daftb]]. NAIF supports this routine only to provide backward
-      !> compatibility.
       module subroutine dafa2b ( ctx, ascii, binary, resv )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6789,9 +5585,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: resv  !! Number of records to reserve.
       end subroutine dafa2b
 
-      !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine [[dafbt]]. NAIF supports this routine only to provide backward
-      !> compatibility.
       module subroutine dafb2a ( ctx, binary, ascii )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6799,9 +5592,6 @@ module pepper_instance_module
          character(*), intent(in) :: ascii  !! Name of an ASCII (text) DAF to be created.
       end subroutine dafb2a
 
-      !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine [[dafbt]]. NAIF supports this routine only to provide backward
-      !> compatibility.
       module subroutine dafb2t ( ctx, binary, text )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6809,11 +5599,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: text  !! Logical unit connected to text file.
       end subroutine dafb2t
 
-      !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine [[daftb]]. NAIF supports this routine only to provide backward
-      !> compatibility.
-      !>
-      !> BSIZE      P   Buffer size.
       module subroutine daft2b ( ctx, text, binary, resv )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6822,8 +5607,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: resv  !! Number of records to reserve.
       end subroutine daft2b
 
-      !> Convert the contents of an DAF transfer file into an equivalent
-      !> binary DAF file.
       module subroutine daftb ( ctx, xfrlun, binfil )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6838,7 +5621,6 @@ module pepper_instance_module
 
    interface
 
-      !> Read and decode encoded characters from a text file.
       module subroutine rdencc ( ctx, unit, n, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6847,7 +5629,6 @@ module pepper_instance_module
          character(*), intent(out) :: data(*)  !! List of decoded characters to be returned.
       end subroutine rdencc
 
-      !> Encode and write characters to a text file.
       module subroutine wrencc ( ctx, unit, n, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6856,7 +5637,6 @@ module pepper_instance_module
          character(*), intent(in) :: data ( * )  !! List of characters to encode and write.
       end subroutine wrencc
 
-      !> Write a single line of text to the Fortran logical unit UNIT.
       module subroutine writln ( ctx, line, unit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6864,7 +5644,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: unit  !! The Fortran unit number to use for output.
       end subroutine writln
 
-      !> Write an array of text lines to a Fortran logical unit.
       module subroutine writla ( ctx, numlin, array, unit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6873,8 +5652,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: unit  !! Fortran unit number to use for output.
       end subroutine writla
 
-      !> Read a single line of text from the Fortran logical unit UNIT,
-      !> reporting the end of file if it occurs.
       module subroutine readln ( ctx, unit, line, eof )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6883,8 +5660,6 @@ module pepper_instance_module
          logical, intent(out) :: eof  !! A logical flag indicating the end of file.
       end subroutine readln
 
-      !> Read lines from a Fortran logical unit and place them in a
-      !> character string array.
       module subroutine readla ( ctx, unit, maxlin, numlin, array, eof )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6895,11 +5670,6 @@ module pepper_instance_module
          logical, intent(out) :: eof  !! Logical flag indicating the end of file.
       end subroutine readla
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> NWD        P   Number of DP numbers in a single DAS DP record.
       module subroutine zzdasgrd ( ctx, handle, recno, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6908,11 +5678,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record ( nwd )  !! Double precision data read from record.
       end subroutine zzdasgrd
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> NWI        P   Number of integers in a single DAS integer record.
       module subroutine zzdasgri ( ctx, handle, recno, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6921,7 +5686,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: record ( nwi )  !! Integer data read from record.
       end subroutine zzdasgri
 
-      !> Write the file record to a new DAS file.
       module subroutine zzdasnfr ( ctx, lun, idword, ifname, nresvr, nresvc, ncomr, ncomc, format )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6935,7 +5699,6 @@ module pepper_instance_module
          character(*), intent(in) :: format  !! File binary format identifier string.
       end subroutine zzdasnfr
 
-      !> Return the contents of the file record of a specified DAS file.
       module subroutine zzdasrfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6948,7 +5711,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: ncomc  !! Number of characters in use in comment area.
       end subroutine zzdasrfr
 
-      !> Open a DAS file for reading.
       module subroutine dasopr ( ctx, fname, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6956,7 +5718,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
       end subroutine dasopr
 
-      !> Open a DAS file for writing.
       module subroutine dasopw ( ctx, fname, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6964,7 +5725,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
       end subroutine dasopw
 
-      !> Open a new DAS file and set the file type.
       module subroutine dasonw ( ctx, fname, ftype, ifname, ncomr, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6975,8 +5735,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: ncomr  !! Number of comment records to allocate.
       end subroutine dasonw
 
-      !> **Obsolete:** This routine has been superseded by [[dasonw]], and it is
-      !> supported for purposes of backward compatibility only.
       module subroutine dasopn ( ctx, fname, ifname, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -6985,22 +5743,18 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
       end subroutine dasopn
 
-      !> Open a scratch DAS file for writing.
       module subroutine dasops ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(out) :: handle  !! Handle assigned to a scratch DAS file.
       end subroutine dasops
 
-      !> Close the DAS file associated with a given handle, without
-      !> flushing buffered data or segregating the file.
       module subroutine dasllc ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of a DAS file to be closed.
       end subroutine dasllc
 
-      !> Return a file summary for a specified DAS file.
       module subroutine dashfs ( ctx, handle, nresvr, nresvc, ncomr, ncomc, free, lastla, lastrc, lastwd )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7018,7 +5772,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: ncomc  !! Number of characters in use in comment area.
       end subroutine dashfs
 
-      !> Update the file summary in a specified DAS file.
       module subroutine dasufs ( ctx, handle, nresvr, nresvc, ncomr, ncomc, free, lastla, lastrc, lastwd )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7036,9 +5789,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: ncomc  !! Number of characters in use in comment area.
       end subroutine dasufs
 
-      !> Return the logical unit associated with a handle. The unit
-      !> is "locked" to the handle by the DAF/DAS handle manager
-      !> subsystem.
       module subroutine dashlu ( ctx, handle, unit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7046,7 +5796,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: unit  !! Corresponding logical unit.
       end subroutine dashlu
 
-      !> Return the handle associated with a logical unit.
       module subroutine dasluh ( ctx, unit, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7054,7 +5803,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: unit  !! Logical unit connected to a DAS file.
       end subroutine dasluh
 
-      !> Return the name of the DAS file associated with a handle.
       module subroutine dashfn ( ctx, handle, fname )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7062,7 +5810,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: handle  !! Handle of a DAS file.
       end subroutine dashfn
 
-      !> Return handle associated with a file name.
       module subroutine dasfnh ( ctx, fname, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7070,8 +5817,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Corresponding handle.
       end subroutine dasfnh
 
-      !> Return a SPICE set containing the handles of all currently
-      !> open DAS files.
       module subroutine dashof ( ctx, fhset )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7081,8 +5826,6 @@ module pepper_instance_module
                                                             !! open DAS files.
       end subroutine dashof
 
-      !> Signal an error if a DAS file file handle does not designate a
-      !> DAS file that is open for a specified type of access.
       module subroutine dassih ( ctx, handle, access )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7090,7 +5833,6 @@ module pepper_instance_module
          character(*), intent(in) :: access  !! String indicating access type.
       end subroutine dassih
 
-      !> Return the allowed access method for a specified DAS file.
       module subroutine dasham ( ctx, handle, access )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7098,10 +5840,6 @@ module pepper_instance_module
          character(*), intent(out) :: access  !! String indicating allowed access method.
       end subroutine dasham
 
-      !> Read DAS double precision physical records.
-      !>
-      !> BUFSZD     P   Number of records in the DP record buffer.
-      !> NWD        P   Number of DP in a single DAS DP record.
       module subroutine dasrrd ( ctx, handle, recno, first, last, datad )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7112,10 +5850,6 @@ module pepper_instance_module
          real(wp), intent(out) :: datad   ( * )  !! Double precision data read from record.
       end subroutine dasrrd
 
-      !> Read DAS integer physical records.
-      !>
-      !> BUFSZI     P   Number of records in the integer record buffer.
-      !> NWI        P   Number of integers in a single DAS integer record.
       module subroutine dasrri ( ctx, handle, recno, first, last, datai )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7126,10 +5860,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: datai   ( * )  !! Integer data read from record.
       end subroutine dasrri
 
-      !> Read DAS character physical records.
-      !>
-      !> BUFSZC     P   Number of records in the character record buffer.
-      !> NWC        P   Number of characters in a single DAS char. record.
       module subroutine dasrrc ( ctx, handle, recno, first, last, datac )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7140,10 +5870,6 @@ module pepper_instance_module
          character(*), intent(out) :: datac  !! Character data read from record.
       end subroutine dasrrc
 
-      !> Write DAS double precision physical records.
-      !>
-      !> BUFSZD     P   Number of records in the DP record buffer.
-      !> NWD        P   Number of DP in a single DAS DP record.
       module subroutine daswrd ( ctx, handle, recno, recd )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7153,10 +5879,6 @@ module pepper_instance_module
          real(wp), intent(in) :: recd    ( nwd )  !! Double precision data to be written to record.
       end subroutine daswrd
 
-      !> Write DAS integer physical records.
-      !>
-      !> BUFSZI     P   Number of records in the integer record buffer.
-      !> NWI        P   Number of integers in a single DAS integer record.
       module subroutine daswri ( ctx, handle, recno, reci )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7166,10 +5888,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: reci    ( nwi )  !! Integer data to be written to record.
       end subroutine daswri
 
-      !> Write DAS character physical records.
-      !>
-      !> BUFSZC     P   Number of records in the character record buffer.
-      !> NWC        P   Number of characters in a single DAS char. record.
       module subroutine daswrc ( ctx, handle, recno, recc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7178,10 +5896,6 @@ module pepper_instance_module
          character(*), intent(in) :: recc  !! Character data to be written to record.
       end subroutine daswrc
 
-      !> Update DAS double precision physical records.
-      !>
-      !> BUFSZD     P   Number of records in the DP record buffer.
-      !> NWD        P   Number of DPs in a single DAS DP record.
       module subroutine dasurd ( ctx, handle, recno, first, last, datad )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7192,10 +5906,6 @@ module pepper_instance_module
          real(wp), intent(in) :: datad   ( * )  !! Double precision data to write to record.
       end subroutine dasurd
 
-      !> Update DAS integer physical records.
-      !>
-      !> BUFSZI     P   Number of records in the integer record buffer.
-      !> NWI        P   Number of integers in a single DAS integer record.
       module subroutine dasuri ( ctx, handle, recno, first, last, datai )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7206,10 +5916,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: datai   ( * )  !! Integer data to write to record.
       end subroutine dasuri
 
-      !> Update DAS character physical records.
-      !>
-      !> BUFSZC     P   Number of records in the character record buffer.
-      !> NWC        P   Number of characters in a single DAS char. record.
       module subroutine dasurc ( ctx, handle, recno, first, last, datac )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7220,14 +5926,12 @@ module pepper_instance_module
          character(*), intent(in) :: datac  !! Character data to write to record.
       end subroutine dasurc
 
-      !> Write out all buffered records of a specified DAS file.
       module subroutine daswbr ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of DAS file.
       end subroutine daswbr
 
-      !> Perform Fortran reads and writes of DAS character records.
       module subroutine dasioc ( ctx, action, unit, recno, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7238,8 +5942,6 @@ module pepper_instance_module
          character(nwc), intent(inout) :: record  !! DAS character record.
       end subroutine dasioc
 
-      !> Perform Fortran reads and writes of DAS double precision records.
-      !> This routine operates on DAS files having native binary format.
       module subroutine dasiod ( ctx, action, unit, recno, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7250,9 +5952,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: record ( nwd )  !! DAS double precision record.
       end subroutine dasiod
 
-      !> Perform Fortran reads and writes of DAS integer records.
-      !> This routine operates on DAS files having native binary
-      !> format.
       module subroutine dasioi ( ctx, action, unit, recno, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7263,10 +5962,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: record ( nwi )  !! DAS integer record.
       end subroutine dasioi
 
-      !> Map a DAS address to a physical location in a specified DAS file.
-      !>
-      !> CHAR       P   Parameter indicating character data type.
-      !> INT        P   Parameter indicating integer data type.
       module subroutine dasa2l ( ctx, handle, type, addrss, clbase, clsize, recno, wordno )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7279,12 +5974,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: wordno  !! Record/word pair corresponding to ADDRSS.
       end subroutine dasa2l
 
-      !> Create or update directories in a DAS file to reflect addition
-      !> of a specified number of words of a specified data type.
-      !>
-      !> CHAR       P   Parameter indicating character data type.
-      !> DP         P   Parameter indicating double precision data type.
-      !> INT        P   Parameter indicating integer data type.
       module subroutine dascud ( ctx, handle, type, nwords )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7293,8 +5982,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: nwords  !! Number of words of data being added.
       end subroutine dascud
 
-      !> Increase the size of the comment area in a DAS file to accommodate
-      !> a specified number of additional comment records.
       module subroutine dasacr ( ctx, handle, n )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7303,9 +5990,6 @@ module pepper_instance_module
                                        !! the specified file.
       end subroutine dasacr
 
-      !> Decrease the size of the comment area in a DAS file to reclaim
-      !> space freed by the removal of a specified number of comment
-      !> records.
       module subroutine dasrcr ( ctx, handle, n )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7313,15 +5997,12 @@ module pepper_instance_module
          integer(ip), intent(in) :: n  !! Number of comment records to remove.
       end subroutine dasrcr
 
-      !> Segregate the data records in a DAS file into clusters, using
-      !> one cluster per data type present in the file.
       module subroutine dassdr ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! DAS file handle.
       end subroutine dassdr
 
-      !> Add character data to a DAS file.
       module subroutine dasadc ( ctx, handle, n, bpos, epos, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7333,7 +6014,6 @@ module pepper_instance_module
                                                    !! added to the character data in the DAS file.
       end subroutine dasadc
 
-      !> Add an array of double precision numbers to a DAS file.
       module subroutine dasadd ( ctx, handle, n, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7342,7 +6022,6 @@ module pepper_instance_module
          real(wp), intent(in) :: data   ( * )  !! Array of d.p. numbers to add.
       end subroutine dasadd
 
-      !> Add an array of integers to a DAS file.
       module subroutine dasadi ( ctx, handle, n, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7351,7 +6030,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: data   ( * )  !! Array of integers to add.
       end subroutine dasadi
 
-      !> Read character data from a range of DAS logical addresses.
       module subroutine dasrdc ( ctx, handle, first, last, bpos, epos, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7363,7 +6041,6 @@ module pepper_instance_module
          character(*), intent(out) :: data   ( * )  !! Data having addresses FIRST through LAST.
       end subroutine dasrdc
 
-      !> Read double precision data from a range of DAS logical addresses.
       module subroutine dasrdd ( ctx, handle, first, last, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7375,7 +6052,6 @@ module pepper_instance_module
          real(wp), intent(out) :: data   ( * )  !! Data having addresses FIRST through LAST.
       end subroutine dasrdd
 
-      !> Read integer data from a range of DAS logical addresses.
       module subroutine dasrdi ( ctx, handle, first, last, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7385,8 +6061,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: data   ( * )  !! Data having addresses FIRST through LAST.
       end subroutine dasrdi
 
-      !> Update character data in a specified range of DAS logical
-      !> addresses with substrings of a character array.
       module subroutine dasudc ( ctx, handle, first, last, bpos, epos, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7398,8 +6072,6 @@ module pepper_instance_module
          character(*), intent(in) :: data   ( * )  !! Data having addresses FIRST through LAST.
       end subroutine dasudc
 
-      !> Update data in a specified range of double precision addresses
-      !> in a DAS file.
       module subroutine dasudd ( ctx, handle, first, last, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7409,8 +6081,6 @@ module pepper_instance_module
          real(wp), intent(in) :: data   ( * )  !! An array of d.p. numbers.
       end subroutine dasudd
 
-      !> Update data in a specified range of integer addresses in a DAS
-      !> file.
       module subroutine dasudi ( ctx, handle, first, last, data )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7420,17 +6090,12 @@ module pepper_instance_module
          integer(ip), intent(in) :: data   ( * )  !! An array of integers.
       end subroutine dasudi
 
-      !> Close a DAS file.
-      !>
-      !> FTSIZE     P   Maximum number of simultaneously open DAS files.
       module subroutine dascls ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of an open DAS file.
       end subroutine dascls
 
-      !> Return the contents of the file record of a specified DAS
-      !> file.
       module subroutine dasrfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7443,7 +6108,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: ncomc  !! Number of characters in use in comment area.
       end subroutine dasrfr
 
-      !> Update the contents of the file record of a specified DAS file.
       module subroutine daswfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7456,9 +6120,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: ncomc  !! Number of characters in use in comment area.
       end subroutine daswfr
 
-      !> Add comments from a buffer of character strings to the comment
-      !> area of a binary DAS file, appending them to any comments which
-      !> are already present in the file's comment area.
       module subroutine dasac ( ctx, handle, n, buffer )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7467,10 +6128,6 @@ module pepper_instance_module
          character(*), intent(in) :: buffer(*)  !! Buffer of lines to be put into the comment area.
       end subroutine dasac
 
-      !> Add comments to a previously opened binary DAS file from a
-      !> previously opened text file attached to a Fortran logical unit.
-      !>
-      !> LNSIZE    P   Maximum length of comment line.
       module subroutine dasacu ( ctx, comlun, begmrk, endmrk, insbln, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7481,15 +6138,12 @@ module pepper_instance_module
          integer(ip), intent(in) :: handle  !! Handle of a DAS file opened with write access.
       end subroutine dasacu
 
-      !> Delete the entire comment area of a previously opened binary
-      !> DAS file.
       module subroutine dasdc ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! The handle of a binary DAS file opened for writing.
       end subroutine dasdc
 
-      !> Extract comments from the comment area of a binary DAS file.
       module subroutine dasec ( ctx, handle, bufsiz, n, buffer, done )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7500,11 +6154,6 @@ module pepper_instance_module
          logical, intent(out) :: done  !! Indicates whether all comments have been extracted.
       end subroutine dasec
 
-      !> All the comment lines of a DAS file, each of any length (PEPPER;
-      !> [[dasec]] without a buffer). It reads the comment area directly: it
-      !> does not change the position of [[dasec]] in the file.
-      !>
-      !> The errors are those of [[dasec]], without SPICE(COMMENTTOOLONG).
       module subroutine das_comments ( ctx, handle, lines )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7512,17 +6161,12 @@ module pepper_instance_module
          type(string), allocatable, intent(out) :: lines(:)  !! the comment lines (size 0 after an error)
       end subroutine das_comments
 
-      !> Split a comment area's text into lines at its end-of-line marks
-      !> (NUL) (PEPPER; used by [[daf_comments]] and [[das_comments]]). Text
-      !> after the last mark is a line too.
       pure module subroutine split_comment_lines ( text, lines )
          implicit none
          character(*), intent(in) :: text  !! the comment text
          type(string), allocatable, intent(out) :: lines(:)  !! the lines
       end subroutine split_comment_lines
 
-      !> Extract comments from a previously opened binary DAS file to a
-      !> previously opened text file attached to a Fortran logical unit.
       module subroutine dasecu ( ctx, handle, comlun, comnts )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7531,8 +6175,6 @@ module pepper_instance_module
          logical, intent(out) :: comnts  !! Logical flag, indicating comments were found.
       end subroutine dasecu
 
-      !> Convert the contents of a binary DAS file to an equivalent DAS
-      !> transfer file.
       module subroutine dasbt ( ctx, binfil, xfrlun )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7540,8 +6182,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: xfrlun  !! Logical unit of a previously opened file.
       end subroutine dasbt
 
-      !> Convert the contents of a DAS transfer file into an equivalent
-      !> binary DAS file.
       module subroutine dastb ( ctx, xfrlun, binfil )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7549,9 +6189,6 @@ module pepper_instance_module
          character(*), intent(in) :: binfil  !! Name of the binary DAS file to be created.
       end subroutine dastb
 
-      !> Return last DAS logical addresses of character, double precision
-      !> and integer type that are currently in use in a specified DAS
-      !> file.
       module subroutine daslla ( ctx, handle, lastc, lastd, lasti )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7569,9 +6206,6 @@ module pepper_instance_module
 
    interface
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzsizeok ( ctx, size, psize, dsize, offset, ok, n )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7583,9 +6217,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: n  !! Value of N if there is a solution, 0 otherwise.
       end subroutine zzsizeok
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzckspk ( ctx, handle, ckspk )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7593,7 +6224,6 @@ module pepper_instance_module
          character(*), intent(out) :: ckspk  !! the type of the DAF file (SPK,CK or ?)
       end subroutine zzckspk
 
-      !> Determine the architecture and type of SPICE kernels.
       module subroutine getfat ( ctx, file, arch, kertyp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7602,8 +6232,6 @@ module pepper_instance_module
          character(*), intent(out) :: kertyp  !! The type of the kernel file.
       end subroutine getfat
 
-      !> Compute the outward-pointing, unit normal vector at a point on
-      !> the surface of an ellipsoid.
       module subroutine surfnm ( ctx, a, b, c, point, normal )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7616,9 +6244,6 @@ module pepper_instance_module
                                                 !! POINT.
       end subroutine surfnm
 
-      !> Locate the point on the surface of an ellipsoid that is nearest
-      !> to a specified position. Also return the altitude of the position
-      !> above the ellipsoid.
       module subroutine nearpt ( ctx, positn, a, b, c, npoint, alt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7630,7 +6255,6 @@ module pepper_instance_module
          real(wp), intent(out) :: alt  !! Altitude of POSITN above the ellipsoid.
       end subroutine nearpt
 
-      !> Convert from rectangular coordinates to geodetic coordinates.
       module subroutine recgeo ( ctx, rectan, re, f, lon, lat, alt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7642,9 +6266,6 @@ module pepper_instance_module
          real(wp), intent(out) :: alt  !! Altitude of the point above reference spheroid.
       end subroutine recgeo
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzvrtplt ( ctx, nv, np, plates, cellsz, maxlst, cells, vrtptr, nlist, pltlst )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7662,9 +6283,6 @@ module pepper_instance_module
                                                    !! of plate IDs to follow.
       end subroutine zzvrtplt
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzvoxcvo ( ctx, vixyz, nvox, cgrscl, cgxyz, cgoff, cgof1d )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7676,11 +6294,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: cgof1d  !! 1-D voxel offset relative to coarse voxel.
       end subroutine zzvoxcvo
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns the voxel index.
       module integer(ip) function zzvox2id ( ctx, vixyz, nvox )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7689,9 +6302,6 @@ module pepper_instance_module
                                                   !! dimensional vector.
       end function zzvox2id
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zztrvlnk ( ctx, aval, maxa, pntrs, cellsz, cells, maxb, nb, blist )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7705,8 +6315,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: blist  ( * )  !! List of B values.
       end subroutine zztrvlnk
 
-      !> Untangle an unsorted AB linked-cell list into an A-index and
-      !> associated B-list.
       module subroutine zzuntngl ( ctx, nptr, maxcel, cells, maxb, pntrs, nout, outlst )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7719,9 +6327,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: outlst ( * )  !! B-list.
       end subroutine zzuntngl
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzinilnk ( ctx, maxp, maxc, ncell, pntrs, cells )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7732,9 +6337,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: cells  ( 2, * )  !! Initialized cell array.
       end subroutine zzinilnk
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzgetvox ( ctx, voxsiz, voxori, nvox, xyz, inbox, voxcor )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7749,9 +6351,6 @@ module pepper_instance_module
                                                        !! grid.
       end subroutine zzgetvox
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzaddlnk ( ctx, aval, bval, maxa, cellsz, pntrs, ncell, cells )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7764,9 +6363,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: cells  ( 2, * )  !! Cell array.
       end subroutine zzaddlnk
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzmkspin ( ctx, np, plates, vrtces, voxscl, cgscal, maxptr, mxcell, maxvxl, cells, nvox, voxsiz, voxori, nvxtot, nvxptr, vxptr, nvxlst, vxlist, extent, cgrptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7792,7 +6388,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: cgrptr ( * )  !! Coarse voxel grid pointer array.
       end subroutine zzmkspin
 
-      !> Open a new DLA file and set the file type.
       module subroutine dlaopn ( ctx, fname, ftype, ifname, ncomch, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7803,21 +6398,18 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Handle assigned to the opened DLA file.
       end subroutine dlaopn
 
-      !> Begin a new segment in a DLA file.
       module subroutine dlabns ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of open DLA file.
       end subroutine dlabns
 
-      !> End a new segment in a DLA file.
       module subroutine dlaens ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of open DLA file.
       end subroutine dlaens
 
-      !> Begin a forward segment search in a DLA file.
       module subroutine dlabfs ( ctx, handle, dladsc, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7826,7 +6418,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether a segment was found.
       end subroutine dlabfs
 
-      !> Begin a backward segment search in a DLA file.
       module subroutine dlabbs ( ctx, handle, dladsc, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7835,7 +6426,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether a segment was found.
       end subroutine dlabbs
 
-      !> Find the segment following a specified segment in a DLA file.
       module subroutine dlafns ( ctx, handle, dladsc, nxtdsc, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7845,7 +6435,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether a segment was found.
       end subroutine dlafns
 
-      !> Find the segment preceding a specified segment in a DLA file.
       module subroutine dlafps ( ctx, handle, dladsc, prvdsc, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7855,12 +6444,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether a segment was found.
       end subroutine dlafps
 
-      !> Return a logical value indicating whether a two DLA
-      !> segments, each identified by DAS handle and DLA descriptor,
-      !> are in fact the same segment.
-      !>
-      !> The function returns .TRUE. if and only if the DLA segments
-      !> match.
       module logical function dlassg ( ctx, han1, han2, dsc1, dsc2 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7872,7 +6455,6 @@ module pepper_instance_module
                                                      !! file.
       end function dlassg
 
-      !> Open a new DSK file for subsequent write operations.
       module subroutine dskopn ( ctx, fname, ifname, ncomch, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7882,7 +6464,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Handle assigned to the opened DSK file.
       end subroutine dskopn
 
-      !> Close a DSK file.
       module subroutine dskcls ( ctx, handle, optmiz )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7890,8 +6471,6 @@ module pepper_instance_module
          logical, intent(in) :: optmiz  !! Flag indicating whether to segregate the DSK.
       end subroutine dskcls
 
-      !> Retrieve the value of a specified DSK tolerance or margin
-      !> parameter.
       module subroutine dskgtl ( ctx, keywrd, dpval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7899,7 +6478,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dpval  !! Value of parameter.
       end subroutine dskgtl
 
-      !> Set the value of a specified DSK tolerance or margin parameter.
       module subroutine dskstl ( ctx, keywrd, dpval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7907,8 +6485,6 @@ module pepper_instance_module
          real(wp), intent(in) :: dpval  !! New value of parameter.
       end subroutine dskstl
 
-      !> Return the DSK descriptor from a DSK segment identified
-      !> by a DAS handle and DLA descriptor.
       module subroutine dskgd ( ctx, handle, dladsc, dskdsc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7917,7 +6493,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dskdsc ( * )  !! DSK segment descriptor.
       end subroutine dskgd
 
-      !> Return bookkeeping data from a DSK type 2 segment.
       module subroutine dskb02 ( ctx, handle, dladsc, nv, np, nvxtot, vtxbds, voxsiz, voxori, vgrext, cgscal, vtxnpl, voxnpt, voxnpl )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7936,7 +6511,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: voxnpl  !! Size of voxel-plate correspondence list.
       end subroutine dskb02
 
-      !> Fetch double precision data from a type 2 DSK segment.
       module subroutine dskd02 ( ctx, handle, dladsc, item, start, room, n, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7949,7 +6523,6 @@ module pepper_instance_module
          real(wp), intent(out) :: values ( * )  !! Array containing requested item.
       end subroutine dskd02
 
-      !> Fetch integer data from a type 2 DSK segment.
       module subroutine dski02 ( ctx, handle, dladsc, item, start, room, n, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7962,8 +6535,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: values ( * )  !! Array containing requested item.
       end subroutine dski02
 
-      !> Compute the unit normal vector for a specified plate from a type
-      !> 2 DSK segment.
       module subroutine dskn02 ( ctx, handle, dladsc, plid, normal )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7973,7 +6544,6 @@ module pepper_instance_module
          real(wp), intent(out) :: normal ( 3 )  !! Plate's unit normal vector.
       end subroutine dskn02
 
-      !> Fetch triangular plates from a type 2 DSK segment.
       module subroutine dskp02 ( ctx, handle, dladsc, start, room, n, plates )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7985,7 +6555,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: plates ( 3, * )  !! Array containing plates.
       end subroutine dskp02
 
-      !> Fetch vertices from a type 2 DSK segment.
       module subroutine dskv02 ( ctx, handle, dladsc, start, room, n, vrtces )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -7997,8 +6566,6 @@ module pepper_instance_module
          real(wp), intent(out) :: vrtces ( 3, * )  !! Array containing vertices.
       end subroutine dskv02
 
-      !> All the plates of a type 2 DSK segment (PEPPER; [[dskp02]] with the
-      !> size from [[dskz02]]).
       module subroutine dsk_plates ( ctx, handle, dladsc, plates )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8007,8 +6574,6 @@ module pepper_instance_module
          integer(ip), allocatable, intent(out) :: plates(:,:)  !! the plates, shape (3, n): vertex indices (n = 0 after an error)
       end subroutine dsk_plates
 
-      !> All the vertices of a type 2 DSK segment (PEPPER; [[dskv02]] with
-      !> the size from [[dskz02]]).
       module subroutine dsk_vertices ( ctx, handle, dladsc, vertices )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8017,8 +6582,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: vertices(:,:)  !! the vertices, shape (3, n) (n = 0 after an error)
       end subroutine dsk_vertices
 
-      !> Return plate model size parameters---plate count and
-      !> vertex count---for a type 2 DSK segment.
       module subroutine dskz02 ( ctx, handle, dladsc, nv, np )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8028,14 +6591,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: np  !! Number of plates.
       end subroutine dskz02
 
-      !> Make spatial index for a DSK type 2 segment. The index is
-      !> returned as a pair of arrays, one of type INTEGER and one of type
-      !> DOUBLE PRECISION. These arrays are suitable for use with the DSK
-      !> type 2 writer [[dskw02]].
-      !>
-      !> IXDFIX     P   Size of fixed-size portion of d.p. index component.
-      !> IXIFIX     P   Size of fixed-size portion of integer index
-      !> component.
       module subroutine dskmi2 ( ctx, nv, vrtces, np, plates, finscl, corscl, worksz, voxpsz, voxlsz, makvtl, spxisz, work, spaixd, spaixi )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8055,8 +6610,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: spaixi ( spxisz )  !! Integer component of spatial index.
       end subroutine dskmi2
 
-      !> Determine range bounds for a set of triangular plates to
-      !> be stored in a type 2 DSK segment.
       module subroutine dskrb2 ( ctx, nv, vrtces, np, plates, corsys, corpar, mncor3, mxcor3 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8070,8 +6623,6 @@ module pepper_instance_module
          real(wp), intent(out) :: mxcor3  !! Upper bound on range of third coordinate.
       end subroutine dskrb2
 
-      !> Find the set of body ID codes of all objects for which
-      !> topographic data are provided in a specified DSK file.
       module subroutine dskobj ( ctx, dskfnm, bodids )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8081,8 +6632,6 @@ module pepper_instance_module
                                                               !! file.
       end subroutine dskobj
 
-      !> The bodies of a DSK file (PEPPER; [[dskobj]] without a set cell):
-      !> their ID codes, sorted, without duplicates.
       module subroutine dsk_objects ( ctx, file, ids )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8090,8 +6639,6 @@ module pepper_instance_module
          integer(ip), allocatable, intent(out) :: ids(:)  !! the body ID codes (size 0 after an error)
       end subroutine dsk_objects
 
-      !> Find the set of surface ID codes for all surfaces associated with
-      !> a given body in a specified DSK file.
       module subroutine dsksrf ( ctx, dskfnm, bodyid, srfids )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8102,8 +6649,6 @@ module pepper_instance_module
                                                               !! file.
       end subroutine dsksrf
 
-      !> The surfaces of a body in a DSK file (PEPPER; [[dsksrf]] without a
-      !> set cell): their ID codes, sorted, without duplicates.
       module subroutine dsk_surfaces ( ctx, file, body, ids )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8119,10 +6664,6 @@ module pepper_instance_module
 
    interface
 
-      !> Load an ephemeris file for use by the readers. Return that file's
-      !> handle, to be used by other SPK routines to refer to the file.
-      !>
-      !> FTSIZE     P   Maximum number of loaded SPK files.
       module subroutine spklef ( ctx, fname, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8130,18 +6671,12 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Loaded file's handle.
       end subroutine spklef
 
-      !> Unload an ephemeris file so that it will no longer be searched by
-      !> the readers.
       module subroutine spkuef ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of file to be unloaded
       end subroutine spkuef
 
-      !> Search through loaded SPK files to find the highest-priority
-      !> segment applicable to the body and time specified and buffer
-      !> searched segments in the process, to attempt to avoid re-reading
-      !> files.
       module subroutine spksfs ( ctx, body, et, handle, descr, ident, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8153,11 +6688,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Indicates whether or not a segment was found.
       end subroutine spksfs
 
-      !> Load a binary PCK file for use by the readers. Return the
-      !> handle of the loaded file which is used by other PCK routines to
-      !> refer to the file.
-      !>
-      !> FTSIZE     P   Maximum number of loaded PCK files.
       module subroutine pcklof ( ctx, fname, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8165,17 +6695,12 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Loaded file's handle.
       end subroutine pcklof
 
-      !> Unload a binary PCK file so that it will no longer be searched by
-      !> the readers.
       module subroutine pckuof ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of file to be unloaded
       end subroutine pckuof
 
-      !> Search through loaded files to find the first segment applicable
-      !> to the body and time specified. Buffer searched segments in the
-      !> process, to attempt to avoid re-reading files.
       module subroutine pcksfs ( ctx, body, et, handle, descr, ident, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8187,11 +6712,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Indicates whether or not a segment was found.
       end subroutine pcksfs
 
-      !> Load a CK pointing file for use by the CK readers. Return that
-      !> file's handle, to be used by other CK routines to refer to the
-      !> file.
-      !>
-      !> FTSIZE     P   Maximum number of loaded CK files.
       module subroutine cklpf ( ctx, fname, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8199,16 +6719,12 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Loaded file's handle.
       end subroutine cklpf
 
-      !> Unload a CK pointing file so that it will no longer be searched
-      !> by the readers.
       module subroutine ckupf ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of CK file to be unloaded
       end subroutine ckupf
 
-      !> Initiate search through loaded files to find segments applicable
-      !> to the spacecraft instrument and time specified.
       module subroutine ckbss ( ctx, inst, sclkdp, tol, needav )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8218,10 +6734,6 @@ module pepper_instance_module
          logical, intent(in) :: needav  !! Is there a need for angular velocity?
       end subroutine ckbss
 
-      !> Search through loaded files to find a segment matching the
-      !> requested instrument, time, and need for angular velocity,
-      !> buffering segment descriptors, identifiers, and handles in the
-      !> process to minimize file reads.
       module subroutine cksns ( ctx, handle, descr, segid, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8231,18 +6743,12 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if a segment was found.
       end subroutine cksns
 
-      !> Determine whether or not any C-kernels are currently loaded.
       module subroutine ckhave ( ctx, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          logical, intent(out) :: found  !! .TRUE. if at least one C-kernel is loaded.
       end subroutine ckhave
 
-      !> Load a DSK shape file for use by the DSK readers.  Return that
-      !> file's handle, to be used by other DSK routines to refer to the
-      !> file.
-      !>
-      !> FTSIZE     P   Maximum number of loaded DSK files.
       module subroutine zzdsklsf ( ctx, fname, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8250,26 +6756,18 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Loaded file's handle.
       end subroutine zzdsklsf
 
-      !> Unload a DSK shape file so that it will no longer be searched
-      !> by the readers.
       module subroutine zzdskusf ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of DSK file to be unloaded
       end subroutine zzdskusf
 
-      !> Initiate search through loaded files to find segments
-      !> satisfying search criteria.
       module subroutine zzdskbss ( ctx, bodyid )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: bodyid  !! ID code of body.
       end subroutine zzdskbss
 
-      !> Search through loaded files to find a segment matching the
-      !> requested body, time, and need for angular velocity.
-      !> Buffer segment descriptors, identifiers, and handles in the
-      !> process to minimize file reads.
       module subroutine zzdsksns ( ctx, cmpfun, handle, dladsc, dskdsc, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8280,9 +6778,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! True if a segment was found.
       end subroutine zzdsksns
 
-      !> Indicate to a calling routine whether any DSK load or unload
-      !> operations have occurred since the local state counter had
-      !> a particular, caller-supplied value.
       module subroutine zzdskchk ( ctx, usrctr, update )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8297,8 +6792,6 @@ module pepper_instance_module
 
    interface
 
-      !> Convert an integer to an equivalent written phrase.
-      !> For example, convert 121 to 'ONE HUNDRED TWENTY-ONE'.
       module subroutine inttxt ( ctx, n, string )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8306,8 +6799,6 @@ module pepper_instance_module
          character(*), intent(out) :: string  !! An English string representing the cardinal of N.
       end subroutine inttxt
 
-      !> Convert an integer to an equivalent written ordinal phrase.
-      !> For example, convert 121 to 'ONE HUNDRED TWENTY-FIRST'.
       module subroutine intord ( ctx, n, string )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8315,10 +6806,6 @@ module pepper_instance_module
          character(*), intent(out) :: string  !! An English string representing the ordinal of N.
       end subroutine intord
 
-      !> Replace a marker with the text representation of an ordinal
-      !> number.
-      !>
-      !> MAXLON     P   Maximum length of an ordinal number.
       module subroutine repmot ( ctx, in, marker, value, rtcase, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8329,9 +6816,6 @@ module pepper_instance_module
          character(*), intent(out) :: out  !! Output string.
       end subroutine repmot
 
-      !> Retrieve the string starting at the FIDX element of the kernel
-      !> pool variable, where the string may be continued across several
-      !> components of the kernel pool variable.
       module subroutine sepool ( ctx, item, fidx, contin, string, size, lidx, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8344,9 +6828,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! flag indicating success or failure of request
       end subroutine sepool
 
-      !> Retrieve the Nth string from a kernel pool variable, where the
-      !> string may be continued across several components of the kernel
-      !> pool variable.
       module subroutine stpool ( ctx, item, nth, contin, nthstr, size, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8358,8 +6839,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating success or failure of request.
       end subroutine stpool
 
-      !> Return the latest version string of a given item such as the
-      !> Toolkit or a routine name.
       module subroutine tkvrsn ( ctx, item, verstr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8367,10 +6846,6 @@ module pepper_instance_module
          character(*), intent(out) :: verstr  !! Version string.
       end subroutine tkvrsn
 
-      !> Returns a string indicating the line terminators of an ASCII file
-      !> and, if requested, stops execution if the terminator does match
-      !> the one that is native to the platform on which the toolkit was
-      !> compiled.
       module subroutine zzascii ( ctx, file, line, check, termin )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8380,26 +6855,12 @@ module pepper_instance_module
          character(*), intent(out) :: termin  !! The deduced terminator ID.
       end subroutine zzascii
 
-      !> Determine whether a file exists.
-      !>
-      !> The function returns the value .TRUE. if the file exists, .FALSE.
-      !> otherwise.
       module logical function exists ( ctx, fname )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: fname  !! Name of the file in question.
       end function exists
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> PEPPER: chooses the loader of FILE (the rules: [[spice_furnsh]]): a
-      !> registered kernel loader named by `loader`, before any check of the
-      !> file; else SPICE's binary kernels by their ID word; else a
-      !> registered loader by extension or `detect`; else the text readers.
-      !> A file a kernel loader reads is loaded as an SPK built in memory
-      !> (FILTYP 'SPK').
       module subroutine zzldker ( ctx, file, nofile, filtyp, handle, loader, used, format )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8413,22 +6874,6 @@ module pepper_instance_module
          character(:), allocatable, intent(out), optional :: format  !! PEPPER: the description of a kernel built by a loader
       end subroutine zzldker
 
-      !> Load one or more SPICE kernels into a program. Lines of text
-      !> kernels and meta-kernels have at most 132 characters; a longer
-      !> line is cut without an error (see Restrictions).
-      !>
-      !> PEPPER: a file named `*.json` (in any case) is a JSON kernel (see
-      !> [[pepper_json]]), a text kernel or meta-kernel.
-      !>
-      !> PEPPER: kernel loaders ([[spice_add_loader]]) read other file
-      !> formats: `loader` names the one that reads FILE, overriding every
-      !> other choice, or is PEPPER for PEPPER's own loading (registered
-      !> loaders not asked); without it FURNSH chooses (SPICE's binary
-      !> kernels, a loader's extension, a loader's `detect`, the text
-      !> readers). The rules are in [[spice_furnsh]], the method programs
-      !> call.
-      !>
-      !> FILSIZ     P   Maximum file name length.
       module subroutine furnsh ( ctx, file, loader )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8437,8 +6882,6 @@ module pepper_instance_module
                                                        !! every other choice ([[spice_furnsh]]; blank or absent: FURNSH chooses)
       end subroutine furnsh
 
-      !> Return the number of kernels of a specified type that are
-      !> currently loaded via the FURNSH interface.
       module subroutine ktotal ( ctx, kind, count )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8446,8 +6889,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: count  !! The number of kernels of type KIND.
       end subroutine ktotal
 
-      !> Return data for the nth kernel that is among a list of specified
-      !> kernel types.
       module subroutine kdata ( ctx, which, kind, file, filtyp, srcfil, handle, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8460,7 +6901,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the specified file could be located.
       end subroutine kdata
 
-      !> Return information about a specific kernel
       module subroutine kinfo ( ctx, file, filtyp, srcfil, handle, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8471,9 +6911,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the specified file could be located.
       end subroutine kinfo
 
-      !> The data of the nth kernel of a kind loaded through FURNSH, with
-      !> file names of any length (PEPPER; [[kdata]], which truncates to its
-      !> arguments' lengths).
       module subroutine kernel_data ( ctx, which, kind, file, filtyp, source, handle, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8486,9 +6923,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! a kernel was found
       end subroutine kernel_data
 
-      !> The data of a kernel loaded through FURNSH, with file names of any
-      !> length (PEPPER; [[kinfo]], which truncates to its arguments'
-      !> lengths).
       module subroutine kernel_info ( ctx, file, filtyp, source, handle, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8499,17 +6933,11 @@ module pepper_instance_module
          logical, intent(out) :: found  !! the file is loaded
       end subroutine kernel_info
 
-      !> Clear the KEEPER subsystem: unload all kernels, clear the kernel
-      !> pool, and re-initialize the subsystem. Existing watches on kernel
-      !> variables are retained.
-      !>
-      !> None.
       module subroutine kclear ( ctx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
       end subroutine kclear
 
-      !> Unload a SPICE kernel.
       module subroutine unload ( ctx, file )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8523,10 +6951,6 @@ module pepper_instance_module
 
    interface
 
-      !> Determine if a kernel pool variable is present and if so
-      !> that it has the correct size and type.
-      !>
-      !> The function returns .FALSE. if the kernel pool variable is OK.
       module logical function badkpv ( ctx, caller, name, comp, size, divby, type )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8538,7 +6962,6 @@ module pepper_instance_module
          character(*), intent(in) :: type  !! Expected type of the kernel pool variable.
       end function badkpv
 
-      !> Parse a string as an integer, encapsulating error handling.
       module subroutine prsint ( ctx, string, intval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8546,9 +6969,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: intval  !! Integer value obtained by parsing STRING.
       end subroutine prsint
 
-      !> Take a measurement X, the units associated with
-      !> X, and units to which X should be converted; return Y ---
-      !> the value of the measurement in the output units.
       module subroutine convrt ( ctx, x, in, out, y )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8558,9 +6978,6 @@ module pepper_instance_module
          real(wp), intent(out) :: y  !! The measurement in the desired units.
       end subroutine convrt
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzcvpool ( ctx, agent, usrctr, update )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8569,9 +6986,6 @@ module pepper_instance_module
          logical, intent(out) :: update  !! .TRUE. if variables for AGENT have been updated
       end subroutine zzcvpool
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzutcpm ( ctx, string, start, hoff, moff, last, succes )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8583,11 +6997,6 @@ module pepper_instance_module
          logical, intent(out) :: succes  !! indicates that a time zone was parsed.
       end subroutine zzutcpm
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns the exponent associated with X.
       module subroutine zzvststr ( ctx, x, fill, expont )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8596,9 +7005,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: expont  !! The exponent associated with X.
       end subroutine zzvststr
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzvsbstr ( ctx, from, to, rnd, substr, did )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8609,8 +7015,6 @@ module pepper_instance_module
          logical, intent(out) :: did  !! is a leading zero a result of rounding.
       end subroutine zzvsbstr
 
-      !> Create a formatted string that represents a double precision
-      !> number, using a format picture.
       module subroutine dpfmt ( ctx, x, pictur, str )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8619,8 +7023,6 @@ module pepper_instance_module
          character(*), intent(out) :: str  !! a string representing X as prescribed by PICTUR
       end subroutine dpfmt
 
-      !> Take a double precision number and convert it to an
-      !> equivalent formatted character string representation (base 10).
       module subroutine dpstrf ( ctx, x, sigdig, format, string )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8630,10 +7032,6 @@ module pepper_instance_module
          character(*), intent(out) :: string  !! A character string representation of X
       end subroutine dpstrf
 
-      !> Replace a marker in a string with a formatted double precision
-      !> value.
-      !>
-      !> MAXLFD     P   Maximum length of a formatted DP number.
       module subroutine repmf ( ctx, in, marker, value, sigdig, format, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8645,8 +7043,6 @@ module pepper_instance_module
          character(*), intent(out) :: out  !! Output string.
       end subroutine repmf
 
-      !> Convert Year Month and Day on the Julian Calendar
-      !> to the Gregorian Calendar
       module subroutine jul2gr ( ctx, year, month, day, doy )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8656,8 +7052,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: doy  !! Day of Year in Gregorian Calendar
       end subroutine jul2gr
 
-      !> Convert Year Month and Day on the  Gregorian Calendar
-      !> to the Julian Calendar
       module subroutine gr2jul ( ctx, year, month, day, doy )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8667,9 +7061,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: doy  !! Day of Year in Julian Calendar
       end subroutine gr2jul
 
-      !> Convert from an ephemeris epoch measured in seconds past
-      !> the epoch of J2000 to a calendar string format using a
-      !> formal calendar free of leapseconds.
       module subroutine etcal ( ctx, et, calstr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8677,10 +7068,6 @@ module pepper_instance_module
          character(*), intent(out) :: calstr  !! A standard calendar representation of ET.
       end subroutine etcal
 
-      !> Transform a time vector from one representation and system
-      !> to another.
-      !>
-      !> MXCOMP     P    maximum number of components allowed for TVEC.
       module subroutine ttrans ( ctx, from, to, tvec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8690,8 +7077,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: tvec ( mxcomp )  !! time vector representing an epoch.
       end subroutine ttrans
 
-      !> Set and retrieve the defaults associated with calendar
-      !> input strings.
       module subroutine timdef ( ctx, action, item, value )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8700,11 +7085,6 @@ module pepper_instance_module
          character(*), intent(inout) :: value  !! Value associated with the default item.
       end subroutine timdef
 
-      !> Transform time from one uniform scale to another. The uniform
-      !> time scales are TAI, GPS, TT, TDT, TDB, ET, JED, JDTDB, JDTDT.
-      !>
-      !> The function returns the d.p. in OUTSYS that is equivalent to the
-      !> EPOCH on the INSYS time scale.
       module real(wp) function unitim ( ctx, epoch, insys, outsys )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8713,9 +7093,6 @@ module pepper_instance_module
          character(*), intent(in) :: outsys  !! The time scale associated with the function value.
       end function unitim
 
-      !> Convert a string representing an epoch to a double precision
-      !> value representing the number of TDB seconds past the J2000
-      !> epoch corresponding to the input epoch.
       module subroutine str2et ( ctx, timstr, et )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8723,9 +7100,6 @@ module pepper_instance_module
          real(wp), intent(out) :: et  !! The equivalent value in seconds past J2000, TDB.
       end subroutine str2et
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzprscor ( ctx, abcorr, attblk )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8733,9 +7107,6 @@ module pepper_instance_module
          logical, intent(out) :: attblk ( * )  !! Aberration correction attribute block.
       end subroutine zzprscor
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzvalcor ( ctx, abcorr, attblk )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8743,9 +7114,6 @@ module pepper_instance_module
          logical, intent(out) :: attblk ( * )  !! Aberration correction attribute block.
       end subroutine zzvalcor
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzcorepc ( ctx, abcorr, et, lt, etcorr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8762,11 +7130,6 @@ module pepper_instance_module
 
    interface
 
-      !> Look up integer type 1 SCLK data from the kernel pool.
-      !>
-      !> MXNFLD     P   Maximum number of fields in an SCLK string.
-      !> NDELIM     P   Maximum number of delimiter codes.
-      !> MXTSYS     P   Maximum number of supported parallel time systems.
       module subroutine scli01 ( ctx, name, sc, maxnv, n, ival )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8777,9 +7140,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: ival ( * )  !! Returned integer values.
       end subroutine scli01
 
-      !> Look up double precision type 1 SCLK data from the kernel pool.
-      !>
-      !> MXCOEF     P   Maximum number of coefficient sets in SCLK kernel.
       module subroutine scld01 ( ctx, name, sc, maxnv, n, dval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8790,17 +7150,11 @@ module pepper_instance_module
          real(wp), intent(out) :: dval ( * )  !! Requested kernel data item.
       end subroutine scld01
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzscin01 ( ctx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context (PEPPER: its type 1 SCLK database is emptied)
       end subroutine zzscin01
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzscad01 ( ctx, sc, sclkat )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context (PEPPER: its type 1 SCLK database grows)
@@ -8808,20 +7162,12 @@ module pepper_instance_module
          integer(ip), intent(out) :: sclkat  !! Index of the clock in the database.
       end subroutine zzscad01
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzscup01 ( ctx, sc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context (PEPPER: the clock's data are made current in its database)
          integer(ip), intent(in) :: sc  !! SCLK ID code.
       end subroutine zzscup01
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns TRUE is SCLK information is available.
       module logical function zzsclk ( ctx, ckid, sclkid )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8829,8 +7175,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: sclkid  !! Idcode to pass to the SCLOCK routines for CKID
       end function zzsclk
 
-      !> Convert a character representation of a type 1 spacecraft clock
-      !> count to ticks.
       module subroutine sctk01 ( ctx, sc, clkstr, ticks )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8839,8 +7183,6 @@ module pepper_instance_module
          real(wp), intent(out) :: ticks  !! Number of ticks represented by the clock count.
       end subroutine sctk01
 
-      !> Convert a number of ticks to an equivalent type 1 spacecraft clock
-      !> string.
       module subroutine scfm01 ( ctx, sc, ticks, clkstr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8849,8 +7191,6 @@ module pepper_instance_module
          real(wp), intent(in) :: ticks  !! Number of ticks represented by a clock count.
       end subroutine scfm01
 
-      !> Convert encoded type 1 spacecraft clock (`ticks') to ephemeris
-      !> seconds past J2000 (ET).
       module subroutine scte01 ( ctx, sc, sclkdp, et )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8859,8 +7199,6 @@ module pepper_instance_module
          real(wp), intent(out) :: et  !! Ephemeris time, seconds past J2000. (PEPPER: an output; SPICELIB's table said I)
       end subroutine scte01
 
-      !> Convert ephemeris seconds past J2000 (ET) to discrete encoded
-      !> type 1 spacecraft clock (`ticks').
       module subroutine scet01 ( ctx, sc, et, sclkdp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8869,9 +7207,6 @@ module pepper_instance_module
          real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
       end subroutine scet01
 
-      !> Convert ephemeris seconds past J2000 (ET) to continuous encoded
-      !> type 1 spacecraft clock (`ticks').  The output value need not be
-      !> integral.
       module subroutine scec01 ( ctx, sc, et, sclkdp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8880,8 +7215,6 @@ module pepper_instance_module
          real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
       end subroutine scec01
 
-      !> Return the type of a specified clock. The clock need not be
-      !> type 1.
       module subroutine scty01 ( ctx, sc, clktyp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8889,7 +7222,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: clktyp  !! NAIF spacecraft clock type.
       end subroutine scty01
 
-      !> Return partition data for a specified type 1 clock.
       module subroutine scpr01 ( ctx, sc, npartn, parbeg, parend )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8906,9 +7238,6 @@ module pepper_instance_module
 
    interface
 
-      !> Calculate the 3x3 rotation matrix generated by a rotation
-      !> of a specified angle about a specified axis. This rotation
-      !> is thought of as rotating the coordinate system.
       module subroutine rotate ( ctx, angle, iaxis, mout )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8917,8 +7246,6 @@ module pepper_instance_module
          real(wp), intent(out) :: mout  ( 3,3 )  !! Resulting rotation matrix [ANGLE] IAXIS
       end subroutine rotate
 
-      !> Apply a rotation of ANGLE radians about axis IAXIS to a matrix.
-      !> This rotation is thought of as rotating the coordinate system.
       module subroutine rotmat ( ctx, m1, angle, iaxis, mout )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8928,8 +7255,6 @@ module pepper_instance_module
          real(wp), intent(out) :: mout  ( 3,3 )  !! Resulting rotated matrix [ANGLE]      * M1 IAXIS
       end subroutine rotmat
 
-      !> Factor a rotation matrix as a product of three rotations about
-      !> specified coordinate axes.
       module subroutine m2eul ( ctx, r, axis3, axis2, axis1, angle3, angle2, angle1 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8942,7 +7267,6 @@ module pepper_instance_module
          real(wp), intent(out) :: angle1  !! Third, second, and first Euler angles, in radians.
       end subroutine m2eul
 
-      !> Construct a rotation matrix from a set of Euler angles.
       module subroutine eul2m ( ctx, angle3, angle2, angle1, axis3, axis2, axis1, r )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8955,8 +7279,6 @@ module pepper_instance_module
          real(wp), intent(out) :: r ( 3, 3 )  !! Product of the 3 rotations.
       end subroutine eul2m
 
-      !> Convert a state transformation matrix to Euler angles and their
-      !> derivatives, given a specified set of axes.
       module subroutine xf2eul ( ctx, xform, axisa, axisb, axisc, eulang, unique )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8968,8 +7290,6 @@ module pepper_instance_module
          logical, intent(out) :: unique  !! Indicates if EULANG is a unique representation.
       end subroutine xf2eul
 
-      !> Compute a state transformation from an Euler angle factorization
-      !> of a rotation and the derivatives of those Euler angles.
       module subroutine eul2xf ( ctx, eulang, axisa, axisb, axisc, xform )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8980,9 +7300,6 @@ module pepper_instance_module
          real(wp), intent(in) :: eulang ( 6 )  !! An array of Euler angles and their derivatives.
       end subroutine eul2xf
 
-      !> Find the transformation to the right-handed frame having a
-      !> given vector as a specified axis and having a second given
-      !> vector lying in a specified coordinate plane.
       module subroutine twovec ( ctx, axdef, indexa, plndef, indexp, mout )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -8993,9 +7310,6 @@ module pepper_instance_module
          real(wp), intent(out) :: mout   ( 3,3 )  !! Output rotation matrix.
       end subroutine twovec
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zztwovxf ( ctx, axdef, indexa, plndef, indexp, xform )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9006,8 +7320,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xform  ( 6, 6 )  !! Output state transformation matrix.
       end subroutine zztwovxf
 
-      !> Compute the matrix needed to rotate vectors between two
-      !> standard inertial reference frames.
       module subroutine irfrot ( ctx, refa, refb, rotab )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9016,8 +7328,6 @@ module pepper_instance_module
          real(wp), intent(out) :: rotab    ( 3,3 )  !! Rotation from frame A to frame B.
       end subroutine irfrot
 
-      !> Return the index of one of the standard inertial reference
-      !> frames supported by [[irfrot]].
       module subroutine irfnum ( ctx, name, index )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9025,8 +7335,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: index  !! Index of frame.
       end subroutine irfnum
 
-      !> Return the name of one of the standard inertial reference
-      !> frames supported by [[irfrot]].
       module subroutine irfnam ( ctx, index, name )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9034,16 +7342,12 @@ module pepper_instance_module
          integer(ip), intent(in) :: index  !! Index of standard inertial reference frame.
       end subroutine irfnam
 
-      !> Specify a standard inertial reference frame as the default
-      !> frame for a program.
       module subroutine irfdef ( ctx, index )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: index  !! Index of default frame.
       end subroutine irfdef
 
-      !> Return the mean obliquity of the ecliptic, and its time
-      !> derivative, at a specified epoch.
       module subroutine zzmobliq ( ctx, et, mob, dmob )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9052,10 +7356,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dmob  !! Time derivative of the mean obliquity.
       end subroutine zzmobliq
 
-      !> Calculates nutation angles delta psi and delta epsilon,  and
-      !> their rates of change, referred to the ecliptic of date, from
-      !> the Wahr series (Table 1,'Proposal to the IAU Working Group
-      !> on Nutation', John M. Wahr and Martin L. Smith 1979)
       module subroutine zzwahr ( ctx, et, dvnut )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9063,9 +7363,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dvnut(4)  !! Nutation angles and their rates.
       end subroutine zzwahr
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzenut80 ( ctx, et, nutxf )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9073,9 +7370,6 @@ module pepper_instance_module
          real(wp), intent(out) :: nutxf  ( 6, 6 )  !! Nutation transformation matrix.
       end subroutine zzenut80
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzeprc76 ( ctx, et, precxf )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9083,8 +7377,6 @@ module pepper_instance_module
          real(wp), intent(out) :: precxf ( 6, 6 )  !! Precession state transformation matrix at ET.
       end subroutine zzeprc76
 
-      !> Compute the velocity of an ellipsoid surface point nearest to a
-      !> specified position.
       module subroutine zzdnpt ( ctx, state, nearp, a, b, c, dnear, dalt, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9098,8 +7390,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Tells whether DNEAR is degenerate.
       end subroutine zzdnpt
 
-      !> Compute the state (position and velocity) of an ellipsoid surface
-      !> point nearest to the position component of a specified state.
       module subroutine dnearp ( ctx, state, a, b, c, dnear, dalt, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9112,9 +7402,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag that indicates whether DNEAR is degenerate.
       end subroutine dnearp
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzstelab ( ctx, xmit, accobs, vobs, starg, scorr, dscorr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9133,9 +7420,6 @@ module pepper_instance_module
 
    interface
 
-      !> Evaluate a pointing record returned by [[ckr01]] from a CK data type 1
-      !> segment. Return the C-matrix and optionally the angular velocity
-      !> vector associated with the time CLKOUT.
       module subroutine cke01 ( ctx, needav, record, cmat, av, clkout )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9146,9 +7430,6 @@ module pepper_instance_module
          real(wp), intent(out) :: clkout  !! Output spacecraft clock time.
       end subroutine cke01
 
-      !> Evaluate a pointing record returned by [[ckr02]] from a CK data type 2
-      !> segment. Return the C-matrix and angular velocity vector
-      !> associated with the time CLKOUT.
       module subroutine cke02 ( ctx, needav, record, cmat, av, clkout )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9159,9 +7440,6 @@ module pepper_instance_module
          real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
       end subroutine cke02
 
-      !> Evaluate a pointing record returned by [[ckr03]] from a CK type 3
-      !> segment. Return the C-matrix and angular velocity vector
-      !> associated with the time CLKOUT.
       module subroutine cke03 ( ctx, needav, record, cmat, av, clkout )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9172,9 +7450,6 @@ module pepper_instance_module
          real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
       end subroutine cke03
 
-      !> Evaluate a pointing record returned by [[ckr04]] from a CK type 4
-      !> segment. Return the C-matrix and angular velocity vector
-      !> associated with the time CLKOUT.
       module subroutine cke04 ( ctx, needav, record, cmat, av, clkout )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9185,7 +7460,6 @@ module pepper_instance_module
          real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
       end subroutine cke04
 
-      !> Evaluate a single data record from a type 5 CK segment.
       module subroutine cke05 ( ctx, needav, record, cmat, av, clkout )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9196,7 +7470,6 @@ module pepper_instance_module
          real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
       end subroutine cke05
 
-      !> Read a pointing record from a CK segment, data type 1.
       module subroutine ckr01 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9209,7 +7482,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. when data is found.
       end subroutine ckr01
 
-      !> Read a pointing record from a CK segment, data type 2.
       module subroutine ckr02 ( ctx, handle, descr, sclkdp, tol, record, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9221,7 +7493,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. when data is found.
       end subroutine ckr02
 
-      !> Read a pointing record from a CK segment, data type 3.
       module subroutine ckr03 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9234,8 +7505,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. when data is found.
       end subroutine ckr03
 
-      !> Read a single CK data record from a segment of type 05
-      !> (MEX/Rosetta Attitude file interpolation).
       module subroutine ckr05 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9248,8 +7517,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether record was found.
       end subroutine ckr05
 
-      !> Read a single CK data record from a segment of type 6
-      !> (ESOC/DDID Piecewise Interpolation).
       module subroutine ckr06 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9262,8 +7529,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether record was found.
       end subroutine ckr06
 
-      !> Read a single PCK data record from a segment of type 2
-      !> (Chebyshev, 3-vector only).
       module subroutine pckr02 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9273,8 +7538,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! Data record.
       end subroutine pckr02
 
-      !> Read a single PCK data record from a segment of type 20
-      !> (Chebyshev, derivative coefficients only).
       module subroutine pckr20 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9284,7 +7547,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! Data record.
       end subroutine pckr20
 
-      !> Obtain the value of a specified generic segment meta data item.
       module subroutine sgmeta ( ctx, handle, descr, mnemon, value )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9294,8 +7556,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: value  !! The value of the meta data item requested.
       end subroutine sgmeta
 
-      !> Evaluate a single SPK data record from a segment of type 1
-      !> (Difference Lines).
       module subroutine spke01 ( ctx, et, record, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9304,8 +7564,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
       end subroutine spke01
 
-      !> Evaluate a single data record from an PCK or SPK segment of type
-      !> 2 (Chebyshev Polynomials, 3 components).
       module subroutine spke02 ( ctx, et, record, xyzdot )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9314,8 +7572,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xyzdot   ( 6 )  !! Three function components and their derivatives.
       end subroutine spke02
 
-      !> Evaluate a single SPK data record from a segment of type 3
-      !> (Chebyshev Polynomials, position and velocity).
       module subroutine spke03 ( ctx, et, record, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9324,9 +7580,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
       end subroutine spke03
 
-      !> Evaluate a single SPK data record from a segment of type 8
-      !> (equally spaced discrete states, interpolated by Lagrange
-      !> polynomials).
       module subroutine spke08 ( ctx, et, record, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9335,8 +7588,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state  ( 6 )  !! State (position and velocity).
       end subroutine spke08
 
-      !> Evaluate a single SPK data record from a segment of type 9
-      !> (discrete states, evaluated by Lagrange interpolation).
       module subroutine spke09 ( ctx, et, record, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9345,9 +7596,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state  ( 6 )  !! State (position and velocity).
       end subroutine spke09
 
-      !> Evaluate a single data record from a type 12 SPK segment.
-      !>
-      !> MAXREC     P   Maximum size of SPK record. See [[spkpvn]].
       module subroutine spke12 ( ctx, et, record, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9356,9 +7604,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
       end subroutine spke12
 
-      !> Evaluate a single data record from a type 13 SPK segment.
-      !>
-      !> MAXREC     P   Maximum size of SPK record. See [[spkpvn]].
       module subroutine spke13 ( ctx, et, record, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9367,7 +7612,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
       end subroutine spke13
 
-      !> Evaluate a single data record from a type 14 SPK segment.
       module subroutine spke14 ( ctx, et, record, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9376,8 +7620,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
       end subroutine spke14
 
-      !> Evaluate a single SPK data record from a segment of type 17
-      !> (Equinoctial Elements).
       module subroutine spke17 ( ctx, et, recin, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9386,9 +7628,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state  ( 6 )  !! State (position and velocity).
       end subroutine spke17
 
-      !> Evaluate a single data record from a type 18 SPK segment.
-      !>
-      !> MAXREC     P   Maximum size of SPK record.
       module subroutine spke18 ( ctx, et, record, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9397,9 +7636,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
       end subroutine spke18
 
-      !> Evaluate a single data record from a type 19 SPK segment.
-      !>
-      !> MAXREC     P   Maximum size of SPK record.
       module subroutine spke19 ( ctx, et, record, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9408,8 +7644,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
       end subroutine spke19
 
-      !> Evaluate a single data record from an SPK or PCK segment of type
-      !> 20 (Chebyshev polynomials, velocity only).
       module subroutine spke20 ( ctx, et, record, xyzdot )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9418,11 +7652,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xyzdot   ( 6 )  !! Three function components and their derivatives.
       end subroutine spke20
 
-      !> Evaluate a single SPK data record from a segment of type 21
-      !> (Extended Difference Lines).
-      !>
-      !> MAXTRM     P   Maximum number of terms per difference table
-      !> component.
       module subroutine spke21 ( ctx, et, record, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9431,8 +7660,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
       end subroutine spke21
 
-      !> Read a single SPK data record from a segment of type 1
-      !> (Difference Lines).
       module subroutine spkr01 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9442,8 +7669,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! Data record.
       end subroutine spkr01
 
-      !> Read a single SPK data record from a segment of type 2
-      !> (Chebyshev, position only).
       module subroutine spkr02 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9453,8 +7678,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! Data record.
       end subroutine spkr02
 
-      !> Read a single SPK data record from a segment of type 3
-      !> (Chebyshev coefficients, position and velocity).
       module subroutine spkr03 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9464,8 +7687,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! Data record.
       end subroutine spkr03
 
-      !> Read a single SPK data record from a segment of type 5
-      !> ( two body propagation between discrete state vectors ).
       module subroutine spkr05 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9475,9 +7696,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! Data record.
       end subroutine spkr05
 
-      !> Read a single SPK data record from a segment of type 8
-      !> (equally spaced discrete states, interpolated by Lagrange
-      !> polynomials).
       module subroutine spkr08 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9487,9 +7705,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! Data record.
       end subroutine spkr08
 
-      !> Read a single SPK data record from a segment of type 9
-      !> (Unequally spaced discrete states, interpolated by Lagrange
-      !> polynomials).
       module subroutine spkr09 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9499,8 +7714,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! Data record.
       end subroutine spkr09
 
-      !> Read a single SPK data record from a segment of type 15
-      !> (Precessing Conic Propagation).
       module subroutine spkr15 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9510,8 +7723,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record(*)  !! Data record.
       end subroutine spkr15
 
-      !> Read a single SPK data record from a segment of type 17
-      !> (Equinoctial Elements).
       module subroutine spkr17 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9521,8 +7732,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record(*)  !! Data record.
       end subroutine spkr17
 
-      !> Read a single SPK data record from a segment of type 18
-      !> (MEX/Rosetta Orbit file interpolation).
       module subroutine spkr18 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9532,8 +7741,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! Data record.
       end subroutine spkr18
 
-      !> Read a single SPK data record from a segment of type 19
-      !> (ESOC/DDID Piecewise Interpolation).
       module subroutine spkr19 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9543,8 +7750,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! Data record.
       end subroutine spkr19
 
-      !> Read a single SPK data record from a segment of type 20
-      !> (Chebyshev, velocity coefficients only).
       module subroutine spkr20 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9554,8 +7759,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! Data record.
       end subroutine spkr20
 
-      !> Read a single SPK data record from a segment of type 21
-      !> (Extended Difference Lines).
       module subroutine spkr21 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9565,10 +7768,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! Data record.
       end subroutine spkr21
 
-      !> Compute the values of the Stumpff functions C_0 through C_3 at
-      !> a specified point.
-      !>
-      !> TRUNC      P   Number of terms needed in Maclaurin series for C_3.
       module subroutine stmp03 ( ctx, x, c0, c1, c2, c3 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9579,21 +7778,12 @@ module pepper_instance_module
          real(wp), intent(out) :: c3  !! Value of C_3(X)
       end subroutine stmp03
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns the NAIF integer ID code of the barycenter,
-      !> if any, associated with BODY.
       module integer(ip) function zzbodbry ( ctx, body )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: body  !! ID code of body.
       end function zzbodbry
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzck4d2i ( ctx, dpcoef, nsets, parcod, i )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9603,10 +7793,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: i      ( * )  !! Array of NSETS integer components.
       end subroutine zzck4d2i
 
-      !> This subroutine provides deep space common items used by both the
-      !> secular and periodics subroutines.
-      !>
-      !> See Detailed_input and Detailed_Output.
       module subroutine zzdscm ( ctx, epoch, eccp, argpp, tc, inclp, nodep, np, snodm, cnodm, sinim, cosim, sinomm, cosomm, day, e3, ee2, eccm, emsq, gam, peo, pgho, pho, pinco, plo, rtemsq, se2, se3, sgh2, sgh3, sgh4, sh2, sh3, si2, si3, sl2, sl3, sl4, s1, s2, s3, s4, s5, s6, s7, ss1, ss2, ss3, ss4, ss5, ss6, ss7, sz1, sz2, sz3, sz11, sz12, sz13, sz21, sz22, sz23, sz31, sz32, sz33, xgh2, xgh3, xgh4, xh2, xh3, xi2, xi3, xl2, xl3, xl4, xn, z1, z2, z3, z11, z12, z13, z21, z22, z23, z31, z32, z33, zmol, zmos )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9700,11 +7886,6 @@ module pepper_instance_module
          real(wp), intent(out) :: zmos  !! Internal SGD4 parameter.
       end subroutine zzdscm
 
-      !> This Subroutine provides Deep Space contributions to Mean
-      !> Motion Dot due to geopotential resonance with half day and one
-      !> day orbits.
-      !>
-      !> See Detailed_input and Detailed_Output.
       module subroutine zzdsin ( ctx, geophs, cosim, emsq, argpo, s1, s2, s3, s4, s5, sinim, ss1, ss2, ss3, ss4, ss5, sz1, sz3, sz11, sz13, sz21, sz23, sz31, sz33, t, tc, gsto, mo, mdot, no, nodeo, nodedot, xpidot, z1, z3, z11, z13, z21, z23, z31, z33, ecco, eccsq, eccm, argpm, inclm, mm, xn, nodem, irez, atime, d2201, d2211, d3210, d3222, d4410, d4422, d5220, d5232, d5421, d5433, dedt, didt, dmdt, dndt, dnodt, domdt, del1, del2, del3, xfact, xlamo, xli, xni )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9783,13 +7964,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: irez  !! Resonance flags: 0-none, 1-one day, 2-half day
       end subroutine zzdsin
 
-      !> This subroutine provides deep space contributions to mean
-      !> elements for perturbing third body. These effects have been
-      !> averaged over one revolution of the sun and moon. For earth
-      !> resonance effects, the effects have been averaged over NO
-      !> revolutions of the satellite.
-      !>
-      !> See Detailed_input and Detailed_Output.
       module subroutine zzdspc ( ctx, irez, d2201, d2211, d3210, d3222, d4410, d4422, d5220, d5232, d5421, d5433, dedt, del1, del2, del3, didt, dmdt, dnodt, domdt, argpo, argpdot, t, tc, gsto, xfact, xlamo, no, atime, eccm, argpm, inclm, xli, mm, xni, nodem, dndt, xn )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9832,12 +8006,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: xn
       end subroutine zzdspc
 
-      !> Provide deep space long period periodic contributions to the mean
-      !> elements. By design, these periodics are zero at epoch. This used
-      !> to be dscom which included initialization, but it's really a
-      !> recurring function.
-      !>
-      !> See Detailed_input and Detailed_Output.
       module subroutine zzdspr ( ctx, opmode, e3, ee2, peo, pgho, pho, pinco, plo, se2, se3, sgh2, sgh3, sgh4, sh2, sh3, si2, si3, sl2, sl3, sl4, t, xgh2, xgh3, xgh4, xh2, xh3, xi2, xi3, xl2, xl3, xl4, zmol, zmos, inclo, doinit, eccp, inclp, nodep, argpp, mp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9883,11 +8051,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: mp  !! Mean anomaly.
       end subroutine zzdspr
 
-      !> This subroutine initializes the SGP4 propagator. All the
-      !> initialization is consolidated here instead of having multiple
-      !> loops inside other routines.
-      !>
-      !> See Detailed_input and Detailed_Output.
       module subroutine zzinil ( ctx, geophs, opmode, ecco, epoch, inclo, no, ainv, ao, con41, con42, cosio, cosio2, eccsq, omeosq, posq, rp, rteosq, sinio, gsto )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9912,7 +8075,6 @@ module pepper_instance_module
          real(wp), intent(out) :: gsto  !! GST at time of observation.
       end subroutine zzinil
 
-      !> Evaluate a single data record from a type 6 CK segment.
       module subroutine cke06 ( ctx, needav, record, cmat, av, clkout )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9923,9 +8085,6 @@ module pepper_instance_module
          real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
       end subroutine cke06
 
-      !> Return (depending upon the user's request) the ID code of either
-      !> the spacecraft or spacecraft clock associated with a C-Kernel ID
-      !> code.
       module subroutine ckmeta ( ctx, ckid, meta, idcode )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9934,9 +8093,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: idcode  !! The requested SCLK or spacecraft ID code.
       end subroutine ckmeta
 
-      !> Return the number of pointing records in a CK type 04 segment.
-      !> The segment is identified by a CK file handle and segment
-      !> descriptor.
       module subroutine cknr04 ( ctx, handle, descr, nrec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9945,8 +8101,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: nrec  !! The number of pointing records in the segment.
       end subroutine cknr04
 
-      !> Evaluate a single PCK data record from a segment of type 2
-      !> (Chebyshev Polynomials, position only).
       module subroutine pcke02 ( ctx, et, record, eulang )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9955,8 +8109,6 @@ module pepper_instance_module
          real(wp), intent(out) :: eulang   ( 6 )  !! Euler angles and their derivatives.
       end subroutine pcke02
 
-      !> Evaluate a single PCK data record from a segment of type 20
-      !> (Chebyshev Polynomials, rotation derivative only).
       module subroutine pcke20 ( ctx, et, record, eulang )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9965,9 +8117,6 @@ module pepper_instance_module
          real(wp), intent(out) :: eulang   ( 6 )  !! Euler angles and their derivatives.
       end subroutine pcke20
 
-      !> Compute the state of a massless body at time t_0 + DT by applying
-      !> the two-body force model to a given central mass and a given body
-      !> state at time t_0.
       module subroutine prop2b ( ctx, gm, pvinit, dt, pvprop )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9977,9 +8126,6 @@ module pepper_instance_module
          real(wp), intent(out) :: pvprop ( 6 )  !! The propagated state.
       end subroutine prop2b
 
-      !> Fetch from the constants partition of a generic segment the
-      !> double precision numbers from FIRST to LAST. The segment is
-      !> identified by a DAF file handle and segment descriptor.
       module subroutine sgfcon ( ctx, handle, descr, first, last, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -9990,9 +8136,6 @@ module pepper_instance_module
          real(wp), intent(out) :: values ( * )  !! The constant values that were requested.
       end subroutine sgfcon
 
-      !> Fetch the data packets indexed from FIRST to LAST from the
-      !> packet partition of a generic segment. The segment is
-      !> identified by a DAF file handle and segment descriptor.
       module subroutine sgfpkt ( ctx, handle, descr, first, last, values, ends )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10004,9 +8147,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: ends    ( * )  !! An array of pointers to the ends of the packets.
       end subroutine sgfpkt
 
-      !> Find the reference value associated with the value X and its
-      !> index in a generic segment. The segment is identified by a DAF
-      !> file handle and segment descriptor.
       module subroutine sgfrvi ( ctx, handle, descr, x, value, indx, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10018,7 +8158,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! A flag indicating whether values for X were found.
       end subroutine sgfrvi
 
-      !> Read a single data record from a type 12 SPK segment.
       module subroutine spkr12 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10028,7 +8167,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! The desired type 12 SPK record.
       end subroutine spkr12
 
-      !> Read a single data record from a type 13 SPK segment.
       module subroutine spkr13 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10038,7 +8176,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! The desired type 13 SPK record.
       end subroutine spkr13
 
-      !> Read a single data record from a type 4 CK segment.
       module subroutine ckr04 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10051,9 +8188,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. when a record covering SCLKDP is found.
       end subroutine ckr04
 
-      !> Evaluate a single PCK data record from a segment of type 03
-      !> (Variable width Chebyshev Polynomials for RA, DEC, and W) to
-      !> obtain a state transformation matrix.
       module subroutine pcke03 ( ctx, et, record, rotmat )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10062,7 +8196,6 @@ module pepper_instance_module
          real(wp), intent(out) :: rotmat   ( 6, 6 )  !! State transformation matrix at epoch ET.
       end subroutine pcke03
 
-      !> Read a single PCK data record from a segment of type 03.
       module subroutine pckr03 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10072,8 +8205,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! Data record associated with epoch ET.
       end subroutine pckr03
 
-      !> Evaluate a single SPK data record from a segment of type 5
-      !> (two body propagation between discrete state vectors).
       module subroutine spke05 ( ctx, et, record, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10082,8 +8213,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
       end subroutine spke05
 
-      !> Evaluate a single SPK data record from a segment of type 15
-      !> (Precessing Conic Propagation).
       module subroutine spke15 ( ctx, et, recin, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10092,8 +8221,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state  ( 6 )  !! State (position and velocity).
       end subroutine spke15
 
-      !> Read a single SPK data record from a segment of type 10
-      !> (NORAD two line element sets).
       module subroutine spkr10 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10103,7 +8230,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! Data record.
       end subroutine spkr10
 
-      !> Read a single data record from a type 14 SPK segment.
       module subroutine spkr14 ( ctx, handle, descr, et, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10113,7 +8239,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record   ( * )  !! The desired type 14 SPK record.
       end subroutine spkr14
 
-      !> Evaluate pointing data from a segment for a given time.
       module subroutine ckpfs ( ctx, handle, descr, sclkdp, tol, needav, cmat, av, clkout, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10128,9 +8253,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
       end subroutine ckpfs
 
-      !> Return the name of an inertial reference frame and the 6 x 6
-      !> state transformation matrix from that frame to the body fixed
-      !> frame of a given body at a specified epoch.
       module subroutine pckmat ( ctx, body, et, ref, tsipm, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10141,7 +8263,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if data for BODY and ET are found.
       end subroutine pckmat
 
-      !> This subroutine initializes variables for SGP4.
       module subroutine xxsgp4i ( ctx, geophs, elems, opmode )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10150,12 +8271,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: opmode  !! Flag to indicate operation mode for GMST.
       end subroutine xxsgp4i
 
-      !> This procedure is the SGP4 prediction model from Space Command.
-      !> This is an updated and combined version of SGP4 and SDP4
-      !> originally published separately in Spacetrack report #3 [1].
-      !> This version follows the methodology from the 2006 AIAA
-      !> Vallado paper [4] describing the history and development of
-      !> the code.
       module subroutine xxsgp4e ( ctx, t, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10171,9 +8286,6 @@ module pepper_instance_module
 
    interface
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzdynbid ( ctx, frname, frcode, item, idcode )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10183,9 +8295,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: idcode  !! Body ID code.
       end subroutine zzdynbid
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzdynvai ( ctx, frname, frcode, item, maxn, n, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10197,9 +8306,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: values  ( * )  !! Output kernel variable.
       end subroutine zzdynvai
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzdynoac ( ctx, frname, frcode, item, maxn, n, values, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10212,9 +8318,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! "Found" flag.
       end subroutine zzdynoac
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzdynoad ( ctx, frname, frcode, item, maxn, n, values, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10227,9 +8330,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! "Found" flag.
       end subroutine zzdynoad
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzdynvac ( ctx, frname, frcode, item, maxn, n, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10241,9 +8341,6 @@ module pepper_instance_module
          character(*), intent(out) :: values  ( * )  !! Output kernel variable.
       end subroutine zzdynvac
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzdynvad ( ctx, frname, frcode, item, maxn, n, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10255,11 +8352,6 @@ module pepper_instance_module
          real(wp), intent(out) :: values  ( * )  !! Output kernel variable.
       end subroutine zzdynvad
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> LBSNGL     P   Lower bound of singly linked list pool.
       module subroutine zzswfcln ( ctx, hdfram, frpool, basbeg, framat )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10269,11 +8361,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: framat  !! Switch frame index in switch frame ID array.
       end subroutine zzswfcln
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> LBSNGL     P   Lower bound of singly linked list pool.
       module subroutine zzswfini ( ctx, hdfram, frpool, fidlst, basbeg, free, prvat, prvfrm, samfrm )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10287,8 +8374,6 @@ module pepper_instance_module
          logical, intent(out) :: samfrm  !! Flag indicating input frame matches previous one.
       end subroutine zzswfini
 
-      !> Return the values of the triaxial radii for any body in the
-      !> kernel pool.
       module subroutine zzgftreb ( ctx, body, axes )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10296,9 +8381,6 @@ module pepper_instance_module
          real(wp), intent(out) :: axes ( 3 )  !! Length of axes of body (1,2,3, as defined below).
       end subroutine zzgftreb
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzfdat ( ctx, ncount, maxbfr, name, idcode, center, type, typid, centrd, bnmlst, bnmpol, bnmnms, bnmidx, bidlst, bidpol, bidids, bididx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10321,7 +8403,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: bididx (          * )  !! frame ID-based hash index storage array
       end subroutine zzfdat
 
-      !> Look up the frame ID code associated with a string.
       module subroutine namfrm ( ctx, frname, frcode )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10329,8 +8410,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: frcode  !! The SPICE ID code of the frame.
       end subroutine namfrm
 
-      !> Retrieve the name of a reference frame associated with a SPICE ID
-      !> code.
       module subroutine frmnam ( ctx, frcode, frname )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10338,9 +8417,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: frcode  !! an integer code for a reference frame
       end subroutine frmnam
 
-      !> Find the kernel variable that defines an item of a frame:
-      !> FRAME_<ID code>_<item>, or else FRAME_<name>_<item>, names of any
-      !> length (PEPPER; the lookup shared by the ZZDYNxxx routines).
       module subroutine dynamic_frame_variable ( ctx, frname, frcode, item, required, kvname, found, n, dtype, what )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10355,8 +8431,6 @@ module pepper_instance_module
          character(*), intent(in), optional :: what  !! what the frame is, for the message (default: parameterized dynamic frame)
       end subroutine dynamic_frame_variable
 
-      !> The character values of the kernel variable that defines an item
-      !> of a dynamic frame, at full length (PEPPER; the body of [[zzdynvac]]).
       module subroutine dynamic_frame_strings ( ctx, frname, frcode, item, maxn, n, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10368,8 +8442,6 @@ module pepper_instance_module
          type(string), allocatable, intent(out) :: values(:)  !! the values
       end subroutine dynamic_frame_strings
 
-      !> The name of a frame from its ID code, of any length (PEPPER; the
-      !> body of [[frmnam]], which truncates to its argument's length).
       module subroutine frame_name_of ( ctx, frcode, frname, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10378,8 +8450,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! the frame is known
       end subroutine frame_name_of
 
-      !> The frame associated with an object, its name of any length
-      !> (PEPPER; the body of [[cidfrm]]).
       module subroutine frame_of_center ( ctx, cent, frcode, frname, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10389,8 +8459,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! a frame was found
       end subroutine frame_of_center
 
-      !> The frame of a class and class ID, its name of any length
-      !> (PEPPER; the body of [[ccifrm]]).
       module subroutine frame_of_class ( ctx, frclss, clssid, frcode, frname, cent, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10402,8 +8470,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! a frame was found
       end subroutine frame_of_class
 
-      !> Retrieve the minimal attributes associated with a frame
-      !> needed for converting transformations to and from it.
       module subroutine frinfo ( ctx, frcode, cent, frclss, clssid, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10414,7 +8480,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the requested information is available.
       end subroutine frinfo
 
-      !> Retrieve frame ID code and name to associate with a frame center.
       module subroutine cidfrm ( ctx, cent, frcode, frname, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10424,7 +8489,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the requested information is available.
       end subroutine cidfrm
 
-      !> Retrieve frame ID code and name to associate with an object.
       module subroutine cnmfrm ( ctx, cname, frcode, frname, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10434,8 +8498,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the requested information is available.
       end subroutine cnmfrm
 
-      !> Return the frame name, frame ID, and center associated with
-      !> a given frame class and class ID.
       module subroutine ccifrm ( ctx, frclss, clssid, frcode, frname, cent, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10454,19 +8516,12 @@ module pepper_instance_module
 
    interface
 
-      !> Return the spacecraft clock type for a specified spacecraft.
-      !>
-      !> The function returns the spacecraft clock type associated with
-      !> the spacecraft specified by SC.
       module integer(ip) function sctype ( ctx, sc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
       end function sctype
 
-      !> Return a 6x6 matrix that transforms states in inertial
-      !> coordinates to states in body-equator-and-prime-meridian
-      !> coordinates.
       module subroutine tisbod ( ctx, ref, body, et, tsipm )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10476,8 +8531,6 @@ module pepper_instance_module
          real(wp), intent(out) :: tsipm   ( 6,6 )  !! Transformation (state), inertial to prime meridian
       end subroutine tisbod
 
-      !> Find the position rotation matrix from a Text Kernel (TK) frame
-      !> with the specified frame class ID to its base frame.
       module subroutine tkfram ( ctx, frcode, rot, frame, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10487,9 +8540,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the rotation could be determined.
       end subroutine tkfram
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzdynfid ( ctx, frname, frcode, item, idcode )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10499,11 +8549,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: idcode  !! Output kernel variable.
       end subroutine zzdynfid
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> CTRSIZ     P   Counter array size.
       module subroutine zznamfrm ( ctx, usrctr, savnam, savcde, frname, frcode )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10514,9 +8559,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: frcode  !! Frame ID code.
       end subroutine zznamfrm
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zznofcon ( ctx, et, frame1, endp1, frame2, endp2, errmsg )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10528,9 +8570,6 @@ module pepper_instance_module
          character(*), intent(out) :: errmsg  !! Long error message.
       end subroutine zznofcon
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzswffet ( ctx, framid, hdfram, frpool, fidlst, basbeg, free, bascnt, usetim, binary, clsses, clsids, baslst, starts, stops, framat, nroom )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10552,7 +8591,6 @@ module pepper_instance_module
          integer(ip), intent(in), optional :: nroom  !! PEPPER: size of the base frame arrays (default MAXBAS).
       end subroutine zzswffet
 
-      !> J2000 to TEME, and TEME to J2000, probably.
       module subroutine zzteme ( ctx, et, j2tm, tm2j )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10561,9 +8599,6 @@ module pepper_instance_module
          real(wp), intent(out) :: tm2j    ( 6, 6 )  !! The state transformation operator TEME to J2000.
       end subroutine zzteme
 
-      !> Convert ephemeris seconds past J2000 (ET) to continuous encoded
-      !> spacecraft clock (`ticks').  Non-integral tick values may be
-      !> returned.
       module subroutine sce2c ( ctx, sc, et, sclkdp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10572,9 +8607,6 @@ module pepper_instance_module
          real(wp), intent(out) :: sclkdp  !! SCLK, encoded as ticks since spacecraft clock start. SCLKDP need not be integral.
       end subroutine sce2c
 
-      !> Evaluate a single SPK data record from a segment of type 10
-      !> (NORAD two-line element sets.). This evaluator uses algorithms
-      !> as described in Vallado 2006 [4].
       module subroutine spke10 ( ctx, et, record, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10583,9 +8615,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
       end subroutine spke10
 
-      !> Return a 3x3 matrix that transforms positions in inertial
-      !> coordinates to positions in body-equator-and-prime-meridian
-      !> coordinates.
       module subroutine tipbod ( ctx, ref, body, et, tipm )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10595,10 +8624,6 @@ module pepper_instance_module
          real(wp), intent(out) :: tipm   ( 3, 3 )  !! Position transformation matrix, inertial to prime meridian.
       end subroutine tipbod
 
-      !> Find the position rotation matrix from a C-kernel (CK) frame with
-      !> the specified frame class ID (CK ID) to the base frame of the
-      !> highest priority CK segment containing orientation data for this
-      !> CK frame at the time requested.
       module subroutine ckfrot ( ctx, inst, et, rotate, ref, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10609,10 +8634,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
       end subroutine ckfrot
 
-      !> Find the state transformation matrix from a C-kernel (CK) frame
-      !> with the specified frame class ID (CK ID) to the base frame of
-      !> the highest priority CK segment containing orientation and
-      !> angular velocity data for this CK frame at the time requested.
       module subroutine ckfxfm ( ctx, inst, et, xform, ref, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10623,11 +8644,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
       end subroutine ckfxfm
 
-      !> Return, for a specified SPK segment and time, the state (position
-      !> and velocity) of the segment's target body relative to its center
-      !> of motion.
-      !>
-      !> MAXREC     P   Maximum length of records returned by SPKRnn.
       recursive module subroutine spkpvn ( ctx, handle, descr, et, ref, state, center )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10639,9 +8655,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: center  !! Center of state.
       end subroutine spkpvn
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzswfxfm ( ctx, infrm, et, ndim, xform, outfrm, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10660,9 +8673,6 @@ module pepper_instance_module
 
    interface
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       recursive module subroutine zzdynfrm ( ctx, infram, center, et, xform, basfrm )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10673,9 +8683,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: basfrm  !! Frame ID of base frame associated with INFRAM.
       end subroutine zzdynfrm
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       recursive module subroutine zzdynrot ( ctx, infram, center, et, rotate, basfrm )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10691,8 +8698,6 @@ module pepper_instance_module
    ! --- pepper_transforms
    interface
 
-      !> Find the transformation from a user specified frame to
-      !> another frame at a user specified epoch.
       recursive module subroutine frmget ( ctx, infrm, et, xform, outfrm, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10703,8 +8708,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if a frame transformation can be found.
       end subroutine frmget
 
-      !> Find the rotation from a user specified frame to another frame at
-      !> a user specified epoch.
       recursive module subroutine rotget ( ctx, infrm, et, rotate, outfrm, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10715,8 +8718,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if a rotation can be found.
       end subroutine rotget
 
-      !> Return the state transformation matrix from one
-      !> frame to another.
       recursive module subroutine frmchg ( ctx, frame1, frame2, et, xform )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10726,8 +8727,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xform ( 6, 6 )  !! a state transformation matrix
       end subroutine frmchg
 
-      !> Return the transformation matrix from one
-      !> frame to another.
       recursive module subroutine refchg ( ctx, frame1, frame2, et, rotate )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10737,8 +8736,6 @@ module pepper_instance_module
          real(wp), intent(out) :: rotate ( 3, 3 )  !! a rotation matrix
       end subroutine refchg
 
-      !> Return the matrix that transforms position vectors from one
-      !> specified frame to another at a specified epoch.
       recursive module subroutine pxform ( ctx, from, to, et, rotate )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10748,8 +8745,6 @@ module pepper_instance_module
          real(wp), intent(out) :: rotate  ( 3, 3 )  !! A rotation matrix.
       end subroutine pxform
 
-      !> Return the state transformation matrix from one frame to
-      !> another at a specified epoch.
       recursive module subroutine sxform ( ctx, from, to, et, xform )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10764,7 +8759,6 @@ module pepper_instance_module
    ! --- pepper_time_api
    interface
 
-      !> Return the value of Delta ET (ET-UTC) for an input epoch.
       module subroutine deltet ( ctx, epoch, eptype, delta )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10773,8 +8767,6 @@ module pepper_instance_module
          real(wp), intent(out) :: delta  !! Delta ET (ET-UTC) at input epoch.
       end subroutine deltet
 
-      !> Convert an input time from ephemeris seconds past J2000
-      !> to Calendar, Day-of-Year, or Julian Date format, UTC.
       module subroutine et2utc ( ctx, et, format, prec, utcstr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10784,8 +8776,6 @@ module pepper_instance_module
          character(*), intent(out) :: utcstr  !! Output time string, UTC.
       end subroutine et2utc
 
-      !> Prepare recognized markers and auxiliary arrays for the
-      !> routine [[scan]].
       module subroutine scanpr ( ctx, nmarks, marks, mrklen, pnters )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10795,9 +8785,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: pnters  ( * )  !! auxiliary array describing MARKS.
       end subroutine scanpr
 
-      !> Scan a string and return the beginnings and ends of recognized
-      !> and unrecognized substrings. The full collection of these
-      !> substrings partitions the string.
       module subroutine scan ( ctx, string, marks, mrklen, pnters, room, start, ntokns, ident, beg, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10813,8 +8800,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: ident   ( * )  !! position of scanned substring within array MARKS.
       end subroutine scan
 
-      !> Create a time format picture suitable for use by the routine
-      !> [[timout]] from a given sample time string.
       module subroutine tpictr ( ctx, sample, pictur, ok, errmsg )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10824,8 +8809,6 @@ module pepper_instance_module
          character(*), intent(out) :: errmsg  !! a diagnostic returned if SAMPLE cannot be parsed
       end subroutine tpictr
 
-      !> Convert an input time from Calendar or Julian Date format, UTC,
-      !> to ephemeris seconds past J2000.
       module subroutine utc2et ( ctx, utcstr, et )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10833,9 +8816,6 @@ module pepper_instance_module
          real(wp), intent(out) :: et  !! Output epoch, ephemeris seconds past J2000.
       end subroutine utc2et
 
-      !> Convert an input epoch represented in TDB seconds past the TDB
-      !> epoch of J2000 to a character string formatted to the
-      !> specifications of a user's format picture.
       module subroutine timout ( ctx, et, pictur, output )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10849,10 +8829,6 @@ module pepper_instance_module
    ! --- pepper_sclk_api
    interface
 
-      !> Convert ephemeris seconds past J2000 (ET) to integral
-      !> encoded spacecraft clock (`ticks'). For conversion to
-      !> fractional ticks, (required for C-kernel production), see
-      !> the routine [[sce2c]].
       module subroutine sce2t ( ctx, sc, et, sclkdp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10861,7 +8837,6 @@ module pepper_instance_module
          real(wp), intent(out) :: sclkdp  !! SCLK, encoded as ticks since spacecraft clock start.
       end subroutine sce2t
 
-      !> Convert encoded spacecraft clock ticks to character clock format.
       module subroutine scfmt ( ctx, sc, ticks, clkstr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10870,10 +8845,6 @@ module pepper_instance_module
          character(*), intent(out) :: clkstr  !! Character representation of a clock count.
       end subroutine scfmt
 
-      !> Get spacecraft clock partition information from a spacecraft
-      !> clock kernel file.
-      !>
-      !> MXPART     P   Maximum number of partitions.
       module subroutine scpart ( ctx, sc, nparts, pstart, pstop )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10883,8 +8854,6 @@ module pepper_instance_module
          real(wp), intent(out) :: pstop   ( * )  !! Array of partition stop times.
       end subroutine scpart
 
-      !> Convert encoded spacecraft clock (`ticks') to ephemeris
-      !> seconds past J2000 (ET).
       module subroutine sct2e ( ctx, sc, sclkdp, et )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10893,7 +8862,6 @@ module pepper_instance_module
          real(wp), intent(out) :: et  !! Ephemeris time, seconds past J2000.
       end subroutine sct2e
 
-      !> Convert a spacecraft clock format string to number of "ticks".
       module subroutine sctiks ( ctx, sc, clkstr, ticks )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10902,10 +8870,6 @@ module pepper_instance_module
          real(wp), intent(out) :: ticks  !! Number of ticks represented by the clock string.
       end subroutine sctiks
 
-      !> Convert a double precision encoding of spacecraft clock time into
-      !> a character representation.
-      !>
-      !> MXPART     P   Maximum number of spacecraft clock partitions.
       module subroutine scdecd ( ctx, sc, sclkdp, sclkch )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10914,10 +8878,6 @@ module pepper_instance_module
          character(*), intent(out) :: sclkch  !! Character representation of a clock count.
       end subroutine scdecd
 
-      !> Encode a character representation of spacecraft clock time into a
-      !> double precision number.
-      !>
-      !> MXPART     P   Maximum number of spacecraft clock partitions.
       module subroutine scencd ( ctx, sc, sclkch, sclkdp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10926,9 +8886,6 @@ module pepper_instance_module
          real(wp), intent(out) :: sclkdp  !! Encoded representation of the clock count.
       end subroutine scencd
 
-      !> Convert an epoch specified as ephemeris seconds past J2000 (ET) to
-      !> a character string representation of a spacecraft clock value
-      !> (SCLK).
       module subroutine sce2s ( ctx, sc, et, sclkch )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10937,8 +8894,6 @@ module pepper_instance_module
          character(*), intent(out) :: sclkch  !! An SCLK string.
       end subroutine sce2s
 
-      !> Convert a spacecraft clock string to ephemeris seconds past
-      !> J2000 (ET).
       module subroutine scs2e ( ctx, sc, sclkch, et )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10954,7 +8909,6 @@ module pepper_instance_module
 
    interface
 
-      !> Find the set of ID codes of all objects in a specified CK file.
       module subroutine ckobj ( ctx, ckfnm, ids )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10963,8 +8917,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: ids ( lbcell : * )  !! Set of ID codes of objects in CK file.
       end subroutine ckobj
 
-      !> The objects of a CK file (PEPPER; [[ckobj]] without a set cell):
-      !> their ID codes, sorted, without duplicates.
       module subroutine ck_objects ( ctx, file, ids )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10972,7 +8924,6 @@ module pepper_instance_module
          integer(ip), allocatable, intent(out) :: ids(:)  !! the ID codes (size 0 after an error)
       end subroutine ck_objects
 
-      !> Get pointing (attitude) for a specified spacecraft clock time.
       module subroutine ckgp ( ctx, inst, sclkdp, tol, ref, cmat, clkout, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -10985,8 +8936,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
       end subroutine ckgp
 
-      !> Get pointing (attitude) and angular velocity for a specified
-      !> spacecraft clock time.
       module subroutine ckgpav ( ctx, inst, sclkdp, tol, ref, cmat, av, clkout, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11000,9 +8949,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
       end subroutine ckgpav
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzckcv01 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11015,9 +8961,6 @@ module pepper_instance_module
          type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       end subroutine zzckcv01
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzckcv02 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11030,9 +8973,6 @@ module pepper_instance_module
          type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       end subroutine zzckcv02
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzckcv03 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11045,11 +8985,6 @@ module pepper_instance_module
          type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       end subroutine zzckcv03
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> CK4RSZ     P   C-kernel Type 04 Maximum Record Size
       module subroutine zzckcv04 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11062,9 +8997,6 @@ module pepper_instance_module
          type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       end subroutine zzckcv04
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzckcv05 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, schedl )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11078,9 +9010,6 @@ module pepper_instance_module
          type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       end subroutine zzckcv05
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzckcv06 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, schedl )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11094,8 +9023,6 @@ module pepper_instance_module
          type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       end subroutine zzckcv06
 
-      !> Find the coverage window for a specified object in a specified CK
-      !> file.
       module subroutine ckcov ( ctx, ckfnm, idcode, needav, level, tol, timsys, cover )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11109,14 +9036,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: cover ( lbcell : * )  !! Window giving coverage for IDCODE.
       end subroutine ckcov
 
-      !> The coverage of an object in a CK file (PEPPER; [[ckcov]] without
-      !> a window cell).
-      !>
-      !> The result is a window as an array: each column an interval
-      !> [start, stop] (TDB seconds past J2000), sorted and disjoint
-      !> ([[pepper_windows]]). The errors are those of [[ckcov]],
-      !> without SPICE(WINDOWEXCESS). With TIMSYS = 'SCLK' the times are
-      !> encoded spacecraft clock ticks.
       module subroutine ck_coverage ( ctx, file, inst, needav, level, tol, timsys, intervals )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11134,8 +9053,6 @@ module pepper_instance_module
    ! --- pepper_pck_api
    interface
 
-      !> Find the coverage window for a specified reference frame in a
-      !> specified binary PCK file.
       module subroutine pckcov ( ctx, pckfnm, idcode, cover )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11145,13 +9062,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: cover  ( lbcell : * )  !! Window giving coverage in PCKFNM for IDCODE.
       end subroutine pckcov
 
-      !> The coverage of a frame in a binary PCK file (PEPPER; [[pckcov]]
-      !> without a window cell).
-      !>
-      !> The result is a window as an array: each column an interval
-      !> [start, stop] (TDB seconds past J2000), sorted and disjoint
-      !> ([[pepper_windows]]). The errors are those of [[pckcov]],
-      !> without SPICE(WINDOWEXCESS).
       module subroutine pck_coverage ( ctx, file, frame, intervals )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11160,8 +9070,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: intervals(:,:)  !! the coverage, shape (2, n) (n = 0 after an error)
       end subroutine pck_coverage
 
-      !> This routine is obsolete. It supports only the type 02 binary
-      !> PCK format. It is maintained only for backward compatibility
       module subroutine pckeul ( ctx, body, et, found, ref, eulang )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11172,8 +9080,6 @@ module pepper_instance_module
          real(wp), intent(out) :: eulang   ( 6 )  !! Euler angles and their derivatives.
       end subroutine pckeul
 
-      !> Find the set of reference frame class ID codes of all frames
-      !> in a specified binary PCK file.
       module subroutine pckfrm ( ctx, pckfnm, ids )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11182,8 +9088,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: ids    ( lbcell : * )  !! Set of frame class ID codes of frames in PCK file.
       end subroutine pckfrm
 
-      !> The frames of a binary PCK file (PEPPER; [[pckfrm]] without a set
-      !> cell): their class ID codes, sorted, without duplicates.
       module subroutine pck_frames ( ctx, file, ids )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11191,9 +9095,6 @@ module pepper_instance_module
          integer(ip), allocatable, intent(out) :: ids(:)  !! the frame class ID codes (size 0 after an error)
       end subroutine pck_frames
 
-      !> Return the Euler angles needed to compute the transformation from
-      !> inertial to body-fixed coordinates for any body in the kernel
-      !> pool.
       module subroutine bodeul ( ctx, body, et, ra, dec, w, lambda )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11210,17 +9111,6 @@ module pepper_instance_module
    ! --- pepper_dsk_write
    interface
 
-      !> Write a type 2 segment to a DSK file.
-      !>
-      !> ANGMRG     P   Angular round-off margin.
-      !> GENCLS     P   General surface DSK class.
-      !> SVFCLS     P   Single-valued function DSK class.
-      !> NSYPAR     P   Maximum number of coordinate system parameters in
-      !> a DSK descriptor.
-      !> MAXCGR     P   Maximum DSK type 2 coarse voxel count.
-      !> MAXPLT     P   Maximum DSK type 2 plate count.
-      !> MAXVOX     P   Maximum DSK type 2 voxel count.
-      !> MAXVRT     P   Maximum DSK type 2 vertex count.
       module subroutine dskw02 ( ctx, handle, center, surfid, dclass, frame, corsys, corpar, mncor1, mxcor1, mncor2, mxcor2, mncor3, mxcor3, first, last, nv, vrtces, np, plates, spaixd, spaixi )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11255,10 +9145,6 @@ module pepper_instance_module
 
    interface
 
-      !> Fetch from the references partition of a generic segment
-      !> the double precision numbers from FIRST to LAST. The
-      !> segment is identified by a DAF file handle and segment
-      !> descriptor.
       module subroutine sgfref ( ctx, handle, descr, first, last, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11269,8 +9155,6 @@ module pepper_instance_module
          real(wp), intent(out) :: values ( * )  !! The reference values that were requested.
       end subroutine sgfref
 
-      !> Begin writing a generic segment that will contain fixed size data
-      !> packets.
       module subroutine sgbwfs ( ctx, handle, descr, segid, nconst, const, pktsiz, idxtyp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11283,8 +9167,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: idxtyp  !! Index type for the reference values.
       end subroutine sgbwfs
 
-      !> Begin writing a generic segment that will contain variable size
-      !> data packets.
       module subroutine sgbwvs ( ctx, handle, descr, segid, nconst, const, idxtyp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11296,8 +9178,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: idxtyp  !! Index type for the reference values.
       end subroutine sgbwvs
 
-      !> Write one or more fixed size data packets to the generic segment
-      !> currently being written to the DAF file associated with HANDLE.
       module subroutine sgwfpk ( ctx, handle, npkts, pktdat, nrefs, refdat )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11308,9 +9188,6 @@ module pepper_instance_module
          real(wp), intent(in) :: refdat ( * )  !! Reference data.
       end subroutine sgwfpk
 
-      !> Write one or more variable size data packets to the generic
-      !> segment currently being written to the DAF file associated with
-      !> HANDLE.
       module subroutine sgwvpk ( ctx, handle, npkts, pktsiz, pktdat, nrefs, refdat )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11322,15 +9199,12 @@ module pepper_instance_module
          real(wp), intent(in) :: refdat ( * )  !! Reference data.
       end subroutine sgwvpk
 
-      !> End the generic segment in the DAF file associated with HANDLE.
       module subroutine sgwes ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
       end subroutine sgwes
 
-      !> Find the coverage window for a specified ephemeris object in a
-      !> specified SPK file.
       module subroutine spkcov ( ctx, spkfnm, idcode, cover )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11340,13 +9214,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: cover ( lbcell : * )  !! Window giving coverage in SPKFNM for IDCODE.
       end subroutine spkcov
 
-      !> The coverage of an object in an SPK file (PEPPER; [[spkcov]]
-      !> without a window cell).
-      !>
-      !> The result is a window as an array: each column an interval
-      !> [start, stop] (TDB seconds past J2000), sorted and disjoint
-      !> ([[pepper_windows]]). The errors are those of [[spkcov]],
-      !> without SPICE(WINDOWEXCESS).
       module subroutine spk_coverage ( ctx, file, body, intervals )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11355,8 +9222,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: intervals(:,:)  !! the coverage, shape (2, n) (n = 0 after an error)
       end subroutine spk_coverage
 
-      !> Compute the geometric state (position and velocity) of a target
-      !> body relative to an observing body.
       recursive module subroutine spkgeo ( ctx, targ, et, ref, obs, state, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11368,8 +9233,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lt  !! Light time.
       end subroutine spkgeo
 
-      !> Compute the geometric position of a target body relative to an
-      !> observing body.
       recursive module subroutine spkgps ( ctx, targ, et, ref, obs, pos, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11381,7 +9244,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lt  !! Light time.
       end subroutine spkgps
 
-      !> Find the set of ID codes of all objects in a specified SPK file.
       module subroutine spkobj ( ctx, spkfnm, ids )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11390,8 +9252,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: ids    ( lbcell : * )  !! Set of ID codes of objects in SPK file.
       end subroutine spkobj
 
-      !> The objects of an SPK file (PEPPER; [[spkobj]] without a set
-      !> cell): their ID codes, sorted, without duplicates.
       module subroutine spk_objects ( ctx, file, ids )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11399,8 +9259,6 @@ module pepper_instance_module
          integer(ip), allocatable, intent(out) :: ids(:)  !! the ID codes (size 0 after an error)
       end subroutine spk_objects
 
-      !> Perform routine error checks and if all check pass, pack the
-      !> descriptor for an SPK segment
       module subroutine spkpds ( ctx, body, center, frame, type, first, last, descr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11413,8 +9271,6 @@ module pepper_instance_module
          real(wp), intent(out) :: descr ( * )  !! An SPK segment descriptor.
       end subroutine spkpds
 
-      !> Extract a subset of the data in a SPK segment of type 1
-      !> into a new segment.
       module subroutine spks01 ( ctx, handle, baddr, eaddr, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11425,8 +9281,6 @@ module pepper_instance_module
          real(wp), intent(in) :: end  !! End (final epoch) of subset.
       end subroutine spks01
 
-      !> Extract a subset of the data in a SPK segment of type 2
-      !> into a new segment.
       module subroutine spks02 ( ctx, handle, baddr, eaddr, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11437,8 +9291,6 @@ module pepper_instance_module
          real(wp), intent(in) :: end  !! End (final epoch) of subset.
       end subroutine spks02
 
-      !> Extract a subset of the data in a SPK segment of type 3 (Chebyshev
-      !> polynomials, position and velocity) into a new segment.
       module subroutine spks03 ( ctx, handle, baddr, eaddr, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11449,8 +9301,6 @@ module pepper_instance_module
          real(wp), intent(in) :: end  !! End (final epoch) of subset.
       end subroutine spks03
 
-      !> Extract a subset of the data in an SPK segment of type 5
-      !> into a new segment.
       module subroutine spks05 ( ctx, handle, baddr, eaddr, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11461,8 +9311,6 @@ module pepper_instance_module
          real(wp), intent(in) :: end  !! End (final epoch) of subset.
       end subroutine spks05
 
-      !> Extract a subset of the data in an SPK segment of type 8
-      !> into a new segment.
       module subroutine spks08 ( ctx, handle, baddr, eaddr, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11473,8 +9321,6 @@ module pepper_instance_module
          real(wp), intent(in) :: end  !! End (final epoch) of subset.
       end subroutine spks08
 
-      !> Extract a subset of the data in an SPK segment of type 9
-      !> into a new segment.
       module subroutine spks09 ( ctx, handle, baddr, eaddr, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11485,8 +9331,6 @@ module pepper_instance_module
          real(wp), intent(in) :: end  !! End (final epoch) of subset.
       end subroutine spks09
 
-      !> Extract a subset of the data in an SPK segment of type 15
-      !> into a new segment.
       module subroutine spks15 ( ctx, handle, baddr, eaddr, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11497,8 +9341,6 @@ module pepper_instance_module
          real(wp), intent(in) :: end  !! End (final epoch) of subset.
       end subroutine spks15
 
-      !> Extract a subset of the data in an SPK segment of type 17
-      !> into a new segment.
       module subroutine spks17 ( ctx, handle, baddr, eaddr, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11509,8 +9351,6 @@ module pepper_instance_module
          real(wp), intent(in) :: end  !! End (final epoch) of subset.
       end subroutine spks17
 
-      !> Extract a subset of the data in an SPK segment of type 18
-      !> into a new segment.
       module subroutine spks18 ( ctx, handle, baddr, eaddr, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11521,8 +9361,6 @@ module pepper_instance_module
          real(wp), intent(in) :: end  !! End (final epoch) of subset.
       end subroutine spks18
 
-      !> Extract a subset of the data in an SPK segment of type 19
-      !> into a new segment.
       module subroutine spks19 ( ctx, handle, baddr, eaddr, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11533,8 +9371,6 @@ module pepper_instance_module
          real(wp), intent(in) :: end  !! End (final epoch) of subset.
       end subroutine spks19
 
-      !> Extract a subset of the data in a SPK segment of type 20
-      !> into a new segment.
       module subroutine spks20 ( ctx, handle, baddr, eaddr, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11545,8 +9381,6 @@ module pepper_instance_module
          real(wp), intent(in) :: end  !! End (final epoch) of subset.
       end subroutine spks20
 
-      !> Extract a subset of the data in a SPK segment of type 21
-      !> into a new segment.
       module subroutine spks21 ( ctx, handle, baddr, eaddr, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11557,7 +9391,6 @@ module pepper_instance_module
          real(wp), intent(in) :: end  !! End (final epoch) of subset.
       end subroutine spks21
 
-      !> Unpack the contents of an SPK segment descriptor.
       module subroutine spkuds ( ctx, descr, body, center, frame, type, first, last, baddrs, eaddrs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11572,8 +9405,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: eaddrs  !! Ending DAF address of the segment.
       end subroutine spkuds
 
-      !> Correct a state transformation matrix for the rate of change of
-      !> light time.
       module subroutine zzcorsxf ( ctx, xmit, dlt, xform, corxfm )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11583,9 +9414,6 @@ module pepper_instance_module
          real(wp), intent(out) :: corxfm ( 6, 6 )  !! Corrected state transformation matrix.
       end subroutine zzcorsxf
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzcvxsta ( ctx, et, ref, center, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11595,9 +9423,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state ( 6 )  !! State vector.
       end subroutine zzcvxsta
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzcvssta ( ctx, state, center, et, ref )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11607,7 +9432,6 @@ module pepper_instance_module
          real(wp), intent(in) :: state ( 6 )  !! State vector.
       end subroutine zzcvssta
 
-      !> Add data to a type 14 SPK segment associated with HANDLE.
       module subroutine spk14a ( ctx, handle, ncsets, coeffs, epochs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11617,8 +9441,6 @@ module pepper_instance_module
          real(wp), intent(in) :: epochs ( * )  !! The epochs associated with the coefficient sets.
       end subroutine spk14a
 
-      !> Begin a type 14 SPK segment in the SPK file associated with
-      !> HANDLE.
       module subroutine spk14b ( ctx, handle, segid, body, center, frame, first, last, chbdeg )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11632,16 +9454,12 @@ module pepper_instance_module
          integer(ip), intent(in) :: chbdeg  !! The degree of the Chebyshev Polynomial used.
       end subroutine spk14b
 
-      !> End the type 14 SPK segment currently being written to the SPK
-      !> file associated with HANDLE.
       module subroutine spk14e ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! The handle of an SPK file open for writing.
       end subroutine spk14e
 
-      !> Return the position of a target body relative to an observer,
-      !> optionally corrected for light time and stellar aberration.
       recursive module subroutine spkapo ( ctx, targ, et, ref, sobs, abcorr, ptarg, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11654,9 +9472,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lt  !! One way light time between observer and target.
       end subroutine spkapo
 
-      !> Return the state (position and velocity) of a target body
-      !> relative to an observer, optionally corrected for light time,
-      !> expressed relative to an inertial reference frame.
       recursive module subroutine spkltc ( ctx, targ, et, ref, abcorr, stobs, starg, lt, dlt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11670,8 +9485,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
       end subroutine spkltc
 
-      !> Extract a subset of the data in a type 10 SPK segment into a new
-      !> type 10 segment.
       module subroutine spks10 ( ctx, srchan, srcdsc, dsthan, dstdsc, dstsid )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11682,8 +9495,6 @@ module pepper_instance_module
          character(*), intent(in) :: dstsid  !! Segment identifier for the new segment.
       end subroutine spks10
 
-      !> Extract a subset of the data in an SPK segment of type 12
-      !> into a new segment.
       module subroutine spks12 ( ctx, handle, baddr, eaddr, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11694,8 +9505,6 @@ module pepper_instance_module
          real(wp), intent(in) :: end  !! End (final epoch) of subset.
       end subroutine spks12
 
-      !> Extract a subset of the data in an SPK segment of type 13
-      !> into a new segment.
       module subroutine spks13 ( ctx, handle, baddr, eaddr, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11706,8 +9515,6 @@ module pepper_instance_module
          real(wp), intent(in) :: end  !! End (final epoch) of subset.
       end subroutine spks13
 
-      !> Return the state (position and velocity) of a target body
-      !> relative to the solar system barycenter.
       recursive module subroutine spkssb ( ctx, targ, et, ref, starg )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11717,9 +9524,6 @@ module pepper_instance_module
          real(wp), intent(out) :: starg    ( 6 )  !! State of target.
       end subroutine spkssb
 
-      !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine [[spkaps]]. This routine is supported for purposes of
-      !> backward compatibility only.
       module subroutine spkapp ( ctx, targ, et, ref, sobs, abcorr, starg, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11732,12 +9536,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lt  !! One way light time between observer and target.
       end subroutine spkapp
 
-      !> Return the state (position and velocity) of a target body
-      !> relative to an observer specified by its state and
-      !> acceleration relative to the solar system barycenter. The
-      !> returned state may be optionally corrected for light time
-      !> and stellar aberration. All input and output vectors are
-      !> expressed relative to an inertial reference frame.
       recursive module subroutine spkaps ( ctx, targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11752,9 +9550,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
       end subroutine spkaps
 
-      !> Return the position of a target body relative to an observing
-      !> body, optionally corrected for light time (planetary aberration)
-      !> and stellar aberration.
       recursive module subroutine spkezp ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11767,8 +9562,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lt  !! One way light time between observer and target.
       end subroutine spkezp
 
-      !> Extract a subset of the data in a type 14 SPK segment into a new
-      !> type 14 segment.
       module subroutine spks14 ( ctx, srchan, srcdsc, dsthan, dstdsc, dstsid )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11779,9 +9572,6 @@ module pepper_instance_module
          character(*), intent(in) :: dstsid  !! Segment identifier for the new segment.
       end subroutine spks14
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzspkflt ( ctx, trgsub, et, ref, abcorr, stobs, starg, lt, dlt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11795,10 +9585,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
       end subroutine zzspkflt
 
-      !> Return the state (position and velocity) of a target body
-      !> relative to an observer, optionally corrected for light time
-      !> and stellar aberration, expressed relative to an inertial
-      !> reference frame.
       recursive module subroutine spkacs ( ctx, targ, et, ref, abcorr, obs, starg, lt, dlt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11812,9 +9598,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
       end subroutine spkacs
 
-      !> Return the position of a target body relative to an observing
-      !> body, optionally corrected for light time (planetary aberration)
-      !> and stellar aberration.
       recursive module subroutine spkpos ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11827,8 +9610,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lt  !! One way light time between observer and target.
       end subroutine spkpos
 
-      !> Extract a subset of the data in an SPK segment into a
-      !> separate segment.
       module subroutine spksub ( ctx, handle, descr, ident, begin, end, newh )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11840,9 +9621,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: newh  !! Handle of new segment.
       end subroutine spksub
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzspkfao ( ctx, targ, et, ref, abcorr, obssub, starg, lt, dlt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11856,9 +9634,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
       end subroutine zzspkfao
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzspkfap ( ctx, trgsub, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11873,9 +9648,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
       end subroutine zzspkfap
 
-      !> Return the state (position and velocity) of a target body
-      !> relative to an observing body, optionally corrected for light
-      !> time (planetary aberration) and stellar aberration.
       recursive module subroutine spkez ( ctx, targ, et, ref, abcorr, obs, starg, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11888,9 +9660,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lt  !! One way light time between observer and target.
       end subroutine spkez
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzspkfat ( ctx, trgsub, et, ref, abcorr, obs, starg, lt, dlt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11904,9 +9673,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
       end subroutine zzspkfat
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzspkfzo ( ctx, targ, et, ref, abcorr, obssub, starg, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11919,10 +9685,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lt  !! One way light time between observer and target.
       end subroutine zzspkfzo
 
-      !> Return the state of a specified target relative to an "observer,"
-      !> where the observer has constant velocity in a specified reference
-      !> frame. The observer's state is provided by the calling program
-      !> rather than by loaded SPK files.
       recursive module subroutine spkcvo ( ctx, target, et, outref, refloc, abcorr, obssta, obsepc, obsctr, obsref, state, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11939,9 +9701,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lt  !! One way light time between target and observer.
       end subroutine spkcvo
 
-      !> Return the state (position and velocity) of a target body
-      !> relative to an observing body, optionally corrected for light
-      !> time (planetary aberration) and stellar aberration.
       recursive module subroutine spkezr ( ctx, targ, et, ref, abcorr, obs, starg, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11954,13 +9713,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lt  !! One way light time between observer and target.
       end subroutine spkezr
 
-      !> Prepare a state query (PEPPER; [[pepper_query_types]]): the state of
-      !> a target relative to an observer in a frame, with an aberration
-      !> correction, as [[spkezr]], resolved once for evaluation at any number
-      !> of epochs with `query_state`.
-      !>
-      !> The errors are those of [[spkezr]] for these arguments (unknown
-      !> names, an invalid correction, an unknown frame).
       module subroutine prepare_state ( ctx, q, target, observer, frame, abcorr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11971,8 +9723,6 @@ module pepper_instance_module
          character(*), intent(in) :: abcorr  !! the aberration correction, as for [[spkezr]]
       end subroutine prepare_state
 
-      !> The state of a prepared query at one epoch (PEPPER): [[spkezr]]'s
-      !> result, to the last bit. Bound as the generic `query_state`.
       recursive module subroutine query_state_one ( ctx, q, et, state, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11982,8 +9732,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lt  !! the one-way light time between them
       end subroutine query_state_one
 
-      !> The states of a prepared query at many epochs (PEPPER). Bound as the
-      !> generic `query_state`.
       recursive module subroutine query_state_batch ( ctx, q, ets, states, lts )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -11993,11 +9741,6 @@ module pepper_instance_module
          real(wp), intent(out), optional :: lts(:)  !! the light times
       end subroutine query_state_batch
 
-      !> Prepare a frame transformation query (PEPPER;
-      !> [[pepper_query_types]]): the transformation from one frame to
-      !> another, as [[pxform]] and [[sxform]], resolved once for evaluation
-      !> with `query_rotation` and `query_transform`. A rotation between
-      !> inertial and fixed TK frames is computed once.
       module subroutine prepare_rotation ( ctx, q, from, to )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12006,8 +9749,6 @@ module pepper_instance_module
          character(*), intent(in) :: to  !! the frame transformed to
       end subroutine prepare_rotation
 
-      !> The rotation of a prepared frame query at one epoch (PEPPER):
-      !> [[pxform]]'s result. Bound as the generic `query_rotation`.
       recursive module subroutine query_rotation_one ( ctx, q, et, rotate )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12016,8 +9757,6 @@ module pepper_instance_module
          real(wp), intent(out) :: rotate(3, 3)  !! the rotation
       end subroutine query_rotation_one
 
-      !> The rotations of a prepared frame query at many epochs (PEPPER).
-      !> Bound as the generic `query_rotation`.
       recursive module subroutine query_rotation_batch ( ctx, q, ets, rotations )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12026,9 +9765,6 @@ module pepper_instance_module
          real(wp), intent(out) :: rotations(:,:,:)  !! the rotations, shape (3, 3, size(ets)) at least
       end subroutine query_rotation_batch
 
-      !> The state transformation of a prepared frame query at one epoch
-      !> (PEPPER): [[sxform]]'s result. Bound as the generic
-      !> `query_transform`.
       recursive module subroutine query_transform_one ( ctx, q, et, xform )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12037,8 +9773,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xform(6, 6)  !! the state transformation
       end subroutine query_transform_one
 
-      !> The state transformations of a prepared frame query at many epochs
-      !> (PEPPER). Bound as the generic `query_transform`.
       recursive module subroutine query_transform_batch ( ctx, q, ets, xforms )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12047,9 +9781,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xforms(:,:,:)  !! the transformations, shape (6, 6, size(ets)) at least
       end subroutine query_transform_batch
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzspkfzt ( ctx, trgsub, et, ref, abcorr, obs, starg, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12062,10 +9793,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lt  !! One way light time between observer and target.
       end subroutine zzspkfzt
 
-      !> Return the state of a specified target relative to an "observer,"
-      !> where the observer has constant position in a specified reference
-      !> frame. The observer's position is provided by the calling program
-      !> rather than by loaded SPK files.
       recursive module subroutine spkcpo ( ctx, target, et, outref, refloc, abcorr, obspos, obsctr, obsref, state, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12081,10 +9808,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lt  !! One way light time between target and observer.
       end subroutine spkcpo
 
-      !> Return the state, relative to a specified observer, of a target
-      !> having constant velocity in a specified reference frame. The
-      !> target's state is provided by the calling program rather than by
-      !> loaded SPK files.
       recursive module subroutine spkcvt ( ctx, trgsta, trgepc, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12101,10 +9824,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lt  !! One way light time between target and observer.
       end subroutine spkcvt
 
-      !> Return the state, relative to a specified observer, of a target
-      !> having constant position in a specified reference frame. The
-      !> target's position is provided by the calling program rather than
-      !> by loaded SPK files.
       recursive module subroutine spkcpt ( ctx, trgpos, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12125,8 +9844,6 @@ module pepper_instance_module
    ! --- pepper_symbols
    interface
 
-      !> Delete a symbol from a character symbol table. The symbol and its
-      !> associated values are deleted.
       module subroutine sydelc ( ctx, name, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12137,8 +9854,6 @@ module pepper_instance_module
          character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine sydelc
 
-      !> Delete a symbol from a double precision symbol table. The symbol
-      !> and its associated values are deleted.
       module subroutine sydeld ( ctx, name, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12149,8 +9864,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine sydeld
 
-      !> Delete a symbol from an integer symbol table. The symbol
-      !> and its associated values are deleted.
       module subroutine sydeli ( ctx, name, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12161,12 +9874,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine sydeli
 
-      !> Return the dimension of a particular symbol in a character symbol
-      !> table. If the symbol is not found, the function returns the value
-      !> zero.
-      !>
-      !> The function returns the dimension of the symbol NAME. If NAME is
-      !> not in the symbol table, the function returns the value zero.
       module integer(ip) function sydimc ( ctx, name, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12177,12 +9884,6 @@ module pepper_instance_module
          character(*), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end function sydimc
 
-      !> Return the dimension of a particular symbol in a double precision
-      !> symbol table. If the symbol is not found, the function returns the
-      !> value zero.
-      !>
-      !> The function returns the dimension of the symbol NAME. If NAME is
-      !> not in the symbol table, the function returns the value zero.
       module integer(ip) function sydimd ( ctx, name, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12193,12 +9894,6 @@ module pepper_instance_module
          real(wp), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end function sydimd
 
-      !> Return the dimension of a particular symbol in an integer symbol
-      !> table. If the symbol is not found, the function returns the
-      !> value zero.
-      !>
-      !> The function returns the dimension of the symbol NAME. If NAME is
-      !> not in the symbol table, the function returns the value zero.
       module integer(ip) function sydimi ( ctx, name, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12209,9 +9904,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end function sydimi
 
-      !> Create a duplicate of a symbol within a character symbol table.
-      !> If a symbol with the new name already exists, its components
-      !> are replaced.
       module subroutine sydupc ( ctx, name, copy, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12223,9 +9915,6 @@ module pepper_instance_module
          character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine sydupc
 
-      !> Create a duplicate of a symbol within a double precision symbol
-      !> table. If a symbol with the new name already exists, its
-      !> components are replaced.
       module subroutine sydupd ( ctx, name, copy, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12237,9 +9926,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine sydupd
 
-      !> Create a duplicate of a symbol within an integer symbol table.
-      !> If a symbol with the new name already exists, its components
-      !> are replaced.
       module subroutine sydupi ( ctx, name, copy, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12251,7 +9937,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine sydupi
 
-      !> Fetch the Nth symbol in a character symbol table.
       module subroutine syfetc ( ctx, nth, tabsym, tabptr, tabval, name, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12264,7 +9949,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the NTH symbol is in the symbol table.
       end subroutine syfetc
 
-      !> Fetch the Nth symbol in a double precision symbol table.
       module subroutine syfetd ( ctx, nth, tabsym, tabptr, tabval, name, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12277,7 +9961,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the NTH symbol is in the symbol table.
       end subroutine syfetd
 
-      !> Fetch the Nth symbol in an integer symbol table.
       module subroutine syfeti ( ctx, nth, tabsym, tabptr, tabval, name, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12290,8 +9973,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the NTH symbol is in the symbol table.
       end subroutine syfeti
 
-      !> Return the dimension and associated values for a particular
-      !> symbol.
       module subroutine sygetc ( ctx, name, tabsym, tabptr, tabval, n, values, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12305,8 +9986,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the symbol NAME is in the symbol table.
       end subroutine sygetc
 
-      !> Return the dimension and associated values for a particular
-      !> symbol.
       module subroutine sygetd ( ctx, name, tabsym, tabptr, tabval, n, values, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12320,8 +9999,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the symbol NAME is in the symbol table.
       end subroutine sygetd
 
-      !> Return the dimension and associated values for a particular
-      !> symbol.
       module subroutine sygeti ( ctx, name, tabsym, tabptr, tabval, n, values, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12335,8 +10012,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the symbol NAME is in the symbol table.
       end subroutine sygeti
 
-      !> Return the Nth value associated with a particular symbol in a
-      !> character symbol table.
       module subroutine synthc ( ctx, name, nth, tabsym, tabptr, tabval, value, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12350,8 +10025,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the Nth value of the symbol exists.
       end subroutine synthc
 
-      !> Return the Nth component of a particular symbol in a double
-      !> precision symbol table.
       module subroutine synthd ( ctx, name, nth, tabsym, tabptr, tabval, value, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12365,8 +10038,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the Nth value of the symbol exists.
       end subroutine synthd
 
-      !> Return the Nth component of a particular symbol in an integer
-      !> symbol table.
       module subroutine synthi ( ctx, name, nth, tabsym, tabptr, tabval, value, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12380,9 +10051,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the Nth value of the symbol exists, false if it does not.
       end subroutine synthi
 
-      !> Order the components of a single symbol in a character symbol
-      !> table. The components are ordered according to the ASCII collating
-      !> sequence.
       module subroutine syordc ( ctx, name, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12393,8 +10061,6 @@ module pepper_instance_module
          character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine syordc
 
-      !> Order the components of a single symbol in a double precision
-      !> symbol table. The components are sorted in increasing order.
       module subroutine syordd ( ctx, name, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12405,8 +10071,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine syordd
 
-      !> Order the components of a single symbol in an integer symbol
-      !> table. The components are sorted in increasing order.
       module subroutine syordi ( ctx, name, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12417,9 +10081,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine syordi
 
-      !> Pop a value associated with a particular symbol in a character
-      !> symbol table. The first value associated with the symbol is
-      !> removed, and subsequent values are moved forward.
       module subroutine sypopc ( ctx, name, tabsym, tabptr, tabval, value, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12432,9 +10093,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the symbol exists, .FALSE. otherwise.
       end subroutine sypopc
 
-      !> Pop a value associated with a particular symbol in a double
-      !> precision symbol table. The first value associated with the
-      !> symbol is removed, and subsequent values are moved forward.
       module subroutine sypopd ( ctx, name, tabsym, tabptr, tabval, value, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12447,9 +10105,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the symbol exists, .FALSE. otherwise.
       end subroutine sypopd
 
-      !> Pop a value associated with a particular symbol in an integer
-      !> symbol table. The first value associated with the symbol is
-      !> removed, and subsequent values are moved forward.
       module subroutine sypopi ( ctx, name, tabsym, tabptr, tabval, value, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12462,9 +10117,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the symbol exists, .FALSE. otherwise.
       end subroutine sypopi
 
-      !> Set the values of a particular symbol in a character symbol table.
-      !> If the symbol already exists, the previous values associated with
-      !> it are removed, otherwise a new symbol is created.
       module subroutine syputc ( ctx, name, values, n, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12477,9 +10129,6 @@ module pepper_instance_module
          character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine syputc
 
-      !> Set the values of a particular symbol in a double precision
-      !> symbol table. If the symbol already exists, the previous values
-      !> associated with it are removed, otherwise a new symbol is created.
       module subroutine syputd ( ctx, name, values, n, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12492,9 +10141,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine syputd
 
-      !> Set the values of a particular symbol in an integer symbol table.
-      !> If the symbol already exists, the previous values associated with
-      !> it are removed, otherwise a new symbol is created.
       module subroutine syputi ( ctx, name, values, n, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12507,8 +10153,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine syputi
 
-      !> Select a subset of the values associated with a particular
-      !> symbol in a character symbol table.
       module subroutine syselc ( ctx, name, begin, end, tabsym, tabptr, tabval, values, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12523,8 +10167,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the subset of values exists.
       end subroutine syselc
 
-      !> Select a subset of the values associated with a particular
-      !> symbol in a double precision symbol table.
       module subroutine syseld ( ctx, name, begin, end, tabsym, tabptr, tabval, values, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12539,8 +10181,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the subset of values exists.
       end subroutine syseld
 
-      !> Select a subset of the values associated with a particular
-      !> symbol in an integer symbol table.
       module subroutine syseli ( ctx, name, begin, end, tabsym, tabptr, tabval, values, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12555,9 +10195,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! .TRUE. if the subset of values exists.
       end subroutine syseli
 
-      !> Set the value of a particular symbol in a character symbol table.
-      !> If the symbol already exists, the previous values associated with
-      !> it are removed, otherwise a new symbol is created.
       module subroutine sysetc ( ctx, name, value, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12569,9 +10206,6 @@ module pepper_instance_module
          character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine sysetc
 
-      !> Set the value of a particular symbol in a double precision symbol
-      !> table. If the symbol already exists, the previous values
-      !> associated with it are removed, otherwise a new symbol is created.
       module subroutine sysetd ( ctx, name, value, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12583,9 +10217,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine sysetd
 
-      !> Set the value of a particular symbol in an integer symbol table.
-      !> If the symbol already exists, the previous values associated with
-      !> it are removed, otherwise a new symbol is created.
       module subroutine syseti ( ctx, name, value, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12597,8 +10228,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine syseti
 
-      !> Transpose two values associated with a particular symbol in a
-      !> character symbol table.
       module subroutine sytrnc ( ctx, name, idx1, idx2, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12611,8 +10240,6 @@ module pepper_instance_module
          character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine sytrnc
 
-      !> Transpose two values associated with a particular symbol in a
-      !> double precision symbol table.
       module subroutine sytrnd ( ctx, name, idx1, idx2, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12625,8 +10252,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine sytrnd
 
-      !> Transpose two values associated with a particular symbol in an
-      !> integer symbol table.
       module subroutine sytrni ( ctx, name, idx1, idx2, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12639,9 +10264,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine sytrni
 
-      !> Enqueue a value onto a particular symbol in a character
-      !> symbol table. If the symbol is not in the table, a new one
-      !> is created.
       module subroutine syenqc ( ctx, name, value, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12653,9 +10275,6 @@ module pepper_instance_module
          character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine syenqc
 
-      !> Enqueue a value onto a particular symbol in a double precision
-      !> symbol table. If the symbol is not in the table, a new one
-      !> is created.
       module subroutine syenqd ( ctx, name, value, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12667,9 +10286,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine syenqd
 
-      !> Enqueue a value onto a particular symbol in an integer
-      !> symbol table. If the symbol is not in the table, a new one
-      !> is created.
       module subroutine syenqi ( ctx, name, value, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12681,9 +10297,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine syenqi
 
-      !> Push a value onto a particular symbol in a character symbol table.
-      !> The previous value(s) associated with the symbol is extended at
-      !> the front. A new symbol is created if necessary.
       module subroutine sypshc ( ctx, name, value, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12695,9 +10308,6 @@ module pepper_instance_module
          character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine sypshc
 
-      !> Push a value onto a particular symbol in a double precision
-      !> symbol table. The previous value(s) associated with the symbol
-      !> is extended at the front. A new symbol is created if necessary.
       module subroutine sypshd ( ctx, name, value, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12709,9 +10319,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine sypshd
 
-      !> Push a value onto a particular symbol in an integer symbol table.
-      !> The previous value(s) associated with the symbol is extended at
-      !> the front. A new symbol is created if necessary.
       module subroutine sypshi ( ctx, name, value, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12723,7 +10330,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine sypshi
 
-      !> Rename an existing symbol in a character symbol table.
       module subroutine syrenc ( ctx, old, new, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12735,7 +10341,6 @@ module pepper_instance_module
          character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine syrenc
 
-      !> Rename an existing symbol in a double precision symbol table.
       module subroutine syrend ( ctx, old, new, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12747,7 +10352,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
       end subroutine syrend
 
-      !> Rename an existing symbol in an integer symbol table.
       module subroutine syreni ( ctx, old, new, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12766,16 +10370,12 @@ module pepper_instance_module
 
    interface
 
-      !> Close an open CK file.
       module subroutine ckcls ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of the CK file to be closed.
       end subroutine ckcls
 
-      !> Return a specified pointing instance from a CK type 01 segment.
-      !> The segment is identified by a CK file handle and segment
-      !> descriptor.
       module subroutine ckgr01 ( ctx, handle, descr, recno, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12785,9 +10385,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record  ( * )  !! The pointing record.
       end subroutine ckgr01
 
-      !> Return a specified pointing instance from a CK type 03 segment.
-      !> The segment is identified by a CK file handle and segment
-      !> descriptor.
       module subroutine ckgr03 ( ctx, handle, descr, recno, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12797,9 +10394,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record  ( * )  !! The pointing record.
       end subroutine ckgr03
 
-      !> Return a specified pointing record from a CK type 04 segment.
-      !> The segment is identified by a CK file handle and segment
-      !> descriptor.
       module subroutine ckgr04 ( ctx, handle, descr, recno, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12809,9 +10403,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record  ( * )  !! The pointing record.
       end subroutine ckgr04
 
-      !> Return a specified pointing instance from a CK type 05 segment.
-      !> The segment is identified by a CK file handle and segment
-      !> descriptor.
       module subroutine ckgr05 ( ctx, handle, descr, recno, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12821,8 +10412,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record  ( * )  !! The pointing record.
       end subroutine ckgr05
 
-      !> Return a specified pointing record from a type 6 CK segment, given
-      !> the CK file's handle and the segment's descriptor.
       module subroutine ckgr06 ( ctx, handle, descr, msno, recno, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12833,9 +10422,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record ( * )  !! The pointing record.
       end subroutine ckgr06
 
-      !> Return the mini-segment control parameters, mini-segment interval
-      !> bounds, and last epoch for a specified mini-segment in a type 6
-      !> CK segment.
       module subroutine ckmp06 ( ctx, handle, descr, msno, rate, subtyp, winsiz, nrec, ivlbds, lstepc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12850,8 +10436,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lstepc  !! Last epoch of mini-segment.
       end subroutine ckmp06
 
-      !> Return the number of mini-segments in a type 6 CK segment, given
-      !> the handle of the type 6 CK file and the segment's descriptor.
       module subroutine cknm06 ( ctx, handle, descr, nmini )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12860,9 +10444,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: nmini  !! The number of pointing instances in the segment.
       end subroutine cknm06
 
-      !> Return the number of pointing instances in a CK type 01 segment.
-      !> The segment is identified by a CK file handle and segment
-      !> descriptor.
       module subroutine cknr01 ( ctx, handle, descr, nrec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12871,9 +10452,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: nrec  !! The number of records in the segment.
       end subroutine cknr01
 
-      !> Return the number of pointing records in a CK type 02 segment.
-      !> The segment is identified by a CK file handle and segment
-      !> descriptor.
       module subroutine cknr02 ( ctx, handle, descr, nrec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12882,9 +10460,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: nrec  !! The number of records in the segment.
       end subroutine cknr02
 
-      !> Return the number of pointing instances in a CK type 03 segment.
-      !> The segment is identified by a CK file handle and segment
-      !> descriptor.
       module subroutine cknr03 ( ctx, handle, descr, nrec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12893,9 +10468,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: nrec  !! The number of pointing instances in the segment.
       end subroutine cknr03
 
-      !> Return the number of pointing instances in a CK type 05 segment.
-      !> The segment is identified by a CK file handle and segment
-      !> descriptor.
       module subroutine cknr05 ( ctx, handle, descr, nrec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12904,7 +10476,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: nrec  !! The number of pointing instances in the segment.
       end subroutine cknr05
 
-      !> Open a new CK file, returning the handle of the opened file.
       module subroutine ckopn ( ctx, fname, ifname, ncomch, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12914,7 +10485,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! The handle of the opened CK file.
       end subroutine ckopn
 
-      !> Add a type 1 segment to a C-kernel.
       module subroutine ckw01 ( ctx, handle, begtim, endtim, inst, ref, avflag, segid, nrec, sclkdp, quats, avvs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12931,7 +10501,6 @@ module pepper_instance_module
          real(wp), intent(in) :: avvs   (   3, * )  !! Angular velocity vectors.
       end subroutine ckw01
 
-      !> Write a type 2 segment to a C-kernel.
       module subroutine ckw02 ( ctx, handle, begtim, endtim, inst, ref, segid, nrec, start, stop, quats, avvs, rates )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12949,7 +10518,6 @@ module pepper_instance_module
          real(wp), intent(in) :: rates  (      * )  !! Number of seconds per tick for each interval.
       end subroutine ckw02
 
-      !> Add a type 3 segment to a C-kernel.
       module subroutine ckw03 ( ctx, handle, begtim, endtim, inst, ref, avflag, segid, nrec, sclkdp, quats, avvs, nints, starts )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12968,8 +10536,6 @@ module pepper_instance_module
          real(wp), intent(in) :: starts (      * )  !! Encoded SCLK interval start times.
       end subroutine ckw03
 
-      !> Begin a type CK04 segment in the DAF file associated with
-      !> HANDLE. See also [[ckw04a]] and [[ckw04e]].
       module subroutine ckw04b ( ctx, handle, begtim, inst, ref, avflag, segid )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12981,8 +10547,6 @@ module pepper_instance_module
          real(wp), intent(in) :: begtim  !! The segment coverage start encoded SCLK time
       end subroutine ckw04b
 
-      !> End the type 04 CK segment currently being written to the DAF
-      !> file associated with HANDLE. See also [[ckw04b]] and [[ckw04e]].
       module subroutine ckw04e ( ctx, handle, endtim )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -12990,9 +10554,6 @@ module pepper_instance_module
          real(wp), intent(in) :: endtim  !! The segment coverage end encoded SCLK time.
       end subroutine ckw04e
 
-      !> Write a type 5 segment to a CK file.
-      !>
-      !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
       module subroutine ckw05 ( ctx, handle, subtyp, degree, begtim, endtim, inst, ref, avflag, segid, n, sclkdp, packts, rate, nints, starts )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13013,9 +10574,6 @@ module pepper_instance_module
          real(wp), intent(in) :: starts ( * )  !! Encoded SCLK interval start times.
       end subroutine ckw05
 
-      !> Write a type 6 segment to a CK file.
-      !>
-      !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
       module subroutine ckw06 ( ctx, handle, inst, ref, avflag, first, last, segid, nmini, npkts, subtps, degres, packts, rates, sclkdp, ivlbds, sellst )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13037,8 +10595,6 @@ module pepper_instance_module
          logical, intent(in) :: sellst  !! Interval selection flag.
       end subroutine ckw06
 
-      !> Add data to a type 03 PCK segment in the binary PCK file
-      !> associated with HANDLE. See also [[pck03b]] and [[pck03e]].
       module subroutine pck03a ( ctx, handle, ncsets, coeffs, epochs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13048,22 +10604,18 @@ module pepper_instance_module
          real(wp), intent(in) :: epochs ( * )  !! The epochs associated with the element sets.
       end subroutine pck03a
 
-      !> End the type 03 PCK segment currently being written to the binary
-      !> PCK file associated with HANDLE. See also [[pck03b]] and [[pck03a]].
       module subroutine pck03e ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! The handle of a binary PCK file open for writing.
       end subroutine pck03e
 
-      !> Close an open PCK file.
       module subroutine pckcls ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of the PCK file to be closed.
       end subroutine pckcls
 
-      !> Create a new PCK file, returning the handle of the opened file.
       module subroutine pckopn ( ctx, name, ifname, ncomch, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13073,8 +10625,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! The handle of the opened PCK file.
       end subroutine pckopn
 
-      !> Perform routine error checks and if all checks pass, pack the
-      !> descriptor for a PCK segment
       module subroutine pckpds ( ctx, body, frame, type, first, last, descr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13086,7 +10636,6 @@ module pepper_instance_module
          real(wp), intent(out) :: descr ( * )  !! A PCK segment descriptor.
       end subroutine pckpds
 
-      !> Unpack the contents of a PCK segment descriptor
       module subroutine pckuds ( ctx, descr, body, frame, type, first, last, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13100,9 +10649,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: end  !! Ending DAF address of the segment.
       end subroutine pckuds
 
-      !> Write a type 2 segment to a PCK binary file given the file
-      !> handle, body-fixed frame class ID, frame, time range covered by
-      !> the segment, and the Chebyshev polynomial coefficients.
       module subroutine pckw02 ( ctx, handle, clssid, frame, first, last, segid, intlen, n, polydg, cdata, btime )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13119,10 +10665,6 @@ module pepper_instance_module
          real(wp), intent(in) :: btime  !! Begin time of first logical record.
       end subroutine pckw02
 
-      !> Write a type 20 segment to a PCK file.
-      !>
-      !> MAXDEG     P   Maximum allowed degree of Chebyshev expansions.
-      !> TOLSCL     P   Tolerance scale factor for coverage bound checking.
       module subroutine pckw20 ( ctx, handle, clssid, frame, first, last, segid, intlen, n, polydg, cdata, ascale, tscale, initjd, initfr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13142,9 +10684,6 @@ module pepper_instance_module
          real(wp), intent(in) :: initfr  !! Fractional part of begin time (TDB Julian date) of first record.
       end subroutine pckw20
 
-      !> Store text from a text file in the comment area of a binary SPK
-      !> or CK file, appending it to whatever text may already have
-      !> been stored there.
       module subroutine spcac ( ctx, handle, unit, bmark, emark )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13154,15 +10693,12 @@ module pepper_instance_module
          character(*), intent(in) :: emark  !! Ending marker.
       end subroutine spcac
 
-      !> Empty the comment area of a binary SPK or CK file.
       module subroutine spcdc ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
       end subroutine spcdc
 
-      !> Extract the text from the comment area of a binary SPK or CK file
-      !> and write it to a text file.
       module subroutine spcec ( ctx, handle, unit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13170,7 +10706,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: unit  !! Logical unit connected to text file.
       end subroutine spcec
 
-      !> Open a new SPK or CK file for subsequent write requests.
       module subroutine spcopn ( ctx, fname, ifname, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13179,8 +10714,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Handle of new SPK or CK file.
       end subroutine spcopn
 
-      !> Read the first line of text from the comment area
-      !> of a binary SPK or CK file.
       module subroutine spcrfl ( ctx, handle, line, eoc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13189,9 +10722,6 @@ module pepper_instance_module
          logical, intent(out) :: eoc  !! End of comments?
       end subroutine spcrfl
 
-      !> Continue reading lines from the comment area of a binary
-      !> SPK or CK file specified by the most recent call to
-      !> the routine [[spcrfl]].
       module subroutine spcrnl ( ctx, line, eoc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13199,14 +10729,12 @@ module pepper_instance_module
          logical, intent(out) :: eoc  !! End of comments?
       end subroutine spcrnl
 
-      !> Close an open SPK file.
       module subroutine spkcls ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of the SPK file to be closed.
       end subroutine spkcls
 
-      !> Open an existing SPK file for subsequent write.
       module subroutine spkopa ( ctx, file, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13214,7 +10742,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Handle attached to the SPK file opened to append.
       end subroutine spkopa
 
-      !> Create a new SPK file, returning the handle of the opened file.
       module subroutine spkopn ( ctx, fname, ifname, ncomch, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13224,7 +10751,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! The handle of the opened SPK file.
       end subroutine spkopn
 
-      !> Write a type 1 segment to an SPK file.
       module subroutine spkw01 ( ctx, handle, body, center, frame, first, last, segid, n, dlines, epochs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13241,10 +10767,6 @@ module pepper_instance_module
          real(wp), intent(in) :: epochs (         * )  !! Coverage end times of difference lines.
       end subroutine spkw01
 
-      !> Write a type 2 segment to an SPK file.
-      !>
-      !> MAXDEG     P   Maximum degree of Chebyshev expansions.
-      !> TOLSCL     P   Scale factor used to compute time bound tolerance.
       module subroutine spkw02 ( ctx, handle, body, center, frame, first, last, segid, intlen, n, polydg, cdata, btime )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13262,10 +10784,6 @@ module pepper_instance_module
          real(wp), intent(in) :: btime  !! Begin time of first logical record.
       end subroutine spkw02
 
-      !> Write a type 3 segment to an SPK file.
-      !>
-      !> MAXDEG     P   Maximum degree of Chebyshev expansions.
-      !> TOLSCL     P   Scale factor used to compute time bound tolerance.
       module subroutine spkw03 ( ctx, handle, body, center, frame, first, last, segid, intlen, n, polydg, cdata, btime )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13283,9 +10801,6 @@ module pepper_instance_module
          real(wp), intent(in) :: btime  !! Begin time of first record.
       end subroutine spkw03
 
-      !> Write an SPK segment of type 5 given a time-ordered set of
-      !> discrete states and epochs, and the gravitational parameter
-      !> of a central body.
       module subroutine spkw05 ( ctx, handle, body, center, frame, first, last, segid, gm, n, states, epochs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13302,11 +10817,6 @@ module pepper_instance_module
          real(wp), intent(in) :: epochs   (    * )  !! Epochs.
       end subroutine spkw05
 
-      !> Write a type 8 segment to an SPK file.
-      !>
-      !> MAXDEG     P   Maximum degree of interpolating polynomials.
-      !> TOLSCL     P   Scale factor used to compute time bound tolerance.
-      !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
       module subroutine spkw08 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, begtim, step )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13324,9 +10834,6 @@ module pepper_instance_module
          real(wp), intent(in) :: step  !! Time step separating epochs of states.
       end subroutine spkw08
 
-      !> Write a type 9 segment to an SPK file.
-      !>
-      !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
       module subroutine spkw09 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, epochs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13343,8 +10850,6 @@ module pepper_instance_module
          real(wp), intent(in) :: epochs (    * )  !! Array of epochs corresponding to states.
       end subroutine spkw09
 
-      !> Write an SPK type 10 segment to the file specified by
-      !> the input HANDLE.
       module subroutine spkw10 ( ctx, handle, body, center, frame, first, last, segid, consts, n, elems, epochs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13361,10 +10866,6 @@ module pepper_instance_module
          real(wp), intent(in) :: epochs ( * )  !! The epochs associated with the element sets.
       end subroutine spkw10
 
-      !> Write a type 12 segment to an SPK file.
-      !>
-      !> MAXDEG     P   Maximum degree of interpolating polynomials.
-      !> TOLSCL     P   Scale factor used to compute time bound tolerance.
       module subroutine spkw12 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, begtim, step )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13382,9 +10883,6 @@ module pepper_instance_module
          real(wp), intent(in) :: step  !! Time step separating epochs of states.
       end subroutine spkw12
 
-      !> Write a type 13 segment to an SPK file.
-      !>
-      !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
       module subroutine spkw13 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, epochs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13401,7 +10899,6 @@ module pepper_instance_module
          real(wp), intent(in) :: epochs (    * )  !! Array of epochs corresponding to states.
       end subroutine spkw13
 
-      !> Write an SPK segment of type 15 given a type 15 data record.
       module subroutine spkw15 ( ctx, handle, body, center, frame, first, last, segid, epoch, tp, pa, p, ecc, j2flg, pv, gm, j2, radius )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13424,7 +10921,6 @@ module pepper_instance_module
          real(wp), intent(in) :: radius  !! Equatorial radius of central body.
       end subroutine spkw15
 
-      !> Write an SPK segment of type 17 given a type 17 data record.
       module subroutine spkw17 ( ctx, handle, body, center, frame, first, last, segid, epoch, eqel, rapol, decpol )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13441,9 +10937,6 @@ module pepper_instance_module
          real(wp), intent(in) :: decpol  !! Declination of the reference plane's pole.
       end subroutine spkw17
 
-      !> Write a type 18 segment to an SPK file.
-      !>
-      !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
       module subroutine spkw18 ( ctx, handle, subtyp, body, center, frame, first, last, segid, degree, n, packts, epochs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13461,9 +10954,6 @@ module pepper_instance_module
          real(wp), intent(in) :: epochs ( * )  !! Array of epochs corresponding to packets.
       end subroutine spkw18
 
-      !> Write a type 19 segment to an SPK file.
-      !>
-      !> MAXDEG     P   Maximum allowed degree of interpolating polynomial.
       module subroutine spkw19 ( ctx, handle, body, center, frame, first, last, segid, nintvl, npkts, subtps, degres, packts, epochs, ivlbds, sellst )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13484,7 +10974,6 @@ module pepper_instance_module
          logical, intent(in) :: sellst  !! Interval selection flag.
       end subroutine spkw19
 
-      !> Write a type 20 segment to an SPK file.
       module subroutine spkw20 ( ctx, handle, body, center, frame, first, last, segid, intlen, n, polydg, cdata, dscale, tscale, initjd, initfr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13505,10 +10994,6 @@ module pepper_instance_module
          real(wp), intent(in) :: initfr  !! Fractional part of begin time of first record.
       end subroutine spkw20
 
-      !> Write a type 21 segment to an SPK file.
-      !>
-      !> MAXTRM     P   Maximum number of terms per difference table
-      !> component.
       module subroutine spkw21 ( ctx, handle, body, center, frame, first, last, segid, n, dlsize, dlines, epochs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13525,9 +11010,6 @@ module pepper_instance_module
          real(wp), intent(in) :: epochs (         * )  !! Coverage end times of difference lines.
       end subroutine spkw21
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzck4i2d ( ctx, i, nsets, parcod, dpcoef )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13537,9 +11019,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dpcoef  !! DP number containing NSETS packed integer numbers.
       end subroutine zzck4i2d
 
-      !> Return a specified pointing instance from a CK type 02 segment.
-      !> The segment is identified by a CK file handle and segment
-      !> descriptor.
       module subroutine ckgr02 ( ctx, handle, descr, recno, record )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13549,8 +11028,6 @@ module pepper_instance_module
          real(wp), intent(out) :: record  ( * )  !! The pointing record.
       end subroutine ckgr02
 
-      !> Add data to a type 4 CK segment currently being written to
-      !> the file associated with HANDLE. See also [[ckw04b]] and [[ckw04e]].
       module subroutine ckw04a ( ctx, handle, npkts, pktsiz, pktdat, sclkdp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13561,8 +11038,6 @@ module pepper_instance_module
          real(wp), intent(in) :: sclkdp( * )  !! The SCLK times associated with the data packets.
       end subroutine ckw04a
 
-      !> Begin a type 03 PCK segment in the binary PCK file associated with
-      !> HANDLE. See also [[pck03a]] and [[pck03e]].
       module subroutine pck03b ( ctx, handle, segid, body, frame, first, last, chbdeg )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13575,9 +11050,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: chbdeg  !! The degree of the Chebyshev Polynomial used.
       end subroutine pck03b
 
-      !> Convert the contents of a binary SPK or CK file to text,
-      !> including comments if present, and write them to a text file
-      !> opened by the calling program.
       module subroutine spcb2t ( ctx, binary, unit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13585,8 +11057,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: unit  !! Logical unit connected to a text file.
       end subroutine spcb2t
 
-      !> Reconstruct a binary SPK or CK file including comments
-      !> from a text file opened by the calling program.
       module subroutine spct2b ( ctx, unit, binary )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13594,8 +11064,6 @@ module pepper_instance_module
          character(*), intent(in) :: binary  !! Name of a binary SPK or CK file to be created.
       end subroutine spct2b
 
-      !> Convert a text (ASCII) format SPK or CK file to an equivalent
-      !> binary file, including comments.
       module subroutine spca2b ( ctx, text, binary )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13603,8 +11071,6 @@ module pepper_instance_module
          character(*), intent(in) :: binary  !! Name of a binary SPK or CK file to be created.
       end subroutine spca2b
 
-      !> Convert a binary SPK or CK file to an equivalent text (ASCII)
-      !> file, including the comment area.
       module subroutine spcb2a ( ctx, binary, text )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13632,7 +11098,6 @@ module pepper_instance_module
 
    interface
 
-      !> Return the time step set by the most recent call to [[gfsstp]].
       module subroutine gfstep ( ctx, time, step )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13640,16 +11105,12 @@ module pepper_instance_module
          real(wp), intent(out) :: step  !! Time step to take.
       end subroutine gfstep
 
-      !> Set the step size to be returned by [[gfstep]].
       module subroutine gfsstp ( ctx, step )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: step  !! Time step to take.
       end subroutine gfsstp
 
-      !> Estimate, using a bisection method, the next abscissa value at
-      !> which a state change occurs. This is the default GF refinement
-      !> method.
       module subroutine gfrefn ( ctx, t1, t2, s1, s2, t )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13660,12 +11121,6 @@ module pepper_instance_module
          real(wp), intent(out) :: t  !! New value at which to check for transition.
       end subroutine gfrefn
 
-      !> Return the correct article "a" or "an" used to modify a word
-      !> and return it capitalized, lower case, or upper case.
-      !>
-      !> The function returns the correct article, 'A' or 'AN', needed to
-      !> modify a word WORD, appropriately capitalized.
-      !> (PEPPER: the result has length 2; SPICELIB's had the caller's length.)
       module character(2) function ana ( ctx, word, case )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13673,11 +11128,6 @@ module pepper_instance_module
          character(*), intent(in) :: case  !! 'U', 'L', or 'C' to specify capitalization of [[ana]].
       end function ana
 
-      !> Return the azimuth/elevation coordinates of a specified target
-      !> relative to an "observer," where the observer has constant
-      !> position in a specified reference frame. The observer's position
-      !> is provided by the calling program rather than by loaded SPK
-      !> files.
       module subroutine azlcpo ( ctx, method, target, et, abcorr, azccw, elplsz, obspos, obsctr, obsref, azlsta, lt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13694,8 +11144,6 @@ module pepper_instance_module
          real(wp), intent(out) :: lt  !! One way light time between target and observer.
       end subroutine azlcpo
 
-      !> Return a set containing the frame IDs of all built-in frames of a
-      !> specified class.
       module subroutine bltfrm ( ctx, frmcls, idset )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13704,8 +11152,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: idset  ( lbcell : * )  !! Set of ID codes of frames of the specified class.
       end subroutine bltfrm
 
-      !> Return the J2000 to body Equator and Prime Meridian coordinate
-      !> transformation matrix for a specified body.
       module subroutine bodmat ( ctx, body, et, tipm )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13714,9 +11160,6 @@ module pepper_instance_module
          real(wp), intent(out) :: tipm   ( 3,3 )  !! Transformation from Inertial to PM for BODY at ET.
       end subroutine bodmat
 
-      !> Determine the state (position, velocity) of an orbiting body
-      !> from a set of elliptic, hyperbolic, or parabolic orbital
-      !> elements.
       module subroutine conics ( ctx, elts, et, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13725,15 +11168,12 @@ module pepper_instance_module
          real(wp), intent(out) :: state   ( 6 )  !! State of orbiting body at ET.
       end subroutine conics
 
-      !> Delete a file.
       module subroutine delfil ( ctx, filnam )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: filnam  !! The name of a file to be deleted.
       end subroutine delfil
 
-      !> Compute the Jacobian matrix of the transformation from
-      !> rectangular to geodetic coordinates.
       module subroutine dgeodr ( ctx, x, y, z, re, f, jacobi )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13745,9 +11185,6 @@ module pepper_instance_module
          real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
       end subroutine dgeodr
 
-      !> Calculate the value of the time derivative of the
-      !> half angle of a spherical body given a state vector
-      !> STATE and body radius BODYR.
       module real(wp) function dhfa ( ctx, state, bodyr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13755,7 +11192,6 @@ module pepper_instance_module
          real(wp), intent(in) :: bodyr  !! Radius of body
       end function dhfa
 
-      !> Diagonalize a symmetric 2x2 matrix.
       module subroutine diags2 ( ctx, symmat, diag, rotate )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13764,9 +11200,6 @@ module pepper_instance_module
          real(wp), intent(out) :: rotate ( 2, 2 )  !! A rotation used as the similarity transformation.
       end subroutine diags2
 
-      !> Calculate the derivative with respect to the angle of rotation
-      !> of a 3x3 coordinate system rotation matrix generated by a
-      !> rotation of a specified angle about a specified axis.
       module subroutine drotat ( ctx, angle, iaxis, dmout )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13775,9 +11208,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dmout  ( 3,3 )  !! Derivative of rotation matrix [ANGLE] w.r.t. angle IAXIS
       end subroutine drotat
 
-      !> Locate a keyword and succeeding numeric words within a string.
-      !> Parse and store the numeric words. Remove the keyword and
-      !> numeric words from the input string.
       module subroutine dxtrct ( ctx, keywd, maxwds, string, nfound, parsed, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13789,11 +11219,6 @@ module pepper_instance_module
          real(wp), intent(out) :: values ( * )  !! The double precision values for the numbers.
       end subroutine dxtrct
 
-      !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine [[evsgp4]]. *ALL* TLE evaluations should use that routine.
-      !> NAIF supports [[ev2lin]] only for backward compatibility.
-      !>
-      !> NMODL      P   Parameter controlling number of buffered elements.
       module subroutine ev2lin ( ctx, et, geophs, elems, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13803,9 +11228,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state  ( * )  !! Evaluated state
       end subroutine ev2lin
 
-      !> Evaluate NORAD two-line element data for earth orbiting
-      !> spacecraft. This evaluator uses algorithms as described
-      !> in Vallado 2006 [4].
       module subroutine evsgp4 ( ctx, et, geophs, elems, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13815,10 +11237,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state  (  6 )  !! Evaluated state
       end subroutine evsgp4
 
-      !> Return the location within the set array of the NTH element within
-      !> the order imposed by the ASCII collating sequence.
-      !>
-      !> The function returns the location of the NTH element in the set.
       module integer(ip) function fetchc ( ctx, nth, set )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13827,10 +11245,6 @@ module pepper_instance_module
          character(*), intent(in) :: set      ( lbcell:* )  !! Input set.
       end function fetchc
 
-      !> Return the location within the set array of the NTH element
-      !> within the order imposed by the values of the elements.
-      !>
-      !> The function returns the location of the NTH element in the set.
       module integer(ip) function fetchd ( ctx, nth, set )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13839,10 +11253,6 @@ module pepper_instance_module
          real(wp), intent(in) :: set      ( lbcell:* )  !! Input set.
       end function fetchd
 
-      !> Return the location within the set array of the NTH element
-      !> within the order imposed by the values of the elements.
-      !>
-      !> The function returns the location of the NTH element in the set.
       module integer(ip) function fetchi ( ctx, nth, set )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13851,7 +11261,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: set      ( lbcell:* )  !! Input set.
       end function fetchi
 
-      !> Map the name of an open file to its associated logical unit.
       module subroutine fn2lun ( ctx, filnam, lunit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13859,7 +11268,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: lunit  !! The logical unit associated with the filename.
       end subroutine fn2lun
 
-      !> Convert geodetic coordinates to rectangular coordinates.
       module subroutine georec ( ctx, lon, lat, alt, re, f, rectan )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13871,8 +11279,6 @@ module pepper_instance_module
          real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of point.
       end subroutine georec
 
-      !> Return the field-of-view (FOV) parameters for a specified
-      !> instrument. The instrument is specified by its NAIF ID code.
       module subroutine getfov ( ctx, instid, room, shape, frame, bsight, n, bounds )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13885,9 +11291,6 @@ module pepper_instance_module
          real(wp), intent(out) :: bounds ( 3, * )  !! FOV boundary vectors.
       end subroutine getfov
 
-      !> Solve the time of flight equation MA = e sinh(F) - F for the
-      !> hyperbolic eccentric anomaly F, given the mean anomaly, MA,
-      !> and the eccentricity, e.
       module subroutine hyptof ( ctx, ma, ecc, f )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13896,9 +11299,6 @@ module pepper_instance_module
          real(wp), intent(out) :: f  !! Hyperbolic eccentric anomaly.
       end subroutine hyptof
 
-      !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine [[ilumin]]. This routine is supported for purposes of
-      !> backward compatibility only.
       module subroutine illum ( ctx, target, et, abcorr, obsrvr, spoint, phase, solar, emissn )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13912,8 +11312,6 @@ module pepper_instance_module
          real(wp), intent(out) :: emissn  !! Emission angle at the surface point.
       end subroutine illum
 
-      !> Return the matrix that transforms vectors from one specified
-      !> inertial reference frame to another.
       module subroutine irftrn ( ctx, refa, refb, rotab )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13922,10 +11320,6 @@ module pepper_instance_module
          real(wp), intent(out) :: rotab ( 3, 3 )  !! REFA-to-REFB transformation matrix.
       end subroutine irftrn
 
-      !> **Deprecated:** This routine is deprecated because all high-level
-      !> time conversion routines ([[str2et]], [[utc2et]], [[tparse]]) were updated
-      !> to accept ISO formatted times on input.  This routine is
-      !> supported for purposes of backward compatibility only.
       module subroutine iso2utc ( ctx, tstrng, utcstr, error )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13934,18 +11328,12 @@ module pepper_instance_module
          character(*), intent(out) :: error  !! Error message if something went wrong.
       end subroutine iso2utc
 
-      !> Determine whether a named file is currently open.
-      !>
-      !> The function returns the value .TRUE. if the file is open, .FALSE.
-      !> otherwise.
       module logical function isopen ( ctx, file )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: file  !! Name of the file in question.
       end function isopen
 
-      !> Return a SPICE set containing the frame IDs of all reference
-      !> frames of a given class having specifications in the kernel pool.
       module subroutine kplfrm ( ctx, frmcls, idset )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13954,8 +11342,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: idset  ( lbcell : * )  !! Set of ID codes of frames of the specified class.
       end subroutine kplfrm
 
-      !> Parse a list of items delimited by multiple delimiters,
-      !> placing the resulting items into a set.
       module subroutine lparss ( ctx, list, delims, set )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13965,11 +11351,6 @@ module pepper_instance_module
          character(*), intent(inout) :: set  ( lbcell:* )  !! Items in the list, validated, left justified.
       end subroutine lparss
 
-      !> Compute L_s, the planetocentric longitude of the sun, as seen
-      !> from a specified body.
-      !>
-      !> The function returns the value of L_s for the specified body
-      !> at the specified time.
       module real(wp) function lspcn ( ctx, body, et, abcorr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13978,10 +11359,6 @@ module pepper_instance_module
          character(*), intent(in) :: abcorr  !! Aberration correction.
       end function lspcn
 
-      !> Compute the transmission (or reception) time of a signal at a
-      !> specified target, given the reception (or transmission) time at a
-      !> specified observer. Also return the elapsed time between
-      !> transmission and reception.
       module subroutine ltime ( ctx, etobs, obs, dir, targ, ettarg, elapsd )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -13993,7 +11370,6 @@ module pepper_instance_module
          real(wp), intent(out) :: elapsd  !! Time between transmit and receipt of the signal.
       end subroutine ltime
 
-      !> Map the logical unit of an open file to its associated filename.
       module subroutine lun2fn ( ctx, lunit, filnam )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14001,8 +11377,6 @@ module pepper_instance_module
          character(*), intent(out) :: filnam  !! Name of the file associated with LUNIT.
       end subroutine lun2fn
 
-      !> Scan a string from a specified starting position for the
-      !> end of a signed integer.
       module subroutine lx4sgn ( ctx, string, first, last, nchar )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14012,10 +11386,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: nchar  !! number of characters in the signed integer.
       end subroutine lx4sgn
 
-      !> Scan an identifier, starting from a specified character
-      !> position.
-      !>
-      !> LBCELL     P   The SPICE cell lower bound.
       module subroutine lxidnt ( ctx, idspec, string, first, last, nchar )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14027,11 +11397,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: nchar  !! Number of characters in token.
       end subroutine lxidnt
 
-      !> Return the default specification for the characters that may
-      !> appear in an identifier.
-      !>
-      !> MXSPEC     P   Recommended size for declaration of IDSPEC.
-      !> LBCELL     P   The SPICE cell lower bound.
       module subroutine lxdfid ( ctx, idspec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14039,11 +11404,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: idspec ( lbcell : * )  !! Identifier character specification.
       end subroutine lxdfid
 
-      !> Set the acceptable characters that may appear in an identifier
-      !> token.
-      !>
-      !> MXSPEC     P   Recommended size for declaration of IDSPEC.
-      !> LBCELL     P   The SPICE cell lower bound.
       module subroutine lxcsid ( ctx, hdchrs, tlchrs, idspec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14053,9 +11413,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: idspec ( lbcell : * )  !! Identifier character specification.
       end subroutine lxcsid
 
-      !> Find the nearest point on an ellipse to a specified point, both
-      !> in three-dimensional space, and find the distance between the
-      !> ellipse and the point.
       module subroutine npelpt ( ctx, point, ellips, pnear, dist )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14066,9 +11423,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dist  !! Distance of input point to ellipse.
       end subroutine npelpt
 
-      !> Determine the set of osculating conic orbital elements that
-      !> corresponds to the state (position, velocity) of a body at
-      !> some epoch.
       module subroutine oscelt ( ctx, state, et, mu, elts )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14078,8 +11432,6 @@ module pepper_instance_module
          real(wp), intent(out) :: elts   ( 8 )  !! Equivalent conic elements.
       end subroutine oscelt
 
-      !> Solve the time of flight equation MA = D + (D**3) / 3
-      !> for the parabolic eccentric anomaly D, given mean anomaly.
       module subroutine partof ( ctx, ma, d )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14087,19 +11439,12 @@ module pepper_instance_module
          real(wp), intent(out) :: d  !! Parabolic eccentric anomaly.
       end subroutine partof
 
-      !> Indicate for a specified body whether planetographic and
-      !> planetocentric longitude increase in the same sense.
-      !>
-      !> The function returns 1 if planetographic and planetocentric
-      !> longitude for the specified body increase in the same sense, and
-      !> -1 if they increase in the opposite sense.
       module integer(ip) function plnsns ( ctx, bodid )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: bodid  !! is the NAIF integer ID code of some solar system object.
       end function plnsns
 
-      !> Prompt a user for keyboard input.
       module subroutine prompt ( ctx, dspmsg, buffer )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14107,8 +11452,6 @@ module pepper_instance_module
          character(*), intent(out) :: buffer  !! The response typed by a user.
       end subroutine prompt
 
-      !> Parse a string as a double precision number, encapsulating error
-      !> handling.
       module subroutine prsdp ( ctx, string, dpval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14116,10 +11459,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dpval  !! D.p. value obtained by parsing STRING.
       end subroutine prsdp
 
-      !> Encode a nonnegative integer number into a character string,
-      !> portably, using 128 as the base for encoding.
-      !>
-      !> MINLEN     P   Minimum length of string.
       module subroutine prtenc ( ctx, number, string )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14127,7 +11466,6 @@ module pepper_instance_module
          character(*), intent(out) :: string  !! Encoded string.
       end subroutine prtenc
 
-      !> Decode a character string encoded by [[prtenc]].
       module subroutine prtdec ( ctx, string, number )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14135,9 +11473,6 @@ module pepper_instance_module
          character(*), intent(in) :: string  !! Encoded character string.
       end subroutine prtdec
 
-      !> Return the 3x3 matrix that transforms position vectors from one
-      !> specified frame at a specified epoch to another specified
-      !> frame at another specified epoch.
       module subroutine pxfrm2 ( ctx, from, to, etfrom, etto, rotate )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14148,7 +11483,6 @@ module pepper_instance_module
          real(wp), intent(out) :: rotate  ( 3, 3 )  !! A position transformation matrix from frame FROM to frame TO.
       end subroutine pxfrm2
 
-      !> Read the next non-blank line of text from a text file.
       module subroutine rdnbl ( ctx, file, line, eof )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14157,10 +11491,6 @@ module pepper_instance_module
          logical, intent(out) :: eof  !! End-of-file indicator.
       end subroutine rdnbl
 
-      !> Replace a marker with the text representation of a
-      !> cardinal number.
-      !>
-      !> MAXLCN     P   Maximum length of a cardinal number.
       module subroutine repmct ( ctx, in, marker, value, rtcase, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14171,7 +11501,6 @@ module pepper_instance_module
          character(*), intent(out) :: out  !! Output string.
       end subroutine repmct
 
-      !> Replace a marker with the text representation of a logical value.
       module subroutine repml ( ctx, in, marker, value, rtcase, out )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14182,9 +11511,6 @@ module pepper_instance_module
          character(*), intent(out) :: out  !! Output string.
       end subroutine repml
 
-      !> Transform a vector to a new reference frame rotated by ANGLE
-      !> radians about axis IAXIS. This transformation rotates V1 by
-      !> -ANGLE radians about the specified axis.
       module subroutine rotvec ( ctx, v1, angle, iaxis, vout )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14194,12 +11520,6 @@ module pepper_instance_module
          real(wp), intent(out) :: vout  ( 3 )  !! Resulting vector expressed in the new frame.
       end subroutine rotvec
 
-      !> Convert a character representation of a type 1 spacecraft clock
-      !> count to ticks.
-      !>
-      !> MXNFLD     P   Maximum number of allowed fields in an SCLK string.
-      !> DELIMS     P   The accepted delimiters of an SCLK string.
-      !> DPLEN      P   Maximum width of a clock field.
       module subroutine scps01 ( ctx, sc, clkstr, error, msg, ticks )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14210,7 +11530,6 @@ module pepper_instance_module
          real(wp), intent(out) :: ticks  !! Number of ticks represented by the clock count.
       end subroutine scps01
 
-      !> Convert an SCLK name string to a NAIF integer code.
       module subroutine scn2id ( ctx, clknam, clkid, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14219,8 +11538,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether item was found.
       end subroutine scn2id
 
-      !> Convert a NAIF integer code for a spacecraft clock to an SCLK name
-      !> string.
       module subroutine scid2n ( ctx, clkid, clknam, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14229,11 +11546,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether item was found.
       end subroutine scid2n
 
-      !> Return the distance between two points on a sphere, measured
-      !> along the shortest great circle arc connecting them.
-      !>
-      !> The function returns the distance between the two input points,
-      !> measured along the shortest great circle arc connecting them.
       module real(wp) function sphsd ( ctx, radius, lon1, lat1, lon2, lat2 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14244,8 +11556,6 @@ module pepper_instance_module
          real(wp), intent(in) :: lat2  !! Longitude and latitude of second point in radians.
       end function sphsd
 
-      !> Return the state (position and velocity) of a target body
-      !> relative to some center of motion in a specified frame.
       module subroutine spkpv ( ctx, handle, descr, et, ref, state, center )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14257,8 +11567,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: center  !! Center of state.
       end subroutine spkpv
 
-      !> Convert planetocentric latitude and longitude of a surface
-      !> point on a specified body to rectangular coordinates.
       module subroutine srfrec ( ctx, body, lon, lat, rectan )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14268,8 +11576,6 @@ module pepper_instance_module
          real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of the point.
       end subroutine srfrec
 
-      !> Determine the intersection of a line-of-sight vector with the
-      !> surface of an ellipsoid.
       module subroutine surfpt ( ctx, positn, u, a, b, c, point, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14282,10 +11588,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating if U points at the ellipsoid.
       end subroutine surfpt
 
-      !> Find the state transformation from a base frame to the
-      !> right-handed frame defined by two state vectors: one state
-      !> vector defining a specified axis and a second state vector
-      !> defining a specified coordinate plane.
       module subroutine twovxf ( ctx, axdef, indexa, plndef, indexp, xform )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14296,8 +11598,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xform  ( 6, 6 )  !! Output state transformation matrix.
       end subroutine twovxf
 
-      !> Calculate the first derivative of a caller-specified scalar
-      !> function using a three-point estimation.
       module subroutine uddf ( ctx, udfunc, x, dx, deriv )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14307,9 +11607,6 @@ module pepper_instance_module
          real(wp), intent(out) :: deriv  !! Approximate derivative of UDFUNC at X.
       end subroutine uddf
 
-      !> Serve as a dummy function for GF routines expecting an UDFUNS
-      !> argument. It is a no-op routine with an argument signature
-      !> matching UDFUNS.
       module subroutine udf ( ctx, x, value )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14317,11 +11614,6 @@ module pepper_instance_module
          real(wp), intent(out) :: value  !! Double precision value, unused. (PEPPER: an output, as for any [[gf_scalar]]; not set)
       end subroutine udf
 
-      !> Find the minimum or maximum angular separation between a
-      !> specified ray and ellipse.
-      !>
-      !> UBEL       P   Upper bound of SPICELIB ellipse.
-      !> UBPL       P   Upper bound of SPICELIB plane.
       module subroutine zzasryel ( ctx, extrem, ellips, vertex, dir, angle, extpt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14334,11 +11626,6 @@ module pepper_instance_module
          real(wp), intent(out) :: extpt  ( 3 )  !! Point on ellipse where extremum is achieved.
       end subroutine zzasryel
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> BIG        P   Limit on magnitude of coefficients and UB.
       module subroutine zzbquad ( ctx, a, b, c, ub, n, nx, r1, r2 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14352,10 +11639,6 @@ module pepper_instance_module
          real(wp), intent(out) :: r2  !! Root of larger absolute value.
       end subroutine zzbquad
 
-      !> Given the latitude of a midpoint of chord on a circle of constant
-      !> latitude, and given the longitude extent of the chord, compute
-      !> the latitude of the chord's endpoints. The coordinate system is
-      !> "latitudinal," aka planetocentric.
       module subroutine zzchrlat ( ctx, midlat, dlon, eptlat )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14364,17 +11647,12 @@ module pepper_instance_module
          real(wp), intent(out) :: eptlat  !! is the latitude of the endpoints of the chord.
       end subroutine zzchrlat
 
-      !> Fetch the current CPU date and time and store the result
-      !> as a double precision 6-vector.
       module subroutine zzcputim ( ctx, tvec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(out) :: tvec ( 6 )  !! contains year, month, day, hours, minutes, seconds
       end subroutine zzcputim
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzcxbrut ( ctx, apex, axis, angle, endpt1, endpt2, xpt, isbrck )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14387,9 +11665,6 @@ module pepper_instance_module
          logical, intent(out) :: isbrck  !! Logical flag indicating whether root is bracketed.
       end subroutine zzcxbrut
 
-      !> Safely calculate the value NUMR/DENOM, avoiding the possibility
-      !> of floating point exceptions (FPE), due to numeric underflow,
-      !> numeric overflow, or divide-by-zero.
       module real(wp) function zzdiv ( ctx, numr, denom )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14397,18 +11672,12 @@ module pepper_instance_module
          real(wp), intent(in) :: denom  !! Denominator of division.
       end function zzdiv
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzdskbbl ( ctx, bodyid )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: bodyid  !! Body ID code.
       end subroutine zzdskbbl
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzdsksbi ( ctx, maxbod, stsize, btbody, btnbod, btsegp, btstsz, sthan, stdscr, stdlad, stfree, stoff, stctr, strad )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14427,9 +11696,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: strad  ( * )  !! Radii of bounding spheres for segments.
       end subroutine zzdsksbi
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzdsksbr ( ctx, needed, maxbod, stsize, btbody, btnbod, btsegp, btstsz, sthan, stdscr, stdlad, stfree, stoff, stctr, strad )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14449,23 +11715,12 @@ module pepper_instance_module
          real(wp), intent(inout) :: strad  ( * )  !! Radii of bounding spheres for segments.
       end subroutine zzdsksbr
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> The function always returns the value .FALSE.
       module logical function zzdsksbd ( ctx, bodyid )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: bodyid  !! ID code of target body.
       end function zzdsksbd
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> The function returns .TRUE. if and only if the specified segment
-      !> matches the body ID set via [[zzdsksbd]].
       module logical function zzdskbdc ( ctx, handle, dladsc, dskdsc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14474,11 +11729,6 @@ module pepper_instance_module
          real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
       end function zzdskbdc
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> The function returns .FALSE. for all segments.
       module logical function zzdsknot ( ctx, handle, dladsc, dskdsc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14487,11 +11737,6 @@ module pepper_instance_module
          real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
       end function zzdsknot
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> The function always returns the value .FALSE.
       module logical function zzdsksit ( ctx, bodyid, nsurf, srflst, et )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14501,12 +11746,6 @@ module pepper_instance_module
          real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
       end function zzdsksit
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> The function returns .TRUE. if and only if the specified segment
-      !> matches the body ID set via [[zzdsksit]].
       module logical function zzdskcit ( ctx, handle, dladsc, dskdsc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14515,11 +11754,6 @@ module pepper_instance_module
          real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
       end function zzdskcit
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> The function always returns the value .FALSE.
       module logical function zzdskusc ( ctx, bodyid, et, cor1, cor2 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14529,12 +11763,6 @@ module pepper_instance_module
          real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
       end function zzdskusc
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> The function returns .TRUE. if and only if the specified segment
-      !> matches the body ID set via [[zzdskusc]].
       module logical function zzdskumc ( ctx, handle, dladsc, dskdsc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14543,11 +11771,6 @@ module pepper_instance_module
          real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
       end function zzdskumc
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> The function always returns the value .FALSE.
       module logical function zzdskmsc ( ctx, bodyid, surfid, framid, corsys, corpar, et, cor1, cor2 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14561,12 +11784,6 @@ module pepper_instance_module
          real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
       end function zzdskmsc
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> The function returns .TRUE. if and only if the specified segment
-      !> matches the body ID set via [[zzdskmsc]].
       module logical function zzdskmmc ( ctx, handle, dladsc, dskdsc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14575,11 +11792,6 @@ module pepper_instance_module
          real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
       end function zzdskmmc
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> The function always returns the value .FALSE.
       module logical function zzdsksrc ( ctx, surfid, bodyid, dclass, et, framid, pos )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14591,12 +11803,6 @@ module pepper_instance_module
          real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
       end function zzdsksrc
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> The function returns .TRUE. if and only if the specified segment
-      !> matches the body ID set via [[zzdsksrc]].
       module logical function zzdskmrc ( ctx, handle, dladsc, dskdsc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14605,20 +11811,12 @@ module pepper_instance_module
          real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
       end function zzdskmrc
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> The function returns the maximum radius of the segment.
       module real(wp) function zzdsksgr ( ctx, dskdsc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: dskdsc ( * )  !! is a DSK descriptor.
       end function zzdsksgr
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzedterm ( ctx, type, a, b, c, srcrad, srcpos, npts, trmpts )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14632,9 +11830,6 @@ module pepper_instance_module
          real(wp), intent(out) :: trmpts ( 3, npts )  !! Terminator point set.
       end subroutine zzedterm
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzedtmpt ( ctx, umbral, a, b, c, r, axis, plnvec, point )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14648,9 +11843,6 @@ module pepper_instance_module
          real(wp), intent(out) :: point  ( 3 )  !! Terminator point.
       end subroutine zzedtmpt
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzellbds ( ctx, a, b, hmax, hmin, amax, bmax, amin, bmin )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14664,9 +11856,6 @@ module pepper_instance_module
          real(wp), intent(out) :: bmin  !! Inner spheroid's semi-minor axis length.
       end subroutine zzellbds
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzelnaxx ( ctx, a, b, lat, xxpt, yxpt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14677,7 +11866,6 @@ module pepper_instance_module
          real(wp), intent(out) :: yxpt  !! Normal line intercept on the Y-axis.
       end subroutine zzelnaxx
 
-      !> Return the 1976 IAU Earth precession matrix for a specified time.
       module subroutine zzeprcss ( ctx, et, precm )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14685,9 +11873,6 @@ module pepper_instance_module
          real(wp), intent(out) :: precm ( 3, 3 )  !! Precession matrix at ET.
       end subroutine zzeprcss
 
-      !> Given a the "lines" of a two-line element set, parse the
-      !> lines and return the elements in units suitable for use
-      !> in SPICE software.
       module subroutine zzgetelm ( ctx, frstyr, lines, epoch, elems, ok, error )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14699,17 +11884,12 @@ module pepper_instance_module
          character(*), intent(out) :: error  !! String describing error.
       end subroutine zzgetelm
 
-      !> Constants assignments equivalent to 21 July 2006 "getgravconst"
-      !> by David Vallado, AIAA-2006-6753.
       module subroutine zzgrav ( ctx, grav )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(out) :: grav( ngravs, ngravc )  !! Array of geophysical constants.
       end subroutine zzgrav
 
-      !> SPICE private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzholdd ( ctx, op, id, ok, value )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14719,11 +11899,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: value  !! Double precision value returned or to store.
       end subroutine zzholdd
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> MARGIN     P   Minimum complement of FOV cone angle.
       module subroutine zzhullax ( ctx, inst, n, bounds, axis )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14733,11 +11908,6 @@ module pepper_instance_module
          real(wp), intent(out) :: axis   ( 3 )  !! Instrument FOV axis vector.
       end subroutine zzhullax
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns .TRUE. if the voxel is inside the grid.
       module logical function zzingrd ( ctx, nvox, voxel )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14745,11 +11915,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: voxel ( 3 )  !! Coordinates of voxel in voxel grid units.
       end function zzingrd
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> NONE       P   Meaning: exclude nothing.
       module subroutine zzinrec ( ctx, p, bounds, margin, exclud, inside )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14760,9 +11925,6 @@ module pepper_instance_module
          logical, intent(out) :: inside  !! Flag indicating whether point is in element.
       end subroutine zzinrec
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzinrypl ( ctx, vertex, udir, uplnml, const, maxd, nxpts, xpt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14775,9 +11937,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xpt    ( 3 )  !! Intersection point, if NXPTS = 1.
       end subroutine zzinrypl
 
-      !> Create a bounding box for a latitudinal volume element.
-      !>
-      !> MARGIN     P   Angular margin.
       module subroutine zzlatbox ( ctx, bounds, center, lr, lt, lz, radius )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14789,9 +11948,6 @@ module pepper_instance_module
          real(wp), intent(out) :: radius  !! Radius of box.
       end subroutine zzlatbox
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzlexmet ( ctx, method, maxn, n, begs, ends )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14802,9 +11958,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: ends   ( * )  !! Ending indices of tokens.
       end subroutine zzlexmet
 
-      !> Safely calculate the value A*B, avoiding the possibility
-      !> of floating point exceptions (FPE) due to numeric underflow
-      !> or numeric overflow.
       module real(wp) function zzmult ( ctx, a, b )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14812,9 +11965,6 @@ module pepper_instance_module
          real(wp), intent(in) :: b  !! Multiplicand.
       end function zzmult
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zznrmlon ( ctx, inmin, inmax, tol, outmin, outmax )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14825,9 +11975,6 @@ module pepper_instance_module
          real(wp), intent(out) :: outmax  !! Adjusted longitude interval upper bound.
       end subroutine zznrmlon
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzrecbox ( ctx, bounds, center, lx, ly, lz, radius )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14839,9 +11986,6 @@ module pepper_instance_module
          real(wp), intent(out) :: radius  !! Radius of box.
       end subroutine zzrecbox
 
-      !> Given a vector, return a transformation matrix that maps from the
-      !> vector's base reference frame to the RTN
-      !> (radial-tangential-normal) frame associated with the vector.
       module subroutine zzrtnmat ( ctx, v, m )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14849,9 +11993,6 @@ module pepper_instance_module
          real(wp), intent(out) :: m ( 3, 3 )  !! Base frame to RTN frame rotation matrix.
       end subroutine zzrtnmat
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzryxsph ( ctx, vertex, udir, r, xpt, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14862,8 +12003,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether intersection exists.
       end subroutine zzryxsph
 
-      !> Routine to calculate the dot terms for the secular perturbation
-      !> of a vehicle.
       module subroutine zzsecprt ( ctx, isynfl, dg, del, xni, omegao, atime, omgdot, xli, xfact, xldot, xndot, xnddt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14881,12 +12020,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xndot  !! Time rate of change of XN
       end subroutine zzsecprt
 
-      !> Compute the angular separation between two spherical or
-      !> point objects.
-      !>
-      !> The function returns the angular separation between two bodies,
-      !> BOD1 and BOD2, with radius R1 and R2 respectively, as seen from
-      !> an observer OBS, possibly corrected for aberration corrections.
       module real(wp) function zzsepq ( ctx, et, bod1, bod2, r1, r2, obs, abcorr, ref )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14900,9 +12033,6 @@ module pepper_instance_module
          character(*), intent(in) :: ref  !! Reference frame of the angular separation
       end function zzsepq
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzsfxcor ( ctx, udnear, udmaxr, udrayx, trgcde, et, abcorr, uselt, usecn, usestl, xmit, fixref, obscde, dfrcde, dclass, dcentr, dvec, spoint, trgepc, srfvec, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14928,11 +12058,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Found flag.
       end subroutine zzsfxcor
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> UBPL       P   SPICE plane upper bound.
       module subroutine zzsglatx ( ctx, p1, p2, minlat, minp, maxlat, maxp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14944,8 +12069,6 @@ module pepper_instance_module
          real(wp), intent(out) :: maxp   ( 3 )  !! Point where maximum latitude is attained.
       end subroutine zzsglatx
 
-      !> Check/initialize the quantities describing an angular separation
-      !> between two spherical or point objects.
       module subroutine zzspin ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, obsrvr, abcorr, bods, frames, mxrad, obs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14963,9 +12086,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: obs  !! Body/SPK IDs of OBSRVR
       end subroutine zzspin
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zztanslv ( ctx, udcond, udstep, udrefn, cstep, step, start, finish, tol, result, points, endflg, room )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14983,9 +12103,6 @@ module pepper_instance_module
          integer(ip), intent(in), optional :: room  !! SPICELIB's fixed capacity (legacy interface): RESULT and POINTS do not grow, and the errors for lack of room are SPICELIB's.
       end subroutine zztanslv
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zztogrid ( ctx, modxyz, voxori, voxsiz, grdxyz )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14995,14 +12112,6 @@ module pepper_instance_module
          real(wp), intent(out) :: grdxyz  ( 3 )  !! Coordinates of point in voxel grid coordinates.
       end subroutine zztogrid
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> UBPL       P   Upper bound of SPICELIB plane array.
-      !>
-      !> The function returns the winding number of the input polygon
-      !> about the input point.
       module integer(ip) function zzwind ( ctx, plane, n, vertcs, point )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15013,12 +12122,6 @@ module pepper_instance_module
          real(wp), intent(in) :: point  ( 3 )  !! Point in PLANE.
       end function zzwind
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> The function returns the winding number of the input polygon
-      !> about the input point.
       module integer(ip) function zzwind2d ( ctx, n, vertcs, point )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15027,8 +12130,6 @@ module pepper_instance_module
          real(wp), intent(in) :: point  ( 2 )  !! Point in PLANE.
       end function zzwind2d
 
-      !> Compute the Jacobian matrix of the transformation from
-      !> rectangular to planetographic coordinates.
       module subroutine dpgrdr ( ctx, body, x, y, z, re, f, jacobi )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15041,8 +12142,6 @@ module pepper_instance_module
          real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
       end subroutine dpgrdr
 
-      !> Compute the Jacobian matrix of the transformation from
-      !> planetographic to rectangular coordinates.
       module subroutine drdpgr ( ctx, body, lon, lat, alt, re, f, jacobi )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15055,11 +12154,6 @@ module pepper_instance_module
          real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
       end subroutine drdpgr
 
-      !> Calculate the time derivative of the separation angle between
-      !> two input states, S1 and S2.
-      !>
-      !> The function returns the time derivative of the separation angle
-      !> between the two input states, S1 and S2.
       module real(wp) function dvsep ( ctx, s1, s2 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15067,9 +12161,6 @@ module pepper_instance_module
          real(wp), intent(in) :: s2 (6)  !! State vector of the second body.
       end function dvsep
 
-      !> Compute a set of points on the umbral or penumbral terminator of
-      !> a specified target body, where the target shape is modeled as an
-      !> ellipsoid.
       module subroutine edterm ( ctx, trmtyp, source, target, et, fixref, abcorr, obsrvr, npts, trgepc, obspos, trmpts )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15086,8 +12177,6 @@ module pepper_instance_module
          real(wp), intent(out) :: trmpts ( 3, npts )  !! Terminator point set.
       end subroutine edterm
 
-      !> Parse the "lines" of a two-line element set, returning the
-      !> elements in units suitable for use in SPICE software.
       module subroutine getelm ( ctx, frstyr, lines, epoch, elems )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15097,8 +12186,6 @@ module pepper_instance_module
          real(wp), intent(out) :: elems ( 10 )  !! The elements converted to SPICE units.
       end subroutine getelm
 
-      !> Return the field-of-view (FOV) parameters for a specified
-      !> instrument. The instrument is specified by name.
       module subroutine getfvn ( ctx, inst, room, shape, frame, bsight, n, bounds )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15111,12 +12198,6 @@ module pepper_instance_module
          real(wp), intent(out) :: bounds ( 3, * )  !! FOV boundary vectors.
       end subroutine getfvn
 
-      !> The field of view of an instrument given by its ID code, with all
-      !> its boundary vectors and a frame name of any length (PEPPER;
-      !> [[getfov]] with the size taken from the pool). Bound as the generic
-      !> `fov`.
-      !>
-      !> The errors are those of [[getfov]], except SPICE(BOUNDARYTOOBIG).
       module subroutine fov_by_code ( ctx, instid, shape, frame, bsight, bounds )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15127,11 +12208,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: bounds(:,:)  !! the boundary vectors, shape (3, n) (n = 0 after an error)
       end subroutine fov_by_code
 
-      !> The field of view of an instrument given by name, with all its
-      !> boundary vectors and a frame name of any length (PEPPER; [[getfvn]]
-      !> with the size taken from the pool). Bound as the generic `fov`.
-      !>
-      !> The errors are those of [[getfvn]], except SPICE(BOUNDARYTOOBIG).
       module subroutine fov_by_name ( ctx, inst, shape, frame, bsight, bounds )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15142,8 +12218,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: bounds(:,:)  !! the boundary vectors, shape (3, n) (n = 0 after an error)
       end subroutine fov_by_name
 
-      !> Scan a string from a specified starting position for the
-      !> end of a decimal number.
       module subroutine lx4dec ( ctx, string, first, last, nchar )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15153,10 +12227,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: nchar  !! number of characters in the decimal number.
       end subroutine lx4dec
 
-      !> Determine the set of osculating conic orbital elements that
-      !> corresponds to the state (position, velocity) of a body at some
-      !> epoch. In additional to the classical elements, return the true
-      !> anomaly, semi-major axis, and period, if applicable.
       module subroutine oscltx ( ctx, state, et, mu, elts )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15166,7 +12236,6 @@ module pepper_instance_module
          real(wp), intent(out) :: elts   ( *  )  !! Extended set of classical conic elements.
       end subroutine oscltx
 
-      !> Convert planetographic coordinates to rectangular coordinates.
       module subroutine pgrrec ( ctx, body, lon, lat, alt, re, f, rectan )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15179,7 +12248,6 @@ module pepper_instance_module
          real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of the point.
       end subroutine pgrrec
 
-      !> Convert rectangular coordinates to planetographic coordinates.
       module subroutine recpgr ( ctx, body, rectan, re, f, lon, lat, alt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15192,8 +12260,6 @@ module pepper_instance_module
          real(wp), intent(out) :: alt  !! Altitude of the point above reference spheroid.
       end subroutine recpgr
 
-      !> Find semi-axis vectors of an ellipse generated by two arbitrary
-      !> three-dimensional vectors.
       module subroutine saelgv ( ctx, vec1, vec2, smajor, sminor )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15203,10 +12269,6 @@ module pepper_instance_module
          real(wp), intent(out) :: sminor ( 3 )  !! Semi-minor axis of ellipse.
       end subroutine saelgv
 
-      !> Parse a character representation of spacecraft clock time and
-      !> encode it as a double precision number.
-      !>
-      !> MXPART     P   Maximum number of spacecraft clock partitions.
       module subroutine scpars ( ctx, sc, sclkch, error, msg, sclkdp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15217,9 +12279,6 @@ module pepper_instance_module
          real(wp), intent(out) :: sclkdp  !! Encoded representation of the clock count.
       end subroutine scpars
 
-      !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine [[subpnt]]. This routine is supported for purposes of
-      !> backward compatibility only.
       module subroutine subpt ( ctx, method, target, et, abcorr, obsrvr, spoint, alt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15232,9 +12291,6 @@ module pepper_instance_module
          real(wp), intent(out) :: alt  !! Altitude of the observer above the target body.
       end subroutine subpt
 
-      !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine [[subslr]]. This routine is supported for purposes of
-      !> backward compatibility only.
       module subroutine subsol ( ctx, method, target, et, abcorr, obsrvr, spoint )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15246,8 +12302,6 @@ module pepper_instance_module
          real(wp), intent(out) :: spoint ( 3 )  !! Sub-solar point on the target body.
       end subroutine subsol
 
-      !> Find the state (position and velocity) of the surface intercept
-      !> defined by a specified ray, ray velocity, and ellipsoid.
       module subroutine surfpv ( ctx, stvrtx, stdir, a, b, c, stx, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15260,19 +12314,12 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether intercept state was found.
       end subroutine surfpv
 
-      !> Write a line of text to standard output.
       module subroutine tostdo ( ctx, line )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          character(*), intent(in) :: line  !! is a line of text to be written to standard output
       end subroutine tostdo
 
-      !> Compute the angular separation in radians between two spherical
-      !> or point objects.
-      !>
-      !> The function returns the angular separation between two targets,
-      !> TARG1 and TARG2, as seen from an observer OBSRVR, possibly
-      !> corrected for aberration corrections.
       module real(wp) function trgsep ( ctx, et, targ1, shape1, frame1, targ2, shape2, frame2, obsrvr, abcorr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15287,8 +12334,6 @@ module pepper_instance_module
          character(*), intent(in) :: abcorr  !! Aberration corrections flag.
       end function trgsep
 
-      !> Return .TRUE. if the derivative of the callback function UDFUNC
-      !> at a given abscissa value is negative.
       module subroutine uddc ( ctx, udfunc, x, dx, isdecr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15298,8 +12343,6 @@ module pepper_instance_module
          logical, intent(out) :: isdecr  !! Boolean indicating if the derivative is negative.
       end subroutine uddc
 
-      !> Write the value of a variable in a double precision symbol
-      !> table to a NAIF ASCII kernel file.
       module subroutine wrkvar ( ctx, unit, name, dirctv, tabsym, tabptr, tabval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15312,10 +12355,6 @@ module pepper_instance_module
          real(wp), intent(in) :: tabval     ( lbcell:* )  !! Double precision symbol table.
       end subroutine wrkvar
 
-      !> Return a list of voxels that a given ray intersects in a given
-      !> voxel grid.
-      !>
-      !> GRDTOL     P   Tolerance for vertex distance from grid.
       module subroutine xdda ( ctx, vertex, raydir, grdext, maxnvx, nvx, voxlst )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15327,11 +12366,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: voxlst ( 3, * )  !! List of voxels intersected by ray.
       end subroutine xdda
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> BIG        P   Limit on magnitude of coefficients and UB.
       module subroutine zzcnquad ( ctx, a, b, c, ub, n, r1, r2 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15344,9 +12378,6 @@ module pepper_instance_module
          real(wp), intent(out) :: r2  !! Root of larger absolute value.
       end subroutine zzcnquad
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzdsksph ( ctx, bodyid, nsurf, srflst, minrad, maxrad )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15357,11 +12388,6 @@ module pepper_instance_module
          real(wp), intent(out) :: maxrad  !! Radius of outer bounding sphere for body.
       end subroutine zzdsksph
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> MARGIN     P   Minimum complement of FOV cone angle.
       module subroutine zzfovaxi ( ctx, inst, n, bounds, axis )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15371,16 +12397,6 @@ module pepper_instance_module
          real(wp), intent(out) :: axis   ( 3 )  !! Instrument FOV axis vector.
       end subroutine zzfovaxi
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> ANGMRG     P   Angular rounding margin.
-      !> LONALI     P   Longitude shift margin.
-      !> NONE       P   Meaning: exclude nothing.
-      !> LONIDX     P   Longitude index. Also used for exclusion.
-      !> LATIDX     P   Latitude index. Also used for exclusion.
-      !> RADIDX     P   Radius index. Also used for exclusion.
       module subroutine zzinlat0 ( ctx, r, lon, lat, bounds, exclud, inside )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15392,8 +12408,6 @@ module pepper_instance_module
          logical, intent(out) :: inside  !! Flag indicating whether point is in element.
       end subroutine zzinlat0
 
-      !> Entrance for deep space initialization.  This section is called
-      !> once per element set.
       module subroutine zzdpinit ( ctx, ao, xlldot, omgdot, xnodot, xnodp, elems )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15405,7 +12419,6 @@ module pepper_instance_module
          real(wp), intent(in) :: xnodp  !! Original mean motion
       end subroutine zzdpinit
 
-      !> Entrance for deep space secular effects
       module subroutine zzdpsec ( ctx, xll, omgasm, xnodes, em, xinc, xn, t, elems, omgdot )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15420,7 +12433,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: xnodes  !! Perturbed argument of ascending node
       end subroutine zzdpsec
 
-      !> Entrances for lunar-solar periodics
       module subroutine zzdpper ( ctx, t, em, xinc, omgasm, xnodes, xll )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15432,13 +12444,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: xnodes  !! Perturbed argument of ascending node
       end subroutine zzdpper
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> LT         P   Code indicating latitude of P < LAT.
-      !> EQ         P   Code indicating latitude of P = LAT.
-      !> GT         P   Code indicating latitude of P > LAT.
       module subroutine zzpdcmpl ( ctx, re, f, p, lat, rel )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15449,13 +12454,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: rel  !! Relation code.
       end subroutine zzpdcmpl
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> The function returns .TRUE. if the sign of the planetodetic
-      !> latitude of the input point matches that of the input
-      !> planetodetic latitude.
       module logical function zzpdpltc ( ctx, re, f, p, lat )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15465,9 +12463,6 @@ module pepper_instance_module
          real(wp), intent(in) :: lat  !! Planetodetic latitude.
       end function zzpdpltc
 
-      !> Create a bounding box for a planetodetic volume element.
-      !>
-      !> ANGMRG     P   Angular margin.
       module subroutine zzpdtbox ( ctx, bounds, corpar, center, lr, lt, lz, radius )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15480,9 +12475,6 @@ module pepper_instance_module
          real(wp), intent(out) :: radius  !! Radius of box.
       end subroutine zzpdtbox
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzraybox ( ctx, vertex, raydir, boxori, extent, xpt, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15494,20 +12486,12 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether intercept was found.
       end subroutine zzraybox
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> PEPPER: fills SRF (SPICELIB returned arrays of MXNSRF entries and
-      !> their hash tables; see [[surface_names]]).
       module subroutine zzsrfker ( ctx, srf )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          type(surface_names), intent(inout) :: srf  !! the surface names from the kernel pool
       end subroutine zzsrfker
 
-      !> Form a SPICE ellipse from a center vector and two generating
-      !> vectors.
       module subroutine cgv2el ( ctx, center, vec1, vec2, ellips )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15518,9 +12502,6 @@ module pepper_instance_module
          real(wp), intent(out) :: ellips ( ubel )  !! The SPICE ellipse defined by the input vectors.
       end subroutine cgv2el
 
-      !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine [[evsgp4]]. *ALL* TLE evaluations should use that routine.
-      !> NAIF supports [[dpspce]] only for backward compatibility.
       module subroutine dpspce ( ctx, et, geophs, elems, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15530,8 +12511,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state  ( 6  )  !! State vector at ET.
       end subroutine dpspce
 
-      !> Compute the local solar time for a given ephemeris epoch ET
-      !> for an object on the surface of a body at a specified longitude.
       module subroutine et2lst ( ctx, et, body, lon, type, hr, mn, sc, time, ampm )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15546,8 +12525,6 @@ module pepper_instance_module
          character(*), intent(out) :: ampm  !! String giving time on A.M./ P.M. scale
       end subroutine et2lst
 
-      !> Compute the points of intersection of a specified nappe of a cone
-      !> and a line segment.
       module subroutine incnsg ( ctx, apex, axis, angle, endpt1, endpt2, nxpts, xpt1, xpt2 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15561,8 +12538,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xpt2   ( 3 )  !! Second intersection point, if it exists.
       end subroutine incnsg
 
-      !> Scan a string from a specified starting position for the
-      !> end of a number.
       module subroutine lx4num ( ctx, string, first, last, nchar )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15572,10 +12547,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: nchar  !! number of characters in the number.
       end subroutine lx4num
 
-      !> Read the next variable from a SPICE ASCII kernel file into a
-      !> double precision symbol table.
-      !>
-      !> LINLEN     P   Maximum line length.
       module subroutine rdkvar ( ctx, tabsym, tabptr, tabval, name, eof )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15587,7 +12558,6 @@ module pepper_instance_module
          logical, intent(out) :: eof  !! End of file indicator.
       end subroutine rdkvar
 
-      !> Transform a state between coordinate systems.
       module subroutine xfmsta ( ctx, istate, icosys, ocosys, body, ostate )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15598,9 +12568,6 @@ module pepper_instance_module
          real(wp), intent(out) :: ostate(6)  !! Converted output state.
       end subroutine xfmsta
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzilusta ( ctx, method, target, illum, et, fixref, abcorr, obsrvr, spoint, normal, phssta, incsta, emista )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15618,17 +12585,6 @@ module pepper_instance_module
          real(wp), intent(out) :: emista ( 2 )  !! Emission angle state.
       end subroutine zzilusta
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> LATMRG     P   Margin for latitude near the poles.
-      !> LONALI     P   Longitude shift margin.
-      !> ANGMRG     P   Angular rounding margin.
-      !> NONE       P   Meaning: exclude nothing.
-      !> LONIDX     P   Longitude index. Also used for exclusion.
-      !> LATIDX     P   Latitude index. Also used for exclusion.
-      !> RADIDX     P   Radius index. Also used for exclusion.
       module subroutine zzinlat ( ctx, p, bounds, margin, exclud, inside )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15639,16 +12595,6 @@ module pepper_instance_module
          logical, intent(out) :: inside  !! Flag indicating whether point is in element.
       end subroutine zzinlat
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> ANGMRG     P   Angular rounding margin.
-      !> LONALI     P   Longitude alias margin.
-      !> NONE       P   Meaning: exclude nothing.
-      !> LONIDX     P   Longitude index. Also used for exclusion.
-      !> LATIDX     P   Latitude index. Also used for exclusion.
-      !> ALTIDX     P   Altitude index. Also used for exclusion.
       module subroutine zzinpdt0 ( ctx, p, lon, bounds, corpar, exclud, inside )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15660,9 +12606,6 @@ module pepper_instance_module
          logical, intent(out) :: inside  !! Flag indicating whether point is in element.
       end subroutine zzinpdt0
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzrytrec ( ctx, vertex, raydir, bounds, margin, nxpts, xpt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15674,9 +12617,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xpt    ( 3 )  !! Intercept.
       end subroutine zzrytrec
 
-      !> Create a bounding box for a DSK segment volume element.
-      !> The outputs are the box's center and radius. The center
-      !> is relative to the segment's frame center.
       module subroutine zzsegbox ( ctx, dskdsc, boxctr, maxr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15685,9 +12625,6 @@ module pepper_instance_module
          real(wp), intent(out) :: maxr  !! Radius of box.
       end subroutine zzsegbox
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzsrfn2c ( ctx, srfnam, bodyid, surfid, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15697,9 +12634,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Found flag.
       end subroutine zzsrfn2c
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzsrfc2n ( ctx, surfid, bodyid, srfnam, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15709,10 +12643,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Found flag.
       end subroutine zzsrfc2n
 
-      !> The name of a surface from its ID code and body, of any length
-      !> (PEPPER; the body of [[zzsrfc2n]], which truncates to its argument's
-      !> length). Unlike [[srfc2s]], a surface without a name gives an empty
-      !> NAME, not the code as a string.
       module subroutine surface_name ( ctx, code, body, name, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15722,9 +12652,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! the surface has a name
       end subroutine surface_name
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzsrftrk ( ctx, usrctr, update )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15732,7 +12659,6 @@ module pepper_instance_module
          logical, intent(out) :: update  !! Update flag.
       end subroutine zzsrftrk
 
-      !> Find the intersection of a triaxial ellipsoid and a plane.
       module subroutine inedpl ( ctx, a, b, c, plane, ellips, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15746,7 +12672,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether ellipse was found.
       end subroutine inedpl
 
-      !> Project an ellipse onto a plane, orthogonally.
       module subroutine pjelpl ( ctx, elin, plane, elout )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15757,11 +12682,6 @@ module pepper_instance_module
          real(wp), intent(out) :: elout ( ubel )  !! A SPICE ellipse resulting from the projection.
       end subroutine pjelpl
 
-      !> Translate a surface ID code, together with a body ID code, to the
-      !> corresponding surface name. If no such name exists, return a
-      !> string representation of the surface ID code.
-      !>
-      !> SFNMLN     P   Maximum length of surface name.
       module subroutine srfc2s ( ctx, code, bodyid, srfstr, isname )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15771,11 +12691,6 @@ module pepper_instance_module
          logical, intent(out) :: isname  !! Logical flag indicating output is a surface name.
       end subroutine srfc2s
 
-      !> Translate a surface ID code, together with a body string, to the
-      !> corresponding surface name. If no such surface name exists,
-      !> return a string representation of the surface ID code.
-      !>
-      !> SFNMLN     P   Maximum length of surface name.
       module subroutine srfcss ( ctx, code, bodstr, srfstr, isname )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15785,9 +12700,6 @@ module pepper_instance_module
          logical, intent(out) :: isname  !! Flag indicating whether output is a surface name.
       end subroutine srfcss
 
-      !> Translate a surface string, together with a body string, to the
-      !> corresponding surface ID code. The input strings may contain
-      !> names or integer ID codes.
       module subroutine srfs2c ( ctx, srfstr, bodstr, code, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15797,9 +12709,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether surface ID was found.
       end subroutine srfs2c
 
-      !> Translate a surface string, together with a body ID code, to the
-      !> corresponding surface ID code. The input surface string may
-      !> contain a name or an integer ID code.
       module subroutine srfscc ( ctx, srfstr, bodyid, code, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15809,9 +12718,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether surface ID was found.
       end subroutine srfscc
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzdsksba ( ctx, bodyid, maxbod, stsize, btbody, btnbod, btsegp, btstsz, sthan, stdscr, stdlad, stfree, stoff, stctr, strad )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15831,12 +12737,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: strad  ( * )  !! Radii of bounding spheres for segments.
       end subroutine zzdsksba
 
-      !> Determine whether a specified ellipse intersects the pyramid
-      !> defined by a polygonal field of view.
-      !>
-      !> UBEL       P   Upper bound of SPICELIB ellipse array.
-      !> UBPL       P   Upper bound of SPICELIB plane array.
-      !> MAXFOV     P   Maximum number of boundary vectors.
       module subroutine zzelvupy ( ctx, ellips, vertex, axis, n, bounds, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15849,16 +12749,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether intersection was found.
       end subroutine zzelvupy
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> LONALI     P   Longitude shift margin.
-      !> NONE       P   Meaning: exclude nothing.
-      !> LONIDX     P   Longitude index. Also used for exclusion.
-      !> LATIDX     P   Latitude index. Also used for exclusion.
-      !> ALTIDX     P   Altitude index. Also used for exclusion.
-      !> LATMRG     P   High/low latitude margin.
       module subroutine zzinpdt ( ctx, p, bounds, corpar, margin, exclud, inside )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15870,13 +12760,6 @@ module pepper_instance_module
          logical, intent(out) :: inside  !! Flag indicating whether point is in element.
       end subroutine zzinpdt
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> LONIDX     P   Longitude index.
-      !> LATIDX     P   Latitude index.
-      !> RADIDX     P   Radius index.
       module subroutine zzrytlat ( ctx, vertex, raydir, bounds, margin, nxpts, xpt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15888,8 +12771,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xpt    ( 3 )  !! Intercept.
       end subroutine zzrytlat
 
-      !> Find the limb of a triaxial ellipsoid, viewed from a specified
-      !> point.
       module subroutine edlimb ( ctx, a, b, c, viewpt, limb )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15901,11 +12782,6 @@ module pepper_instance_module
          real(wp), intent(out) :: limb   ( ubel )  !! Limb of ellipsoid as seen from viewing point.
       end subroutine edlimb
 
-      !> Find nearest point on a triaxial ellipsoid to a specified line,
-      !> and the distance from the ellipsoid to the line.
-      !>
-      !> UBEL       P   Upper bound of array containing SPICE ellipse.
-      !> UBPL       P   Upper bound of array containing SPICE plane.
       module subroutine npedln ( ctx, a, b, c, linept, linedr, pnear, dist )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15918,9 +12794,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dist  !! Distance of ellipsoid from line
       end subroutine npedln
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzinvelt ( ctx, p, corsys, corpar, bounds, margin, exclud, inside )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15933,11 +12806,6 @@ module pepper_instance_module
          logical, intent(out) :: inside  !! Flag indicating whether point is in element.
       end subroutine zzinvelt
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> MAXSRF     P   DSK subsystem maximum surface list size.
       module subroutine zzprsmet ( ctx, bodyid, method, mxnsrf, shape, subtyp, pri, nsurf, srflst, pntdef, trmtyp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15953,13 +12821,6 @@ module pepper_instance_module
          character(*), intent(out) :: trmtyp  !! Terminator type.
       end subroutine zzprsmet
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> LONIDX     P   Longitude index.
-      !> LATIDX     P   Latitude index.
-      !> ALTIDX     P   Altitude index.
       module subroutine zzrytpdt ( ctx, vertex, raydir, bounds, corpar, margin, nxpts, xpt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15972,11 +12833,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xpt    ( 3 )  !! Intercept.
       end subroutine zzrytpdt
 
-      !> Determine the plate ID and body-fixed coordinates of the
-      !> intersection of a specified ray with the surface defined by a
-      !> type 2 DSK plate model.
-      !>
-      !> XFRACT     P   Plate expansion fraction.
       module subroutine dskx02 ( ctx, handle, dladsc, vertex, raydir, plid, xpt, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -15989,9 +12845,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether intercept exists.
       end subroutine dskx02
 
-      !> **Deprecated:** This routine has been superseded by the SPICELIB
-      !> routine [[sincpt]]. This routine is supported for purposes of
-      !> backward compatibility only.
       module subroutine srfxpt ( ctx, method, target, et, abcorr, obsrvr, dref, dvec, spoint, dist, trgepc, obspos, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16009,10 +12862,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether intercept was found.
       end subroutine srfxpt
 
-      !> Compute, for a given observer, ray emanating from the observer,
-      !> and target, the "tangent point": the point on the ray nearest
-      !> to the target's surface. Also compute the point on the target's
-      !> surface nearest to the tangent point.
       module subroutine tangpt ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, dref, dvec, tanpt, alt, range, srfpt, trgepc, srfvec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16033,20 +12882,6 @@ module pepper_instance_module
          real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to surface point SRFPT.
       end subroutine tangpt
 
-      !> Indicate whether one triaxial ellipsoid is occulted by another as
-      !> seen from a specified viewing location.
-      !>
-      !> UBEL       P   Upper bound of SPICELIB ellipse data structure.
-      !> UBPL       P   Upper bound of SPICELIB plane data structure.
-      !>
-      !> The function returns an integer code indicating the geometric
-      !> relationship of the three bodies.  Negative codes indicate that
-      !> the first target is partially or fully occulted by the second;
-      !> positive codes indicate that the second target is partially
-      !> or fully occulted by the first; a value of zero indicates no
-      !> occultation.
-      !>
-      !> See Detailed_Output for the list of codes and meanings.
       module integer(ip) function zzocced ( ctx, viewpt, centr1, semax1, centr2, semax2 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16057,12 +12892,6 @@ module pepper_instance_module
          real(wp), intent(in) :: semax2 ( 3, 3 )  !! Semi-major axis matrix for second ellipsoid.
       end function zzocced
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> PTMEMM     P   Default margin for point-plate distance.
-      !> XFRACT     P   Default plate expansion fraction.
       module subroutine zzptpl02 ( ctx, handle, dladsc, dskdsc, point, plid, plate, verts, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16076,9 +12905,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Found flag.
       end subroutine zzptpl02
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzrytelt ( ctx, vertex, raydir, dskdsc, margin, nxpts, xpt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16090,9 +12916,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xpt    ( 3 )  !! Intercept.
       end subroutine zzrytelt
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzdskbun ( ctx, bodyid, nsurf, srflst, et, fixfid, nseg, hanbuf, dlabuf, dskbuf, offbuf, ctrbuf, radbuf, point, normal )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16112,9 +12935,6 @@ module pepper_instance_module
          real(wp), intent(out) :: normal ( 3 )  !! Outward unit normal vector at surface point.
       end subroutine zzdskbun
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzdsksgx ( ctx, handle, dladsc, dtype, et, vertex, raydir, xpt, dc, ic, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16130,11 +12950,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Found flag.
       end subroutine zzdsksgx
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> SGREED     P   Default segment boundary margin.
       module subroutine zzdskbux ( ctx, bodyid, nsurf, srflst, et, fixfid, nseg, hanbuf, dlabuf, dskbuf, offbuf, ctrbuf, radbuf, vertex, raydir, xpt, segidx, dc, ic, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16159,9 +12974,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Found flag. True if and only if intercept exists.
       end subroutine zzdskbux
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzsbfxr ( ctx, bodyid, nsurf, srflst, et, fixfid, vertex, raydir, xpt, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16176,9 +12988,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Found flag. True if intercept exists.
       end subroutine zzsbfxr
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzsbfxri ( ctx, bodyid, nsurf, srflst, et, fixfid, vertex, raydir, xpt, handle, dladsc, dskdsc, dc, ic, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16198,9 +13007,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Found flag. True if intercept exists.
       end subroutine zzsbfxri
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzsbfnrm ( ctx, bodyid, nsurf, srflst, et, fixfid, point, normal )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16213,14 +13019,6 @@ module pepper_instance_module
          real(wp), intent(out) :: normal ( 3 )  !! Unit length outward normal at input point.
       end subroutine zzsbfnrm
 
-      !> Compute a ray-surface intercept using data provided by
-      !> multiple loaded DSK segments. Return information about
-      !> the source of the data defining the surface on which the
-      !> intercept was found: DSK handle, DLA and DSK descriptors,
-      !> and DSK data type-dependent parameters.
-      !>
-      !> DCSIZE     P   Required size of DC array.
-      !> ICSIZE     P   Required size of IC array.
       module subroutine dskxsi ( ctx, pri, target, nsurf, srflst, et, fixref, vertex, raydir, maxd, maxi, xpt, handle, dladsc, dskdsc, dc, ic, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16243,8 +13041,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Found flag.
       end subroutine dskxsi
 
-      !> Compute ray-surface intercepts for a set of rays, using data
-      !> provided by multiple loaded DSK segments.
       module subroutine dskxv ( ctx, pri, target, nsurf, srflst, et, fixref, nrays, vtxarr, dirarr, xptarr, fndarr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16261,8 +13057,6 @@ module pepper_instance_module
          logical, intent(out) :: fndarr ( * )  !! Found flag array.
       end subroutine dskxv
 
-      !> Find the illumination angles (phase, incidence, and
-      !> emission) at a specified surface point of a target body.
       module subroutine illumg ( ctx, method, target, ilusrc, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16281,10 +13075,6 @@ module pepper_instance_module
          real(wp), intent(out) :: emissn  !! Emission angle at the surface point.
       end subroutine illumg
 
-      !> Map array of surface points on a specified target body to
-      !> the corresponding unit length outward surface normal vectors.
-      !>
-      !> PTMEMM     P   Default point-surface membership margin.
       module subroutine srfnrm ( ctx, method, target, et, fixref, npts, srfpts, normls )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16297,20 +13087,12 @@ module pepper_instance_module
          real(wp), intent(out) :: normls ( 3, * )  !! Array of outward, unit length normal vectors.
       end subroutine srfnrm
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzsuelin ( ctx, trgcde )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: trgcde  !! Target body ID code.
       end subroutine zzsuelin
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> MAXSRF     P   Maximum size of surface ID list.
       module subroutine zzsudski ( ctx, trgcde, nsurf, srflst, fixfid )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16320,9 +13102,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: fixfid  !! Target body-fixed frame ID.
       end subroutine zzsudski
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzraysfx ( ctx, vertex, raydir, et, spoint, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16333,27 +13112,18 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Found flag. .TRUE. if intercept exists.
       end subroutine zzraysfx
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzmaxrad ( ctx, maxrad )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(out) :: maxrad  !! Radius of outer bounding sphere for target body.
       end subroutine zzmaxrad
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzminrad ( ctx, minrad )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(out) :: minrad  !! Radius of inner bounding sphere for target body.
       end subroutine zzminrad
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzraynp ( ctx, vertex, raydir, et, pnear, dist )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16364,11 +13134,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dist  !! Distance between near point and ray.
       end subroutine zzraynp
 
-      !> Compute the illumination angles---phase, incidence, and
-      !> emission---at a specified point on a target body. Return logical
-      !> flags indicating whether the surface point is visible from
-      !> the observer's position and whether the surface point is
-      !> illuminated.
       module subroutine illumf ( ctx, method, target, ilusrc, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn, visibl, lit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16389,8 +13154,6 @@ module pepper_instance_module
          logical, intent(out) :: lit  !! Illumination flag (.TRUE. = illuminated).
       end subroutine illumf
 
-      !> Find the illumination angles (phase, solar incidence, and
-      !> emission) at a specified surface point of a target body.
       module subroutine ilumin ( ctx, method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16408,8 +13171,6 @@ module pepper_instance_module
          real(wp), intent(out) :: emissn  !! Emission angle at the surface point.
       end subroutine ilumin
 
-      !> Map array of planetocentric longitude/latitude coordinate pairs
-      !> to surface points on a specified target body.
       module subroutine latsrf ( ctx, method, target, et, fixref, npts, lonlat, srfpts )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16422,10 +13183,6 @@ module pepper_instance_module
          real(wp), intent(out) :: srfpts ( 3, * )  !! Array of surface points.
       end subroutine latsrf
 
-      !> Compute, for a given observer and a ray emanating from the
-      !> observer, the surface intercept of the ray on a target body at
-      !> a specified epoch, optionally corrected for light time and
-      !> stellar aberration.
       module subroutine sincpt ( ctx, method, target, et, fixref, abcorr, obsrvr, dref, dvec, spoint, trgepc, srfvec, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16443,9 +13200,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether intercept was found.
       end subroutine sincpt
 
-      !> Compute the rectangular coordinates of the sub-observer point on
-      !> a target body at a specified epoch, optionally corrected for
-      !> light time and stellar aberration.
       module subroutine subpnt ( ctx, method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16460,9 +13214,6 @@ module pepper_instance_module
          real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to sub-observer point.
       end subroutine subpnt
 
-      !> Compute the rectangular coordinates of the sub-solar point on
-      !> a target body at a specified epoch, optionally corrected for
-      !> light time and stellar aberration.
       module subroutine subslr ( ctx, method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16477,15 +13228,6 @@ module pepper_instance_module
          real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to sub-solar point.
       end subroutine subslr
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> ELLSHP     P   Ellipsoid shape code.
-      !> DSKSHP     P   DSK shape code.
-      !> LMBCRV     P   Limb code.
-      !> UMBRAL     P   Umbral terminator code.
-      !> PNMBRL     P   Penumbral terminator code.
       module subroutine zztanini ( ctx, curve, srcrad, shape, trgcde, nsurf, srflst, fixfid, et, plnvec, axis )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16501,9 +13243,6 @@ module pepper_instance_module
          real(wp), intent(in) :: axis   ( 3 )  !! Axis vector: edge of cutting half-plane.
       end subroutine zztanini
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zztansta ( ctx, angle, ocultd, point )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16512,15 +13251,6 @@ module pepper_instance_module
          real(wp), intent(out) :: point  ( 3 )  !! Tangent point on target.
       end subroutine zztansta
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> ELLSHP     P   Ellipsoid shape code.
-      !> DSKSHP     P   DSK shape code.
-      !> LMBCRV     P   Limb code.
-      !> UMBRAL     P   Umbral terminator code.
-      !> PNMBRL     P   Penumbral terminator code.
       module subroutine zztangnt ( ctx, curve, srcrad, shape, trgcde, nsurf, srflst, fixfid, et, plnvec, axis, schstp, soltol, result, points )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16540,10 +13270,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(inout) :: points ( :, : )  !! Array of tangent points. Grows (PEPPER).
       end subroutine zztangnt
 
-      !> Find limb points on a target body. The limb is the set of points
-      !> of tangency on the target of rays emanating from the observer.
-      !> The caller specifies half-planes bounded by the observer-target
-      !> center vector in which to search for limb points.
       module subroutine limbpt ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, tangts )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16566,9 +13292,6 @@ module pepper_instance_module
          real(wp), intent(out) :: tangts ( 3, * )  !! Tangent vectors emanating from the observer.
       end subroutine limbpt
 
-      !> Find terminator points on a target body. The caller specifies
-      !> half-planes, bounded by the illumination source center-target
-      !> center vector, in which to search for terminator points.
       module subroutine termpt ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, trmvcs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16592,12 +13315,6 @@ module pepper_instance_module
          real(wp), intent(out) :: trmvcs ( 3, * )  !! Terminator vectors emanating from the observer.
       end subroutine termpt
 
-      !> Limb points on a target body, without a limit on their number
-      !> (PEPPER; [[limbpt]] without MAXN). The outputs are allocated to
-      !> the number of points found.
-      !>
-      !> The errors are those of [[limbpt]], without SPICE(OUTOFROOM) and the
-      !> checks of MAXN; NCUTS must be positive.
       module subroutine limb_points ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, tangts )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16618,12 +13335,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: epochs(:)  !! the epochs of the points
          real(wp), allocatable, intent(out) :: tangts(:,:)  !! the tangent vectors from the observer to the points, shape (3, n)
       end subroutine limb_points
-      !> Terminator points on a target body, without a limit on their
-      !> number (PEPPER; [[termpt]] without MAXN). The outputs are allocated
-      !> to the number of points found.
-      !>
-      !> The errors are those of [[termpt]], without SPICE(OUTOFROOM) and the
-      !> checks of MAXN; NCUTS must not be negative.
       module subroutine terminator_points ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, trmvcs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16645,9 +13356,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: epochs(:)  !! the epochs of the points
          real(wp), allocatable, intent(out) :: trmvcs(:,:)  !! the vectors from the observer to the points, shape (3, n)
       end subroutine terminator_points
-      !> The work of [[limb_points]] and [[limbpt]] (PEPPER: the body of
-      !> SPICELIB's LIMBPT with outputs that grow). The outputs hold NOUT
-      !> points.
       module subroutine limb_points_body ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, tangts, nout )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16669,9 +13377,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: tangts(:,:)  !! the tangent vectors from the observer to the points, shape (3, n)
          integer(ip), intent(out) :: nout  !! the number of points stored in the outputs (their size may be larger)
       end subroutine limb_points_body
-      !> The work of [[terminator_points]] and [[termpt]] (PEPPER: the
-      !> body of SPICELIB's TERMPT with outputs that grow). The outputs hold
-      !> NOUT points.
       module subroutine terminator_points_body ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, trmvcs, nout )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16709,28 +13414,17 @@ module pepper_instance_module
 
    interface
 
-      !> Serve as a placeholder for an interrupt detection function.
-      !>
-      !> The function returns the value .FALSE. in all cases.
       module logical function gfbail ( ctx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
       end function gfbail
 
-      !> Override the default GF convergence value used in the high
-      !> level GF routines.
-      !>
-      !> ZZPUT      P   [[zzholdd]] stores a DP value.
-      !> GF_TOL     P   [[zzholdd]] acts on the GF subsystem tolerance.
       module subroutine gfstol ( ctx, value )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: value  !! Double precision value returned or to store.
       end subroutine gfstol
 
-      !> SPICE private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzgfcoq ( ctx, vecdef, method, trgid, et, ref, abcorr, obsid, dref, dvec, crdsys, ctrid, re, f, crdnam, value, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16752,9 +13446,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating if coordinate was computed.
       end subroutine zzgfcoq
 
-      !> SPICE private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzgfcprx ( ctx, state, corsys, re, f, sense, cdsign )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16766,9 +13457,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: cdsign ( 3 )  !! Velocity sign vector.
       end subroutine zzgfcprx
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzgfdiq ( ctx, targid, et, abcorr, obsid, dist )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16779,9 +13467,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dist  !! Distance between target and observer.
       end subroutine zzgfdiq
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzgfdsps ( ctx, nlead, string, fmt, ntrail )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16791,8 +13476,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: ntrail  !! Number of trailing blank lines to write.
       end subroutine zzgfdsps
 
-      !> Perform initialization functions for visibility state
-      !> determination.
       module subroutine zzgffvin ( ctx, inst, tshape, raydir, target, tframe, abcorr, obsrvr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16805,7 +13488,6 @@ module pepper_instance_module
          character(*), intent(in) :: obsrvr  !! Name of the observing body.
       end subroutine zzgffvin
 
-      !> Indicate whether the target is currently in the instrument FOV.
       module subroutine zzgffvst ( ctx, time, vistat )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16813,7 +13495,6 @@ module pepper_instance_module
          logical, intent(out) :: vistat  !! .TRUE. if the object is visible, .FALSE. otherwise.
       end subroutine zzgffvst
 
-      !> Initialize the GF illumination angle constraint search utilities.
       module subroutine zzgfilin ( ctx, method, angtyp, target, illum, fixref, abcorr, obsrvr, spoint )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16827,8 +13508,6 @@ module pepper_instance_module
          real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
       end subroutine zzgfilin
 
-      !> Indicate whether a specified illumination angle is decreasing at
-      !> a specified time.
       module subroutine zzgfildc ( ctx, udfunc, et, decres )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16837,7 +13516,6 @@ module pepper_instance_module
          procedure(gf_scalar) :: udfunc  !! Placeholder external routine argument.
       end subroutine zzgfildc
 
-      !> Return the specified illumination angle at a specified epoch.
       module subroutine zzgfilgq ( ctx, et, angle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16845,8 +13523,6 @@ module pepper_instance_module
          real(wp), intent(out) :: angle  !! Illumination angle at time ET.
       end subroutine zzgfilgq
 
-      !> Perform initialization functions for occultation state
-      !> determination.
       module subroutine zzgfocin ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, obsrvr, abcorr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16861,7 +13537,6 @@ module pepper_instance_module
          character(*), intent(in) :: abcorr  !! Aberration correction flag.
       end subroutine zzgfocin
 
-      !> See if the object is currently occulted.
       module subroutine zzgfocst ( ctx, time, ocstat )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16869,9 +13544,6 @@ module pepper_instance_module
          logical, intent(out) :: ocstat  !! .TRUE. if the object is occulted, .FALSE. otherwise.
       end subroutine zzgfocst
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzgfpaq ( ctx, et, targ, illmn, obs, abcorr, value )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16883,22 +13555,12 @@ module pepper_instance_module
          real(wp), intent(out) :: value  !! Value of phase angle.
       end subroutine zzgfpaq
 
-      !> SPICE private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> ZZPUT      P   [[zzholdd]] stores a DP value.
-      !> [[gf_ref]]     P   [[zzholdd]] acts on the reference value
-      !> for a GF search.
       module subroutine zzgfref ( ctx, refval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: refval  !! The value to set as the reference value.
       end subroutine zzgfref
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzgfrrq ( ctx, et, targ, obs, abcorr, value )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16909,9 +13571,6 @@ module pepper_instance_module
          real(wp), intent(out) :: value  !! Value of range rate between objects
       end subroutine zzgfrrq
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzgfsolv ( ctx, udcond, udstep, udrefn, bail, udbail, cstep, step, start, finish, tol, rpt, udrepu, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16931,9 +13590,6 @@ module pepper_instance_module
          procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
       end subroutine zzgfsolv
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzgfsolvx ( ctx, udfuns, udfunb, udstep, udrefn, bail, udbail, cstep, step, start, finish, tol, rpt, udrepu, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16954,9 +13610,6 @@ module pepper_instance_module
          procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
       end subroutine zzgfsolvx
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzgfspq ( ctx, et, targ1, targ2, r1, r2, obs, abcorr, ref, value )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16971,8 +13624,6 @@ module pepper_instance_module
          real(wp), intent(out) :: value  !! Value of angular separation between objects
       end subroutine zzgfspq
 
-      !> This routine initializes variables that describe an angular
-      !> separation event of interest for solution by [[zzgfsolv]].
       module subroutine zzgfspin ( ctx, of, from, shape, frame, abcorr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16983,8 +13634,6 @@ module pepper_instance_module
          character(*), intent(in) :: abcorr  !! Aberration correction flag.
       end subroutine zzgfspin
 
-      !> Computes whether or not the angular separation between SVBOD1 and
-      !> SVBOD2 is decreasing at time ET.
       module subroutine zzgfspdc ( ctx, udfunc, et, decres )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16993,8 +13642,6 @@ module pepper_instance_module
          procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfspdc
 
-      !> Determine the angular separation between the limbs of the two
-      !> bodies.
       module subroutine zzgfspgq ( ctx, et, sep )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17002,7 +13649,6 @@ module pepper_instance_module
          real(wp), intent(out) :: sep  !! Separation at time ET.
       end subroutine zzgfspgq
 
-      !> Retrieve values set in [[zzgfspin]].
       module subroutine zzgfspx ( ctx, xabcr, xbod, yref, xref, xobs, xrad, xshp )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17015,9 +13661,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: xshp  (2)  !! Saved values SVSHP1 and SVSHP2.
       end subroutine zzgfspx
 
-      !> SPICE private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzgfssin ( ctx, method, trgid, et, fixref, abcorr, obsid, dref, dctr, dvec, radii, state, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17035,9 +13678,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether state was found.
       end subroutine zzgfssin
 
-      !> SPICE private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzgfssob ( ctx, method, trgid, et, fixref, abcorr, obsid, radii, state )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17051,13 +13691,6 @@ module pepper_instance_module
          real(wp), intent(out) :: state  ( 6 )  !! State used to define coordinates.
       end subroutine zzgfssob
 
-      !> SPICE private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> ZZGET      P   [[zzholdd]] retrieves a stored DP value.
-      !> [[gf_ref]]     P   [[zzholdd]] acts on the reference value
-      !> for a GF search.
       module subroutine zzgfudlt ( ctx, udfunc, et, isless )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17066,9 +13699,6 @@ module pepper_instance_module
          procedure(gf_scalar) :: udfunc  !! Name of the routine that computes the scalar value of interest at ET.
       end subroutine zzgfudlt
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzgfwsts ( ctx, wndw1, wndw2, inclsn, wndw3 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17079,8 +13709,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: wndw3 ( lbcell : * )  !! Result of sifting WNDW1 through WNDW2.
       end subroutine zzgfwsts
 
-      !> Determine if a specified ray is within the field-of-view (FOV) of
-      !> a specified instrument at a given time.
       module subroutine fovray ( ctx, inst, raydir, rframe, abcorr, obsrvr, et, visibl )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17093,8 +13721,6 @@ module pepper_instance_module
          logical, intent(out) :: visibl  !! Visibility flag (.TRUE./.FALSE.).
       end subroutine fovray
 
-      !> Determine if a specified ephemeris object is within the
-      !> field-of-view (FOV) of a specified instrument at a given time.
       module subroutine fovtrg ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, et, visibl )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17108,13 +13734,6 @@ module pepper_instance_module
          logical, intent(out) :: visibl  !! Visibility flag (.TRUE./.FALSE.).
       end subroutine fovtrg
 
-      !> Determine time intervals when a specified target body or ray
-      !> intersects the space bounded by the field-of-view (FOV) of a
-      !> specified instrument. Report progress and handle interrupts if so
-      !> commanded.
-      !>
-      !> LBCELL     P   SPICE Cell lower bound.
-      !> MAXVRT     P   Maximum number of FOV boundary vertices.
       module subroutine gffove ( ctx, inst, tshape, raydir, target, tframe, abcorr, obsrvr, tol, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17139,11 +13758,6 @@ module pepper_instance_module
          procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
       end subroutine gffove
 
-      !> Determine time intervals when an observer sees one target
-      !> occulted by another. Report progress and handle interrupts
-      !> if so commanded.
-      !>
-      !> LBCELL     P   SPICE Cell lower bound.
       module subroutine gfocce ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, obsrvr, tol, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17170,9 +13784,6 @@ module pepper_instance_module
          procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
       end subroutine gfocce
 
-      !> Determine the occultation condition (not occulted, partially
-      !> occulted, etc.) of one target relative to another target as seen
-      !> by an observer at a given time.
       module subroutine occult ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, et, ocltid )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17188,10 +13799,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: ocltid  !! Occultation identification code.
       end subroutine occult
 
-      !> Compute the apparent phase angle for a target, observer,
-      !> illuminator set of ephemeris objects.
-      !>
-      !> The function returns the value of phase angle.
       module real(wp) function phaseq ( ctx, et, target, illmn, obsrvr, abcorr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17202,9 +13809,6 @@ module pepper_instance_module
          character(*), intent(in) :: abcorr  !! Aberration correction flag.
       end function phaseq
 
-      !> SPICE private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
       module subroutine zzgfcost ( ctx, vecdef, method, trgid, et, ref, abcorr, obsid, dref, dctr, dvec, radii, state, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17223,7 +13827,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating if state was computed.
       end subroutine zzgfcost
 
-      !> Initialize the GF distance constraint search utilities.
       module subroutine zzgfdiin ( ctx, target, abcorr, obsrvr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17232,8 +13835,6 @@ module pepper_instance_module
          character(*), intent(in) :: obsrvr  !! Observer name.
       end subroutine zzgfdiin
 
-      !> Indicate whether the observer-target distance is decreasing at a
-      !> specified time.
       module subroutine zzgfdidc ( ctx, udfunc, et, decres )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17242,8 +13843,6 @@ module pepper_instance_module
          procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfdidc
 
-      !> Return the distance between the target and observer
-      !> at a specified epoch.
       module subroutine zzgfdigq ( ctx, et, dist )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17251,8 +13850,6 @@ module pepper_instance_module
          real(wp), intent(out) :: dist  !! Distance at time ET.
       end subroutine zzgfdigq
 
-      !> This is the initialization entry point used for describing
-      !> the event that is to be solved for by [[zzgfsolv]].
       module subroutine zzgfpain ( ctx, target, illmn, abcorr, obsrvr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17262,8 +13859,6 @@ module pepper_instance_module
          character(*), intent(in) :: obsrvr  !! Name of the observing body.
       end subroutine zzgfpain
 
-      !> Computes whether or not the phase angle between the observer
-      !> and the target is decreasing at time ET.
       module subroutine zzgfpadc ( ctx, udfunc, et, decres )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17272,8 +13867,6 @@ module pepper_instance_module
          procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfpadc
 
-      !> Determine the phase angle between the centers of the two
-      !> bodies.
       module subroutine zzgfpagq ( ctx, et, rvl )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17281,7 +13874,6 @@ module pepper_instance_module
          real(wp), intent(out) :: rvl  !! Phase angle at time ET.
       end subroutine zzgfpagq
 
-      !> Retrieve values set in [[zzgfpain]].
       module subroutine zzgfpax ( ctx, xtarg, xillmn, xabcor, xobs, xablk )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17292,12 +13884,6 @@ module pepper_instance_module
          logical, intent(out) :: xablk  ( nabcor )  !! Saved value for the aberration correction attribute block.
       end subroutine zzgfpax
 
-      !> SPICE private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> LBCELL     P   SPICELIB cell lower bound.
-      !> NWREQ      P   Minimum number of workspace windows.
       module subroutine zzgfrel ( ctx, udstep, udrefn, udqdec, udcond, udfunc, udqref, relate, refval, tol, adjust, cnfine, mw, nw, work, rpt, udrepi, udrepu, udrepf, rptpre, rptsuf, bail, udbail, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17327,12 +13913,6 @@ module pepper_instance_module
          procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
       end subroutine zzgfrel
 
-      !> SPICE private routine intended solely for the support of SPICE
-      !> routines. Users should not call this routine directly due to the
-      !> volatile nature of this routine.
-      !>
-      !> LBCELL     P   SPICELIB cell lower bound.
-      !> NWREQ      P   Minimum number of workspace windows.
       module subroutine zzgfrelx ( ctx, udstep, udrefn, udqdec, udcond, udfunc, relate, refval, tol, adjust, cnfine, mw, nw, work, rpt, udrepi, udrepu, udrepf, rptpre, rptsuf, bail, udbail, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17361,8 +13941,6 @@ module pepper_instance_module
          procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
       end subroutine zzgfrelx
 
-      !> Initialize the work progress utility. This is required prior to
-      !> use of the routine that performs the actual reporting.
       module subroutine zzgftswk ( ctx, total, wait, tcheck, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17373,15 +13951,12 @@ module pepper_instance_module
          character(*), intent(in) :: end  !! Last part of the output message.
       end subroutine zzgftswk
 
-      !> Let the work reporter know that an increment of work has just
-      !> been completed.
       module subroutine zzgfwkin ( ctx, incr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          real(wp), intent(in) :: incr  !! An amount of work just completed.
       end subroutine zzgfwkin
 
-      !> Adjust the frequency with which work progress is reported.
       module subroutine zzgfwkad ( ctx, wait, tcheck, begin, end )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17391,14 +13966,12 @@ module pepper_instance_module
          character(*), intent(in) :: end  !! Last part of the output message.
       end subroutine zzgfwkad
 
-      !> Set the output unit for the progress report.
       module subroutine zzgfwkun ( ctx, unit )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: unit  !! Output logical unit.
       end subroutine zzgfwkun
 
-      !> Return saved progress report parameters.
       module subroutine zzgfwkmo ( ctx, unit, total, wait, tcheck, begin, end, incr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17411,8 +13984,6 @@ module pepper_instance_module
          real(wp), intent(out) :: incr  !! Last progress increment.
       end subroutine zzgfwkmo
 
-      !> This is the initialization entry point used for describing
-      !> the event that is to be solved for by [[zzgfsolv]].
       module subroutine zzgfrrin ( ctx, target, abcorr, obsrvr, dt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17422,8 +13993,6 @@ module pepper_instance_module
          real(wp), intent(in) :: dt  !! Interval from ET for derivative calculation.
       end subroutine zzgfrrin
 
-      !> Computes whether or not the range rate between the observer
-      !> and the target is decreasing at time ET.
       module subroutine zzgfrrdc ( ctx, udfunc, et, decres )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17432,8 +14001,6 @@ module pepper_instance_module
          procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfrrdc
 
-      !> Determine the range rate between the centers of the two
-      !> bodies.
       module subroutine zzgfrrgq ( ctx, et, rvl )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17441,7 +14008,6 @@ module pepper_instance_module
          real(wp), intent(out) :: rvl  !! Range rate at time ET.
       end subroutine zzgfrrgq
 
-      !> Retrieve values set in [[zzgfrrin]].
       module subroutine zzgfrrx ( ctx, xtarg, xabcor, xobs, xdt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17451,9 +14017,6 @@ module pepper_instance_module
          real(wp), intent(out) :: xdt  !! Saved value for DT.
       end subroutine zzgfrrx
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzgfudb ( ctx, udfuns, udfunb, tol, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17473,13 +14036,6 @@ module pepper_instance_module
          procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
       end subroutine zzgfudb
 
-      !> Determine time intervals when an observer sees one target body
-      !> occulted by, or in transit across, another.
-      !>
-      !> LBCELL     P   SPICE Cell lower bound.
-      !> CNVTOL     P   Convergence tolerance.
-      !> ZZGET      P   [[zzholdd]] retrieves a stored DP value.
-      !> GF_TOL     P   [[zzholdd]] acts on the GF subsystem tolerance.
       module subroutine gfoclt ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, obsrvr, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17498,16 +14054,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
       end subroutine gfoclt
 
-      !> Determine time intervals when a specified ray intersects the
-      !> space bounded by the field-of-view (FOV) of a specified
-      !> instrument.
-      !>
-      !> MARGIN     P   Minimum complement of FOV cone angle.
-      !> LBCELL     P   SPICE Cell lower bound.
-      !> CNVTOL     P   Convergence tolerance.
-      !> MAXVRT     P   Maximum number of FOV boundary vertices.
-      !> ZZGET      P   [[zzholdd]] retrieves a stored DP value.
-      !> GF_TOL     P   [[zzholdd]] acts on the GF subsystem tolerance.
       module subroutine gfrfov ( ctx, inst, raydir, rframe, abcorr, obsrvr, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17522,11 +14068,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
       end subroutine gfrfov
 
-      !> Initialize a search progress report.
-      !>
-      !> LBCELL     P   The SPICE cell lower bound.
-      !> MXBEGM     P   Maximum progress report message prefix length.
-      !> MXENDM     P   Maximum progress report message suffix length.
       module subroutine gfrepi ( ctx, window, begmss, endmss )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17536,8 +14077,6 @@ module pepper_instance_module
          character(*), intent(in) :: endmss  !! End of the text portion of output message.
       end subroutine gfrepi
 
-      !> Tell the progress reporting system how far a search has
-      !> progressed.
       module subroutine gfrepu ( ctx, ivbeg, ivend, time )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17546,22 +14085,11 @@ module pepper_instance_module
          real(wp), intent(in) :: time  !! Current time being examined in the search process
       end subroutine gfrepu
 
-      !> Finish a progress report.
-      !>
-      !> None.
       module subroutine gfrepf ( ctx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
       end subroutine gfrepf
 
-      !> Determine time intervals when a specified ephemeris object
-      !> intersects the space bounded by the field-of-view (FOV) of a
-      !> specified instrument.
-      !>
-      !> MARGIN     P   Minimum complement of FOV cone angle.
-      !> LBCELL     P   SPICE Cell lower bound.
-      !> CNVTOL     P   Convergence tolerance.
-      !> MAXVRT     P   Maximum number of FOV boundary vertices.
       module subroutine gftfov ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17577,10 +14105,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
       end subroutine gftfov
 
-      !> Perform a GF search on a user defined boolean quantity.
-      !>
-      !> LBCELL     P   SPICE Cell lower bound.
-      !> CNVTOL     P   Convergence tolerance.
       module subroutine gfudb ( ctx, udfuns, udfunb, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17592,10 +14116,6 @@ module pepper_instance_module
          procedure(gf_boolean) :: udfunb  !! Name of the routine returning the boolean value corresponding to an ET.
       end subroutine gfudb
 
-      !> Perform a GF search on a user defined scalar quantity.
-      !>
-      !> LBCELL     P   SPICE Cell lower bound.
-      !> CNVTOL     P   Convergence tolerance.
       module subroutine gfuds ( ctx, udfuns, udqdec, relate, refval, adjust, step, cnfine, mw, nw, work, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17613,7 +14133,6 @@ module pepper_instance_module
          procedure(gf_decr_x) :: udqdec  !! Name of the routine that computes whether the scalar quantity is decreasing.
       end subroutine gfuds
 
-      !> Initialize a coordinate search.
       module subroutine zzgfcoin ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, crdsys, crdnam )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17629,8 +14148,6 @@ module pepper_instance_module
          character(*), intent(in) :: crdnam  !! Coordinate name.
       end subroutine zzgfcoin
 
-      !> Compute the coordinate defined by the last call to [[zzgfcoin]] is at
-      !> the specified epoch.
       module subroutine zzgfcog ( ctx, et, crdval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17638,8 +14155,6 @@ module pepper_instance_module
          real(wp), intent(out) :: crdval  !! Coordinate at epoch.
       end subroutine zzgfcog
 
-      !> Indicate whether the coordinate defined by the last call to
-      !> [[zzgfcoin]] is decreasing at the specified epoch.
       module subroutine zzgfcodc ( ctx, udfunc, et, decres )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17648,8 +14163,6 @@ module pepper_instance_module
          procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfcodc
 
-      !> Indicate whether the state of coordinate defined by the last call
-      !> to [[zzgfcoin]] is computable at the specified epoch.
       module subroutine zzgfcoex ( ctx, udfunc, et, crdfnd )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17658,8 +14171,6 @@ module pepper_instance_module
          procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfcoex
 
-      !> Compute the cosine of the coordinate defined by the last call to
-      !> [[zzgfcoin]] is at the specified epoch.
       module subroutine zzgfcocg ( ctx, et, crdval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17667,8 +14178,6 @@ module pepper_instance_module
          real(wp), intent(out) :: crdval  !! Cosine of coordinate at epoch.
       end subroutine zzgfcocg
 
-      !> Compute the sine of the coordinate defined by the last call to
-      !> [[zzgfcoin]] is at the specified epoch.
       module subroutine zzgfcosg ( ctx, et, crdval )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17676,8 +14185,6 @@ module pepper_instance_module
          real(wp), intent(out) :: crdval  !! Sine of coordinate at epoch.
       end subroutine zzgfcosg
 
-      !> Indicate whether the cosine of the coordinate defined by the
-      !> last call to [[zzgfcoin]] is decreasing at the specified epoch.
       module subroutine zzgfcocd ( ctx, udfunc, et, decres )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17686,8 +14193,6 @@ module pepper_instance_module
          procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfcocd
 
-      !> Indicate whether the sine of the coordinate defined by the
-      !> last call to [[zzgfcoin]] is decreasing at the specified epoch.
       module subroutine zzgfcosd ( ctx, udfunc, et, decres )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17696,11 +14201,6 @@ module pepper_instance_module
          procedure(gf_scalar) :: udfunc  !! the [[gf_scalar]] routine
       end subroutine zzgfcosd
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
-      !>
-      !> LBCELL     P   Cell lower bound.
       module subroutine zzgflong ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, crdsys, crdnam, relate, refval, tol, adjust, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, mw, nw, work, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17734,10 +14234,6 @@ module pepper_instance_module
          procedure(gf_rep_final) :: udrepf  !! Progress report termination routine.
       end subroutine zzgflong
 
-      !> Perform a coordinate search.
-      !>
-      !> LBCELL     P   Cell lower bound.
-      !> CNTRCT     P   Existence window contraction magnitude.
       module subroutine zzgfcslv ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, crdsys, crdnam, relate, refval, tol, adjust, udstep, udrefn, rpt, udrepi, udrepu, udrepf, bail, udbail, mw, nw, work, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17771,12 +14267,6 @@ module pepper_instance_module
          procedure(gf_rep_final) :: udrepf  !! Progress report termination routine.
       end subroutine zzgfcslv
 
-      !> Determine time intervals when a specified geometric quantity
-      !> satisfies a specified mathematical condition.
-      !>
-      !> MAXPAR     P   Maximum number of parameters required to define
-      !> any quantity.
-      !> CNVTOL     P   Default convergence tolerance.
       module subroutine gfevnt ( ctx, udstep, udrefn, gquant, qnpars, qpnams, qcpars, qdpars, qipars, qlpars, op, refval, tol, adjust, cnfine, rpt, udrepi, udrepu, udrepf, mw, nw, work, bail, udbail, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17807,13 +14297,6 @@ module pepper_instance_module
          procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
       end subroutine gfevnt
 
-      !> The cells of a GF search with windows as arrays (PEPPER): the
-      !> confinement window as a cell, and a result cell and work windows
-      !> of a size that the search cannot exceed. The GF solver finds at
-      !> most one transition per STEP in each confinement interval, so no
-      !> window holds more than B = sum (ceiling(length/STEP) + 2) intervals;
-      !> the cells have room for 2B. Signals SPICE(INSUFFICIENTMEMORY) if
-      !> they cannot be allocated.
       module subroutine gf_cells ( ctx, cnfine, step, cnf, res, mw, work )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17825,14 +14308,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out), optional :: work(:,:)  !! NWMAX empty work windows of size MW
       end subroutine gf_cells
 
-      !> A GF search on the observer-target distance (PEPPER; [[gfdist]] with the confinement
-      !> and result windows as arrays, and without workspace).
-      !>
-      !> The windows that the search needs are sized from the confinement
-      !> window and the step: the solver finds at most one transition per
-      !> step. The errors are those of [[gfdist]], without
-      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
-      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_distance ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17847,14 +14322,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       end subroutine gf_distance
 
-      !> A GF search on a coordinate of a position vector (PEPPER; [[gfposc]] with the confinement
-      !> and result windows as arrays, and without workspace).
-      !>
-      !> The windows that the search needs are sized from the confinement
-      !> window and the step: the solver finds at most one transition per
-      !> step. The errors are those of [[gfposc]], without
-      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
-      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_position ( ctx, target, frame, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17872,14 +14339,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       end subroutine gf_position
 
-      !> A GF search on a coordinate of a sub-observer point (PEPPER; [[gfsubc]] with the confinement
-      !> and result windows as arrays, and without workspace).
-      !>
-      !> The windows that the search needs are sized from the confinement
-      !> window and the step: the solver finds at most one transition per
-      !> step. The errors are those of [[gfsubc]], without
-      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
-      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_subpoint ( ctx, target, fixref, method, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17898,14 +14357,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       end subroutine gf_subpoint
 
-      !> A GF search on a coordinate of a surface intercept vector (PEPPER; [[gfsntc]] with the confinement
-      !> and result windows as arrays, and without workspace).
-      !>
-      !> The windows that the search needs are sized from the confinement
-      !> window and the step: the solver finds at most one transition per
-      !> step. The errors are those of [[gfsntc]], without
-      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
-      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_intercept ( ctx, target, fixref, method, abcorr, obsrvr, dref, dvec, crdsys, coord, relate, refval, adjust, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17926,14 +14377,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       end subroutine gf_intercept
 
-      !> A GF search on the angular separation of two bodies (PEPPER; [[gfsep]] with the confinement
-      !> and result windows as arrays, and without workspace).
-      !>
-      !> The windows that the search needs are sized from the confinement
-      !> window and the step: the solver finds at most one transition per
-      !> step. The errors are those of [[gfsep]], without
-      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
-      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_separation ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17953,14 +14396,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       end subroutine gf_separation
 
-      !> A GF search on occultations or transits (PEPPER; [[gfoclt]] with the confinement
-      !> and result windows as arrays, and without workspace).
-      !>
-      !> The windows that the search needs are sized from the confinement
-      !> window and the step: the solver finds at most one transition per
-      !> step. The errors are those of [[gfoclt]], without
-      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
-      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_occultation ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, obsrvr, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -17978,14 +14413,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       end subroutine gf_occultation
 
-      !> A GF search on an illumination angle (PEPPER; [[gfilum]] with the confinement
-      !> and result windows as arrays, and without workspace).
-      !>
-      !> The windows that the search needs are sized from the confinement
-      !> window and the step: the solver finds at most one transition per
-      !> step. The errors are those of [[gfilum]], without
-      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
-      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_illumination ( ctx, method, angtyp, target, illmn, fixref, abcorr, obsrvr, spoint, relate, refval, adjust, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18005,14 +14432,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       end subroutine gf_illumination
 
-      !> A GF search on the phase angle (PEPPER; [[gfpa]] with the confinement
-      !> and result windows as arrays, and without workspace).
-      !>
-      !> The windows that the search needs are sized from the confinement
-      !> window and the step: the solver finds at most one transition per
-      !> step. The errors are those of [[gfpa]], without
-      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
-      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_phase ( ctx, target, illmn, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18028,14 +14447,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       end subroutine gf_phase
 
-      !> A GF search on the range rate (PEPPER; [[gfrr]] with the confinement
-      !> and result windows as arrays, and without workspace).
-      !>
-      !> The windows that the search needs are sized from the confinement
-      !> window and the step: the solver finds at most one transition per
-      !> step. The errors are those of [[gfrr]], without
-      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
-      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_range_rate ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18050,14 +14461,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       end subroutine gf_range_rate
 
-      !> A GF search on a target in an instrument field of view (PEPPER; [[gftfov]] with the confinement
-      !> and result windows as arrays, and without workspace).
-      !>
-      !> The windows that the search needs are sized from the confinement
-      !> window and the step: the solver finds at most one transition per
-      !> step. The errors are those of [[gftfov]], without
-      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
-      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_target_in_fov ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18072,14 +14475,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       end subroutine gf_target_in_fov
 
-      !> A GF search on a ray in an instrument field of view (PEPPER; [[gfrfov]] with the confinement
-      !> and result windows as arrays, and without workspace).
-      !>
-      !> The windows that the search needs are sized from the confinement
-      !> window and the step: the solver finds at most one transition per
-      !> step. The errors are those of [[gfrfov]], without
-      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
-      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_ray_in_fov ( ctx, inst, raydir, rframe, abcorr, obsrvr, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18093,14 +14488,6 @@ module pepper_instance_module
          real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       end subroutine gf_ray_in_fov
 
-      !> A GF search on a user-defined scalar quantity (PEPPER; [[gfuds]] with the confinement
-      !> and result windows as arrays, and without workspace).
-      !>
-      !> The windows that the search needs are sized from the confinement
-      !> window and the step: the solver finds at most one transition per
-      !> step. The errors are those of [[gfuds]], without
-      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
-      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_user_scalar ( ctx, udfuns, udqdec, relate, refval, adjust, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18114,14 +14501,6 @@ module pepper_instance_module
          procedure(gf_decr_x) :: udqdec  !! Name of the routine that computes whether the scalar quantity is decreasing.
       end subroutine gf_user_scalar
 
-      !> A GF search on a user-defined boolean quantity (PEPPER; [[gfudb]] with the confinement
-      !> and result windows as arrays, and without workspace).
-      !>
-      !> The windows that the search needs are sized from the confinement
-      !> window and the step: the solver finds at most one transition per
-      !> step. The errors are those of [[gfudb]], without
-      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
-      !> allocate signals SPICE(INSUFFICIENTMEMORY).
       module subroutine gf_user_boolean ( ctx, udfuns, udfunb, step, cnfine, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18132,16 +14511,6 @@ module pepper_instance_module
          procedure(gf_boolean) :: udfunb  !! Name of the routine returning the boolean value corresponding to an ET.
       end subroutine gf_user_boolean
 
-      !> A GF search on a geometric quantity, with the caller's step and refinement routines (PEPPER; [[gfevnt]] with the confinement
-      !> and result windows as arrays, and without workspace).
-      !>
-      !> The windows that the search needs are sized from the confinement
-      !> window and the step: the solver finds at most one transition per
-      !> step. The errors are those of [[gfevnt]], without
-      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
-      !> allocate signals SPICE(INSUFFICIENTMEMORY).
-      !> STEP is not used by the search: give the smallest step that UDSTEP
-      !> returns (a smaller one may give SPICE(WINDOWEXCESS)).
       module subroutine gf_event ( ctx, udstep, udrefn, gquant, qnpars, qpnams, qcpars, qdpars, qipars, qlpars, op, refval, tol, adjust, step, cnfine, rpt, udrepi, udrepu, udrepf, bail, udbail, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18169,12 +14538,6 @@ module pepper_instance_module
          procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
       end subroutine gf_event
 
-      !> Determine time intervals over which a specified constraint on
-      !> observer-target distance is met.
-      !>
-      !> LBCELL     P   SPICE Cell lower bound.
-      !> CNVTOL     P   Convergence tolerance.
-      !> NWDIST     P   Number of workspace windows for distance search.
       module subroutine gfdist ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18193,13 +14556,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
       end subroutine gfdist
 
-      !> Determine time intervals over which a specified constraint on
-      !> the observed phase, solar incidence, or emission angle at
-      !> a specified target body surface point is met.
-      !>
-      !> LBCELL     P   SPICE Cell lower bound.
-      !> CNVTOL     P   Convergence tolerance.
-      !> NWILUM     P   Number of workspace windows for angle search.
       module subroutine gfilum ( ctx, method, angtyp, target, illmn, fixref, abcorr, obsrvr, spoint, relate, refval, adjust, step, cnfine, mw, nw, work, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18223,12 +14579,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
       end subroutine gfilum
 
-      !> Determine time intervals for which a specified constraint
-      !> on the phase angle between an illumination source, a target,
-      !> and observer body centers is met.
-      !>
-      !> LBCELL     P   SPICE Cell lower bound.
-      !> CNVTOL     P   Default convergence tolerance.
       module subroutine gfpa ( ctx, target, illmn, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18248,11 +14598,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
       end subroutine gfpa
 
-      !> Determine time intervals for which a coordinate of an
-      !> observer-target position vector satisfies a numerical constraint.
-      !>
-      !> LBCELL     P   SPICE Cell lower bound.
-      !> CNVTOL     P   Convergence tolerance.
       module subroutine gfposc ( ctx, target, frame, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18274,11 +14619,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
       end subroutine gfposc
 
-      !> Determine time intervals for which a specified constraint
-      !> on the observer-target range rate is met.
-      !>
-      !> LBCELL     P   SPICE Cell lower bound.
-      !> CNVTOL     P   Convergence tolerance.
       module subroutine gfrr ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18297,14 +14637,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
       end subroutine gfrr
 
-      !> Determine time intervals when the angular separation between
-      !> the position vectors of two target bodies relative to an observer
-      !> satisfies a numerical relationship.
-      !>
-      !> LBCELL     P   SPICE Cell lower bound.
-      !> CNVTOL     P   Convergence tolerance.
-      !> ZZGET      P   [[zzholdd]] retrieves a stored DP value.
-      !> GF_TOL     P   [[zzholdd]] acts on the GF subsystem tolerance.
       module subroutine gfsep ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18328,14 +14660,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
       end subroutine gfsep
 
-      !> Determine time intervals for which a coordinate of a
-      !> surface intercept position vector satisfies a numerical
-      !> constraint.
-      !>
-      !> LBCELL     P   SPICE Cell lower bound.
-      !> CNVTOL     P   Convergence tolerance.
-      !> ZZGET      P   [[zzholdd]] retrieves a stored DP value.
-      !> GF_TOL     P   [[zzholdd]] acts on the GF subsystem tolerance.
       module subroutine gfsntc ( ctx, target, fixref, method, abcorr, obsrvr, dref, dvec, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18360,11 +14684,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
       end subroutine gfsntc
 
-      !> Determine time intervals for which a coordinate of an
-      !> subpoint position vector satisfies a numerical constraint.
-      !>
-      !> LBCELL     P   SPICE Cell lower bound.
-      !> CNVTOL     P   Convergence tolerance.
       module subroutine gfsubc ( ctx, target, fixref, method, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18408,15 +14727,12 @@ module pepper_instance_module
 
    interface
 
-      !> Close an E-kernel.
       module subroutine ekcls ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! EK file handle.
       end subroutine ekcls
 
-      !> Return shadowing status of a specified EK file. THIS IS A
-      !> STUB ROUTINE.
       module subroutine ekshdw ( ctx, handle, isshad )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18424,9 +14740,6 @@ module pepper_instance_module
          logical, intent(out) :: isshad  !! Logical flag indicating whether EK is shadowed.
       end subroutine ekshdw
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekcdsc ( ctx, handle, segdsc, column, coldsc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18436,7 +14749,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: coldsc ( cdscsz )  !! Descriptor for specified column.
       end subroutine zzekcdsc
 
-      !> Look up the name of a column, given the column's descriptor.
       module subroutine zzekcnam ( ctx, handle, coldsc, column )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18445,9 +14757,6 @@ module pepper_instance_module
          character(*), intent(out) :: column  !! Column name.
       end subroutine zzekcnam
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekgei ( ctx, handle, addrss, ival )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18456,7 +14765,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: ival  !! Decoded integer value.
       end subroutine zzekgei
 
-      !> Return the status of a specified EK record.
       module subroutine zzekgrs ( ctx, handle, recptr, status )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18465,9 +14773,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: status  !! Status of specified EK record.
       end subroutine zzekgrs
 
-      !> Determine the order of elements in a character EK column,
-      !> using dictionary ordering on character data values and array
-      !> indices.
       module subroutine zzekordc ( ctx, cvals, nullok, nlflgs, nvals, iorder )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18478,9 +14783,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: iorder ( * )  !! Order vector for CVALS.
       end subroutine zzekordc
 
-      !> Determine the order of elements in a double precision EK column,
-      !> using dictionary ordering on d.p. data values and array
-      !> indices.
       module subroutine zzekordd ( ctx, dvals, nullok, nlflgs, nvals, iorder )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18491,8 +14793,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: iorder ( * )  !! Order vector for DVALS.
       end subroutine zzekordd
 
-      !> Determine the order of elements in an integer EK column, using
-      !> dictionary ordering on integer data values and array indices.
       module subroutine zzekordi ( ctx, ivals, nullok, nlflgs, nvals, iorder )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18503,7 +14803,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: iorder ( * )  !! Order vector for IVALS.
       end subroutine zzekordi
 
-      !> Parse a declaration of a new EK column.
       module subroutine zzekpdec ( ctx, decl, pardsc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18511,8 +14810,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: pardsc ( * )  !! Partial column descriptor.
       end subroutine zzekpdec
 
-      !> Check that an EK is valid for a specified type of access by the
-      !> paging system.
       module subroutine zzekpgch ( ctx, handle, access )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18520,9 +14817,6 @@ module pepper_instance_module
          character(*), intent(in) :: access  !! Access type.
       end subroutine zzekpgch
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekqini ( ctx, isize, dsize, eqryi, eqryc, eqryd )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18534,8 +14828,6 @@ module pepper_instance_module
          real(wp), intent(inout) :: eqryd ( * )  !! D.p. component of query.
       end subroutine zzekqini
 
-      !> Back up a modified EK record belonging to a shadowed EK.
-      !> This is a stub routine.
       module subroutine zzekrbck ( ctx, action, handle, segdsc, coldsc, recno )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18546,9 +14838,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: recno  !! Record number.
       end subroutine zzekrbck
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekreqi ( ctx, eqryi, name, value )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18558,15 +14847,12 @@ module pepper_instance_module
          integer(ip), intent(out) :: value  !! Value of item.
       end subroutine zzekreqi
 
-      !> Obtain last address in use in EK scratch area.
       module subroutine zzekstop ( ctx, top )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(out) :: top  !! EK scratch area stack top.
       end subroutine zzekstop
 
-      !> Push the contents of an integer array onto the EK scratch area
-      !> stack.
       module subroutine zzekspsh ( ctx, n, idata )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18574,8 +14860,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: idata ( * )  !! Integer data.
       end subroutine zzekspsh
 
-      !> Pop a specified number of elements from the top of the EK scratch
-      !> area stack, transferring this data to an integer array.
       module subroutine zzekspop ( ctx, n, idata )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18583,15 +14867,12 @@ module pepper_instance_module
          integer(ip), intent(out) :: idata ( * )  !! Integer data.
       end subroutine zzekspop
 
-      !> Decrement the EK scratch area stack pointer by a specified count.
       module subroutine zzeksdec ( ctx, n )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: n  !! Decrement count.
       end subroutine zzeksdec
 
-      !> Update the contents of a range of addresses already in use in the
-      !> EK scratch area.
       module subroutine zzeksupd ( ctx, beg, end, idata )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18600,7 +14881,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: idata ( * )  !! Integer data.
       end subroutine zzeksupd
 
-      !> Read from a range of addresses in the EK scratch area.
       module subroutine zzeksrd ( ctx, beg, end, idata )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18609,16 +14889,11 @@ module pepper_instance_module
          integer(ip), intent(out) :: idata ( * )  !! Integer data.
       end subroutine zzeksrd
 
-      !> Clean up:  re-initialize the EK scratch area; unload the
-      !> scratch file.
-      !>
-      !> None.
       module subroutine zzekscln ( ctx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
       end subroutine zzekscln
 
-      !> Scan tokens in an EK query.
       module subroutine zzekscan ( ctx, query, maxntk, maxnum, ntoken, tokens, lxbegs, lxends, values, numvls, chrbuf, chbegs, chends, scnerr, errmsg )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18638,9 +14913,6 @@ module pepper_instance_module
          character(*), intent(out) :: errmsg  !! Scan error description.
       end subroutine zzekscan
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzeksei ( ctx, handle, addrss, ival )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18649,11 +14921,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: ival  !! Integer value to write.
       end subroutine zzeksei
 
-      !> Determine the type of segment required to support a specified
-      !> set of columns.
-      !>
-      !> The function returns the type of segment that is compatible with
-      !> the input column descriptors.
       module integer(ip) function zzekstyp ( ctx, ncols, cdscrs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18661,10 +14928,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: cdscrs ( cdscsz, * )  !! Descriptors of columns.
       end function zzekstyp
 
-      !> Return the size of a specified entry in a class 4 column.
-      !>
-      !> The function returns the number of elements in the specified
-      !> column entry.
       module integer(ip) function zzeksz04 ( ctx, handle, segdsc, coldsc, recptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18674,10 +14937,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
       end function zzeksz04
 
-      !> Return the size of a specified entry in a class 5 column.
-      !>
-      !> The function returns the number of elements in the specified
-      !> column entry.
       module integer(ip) function zzeksz05 ( ctx, handle, segdsc, coldsc, recptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18687,9 +14946,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
       end function zzeksz05
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzektcnv ( ctx, timstr, et, error, errmsg )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18699,9 +14955,6 @@ module pepper_instance_module
          character(*), intent(out) :: errmsg  !! Error message.
       end subroutine zzektcnv
 
-      !> Locate the first occurrence of a specified token in a tokenized
-      !> EK query.  The input may actually be any subset of token codes
-      !> and corresponding keyword codes from a tokenized query.
       module subroutine zzektloc ( ctx, tokid, kwcode, ntoken, tokens, values, loc, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18714,9 +14967,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether token was found.
       end subroutine zzektloc
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekweqi ( ctx, name, value, eqryi )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18726,7 +14976,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
       end subroutine zzekweqi
 
-      !> Open an existing E-kernel file for reading.
       module subroutine ekopr ( ctx, fname, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18734,7 +14983,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Handle attached to EK file.
       end subroutine ekopr
 
-      !> Open an existing E-kernel file for writing.
       module subroutine ekopw ( ctx, fname, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18742,7 +14990,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Handle attached to EK file.
       end subroutine ekopw
 
-      !> Get the companion pointer of a specified EK record.
       module subroutine zzekgrcp ( ctx, handle, recptr, ptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18751,9 +14998,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: ptr  !! Pointer to companion of specified EK record.
       end subroutine zzekgrcp
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekinqc ( ctx, value, length, lexbeg, lexend, eqryi, eqryc, descr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18767,9 +15011,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: descr  ( * )  !! Descriptor for value.
       end subroutine zzekinqc
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekinqn ( ctx, value, type, lexbeg, lexend, eqryi, eqryd, descr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18783,27 +15024,18 @@ module pepper_instance_module
          integer(ip), intent(out) :: descr  ( * )  !! Descriptor for value.
       end subroutine zzekinqn
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekjsqz ( ctx, jrsbas )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: jrsbas  !! Scratch area base address of join row set.
       end subroutine zzekjsqz
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekpgin ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! DAS file handle.
       end subroutine zzekpgin
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekpgan ( ctx, handle, type, p, base )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18813,9 +15045,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: base  !! DAS base address of page.
       end subroutine zzekpgan
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekpgal ( ctx, handle, type, p, base )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18825,9 +15054,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: base  !! DAS base address of page.
       end subroutine zzekpgal
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekpgfr ( ctx, handle, type, p )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18836,9 +15062,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: p  !! Page number.
       end subroutine zzekpgfr
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekpgrc ( ctx, handle, p, pagec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18847,9 +15070,6 @@ module pepper_instance_module
          character(*), intent(out) :: pagec  !! Character page.
       end subroutine zzekpgrc
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekpgrd ( ctx, handle, p, paged )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18858,9 +15078,6 @@ module pepper_instance_module
          real(wp), intent(out) :: paged ( * )  !! Double precision page.
       end subroutine zzekpgrd
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekpgri ( ctx, handle, p, pagei )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18869,9 +15086,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: pagei ( * )  !! Integer page.
       end subroutine zzekpgri
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekpgwc ( ctx, handle, p, pagec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18880,9 +15094,6 @@ module pepper_instance_module
          character(*), intent(in) :: pagec  !! Character page.
       end subroutine zzekpgwc
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekpgwd ( ctx, handle, p, paged )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18891,9 +15102,6 @@ module pepper_instance_module
          real(wp), intent(in) :: paged ( * )  !! Double precision page.
       end subroutine zzekpgwd
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekpgwi ( ctx, handle, p, pagei )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18902,9 +15110,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: pagei ( * )  !! Integer page.
       end subroutine zzekpgwi
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekpgbs ( ctx, type, p, base )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18913,9 +15118,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: base  !! DAS base address of page.
       end subroutine zzekpgbs
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekpgpg ( ctx, type, addrss, p, base )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18925,9 +15127,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: base  !! DAS base address of page.
       end subroutine zzekpgpg
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekpgst ( ctx, handle, stat, value )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18936,9 +15135,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: value  !! Value of requested statistic.
       end subroutine zzekpgst
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekqcnj ( ctx, eqryi, n, size )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18948,9 +15144,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: size  !! Size of Nth conjunction in WHERE clause.
       end subroutine zzekqcnj
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekqcon ( ctx, eqryi, eqryc, eqryd, n, cnstyp, ltname, ltidx, lcname, lcidx, opcode, rtname, rtidx, rcname, rcidx, dtype, cbeg, cend, dval, ival )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18976,9 +15169,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: ival  !! RHS integer value.
       end subroutine zzekqcon
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekqord ( ctx, eqryi, eqryc, n, table, tabidx, column, colidx, sense )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -18993,9 +15183,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: sense  !! Code giving order sense for Nth column.
       end subroutine zzekqord
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekqsel ( ctx, eqryi, eqryc, n, lxbeg, lxend, table, tabidx, column, colidx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19011,9 +15198,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: colidx  !! Index of column in TABLE, if known.
       end subroutine zzekqsel
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekqtab ( ctx, eqryi, eqryc, n, table, alias )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19025,9 +15209,6 @@ module pepper_instance_module
          character(*), intent(out) :: alias  !! Alias of Nth table in FROM clause.
       end subroutine zzekqtab
 
-      !> Read a column entry from a specified record in a class 9 column.
-      !> Class 9 columns contain fixed record count, fixed-length,
-      !> scalar character values.
       module subroutine zzekrd09 ( ctx, handle, segdsc, coldsc, recno, cvlen, cval, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19040,7 +15221,6 @@ module pepper_instance_module
          logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine zzekrd09
 
-      !> Set the companion pointer of a specified EK record.
       module subroutine zzeksrcp ( ctx, handle, recptr, recno )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19049,7 +15229,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: recno  !! Record number of companion of specified EK record.
       end subroutine zzeksrcp
 
-      !> Set the status of a specified EK record.
       module subroutine zzeksrs ( ctx, handle, recptr, status )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19058,10 +15237,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: status  !! Status of specified EK record.
       end subroutine zzeksrs
 
-      !> Return the size of a specified entry in a class 6 column.
-      !>
-      !> The function returns the number of elements in the specified
-      !> column entry.
       module integer(ip) function zzeksz06 ( ctx, handle, segdsc, coldsc, recptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19071,8 +15246,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
       end function zzeksz06
 
-      !> Given a union of EK join row sets, prepare EKVCAL to
-      !> compute addresses of row vectors in that union.
       module subroutine zzekvset ( ctx, njrs, bases )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19080,9 +15253,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: bases  ( * )  !! EK scratch area base addresses of join row sets.
       end subroutine zzekvset
 
-      !> Find the EK scratch area base address of a row vector and the
-      !> corresponding segment vector, where the row vector has a
-      !> specified index within a union of join row sets.
       module subroutine zzekvcal ( ctx, rwvidx, rwvbas, sgvbas )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19091,7 +15261,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: sgvbas  !! Base address of parent segment vector.
       end subroutine zzekvcal
 
-      !> Return the forward data pointer for a specified EK data page.
       module subroutine zzekgfwd ( ctx, handle, type, p, fward )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19101,7 +15270,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: fward  !! Forward data pointer.
       end subroutine zzekgfwd
 
-      !> Return the link count for a specified EK data page.
       module subroutine zzekglnk ( ctx, handle, type, p, nlinks )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19111,7 +15279,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: nlinks  !! Number of links to page.
       end subroutine zzekglnk
 
-      !> Convert the WHERE clause of an EK query to a normalized form.
       module subroutine zzeknrml ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, eqryi, eqryc, eqryd, error, prserr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19132,7 +15299,6 @@ module pepper_instance_module
          character(*), intent(out) :: prserr  !! Parse error message.
       end subroutine zzeknrml
 
-      !> Set the forward data pointer for a specified EK data page.
       module subroutine zzeksfwd ( ctx, handle, type, p, fward )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19142,7 +15308,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: fward  !! Forward data pointer.
       end subroutine zzeksfwd
 
-      !> Set the link count for a specified EK data page.
       module subroutine zzekslnk ( ctx, handle, type, p, nlinks )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19152,8 +15317,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: nlinks  !! Number of links to page.
       end subroutine zzekslnk
 
-      !> Execute a 1-3 split:  split the root node to create two new
-      !> children, leaving a single key in the root.
       module subroutine zzektr13 ( ctx, handle, tree )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19161,8 +15324,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: tree  !! Root of tree.
       end subroutine zzektr13
 
-      !> Execute a 3-1 merge:  move the contents of two children into
-      !> the root node and delete the children.
       module subroutine zzektr31 ( ctx, handle, tree )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19170,17 +15331,12 @@ module pepper_instance_module
          integer(ip), intent(in) :: tree  !! Root of tree.
       end subroutine zzektr31
 
-      !> Map a node in a tree to its DAS base integer address.
-      !>
-      !> The function returns the DAS integer base address of the
-      !> specified node.
       module integer(ip) function zzektrbs ( ctx, node )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: node  !! Node number.
       end function zzektrbs
 
-      !> Free a tree:  deallocate all pages belonging to the tree.
       module subroutine zzektrfr ( ctx, handle, tree )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19188,7 +15344,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: tree  !! Root of tree.
       end subroutine zzektrfr
 
-      !> Initialize an EK tree, returning the root of the tree.
       module subroutine zzektrit ( ctx, handle, tree )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19196,8 +15351,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: tree  !! Root of tree.
       end subroutine zzektrit
 
-      !> Locate a specified key.  Return metadata describing the node
-      !> containing the key.
       module subroutine zzektrlk ( ctx, handle, tree, key, idx, node, noffst, level, value )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19211,8 +15364,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: value  !! Value associated with KEY.
       end subroutine zzektrlk
 
-      !> Given a key, return general information pertaining to the key's
-      !> parent node.
       module subroutine zzektrpi ( ctx, handle, tree, key, parent, pkey, poffst, lpidx, lpkey, lsib, rpidx, rpkey, rsib )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19230,8 +15381,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: rsib  !! Node number of right sibling.
       end subroutine zzektrpi
 
-      !> Rotate a specified number of keys from one node, through
-      !> the parent, into a neighboring sibling node.
       module subroutine zzektrrk ( ctx, handle, tree, left, right, parent, pkidx, nrot )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19244,9 +15393,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: nrot  !! Number of keys to rotate.
       end subroutine zzektrrk
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekweed ( ctx, njrs, bases, nrows )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19255,7 +15401,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: nrows  !! Total number of row vectors in join row set union.
       end subroutine zzekweed
 
-      !> Open a new E-kernel file and prepare the file for writing.
       module subroutine ekopn ( ctx, fname, ifname, ncomch, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19265,15 +15410,12 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Handle attached to new EK file.
       end subroutine ekopn
 
-      !> Open a scratch (temporary) E-kernel file and prepare the file
-      !> for writing.
       module subroutine ekops ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(out) :: handle  !! File handle attached to new EK file.
       end subroutine ekops
 
-      !> Create a new type 1 index for a specified EK column.
       module subroutine zzekcix1 ( ctx, handle, coldsc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19281,8 +15423,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: coldsc ( cdscsz )  !! Column descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
       end subroutine zzekcix1
 
-      !> Parse an EK query that has been scanned and tokenized.
-      !> Represent the result as an encoded EK query.
       module subroutine zzekpars ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, eqryi, eqryc, eqryd, error, prserr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19303,8 +15443,6 @@ module pepper_instance_module
          character(*), intent(out) :: prserr  !! Parse error description.
       end subroutine zzekpars
 
-      !> Execute a 2-3 split:  split two sibling nodes into three nodes,
-      !> each one approximately 2/3 full.
       module subroutine zzektr23 ( ctx, handle, tree, left, right, parent, pkidx, overfl )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19317,10 +15455,6 @@ module pepper_instance_module
          logical, intent(out) :: overfl  !! Overflow flag.
       end subroutine zzektr23
 
-      !> Execute a 3-2 merge:  merge three neighboring sibling nodes, two
-      !> of which contain the minimum number of keys and one of which
-      !> has an underflow of one key, into two nodes, each one
-      !> approximately full.
       module subroutine zzektr32 ( ctx, handle, tree, left, middle, right, parent, lpkidx, undrfl )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19334,7 +15468,6 @@ module pepper_instance_module
          logical, intent(out) :: undrfl  !! Underflow flag.
       end subroutine zzektr32
 
-      !> Return the data pointer from a specified location in an EK tree.
       module subroutine zzektrdp ( ctx, handle, tree, key, ptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19344,10 +15477,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: ptr  !! Data pointer.
       end subroutine zzektrdp
 
-      !> Return the number of keys in a node.
-      !>
-      !> The function returns the total number of keys in the specified
-      !> node of an EK tree.
       module integer(ip) function zzektrnk ( ctx, handle, tree, node )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19356,8 +15485,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: node  !! Node of interest.
       end function zzektrnk
 
-      !> Identify the immediate siblings of a node:  return a key in each
-      !> sibling and the siblings' node numbers.
       module subroutine zzektrsb ( ctx, handle, tree, key, lsib, lkey, rsib, rkey )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19370,10 +15497,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: rkey  !! Key in right sibling.
       end subroutine zzektrsb
 
-      !> Return the number of keys in a tree.
-      !>
-      !> The function returns the total number of keys in the specified
-      !> EK tree.
       module integer(ip) function zzektrsz ( ctx, handle, tree )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19381,8 +15504,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: tree  !! Root of tree.
       end function zzektrsz
 
-      !> Delete a value from a tree at a specified location without
-      !> balancing the tree.
       module subroutine zzektrud ( ctx, handle, tree, key, trgkey, undrfl )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19393,8 +15514,6 @@ module pepper_instance_module
          logical, intent(out) :: undrfl  !! Underflow flag.
       end subroutine zzektrud
 
-      !> Insert a value into a tree at a specified location without
-      !> balancing the tree.
       module subroutine zzektrui ( ctx, handle, tree, key, value, overfl )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19405,17 +15524,12 @@ module pepper_instance_module
          logical, intent(out) :: overfl  !! Overflow flag.
       end subroutine zzektrui
 
-      !> Return the number of segments in a specified EK.
-      !>
-      !> The function returns the number of segments in the specified
-      !> E-kernel.
       module integer(ip) function eknseg ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! EK file handle.
       end function eknseg
 
-      !> Look up a specified record pointer from an EK index.
       module subroutine zzekixlk ( ctx, handle, coldsc, key, recptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19425,8 +15539,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: recptr  !! Record pointer.
       end subroutine zzekixlk
 
-      !> Look up the record pointer of an EK record having a specified
-      !> ordinal position in a specified EK segment.
       module subroutine zzekrplk ( ctx, handle, segdsc, n, recptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19436,8 +15548,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: recptr  !! Record pointer.
       end subroutine zzekrplk
 
-      !> One-shot tree load:  insert an entire array into an empty
-      !> tree.
       module subroutine zzektr1s ( ctx, handle, tree, size, values )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19447,8 +15557,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: values  ( * )  !! Values to insert.
       end subroutine zzektr1s
 
-      !> Solve overflow in a node by balancing the node
-      !> with one of its sibling nodes.
       module subroutine zzektrbn ( ctx, handle, tree, left, right, parent, pkidx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19460,9 +15568,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: pkidx  !! Parent key index.
       end subroutine zzektrbn
 
-      !> Get a key from a node by index:  return the key having a specified
-      !> index in a specified node.  The node of interest is identified
-      !> by a key in the node.
       module subroutine zzektrki ( ctx, handle, tree, nodkey, n, key )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19473,11 +15578,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: key  !! Key located at index N.
       end subroutine zzektrki
 
-      !> Search an EK tree linearly to find a specified data value.  The
-      !> function returns the index at which the value is found.
-      !>
-      !> The function returns the lowest index at which the input value
-      !> is found, or zero if the value is not found.
       module integer(ip) function zzektrls ( ctx, handle, tree, ival )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19486,9 +15586,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: ival  !! Value to search for.
       end function zzektrls
 
-      !> Return the integer metadata location of a specified segment.  The
-      !> number and DAS integer base address of the first integer
-      !> page of the metadata are returned.
       module subroutine zzekmloc ( ctx, handle, segno, page, base )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19498,7 +15595,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: base  !! Page base.
       end subroutine zzekmloc
 
-      !> Delete a value from an EK tree at a specified location.
       module subroutine zzektrdl ( ctx, handle, tree, key )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19507,7 +15603,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: key  !! Key at which to delete value.
       end subroutine zzektrdl
 
-      !> Insert a value into an EK tree at a specified location.
       module subroutine zzektrin ( ctx, handle, tree, key, value )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19517,7 +15612,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: value  !! Value to insert.
       end subroutine zzektrin
 
-      !> Delete a specified data page for a specified EK segment.
       module subroutine zzekdps ( ctx, handle, segdsc, type, p )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19527,7 +15621,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: p  !! Page number.
       end subroutine zzekdps
 
-      !> Complete a fast load operation on a new type 1 E-kernel segment.
       module subroutine zzekff01 ( ctx, handle, segno, rcptrs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19536,7 +15629,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: rcptrs ( * )  !! Record pointers.
       end subroutine zzekff01
 
-      !> Look up the descriptor of a specified EK segment.
       module subroutine zzeksdsc ( ctx, handle, segno, segdsc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19545,8 +15637,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: segdsc ( sdscsz )  !! Segment descriptor.
       end subroutine zzeksdsc
 
-      !> Return general segment information for a specified segment in a
-      !> specified EK.
       module subroutine zzeksinf ( ctx, handle, segno, tabnam, segdsc, cnames, cdscrs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19558,8 +15648,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: cdscrs ( cdscsz, * )  !! Descriptors of columns in segment.
       end subroutine zzeksinf
 
-      !> Append an item to a tree.  The key indicating the location of
-      !> the new item is returned.
       module subroutine zzektrap ( ctx, handle, tree, value, key )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19569,7 +15657,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: key  !! Key pointing to new value.
       end subroutine zzektrap
 
-      !> Complete a fast write operation on a new E-kernel segment.
       module subroutine ekffld ( ctx, handle, segno, rcptrs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19578,8 +15665,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: rcptrs ( * )  !! Record pointers. (PEPPER: changed by the routine, an input in SPICELIB's table)
       end subroutine ekffld
 
-      !> Return summary information for a specified segment in a
-      !> specified EK.
       module subroutine ekssum ( ctx, handle, segno, tabnam, nrows, ncols, cnames, dtypes, sizes, strlns, indexd, nullok )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19596,8 +15681,6 @@ module pepper_instance_module
          logical, intent(out) :: nullok ( * )  !! Flags indicating whether columns allow nulls.
       end subroutine ekssum
 
-      !> Allocate a series of contiguous data pages for a specified EK
-      !> segment.
       module subroutine zzekacps ( ctx, handle, segdsc, type, n, p, base )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19609,7 +15692,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: base  !! DAS base address of page.
       end subroutine zzekacps
 
-      !> Allocate a data page for a specified EK segment.
       module subroutine zzekaps ( ctx, handle, segdsc, type, new, p, base )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19621,7 +15703,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: base  !! DAS base address of page.
       end subroutine zzekaps
 
-      !> Start a new type 1 segment in an E-kernel.
       module subroutine zzekbs01 ( ctx, handle, tabnam, ncols, cnames, cdscrs, segno )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19633,7 +15714,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: segno  !! Segment number.
       end subroutine zzekbs01
 
-      !> Start a new type 2 segment in an E-kernel.
       module subroutine zzekbs02 ( ctx, handle, tabnam, ncols, cnames, cdscrs, segno )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19645,7 +15725,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: segno  !! Segment number.
       end subroutine zzekbs02
 
-      !> Delete a specified class 4 column entry from an EK record.
       module subroutine zzekde04 ( ctx, handle, segdsc, coldsc, recptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19655,12 +15734,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: recptr  !! Record pointer.
       end subroutine zzekde04
 
-      !> Find the EK record number corresponding to a specified record
-      !> pointer.  Beware, for type 1 segments, this is done by linear
-      !> searching.
-      !>
-      !> The function returns the number of the record having the
-      !> specified record pointer.
       module integer(ip) function zzekrp2n ( ctx, handle, segno, recptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19687,7 +15760,6 @@ module pepper_instance_module
 
    interface
 
-      !> Start a new segment in an E-kernel.
       module subroutine ekbseg ( ctx, handle, tabnam, ncols, cnames, decls, segno )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19699,8 +15771,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: segno  !! Segment number.
       end subroutine ekbseg
 
-      !> Add a new, empty record to a specified E-kernel segment at
-      !> a specified index.
       module subroutine ekinsr ( ctx, handle, segno, recno )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19709,8 +15779,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: recno  !! Record number.
       end subroutine ekinsr
 
-      !> Check whether a file is a type 1 star catalog and return the
-      !> catalog's table name if it is.
       module subroutine stcc01 ( ctx, catfnm, tabnam, istyp1, errmsg )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19720,7 +15788,6 @@ module pepper_instance_module
          character(*), intent(out) :: errmsg  !! Error message.
       end subroutine stcc01
 
-      !> Add an entire class 1 column to an EK segment.
       module subroutine zzekac01 ( ctx, handle, segdsc, coldsc, ivals, nlflgs, rcptrs, wkindx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19733,7 +15800,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
       end subroutine zzekac01
 
-      !> Add an entire class 2 column to an EK segment.
       module subroutine zzekac02 ( ctx, handle, segdsc, coldsc, dvals, nlflgs, rcptrs, wkindx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19746,7 +15812,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
       end subroutine zzekac02
 
-      !> Add an entire class 3 column to an EK segment.
       module subroutine zzekac03 ( ctx, handle, segdsc, coldsc, cvals, nlflgs, rcptrs, wkindx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19759,7 +15824,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
       end subroutine zzekac03
 
-      !> Add an entire class 4 column to an EK segment.
       module subroutine zzekac04 ( ctx, handle, segdsc, coldsc, ivals, entszs, nlflgs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19771,7 +15835,6 @@ module pepper_instance_module
          logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
       end subroutine zzekac04
 
-      !> Add an entire class 5 column to an EK segment.
       module subroutine zzekac05 ( ctx, handle, segdsc, coldsc, dvals, entszs, nlflgs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19783,7 +15846,6 @@ module pepper_instance_module
          logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
       end subroutine zzekac05
 
-      !> Add an entire class 6 column to an EK segment.
       module subroutine zzekac06 ( ctx, handle, segdsc, coldsc, cvals, entszs, nlflgs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19795,8 +15857,6 @@ module pepper_instance_module
          logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
       end subroutine zzekac06
 
-      !> Add a column entry to a specified record in a class 4 column.
-      !> The entries of class 4 columns are arrays of integer values.
       module subroutine zzekad04 ( ctx, handle, segdsc, coldsc, recptr, nvals, ivals, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19809,8 +15869,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine zzekad04
 
-      !> Add a column entry to a specified record in a class 5 column.
-      !> The entries of class 5 columns are arrays of d.p. values.
       module subroutine zzekad05 ( ctx, handle, segdsc, coldsc, recptr, nvals, dvals, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19823,9 +15881,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine zzekad05
 
-      !> Add a column entry to a specified record in a class 6 column.
-      !> The entries of class 6 columns are arrays of character string
-      !> values.
       module subroutine zzekad06 ( ctx, handle, segdsc, coldsc, recptr, nvals, cvals, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19838,7 +15893,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine zzekad06
 
-      !> Delete a specified class 5 column entry from an EK record.
       module subroutine zzekde05 ( ctx, handle, segdsc, coldsc, recptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19848,7 +15902,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: recptr  !! Record pointer.
       end subroutine zzekde05
 
-      !> Delete a specified class 6 column entry from an EK record.
       module subroutine zzekde06 ( ctx, handle, segdsc, coldsc, recptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19858,10 +15911,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: recptr  !! Record pointer.
       end subroutine zzekde06
 
-      !> Return the size of a specified column entry.
-      !>
-      !> The function returns the number of elements in the specified
-      !> column entry.
       module integer(ip) function zzekesiz ( ctx, handle, segdsc, coldsc, recptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19871,7 +15920,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
       end function zzekesiz
 
-      !> Return the data pointer for a specified EK column entry.
       module subroutine zzekgcdp ( ctx, handle, segdsc, coldsc, recptr, datptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19882,7 +15930,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: datptr  !! Data pointer of column entry.
       end subroutine zzekgcdp
 
-      !> Initialize a new type 1 EK segment to allow fast loading.
       module subroutine zzekif01 ( ctx, handle, segno, rcptrs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19891,7 +15938,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: rcptrs ( * )  !! Array of record pointers.
       end subroutine zzekif01
 
-      !> Initialize a new type 2 EK segment to allow fast loading.
       module subroutine zzekif02 ( ctx, handle, segno )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19899,8 +15945,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: segno  !! Segment number.
       end subroutine zzekif02
 
-      !> Read a column entry from a specified record in a class 1 column.
-      !> Class 1 columns contain scalar integer values.
       module subroutine zzekrd01 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19912,8 +15956,6 @@ module pepper_instance_module
          logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine zzekrd01
 
-      !> Read a column entry from a specified record in a class 2 column.
-      !> Class 2 columns contain scalar double precision values.
       module subroutine zzekrd02 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19925,8 +15967,6 @@ module pepper_instance_module
          logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine zzekrd02
 
-      !> Read a column entry from a specified record in a class 3 column.
-      !> Class 3 columns contain scalar character values.
       module subroutine zzekrd03 ( ctx, handle, segdsc, coldsc, recptr, cvlen, cval, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19939,9 +15979,6 @@ module pepper_instance_module
          logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine zzekrd03
 
-      !> Read a specified element range from a column entry in a specified
-      !> record in a class 4 column.  Class 4 columns have integer arrays
-      !> as column entries.
       module subroutine zzekrd04 ( ctx, handle, segdsc, coldsc, recptr, beg, end, ivals, isnull, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19956,9 +15993,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether elements were found.
       end subroutine zzekrd04
 
-      !> Read a specified element range from a column entry in a specified
-      !> record in a class 5 column.  Class 5 columns have d.p. arrays
-      !> as column entries.
       module subroutine zzekrd05 ( ctx, handle, segdsc, coldsc, recptr, beg, end, dvals, isnull, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19973,9 +16007,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether elements were found.
       end subroutine zzekrd05
 
-      !> Read a specified element range from a column entry in a specified
-      !> record in a class 6 column.  Class 6 columns have character arrays
-      !> as column entries.
       module subroutine zzekrd06 ( ctx, handle, segdsc, coldsc, recptr, beg, end, cvals, isnull, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -19990,8 +16021,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether elements were found.
       end subroutine zzekrd06
 
-      !> Read a column entry from a specified record in a class 7 column.
-      !> Class 7 columns contain fixed-count, scalar integer values.
       module subroutine zzekrd07 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20003,9 +16032,6 @@ module pepper_instance_module
          logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine zzekrd07
 
-      !> Read a column entry from a specified record in a class 8 column.
-      !> Class 8 columns contain fixed-count, scalar, double precision
-      !> values.
       module subroutine zzekrd08 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20017,7 +16043,6 @@ module pepper_instance_module
          logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine zzekrd08
 
-      !> Set the data pointer for a specified EK column entry.
       module subroutine zzekscdp ( ctx, handle, segdsc, coldsc, recptr, datptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20028,7 +16053,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: datptr  !! Data pointer of column entry.
       end subroutine zzekscdp
 
-      !> Write a character array out to a contiguous set of EK pages.
       module subroutine zzekwpac ( ctx, handle, segdsc, nvals, l, cvals, p, base )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20041,7 +16065,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: base  !! Base address of first page.
       end subroutine zzekwpac
 
-      !> Write an integer array out to a contiguous set of EK pages.
       module subroutine zzekwpai ( ctx, handle, segdsc, nvals, ivals, p, base )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20053,7 +16076,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: base  !! Base address of first page.
       end subroutine zzekwpai
 
-      !> Write a logical array out to a contiguous set of EK pages.
       module subroutine zzekwpal ( ctx, handle, segdsc, nvals, lvals, p, base )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20065,8 +16087,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: base  !! Base address of first page.
       end subroutine zzekwpal
 
-      !> Append a new, empty record at the end of a specified E-kernel
-      !> segment.
       module subroutine ekappr ( ctx, handle, segno, recno )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20075,7 +16095,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: recno  !! Number of appended record.
       end subroutine ekappr
 
-      !> Initialize a new E-kernel segment to allow fast writing.
       module subroutine ekifld ( ctx, handle, tabnam, ncols, nrows, cnames, decls, segno, rcptrs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20089,7 +16108,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: rcptrs ( * )  !! Array of record pointers.
       end subroutine ekifld
 
-      !> Read data from a character column in a specified EK record.
       module subroutine ekrcec ( ctx, handle, segno, recno, column, nvals, cvals, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20102,8 +16120,6 @@ module pepper_instance_module
          logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine ekrcec
 
-      !> Read data from a double precision column in a specified EK
-      !> record.
       module subroutine ekrced ( ctx, handle, segno, recno, column, nvals, dvals, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20116,7 +16132,6 @@ module pepper_instance_module
          logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine ekrced
 
-      !> Read data from an integer column in a specified EK record.
       module subroutine ekrcei ( ctx, handle, segno, recno, column, nvals, ivals, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20129,9 +16144,6 @@ module pepper_instance_module
          logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine ekrcei
 
-      !> All the values of a double precision or time column entry of an EK
-      !> record (PEPPER; [[ekrced]] with the size of the entry). Bound as the
-      !> generic `ek_values`.
       module subroutine ek_values_real ( ctx, handle, segno, recno, column, values, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20143,9 +16155,6 @@ module pepper_instance_module
          logical, intent(out) :: isnull  !! the entry is null
       end subroutine ek_values_real
 
-      !> All the values of an integer column entry of an EK record (PEPPER;
-      !> [[ekrcei]] with the size of the entry). Bound as the generic
-      !> `ek_values`.
       module subroutine ek_values_int ( ctx, handle, segno, recno, column, values, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20157,10 +16166,6 @@ module pepper_instance_module
          logical, intent(out) :: isnull  !! the entry is null
       end subroutine ek_values_int
 
-      !> All the values of a character column entry of an EK record, each of
-      !> its full length (PEPPER; [[ekrcec]] with the size of the entry).
-      !> Bound as the generic `ek_values`. Values of fixed-length columns
-      !> are returned without their trailing blanks.
       module subroutine ek_values_str ( ctx, handle, segno, recno, column, values, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20172,7 +16177,6 @@ module pepper_instance_module
          logical, intent(out) :: isnull  !! the entry is null
       end subroutine ek_values_str
 
-      !> Add an entire class 7 column to an EK segment.
       module subroutine zzekac07 ( ctx, handle, segdsc, coldsc, ivals, nlflgs, wkindx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20184,7 +16188,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
       end subroutine zzekac07
 
-      !> Add an entire class 8 column to an EK segment.
       module subroutine zzekac08 ( ctx, handle, segdsc, coldsc, dvals, nlflgs, wkindx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20196,7 +16199,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
       end subroutine zzekac08
 
-      !> Add an entire class 9 column to an EK segment.
       module subroutine zzekac09 ( ctx, handle, segdsc, coldsc, cvals, nlflgs, wkindx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20208,8 +16210,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
       end subroutine zzekac09
 
-      !> Read scalar data from a character column in a specified EK
-      !> record.
       module subroutine zzekrsc ( ctx, handle, segdsc, coldsc, recptr, eltidx, cvlen, cval, isnull, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20224,8 +16224,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicting whether entry element was found.
       end subroutine zzekrsc
 
-      !> Read scalar data from a double precision column in a specified EK
-      !> record.
       module subroutine zzekrsd ( ctx, handle, segdsc, coldsc, recptr, eltidx, dval, isnull, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20239,7 +16237,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicting whether entry element was found.
       end subroutine zzekrsd
 
-      !> Read scalar data from an integer column in a specified EK record.
       module subroutine zzekrsi ( ctx, handle, segdsc, coldsc, recptr, eltidx, ival, isnull, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20253,7 +16250,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicting whether entry element was found.
       end subroutine zzekrsi
 
-      !> Update a specified class 4 column entry in an EK record.
       module subroutine zzekue04 ( ctx, handle, segdsc, coldsc, recptr, nvals, ivals, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20266,7 +16262,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Null flag.
       end subroutine zzekue04
 
-      !> Update a specified class 5 column entry in an EK record.
       module subroutine zzekue05 ( ctx, handle, segdsc, coldsc, recptr, nvals, dvals, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20279,7 +16274,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Null flag.
       end subroutine zzekue05
 
-      !> Update a specified class 6 column entry in an EK record.
       module subroutine zzekue06 ( ctx, handle, segdsc, coldsc, recptr, nvals, cvals, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20292,7 +16286,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Null flag.
       end subroutine zzekue06
 
-      !> Add an entire character column to an EK segment.
       module subroutine ekaclc ( ctx, handle, segno, column, cvals, entszs, nlflgs, rcptrs, wkindx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20306,7 +16299,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
       end subroutine ekaclc
 
-      !> Add an entire double precision column to an EK segment.
       module subroutine ekacld ( ctx, handle, segno, column, dvals, entszs, nlflgs, rcptrs, wkindx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20320,7 +16312,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
       end subroutine ekacld
 
-      !> Add an entire integer column to an EK segment.
       module subroutine ekacli ( ctx, handle, segno, column, ivals, entszs, nlflgs, rcptrs, wkindx )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20334,12 +16325,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
       end subroutine ekacli
 
-      !> Compare two column entry elements, and return the relation of the
-      !> first to the second:  LT, EQ, or GT.
-      !>
-      !> The function returns a parameter indicating the order relation
-      !> satisfied by the input arguments.  Possible values are LT, EQ,
-      !> and GT.
       module integer(ip) function zzekecmp ( ctx, hans, sgdscs, cldscs, rows, elts )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20350,11 +16335,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: elts   ( * )  !! Element indices.
       end function zzekecmp
 
-      !> Compare a specified scalar EK column entry with a scalar value.
-      !>
-      !> The function returns .TRUE. if and only if the specified column
-      !> entry and input value of the corresponding data type satisfy the
-      !> relation specified by the input argument OP.
       module logical function zzekscmp ( ctx, op, handle, segdsc, coldsc, row, eltidx, dtype, cval, dval, ival, null )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20371,9 +16351,6 @@ module pepper_instance_module
          logical, intent(in) :: null  !! Flag indicating whether scalar is null.
       end function zzekscmp
 
-      !> Find the last column value less than or equal to a specified key,
-      !> for a specified character EK column having a type 1 index, using
-      !> dictionary ordering on character data values and record pointers.
       module subroutine zzekerc1 ( ctx, handle, segdsc, coldsc, ckey, recptr, null, prvidx, prvptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20387,9 +16364,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of CKEY.
       end subroutine zzekerc1
 
-      !> Find the last column value less than or equal to a specified key,
-      !> for a specified d.p. EK column having a type 1 index, using
-      !> dictionary ordering on d.p. data values and record pointers.
       module subroutine zzekerd1 ( ctx, handle, segdsc, coldsc, dkey, recptr, null, prvidx, prvptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20403,9 +16377,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of DKEY.
       end subroutine zzekerd1
 
-      !> Find the last column value less than or equal to a specified key,
-      !> for a specified integer EK column having a type 1 index, using
-      !> dictionary ordering on integer data values and record pointers.
       module subroutine zzekeri1 ( ctx, handle, segdsc, coldsc, ikey, recptr, null, prvidx, prvptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20419,8 +16390,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of IKEY.
       end subroutine zzekeri1
 
-      !> Find the last column value less than or equal to a specified key,
-      !> for a specified, indexed character EK column.
       module subroutine zzekllec ( ctx, handle, segdsc, coldsc, ckey, prvloc, prvptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20432,8 +16401,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of CKEY.
       end subroutine zzekllec
 
-      !> Find the last column value less than or equal to a specified key,
-      !> for a specified, indexed double precision EK column.
       module subroutine zzeklled ( ctx, handle, segdsc, coldsc, dkey, prvloc, prvptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20445,8 +16412,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of DKEY.
       end subroutine zzeklled
 
-      !> Find the last column value less than or equal to a specified key,
-      !> for a specified, indexed integer EK column.
       module subroutine zzekllei ( ctx, handle, segdsc, coldsc, ikey, prvloc, prvptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20458,8 +16423,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: prvptr  !! Pointer to a record containing predecessor of IKEY.
       end subroutine zzekllei
 
-      !> Find the last column value less than a specified key,
-      !> for a specified, indexed character EK column.
       module subroutine zzeklltc ( ctx, handle, segdsc, coldsc, ckey, prvloc, prvptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20471,8 +16434,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of CKEY.
       end subroutine zzeklltc
 
-      !> Find the last column value less than a specified key,
-      !> for a specified, indexed double precision EK column.
       module subroutine zzeklltd ( ctx, handle, segdsc, coldsc, dkey, prvloc, prvptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20484,8 +16445,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: prvptr  !! Pointer to a record containing predecessor of DKEY.
       end subroutine zzeklltd
 
-      !> Find the last column value less than a specified key,
-      !> for a specified, indexed integer EK column.
       module subroutine zzekllti ( ctx, handle, segdsc, coldsc, ikey, prvloc, prvptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20497,11 +16456,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of IKEY.
       end subroutine zzekllti
 
-      !> Compare two EK rows, using as the order relation dictionary
-      !> ordering on a specified list of columns.
-      !>
-      !> The function returns .TRUE. if and only if the two rows
-      !> satisfy the order relation specified by the input arguments.
       module logical function zzekrcmp ( ctx, op, ncols, han1, sgdsc1, cdlst1, row1, elts1, han2, sgdsc2, cdlst2, row2, elts2 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20519,13 +16473,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: elts2  ( * )  !! List of element indices for second row.
       end function zzekrcmp
 
-      !> Determine whether a specified row in an EK file satisfies
-      !> a specified set of constraints.
-      !>
-      !> MAXCOL     P   Maximum number of columns per segment.
-      !>
-      !> The function returns .TRUE. if and only if the specified
-      !> EK row satisfies the input constraints.
       module logical function zzekrmch ( ctx, ncnstr, active, handle, segdsc, cdscrs, row, elts, ops, vtypes, chrbuf, cbegs, cends, dvals, ivals )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20545,11 +16492,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: ivals  ( * )  !! Integer values used in query constraints.
       end function zzekrmch
 
-      !> Compare two row vectors, using dictionary ordering on a
-      !> specified list of columns as the order relation.
-      !>
-      !> The function returns .TRUE. if and only if the two rows
-      !> satisfy the order relation specified by the input arguments.
       module logical function zzekvcmp ( ctx, op, ncols, tabs, cols, elts, senses, sthan, stsdsc, stdtpt, dtpool, dtdscs, sgvec1, rwvec1, sgvec2, rwvec2 )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20571,11 +16513,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: rwvec2 ( * )  !! Second row vector.
       end function zzekvcmp
 
-      !> Determine whether a vector of constraints involving comparisons of
-      !> specified EK column elements is satisfied.
-      !>
-      !> The function returns .TRUE. if and only if all of the relational
-      !> constraints specified by the input arguments are satisfied.
       module logical function zzekvmch ( ctx, ncnstr, active, lhans, lsdscs, lcdscs, lrows, lelts, ops, rhans, rsdscs, rcdscs, rrows, relts )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20594,14 +16531,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: relts  ( * )  !! Column element indices for RHS's of constraints.
       end function zzekvmch
 
-      !> Find the ordinal position of the row, in an specified EK segment,
-      !> whose value in a specified column is the last last element less
-      !> than or equal to a specified value, where the order relation is
-      !> given by an order vector in a specified DAS file.
-      !>
-      !> The function returns the index of the last order vector element
-      !> that points to an array element that is less than or equal to
-      !> the input value of the same data type as the column.
       module integer(ip) function zzekille ( ctx, handle, segdsc, coldsc, nrows, dtype, cval, dval, ival )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20615,14 +16544,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: ival  !! Integer value.
       end function zzekille
 
-      !> Find the ordinal position of the row, in an specified EK segment,
-      !> whose value in a specified column is the last last element less
-      !> than a specified value, where the order relation is given by an
-      !> order vector in a specified DAS file.
-      !>
-      !> The function returns the index of the last order vector element
-      !> that points to an array element that is less than the input
-      !> value of the same data type as the column.
       module integer(ip) function zzekillt ( ctx, handle, segdsc, coldsc, nrows, dtype, cval, dval, ival )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20636,8 +16557,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: ival  !! Integer value.
       end function zzekillt
 
-      !> Sort the row vectors of a join row set union, given an order
-      !> relation defined by a set of qualified order-by columns.
       module subroutine zzekjsrt ( ctx, njrs, ubases, norder, otabs, ocols, oelts, senses, sthan, stsdsc, stdtpt, dtpool, dtdscs, ordbas )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20657,9 +16576,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: ordbas  !! Scratch area base address for order vector.
       end subroutine zzekjsrt
 
-      !> Find the last column value less than or equal to a specified key,
-      !> for a specified, indexed character EK column, using dictionary
-      !> ordering on character data values and record pointers.
       module subroutine zzeklerc ( ctx, handle, segdsc, coldsc, ckey, recptr, null, prvidx, prvptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20673,9 +16589,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of CKEY.
       end subroutine zzeklerc
 
-      !> Find the last column value less than or equal to a specified key,
-      !> for a specified, indexed d.p. EK column, using dictionary
-      !> ordering on d.p. data values and record pointers.
       module subroutine zzeklerd ( ctx, handle, segdsc, coldsc, dkey, recptr, null, prvidx, prvptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20689,9 +16602,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of DKEY.
       end subroutine zzeklerd
 
-      !> Find the last column value less than or equal to a specified key,
-      !> for a specified, indexed integer EK column, using dictionary
-      !> ordering on integer data values and record pointers.
       module subroutine zzekleri ( ctx, handle, segdsc, coldsc, ikey, recptr, null, prvidx, prvptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20705,8 +16615,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of IKEY.
       end subroutine zzekleri
 
-      !> Find the ordinal position of a specified record in a specified,
-      !> indexed EK column.
       module subroutine zzekfrx ( ctx, handle, segdsc, coldsc, recptr, pos )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20717,9 +16625,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: pos  !! Ordinal position of record.
       end subroutine zzekfrx
 
-      !> Insert into a type 1 EK index a record pointer associated with a
-      !> character key.  The key and record pointer determine the insertion
-      !> point via dictionary ordering on (value, record pointer) pairs.
       module subroutine zzekiic1 ( ctx, handle, segdsc, coldsc, ckey, recptr, null )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20731,9 +16636,6 @@ module pepper_instance_module
          logical, intent(in) :: null  !! Null flag.
       end subroutine zzekiic1
 
-      !> Insert into a type 1 EK index a record pointer associated with a
-      !> d.p. key.  The key and record pointer determine the insertion
-      !> point via dictionary ordering on (value, record pointer) pairs.
       module subroutine zzekiid1 ( ctx, handle, segdsc, coldsc, dkey, recptr, null )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20745,9 +16647,6 @@ module pepper_instance_module
          logical, intent(in) :: null  !! Null flag.
       end subroutine zzekiid1
 
-      !> Insert into a type 1 EK index a record pointer associated with an
-      !> integer key.  The key and record pointer determine the insertion
-      !> point via dictionary ordering on (value, record pointer) pairs.
       module subroutine zzekiii1 ( ctx, handle, segdsc, coldsc, ikey, recptr, null )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20759,9 +16658,6 @@ module pepper_instance_module
          logical, intent(in) :: null  !! Null flag.
       end subroutine zzekiii1
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekjprp ( ctx, segvec, jbase1, nt1, rb1, nr1, jbase2, nt2, rb2, nr2, njcnst, active, cpidx1, clidx1, elts1, ops, cpidx2, clidx2, elts2, sthan, stsdsc, stdtpt, dtpool, dtdscs )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20791,9 +16687,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: dtdscs ( cdscsz,          * )  !! Array of column descriptors.
       end subroutine zzekjprp
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekjnxt ( ctx, found, rowvec )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20801,11 +16694,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: rowvec ( * )  !! Row vector matching join constraints.
       end subroutine zzekjnxt
 
-      !> Determine the key column to use when searching an EK segment
-      !> for rows matching query constraints.
-      !>
-      !> MAXCON     P   Maximum number of constraints allowed in query.
-      !> CDSCSZ     P   Column descriptor size.
       module subroutine zzekkey ( ctx, handle, segdsc, nrows, ncnstr, clidxs, dsclst, ops, dtypes, chrbuf, cbegs, cends, dvals, ivals, active, key, keydsc, begidx, endidx, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20830,8 +16718,6 @@ module pepper_instance_module
          logical, intent(out) :: found  !! Flag indicating whether a key column was found.
       end subroutine zzekkey
 
-      !> Add a column entry to a class 1 column in a specified EK record.
-      !> Class 1 columns contain scalar, integer values.
       module subroutine zzekad01 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20843,8 +16729,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Null flag.
       end subroutine zzekad01
 
-      !> Add a column entry to a specified record in a class 2 column.
-      !> Class 2 columns contain scalar double precision values.
       module subroutine zzekad02 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20856,8 +16740,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Null flag.
       end subroutine zzekad02
 
-      !> Add a column entry to a class 3 column in a specified EK record.
-      !> Class 3 columns contain scalar, character values.
       module subroutine zzekad03 ( ctx, handle, segdsc, coldsc, recptr, cval, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20869,8 +16751,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Null flag.
       end subroutine zzekad03
 
-      !> Update an EK column index to reflect deletion of a record
-      !> specified by a record pointer.
       module subroutine zzekixdl ( ctx, handle, segdsc, coldsc, recptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20880,10 +16760,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: recptr  !! Record pointer to locate.
       end subroutine zzekixdl
 
-      !> Perform join of two EK join row sets, subject to a specified set
-      !> of EK join constraints, yielding an EK join row set.
-      !>
-      !> CDSCSZ     P   Size of column descriptor.
       module subroutine zzekjoin ( ctx, jbase1, jbase2, njcnst, active, cpidx1, clidx1, elts1, ops, cpidx2, clidx2, elts2, sthan, stsdsc, stdtpt, dtpool, dtdscs, jbase3, nrows )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20908,7 +16784,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: nrows  !! Number of rows in output join row set.
       end subroutine zzekjoin
 
-      !> Add data to a character column in a specified EK record.
       module subroutine ekacec ( ctx, handle, segno, recno, column, nvals, cvals, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20921,7 +16796,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine ekacec
 
-      !> Add data to an double precision column in a specified EK record.
       module subroutine ekaced ( ctx, handle, segno, recno, column, nvals, dvals, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20934,7 +16808,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine ekaced
 
-      !> Add data to an integer column in a specified EK record.
       module subroutine ekacei ( ctx, handle, segno, recno, column, nvals, ivals, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20947,7 +16820,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine ekacei
 
-      !> Load an EK file, making it accessible to the EK readers.
       module subroutine eklef ( ctx, fname, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20955,23 +16827,18 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! File handle of loaded EK file.
       end subroutine eklef
 
-      !> Unload an EK file, making its contents inaccessible to the
-      !> EK reader routines, and clearing space in order to allow other
-      !> EK files to be loaded.
       module subroutine ekuef ( ctx, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(in) :: handle  !! Handle of EK file.
       end subroutine ekuef
 
-      !> Return the number of loaded EK tables.
       module subroutine ekntab ( ctx, n )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
          integer(ip), intent(out) :: n  !! Number of loaded tables.
       end subroutine ekntab
 
-      !> Return the name of a specified, loaded table.
       module subroutine ektnam ( ctx, n, table )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20979,8 +16846,6 @@ module pepper_instance_module
          character(*), intent(out) :: table  !! Name of table.
       end subroutine ektnam
 
-      !> Return the number of distinct columns in a specified, currently
-      !> loaded table.
       module subroutine ekccnt ( ctx, table, ccount )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20988,8 +16853,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: ccount  !! Count of distinct, currently loaded columns.
       end subroutine ekccnt
 
-      !> Return attribute information about a column belonging to a loaded
-      !> EK table, specifying the column by table and index.
       module subroutine ekcii ( ctx, table, cindex, column, attdsc )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -20999,7 +16862,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: attdsc ( adscsz )  !! Column attribute descriptor.
       end subroutine ekcii
 
-      !> Search for EK events matching a specified set of constraints.
       module subroutine eksrch ( ctx, eqryi, eqryc, eqryd, nmrows, semerr, errmsg )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21012,8 +16874,6 @@ module pepper_instance_module
          character(*), intent(out) :: errmsg  !! Message describing semantic error, if any.
       end subroutine eksrch
 
-      !> Return the number of elements in a specified column entry in
-      !> the current row.
       module subroutine eknelt ( ctx, selidx, row, nelt )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21022,8 +16882,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: nelt  !! Number of elements in entry in current row.
       end subroutine eknelt
 
-      !> Return an element of an entry in a column of character
-      !> type in a specified row.
       module subroutine ekgc ( ctx, selidx, row, elment, cdata, null, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21035,8 +16893,6 @@ module pepper_instance_module
          logical, intent(out) :: null  !! Flag indicating whether column entry was null.
       end subroutine ekgc
 
-      !> Return an element of an entry in a column of double precision
-      !> or `time' type in a specified row.
       module subroutine ekgd ( ctx, selidx, row, elment, ddata, null, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21048,8 +16904,6 @@ module pepper_instance_module
          logical, intent(out) :: null  !! Flag indicating whether column entry was null.
       end subroutine ekgd
 
-      !> Return an element of an entry in a column of integer
-      !> type in a specified row.
       module subroutine ekgi ( ctx, selidx, row, elment, idata, null, found )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21061,7 +16915,6 @@ module pepper_instance_module
          logical, intent(out) :: null  !! Flag indicating whether column entry was null.
       end subroutine ekgi
 
-      !> Delete a specified class 1 column entry from an EK record.
       module subroutine zzekde01 ( ctx, handle, segdsc, coldsc, recptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21071,7 +16924,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: recptr  !! Record pointer.
       end subroutine zzekde01
 
-      !> Delete a specified class 2 column entry from an EK record.
       module subroutine zzekde02 ( ctx, handle, segdsc, coldsc, recptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21081,7 +16933,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: recptr  !! Record pointer.
       end subroutine zzekde02
 
-      !> Delete a specified class 3 column entry from an EK record.
       module subroutine zzekde03 ( ctx, handle, segdsc, coldsc, recptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21091,7 +16942,6 @@ module pepper_instance_module
          integer(ip), intent(in) :: recptr  !! Record pointer.
       end subroutine zzekde03
 
-      !> Update a specified class 1 column entry in an EK record.
       module subroutine zzekue01 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21103,7 +16953,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Null flag.
       end subroutine zzekue01
 
-      !> Update a specified class 2 column entry in an EK record.
       module subroutine zzekue02 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21115,7 +16964,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Null flag.
       end subroutine zzekue02
 
-      !> Delete a specified record from a specified E-kernel segment.
       module subroutine ekdelr ( ctx, handle, segno, recno )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21124,7 +16972,6 @@ module pepper_instance_module
          integer(ip), intent(inout) :: recno  !! Record number. (PEPPER: changed by the routine, an input in SPICELIB's table)
       end subroutine ekdelr
 
-      !> Update a double precision column entry in a specified EK record.
       module subroutine ekuced ( ctx, handle, segno, recno, column, nvals, dvals, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21137,7 +16984,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine ekuced
 
-      !> Update an integer column entry in a specified EK record.
       module subroutine ekucei ( ctx, handle, segno, recno, column, nvals, ivals, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21150,7 +16996,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine ekucei
 
-      !> Get data for a single star from a SPICE type 1 star catalog.
       module subroutine stcg01 ( ctx, index, ra, dec, rasig, decsig, catnum, sptype, vmag )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21164,8 +17009,6 @@ module pepper_instance_module
          real(wp), intent(out) :: vmag  !! Visual magnitude.
       end subroutine stcg01
 
-      !> Load SPICE type 1 star catalog and return the catalog's
-      !> table name.
       module subroutine stcl01 ( ctx, catfnm, tabnam, handle )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21174,9 +17017,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: handle  !! Catalog file handle.
       end subroutine stcl01
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekcchk ( ctx, query, eqryi, eqryc, ntab, tablst, alslst, base, error, errmsg, errptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21193,9 +17033,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
       end subroutine zzekcchk
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzekpcol ( ctx, qcol, eqryi, eqryc, table, alias, tabidx, column, colidx, error, errmsg )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21212,9 +17049,6 @@ module pepper_instance_module
          character(*), intent(out) :: errmsg  !! Parse error message.
       end subroutine zzekpcol
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzeksemc ( ctx, query, eqryi, eqryc, error, errmsg, errptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21227,9 +17061,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
       end subroutine zzeksemc
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzektres ( ctx, query, eqryi, eqryc, eqryd, error, errmsg, errptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21243,7 +17074,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
       end subroutine zzektres
 
-      !> Update a specified class 3 column entry in an EK record.
       module subroutine zzekue03 ( ctx, handle, segdsc, coldsc, recptr, cval, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21255,7 +17085,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Null flag.
       end subroutine zzekue03
 
-      !> Update a character column entry in a specified EK record.
       module subroutine ekucec ( ctx, handle, segno, recno, column, nvals, cvals, isnull )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21268,9 +17097,6 @@ module pepper_instance_module
          logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
       end subroutine ekucec
 
-      !> SPICE Private routine intended solely for the support of SPICE
-      !> routines.  Users should not call this routine directly due
-      !> to the volatile nature of this routine.
       module subroutine zzeknres ( ctx, query, eqryi, eqryc, error, errmsg, errptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21283,7 +17109,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
       end subroutine zzeknres
 
-      !> Find E-kernel data that satisfy a set of constraints.
       module subroutine ekfind ( ctx, query, nmrows, error, errmsg )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21293,7 +17118,6 @@ module pepper_instance_module
          character(*), intent(out) :: errmsg  !! Parse error description.
       end subroutine ekfind
 
-      !> Convert an EK query to encoded form.
       module subroutine zzekencd ( ctx, query, eqryi, eqryc, eqryd, error, errmsg, errptr )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21306,8 +17130,6 @@ module pepper_instance_module
          integer(ip), intent(out) :: errptr  !! Error pointer.
       end subroutine zzekencd
 
-      !> Parse the SELECT clause of an EK query, returning full particulars
-      !> concerning each selected item.
       module subroutine ekpsel ( ctx, query, n, xbegs, xends, xtypes, xclass, tabs, cols, error, errmsg )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21323,8 +17145,6 @@ module pepper_instance_module
          character(*), intent(out) :: errmsg  !! Parse error message.
       end subroutine ekpsel
 
-      !> Search through a type 1 star catalog and return the number of
-      !> stars within a specified RA - DEC rectangle.
       module subroutine stcf01 ( ctx, catnam, westra, eastra, sthdec, nthdec, nstars )
          implicit none
          class(pepper_context), intent(inout) :: ctx  !! the context

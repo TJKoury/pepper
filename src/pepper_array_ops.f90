@@ -23,6 +23,9 @@ submodule (pepper_instance_module) pepper_array_ops
 
 contains
 
+      !> Cycle the elements of a character array forward or backward
+      !> in place.
+      !>
       !>## Detailed Input
       !>
       !>     NELT     is the number of elements in the input array.
@@ -259,6 +262,9 @@ contains
       return
       end subroutine cyacip
 
+      !> Cycle the elements of a double precision array forward
+      !> or backward in place.
+      !>
       !>## Detailed Input
       !>
       !>     NELT     is the number of elements in the input array.
@@ -454,6 +460,9 @@ contains
       return
       end subroutine cyadip
 
+      !> Cycle the elements of an integer array forward or backward
+      !> in place.
+      !>
       !>## Detailed Input
       !>
       !>     NELT     is the number of elements in the input array.
@@ -649,6 +658,8 @@ contains
       return
       end subroutine cyaiip
 
+      !> Cycle the elements of a character array forward or backward.
+      !>
       !>## Detailed Input
       !>
       !>     ARRAY    is the array to be cycled.
@@ -922,6 +933,9 @@ contains
       return
       end subroutine cyclac
 
+      !> Cycle the elements of a double precision array forward
+      !> or backward.
+      !>
       !>## Detailed Input
       !>
       !>     ARRAY    is the array to be cycled.
@@ -1144,6 +1158,8 @@ contains
       return
       end subroutine cyclad
 
+      !> Cycle the elements of an integer array forward or backward.
+      !>
       !>## Detailed Input
       !>
       !>     ARRAY    is the array to be cycled.
@@ -1366,6 +1382,9 @@ contains
       return
       end subroutine cyclai
 
+      !> Insert one or more elements into a character array at the
+      !> indicated location.
+      !>
       !>## Detailed Input
       !>
       !>     ELTS     contains one or more elements which are to be
@@ -1568,6 +1587,9 @@ contains
       return
       end subroutine inslac
 
+      !> Insert one or more elements into a double precision array at
+      !> the indicated location.
+      !>
       !>## Detailed Input
       !>
       !>     ELTS     contains one or more elements which are to be
@@ -1768,6 +1790,9 @@ contains
       return
       end subroutine inslad
 
+      !> Insert one or more elements into an integer array at
+      !> the indicated location.
+      !>
       !>## Detailed Input
       !>
       !>     ELTS     contains one or more elements which are to be
@@ -1968,6 +1993,9 @@ contains
       return
       end subroutine inslai
 
+      !> Remove one or more elements from a character array at the
+      !> indicated location.
+      !>
       !>## Detailed Input
       !>
       !>     NE       is the number of elements to be removed.
@@ -2157,6 +2185,9 @@ contains
       return
       end subroutine remlac
 
+      !> Remove one or more elements from a double precision array at the
+      !> indicated location.
+      !>
       !>## Detailed Input
       !>
       !>     NE       is the number of elements to be removed.
@@ -2347,6 +2378,9 @@ contains
       return
       end subroutine remlad
 
+      !> Remove one or more elements from an integer array at the
+      !> indicated location.
+      !>
       !>## Detailed Input
       !>
       !>     NE       is the number of elements to be removed.
@@ -2537,6 +2571,9 @@ contains
       return
       end subroutine remlai
 
+      !> Swap (exchange) two non-intersecting groups of contiguous
+      !> elements of a character array.
+      !>
       !>## Detailed Input
       !>
       !>     N,
@@ -2928,6 +2965,9 @@ contains
       return
       end subroutine swapac
 
+      !> Swap (exchange) two non-intersecting groups of contiguous
+      !> elements of a double precision array.
+      !>
       !>## Detailed Input
       !>
       !>     N,
@@ -3321,6 +3361,9 @@ contains
       return
       end subroutine swapad
 
+      !> Swap (exchange) two non-intersecting groups of contiguous
+      !> elements of an integer array.
+      !>
       !>## Detailed Input
       !>
       !>     N,
@@ -3713,6 +3756,10 @@ contains
       return
       end subroutine swapai
 
+      !> Pack the contents of a CHARACTER array. That is, take
+      !> a set of arbitrarily spaced elements from an input array,
+      !> and make them adjacent elements in an output array.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is the input array.
@@ -3893,6 +3940,10 @@ contains
       return
       end subroutine packac
 
+      !> Pack the contents of a double precision array. That is,
+      !> take a set of arbitrarily spaced elements from an input
+      !> array, and make them adjacent elements in an output array.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is the input array.
@@ -4073,6 +4124,10 @@ contains
       return
       end subroutine packad
 
+      !> Pack the contents of an integer array. That is,
+      !> take a set of arbitrarily spaced elements from an input
+      !> array, and make them adjacent elements in an output array.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is the input array.
@@ -4253,6 +4308,8 @@ contains
       return
       end subroutine packai
 
+      !> Allocate a node in a doubly linked list pool.
+      !>
       !>## Detailed Input
       !>
       !>     POOL     is a doubly linked list pool.
@@ -4447,6 +4504,8 @@ contains
       return
       end subroutine lnkan
 
+      !> Free a specified sublist in a list.
+      !>
       !>## Detailed Input
       !>
       !>     HEAD,
@@ -4790,6 +4849,11 @@ contains
       return
       end subroutine lnkfsl
 
+      !> Return the head node of the list containing a specified node.
+      !>
+      !> The function returns the number of the head node of the list
+      !> containing NODE.
+      !>
       !>## Detailed Input
       !>
       !>     NODE     is the number of a node in POOL. Normally,
@@ -4991,6 +5055,9 @@ contains
       return
       end function lnkhl
 
+      !> Insert the list containing a specified node into a another list,
+      !> following a specified node.
+      !>
       !>## Detailed Input
       !>
       !>     PREV     is a node in a list. PREV is permitted to be
@@ -5263,6 +5330,9 @@ contains
       return
       end subroutine lnkila
 
+      !> Insert the list containing a specified node into a another list,
+      !> preceding a specified node.
+      !>
       !>## Detailed Input
       !>
       !>     LIST     is a node in the list to be inserted. The entire
@@ -5538,6 +5608,8 @@ contains
       return
       end subroutine lnkilb
 
+      !> Initialize a doubly linked list pool.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the number of nodes in the pool.
@@ -5727,6 +5799,10 @@ contains
       return
       end subroutine lnkini
 
+      !> Return the number of free nodes in a doubly linked list pool.
+      !>
+      !> The function returns the number of free nodes in the pool.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the number of nodes in the pool.
@@ -5854,6 +5930,12 @@ contains
       return
       end function lnknfn
 
+      !> Find the node following a specified node in a doubly linked list
+      !> pool.
+      !>
+      !> The function returns the number of the successor of the node
+      !> indicated by NODE.
+      !>
       !>## Detailed Input
       !>
       !>     NODE     is the number of an allocated node in POOL.
@@ -6051,6 +6133,12 @@ contains
       return
       end function lnknxt
 
+      !> Find the node preceding a specified node in a doubly linked list
+      !> pool.
+      !>
+      !> The function returns the number of the predecessor of the node
+      !> indicated by NODE.
+      !>
       !>## Detailed Input
       !>
       !>     NODE     is the number of an allocated node in POOL.
@@ -6249,6 +6337,10 @@ contains
       return
       end function lnkprv
 
+      !> Return the size of a doubly linked list pool.
+      !>
+      !> The function returns the size of the pool.
+      !>
       !>## Detailed Input
       !>
       !>     POOL     is a doubly linked list pool.
@@ -6370,6 +6462,11 @@ contains
       return
       end function lnksiz
 
+      !> Return the tail node of the list containing a specified node.
+      !>
+      !> The function returns the number of the tail node of the list
+      !> containing NODE.
+      !>
       !>## Detailed Input
       !>
       !>     NODE     is the number of a node in POOL. Normally,
@@ -6583,6 +6680,8 @@ contains
       return
       end function lnktl
 
+      !> Extract a specified sublist from a list.
+      !>
       !>## Detailed Input
       !>
       !>     HEAD,

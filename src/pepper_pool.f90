@@ -1580,6 +1580,8 @@ submodule (pepper_instance_module) pepper_pool
 
 contains
 
+      !> Set counter array to the initial values for the user routines.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -1651,6 +1653,9 @@ contains
       return
       end subroutine zzctruin
 
+      !> Set counter array to the initial values for the subsystem
+      !> routines.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -1722,6 +1727,8 @@ contains
       return
       end subroutine zzctrsin
 
+      !> Increment counter array.
+      !>
       !>## Detailed Input
       !>
       !>     OLDCTR      is the counter array to be incremented.
@@ -1820,6 +1827,8 @@ contains
       return
       end subroutine zzctrinc
 
+      !> Check and update, if needed, counter array.
+      !>
       !>## Detailed Input
       !>
       !>     NEWCTR      is the new counter value against which the old
@@ -1902,6 +1911,10 @@ contains
       return
       end subroutine zzctrchk
 
+      !> Set the long error message equal to a standard I/O error message
+      !> composed from an action, the name of a file, and a value of
+      !> IOSTAT.
+      !>
       !>## Detailed Input
       !>
       !>     ACTION   is the action which caused the error. This may
@@ -2097,6 +2110,8 @@ contains
       return
       end subroutine ioerr
 
+      !> Read the next line of text from a text file.
+      !>
       !>## Detailed Input
       !>
       !>     FILE     is the name of the text file from which the next
@@ -2801,6 +2816,8 @@ contains
 
       end subroutine rdtext
 
+      !> Close a text file currently opened by [[rdtext]].
+      !>
       !>## Detailed Input
       !>
       !>     FILE     is the name of a text file which is currently
@@ -3005,6 +3022,8 @@ contains
       end associate
       end subroutine cltext
 
+      !> Open and initialize a SPICE ASCII kernel file.
+      !>
       !>## Detailed Input
       !>
       !>     KERNEL   is the name of the SPICE ASCII kernel file to be opened
@@ -3238,6 +3257,8 @@ contains
       end associate
       end subroutine rdknew
 
+      !> Read the next line of data from a SPICE ASCII kernel file.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -3471,6 +3492,9 @@ contains
       end associate
       end subroutine rdkdat
 
+      !> Return the name of file and line number of the last line read by
+      !> the entry point [[rdkdat]].
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -3583,14 +3607,12 @@ contains
       end associate
       end subroutine rdklin
 
-      !>## Abstract
+      !> Create an error message for ZZTOKNS token buffer and picture
+      !> overflow exceptions.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Create an error message for ZZTOKNS token buffer and picture
-      !>     overflow exceptions.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3679,14 +3701,12 @@ contains
 
       end subroutine zztknerr
 
-      !>## Abstract
+      !> Given a numeric pattern, construct the appropriate time format
+      !> picture component.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Given a numeric pattern, construct the appropriate time format
-      !>     picture component.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3819,13 +3839,13 @@ contains
 
       end subroutine zzmkpc
 
-      !>## Abstract
+      !> The function returns TRUE if a replacement is performed
       !>
-      !>    SPICE Private routine intended solely for the support of SPICE
-      !>    routines.  Users should not call this routine directly due
-      !>    to the volatile nature of this routine.
+      !> Replace matching tokens and remove the character "*"
       !>
-      !>    Replace matching tokens and remove the character "*"
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3900,14 +3920,12 @@ contains
       return
       end function zzrept
 
-      !>## Abstract
+      !> Determine whether the components of a time vector are in the
+      !> "usual" range for the components, if component checking is
+      !> enabled.
       !>
-      !>     Determine whether the components of a time vector are in the
-      !>     "usual" range for the components, if component checking is
-      !>     enabled.
-      !>
-      !>     If component checking is not enabled, this routine simply
-      !>     returns after setting the outputs.
+      !> If component checking is not enabled, this routine simply
+      !> returns after setting the outputs.
       !>
       !>## Detailed Input
       !>
@@ -4428,6 +4446,10 @@ contains
       end associate
       end subroutine tcheck
 
+      !> Restrict the set of strings that are recognized by SPICE time
+      !> parsing routines to those that have standard values for all time
+      !> components.
+      !>
       !>## Detailed Input
       !>
       !>     TYPE     is a character string that is used to adjust the set of
@@ -4689,6 +4711,8 @@ contains
       end associate
       end subroutine tparch
 
+      !> Determine whether component checking is enabled for time strings.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -4811,6 +4835,8 @@ contains
       end associate
       end subroutine tchckd
 
+      !> Expand an abbreviated year to a full year specification.
+      !>
       !>## Detailed Input
       !>
       !>     YEAR     is an "abbreviated year." In other words the 98 of
@@ -5028,6 +5054,8 @@ contains
       end associate
       end subroutine texpyr
 
+      !> Set the lower bound on the 100 year range.
+      !>
       !>## Detailed Input
       !>
       !>     YEAR     is the year associated with the lower bound on all year
@@ -5210,13 +5238,11 @@ contains
       end associate
       end subroutine tsetyr
 
-      !>## Abstract
+      !> Initialize the built-in time patterns.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Initialize the built-in time patterns.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5371,6 +5397,13 @@ contains
       return
       end function zztpats
 
+      !> Parse the components of a time string and return a vector of the
+      !> components of that string. Also return an array of any modifiers
+      !> present in the input string; these may alter the interpretation
+      !> of the components.
+      !>
+      !> The function returns
+      !>
       !>## Detailed Input
       !>
       !>     STRING   is a character string that represents some
@@ -6659,13 +6692,13 @@ contains
 
       end subroutine tpartv
 
-      !>## Abstract
+      !> The function returns TRUE is a combination was performed.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Combine several token representatives into a single token.
       !>
-      !>     Combine several token representatives into a single token.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6817,13 +6850,11 @@ contains
       end associate
       end function zzcmbt
 
-      !>## Abstract
+      !> Return the internal representation of the time string.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the internal representation of the time string.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6903,14 +6934,14 @@ contains
       end associate
       end function zzgrep
 
-      !>## Abstract
+      !> The function returns TRUE if a pair is found.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Determine if there is a pair of consecutive tokens from
+      !> a user specified list of tokens.
       !>
-      !>     Determine if there is a pair of consecutive tokens from
-      !>     a user specified list of tokens.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7034,14 +7065,16 @@ contains
       end associate
       end function zzispt
 
-      !>## Abstract
+      !> LETTER     I
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> The function returns
       !>
-      !>     Determine if a token is present in the internal representation
-      !>     of a tokenized time string.
+      !> Determine if a token is present in the internal representation
+      !> of a tokenized time string.
+      !>
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7122,14 +7155,14 @@ contains
       end associate
       end function zzist
 
-      !>## Abstract
+      !> The function returns TRUE if the token is located.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Return the beginning and ending of a token in a time string
+      !> and remove the token from the internal representation.
       !>
-      !>     Return the beginning and ending of a token in a time string
-      !>     and remove the token from the internal representation.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7260,13 +7293,13 @@ contains
       end associate
       end function zznote
 
-      !>## Abstract
+      !> The function returns TRUE if any tokens are removed.
       !>
-      !>    SPICE Private routine intended solely for the support of SPICE
-      !>    routines. Users should not call this routine directly due
-      !>    to the volatile nature of this routine.
+      !> Remove a specified token from the internal representation
       !>
-      !>    Remove a specified token from the internal representation
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7382,14 +7415,14 @@ contains
       end associate
       end function zzremt
 
-      !>## Abstract
+      !> The function returns TRUE is a substitution is performed.
       !>
-      !>    SPICE Private routine intended solely for the support of SPICE
-      !>    routines. Users should not call this routine directly due
-      !>    to the volatile nature of this routine.
+      !> Substitute one token for another in the internal representation
+      !> of a tokenized time string.
       !>
-      !>    Substitute one token for another in the internal representation
-      !>    of a tokenized time string.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7561,13 +7594,13 @@ contains
       end associate
       end function zzsubt
 
-      !>## Abstract
+      !> The function returns TRUE is STRING can be tokenized.
       !>
-      !>    SPICE Private routine intended solely for the support of SPICE
-      !>    routines. Users should not call this routine directly due
-      !>    to the volatile nature of this routine.
+      !> Construct an internal tokenized representation of STRING.
       !>
-      !>    Construct an internal tokenized representation of STRING.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8676,14 +8709,14 @@ contains
       end associate
       end function zztokns
 
-      !>## Abstract
+      !> The function returns TRUE if the string was unpacked completely.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Unpack the time string and parse its components using the
+      !> stored internal representation.
       !>
-      !>     Unpack the time string and parse its components using the
-      !>     stored internal representation.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9393,15 +9426,15 @@ contains
       end associate
       end function zzunpck
 
-      !>## Abstract
+      !> The function returns TRUE if any substitutions are performed.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Examine the value of an integer token and if it is within the
+      !> range from B to E replace the token with the new token
+      !> specified by LETTER.
       !>
-      !>     Examine the value of an integer token and if it is within the
-      !>     range from B to E replace the token with the new token
-      !>     specified by LETTER.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9539,6 +9572,9 @@ contains
       end associate
       end function zzvalt
 
+      !> Parse a time string and return seconds past the J2000 epoch
+      !> on a formal calendar.
+      !>
       !>## Detailed Input
       !>
       !>     STRING   is an input time string, containing a Calendar or Julian
@@ -10218,15 +10254,15 @@ contains
 
       end subroutine tparse
 
-      !>## Abstract
+      !> PEPPER: initializes the pool state PS (SPICELIB passed the arrays).
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> This routine initializes the data structures needed for
+      !> maintaining the kernel pool and initializes the hash function
+      !> used for the name list in the kernel pool.
       !>
-      !>     This routine initializes the data structures needed for
-      !>     maintaining the kernel pool and initializes the hash function
-      !>     used for the name list in the kernel pool.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       module subroutine zzpini ( ctx, ps )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
@@ -10248,14 +10284,14 @@ contains
       if ( .not. ctx%failed() ) ps%first = .false.
       end subroutine zzpini
 
-      !>## Abstract
+      !> PEPPER: stores into the pool state PS (SPICELIB passed the arrays).
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Read the next variable from a SPICE ASCII kernel file into
+      !> the kernel pool.
       !>
-      !>     Read the next variable from a SPICE ASCII kernel file into
-      !>     the kernel pool.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -11282,13 +11318,13 @@ contains
       end subroutine kernel_location
       end subroutine zzrvar
 
-      !>## Abstract
+      !> PEPPER: stores into the pool state PS (SPICELIB passed the arrays).
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Read the next variable from a text buffer into the kernel pool.
       !>
-      !>     Read the next variable from a text buffer into the kernel pool.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -12225,6 +12261,9 @@ contains
       return
       end subroutine zzrvbf
 
+      !> Remove all kernel variables from the kernel pool. Watches
+      !> on kernel variables are retained.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -12521,6 +12560,14 @@ contains
       call write_provided_frames ( ctx )
       end subroutine clpool
 
+      !> Load the variables contained in a NAIF ASCII kernel file into the
+      !> kernel pool. Lines have at most 132 characters; a longer line is
+      !> cut without an error (see Restrictions).
+      !>
+      !> PEPPER: a file named `*.json` (in any case) is a JSON kernel (see
+      !> [[pepper_json]]), loaded atomically: on an error nothing in it is
+      !> loaded.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of the text kernel file whose variables will
@@ -12912,13 +12959,11 @@ contains
       end associate
       end subroutine ldpool
 
-      !>## Abstract
+      !> Return the value of a kernel variable from the kernel pool.
       !>
-      !>     Return the value of a kernel variable from the kernel pool.
-      !>
-      !>     This routine is maintained only for backward compatibility.
-      !>     It should be regarded as obsolete. Use one of the entry points
-      !>     GDPOOL, GIPOOL or GCPOOL in its place.
+      !> This routine is maintained only for backward compatibility.
+      !> It should be regarded as obsolete. Use one of the entry points
+      !> GDPOOL, GIPOOL or GCPOOL in its place.
       !>
       !>## Detailed Input
       !>
@@ -13114,6 +13159,9 @@ contains
       end associate
       end subroutine rtpool
 
+      !> Confirm the existence of a numeric kernel variable in the kernel
+      !> pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the numeric kernel variable whose
@@ -13404,6 +13452,11 @@ contains
       end associate
       end subroutine expool
 
+      !> Write to a specified unit a set of "keyword = value" assignments
+      !> for all currently defined kernel variables. The assignments
+      !> constitute a text kernel from which the current state of the
+      !> kernel pool can be restored.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the logical unit to which the variables in the pool
@@ -13781,6 +13834,9 @@ contains
          end subroutine double_quotes
       end subroutine wrpool
 
+      !> Add a name to the list of agents to notify whenever a member of
+      !> a list of kernel variables is updated.
+      !>
       !>## Detailed Input
       !>
       !>     AGENT    is the name of a routine or entry point (agency) that
@@ -14053,6 +14109,9 @@ contains
       return
       end subroutine swpool
 
+      !> Indicate whether or not any watched kernel variables that have a
+      !> specified agent on their notification list have been updated.
+      !>
       !>## Detailed Input
       !>
       !>     AGENT    is the name of a subroutine, entry point, or significant
@@ -14336,6 +14395,9 @@ contains
       return
       end subroutine cvpool
 
+      !> Return the character value of a kernel variable from the
+      !> kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the variable whose values are to be
@@ -14576,7 +14638,7 @@ contains
       end subroutine gcpool
 
       !> Return one string value of a character kernel variable, of any
-      !> length (PEPPER).
+      !> length (PEPPER; [[gcpool]] truncates to the length of its output).
       module subroutine pool_string ( ctx, name, nth, value, found, n )
       use pepper_kinds, only: ip
       implicit none
@@ -14603,8 +14665,9 @@ contains
       end associate
       end subroutine pool_string
 
-      !> The names of the kernel variables that match a template, of any
-      !> length (PEPPER).
+      !> The names of the kernel variables that match a template (wildcards
+      !> * and %, case-insensitive, as [[gnpool]]), of any length, in the order
+      !> of [[gnpool]] (PEPPER).
       module subroutine pool_names ( ctx, template, names )
       use pepper_kinds, only: ip
       use pepper_containers, only: grow
@@ -14632,7 +14695,8 @@ contains
       end associate
       end subroutine pool_names
 
-      !> All the values of a numeric kernel variable (PEPPER).
+      !> All the values of a numeric kernel variable (PEPPER; [[gdpool]] with
+      !> the size taken from the pool).
       module subroutine pool_values ( ctx, name, values, found )
       use pepper_kinds, only: ip
       implicit none
@@ -14661,7 +14725,9 @@ contains
       end subroutine pool_values
 
       !> All the values of a numeric kernel variable, rounded to integers
-      !> (PEPPER).
+      !> (PEPPER; [[gipool]] with the size taken from the pool).
+      !>
+      !> A value outside the range of integers signals SPICE(INTOUTOFRANGE).
       module subroutine pool_integers ( ctx, name, values, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax, intmin
@@ -14711,7 +14777,7 @@ contains
       end subroutine pool_integers
 
       !> All the values of a character kernel variable, each of any length
-      !> (PEPPER).
+      !> (PEPPER; [[gcpool]] with the size taken from the pool).
       module subroutine pool_strings ( ctx, name, values, found )
       use pepper_kinds, only: ip
       implicit none
@@ -14743,7 +14809,18 @@ contains
       end associate
       end subroutine pool_strings
 
-      !> Where the values of a kernel variable came from (PEPPER).
+      !> Where the values of a kernel variable came from (PEPPER): the
+      !> assignments in effect, in order, with the source of each, the line
+      !> where it begins, and the index of its first value. An `=` assignment
+      !> replaces the values, so it is the first one; each `+=` (or `"+NAME"`
+      !> of a JSON kernel) that followed adds one.
+      !>
+      !> The source is the kernel file, named as it was loaded (with
+      !> [[spice_furnsh]], or listed in a meta-kernel), or a tag for the values
+      !> set by a program: `(PCPOOL)`, `(PDPOOL)`, `(PIPOOL)`, `(LMPOOL)` (its
+      !> line is the line of the buffer), `(add_frame)` (the definition of a
+      !> programmatic frame, [[spice_add_frame]]). [[pool_defined_by]] is the
+      !> reverse.
       module subroutine pool_sources ( ctx, name, sources, lines, found, first )
       use pepper_kinds, only: ip
       implicit none
@@ -14779,7 +14856,10 @@ contains
       end associate
       end subroutine pool_sources
 
-      !> The kernel variables that a source assigned (PEPPER).
+      !> The kernel variables that a source assigned (PEPPER; the reverse of
+      !> [[pool_sources]]): the variables with an assignment in effect from
+      !> it, in the order of [[gnpool]]. A variable that a later `=` from
+      !> another source replaced is not among them.
       module subroutine pool_defined_by ( ctx, source, names )
       use pepper_kinds, only: ip
       use pepper_containers, only: grow
@@ -14811,7 +14891,13 @@ contains
       end associate
       end subroutine pool_defined_by
 
-      !> Write the kernel pool as a JSON kernel (PEPPER).
+      !> Write the kernel pool as a JSON kernel (PEPPER; the JSON counterpart
+      !> of [[wrpool]]): one `"NAME": value` per variable, in the order of
+      !> [[gnpool]], each with a `//` comment naming its sources and lines
+      !> ([[pool_sources]]). Loading the file ([[spice_furnsh]], as a `*.json`
+      !> kernel) gives the same variables and values: the numbers are written
+      !> with as many digits as they need to read back exactly (integers
+      !> without a fraction), and times as the numbers they became.
       module subroutine pool_write_json ( ctx, unit )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -14999,6 +15085,8 @@ contains
       end subroutine append_integer
       end subroutine pool_write_json
 
+      !> Return the d.p. value of a kernel variable from the kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the variable whose values are to be
@@ -15230,6 +15318,9 @@ contains
       end associate
       end subroutine gdpool
 
+      !> Return the integer value of a kernel variable from the
+      !> kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the variable whose values are to be
@@ -15481,6 +15572,8 @@ contains
       end associate
       end subroutine gipool
 
+      !> Return the data about a kernel pool variable.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the variable whose values are to be
@@ -15711,6 +15804,9 @@ contains
       end associate
       end subroutine dtpool
 
+      !> Provide toolkit programmers a method for programmatically
+      !> inserting character data into the kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the kernel pool variable to associate
@@ -15954,6 +16050,9 @@ contains
       end associate
       end subroutine pcpool
 
+      !> Provide toolkit programmers a method for programmatically
+      !> inserting double precision data into the kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the kernel pool variable to associate
@@ -16196,6 +16295,9 @@ contains
       end associate
       end subroutine pdpool
 
+      !> Provide toolkit programmers a method for programmatically
+      !> inserting integer data into the kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the kernel pool variable to associate
@@ -16438,6 +16540,9 @@ contains
       end associate
       end subroutine pipool
 
+      !> Load the variables contained in an internal buffer into the
+      !> kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     CVALS    is an array that contains lines of text that
@@ -16609,6 +16714,8 @@ contains
       end associate
       end subroutine lmpool
 
+      !> Return the kernel pool size limitations.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of a kernel pool size parameter.
@@ -16749,6 +16856,8 @@ contains
       end if
       end subroutine szpool
 
+      !> Delete a variable from the kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the kernel pool variable to delete.
@@ -16899,6 +17008,8 @@ contains
       end associate
       end subroutine dvpool
 
+      !> Return names of kernel variables matching a specified template.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is a MATCHI template which will be used when searching
@@ -17147,6 +17258,9 @@ contains
       end associate
       end subroutine gnpool
 
+      !> Delete a name from the list of agents to notify whenever a member
+      !> of a list of kernel variables is updated.
+      !>
       !>## Detailed Input
       !>
       !>     AGENT    is any agent name that has previously been associated
@@ -17248,14 +17362,12 @@ contains
       return
       end subroutine dwpool
 
-      !>## Abstract
+      !> Check and update the POOL state counter tracked by a caller
+      !> (user) routine.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Check and update the POOL state counter tracked by a caller
-      !>     (user) routine.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>

@@ -31,8 +31,14 @@ contains
    ! Ephemerides
    ! ----------------------------------------------------------------------
 
-   !> Add a programmatic ephemeris (PEPPER): it replaces the program's
-   !> earlier one of the body (not a kernel's: [[kb_add_ephemeris]]).
+   !> Add a programmatic ephemeris (PEPPER; plans/programmatic_plan.md): the
+   !> states of BODY relative to CENTER in FRAME come from PROVIDER (a copy
+   !> of it is kept) at the epochs of [TBEG, TEND]. The body enters the SPK
+   !> segment search as a file loaded now: it overrides the files loaded
+   !> before (and is overridden by those loaded after) at those epochs.
+   !> Adding a body again replaces its registration (the program's, not a
+   !> kernel's: [[kb_add_ephemeris]]). Errors are signaled in the
+   !> instance's context.
    module subroutine spice_add_ephemeris ( this, body, center, frame, tbeg, tend, provider )
       implicit none
       class(pepper_instance), target, intent(inout) :: this  !! the instance
@@ -48,7 +54,8 @@ contains
       call register_ephemeris ( ctx, body, center, frame, tbeg, tend, provider, 0_ip, virtual_ident, .true. )
    end subroutine spice_add_ephemeris
 
-   !> Register a programmatic ephemeris owned by a kernel (PEPPER).
+   !> Register a programmatic ephemeris owned by a kernel built in memory
+   !> (its handle), from a builder being loaded (PEPPER).
    module subroutine register_owned_ephemeris ( ctx, body, center, frame, tbeg, tend, provider, owner, ident )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -155,8 +162,10 @@ contains
       end associate
    end subroutine register_ephemeris
 
-   !> Remove a programmatic ephemeris (PEPPER): the program's of the body
-   !> (not a kernel's, which goes with its kernel).
+   !> Remove a programmatic ephemeris (PEPPER): the body's other segments
+   !> (files) apply again. No error if the body has none. Only the
+   !> program's ([[spice_add_ephemeris]]): one a kernel owns
+   !> ([[kb_add_ephemeris]]) goes with its kernel (UNLOAD, KCLEAR).
    module subroutine spice_remove_ephemeris ( this, body )
       implicit none
       class(pepper_instance), target, intent(inout) :: this  !! the instance
@@ -180,7 +189,8 @@ contains
       end do
    end subroutine remove_ephemeris_entry
 
-   !> Remove the programmatic ephemerides a kernel owns (PEPPER).
+   !> Remove the programmatic ephemerides a kernel owns (its handle):
+   !> UNLOAD, KCLEAR (PEPPER).
    module subroutine remove_owned_ephemerides ( ctx, owner )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -233,7 +243,7 @@ contains
    end subroutine clear_provided_ephemerides
 
    !> The state of a programmatic ephemeris's virtual segment (SPKPVN's
-   !> type 100) (PEPPER).
+   !> type 100): its provider's, at ET (PEPPER).
    recursive module subroutine provided_state ( ctx, handle, et, state )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -268,7 +278,7 @@ contains
       call ctx%sigerr ( 'SPICE(INVALIDHANDLE)' )
    end subroutine provided_state
 
-   !> The state of [[ephemeris_procedure]]: its procedure's (PEPPER).
+   !> The state of [[ephemeris_procedure]]: its procedure's.
    recursive module subroutine ephemeris_procedure_state ( self, ctx, body, et, state, found )
       implicit none
       class(ephemeris_procedure), intent(in) :: self  !! the provider
@@ -289,6 +299,14 @@ contains
    ! Frames
    ! ----------------------------------------------------------------------
 
+   !> Add a programmatic frame (PEPPER; plans/programmatic_plan.md): a frame of
+   !> class 7 whose orientation comes from PROVIDER (a copy of it is kept).
+   !> The frame's definition (name, ID code, class, center) is written into
+   !> the kernel pool, so no frame kernel is needed. Adding a frame again
+   !> (the same code) replaces it; the names and codes of built-in frames
+   !> are refused (SPICE(FRAMEEXISTS)). Errors are signaled in the
+   !> instance's context.
+   !>
    !> Add a programmatic frame (PEPPER): it replaces the program's earlier
    !> one of the code (not a kernel's: [[kb_add_frame]]).
    module subroutine spice_add_frame ( this, name, code, center, provider )
@@ -314,7 +332,8 @@ contains
       call register_frame ( ctx, name, code, center, provider, 0_ip )
    end subroutine spice_add_frame
 
-   !> Register a programmatic frame owned by a kernel (PEPPER).
+   !> Register a programmatic frame owned by a kernel built in memory
+   !> (its handle), from a builder being loaded (PEPPER).
    module subroutine register_owned_frame ( ctx, name, code, center, provider, owner )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -328,6 +347,9 @@ contains
       call register_frame ( ctx, name, code, center, provider, owner )
    end subroutine register_owned_frame
 
+   !> Check a frame definition as [[spice_add_frame]] does (a blank name;
+   !> a name or code of another frame: SPICE(FRAMEEXISTS)) (PEPPER).
+   !>
    !> Check a programmatic frame's name and code (PEPPER): the name and the
    !> code must not be those of another frame (a built-in frame, or a frame
    !> of a kernel under another name or code); a programmatic frame of the
@@ -462,7 +484,9 @@ contains
       end associate
    end subroutine remove_frame_at
 
-   !> Remove the programmatic frames a kernel owns (PEPPER).
+   !> Remove the programmatic frames a kernel owns (its handle): UNLOAD,
+   !> KCLEAR. A frame's definition leaves the kernel pool when no other
+   !> registration of it remains (PEPPER).
    module subroutine remove_owned_frames ( ctx, owner )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the instance's context
@@ -474,6 +498,9 @@ contains
       end do
    end subroutine remove_owned_frames
 
+   !> Remove a programmatic frame and its definition from the kernel pool
+   !> (PEPPER). No error if there is no such programmatic frame.
+   !>
    !> Remove a programmatic frame (PEPPER): the program's of the name (not
    !> a kernel's, which goes with its kernel).
    module subroutine spice_remove_frame ( this, name )
@@ -529,7 +556,8 @@ contains
       deallocate ( ctx%spice%pool%setter )
    end subroutine write_frame_definition
 
-   !> Forget every programmatic frame (KCLEAR) (PEPPER).
+   !> Forget every programmatic frame (KCLEAR, before it empties the
+   !> kernel pool) (PEPPER).
    module subroutine clear_provided_frames ( ctx )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -539,8 +567,9 @@ contains
       end associate
    end subroutine clear_provided_frames
 
-   !> Write the definitions of the programmatic frames into the kernel pool
-   !> (CLPOOL) (PEPPER).
+   !> Write the definitions of the programmatic frames into the kernel
+   !> pool (CLPOOL, after it empties the pool: programmatic frames are
+   !> registrations, like loaded files, not kernel variables) (PEPPER).
    module subroutine write_provided_frames ( ctx )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -627,8 +656,8 @@ contains
       call ctx%sigerr ( 'SPICE(UNKNOWNFRAMETYPE)' )
    end subroutine provided_transform
 
-   !> A frame provider's rotation: the rotation block of its transformation
-   !> (PEPPER).
+   !> A [[frame_provider]]'s rotation: by default, the rotation block of
+   !> its `transform`.
    recursive module subroutine frame_provider_rotation ( self, ctx, frame, et, rotate, relative, found )
       implicit none
       class(frame_provider), intent(in) :: self  !! the provider
@@ -643,7 +672,7 @@ contains
       rotate = xform(1:3, 1:3)
    end subroutine frame_provider_rotation
 
-   !> The transformation of [[frame_procedure]]: its procedure's (PEPPER).
+   !> The transformation of [[frame_procedure]]: its procedure's.
    recursive module subroutine frame_procedure_transform ( self, ctx, frame, et, xform, relative, found )
       implicit none
       class(frame_procedure), intent(in) :: self  !! the provider

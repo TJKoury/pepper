@@ -22,14 +22,12 @@ submodule (pepper_instance_module) pepper_dynamic
 
 contains
 
-      !>## Abstract
+      !> For a specified dynamic frame, find the transformation
+      !> that maps states from the dynamic frame to its base frame.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     For a specified dynamic frame, find the transformation
-      !>     that maps states from the dynamic frame to its base frame.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -335,14 +333,12 @@ contains
       ctx%ndynamic = ctx%ndynamic - 1
       end subroutine zzdynfrm
 
-      !>## Abstract
+      !> For a specified dynamic frame, find the rotation that maps
+      !> positions from the dynamic frame to its base frame.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     For a specified dynamic frame, find the rotation that maps
-      !>     positions from the dynamic frame to its base frame.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>

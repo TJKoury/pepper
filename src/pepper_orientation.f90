@@ -18,6 +18,11 @@ submodule (pepper_instance_module) pepper_orientation
 
 contains
 
+      !> Return the spacecraft clock type for a specified spacecraft.
+      !>
+      !> The function returns the spacecraft clock type associated with
+      !> the spacecraft specified by SC.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF ID code for a spacecraft, whose
@@ -173,6 +178,10 @@ contains
       return
       end function sctype
 
+      !> Return a 6x6 matrix that transforms states in inertial
+      !> coordinates to states in body-equator-and-prime-meridian
+      !> coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     REF      is the NAIF name for an inertial reference frame.
@@ -936,7 +945,6 @@ contains
       !>     ID-based hash for text PCK data. KIDLST, KIDPOL, and KIDIDS
       !>     provide the index in the body PCK data arrays at which the data
       !>     of the body with a given ID are stored.
-
       module subroutine tisbod ( ctx, ref, body, et, tsipm )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, j2000, rpd, spd, twopi
@@ -1709,6 +1717,9 @@ contains
       end associate
       end subroutine tisbod
 
+      !> Find the position rotation matrix from a Text Kernel (TK) frame
+      !> with the specified frame class ID to its base frame.
+      !>
       !>## Detailed Input
       !>
       !>     FRCODE   is the unique frame class ID of the TK frame for which
@@ -2667,19 +2678,17 @@ contains
       end associate
       end subroutine tkfram
 
-      !>## Abstract
+      !> Look up a frame definition kernel variable whose associated
+      !> value is a frame name or frame ID code.  The returned value is
+      !> always an ID code.  The kernel variable name can refer to
+      !> the frame being defined by either name or ID code.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> If the kernel variable is not present, or if the variable
+      !> is not a frame name or a numeric value, signal an error.
       !>
-      !>     Look up a frame definition kernel variable whose associated
-      !>     value is a frame name or frame ID code.  The returned value is
-      !>     always an ID code.  The kernel variable name can refer to
-      !>     the frame being defined by either name or ID code.
-      !>
-      !>     If the kernel variable is not present, or if the variable
-      !>     is not a frame name or a numeric value, signal an error.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3014,16 +3023,14 @@ contains
       return
       end subroutine zzdynfid
 
-      !>## Abstract
+      !> Translate a string containing a frame name to its ID code, but
+      !> bypass calling NAMFRM and return saved value provided by the
+      !> caller if the name is the same as the saved name and the POOL
+      !> state did not change.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Translate a string containing a frame name to its ID code, but
-      !>     bypass calling NAMFRM and return saved value provided by the
-      !>     caller if the name is the same as the saved name and the POOL
-      !>     state did not change.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3271,14 +3278,12 @@ contains
 
       end subroutine zznamfrm
 
-      !>## Abstract
+      !> Create an informative long error message for cases where the
+      !> frame system signals a SPICE(NOFRAMECONNECT) error.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Create an informative long error message for cases where the
-      !>     frame system signals a SPICE(NOFRAMECONNECT) error.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3812,14 +3817,12 @@ contains
       return
       end subroutine zznofcon
 
-      !>## Abstract
+      !> Fetch kernel variables for a specified switch frame. Data
+      !> for the new frame are added to the switch frame database.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Fetch kernel variables for a specified switch frame. Data
-      !>     for the new frame are added to the switch frame database.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4870,6 +4873,8 @@ contains
       return
       end subroutine zzswffet
 
+      !> J2000 to TEME, and TEME to J2000, probably.
+      !>
       !>## Detailed Input
       !>
       !>     ET         time expressed in terms of TDB seconds past epoch J2000
@@ -4979,6 +4984,10 @@ contains
       return
       end subroutine zzteme
 
+      !> Convert ephemeris seconds past J2000 (ET) to continuous encoded
+      !> spacecraft clock (`ticks').  Non-integral tick values may be
+      !> returned.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF integer code for a spacecraft whose
@@ -5203,6 +5212,10 @@ contains
       return
       end subroutine sce2c
 
+      !> Evaluate a single SPK data record from a segment of type 10
+      !> (NORAD two-line element sets.). This evaluator uses algorithms
+      !> as described in Vallado 2006 [4].
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, specified as ephemeris seconds past
@@ -5539,6 +5552,10 @@ contains
       return
       end subroutine spke10
 
+      !> Return a 3x3 matrix that transforms positions in inertial
+      !> coordinates to positions in body-equator-and-prime-meridian
+      !> coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     REF      is the NAIF name for an inertial reference frame.
@@ -5930,6 +5947,11 @@ contains
       return
       end subroutine tipbod
 
+      !> Find the position rotation matrix from a C-kernel (CK) frame with
+      !> the specified frame class ID (CK ID) to the base frame of the
+      !> highest priority CK segment containing orientation data for this
+      !> CK frame at the time requested.
+      !>
       !>## Detailed Input
       !>
       !>     INST     is the unique frame class ID (CK ID) of the CK frame for
@@ -6343,6 +6365,11 @@ contains
       return
       end subroutine ckfrot
 
+      !> Find the state transformation matrix from a C-kernel (CK) frame
+      !> with the specified frame class ID (CK ID) to the base frame of
+      !> the highest priority CK segment containing orientation and
+      !> angular velocity data for this CK frame at the time requested.
+      !>
       !>## Detailed Input
       !>
       !>     INST     is the unique frame class ID (CK ID) of the CK frame for
@@ -6746,6 +6773,10 @@ contains
       return
       end subroutine ckfxfm
 
+      !> Return, for a specified SPK segment and time, the state (position
+      !> and velocity) of the segment's target body relative to its center
+      !> of motion.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -7102,13 +7133,11 @@ contains
       return
       end subroutine spkpvn
 
-      !>## Abstract
+      !> Return switch frame state or position transformation matrix.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return switch frame state or position transformation matrix.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>

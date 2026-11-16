@@ -16,6 +16,9 @@ submodule (pepper_instance_module) pepper_pck_api
 
 contains
 
+      !> Find the coverage window for a specified reference frame in a
+      !> specified binary PCK file.
+      !>
       !>## Detailed Input
       !>
       !>     PCKFNM   is the name of a binary PCK file.
@@ -505,6 +508,13 @@ contains
       end do
       end subroutine pckcov
 
+      !> The coverage of a frame in a binary PCK file (PEPPER; [[pckcov]]
+      !> without a window cell).
+      !>
+      !> The result is a window as an array: each column an interval
+      !> [start, stop] (TDB seconds past J2000), sorted and disjoint
+      !> ([[pepper_windows]]). The errors are those of [[pckcov]],
+      !> without SPICE(WINDOWEXCESS).
       module subroutine pck_coverage ( ctx, file, frame, intervals )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -638,14 +648,12 @@ contains
       return
       end subroutine pck_coverage
 
-      !>## Abstract
+      !> This routine is obsolete. It supports only the type 02 binary
+      !> PCK format. It is maintained only for backward compatibility
       !>
-      !>     This routine is obsolete. It supports only the type 02 binary
-      !>     PCK format. It is maintained only for backward compatibility
-      !>
-      !>     Return Euler angles and their derivatives and their reference
-      !>     frame, given an input time and body and reference frame from
-      !>     a PCK binary file.
+      !> Return Euler angles and their derivatives and their reference
+      !> frame, given an input time and body and reference frame from
+      !> a PCK binary file.
       !>
       !>## Detailed Input
       !>
@@ -835,6 +843,9 @@ contains
       return
       end subroutine pckeul
 
+      !> Find the set of reference frame class ID codes of all frames
+      !> in a specified binary PCK file.
+      !>
       !>## Detailed Input
       !>
       !>     PCKFNM   is the name of a binary PCK file.
@@ -1116,6 +1127,8 @@ contains
       end do
       end subroutine pckfrm
 
+      !> The frames of a binary PCK file (PEPPER; [[pckfrm]] without a set
+      !> cell): their class ID codes, sorted, without duplicates.
       module subroutine pck_frames ( ctx, file, ids )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: append_id, sort_unique
@@ -1251,6 +1264,10 @@ contains
       return
       end subroutine pck_frames
 
+      !> Return the Euler angles needed to compute the transformation from
+      !> inertial to body-fixed coordinates for any body in the kernel
+      !> pool.
+      !>
       !>## Detailed Input
       !>
       !>     BODY     is the integer ID code of the body for which the

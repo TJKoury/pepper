@@ -121,21 +121,19 @@ submodule (pepper_instance_module) pepper_dsk_files
 
 contains
 
-      !>## Abstract
+      !> This routine exists to determine whether or not the type of
+      !> a DAF segment is compatible with the sizes allowed for SPK
+      !> type 01 segments or CK type 02 segments.  However, more generally
+      !> it determines whether or not the integer equation:
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> SIZE = PSIZE*N + (N-OFFSET)/DSIZE
       !>
-      !>     This routine exists to determine whether or not the type of
-      !>     a DAF segment is compatible with the sizes allowed for SPK
-      !>     type 01 segments or CK type 02 segments.  However, more generally
-      !>     it determines whether or not the integer equation:
+      !> can be satisfied for some value of N.  Moreover, if such
+      !> an N exists (there can be only one) it returns that value.
       !>
-      !>         SIZE = PSIZE*N + (N-OFFSET)/DSIZE
-      !>
-      !>     can be satisfied for some value of N.  Moreover, if such
-      !>     an N exists (there can be only one) it returns that value.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -300,14 +298,12 @@ contains
       return
       end subroutine zzsizeok
 
-      !>## Abstract
+      !> This routine determines whether or not a DAF file attached to
+      !> the supplied handle is an SPK, CK or unknown file.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     This routine determines whether or not a DAF file attached to
-      !>     the supplied handle is an SPK, CK or unknown file.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -646,6 +642,8 @@ contains
 
       end subroutine zzckspk
 
+      !> Determine the architecture and type of SPICE kernels.
+      !>
       !>## Detailed Input
       !>
       !>     FILE     is the name of a SPICE kernel file whose architecture
@@ -1665,6 +1663,9 @@ contains
 
       end subroutine getfat
 
+      !> Compute the outward-pointing, unit normal vector at a point on
+      !> the surface of an ellipsoid.
+      !>
       !>## Detailed Input
       !>
       !>     A        is the length of the semi-axis of the ellipsoid that is
@@ -1869,6 +1870,10 @@ contains
       return
       end subroutine surfnm
 
+      !> Locate the point on the surface of an ellipsoid that is nearest
+      !> to a specified position. Also return the altitude of the position
+      !> above the ellipsoid.
+      !>
       !>## Detailed Input
       !>
       !>     POSITN   is a 3-vector giving the position of a point with respect
@@ -3850,6 +3855,8 @@ contains
       return
       end subroutine nearpt
 
+      !> Convert from rectangular coordinates to geodetic coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     RECTAN   are the rectangular coordinates of a point. RECTAN
@@ -4266,14 +4273,12 @@ contains
       return
       end subroutine recgeo
 
-      !>## Abstract
+      !> Generate a data structure that represents the mapping from
+      !> vertices to the plates containing them.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Generate a data structure that represents the mapping from
-      !>     vertices to the plates containing them.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4552,14 +4557,12 @@ contains
       return
       end subroutine zzvrtplt
 
-      !>## Abstract
+      !> Map voxel coordinates to coarse voxel coordinates and offset
+      !> relative to coarse voxel. Offset coordinates are 1-based.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Map voxel coordinates to coarse voxel coordinates and offset
-      !>     relative to coarse voxel. Offset coordinates are 1-based.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4722,14 +4725,14 @@ contains
 
       end subroutine zzvoxcvo
 
-      !>## Abstract
+      !> The function returns the voxel index.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Given a voxel's grid coordinates and the voxel grid
+      !> dimensions, return the voxel's 1-dimensional index.
       !>
-      !>     Given a voxel's grid coordinates and the voxel grid
-      !>     dimensions, return the voxel's 1-dimensional index.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4830,15 +4833,13 @@ contains
       return
       end function zzvox2id
 
-      !>## Abstract
+      !> Traverse an AB pool linked list, searching for all cells that are
+      !> associated with a specified A-value. Store the B-values of these
+      !> cells in an array.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Traverse an AB pool linked list, searching for all cells that are
-      !>     associated with a specified A-value. Store the B-values of these
-      !>     cells in an array.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5095,6 +5096,9 @@ contains
       return
       end subroutine zztrvlnk
 
+      !> Untangle an unsorted AB linked-cell list into an A-index and
+      !> associated B-list.
+      !>
       !>## Detailed Input
       !>
       !>     NPTR       is the size of the input pointer array INPTR.
@@ -5373,13 +5377,11 @@ contains
       return
       end subroutine zzuntngl
 
-      !>## Abstract
+      !> Initialize an AB cell linked-list structure.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Initialize an AB cell linked-list structure.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5531,14 +5533,12 @@ contains
       return
       end subroutine zzinilnk
 
-      !>## Abstract
+      !> This subroutine returns the 1-based voxel coordinates of the
+      !> voxel that contains a given point.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     This subroutine returns the 1-based voxel coordinates of the
-      !>     voxel that contains a given point.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5754,14 +5754,12 @@ contains
       return
       end subroutine zzgetvox
 
-      !>## Abstract
+      !> Add a new AB cell to an AB cell pool and update the A-value
+      !> pointer array.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Add a new AB cell to an AB cell pool and update the A-value
-      !>     pointer array.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5966,13 +5964,11 @@ contains
       return
       end subroutine zzaddlnk
 
-      !>## Abstract
+      !> Create voxel grid data structure and voxel-plate mapping.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Create voxel grid data structure and voxel-plate mapping.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6741,6 +6737,8 @@ contains
       return
       end subroutine zzmkspin
 
+      !> Open a new DLA file and set the file type.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a new DLA file to be created. The file
@@ -7171,6 +7169,8 @@ contains
       return
       end subroutine dlaopn
 
+      !> Begin a new segment in a DLA file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the DLA file to
@@ -7623,6 +7623,8 @@ contains
       return
       end subroutine dlabns
 
+      !> End a new segment in a DLA file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the DLA file to
@@ -8011,6 +8013,8 @@ contains
       return
       end subroutine dlaens
 
+      !> Begin a forward segment search in a DLA file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the file to be
@@ -8288,6 +8292,8 @@ contains
       return
       end subroutine dlabfs
 
+      !> Begin a backward segment search in a DLA file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the file to be
@@ -8570,6 +8576,8 @@ contains
       return
       end subroutine dlabbs
 
+      !> Find the segment following a specified segment in a DLA file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the file to be
@@ -8845,6 +8853,8 @@ contains
       return
       end subroutine dlafns
 
+      !> Find the segment preceding a specified segment in a DLA file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the file to be
@@ -9127,6 +9137,13 @@ contains
       return
       end subroutine dlafps
 
+      !> Return a logical value indicating whether a two DLA
+      !> segments, each identified by DAS handle and DLA descriptor,
+      !> are in fact the same segment.
+      !>
+      !> The function returns .TRUE. if and only if the DLA segments
+      !> match.
+      !>
       !>## Detailed Input
       !>
       !>     HAN1     is the integer handle associated with a DLA file.
@@ -9295,6 +9312,8 @@ contains
       return
       end function dlassg
 
+      !> Open a new DSK file for subsequent write operations.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a new DSK file to be created. The
@@ -9437,6 +9456,8 @@ contains
       return
       end subroutine dskopn
 
+      !> Close a DSK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the DAS file handle associated with the file.
@@ -9586,6 +9607,9 @@ contains
       return
       end subroutine dskcls
 
+      !> Retrieve the value of a specified DSK tolerance or margin
+      !> parameter.
+      !>
       !>## Detailed Input
       !>
       !>     KEYWRD   is an integer code specifying the parameter to
@@ -9721,6 +9745,8 @@ contains
       end associate
       end subroutine dskgtl
 
+      !> Set the value of a specified DSK tolerance or margin parameter.
+      !>
       !>## Detailed Input
       !>
       !>     KEYWRD   is an integer code specifying the parameter to
@@ -9901,6 +9927,9 @@ contains
       end associate
       end subroutine dskstl
 
+      !> Return the DSK descriptor from a DSK segment identified
+      !> by a DAS handle and DLA descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file that is open for
@@ -10461,6 +10490,8 @@ contains
       return
       end subroutine dskgd
 
+      !> Return bookkeeping data from a DSK type 2 segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
@@ -10790,6 +10821,8 @@ contains
       return
       end subroutine dskb02
 
+      !> Fetch double precision data from a type 2 DSK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
@@ -11336,6 +11369,8 @@ contains
       end associate
       end subroutine dskd02
 
+      !> Fetch integer data from a type 2 DSK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
@@ -12063,6 +12098,9 @@ contains
       end associate
       end subroutine dski02
 
+      !> Compute the unit normal vector for a specified plate from a type
+      !> 2 DSK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
@@ -12456,6 +12494,8 @@ contains
       return
       end subroutine dskn02
 
+      !> Fetch triangular plates from a type 2 DSK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
@@ -12852,6 +12892,8 @@ contains
       return
       end subroutine dskp02
 
+      !> Fetch vertices from a type 2 DSK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
@@ -13259,7 +13301,8 @@ contains
       return
       end subroutine dskv02
 
-      !> All the plates of a type 2 DSK segment (PEPPER).
+      !> All the plates of a type 2 DSK segment (PEPPER; [[dskp02]] with the
+      !> size from [[dskz02]]).
       module subroutine dsk_plates ( ctx, handle, dladsc, plates )
       use pepper_kinds, only: ip
       implicit none
@@ -13283,7 +13326,8 @@ contains
       end if
       end subroutine dsk_plates
 
-      !> All the vertices of a type 2 DSK segment (PEPPER).
+      !> All the vertices of a type 2 DSK segment (PEPPER; [[dskv02]] with
+      !> the size from [[dskz02]]).
       module subroutine dsk_vertices ( ctx, handle, dladsc, vertices )
       use pepper_kinds, only: ip
       implicit none
@@ -13307,6 +13351,9 @@ contains
       end if
       end subroutine dsk_vertices
 
+      !> Return plate model size parameters---plate count and
+      !> vertex count---for a type 2 DSK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
@@ -13596,6 +13643,11 @@ contains
       return
       end subroutine dskz02
 
+      !> Make spatial index for a DSK type 2 segment. The index is
+      !> returned as a pair of arrays, one of type INTEGER and one of type
+      !> DOUBLE PRECISION. These arrays are suitable for use with the DSK
+      !> type 2 writer [[dskw02]].
+      !>
       !>## Detailed Input
       !>
       !>     NV       is the number of vertices belonging to the input
@@ -14511,6 +14563,9 @@ contains
       return
       end subroutine dskmi2
 
+      !> Determine range bounds for a set of triangular plates to
+      !> be stored in a type 2 DSK segment.
+      !>
       !>## Detailed Input
       !>
       !>     NV       is the number of vertices belonging to the input
@@ -15090,6 +15145,9 @@ contains
       return
       end subroutine dskrb2
 
+      !> Find the set of body ID codes of all objects for which
+      !> topographic data are provided in a specified DSK file.
+      !>
       !>## Detailed Input
       !>
       !>     DSKFNM   is the name of a DSK file. This file will be opened for
@@ -15304,6 +15362,8 @@ contains
       end do
       end subroutine dskobj
 
+      !> The bodies of a DSK file (PEPPER; [[dskobj]] without a set cell):
+      !> their ID codes, sorted, without duplicates.
       module subroutine dsk_objects ( ctx, file, ids )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: append_id, sort_unique
@@ -15428,6 +15488,9 @@ contains
       return
       end subroutine dsk_objects
 
+      !> Find the set of surface ID codes for all surfaces associated with
+      !> a given body in a specified DSK file.
+      !>
       !>## Detailed Input
       !>
       !>     DSKFNM   is the name of a DSK file. This file will be opened for
@@ -15645,6 +15708,8 @@ contains
       end do
       end subroutine dsksrf
 
+      !> The surfaces of a body in a DSK file (PEPPER; [[dsksrf]] without a
+      !> set cell): their ID codes, sorted, without duplicates.
       module subroutine dsk_surfaces ( ctx, file, body, ids )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: append_id, sort_unique

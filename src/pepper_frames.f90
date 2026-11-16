@@ -293,19 +293,17 @@ submodule (pepper_instance_module) pepper_frames
 
 contains
 
-      !>## Abstract
+      !> Look up a frame definition kernel variable whose associated value
+      !> is a body name or body ID code.  The returned value is always an
+      !> ID code.  The frame name or frame ID may be used as part of the
+      !> variable's name.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> If the kernel variable is not present, or if the variable
+      !> is not a body name or a numeric value, signal an error.
       !>
-      !>     Look up a frame definition kernel variable whose associated value
-      !>     is a body name or body ID code.  The returned value is always an
-      !>     ID code.  The frame name or frame ID may be used as part of the
-      !>     variable's name.
-      !>
-      !>     If the kernel variable is not present, or if the variable
-      !>     is not a body name or a numeric value, signal an error.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -623,17 +621,15 @@ contains
       return
       end subroutine zzdynbid
 
-      !>## Abstract
+      !> Look up array-valued integer frame kernel variable. The frame
+      !> name or frame ID may be used as part of the variable's name.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> If the kernel variable is not present, or if the variable
+      !> has the wrong data type, signal an error.
       !>
-      !>     Look up array-valued integer frame kernel variable. The frame
-      !>     name or frame ID may be used as part of the variable's name.
-      !>
-      !>     If the kernel variable is not present, or if the variable
-      !>     has the wrong data type, signal an error.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -876,18 +872,16 @@ contains
       return
       end subroutine zzdynvai
 
-      !>## Abstract
+      !> Look up optional array-valued character frame kernel variable.
+      !> The frame name or frame ID may be used as part of the variable's
+      !> name.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> If the kernel variable is not present, or if the variable
+      !> has the wrong data type or size, set the FOUND flag to .FALSE.
       !>
-      !>     Look up optional array-valued character frame kernel variable.
-      !>     The frame name or frame ID may be used as part of the variable's
-      !>     name.
-      !>
-      !>     If the kernel variable is not present, or if the variable
-      !>     has the wrong data type or size, set the FOUND flag to .FALSE.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1133,18 +1127,16 @@ contains
       return
       end subroutine zzdynoac
 
-      !>## Abstract
+      !> Look up optional array-valued double precision frame kernel
+      !> variable. The frame name or frame ID may be used as part of the
+      !> variable's name.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> If the kernel variable is not present, or if the variable
+      !> has the wrong data type, set the FOUND flag to .FALSE.
       !>
-      !>     Look up optional array-valued double precision frame kernel
-      !>     variable. The frame name or frame ID may be used as part of the
-      !>     variable's name.
-      !>
-      !>     If the kernel variable is not present, or if the variable
-      !>     has the wrong data type, set the FOUND flag to .FALSE.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1391,17 +1383,15 @@ contains
       return
       end subroutine zzdynoad
 
-      !>## Abstract
+      !> Look up array-valued character frame kernel variable.  The frame
+      !> name or frame ID may be used as part of the variable's name.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> If the kernel variable is not present, or if the variable
+      !> has the wrong data type, signal an error.
       !>
-      !>     Look up array-valued character frame kernel variable.  The frame
-      !>     name or frame ID may be used as part of the variable's name.
-      !>
-      !>     If the kernel variable is not present, or if the variable
-      !>     has the wrong data type, signal an error.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1565,18 +1555,16 @@ contains
       return
       end subroutine zzdynvac
 
-      !>## Abstract
+      !> Look up array-valued double precision frame kernel variable.
+      !> The frame name or frame ID may be used as part of the variable's
+      !> name.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> If the kernel variable is not present, or if the variable
+      !> has the wrong data type, signal an error.
       !>
-      !>     Look up array-valued double precision frame kernel variable.
-      !>     The frame name or frame ID may be used as part of the variable's
-      !>     name.
-      !>
-      !>     If the kernel variable is not present, or if the variable
-      !>     has the wrong data type, signal an error.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1814,14 +1802,12 @@ contains
       return
       end subroutine zzdynvad
 
-      !>## Abstract
+      !> Perform partial data structure clean up in response to failures
+      !> detected in the switch frame data fetch routine ZZSWFFET.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Perform partial data structure clean up in response to failures
-      !>     detected in the switch frame data fetch routine ZZSWFFET.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1911,16 +1897,14 @@ contains
       return
       end subroutine zzswfcln
 
-      !>## Abstract
+      !> Initialize switch frame bookkeeping data structures.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Arrays of base frame attributes are not initialized by this
+      !> routine.
       !>
-      !>     Initialize switch frame bookkeeping data structures.
-      !>
-      !>     Arrays of base frame attributes are not initialized by this
-      !>     routine.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -2037,6 +2021,9 @@ contains
       return
       end subroutine zzswfini
 
+      !> Return the values of the triaxial radii for any body in the
+      !> kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     BODY     is the NAIF ID code of the body for which the axes are
@@ -2188,15 +2175,13 @@ contains
       return
       end subroutine zzgftreb
 
-      !>## Abstract
+      !> Initialize the table of built-in frame names and their ID codes
+      !> and hashes and order arrays providing efficient access to these
+      !> tables.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Initialize the table of built-in frame names and their ID codes
-      !>     and hashes and order arrays providing efficient access to these
-      !>     tables.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3404,6 +3389,8 @@ contains
       return
       end subroutine zzfdat
 
+      !> Look up the frame ID code associated with a string.
+      !>
       !>## Detailed Input
       !>
       !>     FRNAME   is a character string that stands for some
@@ -3571,6 +3558,9 @@ contains
       return
       end subroutine namfrm
 
+      !> Retrieve the name of a reference frame associated with a SPICE ID
+      !> code.
+      !>
       !>## Detailed Input
       !>
       !>     FRCODE   is an integer code for a reference frame.
@@ -3726,6 +3716,9 @@ contains
       return
       end subroutine frmnam
 
+      !> Retrieve the minimal attributes associated with a frame
+      !> needed for converting transformations to and from it.
+      !>
       !>## Detailed Input
       !>
       !>     FRCODE   is the ID code for some reference frame.
@@ -4178,6 +4171,8 @@ contains
       end associate
       end subroutine frinfo
 
+      !> Retrieve frame ID code and name to associate with a frame center.
+      !>
       !>## Detailed Input
       !>
       !>     CENT     is the ID code for object for which there is a
@@ -4334,6 +4329,8 @@ contains
       return
       end subroutine cidfrm
 
+      !> Retrieve frame ID code and name to associate with an object.
+      !>
       !>## Detailed Input
       !>
       !>     CNAME    is the name for object for which there is a
@@ -4541,6 +4538,9 @@ contains
       return
       end subroutine cnmfrm
 
+      !> Return the frame name, frame ID, and center associated with
+      !> a given frame class and class ID.
+      !>
       !>## Detailed Input
       !>
       !>     FRCLSS   is the class or type of the frame. This identifies
@@ -4781,6 +4781,10 @@ contains
       return
       end subroutine ccifrm
 
+!> Find the kernel variable that defines an item of a frame:
+!> FRAME_<ID code>_<item>, or else FRAME_<name>_<item>, names of any
+!> length (PEPPER; the lookup shared by the ZZDYNxxx routines).
+!>
 !> PEPPER: find the kernel variable that defines an item of a frame:
 !> FRAME_<ID code>_<item>, or else FRAME_<name>_<item>. The lookup shared
 !> by the ZZDYNxxx routines; the names have any length (SPICELIB limited
@@ -4833,6 +4837,9 @@ contains
       call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)' )
       end subroutine dynamic_frame_variable
 
+!> The character values of the kernel variable that defines an item
+!> of a dynamic frame, at full length (PEPPER; the body of [[zzdynvac]]).
+!>
 !> PEPPER: the character values of the kernel variable that defines an
 !> item of a dynamic frame (FRAME_<ID code>_<item>, or else
 !> FRAME_<name>_<item>), at full length: the body of [[zzdynvac]].
@@ -4895,8 +4902,8 @@ contains
       end do
       end subroutine dynamic_frame_strings
 
-!> PEPPER: the name of a frame from its ID code, of any length (the body
-!> of [[frmnam]], which copies it into its fixed-length argument).
+!> The name of a frame from its ID code, of any length (PEPPER; the
+!> body of [[frmnam]], which truncates to its argument's length).
       module subroutine frame_name_of ( ctx, frcode, frname, found )
       use pepper_kinds, only: ip
       implicit none
@@ -4950,8 +4957,8 @@ contains
       end associate
       end subroutine frame_name_of
 
-!> PEPPER: the frame associated with an object, its name of any length
-!> (the body of [[cidfrm]]).
+!> The frame associated with an object, its name of any length
+!> (PEPPER; the body of [[cidfrm]]).
       module subroutine frame_of_center ( ctx, cent, frcode, frname, found )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bschoi
@@ -5019,8 +5026,8 @@ contains
       return
       end subroutine frame_of_center
 
-!> PEPPER: the frame of a class and class ID, its name of any length
-!> (the body of [[ccifrm]]).
+!> The frame of a class and class ID, its name of any length
+!> (PEPPER; the body of [[ccifrm]]).
       module subroutine frame_of_class ( ctx, frclss, clssid, frcode, frname, cent, found )
       use pepper_kinds, only: ip
       use pepper_inc_ninert

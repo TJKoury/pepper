@@ -9,6 +9,11 @@ submodule (pepper_instance_module) pepper_sclk_api
 
 contains
 
+      !> Convert ephemeris seconds past J2000 (ET) to integral
+      !> encoded spacecraft clock (`ticks'). For conversion to
+      !> fractional ticks, (required for C-kernel production), see
+      !> the routine [[sce2c]].
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF integer code for a spacecraft whose
@@ -253,6 +258,8 @@ contains
       return
       end subroutine sce2t
 
+      !> Convert encoded spacecraft clock ticks to character clock format.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is the NAIF ID number for the spacecraft whose clock's
@@ -605,6 +612,9 @@ contains
       return
       end subroutine scfmt
 
+      !> Get spacecraft clock partition information from a spacecraft
+      !> clock kernel file.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is the NAIF ID for the spacecraft whose clock partition
@@ -890,6 +900,9 @@ contains
       return
       end subroutine scpart
 
+      !> Convert encoded spacecraft clock (`ticks') to ephemeris
+      !> seconds past J2000 (ET).
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF integer code for a spacecraft, one of
@@ -1145,6 +1158,8 @@ contains
       return
       end subroutine sct2e
 
+      !> Convert a spacecraft clock format string to number of "ticks".
+      !>
       !>## Detailed Input
       !>
       !>     SC       is the NAIF ID number for the spacecraft whose clock
@@ -1424,6 +1439,9 @@ contains
       return
       end subroutine sctiks
 
+      !> Convert a double precision encoding of spacecraft clock time into
+      !> a character representation.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is the NAIF integer code of the spacecraft whose
@@ -1988,6 +2006,9 @@ contains
       return
       end subroutine scdecd
 
+      !> Encode a character representation of spacecraft clock time into a
+      !> double precision number.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is the standard NAIF ID of the spacecraft whose clock's
@@ -2606,6 +2627,10 @@ contains
       return
       end subroutine scencd
 
+      !> Convert an epoch specified as ephemeris seconds past J2000 (ET) to
+      !> a character string representation of a spacecraft clock value
+      !> (SCLK).
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF ID code for a spacecraft clock whose
@@ -2872,6 +2897,9 @@ contains
       return
       end subroutine sce2s
 
+      !> Convert a spacecraft clock string to ephemeris seconds past
+      !> J2000 (ET).
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF ID code for a spacecraft, one of whose

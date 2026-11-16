@@ -503,6 +503,8 @@ submodule (pepper_instance_module) pepper_ek_storage
 
 contains
 
+      !> Close an E-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an EK to be closed. Note
@@ -851,6 +853,9 @@ contains
       return
       end subroutine ekcls
 
+      !> Return shadowing status of a specified EK file. THIS IS A
+      !> STUB ROUTINE.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an EK open for writing.
@@ -925,14 +930,12 @@ contains
       return
       end subroutine ekshdw
 
-      !>## Abstract
+      !> Look up the column descriptor for a column of a given name
+      !> in a specified segment.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Look up the column descriptor for a column of a given name
-      !>     in a specified segment.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1078,6 +1081,8 @@ contains
 
       end subroutine zzekcdsc
 
+      !> Look up the name of a column, given the column's descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -1157,14 +1162,12 @@ contains
 
       end subroutine zzekcnam
 
-      !>## Abstract
+      !> Get an encoded integer at a specified address from a character
+      !> data page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Get an encoded integer at a specified address from a character
-      !>     data page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1265,6 +1268,8 @@ contains
       return
       end subroutine zzekgei
 
+      !> Return the status of a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -1342,6 +1347,10 @@ contains
       return
       end subroutine zzekgrs
 
+      !> Determine the order of elements in a character EK column,
+      !> using dictionary ordering on character data values and array
+      !> indices.
+      !>
       !>## Detailed Input
       !>
       !>     CVALS          is an array of character string EK column values,
@@ -1577,6 +1586,10 @@ contains
       return
       end subroutine zzekordc
 
+      !> Determine the order of elements in a double precision EK column,
+      !> using dictionary ordering on d.p. data values and array
+      !> indices.
+      !>
       !>## Detailed Input
       !>
       !>     DVALS          is an array of double precision EK column values,
@@ -1812,6 +1825,9 @@ contains
       return
       end subroutine zzekordd
 
+      !> Determine the order of elements in an integer EK column, using
+      !> dictionary ordering on integer data values and array indices.
+      !>
       !>## Detailed Input
       !>
       !>      IVALS          is an array of integer EK column values,
@@ -2050,6 +2066,8 @@ contains
       return
       end subroutine zzekordi
 
+      !> Parse a declaration of a new EK column.
+      !>
       !>## Detailed Input
       !>
       !>     DECL           is a character string containing a column
@@ -2824,6 +2842,9 @@ contains
       end associate
       end subroutine zzekpdec
 
+      !> Check that an EK is valid for a specified type of access by the
+      !> paging system.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The specified file is to be
@@ -3011,13 +3032,11 @@ contains
       return
       end subroutine zzekpgch
 
-      !>## Abstract
+      !> Initialize encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Initialize encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3186,6 +3205,9 @@ contains
       return
       end subroutine zzekqini
 
+      !> Back up a modified EK record belonging to a shadowed EK.
+      !> This is a stub routine.
+      !>
       !>## Detailed Input
       !>
       !>     ACTION         is a short string indicating the action taken
@@ -3378,13 +3400,11 @@ contains
       return
       end subroutine zzekrbck
 
-      !>## Abstract
+      !> Read scalar integer value from encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read scalar integer value from encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3492,6 +3512,8 @@ contains
       return
       end subroutine zzekreqi
 
+      !> Obtain last address in use in EK scratch area.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -3560,6 +3582,9 @@ contains
       end associate
       end subroutine zzekstop
 
+      !> Push the contents of an integer array onto the EK scratch area
+      !> stack.
+      !>
       !>## Detailed Input
       !>
       !>     N              is the number of integers in the array IDATA to
@@ -3759,6 +3784,9 @@ contains
       end associate
       end subroutine zzekspsh
 
+      !> Pop a specified number of elements from the top of the EK scratch
+      !> area stack, transferring this data to an integer array.
+      !>
       !>## Detailed Input
       !>
       !>     N              is the number of integers to pop from the
@@ -3930,6 +3958,8 @@ contains
       end associate
       end subroutine zzekspop
 
+      !> Decrement the EK scratch area stack pointer by a specified count.
+      !>
       !>## Detailed Input
       !>
       !>     N              is the number to subtract from the EK scratch
@@ -4036,6 +4066,9 @@ contains
       end associate
       end subroutine zzeksdec
 
+      !> Update the contents of a range of addresses already in use in the
+      !> EK scratch area.
+      !>
       !>## Detailed Input
       !>
       !>     BEG,
@@ -4190,6 +4223,8 @@ contains
       end associate
       end subroutine zzeksupd
 
+      !> Read from a range of addresses in the EK scratch area.
+      !>
       !>## Detailed Input
       !>
       !>     BEG,
@@ -4342,6 +4377,9 @@ contains
       end associate
       end subroutine zzeksrd
 
+      !> Clean up:  re-initialize the EK scratch area; unload the
+      !> scratch file.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -4437,6 +4475,8 @@ contains
       end associate
       end subroutine zzekscln
 
+      !> Scan tokens in an EK query.
+      !>
       !>## Detailed Input
       !>
       !>     QUERY          is character string containing an EK query.  See
@@ -5294,14 +5334,12 @@ contains
       end associate
       end subroutine zzekscan
 
-      !>## Abstract
+      !> Set an encoded integer at a specified address from a character
+      !> data page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Set an encoded integer at a specified address from a character
-      !>     data page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5401,6 +5439,12 @@ contains
       return
       end subroutine zzeksei
 
+      !> Determine the type of segment required to support a specified
+      !> set of columns.
+      !>
+      !> The function returns the type of segment that is compatible with
+      !> the input column descriptors.
+      !>
       !>## Detailed Input
       !>
       !>     NCOLS          is the number of columns in a new segment.
@@ -5535,6 +5579,11 @@ contains
       return
       end function zzekstyp
 
+      !> Return the size of a specified entry in a class 4 column.
+      !>
+      !> The function returns the number of elements in the specified
+      !> column entry.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -5687,6 +5736,11 @@ contains
       return
       end function zzeksz04
 
+      !> Return the size of a specified entry in a class 5 column.
+      !>
+      !> The function returns the number of elements in the specified
+      !> column entry.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -5845,13 +5899,11 @@ contains
       return
       end function zzeksz05
 
-      !>## Abstract
+      !> Convert time strings from EK query to ephemeris time.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Convert time strings from EK query to ephemeris time.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6138,6 +6190,10 @@ contains
       return
       end subroutine zzektcnv
 
+      !> Locate the first occurrence of a specified token in a tokenized
+      !> EK query.  The input may actually be any subset of token codes
+      !> and corresponding keyword codes from a tokenized query.
+      !>
       !>## Detailed Input
       !>
       !>     TOKID          is a token code identifying the type of token
@@ -6257,13 +6313,11 @@ contains
       return
       end subroutine zzektloc
 
-      !>## Abstract
+      !> Write scalar integer value to encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Write scalar integer value to encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6394,6 +6448,8 @@ contains
       return
       end subroutine zzekweqi
 
+      !> Open an existing E-kernel file for reading.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of an existing E-kernel file to be
@@ -6565,6 +6621,8 @@ contains
       return
       end subroutine ekopr
 
+      !> Open an existing E-kernel file for writing.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of an existing E-kernel file to be
@@ -6983,6 +7041,8 @@ contains
       return
       end subroutine ekopw
 
+      !> Get the companion pointer of a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -7074,14 +7134,12 @@ contains
       return
       end subroutine zzekgrcp
 
-      !>## Abstract
+      !> Insert a character value into a specified encoded EK query, and
+      !> obtain a descriptor for the stored value.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Insert a character value into a specified encoded EK query, and
-      !>     obtain a descriptor for the stored value.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7253,14 +7311,12 @@ contains
       return
       end subroutine zzekinqc
 
-      !>## Abstract
+      !> Insert a numeric value into a specified encoded EK query, and
+      !> obtain a descriptor for the stored value.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Insert a numeric value into a specified encoded EK query, and
-      !>     obtain a descriptor for the stored value.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7411,14 +7467,12 @@ contains
       return
       end subroutine zzekinqn
 
-      !>## Abstract
+      !> Compress a join row set by eliminating segment vectors for
+      !> which there are no corresponding row vectors.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Compress a join row set by eliminating segment vectors for
-      !>     which there are no corresponding row vectors.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7827,13 +7881,11 @@ contains
       return
       end subroutine zzekjsqz
 
-      !>## Abstract
+      !> Initialize an open DAS file for paged access.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Initialize an open DAS file for paged access.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7980,13 +8032,11 @@ contains
       end associate
       end subroutine zzekpgin
 
-      !>## Abstract
+      !> Allocate a new page of a specified data type.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Allocate a new page of a specified data type.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8141,14 +8191,12 @@ contains
       end associate
       end subroutine zzekpgan
 
-      !>## Abstract
+      !> Allocate a page of a specified data type.  The page need not
+      !> be new:  free pages are returned if possible.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Allocate a page of a specified data type.  The page need not
-      !>     be new:  free pages are returned if possible.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8440,13 +8488,11 @@ contains
       end associate
       end subroutine zzekpgal
 
-      !>## Abstract
+      !> Free a specified page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Free a specified page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8689,13 +8735,11 @@ contains
       return
       end subroutine zzekpgfr
 
-      !>## Abstract
+      !> Read a specified character page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read a specified character page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8805,13 +8849,11 @@ contains
       return
       end subroutine zzekpgrc
 
-      !>## Abstract
+      !> Read a specified double precision page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read a specified double precision page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8907,13 +8949,11 @@ contains
       return
       end subroutine zzekpgrd
 
-      !>## Abstract
+      !> Read a specified integer page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read a specified integer page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9009,13 +9049,11 @@ contains
       return
       end subroutine zzekpgri
 
-      !>## Abstract
+      !> Write a specified character page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Write a specified character page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9140,13 +9178,11 @@ contains
       return
       end subroutine zzekpgwc
 
-      !>## Abstract
+      !> Write a specified double precision page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Write a specified double precision page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9255,13 +9291,11 @@ contains
       return
       end subroutine zzekpgwd
 
-      !>## Abstract
+      !> Write a specified integer page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Write a specified integer page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9370,13 +9404,11 @@ contains
       return
       end subroutine zzekpgwi
 
-      !>## Abstract
+      !> Map a page to its base address.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Map a page to its base address.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9467,14 +9499,12 @@ contains
       return
       end subroutine zzekpgbs
 
-      !>## Abstract
+      !> Map a DAS address to the number of the page containing it.  Also
+      !> return the base address of the page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Map a DAS address to the number of the page containing it.  Also
-      !>     return the base address of the page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9578,13 +9608,11 @@ contains
       return
       end subroutine zzekpgpg
 
-      !>## Abstract
+      !> Return paging statistics.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return paging statistics.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9711,13 +9739,11 @@ contains
       return
       end subroutine zzekpgst
 
-      !>## Abstract
+      !> Read conjunction sizes from an encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read conjunction sizes from an encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9845,14 +9871,12 @@ contains
       return
       end subroutine zzekqcnj
 
-      !>## Abstract
+      !> Return elements of a specified constraint from an encoded EK
+      !> query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return elements of a specified constraint from an encoded EK
-      !>     query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -10184,14 +10208,12 @@ contains
       return
       end subroutine zzekqcon
 
-      !>## Abstract
+      !> Read a specified order-by table and column name, along with the
+      !> corresponding order sense, from an encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read a specified order-by table and column name, along with the
-      !>     corresponding order sense, from an encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -10456,14 +10478,12 @@ contains
       return
       end subroutine zzekqord
 
-      !>## Abstract
+      !> Read a specified SELECT clause table and column name from an
+      !> encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read a specified SELECT clause table and column name from an
-      !>     encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -10747,13 +10767,11 @@ contains
       return
       end subroutine zzekqsel
 
-      !>## Abstract
+      !> Read table names and aliases from an encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read table names and aliases from an encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -10948,6 +10966,10 @@ contains
       return
       end subroutine zzekqtab
 
+      !> Read a column entry from a specified record in a class 9 column.
+      !> Class 9 columns contain fixed record count, fixed-length,
+      !> scalar character values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -11213,6 +11235,8 @@ contains
       return
       end subroutine zzekrd09
 
+      !> Set the companion pointer of a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -11310,6 +11334,8 @@ contains
       return
       end subroutine zzeksrcp
 
+      !> Set the status of a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -11397,6 +11423,11 @@ contains
       return
       end subroutine zzeksrs
 
+      !> Return the size of a specified entry in a class 6 column.
+      !>
+      !> The function returns the number of elements in the specified
+      !> column entry.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -11549,6 +11580,9 @@ contains
       return
       end function zzeksz06
 
+      !> Given a union of EK join row sets, prepare EKVCAL to
+      !> compute addresses of row vectors in that union.
+      !>
       !>## Detailed Input
       !>
       !>     NJRS           is the number of join row sets in a join row set
@@ -11813,6 +11847,10 @@ contains
       end associate
       end subroutine zzekvset
 
+      !> Find the EK scratch area base address of a row vector and the
+      !> corresponding segment vector, where the row vector has a
+      !> specified index within a union of join row sets.
+      !>
       !>## Detailed Input
       !>
       !>     RWVIDX         is the index of a row vector in a join row set
@@ -11943,6 +11981,8 @@ contains
       end associate
       end subroutine zzekvcal
 
+      !> Return the forward data pointer for a specified EK data page.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -12059,6 +12099,8 @@ contains
       return
       end subroutine zzekgfwd
 
+      !> Return the link count for a specified EK data page.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -12171,6 +12213,8 @@ contains
       return
       end subroutine zzekglnk
 
+      !> Convert the WHERE clause of an EK query to a normalized form.
+      !>
       !>## Detailed Input
       !>
       !>     QUERY          is an EK query to be parsed.  The tokens of the
@@ -14750,6 +14794,8 @@ contains
          end subroutine more_descriptors
       end subroutine zzeknrml
 
+      !> Set the forward data pointer for a specified EK data page.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -14863,6 +14909,8 @@ contains
       return
       end subroutine zzeksfwd
 
+      !> Set the link count for a specified EK data page.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -14978,6 +15026,9 @@ contains
       return
       end subroutine zzekslnk
 
+      !> Execute a 1-3 split:  split the root node to create two new
+      !> children, leaving a single key in the root.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -15219,6 +15270,9 @@ contains
       return
       end subroutine zzektr13
 
+      !> Execute a 3-1 merge:  move the contents of two children into
+      !> the root node and delete the children.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -15490,6 +15544,11 @@ contains
       return
       end subroutine zzektr31
 
+      !> Map a node in a tree to its DAS base integer address.
+      !>
+      !> The function returns the DAS integer base address of the
+      !> specified node.
+      !>
       !>## Detailed Input
       !>
       !>     NODE           is the number of a node in an EK tree.
@@ -15551,6 +15610,8 @@ contains
       return
       end function zzektrbs
 
+      !> Free a tree:  deallocate all pages belonging to the tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -15816,6 +15877,8 @@ contains
       return
       end subroutine zzektrfr
 
+      !> Initialize an EK tree, returning the root of the tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -15932,6 +15995,9 @@ contains
       end associate
       end subroutine zzektrit
 
+      !> Locate a specified key.  Return metadata describing the node
+      !> containing the key.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -16343,6 +16409,9 @@ contains
       end associate
       end subroutine zzektrlk
 
+      !> Given a key, return general information pertaining to the key's
+      !> parent node.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -16682,6 +16751,9 @@ contains
       return
       end subroutine zzektrpi
 
+      !> Rotate a specified number of keys from one node, through
+      !> the parent, into a neighboring sibling node.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -17213,14 +17285,12 @@ contains
       return
       end subroutine zzektrrk
 
-      !>## Abstract
+      !> Weed out redundant, fully qualified row vectors from a join row
+      !> set union.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Weed out redundant, fully qualified row vectors from a join row
-      !>     set union.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -17630,6 +17700,8 @@ contains
       return
       end subroutine zzekweed
 
+      !> Open a new E-kernel file and prepare the file for writing.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a new E-kernel file to be created.
@@ -17969,6 +18041,9 @@ contains
       return
       end subroutine ekopn
 
+      !> Open a scratch (temporary) E-kernel file and prepare the file
+      !> for writing.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -18418,6 +18493,8 @@ contains
       return
       end subroutine ekops
 
+      !> Create a new type 1 index for a specified EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK that is open for write
@@ -18518,6 +18595,9 @@ contains
       return
       end subroutine zzekcix1
 
+      !> Parse an EK query that has been scanned and tokenized.
+      !> Represent the result as an encoded EK query.
+      !>
       !>## Detailed Input
       !>
       !>     QUERY          is a string containing the original input query.
@@ -20065,6 +20145,9 @@ contains
       return
       end subroutine zzekpars
 
+      !> Execute a 2-3 split:  split two sibling nodes into three nodes,
+      !> each one approximately 2/3 full.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -20641,6 +20724,11 @@ contains
       return
       end subroutine zzektr23
 
+      !> Execute a 3-2 merge:  merge three neighboring sibling nodes, two
+      !> of which contain the minimum number of keys and one of which
+      !> has an underflow of one key, into two nodes, each one
+      !> approximately full.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -21300,6 +21388,8 @@ contains
       return
       end subroutine zzektr32
 
+      !> Return the data pointer from a specified location in an EK tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -21398,6 +21488,11 @@ contains
       return
       end subroutine zzektrdp
 
+      !> Return the number of keys in a node.
+      !>
+      !> The function returns the total number of keys in the specified
+      !> node of an EK tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -21485,6 +21580,9 @@ contains
       return
       end function zzektrnk
 
+      !> Identify the immediate siblings of a node:  return a key in each
+      !> sibling and the siblings' node numbers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -21711,6 +21809,11 @@ contains
       return
       end subroutine zzektrsb
 
+      !> Return the number of keys in a tree.
+      !>
+      !> The function returns the total number of keys in the specified
+      !> EK tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -21786,6 +21889,9 @@ contains
       return
       end function zzektrsz
 
+      !> Delete a value from a tree at a specified location without
+      !> balancing the tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -22364,6 +22470,9 @@ contains
       return
       end subroutine zzektrud
 
+      !> Insert a value into a tree at a specified location without
+      !> balancing the tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -22886,6 +22995,11 @@ contains
       return
       end subroutine zzektrui
 
+      !> Return the number of segments in a specified EK.
+      !>
+      !> The function returns the number of segments in the specified
+      !> E-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file opened for read access.
@@ -23045,6 +23159,8 @@ contains
       return
       end function eknseg
 
+      !> Look up a specified record pointer from an EK index.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -23170,6 +23286,9 @@ contains
 
       end subroutine zzekixlk
 
+      !> Look up the record pointer of an EK record having a specified
+      !> ordinal position in a specified EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -23280,6 +23399,9 @@ contains
 
       end subroutine zzekrplk
 
+      !> One-shot tree load:  insert an entire array into an empty
+      !> tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -24059,6 +24181,9 @@ contains
       return
       end subroutine zzektr1s
 
+      !> Solve overflow in a node by balancing the node
+      !> with one of its sibling nodes.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -24267,6 +24392,10 @@ contains
       return
       end subroutine zzektrbn
 
+      !> Get a key from a node by index:  return the key having a specified
+      !> index in a specified node.  The node of interest is identified
+      !> by a key in the node.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -24401,6 +24530,12 @@ contains
 
       end subroutine zzektrki
 
+      !> Search an EK tree linearly to find a specified data value.  The
+      !> function returns the index at which the value is found.
+      !>
+      !> The function returns the lowest index at which the input value
+      !> is found, or zero if the value is not found.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -24492,6 +24627,10 @@ contains
       return
       end function zzektrls
 
+      !> Return the integer metadata location of a specified segment.  The
+      !> number and DAS integer base address of the first integer
+      !> page of the metadata are returned.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The EK may be open for read
@@ -24646,6 +24785,8 @@ contains
 
       end subroutine zzekmloc
 
+      !> Delete a value from an EK tree at a specified location.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -25210,6 +25351,8 @@ contains
       return
       end subroutine zzektrdl
 
+      !> Insert a value into an EK tree at a specified location.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -25575,6 +25718,8 @@ contains
       return
       end subroutine zzektrin
 
+      !> Delete a specified data page for a specified EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -25741,6 +25886,8 @@ contains
       return
       end subroutine zzekdps
 
+      !> Complete a fast load operation on a new type 1 E-kernel segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -26041,6 +26188,8 @@ contains
       return
       end subroutine zzekff01
 
+      !> Look up the descriptor of a specified EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -26119,6 +26268,9 @@ contains
       return
       end subroutine zzeksdsc
 
+      !> Return general segment information for a specified segment in a
+      !> specified EK.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -26421,6 +26573,9 @@ contains
       return
       end subroutine zzeksinf
 
+      !> Append an item to a tree.  The key indicating the location of
+      !> the new item is returned.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -26510,6 +26665,8 @@ contains
 
       end subroutine zzektrap
 
+      !> Complete a fast write operation on a new E-kernel segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file that is open for writing.
@@ -26917,6 +27074,9 @@ contains
       return
       end subroutine ekffld
 
+      !> Return summary information for a specified segment in a
+      !> specified EK.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is an EK file handle specifying the EK containing
@@ -27192,6 +27352,9 @@ contains
       return
       end subroutine ekssum
 
+      !> Allocate a series of contiguous data pages for a specified EK
+      !> segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -27354,6 +27517,8 @@ contains
       return
       end subroutine zzekacps
 
+      !> Allocate a data page for a specified EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -27504,6 +27669,8 @@ contains
       return
       end subroutine zzekaps
 
+      !> Start a new type 1 segment in an E-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -27920,6 +28087,8 @@ contains
       return
       end subroutine zzekbs01
 
+      !> Start a new type 2 segment in an E-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -28322,6 +28491,8 @@ contains
       return
       end subroutine zzekbs02
 
+      !> Delete a specified class 4 column entry from an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -28566,6 +28737,13 @@ contains
       return
       end subroutine zzekde04
 
+      !> Find the EK record number corresponding to a specified record
+      !> pointer.  Beware, for type 1 segments, this is done by linear
+      !> searching.
+      !>
+      !> The function returns the number of the record having the
+      !> specified record pointer.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write

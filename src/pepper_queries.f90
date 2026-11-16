@@ -31,8 +31,13 @@ submodule (pepper_instance_module) pepper_queries
 
 contains
 
-   !> Prepare a state query: the state of a target relative to an observer
-   !> in a frame, with an aberration correction (PEPPER).
+   !> Prepare a state query (PEPPER; [[pepper_query_types]]): the state of
+   !> a target relative to an observer in a frame, with an aberration
+   !> correction, as [[spkezr]], resolved once for evaluation at any number
+   !> of epochs with `query_state`.
+   !>
+   !> The errors are those of [[spkezr]] for these arguments (unknown
+   !> names, an invalid correction, an unknown frame).
    module subroutine prepare_state ( ctx, q, target, observer, frame, abcorr )
       use pepper_inc_frmtyp, only: inertl
       use pepper_inc_zzabcorr, only: nabcor, geoidx, ltidx, stlidx, cnvidx, xmtidx, relidx
@@ -125,7 +130,8 @@ contains
       q%prepared     = .true.
    end subroutine prepare_state
 
-   !> The state of a prepared query at one epoch: SPKEZR's result (PEPPER).
+   !> The state of a prepared query at one epoch (PEPPER): [[spkezr]]'s
+   !> result, to the last bit. Bound as the generic `query_state`.
    recursive module subroutine query_state_one ( ctx, q, et, state, lt )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -153,7 +159,8 @@ contains
       end if
    end subroutine query_state_one
 
-   !> The states of a prepared query at many epochs (PEPPER).
+   !> The states of a prepared query at many epochs (PEPPER). Bound as the
+   !> generic `query_state`.
    recursive module subroutine query_state_batch ( ctx, q, ets, states, lts )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -190,7 +197,11 @@ contains
       end do
    end subroutine query_state_batch
 
-   !> Prepare a frame transformation query (PEPPER).
+   !> Prepare a frame transformation query (PEPPER;
+   !> [[pepper_query_types]]): the transformation from one frame to
+   !> another, as [[pxform]] and [[sxform]], resolved once for evaluation
+   !> with `query_rotation` and `query_transform`. A rotation between
+   !> inertial and fixed TK frames is computed once.
    module subroutine prepare_rotation ( ctx, q, from, to )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -230,8 +241,8 @@ contains
       q%prepared = .true.
    end subroutine prepare_rotation
 
-   !> The rotation of a prepared frame query at one epoch: PXFORM's result
-   !> (PEPPER).
+   !> The rotation of a prepared frame query at one epoch (PEPPER):
+   !> [[pxform]]'s result. Bound as the generic `query_rotation`.
    recursive module subroutine query_rotation_one ( ctx, q, et, rotate )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -269,6 +280,7 @@ contains
    end subroutine query_rotation_one
 
    !> The rotations of a prepared frame query at many epochs (PEPPER).
+   !> Bound as the generic `query_rotation`.
    recursive module subroutine query_rotation_batch ( ctx, q, ets, rotations )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -293,8 +305,9 @@ contains
       end do
    end subroutine query_rotation_batch
 
-   !> The state transformation of a prepared frame query at one epoch:
-   !> SXFORM's result (PEPPER).
+   !> The state transformation of a prepared frame query at one epoch
+   !> (PEPPER): [[sxform]]'s result. Bound as the generic
+   !> `query_transform`.
    recursive module subroutine query_transform_one ( ctx, q, et, xform )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -312,7 +325,7 @@ contains
    end subroutine query_transform_one
 
    !> The state transformations of a prepared frame query at many epochs
-   !> (PEPPER).
+   !> (PEPPER). Bound as the generic `query_transform`.
    recursive module subroutine query_transform_batch ( ctx, q, ets, xforms )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context

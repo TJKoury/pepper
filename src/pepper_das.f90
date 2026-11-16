@@ -1043,6 +1043,8 @@ submodule (pepper_instance_module) pepper_das
 
 contains
 
+      !> Read and decode encoded characters from a text file.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for a previously opened text
@@ -1510,6 +1512,8 @@ contains
       return
       end subroutine rdencc
 
+      !> Encode and write characters to a text file.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for a previously opened text
@@ -2209,6 +2213,8 @@ contains
       end associate
       end subroutine wrencc
 
+      !> Write a single line of text to the Fortran logical unit UNIT.
+      !>
       !>## Detailed Input
       !>
       !>     LINE     is the text line which is to be written to UNIT.
@@ -2504,6 +2510,8 @@ contains
       return
       end subroutine writln
 
+      !> Write an array of text lines to a Fortran logical unit.
+      !>
       !>## Detailed Input
       !>
       !>     NUMLIN   is the number of text lines in ARRAY which are to be
@@ -2673,6 +2681,9 @@ contains
 
       end subroutine writla
 
+      !> Read a single line of text from the Fortran logical unit UNIT,
+      !> reporting the end of file if it occurs.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for the input. This may
@@ -2796,6 +2807,9 @@ contains
       return
       end subroutine readln
 
+      !> Read lines from a Fortran logical unit and place them in a
+      !> character string array.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for the input. This may
@@ -3067,14 +3081,12 @@ contains
 
       end subroutine readla
 
-      !>## Abstract
+      !> Read DAS double precision physical records from native
+      !> or non-native DAS files.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read DAS double precision physical records from native
-      !>     or non-native DAS files.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3253,14 +3265,12 @@ contains
       end associate
       end subroutine zzdasgrd
 
-      !>## Abstract
+      !> Read DAS integer physical records from native or non-native DAS
+      !> files.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read DAS integer physical records from native or non-native DAS
-      !>     files.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3438,6 +3448,8 @@ contains
       end associate
       end subroutine zzdasgri
 
+      !> Write the file record to a new DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     LUN        is a logical unit number of a DAS whose first record is
@@ -3684,6 +3696,8 @@ contains
       end associate
       end subroutine zzdasnfr
 
+      !> Return the contents of the file record of a specified DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle for a previously opened DAS file.
@@ -3956,6 +3970,8 @@ contains
       end associate
       end subroutine zzdasrfr
 
+      !> Open a DAS file for reading.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a DAS file to be opened with read
@@ -4583,6 +4599,8 @@ contains
       end associate
       end subroutine dasopr
 
+      !> Open a DAS file for writing.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a DAS file to be opened with write
@@ -5190,6 +5208,8 @@ contains
       end associate
       end subroutine dasopw
 
+      !> Open a new DAS file and set the file type.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a new DAS file to be created (and
@@ -5698,12 +5718,10 @@ contains
       end associate
       end subroutine dasonw
 
-      !>## Abstract
+      !> **Obsolete:** This routine has been superseded by [[dasonw]], and it is
+      !> supported for purposes of backward compatibility only.
       !>
-      !>     Obsolete: This routine has been superseded by DASONW, and it is
-      !>     supported for purposes of backward compatibility only.
-      !>
-      !>     Open a new DAS file for writing.
+      !> Open a new DAS file for writing.
       !>
       !>## Detailed Input
       !>
@@ -6139,6 +6157,8 @@ contains
       end associate
       end subroutine dasopn
 
+      !> Open a scratch DAS file for writing.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -6541,6 +6561,9 @@ contains
       end associate
       end subroutine dasops
 
+      !> Close the DAS file associated with a given handle, without
+      !> flushing buffered data or segregating the file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file.
@@ -7046,6 +7069,8 @@ contains
       end associate
       end subroutine dasllc
 
+      !> Return a file summary for a specified DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file. The file
@@ -7558,6 +7583,8 @@ contains
       end associate
       end subroutine dashfs
 
+      !> Update the file summary in a specified DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file.
@@ -7973,6 +8000,10 @@ contains
       end associate
       end subroutine dasufs
 
+      !> Return the logical unit associated with a handle. The unit
+      !> is "locked" to the handle by the DAF/DAS handle manager
+      !> subsystem.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file.
@@ -8176,6 +8207,8 @@ contains
       end associate
       end subroutine dashlu
 
+      !> Return the handle associated with a logical unit.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the logical unit to which a DAS file has been
@@ -8360,6 +8393,8 @@ contains
       end associate
       end subroutine dasluh
 
+      !> Return the name of the DAS file associated with a handle.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file.
@@ -8609,6 +8644,8 @@ contains
       end associate
       end subroutine dashfn
 
+      !> Return handle associated with a file name.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a previously opened DAS file.
@@ -8792,6 +8829,9 @@ contains
       end associate
       end subroutine dasfnh
 
+      !> Return a SPICE set containing the handles of all currently
+      !> open DAS files.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -8977,6 +9017,9 @@ contains
       end associate
       end subroutine dashof
 
+      !> Signal an error if a DAS file file handle does not designate a
+      !> DAS file that is open for a specified type of access.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a DAS file handle to validate. For HANDLE to be
@@ -9258,6 +9301,8 @@ contains
       end associate
       end subroutine dassih
 
+      !> Return the allowed access method for a specified DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file.
@@ -9464,6 +9509,8 @@ contains
       end associate
       end subroutine dasham
 
+      !> Read DAS double precision physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an open DAS file.
@@ -9807,6 +9854,8 @@ contains
       end associate
       end subroutine dasrrd
 
+      !> Read DAS integer physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an open DAS file.
@@ -10141,6 +10190,8 @@ contains
       end associate
       end subroutine dasrri
 
+      !> Read DAS character physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an open DAS file.
@@ -10467,6 +10518,8 @@ contains
       end associate
       end subroutine dasrrc
 
+      !> Write DAS double precision physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
@@ -10756,6 +10809,8 @@ contains
       end associate
       end subroutine daswrd
 
+      !> Write DAS integer physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
@@ -11046,6 +11101,8 @@ contains
       end associate
       end subroutine daswri
 
+      !> Write DAS character physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
@@ -11333,6 +11390,8 @@ contains
       end associate
       end subroutine daswrc
 
+      !> Update DAS double precision physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
@@ -11688,6 +11747,8 @@ contains
       end associate
       end subroutine dasurd
 
+      !> Update DAS integer physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
@@ -12041,6 +12102,8 @@ contains
       end associate
       end subroutine dasuri
 
+      !> Update DAS character physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
@@ -12402,6 +12465,8 @@ contains
       end associate
       end subroutine dasurc
 
+      !> Write out all buffered records of a specified DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
@@ -13007,6 +13072,8 @@ contains
       end associate
       end subroutine daswbr
 
+      !> Perform Fortran reads and writes of DAS character records.
+      !>
       !>## Detailed Input
       !>
       !>     ACTION   is a character string specifying whether to read
@@ -13214,6 +13281,9 @@ contains
       return
       end subroutine dasioc
 
+      !> Perform Fortran reads and writes of DAS double precision records.
+      !> This routine operates on DAS files having native binary format.
+      !>
       !>## Detailed Input
       !>
       !>     ACTION   is a character string specifying whether to read
@@ -13427,6 +13497,10 @@ contains
       return
       end subroutine dasiod
 
+      !> Perform Fortran reads and writes of DAS integer records.
+      !> This routine operates on DAS files having native binary
+      !> format.
+      !>
       !>## Detailed Input
       !>
       !>     ACTION   is a character string specifying whether to read
@@ -13637,6 +13711,8 @@ contains
       return
       end subroutine dasioi
 
+      !> Map a DAS address to a physical location in a specified DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an open DAS file.
@@ -14704,6 +14780,9 @@ contains
       end associate
       end subroutine dasa2l
 
+      !> Create or update directories in a DAS file to reflect addition
+      !> of a specified number of words of a specified data type.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a DAS file open for writing.
@@ -15538,6 +15617,9 @@ contains
       return
       end subroutine dascud
 
+      !> Increase the size of the comment area in a DAS file to accommodate
+      !> a specified number of additional comment records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an existing DAS file opened for
@@ -16013,6 +16095,10 @@ contains
       return
       end subroutine dasacr
 
+      !> Decrease the size of the comment area in a DAS file to reclaim
+      !> space freed by the removal of a specified number of comment
+      !> records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an existing DAS file opened for
@@ -16428,6 +16514,9 @@ contains
       return
       end subroutine dasrcr
 
+      !> Segregate the data records in a DAS file into clusters, using
+      !> one cluster per data type present in the file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
@@ -17321,6 +17410,8 @@ contains
       return
       end subroutine dassdr
 
+      !> Add character data to a DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
@@ -17919,6 +18010,8 @@ contains
       end associate
       end subroutine dasadc
 
+      !> Add an array of double precision numbers to a DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
@@ -18351,6 +18444,8 @@ contains
       end associate
       end subroutine dasadd
 
+      !> Add an array of integers to a DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
@@ -18772,6 +18867,8 @@ contains
       end associate
       end subroutine dasadi
 
+      !> Read character data from a range of DAS logical addresses.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle for an open DAS file.
@@ -19296,6 +19393,8 @@ contains
       return
       end subroutine dasrdc
 
+      !> Read double precision data from a range of DAS logical addresses.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle for an open DAS file.
@@ -19620,6 +19719,8 @@ contains
       return
       end subroutine dasrdd
 
+      !> Read integer data from a range of DAS logical addresses.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle for an open DAS file.
@@ -19934,6 +20035,9 @@ contains
       return
       end subroutine dasrdi
 
+      !> Update character data in a specified range of DAS logical
+      !> addresses with substrings of a character array.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
@@ -20508,6 +20612,9 @@ contains
       return
       end subroutine dasudc
 
+      !> Update data in a specified range of double precision addresses
+      !> in a DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
@@ -20900,6 +21007,9 @@ contains
       return
       end subroutine dasudd
 
+      !> Update data in a specified range of integer addresses in a DAS
+      !> file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
@@ -21284,6 +21394,8 @@ contains
       return
       end subroutine dasudi
 
+      !> Close a DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an open DAS file.
@@ -21717,6 +21829,9 @@ contains
       return
       end subroutine dascls
 
+      !> Return the contents of the file record of a specified DAS
+      !> file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle for a previously opened DAS file.
@@ -21956,6 +22071,8 @@ contains
       return
       end subroutine dasrfr
 
+      !> Update the contents of the file record of a specified DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle for a DAS file open for writing.
@@ -22314,6 +22431,10 @@ contains
       return
       end subroutine daswfr
 
+      !> Add comments from a buffer of character strings to the comment
+      !> area of a binary DAS file, appending them to any comments which
+      !> are already present in the file's comment area.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a binary DAS file which has been
@@ -22777,6 +22898,9 @@ contains
       return
       end subroutine dasac
 
+      !> Add comments to a previously opened binary DAS file from a
+      !> previously opened text file attached to a Fortran logical unit.
+      !>
       !>## Detailed Input
       !>
       !>     COMLUN   is the Fortran logical unit of a previously opened text
@@ -23482,6 +23606,9 @@ contains
       return
       end subroutine dasacu
 
+      !> Delete the entire comment area of a previously opened binary
+      !> DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a binary DAS file that is to have its
@@ -23657,6 +23784,8 @@ contains
       return
       end subroutine dasdc
 
+      !> Extract comments from the comment area of a binary DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a binary DAS file which has been
@@ -24310,7 +24439,11 @@ contains
       end associate
       end subroutine dasec
 
-      !> All the comment lines of a DAS file, each of any length (PEPPER).
+      !> All the comment lines of a DAS file, each of any length (PEPPER;
+      !> [[dasec]] without a buffer). It reads the comment area directly: it
+      !> does not change the position of [[dasec]] in the file.
+      !>
+      !> The errors are those of [[dasec]], without SPICE(COMMENTTOOLONG).
       module subroutine das_comments ( ctx, handle, lines )
       use pepper_kinds, only: ip
       implicit none
@@ -24347,6 +24480,9 @@ contains
       call split_comment_lines ( text(1:min(ncomc, len(text))), lines )
       end subroutine das_comments
 
+      !> Extract comments from a previously opened binary DAS file to a
+      !> previously opened text file attached to a Fortran logical unit.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle for a binary DAS file that has been
@@ -24511,6 +24647,9 @@ contains
       return
       end subroutine dasecu
 
+      !> Convert the contents of a binary DAS file to an equivalent DAS
+      !> transfer file.
+      !>
       !>## Detailed Input
       !>
       !>     BINFIL   is the name of a binary DAS file which is to be converted
@@ -25589,6 +25728,9 @@ contains
       return
       end subroutine dasbt
 
+      !> Convert the contents of a DAS transfer file into an equivalent
+      !> binary DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     XFRLUN   is the Fortran logical unit number of a previously opened
@@ -27793,6 +27935,10 @@ contains
       return
       end subroutine dastb
 
+      !> Return last DAS logical addresses of character, double precision
+      !> and integer type that are currently in use in a specified DAS
+      !> file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a DAS file whose active

@@ -16,6 +16,9 @@ submodule (pepper_instance_module) pepper_transforms
 
 contains
 
+      !> Find the transformation from a user specified frame to
+      !> another frame at a user specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     INFRM    is the SPICE ID-code for some reference frame.
@@ -297,6 +300,9 @@ contains
       end associate
       end subroutine frmget
 
+      !> Find the rotation from a user specified frame to another frame at
+      !> a user specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     INFRM    is the SPICE ID-code for some reference frame.
@@ -538,6 +544,9 @@ contains
       end associate
       end subroutine rotget
 
+      !> Return the state transformation matrix from one
+      !> frame to another.
+      !>
       !>## Detailed Input
       !>
       !>     FRAME1   is the frame id-code in which some states are known.
@@ -1198,6 +1207,9 @@ contains
 
       end subroutine frmchg
 
+      !> Return the transformation matrix from one
+      !> frame to another.
+      !>
       !>## Detailed Input
       !>
       !>     FRAME1   is the frame id-code in which some positions
@@ -1693,6 +1705,9 @@ contains
 
       end subroutine refchg
 
+      !> Return the matrix that transforms position vectors from one
+      !> specified frame to another at a specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     FROM     is the name of a reference frame in which a position
@@ -1898,6 +1913,9 @@ contains
       end associate
       end subroutine pxform
 
+      !> Return the state transformation matrix from one frame to
+      !> another at a specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     FROM     is the name of a reference frame in which a state is
