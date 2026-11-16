@@ -2627,8 +2627,6 @@ contains
       !>        from the segment lists, just as if the user had unloaded
       !>        the file before loading it again. This means that a single
       !>        file cannot occur more than once in the file table.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine spklef ( ctx, fname, handle )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
@@ -3722,8 +3720,6 @@ contains
       !>        modified.
       !>
       !>-    Beta Version 1.0.0, 14-MAR-1990 (RET) (IMU)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine cklpf ( ctx, fname, handle )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
@@ -4056,8 +4052,6 @@ contains
       !>          2) Header documentation was updated.
       !>
       !>-    Beta Version 1.0.0, 20-APR-1990 (RET) (IMU)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine ckbss ( ctx, inst, sclkdp, tol, needav )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -4685,8 +4679,6 @@ contains
       !>## Revisions
       !>
       !>     None.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzdsklsf ( ctx, fname, handle )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
@@ -4902,8 +4894,6 @@ contains
       !>## Revisions
       !>
       !>     None.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzdskbss ( ctx, bodyid )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla

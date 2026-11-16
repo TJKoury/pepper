@@ -483,10 +483,6 @@ contains
       !>        messages were changed to references to "reference frames."
       !>        This change was made to enable this utility to support
       !>        kernel variable look-ups for non-dynamic frames.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
       module subroutine zzdynbid ( ctx, frname, frcode, item, idcode )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, repmc, rtrim
@@ -779,10 +775,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local Parameters
       module subroutine zzdynvai ( ctx, frname, frcode, item, maxn, n, values )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, repmc, rtrim
@@ -1035,10 +1027,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local Parameters
       module subroutine zzdynoac ( ctx, frname, frcode, item, maxn, n, values, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, repmc, rtrim
@@ -1296,10 +1284,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 16-DEC-2004 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local Parameters
       module subroutine zzdynoad ( ctx, frname, frcode, item, maxn, n, values, found )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, repmc, rtrim
@@ -1554,10 +1538,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local Parameters
       module subroutine zzdynvac ( ctx, frname, frcode, item, maxn, n, values )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, repmc, rtrim
@@ -1733,10 +1713,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local Parameters
       module subroutine zzdynvad ( ctx, frname, frcode, item, maxn, n, values )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, repmc, rtrim

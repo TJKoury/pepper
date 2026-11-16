@@ -15636,19 +15636,9 @@ contains
       !>        Also, without the local variable CORR, SPKAPP would have to
       !>        modify the value of a passed argument, ABCORR. That's a no no.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Indices of flags in the FLAGS array:
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine spkapp ( ctx, targ, et, ref, sobs, abcorr, starg, lt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
@@ -17220,8 +17210,6 @@ contains
       !>        of radiation. Formerly, only the reception case was
       !>        supported.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Saved frame name length.
@@ -17229,12 +17217,6 @@ contains
       !>     Local variables
       !>
       !>     Saved frame name/ID item declarations.
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       recursive module subroutine spkezp ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxv
@@ -17901,8 +17883,6 @@ contains
       !>
       !>     None.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     TOL is the tolerance used for a division-by-zero test
@@ -17912,14 +17892,6 @@ contains
       !>
       !>     Maximum number of light time iterations for any
       !>     aberration correction:
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzspkflt (  ctx, trgsub, et, ref, abcorr, stobs, starg, lt, dlt  )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
@@ -19897,18 +19869,6 @@ contains
       !>## Revisions
       !>
       !>     None.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzspkfao (  ctx, targ, et, ref, abcorr, obssub, starg, lt, dlt  )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
@@ -20359,18 +20319,6 @@ contains
       !>## Revisions
       !>
       !>     None.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzspkfap (  ctx, trgsub, et, ref, abcorr, stobs, accobs, starg, lt, dlt  )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
@@ -21413,8 +21361,6 @@ contains
       !>        version, it said that calling SPKEZ was equivalent to calling
       !>        SPKSSB and SPKAPP.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Saved frame name length.
@@ -21422,12 +21368,6 @@ contains
       !>     Local variables
       !>
       !>     Saved frame name/ID item declarations.
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       recursive module subroutine spkez ( ctx, targ, et, ref, abcorr, obs, starg, lt )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxvg
@@ -21982,18 +21922,6 @@ contains
       !>## Revisions
       !>
       !>     None.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzspkfat (  ctx, trgsub, et, ref, abcorr, obs, starg, lt, dlt  )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
@@ -22793,18 +22721,6 @@ contains
       !>## Revisions
       !>
       !>     None.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzspkfzo (  ctx, targ, et, ref, abcorr, obssub, starg, lt  )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
@@ -25855,18 +25771,6 @@ contains
       !>## Revisions
       !>
       !>     None.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzspkfzt (  ctx, trgsub, et, ref, abcorr, obs, starg, lt  )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight

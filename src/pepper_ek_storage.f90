@@ -997,10 +997,6 @@ contains
       !>        long error message.
       !>
       !>-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzekcdsc ( ctx, handle, segdsc, column, coldsc )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr
@@ -1134,8 +1130,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     Local variables
       module subroutine zzekcnam ( ctx, handle, coldsc, column )
       use pepper_kinds, only: ip
       use pepper_inc_ekcnamsz
@@ -1237,8 +1231,6 @@ contains
       !>        Corrected typo in comments.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     Local variables
       module subroutine zzekgei ( ctx, handle, addrss, ival )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
@@ -1317,8 +1309,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     Local variables
       module subroutine zzekgrs ( ctx, handle, recptr, status )
       use pepper_kinds, only: ip
       use pepper_inc_ekrecptr
@@ -1696,8 +1686,6 @@ contains
       !>         Renamed as a private routine.
       !>
       !>-     Beta Version 1.0.0, 13-APR-1994 (NJB) (IMU)
-      !>
-      !>     Local variables
       module subroutine zzekordd ( ctx, dvals, nullok, nlflgs, nvals, iorder )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: swapi
@@ -1933,8 +1921,6 @@ contains
       !>         Renamed as a private routine.
       !>
       !>-     Beta Version 1.0.0, 13-APR-1994 (NJB) (IMU)
-      !>
-      !>     Local variables
       module subroutine zzekordi ( ctx, ivals, nullok, nlflgs, nvals, iorder )
       use pepper_kinds, only: ip
       use pepper_arrays, only: swapi
@@ -2280,20 +2266,10 @@ contains
       !>
       !>-    Beta Version 1.0.0, 16-NOV-1995 (NJB)
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Parameters naming indices of keywords in the attribute list
       !>     ATTKEY:
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzekpdec ( ctx, decl, pardsc )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, lparsm, nparsi, cmprss_inplace, ucase_inplace
@@ -2905,10 +2881,6 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzekpgch ( ctx, handle, access )
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
@@ -3438,14 +3410,6 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
       !>
       !>     Initial values
       !>
@@ -4649,19 +4613,11 @@ contains
       !>
       !>        Complete re-write for architecture 3.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Number of tokens made up of special characters:
       !>
       !>     Max length of any such token:
-      !>
-      !>     Local variables
-      !>
-      !>     Statement Functions
-      !>
-      !>     Saved variables
       !>
       !>     Initial values
       !>
@@ -4673,8 +4629,6 @@ contains
       !>     ones, in order for the matching algorithm to work properly.
       !>
       !>     Statement Function Definitions
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzekscan ( ctx, query, maxntk, maxnum, ntoken, tokens, lxbegs, lxends, values, numvls, chrbuf, chbegs, chends, scnerr, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc
@@ -5382,8 +5336,6 @@ contains
       !>        Corrected typo in comments.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     Local variables
       module subroutine zzeksei ( ctx, handle, addrss, ival )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
@@ -5472,10 +5424,6 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 06-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module integer(ip) function zzekstyp ( ctx, ncols, cdscrs )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
@@ -5764,8 +5712,6 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Local variables
       module integer(ip) function zzeksz05 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
@@ -5966,10 +5912,6 @@ contains
       !>        FAILED() returns .TRUE. has been changed so that REPMC is
       !>        not called.  Instead, the error-free routine SUFFIX is
       !>        used.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
       module subroutine zzektcnv ( ctx, timstr, et, error, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss, posr, rtrim, suffix, repmc_inplace, ucase_inplace
@@ -6348,14 +6290,6 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 01-AUG-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
       !>
       !>     Initial values
       !>
@@ -7051,10 +6985,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzekgrcp ( ctx, handle, recptr, ptr )
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
@@ -7524,10 +7454,6 @@ contains
       !>        However, the Intel Fortran compiler for the Mac flags a runtime
       !>        error when the above code is exercised.  So NRVDEL is now
       !>        initialized prior to the above IF statement.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzekjsqz ( ctx, jrsbas )
       use pepper_kinds, only: ip
       use pepper_inc_ekjrs
@@ -11061,8 +10987,6 @@ contains
       !>
       !>        The argument RECPTR was renamed to RECNO.  The reference to
       !>        ZZEKRP2N was removed.
-      !>
-      !>     Local variables
       module subroutine zzekrd09 ( ctx, handle, segdsc, coldsc, recno, cvlen, cval, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
@@ -11281,10 +11205,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzeksrcp ( ctx, handle, recptr, recno )
       use pepper_kinds, only: ip
       use pepper_inc_ekrecptr
@@ -11369,10 +11289,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzeksrs ( ctx, handle, recptr, status )
       use pepper_kinds, only: ip
       use pepper_inc_ekrecptr
@@ -11469,8 +11385,6 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Local variables
       module integer(ip) function zzeksz06 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
@@ -12008,10 +11922,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzekgfwd ( ctx, handle, type, p, fward )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekdatpag
@@ -12121,10 +12031,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzekglnk ( ctx, handle, type, p, nlinks )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekdatpag
@@ -12421,8 +12327,6 @@ contains
       !>
       !>        Significantly re-written for architecture 3.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Data structure bounds:
@@ -12504,10 +12408,6 @@ contains
       !>        The two events that can cause the state to be popped are
       !>        the execution of a reduction and encountering a right grouper.
       !>
-      !>     Other local variables
-      !>
-      !>     Saved variables
-      !>
       !>     Initial values
       !>
       !>     Note:  there is no "UNLIKE" keyword, but there is an UNLIKE
@@ -12515,8 +12415,6 @@ contains
       !>
       !>     PEPPER: the tables of the comparison operators (CMPOPS, CMPCDE,
       !>     CMPNEG) are parameters, declared above.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzeknrml ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, eqryi, eqryc, eqryd, error, prserr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc_inplace, repmi_inplace
@@ -14814,10 +14712,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzeksfwd ( ctx, handle, type, p, fward )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekdatpag
@@ -14930,10 +14824,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzekslnk ( ctx, handle, type, p, nlinks )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekdatpag
@@ -15097,8 +14987,6 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 26-OCT-1995 (NJB)
-      !>
-      !>     Local variables
       module subroutine zzektr13 ( ctx, handle, tree )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
@@ -15364,8 +15252,6 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 27-OCT-1995 (NJB)
-      !>
-      !>     Local variables
       module subroutine zzektr31 ( ctx, handle, tree )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
@@ -15637,12 +15523,6 @@ contains
       !>
       !>        Bug fix:  the original version was untested and had numerous
       !>        problems.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local parameters
       module subroutine zzektrfr ( ctx, handle, tree )
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
@@ -15880,16 +15760,6 @@ contains
       !>        it was done to pacify Valgrind.
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzektrit ( ctx, handle, tree )
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
@@ -16038,14 +15908,6 @@ contains
       !>        values.
       !>
       !>-    Beta Version 1.0.0, 26-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
       !>
       !>     Initial values
       !>
@@ -16474,10 +16336,6 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzektrpi ( ctx, handle, tree, key, parent, pkey, poffst, lpidx, lpkey, lsib, rpidx, rpkey, rsib )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlei
@@ -16823,10 +16681,6 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 16-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzektrrk ( ctx, handle, tree, left, right, parent, pkidx, nrot )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
@@ -17339,10 +17193,6 @@ contains
       !>        error check.
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzekweed ( ctx, njrs, bases, nrows )
       use pepper_kinds, only: ip
       use pepper_inc_ekjrs
@@ -18503,10 +18353,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 06-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzekcix1 ( ctx, handle, coldsc )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
@@ -20262,10 +20108,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 16-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzektr23 ( ctx, handle, tree, left, right, parent, pkidx, overfl )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
@@ -20870,10 +20712,6 @@ contains
       !>        Fixed typo in comments.
       !>
       !>-    Beta Version 1.0.0, 16-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local parameters
       module subroutine zzektr32 ( ctx, handle, tree, left, middle, right, parent, lpkidx, undrfl )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
@@ -21395,8 +21233,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 26-OCT-1995 (NJB)
-      !>
-      !>     Local variables
       module subroutine zzektrdp ( ctx, handle, tree, key, ptr )
       use pepper_kinds, only: ip
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -21580,12 +21416,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Other functions
-      !>
-      !>     Local variables
       module subroutine zzektrsb ( ctx, handle, tree, key, lsib, lkey, rsib, rkey )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
@@ -21922,10 +21752,6 @@ contains
       !>        is used throughout the routine.
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzektrud ( ctx, handle, tree, key, trgkey, undrfl )
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
@@ -22492,10 +22318,6 @@ contains
       !>        Removed redundant calls to CHKIN.
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzektrui ( ctx, handle, tree, key, value, overfl )
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
@@ -23136,8 +22958,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     Local variables
       module subroutine zzekixlk ( ctx, handle, coldsc, key, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
@@ -23257,8 +23077,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     Local variables
       module subroutine zzekrplk ( ctx, handle, segdsc, n, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
@@ -24201,10 +24019,6 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 27-OCT-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzektrbn ( ctx, handle, tree, left, right, parent, pkidx )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
@@ -24365,10 +24179,6 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
-      !>
-      !>     Functions
-      !>
-      !>     Local variables
       module subroutine zzektrki ( ctx, handle, tree, nodkey, n, key )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
@@ -24486,10 +24296,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
       module integer(ip) function zzektrls ( ctx, handle, tree, ival )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
@@ -24611,12 +24417,6 @@ contains
       !>        Added the required discovery CHKIN.
       !>
       !>-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzekmloc ( ctx, handle, segno, page, base )
       use pepper_kinds, only: ip
       use pepper_inc_ekfilpar
@@ -24812,12 +24612,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Other functions
-      !>
-      !>     Local parameters
       module subroutine zzektrdl ( ctx, handle, tree, key )
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
@@ -25359,12 +25153,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 01-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Other functions
-      !>
-      !>     Local parameters
       module subroutine zzektrin ( ctx, handle, tree, key, value )
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
@@ -25688,12 +25476,6 @@ contains
       !>        from the parent data page tree was corrected.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzekdps ( ctx, handle, segdsc, type, p )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
@@ -25858,10 +25640,6 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 08-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
       module subroutine zzekff01 ( ctx, handle, segno, rcptrs )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
@@ -26139,8 +25917,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     Local variables
       module subroutine zzeksdsc ( ctx, handle, segno, segdsc )
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
@@ -26348,10 +26124,6 @@ contains
       !>        TNAMSZ and CNAMSZ respectively, the trailing characters
       !>        at positions past those designated by these parameters were
       !>        left unassigned on output.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzeksinf ( ctx, handle, segno, tabnam, segdsc, cnames, cdscrs )
       use pepper_kinds, only: ip
       use pepper_inc_ekcnamsz
@@ -26536,8 +26308,6 @@ contains
       !>        $Procedure line was corrected.
       !>
       !>-    Beta Version 1.0.0, 22-OCT-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
       module subroutine zzektrap ( ctx, handle, tree, value, key )
       use pepper_kinds, only: ip
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -27323,10 +27093,6 @@ contains
       !>        Corrected typo in comments.
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzekacps ( ctx, handle, segdsc, type, n, p, base )
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
@@ -27479,10 +27245,6 @@ contains
       !>        Corrected typo in comments.
       !>
       !>-    Beta Version 1.0.0, 08-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzekaps ( ctx, handle, segdsc, type, new, p, base )
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
@@ -27621,10 +27383,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 17-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
       module subroutine zzekbs01 ( ctx, handle, tabnam, ncols, cnames, cdscrs, segno )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase, ucase_inplace
@@ -28047,10 +27805,6 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 17-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
       module subroutine zzekbs02 ( ctx, handle, tabnam, ncols, cnames, cdscrs, segno )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase, ucase_inplace
@@ -28453,10 +28207,6 @@ contains
       !>        Deleted unneeded declarations and code.
       !>
       !>-    Beta Version 1.0.0, 28-SEP-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzekde04 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
@@ -28690,10 +28440,6 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
       module integer(ip) function zzekrp2n ( ctx, handle, segno, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc

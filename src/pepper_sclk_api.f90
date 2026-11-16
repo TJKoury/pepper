@@ -1852,14 +1852,6 @@ contains
       !>
       !>        Comment section for permuted index source lines was added
       !>        following the header.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Standard SPICE error handling.
       module subroutine scdecd ( ctx, sc, sclkdp, sclkch )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled

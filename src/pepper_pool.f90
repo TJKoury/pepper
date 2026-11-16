@@ -2551,8 +2551,6 @@ contains
       !>        to the entry point WRTEXT (which was dropped when the routine
       !>        left OPTLIB) were removed.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local variables
       !>
       !>     Save the names of the files, their associated logical units, and
@@ -3393,8 +3391,6 @@ contains
       !>        If the error action was set to 'RETURN' an infinite loop
       !>        could have resulted if RDTEXT failed and the loop conditions
       !>        were satisfied.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine rdkdat ( ctx, line, eof )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
@@ -12494,8 +12490,6 @@ contains
       !>        pool if it has not been done yet.
       !>
       !>-    SPICELIB Version 1.0.0, 8-JAN-1989 (IMU)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine clpool ( ctx )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
@@ -12873,8 +12867,6 @@ contains
       !>        Declaration of unused function FAILED removed.
       !>
       !>-    SPICELIB Version 1.0.0, 8-JAN-1989 (IMU)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine ldpool ( ctx, fname )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
@@ -13082,8 +13074,6 @@ contains
       !>        pool if it has not been done yet.
       !>
       !>-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine rtpool ( ctx, name, n, values, found )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
@@ -13377,8 +13367,6 @@ contains
       !>
       !>        All entry points except POOL and CLPOOL now initialize the
       !>        pool if it has not been done yet.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine expool ( ctx, name, found )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
@@ -13650,8 +13638,6 @@ contains
       !>        now been made an explicit---and changeable---limit.)
       !>
       !>        Declaration of unused function FAILED removed.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine wrpool ( ctx, unit )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
@@ -14025,8 +14011,6 @@ contains
       !>        looking at the version number. The best way to determine
       !>        the routine you had previously is to compare the dates
       !>        stored in the Version line of the routine.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine swpool ( ctx, agent, nnames, names )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -14310,8 +14294,6 @@ contains
       !>        looking at the version number. The best way to determine
       !>        the routine you had previously is to compare the dates
       !>        stored in the Version line of the routine.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine cvpool ( ctx, agent, update )
       implicit none
       class(pepper_context), intent(inout) :: ctx  !! the context
@@ -16869,8 +16851,6 @@ contains
       !>
       !>        Corrected an in-line comment relating to finding the
       !>        head node of the conflict resolution list for NAME.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dvpool ( ctx, name )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr

@@ -6730,8 +6730,6 @@ contains
       !>       If its not in the table, the FOUND flag is just set to .FALSE.
       !>
       !>-    GLLSPICE Version 1.0.0, 28-JUN-1990 (JEM)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzbodn2c ( ctx, name, code, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: ljucrs
@@ -7084,8 +7082,6 @@ contains
       !>       representation.
       !>
       !>-    GLLSPICE Version 1.0.0, 28-JUN-1990 (JEM)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine body_name_of ( ctx, code, name, found )
       use pepper_kinds, only: ip
       use pepper_inc_zzbodtrn
@@ -7508,8 +7504,6 @@ contains
       !>       representation.
       !>
       !>-    GLLSPICE Version 1.0.0, 28-JUN-1990 (JEM)
-      !>
-      !>     Standard SPICE error handling.
       subroutine zzboddef_apply ( ctx, name, code )
       use pepper_kinds, only: ip
       use pepper_strings, only: ljucrs
@@ -7767,8 +7761,6 @@ contains
       !>        block.
       !>
       !>-    SPICELIB Version 1.0.0, 16-JUN-2002 (EDW)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzbodkik ( ctx )
       use pepper_kinds, only: ip
       use pepper_inc_zzbodtrn
@@ -7940,8 +7932,6 @@ contains
       !>        state using state counters.
       !>
       !>-    SPICELIB Version 4.0.0, 26-AUG-2002 (FST)
-      !>
-      !>     Standard SPICE error handling.
       subroutine zzbodrst_apply ( ctx )
       use pepper_kinds, only: ip
       use pepper_inc_zzbodtrn
@@ -8173,8 +8163,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzbctrck ( ctx, usrctr, update )
       use pepper_kinds, only: ip
       use pepper_inc_zzbodtrn
@@ -10920,8 +10908,6 @@ contains
       !>        Updated to use BODS2C. This simplifies the name-to-ID
       !>        mapping code.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Saved body name length.
@@ -10931,10 +10917,6 @@ contains
       !>     Saved name/ID item declarations.
       !>
       !>     Saved name/ID items.
-      !>
-      !>     Initial values.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine bodvrd ( ctx, bodynm, item, maxn, dim, values )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, suffix

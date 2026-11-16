@@ -706,8 +706,6 @@ contains
       !>
       !>        Some corrections and other minor enhancements were made to the
       !>        header.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine scli01 ( ctx, name, sc, maxnv, n, ival )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc, suffix, repmc_inplace, repmi_inplace
@@ -1151,8 +1149,6 @@ contains
       !>        Some corrections and other minor enhancements were made to the
       !>        header. Comment section for permuted index source lines was
       !>        added following the header.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine scld01 ( ctx, name, sc, maxnv, n, dval )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc, suffix, repmc_inplace, repmd_inplace, repmi_inplace
@@ -1582,8 +1578,6 @@ contains
       !>
       !>     None.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Following are parameters for the indices within the
@@ -1597,8 +1591,6 @@ contains
       !>     Local variables
       !>
       !>     Saved values
-      !>
-      !>     Initial values
       module subroutine zzscad01 ( ctx, sc, sclkat )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: suffix, repmi_inplace
@@ -2321,8 +2313,6 @@ contains
       !>
       !>        A comment section for permuted index source lines was added
       !>        following the header.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine sctk01 ( ctx, sc, clkstr, ticks )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lparsm, nparsd
@@ -2755,8 +2745,6 @@ contains
       !>
       !>        A comment section for permuted index source lines was added
       !>        following the header.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine scfm01 ( ctx, sc, ticks, clkstr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: prefix, suffix
@@ -3205,8 +3193,6 @@ contains
       !>
       !>        A comment section for permuted index source lines was added
       !>        following the header.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine scte01 ( ctx, sc, sclkdp, et )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
@@ -3707,8 +3693,6 @@ contains
       !>
       !>        A comment section for permuted index source lines was added
       !>        following the header.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine scet01 ( ctx, sc, et, sclkdp )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
@@ -4186,8 +4170,6 @@ contains
       !>
       !>        Bug fix: changed maximum value arguments to 1 in
       !>        calls to SCLI01 to fetch NFIELD and DELCDE values.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine scec01 ( ctx, sc, et, sclkdp )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr

@@ -9493,8 +9493,6 @@ contains
       !>        Updated to remove non-standard use of duplicate arguments
       !>        in XPOSEG and LGRESP calls.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Size of a state vector:
@@ -16604,8 +16602,6 @@ contains
       !>        Also, the file was formatted for use by the program that
       !>        creates the environment specific source files.
       !>
-      !>     SPICELIB Functions
-      !>
       !>     Local Parameters
       !>
       !>     The integers NPAIRS, LPAIR2, and LPAIR3 are used to declare
@@ -16655,10 +16651,6 @@ contains
       !>     TRUNC. LPAIR3 and LPAIR2 indicate which of these pairs
       !>     (counting 1/(1*2) as the first) will be the last one needed in
       !>     the evaluation of C_2 and C_3.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
       !>
       !>     Initial values
       !>

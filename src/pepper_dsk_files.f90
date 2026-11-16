@@ -6187,10 +6187,6 @@ contains
       !>        Now, indices in the voxel-plate pointer array are used as
       !>        "A" values.
       !>
-      !>     SPICELIB functions
-      !>
-      !>     Other functions
-      !>
       !>     Local parameters
       !>
       !>     Fraction of voxel edge length used a tolerance for plate

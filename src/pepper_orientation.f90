@@ -925,8 +925,6 @@ contains
       !>         NAIF_IDS, KERNEL, and TIME Required Reading files have
       !>         been added in the $Required_Reading section.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Maximum number of coefficients per phase angle polynomial.
@@ -2851,10 +2849,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
       module subroutine zzdynfid ( ctx, frname, frcode, item, idcode )
       use pepper_kinds, only: ip
       use pepper_strings, only: beint, intstr, repmc, rtrim

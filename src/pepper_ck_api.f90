@@ -1215,8 +1215,6 @@ contains
       !>
       !>-    Beta Version 1.0.0, 04-MAY-1990 (RET) (IMU)
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>        NDC        is the number of double precision components in an
@@ -1244,10 +1242,6 @@ contains
       !>     Saved frame name/ID item declarations.
       !>
       !>     Saved frame name/ID items.
-      !>
-      !>     Initial values.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine ckgp ( ctx, inst, sclkdp, tol, ref, cmat, clkout, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxm
@@ -2224,8 +2218,6 @@ contains
       !>
       !>-    Beta Version 1.0.0, 04-JUN-1990 (RET) (IMU)
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>        NDC        is the number of double precision components in an
@@ -2253,10 +2245,6 @@ contains
       !>     Saved frame name/ID item declarations.
       !>
       !>     Saved frame name/ID items.
-      !>
-      !>     Initial values.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine ckgpav ( ctx, inst, sclkdp, tol, ref, cmat, av, clkout, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mtxv, mxm, xf2rav

@@ -309,16 +309,6 @@ contains
       !>        Call to ZZBODVCD was replaced with call to BODVCD.
       !>
       !>-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
       recursive module subroutine zzdynfrm ( ctx, infram, center, et, xform, basfrm )
 !
 !     PEPPER: the evaluation (dynamic_frame_xform) may need other dynamic frames,
@@ -610,16 +600,6 @@ contains
       !>        Call to ZZBODVCD was replaced with call to BODVCD.
       !>
       !>-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
       recursive module subroutine zzdynrot ( ctx, infram, center, et, rotate, basfrm )
 !
 !     PEPPER: the evaluation (dynamic_frame_rotation) may need other dynamic frames,

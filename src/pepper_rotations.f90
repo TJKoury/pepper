@@ -3687,10 +3687,6 @@ contains
       !>
       !>        Updated to remove non-standard use of duplicate arguments
       !>        in DUCRSS and MOVED calls.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local Variables
       module subroutine zztwovxf ( ctx, axdef, indexa, plndef, indexp, xform )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ducrss, dvhat
@@ -5209,8 +5205,6 @@ contains
       !>        This is the value used in this routine.  The verification of
       !>        this error is courtesy of Myles Standish.
       !>
-      !>     SPICELIB Functions
-      !>
       !>     Parameters
       !>
       !>     NTERM is the number of SIN and COSINE terms used in the
@@ -5705,10 +5699,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
       module subroutine zzenut80 ( ctx, et, nutxf )
       use pepper_kinds, only: wp
       implicit none

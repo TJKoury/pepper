@@ -6235,8 +6235,6 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
       !>
-      !>     SPICELIB Functions
-      !>
       !>     Local Parameters
       !>
       !>     Record Number of the file record in a DAF.
@@ -6253,12 +6251,6 @@ contains
       !>     Local Variables
       !>
       !>     PEPPER: ZZXLATEI returns an array (also of one element).
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzdafgfr ( ctx, handle, idword, nd, ni, ifname, fward, bward, free, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
@@ -6573,8 +6565,6 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 02-MAR-1999 (FST)
       !>
-      !>     SPICELIB Functions
-      !>
       !>     Local Parameters
       !>
       !>     Amount of space measured in characters necessary to
@@ -6591,14 +6581,6 @@ contains
       !>     non-standard platforms.
       !>
       !>     Lengths of internal file name, ID word, and format word.
-      !>
-      !>     Local Variables
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzdafnfr ( ctx, lun, idword, nd, ni, ifname, fward, bward, free, format )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
@@ -6826,16 +6808,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
-      !>
-      !>     SPICELIB Functions
-      !>
-      !>     Local Variables
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzdafgdr ( ctx, handle, recno, dprec, found )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase_inplace
@@ -7106,8 +7078,6 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
       !>
-      !>     SPICELIB Functions
-      !>
       !>     Local Parameters
       !>
       !>     Length in bytes of double precision numbers and integers.
@@ -7117,12 +7087,6 @@ contains
       !>     Equivalence DPBUF to INBUF. (PEPPER: not equivalenced; a
       !>     summary's integers are translated into INBUF and packed into
       !>     DPBUF with TRANSFER.)
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzdafgsr ( ctx, handle, recno, nd, ni, dprec, found )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: pack_integers
@@ -8274,8 +8238,6 @@ contains
       !>
       !>        Some error messages were changed so that they specify
       !>        names of relevant DAFs.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dafopw ( ctx, fname, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
@@ -8650,8 +8612,6 @@ contains
       !>
       !>        See the $Revisions section under DAFAH for a discussion
       !>        of the impact of the changes made for this version.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dafonw ( ctx, fname, ftype, nd, ni, ifname, resv, handle )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ltrim, rtrim
@@ -9183,8 +9143,6 @@ contains
       !>
       !>        Some error messages were changed so that they specify
       !>        names of relevant DAFs.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dafopn ( ctx, fname, nd, ni, ifname, resv, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
@@ -10195,8 +10153,6 @@ contains
       !>        occurs. The purpose of this change was to help speed up a
       !>        routine that gets called constantly by higher level DAF
       !>        routines.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dafhlu ( ctx, handle, unit )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
@@ -12765,8 +12721,6 @@ contains
       !>        signal an error). The purpose of this change was to help
       !>        speed up a routine that gets called constantly by higher level
       !>        DAF routines.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dafrdr ( ctx, handle, recno, begin, end, data, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
@@ -13779,8 +13733,6 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
       !>
-      !>     SPICELIB Functions
-      !>
       !>     Local Parameters
       !>
       !>     Length of the double precision and integer buffers that
@@ -13794,10 +13746,6 @@ contains
       !>     Equivalence DPBUFR to INBUFR. (PEPPER: no DPBUFR; TRANSFER of
       !>     INBUFR.)
       !>
-      !>     Statement Functions
-      !>
-      !>     Saved Variables
-      !>
       !>     Data Statements
       !>
       !>     Statement Function Definitions
@@ -13809,8 +13757,6 @@ contains
       !>     Some versions of the g77 implement ICHAR with a signed integer.
       !>     This function computes the value of ICHAR that this code requires
       !>     on any version of g77 for x86 Linux.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzxlated ( ctx, inbff, input, space, output )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: pack_integers
@@ -19184,8 +19130,6 @@ contains
       !>        DAFBNA now adds information about DAFs to the state table,
       !>        deletes information about closed DAFs from the state table,
       !>        and initializes the state pool.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dafbna ( ctx, handle, sum, name )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
@@ -19635,8 +19579,6 @@ contains
       !>        Updated to work with new DAF routines that allow writing
       !>        to multiple DAFs simultaneously. Functionality for
       !>        applications that write to one DAF at a time is unchanged.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dafada ( ctx, data, n )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
@@ -19818,8 +19760,6 @@ contains
       !>
       !>        Also changed was a numeric constant from 1.D0 to the
       !>        equivalent, but more aesthetically pleasing 1.0D0.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dafena ( ctx )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman

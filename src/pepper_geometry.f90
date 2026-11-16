@@ -10533,16 +10533,6 @@ contains
       !>
       !>        The routine now verifies that the eccentricity is in the
       !>        proper range---(1,+infinity)---before proceeding.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine hyptof ( ctx, ma, ecc, f )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
@@ -13387,8 +13377,6 @@ contains
       !>        counter and to do name-ID conversion only if the counter
       !>        has changed.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Saved body name length.
@@ -15499,20 +15487,6 @@ contains
       !>-    Beta Version 1.0.1, 27-JAN-1989 (IMU)
       !>
       !>        $Examples section completed.
-      !>
-      !>     External functions
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine oscelt ( ctx, state, et, mu, elts )
       use pepper_kinds, only: wp
       use pepper_constants, only: pi, twopi
@@ -20242,16 +20216,6 @@ contains
       !>
       !>      Short error message SPICE(ZEROAXISLENGTH) changed to
       !>      SPICE(BADAXISLENGTH)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
       module subroutine surfpt ( ctx, positn, u, a, b, c, point, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vdot, vhat, vnorm, vperp
@@ -22164,14 +22128,6 @@ contains
       !>## Revisions
       !>
       !>     None.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
       module subroutine zzbquad ( ctx, a, b, c, ub, n, nx, r1, r2 )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
@@ -33101,8 +33057,6 @@ contains
       !>        to be found again in a later pass through the loop, and a
       !>        solution intercept to be found at that point or later.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     This value will become system-dependent when systems
@@ -33116,14 +33070,6 @@ contains
       !>     as non-intersecting.
       !>
       !>     Code for the frame J2000.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzsfxcor ( ctx, udnear, udmaxr, udrayx, trgcde, et, abcorr, uselt, usecn, &
             usestl, xmit, fixref, obscde, dfrcde, dclass, dcentr, dvec, spoint, trgepc, srfvec, &
             found )
@@ -44506,8 +44452,6 @@ contains
       !>        input arguments TARGET and OBSRVR: calls to BODN2C
       !>        were replaced by calls to BODS2C.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Saved body name length.
@@ -44519,12 +44463,6 @@ contains
       !>     Saved variables
       !>
       !>     Saved name/ID items.
-      !>
-      !>     Initial values
-      !>
-      !>     Initial values.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine subsol ( ctx, method, target, et, abcorr, obsrvr, spoint )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
@@ -51420,16 +51358,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-DEC-2015 (NJB) (BVS) (EDW)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
       module subroutine zzsrfker ( ctx, srf )
       use pepper_kinds, only: ip
       use pepper_strings, only: ljucrs
@@ -66691,16 +66619,6 @@ contains
       !>
       !>     Parameter indicating no coordinates are to be excluded
       !>     in the test for a point being within segment boundaries.
-      !>
-      !>     Local Variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Statement functions
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dskx02 ( ctx, handle, dladsc, vertex, raydir, plid, xpt, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
@@ -86943,10 +86861,6 @@ contains
       !>     Saved frame name/ID items.
       !>
       !>     Saved surface name/ID items.
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine sincpt ( ctx, method, target, et, fixref, abcorr, obsrvr, dref, dvec, spoint, trgepc, srfvec, found )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp

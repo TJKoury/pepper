@@ -1594,19 +1594,9 @@ contains
       !>        $Examples section completed. Declarations of unused variables
       !>        HALFPI and N removed.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Maximum number of coefficients per phase angle polynomial.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine bodeul ( ctx, body, et, ra, dec, w, lambda )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, j2000, rpd, spd, twopi

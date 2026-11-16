@@ -2466,10 +2466,6 @@ contains
       !>               POS    = POS + 1
       !>
       !>            ELSE ...
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local Parameters
       module subroutine hx2int ( ctx, string, number, error, errmsg )
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin

@@ -13941,18 +13941,12 @@ contains
       !>        returned to its HANDLE, tying up resources in the
       !>        handle manager.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     IFNLEN      is the length of a DAF internal file name.
       !>
       !>     MAXCPR      is the maximum number of characters per DAF record and
       !>                 hence the maximum comment line length.
-      !>
-      !>     Local variables
-      !>
-      !>     Standard SPICE error handling.
       module subroutine spcac ( ctx, handle, unit, bmark, emark )
       use pepper_kinds, only: ip
       implicit none
@@ -15089,20 +15083,12 @@ contains
       !>        HANBUF, to allow the entry point to retrieve a logical
       !>        unit.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     IFNLEN      is the length of a DAF internal file name.
       !>
       !>     MAXCPR      is the maximum number of characters per DAF record and
       !>                 hence the maximum comment line length.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Standard SPICE error handling.
       module subroutine spcrfl ( ctx, handle, line, eoc )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos

@@ -853,8 +853,6 @@ contains
       !>
       !>     Non-printing character values.
       !>
-      !>     Saved Variables
-      !>
       !>     Data Statements
       !>
       !>     Set up the components of the FTP validation string that
@@ -1152,12 +1150,6 @@ contains
       !>               chunk from STRING.  If it is, then the file is
       !>               as valid as far as this version of the toolkit is
       !>               concerned.  Otherwise, the file is damaged.
-      !>
-      !>     SPICELIB Functions
-      !>
-      !>     Local Variables
-      !>
-      !>     Saved Variables
       !>
       !>     Data Statements
       !>
@@ -1793,10 +1785,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-AUG-2002 (FST)
-      !>
-      !>     Local Parameters
-      !>
-      !>     Local Variables
       module subroutine zzgetbff ( ctx, bffid )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: unpack_integers
@@ -1917,18 +1905,12 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 07-JUN-2001 (FST)
       !>
-      !>     SPICELIB Functions
-      !>
       !>     Local Parameters
       !>
       !>     Number of classes of label/ID pairs of which this routine is
       !>     aware.
       !>
       !>     Integer codes for the currently supported classes.
-      !>
-      !>     Local Variables
-      !>
-      !>     Saved Variables
       !>
       !>     Data Statements
       !>
@@ -2096,8 +2078,6 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 26-APR-2012 (BVS)
       !>
-      !>     SPICELIB Functions
-      !>
       !>     Local parameters.
       !>
       !>     Character buffer size consistent with the number of integers
@@ -2105,10 +2085,6 @@ contains
       !>
       !>     Minimum and maximum values for the range of ASCII printing
       !>     characters.
-      !>
-      !>     Local variables.
-      !>
-      !>     Saved variables.
       !>
       !>     Data statements.
       !>
@@ -2575,8 +2551,6 @@ contains
       !>        examination algorithm used on pre-N0050 DAFs to determine
       !>        its format.
       !>
-      !>     SPICELIB Functions
-      !>
       !>     Local Parameters
       !>
       !>     Number of characters to be read in from a record.
@@ -2604,12 +2578,6 @@ contains
       !>
       !>     NULLID is the index of the extended STRBFF "NULL" string ID.
       !>
-      !>     Local Variables
-      !>
-      !>     Statement Functions
-      !>
-      !>     Saved Variables
-      !>
       !>     Data Statements
       !>
       !>     Statement Function Definitions
@@ -2621,8 +2589,6 @@ contains
       !>     Some versions of the g77 implement ICHAR with a signed integer.
       !>     This function computes the value of ICHAR that this code requires
       !>     on any version of g77 for x86 Linux.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzddhppf ( ctx, unit, arch, bff )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos, ucase_inplace
@@ -3603,17 +3569,9 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
       !>
-      !>     SPICELIB Functions
-      !>
       !>     Local Parameters
       !>
       !>     These parameters are used for arithmetic shifting.
-      !>
-      !>     Local Variables
-      !>
-      !>     Statement Functions
-      !>
-      !>     Saved Variables
       !>
       !>     Data Statements
       !>
@@ -3626,8 +3584,6 @@ contains
       !>     Some versions of the g77 implement ICHAR with a signed integer.
       !>     This function computes the value of ICHAR that this code requires
       !>     on any version of g77 for x86 Linux.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzxlatei ( ctx, inbff, input, space, output )
       use pepper_kinds, only: ip
       use pepper_constants, only: intmin
@@ -5945,8 +5901,6 @@ contains
       !>        Revisions section of ZZDDHMAN for details.
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzddhopn ( ctx, fname, method, arch, handle )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
@@ -6844,8 +6798,6 @@ contains
       !>        the decision was made to signal the error
       !>        SPICE(FILENOTCONNECTED) rather than connect a file not
       !>        present in the unit table when KILL is set.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzddhcls ( ctx, handle, arch, kill )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
@@ -7164,8 +7116,6 @@ contains
       !>        Fixed typo in long error message and in comments.
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzddhhlu ( ctx, handle, arch, lock, unit )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
@@ -7527,8 +7477,6 @@ contains
       !>        Corrected typo in comments.
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-      !>
-      !>     Standard SPICE discovery error handling.
       module subroutine zzddhunl ( ctx, handle, arch )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi

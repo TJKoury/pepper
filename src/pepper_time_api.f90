@@ -3814,8 +3814,6 @@ contains
       !>
       !>        Integer argument to BRCKTD changed from 0 to 0.0D0.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     The parameters below act essentially as an enumeration
@@ -3868,8 +3866,6 @@ contains
       !>     Character string representations for months and week days.
       !>
       !>     Save everything.
-      !>
-      !>     Initial values
       module subroutine timout ( ctx, et, pictur, output )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j1950, j2000, spd

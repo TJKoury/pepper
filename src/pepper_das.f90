@@ -1910,16 +1910,6 @@ contains
       !>        with a ZZICHR statement function that returns values
       !>        in this range for all supported environments.
       !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Statement Functions
-      !>
-      !>     Saved variables
-      !>
       !>     Initial values
       !>
       !>     Define the hexadecimal digits
@@ -1930,8 +1920,6 @@ contains
       !>     Some compilers implement ICHAR with a signed integer; this computes
       !>     the (non-negative) value this code requires. (PEPPER: one form for
       !>     all compilers; it equals ICHAR where ICHAR is not negative.)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine wrencc ( ctx, unit, n, data )
       use pepper_kinds, only: ip
       implicit none
@@ -3522,8 +3510,6 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 11-DEC-2001 (FST)
       !>
-      !>     SPICELIB Functions
-      !>
       !>     Local Parameters
       !>
       !>     Amount of space measured in characters necessary to null pad
@@ -3537,14 +3523,6 @@ contains
       !>     length of the file record is 1024 bytes.
       !>
       !>     Lengths of internal file name, ID word, and format word.
-      !>
-      !>     Local Variables
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzdasnfr ( ctx, lun, idword, ifname, nresvr, nresvc, ncomr, ncomc, format )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
@@ -3793,8 +3771,6 @@ contains
       !>
       !>     None.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Parameters for positions of file record elements:
@@ -3810,14 +3786,6 @@ contains
       !>     Comment area record count begin and end:
       !>
       !>     Comment area character count begin and end:
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzdasrfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
       use pepper_kinds, only: ip
       use pepper_inc_zzddhman
@@ -4299,8 +4267,6 @@ contains
       !>        points affected are: DASFM, DASOPR.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasopr ( ctx, fname, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
@@ -4922,8 +4888,6 @@ contains
       !>        than the binary version.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasopw ( ctx, fname, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
@@ -5465,8 +5429,6 @@ contains
       !>
       !>        See the $Revisions section under DASFM for a discussion of
       !>        the various changes made for this version.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasonw ( ctx, fname, ftype, ifname, ncomr, handle )
       use pepper_kinds, only: ip
       use pepper_strings, only: ltrim, rtrim
@@ -5966,8 +5928,6 @@ contains
       !>
       !>        See the $Revisions section under DASFM for a discussion
       !>        of the changes made for this version.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasopn ( ctx, fname, ifname, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
@@ -6397,8 +6357,6 @@ contains
       !>
       !>        Bug fix: removed unneeded file name variable FNAME from
       !>        error message.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasops ( ctx, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
@@ -6956,8 +6914,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasllc ( ctx, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
@@ -7464,8 +7420,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUL-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dashfs ( ctx, handle, nresvr, nresvc, ncomr, ncomc, free, lastla, lastrc, lastwd )
       use pepper_kinds, only: ip
       use pepper_inc_das
@@ -7776,8 +7730,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUL-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasufs ( ctx, handle, nresvr, nresvc, ncomr, ncomc, free, lastla, lastrc, lastwd )
       use pepper_kinds, only: ip
       use pepper_inc_das
@@ -8286,8 +8238,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasluh ( ctx, unit, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
@@ -8526,8 +8476,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dashfn ( ctx, handle, fname )
       use pepper_kinds, only: ip
       use pepper_inc_das
@@ -8718,8 +8666,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasfnh ( ctx, fname, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
@@ -9128,8 +9074,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dassih ( ctx, handle, access )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
@@ -9371,8 +9315,6 @@ contains
       !>        routines ever change.
       !>
       !>-    SPICELIB Version 1.0.0, 01-FEB-1993 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasham ( ctx, handle, access )
       use pepper_kinds, only: ip
       use pepper_inc_das
@@ -10585,8 +10527,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine daswrd ( ctx, handle, recno, recd )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -10872,8 +10812,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine daswri ( ctx, handle, recno, reci )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -11162,8 +11100,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine daswrc ( ctx, handle, recno, recc )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -11477,8 +11413,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasurd ( ctx, handle, recno, first, last, datad )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -11831,8 +11765,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasuri ( ctx, handle, recno, first, last, datai )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -12188,8 +12120,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasurc ( ctx, handle, recno, first, last, datac )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -12779,8 +12709,6 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine daswbr ( ctx, handle )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -13912,8 +13840,6 @@ contains
       !>
       !>        TSPICE Version 1.0.0 APR-11-2014 (NJB)
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Words per data record, for each data type:
@@ -13929,10 +13855,6 @@ contains
       !>     Access word length
       !>
       !>     File table size
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
       !>
       !>     Initial values
       !>
@@ -17681,18 +17603,6 @@ contains
       !>        Test of FAILED() added to loop termination condition. Without
       !>        this test, an infinite loop could result if DASA2L, DASURC or
       !>        DASWRC signaled an error inside the loop.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasadc ( ctx, handle, n, bpos, epos, data )
       use pepper_kinds, only: ip
       implicit none
@@ -18197,18 +18107,6 @@ contains
       !>        Test of FAILED() added to loop termination condition. Without
       !>        this test, an infinite loop could result if DASA2L, DASURD or
       !>        DASWRD signaled an error inside the loop.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasadd ( ctx, handle, n, data )
       use pepper_kinds, only: ip, wp
       implicit none
@@ -18624,18 +18522,6 @@ contains
       !>        Test of FAILED() added to loop termination condition. Without
       !>        this test, an infinite loop could result if DASA2L, DASURI or
       !>        DASWRI signaled an error inside the loop.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasadi ( ctx, handle, n, data )
       use pepper_kinds, only: ip
       implicit none
@@ -21626,18 +21512,6 @@ contains
       !>        change makes the value of FTSIZE in DASCLS compatible with the
       !>        value in DASFM. See DASFM for a discussion of the reasons for
       !>        the increase in the value.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dascls ( ctx, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
@@ -23968,8 +23842,6 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 23-NOV-1992 (KRG)
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Length of a DAS character record, in characters.
@@ -23993,10 +23865,6 @@ contains
       !>     Saved variables
       !>
       !>     Save all of the file table information.
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dasec ( ctx, handle, bufsiz, n, buffer, done )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip

@@ -3488,10 +3488,6 @@ contains
       !>        Updated to remove non-standard use of duplicate arguments
       !>        in RMAINI calls.
       !>
-      !>     Spicelib Functions
-      !>
-      !>     Local (in-line) Functions
-      !>
       !>     Local parameters
       !>
       !>     We declare the variables that contain the number of days in
@@ -3514,8 +3510,6 @@ contains
       !>
       !>     DPJAN0(I) gives the number of days that occur before the I'th
       !>     month of a normal year.
-      !>
-      !>     Saved variables
       !>
       !>     Initial values
       !>
@@ -5038,12 +5032,6 @@ contains
       !>        in RMAIND and RMAINI calls. Changed reference to LDPOOL to
       !>        reference to FURNSH in an error message.
       !>
-      !>     SPICELIB functions
-      !>
-      !>     Local (in-line) functions
-      !>
-      !>     Local parameters
-      !>
       !>     Parameters
       !>
       !>     We declare the variables that contain the number of days in
@@ -5101,8 +5089,6 @@ contains
       !>
       !>     DPJAN0(I) gives the number of days that occur before the I'th
       !>     month of a normal year.
-      !>
-      !>     Saved variables
       !>
       !>     Initial values
       !>
@@ -7882,16 +7868,10 @@ contains
       !>        in the input string. In such cases, ZONED retained the
       !>        value from the previous call.
       !>
-      !>     SPICELIB Functions.
-      !>
       !>     Local (in-line) Functions
       !>
       !>     The following integers are pointers to the
       !>     locations of various components in a time vector.
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
       module subroutine str2et ( ctx, timstr, et )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: prefix, repmc_inplace, repmi_inplace
@@ -8701,8 +8681,6 @@ contains
       !>
       !>-    SPICELIB Version 1.0.0, 13-DEC-2004 (NJB)
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local variables
       !>
       !>     PEPPER: the table (in increasing order of the strings, as the
@@ -9075,12 +9053,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 24-NOV-2004 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
       module subroutine zzcorepc ( ctx, abcorr, et, lt, etcorr )
       use pepper_kinds, only: wp
       use pepper_inc_zzabcorr

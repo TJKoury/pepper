@@ -623,8 +623,6 @@ contains
       !>        have the same value of MINLEN. (Also, if CHBASE is
       !>        changed, ENCHAR and DECHAR will always be recompiled
       !>        simultaneously.)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine dechar ( ctx, string, number )
       use pepper_kinds, only: ip
       implicit none

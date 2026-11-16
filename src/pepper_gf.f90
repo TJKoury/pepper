@@ -4274,8 +4274,6 @@ contains
       !>        to SVETRG (save ellipsoidal target), since it does not apply
       !>        to DSK targets. Note that DSK targets currently are not
       !>        supported.
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzgffvin ( ctx, inst, tshape, raydir, target, tframe, abcorr, obsrvr )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr, halfpi
@@ -5153,8 +5151,6 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB) (LSE) (WLT) (EDW)
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzgffvst ( ctx, time, vistat )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: el2cgv, mtxv, mxm, mxv, vdot, vsep
@@ -21843,8 +21839,6 @@ contains
       !>
       !>## Exceptions
       !>
-      !>     Standard SPICE error handling.
-      !>
       !>## Files
       !>
       !>     None.
@@ -21987,8 +21981,6 @@ contains
       !>      None.
       !>
       !>## Exceptions
-      !>
-      !>     Standard SPICE error handling.
       !>
       !>## Files
       !>
@@ -32216,14 +32208,6 @@ contains
       !>     SYSLEN is the maximum length of a coordinate system name.
       !>
       !>     RPTLEN is the maximum length of a progress reporter message.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzgflong ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, &
             crdsys, crdnam, relate, refval, tol, adjust, udstep, udrefn, rpt, udrepi, udrepu, &
             udrepf, bail, udbail, mw, nw, work, cnfine, result )
