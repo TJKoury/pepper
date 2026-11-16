@@ -60819,10 +60819,6 @@ contains
       real(wp), intent(inout) :: stctr  ( 3, * )  !! Centers of bounding spheres for segments.
       real(wp), intent(inout) :: strad  ( * )  !! Radii of bounding spheres for segments.
 
-!
-!     External routines
-!
-
       character(:), allocatable :: frname
       logical :: namfnd
 

@@ -15372,11 +15372,6 @@ contains
       use pepper_inc_gf
       implicit none
 
-
-!
-!     External routines
-!
-
 !     STEP is a step size initializer for the unused, dummy step size
 !     argument to ZZGFSOLV. The routine UDSTEP, which is passed to
 !     ZZGFSOLV, will be used by that routine to obtain the step size.
@@ -16612,11 +16607,6 @@ contains
       use pepper_inc_gf
       use pepper_inc_zzdsk
       implicit none
-
-
-!
-!     External routines
-!
 
 !
 !     STEP is a step size initializer for the unused, dummy step size
@@ -25247,8 +25237,6 @@ contains
       real(wp) :: tol
       logical :: ok
 
-!
-!     External routines
 !
 !     Interrupt handler:
 !
