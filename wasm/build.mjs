@@ -994,6 +994,7 @@ async function main() {
     "-Wl,-O2",
     "-Wl,--gc-sections",
     "-Wl,--strip-all",
+    "-Wl,--compress-relocations",
     "-Wl,--initial-memory=67108864",
     "-Wl,--max-memory=2147483648",
     "-Wl,-z,stack-size=4194304",
