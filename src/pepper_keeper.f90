@@ -2,9 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_keeper.f90.
+!> [[pepper_instance_module]]).
 !>
 !>## KEEPER (Keeps track of SPICE kernels)
 !>
@@ -174,158 +172,160 @@
 !>
 !>        Example code begins here.
 !>
-!>              PROGRAM KEEPER_EX1
-!>              IMPLICIT NONE
+!>```fortran
+!>      PROGRAM KEEPER_EX1
+!>      IMPLICIT NONE
 !>
-!>        C
-!>        C     Local constants.
-!>        C
-!>              INTEGER               FNAMLN
-!>              PARAMETER           ( FNAMLN = 256 )
+!>C
+!>C     Local constants.
+!>C
+!>      INTEGER               FNAMLN
+!>      PARAMETER           ( FNAMLN = 256 )
 !>
-!>              INTEGER               FTYPLN
-!>              PARAMETER           ( FTYPLN = 33 )
+!>      INTEGER               FTYPLN
+!>      PARAMETER           ( FTYPLN = 33 )
 !>
-!>              INTEGER               SRCLEN
-!>              PARAMETER           ( SRCLEN = 256 )
+!>      INTEGER               SRCLEN
+!>      PARAMETER           ( SRCLEN = 256 )
 !>
-!>        C
-!>        C     Local variables.
-!>        C
-!>              CHARACTER*(FNAMLN)    FILE
-!>              CHARACTER*(FTYPLN)    FILTYP
-!>              CHARACTER*(SRCLEN)    SRCFIL
+!>C
+!>C     Local variables.
+!>C
+!>      CHARACTER*(FNAMLN)    FILE
+!>      CHARACTER*(FTYPLN)    FILTYP
+!>      CHARACTER*(SRCLEN)    SRCFIL
 !>
-!>              INTEGER               COUNT
-!>              INTEGER               HANDLE
-!>              INTEGER               WHICH
+!>      INTEGER               COUNT
+!>      INTEGER               HANDLE
+!>      INTEGER               WHICH
 !>
-!>              LOGICAL               FOUND
+!>      LOGICAL               FOUND
 !>
-!>        C
-!>        C     Load several kernel files.
-!>        C
-!>              CALL FURNSH ( 'keeper_ex1.tm'              )
-!>              CALL FURNSH ( 'RSSD0002.TF'                )
-!>              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
+!>C
+!>C     Load several kernel files.
+!>C
+!>      CALL FURNSH ( 'keeper_ex1.tm'              )
+!>      CALL FURNSH ( 'RSSD0002.TF'                )
+!>      CALL FURNSH ( 'earth_latest_high_prec.bpc' )
 !>
-!>        C
-!>        C     Count the number of loaded kernel files.
-!>        C
-!>              CALL KTOTAL ( 'ALL', COUNT )
+!>C
+!>C     Count the number of loaded kernel files.
+!>C
+!>      CALL KTOTAL ( 'ALL', COUNT )
 !>
-!>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!>             . //               'final FURNSH: ', COUNT
-!>              WRITE(*,*) ' '
+!>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+!>     . //               'final FURNSH: ', COUNT
+!>      WRITE(*,*) ' '
 !>
-!>        C
-!>        C     Retrieve the data for all the loaded kernels and
-!>        C     test an index for which there should be no kernel.
-!>        C
-!>              WRITE(*,'(A)') 'Overview of loaded kernels, by index:'
-!>              WRITE(*,*) ' '
+!>C
+!>C     Retrieve the data for all the loaded kernels and
+!>C     test an index for which there should be no kernel.
+!>C
+!>      WRITE(*,'(A)') 'Overview of loaded kernels, by index:'
+!>      WRITE(*,*) ' '
 !>
-!>              DO WHICH= 1, COUNT + 1
+!>      DO WHICH= 1, COUNT + 1
 !>
-!>                 CALL KDATA ( WHICH, 'ALL',   FILE, FILTYP,
-!>             .                SRCFIL, HANDLE, FOUND        )
+!>         CALL KDATA ( WHICH, 'ALL',   FILE, FILTYP,
+!>     .                SRCFIL, HANDLE, FOUND        )
 !>
-!>                 IF ( FOUND ) THEN
+!>         IF ( FOUND ) THEN
 !>
-!>                    WRITE(*,*) '  Index : ', WHICH
-!>                    WRITE(*,*) '  File  : ', FILE
-!>                    WRITE(*,*) '  Type  : ', FILTYP
-!>                    WRITE(*,*) '  Source: ', SRCFIL
-!>                    WRITE(*,*) '  Handle: ', HANDLE
-!>                    WRITE(*,*) ' '
+!>            WRITE(*,*) '  Index : ', WHICH
+!>            WRITE(*,*) '  File  : ', FILE
+!>            WRITE(*,*) '  Type  : ', FILTYP
+!>            WRITE(*,*) '  Source: ', SRCFIL
+!>            WRITE(*,*) '  Handle: ', HANDLE
+!>            WRITE(*,*) ' '
 !>
-!>                 ELSE
+!>         ELSE
 !>
-!>                    WRITE(*,*) '  No kernel found with index: ', WHICH
+!>            WRITE(*,*) '  No kernel found with index: ', WHICH
 !>
-!>                 END IF
+!>         END IF
 !>
-!>              END DO
+!>      END DO
 !>
-!>        C
-!>        C     Unload the text kernels.
-!>        C
-!>              CALL KTOTAL ( 'TEXT', COUNT )
+!>C
+!>C     Unload the text kernels.
+!>C
+!>      CALL KTOTAL ( 'TEXT', COUNT )
 !>
-!>              WRITE(*,*) ' '
-!>              WRITE(*,'(A,I2,A)') 'Unloading', COUNT,
-!>             .                    ' text kernels...'
-!>              WRITE(*,*) ' '
+!>      WRITE(*,*) ' '
+!>      WRITE(*,'(A,I2,A)') 'Unloading', COUNT,
+!>     .                    ' text kernels...'
+!>      WRITE(*,*) ' '
 !>
-!>              DO WHILE ( COUNT .NE. 0 )
+!>      DO WHILE ( COUNT .NE. 0 )
 !>
-!>                 CALL KDATA (      1, 'TEXT',  FILE, FILTYP,
-!>             .                SRCFIL, HANDLE, FOUND        )
+!>         CALL KDATA (      1, 'TEXT',  FILE, FILTYP,
+!>     .                SRCFIL, HANDLE, FOUND        )
 !>
-!>        C
-!>        C        If the kernel is found in the pool, unload it.
-!>        C
-!>                 IF ( FOUND ) THEN
+!>C
+!>C        If the kernel is found in the pool, unload it.
+!>C
+!>         IF ( FOUND ) THEN
 !>
-!>                    CALL UNLOAD ( FILE )
+!>            CALL UNLOAD ( FILE )
 !>
-!>        C
-!>        C           Check if the file has been unloaded.
-!>        C
-!>                    CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
+!>C
+!>C           Check if the file has been unloaded.
+!>C
+!>            CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
 !>
-!>                    IF ( FOUND ) THEN
+!>            IF ( FOUND ) THEN
 !>
-!>                       WRITE(*,'(A)') '  Error unloading ' // FILE
+!>               WRITE(*,'(A)') '  Error unloading ' // FILE
 !>
-!>                    ELSE
+!>            ELSE
 !>
-!>                       WRITE(*,'(A)') '  Success unloading ' // FILE
+!>               WRITE(*,'(A)') '  Success unloading ' // FILE
 !>
-!>                    END IF
+!>            END IF
 !>
-!>        C
-!>        C        Something is not working. Inform NAIF.
-!>        C
-!>                 ELSE
+!>C
+!>C        Something is not working. Inform NAIF.
+!>C
+!>         ELSE
 !>
-!>                    WRITE(*,*) ' ERROR: No kernel found with index: ',
-!>             .                 WHICH
+!>            WRITE(*,*) ' ERROR: No kernel found with index: ',
+!>     .                 WHICH
 !>
-!>                 END IF
+!>         END IF
 !>
-!>        C
-!>        C        Check if we have more text kernels to unload from
-!>        C        the kernel pool. Note that unloading a text kernel
-!>        C        or meta-kernel implies that the kernel pool is
-!>        C        cleared, and any kernel(s) that were not to be
-!>        C        unloaded are re-loaded. Therefore the COUNT value
-!>        C        changes, and the indexing of the files within the
-!>        C        kernel pool too.
-!>        C
-!>                 CALL KTOTAL ( 'TEXT', COUNT )
+!>C
+!>C        Check if we have more text kernels to unload from
+!>C        the kernel pool. Note that unloading a text kernel
+!>C        or meta-kernel implies that the kernel pool is
+!>C        cleared, and any kernel(s) that were not to be
+!>C        unloaded are re-loaded. Therefore the COUNT value
+!>C        changes, and the indexing of the files within the
+!>C        kernel pool too.
+!>C
+!>         CALL KTOTAL ( 'TEXT', COUNT )
 !>
-!>              END DO
+!>      END DO
 !>
-!>              CALL KTOTAL ( 'ALL', COUNT )
+!>      CALL KTOTAL ( 'ALL', COUNT )
 !>
-!>              WRITE(*,*) ' '
-!>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!>             . //               'UNLOAD calls: ', COUNT
+!>      WRITE(*,*) ' '
+!>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+!>     . //               'UNLOAD calls: ', COUNT
 !>
-!>        C
-!>        C     Clear the KEEPER system, retrieve the number of loaded
-!>        C     after the clear.
-!>        C
-!>              CALL KCLEAR()
+!>C
+!>C     Clear the KEEPER system, retrieve the number of loaded
+!>C     after the clear.
+!>C
+!>      CALL KCLEAR()
 !>
-!>              CALL KTOTAL ( 'ALL', COUNT )
+!>      CALL KTOTAL ( 'ALL', COUNT )
 !>
-!>              WRITE(*,*) ' '
-!>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-!>             . //               'KCLEAR      : ', COUNT
+!>      WRITE(*,*) ' '
+!>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+!>     . //               'KCLEAR      : ', COUNT
 !>
-!>              END
+!>      END
+!>```
 !>
 !>        When this program was executed on a Mac/Intel/gfortran/64-bit
 !>        platform, the output was:
@@ -542,6 +542,9 @@ submodule (pepper_instance_module) pepper_keeper
 
 contains
 
+      !> Convert an integer to an equivalent written phrase.
+      !> For example, convert 121 to 'ONE HUNDRED TWENTY-ONE'.
+      !>
       !>## Detailed Input
       !>
       !>     N        is any integer (less than 10**12 in absolute value).
@@ -641,10 +644,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 15-AUG-1990 (WLT)
-      module procedure inttxt
+      module subroutine inttxt ( ctx, n, string )
       use pepper_kinds, only: ip
       use pepper_strings, only: suffix
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! An integer (less than 10**12 in absolute value).
+      character(*), intent(out) :: string  !! An English string representing the cardinal of N.
 
       integer(ip), parameter :: lngest = 9
 
@@ -786,8 +792,11 @@ contains
       end do
 
       return
-      end procedure inttxt
+      end subroutine inttxt
 
+      !> Convert an integer to an equivalent written ordinal phrase.
+      !> For example, convert 121 to 'ONE HUNDRED TWENTY-FIRST'.
+      !>
       !>## Detailed Input
       !>
       !>     N        is an integer (less than 10**12 in absolute value).
@@ -882,10 +891,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 15-AUG-1990 (WLT)
-      module procedure intord
+      module subroutine intord ( ctx, n, string )
       use pepper_kinds, only: ip
       use pepper_strings, only: suffix
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! An integer (less than 10**12 in absolute value).
+      character(*), intent(out) :: string  !! An English string representing the ordinal of N.
 
       integer(ip), parameter :: maxord = 148
 
@@ -968,8 +980,11 @@ contains
       string = mystr
 
       return
-      end procedure intord
+      end subroutine intord
 
+      !> Replace a marker with the text representation of an ordinal
+      !> number.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is an arbitrary character string.
@@ -1077,62 +1092,64 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REPMOT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REPMOT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 80 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 80 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)      INSTR
-      !>              CHARACTER*(STRLEN)      MARKER
-      !>              CHARACTER*(STRLEN)      OUTSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)      INSTR
+      !>      CHARACTER*(STRLEN)      MARKER
+      !>      CHARACTER*(STRLEN)      OUTSTR
       !>
-      !>        C
-      !>        C     1. Uppercase
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'INVALID COMMAND. # WORD NOT RECOGNIZED.'
+      !>C
+      !>C     1. Uppercase
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'INVALID COMMAND. # WORD NOT RECOGNIZED.'
       !>
-      !>              CALL REPMOT ( INSTR, MARKER, 5, 'U', OUTSTR )
+      !>      CALL REPMOT ( INSTR, MARKER, 5, 'U', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 1: Replacement text in uppercase.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Case 1: Replacement text in uppercase.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     2. Lowercase
-      !>        C
-      !>              MARKER = ' XX '
-      !>              INSTR  = 'The XX word of the XX sentence was ...'
+      !>C
+      !>C     2. Lowercase
+      !>C
+      !>      MARKER = ' XX '
+      !>      INSTR  = 'The XX word of the XX sentence was ...'
       !>
-      !>              CALL REPMOT ( INSTR, MARKER, 5, 'L', OUTSTR )
+      !>      CALL REPMOT ( INSTR, MARKER, 5, 'L', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 2: Replacement text in lowercase.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Case 2: Replacement text in lowercase.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     2. Capitalized
-      !>        C
-      !>              MARKER = ' XX '
-      !>              INSTR  = 'Name:  YY.  Rank:  XX.'
+      !>C
+      !>C     2. Capitalized
+      !>C
+      !>      MARKER = ' XX '
+      !>      INSTR  = 'Name:  YY.  Rank:  XX.'
       !>
-      !>              CALL REPMC  ( INSTR,  'YY',  'Moriarty', OUTSTR )
-      !>              CALL REPMOT ( OUTSTR, MARKER, 5,    'C', OUTSTR )
+      !>      CALL REPMC  ( INSTR,  'YY',  'Moriarty', OUTSTR )
+      !>      CALL REPMOT ( OUTSTR, MARKER, 5,    'C', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 3: Replacement text capitalized.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*) 'Case 3: Replacement text capitalized.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1199,10 +1216,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
-      module procedure repmot
+      module subroutine repmot ( ctx, in, marker, value, rtcase, out )
       use pepper_kinds, only: ip
       use pepper_strings, only: lcase_inplace, ucase_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: in  !! Input string.
+      character(*), intent(in) :: marker  !! Marker to be replaced.
+      integer(ip), intent(in) :: value  !! Replacement value.
+      character(1), intent(in) :: rtcase  !! Case of replacement text.
+      character(*), intent(out) :: out  !! Output string.
 
       integer(ip), parameter :: maxlon = 147
 
@@ -1294,8 +1317,12 @@ contains
       call repsub ( ctx, in,  mrkpsb,  mrkpse,  ord ( : len_trim(ord) ),  out )
 
       return
-      end procedure repmot
+      end subroutine repmot
 
+      !> Retrieve the string starting at the FIDX element of the kernel
+      !> pool variable, where the string may be continued across several
+      !> components of the kernel pool variable.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is the name of a kernel pool variable for which
@@ -1561,10 +1588,18 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 12-APR-2012 (WLT) (BVS)
-      module procedure sepool
+      module subroutine sepool ( ctx, item, fidx, contin, string, size, lidx, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: item  !! name of the kernel pool variable
+      integer(ip), intent(in) :: fidx  !! index of the first component of the string
+      character(*), intent(in) :: contin  !! character sequence used to indicate continuation
+      character(*), intent(out) :: string  !! a full string concatenated across continuations
+      integer(ip), intent(out) :: size  !! the number of character in the full string value
+      integer(ip), intent(out) :: lidx  !! index of the last component of the string
+      logical, intent(out) :: found  !! flag indicating success or failure of request
 
 !     SPICELIB Variables
 !
@@ -1688,8 +1723,12 @@ contains
          call pool_string ( ctx, item, k, part, got )
          if ( got .and. len ( part ) == 0 ) part = ' '
       end subroutine get_part
-      end procedure sepool
+      end subroutine sepool
 
+      !> Retrieve the Nth string from a kernel pool variable, where the
+      !> string may be continued across several components of the kernel
+      !> pool variable.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is the name of a kernel pool variable for which
@@ -1954,10 +1993,17 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-1997 (WLT)
-      module procedure stpool
+      module subroutine stpool ( ctx, item, nth, contin, nthstr, size, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: item  !! Name of the kernel pool variable.
+      integer(ip), intent(in) :: nth  !! Index of the full string to retrieve.
+      character(*), intent(in) :: contin  !! Character sequence used to indicate continuation.
+      character(*), intent(out) :: nthstr  !! A full string concatenated across continuations.
+      integer(ip), intent(out) :: size  !! The number of characters in the full string value.
+      logical, intent(out) :: found  !! Flag indicating success or failure of request.
 
 !     SPICELIB Variables
 !
@@ -2093,8 +2139,11 @@ contains
          call pool_string ( ctx, item, k, part, got )
          if ( got .and. len ( part ) == 0 ) part = ' '
       end subroutine get_part
-      end procedure stpool
+      end subroutine stpool
 
+      !> Return the latest version string of a given item such as the
+      !> Toolkit or a routine name.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is the item for which a version string is to be returned.
@@ -2312,9 +2361,12 @@ contains
       !>        Version update, N0036.
       !>
       !>-    SPICELIB Version 1.0.0, 23-AUG-1994 (HAN)
-      module procedure tkvrsn
+      module subroutine tkvrsn ( ctx, item, verstr )
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: item  !! Item for which a version string is desired.
+      character(*), intent(out) :: verstr  !! Version string.
 
 !
 !     At the current time only the TOOLKIT version number is
@@ -2327,8 +2379,13 @@ contains
       end if
 
       return
-      end procedure tkvrsn
+      end subroutine tkvrsn
 
+      !> Returns a string indicating the line terminators of an ASCII file
+      !> and, if requested, stops execution if the terminator does match
+      !> the one that is native to the platform on which the toolkit was
+      !> compiled.
+      !>
       !>## Detailed Input
       !>
       !>     FILE       the name of the ASCII file to scan for a line
@@ -2543,11 +2600,16 @@ contains
       !>        Updated for PC-CYGWIN.
       !>
       !>-    SPICELIB Version 1.0.0, 17-FEB-2004 (EDW) (BVS)
-      module procedure zzascii
+      module subroutine zzascii ( ctx, file, line, check, termin )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, rtrim
 
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! Name of the text file to scan.
+      character(*), intent(inout) :: line  !! The work string for file reads.
+      logical, intent(in) :: check  !! Flag directing to check for mismatched EOL.
+      character(*), intent(out) :: termin  !! The deduced terminator ID.
       integer(ip), parameter :: eoltsz = 5
 
 !
@@ -2822,8 +2884,13 @@ contains
       end if
 
       return
-      end procedure zzascii
+      end subroutine zzascii
 
+      !> Determine whether a file exists.
+      !>
+      !> The function returns the value .TRUE. if the file exists, .FALSE.
+      !> otherwise.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of the file in question. This may be any
@@ -2874,50 +2941,52 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EXISTS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EXISTS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              LOGICAL                 EXISTS
-      !>              INTEGER                 RTRIM
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      LOGICAL                 EXISTS
+      !>      INTEGER                 RTRIM
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 FILEN
-      !>              PARAMETER             ( FILEN = 14 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 FILEN
+      !>      PARAMETER             ( FILEN = 14 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(FILEN)       FNAME  ( 2 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(FILEN)       FNAME  ( 2 )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Define an array of file names.
-      !>        C
-      !>              DATA                    FNAME / 'exists_ex1.txt',
-      !>             .                                'exists_ex1.pgm' /
+      !>C
+      !>C     Define an array of file names.
+      !>C
+      !>      DATA                    FNAME / 'exists_ex1.txt',
+      !>     .                                'exists_ex1.pgm' /
       !>
-      !>              DO I = 1, 2
+      !>      DO I = 1, 2
       !>
-      !>                 IF ( EXISTS ( FNAME(I) ) ) THEN
+      !>         IF ( EXISTS ( FNAME(I) ) ) THEN
       !>
-      !>                    WRITE(*,*) 'The file ', FNAME(I)(:RTRIM(FNAME(I))),
-      !>             .                 ' exists.'
+      !>            WRITE(*,*) 'The file ', FNAME(I)(:RTRIM(FNAME(I))),
+      !>     .                 ' exists.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'Cannot find the file ', FNAME(I)
+      !>            WRITE(*,*) 'Cannot find the file ', FNAME(I)
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2999,10 +3068,12 @@ contains
       !>        occurred during the execution of the INQUIRE statement.
       !>        In this case, a SPICELIB error is signaled and the routine
       !>        checks out.
-      module procedure exists
+      module logical function exists ( ctx, fname )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of the file in question.
 
       integer(ip) :: iostat
       integer(ip) :: r
@@ -3054,16 +3125,21 @@ contains
       exists = myexst
 
       return
-      end procedure exists
+      end function exists
 
-      !>## Abstract
+      !> PEPPER: chooses the loader of FILE (the rules: [[spice_furnsh]]): a
+      !> registered kernel loader named by `loader`, before any check of the
+      !> file; else SPICE's binary kernels by their ID word; else a
+      !> registered loader by extension or `detect`; else the text readers.
+      !> A file a kernel loader reads is loaded as an SPK built in memory
+      !> (FILTYP 'SPK').
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Determine the architecture and type of a file and load
+      !> the file into the appropriate SPICE subsystem
       !>
-      !>     Determine the architecture and type of a file and load
-      !>     the file into the appropriate SPICE subsystem
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3248,9 +3324,18 @@ contains
       !>        whenever a text kernel loads.
       !>
       !>-    SPICELIB Version 1.0.0, 04-JUN-1999 (WLT)
-      module procedure zzldker
+      module subroutine zzldker ( ctx, file, nofile, filtyp, handle, loader, used, format )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! The name of a file to be loaded.
+      character(*), intent(in) :: nofile  !! A message to issue if FILE cannot be located
+      character(*), intent(out) :: filtyp  !! The type of kernel.
+      integer(ip), intent(out) :: handle  !! The handle associated with the loaded kernel.
+      character(*), intent(in), optional :: loader  !! PEPPER: the registered loader that reads FILE, before anything else
+                                                    !! (PEPPER: PEPPER's own loading; blank: chosen by the file)
+      character(:), allocatable, intent(out), optional :: used  !! PEPPER: the kernel loader that read the file (blank: none)
+      character(:), allocatable, intent(out), optional :: format  !! PEPPER: the description of a kernel built by a loader
 
 !
 !     Local Variables.
@@ -3260,8 +3345,36 @@ contains
       character(wdsize) :: versn
       character(wdsize) :: arch
       character(wdsize) :: mytype
+      character(:), allocatable :: fmt  ! PEPPER: the description of a kernel made by a loader
+      integer(ip) :: k  ! PEPPER: the kernel loader (0: none; -1: PEPPER's own loading, loader='PEPPER')
 
       if ( ctx%failed() ) return
+
+!
+!     PEPPER: a registered kernel loader named by FURNSH's LOADER argument
+!     (or the meta-kernel's KERNEL_LOADERS) reads the file, before and
+!     instead of anything else: no check that the file exists, of its
+!     architecture (a SPICE binary kernel is given to it too), of its
+!     extension, or of the other loaders' detect. The loader alone
+!     decides, and reports its own errors. The name PEPPER (k = -1) means
+!     PEPPER's own loading: the file is loaded as without kernel loaders
+!     (SPICE's kernels by their ID word, JSON kernels by their extension,
+!     else text kernels and meta-kernels), and registered loaders are not
+!     asked. Any other name no loader has: SPICE(UNKNOWNLOADER).
+!
+      if ( present ( used   ) ) used   = ' '
+      if ( present ( format ) ) format = ' '
+      k = 0
+      if ( present ( loader ) ) then
+         if ( loader /= ' ' ) then
+            call find_kernel_loader ( ctx, file, loader, k )
+            if ( ctx%failed() ) return
+         end if
+      end if
+      if ( k > 0 ) then
+         call load_with_loader ( )
+         return
+      end if
 
       if ( .not. exists( ctx, file ) ) then
 
@@ -3273,6 +3386,27 @@ contains
 
       end if
 
+!
+!     PEPPER: a file a kernel loader read is loaded again (GETFAT would
+!     see the kernel built from it): the loader reads it again.
+!
+      if ( k == 0 .and. synthetic_named ( ctx, file ) > 0 ) then
+         call match_kernel_loader ( ctx, file, k )
+         if ( ctx%failed() ) return
+         if ( k > 0 ) then
+            call load_with_loader ( )
+            return
+         end if
+      end if
+
+!
+!     PEPPER: from here the file is read from disk: a kernel built in
+!     memory with its name (a loader's file loaded again with
+!     loader='PEPPER' or no loader matching, an SPK written from a kernel
+!     under the kernel's name) is not what GETFAT and DAFOPR see. FURNSH
+!     clears the flag after ZZLDKER returns.
+!
+      ctx%spice%zzddhman%files_only = .true.
       call getfat ( ctx, file, arch, mytype )
 
 !
@@ -3397,6 +3531,19 @@ contains
       else
 
 !
+!        PEPPER: a file that is not a SPICE binary kernel may be one a
+!        registered kernel loader reads (its extension, or its detect).
+!
+         if ( k == 0 ) then
+            call match_kernel_loader ( ctx, file, k )
+            if ( ctx%failed() ) return
+            if ( k > 0 ) then
+               call load_with_loader ( )
+               return
+            end if
+         end if
+
+!
 !        PEPPER: SPICELIB checked here (ZZASCII) that the file's line
 !        terminators were the platform's, and signaled
 !        SPICE(INCOMPATIBLEEOL) otherwise. The text reader (RDTEXT) reads
@@ -3423,6 +3570,19 @@ contains
 
       contains
 
+      !> PEPPER: load the file with registered kernel loader K: an SPK
+      !> built in memory, named FILE.
+      subroutine load_with_loader ( )
+         ! the loader's kernel is registered under the file's name and
+         ! found by it (SPKLEF)
+         ctx%spice%zzddhman%files_only = .false.
+         call run_kernel_loader ( ctx, k, file, handle, fmt )
+         if ( ctx%failed() ) return
+         filtyp = 'SPK'
+         if ( present ( used   ) ) used   = ctx%spice%loaders(k)%name
+         if ( present ( format ) ) format = fmt
+      end subroutine load_with_loader
+
       !> Unload a DAF that was just loaded but could not be read into
       !> memory, keeping the error that was signaled.
       subroutine unload_daf ( kind, han )
@@ -3445,8 +3605,23 @@ contains
          call ctx%sigerr ( short )
       end subroutine unload_daf
 
-      end procedure zzldker
+      end subroutine zzldker
 
+      !> Load one or more SPICE kernels into a program. Lines of text
+      !> kernels and meta-kernels have at most 132 characters; a longer
+      !> line is cut without an error (see Restrictions).
+      !>
+      !> PEPPER: a file named `*.json` (in any case) is a JSON kernel (see
+      !> [[pepper_json]]), a text kernel or meta-kernel.
+      !>
+      !> PEPPER: kernel loaders ([[spice_add_loader]]) read other file
+      !> formats: `loader` names the one that reads FILE, overriding every
+      !> other choice, or is PEPPER for PEPPER's own loading (registered
+      !> loaders not asked); without it FURNSH chooses (SPICE's binary
+      !> kernels, a loader's extension, a loader's `detect`, the text
+      !> readers). The rules are in [[spice_furnsh]], the method programs
+      !> call.
+      !>
       !>## Detailed Input
       !>
       !>     FILE     is a SPICE kernel file. The file may be either binary
@@ -3841,41 +4016,43 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM FURNSH_EX5
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM FURNSH_EX5
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               COUNT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               COUNT
       !>
-      !>        C
-      !>        C     Load several kernel files.
-      !>        C
-      !>              CALL FURNSH ( 'furnsh_ex5.tm'              )
-      !>              CALL FURNSH ( 'RSSD0002.TF'                )
-      !>              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
+      !>C
+      !>C     Load several kernel files.
+      !>C
+      !>      CALL FURNSH ( 'furnsh_ex5.tm'              )
+      !>      CALL FURNSH ( 'RSSD0002.TF'                )
+      !>      CALL FURNSH ( 'earth_latest_high_prec.bpc' )
       !>
-      !>        C
-      !>        C     Count the number of loaded kernel files.
-      !>        C
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>C
+      !>C     Count the number of loaded kernel files.
+      !>C
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'final FURNSH: ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'final FURNSH: ', COUNT
       !>
-      !>        C
-      !>        C     Clear the KEEPER system, retrieve the number of loaded
-      !>        C     after the clear.
-      !>        C
-      !>              CALL KCLEAR()
+      !>C
+      !>C     Clear the KEEPER system, retrieve the number of loaded
+      !>C     after the clear.
+      !>C
+      !>      CALL KCLEAR()
       !>
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'KCLEAR      : ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'KCLEAR      : ', COUNT
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4004,10 +4181,14 @@ contains
       !>        the correct name PATH_VALUES.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-      module procedure furnsh
+      module subroutine furnsh ( ctx, file, loader )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos, rtrim, samsub, repmc_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! SPICE kernel file (text or binary).
+      character(*), intent(in), optional :: loader  !! PEPPER: the registered kernel loader that reads FILE, overriding
+                                                    !! every other choice ([[spice_furnsh]]; blank or absent: FURNSH chooses)
       character(1) :: norc
       character(:), allocatable :: fil2ld
       character(:), allocatable :: pvalue
@@ -4061,6 +4242,11 @@ contains
       logical :: paths
       logical :: single
       logical :: update
+      type(string), allocatable :: kload(:)  ! PEPPER: the meta-kernel's KERNEL_LOADERS
+      character(:), allocatable :: raw  ! PEPPER: the file as written in KERNELS_TO_LOAD
+      character(:), allocatable :: lname  ! PEPPER: the loader KERNEL_LOADERS names for it
+      character(:), allocatable :: used  ! PEPPER: the kernel loader that read a file
+      character(:), allocatable :: fmt  ! PEPPER: the description of a kernel made by a loader
       associate ( kt => ctx%spice%keeper, &
                   loaded => ctx%spice%keeper%loaded, &
                   known => ctx%spice%keeper%known, &
@@ -4102,12 +4288,14 @@ contains
       !     load (GETFAT and ZZDDHOPN check the same file; see zzddhman_state).
       !
       ctx%spice%zzddhman%reuse_f2h = .true.
-      call zzldker ( ctx, file, nofile, thstyp, myhand )
+      call zzldker ( ctx, file, nofile, thstyp, myhand, loader, used, fmt )
       ctx%spice%zzddhman%reuse_f2h = .false.
+      ctx%spice%zzddhman%files_only = .false.
 
       if ( ctx%failed() ) return
 
-      call kt%add ( keeper_kernel ( name = trim ( file ), type = thstyp, handle = myhand, source = 0 ) )
+      call kt%add ( keeper_kernel ( name = trim ( file ), type = thstyp, handle = myhand, source = 0, &
+                                    loader = used, format = fmt ) )
       cursrc = loaded
 
        call cvpool ( ctx, 'FURNSH', update )
@@ -4176,6 +4364,14 @@ contains
       kt%kernels(loaded)%type = 'META'
 
 !
+!     PEPPER: the kernel loaders the meta-kernel names for its files
+!     (KERNEL_LOADERS: pairs of a file, as written in KERNELS_TO_LOAD,
+!     and a loader's name; see spice_add_loader).
+!
+      call meta_kernel_loaders ( ctx, file, kload )
+      if ( ctx%failed() ) return
+
+!
 !     Now load all kernels specified in the KERNELS_TO_LOAD variable.
 !
       filnum = 1
@@ -4198,6 +4394,7 @@ contains
 !        Resolve any path symbols that may be present.
 !        Make sure we have room to load at least one more file.
 !
+         raw = trim ( fil2ld )
          if ( paths ) then
 
             start  = 1
@@ -4280,8 +4477,10 @@ contains
          !     load (GETFAT and ZZDDHOPN check the same file; see zzddhman_state).
          !
          ctx%spice%zzddhman%reuse_f2h = .true.
-         call zzldker( ctx, fil2ld, nofile, thstyp, myhand )
+         call meta_kernel_loader ( kload, raw, trim ( fil2ld ), lname )
+         call zzldker( ctx, fil2ld, nofile, thstyp, myhand, lname, used, fmt )
          ctx%spice%zzddhman%reuse_f2h = .false.
+         ctx%spice%zzddhman%files_only = .false.
 
          if ( ctx%failed() ) return
 
@@ -4328,7 +4527,8 @@ contains
 !        Add the latest file loaded to our database of loaded
 !        files.
 !
-         call kt%add ( keeper_kernel ( name = fil2ld, type = thstyp, handle = myhand, source = cursrc ) )
+         call kt%add ( keeper_kernel ( name = fil2ld, type = thstyp, handle = myhand, source = cursrc, &
+                                       loader = used, format = fmt ) )
 
 !
 !        Get the name of the next file to load.
@@ -4346,6 +4546,7 @@ contains
       do i = 1, nknown
          call dvpool ( ctx, known(i) )
       end do
+      call dvpool ( ctx, 'KERNEL_LOADERS' )
 
       call cvpool ( ctx, 'FURNSH', update )
 
@@ -4369,8 +4570,11 @@ contains
                fil2ld = ' '
             end if
          end subroutine get_file_name
-      end procedure furnsh
+      end subroutine furnsh
 
+      !> Return the number of kernels of a specified type that are
+      !> currently loaded via the FURNSH interface.
+      !>
       !>## Detailed Input
       !>
       !>     KIND     is a list of types of kernels to count when computing
@@ -4496,65 +4700,67 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM KTOTAL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM KTOTAL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               COUNT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               COUNT
       !>
-      !>        C
-      !>        C     Load several kernel files.
-      !>        C
-      !>              CALL FURNSH ( 'ktotal_ex1.tm'              )
-      !>              CALL FURNSH ( 'RSSD0002.TF'                )
-      !>              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
+      !>C
+      !>C     Load several kernel files.
+      !>C
+      !>      CALL FURNSH ( 'ktotal_ex1.tm'              )
+      !>      CALL FURNSH ( 'RSSD0002.TF'                )
+      !>      CALL FURNSH ( 'earth_latest_high_prec.bpc' )
       !>
-      !>        C
-      !>        C     Count the number of loaded kernel files.
-      !>        C
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>C
+      !>C     Count the number of loaded kernel files.
+      !>C
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'final FURNSH: ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'final FURNSH: ', COUNT
       !>
-      !>        C
-      !>        C     Count the number of meta-kernels.
-      !>        C
-      !>              CALL KTOTAL ( 'META', COUNT )
+      !>C
+      !>C     Count the number of meta-kernels.
+      !>C
+      !>      CALL KTOTAL ( 'META', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of meta-kernels  '
-      !>             . //               '            : ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of meta-kernels  '
+      !>     . //               '            : ', COUNT
       !>
-      !>        C
-      !>        C     Count the number of text kernels.
-      !>        C
-      !>              CALL KTOTAL ( 'TEXT', COUNT )
+      !>C
+      !>C     Count the number of text kernels.
+      !>C
+      !>      CALL KTOTAL ( 'TEXT', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of text kernels  '
-      !>             . //               '            : ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of text kernels  '
+      !>     . //               '            : ', COUNT
       !>
-      !>        C
-      !>        C     Count the number of binary kernels. These kernels
-      !>        C     are of type CK, DSK, EK, PCK or SPK.
-      !>        C
-      !>              CALL KTOTAL ( 'CK DSK EK PCK SPK', COUNT )
-      !>              WRITE(*,'(A,I2)') 'The total number of binary kernels'
-      !>             . //               '            : ', COUNT
+      !>C
+      !>C     Count the number of binary kernels. These kernels
+      !>C     are of type CK, DSK, EK, PCK or SPK.
+      !>C
+      !>      CALL KTOTAL ( 'CK DSK EK PCK SPK', COUNT )
+      !>      WRITE(*,'(A,I2)') 'The total number of binary kernels'
+      !>     . //               '            : ', COUNT
       !>
-      !>        C
-      !>        C     Clear the KEEPER system, retrieve the number of loaded
-      !>        C     after the clear.
-      !>        C
-      !>              CALL KCLEAR()
+      !>C
+      !>C     Clear the KEEPER system, retrieve the number of loaded
+      !>C     after the clear.
+      !>C
+      !>      CALL KCLEAR()
       !>
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'KCLEAR      : ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'KCLEAR      : ', COUNT
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4602,10 +4808,13 @@ contains
       !>        Deleted reference to unneeded variable DOALL.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-      module procedure ktotal
+      module subroutine ktotal ( ctx, kind, count )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, fndnwd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: kind  !! A list of kinds of kernels to count.
+      integer(ip), intent(out) :: count  !! The number of kernels of type KIND.
       logical :: return
       character(1) :: norc
       character(lnsize) :: symbol
@@ -4718,8 +4927,11 @@ contains
 
       return
       end associate
-      end procedure ktotal
+      end subroutine ktotal
 
+      !> Return data for the nth kernel that is among a list of specified
+      !> kernel types.
+      !>
       !>## Detailed Input
       !>
       !>     WHICH    is the number of the kernel to fetch (matching the type
@@ -4867,67 +5079,69 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM KDATA_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM KDATA_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER               FNAMLN
-      !>              PARAMETER           ( FNAMLN = 256 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER               FNAMLN
+      !>      PARAMETER           ( FNAMLN = 256 )
       !>
-      !>              INTEGER               FTYPLN
-      !>              PARAMETER           ( FTYPLN = 33 )
+      !>      INTEGER               FTYPLN
+      !>      PARAMETER           ( FTYPLN = 33 )
       !>
-      !>              INTEGER               SRCLEN
-      !>              PARAMETER           ( SRCLEN = 256 )
+      !>      INTEGER               SRCLEN
+      !>      PARAMETER           ( SRCLEN = 256 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(FNAMLN)    FILE
-      !>              CHARACTER*(FTYPLN)    FILTYP
-      !>              CHARACTER*(SRCLEN)    SRCFIL
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(FNAMLN)    FILE
+      !>      CHARACTER*(FTYPLN)    FILTYP
+      !>      CHARACTER*(SRCLEN)    SRCFIL
       !>
-      !>              INTEGER               COUNT
-      !>              INTEGER               HANDLE
-      !>              INTEGER               WHICH
+      !>      INTEGER               COUNT
+      !>      INTEGER               HANDLE
+      !>      INTEGER               WHICH
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load several kernel files.
-      !>        C
-      !>              CALL FURNSH ( 'kdata_ex1.tm' )
+      !>C
+      !>C     Load several kernel files.
+      !>C
+      !>      CALL FURNSH ( 'kdata_ex1.tm' )
       !>
-      !>        C
-      !>        C     Count the number of loaded kernel files.
-      !>        C
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>C
+      !>C     Count the number of loaded kernel files.
+      !>C
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              DO WHICH= 1, COUNT + 1
+      !>      DO WHICH= 1, COUNT + 1
       !>
-      !>                 CALL KDATA ( WHICH, 'ALL',   FILE, FILTYP,
-      !>             .                SRCFIL, HANDLE, FOUND        )
+      !>         CALL KDATA ( WHICH, 'ALL',   FILE, FILTYP,
+      !>     .                SRCFIL, HANDLE, FOUND        )
       !>
-      !>                 IF ( FOUND ) THEN
+      !>         IF ( FOUND ) THEN
       !>
-      !>                    WRITE(*,*) 'Index : ', WHICH
-      !>                    WRITE(*,*) 'File  : ', FILE
-      !>                    WRITE(*,*) 'Type  : ', FILTYP
-      !>                    WRITE(*,*) 'Source: ', SRCFIL
-      !>                    WRITE(*,*) 'Handle: ', HANDLE
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Index : ', WHICH
+      !>            WRITE(*,*) 'File  : ', FILE
+      !>            WRITE(*,*) 'Type  : ', FILTYP
+      !>            WRITE(*,*) 'Source: ', SRCFIL
+      !>            WRITE(*,*) 'Handle: ', HANDLE
+      !>            WRITE(*,*) ' '
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'No kernel found with index: ', WHICH
+      !>            WRITE(*,*) 'No kernel found with index: ', WHICH
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5005,10 +5219,18 @@ contains
       !>        Typo in header example was corrected.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-      module procedure kdata
+      module subroutine kdata ( ctx, which, kind, file, filtyp, srcfil, handle, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, fndnwd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: which  !! Index of kernel to fetch from the list of kernels.
+      character(*), intent(in) :: kind  !! The kind of kernel to which fetches are limited.
+      character(*), intent(out) :: file  !! The name of the kernel file.
+      character(*), intent(out) :: filtyp  !! The type of the kernel.
+      integer(ip), intent(out) :: handle  !! The handle attached to FILE.
+      character(*), intent(out) :: srcfil  !! Name of the source file used to load FILE.
+      logical, intent(out) :: found  !! .TRUE. if the specified file could be located.
       logical :: return
       character(1) :: norc
       character(lnsize) :: symbol
@@ -5155,8 +5377,10 @@ contains
 
       return
       end associate
-      end procedure kdata
+      end subroutine kdata
 
+      !> Return information about a specific kernel
+      !>
       !>## Detailed Input
       !>
       !>     FILE     is the name of a kernel file for which KEEPER
@@ -5258,104 +5482,106 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM KINFO_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM KINFO_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              LOGICAL               EQSTR
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      LOGICAL               EQSTR
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER               FILLEN
-      !>              PARAMETER           ( FILLEN = 32 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER               FILLEN
+      !>      PARAMETER           ( FILLEN = 32 )
       !>
-      !>              INTEGER               TYPLEN
-      !>              PARAMETER           ( TYPLEN = 33 )
+      !>      INTEGER               TYPLEN
+      !>      PARAMETER           ( TYPLEN = 33 )
       !>
-      !>              INTEGER               SRCLEN
-      !>              PARAMETER           ( SRCLEN = 256 )
+      !>      INTEGER               SRCLEN
+      !>      PARAMETER           ( SRCLEN = 256 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(FILLEN)    FILE
-      !>              CHARACTER*(TYPLEN)    FILTYP
-      !>              CHARACTER*(SRCLEN)    SRCFIL
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(FILLEN)    FILE
+      !>      CHARACTER*(TYPLEN)    FILTYP
+      !>      CHARACTER*(SRCLEN)    SRCFIL
       !>
-      !>              INTEGER               COUNT
-      !>              INTEGER               HANDLE
-      !>              INTEGER               WHICH
+      !>      INTEGER               COUNT
+      !>      INTEGER               HANDLE
+      !>      INTEGER               WHICH
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( 'kinfo_ex1.tm' )
+      !>C
+      !>C     Load the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( 'kinfo_ex1.tm' )
       !>
-      !>        C
-      !>        C     Find out the total number of kernels in the kernel pool.
-      !>        C
-      !>              CALL KTOTAL ( 'all', COUNT )
+      !>C
+      !>C     Find out the total number of kernels in the kernel pool.
+      !>C
+      !>      CALL KTOTAL ( 'all', COUNT )
       !>
-      !>              IF ( COUNT .EQ. 0 ) THEN
+      !>      IF ( COUNT .EQ. 0 ) THEN
       !>
-      !>                 WRITE(*,*) 'No files loaded at this time.'
+      !>         WRITE(*,*) 'No files loaded at this time.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) 'The loaded files files are: '
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) 'The loaded files files are: '
+      !>         WRITE(*,*) ' '
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Find the file name, type and source for each of the
-      !>        C     kernels in the kernel pool and print its type.
-      !>        C
-      !>              DO WHICH= 1, COUNT
+      !>C
+      !>C     Find the file name, type and source for each of the
+      !>C     kernels in the kernel pool and print its type.
+      !>C
+      !>      DO WHICH= 1, COUNT
       !>
-      !>                 CALL KDATA ( WHICH,  'all',  FILE, FILTYP,
-      !>             .                SRCFIL, HANDLE, FOUND        )
+      !>         CALL KDATA ( WHICH,  'all',  FILE, FILTYP,
+      !>     .                SRCFIL, HANDLE, FOUND        )
       !>
-      !>                 CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
+      !>         CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
       !>
-      !>                 IF ( EQSTR( FILTYP, "SPK" ) ) THEN
+      !>         IF ( EQSTR( FILTYP, "SPK" ) ) THEN
       !>
-      !>                    WRITE(*,*) FILE, ' is an SPK file.'
+      !>            WRITE(*,*) FILE, ' is an SPK file.'
       !>
-      !>                 ELSE IF ( EQSTR( FILTYP, "CK" ) ) THEN
+      !>         ELSE IF ( EQSTR( FILTYP, "CK" ) ) THEN
       !>
-      !>                    WRITE(*,*) FILE, ' is a CK file.'
+      !>            WRITE(*,*) FILE, ' is a CK file.'
       !>
-      !>                 ELSE IF ( EQSTR( FILTYP, "PCK" ) ) THEN
+      !>         ELSE IF ( EQSTR( FILTYP, "PCK" ) ) THEN
       !>
-      !>                    WRITE(*,*) FILE, ' is a PCK file.'
+      !>            WRITE(*,*) FILE, ' is a PCK file.'
       !>
-      !>                 ELSE IF ( EQSTR( FILTYP, "DSK" ) ) THEN
+      !>         ELSE IF ( EQSTR( FILTYP, "DSK" ) ) THEN
       !>
-      !>                    WRITE(*,*) FILE, ' is a DSK file.'
+      !>            WRITE(*,*) FILE, ' is a DSK file.'
       !>
-      !>                 ELSE IF ( EQSTR( FILTYP, "EK" ) ) THEN
+      !>         ELSE IF ( EQSTR( FILTYP, "EK" ) ) THEN
       !>
-      !>                    WRITE(*,*) FILE, ' is an EK file.'
+      !>            WRITE(*,*) FILE, ' is an EK file.'
       !>
-      !>                 ELSE IF ( EQSTR( FILTYP, "META" ) ) THEN
+      !>         ELSE IF ( EQSTR( FILTYP, "META" ) ) THEN
       !>
-      !>                    WRITE(*,*) FILE, ' is a meta-kernel file.'
+      !>            WRITE(*,*) FILE, ' is a meta-kernel file.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) FILE, ' is a text kernel.'
+      !>            WRITE(*,*) FILE, ' is a text kernel.'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5401,9 +5627,15 @@ contains
       !>        Updated the $Author_and_Institution section.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-      module procedure kinfo
+      module subroutine kinfo ( ctx, file, filtyp, srcfil, handle, found )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! Name of a kernel to fetch information for
+      character(*), intent(out) :: filtyp  !! The type of the kernel
+      integer(ip), intent(out) :: handle  !! The handle attached to FILE.
+      character(*), intent(out) :: srcfil  !! Name of the source file used to load FILE.
+      logical, intent(out) :: found  !! .TRUE. if the specified file could be located.
       logical :: return
       character(1) :: norc
       character(lnsize) :: symbol
@@ -5484,7 +5716,7 @@ contains
 
       return
       end associate
-      end procedure kinfo
+      end subroutine kinfo
 
       !> The length of the longest file name among the kernels loaded
       !> through FURNSH (at least 1).
@@ -5502,10 +5734,19 @@ contains
       end function longest_kernel_name
 
       !> The data of the nth kernel of a kind loaded through FURNSH, with
-      !> file names of any length (PEPPER).
-      module procedure kernel_data
+      !> file names of any length (PEPPER; [[kdata]], which truncates to its
+      !> arguments' lengths).
+      module subroutine kernel_data ( ctx, which, kind, file, filtyp, source, handle, found )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: which  !! the index of the kernel among those of KIND
+      character(*), intent(in) :: kind  !! the kinds of kernel ('ALL', 'SPK', 'CK TEXT', ..., as [[kdata]])
+      character(:), allocatable, intent(out) :: file  !! the file name (empty if not found)
+      character(:), allocatable, intent(out) :: filtyp  !! the kernel type: SPK, CK, PCK, DSK, EK, TEXT or META
+      character(:), allocatable, intent(out) :: source  !! the meta-kernel it was loaded from (empty if loaded directly)
+      integer(ip), intent(out) :: handle  !! its handle (0 for a text or meta-kernel)
+      logical, intent(out) :: found  !! a kernel was found
       character(len=longest_kernel_name(ctx)) :: f
       character(len=longest_kernel_name(ctx)) :: s
       character(8) :: t
@@ -5513,20 +5754,31 @@ contains
       file   = trim ( f )
       filtyp = trim ( t )
       source = trim ( s )
-      end procedure kernel_data
+      end subroutine kernel_data
 
       !> The data of a kernel loaded through FURNSH, with file names of any
-      !> length (PEPPER).
-      module procedure kernel_info
+      !> length (PEPPER; [[kinfo]], which truncates to its arguments'
+      !> lengths).
+      module subroutine kernel_info ( ctx, file, filtyp, source, handle, found )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the file name, as loaded
+      character(:), allocatable, intent(out) :: filtyp  !! the kernel type: SPK, CK, PCK, DSK, EK, TEXT or META
+      character(:), allocatable, intent(out) :: source  !! the meta-kernel it was loaded from (empty if loaded directly)
+      integer(ip), intent(out) :: handle  !! its handle (0 for a text or meta-kernel)
+      logical, intent(out) :: found  !! the file is loaded
       character(len=longest_kernel_name(ctx)) :: s
       character(8) :: t
       call kinfo ( ctx, file, t, s, handle, found )
       filtyp = trim ( t )
       source = trim ( s )
-      end procedure kernel_info
+      end subroutine kernel_info
 
+      !> Clear the KEEPER subsystem: unload all kernels, clear the kernel
+      !> pool, and re-initialize the subsystem. Existing watches on kernel
+      !> variables are retained.
+      !>
       !>## Detailed Input
       !>
       !>     None. This routine operates by side effects. See $Particulars
@@ -5625,39 +5877,41 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM KCLEAR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM KCLEAR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               COUNT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               COUNT
       !>
-      !>        C
-      !>        C     Load several kernel files.
-      !>        C
-      !>              CALL FURNSH ( 'kclear_ex1.tm' )
+      !>C
+      !>C     Load several kernel files.
+      !>C
+      !>      CALL FURNSH ( 'kclear_ex1.tm' )
       !>
-      !>        C
-      !>        C     Count the number of loaded kernel files.
-      !>        C
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>C
+      !>C     Count the number of loaded kernel files.
+      !>C
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'FURNSH: ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'FURNSH: ', COUNT
       !>
-      !>        C
-      !>        C     Clear the KEEPER system, retrieve the number of loaded
-      !>        C     after the clear.
-      !>        C
-      !>              CALL KCLEAR()
+      !>C
+      !>C     Clear the KEEPER system, retrieve the number of loaded
+      !>C     after the clear.
+      !>C
+      !>      CALL KCLEAR()
       !>
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'KCLEAR: ', COUNT
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'KCLEAR: ', COUNT
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5708,9 +5962,10 @@ contains
       !>        script to create a link for the "POOL" substring.
       !>
       !>-    SPICELIB Version 1.0.0, 15-NOV-2006 (NJB)
-      module procedure kclear
+      module subroutine kclear ( ctx )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
       character(1) :: norc
       character(lnsize) :: symbol
       character(msgsiz) :: nofile
@@ -5794,6 +6049,7 @@ contains
             call zzdskusf ( ctx, kt%kernels(i)%handle )
 
          end if
+         call notify_kernel_unloaded ( ctx, i, clearing=.true. )  ! PEPPER: a kernel loader's callback
 
       end do
 
@@ -5829,8 +6085,10 @@ contains
 
       return
       end associate
-      end procedure kclear
+      end subroutine kclear
 
+      !> Unload a SPICE kernel.
+      !>
       !>## Detailed Input
       !>
       !>     FILE     is the name of a file to unload. This file
@@ -6082,128 +6340,130 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM UNLOAD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM UNLOAD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER               FNAMLN
-      !>              PARAMETER           ( FNAMLN = 256 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER               FNAMLN
+      !>      PARAMETER           ( FNAMLN = 256 )
       !>
-      !>              INTEGER               FTYPLN
-      !>              PARAMETER           ( FTYPLN = 33 )
+      !>      INTEGER               FTYPLN
+      !>      PARAMETER           ( FTYPLN = 33 )
       !>
-      !>              INTEGER               SRCLEN
-      !>              PARAMETER           ( SRCLEN = 256 )
+      !>      INTEGER               SRCLEN
+      !>      PARAMETER           ( SRCLEN = 256 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(FNAMLN)    FILE
-      !>              CHARACTER*(FTYPLN)    FILTYP
-      !>              CHARACTER*(SRCLEN)    SRCFIL
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(FNAMLN)    FILE
+      !>      CHARACTER*(FTYPLN)    FILTYP
+      !>      CHARACTER*(SRCLEN)    SRCFIL
       !>
-      !>              INTEGER               COUNT
-      !>              INTEGER               HANDLE
+      !>      INTEGER               COUNT
+      !>      INTEGER               HANDLE
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load several kernel files.
-      !>        C
-      !>              CALL FURNSH ( 'unload_ex1.tm'              )
-      !>              CALL FURNSH ( 'RSSD0002.TF'                )
-      !>              CALL FURNSH ( 'earth_latest_high_prec.bpc' )
+      !>C
+      !>C     Load several kernel files.
+      !>C
+      !>      CALL FURNSH ( 'unload_ex1.tm'              )
+      !>      CALL FURNSH ( 'RSSD0002.TF'                )
+      !>      CALL FURNSH ( 'earth_latest_high_prec.bpc' )
       !>
-      !>        C
-      !>        C     Count the number of loaded kernel files.
-      !>        C
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>C
+      !>C     Count the number of loaded kernel files.
+      !>C
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'final FURNSH: ', COUNT
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'final FURNSH: ', COUNT
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     Unload the text kernels.
-      !>        C
-      !>              CALL KTOTAL ( 'TEXT', COUNT )
+      !>C
+      !>C     Unload the text kernels.
+      !>C
+      !>      CALL KTOTAL ( 'TEXT', COUNT )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,'(A,I2,A)') 'Unloading', COUNT,
-      !>             .                    ' text kernels...'
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,'(A,I2,A)') 'Unloading', COUNT,
+      !>     .                    ' text kernels...'
+      !>      WRITE(*,*) ' '
       !>
-      !>              DO WHILE ( COUNT .NE. 0 )
+      !>      DO WHILE ( COUNT .NE. 0 )
       !>
-      !>                 CALL KDATA (      1, 'TEXT',  FILE, FILTYP,
-      !>             .                SRCFIL, HANDLE, FOUND        )
+      !>         CALL KDATA (      1, 'TEXT',  FILE, FILTYP,
+      !>     .                SRCFIL, HANDLE, FOUND        )
       !>
-      !>        C
-      !>        C        If the kernel is found in the pool, unload it.
-      !>        C
-      !>                 IF ( FOUND ) THEN
+      !>C
+      !>C        If the kernel is found in the pool, unload it.
+      !>C
+      !>         IF ( FOUND ) THEN
       !>
-      !>                    CALL UNLOAD ( FILE )
+      !>            CALL UNLOAD ( FILE )
       !>
-      !>        C
-      !>        C           Check if the file has been unloaded.
-      !>        C
-      !>                    CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
+      !>C
+      !>C           Check if the file has been unloaded.
+      !>C
+      !>            CALL KINFO ( FILE, FILTYP, SRCFIL, HANDLE, FOUND )
       !>
-      !>                    IF ( FOUND ) THEN
+      !>            IF ( FOUND ) THEN
       !>
-      !>                       WRITE(*,'(A)') '  Error unloading ' // FILE
+      !>               WRITE(*,'(A)') '  Error unloading ' // FILE
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE(*,'(A)') '  Success unloading ' // FILE
+      !>               WRITE(*,'(A)') '  Success unloading ' // FILE
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>        C
-      !>        C        Something is not working. Inform NAIF.
-      !>        C
-      !>                 ELSE
+      !>C
+      !>C        Something is not working. Inform NAIF.
+      !>C
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) ' ERROR: No kernel found but KTOTAL '
-      !>             .      //         'returns ', COUNT
+      !>            WRITE(*,*) ' ERROR: No kernel found but KTOTAL '
+      !>     .      //         'returns ', COUNT
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>        C
-      !>        C        Check if we have more text kernels to unload from
-      !>        C        the kernel pool. Note that unloading a text kernel
-      !>        C        or meta-kernel implies that the kernel pool is
-      !>        C        cleared, and any kernel(s) that were not to be
-      !>        C        unloaded are re-loaded. Therefore the COUNT value
-      !>        C        changes, and the indexing of the files within the
-      !>        C        kernel pool too.
-      !>        C
-      !>                 CALL KTOTAL ( 'TEXT', COUNT )
+      !>C
+      !>C        Check if we have more text kernels to unload from
+      !>C        the kernel pool. Note that unloading a text kernel
+      !>C        or meta-kernel implies that the kernel pool is
+      !>C        cleared, and any kernel(s) that were not to be
+      !>C        unloaded are re-loaded. Therefore the COUNT value
+      !>C        changes, and the indexing of the files within the
+      !>C        kernel pool too.
+      !>C
+      !>         CALL KTOTAL ( 'TEXT', COUNT )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'UNLOAD calls: ', COUNT
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'UNLOAD calls: ', COUNT
       !>
-      !>        C
-      !>        C     Unload the meta-kernel and retrieve the number of loaded
-      !>        C     after the clear.
-      !>        C
-      !>              CALL UNLOAD ( 'unload_ex1.tm' )
+      !>C
+      !>C     Unload the meta-kernel and retrieve the number of loaded
+      !>C     after the clear.
+      !>C
+      !>      CALL UNLOAD ( 'unload_ex1.tm' )
       !>
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,'(A,I2)') 'The total number of kernels after '
-      !>             . //               'final UNLOAD: ', COUNT
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,'(A,I2)') 'The total number of kernels after '
+      !>     . //               'final UNLOAD: ', COUNT
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6272,9 +6532,11 @@ contains
       !>        introduced.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-      module procedure unload
+      module subroutine unload ( ctx, file )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! The name of a kernel to unload.
       character(1) :: norc
       character(lnsize) :: symbol
       character(msgsiz) :: nofile
@@ -6558,6 +6820,7 @@ contains
 
                end if
 
+               call notify_kernel_unloaded ( ctx, j )  ! PEPPER: a kernel loader's callback
                call kt%remove ( j )
 
 !
@@ -6595,6 +6858,7 @@ contains
 !
 !     Remove the I'th kernel from our local database.
 !
+      call notify_kernel_unloaded ( ctx, i )  ! PEPPER: a kernel loader's callback
       call kt%remove ( i )
 
 !
@@ -6639,6 +6903,7 @@ contains
                   do j = 1, nknown
                      call dvpool ( ctx, known(j) )
                   end do
+                  call dvpool ( ctx, 'KERNEL_LOADERS' )
 
                   call cvpool ( ctx, 'FURNSH', update )
 
@@ -6734,18 +6999,21 @@ contains
 
       return
       end associate
-      end procedure unload
+      end subroutine unload
 
       !> Load a SPICE kernel (binary DAF SPK/CK/PCK, ASCII text kernel, or
       !> JSON kernel) directly from an in-memory byte buffer without any
       !> filesystem access (PEPPER).
-      module procedure furnsh_memory
+      module subroutine furnsh_memory ( ctx, name, bytes )
       use, intrinsic :: iso_fortran_env, only: int8, int64
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: nextwd_inplace, pos, ucase_inplace
       use pepper_inc_zzddhman
       use pepper_inc_zzftprms
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Virtual kernel name (e.g. 'de440s.bsp', 'naif0012.tls').
+      integer(int8), intent(in) :: bytes(:)  !! Raw kernel bytes.
       integer(ip), parameter :: hdrlen = 12
       integer(ip), parameter :: recl = 1024
       integer(ip), parameter :: minpch = 32
@@ -7017,6 +7285,6 @@ contains
       end if
 
       end associate
-      end procedure furnsh_memory
+      end subroutine furnsh_memory
 
 end submodule pepper_keeper

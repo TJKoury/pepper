@@ -629,8 +629,8 @@ async function generateSdsAndBridgeSources(manifest, buildDir) {
   // character-length arguments (with C++ default = 1 so call sites stay clean).
   const rawPepperH = await fsp.readFile(path.join(ROOT, "include", "pepper.h"), "utf8");
   const wasmPepperH = rawPepperH.replace(
-    /((?:int|void|double)\s+pepper_[A-Za-z0-9_]+\s*\()([\s\S]*?)(\)\s*;)/g,
-    (full, prefix, params, suffix) => {
+    /((?:int|void|double)\s+(pepper_[A-Za-z0-9_]+)\s*\()([\s\S]*?)(\)\s*;)/g,
+    (full, prefix, fnName, params, suffix) => {
       const parts = params
         .split(",")
         .map((p) => p.trim())
@@ -639,9 +639,14 @@ async function generateSdsAndBridgeSources(manifest, buildDir) {
         return full;
       }
       let charPtrCount = 0;
-      for (const p of parts) {
-        if (/\bchar\s*\*\s*[A-Za-z0-9_]+\s*$/.test(p)) {
-          charPtrCount += 1;
+      if (fnName === "pepper_spice_write_kernel") {
+        // ck_file and text_file are type(c_ptr), value in pepper_capi_core.f90
+        charPtrCount = 2;
+      } else {
+        for (const p of parts) {
+          if (/\bchar\s*\*\s*[A-Za-z0-9_]+\s*$/.test(p)) {
+            charPtrCount += 1;
+          }
         }
       }
       if (charPtrCount === 0) return full;

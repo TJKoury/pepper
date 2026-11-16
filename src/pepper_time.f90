@@ -2,9 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_time.f90.
+!> [[pepper_instance_module]]).
 !>
 !>## ZZVSTRNG (Virtual String)
 !>
@@ -207,6 +205,11 @@ submodule (pepper_instance_module) pepper_time
 
 contains
 
+      !> Determine if a kernel pool variable is present and if so
+      !> that it has the correct size and type.
+      !>
+      !> The function returns .FALSE. if the kernel pool variable is OK.
+      !>
       !>## Detailed Input
       !>
       !>     CALLER   is the name of the routine calling this routine
@@ -346,97 +349,99 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM BADKPV_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM BADKPV_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              LOGICAL               BADKPV
-      !>              INTEGER               RTRIM
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      LOGICAL               BADKPV
+      !>      INTEGER               RTRIM
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         CALLER
-      !>              PARAMETER           ( CALLER  = 'BADKPV_EX1' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         CALLER
+      !>      PARAMETER           ( CALLER  = 'BADKPV_EX1' )
       !>
-      !>              INTEGER               KWDLEN
-      !>              PARAMETER           ( KWDLEN = 32 )
+      !>      INTEGER               KWDLEN
+      !>      PARAMETER           ( KWDLEN = 32 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*2           COMP
-      !>              CHARACTER*(KWDLEN)    NAME
-      !>              CHARACTER*1           TYPE
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*2           COMP
+      !>      CHARACTER*(KWDLEN)    NAME
+      !>      CHARACTER*1           TYPE
       !>
-      !>              INTEGER               DIVBY
-      !>              INTEGER               SIZE
+      !>      INTEGER               DIVBY
+      !>      INTEGER               SIZE
       !>
-      !>        C
-      !>        C     Load the test kernel.
-      !>        C
-      !>              CALL FURNSH ( 'badkpv_ex1.tpc' )
+      !>C
+      !>C     Load the test kernel.
+      !>C
+      !>      CALL FURNSH ( 'badkpv_ex1.tpc' )
       !>
-      !>        C
-      !>        C     Change the default behavior of the SPICE error handling
-      !>        C     system to print out all messages and continue the
-      !>        C     execution of the program. We do this for demonstration
-      !>        C     purposes. Please, refrain from changing the default
-      !>        C     behavior on real applications.
-      !>        C
-      !>              CALL ERRACT ( 'SET', 'REPORT' )
+      !>C
+      !>C     Change the default behavior of the SPICE error handling
+      !>C     system to print out all messages and continue the
+      !>C     execution of the program. We do this for demonstration
+      !>C     purposes. Please, refrain from changing the default
+      !>C     behavior on real applications.
+      !>C
+      !>      CALL ERRACT ( 'SET', 'REPORT' )
       !>
-      !>        C
-      !>        C     Assume that we need some data for body 399 and we expect
-      !>        C     there to be an even number of items available and at
-      !>        C     least 4 such items. Moreover we expect these items to be
-      !>        C     numeric. Note that the variable assignments below are
-      !>        C     present only to assist in understanding the calls to
-      !>        C     BADKPV.
-      !>        C
-      !>              NAME   = 'BODY_399_DATA'
-      !>              COMP   = '=>'
-      !>              SIZE   =  4
-      !>              DIVBY  =  2
-      !>              TYPE = 'N'
+      !>C
+      !>C     Assume that we need some data for body 399 and we expect
+      !>C     there to be an even number of items available and at
+      !>C     least 4 such items. Moreover we expect these items to be
+      !>C     numeric. Note that the variable assignments below are
+      !>C     present only to assist in understanding the calls to
+      !>C     BADKPV.
+      !>C
+      !>      NAME   = 'BODY_399_DATA'
+      !>      COMP   = '=>'
+      !>      SIZE   =  4
+      !>      DIVBY  =  2
+      !>      TYPE = 'N'
       !>
-      !>              IF ( .NOT. BADKPV( CALLER, NAME,  COMP,
-      !>             .                   SIZE,   DIVBY, TYPE ) ) THEN
+      !>      IF ( .NOT. BADKPV( CALLER, NAME,  COMP,
+      !>     .                   SIZE,   DIVBY, TYPE ) ) THEN
       !>
-      !>                 WRITE(*,'(3A)') 'Expected form of variable ',
-      !>             .                   NAME(:RTRIM(NAME)),
-      !>             .                   ' found in kernel pool.'
+      !>         WRITE(*,'(3A)') 'Expected form of variable ',
+      !>     .                   NAME(:RTRIM(NAME)),
+      !>     .                   ' found in kernel pool.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     In addition we need the names given to these items.
-      !>        C     Improperly indicate the array has type numeric.
-      !>        C
-      !>              NAME   = 'BODY_399_NAMES'
-      !>              COMP   = '=>'
-      !>              SIZE   =  4
-      !>              DIVBY  =  1
-      !>              TYPE = 'N'
+      !>C
+      !>C     In addition we need the names given to these items.
+      !>C     Improperly indicate the array has type numeric.
+      !>C
+      !>      NAME   = 'BODY_399_NAMES'
+      !>      COMP   = '=>'
+      !>      SIZE   =  4
+      !>      DIVBY  =  1
+      !>      TYPE = 'N'
       !>
-      !>              IF ( .NOT. BADKPV( CALLER, NAME,  COMP,
-      !>             .                   SIZE,   DIVBY, TYPE ) ) THEN
+      !>      IF ( .NOT. BADKPV( CALLER, NAME,  COMP,
+      !>     .                   SIZE,   DIVBY, TYPE ) ) THEN
       !>
-      !>                 WRITE(*,'(3A)') 'Expected form of variable ',
-      !>             .                   NAME(:RTRIM(NAME)),
-      !>             .                   ' found in kernel pool.'
+      !>         WRITE(*,'(3A)') 'Expected form of variable ',
+      !>     .                   NAME(:RTRIM(NAME)),
+      !>     .                   ' found in kernel pool.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Change the behavior of the SPICE error handling to
-      !>        C     its default.
-      !>        C
-      !>              CALL ERRACT ( 'SET', 'DEFAULT' )
+      !>C
+      !>C     Change the behavior of the SPICE error handling to
+      !>C     its default.
+      !>C
+      !>      CALL ERRACT ( 'SET', 'DEFAULT' )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -515,10 +520,17 @@ contains
       !>        without having assigned value to BADKPV.
       !>
       !>-    SPICELIB Version 1.0.0, 09-APR-1997 (WLT)
-      module procedure badkpv
+      module logical function badkpv ( ctx, caller, name, comp, size, divby, type )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqchr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: caller  !! Name of the routine calling this routine.
+      character(*), intent(in) :: name  !! Name of a kernel pool variable.
+      character(*), intent(in) :: comp  !! Comparison operator.
+      integer(ip), intent(in) :: size  !! Expected size of the kernel pool variable.
+      integer(ip), intent(in) :: divby  !! A divisor of the size of the kernel pool variable.
+      character(*), intent(in) :: type  !! Expected type of the kernel pool variable.
 
       character(1) :: class
 
@@ -693,8 +705,10 @@ contains
       badkpv = .false.
 
       return
-      end procedure badkpv
+      end function badkpv
 
+      !> Parse a string as an integer, encapsulating error handling.
+      !>
       !>## Detailed Input
       !>
       !>     STRING   is a string representing a numeric value. Commas and
@@ -762,54 +776,56 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PRSINT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PRSINT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               SETSIZ
-      !>              PARAMETER           ( SETSIZ = 10 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               SETSIZ
+      !>      PARAMETER           ( SETSIZ = 10 )
       !>
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 11 )
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 11 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)    STRVAL ( SETSIZ )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)    STRVAL ( SETSIZ )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               INTVAL
+      !>      INTEGER               I
+      !>      INTEGER               INTVAL
       !>
-      !>        C
-      !>        C     Initialize the array of strings.
-      !>        C
-      !>              DATA                  STRVAL / '100,000,000',
-      !>             .                               ' -2 690 192',
-      !>             .                               '  +12.2 e-1',
-      !>             .                               '-3. 141 592',
-      !>             .                               '      1.2e8',
-      !>             .                               '         E6',
-      !>             .                               '         Pi',
-      !>             .                               '        -PI',
-      !>             .                               '-2147483648',
-      !>             .                               ' 2147483647' /
+      !>C
+      !>C     Initialize the array of strings.
+      !>C
+      !>      DATA                  STRVAL / '100,000,000',
+      !>     .                               ' -2 690 192',
+      !>     .                               '  +12.2 e-1',
+      !>     .                               '-3. 141 592',
+      !>     .                               '      1.2e8',
+      !>     .                               '         E6',
+      !>     .                               '         Pi',
+      !>     .                               '        -PI',
+      !>     .                               '-2147483648',
+      !>     .                               ' 2147483647' /
       !>
-      !>        C
-      !>        C     Parse each string into an INTEGER variable.
-      !>        C
-      !>              WRITE(*,'(A)') '   STRVAL       INTVAL'
-      !>              WRITE(*,'(A)') '-----------  ------------'
-      !>              DO I = 1, SETSIZ
+      !>C
+      !>C     Parse each string into an INTEGER variable.
+      !>C
+      !>      WRITE(*,'(A)') '   STRVAL       INTVAL'
+      !>      WRITE(*,'(A)') '-----------  ------------'
+      !>      DO I = 1, SETSIZ
       !>
-      !>                 CALL PRSINT ( STRVAL(I), INTVAL )
+      !>         CALL PRSINT ( STRVAL(I), INTVAL )
       !>
-      !>                 WRITE(*,'(A11,2X,I12)') STRVAL(I), INTVAL
+      !>         WRITE(*,'(A11,2X,I12)') STRVAL(I), INTVAL
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -851,10 +867,13 @@ contains
       !>        exceptions and particulars.
       !>
       !>-    SPICELIB Version 1.0.0, 22-JUL-1997 (NJB)
-      module procedure prsint
+      module subroutine prsint ( ctx, string, intval )
       use pepper_kinds, only: ip
       use pepper_strings, only: nparsi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! String representing a numeric value.
+      integer(ip), intent(out) :: intval  !! Integer value obtained by parsing STRING.
 
       integer(ip), parameter :: msglen = 320
 
@@ -872,8 +891,12 @@ contains
       end if
 
       return
-      end procedure prsint
+      end subroutine prsint
 
+      !> Take a measurement X, the units associated with
+      !> X, and units to which X should be converted; return Y ---
+      !> the value of the measurement in the output units.
+      !>
       !>## Detailed Input
       !>
       !>     X        is a number representing a measurement in the units
@@ -1035,11 +1058,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WMO) (WLT) (IMU)
-      module procedure convrt
+      module subroutine convrt ( ctx, x, in, out, y )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr
       use pepper_strings, only: ucase
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! Number representing a measurement in some units.
+      character(*), intent(in) :: in  !! The units in which X is measured.
+      character(*), intent(in) :: out  !! Desired units for the measurement.
+      real(wp), intent(out) :: y  !! The measurement in the desired units.
 
       character(16) :: inu
       character(16) :: outu
@@ -1241,18 +1269,16 @@ contains
 
       return
 
-      end procedure convrt
+      end subroutine convrt
 
-      !>## Abstract
+      !> Determine whether or not any of the POOL variables that are to be
+      !> watched and have AGENT on their distribution list have been
+      !> updated, but do the full watcher check only if the POOL state
+      !> counter has changed.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Determine whether or not any of the POOL variables that are to be
-      !>     watched and have AGENT on their distribution list have been
-      !>     updated, but do the full watcher check only if the POOL state
-      !>     counter has changed.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1406,14 +1432,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-SEP-2013 (BVS)
-      module procedure zzcvpool
+      module subroutine zzcvpool ( ctx, agent, usrctr, update )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
-
-!
-!     SPICELIB functions.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: agent  !! Name of the agent to check for notices
+      integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! POOL state counter tracked by the caller
+      logical, intent(out) :: update  !! .TRUE. if variables for AGENT have been updated
 
 !
 !     Standard SPICE error handling.
@@ -1436,15 +1462,13 @@ contains
 
       return
 
-      end procedure zzcvpool
+      end subroutine zzcvpool
 
-      !>## Abstract
+      !> Parse a substring of the form ::UTC[+/-]1-12:0-59
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Parse a substring of the form ::UTC[+/-]1-12:0-59
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1516,10 +1540,17 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 27-SEP-1996 (WLT)
-      module procedure zzutcpm
+      module subroutine zzutcpm ( ctx, string, start, hoff, moff, last, succes )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lx4uns, nparsd, samch
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! is a string containing a substring ::UTC+HR:MN
+      integer(ip), intent(in) :: start  !! is the location in the string to start parsing
+      real(wp), intent(out) :: hoff  !! is the d.p. value associated with HR.
+      real(wp), intent(out) :: moff  !! is the d.p. value associated with MN
+      integer(ip), intent(out) :: last  !! is the end of the time zone substring.
+      logical, intent(out) :: succes  !! indicates that a time zone was parsed.
 
 
       character(lnsize) :: error
@@ -1607,17 +1638,17 @@ contains
       end if
 
       return
-      end procedure zzutcpm
+      end subroutine zzutcpm
 
-      !>## Abstract
+      !> The function returns the exponent associated with X.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Set up the virtual string associated with X and return the
+      !> exponent associated with X when represented in scientific
+      !> notation.
       !>
-      !>     Set up the virtual string associated with X and return the
-      !>     exponent associated with X when represented in scientific
-      !>     notation.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1669,10 +1700,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 12-SEP-1996 (WLT)
-      module procedure zzvststr
+      module subroutine zzvststr ( ctx, x, fill, expont )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: dpstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! double precision number to needing a virtual string
+      character(1), intent(in) :: fill  !! leading character for virtual string.
+      integer(ip), intent(out) :: expont  !! The exponent associated with X.
       integer(ip), parameter :: esgn = maxsig + 4
       integer(ip), parameter :: efst = esgn + 1
       integer(ip), parameter :: escd = efst + 1
@@ -1731,16 +1766,14 @@ contains
 
       return
       end associate
-      end procedure zzvststr
+      end subroutine zzvststr
 
-      !>## Abstract
+      !> Return the character from the specified SLOT of a virtual
+      !> decimal string.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the character from the specified SLOT of a virtual
-      !>     decimal string.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1801,75 +1834,15 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 12-SEP-1996 (WLT)
-      !>
-      !>     The buffered numeric string has the form:
-      !>
-      !>       by.xxxxxxxxxxxxxEseee...
-      !>       123456789012345678901234
-      !>                1         2
-      !>
-      !>     Ignoring the exponent we can regard this as being the
-      !>     decimal equivalent of the number with the decimal point
-      !>     in the wrong position.  We'll need to remedy this.
-      !>
-      !>       by.xxxxxxxxxxxxx
-      !>       1234567890123456
-      !>                1
-      !>
-      !>      We can think of this decimal representation as being a
-      !>      simplification of the "infinite string" representation
-      !>      below.
-      !>
-      !>                     b    y   .   x   x       x
-      !>        d-4 d-3 d-2 d-1  d00  p  d01 d02 ... d13  0   0   0   0
-      !>        -2  -1   0   1    2   3   4   5       16
-      !>
-      !>     From this its clear that i'th digit can be easily computed
-      !>     via following decision block.
-      !>
-      !>        if ( i .lt. 0 ) then
-      !>           digit  = '0'
-      !>        else if ( i .eq. 0 ) then
-      !>           digit  = string(2:2)
-      !>        else if ( i .lt. maxsig ) then
-      !>           digit = string(i+3:i+3)
-      !>        else
-      !>           digit = '0'
-      !>        end if
-      !>
-      !>     To have an accurate representation of the number (one that
-      !>     accounts for the exponent) we shift the decimal point ('p')
-      !>     "right" by EXP slots. (If EXP is negative we shift right a
-      !>     negative number of slots).  In the sequence of characters the
-      !>     decimal point will follow d_EXP.
-      !>
-      !>     IF we renumber the slots so that the decimal point is in
-      !>     slot 0 then for S < 0 slot S contains digit d_EXP+1+S
-      !>
-      !>     For S > 0 slot S contains digit d_EXP+S
-      !>
-      !>     Combining these observations we can compute the SLOT'th character
-      !>     of the virtual string as follows.
-      !>
-      !>     If the character requested is character zero of the virtual
-      !>     string, we just get the decimal point.
-      !>
-      !>     If the character requested is in a slot whose index is
-      !>     greater than zero it is to the
-      !>     right of the decimal point so it must be D_exp+slot.
-      !>
-      !>     If the character requested is in a slot whose index is negative
-      !>     it is to the left of the decimal point.  Since the slot
-      !>     just to the left of the decimal point contains D_exp it follows
-      !>     by induction that for any negative slot, the decimal is
-      !>     D_exp+slot+1
-      !>
-      !>     Since we may need to round the output, we will work from right
-      !>     to left.  First thing we do is get the index of the right most
-      !>     significant portion of SUBSTR that we will manipulate.
-      module procedure zzvsbstr
+      module subroutine zzvsbstr ( ctx, from, to, rnd, substr, did )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: from  !! the index of the first character to retrieve
+      integer(ip), intent(in) :: to  !! the index of the last character to retrieve
+      logical, intent(in) :: rnd  !! treat the virtual string as rounded string.
+      character(*), intent(out) :: substr  !! Contents of virtual string from FROM to TO.
+      logical, intent(out) :: did  !! is a leading zero a result of rounding.
       integer(ip) :: slot
       integer(ip) :: j
       logical :: incr
@@ -1882,6 +1855,73 @@ contains
                   myfill => ctx%zzvstrng_state%myfill, &
                   code0 => ctx%zzvstrng_state%code0, &
                   exp => ctx%zzvstrng_state%exp )
+!
+!     The buffered numeric string has the form:
+!
+!       by.xxxxxxxxxxxxxEseee...
+!       123456789012345678901234
+!                1         2
+!
+!     Ignoring the exponent we can regard this as being the
+!     decimal equivalent of the number with the decimal point
+!     in the wrong position.  We'll need to remedy this.
+!
+!       by.xxxxxxxxxxxxx
+!       1234567890123456
+!                1
+!
+!      We can think of this decimal representation as being a
+!      simplification of the "infinite string" representation
+!      below.
+!
+!                     b    y   .   x   x       x
+!        d-4 d-3 d-2 d-1  d00  p  d01 d02 ... d13  0   0   0   0
+!        -2  -1   0   1    2   3   4   5       16
+!
+!     From this its clear that i'th digit can be easily computed
+!     via following decision block.
+!
+!        if ( i .lt. 0 ) then
+!           digit  = '0'
+!        else if ( i .eq. 0 ) then
+!           digit  = string(2:2)
+!        else if ( i .lt. maxsig ) then
+!           digit = string(i+3:i+3)
+!        else
+!           digit = '0'
+!        end if
+!
+!     To have an accurate representation of the number (one that
+!     accounts for the exponent) we shift the decimal point ('p')
+!     "right" by EXP slots. (If EXP is negative we shift right a
+!     negative number of slots).  In the sequence of characters the
+!     decimal point will follow d_EXP.
+!
+!     IF we renumber the slots so that the decimal point is in
+!     slot 0 then for S < 0 slot S contains digit d_EXP+1+S
+!
+!     For S > 0 slot S contains digit d_EXP+S
+!
+!     Combining these observations we can compute the SLOT'th character
+!     of the virtual string as follows.
+!
+!     If the character requested is character zero of the virtual
+!     string, we just get the decimal point.
+!
+!     If the character requested is in a slot whose index is
+!     greater than zero it is to the
+!     right of the decimal point so it must be D_exp+slot.
+!
+!     If the character requested is in a slot whose index is negative
+!     it is to the left of the decimal point.  Since the slot
+!     just to the left of the decimal point contains D_exp it follows
+!     by induction that for any negative slot, the decimal is
+!     D_exp+slot+1
+!
+!     Since we may need to round the output, we will work from right
+!     to left.  First thing we do is get the index of the right most
+!     significant portion of SUBSTR that we will manipulate.
+!
       j    = to - from + 1
       lsub = len(substr)
 !
@@ -2043,8 +2083,11 @@ contains
 
       return
       end associate
-      end procedure zzvsbstr
+      end subroutine zzvsbstr
 
+      !> Create a formatted string that represents a double precision
+      !> number, using a format picture.
+      !>
       !>## Detailed Input
       !>
       !>     X        is any double precision number.
@@ -2258,10 +2301,14 @@ contains
       !>        were corrected in the header.
       !>
       !>-    SPICELIB Version 1.0.0, 17-SEP-1996 (WLT)
-      module procedure dpfmt
+      module subroutine dpfmt ( ctx, x, pictur, str )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: dpstr, ncpos, pos
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! a double precision number.
+      character(*), intent(in) :: pictur  !! a string describing the appearance of the output
+      character(*), intent(out) :: str  !! a string representing X as prescribed by PICTUR
 
       integer(ip), parameter :: wdsize = 32
 
@@ -2617,8 +2664,11 @@ contains
       end if
 
       return
-      end procedure dpfmt
+      end subroutine dpfmt
 
+      !> Take a double precision number and convert it to an
+      !> equivalent formatted character string representation (base 10).
+      !>
       !>## Detailed Input
       !>
       !>     X        is a double precision number.
@@ -2803,10 +2853,15 @@ contains
       !>        a zero length substring of the variable NUMSTR. This was
       !>        O.K. under VAX Fortran, because it allows such references.
       !>        However, most implementations of Fortran are not as forgiving.
-      module procedure dpstrf
+      module subroutine dpstrf ( ctx, x, sigdig, format, string )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: dpstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! A double precision number
+      integer(ip), intent(in) :: sigdig  !! The number of significant digits saved for output
+      character(1), intent(in) :: format  !! 'E' for scientific, 'F' for floating point.
+      character(*), intent(out) :: string  !! A character string representation of X
 
       real(wp) :: y
 
@@ -2923,8 +2978,11 @@ contains
 
       return
 
-      end procedure dpstrf
+      end subroutine dpstrf
 
+      !> Replace a marker in a string with a formatted double precision
+      !> value.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is an arbitrary character string.
@@ -3037,91 +3095,93 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REPMF_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REPMF_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 80 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 80 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)      INSTR
-      !>              CHARACTER*(STRLEN)      MARKER
-      !>              CHARACTER*(STRLEN)      OUTSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)      INSTR
+      !>      CHARACTER*(STRLEN)      MARKER
+      !>      CHARACTER*(STRLEN)      OUTSTR
       !>
-      !>        C
-      !>        C     1. Single marker, two significant digits, scientific.
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>C
+      !>C     1. Single marker, two significant digits, scientific.
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'Invalid value. The value was:  #'
       !>
-      !>              CALL REPMF ( INSTR, MARKER, 5.0D1, 2, 'E', OUTSTR )
+      !>      CALL REPMF ( INSTR, MARKER, 5.0D1, 2, 'E', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 1: Single marker, two significant '
-      !>             .        // 'digits, scientific.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 1: Single marker, two significant '
+      !>     .        // 'digits, scientific.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>        C
-      !>        C     2. Multiple markers, three significant digits,
-      !>        C        scientific.
-      !>        C
-      !>              MARKER = ' XX '
-      !>              INSTR  = 'Left > Right endpoint. Left: XX; Right: XX'
+      !>C
+      !>C     2. Multiple markers, three significant digits,
+      !>C        scientific.
+      !>C
+      !>      MARKER = ' XX '
+      !>      INSTR  = 'Left > Right endpoint. Left: XX; Right: XX'
       !>
-      !>              CALL REPMF ( INSTR, MARKER, -5.2D-9, 3, 'e', OUTSTR )
+      !>      CALL REPMF ( INSTR, MARKER, -5.2D-9, 3, 'e', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 2: Multiple markers, 3 significant '
-      !>             .        // 'digits, scientific.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 2: Multiple markers, 3 significant '
+      !>     .        // 'digits, scientific.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>        C
-      !>        C     3. Fixed-point notation.
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>C
+      !>C     3. Fixed-point notation.
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'Invalid value. The value was:  #'
       !>
-      !>              CALL REPMF ( INSTR, MARKER, 5.0D1, 3, 'F', OUTSTR )
+      !>      CALL REPMF ( INSTR, MARKER, 5.0D1, 3, 'F', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 3: Fixed-point notation.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 3: Fixed-point notation.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>        C
-      !>        C     4. Fixed-point notation, no decimals.
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>C
+      !>C     4. Fixed-point notation, no decimals.
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'Invalid value. The value was:  #'
       !>
-      !>              CALL REPMF ( INSTR, MARKER, 5.0D1, 2, 'f', OUTSTR )
+      !>      CALL REPMF ( INSTR, MARKER, 5.0D1, 2, 'f', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 4: Fixed-point notation, no decimals.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 4: Fixed-point notation, no decimals.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>        C
-      !>        C     5. Excessive significant digits.
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>C
+      !>C     5. Excessive significant digits.
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'Invalid value. The value was:  #'
       !>
-      !>              CALL REPMF ( INSTR, MARKER, 5.0D1, 100, 'F', OUTSTR )
+      !>      CALL REPMF ( INSTR, MARKER, 5.0D1, 100, 'F', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 5: Excessive significant digits.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 5: Excessive significant digits.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -3197,10 +3257,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
-      module procedure repmf
+      module subroutine repmf ( ctx, in, marker, value, sigdig, format, out )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: zzrepsub, ucase_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: in  !! Input string.
+      character(*), intent(in) :: marker  !! Marker to be replaced.
+      real(wp), intent(in) :: value  !! Replacement value.
+      integer(ip), intent(in) :: sigdig  !! Significant digits in replacement text.
+      character(*), intent(in) :: format  !! Format: 'E' or 'F'.
+      character(*), intent(out) :: out  !! Output string.
 
       integer(ip), parameter :: maxlfd = 56
 
@@ -3268,8 +3335,11 @@ contains
       end if
 
       return
-      end procedure repmf
+      end subroutine repmf
 
+      !> Convert Year Month and Day on the Julian Calendar
+      !> to the Gregorian Calendar
+      !>
       !>## Detailed Input
       !>
       !>     YEAR     is an integer representing the year of an epoch, E, in
@@ -3437,89 +3507,36 @@ contains
       !>
       !>        Updated to remove non-standard use of duplicate arguments
       !>        in RMAINI calls.
-      !>
-      !>     Spicelib Functions
-      !>
-      !>     Local (in-line) Functions
-      !>
-      !>     Local parameters
-      !>
-      !>     We declare the variables that contain the number of days in
-      !>     400 years (Gregorian), 100 years (Gregorian), 4 years and 1 year.
-      !>
-      !>     The following integers give the number of days during the
-      !>     associated month of a non-leap year.
-      !>
-      !>     The integers that follow give the number of days in a normal
-      !>     year that precede the first of the month.
-      !>
-      !>     The integers that follow give the number of days in a leap
-      !>     year that precede the first of the month.
-      !>
-      !>     Local variables
-      !>
-      !>     The array EXTRA contains the number of additional days that
-      !>     appear before the first of a month during a leap year (as opposed
-      !>     to a non-leap year).
-      !>
-      !>     DPJAN0(I) gives the number of days that occur before the I'th
-      !>     month of a normal year.
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Definitions of statement functions.
-      !>
-      !>     The number of days elapsed since Gregorian Jan 1, of year 1 A.D.
-      !>     to Jan 1 of YR is given by:
-      !>
-      !>     The number of days elapsed since Julian Jan 1, of year 1 A.D.
-      !>     to Jan 1 of YR is given by:
-      !>
-      !>     Return 1 if YR is divisible by M, otherwise return 0.
-      !>
-      !>     The number of leap days in a Gregorian year is given by:
-      !>
-      !>     The number of leap days in a Julian year is given by:
-      !>
-      !>     To compute the day of the year we
-      !>
-      !>        look up the number of days to the beginning of the month,
-      !>
-      !>        add on the number leap days that occurred prior to that
-      !>        time
-      !>
-      !>        add on the number of days into the month
-      !>
-      !>     The number of days since 1 Jan 1 A.D. (Gregorian) is given by:
-      !>
-      !>     The number of days since 1 Jan 1 A.D. (Julianis given by:
-      !>
-      !>     If this is the first pass through this entry point (or the
-      !>     companion entry point) we need to set up some reference points.
-      !>
-      !>     RDAYG   is the number of days past 1 A.D. Jan 1 of the Gregorian
-      !>             calendar of the date Oct 15, 1582
-      !>
-      !>     RDAYJ   is the number of days past 1 A.D. Jan 1 of the Julian
-      !>             calendar of the date Oct 5, 1582.
-      !>
-      !>     OFFSTJ and OFFSTG are just the offset from one count of days
-      !>     to the other.
-      module procedure jul2gr
+      module subroutine jul2gr ( ctx, year, month, day, doy )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlti
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: year  !! Year  of Julian Calendar/Gregorian Calendar
+      integer(ip), intent(inout) :: month  !! Month of Julian Calendar/Gregorian Calendar
+      integer(ip), intent(inout) :: day  !! Day of Month in Julian Calendar/Gregorian Calendar
+      integer(ip), intent(out) :: doy  !! Day of Year in Gregorian Calendar
+!
+!     Local (in-line) Functions
+!
       integer(ip) :: divble
       integer(ip) :: gdoy
       integer(ip) :: gdp001
       integer(ip) :: gldays
+!
+!     Definitions of statement functions.
+!
+!     The number of days elapsed since Gregorian Jan 1, of year 1 A.D.
+!     to Jan 1 of YR is given by:
+!
       integer(ip) :: gydays
       integer(ip) :: jdoy
       integer(ip) :: jdp001
       integer(ip) :: jldays
       integer(ip) :: jydays
+!
+!     Local variables
+!
       integer(ip) :: dayg
       integer(ip) :: dayj
       integer(ip) :: dofyr
@@ -3534,11 +3551,22 @@ contains
       integer(ip) :: tmpyr
       integer(ip) :: yr
       integer(ip) :: yroff
+!
+!     The array EXTRA contains the number of additional days that
+!     appear before the first of a month during a leap year (as opposed
+!     to a non-leap year).
+!
+!     Initial values
+!
       integer(ip), parameter :: extra  ( 12 ) = &
          [ 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
       integer(ip), parameter :: dpbegl ( 12 ) = &
          [ janl0, febl0, marl0, aprl0, mayl0, junl0, jull0, augl0, &
            sepl0, octl0, novl0, decl0 ]
+!
+!     DPJAN0(I) gives the number of days that occur before the I'th
+!     month of a normal year.
+!
       integer(ip), parameter :: dpjan0 ( 12 ) = &
          [ jan0, feb0, mar0, apr0, may0, jun0, jul0, aug0, sep0, oct0, &
            nov0, dec0 ]
@@ -3608,6 +3636,19 @@ contains
                   rdayj => ctx%jul2gr_state%rdayj, &
                   offstj => ctx%jul2gr_state%offstj, &
                   offstg => ctx%jul2gr_state%offstg )
+!
+!     If this is the first pass through this entry point (or the
+!     companion entry point) we need to set up some reference points.
+!
+!     RDAYG   is the number of days past 1 A.D. Jan 1 of the Gregorian
+!             calendar of the date Oct 15, 1582
+!
+!     RDAYJ   is the number of days past 1 A.D. Jan 1 of the Julian
+!             calendar of the date Oct 5, 1582.
+!
+!     OFFSTJ and OFFSTG are just the offset from one count of days
+!     to the other.
+!
       if ( first ) then
 
          first  = .false.
@@ -3705,8 +3746,11 @@ contains
 
       return
       end associate
-      end procedure jul2gr
+      end subroutine jul2gr
 
+      !> Convert Year Month and Day on the  Gregorian Calendar
+      !> to the Julian Calendar
+      !>
       !>## Detailed Input
       !>
       !>     YEAR     is an integer representing the year of an epoch, E, in
@@ -3847,10 +3891,15 @@ contains
       !>        error months that are outside the range from 1 to 12.
       !>
       !>-    SPICELIB Version 1.0.0, 13-MAR-1996 (WLT)
-      module procedure gr2jul
+      module subroutine gr2jul ( ctx, year, month, day, doy )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlti
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: year  !! Year  of Gregorian Calendar/Julian Calendar
+      integer(ip), intent(inout) :: month  !! Month of Gregorian Calendar/Julian Calendar
+      integer(ip), intent(inout) :: day  !! Day of Month in Gregorian Calendar/Julian Calendar
+      integer(ip), intent(out) :: doy  !! Day of Year in Julian Calendar
       integer(ip) :: divble
       integer(ip) :: gdoy
       integer(ip) :: gdp001
@@ -4036,8 +4085,12 @@ contains
 
       return
       end associate
-      end procedure gr2jul
+      end subroutine gr2jul
 
+      !> Convert from an ephemeris epoch measured in seconds past
+      !> the epoch of J2000 to a calendar string format using a
+      !> formal calendar free of leapseconds.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is an epoch measured in ephemeris seconds
@@ -4221,12 +4274,15 @@ contains
       !>        consistent with the calendar date format of ET2UTC.
       !>
       !>-    SPICELIB Version 1.0.0, 14-DEC-1993 (WLT)
-      module procedure etcal
+      module subroutine etcal ( ctx, et, calstr )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax, intmin, spd
       use pepper_arrays, only: lstlti
       use pepper_strings, only: intstr, cmprss_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris time measured in seconds past J2000.
+      character(*), intent(out) :: calstr  !! A standard calendar representation of ET.
       integer(ip), parameter :: strsiz = 16
       integer(ip), parameter :: lngsiz = 180
       character(3), parameter :: months ( 12 ) = &
@@ -4579,8 +4635,11 @@ contains
 
       return
       end associate
-      end procedure etcal
+      end subroutine etcal
 
+      !> Transform a time vector from one representation and system
+      !> to another.
+      !>
       !>## Detailed Input
       !>
       !>     TVEC     is called a time vector. It is an array of double
@@ -4974,98 +5033,7 @@ contains
       !>        Updated to remove non-standard use of duplicate arguments
       !>        in RMAIND and RMAINI calls. Changed reference to LDPOOL to
       !>        reference to FURNSH in an error message.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local (in-line) functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Parameters
-      !>
-      !>     We declare the variables that contain the number of days in
-      !>     400 years, 100 years, 4 years and 1 year.
-      !>
-      !>     The following integers give the number of days during the
-      !>     associated month of a non-leap year.
-      !>
-      !>     The integers that follow give the number of days in a normal
-      !>     year that precede the first of the month.
-      !>
-      !>     The integers that follow give the number of days in a leap
-      !>     year that precede the first of the month.
-      !>
-      !>     MAXLP is the maximum number of leap seconds that can be
-      !>     stored internally.   The value of 140 should be sufficient
-      !>     to store leap seconds through the year 2100.
-      !>
-      !>     MAXVAR is the number of kernel pool variables required by this
-      !>     routine.
-      !>
-      !>     The following gives us an "enumeration" for all of the
-      !>     various types of time vectors that are recognized.
-      !>
-      !>     DAYSEC
-      !>     DAYP2
-      !>     ET
-      !>     FRML
-      !>     JDTDB
-      !>     JDTDT
-      !>     JDUTC
-      !>     JED
-      !>     TAI
-      !>     TDB
-      !>     TDT
-      !>     YD
-      !>     YDD
-      !>     YDDF
-      !>     YDF
-      !>     YMD
-      !>     YMDF
-      !>     YMWD
-      !>     YMWDF
-      !>     YWD
-      !>     YWDF
-      !>
-      !>     The following parameters just make the code seem a bit
-      !>     more natural.
-      !>
-      !>     Local variables
-      !>
-      !>     The array EXTRA contains the number of many additional days that
-      !>     appear before the first of a month during a leap year (as opposed
-      !>     to a non-leap year).
-      !>
-      !>     DPJAN0(I) gives the number of days that occur before the I'th
-      !>     month of a normal year.
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Definitions of statement functions.
-      !>
-      !>     The number of days elapsed since Jan 1, of year 1 A.D. to
-      !>     Jan 1 of YEAR is given by:
-      !>
-      !>     Return 1 if YEAR is divisible by N, otherwise return 0.
-      !>
-      !>     The number of leap days in a year is given by:
-      !>
-      !>     To compute the day of the year we
-      !>
-      !>        look up the number of days to the beginning of the month,
-      !>
-      !>        add on the number leap days that occurred prior to that
-      !>        time
-      !>
-      !>        add on the number of days into the month
-      !>
-      !>     The number of days since 1 Jan 1 A.D. is given by:
-      !>
-      !>     The number of seconds represented by HOURS hours MINS minutes
-      !>     and SECS seconds.
-      module procedure ttrans
+      module subroutine ttrans ( ctx, from, to, tvec )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       use pepper_arrays, only: bsrchc, lstled, lstlei, lstlti, orderc, reordc, reordi, reordl
@@ -5074,12 +5042,52 @@ contains
       use pepper_inc_zzctr
       use pepper_containers, only: grow
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: mxcomp = 10
+      character(*), intent(in) :: from  !! description of a time vector.
+      character(*), intent(in) :: to  !! description of a time vector.
+      real(wp), intent(inout) :: tvec ( mxcomp )  !! time vector representing an epoch.
+!
+!     Local (in-line) functions
+!
       integer(ip) :: divble
       integer(ip) :: doy
       integer(ip) :: dp0001
       integer(ip) :: ldays
+!
+!     Definitions of statement functions.
+!
+!     The number of days elapsed since Jan 1, of year 1 A.D. to
+!     Jan 1 of YEAR is given by:
+!
       integer(ip) :: ydays
       real(wp) :: hmssec
+!
+!     The following gives us an "enumeration" for all of the
+!     various types of time vectors that are recognized.
+!
+!     DAYSEC
+!     DAYP2
+!     ET
+!     FRML
+!     JDTDB
+!     JDTDT
+!     JDUTC
+!     JED
+!     TAI
+!     TDB
+!     TDT
+!     YD
+!     YDD
+!     YDDF
+!     YDF
+!     YMD
+!     YMDF
+!     YMWD
+!     YMWDF
+!     YWD
+!     YWDF
+!
       integer(ip), parameter :: daysec = 1
       integer(ip), parameter :: dayp2 = daysec + 1
       integer(ip), parameter :: et = dayp2 + 1
@@ -5102,7 +5110,14 @@ contains
       integer(ip), parameter :: ywd = ymwdf  + 1
       integer(ip), parameter :: ywdf = ywd    + 1
       integer(ip), parameter :: nrec = ywdf
+!
+!     The following parameters just make the code seem a bit
+!     more natural.
+!
       logical, parameter :: yes = .true.
+!
+!     Local variables
+!
       real(wp) :: hours
       real(wp) :: mins
       real(wp) :: secs
@@ -5110,11 +5125,22 @@ contains
       integer(ip) :: i
       integer(ip) :: month
       integer(ip) :: year
+!
+!     The array EXTRA contains the number of many additional days that
+!     appear before the first of a month during a leap year (as opposed
+!     to a non-leap year).
+!
+!     Initial values
+!
       integer(ip), parameter :: extra  ( 12 ) = &
          [ 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
       integer(ip), parameter :: dpbegl ( 12 ) = &
          [ janl0, febl0, marl0, aprl0, mayl0, junl0, jull0, augl0, &
            sepl0, octl0, novl0, decl0 ]
+!
+!     DPJAN0(I) gives the number of days that occur before the I'th
+!     month of a normal year.
+!
       integer(ip), parameter :: dpjan0 ( 12 ) = &
          [ jan0, feb0, mar0, apr0, may0, jun0, jul0, aug0, sep0, oct0, &
            nov0, dec0 ]
@@ -6191,8 +6217,11 @@ contains
       return
       end associate
       end associate
-      end procedure ttrans
+      end subroutine ttrans
 
+      !> Set and retrieve the defaults associated with calendar
+      !> input strings.
+      !>
       !>## Detailed Input
       !>
       !>     ACTION   is a word that specifies whether TIMDEF sets the
@@ -6408,10 +6437,14 @@ contains
       !>        the default value was set.
       !>
       !>-    SPICELIB Version 1.0.0, 13-NOV-1996 (WLT)
-      module procedure timdef
+      module subroutine timdef ( ctx, action, item, value )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: prefix, ucase_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: action  !! Kind of action to take 'SET' or 'GET'.
+      character(*), intent(in) :: item  !! Default item of interest.
+      character(*), intent(inout) :: value  !! Value associated with the default item.
       integer(ip), parameter :: wdsize = 16
       integer(ip), parameter :: nzones = 8
       character(wdsize), parameter :: trnslt ( nzones ) = &
@@ -6584,8 +6617,14 @@ contains
 
       return
       end associate
-      end procedure timdef
+      end subroutine timdef
 
+      !> Transform time from one uniform scale to another. The uniform
+      !> time scales are TAI, GPS, TT, TDT, TDB, ET, JED, JDTDB, JDTDT.
+      !>
+      !> The function returns the d.p. in OUTSYS that is equivalent to the
+      !> EPOCH on the INSYS time scale.
+      !>
       !>## Detailed Input
       !>
       !>     EPOCH    is an epoch relative to the INSYS time scale.
@@ -6729,12 +6768,16 @@ contains
       !>        the function.
       !>
       !>-    SPICELIB Version 1.0.0, 28-MAR-1992 (WLT)
-      module procedure unitim
+      module real(wp) function unitim ( ctx, epoch, insys, outsys )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       use pepper_strings, only: ucase
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: epoch  !! An epoch.
+      character(*), intent(in) :: insys  !! The time scale associated with the input EPOCH.
+      character(*), intent(in) :: outsys  !! The time scale associated with the function value.
       real(wp) :: eb_1(1)  !! one-element copy of eb (array argument)
       real(wp) :: k_1(1)  !! one-element copy of k (array argument)
       real(wp) :: dta_1(1)  !! one-element copy of dta (array argument)
@@ -7168,8 +7211,12 @@ contains
 
       return
       end associate
-      end procedure unitim
+      end function unitim
 
+      !> Convert a string representing an epoch to a double precision
+      !> value representing the number of TDB seconds past the J2000
+      !> epoch corresponding to the input epoch.
+      !>
       !>## Detailed Input
       !>
       !>     TIMSTR   is a string representing an epoch. Virtually all
@@ -7570,47 +7617,49 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM STR2ET_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM STR2ET_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(64)        TIMSTR
-      !>              CHARACTER*(64)        CALDR
-      !>              CHARACTER*(64)        DAYOFY
-      !>              CHARACTER*(127)       FILNAM
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(64)        TIMSTR
+      !>      CHARACTER*(64)        CALDR
+      !>      CHARACTER*(64)        DAYOFY
+      !>      CHARACTER*(127)       FILNAM
       !>
-      !>              DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ET
       !>
-      !>        C
-      !>        C     First get the name of a leapseconds kernel, and load it.
-      !>        C
-      !>              CALL PROMPT ( 'Leapseconds kernel: ', FILNAM )
-      !>              CALL FURNSH ( FILNAM )
+      !>C
+      !>C     First get the name of a leapseconds kernel, and load it.
+      !>C
+      !>      CALL PROMPT ( 'Leapseconds kernel: ', FILNAM )
+      !>      CALL FURNSH ( FILNAM )
       !>
-      !>        C
-      !>        C     Get the time string.
-      !>        C
-      !>              CALL PROMPT ( 'Time string: ', TIMSTR )
+      !>C
+      !>C     Get the time string.
+      !>C
+      !>      CALL PROMPT ( 'Time string: ', TIMSTR )
       !>
-      !>        C
-      !>        C     Convert the string to ET and then back to UTC calendar
-      !>        C     and day-of-year formats.
-      !>        C
-      !>              CALL STR2ET ( TIMSTR, ET )
-      !>              CALL ET2UTC ( ET, 'C', 0, CALDR  )
-      !>              CALL ET2UTC ( ET, 'D', 0, DAYOFY )
+      !>C
+      !>C     Convert the string to ET and then back to UTC calendar
+      !>C     and day-of-year formats.
+      !>C
+      !>      CALL STR2ET ( TIMSTR, ET )
+      !>      CALL ET2UTC ( ET, 'C', 0, CALDR  )
+      !>      CALL ET2UTC ( ET, 'D', 0, DAYOFY )
       !>
-      !>        C
-      !>        C     Print the results.
-      !>        C
-      !>              WRITE (*,*)
-      !>              WRITE (*,*) 'TBD seconds from J2000 epoch: ', ET
-      !>              WRITE (*,*) 'Calendar    Format:           ', CALDR
-      !>              WRITE (*,*) 'Day of year Format:           ', DAYOFY
+      !>C
+      !>C     Print the results.
+      !>C
+      !>      WRITE (*,*)
+      !>      WRITE (*,*) 'TBD seconds from J2000 epoch: ', ET
+      !>      WRITE (*,*) 'Calendar    Format:           ', CALDR
+      !>      WRITE (*,*) 'Day of year Format:           ', DAYOFY
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a PC/Linux/gfortran/64-bit
       !>        platform, using the LCK file named naif0012.tls and the time
@@ -7805,21 +7854,16 @@ contains
       !>        properly set when a time system was specified
       !>        in the input string. In such cases, ZONED retained the
       !>        value from the previous call.
-      !>
-      !>     SPICELIB Functions.
-      !>
-      !>     Local (in-line) Functions
-      !>
-      !>     The following integers are pointers to the
-      !>     locations of various components in a time vector.
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      module procedure str2et
+      module subroutine str2et ( ctx, timstr, et )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: prefix, repmc_inplace, repmi_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: timstr  !! A string representing an epoch.
+      real(wp), intent(out) :: et  !! The equivalent value in seconds past J2000, TDB.
+!
+!     Local (in-line) Functions
+!
       integer(ip), parameter :: smwdsz = 16
       integer(ip), parameter :: msgsiz = 400
       integer(ip), parameter :: era = 1
@@ -7834,6 +7878,10 @@ contains
       character(smwdsz) :: type
       integer(ip) :: day
       integer(ip) :: year
+!
+!     The following integers are pointers to the
+!     locations of various components in a time vector.
+!
       logical :: mods
       integer(ip) :: hr
       integer(ip) :: yr
@@ -8491,15 +8539,13 @@ contains
       call ctx%sigerr ( 'SPICE(BADTIMESTRING)' )
       return
       end associate
-      end procedure str2et
+      end subroutine str2et
 
-      !>## Abstract
+      !> Parse an aberration correction string; return attributes.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Parse an aberration correction string; return attributes.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8621,22 +8667,24 @@ contains
       !>        replaced CMPRSS/UCASE with LJUCRS.
       !>
       !>-    SPICELIB Version 1.0.0, 13-DEC-2004 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      !>
-      !>     PEPPER: the table (in increasing order of the strings, as the
-      !>     binary search needs; SPICELIB sorted it on the first call).
-      module procedure zzprscor
+      module subroutine zzprscor ( ctx, abcorr, attblk )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       use pepper_strings, only: ljucrs
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: abcorr  !! Aberration correction string.
+      logical, intent(out) :: attblk ( * )  !! Aberration correction attribute block.
       character(corlen), parameter :: corlst ( nabcor ) = [ character(corlen) :: &
          'CN', 'CN+S', 'LT', 'LT+S', 'NONE', 'RL', 'RL+S', 'S',&
          'XCN', 'XCN+S', 'XLT', 'XLT+S', 'XRL', 'XRL+S', 'XS' ]
+!
+!     Local variables
+!
+!     PEPPER: the table (in increasing order of the strings, as the
+!     binary search needs; SPICELIB sorted it on the first call).
+!
       character(corlen) :: tmpcor
 
       integer(ip) :: i
@@ -8702,16 +8750,14 @@ contains
       attblk( relidx )  =  rel   ( loc )
 
       return
-      end procedure zzprscor
+      end subroutine zzprscor
 
-      !>## Abstract
+      !> Validate an aberration correction string suitable for use by
+      !> the SPK system; return attributes.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Validate an aberration correction string suitable for use by
-      !>     the SPK system; return attributes.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8831,9 +8877,12 @@ contains
       !>        Corrected typo in comments.
       !>
       !>-    SPICELIB Version 1.0.0, 11-APR-2008 (NJB)
-      module procedure zzvalcor
+      module subroutine zzvalcor ( ctx, abcorr, attblk )
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: abcorr  !! Aberration correction string.
+      logical, intent(out) :: attblk ( * )  !! Aberration correction attribute block.
 
       if ( ctx%failed() ) return
 
@@ -8877,16 +8926,14 @@ contains
       end if
 
       return
-      end procedure zzvalcor
+      end subroutine zzvalcor
 
-      !>## Abstract
+      !> Compute an aberration corrected epoch, given an aberration
+      !> correction specification, an epoch, and a light time.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Compute an aberration corrected epoch, given an aberration
-      !>     correction specification, an epoch, and a light time.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8990,16 +9037,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 24-NOV-2004 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      module procedure zzcorepc
+      module subroutine zzcorepc ( ctx, abcorr, et, lt, etcorr )
       use pepper_kinds, only: wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: abcorr  !! Aberration correction string.
+      real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
+      real(wp), intent(in) :: lt  !! Light time.
+      real(wp), intent(out) :: etcorr  !! Light time-corrected epoch.
+!
+!     Local variables
+!
       logical :: corblk ( abatsz )
 
       if ( ctx%failed() ) return
@@ -9039,6 +9088,6 @@ contains
       end if
 
       return
-      end procedure zzcorepc
+      end subroutine zzcorepc
 
 end submodule pepper_time

@@ -3,9 +3,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_numerics.f90.
+!> [[pepper_instance_module]]).
 submodule (pepper_instance_module) pepper_numerics
 
    implicit none
@@ -13,12 +11,32 @@ submodule (pepper_instance_module) pepper_numerics
 
    ! Parameters shared by this file's procedures (PEPPER: SPICELIB
    ! declared them in each routine that used them).
+   !
+   ! The contents of SPICE planes are as follows:
+   !
+   !    Elements NMLPOS through NMLPOS + 2 contain a unit normal
+   !    vector for the plane.
+   !
+   !    Element CONPOS contains a constant for the plane;  every point
+   !    X in the plane satisfies
+   !
+   !       < X, PLANE(NMLPOS) >  =  PLANE(CONPOS).
+   !
+   !    The plane constant is the distance of the plane from the
+   !    origin; the normal vector, scaled by the constant, is the
+   !    closest point in the plane to the origin.
    integer(ip), parameter :: conpos = 4  !! index of the constant in a plane array
    real(wp), parameter :: magtol = 1.0e-14_wp  !! tolerance of a vector magnitude
    integer(ip), parameter :: nmlpos = 1  !! index of the normal vector in a plane array
 
 contains
 
+      !> Return the inverse hyperbolic cosine of a double precision
+      !> argument.
+      !>
+      !> The function returns the inverse hyperbolic cosine of a double
+      !> precision number.
+      !>
       !>## Detailed Input
       !>
       !>     X        is any double precision number greater than or equal to
@@ -99,9 +117,11 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO)
-      module procedure dacosh
+      module real(wp) function dacosh ( ctx, x )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! Number whose inverse hyperbolic cosine is desired.
 
 !
 !   Set up the error processing.
@@ -133,16 +153,16 @@ contains
       dacosh = dlog (x + x * dsqrt (1.0_wp - (1.0_wp/x)/x) )
 
       return
-      end procedure dacosh
+      end function dacosh
 
-      !>## Abstract
+      !> Compute arc cosine of a bracketed argument.
       !>
-      !>     Compute arc cosine of a bracketed argument.
+      !> The function returns the arc cosine of ARG.
       !>
-      !>     This routine produces a SPICE error if the |argument| exceeds
-      !>     1.D0 by more than TOL. If ARG exceeds 1.D0, the argument is
-      !>     evaluated as if it equaled 1.D0, if ARG is less than -1.,
-      !>     the argument is evaluated as if it equaled -1.D0.
+      !> This routine produces a SPICE error if the |argument| exceeds
+      !> 1.D0 by more than TOL. If ARG exceeds 1.D0, the argument is
+      !> evaluated as if it equaled 1.D0, if ARG is less than -1.,
+      !> the argument is evaluated as if it equaled -1.D0.
       !>
       !>## Detailed Input
       !>
@@ -217,9 +237,12 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 28-FEB-2006 (LSE)
-      module procedure dacosn
+      module real(wp) function dacosn ( ctx, arg, tol )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: arg  !! Argument to be evaluated.
+      real(wp), intent(in) :: tol  !! Tolerance.
 
 !
 !     Bracket ARG.
@@ -258,16 +281,16 @@ contains
       end if
 
       return
-      end procedure dacosn
+      end function dacosn
 
-      !>## Abstract
+      !> Compute arc sine of a bracketed argument.
       !>
-      !>     Compute arc sine of a bracketed argument.
+      !> The function returns the arc sine of ARG.
       !>
-      !>     This routine produces a SPICE error if the |argument| exceeds
-      !>     1.D0 by more than TOL. If ARG exceeds 1.D0, the argument is
-      !>     evaluated as if it equaled 1.D0, if ARG is less than -1.,
-      !>     the argument is evaluated as if it equaled -1.D0.
+      !> This routine produces a SPICE error if the |argument| exceeds
+      !> 1.D0 by more than TOL. If ARG exceeds 1.D0, the argument is
+      !> evaluated as if it equaled 1.D0, if ARG is less than -1.,
+      !> the argument is evaluated as if it equaled -1.D0.
       !>
       !>## Detailed Input
       !>
@@ -342,9 +365,12 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 28-FEB-2006 (LSE)
-      module procedure dasine
+      module real(wp) function dasine ( ctx, arg, tol )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: arg  !! Argument to be evaluated.
+      real(wp), intent(in) :: tol  !! Tolerance.
 
 !
 !     Bracket ARG.
@@ -383,8 +409,14 @@ contains
       end if
 
       return
-      end procedure dasine
+      end function dasine
 
+      !> Return the inverse hyperbolic tangent of a double precision
+      !> argument.
+      !>
+      !> The function returns the inverse hyperbolic tangent of a double
+      !> precision number.
+      !>
       !>## Detailed Input
       !>
       !>     X        is any double precision.
@@ -469,9 +501,11 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO)
-      module procedure datanh
+      module real(wp) function datanh ( ctx, x )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! Number whose inverse hyperbolic tangent is desired.
 
 !
 !     Set up the error processing.
@@ -497,8 +531,11 @@ contains
       datanh = 0.5_wp * dlog ( (1.0_wp+x) / (1.0_wp-x) )
 
       return
-      end procedure datanh
+      end function datanh
 
+      !> Compute the Jacobian matrix of the transformation from
+      !> rectangular to azimuth/elevation coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     X,
@@ -655,157 +692,159 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAZLDR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAZLDR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1   = '(A,F20.8)' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1   = '(A,F20.8)' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'dazldr_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'dazldr_ex1.tm' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(BDNMLN)    OBS
-      !>              CHARACTER*(TIMLEN)    OBSTIM
-      !>              CHARACTER*(FRNMLN)    REF
-      !>              CHARACTER*(BDNMLN)    TARGET
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(BDNMLN)    OBS
+      !>      CHARACTER*(TIMLEN)    OBSTIM
+      !>      CHARACTER*(FRNMLN)    REF
+      !>      CHARACTER*(BDNMLN)    TARGET
       !>
-      !>              DOUBLE PRECISION      AZ
-      !>              DOUBLE PRECISION      AZLVEL ( 3    )
-      !>              DOUBLE PRECISION      DRECTN ( 3    )
-      !>              DOUBLE PRECISION      EL
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      JACOBI ( 3, 3 )
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      STATE  ( 6    )
-      !>              DOUBLE PRECISION      R
-      !>              DOUBLE PRECISION      RECTAN ( 3    )
+      !>      DOUBLE PRECISION      AZ
+      !>      DOUBLE PRECISION      AZLVEL ( 3    )
+      !>      DOUBLE PRECISION      DRECTN ( 3    )
+      !>      DOUBLE PRECISION      EL
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STATE  ( 6    )
+      !>      DOUBLE PRECISION      R
+      !>      DOUBLE PRECISION      RECTAN ( 3    )
       !>
-      !>              LOGICAL               AZCCW
-      !>              LOGICAL               ELPLSZ
+      !>      LOGICAL               AZCCW
+      !>      LOGICAL               ELPLSZ
       !>
-      !>        C
-      !>        C     Load SPICE kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load SPICE kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the observation time to seconds past J2000 TDB.
-      !>        C
-      !>              OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
+      !>C
+      !>C     Convert the observation time to seconds past J2000 TDB.
+      !>C
+      !>      OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
       !>
-      !>              CALL STR2ET ( OBSTIM, ET )
+      !>      CALL STR2ET ( OBSTIM, ET )
       !>
-      !>        C
-      !>        C     Set the target, observer, observer frame, and
-      !>        C     aberration corrections.
-      !>        C
-      !>              TARGET = 'VENUS'
-      !>              OBS    = 'DSS-14'
-      !>              REF    = 'DSS-14_TOPO'
-      !>              ABCORR = 'CN+S'
+      !>C
+      !>C     Set the target, observer, observer frame, and
+      !>C     aberration corrections.
+      !>C
+      !>      TARGET = 'VENUS'
+      !>      OBS    = 'DSS-14'
+      !>      REF    = 'DSS-14_TOPO'
+      !>      ABCORR = 'CN+S'
       !>
-      !>        C
-      !>        C     Compute the observer-target state.
-      !>        C
-      !>              CALL SPKEZR ( TARGET, ET, REF, ABCORR, OBS,
-      !>             .              STATE,  LT                   )
+      !>C
+      !>C     Compute the observer-target state.
+      !>C
+      !>      CALL SPKEZR ( TARGET, ET, REF, ABCORR, OBS,
+      !>     .              STATE,  LT                   )
       !>
-      !>        C
-      !>        C     Convert position to azimuth/elevation coordinates,
-      !>        C     with azimuth increasing clockwise and elevation
-      !>        C     positive towards +Z axis of the DSS-14_TOPO
-      !>        C     reference frame
-      !>        C
-      !>              AZCCW  = .FALSE.
-      !>              ELPLSZ = .TRUE.
+      !>C
+      !>C     Convert position to azimuth/elevation coordinates,
+      !>C     with azimuth increasing clockwise and elevation
+      !>C     positive towards +Z axis of the DSS-14_TOPO
+      !>C     reference frame
+      !>C
+      !>      AZCCW  = .FALSE.
+      !>      ELPLSZ = .TRUE.
       !>
-      !>              CALL RECAZL ( STATE, AZCCW, ELPLSZ, R, AZ, EL )
+      !>      CALL RECAZL ( STATE, AZCCW, ELPLSZ, R, AZ, EL )
       !>
-      !>        C
-      !>        C     Convert velocity to azimuth/elevation coordinates.
-      !>        C
-      !>              CALL DAZLDR ( STATE(1), STATE(2), STATE(3),
-      !>             .              AZCCW,    ELPLSZ,   JACOBI   )
+      !>C
+      !>C     Convert velocity to azimuth/elevation coordinates.
+      !>C
+      !>      CALL DAZLDR ( STATE(1), STATE(2), STATE(3),
+      !>     .              AZCCW,    ELPLSZ,   JACOBI   )
       !>
-      !>              CALL MXV ( JACOBI, STATE(4), AZLVEL )
+      !>      CALL MXV ( JACOBI, STATE(4), AZLVEL )
       !>
-      !>        C
-      !>        C     As a check, convert the azimuth/elevation state back to
-      !>        C     rectangular coordinates.
-      !>        C
-      !>              CALL AZLREC ( R, AZ, EL, AZCCW, ELPLSZ, RECTAN )
+      !>C
+      !>C     As a check, convert the azimuth/elevation state back to
+      !>C     rectangular coordinates.
+      !>C
+      !>      CALL AZLREC ( R, AZ, EL, AZCCW, ELPLSZ, RECTAN )
       !>
-      !>              CALL DRDAZL ( R, AZ, EL, AZCCW, ELPLSZ, JACOBI )
+      !>      CALL DRDAZL ( R, AZ, EL, AZCCW, ELPLSZ, JACOBI )
       !>
-      !>              CALL MXV ( JACOBI, AZLVEL, DRECTN )
+      !>      CALL MXV ( JACOBI, AZLVEL, DRECTN )
       !>
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'AZ/EL coordinates:'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   Range      (km)        = ', R
-      !>              WRITE(*,FMT1) '   Azimuth    (deg)       = ', AZ * DPR()
-      !>              WRITE(*,FMT1) '   Elevation  (deg)       = ', EL * DPR()
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)')    'AZ/EL velocity:'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   d Range/dt     (km/s)  = ', AZLVEL(1)
-      !>              WRITE(*,FMT1) '   d Azimuth/dt   (deg/s) = ', AZLVEL(2)
-      !>             .                                             * DPR()
-      !>              WRITE(*,FMT1) '   d Elevation/dt (deg/s) = ', AZLVEL(3)
-      !>             .                                             * DPR()
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'Rectangular coordinates:'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   X (km)                 = ', STATE(1)
-      !>              WRITE(*,FMT1) '   Y (km)                 = ', STATE(2)
-      !>              WRITE(*,FMT1) '   Z (km)                 = ', STATE(3)
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'Rectangular velocity:'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   dX/dt (km/s)           = ', STATE(4)
-      !>              WRITE(*,FMT1) '   dY/dt (km/s)           = ', STATE(5)
-      !>              WRITE(*,FMT1) '   dZ/dt (km/s)           = ', STATE(6)
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'Rectangular coordinates from inverse '
-      !>             .    //         'mapping:'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   X (km)                 = ', RECTAN(1)
-      !>              WRITE(*,FMT1) '   Y (km)                 = ', RECTAN(2)
-      !>              WRITE(*,FMT1) '   Z (km)                 = ', RECTAN(3)
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'Rectangular velocity from inverse '
-      !>             .    //         'mapping:'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   dX/dt (km/s)           = ', DRECTN(1)
-      !>              WRITE(*,FMT1) '   dY/dt (km/s)           = ', DRECTN(2)
-      !>              WRITE(*,FMT1) '   dZ/dt (km/s)           = ', DRECTN(3)
-      !>              WRITE(*,*)
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'AZ/EL coordinates:'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   Range      (km)        = ', R
+      !>      WRITE(*,FMT1) '   Azimuth    (deg)       = ', AZ * DPR()
+      !>      WRITE(*,FMT1) '   Elevation  (deg)       = ', EL * DPR()
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)')    'AZ/EL velocity:'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   d Range/dt     (km/s)  = ', AZLVEL(1)
+      !>      WRITE(*,FMT1) '   d Azimuth/dt   (deg/s) = ', AZLVEL(2)
+      !>     .                                             * DPR()
+      !>      WRITE(*,FMT1) '   d Elevation/dt (deg/s) = ', AZLVEL(3)
+      !>     .                                             * DPR()
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'Rectangular coordinates:'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   X (km)                 = ', STATE(1)
+      !>      WRITE(*,FMT1) '   Y (km)                 = ', STATE(2)
+      !>      WRITE(*,FMT1) '   Z (km)                 = ', STATE(3)
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'Rectangular velocity:'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   dX/dt (km/s)           = ', STATE(4)
+      !>      WRITE(*,FMT1) '   dY/dt (km/s)           = ', STATE(5)
+      !>      WRITE(*,FMT1) '   dZ/dt (km/s)           = ', STATE(6)
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'Rectangular coordinates from inverse '
+      !>     .    //         'mapping:'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   X (km)                 = ', RECTAN(1)
+      !>      WRITE(*,FMT1) '   Y (km)                 = ', RECTAN(2)
+      !>      WRITE(*,FMT1) '   Z (km)                 = ', RECTAN(3)
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'Rectangular velocity from inverse '
+      !>     .    //         'mapping:'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   dX/dt (km/s)           = ', DRECTN(1)
+      !>      WRITE(*,FMT1) '   dY/dt (km/s)           = ', DRECTN(2)
+      !>      WRITE(*,FMT1) '   dZ/dt (km/s)           = ', DRECTN(3)
+      !>      WRITE(*,*)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -862,9 +901,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-2021 (JDR) (NJB)
-      module procedure dazldr
+      module subroutine dazldr ( ctx, x, y, z, azccw, elplsz, jacobi )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! X-coordinate of point.
+      real(wp), intent(in) :: y  !! Y-coordinate of point.
+      real(wp), intent(in) :: z  !! Z-coordinate of point.
+      logical, intent(in) :: azccw  !! Flag indicating how azimuth is measured.
+      logical, intent(in) :: elplsz  !! Flag indicating how elevation is measured.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
       integer(ip) :: i
 
@@ -930,8 +976,11 @@ contains
       end if
 
       return
-      end procedure dazldr
+      end subroutine dazldr
 
+      !> Compute the Jacobian matrix of the transformation from
+      !> rectangular to cylindrical coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     X,
@@ -1047,112 +1096,114 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DCYLDR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DCYLDR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      RPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      RPD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1 = '(A,E18.8)' )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      CLON
-      !>              DOUBLE PRECISION      DRECTN ( 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      JACOBI ( 3, 3 )
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      CYLVEL ( 3 )
-      !>              DOUBLE PRECISION      RECTAN ( 3 )
-      !>              DOUBLE PRECISION      R
-      !>              DOUBLE PRECISION      STATE  ( 6 )
-      !>              DOUBLE PRECISION      Z
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1 = '(A,E18.8)' )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      CLON
+      !>      DOUBLE PRECISION      DRECTN ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      CYLVEL ( 3 )
+      !>      DOUBLE PRECISION      RECTAN ( 3 )
+      !>      DOUBLE PRECISION      R
+      !>      DOUBLE PRECISION      STATE  ( 6 )
+      !>      DOUBLE PRECISION      Z
       !>
-      !>        C
-      !>        C     Load SPK, PCK and LSK kernels, use a meta kernel for
-      !>        C     convenience.
-      !>        C
-      !>              CALL FURNSH ( 'dcyldr_ex1.tm' )
+      !>C
+      !>C     Load SPK, PCK and LSK kernels, use a meta kernel for
+      !>C     convenience.
+      !>C
+      !>      CALL FURNSH ( 'dcyldr_ex1.tm' )
       !>
-      !>        C
-      !>        C     Look up the apparent state of earth as seen from Mars
-      !>        C     at January 1, 2005 TDB, relative to the IAU_MARS
-      !>        C     reference frame.
-      !>        C
-      !>              CALL STR2ET ( 'January 1, 2005 TDB', ET )
+      !>C
+      !>C     Look up the apparent state of earth as seen from Mars
+      !>C     at January 1, 2005 TDB, relative to the IAU_MARS
+      !>C     reference frame.
+      !>C
+      !>      CALL STR2ET ( 'January 1, 2005 TDB', ET )
       !>
-      !>              CALL SPKEZR ( 'Earth', ET,    'IAU_MARS', 'LT+S',
-      !>             .              'Mars',  STATE, LT                )
+      !>      CALL SPKEZR ( 'Earth', ET,    'IAU_MARS', 'LT+S',
+      !>     .              'Mars',  STATE, LT                )
       !>
-      !>        C
-      !>        C     Convert position to cylindrical coordinates.
-      !>        C
-      !>              CALL RECCYL ( STATE, R, CLON, Z )
+      !>C
+      !>C     Convert position to cylindrical coordinates.
+      !>C
+      !>      CALL RECCYL ( STATE, R, CLON, Z )
       !>
-      !>        C
-      !>        C     Convert velocity to cylindrical coordinates.
-      !>        C
+      !>C
+      !>C     Convert velocity to cylindrical coordinates.
+      !>C
       !>
-      !>              CALL DCYLDR ( STATE(1), STATE(2), STATE(3), JACOBI )
+      !>      CALL DCYLDR ( STATE(1), STATE(2), STATE(3), JACOBI )
       !>
-      !>              CALL MXV ( JACOBI, STATE(4), CYLVEL )
+      !>      CALL MXV ( JACOBI, STATE(4), CYLVEL )
       !>
-      !>        C
-      !>        C     As a check, convert the cylindrical state back to
-      !>        C     rectangular coordinates.
-      !>        C
-      !>              CALL CYLREC ( R, CLON, Z, RECTAN )
+      !>C
+      !>C     As a check, convert the cylindrical state back to
+      !>C     rectangular coordinates.
+      !>C
+      !>      CALL CYLREC ( R, CLON, Z, RECTAN )
       !>
-      !>              CALL DRDCYL ( R, CLON, Z, JACOBI )
+      !>      CALL DRDCYL ( R, CLON, Z, JACOBI )
       !>
-      !>              CALL MXV ( JACOBI, CYLVEL, DRECTN )
+      !>      CALL MXV ( JACOBI, CYLVEL, DRECTN )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular coordinates:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  X (km)                 = ', STATE(1)
-      !>              WRITE(*,FMT1) '  Y (km)                 = ', STATE(2)
-      !>              WRITE(*,FMT1) '  Z (km)                 = ', STATE(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular velocity:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  dX/dt (km/s)           = ', STATE(4)
-      !>              WRITE(*,FMT1) '  dY/dt (km/s)           = ', STATE(5)
-      !>              WRITE(*,FMT1) '  dZ/dt (km/s)           = ', STATE(6)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Cylindrical coordinates:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  Radius    (km)         = ', R
-      !>              WRITE(*,FMT1) '  Longitude (deg)        = ', CLON/RPD()
-      !>              WRITE(*,FMT1) '  Z         (km)         = ', Z
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Cylindrical velocity:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  d Radius/dt    (km/s)  = ', CYLVEL(1)
-      !>              WRITE(*,FMT1) '  d Longitude/dt (deg/s) = ',
-      !>             .                                         CYLVEL(2)/RPD()
-      !>              WRITE(*,FMT1) '  d Z/dt         (km/s)  = ', CYLVEL(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular coordinates from inverse ' //
-      !>             .           'mapping:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  X (km)                 = ', RECTAN(1)
-      !>              WRITE(*,FMT1) '  Y (km)                 = ', RECTAN(2)
-      !>              WRITE(*,FMT1) '  Z (km)                 = ', RECTAN(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular velocity from inverse mapping:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  dX/dt (km/s)           = ', DRECTN(1)
-      !>              WRITE(*,FMT1) '  dY/dt (km/s)           = ', DRECTN(2)
-      !>              WRITE(*,FMT1) '  dZ/dt (km/s)           = ', DRECTN(3)
-      !>              WRITE(*,*) ' '
-      !>              END
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular coordinates:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  X (km)                 = ', STATE(1)
+      !>      WRITE(*,FMT1) '  Y (km)                 = ', STATE(2)
+      !>      WRITE(*,FMT1) '  Z (km)                 = ', STATE(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular velocity:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  dX/dt (km/s)           = ', STATE(4)
+      !>      WRITE(*,FMT1) '  dY/dt (km/s)           = ', STATE(5)
+      !>      WRITE(*,FMT1) '  dZ/dt (km/s)           = ', STATE(6)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Cylindrical coordinates:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  Radius    (km)         = ', R
+      !>      WRITE(*,FMT1) '  Longitude (deg)        = ', CLON/RPD()
+      !>      WRITE(*,FMT1) '  Z         (km)         = ', Z
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Cylindrical velocity:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  d Radius/dt    (km/s)  = ', CYLVEL(1)
+      !>      WRITE(*,FMT1) '  d Longitude/dt (deg/s) = ',
+      !>     .                                         CYLVEL(2)/RPD()
+      !>      WRITE(*,FMT1) '  d Z/dt         (km/s)  = ', CYLVEL(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular coordinates from inverse ' //
+      !>     .           'mapping:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  X (km)                 = ', RECTAN(1)
+      !>      WRITE(*,FMT1) '  Y (km)                 = ', RECTAN(2)
+      !>      WRITE(*,FMT1) '  Z (km)                 = ', RECTAN(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular velocity from inverse mapping:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  dX/dt (km/s)           = ', DRECTN(1)
+      !>      WRITE(*,FMT1) '  dY/dt (km/s)           = ', DRECTN(2)
+      !>      WRITE(*,FMT1) '  dZ/dt (km/s)           = ', DRECTN(3)
+      !>      WRITE(*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1214,10 +1265,15 @@ contains
       !>        Added complete code example.
       !>
       !>-    SPICELIB Version 1.0.0, 19-JUL-2001 (WLT)
-      module procedure dcyldr
+      module subroutine dcyldr ( ctx, x, y, z, jacobi )
       use pepper_kinds, only: wp
       use pepper_math, only: drdcyl, reccyl
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! X-coordinate of point.
+      real(wp), intent(in) :: y  !! Y-coordinate of point.
+      real(wp), intent(in) :: z  !! Z-coordinate of point.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
       real(wp) :: rectan  ( 3 )
       real(wp) :: r
@@ -1269,8 +1325,11 @@ contains
       call invort ( ctx, injacb, jacobi )
 
       return
-      end procedure dcyldr
+      end subroutine dcyldr
 
+      !> Compute the Jacobian matrix of the transformation from
+      !> rectangular to latitudinal coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     X,
@@ -1386,113 +1445,115 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DLATDR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DLATDR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      RPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      RPD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1 = '(A,E18.8)' )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      DRECTN ( 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      JACOBI ( 3, 3 )
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      LATVEL ( 3 )
-      !>              DOUBLE PRECISION      RECTAN ( 3 )
-      !>              DOUBLE PRECISION      R
-      !>              DOUBLE PRECISION      STATE  ( 6 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1 = '(A,E18.8)' )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      DRECTN ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      LATVEL ( 3 )
+      !>      DOUBLE PRECISION      RECTAN ( 3 )
+      !>      DOUBLE PRECISION      R
+      !>      DOUBLE PRECISION      STATE  ( 6 )
       !>
-      !>        C
-      !>        C     Load SPK, PCK and LSK kernels, use a meta kernel for
-      !>        C     convenience.
-      !>        C
-      !>              CALL FURNSH ( 'dlatdr_ex1.tm' )
+      !>C
+      !>C     Load SPK, PCK and LSK kernels, use a meta kernel for
+      !>C     convenience.
+      !>C
+      !>      CALL FURNSH ( 'dlatdr_ex1.tm' )
       !>
-      !>        C
-      !>        C     Look up the apparent state of earth as seen from Mars
-      !>        C     at January 1, 2005 TDB, relative to the IAU_MARS
-      !>        C     reference frame.
-      !>        C
-      !>              CALL STR2ET ( 'January 1, 2005 TDB', ET )
+      !>C
+      !>C     Look up the apparent state of earth as seen from Mars
+      !>C     at January 1, 2005 TDB, relative to the IAU_MARS
+      !>C     reference frame.
+      !>C
+      !>      CALL STR2ET ( 'January 1, 2005 TDB', ET )
       !>
-      !>              CALL SPKEZR ( 'Earth', ET,    'IAU_MARS', 'LT+S',
-      !>             .              'Mars',  STATE, LT                )
+      !>      CALL SPKEZR ( 'Earth', ET,    'IAU_MARS', 'LT+S',
+      !>     .              'Mars',  STATE, LT                )
       !>
-      !>        C
-      !>        C     Convert position to latitudinal coordinates.
-      !>        C
-      !>              CALL RECLAT ( STATE, R, LON, LAT )
+      !>C
+      !>C     Convert position to latitudinal coordinates.
+      !>C
+      !>      CALL RECLAT ( STATE, R, LON, LAT )
       !>
-      !>        C
-      !>        C     Convert velocity to latitudinal coordinates.
-      !>        C
+      !>C
+      !>C     Convert velocity to latitudinal coordinates.
+      !>C
       !>
-      !>              CALL DLATDR ( STATE(1), STATE(2), STATE(3), JACOBI )
+      !>      CALL DLATDR ( STATE(1), STATE(2), STATE(3), JACOBI )
       !>
-      !>              CALL MXV ( JACOBI, STATE(4), LATVEL )
+      !>      CALL MXV ( JACOBI, STATE(4), LATVEL )
       !>
-      !>        C
-      !>        C     As a check, convert the latitudinal state back to
-      !>        C     rectangular coordinates.
-      !>        C
-      !>              CALL LATREC ( R, LON, LAT, RECTAN )
+      !>C
+      !>C     As a check, convert the latitudinal state back to
+      !>C     rectangular coordinates.
+      !>C
+      !>      CALL LATREC ( R, LON, LAT, RECTAN )
       !>
-      !>              CALL DRDLAT ( R, LON, LAT, JACOBI )
+      !>      CALL DRDLAT ( R, LON, LAT, JACOBI )
       !>
-      !>              CALL MXV ( JACOBI, LATVEL, DRECTN )
+      !>      CALL MXV ( JACOBI, LATVEL, DRECTN )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular coordinates:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  X (km)                 = ', STATE(1)
-      !>              WRITE(*,FMT1) '  Y (km)                 = ', STATE(2)
-      !>              WRITE(*,FMT1) '  Z (km)                 = ', STATE(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular velocity:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  dX/dt (km/s)           = ', STATE(4)
-      !>              WRITE(*,FMT1) '  dY/dt (km/s)           = ', STATE(5)
-      !>              WRITE(*,FMT1) '  dZ/dt (km/s)           = ', STATE(6)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Latitudinal coordinates:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  Radius    (km)         = ', R
-      !>              WRITE(*,FMT1) '  Longitude (deg)        = ', LON/RPD()
-      !>              WRITE(*,FMT1) '  Latitude  (deg)        = ', LAT/RPD()
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Latitudinal velocity:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  d Radius/dt    (km/s)  = ', LATVEL(1)
-      !>              WRITE(*,FMT1) '  d Longitude/dt (deg/s) = ',
-      !>             .                                         LATVEL(2)/RPD()
-      !>              WRITE(*,FMT1) '  d Latitude/dt  (deg/s) = ',
-      !>             .                                         LATVEL(3)/RPD()
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular coordinates from inverse ' //
-      !>             .           'mapping:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  X (km)                 = ', RECTAN(1)
-      !>              WRITE(*,FMT1) '  Y (km)                 = ', RECTAN(2)
-      !>              WRITE(*,FMT1) '  Z (km)                 = ', RECTAN(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular velocity from inverse mapping:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  dX/dt (km/s)           = ', DRECTN(1)
-      !>              WRITE(*,FMT1) '  dY/dt (km/s)           = ', DRECTN(2)
-      !>              WRITE(*,FMT1) '  dZ/dt (km/s)           = ', DRECTN(3)
-      !>              WRITE(*,*) ' '
-      !>              END
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular coordinates:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  X (km)                 = ', STATE(1)
+      !>      WRITE(*,FMT1) '  Y (km)                 = ', STATE(2)
+      !>      WRITE(*,FMT1) '  Z (km)                 = ', STATE(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular velocity:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  dX/dt (km/s)           = ', STATE(4)
+      !>      WRITE(*,FMT1) '  dY/dt (km/s)           = ', STATE(5)
+      !>      WRITE(*,FMT1) '  dZ/dt (km/s)           = ', STATE(6)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Latitudinal coordinates:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  Radius    (km)         = ', R
+      !>      WRITE(*,FMT1) '  Longitude (deg)        = ', LON/RPD()
+      !>      WRITE(*,FMT1) '  Latitude  (deg)        = ', LAT/RPD()
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Latitudinal velocity:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  d Radius/dt    (km/s)  = ', LATVEL(1)
+      !>      WRITE(*,FMT1) '  d Longitude/dt (deg/s) = ',
+      !>     .                                         LATVEL(2)/RPD()
+      !>      WRITE(*,FMT1) '  d Latitude/dt  (deg/s) = ',
+      !>     .                                         LATVEL(3)/RPD()
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular coordinates from inverse ' //
+      !>     .           'mapping:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  X (km)                 = ', RECTAN(1)
+      !>      WRITE(*,FMT1) '  Y (km)                 = ', RECTAN(2)
+      !>      WRITE(*,FMT1) '  Z (km)                 = ', RECTAN(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular velocity from inverse mapping:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  dX/dt (km/s)           = ', DRECTN(1)
+      !>      WRITE(*,FMT1) '  dY/dt (km/s)           = ', DRECTN(2)
+      !>      WRITE(*,FMT1) '  dZ/dt (km/s)           = ', DRECTN(3)
+      !>      WRITE(*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1554,10 +1615,15 @@ contains
       !>        Added complete code example.
       !>
       !>-    SPICELIB Version 1.0.0, 16-JUL-2001 (WLT)
-      module procedure dlatdr
+      module subroutine dlatdr ( ctx, x, y, z, jacobi )
       use pepper_kinds, only: wp
       use pepper_math, only: drdlat, reclat
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! X-coordinate of point.
+      real(wp), intent(in) :: y  !! Y-coordinate of point.
+      real(wp), intent(in) :: z  !! Z-coordinate of point.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
       real(wp) :: rectan  ( 3 )
       real(wp) :: r
@@ -1609,8 +1675,11 @@ contains
       call invort ( ctx, injacb, jacobi )
 
       return
-      end procedure dlatdr
+      end subroutine dlatdr
 
+      !> Compute the Jacobian matrix of the transformation from
+      !> azimuth/elevation to rectangular coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     RANGE    is the distance from the origin of the input point
@@ -1817,157 +1886,159 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DRDAZL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DRDAZL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1   = '(A,F20.8)' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1   = '(A,F20.8)' )
       !>
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'drdazl_ex1.tm' )
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'drdazl_ex1.tm' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(BDNMLN)    OBS
-      !>              CHARACTER*(TIMLEN)    OBSTIM
-      !>              CHARACTER*(FRNMLN)    REF
-      !>              CHARACTER*(BDNMLN)    TARGET
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(BDNMLN)    OBS
+      !>      CHARACTER*(TIMLEN)    OBSTIM
+      !>      CHARACTER*(FRNMLN)    REF
+      !>      CHARACTER*(BDNMLN)    TARGET
       !>
-      !>              DOUBLE PRECISION      AZ
-      !>              DOUBLE PRECISION      AZLVEL ( 3    )
-      !>              DOUBLE PRECISION      DRECTN ( 3    )
-      !>              DOUBLE PRECISION      EL
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      JACOBI ( 3, 3 )
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      STATE  ( 6    )
-      !>              DOUBLE PRECISION      R
-      !>              DOUBLE PRECISION      RECTAN ( 3    )
+      !>      DOUBLE PRECISION      AZ
+      !>      DOUBLE PRECISION      AZLVEL ( 3    )
+      !>      DOUBLE PRECISION      DRECTN ( 3    )
+      !>      DOUBLE PRECISION      EL
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STATE  ( 6    )
+      !>      DOUBLE PRECISION      R
+      !>      DOUBLE PRECISION      RECTAN ( 3    )
       !>
-      !>              LOGICAL               AZCCW
-      !>              LOGICAL               ELPLSZ
+      !>      LOGICAL               AZCCW
+      !>      LOGICAL               ELPLSZ
       !>
-      !>        C
-      !>        C     Load SPICE kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load SPICE kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the observation time to seconds past J2000 TDB.
-      !>        C
-      !>              OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
+      !>C
+      !>C     Convert the observation time to seconds past J2000 TDB.
+      !>C
+      !>      OBSTIM = '2003 OCT 13 06:00:00.000000 UTC'
       !>
-      !>              CALL STR2ET ( OBSTIM, ET )
+      !>      CALL STR2ET ( OBSTIM, ET )
       !>
-      !>        C
-      !>        C     Set the target, observer, observer frame, and
-      !>        C     aberration corrections.
-      !>        C
-      !>              TARGET = 'VENUS'
-      !>              OBS    = 'DSS-14'
-      !>              REF    = 'DSS-14_TOPO'
-      !>              ABCORR = 'CN+S'
+      !>C
+      !>C     Set the target, observer, observer frame, and
+      !>C     aberration corrections.
+      !>C
+      !>      TARGET = 'VENUS'
+      !>      OBS    = 'DSS-14'
+      !>      REF    = 'DSS-14_TOPO'
+      !>      ABCORR = 'CN+S'
       !>
-      !>        C
-      !>        C     Compute the observer-target state.
-      !>        C
-      !>              CALL SPKEZR ( TARGET, ET, REF, ABCORR, OBS,
-      !>             .              STATE,  LT                   )
+      !>C
+      !>C     Compute the observer-target state.
+      !>C
+      !>      CALL SPKEZR ( TARGET, ET, REF, ABCORR, OBS,
+      !>     .              STATE,  LT                   )
       !>
-      !>        C
-      !>        C     Convert position to azimuth/elevation coordinates,
-      !>        C     with azimuth increasing clockwise and elevation
-      !>        C     positive towards +Z axis of the DSS-14_TOPO
-      !>        C     reference frame
-      !>        C
-      !>              AZCCW  = .FALSE.
-      !>              ELPLSZ = .TRUE.
+      !>C
+      !>C     Convert position to azimuth/elevation coordinates,
+      !>C     with azimuth increasing clockwise and elevation
+      !>C     positive towards +Z axis of the DSS-14_TOPO
+      !>C     reference frame
+      !>C
+      !>      AZCCW  = .FALSE.
+      !>      ELPLSZ = .TRUE.
       !>
-      !>              CALL RECAZL ( STATE, AZCCW, ELPLSZ, R, AZ, EL )
+      !>      CALL RECAZL ( STATE, AZCCW, ELPLSZ, R, AZ, EL )
       !>
-      !>        C
-      !>        C     Convert velocity to azimuth/elevation coordinates.
-      !>        C
-      !>              CALL DAZLDR ( STATE(1), STATE(2), STATE(3),
-      !>             .              AZCCW,    ELPLSZ,   JACOBI   )
+      !>C
+      !>C     Convert velocity to azimuth/elevation coordinates.
+      !>C
+      !>      CALL DAZLDR ( STATE(1), STATE(2), STATE(3),
+      !>     .              AZCCW,    ELPLSZ,   JACOBI   )
       !>
-      !>              CALL MXV ( JACOBI, STATE(4), AZLVEL )
+      !>      CALL MXV ( JACOBI, STATE(4), AZLVEL )
       !>
-      !>        C
-      !>        C     As a check, convert the azimuth/elevation state back to
-      !>        C     rectangular coordinates.
-      !>        C
-      !>              CALL AZLREC ( R, AZ, EL, AZCCW, ELPLSZ, RECTAN )
+      !>C
+      !>C     As a check, convert the azimuth/elevation state back to
+      !>C     rectangular coordinates.
+      !>C
+      !>      CALL AZLREC ( R, AZ, EL, AZCCW, ELPLSZ, RECTAN )
       !>
-      !>              CALL DRDAZL ( R, AZ, EL, AZCCW, ELPLSZ, JACOBI )
+      !>      CALL DRDAZL ( R, AZ, EL, AZCCW, ELPLSZ, JACOBI )
       !>
-      !>              CALL MXV ( JACOBI, AZLVEL, DRECTN )
+      !>      CALL MXV ( JACOBI, AZLVEL, DRECTN )
       !>
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'AZ/EL coordinates:'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   Range      (km)        = ', R
-      !>              WRITE(*,FMT1) '   Azimuth    (deg)       = ', AZ * DPR()
-      !>              WRITE(*,FMT1) '   Elevation  (deg)       = ', EL * DPR()
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)')    'AZ/EL velocity:'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   d Range/dt     (km/s)  = ', AZLVEL(1)
-      !>              WRITE(*,FMT1) '   d Azimuth/dt   (deg/s) = ', AZLVEL(2)
-      !>             .                                             * DPR()
-      !>              WRITE(*,FMT1) '   d Elevation/dt (deg/s) = ', AZLVEL(3)
-      !>             .                                             * DPR()
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'Rectangular coordinates:'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   X (km)                 = ', STATE(1)
-      !>              WRITE(*,FMT1) '   Y (km)                 = ', STATE(2)
-      !>              WRITE(*,FMT1) '   Z (km)                 = ', STATE(3)
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'Rectangular velocity:'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   dX/dt (km/s)           = ', STATE(4)
-      !>              WRITE(*,FMT1) '   dY/dt (km/s)           = ', STATE(5)
-      !>              WRITE(*,FMT1) '   dZ/dt (km/s)           = ', STATE(6)
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'Rectangular coordinates from inverse '
-      !>             .    //         'mapping:'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   X (km)                 = ', RECTAN(1)
-      !>              WRITE(*,FMT1) '   Y (km)                 = ', RECTAN(2)
-      !>              WRITE(*,FMT1) '   Z (km)                 = ', RECTAN(3)
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'Rectangular velocity from inverse '
-      !>             .    //         'mapping:'
-      !>              WRITE(*,*)
-      !>              WRITE(*,FMT1) '   dX/dt (km/s)           = ', DRECTN(1)
-      !>              WRITE(*,FMT1) '   dY/dt (km/s)           = ', DRECTN(2)
-      !>              WRITE(*,FMT1) '   dZ/dt (km/s)           = ', DRECTN(3)
-      !>              WRITE(*,*)
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'AZ/EL coordinates:'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   Range      (km)        = ', R
+      !>      WRITE(*,FMT1) '   Azimuth    (deg)       = ', AZ * DPR()
+      !>      WRITE(*,FMT1) '   Elevation  (deg)       = ', EL * DPR()
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)')    'AZ/EL velocity:'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   d Range/dt     (km/s)  = ', AZLVEL(1)
+      !>      WRITE(*,FMT1) '   d Azimuth/dt   (deg/s) = ', AZLVEL(2)
+      !>     .                                             * DPR()
+      !>      WRITE(*,FMT1) '   d Elevation/dt (deg/s) = ', AZLVEL(3)
+      !>     .                                             * DPR()
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'Rectangular coordinates:'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   X (km)                 = ', STATE(1)
+      !>      WRITE(*,FMT1) '   Y (km)                 = ', STATE(2)
+      !>      WRITE(*,FMT1) '   Z (km)                 = ', STATE(3)
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'Rectangular velocity:'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   dX/dt (km/s)           = ', STATE(4)
+      !>      WRITE(*,FMT1) '   dY/dt (km/s)           = ', STATE(5)
+      !>      WRITE(*,FMT1) '   dZ/dt (km/s)           = ', STATE(6)
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'Rectangular coordinates from inverse '
+      !>     .    //         'mapping:'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   X (km)                 = ', RECTAN(1)
+      !>      WRITE(*,FMT1) '   Y (km)                 = ', RECTAN(2)
+      !>      WRITE(*,FMT1) '   Z (km)                 = ', RECTAN(3)
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'Rectangular velocity from inverse '
+      !>     .    //         'mapping:'
+      !>      WRITE(*,*)
+      !>      WRITE(*,FMT1) '   dX/dt (km/s)           = ', DRECTN(1)
+      !>      WRITE(*,FMT1) '   dY/dt (km/s)           = ', DRECTN(2)
+      !>      WRITE(*,FMT1) '   dZ/dt (km/s)           = ', DRECTN(3)
+      !>      WRITE(*,*)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2024,10 +2095,17 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 08-SEP-2021 (JDR) (NJB)
-      module procedure drdazl
+      module subroutine drdazl ( ctx, range, az, el, azccw, elplsz, jacobi )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: drdlat
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: range  !! Distance of a point from the origin.
+      real(wp), intent(in) :: az  !! Azimuth of input point in radians.
+      real(wp), intent(in) :: el  !! Elevation of input point in radians.
+      logical, intent(in) :: azccw  !! Flag indicating how azimuth is measured.
+      logical, intent(in) :: elplsz  !! Flag indicating how elevation is measured.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
       real(wp) :: lat
       real(wp) :: lon
@@ -2132,8 +2210,11 @@ contains
       end do
 
       return
-      end procedure drdazl
+      end subroutine drdazl
 
+      !> Compute the Jacobian matrix of the transformation from geodetic
+      !> to rectangular coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     LON      is the geodetic longitude of point (radians).
@@ -2273,144 +2354,146 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DRDGEO_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DRDGEO_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      RPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      RPD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1 = '(A,E18.8)' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1 = '(A,E18.8)' )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      DRECTN ( 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      JACOBI ( 3, 3 )
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      GEOVEL ( 3 )
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RECTAN ( 3 )
-      !>              DOUBLE PRECISION      RP
-      !>              DOUBLE PRECISION      STATE  ( 6 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      DRECTN ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      GEOVEL ( 3 )
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RECTAN ( 3 )
+      !>      DOUBLE PRECISION      RP
+      !>      DOUBLE PRECISION      STATE  ( 6 )
       !>
-      !>              INTEGER               N
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     Load SPK, PCK, and LSK kernels, use a meta kernel for
-      !>        C     convenience.
-      !>        C
-      !>              CALL FURNSH ( 'drdgeo_ex1.tm' )
+      !>C
+      !>C     Load SPK, PCK, and LSK kernels, use a meta kernel for
+      !>C     convenience.
+      !>C
+      !>      CALL FURNSH ( 'drdgeo_ex1.tm' )
       !>
-      !>        C
-      !>        C     Look up the radii for Mars.  Although we
-      !>        C     omit it here, we could first call BADKPV
-      !>        C     to make sure the variable BODY499_RADII
-      !>        C     has three elements and numeric data type.
-      !>        C     If the variable is not present in the kernel
-      !>        C     pool, BODVRD will signal an error.
-      !>        C
-      !>              CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
+      !>C
+      !>C     Look up the radii for Mars.  Although we
+      !>C     omit it here, we could first call BADKPV
+      !>C     to make sure the variable BODY499_RADII
+      !>C     has three elements and numeric data type.
+      !>C     If the variable is not present in the kernel
+      !>C     pool, BODVRD will signal an error.
+      !>C
+      !>      CALL BODVRD ( 'MARS', 'RADII', 3, N, RADII )
       !>
-      !>        C
-      !>        C     Compute flattening coefficient.
-      !>        C
-      !>              RE  =  RADII(1)
-      !>              RP  =  RADII(3)
-      !>              F   =  ( RE - RP ) / RE
+      !>C
+      !>C     Compute flattening coefficient.
+      !>C
+      !>      RE  =  RADII(1)
+      !>      RP  =  RADII(3)
+      !>      F   =  ( RE - RP ) / RE
       !>
-      !>        C
-      !>        C     Look up the apparent state of earth as seen from Mars
-      !>        C     at January 1, 2005 TDB, relative to the IAU_MARS
-      !>        C     reference frame.
-      !>        C
-      !>              CALL STR2ET ( 'January 1, 2005 TDB', ET )
+      !>C
+      !>C     Look up the apparent state of earth as seen from Mars
+      !>C     at January 1, 2005 TDB, relative to the IAU_MARS
+      !>C     reference frame.
+      !>C
+      !>      CALL STR2ET ( 'January 1, 2005 TDB', ET )
       !>
-      !>              CALL SPKEZR ( 'Earth', ET,    'IAU_MARS', 'LT+S',
-      !>             .              'Mars',  STATE, LT                )
+      !>      CALL SPKEZR ( 'Earth', ET,    'IAU_MARS', 'LT+S',
+      !>     .              'Mars',  STATE, LT                )
       !>
-      !>        C
-      !>        C     Convert position to geodetic coordinates.
-      !>        C
-      !>              CALL RECGEO ( STATE, RE, F, LON, LAT, ALT )
+      !>C
+      !>C     Convert position to geodetic coordinates.
+      !>C
+      !>      CALL RECGEO ( STATE, RE, F, LON, LAT, ALT )
       !>
-      !>        C
-      !>        C     Convert velocity to geodetic coordinates.
-      !>        C
+      !>C
+      !>C     Convert velocity to geodetic coordinates.
+      !>C
       !>
-      !>              CALL DGEODR (  STATE(1), STATE(2), STATE(3),
-      !>             .               RE,       F,        JACOBI   )
+      !>      CALL DGEODR (  STATE(1), STATE(2), STATE(3),
+      !>     .               RE,       F,        JACOBI   )
       !>
-      !>              CALL MXV ( JACOBI, STATE(4), GEOVEL )
+      !>      CALL MXV ( JACOBI, STATE(4), GEOVEL )
       !>
-      !>        C
-      !>        C     As a check, convert the geodetic state back to
-      !>        C     rectangular coordinates.
-      !>        C
-      !>              CALL GEOREC ( LON, LAT, ALT, RE, F, RECTAN )
+      !>C
+      !>C     As a check, convert the geodetic state back to
+      !>C     rectangular coordinates.
+      !>C
+      !>      CALL GEOREC ( LON, LAT, ALT, RE, F, RECTAN )
       !>
-      !>              CALL DRDGEO ( LON, LAT, ALT, RE, F, JACOBI )
+      !>      CALL DRDGEO ( LON, LAT, ALT, RE, F, JACOBI )
       !>
-      !>              CALL MXV ( JACOBI, GEOVEL, DRECTN )
+      !>      CALL MXV ( JACOBI, GEOVEL, DRECTN )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular coordinates:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  X (km)                 = ', STATE(1)
-      !>              WRITE(*,FMT1) '  Y (km)                 = ', STATE(2)
-      !>              WRITE(*,FMT1) '  Z (km)                 = ', STATE(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular velocity:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  dX/dt (km/s)           = ', STATE(4)
-      !>              WRITE(*,FMT1) '  dY/dt (km/s)           = ', STATE(5)
-      !>              WRITE(*,FMT1) '  dZ/dt (km/s)           = ', STATE(6)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Ellipsoid shape parameters: '
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  Equatorial radius (km) = ', RE
-      !>              WRITE(*,FMT1) '  Polar radius      (km) = ', RP
-      !>              WRITE(*,FMT1) '  Flattening coefficient = ', F
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Geodetic coordinates:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  Longitude (deg)        = ', LON / RPD()
-      !>              WRITE(*,FMT1) '  Latitude  (deg)        = ', LAT / RPD()
-      !>              WRITE(*,FMT1) '  Altitude  (km)         = ', ALT
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Geodetic velocity:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  d Longitude/dt (deg/s) = ',
-      !>             .                                         GEOVEL(1)/RPD()
-      !>              WRITE(*,FMT1) '  d Latitude/dt  (deg/s) = ',
-      !>             .                                         GEOVEL(2)/RPD()
-      !>              WRITE(*,FMT1) '  d Altitude/dt  (km/s)  = ', GEOVEL(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular coordinates from inverse ' //
-      !>             .           'mapping:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  X (km)                 = ', RECTAN(1)
-      !>              WRITE(*,FMT1) '  Y (km)                 = ', RECTAN(2)
-      !>              WRITE(*,FMT1) '  Z (km)                 = ', RECTAN(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular velocity from inverse mapping:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  dX/dt (km/s)           = ', DRECTN(1)
-      !>              WRITE(*,FMT1) '  dY/dt (km/s)           = ', DRECTN(2)
-      !>              WRITE(*,FMT1) '  dZ/dt (km/s)           = ', DRECTN(3)
-      !>              WRITE(*,*) ' '
-      !>              END
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular coordinates:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  X (km)                 = ', STATE(1)
+      !>      WRITE(*,FMT1) '  Y (km)                 = ', STATE(2)
+      !>      WRITE(*,FMT1) '  Z (km)                 = ', STATE(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular velocity:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  dX/dt (km/s)           = ', STATE(4)
+      !>      WRITE(*,FMT1) '  dY/dt (km/s)           = ', STATE(5)
+      !>      WRITE(*,FMT1) '  dZ/dt (km/s)           = ', STATE(6)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Ellipsoid shape parameters: '
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  Equatorial radius (km) = ', RE
+      !>      WRITE(*,FMT1) '  Polar radius      (km) = ', RP
+      !>      WRITE(*,FMT1) '  Flattening coefficient = ', F
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Geodetic coordinates:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  Longitude (deg)        = ', LON / RPD()
+      !>      WRITE(*,FMT1) '  Latitude  (deg)        = ', LAT / RPD()
+      !>      WRITE(*,FMT1) '  Altitude  (km)         = ', ALT
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Geodetic velocity:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  d Longitude/dt (deg/s) = ',
+      !>     .                                         GEOVEL(1)/RPD()
+      !>      WRITE(*,FMT1) '  d Latitude/dt  (deg/s) = ',
+      !>     .                                         GEOVEL(2)/RPD()
+      !>      WRITE(*,FMT1) '  d Altitude/dt  (km/s)  = ', GEOVEL(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular coordinates from inverse ' //
+      !>     .           'mapping:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  X (km)                 = ', RECTAN(1)
+      !>      WRITE(*,FMT1) '  Y (km)                 = ', RECTAN(2)
+      !>      WRITE(*,FMT1) '  Z (km)                 = ', RECTAN(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular velocity from inverse mapping:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  dX/dt (km/s)           = ', DRECTN(1)
+      !>      WRITE(*,FMT1) '  dY/dt (km/s)           = ', DRECTN(2)
+      !>      WRITE(*,FMT1) '  dZ/dt (km/s)           = ', DRECTN(3)
+      !>      WRITE(*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2481,9 +2564,16 @@ contains
       !>        Added complete code example.
       !>
       !>-    SPICELIB Version 1.0.0, 20-JUL-2001 (WLT)
-      module procedure drdgeo
+      module subroutine drdgeo ( ctx, lon, lat, alt, re, f, jacobi )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: lon  !! Geodetic longitude of point (radians).
+      real(wp), intent(in) :: lat  !! Geodetic latitude of point (radians).
+      real(wp), intent(in) :: alt  !! Altitude of point above the reference spheroid.
+      real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+      real(wp), intent(in) :: f  !! Flattening coefficient.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
       integer(ip), parameter :: dx = 1  !! row of the partial derivatives of X
 
@@ -2704,8 +2794,11 @@ contains
       jacobi (dz,dalt)  =         slat
 
       return
-      end procedure drdgeo
+      end subroutine drdgeo
 
+      !> Compute the Jacobian matrix of the transformation from
+      !> rectangular to spherical coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     X,
@@ -2821,114 +2914,116 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DSPHDR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DSPHDR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      RPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      RPD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1 = '(A,E18.8)' )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      COLAT
-      !>              DOUBLE PRECISION      DRECTN ( 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      JACOBI ( 3, 3 )
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      SPHVEL ( 3 )
-      !>              DOUBLE PRECISION      RECTAN ( 3 )
-      !>              DOUBLE PRECISION      R
-      !>              DOUBLE PRECISION      SLON
-      !>              DOUBLE PRECISION      STATE  ( 6 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1 = '(A,E18.8)' )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      COLAT
+      !>      DOUBLE PRECISION      DRECTN ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      JACOBI ( 3, 3 )
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      SPHVEL ( 3 )
+      !>      DOUBLE PRECISION      RECTAN ( 3 )
+      !>      DOUBLE PRECISION      R
+      !>      DOUBLE PRECISION      SLON
+      !>      DOUBLE PRECISION      STATE  ( 6 )
       !>
-      !>        C
-      !>        C     Load SPK, PCK and LSK kernels, use a meta kernel for
-      !>        C     convenience.
-      !>        C
-      !>              CALL FURNSH ( 'dsphdr_ex1.tm' )
+      !>C
+      !>C     Load SPK, PCK and LSK kernels, use a meta kernel for
+      !>C     convenience.
+      !>C
+      !>      CALL FURNSH ( 'dsphdr_ex1.tm' )
       !>
-      !>        C
-      !>        C     Look up the apparent state of earth as seen from Mars at
-      !>        C     January 1, 2005 TDB, relative to the IAU_MARS reference
-      !>        C     frame.
-      !>        C
-      !>              CALL STR2ET ( 'January 1, 2005 TDB', ET )
+      !>C
+      !>C     Look up the apparent state of earth as seen from Mars at
+      !>C     January 1, 2005 TDB, relative to the IAU_MARS reference
+      !>C     frame.
+      !>C
+      !>      CALL STR2ET ( 'January 1, 2005 TDB', ET )
       !>
-      !>              CALL SPKEZR ( 'Earth', ET,    'IAU_MARS', 'LT+S',
-      !>             .              'Mars',  STATE, LT                )
+      !>      CALL SPKEZR ( 'Earth', ET,    'IAU_MARS', 'LT+S',
+      !>     .              'Mars',  STATE, LT                )
       !>
-      !>        C
-      !>        C     Convert position to spherical coordinates.
-      !>        C
-      !>              CALL RECSPH ( STATE, R, COLAT, SLON )
+      !>C
+      !>C     Convert position to spherical coordinates.
+      !>C
+      !>      CALL RECSPH ( STATE, R, COLAT, SLON )
       !>
-      !>        C
-      !>        C     Convert velocity to spherical coordinates.
-      !>        C
+      !>C
+      !>C     Convert velocity to spherical coordinates.
+      !>C
       !>
-      !>              CALL DSPHDR ( STATE(1), STATE(2), STATE(3), JACOBI )
+      !>      CALL DSPHDR ( STATE(1), STATE(2), STATE(3), JACOBI )
       !>
-      !>              CALL MXV ( JACOBI, STATE(4), SPHVEL )
+      !>      CALL MXV ( JACOBI, STATE(4), SPHVEL )
       !>
-      !>        C
-      !>        C     As a check, convert the spherical state back to
-      !>        C     rectangular coordinates.
-      !>        C
-      !>              CALL SPHREC ( R, COLAT, SLON, RECTAN )
+      !>C
+      !>C     As a check, convert the spherical state back to
+      !>C     rectangular coordinates.
+      !>C
+      !>      CALL SPHREC ( R, COLAT, SLON, RECTAN )
       !>
-      !>              CALL DRDSPH ( R, COLAT, SLON, JACOBI )
+      !>      CALL DRDSPH ( R, COLAT, SLON, JACOBI )
       !>
-      !>              CALL MXV ( JACOBI, SPHVEL, DRECTN )
+      !>      CALL MXV ( JACOBI, SPHVEL, DRECTN )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular coordinates:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  X (km)                  = ', STATE(1)
-      !>              WRITE(*,FMT1) '  Y (km)                  = ', STATE(2)
-      !>              WRITE(*,FMT1) '  Z (km)                  = ', STATE(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular velocity:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  dX/dt (km/s)            = ', STATE(4)
-      !>              WRITE(*,FMT1) '  dY/dt (km/s)            = ', STATE(5)
-      !>              WRITE(*,FMT1) '  dZ/dt (km/s)            = ', STATE(6)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Spherical coordinates:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  Radius     (km)         = ', R
-      !>              WRITE(*,FMT1) '  Colatitude (deg)        = ',
-      !>             .                                             COLAT/RPD()
-      !>              WRITE(*,FMT1) '  Longitude  (deg)        = ', SLON/RPD()
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Spherical velocity:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  d Radius/dt     (km/s)  = ', SPHVEL(1)
-      !>              WRITE(*,FMT1) '  d Colatitude/dt (deg/s) = ',
-      !>             .                                        SPHVEL(2)/RPD()
-      !>              WRITE(*,FMT1) '  d Longitude/dt  (deg/s) = ',
-      !>             .                                        SPHVEL(3)/RPD()
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular coordinates from inverse ' //
-      !>             .           'mapping:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  X (km)                  = ', RECTAN(1)
-      !>              WRITE(*,FMT1) '  Y (km)                  = ', RECTAN(2)
-      !>              WRITE(*,FMT1) '  Z (km)                  = ', RECTAN(3)
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Rectangular velocity from inverse mapping:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,FMT1) '  dX/dt (km/s)            = ', DRECTN(1)
-      !>              WRITE(*,FMT1) '  dY/dt (km/s)            = ', DRECTN(2)
-      !>              WRITE(*,FMT1) '  dZ/dt (km/s)            = ', DRECTN(3)
-      !>              WRITE(*,*) ' '
-      !>              END
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular coordinates:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  X (km)                  = ', STATE(1)
+      !>      WRITE(*,FMT1) '  Y (km)                  = ', STATE(2)
+      !>      WRITE(*,FMT1) '  Z (km)                  = ', STATE(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular velocity:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  dX/dt (km/s)            = ', STATE(4)
+      !>      WRITE(*,FMT1) '  dY/dt (km/s)            = ', STATE(5)
+      !>      WRITE(*,FMT1) '  dZ/dt (km/s)            = ', STATE(6)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Spherical coordinates:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  Radius     (km)         = ', R
+      !>      WRITE(*,FMT1) '  Colatitude (deg)        = ',
+      !>     .                                             COLAT/RPD()
+      !>      WRITE(*,FMT1) '  Longitude  (deg)        = ', SLON/RPD()
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Spherical velocity:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  d Radius/dt     (km/s)  = ', SPHVEL(1)
+      !>      WRITE(*,FMT1) '  d Colatitude/dt (deg/s) = ',
+      !>     .                                        SPHVEL(2)/RPD()
+      !>      WRITE(*,FMT1) '  d Longitude/dt  (deg/s) = ',
+      !>     .                                        SPHVEL(3)/RPD()
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular coordinates from inverse ' //
+      !>     .           'mapping:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  X (km)                  = ', RECTAN(1)
+      !>      WRITE(*,FMT1) '  Y (km)                  = ', RECTAN(2)
+      !>      WRITE(*,FMT1) '  Z (km)                  = ', RECTAN(3)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Rectangular velocity from inverse mapping:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,FMT1) '  dX/dt (km/s)            = ', DRECTN(1)
+      !>      WRITE(*,FMT1) '  dY/dt (km/s)            = ', DRECTN(2)
+      !>      WRITE(*,FMT1) '  dZ/dt (km/s)            = ', DRECTN(3)
+      !>      WRITE(*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2990,10 +3085,15 @@ contains
       !>        Added complete code example.
       !>
       !>-    SPICELIB Version 1.0.0, 19-JUL-2001 (WLT)
-      module procedure dsphdr
+      module subroutine dsphdr ( ctx, x, y, z, jacobi )
       use pepper_kinds, only: wp
       use pepper_math, only: drdsph, recsph
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! X-coordinate of point.
+      real(wp), intent(in) :: y  !! Y-coordinate of point.
+      real(wp), intent(in) :: z  !! Z-coordinate of point.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
       real(wp) :: rectan  ( 3 )
       real(wp) :: r
@@ -3045,8 +3145,12 @@ contains
       call invort ( ctx, injacb, jacobi )
 
       return
-      end procedure dsphdr
+      end subroutine dsphdr
 
+      !> Compute the state (position and velocity) of an object whose
+      !> trajectory is described via equinoctial elements relative to some
+      !> fixed plane (usually the equatorial plane of some planet).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch (ephemeris time) at which the state
@@ -3268,15 +3372,18 @@ contains
       !>        'Declarations_of_external_functions'.
       !>
       !>-    SPICELIB Version 1.0.0, 08-JAN-1997 (WLT) (RAJ)
-      module procedure eqncpv
+      module subroutine eqncpv ( ctx, et, epoch, eqel, rapol, decpol, state )
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
       use pepper_math, only: mxv
       implicit none
-
-!
-!     SPICELIB Functions.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch in seconds past J2000 to find state
+      real(wp), intent(in) :: epoch  !! Epoch of elements in seconds past J2000
+      real(wp), intent(in) :: eqel ( 9 )  !! Array of equinoctial elements
+      real(wp), intent(in) :: rapol  !! Right Ascension of the pole of the reference plane
+      real(wp), intent(in) :: decpol  !! Declination of the pole of the reference plane
+      real(wp), intent(out) :: state ( 6 )  !! State of the object described by EQEL.
 
       real(wp) :: a
       real(wp) :: b
@@ -3573,8 +3680,12 @@ contains
       call mxv ( trans, xhold(4), state(4) )
 
       return
-      end procedure eqncpv
+      end subroutine eqncpv
 
+      !> Scale a point so that it lies on the surface of a specified
+      !> triaxial ellipsoid that is centered at the origin and aligned
+      !> with the Cartesian coordinate axes.
+      !>
       !>## Detailed Input
       !>
       !>     P        is a non-zero point in three-dimensional space.
@@ -3636,40 +3747,42 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EDPNT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EDPNT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1 = '(A,F18.14)'  )
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1 = '(A,F18.14)'  )
       !>
-      !>              CHARACTER*(*)         FMT3
-      !>              PARAMETER           ( FMT3 = '(A,3F18.14)' )
+      !>      CHARACTER*(*)         FMT3
+      !>      PARAMETER           ( FMT3 = '(A,3F18.14)' )
       !>
-      !>              DOUBLE PRECISION      A
-      !>              DOUBLE PRECISION      B
-      !>              DOUBLE PRECISION      C
-      !>              DOUBLE PRECISION      V      ( 3 )
-      !>              DOUBLE PRECISION      EP     ( 3 )
-      !>              DOUBLE PRECISION      LEVEL
+      !>      DOUBLE PRECISION      A
+      !>      DOUBLE PRECISION      B
+      !>      DOUBLE PRECISION      C
+      !>      DOUBLE PRECISION      V      ( 3 )
+      !>      DOUBLE PRECISION      EP     ( 3 )
+      !>      DOUBLE PRECISION      LEVEL
       !>
-      !>              A = 3.D0
-      !>              B = 2.D0
-      !>              C = 1.D0
+      !>      A = 3.D0
+      !>      B = 2.D0
+      !>      C = 1.D0
       !>
-      !>              CALL VPACK ( 1.D0, 1.D0, 1.D0, V )
+      !>      CALL VPACK ( 1.D0, 1.D0, 1.D0, V )
       !>
-      !>              CALL EDPNT ( V, A, B, C, EP )
+      !>      CALL EDPNT ( V, A, B, C, EP )
       !>
-      !>              WRITE (*,FMT3) 'EP    = ', EP
+      !>      WRITE (*,FMT3) 'EP    = ', EP
       !>
-      !>        C
-      !>        C     Verify that EP is on the ellipsoid.
-      !>        C
-      !>              LEVEL = (EP(1)/A)**2 + (EP(2)/B)**2 + (EP(3)/C)**2
+      !>C
+      !>C     Verify that EP is on the ellipsoid.
+      !>C
+      !>      LEVEL = (EP(1)/A)**2 + (EP(2)/B)**2 + (EP(3)/C)**2
       !>
-      !>              WRITE (*,FMT1) 'LEVEL = ', LEVEL
+      !>      WRITE (*,FMT1) 'LEVEL = ', LEVEL
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -3698,9 +3811,15 @@ contains
       !>        Minor edits to the header and code example.
       !>
       !>-    SPICELIB Version 2.0.0, 19-APR-2016 (NJB) (EDW)
-      module procedure edpnt
+      module subroutine edpnt ( ctx, p, a, b, c, ep )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: p  ( 3 )  !! A point in three-dimensional space.
+      real(wp), intent(in) :: a  !! Semi-axis length in the X direction.
+      real(wp), intent(in) :: b  !! Semi-axis length in the Y direction.
+      real(wp), intent(in) :: c  !! Semi-axis length in the Z direction.
+      real(wp), intent(out) :: ep ( 3 )  !! Point on ellipsoid.
 
       real(wp) :: level
       real(wp) :: sq
@@ -3767,8 +3886,11 @@ contains
       ep(3) = p(3) / sq
 
       return
-      end procedure edpnt
+      end subroutine edpnt
 
+      !> Return the unique point on an ellipsoid's surface where the
+      !> outward normal direction is a given vector.
+      !>
       !>## Detailed Input
       !>
       !>     A        is the length of the semi-axis of the ellipsoid
@@ -3860,107 +3982,109 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EDNMPT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EDNMPT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      VSEP
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      VSEP
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1 = '(A,F14.8)'  )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1 = '(A,F14.8)'  )
       !>
-      !>              CHARACTER*(*)         FMT3
-      !>              PARAMETER           ( FMT3 = '(A,3F14.8)' )
+      !>      CHARACTER*(*)         FMT3
+      !>      PARAMETER           ( FMT3 = '(A,3F14.8)' )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      A
-      !>              DOUBLE PRECISION      B
-      !>              DOUBLE PRECISION      C
-      !>              DOUBLE PRECISION      NORMAL ( 3 )
-      !>              DOUBLE PRECISION      POINT  ( 3 )
-      !>              DOUBLE PRECISION      XNORML ( 3 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      A
+      !>      DOUBLE PRECISION      B
+      !>      DOUBLE PRECISION      C
+      !>      DOUBLE PRECISION      NORMAL ( 3 )
+      !>      DOUBLE PRECISION      POINT  ( 3 )
+      !>      DOUBLE PRECISION      XNORML ( 3 )
       !>
-      !>        C
-      !>        C     Initialize the ellipsoid semi-axes.
-      !>        C
-      !>              A = 10.D0
-      !>              B =  5.D0
-      !>              C =  2.D0
+      !>C
+      !>C     Initialize the ellipsoid semi-axes.
+      !>C
+      !>      A = 10.D0
+      !>      B =  5.D0
+      !>      C =  2.D0
       !>
-      !>        C
-      !>        C     Pick several vectors; find the points
-      !>        C     on the ellipsoid where the respective
-      !>        C     outward normals are parallel to those
-      !>        C     vectors; check the results.
-      !>        C
-      !>              CALL VPACK  ( 0.D0, 0.D0, 3.D0, XNORML )
-      !>              CALL EDNMPT ( A,    B,    C,    XNORML, POINT  )
-      !>              CALL SURFNM ( A,    B,    C,    POINT,  NORMAL )
+      !>C
+      !>C     Pick several vectors; find the points
+      !>C     on the ellipsoid where the respective
+      !>C     outward normals are parallel to those
+      !>C     vectors; check the results.
+      !>C
+      !>      CALL VPACK  ( 0.D0, 0.D0, 3.D0, XNORML )
+      !>      CALL EDNMPT ( A,    B,    C,    XNORML, POINT  )
+      !>      CALL SURFNM ( A,    B,    C,    POINT,  NORMAL )
       !>
-      !>              WRITE (*,*   ) ' '
-      !>              WRITE (*,FMT3) 'Semi-axis lengths:   ', A, B, C
-      !>              WRITE (*,FMT3) 'Input vector:        ', XNORML
-      !>              WRITE (*,FMT3) 'Point:               ', POINT
-      !>              WRITE (*,FMT3) 'Outward normal:      ', NORMAL
-      !>              WRITE (*,FMT1) 'Angular error (rad): ', VSEP(NORMAL,
-      !>             .                                          XNORML )
-      !>              WRITE (*,FMT1) 'Off-surface error:   ',
-      !>             .                 (POINT(1)/A)**2 + (POINT(2)/B)**2
-      !>             .               + (POINT(3)/C)**2 - 1
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*   ) ' '
+      !>      WRITE (*,FMT3) 'Semi-axis lengths:   ', A, B, C
+      !>      WRITE (*,FMT3) 'Input vector:        ', XNORML
+      !>      WRITE (*,FMT3) 'Point:               ', POINT
+      !>      WRITE (*,FMT3) 'Outward normal:      ', NORMAL
+      !>      WRITE (*,FMT1) 'Angular error (rad): ', VSEP(NORMAL,
+      !>     .                                          XNORML )
+      !>      WRITE (*,FMT1) 'Off-surface error:   ',
+      !>     .                 (POINT(1)/A)**2 + (POINT(2)/B)**2
+      !>     .               + (POINT(3)/C)**2 - 1
+      !>      WRITE (*,*) ' '
       !>
-      !>              CALL VPACK  ( 15.D0, -7.D0, 3.D0, XNORML )
-      !>              CALL EDNMPT ( A,      B,    C,    XNORML, POINT  )
-      !>              CALL SURFNM ( A,      B,    C,    POINT,  NORMAL )
+      !>      CALL VPACK  ( 15.D0, -7.D0, 3.D0, XNORML )
+      !>      CALL EDNMPT ( A,      B,    C,    XNORML, POINT  )
+      !>      CALL SURFNM ( A,      B,    C,    POINT,  NORMAL )
       !>
-      !>              WRITE (*,FMT3) 'Semi-axis lengths:   ', A, B, C
-      !>              WRITE (*,FMT3) 'Input vector:        ', XNORML
-      !>              WRITE (*,FMT3) 'Point:               ', POINT
-      !>              WRITE (*,FMT3) 'Outward normal:      ', NORMAL
-      !>              WRITE (*,FMT1) 'Angular error (rad): ', VSEP(NORMAL,
-      !>             .                                             XNORML )
-      !>              WRITE (*,FMT1) 'Off-surface error:   ',
-      !>             .                 (POINT(1)/A)**2 + (POINT(2)/B)**2
-      !>             .               + (POINT(3)/C)**2 - 1
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,FMT3) 'Semi-axis lengths:   ', A, B, C
+      !>      WRITE (*,FMT3) 'Input vector:        ', XNORML
+      !>      WRITE (*,FMT3) 'Point:               ', POINT
+      !>      WRITE (*,FMT3) 'Outward normal:      ', NORMAL
+      !>      WRITE (*,FMT1) 'Angular error (rad): ', VSEP(NORMAL,
+      !>     .                                             XNORML )
+      !>      WRITE (*,FMT1) 'Off-surface error:   ',
+      !>     .                 (POINT(1)/A)**2 + (POINT(2)/B)**2
+      !>     .               + (POINT(3)/C)**2 - 1
+      !>      WRITE (*,*) ' '
       !>
-      !>              CALL VPACK  ( 15.D0, -7.D0, 3.D0, XNORML )
-      !>              CALL EDNMPT ( A,      B,    C,    XNORML, POINT  )
-      !>              CALL SURFNM ( A,      B,    C,    POINT,  NORMAL )
+      !>      CALL VPACK  ( 15.D0, -7.D0, 3.D0, XNORML )
+      !>      CALL EDNMPT ( A,      B,    C,    XNORML, POINT  )
+      !>      CALL SURFNM ( A,      B,    C,    POINT,  NORMAL )
       !>
-      !>              WRITE (*,FMT3) 'Semi-axis lengths:   ', A, B, C
-      !>              WRITE (*,FMT3) 'Input vector:        ', XNORML
-      !>              WRITE (*,FMT3) 'Point:               ', POINT
-      !>              WRITE (*,FMT3) 'Outward normal:      ', NORMAL
-      !>              WRITE (*,FMT1) 'Angular error (rad): ', VSEP(NORMAL,
-      !>             .                                             XNORML )
-      !>              WRITE (*,FMT1) 'Off-surface error:   ',
-      !>             .                 (POINT(1)/A)**2 + (POINT(2)/B)**2
-      !>             .               + (POINT(3)/C)**2 - 1
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,FMT3) 'Semi-axis lengths:   ', A, B, C
+      !>      WRITE (*,FMT3) 'Input vector:        ', XNORML
+      !>      WRITE (*,FMT3) 'Point:               ', POINT
+      !>      WRITE (*,FMT3) 'Outward normal:      ', NORMAL
+      !>      WRITE (*,FMT1) 'Angular error (rad): ', VSEP(NORMAL,
+      !>     .                                             XNORML )
+      !>      WRITE (*,FMT1) 'Off-surface error:   ',
+      !>     .                 (POINT(1)/A)**2 + (POINT(2)/B)**2
+      !>     .               + (POINT(3)/C)**2 - 1
+      !>      WRITE (*,*) ' '
       !>
-      !>              CALL VPACK  ( A/2, B/2,  C/2, XNORML )
-      !>              CALL EDNMPT ( A,   B,    C,   XNORML, POINT  )
-      !>              CALL SURFNM ( A,   B,    C,   POINT,  NORMAL )
+      !>      CALL VPACK  ( A/2, B/2,  C/2, XNORML )
+      !>      CALL EDNMPT ( A,   B,    C,   XNORML, POINT  )
+      !>      CALL SURFNM ( A,   B,    C,   POINT,  NORMAL )
       !>
-      !>              WRITE (*,FMT3) 'Semi-axis lengths:   ', A, B, C
-      !>              WRITE (*,FMT3) 'Input vector:        ', XNORML
-      !>              WRITE (*,FMT3) 'Point:               ', POINT
-      !>              WRITE (*,FMT3) 'Outward normal:      ', NORMAL
-      !>              WRITE (*,FMT1) 'Angular error (rad): ', VSEP(NORMAL,
-      !>             .                                             XNORML )
-      !>              WRITE (*,FMT1) 'Off-surface error:   ',
-      !>             .                 (POINT(1)/A)**2 + (POINT(2)/B)**2
-      !>             .               + (POINT(3)/C)**2 - 1
-      !>              WRITE (*,*) ' '
-      !>              END
+      !>      WRITE (*,FMT3) 'Semi-axis lengths:   ', A, B, C
+      !>      WRITE (*,FMT3) 'Input vector:        ', XNORML
+      !>      WRITE (*,FMT3) 'Point:               ', POINT
+      !>      WRITE (*,FMT3) 'Outward normal:      ', NORMAL
+      !>      WRITE (*,FMT1) 'Angular error (rad): ', VSEP(NORMAL,
+      !>     .                                             XNORML )
+      !>      WRITE (*,FMT1) 'Off-surface error:   ',
+      !>     .                 (POINT(1)/A)**2 + (POINT(2)/B)**2
+      !>     .               + (POINT(3)/C)**2 - 1
+      !>      WRITE (*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4017,9 +4141,15 @@ contains
       !>        output to fit in the $Examples section without modifications.
       !>
       !>-    SPICELIB Version 1.0.0, 17-MAY-2016 (NJB) (WLT)
-      module procedure ednmpt
+      module subroutine ednmpt ( ctx, a, b, c, normal, point )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: a  !! Length of the ellipsoid semi-axis along the X-axis.
+      real(wp), intent(in) :: b  !! Length of the ellipsoid semi-axis along the Y-axis.
+      real(wp), intent(in) :: c  !! Length of the ellipsoid semi-axis along the Z-axis.
+      real(wp), intent(in) :: normal ( 3 )  !! Outward normal direction.
+      real(wp), intent(out) :: point  ( 3 )  !! Point where outward normal is parallel to NORMAL.
 
       real(wp) :: arg
       real(wp) :: lambda
@@ -4151,8 +4281,12 @@ contains
       point(2) = lambda * nb2
       point(3) = lambda * nc2
 
-      end procedure ednmpt
+      end subroutine ednmpt
 
+      !> Solve the time of flight equation MA = E - e sin(E) for the
+      !> elliptic eccentric anomaly E, given mean anomaly the MA and
+      !> the eccentricity ECC.
+      !>
       !>## Detailed Input
       !>
       !>     MA       is the elliptic mean anomaly of an orbiting body at
@@ -4245,11 +4379,15 @@ contains
       !>
       !>        The routine now verifies that the eccentricity is in the
       !>        proper range---[0,1)---before proceeding.
-      module procedure elltof
+      module subroutine elltof ( ctx, ma, ecc, e )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, pi, twopi
       use pepper_math, only: dcbrt
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: ma  !! Mean anomaly at epoch.
+      real(wp), intent(in) :: ecc  !! Eccentricity.
+      real(wp), intent(out) :: e  !! Elliptic eccentric anomaly.
 
       real(wp), parameter :: tol = 1.0e-15_wp
 
@@ -4439,8 +4577,12 @@ contains
       end if
 
       return
-      end procedure elltof
+      end subroutine elltof
 
+      !> Evaluate, at a specified point, a Hermite interpolating polynomial
+      !> for a specified set of equally spaced abscissa values and
+      !> corresponding pairs of function and function derivative values.
+      !>
       !>## Detailed Input
       !>
       !>     N        is the number of points defining the polynomial.
@@ -4548,37 +4690,39 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM HRMESP_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>       PROGRAM HRMESP_EX1
+      !>       IMPLICIT NONE
       !>
-      !>              DOUBLE PRECISION      ANSWER
-      !>              DOUBLE PRECISION      DERIV
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      YVALS (8)
-      !>              DOUBLE PRECISION      WORK  (8,2)
-      !>              INTEGER               N
+      !>       DOUBLE PRECISION      ANSWER
+      !>       DOUBLE PRECISION      DERIV
+      !>       DOUBLE PRECISION      FIRST
+      !>       DOUBLE PRECISION      STEP
+      !>       DOUBLE PRECISION      YVALS (8)
+      !>       DOUBLE PRECISION      WORK  (8,2)
+      !>       INTEGER               N
       !>
-      !>              N         =       4
+      !>       N         =       4
       !>
-      !>              YVALS(1)  =       6.D0
-      !>              YVALS(2)  =       3.D0
-      !>              YVALS(3)  =       8.D0
-      !>              YVALS(4)  =      11.D0
-      !>              YVALS(5)  =    2210.D0
-      !>              YVALS(6)  =    5115.D0
-      !>              YVALS(7)  =   78180.D0
-      !>              YVALS(8)  =  109395.D0
+      !>       YVALS(1)  =       6.D0
+      !>       YVALS(2)  =       3.D0
+      !>       YVALS(3)  =       8.D0
+      !>       YVALS(4)  =      11.D0
+      !>       YVALS(5)  =    2210.D0
+      !>       YVALS(6)  =    5115.D0
+      !>       YVALS(7)  =   78180.D0
+      !>       YVALS(8)  =  109395.D0
       !>
-      !>              FIRST     =  -1.D0
-      !>              STEP      =   2.D0
+      !>       FIRST     =  -1.D0
+      !>       STEP      =   2.D0
       !>
-      !>              CALL HRMESP ( N,    FIRST, STEP,   YVALS,
-      !>             .              2.D0, WORK,  ANSWER, DERIV )
+      !>       CALL HRMESP ( N,    FIRST, STEP,   YVALS,
+      !>      .              2.D0, WORK,  ANSWER, DERIV )
       !>
-      !>              WRITE (*,*) 'ANSWER = ', ANSWER
-      !>              WRITE (*,*) 'DERIV  = ', DERIV
-      !>              END
+      !>       WRITE (*,*) 'ANSWER = ', ANSWER
+      !>       WRITE (*,*) 'DERIV  = ', DERIV
+      !>       END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4630,9 +4774,18 @@ contains
       !>        suppress compilation warnings on the SGI-N32 platform.
       !>
       !>-    SPICELIB Version 1.0.0, 01-MAR-2000 (NJB)
-      module procedure hrmesp
+      module subroutine hrmesp ( ctx, n, first, step, yvals, x, work, f, df )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of points defining the polynomial.
+      real(wp), intent(in) :: first  !! First abscissa value.
+      real(wp), intent(in) :: step  !! Step size.
+      real(wp), intent(in) :: yvals ( 2*n )  !! Ordinate and derivative values.
+      real(wp), intent(in) :: x  !! Point at which to interpolate the polynomial.
+      real(wp), intent(inout) :: work  ( 2*n, 2 )  !! Work space array.
+      real(wp), intent(out) :: f  !! Interpolated function value at X.
+      real(wp), intent(out) :: df  !! Interpolated function's derivative at X.
 
       real(wp) :: c1
       real(wp) :: c2
@@ -4815,8 +4968,11 @@ contains
       df  =  work( 1, 2 )  /  step
 
       return
-      end procedure hrmesp
+      end subroutine hrmesp
 
+      !> Evaluate a Hermite interpolating polynomial at a specified
+      !> abscissa value.
+      !>
       !>## Detailed Input
       !>
       !>     N        is the number of points defining the polynomial.
@@ -4919,39 +5075,41 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM HRMINT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>       PROGRAM HRMINT_EX1
+      !>       IMPLICIT NONE
       !>
-      !>              DOUBLE PRECISION      ANSWER
-      !>              DOUBLE PRECISION      DERIV
-      !>              DOUBLE PRECISION      XVALS (4)
-      !>              DOUBLE PRECISION      YVALS (8)
-      !>              DOUBLE PRECISION      WORK  (8,2)
-      !>              INTEGER               N
+      !>       DOUBLE PRECISION      ANSWER
+      !>       DOUBLE PRECISION      DERIV
+      !>       DOUBLE PRECISION      XVALS (4)
+      !>       DOUBLE PRECISION      YVALS (8)
+      !>       DOUBLE PRECISION      WORK  (8,2)
+      !>       INTEGER               N
       !>
-      !>              N         =   4
+      !>       N         =   4
       !>
-      !>              XVALS(1)  =      -1.D0
-      !>              XVALS(2)  =       0.D0
-      !>              XVALS(3)  =       3.D0
-      !>              XVALS(4)  =       5.D0
+      !>       XVALS(1)  =      -1.D0
+      !>       XVALS(2)  =       0.D0
+      !>       XVALS(3)  =       3.D0
+      !>       XVALS(4)  =       5.D0
       !>
-      !>              YVALS(1)  =       6.D0
-      !>              YVALS(2)  =       3.D0
-      !>              YVALS(3)  =       5.D0
-      !>              YVALS(4)  =       0.D0
-      !>              YVALS(5)  =    2210.D0
-      !>              YVALS(6)  =    5115.D0
-      !>              YVALS(7)  =   78180.D0
-      !>              YVALS(8)  =  109395.D0
+      !>       YVALS(1)  =       6.D0
+      !>       YVALS(2)  =       3.D0
+      !>       YVALS(3)  =       5.D0
+      !>       YVALS(4)  =       0.D0
+      !>       YVALS(5)  =    2210.D0
+      !>       YVALS(6)  =    5115.D0
+      !>       YVALS(7)  =   78180.D0
+      !>       YVALS(8)  =  109395.D0
       !>
-      !>              CALL HRMINT ( N, XVALS, YVALS, 2.D0, WORK, ANSWER,
-      !>             .                                           DERIV )
+      !>       CALL HRMINT ( N, XVALS, YVALS, 2.D0, WORK, ANSWER,
+      !>      .                                           DERIV )
       !>
-      !>              WRITE (*,*) 'ANSWER = ', ANSWER
-      !>              WRITE (*,*) 'DERIV  = ', DERIV
+      !>       WRITE (*,*) 'ANSWER = ', ANSWER
+      !>       WRITE (*,*) 'DERIV  = ', DERIV
       !>
-      !>              END
+      !>       END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5002,9 +5160,17 @@ contains
       !>        suppress compilation warnings on the SGI-N32 platform.
       !>
       !>-    SPICELIB Version 1.0.0, 01-MAR-2000 (NJB)
-      module procedure hrmint
+      module subroutine hrmint ( ctx, n, xvals, yvals, x, work, f, df )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of points defining the polynomial.
+      real(wp), intent(in) :: xvals (   n )  !! Abscissa values.
+      real(wp), intent(in) :: yvals ( 2*n )  !! Ordinate and derivative values.
+      real(wp), intent(in) :: x  !! Point at which to interpolate the polynomial.
+      real(wp), intent(inout) :: work  ( 2*n, 2 )  !! Work space array.
+      real(wp), intent(out) :: f  !! Interpolated function value at X.
+      real(wp), intent(out) :: df  !! Interpolated function's derivative at X.
 
       real(wp) :: c1
       real(wp) :: c2
@@ -5182,8 +5348,16 @@ contains
       df  =  work( 1, 2 )
 
       return
-      end procedure hrmint
+      end subroutine hrmint
 
+      !> Evaluate a Lagrange interpolating polynomial for a specified
+      !> set of coordinate pairs whose first components are equally
+      !> spaced, at a specified abscissa value.
+      !>
+      !> The function returns the value at X of the unique polynomial of
+      !> degree N-1 that fits the points in the plane defined by FIRST,
+      !> STEP, and YVALS.
+      !>
       !>## Detailed Input
       !>
       !>     N        is the number of points defining the polynomial. The
@@ -5298,31 +5472,33 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM LGRESP_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>       PROGRAM LGRESP_EX1
+      !>       IMPLICIT NONE
       !>
-      !>              DOUBLE PRECISION      LGRESP
-      !>              DOUBLE PRECISION      ANSWER
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      YVALS (4)
-      !>              DOUBLE PRECISION      WORK  (4)
-      !>              INTEGER               N
+      !>       DOUBLE PRECISION      LGRESP
+      !>       DOUBLE PRECISION      ANSWER
+      !>       DOUBLE PRECISION      FIRST
+      !>       DOUBLE PRECISION      STEP
+      !>       DOUBLE PRECISION      YVALS (4)
+      !>       DOUBLE PRECISION      WORK  (4)
+      !>       INTEGER               N
       !>
-      !>              N         =   4
-      !>              FIRST     =  -1.D0
-      !>              STEP      =   2.D0
+      !>       N         =   4
+      !>       FIRST     =  -1.D0
+      !>       STEP      =   2.D0
       !>
-      !>              YVALS(1)  =  -2.D0
-      !>              YVALS(2)  =  -8.D0
-      !>              YVALS(3)  =  26.D0
-      !>              YVALS(4)  = 148.D0
+      !>       YVALS(1)  =  -2.D0
+      !>       YVALS(2)  =  -8.D0
+      !>       YVALS(3)  =  26.D0
+      !>       YVALS(4)  = 148.D0
       !>
-      !>              ANSWER    =   LGRESP ( N,     FIRST, STEP,
-      !>             .                       YVALS, WORK,  2.D0 )
+      !>       ANSWER    =   LGRESP ( N,     FIRST, STEP,
+      !>      .                       YVALS, WORK,  2.D0 )
       !>
-      !>              WRITE (*,*) 'ANSWER = ', ANSWER
-      !>              END
+      !>       WRITE (*,*) 'ANSWER = ', ANSWER
+      !>       END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5336,31 +5512,33 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM LGRESP_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>       PROGRAM LGRESP_EX2
+      !>       IMPLICIT NONE
       !>
-      !>              DOUBLE PRECISION      LGRESP
-      !>              DOUBLE PRECISION      ANSWER
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      YVALS (4)
-      !>              DOUBLE PRECISION      WORK  (4)
-      !>              INTEGER               N
+      !>       DOUBLE PRECISION      LGRESP
+      !>       DOUBLE PRECISION      ANSWER
+      !>       DOUBLE PRECISION      FIRST
+      !>       DOUBLE PRECISION      STEP
+      !>       DOUBLE PRECISION      YVALS (4)
+      !>       DOUBLE PRECISION      WORK  (4)
+      !>       INTEGER               N
       !>
-      !>              N         =   4
-      !>              FIRST     =   5.D0
-      !>              STEP      =  -2.D0
+      !>       N         =   4
+      !>       FIRST     =   5.D0
+      !>       STEP      =  -2.D0
       !>
-      !>              YVALS(1)  = 148.D0
-      !>              YVALS(2)  =  26.D0
-      !>              YVALS(3)  =  -8.D0
-      !>              YVALS(4)  =  -2.D0
+      !>       YVALS(1)  = 148.D0
+      !>       YVALS(2)  =  26.D0
+      !>       YVALS(3)  =  -8.D0
+      !>       YVALS(4)  =  -2.D0
       !>
-      !>              ANSWER    =   LGRESP ( N,     FIRST, STEP,
-      !>             .                       YVALS, WORK,  2.D0 )
+      !>       ANSWER    =   LGRESP ( N,     FIRST, STEP,
+      !>      .                       YVALS, WORK,  2.D0 )
       !>
-      !>              WRITE (*,*) 'ANSWER = ', ANSWER
-      !>              END
+      !>       WRITE (*,*) 'ANSWER = ', ANSWER
+      !>       END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5405,9 +5583,16 @@ contains
       !>        documentation.
       !>
       !>-    SPICELIB Version 1.0.0, 14-AUG-1993 (NJB)
-      module procedure lgresp
+      module real(wp) function lgresp ( ctx, n, first, step, yvals, work, x )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of points defining the polynomial.
+      real(wp), intent(in) :: first  !! First abscissa value.
+      real(wp), intent(in) :: step  !! Step size.
+      real(wp), intent(in) :: yvals ( * )  !! Ordinate values.
+      real(wp), intent(inout) :: work  ( * )  !! Work space array.
+      real(wp), intent(in) :: x  !! Point at which to interpolate the polynomial.
 
       real(wp) :: c1
       real(wp) :: c2
@@ -5564,8 +5749,12 @@ contains
       lgresp = work(1)
 
       return
-      end procedure lgresp
+      end function lgresp
 
+      !> Evaluate a Lagrange interpolating polynomial, for a specified
+      !> set of coordinate pairs, at a specified abscissa value. Return
+      !> both the value of the polynomial and its derivative.
+      !>
       !>## Detailed Input
       !>
       !>     N        is the number of points defining the polynomial.
@@ -5677,33 +5866,35 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM LGRIND_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM LGRIND_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              DOUBLE PRECISION      P
-      !>              DOUBLE PRECISION      DP
-      !>              DOUBLE PRECISION      XVALS (4)
-      !>              DOUBLE PRECISION      YVALS (4)
-      !>              DOUBLE PRECISION      WORK  (4,2)
-      !>              INTEGER               N
+      !>      DOUBLE PRECISION      P
+      !>      DOUBLE PRECISION      DP
+      !>      DOUBLE PRECISION      XVALS (4)
+      !>      DOUBLE PRECISION      YVALS (4)
+      !>      DOUBLE PRECISION      WORK  (4,2)
+      !>      INTEGER               N
       !>
-      !>              N         =   4
+      !>      N         =   4
       !>
-      !>              XVALS(1)  =  -1
-      !>              XVALS(2)  =   0
-      !>              XVALS(3)  =   1
-      !>              XVALS(4)  =   3
+      !>      XVALS(1)  =  -1
+      !>      XVALS(2)  =   0
+      !>      XVALS(3)  =   1
+      !>      XVALS(4)  =   3
       !>
-      !>              YVALS(1)  =  -2
-      !>              YVALS(2)  =  -7
-      !>              YVALS(3)  =  -8
-      !>              YVALS(4)  =  26
+      !>      YVALS(1)  =  -2
+      !>      YVALS(2)  =  -7
+      !>      YVALS(3)  =  -8
+      !>      YVALS(4)  =  26
       !>
-      !>              CALL LGRIND ( N, XVALS, YVALS, WORK, 2.D0, P, DP )
+      !>      CALL LGRIND ( N, XVALS, YVALS, WORK, 2.D0, P, DP )
       !>
-      !>              WRITE (*,*) 'P, DP = ', P, DP
+      !>      WRITE (*,*) 'P, DP = ', P, DP
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5743,9 +5934,17 @@ contains
       !>        documentation.
       !>
       !>-    SPICELIB Version 1.0.0, 20-AUG-2002 (NJB)
-      module procedure lgrind
+      module subroutine lgrind ( ctx, n, xvals, yvals, work, x, p, dp )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of points defining the polynomial.
+      real(wp), intent(in) :: xvals ( n )  !! Abscissa values.
+      real(wp), intent(in) :: yvals ( n )  !! Ordinate values.
+      real(wp), intent(inout) :: work  ( n, 2 )  !! Work space array.
+      real(wp), intent(in) :: x  !! Point at which to interpolate the polynomial.
+      real(wp), intent(out) :: p  !! Polynomial value at X.
+      real(wp), intent(out) :: dp  !! Polynomial derivative at X.
 
       real(wp) :: c1
       real(wp) :: c2
@@ -5907,8 +6106,15 @@ contains
       dp =  work(1,2)
 
       return
-      end procedure lgrind
+      end subroutine lgrind
 
+      !> Evaluate a Lagrange interpolating polynomial for a specified
+      !> set of coordinate pairs, at a specified abscissa value.
+      !>
+      !> The function returns the value at X of the unique polynomial of
+      !> degree N-1 that fits the points in the plane defined by XVALS and
+      !> YVALS.
+      !>
       !>## Detailed Input
       !>
       !>     N        is the number of points defining the polynomial.
@@ -6011,32 +6217,34 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM LGRINT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM LGRINT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              DOUBLE PRECISION      LGRINT
-      !>              DOUBLE PRECISION      ANSWER
-      !>              DOUBLE PRECISION      XVALS (4)
-      !>              DOUBLE PRECISION      YVALS (4)
-      !>              DOUBLE PRECISION      WORK  (4)
-      !>              INTEGER               N
+      !>      DOUBLE PRECISION      LGRINT
+      !>      DOUBLE PRECISION      ANSWER
+      !>      DOUBLE PRECISION      XVALS (4)
+      !>      DOUBLE PRECISION      YVALS (4)
+      !>      DOUBLE PRECISION      WORK  (4)
+      !>      INTEGER               N
       !>
-      !>              N         =   4
+      !>      N         =   4
       !>
-      !>              XVALS(1)  =  -1.D0
-      !>              XVALS(2)  =   0.D0
-      !>              XVALS(3)  =   1.D0
-      !>              XVALS(4)  =   3.D0
+      !>      XVALS(1)  =  -1.D0
+      !>      XVALS(2)  =   0.D0
+      !>      XVALS(3)  =   1.D0
+      !>      XVALS(4)  =   3.D0
       !>
-      !>              YVALS(1)  =  -2.D0
-      !>              YVALS(2)  =  -7.D0
-      !>              YVALS(3)  =  -8.D0
-      !>              YVALS(4)  =  26.D0
+      !>      YVALS(1)  =  -2.D0
+      !>      YVALS(2)  =  -7.D0
+      !>      YVALS(3)  =  -8.D0
+      !>      YVALS(4)  =  26.D0
       !>
-      !>              ANSWER    =   LGRINT ( N, XVALS, YVALS, WORK, 2.D0 )
+      !>      ANSWER    =   LGRINT ( N, XVALS, YVALS, WORK, 2.D0 )
       !>
-      !>              WRITE (*,*) 'ANSWER = ', ANSWER
-      !>              END
+      !>      WRITE (*,*) 'ANSWER = ', ANSWER
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6076,9 +6284,15 @@ contains
       !>        documentation.
       !>
       !>-    SPICELIB Version 1.0.0, 16-AUG-1993 (NJB)
-      module procedure lgrint
+      module real(wp) function lgrint ( ctx, n, xvals, yvals, work, x )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of points defining the polynomial.
+      real(wp), intent(in) :: xvals ( * )  !! Abscissa values.
+      real(wp), intent(in) :: yvals ( * )  !! Ordinate values.
+      real(wp), intent(inout) :: work  ( * )  !! Work space array.
+      real(wp), intent(in) :: x  !! Point at which to interpolate the polynomial.
 
       real(wp) :: c1
       real(wp) :: c2
@@ -6225,8 +6439,13 @@ contains
       lgrint = work(1)
 
       return
-      end procedure lgrint
+      end function lgrint
 
+      !> Evaluate an indefinite integral of a Chebyshev expansion at a
+      !> specified point X and return the value of the input expansion at
+      !> X as well. The constant of integration is selected to make the
+      !> integral zero when X equals the abscissa value X2S(1).
+      !>
       !>## Detailed Input
       !>
       !>     DEGP     is the degree of the input Chebyshev expansion.
@@ -6379,76 +6598,78 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CHBIGR_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      CP    ( 6 )
-      !>              DOUBLE PRECISION      X
-      !>              DOUBLE PRECISION      X2S   ( 2 )
-      !>              DOUBLE PRECISION      P
-      !>              DOUBLE PRECISION      ITGRLP
+      !>```fortran
+      !>      PROGRAM CHBIGR_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      CP    ( 6 )
+      !>      DOUBLE PRECISION      X
+      !>      DOUBLE PRECISION      X2S   ( 2 )
+      !>      DOUBLE PRECISION      P
+      !>      DOUBLE PRECISION      ITGRLP
       !>
-      !>              INTEGER               DEGP
+      !>      INTEGER               DEGP
       !>
-      !>        C
-      !>        C     Let our domain be the interval [10, 30].
-      !>        C
-      !>              X2S(1) = 20.D0
-      !>              X2S(2) = 10.D0
+      !>C
+      !>C     Let our domain be the interval [10, 30].
+      !>C
+      !>      X2S(1) = 20.D0
+      !>      X2S(2) = 10.D0
       !>
-      !>        C
-      !>        C     Assign the expansion coefficients.
-      !>        C
-      !>              DEGP  = 5
+      !>C
+      !>C     Assign the expansion coefficients.
+      !>C
+      !>      DEGP  = 5
       !>
-      !>              CP(1) = 0.D0
-      !>              CP(2) = 3.75D0
-      !>              CP(3) = 0.D0
-      !>              CP(4) = 1.875D0
-      !>              CP(5) = 0.D0
-      !>              CP(6) = 0.375D0
+      !>      CP(1) = 0.D0
+      !>      CP(2) = 3.75D0
+      !>      CP(3) = 0.D0
+      !>      CP(4) = 1.875D0
+      !>      CP(5) = 0.D0
+      !>      CP(6) = 0.375D0
       !>
-      !>        C
-      !>        C     Evaluate the function and its integral at X = 30.
-      !>        C
-      !>              X = 30.D0
+      !>C
+      !>C     Evaluate the function and its integral at X = 30.
+      !>C
+      !>      X = 30.D0
       !>
-      !>              CALL CHBIGR ( DEGP, CP, X2S, X, P, ITGRLP )
+      !>      CALL CHBIGR ( DEGP, CP, X2S, X, P, ITGRLP )
       !>
-      !>        C
-      !>        C     We make the change of variables
-      !>        C
-      !>        C        S(X) = (1/10) * ( X - 20 )
-      !>        C
-      !>        C     The expansion represents the polynomial
-      !>        C
-      !>        C                         5
-      !>        C        f(X) = g(S) = 6*S
-      !>        C
-      !>        C     An indefinite integral of the expansion is
-      !>        C
-      !>        C                                    6
-      !>        C        F(X) = G(S) * dX/dS = 10 * S
-      !>        C
-      !>        C     where G is defined on the interval [-1, 1]. The result
-      !>        C     should be (due to the change of variables)
-      !>        C
-      !>        C          (G(1)  - G(0) ) * dX/dS
-      !>        C
-      !>        C        = (F(30) - F(20)) * 10
-      !>        C
-      !>        C        = 10
-      !>        C
-      !>        C     The value of the expansion at X should be
-      !>        C
-      !>        C        f(30) = g(1) = 6
-      !>        C
-      !>              WRITE (*,*) 'ITGRLP = ', ITGRLP
-      !>              WRITE (*,*) 'P      = ', P
+      !>C
+      !>C     We make the change of variables
+      !>C
+      !>C        S(X) = (1/10) * ( X - 20 )
+      !>C
+      !>C     The expansion represents the polynomial
+      !>C
+      !>C                         5
+      !>C        f(X) = g(S) = 6*S
+      !>C
+      !>C     An indefinite integral of the expansion is
+      !>C
+      !>C                                    6
+      !>C        F(X) = G(S) * dX/dS = 10 * S
+      !>C
+      !>C     where G is defined on the interval [-1, 1]. The result
+      !>C     should be (due to the change of variables)
+      !>C
+      !>C          (G(1)  - G(0) ) * dX/dS
+      !>C
+      !>C        = (F(30) - F(20)) * 10
+      !>C
+      !>C        = 10
+      !>C
+      !>C     The value of the expansion at X should be
+      !>C
+      !>C        f(30) = g(1) = 6
+      !>C
+      !>      WRITE (*,*) 'ITGRLP = ', ITGRLP
+      !>      WRITE (*,*) 'P      = ', P
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6505,9 +6726,16 @@ contains
       !>        the description of argument CP in $Detailed_Input.
       !>
       !>-    SPICELIB Version 1.0.0, 03-DEC-2013 (NJB)
-      module procedure chbigr
+      module subroutine chbigr ( ctx, degp, cp, x2s, x, p, itgrlp )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: degp  !! Degree of input Chebyshev expansion.
+      real(wp), intent(in) :: cp     ( * )  !! Chebyshev coefficients of input expansion.
+      real(wp), intent(in) :: x2s    ( 2 )  !! Transformation parameters.
+      real(wp), intent(in) :: x  !! Abscissa value of evaluation.
+      real(wp), intent(out) :: p  !! Input expansion evaluated at X.
+      real(wp), intent(out) :: itgrlp  !! Integral evaluated at X.
 
 !     Local variables
 !
@@ -6883,8 +7111,10 @@ contains
       itgrlp = x2s(2) * itgrlp
 
       return
-      end procedure chbigr
+      end subroutine chbigr
 
+      !> Find the intersection of an ellipse and a plane.
+      !>
       !>## Detailed Input
       !>
       !>     ELLIPS   is a SPICE ellipse. The ellipse is allowed to
@@ -6961,6 +7191,7 @@ contains
       !>         We assume that all vectors are given in body-fixed
       !>         coordinates.
       !>
+      !>```fortran
       !>            C
       !>            C     Find the limb of the ellipsoid as seen from the
       !>            C     point OBSERV. Here A, B, and C are the lengths of
@@ -7016,6 +7247,7 @@ contains
       !>            C     the two separations we've computed.
       !>            C
       !>                  ANGLE = MIN ( SEP1, SEP2 )
+      !>```
       !>
       !>## Restrictions
       !>
@@ -7092,14 +7324,20 @@ contains
       !>        Error handling code has been added to trap errors that had
       !>        been erroneously passed off to lower level routines for
       !>        diagnosis.
-      module procedure inelpl
+      module subroutine inelpl ( ctx, ellips, plane, nxpts, xpt1, xpt2 )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
       use pepper_math, only: el2cgv, pl2nvc, pl2nvp, vdot, vnormg, vsep
       implicit none
-
-
       integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubel = 9  !! number of elements of an ellipse
+      real(wp), intent(in) :: ellips ( ubel )  !! A SPICE ellipse.
+      real(wp), intent(in) :: plane  ( ubpl )  !! A SPICE plane.
+      integer(ip), intent(out) :: nxpts  !! Number of intersection points of plane and ellipse.
+      real(wp), intent(out) :: xpt1   ( 3 )  !! Intersection points.
+      real(wp), intent(out) :: xpt2   ( 3 )  !! Intersection points.
+
 
       real(wp), parameter :: seplim = 1.0e-9_wp
 
@@ -7380,8 +7618,10 @@ contains
       xpt2 = 1.0_wp*center + dcos(angle2)*smajor + dsin(angle2)*sminor
 
       return
-      end procedure inelpl
+      end subroutine inelpl
 
+      !> Find the intersection of a ray and a plane.
+      !>
       !>## Detailed Input
       !>
       !>     VERTEX,
@@ -7857,11 +8097,18 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 01-APR-1991 (NJB) (WLT)
-      module procedure inrypl
+      module subroutine inrypl ( ctx, vertex, dir, plane, nxpts, xpt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_math, only: pl2nvc, smsgnd, vdot, vhat, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
+      real(wp), intent(in) :: vertex (    3 )  !! Vertex and direction vector of ray.
+      real(wp), intent(in) :: dir    (    3 )  !! Vertex and direction vector of ray.
+      real(wp), intent(in) :: plane  ( ubpl )  !! A SPICE plane.
+      integer(ip), intent(out) :: nxpts  !! Number of intersection points of ray and plane.
+      real(wp), intent(out) :: xpt    (    3 )  !! Intersection point, if NXPTS = 1.
 
 
       real(wp), parameter :: margin = 3.0_wp
@@ -8100,8 +8347,13 @@ contains
       xpt = mscale*xpt
 
       return
-      end procedure inrypl
+      end subroutine inrypl
 
+      !> Construct the inverse of a 3x3 matrix with orthogonal columns and
+      !> non-zero column norms using a numerically stable algorithm. The
+      !> rows of the output matrix are the columns of the input matrix
+      !> divided by the length squared of the corresponding columns.
+      !>
       !>## Detailed Input
       !>
       !>     M        is a 3x3 matrix.
@@ -8174,59 +8426,61 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM INVORT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM INVORT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      IMAT ( 3, 3 )
-      !>              DOUBLE PRECISION      M    ( 3, 3 )
-      !>              DOUBLE PRECISION      MOUT ( 3, 3 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      IMAT ( 3, 3 )
+      !>      DOUBLE PRECISION      M    ( 3, 3 )
+      !>      DOUBLE PRECISION      MOUT ( 3, 3 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Define a matrix to invert.
-      !>        C
-      !>              DATA                  M  /  0.D0,  0.5D0, 0.D0,
-      !>             .                           -1.D0,  0.D0,  0.D0,
-      !>             .                            0.D0,  0.D0,  1.D0 /
+      !>C
+      !>C     Define a matrix to invert.
+      !>C
+      !>      DATA                  M  /  0.D0,  0.5D0, 0.D0,
+      !>     .                           -1.D0,  0.D0,  0.D0,
+      !>     .                            0.D0,  0.D0,  1.D0 /
       !>
-      !>              WRITE(*,*) 'Original Matrix:'
-      !>              DO I=1, 3
+      !>      WRITE(*,*) 'Original Matrix:'
+      !>      DO I=1, 3
       !>
-      !>                 WRITE(*,'(3F16.7)') ( M(I,J), J=1,3 )
+      !>         WRITE(*,'(3F16.7)') ( M(I,J), J=1,3 )
       !>
-      !>              END DO
-      !>        C
-      !>        C     Invert the matrix, then output.
-      !>        C
-      !>              CALL INVORT ( M, MOUT )
+      !>      END DO
+      !>C
+      !>C     Invert the matrix, then output.
+      !>C
+      !>      CALL INVORT ( M, MOUT )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Inverse Matrix:'
-      !>              DO I=1, 3
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Inverse Matrix:'
+      !>      DO I=1, 3
       !>
-      !>                 WRITE(*,'(3F16.7)') ( MOUT(I,J), J=1,3 )
+      !>         WRITE(*,'(3F16.7)') ( MOUT(I,J), J=1,3 )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Check the M times MOUT produces the identity matrix.
-      !>        C
-      !>              CALL MXM ( M, MOUT, IMAT )
+      !>C
+      !>C     Check the M times MOUT produces the identity matrix.
+      !>C
+      !>      CALL MXM ( M, MOUT, IMAT )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Original times inverse:'
-      !>              DO I=1, 3
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Original times inverse:'
+      !>      DO I=1, 3
       !>
-      !>                 WRITE(*,'(3F16.7)') ( IMAT(I,J), J=1,3 )
+      !>         WRITE(*,'(3F16.7)') ( IMAT(I,J), J=1,3 )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -8283,11 +8537,14 @@ contains
       !>        in VSCL call.
       !>
       !>-    SPICELIB Version 1.0.0, 02-JAN-2002 (WLT)
-      module procedure invort
+      module subroutine invort ( ctx, m, mit )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_math, only: unorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: m   ( 3, 3 )  !! A 3x3 matrix.
+      real(wp), intent(out) :: mit ( 3, 3 )  !! M after transposition and scaling of rows.
 
       real(wp), parameter :: bound = dpmax
       real(wp) :: length
@@ -8345,8 +8602,10 @@ contains
 !
       mit = transpose(temp)
       return
-      end procedure invort
+      end subroutine invort
 
+      !> Return the inverse of a state transformation matrix.
+      !>
       !>## Detailed Input
       !>
       !>     MAT      is a state transformation matrix for converting states
@@ -8441,80 +8700,82 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM INVSTM_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM INVSTM_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      INVMAT ( 6, 6 )
-      !>              DOUBLE PRECISION      ISTAT1 ( 6    )
-      !>              DOUBLE PRECISION      ISTAT2 ( 6    )
-      !>              DOUBLE PRECISION      MAT    ( 6, 6 )
-      !>              DOUBLE PRECISION      STATE  ( 6    )
-      !>              DOUBLE PRECISION      XMAT   ( 6, 6 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      INVMAT ( 6, 6 )
+      !>      DOUBLE PRECISION      ISTAT1 ( 6    )
+      !>      DOUBLE PRECISION      ISTAT2 ( 6    )
+      !>      DOUBLE PRECISION      MAT    ( 6, 6 )
+      !>      DOUBLE PRECISION      STATE  ( 6    )
+      !>      DOUBLE PRECISION      XMAT   ( 6, 6 )
       !>
-      !>              INTEGER               EARTH
+      !>      INTEGER               EARTH
       !>
-      !>        C
-      !>        C     Define the state of the spacecraft, in km and
-      !>        C     km/s, and the ET epoch, in seconds past J2000.
-      !>        C
-      !>              DATA                  ET    /  0.0D0 /
-      !>              DATA                  STATE /  175625246.29100420D0,
-      !>             .                               164189388.12540060D0,
-      !>             .                               -62935198.26067264D0,
-      !>             .                                   11946.73372264D0,
-      !>             .                                  -12771.29732556D0,
-      !>             .                                      13.84902914D0 /
+      !>C
+      !>C     Define the state of the spacecraft, in km and
+      !>C     km/s, and the ET epoch, in seconds past J2000.
+      !>C
+      !>      DATA                  ET    /  0.0D0 /
+      !>      DATA                  STATE /  175625246.29100420D0,
+      !>     .                               164189388.12540060D0,
+      !>     .                               -62935198.26067264D0,
+      !>     .                                   11946.73372264D0,
+      !>     .                                  -12771.29732556D0,
+      !>     .                                      13.84902914D0 /
       !>
-      !>        C
-      !>        C     Load the required high precision Earth PCK.
-      !>        C
-      !>              CALL FURNSH ( 'earth_720101_070426.bpc' )
+      !>C
+      !>C     Load the required high precision Earth PCK.
+      !>C
+      !>      CALL FURNSH ( 'earth_720101_070426.bpc' )
       !>
-      !>        C
-      !>        C     First get the state transformation from J2000 frame
-      !>        C     to Earth body-fixed frame at the time of interest ET.
-      !>        C     The body ID code used in high precision PCK files for
-      !>        C     the Earth is 3000; this number indicates that the
-      !>        C     terrestrial frame used is ITRF93.
-      !>        C
-      !>              EARTH = 3000
-      !>              CALL TISBOD ( 'J2000', EARTH, ET, MAT )
+      !>C
+      !>C     First get the state transformation from J2000 frame
+      !>C     to Earth body-fixed frame at the time of interest ET.
+      !>C     The body ID code used in high precision PCK files for
+      !>C     the Earth is 3000; this number indicates that the
+      !>C     terrestrial frame used is ITRF93.
+      !>C
+      !>      EARTH = 3000
+      !>      CALL TISBOD ( 'J2000', EARTH, ET, MAT )
       !>
-      !>        C
-      !>        C     Get the inverse of MAT.
-      !>        C
-      !>              CALL INVSTM ( MAT,  INVMAT          )
+      !>C
+      !>C     Get the inverse of MAT.
+      !>C
+      !>      CALL INVSTM ( MAT,  INVMAT          )
       !>
-      !>        C
-      !>        C     Transform from bodyfixed state to inertial state.
-      !>        C
-      !>              CALL MXVG ( INVMAT, STATE, 6, 6, ISTAT1 )
+      !>C
+      !>C     Transform from bodyfixed state to inertial state.
+      !>C
+      !>      CALL MXVG ( INVMAT, STATE, 6, 6, ISTAT1 )
       !>
-      !>        C
-      !>        C     Print the resulting state.
-      !>        C
-      !>              WRITE(*,'(A)') 'Input state in Earth centered J2000 '
-      !>             .            // 'frame, using INVSTM:'
-      !>              WRITE(*,'(A,3F16.3)') '   Position:', ISTAT1(1:3)
-      !>              WRITE(*,'(A,3F16.3)') '   Velocity:', ISTAT1(4:6)
+      !>C
+      !>C     Print the resulting state.
+      !>C
+      !>      WRITE(*,'(A)') 'Input state in Earth centered J2000 '
+      !>     .            // 'frame, using INVSTM:'
+      !>      WRITE(*,'(A,3F16.3)') '   Position:', ISTAT1(1:3)
+      !>      WRITE(*,'(A,3F16.3)') '   Velocity:', ISTAT1(4:6)
       !>
-      !>        C
-      !>        C     Compute the same state using SXFORM.
-      !>        C
-      !>              CALL SXFORM ( 'ITRF93', 'J2000', ET, XMAT )
-      !>              CALL MXVG   ( XMAT, STATE, 6, 6, ISTAT2 )
+      !>C
+      !>C     Compute the same state using SXFORM.
+      !>C
+      !>      CALL SXFORM ( 'ITRF93', 'J2000', ET, XMAT )
+      !>      CALL MXVG   ( XMAT, STATE, 6, 6, ISTAT2 )
       !>
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'Input state in Earth centered J2000 '
-      !>             .            // 'frame, using SXFORM:'
-      !>              WRITE(*,'(A,3F16.3)') '   Position:', ISTAT2(1:3)
-      !>              WRITE(*,'(A,3F16.3)') '   Velocity:', ISTAT2(4:6)
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'Input state in Earth centered J2000 '
+      !>     .            // 'frame, using SXFORM:'
+      !>      WRITE(*,'(A,3F16.3)') '   Position:', ISTAT2(1:3)
+      !>      WRITE(*,'(A,3F16.3)') '   Velocity:', ISTAT2(4:6)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -8565,9 +8826,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 29-OCT-1990 (WLT)
-      module procedure invstm
+      module subroutine invstm ( ctx, mat, invmat )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: mat    ( 6, 6 )  !! A state transformation matrix.
+      real(wp), intent(out) :: invmat ( 6, 6 )  !! The inverse of MAT.
 
       integer(ip), parameter :: nrows = 6
 
@@ -8581,8 +8845,12 @@ contains
       call xposbl ( ctx, mat, nrows, ncols, block, invmat )
 
       return
-      end procedure invstm
+      end subroutine invstm
 
+      !> Indicate whether a 3x3 matrix is a rotation matrix.
+      !>
+      !> The function returns .TRUE. if and only if M is a rotation matrix.
+      !>
       !>## Detailed Input
       !>
       !>     M        is a 3x3 matrix to be tested.
@@ -8734,10 +9002,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 06-SEP-1990 (NJB)
-      module procedure isrot
+      module logical function isrot ( ctx, m, ntol, dtol )
       use pepper_kinds, only: wp
       use pepper_math, only: det, unorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: m    ( 3, 3 )  !! A matrix to be tested.
+      real(wp), intent(in) :: ntol  !! Tolerance for the norms of the columns of M.
+      real(wp), intent(in) :: dtol  !! Tolerance for the determinant of a matrix whose columns
+                                    !! are the unitized columns of M.
 
       real(wp) :: d
       real(wp) :: n1
@@ -8807,8 +9080,14 @@ contains
       end if
 
       return
-      end procedure isrot
+      end function isrot
 
+      !> Solve the equinoctial version of Kepler's equation.
+      !>
+      !> The function returns the solution to the equinoctial version of
+      !> Kepler's equation, given the mean longitude and the h and k
+      !> components of the equinoctial elements.
+      !>
       !>## Detailed Input
       !>
       !>     ML       is the mean longitude of some body following two body
@@ -8890,9 +9169,13 @@ contains
       !>        $Procedure section for consistency with KPSOLV routine.
       !>
       !>-    SPICELIB Version 1.0.0, 11-DEC-1996 (WLT)
-      module procedure kepleq
+      module real(wp) function kepleq ( ctx, ml, h, k )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: ml  !! Mean longitude.
+      real(wp), intent(in) :: h  !! h component of equinoctial elements.
+      real(wp), intent(in) :: k  !! k component of equinoctial elements.
 
       real(wp) :: evec ( 2 )
       real(wp) :: e2
@@ -8979,8 +9262,14 @@ contains
       kepleq  =  ml         + kpsolv( ctx, evec )
 
       return
-      end procedure kepleq
+      end function kepleq
 
+      !> Solve the equation X = < EVEC, U(X) > where U(X) is the unit
+      !> vector [ COS(X), SIN(X) ] and  < , > denotes the two-dimensional
+      !> dot product.
+      !>
+      !> The function returns the solution to X = < EVEC, U(X) >
+      !>
       !>## Detailed Input
       !>
       !>     EVEC     is any two dimensional vector whose magnitude is
@@ -9065,9 +9354,11 @@ contains
       !>        a return value.
       !>
       !>-    SPICELIB Version 1.0.0, 03-JAN-1997 (WLT)
-      module procedure kpsolv
+      module real(wp) function kpsolv ( ctx, evec )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: evec ( 2 )  !! A 2-vector whose magnitude is less than 1.
 
 !
 !     MXNEWT is the number of iterations we will perform
@@ -9225,8 +9516,11 @@ contains
       kpsolv = x
 
       return
-      end procedure kpsolv
+      end function kpsolv
 
+      !> Find a unit quaternion corresponding to a specified rotation
+      !> matrix.
+      !>
       !>## Detailed Input
       !>
       !>     R        is a rotation matrix.
@@ -9612,9 +9906,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB)
-      module procedure m2q
+      module subroutine m2q ( ctx, r, q )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: r ( 3,  3 )  !! A rotation matrix.
+      real(wp), intent(out) :: q ( 0 : 3 )  !! A unit quaternion representing R.
 
 !
 !     NTOL and DETOL are used to determine whether R is a rotation
@@ -9795,8 +10092,11 @@ contains
       end if
 
       return
-      end procedure m2q
+      end subroutine m2q
 
+      !> Find the nearest point on a line to a specified point, and find
+      !> the distance between the two points.
+      !>
       !>## Detailed Input
       !>
       !>     LINPT,
@@ -9902,10 +10202,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 02-NOV-1990 (NJB)
-      module procedure nplnpt
+      module subroutine nplnpt ( ctx, linpt, lindir, point, pnear, dist )
       use pepper_kinds, only: wp
       use pepper_math, only: vdist, vproj
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: linpt  ( 3 )  !! Point on a line and the line's direction vector.
+      real(wp), intent(in) :: lindir ( 3 )  !! Point on a line and the line's direction vector.
+      real(wp), intent(in) :: point  ( 3 )  !! A second point.
+      real(wp), intent(out) :: pnear  ( 3 )  !! Nearest point on the line to POINT.
+      real(wp), intent(out) :: dist  !! Distance between POINT and PNEAR.
 
       real(wp) :: proj  ( 3 )
       real(wp) :: trans ( 3 )
@@ -9935,8 +10241,10 @@ contains
       dist = vdist ( pnear,  point )
 
       return
-      end procedure nplnpt
+      end subroutine nplnpt
 
+      !> Find the nearest point on a line segment to a given point.
+      !>
       !>## Detailed Input
       !>
       !>     EP1,
@@ -9981,46 +10289,48 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM NPSGPT_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1 = '(A,3F13.8)' )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      DIST
-      !>              DOUBLE PRECISION      ENDPT1 ( 3 )
-      !>              DOUBLE PRECISION      ENDPT2 ( 3 )
-      !>              DOUBLE PRECISION      PNEAR  ( 3 )
-      !>              DOUBLE PRECISION      POINT  ( 3 )
+      !>```fortran
+      !>      PROGRAM NPSGPT_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1 = '(A,3F13.8)' )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      DIST
+      !>      DOUBLE PRECISION      ENDPT1 ( 3 )
+      !>      DOUBLE PRECISION      ENDPT2 ( 3 )
+      !>      DOUBLE PRECISION      PNEAR  ( 3 )
+      !>      DOUBLE PRECISION      POINT  ( 3 )
       !>
-      !>        C
-      !>        C     Initialize the line segment's endpoints.
-      !>        C
-      !>              CALL VPACK ( 1.D0, -2.D0, 3.D0, ENDPT1 )
-      !>              CALL VPACK ( 1.D0,  2.D0, 3.D0, ENDPT2 )
-      !>        C
-      !>        C     Set the input point.
-      !>        C
-      !>              CALL VPACK ( 1.D0,  0.D0, 0.D0, POINT )
-      !>        C
-      !>        C     Find the near point on the segment.
-      !>        C
-      !>              CALL NPSGPT ( ENDPT1, ENDPT2, POINT, PNEAR, DIST )
+      !>C
+      !>C     Initialize the line segment's endpoints.
+      !>C
+      !>      CALL VPACK ( 1.D0, -2.D0, 3.D0, ENDPT1 )
+      !>      CALL VPACK ( 1.D0,  2.D0, 3.D0, ENDPT2 )
+      !>C
+      !>C     Set the input point.
+      !>C
+      !>      CALL VPACK ( 1.D0,  0.D0, 0.D0, POINT )
+      !>C
+      !>C     Find the near point on the segment.
+      !>C
+      !>      CALL NPSGPT ( ENDPT1, ENDPT2, POINT, PNEAR, DIST )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,FMT1) 'Endpoint 1:  ', ENDPT1
-      !>              WRITE (*,FMT1) 'Endpoint 2:  ', ENDPT2
-      !>              WRITE (*,FMT1) 'Point:       ', POINT
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,FMT1) 'Near point:  ', PNEAR
-      !>              WRITE (*,FMT1) 'Distance:    ', DIST
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,FMT1) 'Endpoint 1:  ', ENDPT1
+      !>      WRITE (*,FMT1) 'Endpoint 2:  ', ENDPT2
+      !>      WRITE (*,FMT1) 'Point:       ', POINT
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,FMT1) 'Near point:  ', PNEAR
+      !>      WRITE (*,FMT1) 'Distance:    ', DIST
+      !>      WRITE (*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -10054,10 +10364,16 @@ contains
       !>-    SPICELIB Version 1.0.0, 02-FEB-2016 (NJB)
       !>
       !>        Updated from DSKLIB Version 1.0.0, 20-MAR-2015 (NJB)
-      module procedure npsgpt
+      module subroutine npsgpt ( ctx, ep1, ep2, point, pnear, dist )
       use pepper_kinds, only: wp
       use pepper_math, only: vdist, vdot
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: ep1   ( 3 )  !! Endpoints of a line segment.
+      real(wp), intent(in) :: ep2   ( 3 )  !! Endpoints of a line segment.
+      real(wp), intent(in) :: point ( 3 )  !! A point in 3-dimensional space.
+      real(wp), intent(out) :: pnear ( 3 )  !! Nearest point on the line segment to POINT.
+      real(wp), intent(out) :: dist  !! Distance between PNEAR and POINT.
 
       real(wp) :: seg    ( 3 )
       real(wp) :: segdot
@@ -10142,8 +10458,10 @@ contains
       end if
 
       return
-      end procedure npsgpt
+      end subroutine npsgpt
 
+      !> Make a SPICE plane from a normal vector and a constant.
+      !>
       !>## Detailed Input
       !>
       !>     NORMAL,
@@ -10209,52 +10527,54 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM NVC2PL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM NVC2PL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 UBPL
-      !>              PARAMETER             ( UBPL =   4 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 UBPL
+      !>      PARAMETER             ( UBPL =   4 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        KONST
-      !>              DOUBLE PRECISION        PLANE  ( UBPL )
-      !>              DOUBLE PRECISION        NORMAL ( 3    )
-      !>              DOUBLE PRECISION        OKONST
-      !>              DOUBLE PRECISION        ONORML ( 3    )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        KONST
+      !>      DOUBLE PRECISION        PLANE  ( UBPL )
+      !>      DOUBLE PRECISION        NORMAL ( 3    )
+      !>      DOUBLE PRECISION        OKONST
+      !>      DOUBLE PRECISION        ONORML ( 3    )
       !>
-      !>        C
-      !>        C     Set the normal vector and the constant defining the
-      !>        C     plane.
-      !>        C
-      !>              DATA                    NORMAL /  1.D0, 1.D0, 1.D0 /
+      !>C
+      !>C     Set the normal vector and the constant defining the
+      !>C     plane.
+      !>C
+      !>      DATA                    NORMAL /  1.D0, 1.D0, 1.D0 /
       !>
-      !>              KONST = 23.D0
+      !>      KONST = 23.D0
       !>
-      !>              WRITE(*,'(A)') 'Inputs:'
-      !>              WRITE(*,'(A,3F12.7)') '   Normal vector:', NORMAL
-      !>              WRITE(*,'(A,F12.7)')  '   Constant     :', KONST
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,'(A)') 'Inputs:'
+      !>      WRITE(*,'(A,3F12.7)') '   Normal vector:', NORMAL
+      !>      WRITE(*,'(A,F12.7)')  '   Constant     :', KONST
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     Make a SPICE plane from NORMAL and KONST.
-      !>        C     NORMAL need not be a unit vector.
-      !>        C
-      !>              CALL NVC2PL ( NORMAL, KONST,  PLANE         )
+      !>C
+      !>C     Make a SPICE plane from NORMAL and KONST.
+      !>C     NORMAL need not be a unit vector.
+      !>C
+      !>      CALL NVC2PL ( NORMAL, KONST,  PLANE         )
       !>
-      !>        C
-      !>        C     Print the results.
-      !>        C
-      !>              CALL PL2NVC ( PLANE, ONORML, OKONST )
-      !>              WRITE(*,'(A)') 'Generated plane:'
-      !>              WRITE(*,'(A,3F12.7)') '   Normal vector:', ONORML
-      !>              WRITE(*,'(A,F12.7)')  '   Constant     :', OKONST
+      !>C
+      !>C     Print the results.
+      !>C
+      !>      CALL PL2NVC ( PLANE, ONORML, OKONST )
+      !>      WRITE(*,'(A)') 'Generated plane:'
+      !>      WRITE(*,'(A,3F12.7)') '   Normal vector:', ONORML
+      !>      WRITE(*,'(A,F12.7)')  '   Constant     :', OKONST
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -10274,96 +10594,98 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM NVC2PL_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM NVC2PL_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 UBPL
-      !>              PARAMETER             ( UBPL =   4 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 UBPL
+      !>      PARAMETER             ( UBPL =   4 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        AXDEF  ( 3    )
-      !>              DOUBLE PRECISION        KONST
-      !>              DOUBLE PRECISION        PLANE  ( UBPL )
-      !>              DOUBLE PRECISION        M      ( 3, 3 )
-      !>              DOUBLE PRECISION        NORMAL ( 3    )
-      !>              DOUBLE PRECISION        PLNDEF ( 3    )
-      !>              DOUBLE PRECISION        POINT  ( 3    )
-      !>              DOUBLE PRECISION        SPAN1  ( 3    )
-      !>              DOUBLE PRECISION        SPAN2  ( 3    )
-      !>              DOUBLE PRECISION        TKONST
-      !>              DOUBLE PRECISION        TNORML ( 3    )
-      !>              DOUBLE PRECISION        TPLANE ( UBPL )
-      !>              DOUBLE PRECISION        TPOINT ( 3    )
-      !>              DOUBLE PRECISION        TSPAN1 ( 3    )
-      !>              DOUBLE PRECISION        TSPAN2 ( 3    )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        AXDEF  ( 3    )
+      !>      DOUBLE PRECISION        KONST
+      !>      DOUBLE PRECISION        PLANE  ( UBPL )
+      !>      DOUBLE PRECISION        M      ( 3, 3 )
+      !>      DOUBLE PRECISION        NORMAL ( 3    )
+      !>      DOUBLE PRECISION        PLNDEF ( 3    )
+      !>      DOUBLE PRECISION        POINT  ( 3    )
+      !>      DOUBLE PRECISION        SPAN1  ( 3    )
+      !>      DOUBLE PRECISION        SPAN2  ( 3    )
+      !>      DOUBLE PRECISION        TKONST
+      !>      DOUBLE PRECISION        TNORML ( 3    )
+      !>      DOUBLE PRECISION        TPLANE ( UBPL )
+      !>      DOUBLE PRECISION        TPOINT ( 3    )
+      !>      DOUBLE PRECISION        TSPAN1 ( 3    )
+      !>      DOUBLE PRECISION        TSPAN2 ( 3    )
       !>
-      !>        C
-      !>        C     Set the normal vector and the constant defining the
-      !>        C     initial plane.
-      !>        C
-      !>              DATA                    NORMAL /
-      !>             .               -0.1616904D0, 0.8084521D0, -0.5659165D0 /
+      !>C
+      !>C     Set the normal vector and the constant defining the
+      !>C     initial plane.
+      !>C
+      !>      DATA                    NORMAL /
+      !>     .               -0.1616904D0, 0.8084521D0, -0.5659165D0 /
       !>
-      !>              DATA                    KONST  /  4.8102899D0 /
+      !>      DATA                    KONST  /  4.8102899D0 /
       !>
-      !>        C
-      !>        C     Define a transformation matrix to the right-handed
-      !>        C     reference frame having the +i unit vector as primary
-      !>        C     axis, aligned to the original frame's +X axis, and
-      !>        C     the -j unit vector as second axis, aligned to the +Y
-      !>        C     axis.
-      !>        C
-      !>              DATA                    AXDEF  /  1.D0,  0.D0,  0.D0 /
-      !>              DATA                    PLNDEF /  0.D0, -1.D0,  0.D0 /
+      !>C
+      !>C     Define a transformation matrix to the right-handed
+      !>C     reference frame having the +i unit vector as primary
+      !>C     axis, aligned to the original frame's +X axis, and
+      !>C     the -j unit vector as second axis, aligned to the +Y
+      !>C     axis.
+      !>C
+      !>      DATA                    AXDEF  /  1.D0,  0.D0,  0.D0 /
+      !>      DATA                    PLNDEF /  0.D0, -1.D0,  0.D0 /
       !>
-      !>              CALL TWOVEC ( AXDEF, 1, PLNDEF, 2, M )
+      !>      CALL TWOVEC ( AXDEF, 1, PLNDEF, 2, M )
       !>
-      !>        C
-      !>        C     Make a SPICE plane from NORMAL and KONST, and then
-      !>        C     find a point in the plane and spanning vectors for the
-      !>        C     plane.  NORMAL need not be a unit vector.
-      !>        C
-      !>              CALL NVC2PL ( NORMAL, KONST,  PLANE         )
-      !>              CALL PL2PSV ( PLANE,  POINT,  SPAN1,  SPAN2 )
+      !>C
+      !>C     Make a SPICE plane from NORMAL and KONST, and then
+      !>C     find a point in the plane and spanning vectors for the
+      !>C     plane.  NORMAL need not be a unit vector.
+      !>C
+      !>      CALL NVC2PL ( NORMAL, KONST,  PLANE         )
+      !>      CALL PL2PSV ( PLANE,  POINT,  SPAN1,  SPAN2 )
       !>
-      !>        C
-      !>        C     Apply the linear transformation to the point and
-      !>        C     spanning vectors.  All we need to do is multiply
-      !>        C     these vectors by M, since for any linear
-      !>        C     transformation T,
-      !>        C
-      !>        C           T ( POINT  +  t1 * SPAN1     +  t2 * SPAN2 )
-      !>        C
-      !>        C        =  T (POINT)  +  t1 * T(SPAN1)  +  t2 * T(SPAN2),
-      !>        C
-      !>        C     which means that T(POINT), T(SPAN1), and T(SPAN2)
-      !>        C     are a point and spanning vectors for the transformed
-      !>        C     plane.
-      !>        C
-      !>              CALL MXV ( M, POINT, TPOINT )
-      !>              CALL MXV ( M, SPAN1, TSPAN1 )
-      !>              CALL MXV ( M, SPAN2, TSPAN2 )
+      !>C
+      !>C     Apply the linear transformation to the point and
+      !>C     spanning vectors.  All we need to do is multiply
+      !>C     these vectors by M, since for any linear
+      !>C     transformation T,
+      !>C
+      !>C           T ( POINT  +  t1 * SPAN1     +  t2 * SPAN2 )
+      !>C
+      !>C        =  T (POINT)  +  t1 * T(SPAN1)  +  t2 * T(SPAN2),
+      !>C
+      !>C     which means that T(POINT), T(SPAN1), and T(SPAN2)
+      !>C     are a point and spanning vectors for the transformed
+      !>C     plane.
+      !>C
+      !>      CALL MXV ( M, POINT, TPOINT )
+      !>      CALL MXV ( M, SPAN1, TSPAN1 )
+      !>      CALL MXV ( M, SPAN2, TSPAN2 )
       !>
-      !>        C
-      !>        C     Make a new SPICE plane TPLANE from the
-      !>        C     transformed point and spanning vectors, and find a
-      !>        C     unit normal and constant for this new plane.
-      !>        C
-      !>              CALL PSV2PL ( TPOINT, TSPAN1, TSPAN2, TPLANE )
-      !>              CALL PL2NVC ( TPLANE, TNORML, TKONST         )
+      !>C
+      !>C     Make a new SPICE plane TPLANE from the
+      !>C     transformed point and spanning vectors, and find a
+      !>C     unit normal and constant for this new plane.
+      !>C
+      !>      CALL PSV2PL ( TPOINT, TSPAN1, TSPAN2, TPLANE )
+      !>      CALL PL2NVC ( TPLANE, TNORML, TKONST         )
       !>
-      !>        C
-      !>        C     Print the results.
-      !>        C
-      !>              WRITE(*,'(A,3F12.7)') 'Unit normal vector:', TNORML
-      !>              WRITE(*,'(A,F12.7)')  'Constant          :', TKONST
+      !>C
+      !>C     Print the results.
+      !>C
+      !>      WRITE(*,'(A,3F12.7)') 'Unit normal vector:', TNORML
+      !>      WRITE(*,'(A,F12.7)')  'Constant          :', TKONST
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -10415,27 +10737,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 01-NOV-1990 (NJB)
-      module procedure nvc2pl
+      module subroutine nvc2pl ( ctx, normal, konst, plane )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: unorm
       implicit none
-
-
-!
-!     The contents of SPICE planes are as follows:
-!
-!        Elements NMLPOS through NMLPOS + 2 contain a unit normal
-!        vector for the plane.
-!
-!        Element CONPOS contains a constant for the plane;  every point
-!        X in the plane satisfies
-!
-!           < X, PLANE(NMLPOS) >  =  PLANE(CONPOS).
-!
-!        The plane constant is the distance of the plane from the
-!        origin; the normal vector, scaled by the constant, is the
-!        closest point in the plane to the origin.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
+      real(wp), intent(in) :: normal (    3 )  !! A normal vector and constant defining a plane.
+      real(wp), intent(in) :: konst  !! A normal vector and constant defining a plane.
+      real(wp), intent(out) :: plane  ( ubpl )  !! An array representing the plane.
 
 
       real(wp) :: mag
@@ -10485,8 +10795,10 @@ contains
       end if
 
       return
-      end procedure nvc2pl
+      end subroutine nvc2pl
 
+      !> Make a SPICE plane from a normal vector and a point.
+      !>
       !>## Detailed Input
       !>
       !>     NORMAL,
@@ -10594,28 +10906,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 01-NOV-1990 (NJB)
-      module procedure nvp2pl
+      module subroutine nvp2pl ( ctx, normal, point, plane )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vdot, vhat
       implicit none
-
-
-!
-!     The contents of SPICE planes are as follows:
-!
-!        Elements NMLPOS through NMLPOS + 2 contain a unit normal
-!        vector for the plane.
-!
-!        Element CONPOS contains a constant for the plane;  every point
-!        X in the plane satisfies
-!
-!           < X, PLANE(NMLPOS) >  =  PLANE(CONPOS).
-!
-!        The plane constant is the distance of the plane from the
-!        origin; the normal vector, scaled by the constant, is the
-!        closest point in the plane to the origin.
-!
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
+      real(wp), intent(in) :: normal (    3 )  !! A normal vector and a point defining a plane.
+      real(wp), intent(in) :: point  (    3 )  !! A normal vector and a point defining a plane.
+      real(wp), intent(out) :: plane  ( ubpl )  !! An array representing the plane.
 
 
       real(wp) :: tmpvec ( 3 )
@@ -10654,8 +10953,10 @@ contains
       end if
 
       return
-      end procedure nvp2pl
+      end subroutine nvp2pl
 
+      !> Make a SPICE plane from a point and two spanning vectors.
+      !>
       !>## Detailed Input
       !>
       !>     POINT,
@@ -10770,27 +11071,19 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 01-NOV-1990 (NJB)
-      module procedure psv2pl
+      module subroutine psv2pl ( ctx, point, span1, span2, plane )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ucrss, vdot
       implicit none
-
-
-!
-!     The contents of SPICE planes are as follows:
-!
-!        Elements NMLPOS through NMLPOS + 2 contain a unit normal
-!        vector for the plane.
-!
-!        Element CONPOS contains a constant for the plane;  every point
-!        X in the plane satisfies
-!
-!           < X, PLANE(NMLPOS) >  =  PLANE(CONPOS).
-!
-!        The plane constant is the distance of the plane from the
-!        origin; the normal vector, scaled by the constant, is the
-!        closest point in the plane to the origin.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
+      real(wp), intent(in) :: point (    3 )  !! A point and two spanning vectors defining a
+                                              !! plane.
+      real(wp), intent(in) :: span1 (    3 )  !! A point and two spanning vectors defining a
+                                              !! plane.
+      real(wp), intent(in) :: span2 (    3 )  !! A point and two spanning vectors defining a
+                                              !! plane.
+      real(wp), intent(out) :: plane ( ubpl )  !! An array representing the plane.
 
 
       real(wp) :: tmpvec ( 3 )
@@ -10832,8 +11125,12 @@ contains
       end if
 
       return
-      end procedure psv2pl
+      end subroutine psv2pl
 
+      !> Compute the total area of a collection of triangular plates.
+      !>
+      !> The function returns the total area of the set of plates.
+      !>
       !>## Detailed Input
       !>
       !>     NV       is the number of vertices comprising the plate
@@ -10948,60 +11245,62 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PLTAR_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     Compute the area of a plate model representing the
-      !>        C     pyramid with one vertex at the origin and the other
-      !>        C     vertices coinciding with the standard basis vectors.
-      !>        C
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      PLTAR
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               NVERT
-      !>              PARAMETER           ( NVERT  = 4 )
+      !>```fortran
+      !>      PROGRAM PLTAR_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     Compute the area of a plate model representing the
+      !>C     pyramid with one vertex at the origin and the other
+      !>C     vertices coinciding with the standard basis vectors.
+      !>C
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      PLTAR
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               NVERT
+      !>      PARAMETER           ( NVERT  = 4 )
       !>
-      !>              INTEGER               NPLATE
-      !>              PARAMETER           ( NPLATE = 4 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      VRTCES ( 3, NVERT  )
-      !>              DOUBLE PRECISION      AREA
+      !>      INTEGER               NPLATE
+      !>      PARAMETER           ( NPLATE = 4 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      VRTCES ( 3, NVERT  )
+      !>      DOUBLE PRECISION      AREA
       !>
-      !>              INTEGER               PLATES ( 3, NPLATE )
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>        C     The plates defined below lie in the following planes,
-      !>        C     respectively:
-      !>        C
-      !>        C        Plate 1:    { P :  < P, (-1,  0,  0) > = 0 }
-      !>        C        Plate 2:    { P :  < P, ( 0, -1,  0) > = 0 }
-      !>        C        Plate 3:    { P :  < P, ( 0,  0, -1) > = 0 }
-      !>        C        Plate 4:    { P :  < P, ( 1,  1,  1) > = 1 }
-      !>        C
-      !>              DATA                  PLATES /    1,     4,     3,
-      !>             .                                  1,     2,     4,
-      !>             .                                  1,     3,     2,
-      !>             .                                  2,     3,     4 /
+      !>      INTEGER               PLATES ( 3, NPLATE )
+      !>C
+      !>C     Initial values
+      !>C
+      !>C     The plates defined below lie in the following planes,
+      !>C     respectively:
+      !>C
+      !>C        Plate 1:    { P :  < P, (-1,  0,  0) > = 0 }
+      !>C        Plate 2:    { P :  < P, ( 0, -1,  0) > = 0 }
+      !>C        Plate 3:    { P :  < P, ( 0,  0, -1) > = 0 }
+      !>C        Plate 4:    { P :  < P, ( 1,  1,  1) > = 1 }
+      !>C
+      !>      DATA                  PLATES /    1,     4,     3,
+      !>     .                                  1,     2,     4,
+      !>     .                                  1,     3,     2,
+      !>     .                                  2,     3,     4 /
       !>
-      !>              DATA                  VRTCES / 0.D0,  0.D0,  0.D0,
-      !>             .                               1.D0,  0.D0,  0.D0,
-      !>             .                               0.D0,  1.D0,  0.D0,
-      !>             .                               0.D0,  0.D0,  1.D0 /
+      !>      DATA                  VRTCES / 0.D0,  0.D0,  0.D0,
+      !>     .                               1.D0,  0.D0,  0.D0,
+      !>     .                               0.D0,  1.D0,  0.D0,
+      !>     .                               0.D0,  0.D0,  1.D0 /
       !>
-      !>              AREA = PLTAR ( NVERT, VRTCES, NPLATE, PLATES )
+      !>      AREA = PLTAR ( NVERT, VRTCES, NPLATE, PLATES )
       !>
-      !>              WRITE (*,*) 'Expected area   =    (3 + SQRT(3)) / 2'
-      !>              WRITE (*,*) '                =    0.2366025403784438E+01'
-      !>              WRITE (*,*) 'Computed area   = ', AREA
+      !>      WRITE (*,*) 'Expected area   =    (3 + SQRT(3)) / 2'
+      !>      WRITE (*,*) '                =    0.2366025403784438E+01'
+      !>      WRITE (*,*) 'Computed area   = ', AREA
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -11033,10 +11332,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 21-OCT-2016 (NJB)
       !>
       !>        Original version 25-MAR-2016 (NJB)
-      module procedure pltar
+      module real(wp) function pltar ( ctx, nv, vrtces, np, plates )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vcrss, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nv  !! Number of vertices.
+      real(wp), intent(in) :: vrtces ( 3, nv )  !! Array of vertices.
+      integer(ip), intent(in) :: np  !! Number of triangular plates.
+      integer(ip), intent(in) :: plates ( 3, np )  !! Array of plates.
 
       real(wp) :: cp    ( 3 )
       real(wp) :: edge1 ( 3 )
@@ -11133,8 +11437,10 @@ contains
 !     at this point.
 !
       return
-      end procedure pltar
+      end function pltar
 
+      !> Find the nearest point on a triangular plate to a given point.
+      !>
       !>## Detailed Input
       !>
       !>     POINT    is an arbitrary point in 3-dimensional space.
@@ -11184,50 +11490,52 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PLTNP_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PLTNP_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1 = '(A,3E15.7)' )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      DIST
-      !>              DOUBLE PRECISION      POINT  ( 3 )
-      !>              DOUBLE PRECISION      PNEAR  ( 3 )
-      !>              DOUBLE PRECISION      V1     ( 3 )
-      !>              DOUBLE PRECISION      V2     ( 3 )
-      !>              DOUBLE PRECISION      V3     ( 3 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1 = '(A,3E15.7)' )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      DIST
+      !>      DOUBLE PRECISION      POINT  ( 3 )
+      !>      DOUBLE PRECISION      PNEAR  ( 3 )
+      !>      DOUBLE PRECISION      V1     ( 3 )
+      !>      DOUBLE PRECISION      V2     ( 3 )
+      !>      DOUBLE PRECISION      V3     ( 3 )
       !>
-      !>        C
-      !>        C     POINT is the input point.
-      !>        C
-      !>              CALL VPACK ( 2.D0, 2.D0, 2.D0, POINT )
-      !>        C
-      !>        C     V1, V2, V3 are the vertices of a plate.
-      !>        C
-      !>              CALL VPACK ( 1.D0, 0.D0, 0.D0, V1 )
-      !>              CALL VPACK ( 0.D0, 1.D0, 0.D0, V2 )
-      !>              CALL VPACK ( 0.D0, 0.D0, 1.D0, V3 )
-      !>        C
-      !>        C     Find the near point on the plate.
-      !>        C
-      !>              CALL PLTNP ( POINT, V1, V2, V3, PNEAR, DIST )
+      !>C
+      !>C     POINT is the input point.
+      !>C
+      !>      CALL VPACK ( 2.D0, 2.D0, 2.D0, POINT )
+      !>C
+      !>C     V1, V2, V3 are the vertices of a plate.
+      !>C
+      !>      CALL VPACK ( 1.D0, 0.D0, 0.D0, V1 )
+      !>      CALL VPACK ( 0.D0, 1.D0, 0.D0, V2 )
+      !>      CALL VPACK ( 0.D0, 0.D0, 1.D0, V3 )
+      !>C
+      !>C     Find the near point on the plate.
+      !>C
+      !>      CALL PLTNP ( POINT, V1, V2, V3, PNEAR, DIST )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,FMT1) 'Plate vertex 1 = ', V1
-      !>              WRITE (*,FMT1) 'Plate vertex 2 = ', V2
-      !>              WRITE (*,FMT1) 'Plate vertex 3 = ', V3
-      !>              WRITE (*,FMT1) 'Input point    = ', POINT
-      !>              WRITE (*,*)    ' '
-      !>              WRITE (*,FMT1) 'Near point     = ', PNEAR
-      !>              WRITE (*,FMT1) 'Distance       = ', DIST
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,FMT1) 'Plate vertex 1 = ', V1
+      !>      WRITE (*,FMT1) 'Plate vertex 2 = ', V2
+      !>      WRITE (*,FMT1) 'Plate vertex 3 = ', V3
+      !>      WRITE (*,FMT1) 'Input point    = ', POINT
+      !>      WRITE (*,*)    ' '
+      !>      WRITE (*,FMT1) 'Near point     = ', PNEAR
+      !>      WRITE (*,FMT1) 'Distance       = ', DIST
+      !>      WRITE (*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -11277,10 +11585,17 @@ contains
       !>        point on 3rd edge were corrected.
       !>
       !>     DSKLIB Version 1.0.0, 29-SEP-2014 (NJB)
-      module procedure pltnp
+      module subroutine pltnp ( ctx, point, v1, v2, v3, pnear, dist )
       use pepper_kinds, only: wp
       use pepper_math, only: vcrss, vdist, vdot, vnorm, vperp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: point ( 3 )  !! A point in 3-dimensional space.
+      real(wp), intent(in) :: v1    ( 3 )  !! Vertices of a triangular plate.
+      real(wp), intent(in) :: v2    ( 3 )  !! Vertices of a triangular plate.
+      real(wp), intent(in) :: v3    ( 3 )  !! Vertices of a triangular plate.
+      real(wp), intent(out) :: pnear ( 3 )  !! Nearest point on the plate to POINT.
+      real(wp), intent(out) :: dist  !! Distance between PNEAR and POINT.
 
       real(wp) :: d1
       real(wp) :: d2
@@ -11474,8 +11789,14 @@ contains
       end if
 
       return
-      end procedure pltnp
+      end subroutine pltnp
 
+      !> Compute the volume of a three-dimensional region bounded by a
+      !> collection of triangular plates.
+      !>
+      !> The function returns the volume of the spatial region bounded
+      !> by the plates.
+      !>
       !>## Detailed Input
       !>
       !>     NV       is the number of vertices comprising the plate
@@ -11599,65 +11920,67 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     Compute the volume of a plate model representing the
-      !>        C     pyramid with one vertex at the origin and the other
-      !>        C     vertices coinciding with the standard basis vectors.
-      !>        C
-      !>              PROGRAM PLTVOL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>C
+      !>C     Compute the volume of a plate model representing the
+      !>C     pyramid with one vertex at the origin and the other
+      !>C     vertices coinciding with the standard basis vectors.
+      !>C
+      !>      PROGRAM PLTVOL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      PLTVOL
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               NVERT
-      !>              PARAMETER           ( NVERT  = 4 )
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      PLTVOL
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               NVERT
+      !>      PARAMETER           ( NVERT  = 4 )
       !>
-      !>              INTEGER               NPLATE
-      !>              PARAMETER           ( NPLATE = 4 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      VRTCES ( 3, NVERT  )
-      !>              DOUBLE PRECISION      VOL
+      !>      INTEGER               NPLATE
+      !>      PARAMETER           ( NPLATE = 4 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      VRTCES ( 3, NVERT  )
+      !>      DOUBLE PRECISION      VOL
       !>
-      !>              INTEGER               PLATES ( 3, NPLATE )
+      !>      INTEGER               PLATES ( 3, NPLATE )
       !>
-      !>        C
-      !>        C     Let the notation
-      !>        C
-      !>        C        < A, B >
-      !>        C
-      !>        C     denote the dot product of vectors A and B.
-      !>        C
-      !>        C     The plates defined below lie in the following planes,
-      !>        C     respectively:
-      !>        C
-      !>        C        Plate 1:    { P :  < P, (-1,  0,  0) > = 0 }
-      !>        C        Plate 2:    { P :  < P, ( 0, -1,  0) > = 0 }
-      !>        C        Plate 3:    { P :  < P, ( 0,  0, -1) > = 0 }
-      !>        C        Plate 4:    { P :  < P, ( 1,  1,  1) > = 1 }
-      !>        C
-      !>              DATA                  PLATES /    1,     4,     3,
-      !>             .                                  1,     2,     4,
-      !>             .                                  1,     3,     2,
-      !>             .                                  2,     3,     4 /
+      !>C
+      !>C     Let the notation
+      !>C
+      !>C        < A, B >
+      !>C
+      !>C     denote the dot product of vectors A and B.
+      !>C
+      !>C     The plates defined below lie in the following planes,
+      !>C     respectively:
+      !>C
+      !>C        Plate 1:    { P :  < P, (-1,  0,  0) > = 0 }
+      !>C        Plate 2:    { P :  < P, ( 0, -1,  0) > = 0 }
+      !>C        Plate 3:    { P :  < P, ( 0,  0, -1) > = 0 }
+      !>C        Plate 4:    { P :  < P, ( 1,  1,  1) > = 1 }
+      !>C
+      !>      DATA                  PLATES /    1,     4,     3,
+      !>     .                                  1,     2,     4,
+      !>     .                                  1,     3,     2,
+      !>     .                                  2,     3,     4 /
       !>
-      !>              DATA                  VRTCES / 0.D0,  0.D0,  0.D0,
-      !>             .                               1.D0,  0.D0,  0.D0,
-      !>             .                               0.D0,  1.D0,  0.D0,
-      !>             .                               0.D0,  0.D0,  1.D0 /
+      !>      DATA                  VRTCES / 0.D0,  0.D0,  0.D0,
+      !>     .                               1.D0,  0.D0,  0.D0,
+      !>     .                               0.D0,  1.D0,  0.D0,
+      !>     .                               0.D0,  0.D0,  1.D0 /
       !>
-      !>              VOL = PLTVOL ( NVERT, VRTCES, NPLATE, PLATES )
+      !>      VOL = PLTVOL ( NVERT, VRTCES, NPLATE, PLATES )
       !>
-      !>              WRITE (*,*) 'Expected volume =    1/6'
-      !>              WRITE (*,*) 'Computed volume = ', VOL
+      !>      WRITE (*,*) 'Expected volume =    1/6'
+      !>      WRITE (*,*) 'Computed volume = ', VOL
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -11690,10 +12013,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 24-OCT-2016 (NJB)
       !>
       !>        Based on original 11-FEB-2011
-      module procedure pltvol
+      module real(wp) function pltvol ( ctx, nv, vrtces, np, plates )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: det
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nv  !! Number of vertices.
+      real(wp), intent(in) :: vrtces ( 3, nv )  !! Array of vertices.
+      integer(ip), intent(in) :: np  !! Number of triangular plates.
+      integer(ip), intent(in) :: plates ( 3, np )  !! Array of plates.
 
       real(wp) :: m ( 3, 3 )
 
@@ -11976,8 +12304,13 @@ contains
 !     at this point.
 !
       return
-      end procedure pltvol
+      end function pltvol
 
+      !> Estimate the derivative of a function by finding the derivative
+      !> of a quadratic approximating function. This derivative estimate
+      !> is equivalent to that found by computing the average of forward
+      !> and backward differences.
+      !>
       !>## Detailed Input
       !>
       !>     NDIM     is the dimension of the function to be
@@ -12063,25 +12396,27 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM QDERIV_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>       PROGRAM QDERIV_EX1
+      !>       IMPLICIT NONE
       !>
-      !>              DOUBLE PRECISION     DELTA
-      !>              DOUBLE PRECISION     DFDT  (1)
-      !>              DOUBLE PRECISION     F0    (1)
-      !>              DOUBLE PRECISION     F2    (1)
-      !>              INTEGER              N
+      !>       DOUBLE PRECISION     DELTA
+      !>       DOUBLE PRECISION     DFDT  (1)
+      !>       DOUBLE PRECISION     F0    (1)
+      !>       DOUBLE PRECISION     F2    (1)
+      !>       INTEGER              N
       !>
-      !>              N     = 1
-      !>              DELTA = 1.D-3
-      !>              F0(1) = ( 2.D0 - DELTA ) ** 2.D0
-      !>              F2(1) = ( 2.D0 + DELTA ) ** 2.D0
+      !>       N     = 1
+      !>       DELTA = 1.D-3
+      !>       F0(1) = ( 2.D0 - DELTA ) ** 2.D0
+      !>       F2(1) = ( 2.D0 + DELTA ) ** 2.D0
       !>
-      !>              CALL QDERIV ( N, F0, F2, DELTA, DFDT )
+      !>       CALL QDERIV ( N, F0, F2, DELTA, DFDT )
       !>
-      !>              WRITE ( *, '(1X,A,E25.16)'  ) '4 - DFDT(1) = ',
-      !>             .                               4 - DFDT(1)
-      !>              END
+      !>       WRITE ( *, '(1X,A,E25.16)'  ) '4 - DFDT(1) = ',
+      !>      .                               4 - DFDT(1)
+      !>       END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -12114,9 +12449,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
-      module procedure qderiv
+      module subroutine qderiv ( ctx, ndim, f0, f2, delta, dfdt )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ndim  !! Dimension of function to be differentiated.
+      real(wp), intent(in) :: f0    ( ndim )  !! Function values at left endpoint.
+      real(wp), intent(in) :: f2    ( ndim )  !! Function values at right endpoint.
+      real(wp), intent(in) :: delta  !! Separation of abscissa points.
+      real(wp), intent(out) :: dfdt  ( ndim )  !! Derivative vector.
 
 !
 !     Use discovery check-in.
@@ -12144,8 +12485,11 @@ contains
       dfdt = (0.5_wp/delta)*f2 + (-0.5_wp/delta)*f0
 
       return
-      end procedure qderiv
+      end subroutine qderiv
 
+      !> Compute the axis of the rotation given by an input matrix
+      !> and the angle of the rotation about that axis.
+      !>
       !>## Detailed Input
       !>
       !>     MATRIX   is a 3x3 rotation matrix in double precision.
@@ -12226,66 +12570,68 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM RAXISA_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM RAXISA_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      TWOPI
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      TWOPI
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ANGLE
-      !>              DOUBLE PRECISION      ANGOUT
-      !>              DOUBLE PRECISION      AXIS   ( 3    )
-      !>              DOUBLE PRECISION      AXOUT  ( 3    )
-      !>              DOUBLE PRECISION      R      ( 3, 3 )
-      !>              DOUBLE PRECISION      ROUT   ( 3, 3 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ANGLE
+      !>      DOUBLE PRECISION      ANGOUT
+      !>      DOUBLE PRECISION      AXIS   ( 3    )
+      !>      DOUBLE PRECISION      AXOUT  ( 3    )
+      !>      DOUBLE PRECISION      R      ( 3, 3 )
+      !>      DOUBLE PRECISION      ROUT   ( 3, 3 )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Define an axis and an angle for rotation.
-      !>        C
-      !>              DATA                  AXIS  /  1.D0, 2.D0, 3.D0  /
+      !>C
+      !>C     Define an axis and an angle for rotation.
+      !>C
+      !>      DATA                  AXIS  /  1.D0, 2.D0, 3.D0  /
       !>
-      !>              ANGLE = 0.1D0 * TWOPI()
+      !>      ANGLE = 0.1D0 * TWOPI()
       !>
-      !>        C
-      !>        C     Determine the rotation matrix.
-      !>        C
-      !>              CALL AXISAR ( AXIS, ANGLE, R )
+      !>C
+      !>C     Determine the rotation matrix.
+      !>C
+      !>      CALL AXISAR ( AXIS, ANGLE, R )
       !>
-      !>        C
-      !>        C     Now calculate the rotation axis and angle based on the
-      !>        C     matrix as input.
-      !>        C
-      !>              CALL RAXISA ( R, AXOUT, ANGOUT )
+      !>C
+      !>C     Now calculate the rotation axis and angle based on the
+      !>C     matrix as input.
+      !>C
+      !>      CALL RAXISA ( R, AXOUT, ANGOUT )
       !>
-      !>              WRITE(*,'(A,3F12.8)') 'Axis :', AXOUT
-      !>              WRITE(*,'(A,F12.8)')  'Angle:', ANGOUT
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,'(A,3F12.8)') 'Axis :', AXOUT
+      !>      WRITE(*,'(A,F12.8)')  'Angle:', ANGOUT
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     Now input the AXOUT and ANGOUT to AXISAR to
-      !>        C     compare against the original rotation matrix R.
-      !>        C
-      !>              WRITE(*,'(A)') 'Difference between input and output '
-      !>             .           //  'matrices:'
+      !>C
+      !>C     Now input the AXOUT and ANGOUT to AXISAR to
+      !>C     compare against the original rotation matrix R.
+      !>C
+      !>      WRITE(*,'(A)') 'Difference between input and output '
+      !>     .           //  'matrices:'
       !>
-      !>              CALL AXISAR ( AXOUT, ANGOUT, ROUT )
+      !>      CALL AXISAR ( AXOUT, ANGOUT, ROUT )
       !>
-      !>              DO I = 1, 3
+      !>      DO I = 1, 3
       !>
-      !>                 WRITE(*,'(3F20.16)') ROUT(I,1) - R(I,1),
-      !>             .                        ROUT(I,2) - R(I,2),
-      !>             .                        ROUT(I,3) - R(I,3)
+      !>         WRITE(*,'(3F20.16)') ROUT(I,1) - R(I,1),
+      !>     .                        ROUT(I,2) - R(I,2),
+      !>     .                        ROUT(I,3) - R(I,3)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -12333,65 +12679,67 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM RAXISA_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM RAXISA_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ANGLE
-      !>              DOUBLE PRECISION      ANGVEL ( 3    )
-      !>              DOUBLE PRECISION      AXIS   ( 3    )
-      !>              DOUBLE PRECISION      INFROT ( 3, 3 )
-      !>              DOUBLE PRECISION      H
-      !>              DOUBLE PRECISION      RT     ( 3, 3 )
-      !>              DOUBLE PRECISION      RTH    ( 3, 3 )
-      !>              DOUBLE PRECISION      T
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ANGLE
+      !>      DOUBLE PRECISION      ANGVEL ( 3    )
+      !>      DOUBLE PRECISION      AXIS   ( 3    )
+      !>      DOUBLE PRECISION      INFROT ( 3, 3 )
+      !>      DOUBLE PRECISION      H
+      !>      DOUBLE PRECISION      RT     ( 3, 3 )
+      !>      DOUBLE PRECISION      RTH    ( 3, 3 )
+      !>      DOUBLE PRECISION      T
       !>
-      !>        C
-      !>        C     Load a PCK file containing a triaxial
-      !>        C     ellipsoidal shape model and orientation
-      !>        C     data for the Earth.
-      !>        C
-      !>              CALL FURNSH ( 'pck00010.tpc' )
+      !>C
+      !>C     Load a PCK file containing a triaxial
+      !>C     ellipsoidal shape model and orientation
+      !>C     data for the Earth.
+      !>C
+      !>      CALL FURNSH ( 'pck00010.tpc' )
       !>
-      !>        C
-      !>        C     Load time into the double precision variable T
-      !>        C     and the delta time (1 ms) into the double precision
-      !>        C     variable H
-      !>        C
-      !>              T = 0.D0
-      !>              H = 1D-3
+      !>C
+      !>C     Load time into the double precision variable T
+      !>C     and the delta time (1 ms) into the double precision
+      !>C     variable H
+      !>C
+      !>      T = 0.D0
+      !>      H = 1D-3
       !>
-      !>        C
-      !>        C     Get the rotation matrices from IAU_EARTH to J2000
-      !>        C     at T and T+H.
-      !>        C
-      !>              CALL PXFORM ( 'IAU_EARTH', 'J2000', T,   RT  )
-      !>              CALL PXFORM ( 'IAU_EARTH', 'J2000', T+H, RTH )
+      !>C
+      !>C     Get the rotation matrices from IAU_EARTH to J2000
+      !>C     at T and T+H.
+      !>C
+      !>      CALL PXFORM ( 'IAU_EARTH', 'J2000', T,   RT  )
+      !>      CALL PXFORM ( 'IAU_EARTH', 'J2000', T+H, RTH )
       !>
-      !>        C
-      !>        C     Compute the infinitesimal rotation R(t+h)R(t)**T
-      !>        C
-      !>              CALL MXMT ( RTH, RT, INFROT )
+      !>C
+      !>C     Compute the infinitesimal rotation R(t+h)R(t)**T
+      !>C
+      !>      CALL MXMT ( RTH, RT, INFROT )
       !>
-      !>        C
-      !>        C     Compute the AXIS and ANGLE of the infinitesimal rotation
-      !>        C
-      !>              CALL RAXISA ( INFROT, AXIS, ANGLE )
+      !>C
+      !>C     Compute the AXIS and ANGLE of the infinitesimal rotation
+      !>C
+      !>      CALL RAXISA ( INFROT, AXIS, ANGLE )
       !>
-      !>        C
-      !>        C     Scale AXIS to get the angular velocity vector
-      !>        C
-      !>              CALL VSCL ( ANGLE/H, AXIS, ANGVEL )
+      !>C
+      !>C     Scale AXIS to get the angular velocity vector
+      !>C
+      !>      CALL VSCL ( ANGLE/H, AXIS, ANGVEL )
       !>
-      !>        C
-      !>        C     Output the results.
-      !>        C
-      !>              WRITE(*,*) 'Instantaneous angular velocity vector:'
-      !>              WRITE(*,'(3F15.10)') ANGVEL
+      !>C
+      !>C     Output the results.
+      !>C
+      !>      WRITE(*,*) 'Instantaneous angular velocity vector:'
+      !>      WRITE(*,'(3F15.10)') ANGVEL
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -12497,11 +12845,15 @@ contains
       !>        so that Fortran intrinsics always get reasonable input values.
       !>
       !>        Add and example to the header.
-      module procedure raxisa
+      module subroutine raxisa ( ctx, matrix, axis, angle )
       use pepper_kinds, only: wp
       use pepper_constants, only: pi
       use pepper_math, only: vhat, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: matrix ( 3, 3 )  !! 3x3 rotation matrix in double precision.
+      real(wp), intent(out) :: axis   (    3 )  !! Axis of the rotation.
+      real(wp), intent(out) :: angle  !! Angle through which the rotation is performed.
 
       real(wp) :: q ( 0: 3 )
 
@@ -12552,8 +12904,10 @@ contains
 
       return
 
-      end procedure raxisa
+      end subroutine raxisa
 
+      !> Find the roots of a quadratic equation.
+      !>
       !>## Detailed Input
       !>
       !>     A,
@@ -12696,9 +13050,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 10-JUL-1990 (NJB)
-      module procedure rquad
+      module subroutine rquad ( ctx, a, b, c, root1, root2 )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: a  !! Coefficient of quadratic term.
+      real(wp), intent(in) :: b  !! Coefficient of linear term.
+      real(wp), intent(in) :: c  !! Constant.
+      real(wp), intent(out) :: root1 ( 2 )  !! Root built from positive discriminant term.
+      real(wp), intent(out) :: root2 ( 2 )  !! Root built from negative discriminant term.
 
       real(wp) :: con
       real(wp) :: discrm
@@ -12836,8 +13196,11 @@ contains
       end if
 
       return
-      end procedure rquad
+      end subroutine rquad
 
+      !> Compute the integer quotient and non-negative remainder
+      !> of NUM and DENOM.
+      !>
       !>## Detailed Input
       !>
       !>     NUM      is the numerator of a quotient
@@ -12912,9 +13275,14 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 01-DEC-1995 (WLT)
-      module procedure rmaind
+      module subroutine rmaind ( ctx, num, denom, q, rem )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: num  !! Numerator used to compute quotient and remainder.
+      real(wp), intent(in) :: denom  !! Denominator used to compute quotient and remainder.
+      real(wp), intent(out) :: q  !! Integer portion of the quotient NUM/DENOM.
+      real(wp), intent(out) :: rem  !! Remainder of the quotient NUM/DENOM.
 
       real(wp) :: mynum
       real(wp) :: mydnom
@@ -12941,8 +13309,11 @@ contains
       end if
 
       return
-      end procedure rmaind
+      end subroutine rmaind
 
+      !> Compute the integer quotient and non-negative remainder
+      !> of NUM and DENOM.
+      !>
       !>## Detailed Input
       !>
       !>     NUM      is the numerator of a quotient
@@ -13014,9 +13385,14 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 01-DEC-1995 (WLT)
-      module procedure rmaini
+      module subroutine rmaini ( ctx, num, denom, q, rem )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: num  !! Numerator used to compute quotient and remainder.
+      integer(ip), intent(in) :: denom  !! Denominator used to compute quotient and remainder.
+      integer(ip), intent(out) :: q  !! Integer portion of the quotient NUM/DENOM.
+      integer(ip), intent(out) :: rem  !! Remainder of the quotient NUM/DENOM.
 
 !
 !     Take care of the zero-denominator case first
@@ -13037,8 +13413,10 @@ contains
       end if
 
       return
-      end procedure rmaini
+      end subroutine rmaini
 
+      !> Project a vector onto a specified plane, orthogonally.
+      !>
       !>## Detailed Input
       !>
       !>     VIN      is a 3-vector that is to be orthogonally projected
@@ -13093,54 +13471,56 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM VPRJP_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM VPRJP_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>        C     Upper bound of plane length.
-      !>        C
-      !>              INTEGER                 UBPL
-      !>              PARAMETER             ( UBPL = 4 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>C     Upper bound of plane length.
+      !>C
+      !>      INTEGER                 UBPL
+      !>      PARAMETER             ( UBPL = 4 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      NORM   ( 3    )
-      !>              DOUBLE PRECISION      ORIG   ( 3    )
-      !>              DOUBLE PRECISION      PROJ   ( 3    )
-      !>              DOUBLE PRECISION      RINGPL ( UBPL )
-      !>              DOUBLE PRECISION      SCPOS  ( 3    )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      NORM   ( 3    )
+      !>      DOUBLE PRECISION      ORIG   ( 3    )
+      !>      DOUBLE PRECISION      PROJ   ( 3    )
+      !>      DOUBLE PRECISION      RINGPL ( UBPL )
+      !>      DOUBLE PRECISION      SCPOS  ( 3    )
       !>
-      !>        C
-      !>        C     Set the spacecraft location and define the normal
-      !>        C     vector as the normal to the equatorial plane, and
-      !>        C     the origin at the body/ring center.
-      !>        C
-      !>              DATA                  SCPOS /  -29703.16955D0,
-      !>             .                               879765.72163D0,
-      !>             .                              -137280.21757D0   /
+      !>C
+      !>C     Set the spacecraft location and define the normal
+      !>C     vector as the normal to the equatorial plane, and
+      !>C     the origin at the body/ring center.
+      !>C
+      !>      DATA                  SCPOS /  -29703.16955D0,
+      !>     .                               879765.72163D0,
+      !>     .                              -137280.21757D0   /
       !>
-      !>              DATA                  NORM  /  0.D0, 0.D0, 1.D0 /
+      !>      DATA                  NORM  /  0.D0, 0.D0, 1.D0 /
       !>
-      !>              DATA                  ORIG  /  0.D0, 0.D0, 0.D0 /
+      !>      DATA                  ORIG  /  0.D0, 0.D0, 0.D0 /
       !>
-      !>        C
-      !>        C     Create the plane structure.
-      !>        C
-      !>              CALL NVP2PL ( NORM, ORIG, RINGPL )
+      !>C
+      !>C     Create the plane structure.
+      !>C
+      !>      CALL NVP2PL ( NORM, ORIG, RINGPL )
       !>
-      !>        C
-      !>        C     Project the position vector onto the ring plane.
-      !>        C
-      !>              CALL VPRJP ( SCPOS, RINGPL, PROJ )
+      !>C
+      !>C     Project the position vector onto the ring plane.
+      !>C
+      !>      CALL VPRJP ( SCPOS, RINGPL, PROJ )
       !>
-      !>              WRITE(*,'(A)') 'Projection of S/C position onto ring '
-      !>             .            // 'plane:'
-      !>              WRITE(*,'(3F17.5)') PROJ
+      !>      WRITE(*,'(A)') 'Projection of S/C position onto ring '
+      !>     .            // 'plane:'
+      !>      WRITE(*,'(3F17.5)') PROJ
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -13190,15 +13570,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 01-NOV-1990 (NJB)
-      module procedure vprjp
+      module subroutine vprjp ( ctx, vin, plane, vout )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: approx, pl2nvc, vdot, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
+      real(wp), intent(in) :: vin   (    3 )  !! Vector to be projected.
+      real(wp), intent(in) :: plane ( ubpl )  !! A SPICE plane onto which VIN is projected.
+      real(wp), intent(out) :: vout  (    3 )  !! Vector resulting from projection.
 
-
-!     Tolerance for deviation from unit length of the normal
-!     vector of the input plane.
-!
 
       real(wp) :: const
       real(wp) :: normal ( 3 )
@@ -13247,8 +13628,11 @@ contains
       vout = 1.0_wp*vin + (const - vdot ( vin, normal ))*normal
 
       return
-      end procedure vprjp
+      end subroutine vprjp
 
+      !> Find the vector in a specified plane that maps to a specified
+      !> vector in another plane under orthogonal projection.
+      !>
       !>## Detailed Input
       !>
       !>     VIN,
@@ -13415,11 +13799,18 @@ contains
       !>        run-time underflow warnings on some platforms.
       !>        In the revised code, BOUND/DPMAX() is never
       !>        scaled by a number having absolute value < 1.
-      module procedure vprjpi
+      module subroutine vprjpi ( ctx, vin, projpl, invpl, vout, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_math, only: approx, pl2nvc, vdot, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
+      real(wp), intent(in) :: vin    (    3 )  !! The projected vector.
+      real(wp), intent(in) :: projpl ( ubpl )  !! Plane containing VIN.
+      real(wp), intent(in) :: invpl  ( ubpl )  !! Plane containing inverse image of VIN.
+      real(wp), intent(out) :: vout   (    3 )  !! Inverse projection of VIN.
+      logical, intent(out) :: found  !! Flag indicating whether VOUT could be calculated.
 
 
 !
@@ -13433,11 +13824,6 @@ contains
 !     BOUND is chosen somewhat arbitrarily....
 !
       real(wp), parameter :: bound = 10.0_wp
-
-!
-!     Tolerance for deviation from unit length of the normal
-!     vector of the input plane.
-!
 
       real(wp) :: denom
       real(wp) :: invc
@@ -13577,8 +13963,11 @@ contains
       end if
 
       return
-      end procedure vprjpi
+      end subroutine vprjpi
 
+      !> Correct the apparent position of an object for stellar
+      !> aberration.
+      !>
       !>## Detailed Input
       !>
       !>     POBJ     is the position (x, y, z, km) of an object with
@@ -13688,87 +14077,89 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM STELAB_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM STELAB_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(6)         REFFRM
-      !>              CHARACTER*(12)        UTCSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(6)         REFFRM
+      !>      CHARACTER*(12)        UTCSTR
       !>
-      !>              DOUBLE PRECISION      APPDIF ( 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      PCORR  ( 3 )
-      !>              DOUBLE PRECISION      POS    ( 3 )
-      !>              DOUBLE PRECISION      SOBS   ( 6 )
+      !>      DOUBLE PRECISION      APPDIF ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      PCORR  ( 3 )
+      !>      DOUBLE PRECISION      POS    ( 3 )
+      !>      DOUBLE PRECISION      SOBS   ( 6 )
       !>
-      !>              INTEGER               IDOBS
-      !>              INTEGER               IDTARG
+      !>      INTEGER               IDOBS
+      !>      INTEGER               IDTARG
       !>
-      !>        C
-      !>        C     Assign an observer, Earth, target, Moon, time of interest
-      !>        C     and reference frame for returned vectors.
-      !>        C
-      !>              IDOBS  = 399
-      !>              IDTARG = 301
-      !>              UTCSTR = 'July 4 2004'
-      !>              REFFRM = 'J2000'
+      !>C
+      !>C     Assign an observer, Earth, target, Moon, time of interest
+      !>C     and reference frame for returned vectors.
+      !>C
+      !>      IDOBS  = 399
+      !>      IDTARG = 301
+      !>      UTCSTR = 'July 4 2004'
+      !>      REFFRM = 'J2000'
       !>
-      !>        C
-      !>        C     Load the needed kernels.
-      !>        C
-      !>              CALL FURNSH ( 'stelab_ex1.tm' )
+      !>C
+      !>C     Load the needed kernels.
+      !>C
+      !>      CALL FURNSH ( 'stelab_ex1.tm' )
       !>
-      !>        C
-      !>        C     Convert the time string to ephemeris time, J2000.
-      !>        C
-      !>              CALL STR2ET ( UTCSTR, ET )
+      !>C
+      !>C     Convert the time string to ephemeris time, J2000.
+      !>C
+      !>      CALL STR2ET ( UTCSTR, ET )
       !>
-      !>        C
-      !>        C     Get the state of the observer with respect to the solar
-      !>        C     system barycenter.
-      !>        C
-      !>              CALL SPKSSB ( IDOBS, ET, REFFRM, SOBS )
+      !>C
+      !>C     Get the state of the observer with respect to the solar
+      !>C     system barycenter.
+      !>C
+      !>      CALL SPKSSB ( IDOBS, ET, REFFRM, SOBS )
       !>
-      !>        C
-      !>        C     Get the light-time corrected position POS of the target
-      !>        C     body IDTARG as seen by the observer.
-      !>        C
-      !>              CALL SPKAPO ( IDTARG, ET, REFFRM, SOBS, 'LT', POS, LT )
+      !>C
+      !>C     Get the light-time corrected position POS of the target
+      !>C     body IDTARG as seen by the observer.
+      !>C
+      !>      CALL SPKAPO ( IDTARG, ET, REFFRM, SOBS, 'LT', POS, LT )
       !>
-      !>        C
-      !>        C     Output the uncorrected vector.
-      !>        C
-      !>              WRITE(*,*) 'Uncorrected position vector'
-      !>              WRITE(*,'(A,3F19.6)') '   ', POS(1), POS(2), POS(3)
+      !>C
+      !>C     Output the uncorrected vector.
+      !>C
+      !>      WRITE(*,*) 'Uncorrected position vector'
+      !>      WRITE(*,'(A,3F19.6)') '   ', POS(1), POS(2), POS(3)
       !>
-      !>        C
-      !>        C     Apply the correction for stellar aberration to the
-      !>        C     light-time corrected position of the target body.
-      !>        C
-      !>              CALL STELAB ( POS, SOBS(4), PCORR )
+      !>C
+      !>C     Apply the correction for stellar aberration to the
+      !>C     light-time corrected position of the target body.
+      !>C
+      !>      CALL STELAB ( POS, SOBS(4), PCORR )
       !>
-      !>        C
-      !>        C     Output the corrected position vector and the apparent
-      !>        C     difference from the uncorrected vector.
-      !>        C
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Corrected position vector'
-      !>              WRITE(*,'(A,3F19.6)') '   ', PCORR(1), PCORR(2),
-      !>             .                             PCORR(3)
+      !>C
+      !>C     Output the corrected position vector and the apparent
+      !>C     difference from the uncorrected vector.
+      !>C
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Corrected position vector'
+      !>      WRITE(*,'(A,3F19.6)') '   ', PCORR(1), PCORR(2),
+      !>     .                             PCORR(3)
       !>
-      !>        C
-      !>        C     Apparent difference.
-      !>        C
-      !>              CALL VSUB ( POS, PCORR, APPDIF )
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Apparent difference'
-      !>              WRITE(*,'(A,3F19.6)') '   ', APPDIF(1), APPDIF(2),
-      !>             .                            APPDIF(3)
+      !>C
+      !>C     Apparent difference.
+      !>C
+      !>      CALL VSUB ( POS, PCORR, APPDIF )
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Apparent difference'
+      !>      WRITE(*,'(A,3F19.6)') '   ', APPDIF(1), APPDIF(2),
+      !>     .                            APPDIF(3)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -13845,11 +14236,18 @@ contains
       !>        observer. If the velocity of the observer is greater
       !>        than or equal to the speed of light, the error
       !>        SPICE(VALUEOUTOFRANGE) is signaled.
-      module procedure stelab
+      module subroutine stelab ( ctx, pobj, vobs, appobj )
       use pepper_kinds, only: wp
       use pepper_constants, only: clight
       use pepper_math, only: vcrss, vdot, vhat, vnorm, vrotv
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: pobj   ( 3 )  !! Position of an object with respect to the
+                                            !! observer.
+      real(wp), intent(in) :: vobs   ( 3 )  !! Velocity of the observer with respect to the Solar
+                                            !! System barycenter.
+      real(wp), intent(out) :: appobj ( 3 )  !! Apparent position of the object with respect to
+                                             !! the observer, corrected for stellar aberration.
 
       real(wp) :: onebyc
       real(wp) :: u      ( 3 )
@@ -13928,8 +14326,12 @@ contains
       end if
 
       return
-      end procedure stelab
+      end subroutine stelab
 
+      !> Correct the position of a target for the stellar aberration
+      !> effect on radiation transmitted from a specified observer to
+      !> the target.
+      !>
       !>## Detailed Input
       !>
       !>     POBJ     is the cartesian position vector of an object with
@@ -14060,91 +14462,93 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM STLABX_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM STLABX_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(6)         REFFRM
-      !>              CHARACTER*(12)        UTCSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(6)         REFFRM
+      !>      CHARACTER*(12)        UTCSTR
       !>
-      !>              DOUBLE PRECISION      APPDIF ( 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      PCORR  ( 3 )
-      !>              DOUBLE PRECISION      POS    ( 3 )
-      !>              DOUBLE PRECISION      SOBS   ( 6 )
+      !>      DOUBLE PRECISION      APPDIF ( 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      PCORR  ( 3 )
+      !>      DOUBLE PRECISION      POS    ( 3 )
+      !>      DOUBLE PRECISION      SOBS   ( 6 )
       !>
-      !>              INTEGER               IDOBS
-      !>              INTEGER               IDTARG
+      !>      INTEGER               IDOBS
+      !>      INTEGER               IDTARG
       !>
-      !>        C
-      !>        C     Assign an observer, Earth, target, Moon, time of interest
-      !>        C     and reference frame for returned vectors.
-      !>        C
-      !>              IDOBS  = 399
-      !>              IDTARG = 301
-      !>              UTCSTR = 'July 4 2004'
-      !>              REFFRM = 'J2000'
+      !>C
+      !>C     Assign an observer, Earth, target, Moon, time of interest
+      !>C     and reference frame for returned vectors.
+      !>C
+      !>      IDOBS  = 399
+      !>      IDTARG = 301
+      !>      UTCSTR = 'July 4 2004'
+      !>      REFFRM = 'J2000'
       !>
-      !>        C
-      !>        C     Load the needed kernels.
-      !>        C
-      !>              CALL FURNSH ( 'stlabx_ex1.tm' )
+      !>C
+      !>C     Load the needed kernels.
+      !>C
+      !>      CALL FURNSH ( 'stlabx_ex1.tm' )
       !>
-      !>        C
-      !>        C     Convert the time string to ephemeris time.
-      !>        C
-      !>              CALL STR2ET ( UTCSTR, ET )
+      !>C
+      !>C     Convert the time string to ephemeris time.
+      !>C
+      !>      CALL STR2ET ( UTCSTR, ET )
       !>
-      !>        C
-      !>        C     Get the state of the observer with respect to the solar
-      !>        C     system barycenter.
-      !>        C
-      !>              CALL SPKSSB ( IDOBS, ET, REFFRM, SOBS )
+      !>C
+      !>C     Get the state of the observer with respect to the solar
+      !>C     system barycenter.
+      !>C
+      !>      CALL SPKSSB ( IDOBS, ET, REFFRM, SOBS )
       !>
-      !>        C
-      !>        C     Get the light-time corrected position POS of the target
-      !>        C     body IDTARG as seen by the observer. Normally we would
-      !>        C     call SPKPOS to obtain this vector, but we already have
-      !>        C     the state of the observer relative to the solar system
-      !>        C     barycenter, so we can avoid looking up that state twice
-      !>        C     by calling SPKAPO.
-      !>        C
-      !>              CALL SPKAPO ( IDTARG, ET, REFFRM, SOBS, 'XLT', POS, LT )
+      !>C
+      !>C     Get the light-time corrected position POS of the target
+      !>C     body IDTARG as seen by the observer. Normally we would
+      !>C     call SPKPOS to obtain this vector, but we already have
+      !>C     the state of the observer relative to the solar system
+      !>C     barycenter, so we can avoid looking up that state twice
+      !>C     by calling SPKAPO.
+      !>C
+      !>      CALL SPKAPO ( IDTARG, ET, REFFRM, SOBS, 'XLT', POS, LT )
       !>
-      !>        C
-      !>        C     Output the uncorrected vector.
-      !>        C
-      !>              WRITE(*,*) 'Uncorrected position vector'
-      !>              WRITE(*,'(A,3F19.6)') '   ', POS(1), POS(2), POS(3)
+      !>C
+      !>C     Output the uncorrected vector.
+      !>C
+      !>      WRITE(*,*) 'Uncorrected position vector'
+      !>      WRITE(*,'(A,3F19.6)') '   ', POS(1), POS(2), POS(3)
       !>
-      !>        C
-      !>        C     Apply the correction for stellar aberration to the
-      !>        C     light-time corrected position of the target body.
-      !>        C
-      !>              CALL STLABX ( POS, SOBS(4), PCORR )
+      !>C
+      !>C     Apply the correction for stellar aberration to the
+      !>C     light-time corrected position of the target body.
+      !>C
+      !>      CALL STLABX ( POS, SOBS(4), PCORR )
       !>
-      !>        C
-      !>        C     Output the corrected position vector and the apparent
-      !>        C     difference from the uncorrected vector.
-      !>        C
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Corrected position vector'
-      !>              WRITE(*,'(A,3F19.6)') '   ', PCORR(1), PCORR(2),
-      !>             .                             PCORR(3)
+      !>C
+      !>C     Output the corrected position vector and the apparent
+      !>C     difference from the uncorrected vector.
+      !>C
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Corrected position vector'
+      !>      WRITE(*,'(A,3F19.6)') '   ', PCORR(1), PCORR(2),
+      !>     .                             PCORR(3)
       !>
-      !>        C
-      !>        C     Apparent difference.
-      !>        C
-      !>              CALL VSUB ( POS, PCORR, APPDIF )
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Apparent difference'
-      !>              WRITE(*,'(A,3F19.6)') '   ', APPDIF(1), APPDIF(2),
-      !>             .                            APPDIF(3)
+      !>C
+      !>C     Apparent difference.
+      !>C
+      !>      CALL VSUB ( POS, PCORR, APPDIF )
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Apparent difference'
+      !>      WRITE(*,'(A,3F19.6)') '   ', APPDIF(1), APPDIF(2),
+      !>     .                            APPDIF(3)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -14188,9 +14592,15 @@ contains
       !>        to SPKAPP.
       !>
       !>-    SPICELIB Version 1.0.0, 02-JAN-2002 (IMU) (WLT) (NJB)
-      module procedure stlabx
+      module subroutine stlabx ( ctx, pobj, vobs, corpos )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: pobj   ( 3 )  !! Position of an object with respect to the
+                                            !! observer.
+      real(wp), intent(in) :: vobs   ( 3 )  !! Velocity of the observer with respect to the Solar
+                                            !! System barycenter.
+      real(wp), intent(out) :: corpos ( 3 )  !! Corrected position of the object.
 
       real(wp) :: negvel ( 3 )
 
@@ -14210,8 +14620,10 @@ contains
       call stelab ( ctx, pobj, negvel, corpos )
 
       return
-      end procedure stlabx
+      end subroutine stlabx
 
+      !> Transpose the square blocks within a matrix.
+      !>
       !>## Detailed Input
       !>
       !>     NROW     is the number of rows in the input matrix.
@@ -14367,9 +14779,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-NOV-1990 (WLT)
-      module procedure xposbl
+      module subroutine xposbl ( ctx, bmat, nrow, ncol, bsize, btmat )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nrow  !! the number of rows in the matrix BMAT
+      integer(ip), intent(in) :: ncol  !! the number of columns in the matrix BMAT
+      integer(ip), intent(in) :: bsize  !! the size of the square blocks in BMAT
+      real(wp), intent(in) :: bmat  ( nrow, ncol )  !! a matrix composed of square block
+                                                    !! submatrices
+      real(wp), intent(out) :: btmat ( nrow, ncol )  !! the result of transposing the blocks of
+                                                     !! BMAT
 
       real(wp) :: temp
 
@@ -14511,6 +14931,6 @@ contains
       end do
 
       return
-      end procedure xposbl
+      end subroutine xposbl
 
 end submodule pepper_numerics

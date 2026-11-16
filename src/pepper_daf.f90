@@ -3,9 +3,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_daf.f90.
+!> [[pepper_instance_module]]).
 !>
 !>## DAFAH (DAF, assign handles)
 !>
@@ -1108,119 +1106,121 @@
 !>
 !>        Example code begins here.
 !>
-!>              PROGRAM DAFANA_EX1
-!>              IMPLICIT NONE
+!>```fortran
+!>      PROGRAM DAFANA_EX1
+!>      IMPLICIT NONE
 !>
-!>        C
-!>        C     Local parameters
-!>        C
-!>              INTEGER               MAXNSZ
-!>              PARAMETER           ( MAXNSZ = 1000 )
+!>C
+!>C     Local parameters
+!>C
+!>      INTEGER               MAXNSZ
+!>      PARAMETER           ( MAXNSZ = 1000 )
 !>
-!>              INTEGER               MAXND
-!>              PARAMETER           ( MAXND  = 124  )
+!>      INTEGER               MAXND
+!>      PARAMETER           ( MAXND  = 124  )
 !>
-!>              INTEGER               MAXNI
-!>              PARAMETER           ( MAXNI  = 250  )
+!>      INTEGER               MAXNI
+!>      PARAMETER           ( MAXNI  = 250  )
 !>
-!>              INTEGER               NWORDS
-!>              PARAMETER           ( NWORDS = 100  )
+!>      INTEGER               NWORDS
+!>      PARAMETER           ( NWORDS = 100  )
 !>
-!>              INTEGER               MAXSUM
-!>              PARAMETER           ( MAXSUM = 125  )
+!>      INTEGER               MAXSUM
+!>      PARAMETER           ( MAXSUM = 125  )
 !>
-!>        C
-!>        C     Local variables.
-!>        C
-!>              CHARACTER*(MAXNSZ)    NAME
+!>C
+!>C     Local variables.
+!>C
+!>      CHARACTER*(MAXNSZ)    NAME
 !>
-!>              DOUBLE PRECISION      DATA   ( NWORDS )
-!>              DOUBLE PRECISION      DC     ( MAXND  )
-!>              DOUBLE PRECISION      SUM    ( MAXSUM )
+!>      DOUBLE PRECISION      DATA   ( NWORDS )
+!>      DOUBLE PRECISION      DC     ( MAXND  )
+!>      DOUBLE PRECISION      SUM    ( MAXSUM )
 !>
-!>              INTEGER               BIDX
-!>              INTEGER               CHUNK
-!>              INTEGER               EIDX
-!>              INTEGER               IC     ( MAXNI  )
-!>              INTEGER               ND
-!>              INTEGER               NI
-!>              INTEGER               ORIGIN
-!>              INTEGER               TARGET
+!>      INTEGER               BIDX
+!>      INTEGER               CHUNK
+!>      INTEGER               EIDX
+!>      INTEGER               IC     ( MAXNI  )
+!>      INTEGER               ND
+!>      INTEGER               NI
+!>      INTEGER               ORIGIN
+!>      INTEGER               TARGET
 !>
-!>              LOGICAL               FOUND
+!>      LOGICAL               FOUND
 !>
-!>        C
-!>        C     Open the origin DAF file for reading.
-!>        C
-!>              CALL DAFOPR ( 'vo2_swu_ck2.bc', ORIGIN )
+!>C
+!>C     Open the origin DAF file for reading.
+!>C
+!>      CALL DAFOPR ( 'vo2_swu_ck2.bc', ORIGIN )
 !>
-!>        C
-!>        C     Start forward search in origin DAF.
-!>        C
-!>              CALL DAFBFS ( ORIGIN )
+!>C
+!>C     Start forward search in origin DAF.
+!>C
+!>      CALL DAFBFS ( ORIGIN )
 !>
-!>        C
-!>        C     Find the first array in origin DAF.
-!>        C
-!>              CALL DAFFNA ( FOUND  )
+!>C
+!>C     Find the first array in origin DAF.
+!>C
+!>      CALL DAFFNA ( FOUND  )
 !>
-!>        C
-!>        C     Get the summary and name of the current array in the
-!>        C     ORIGIN DAF file
-!>        C
-!>              CALL DAFGS  ( SUM  )
-!>              CALL DAFGN  ( NAME )
+!>C
+!>C     Get the summary and name of the current array in the
+!>C     ORIGIN DAF file
+!>C
+!>      CALL DAFGS  ( SUM  )
+!>      CALL DAFGN  ( NAME )
 !>
-!>        C
-!>        C     Unpack the summary.
-!>        C
-!>              CALL DAFHSF ( ORIGIN, ND, NI )
-!>              CALL DAFUS  ( SUM,    ND, NI, DC, IC )
+!>C
+!>C     Unpack the summary.
+!>C
+!>      CALL DAFHSF ( ORIGIN, ND, NI )
+!>      CALL DAFUS  ( SUM,    ND, NI, DC, IC )
 !>
-!>        C
-!>        C     Open the target DAF file for writing. Use 'CK' as
-!>        C     data type, and reserve no records for comments.
-!>        C
-!>              CALL DAFONW ( 'dafana_ex1.bc', 'CK', ND, NI,
-!>             .              'CK file created for example 1 DAFANA', 0,
-!>             .              TARGET )
+!>C
+!>C     Open the target DAF file for writing. Use 'CK' as
+!>C     data type, and reserve no records for comments.
+!>C
+!>      CALL DAFONW ( 'dafana_ex1.bc', 'CK', ND, NI,
+!>     .              'CK file created for example 1 DAFANA', 0,
+!>     .              TARGET )
 !>
-!>        C
-!>        C     Begin a new array in the target DAF file, using the
-!>        C     origin SUM and NAME.
-!>        C
-!>              CALL DAFBNA ( TARGET, SUM, NAME )
+!>C
+!>C     Begin a new array in the target DAF file, using the
+!>C     origin SUM and NAME.
+!>C
+!>      CALL DAFBNA ( TARGET, SUM, NAME )
 !>
-!>        C
-!>        C     Copy the complete array for the first segment of the
-!>        C     origin DAF file.
-!>        C
-!>              BIDX = IC(NI-1)
-!>              EIDX = IC(NI  )
+!>C
+!>C     Copy the complete array for the first segment of the
+!>C     origin DAF file.
+!>C
+!>      BIDX = IC(NI-1)
+!>      EIDX = IC(NI  )
 !>
-!>              DO WHILE ( BIDX .LE. EIDX )
+!>      DO WHILE ( BIDX .LE. EIDX )
 !>
-!>                 CHUNK = MIN ( BIDX + NWORDS - 1, EIDX )
+!>         CHUNK = MIN ( BIDX + NWORDS - 1, EIDX )
 !>
-!>                 CALL DAFGDA ( ORIGIN, BIDX, CHUNK, DATA )
-!>                 CALL DAFADA ( DATA,   NWORDS )
+!>         CALL DAFGDA ( ORIGIN, BIDX, CHUNK, DATA )
+!>         CALL DAFADA ( DATA,   NWORDS )
 !>
-!>                 BIDX = BIDX + NWORDS
+!>         BIDX = BIDX + NWORDS
 !>
-!>              END DO
+!>      END DO
 !>
-!>        C
-!>        C     End the new array in the target DAF.
-!>        C
-!>              CALL DAFENA
+!>C
+!>C     End the new array in the target DAF.
+!>C
+!>      CALL DAFENA
 !>
-!>        C
-!>        C     Close the DAF files.
-!>        C
-!>              CALL DAFCLS ( ORIGIN )
-!>              CALL DAFCLS ( TARGET )
+!>C
+!>C     Close the DAF files.
+!>C
+!>      CALL DAFCLS ( ORIGIN )
+!>      CALL DAFCLS ( TARGET )
 !>
-!>              END
+!>      END
+!>```
 !>
 !>        When this program is executed, no output is presented on
 !>        screen. After run completion, a new CK file exists in the
@@ -1254,212 +1254,214 @@
 !>
 !>        Example code begins here.
 !>
-!>              PROGRAM DAFANA_EX2
-!>              IMPLICIT NONE
+!>```fortran
+!>      PROGRAM DAFANA_EX2
+!>      IMPLICIT NONE
 !>
-!>        C
-!>        C     Assume we have read columns of d.p. numbers
-!>        C     from a text file. Write the data from each
-!>        C     column into a separate DAF.  Read these DAFs
-!>        C     and create a matrix containing the same data
-!>        C     as assumed input text file.
-!>        C
-!>        C     Since we do not need to retain any descriptive
-!>        C     information about the DAFs inside of the files
-!>        C     themselves, we'll use a summary format having
-!>        C     two integer components (the minimum--these are
-!>        C     reserved for use by the DAF routines) and zero
-!>        C     double precision components.
-!>        C
-!>        C     The internal file names and array names will
-!>        C     simply indicate the data sources.
-!>        C
+!>C
+!>C     Assume we have read columns of d.p. numbers
+!>C     from a text file. Write the data from each
+!>C     column into a separate DAF.  Read these DAFs
+!>C     and create a matrix containing the same data
+!>C     as assumed input text file.
+!>C
+!>C     Since we do not need to retain any descriptive
+!>C     information about the DAFs inside of the files
+!>C     themselves, we'll use a summary format having
+!>C     two integer components (the minimum--these are
+!>C     reserved for use by the DAF routines) and zero
+!>C     double precision components.
+!>C
+!>C     The internal file names and array names will
+!>C     simply indicate the data sources.
+!>C
 !>
-!>        C
-!>        C     Local parameters
-!>        C
-!>              INTEGER               FNMLEN
-!>              PARAMETER           ( FNMLEN = 20 )
+!>C
+!>C     Local parameters
+!>C
+!>      INTEGER               FNMLEN
+!>      PARAMETER           ( FNMLEN = 20 )
 !>
-!>              INTEGER               LINLEN
-!>              PARAMETER           ( LINLEN = 80 )
+!>      INTEGER               LINLEN
+!>      PARAMETER           ( LINLEN = 80 )
 !>
-!>              INTEGER               MAXLNS
-!>              PARAMETER           ( MAXLNS =  9 )
+!>      INTEGER               MAXLNS
+!>      PARAMETER           ( MAXLNS =  9 )
 !>
-!>              INTEGER               MAXCOL
-!>              PARAMETER           ( MAXCOL =  3 )
+!>      INTEGER               MAXCOL
+!>      PARAMETER           ( MAXCOL =  3 )
 !>
-!>              INTEGER               ND
-!>              PARAMETER           ( ND     =  0 )
+!>      INTEGER               ND
+!>      PARAMETER           ( ND     =  0 )
 !>
-!>              INTEGER               NDAF
-!>              PARAMETER           ( NDAF   =  3 )
+!>      INTEGER               NDAF
+!>      PARAMETER           ( NDAF   =  3 )
 !>
-!>              INTEGER               NI
-!>              PARAMETER           ( NI     =  2 )
+!>      INTEGER               NI
+!>      PARAMETER           ( NI     =  2 )
 !>
-!>              INTEGER               NUMLEN
-!>              PARAMETER           ( NUMLEN = 30 )
+!>      INTEGER               NUMLEN
+!>      PARAMETER           ( NUMLEN = 30 )
 !>
-!>              INTEGER               SIG
-!>              PARAMETER           ( SIG    = 10 )
+!>      INTEGER               SIG
+!>      PARAMETER           ( SIG    = 10 )
 !>
-!>        C
-!>        C     Local variables
-!>        C
-!>              CHARACTER*(FNMLEN)    DAFNAM ( NDAF   )
-!>              CHARACTER*(FNMLEN)    INFILE
-!>              CHARACTER*(LINLEN)    LINE
-!>              CHARACTER*(NUMLEN)    NUMCH
-!>              CHARACTER*(LINLEN)    PRSERR
-!>              CHARACTER*(FNMLEN)    RESULT
+!>C
+!>C     Local variables
+!>C
+!>      CHARACTER*(FNMLEN)    DAFNAM ( NDAF   )
+!>      CHARACTER*(FNMLEN)    INFILE
+!>      CHARACTER*(LINLEN)    LINE
+!>      CHARACTER*(NUMLEN)    NUMCH
+!>      CHARACTER*(LINLEN)    PRSERR
+!>      CHARACTER*(FNMLEN)    RESULT
 !>
-!>              DOUBLE PRECISION      DC     ( 1      )
-!>              DOUBLE PRECISION      NUMBER ( MAXLNS, MAXCOL )
-!>              DOUBLE PRECISION      NUMDP
-!>              DOUBLE PRECISION      SUMMRY ( 1      )
+!>      DOUBLE PRECISION      DC     ( 1      )
+!>      DOUBLE PRECISION      NUMBER ( MAXLNS, MAXCOL )
+!>      DOUBLE PRECISION      NUMDP
+!>      DOUBLE PRECISION      SUMMRY ( 1      )
 !>
-!>              INTEGER               FA
-!>              INTEGER               HAN    ( NDAF   )
-!>              INTEGER               I
-!>              INTEGER               IA
-!>              INTEGER               IC     ( NI     )
-!>              INTEGER               J
-!>              INTEGER               LENGTH
-!>              INTEGER               NCOLS
-!>              INTEGER               PTR
+!>      INTEGER               FA
+!>      INTEGER               HAN    ( NDAF   )
+!>      INTEGER               I
+!>      INTEGER               IA
+!>      INTEGER               IC     ( NI     )
+!>      INTEGER               J
+!>      INTEGER               LENGTH
+!>      INTEGER               NCOLS
+!>      INTEGER               PTR
 !>
-!>              LOGICAL               EOF
-!>              LOGICAL               FOUND
+!>      LOGICAL               EOF
+!>      LOGICAL               FOUND
 !>
-!>        C
-!>        C     Initial values
-!>        C
-!>              DATA                  DAFNAM   /  'COLUMN1.DAF',
-!>             .                                  'COLUMN2.DAF',
-!>             .                                  'COLUMN3.DAF'  /
+!>C
+!>C     Initial values
+!>C
+!>      DATA                  DAFNAM   /  'COLUMN1.DAF',
+!>     .                                  'COLUMN2.DAF',
+!>     .                                  'COLUMN3.DAF'  /
 !>
-!>              DATA                  NUMBER  /
-!>             .               11.D0, 21.D0, 31.D0, 41.D0, 51.D0,
-!>             .               61.D0, 71.D0, 81.D0, 91.D0,
-!>             .               12.D0, 22.D0, 32.D0, 42.D0, 52.D0,
-!>             .               62.D0, 72.D0, 82.D0, 92.D0,
-!>             .               13.D0, 23.D0, 33.D0, 43.D0, 52.D0,
-!>             .               63.D0, 73.D0, 83.D0, 93.D0        /
+!>      DATA                  NUMBER  /
+!>     .               11.D0, 21.D0, 31.D0, 41.D0, 51.D0,
+!>     .               61.D0, 71.D0, 81.D0, 91.D0,
+!>     .               12.D0, 22.D0, 32.D0, 42.D0, 52.D0,
+!>     .               62.D0, 72.D0, 82.D0, 92.D0,
+!>     .               13.D0, 23.D0, 33.D0, 43.D0, 52.D0,
+!>     .               63.D0, 73.D0, 83.D0, 93.D0        /
 !>
-!>        C
-!>        C     Create the new DAFs, and start a new array in each
-!>        C     one.  Just use the file name for the internal file
-!>        C     name and array name, for each DAF.  No assignments
-!>        C     are required for the array summaries.
-!>        C
-!>              DO I = 1, NDAF
+!>C
+!>C     Create the new DAFs, and start a new array in each
+!>C     one.  Just use the file name for the internal file
+!>C     name and array name, for each DAF.  No assignments
+!>C     are required for the array summaries.
+!>C
+!>      DO I = 1, NDAF
 !>
-!>                 CALL DAFOPN ( DAFNAM(I), ND, NI,
-!>             .                 DAFNAM(I), 0,  HAN(I) )
+!>         CALL DAFOPN ( DAFNAM(I), ND, NI,
+!>     .                 DAFNAM(I), 0,  HAN(I) )
 !>
-!>                 CALL DAFBNA ( HAN(I), SUMMRY, DAFNAM(I) )
+!>         CALL DAFBNA ( HAN(I), SUMMRY, DAFNAM(I) )
 !>
-!>              END DO
+!>      END DO
 !>
-!>        C
-!>        C     At this point, we assume that we have read the
-!>        C     file line by line. Add the numbers from each column
-!>        C     to the corresponding DAF.
-!>        C
-!>              DO I = 1, MAXLNS
+!>C
+!>C     At this point, we assume that we have read the
+!>C     file line by line. Add the numbers from each column
+!>C     to the corresponding DAF.
+!>C
+!>      DO I = 1, MAXLNS
 !>
-!>        C
-!>        C        Add the number from the ith column to the array
-!>        C        in the ith DAF.  We'll use DAFCAD to select
-!>        C        the correct DAF to add data to.
-!>        C
-!>                 DO J = 1, NDAF
-!>                    CALL DAFCAD ( HAN(J)         )
-!>                    CALL DAFADA ( NUMBER(I,J), 1 )
-!>                 END DO
+!>C
+!>C        Add the number from the ith column to the array
+!>C        in the ith DAF.  We'll use DAFCAD to select
+!>C        the correct DAF to add data to.
+!>C
+!>         DO J = 1, NDAF
+!>            CALL DAFCAD ( HAN(J)         )
+!>            CALL DAFADA ( NUMBER(I,J), 1 )
+!>         END DO
 !>
-!>              END DO
+!>      END DO
 !>
-!>        C
-!>        C     Finish ("end") the arrays.  Again, we'll use DAFCAD
-!>        C     to select the DAFs in which the arrays are to be
-!>        C     finished.  After finishing each array, close the DAF
-!>        C     containing it.
-!>        C
-!>              DO I = 1, NDAF
-!>                 CALL DAFCAD ( HAN(I) )
-!>                 CALL DAFENA
-!>                 CALL DAFCLS ( HAN(I) )
-!>              END DO
+!>C
+!>C     Finish ("end") the arrays.  Again, we'll use DAFCAD
+!>C     to select the DAFs in which the arrays are to be
+!>C     finished.  After finishing each array, close the DAF
+!>C     containing it.
+!>C
+!>      DO I = 1, NDAF
+!>         CALL DAFCAD ( HAN(I) )
+!>         CALL DAFENA
+!>         CALL DAFCLS ( HAN(I) )
+!>      END DO
 !>
-!>        C
-!>        C     Now for the verification step.  We'll try to
-!>        C     print a matrix containing the same data as
-!>        C     the original input file.  The format of the numbers,
-!>        C     the delimiters separating the numbers, spacing, and
-!>        C     non-printing characters may differ.
-!>        C
-!>        C     Open the DAFs for reading.
-!>        C
-!>              DO I = 1, NDAF
-!>                 CALL DAFOPR ( DAFNAM(I), HAN(I) )
-!>              END DO
+!>C
+!>C     Now for the verification step.  We'll try to
+!>C     print a matrix containing the same data as
+!>C     the original input file.  The format of the numbers,
+!>C     the delimiters separating the numbers, spacing, and
+!>C     non-printing characters may differ.
+!>C
+!>C     Open the DAFs for reading.
+!>C
+!>      DO I = 1, NDAF
+!>         CALL DAFOPR ( DAFNAM(I), HAN(I) )
+!>      END DO
 !>
-!>        C
-!>        C     Obtain the start and end addresses of the
-!>        C     data in each DAF.  To do this, we'll need to
-!>        C     obtain and unpack the array summaries.
-!>        C
-!>        C     If all went well, the addresses should be the
-!>        C     same for each DAF.  We'll assume that the initial
-!>        C     and final addresses in the first DAF are correct
-!>        C     for all three.
-!>        C
-!>              CALL DAFBFS ( HAN(1) )
-!>              CALL DAFFNA ( FOUND  )
-!>              CALL DAFGS  ( SUMMRY )
-!>              CALL DAFUS  ( SUMMRY, ND, NI, DC, IC )
+!>C
+!>C     Obtain the start and end addresses of the
+!>C     data in each DAF.  To do this, we'll need to
+!>C     obtain and unpack the array summaries.
+!>C
+!>C     If all went well, the addresses should be the
+!>C     same for each DAF.  We'll assume that the initial
+!>C     and final addresses in the first DAF are correct
+!>C     for all three.
+!>C
+!>      CALL DAFBFS ( HAN(1) )
+!>      CALL DAFFNA ( FOUND  )
+!>      CALL DAFGS  ( SUMMRY )
+!>      CALL DAFUS  ( SUMMRY, ND, NI, DC, IC )
 !>
-!>              IA      =  IC( NI-1 )
-!>              FA      =  IC( NI   )
-!>              LENGTH  =  FA - IA + 1
+!>      IA      =  IC( NI-1 )
+!>      FA      =  IC( NI   )
+!>      LENGTH  =  FA - IA + 1
 !>
-!>        C
-!>        C     Now read numbers from the DAFs and build up
-!>        C     lines of text.  Print these lines out.
-!>        C
-!>              DO I = 0,  LENGTH - 1
+!>C
+!>C     Now read numbers from the DAFs and build up
+!>C     lines of text.  Print these lines out.
+!>C
+!>      DO I = 0,  LENGTH - 1
 !>
-!>                 LINE = ' '
+!>         LINE = ' '
 !>
-!>                 DO J = 1, NDAF
+!>         DO J = 1, NDAF
 !>
-!>                    CALL DAFRDA ( HAN(J), IA+I, IA+I, NUMDP )
+!>            CALL DAFRDA ( HAN(J), IA+I, IA+I, NUMDP )
 !>
-!>        C
-!>        C           Convert the double precision number to a
-!>        C           character string, and append it to the current
-!>        C           line.
-!>        C
-!>                    CALL DPSTR  ( NUMDP,  SIG,        NUMCH )
-!>                    CALL SUFFIX ( NUMCH,  3,          LINE  )
+!>C
+!>C           Convert the double precision number to a
+!>C           character string, and append it to the current
+!>C           line.
+!>C
+!>            CALL DPSTR  ( NUMDP,  SIG,        NUMCH )
+!>            CALL SUFFIX ( NUMCH,  3,          LINE  )
 !>
-!>                 END DO
+!>         END DO
 !>
-!>                 WRITE(*,*) LINE
+!>         WRITE(*,*) LINE
 !>
-!>              END DO
+!>      END DO
 !>
-!>        C
-!>        C     Close the DAFs.
-!>        C
-!>              DO I = 1, NDAF
-!>                 CALL DAFCLS( HAN(I) )
-!>              END DO
+!>C
+!>C     Close the DAFs.
+!>C
+!>      DO I = 1, NDAF
+!>         CALL DAFCLS( HAN(I) )
+!>      END DO
 !>
-!>              END
+!>      END
+!>```
 !>
 !>        When this program was executed on a Mac/Intel/gfortran/64-bit
 !>        platform, the output was:
@@ -1935,211 +1937,213 @@
 !>
 !>        Example code begins here.
 !>
-!>              PROGRAM DAFFA_EX1
-!>              IMPLICIT NONE
+!>```fortran
+!>      PROGRAM DAFFA_EX1
+!>      IMPLICIT NONE
 !>
-!>        C
-!>        C     SPICELIB functions
-!>        C
-!>              INTEGER               CARDI
-!>              INTEGER               RTRIM
+!>C
+!>C     SPICELIB functions
+!>C
+!>      INTEGER               CARDI
+!>      INTEGER               RTRIM
 !>
-!>        C
-!>        C     Local parameters.
-!>        C
-!>              INTEGER               DSCSIZ
-!>              PARAMETER           ( DSCSIZ  = 5    )
+!>C
+!>C     Local parameters.
+!>C
+!>      INTEGER               DSCSIZ
+!>      PARAMETER           ( DSCSIZ  = 5    )
 !>
-!>              INTEGER               FILSIZ
-!>              PARAMETER           ( FILSIZ  = 255  )
+!>      INTEGER               FILSIZ
+!>      PARAMETER           ( FILSIZ  = 255  )
 !>
-!>              INTEGER               LBCELL
-!>              PARAMETER           ( LBCELL = -5 )
+!>      INTEGER               LBCELL
+!>      PARAMETER           ( LBCELL = -5 )
 !>
-!>              INTEGER               MAXOBJ
-!>              PARAMETER           ( MAXOBJ  = 1000 )
+!>      INTEGER               MAXOBJ
+!>      PARAMETER           ( MAXOBJ  = 1000 )
 !>
-!>              INTEGER               ND
-!>              PARAMETER           ( ND      = 2    )
+!>      INTEGER               ND
+!>      PARAMETER           ( ND      = 2    )
 !>
-!>              INTEGER               NI
-!>              PARAMETER           ( NI      = 6    )
+!>      INTEGER               NI
+!>      PARAMETER           ( NI      = 6    )
 !>
-!>              INTEGER               NEWCODE
-!>              PARAMETER           ( NEWCODE = -999 )
+!>      INTEGER               NEWCODE
+!>      PARAMETER           ( NEWCODE = -999 )
 !>
-!>              INTEGER               OLDCODE
-!>              PARAMETER           ( OLDCODE =  301 )
+!>      INTEGER               OLDCODE
+!>      PARAMETER           ( OLDCODE =  301 )
 !>
-!>              INTEGER               SGIDLN
-!>              PARAMETER           ( SGIDLN  = 1000 )
+!>      INTEGER               SGIDLN
+!>      PARAMETER           ( SGIDLN  = 1000 )
 !>
-!>        C
-!>        C     Local variables.
-!>        C
-!>              CHARACTER*(FILSIZ)    FNAME
-!>              CHARACTER*(SGIDLN)    SEGID
-!>              CHARACTER*(SGIDLN)    UPDSID
+!>C
+!>C     Local variables.
+!>C
+!>      CHARACTER*(FILSIZ)    FNAME
+!>      CHARACTER*(SGIDLN)    SEGID
+!>      CHARACTER*(SGIDLN)    UPDSID
 !>
-!>              DOUBLE PRECISION      DC     ( ND )
-!>              DOUBLE PRECISION      SUM    ( DSCSIZ )
+!>      DOUBLE PRECISION      DC     ( ND )
+!>      DOUBLE PRECISION      SUM    ( DSCSIZ )
 !>
-!>              INTEGER               HANDLE
-!>              INTEGER               I
-!>              INTEGER               IC     ( NI )
-!>              INTEGER               IDS    ( LBCELL : MAXOBJ )
-!>              INTEGER               OBJ
+!>      INTEGER               HANDLE
+!>      INTEGER               I
+!>      INTEGER               IC     ( NI )
+!>      INTEGER               IDS    ( LBCELL : MAXOBJ )
+!>      INTEGER               OBJ
 !>
-!>              LOGICAL               FOUND
-!>              LOGICAL               UPDATE
+!>      LOGICAL               FOUND
+!>      LOGICAL               UPDATE
 !>
-!>        C
-!>        C     Get the SPK file name.
-!>        C
-!>              CALL PROMPT ( 'Enter name of the SPK file > ', FNAME )
+!>C
+!>C     Get the SPK file name.
+!>C
+!>      CALL PROMPT ( 'Enter name of the SPK file > ', FNAME )
 !>
-!>        C
-!>        C     Initialize the set IDS.
-!>        C
-!>              CALL SSIZEI ( MAXOBJ, IDS )
+!>C
+!>C     Initialize the set IDS.
+!>C
+!>      CALL SSIZEI ( MAXOBJ, IDS )
 !>
-!>        C
-!>        C     Find the set of objects in the SPK file.
-!>        C
-!>              CALL SPKOBJ ( FNAME, IDS )
+!>C
+!>C     Find the set of objects in the SPK file.
+!>C
+!>      CALL SPKOBJ ( FNAME, IDS )
 !>
-!>              WRITE(*,'(A)') 'Objects in the original DAF file:'
-!>              WRITE(*,'(20I4)') ( IDS(I), I= 1, CARDI ( IDS ) )
+!>      WRITE(*,'(A)') 'Objects in the original DAF file:'
+!>      WRITE(*,'(20I4)') ( IDS(I), I= 1, CARDI ( IDS ) )
 !>
-!>        C
-!>        C     Open for writing the SPK file.
-!>        C
-!>              CALL DAFOPW ( FNAME, HANDLE )
+!>C
+!>C     Open for writing the SPK file.
+!>C
+!>      CALL DAFOPW ( FNAME, HANDLE )
 !>
-!>        C
-!>        C     Search the file in forward order.
-!>        C
-!>              CALL DAFBFS ( HANDLE )
-!>              CALL DAFFNA ( FOUND  )
+!>C
+!>C     Search the file in forward order.
+!>C
+!>      CALL DAFBFS ( HANDLE )
+!>      CALL DAFFNA ( FOUND  )
 !>
-!>              WRITE(*,'(A)') 'Original Segment IDs (forward order):'
+!>      WRITE(*,'(A)') 'Original Segment IDs (forward order):'
 !>
-!>              DO WHILE ( FOUND )
+!>      DO WHILE ( FOUND )
 !>
-!>        C
-!>        C        Fetch and unpack the descriptor (aka summary)
-!>        C        of the current segment, and get its name.
-!>        C
-!>                 CALL DAFGN ( SEGID )
-!>                 CALL DAFGS ( SUM   )
-!>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+!>C
+!>C        Fetch and unpack the descriptor (aka summary)
+!>C        of the current segment, and get its name.
+!>C
+!>         CALL DAFGN ( SEGID )
+!>         CALL DAFGS ( SUM   )
+!>         CALL DAFUS ( SUM, ND, NI, DC, IC )
 !>
-!>        C
-!>        C        Print the current segment name
-!>        C
-!>                 WRITE(*,'(2I6,2X,A)') IC(1), IC(2),
-!>             .                         SEGID(:RTRIM(SEGID))
+!>C
+!>C        Print the current segment name
+!>C
+!>         WRITE(*,'(2I6,2X,A)') IC(1), IC(2),
+!>     .                         SEGID(:RTRIM(SEGID))
 !>
-!>        C
-!>        C        Replace ID codes if necessary.
-!>        C
-!>                 UPDATE = .FALSE.
-!>                 IF ( IC(1) .EQ. OLDCODE ) THEN
+!>C
+!>C        Replace ID codes if necessary.
+!>C
+!>         UPDATE = .FALSE.
+!>         IF ( IC(1) .EQ. OLDCODE ) THEN
 !>
-!>                    IC(1)  = NEWCODE
-!>                    UPDATE = .TRUE.
+!>            IC(1)  = NEWCODE
+!>            UPDATE = .TRUE.
 !>
-!>                 END IF
-!>                 IF ( IC(2) .EQ. OLDCODE ) THEN
+!>         END IF
+!>         IF ( IC(2) .EQ. OLDCODE ) THEN
 !>
-!>                    IC(2) = NEWCODE
-!>                    UPDATE = .TRUE.
+!>            IC(2) = NEWCODE
+!>            UPDATE = .TRUE.
 !>
-!>                 END IF
+!>         END IF
 !>
-!>        C
-!>        C        Update segment ID if necessary.
-!>        C
-!>                 IF ( UPDATE ) THEN
+!>C
+!>C        Update segment ID if necessary.
+!>C
+!>         IF ( UPDATE ) THEN
 !>
-!>                    UPDSID = '# - Updated. Do not use.'
-!>                    CALL REPMC ( UPDSID, '#', SEGID(:RTRIM(SEGID)),
-!>             .                   UPDSID                            )
-!>                    CALL DAFRN ( UPDSID )
+!>            UPDSID = '# - Updated. Do not use.'
+!>            CALL REPMC ( UPDSID, '#', SEGID(:RTRIM(SEGID)),
+!>     .                   UPDSID                            )
+!>            CALL DAFRN ( UPDSID )
 !>
-!>                 END IF
+!>         END IF
 !>
-!>        C
-!>        C        Re-pack the descriptor; replace the descriptor
-!>        C        in the file.
-!>        C
-!>                 CALL DAFPS ( ND, NI, DC, IC, SUM )
+!>C
+!>C        Re-pack the descriptor; replace the descriptor
+!>C        in the file.
+!>C
+!>         CALL DAFPS ( ND, NI, DC, IC, SUM )
 !>
-!>                 CALL DAFRS ( SUM )
+!>         CALL DAFRS ( SUM )
 !>
-!>        C
-!>        C        Find the next segment.
-!>        C
-!>                 CALL DAFFNA ( FOUND )
+!>C
+!>C        Find the next segment.
+!>C
+!>         CALL DAFFNA ( FOUND )
 !>
-!>              END DO
+!>      END DO
 !>
-!>        C
-!>        C     Close the file.
-!>        C
-!>              CALL DAFCLS ( HANDLE )
+!>C
+!>C     Close the file.
+!>C
+!>      CALL DAFCLS ( HANDLE )
 !>
-!>        C
-!>        C     Reset the set IDS.
-!>        C
-!>              CALL SCARDI ( 0, IDS )
+!>C
+!>C     Reset the set IDS.
+!>C
+!>      CALL SCARDI ( 0, IDS )
 !>
-!>        C
-!>        C     Find the set of objects in the updated SPK file.
-!>        C
-!>              CALL SPKOBJ ( FNAME, IDS )
+!>C
+!>C     Find the set of objects in the updated SPK file.
+!>C
+!>      CALL SPKOBJ ( FNAME, IDS )
 !>
-!>              WRITE(*,*) ' '
-!>              WRITE(*,'(A)') 'Objects in the updated DAF file:'
-!>              WRITE(*,'(20I4)') ( IDS(I), I= 1, CARDI ( IDS ) )
+!>      WRITE(*,*) ' '
+!>      WRITE(*,'(A)') 'Objects in the updated DAF file:'
+!>      WRITE(*,'(20I4)') ( IDS(I), I= 1, CARDI ( IDS ) )
 !>
-!>        C
-!>        C     Search the file in backwards order and output the
-!>        C     segment IDs.
-!>        C
-!>              CALL DAFOPR ( FNAME, HANDLE )
+!>C
+!>C     Search the file in backwards order and output the
+!>C     segment IDs.
+!>C
+!>      CALL DAFOPR ( FNAME, HANDLE )
 !>
-!>              CALL DAFBBS ( HANDLE )
-!>              CALL DAFFPA ( FOUND  )
+!>      CALL DAFBBS ( HANDLE )
+!>      CALL DAFFPA ( FOUND  )
 !>
-!>              WRITE(*,'(A)') 'Updated Segment IDs (backwards order):'
+!>      WRITE(*,'(A)') 'Updated Segment IDs (backwards order):'
 !>
-!>              DO WHILE ( FOUND )
+!>      DO WHILE ( FOUND )
 !>
-!>        C
-!>        C        Fetch and unpack the descriptor (aka summary)
-!>        C        of the current segment, and get its name.
-!>        C
-!>                 CALL DAFGN ( SEGID )
-!>                 CALL DAFGS ( SUM   )
-!>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+!>C
+!>C        Fetch and unpack the descriptor (aka summary)
+!>C        of the current segment, and get its name.
+!>C
+!>         CALL DAFGN ( SEGID )
+!>         CALL DAFGS ( SUM   )
+!>         CALL DAFUS ( SUM, ND, NI, DC, IC )
 !>
-!>                 WRITE(*,'(2I6,2X,A)') IC(1), IC(2),
-!>             .                         SEGID(:RTRIM(SEGID))
+!>         WRITE(*,'(2I6,2X,A)') IC(1), IC(2),
+!>     .                         SEGID(:RTRIM(SEGID))
 !>
-!>        C
-!>        C        Find the previous segment.
-!>        C
-!>                 CALL DAFFPA ( FOUND )
+!>C
+!>C        Find the previous segment.
+!>C
+!>         CALL DAFFPA ( FOUND )
 !>
-!>              END DO
+!>      END DO
 !>
-!>        C
-!>        C     Close the file.
-!>        C
-!>              CALL DAFCLS ( HANDLE )
+!>C
+!>C     Close the file.
+!>C
+!>      CALL DAFCLS ( HANDLE )
 !>
-!>              END
+!>      END
+!>```
 !>
 !>        When this program was executed on a Mac/Intel/gfortran/64-bit
 !>        platform, using the SPK file named de430.bsp, the output was:
@@ -2192,265 +2196,267 @@
 !>
 !>        Example code begins here.
 !>
-!>              PROGRAM DAFFA_EX2
-!>              IMPLICIT NONE
+!>```fortran
+!>      PROGRAM DAFFA_EX2
+!>      IMPLICIT NONE
 !>
-!>        C
-!>        C     Local parameters
-!>        C
-!>              INTEGER               RTRIM
+!>C
+!>C     Local parameters
+!>C
+!>      INTEGER               RTRIM
 !>
-!>        C
-!>        C     Local parameters
-!>        C
-!>              INTEGER               ARRYSZ
-!>              PARAMETER           ( ARRYSZ = 10000000 )
+!>C
+!>C     Local parameters
+!>C
+!>      INTEGER               ARRYSZ
+!>      PARAMETER           ( ARRYSZ = 10000000 )
 !>
-!>              INTEGER               ERRLEN
-!>              PARAMETER           ( ERRLEN =  240 )
+!>      INTEGER               ERRLEN
+!>      PARAMETER           ( ERRLEN =  240 )
 !>
-!>              INTEGER               FILEN
-!>              PARAMETER           ( FILEN  =  128 )
+!>      INTEGER               FILEN
+!>      PARAMETER           ( FILEN  =  128 )
 !>
-!>              INTEGER               LINLEN
-!>              PARAMETER           ( LINLEN =   80 )
+!>      INTEGER               LINLEN
+!>      PARAMETER           ( LINLEN =   80 )
 !>
-!>              INTEGER               MAXND
-!>              PARAMETER           ( MAXND  =  125 )
+!>      INTEGER               MAXND
+!>      PARAMETER           ( MAXND  =  125 )
 !>
-!>              INTEGER               MAXNI
-!>              PARAMETER           ( MAXNI  =  250 )
+!>      INTEGER               MAXNI
+!>      PARAMETER           ( MAXNI  =  250 )
 !>
-!>              INTEGER               MAXSUM
-!>              PARAMETER           ( MAXSUM =  128 )
+!>      INTEGER               MAXSUM
+!>      PARAMETER           ( MAXSUM =  128 )
 !>
-!>              INTEGER               RLEN
-!>              PARAMETER           ( RLEN   = 1000 )
+!>      INTEGER               RLEN
+!>      PARAMETER           ( RLEN   = 1000 )
 !>
-!>        C
-!>        C     Local variables
-!>        C
-!>              CHARACTER*(RLEN)      ANAME1
-!>              CHARACTER*(RLEN)      ANAME2
-!>              CHARACTER*(FILEN)     DAF1
-!>              CHARACTER*(FILEN)     DAF2
-!>              CHARACTER*(FILEN)     LOG
-!>              CHARACTER*(ERRLEN)    PRSERR
-!>              CHARACTER*(LINLEN)    STR
-!>              CHARACTER*(LINLEN)    TOLCH
+!>C
+!>C     Local variables
+!>C
+!>      CHARACTER*(RLEN)      ANAME1
+!>      CHARACTER*(RLEN)      ANAME2
+!>      CHARACTER*(FILEN)     DAF1
+!>      CHARACTER*(FILEN)     DAF2
+!>      CHARACTER*(FILEN)     LOG
+!>      CHARACTER*(ERRLEN)    PRSERR
+!>      CHARACTER*(LINLEN)    STR
+!>      CHARACTER*(LINLEN)    TOLCH
 !>
-!>              DOUBLE PRECISION      ARRAY1 ( ARRYSZ )
-!>              DOUBLE PRECISION      ARRAY2 ( ARRYSZ )
-!>              DOUBLE PRECISION      DC1    ( MAXND )
-!>              DOUBLE PRECISION      DC2    ( MAXND )
-!>              DOUBLE PRECISION      TOL
-!>              DOUBLE PRECISION      DIFF
-!>              DOUBLE PRECISION      SUM1   ( MAXSUM )
-!>              DOUBLE PRECISION      SUM2   ( MAXSUM )
+!>      DOUBLE PRECISION      ARRAY1 ( ARRYSZ )
+!>      DOUBLE PRECISION      ARRAY2 ( ARRYSZ )
+!>      DOUBLE PRECISION      DC1    ( MAXND )
+!>      DOUBLE PRECISION      DC2    ( MAXND )
+!>      DOUBLE PRECISION      TOL
+!>      DOUBLE PRECISION      DIFF
+!>      DOUBLE PRECISION      SUM1   ( MAXSUM )
+!>      DOUBLE PRECISION      SUM2   ( MAXSUM )
 !>
-!>              INTEGER               FA1
-!>              INTEGER               FA2
-!>              INTEGER               I
-!>              INTEGER               IA1
-!>              INTEGER               IA2
-!>              INTEGER               IC1    ( MAXNI )
-!>              INTEGER               IC2    ( MAXNI )
-!>              INTEGER               HANDL1
-!>              INTEGER               HANDL2
-!>              INTEGER               LEN1
-!>              INTEGER               LEN2
-!>              INTEGER               ND1
-!>              INTEGER               ND2
-!>              INTEGER               NI1
-!>              INTEGER               NI2
-!>              INTEGER               PTR
+!>      INTEGER               FA1
+!>      INTEGER               FA2
+!>      INTEGER               I
+!>      INTEGER               IA1
+!>      INTEGER               IA2
+!>      INTEGER               IC1    ( MAXNI )
+!>      INTEGER               IC2    ( MAXNI )
+!>      INTEGER               HANDL1
+!>      INTEGER               HANDL2
+!>      INTEGER               LEN1
+!>      INTEGER               LEN2
+!>      INTEGER               ND1
+!>      INTEGER               ND2
+!>      INTEGER               NI1
+!>      INTEGER               NI2
+!>      INTEGER               PTR
 !>
-!>              LOGICAL               FOUND
+!>      LOGICAL               FOUND
 !>
-!>        C
-!>        C     Start out by obtaining the names of the DAFs to be
-!>        C     compared.
-!>        C
-!>              CALL PROMPT ( 'Enter name of first DAF  > ', DAF1 )
-!>              CALL PROMPT ( 'Enter name of second DAF > ', DAF2 )
-!>              CALL PROMPT ( 'Enter tolerance for data comparison > ',
-!>             .              TOLCH                                   )
+!>C
+!>C     Start out by obtaining the names of the DAFs to be
+!>C     compared.
+!>C
+!>      CALL PROMPT ( 'Enter name of first DAF  > ', DAF1 )
+!>      CALL PROMPT ( 'Enter name of second DAF > ', DAF2 )
+!>      CALL PROMPT ( 'Enter tolerance for data comparison > ',
+!>     .              TOLCH                                   )
 !>
-!>              CALL NPARSD ( TOLCH, TOL, PRSERR, PTR )
+!>      CALL NPARSD ( TOLCH, TOL, PRSERR, PTR )
 !>
-!>        C
-!>        C     Open both DAFs for reading.
-!>        C
-!>              CALL DAFOPR ( DAF1, HANDL1 )
-!>              CALL DAFOPR ( DAF2, HANDL2 )
+!>C
+!>C     Open both DAFs for reading.
+!>C
+!>      CALL DAFOPR ( DAF1, HANDL1 )
+!>      CALL DAFOPR ( DAF2, HANDL2 )
 !>
-!>        C
-!>        C     Start forward searches in both DAFS.
-!>        C
-!>              CALL DAFBFS ( HANDL1 )
-!>              CALL DAFBFS ( HANDL2 )
+!>C
+!>C     Start forward searches in both DAFS.
+!>C
+!>      CALL DAFBFS ( HANDL1 )
+!>      CALL DAFBFS ( HANDL2 )
 !>
-!>        C
-!>        C     Obtain the summary formats for each DAF. Stop now
-!>        C     if the summary formats don't match.
-!>        C
-!>              CALL DAFHSF ( HANDL1, ND1, NI1 )
-!>              CALL DAFHSF ( HANDL2, ND2, NI2 )
+!>C
+!>C     Obtain the summary formats for each DAF. Stop now
+!>C     if the summary formats don't match.
+!>C
+!>      CALL DAFHSF ( HANDL1, ND1, NI1 )
+!>      CALL DAFHSF ( HANDL2, ND2, NI2 )
 !>
-!>              IF (  ( ND1 .NE. ND2 ) .OR. ( NI1 .NE. NI2 )  ) THEN
+!>      IF (  ( ND1 .NE. ND2 ) .OR. ( NI1 .NE. NI2 )  ) THEN
 !>
-!>                 STR = 'Summary formats do not match.  NI1 = #, '//
-!>             .                      'NI2 = #, ND1 = #, ND2 = #.'
+!>         STR = 'Summary formats do not match.  NI1 = #, '//
+!>     .                      'NI2 = #, ND1 = #, ND2 = #.'
 !>
-!>                 CALL REPMI  ( STR, '#', NI1, STR )
-!>                 CALL REPMI  ( STR, '#', NI2, STR )
-!>                 CALL REPMI  ( STR, '#', ND1, STR )
-!>                 CALL REPMI  ( STR, '#', ND2, STR )
+!>         CALL REPMI  ( STR, '#', NI1, STR )
+!>         CALL REPMI  ( STR, '#', NI2, STR )
+!>         CALL REPMI  ( STR, '#', ND1, STR )
+!>         CALL REPMI  ( STR, '#', ND2, STR )
 !>
-!>                 WRITE(*,*) STR
+!>         WRITE(*,*) STR
 !>
-!>                 CALL SIGERR ( 'Incompatible DAFs' )
+!>         CALL SIGERR ( 'Incompatible DAFs' )
 !>
-!>              END IF
+!>      END IF
 !>
-!>        C
-!>        C     Find the first array in each DAF. Use DAFCS
-!>        C     (DAF, continue search) to set the handle of the DAF
-!>        C     to search in before calling DAFFNA.
-!>        C
-!>              CALL DAFCS  ( HANDL1 )
-!>              CALL DAFFNA ( FOUND  )
+!>C
+!>C     Find the first array in each DAF. Use DAFCS
+!>C     (DAF, continue search) to set the handle of the DAF
+!>C     to search in before calling DAFFNA.
+!>C
+!>      CALL DAFCS  ( HANDL1 )
+!>      CALL DAFFNA ( FOUND  )
 !>
-!>              IF ( FOUND ) THEN
-!>                 CALL DAFCS  ( HANDL2 )
-!>                 CALL DAFFNA ( FOUND  )
-!>              END IF
+!>      IF ( FOUND ) THEN
+!>         CALL DAFCS  ( HANDL2 )
+!>         CALL DAFFNA ( FOUND  )
+!>      END IF
 !>
-!>              DO WHILE ( FOUND )
+!>      DO WHILE ( FOUND )
 !>
-!>        C
-!>        C        Get the summary and name of each array, using
-!>        C        DAFCS to select the DAF to get the information
-!>        C        from. Unpack the summaries and find the beginning
-!>        C        and ending addresses of the arrays. Read the
-!>        C        arrays into the variables ARRAY1 and ARRAY2.
-!>        C
-!>                 CALL DAFCS ( HANDL1 )
-!>                 CALL DAFGN ( ANAME1 )
-!>                 CALL DAFGS ( SUM1   )
-!>                 CALL DAFUS ( SUM1, ND1, NI1, DC1, IC1 )
+!>C
+!>C        Get the summary and name of each array, using
+!>C        DAFCS to select the DAF to get the information
+!>C        from. Unpack the summaries and find the beginning
+!>C        and ending addresses of the arrays. Read the
+!>C        arrays into the variables ARRAY1 and ARRAY2.
+!>C
+!>         CALL DAFCS ( HANDL1 )
+!>         CALL DAFGN ( ANAME1 )
+!>         CALL DAFGS ( SUM1   )
+!>         CALL DAFUS ( SUM1, ND1, NI1, DC1, IC1 )
 !>
-!>                 IA1  = IC1 ( NI1 - 1 )
-!>                 FA1  = IC1 ( NI1     )
-!>                 LEN1 = FA1 - IA1  + 1
+!>         IA1  = IC1 ( NI1 - 1 )
+!>         FA1  = IC1 ( NI1     )
+!>         LEN1 = FA1 - IA1  + 1
 !>
-!>                 IF (  LEN1  .GT.  ARRYSZ  ) THEN
-!>                    CALL SETMSG ( 'Buffer too small; need # elts.')
-!>                    CALL ERRINT ( '#', LEN1                       )
-!>                    CALL SIGERR ( 'ARRAYTOOSMALL'                 )
-!>                 ELSE
-!>                    CALL DAFGDA ( HANDL1, IA1, FA1, ARRAY1 )
-!>                 END IF
+!>         IF (  LEN1  .GT.  ARRYSZ  ) THEN
+!>            CALL SETMSG ( 'Buffer too small; need # elts.')
+!>            CALL ERRINT ( '#', LEN1                       )
+!>            CALL SIGERR ( 'ARRAYTOOSMALL'                 )
+!>         ELSE
+!>            CALL DAFGDA ( HANDL1, IA1, FA1, ARRAY1 )
+!>         END IF
 !>
-!>                 CALL DAFCS ( HANDL2 )
-!>                 CALL DAFGN ( ANAME2 )
-!>                 CALL DAFGS ( SUM2   )
-!>                 CALL DAFUS ( SUM2, ND2, NI2, DC2, IC2 )
+!>         CALL DAFCS ( HANDL2 )
+!>         CALL DAFGN ( ANAME2 )
+!>         CALL DAFGS ( SUM2   )
+!>         CALL DAFUS ( SUM2, ND2, NI2, DC2, IC2 )
 !>
-!>                 IA2 = IC2 ( NI2 - 1 )
-!>                 FA2 = IC2 ( NI2     )
+!>         IA2 = IC2 ( NI2 - 1 )
+!>         FA2 = IC2 ( NI2     )
 !>
-!>                 LEN2 = FA2 - IA2  + 1
+!>         LEN2 = FA2 - IA2  + 1
 !>
-!>                 IF (  LEN2  .GT.  ARRYSZ  ) THEN
+!>         IF (  LEN2  .GT.  ARRYSZ  ) THEN
 !>
-!>                    CALL SETMSG ( 'Buffer too small; need # elts.')
-!>                    CALL ERRINT ( '#', LEN2                       )
-!>                    CALL SIGERR ( 'ARRAYTOOSMALL'                 )
+!>            CALL SETMSG ( 'Buffer too small; need # elts.')
+!>            CALL ERRINT ( '#', LEN2                       )
+!>            CALL SIGERR ( 'ARRAYTOOSMALL'                 )
 !>
-!>                 ELSE IF ( LEN1 .NE. LEN2 ) THEN
+!>         ELSE IF ( LEN1 .NE. LEN2 ) THEN
 !>
-!>                    CALL SETMSG ( 'DAF structures do not match. '//
-!>             .                    'LEN1 = #, LEN2 = #. ' )
-!>                    CALL ERRINT ( '#', LEN1              )
-!>                    CALL ERRINT ( '#', LEN2              )
-!>                    CALL SIGERR ( 'Incompatible DAFs' )
+!>            CALL SETMSG ( 'DAF structures do not match. '//
+!>     .                    'LEN1 = #, LEN2 = #. ' )
+!>            CALL ERRINT ( '#', LEN1              )
+!>            CALL ERRINT ( '#', LEN2              )
+!>            CALL SIGERR ( 'Incompatible DAFs' )
 !>
-!>                 ELSE
-!>                    CALL DAFGDA ( HANDL2, IA2, FA2, ARRAY2 )
-!>                 END IF
-!>        C
-!>        C
-!>        C        Compare the data in the two arrays. Log a message
-!>        C        for every instance of data that differs by more
-!>        C        than the allowed tolerance. Use the array names
-!>        C        to label the data sources.
-!>        C
-!>                 DO I = 1, LEN1
+!>         ELSE
+!>            CALL DAFGDA ( HANDL2, IA2, FA2, ARRAY2 )
+!>         END IF
+!>C
+!>C
+!>C        Compare the data in the two arrays. Log a message
+!>C        for every instance of data that differs by more
+!>C        than the allowed tolerance. Use the array names
+!>C        to label the data sources.
+!>C
+!>         DO I = 1, LEN1
 !>
-!>                    DIFF  =  ABS( ARRAY1(I) - ARRAY2(I) )
+!>            DIFF  =  ABS( ARRAY1(I) - ARRAY2(I) )
 !>
-!>                    IF (  DIFF  .GT.  TOL  ) THEN
-!>        C
-!>        C              Get the array names.
-!>        C
-!>                       CALL DAFCS ( HANDL1 )
-!>                       CALL DAFGN ( ANAME1 )
-!>                       CALL DAFCS ( HANDL2 )
-!>                       CALL DAFGN ( ANAME2 )
+!>            IF (  DIFF  .GT.  TOL  ) THEN
+!>C
+!>C              Get the array names.
+!>C
+!>               CALL DAFCS ( HANDL1 )
+!>               CALL DAFGN ( ANAME1 )
+!>               CALL DAFCS ( HANDL2 )
+!>               CALL DAFGN ( ANAME2 )
 !>
-!>        C
-!>        C              Construct the report strings. The number 14
-!>        C              below is the number of significant digits to
-!>        C              show in the strings representing d.p.
-!>        C              numbers.
-!>        C
+!>C
+!>C              Construct the report strings. The number 14
+!>C              below is the number of significant digits to
+!>C              show in the strings representing d.p.
+!>C              numbers.
+!>C
 !>
-!>                       WRITE(*,*) ' '
-!>                       WRITE(*,*) 'Difference of array ' //
-!>             .                    'elements exceeded '   //
-!>             .                    'tolerance.'
-!>                       WRITE(*,*) 'First array : ',
-!>             .                     ANAME1(:RTRIM(ANAME1))
-!>                       WRITE(*,*) 'Second array: ',
-!>             .                     ANAME2(:RTRIM(ANAME2))
+!>               WRITE(*,*) ' '
+!>               WRITE(*,*) 'Difference of array ' //
+!>     .                    'elements exceeded '   //
+!>     .                    'tolerance.'
+!>               WRITE(*,*) 'First array : ',
+!>     .                     ANAME1(:RTRIM(ANAME1))
+!>               WRITE(*,*) 'Second array: ',
+!>     .                     ANAME2(:RTRIM(ANAME2))
 !>
-!>                       STR = 'First value : #'
-!>                       CALL REPMD  ( STR, '#', ARRAY1(I), 14, STR )
-!>                       WRITE(*,*) STR
+!>               STR = 'First value : #'
+!>               CALL REPMD  ( STR, '#', ARRAY1(I), 14, STR )
+!>               WRITE(*,*) STR
 !>
-!>                       STR = 'Second value: #'
-!>                       CALL REPMD  ( STR, '#', ARRAY2(I), 14, STR )
-!>                       WRITE(*,*) STR
+!>               STR = 'Second value: #'
+!>               CALL REPMD  ( STR, '#', ARRAY2(I), 14, STR )
+!>               WRITE(*,*) STR
 !>
-!>                       STR = 'Difference  :  #'
-!>                       CALL REPMD  ( STR, '#', DIFF,      14, STR )
-!>                       WRITE(*,*) STR
+!>               STR = 'Difference  :  #'
+!>               CALL REPMD  ( STR, '#', DIFF,      14, STR )
+!>               WRITE(*,*) STR
 !>
-!>                    END IF
+!>            END IF
 !>
-!>                 END DO
+!>         END DO
 !>
-!>        C
-!>        C        Find the next pair of arrays.
-!>        C
-!>                 CALL DAFCS  ( HANDL1 )
-!>                 CALL DAFFNA ( FOUND  )
+!>C
+!>C        Find the next pair of arrays.
+!>C
+!>         CALL DAFCS  ( HANDL1 )
+!>         CALL DAFFNA ( FOUND  )
 !>
-!>                 IF ( FOUND ) THEN
-!>                    CALL DAFCS  ( HANDL2 )
-!>                    CALL DAFFNA ( FOUND  )
-!>                 END IF
+!>         IF ( FOUND ) THEN
+!>            CALL DAFCS  ( HANDL2 )
+!>            CALL DAFFNA ( FOUND  )
+!>         END IF
 !>
-!>              END DO
+!>      END DO
 !>
-!>        C
-!>        C     Close the DAFs.
-!>        C
-!>              CALL DAFCLS ( HANDL1 )
-!>              CALL DAFCLS ( HANDL2 )
+!>C
+!>C     Close the DAFs.
+!>C
+!>      CALL DAFCLS ( HANDL1 )
+!>      CALL DAFCLS ( HANDL2 )
 !>
-!>              END
+!>      END
+!>```
 !>
 !>        When this program was executed on a Mac/Intel/gfortran/64-bit
 !>        platform, using the PCK (DAF) files named
@@ -2861,6 +2867,9 @@ submodule (pepper_instance_module) pepper_daf
 
 contains
 
+      !> Read N encoded integers from a text file, decoding them into
+      !> their equivalent integers.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for a previously opened text
@@ -2968,13 +2977,13 @@ contains
       !>        of argument DATA in $Brief_I/O table.
       !>
       !>-    SPICELIB Version 1.0.0, 19-OCT-1992 (KRG)
-      module procedure rdenci
+      module subroutine rdenci ( ctx, unit, n, data )
       use pepper_kinds, only: ip
       implicit none
-
-!     Local parameters
-!
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Fortran unit number of input text file.
+      integer(ip), intent(in) :: n  !! Number of integers to read and decode.
+      integer(ip), intent(out) :: data(*)  !! List of decoded integers.
 
       character(errlen) :: errmsg
       character(maxenc) :: work(wrksiz)
@@ -3080,8 +3089,12 @@ contains
       end do
 
       return
-      end procedure rdenci
+      end subroutine rdenci
 
+      !> Convert a string representing a double precision number in a
+      !> base 16 "scientific notation" into its equivalent double
+      !> precision number.
+      !>
       !>## Detailed Input
       !>
       !>     STRING   is a character string containing a base 16 "scientific
@@ -3260,81 +3273,83 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM HX2DP_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM HX2DP_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 80 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 80 )
       !>
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 17 )
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 17 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(STRLEN)    NUMBER ( 16 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(STRLEN)    NUMBER ( 16 )
       !>
-      !>              DOUBLE PRECISION      VALUE
+      !>      DOUBLE PRECISION      VALUE
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>              LOGICAL               ERROR
+      !>      LOGICAL               ERROR
       !>
-      !>        C
-      !>        C     Assign an array of strings representing, in base 16
-      !>        C     "scientific notation", double precision numbers.
-      !>        C     Not all of them are valid representations.
-      !>        C
-      !>              DATA                  NUMBER /
-      !>             .                  '89705F4136B4A6^-7', '12357898765X34',
-      !>             .                  '1^1',               '-1^1',
-      !>             .                  '4^3',               '-4^3',
-      !>             .                  '7F5EB^5',           '7F5eb^5',
-      !>             .                  '1B^2',              '+1B^2',
-      !>             .                  '+1B^+2',            '0^0',
-      !>             .                  ' ',                 '-AB238Z^2',
-      !>             .                  '234ABC',            '234ABC^'    /
+      !>C
+      !>C     Assign an array of strings representing, in base 16
+      !>C     "scientific notation", double precision numbers.
+      !>C     Not all of them are valid representations.
+      !>C
+      !>      DATA                  NUMBER /
+      !>     .                  '89705F4136B4A6^-7', '12357898765X34',
+      !>     .                  '1^1',               '-1^1',
+      !>     .                  '4^3',               '-4^3',
+      !>     .                  '7F5EB^5',           '7F5eb^5',
+      !>     .                  '1B^2',              '+1B^2',
+      !>     .                  '+1B^+2',            '0^0',
+      !>     .                  ' ',                 '-AB238Z^2',
+      !>     .                  '234ABC',            '234ABC^'    /
       !>
-      !>        C
-      !>        C     Loop over the NUMBER array, call HX2DP for each
-      !>        C     element of NUMBER.
-      !>        C
-      !>              WRITE(*,'(A)') 'string             number'
-      !>              WRITE(*,'(A)') '-----------------  ----------------'
+      !>C
+      !>C     Loop over the NUMBER array, call HX2DP for each
+      !>C     element of NUMBER.
+      !>C
+      !>      WRITE(*,'(A)') 'string             number'
+      !>      WRITE(*,'(A)') '-----------------  ----------------'
       !>
-      !>              DO I= 1, 16
+      !>      DO I= 1, 16
       !>
-      !>                 CALL HX2DP ( NUMBER(I), VALUE, ERROR, ERRMSG )
+      !>         CALL HX2DP ( NUMBER(I), VALUE, ERROR, ERRMSG )
       !>
-      !>                 IF ( ERROR ) THEN
+      !>         IF ( ERROR ) THEN
       !>
-      !>                    WRITE(*,'(A17,2X,A)') NUMBER(I), ERRMSG
+      !>            WRITE(*,'(A17,2X,A)') NUMBER(I), ERRMSG
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,'(A17,X,E17.9)') NUMBER(I), VALUE
+      !>            WRITE(*,'(A17,X,E17.9)') NUMBER(I), VALUE
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Finally, try with a number that has too many digits in
-      !>        C     the mantissa.
-      !>        C
-      !>              CALL HX2DP ( '4ABC123AB346523BDC568798C2473678^1',
-      !>             .             VALUE, ERROR, ERRMSG )
+      !>C
+      !>C     Finally, try with a number that has too many digits in
+      !>C     the mantissa.
+      !>C
+      !>      CALL HX2DP ( '4ABC123AB346523BDC568798C2473678^1',
+      !>     .             VALUE, ERROR, ERRMSG )
       !>
-      !>              WRITE(*,*)
-      !>              WRITE(*,*) 'String 4ABC123AB346523BDC568798C2473678^1 '
-      !>             .        // 'produces:'
-      !>              WRITE(*,*) '   ', ERRMSG
+      !>      WRITE(*,*)
+      !>      WRITE(*,*) 'String 4ABC123AB346523BDC568798C2473678^1 '
+      !>     .        // 'produces:'
+      !>      WRITE(*,*) '   ', ERRMSG
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -3419,11 +3434,16 @@ contains
       !>        example correct.
       !>
       !>-    SPICELIB Version 1.0.0, 26-OCT-1992 (KRG)
-      module procedure hx2dp
+      module subroutine hx2dp ( ctx, string, number, error, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin
       use pepper_strings, only: repmc_inplace, repmi_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! Hex form string to convert to double precision.
+      real(wp), intent(out) :: number  !! Double precision value to be returned.
+      logical, intent(out) :: error  !! A logical flag which is .TRUE. on error.
+      character(*), intent(out) :: errmsg  !! A descriptive error message.
       integer(ip), parameter :: maxman = 31
       real(wp), parameter :: dpval(0:maxdig-1) = &
          [ 0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, 6.0_wp, &
@@ -3815,8 +3835,11 @@ contains
 
       return
       end associate
-      end procedure hx2dp
+      end subroutine hx2dp
 
+      !> Read N encoded d.p. numbers from a text file, decoding them
+      !> into their equivalent d.p. numbers.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for a previously opened text
@@ -3936,13 +3959,13 @@ contains
       !>        file as the cause.
       !>
       !>-    SPICELIB Version 1.0.0, 20-OCT-1992 (KRG)
-      module procedure rdencd
+      module subroutine rdencd ( ctx, unit, n, data )
       use pepper_kinds, only: ip, wp
       implicit none
-
-!     Local parameters
-!
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Fortran unit number of input text file.
+      integer(ip), intent(in) :: n  !! Number of d.p. numbers to read and decode.
+      real(wp), intent(out) :: data(*)  !! List of decoded d.p. numbers.
 
       character(errlen) :: errmsg
       character(maxenc) :: work(wrksiz)
@@ -4050,8 +4073,10 @@ contains
       end do
 
       return
-      end procedure rdencd
+      end subroutine rdencd
 
+      !> Open a new text file for subsequent write access.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of the new text file to be opened.
@@ -4314,9 +4339,12 @@ contains
       !>        The code was reformatted so that a utility program can
       !>        create the source file for a specific environment given a
       !>        master source file.
-      module procedure txtopn
+      module subroutine txtopn ( ctx, fname, unit )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of file.
+      integer(ip), intent(out) :: unit  !! Logical unit.
 
       integer(ip) :: iostat
 
@@ -4349,8 +4377,10 @@ contains
       end if
 
       return
-      end procedure txtopn
+      end subroutine txtopn
 
+      !> Open a text file for read access.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of the text file to be opened.
@@ -4638,9 +4668,12 @@ contains
       !>
       !>        Module updated to allow portability to the Lahey F77L EM/32
       !>        FORTRAN V 4.0 environment.
-      module procedure txtopr
+      module subroutine txtopr ( ctx, fname, unit )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of file.
+      integer(ip), intent(out) :: unit  !! Logical unit.
 
       integer(ip) :: iostat
 
@@ -4676,8 +4709,10 @@ contains
       end if
 
       return
-      end procedure txtopr
+      end subroutine txtopr
 
+      !> Encode and write integers to a text file.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for a previously opened text
@@ -4861,9 +4896,13 @@ contains
       !>        output format actually used by the routine.
       !>
       !>-    SPICELIB Version 1.0.0, 19-OCT-1992 (KRG)
-      module procedure wrenci
+      module subroutine wrenci ( ctx, unit, n, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Fortran unit number of output text file.
+      integer(ip), intent(in) :: n  !! Number of integers to encode and write.
+      integer(ip), intent(in) :: data(*)  !! List of integers to be encoded and written.
 
 
 
@@ -4953,8 +4992,10 @@ contains
       end do
 
       return
-      end procedure wrenci
+      end subroutine wrenci
 
+      !> Convert an integer to an equivalent signed hexadecimal string.
+      !>
       !>## Detailed Input
       !>
       !>     NUMBER   is the integer to be converted.
@@ -5112,9 +5153,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 22-OCT-1992 (KRG)
-      module procedure int2hx
+      module subroutine int2hx ( ctx, number, string, length )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: number  !! Integer to be converted.
+      character(*), intent(out) :: string  !! Equivalent hexadecimal string, left justified.
+      integer(ip), intent(out) :: length  !! The length of the hexadecimal string produced.
 
       integer(ip), parameter :: base = 16
 
@@ -5225,8 +5270,11 @@ contains
       length = strlen - begin + 1
 
       return
-      end procedure int2hx
+      end subroutine int2hx
 
+      !> Convert a double precision number to an equivalent character
+      !> string using a base 16 "scientific notation."
+      !>
       !>## Detailed Input
       !>
       !>     NUMBER   is the double precision number to be converted to a
@@ -5380,49 +5428,51 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DP2HX_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DP2HX_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER               HXSLEN
-      !>              PARAMETER           ( HXSLEN = 40 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER               HXSLEN
+      !>      PARAMETER           ( HXSLEN = 40 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(HXSLEN)    STRVAL
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(HXSLEN)    STRVAL
       !>
-      !>              DOUBLE PRECISION      NUMBER (8)
+      !>      DOUBLE PRECISION      NUMBER (8)
       !>
-      !>              INTEGER               I
-      !>              INTEGER               SVALLN
+      !>      INTEGER               I
+      !>      INTEGER               SVALLN
       !>
-      !>        C
-      !>        C     Assign an array of double precision numbers.
-      !>        C
-      !>              DATA                  NUMBER /    2.0D-9,       1.0D0,
-      !>             .                                  -1.0D0,    1024.0D0,
-      !>             .                               -1024.0D0,  521707.0D0,
-      !>             .                                  27.0D0,       0.0D0 /
+      !>C
+      !>C     Assign an array of double precision numbers.
+      !>C
+      !>      DATA                  NUMBER /    2.0D-9,       1.0D0,
+      !>     .                                  -1.0D0,    1024.0D0,
+      !>     .                               -1024.0D0,  521707.0D0,
+      !>     .                                  27.0D0,       0.0D0 /
       !>
-      !>        C
-      !>        C     Loop over the NUMBER array, call DP2HX for each
-      !>        C     element of NUMBER.
-      !>        C
-      !>              WRITE(*,*) 'number       string             length'
-      !>              WRITE(*,*) '-----------  -----------------  ------'
+      !>C
+      !>C     Loop over the NUMBER array, call DP2HX for each
+      !>C     element of NUMBER.
+      !>C
+      !>      WRITE(*,*) 'number       string             length'
+      !>      WRITE(*,*) '-----------  -----------------  ------'
       !>
-      !>              DO I= 1, 8
+      !>      DO I= 1, 8
       !>
-      !>                 CALL DP2HX ( NUMBER(I), STRVAL, SVALLN )
-      !>                 WRITE(*,'(E12.4,2X,A17,2X,I5)') NUMBER(I), STRVAL,
-      !>             .                                              SVALLN
+      !>         CALL DP2HX ( NUMBER(I), STRVAL, SVALLN )
+      !>         WRITE(*,'(E12.4,2X,A17,2X,I5)') NUMBER(I), STRVAL,
+      !>     .                                              SVALLN
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5482,9 +5532,13 @@ contains
       !>        example correct.
       !>
       !>-    SPICELIB Version 1.0.0, 26-OCT-1992 (KRG)
-      module procedure dp2hx
+      module subroutine dp2hx ( ctx, number, hxstr, hxssiz )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: number  !! D.p. number to be converted.
+      character(*), intent(out) :: hxstr  !! Equivalent character string, left justified.
+      integer(ip), intent(out) :: hxssiz  !! Length of the character string produced.
 
 
 
@@ -5804,8 +5858,10 @@ contains
       hxstr = tmpstr(:hxssiz)
 
       return
-      end procedure dp2hx
+      end subroutine dp2hx
 
+      !> Encode and write d.p. numbers to a text file.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for a previously opened text
@@ -5994,13 +6050,13 @@ contains
       !>        output format actually used by the routine.
       !>
       !>-    SPICELIB Version 1.0.0, 20-OCT-1992 (KRG)
-      module procedure wrencd
+      module subroutine wrencd ( ctx, unit, n, data )
       use pepper_kinds, only: ip, wp
       implicit none
-
-!     Local parameters
-!
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Fortran unit number of output text file.
+      integer(ip), intent(in) :: n  !! Number of d.p. numbers to encode and write.
+      real(wp), intent(in) :: data(*)  !! List of d.p. numbers to encode and write.
 
       character(maxenc) :: work(wrksiz)
 
@@ -6088,15 +6144,13 @@ contains
       end do
 
       return
-      end procedure wrencd
+      end subroutine wrencd
 
-      !>## Abstract
+      !> Read the contents of the file record of a DAF.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read the contents of the file record of a DAF.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6201,39 +6255,41 @@ contains
       !>        Re-ordered header sections.
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
-      !>
-      !>     SPICELIB Functions
-      !>
-      !>     Local Parameters
-      !>
-      !>     Record Number of the file record in a DAF.
-      !>
-      !>     Length of the IDWORD string.
-      !>
-      !>     Length of the internal filename string.
-      !>
-      !>     Starting location in bytes of the internal filename in the
-      !>     file record.
-      !>
-      !>     Size of an integer in bytes.
-      !>
-      !>     Local Variables
-      !>
-      !>     PEPPER: ZZXLATEI returns an array (also of one element).
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzdafgfr
+      module subroutine zzdafgfr ( ctx, handle, idword, nd, ni, ifname, fward, bward, free, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of the DAF.
+      character(*), intent(out) :: idword  !! DAF ID Word that indicates file type.
+      integer(ip), intent(out) :: nd  !! Number of double precision components in summaries.
+      integer(ip), intent(out) :: ni  !! Number of integer components in summaries.
+      character(*), intent(out) :: ifname  !! Internal file name.
+      integer(ip), intent(out) :: fward  !! Forward list pointer.
+      integer(ip), intent(out) :: bward  !! Backward list pointer.
+      integer(ip), intent(out) :: free  !! Free address pointer.
+      logical, intent(out) :: found  !! Logical indicating whether the record was found.
+!
+!     Local Parameters
+!
+!     Record Number of the file record in a DAF.
+!
       integer(ip), parameter :: frlocr = 1
+!
+!     Starting location in bytes of the internal filename in the
+!     file record.
+!
       integer(ip), parameter :: ifnstr = 17
+!
+!     Size of an integer in bytes.
+!
       integer(ip), parameter :: inlen = 4
+!
+!     Local Variables
+!
+!     PEPPER: ZZXLATEI returns an array (also of one element).
+!
       character(cbfsiz) :: chrbuf
       character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       character(idwlen) :: locidw
@@ -6257,6 +6313,9 @@ contains
       associate ( first => ctx%zzdafgfr_state%first, &
                   natbff => ctx%zzdafgfr_state%natbff, &
                   strbff => ctx%zzdafgfr_state%strbff )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -6320,6 +6379,19 @@ contains
          //            'has been closed.'                           )
          call ctx%errint ( '#', handle                                  )
          call ctx%sigerr ( 'SPICE(HANDLENOTFOUND)'                      )
+         return
+      end if
+
+!
+!     PEPPER: a DAF built in memory has no file: its file record is in
+!     its image.
+!
+      i = daf_synthetic_slot ( ctx, handle )
+      if ( i > 0 ) then
+         call daf_image_file_record ( ctx%spice%zzddhman%files(i)%image, &
+                                      idword, nd, ni, ifname, &
+                                      fward, bward, free )
+         found = .true.
          return
       end if
 
@@ -6475,8 +6547,10 @@ contains
 
       return
       end associate
-      end procedure zzdafgfr
+      end subroutine zzdafgfr
 
+      !> Write the file record to a new DAF file.
+      !>
       !>## Detailed Input
       !>
       !>     LUN        is a logical unit number of a DAF whose first record is
@@ -6566,40 +6640,43 @@ contains
       !>        Detailed_Input sections of the module header.
       !>
       !>-    SPICELIB Version 1.0.0, 02-MAR-1999 (FST)
-      !>
-      !>     SPICELIB Functions
-      !>
-      !>     Local Parameters
-      !>
-      !>     Amount of space measured in characters necessary to
-      !>     null pad between the last character of FORMAT and the
-      !>     first character of FTPSTR to keep FTPSTR at character
-      !>     700 in a 1024 byte record.
-      !>
-      !>     Amount of space measured in characters necessary to
-      !>     null pad from the last character of FTPSTR to the
-      !>     end of the file record. Note: This value assumes the
-      !>     length of the file record is 1024 bytes.  The DAF
-      !>     specification only requires the presence of 1000
-      !>     characters, so this may require modification for
-      !>     non-standard platforms.
-      !>
-      !>     Lengths of internal file name, ID word, and format word.
-      !>
-      !>     Local Variables
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzdafnfr
+      module subroutine zzdafnfr ( ctx, lun, idword, nd, ni, ifname, fward, bward, free, format )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       use pepper_inc_zzftprms
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: lun  !! Logical unit number of an open DAF file.
+      character(*), intent(in) :: idword  !! DAF ID word.
+      integer(ip), intent(in) :: nd  !! Number of double precision components in a summary.
+      integer(ip), intent(in) :: ni  !! Number of integer components in a summary.
+      character(*), intent(in) :: ifname  !! Internal filename.
+      integer(ip), intent(in) :: fward  !! First descriptor record.
+      integer(ip), intent(in) :: bward  !! Last descriptor record.
+      integer(ip), intent(in) :: free  !! First free address.
+      character(*), intent(in) :: format  !! File binary format identifier string.
+!
+!     Local Parameters
+!
+!     Amount of space measured in characters necessary to
+!     null pad between the last character of FORMAT and the
+!     first character of FTPSTR to keep FTPSTR at character
+!     700 in a 1024 byte record.
+!
       integer(ip), parameter :: preftp = 603
+!
+!     Amount of space measured in characters necessary to
+!     null pad from the last character of FTPSTR to the
+!     end of the file record. Note: This value assumes the
+!     length of the file record is 1024 bytes.  The DAF
+!     specification only requires the presence of 1000
+!     characters, so this may require modification for
+!     non-standard platforms.
+!
       integer(ip), parameter :: pstftp = 297
+!
+!     Local Variables
+!
       character(1) :: nullch
       character(fmtlen) :: locfmt
       character(idwlen) :: locidw
@@ -6615,6 +6692,9 @@ contains
                   ftpstr => ctx%zzdafnfr_state%ftpstr, &
                   prenul => ctx%zzdafnfr_state%prenul, &
                   pstnul => ctx%zzdafnfr_state%pstnul )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -6725,15 +6805,13 @@ contains
 
       return
       end associate
-      end procedure zzdafnfr
+      end subroutine zzdafnfr
 
-      !>## Abstract
+      !> Read a data record from a DAF.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read a data record from a DAF.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6810,21 +6888,19 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
-      !>
-      !>     SPICELIB Functions
-      !>
-      !>     Local Variables
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzdafgdr
+      module subroutine zzdafgdr ( ctx, handle, recno, dprec, found )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of the DAF.
+      integer(ip), intent(in) :: recno  !! Record number.
+      real(wp), intent(out) :: dprec  ( * )  !! Contents of the record.
+      logical, intent(out) :: found  !! Logical indicating whether the record was found.
+!
+!     Local Variables
+!
       character(cbfsiz) :: chrbuf
       character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       character(strsiz) :: tmpstr
@@ -6840,6 +6916,9 @@ contains
       associate ( first => ctx%zzdafgdr_state%first, &
                   natbff => ctx%zzdafgdr_state%natbff, &
                   strbff => ctx%zzdafgdr_state%strbff )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -6992,15 +7071,13 @@ contains
 
       return
       end associate
-      end procedure zzdafgdr
+      end subroutine zzdafgdr
 
-      !>## Abstract
+      !> Read a summary/descriptor record from a DAF.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read a summary/descriptor record from a DAF.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7084,32 +7161,29 @@ contains
       !>        Corrected typo in comments. Reordered header sections.
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
-      !>
-      !>     SPICELIB Functions
-      !>
-      !>     Local Parameters
-      !>
-      !>     Length in bytes of double precision numbers and integers.
-      !>
-      !>     Local Variables
-      !>
-      !>     Equivalence DPBUF to INBUF. (PEPPER: not equivalenced; a
-      !>     summary's integers are translated into INBUF and packed into
-      !>     DPBUF with TRANSFER.)
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzdafgsr
+      module subroutine zzdafgsr ( ctx, handle, recno, nd, ni, dprec, found )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: pack_integers
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of the DAF.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: nd  !! Number of double precision components in a summary.
+      integer(ip), intent(in) :: ni  !! Number of integer components in a summary.
+      real(wp), intent(out) :: dprec  ( * )  !! Contents of the record.
+      logical, intent(out) :: found  !! Logical indicating whether the record was found.
+!
+!     Local Parameters
+!
+!     Length in bytes of double precision numbers and integers.
+!
       integer(ip), parameter :: dplen = 8
       integer(ip), parameter :: inlen = dplen/2
+!
+!     Local Variables
+!
       character(cbfsiz) :: chrbuf
       character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       character(strsiz) :: tmpstr
@@ -7131,6 +7205,9 @@ contains
       associate ( first => ctx%zzdafgsr_state%first, &
                   natbff => ctx%zzdafgsr_state%natbff, &
                   strbff => ctx%zzdafgsr_state%strbff )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -7194,6 +7271,19 @@ contains
          //            'has been closed.'                           )
          call ctx%errint ( '#', handle                                  )
          call ctx%sigerr ( 'SPICE(HANDLENOTFOUND)'                      )
+         return
+      end if
+
+!
+!     PEPPER: a DAF built in memory has no file: the summary record is
+!     in its image (native).
+!
+      i = daf_synthetic_slot ( ctx, handle )
+      if ( i > 0 ) then
+         associate ( image => ctx%spice%zzddhman%files(i)%image )
+            found = recno >= 1 .and. recno <= size(image)/128
+            if ( found ) dprec(1:128) = image(128*(recno-1)+1:128*recno)
+         end associate
          return
       end if
 
@@ -7416,8 +7506,10 @@ contains
 
       return
       end associate
-      end procedure zzdafgsr
+      end subroutine zzdafgsr
 
+      !> Open a DAF for subsequent read requests.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the file name of a DAF to be opened for read
@@ -7527,76 +7619,78 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFOPR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFOPR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Define the summary parameters appropriate
-      !>        C     for an SPK file.
-      !>        C
-      !>              INTEGER               MAXSUM
-      !>              PARAMETER           ( MAXSUM = 125 )
+      !>C
+      !>C     Define the summary parameters appropriate
+      !>C     for an SPK file.
+      !>C
+      !>      INTEGER               MAXSUM
+      !>      PARAMETER           ( MAXSUM = 125 )
       !>
-      !>              INTEGER               ND
-      !>              PARAMETER           ( ND = 2 )
+      !>      INTEGER               ND
+      !>      PARAMETER           ( ND = 2 )
       !>
-      !>              INTEGER               NI
-      !>              PARAMETER           ( NI = 6 )
+      !>      INTEGER               NI
+      !>      PARAMETER           ( NI = 6 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(32)        KERNEL
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(32)        KERNEL
       !>
-      !>              DOUBLE PRECISION      DC     ( ND     )
-      !>              DOUBLE PRECISION      SUM    ( MAXSUM )
+      !>      DOUBLE PRECISION      DC     ( ND     )
+      !>      DOUBLE PRECISION      SUM    ( MAXSUM )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               IC     ( NI     )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               IC     ( NI     )
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Open a DAF for read. Return a HANDLE referring to the
-      !>        C     file.
-      !>        C
-      !>              KERNEL = 'de421.bsp'
-      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>C
+      !>C     Open a DAF for read. Return a HANDLE referring to the
+      !>C     file.
+      !>C
+      !>      KERNEL = 'de421.bsp'
+      !>      CALL DAFOPR ( KERNEL, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a forward search on the file.
-      !>        C
-      !>              CALL DAFBFS ( HANDLE )
+      !>C
+      !>C     Begin a forward search on the file.
+      !>C
+      !>      CALL DAFBFS ( HANDLE )
       !>
-      !>        C
-      !>        C     Search until a DAF array is found.
-      !>        C
-      !>              CALL DAFFNA ( FOUND )
+      !>C
+      !>C     Search until a DAF array is found.
+      !>C
+      !>      CALL DAFFNA ( FOUND )
       !>
-      !>        C
-      !>        C     Loop while the search finds subsequent DAF arrays.
-      !>        C
-      !>              DO WHILE ( FOUND )
+      !>C
+      !>C     Loop while the search finds subsequent DAF arrays.
+      !>C
+      !>      DO WHILE ( FOUND )
       !>
-      !>                 CALL DAFGS ( SUM )
-      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>         CALL DAFGS ( SUM )
+      !>         CALL DAFUS ( SUM, ND, NI, DC, IC )
       !>
-      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
-      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>         WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>         WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
       !>
-      !>        C
-      !>        C        Check for another segment.
-      !>        C
-      !>                 CALL DAFFNA ( FOUND )
+      !>C
+      !>C        Check for another segment.
+      !>C
+      !>         CALL DAFFNA ( FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Safely close the DAF.
-      !>        C
-      !>              CALL DAFCLS ( HANDLE )
+      !>C
+      !>C     Safely close the DAF.
+      !>C
+      !>      CALL DAFCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -7787,10 +7881,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafopr
+      module subroutine dafopr ( ctx, fname, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of DAF to be opened.
+      integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -7818,7 +7915,6 @@ contains
 
 !
 !     Initialize the handle list, if necessary.
-!
 !
 !     Attempt to open the file; perform any appropriate checks.
 !
@@ -7876,8 +7972,10 @@ contains
 
       return
       end associate
-      end procedure dafopr
+      end subroutine dafopr
 
+      !> Open a DAF for subsequent write requests.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a DAF to be opened with write access.
@@ -7961,103 +8059,105 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFOPW_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFOPW_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               RTRIM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               RTRIM
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         KERNEL
-      !>              PARAMETER           ( KERNEL =
-      !>             .                         'earthstns_itrf93_201023.bsp' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         KERNEL
+      !>      PARAMETER           ( KERNEL =
+      !>     .                         'earthstns_itrf93_201023.bsp' )
       !>
-      !>              INTEGER               BUFFSZ
-      !>              PARAMETER           ( BUFFSZ = 10 )
+      !>      INTEGER               BUFFSZ
+      !>      PARAMETER           ( BUFFSZ = 10 )
       !>
-      !>              INTEGER               LINLEN
-      !>              PARAMETER           ( LINLEN = 1000 )
+      !>      INTEGER               LINLEN
+      !>      PARAMETER           ( LINLEN = 1000 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(LINLEN)    BUFFER ( BUFFSZ )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(LINLEN)    BUFFER ( BUFFSZ )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               N
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               DONE
+      !>      LOGICAL               DONE
       !>
-      !>        C
-      !>        C     Open a DAF for write. Return a HANDLE referring to the
-      !>        C     file.
-      !>        C
-      !>              CALL DAFOPW ( KERNEL, HANDLE )
+      !>C
+      !>C     Open a DAF for write. Return a HANDLE referring to the
+      !>C     file.
+      !>C
+      !>      CALL DAFOPW ( KERNEL, HANDLE )
       !>
-      !>        C
-      !>        C     Print the first 10 lines of comments from the DAF file.
-      !>        C
-      !>              WRITE(*,'(A)') 'Comment area of input DAF file '
-      !>             .            // '(max. 10 lines): '
-      !>              WRITE(*,'(A)') '---------------------------------------'
-      !>             .            // '-----------------------'
+      !>C
+      !>C     Print the first 10 lines of comments from the DAF file.
+      !>C
+      !>      WRITE(*,'(A)') 'Comment area of input DAF file '
+      !>     .            // '(max. 10 lines): '
+      !>      WRITE(*,'(A)') '---------------------------------------'
+      !>     .            // '-----------------------'
       !>
-      !>              CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
+      !>      CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
       !>
-      !>              DO I = 1, N
+      !>      DO I = 1, N
       !>
-      !>                 WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
+      !>         WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              WRITE(*,'(A)') '---------------------------------------'
-      !>             .            // '-----------------------'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Deleting entire comment area...'
+      !>      WRITE(*,'(A)') '---------------------------------------'
+      !>     .            // '-----------------------'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Deleting entire comment area...'
       !>
-      !>        C
-      !>        C     Delete all the comments from the DAF file.
-      !>        C
-      !>              CALL DAFDC ( HANDLE )
+      !>C
+      !>C     Delete all the comments from the DAF file.
+      !>C
+      !>      CALL DAFDC ( HANDLE )
       !>
-      !>        C
-      !>        C     Close the DAF file and re-open it for read
-      !>        C     access to work around the DAFEC restriction
-      !>        C     on comments not to be modified while they are
-      !>        C     being extracted.
-      !>        C
-      !>              CALL DAFCLS( HANDLE  )
+      !>C
+      !>C     Close the DAF file and re-open it for read
+      !>C     access to work around the DAFEC restriction
+      !>C     on comments not to be modified while they are
+      !>C     being extracted.
+      !>C
+      !>      CALL DAFCLS( HANDLE  )
       !>
-      !>              CALL DAFOPR( KERNEL, HANDLE  )
+      !>      CALL DAFOPR( KERNEL, HANDLE  )
       !>
-      !>        C
-      !>        C     Check if the comments have indeed been deleted.
-      !>        C
-      !>              CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
+      !>C
+      !>C     Check if the comments have indeed been deleted.
+      !>C
+      !>      CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
       !>
-      !>              IF ( DONE .AND. N .EQ. 0 ) THEN
+      !>      IF ( DONE .AND. N .EQ. 0 ) THEN
       !>
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) '   Successful operation.'
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) '   Successful operation.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) '   Operation failed.'
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) '   Operation failed.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Safely close the DAF.
-      !>        C
-      !>              CALL DAFCLS ( HANDLE )
+      !>C
+      !>C     Safely close the DAF.
+      !>C
+      !>      CALL DAFCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -8247,12 +8347,13 @@ contains
       !>
       !>        Some error messages were changed so that they specify
       !>        names of relevant DAFs.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dafopw
+      module subroutine dafopw ( ctx, fname, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of DAF to be opened.
+      integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -8276,14 +8377,15 @@ contains
       logical :: found
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
 !     Initialize the handle list, if necessary.
 !
-!
 !     Check to see if there is room in the file table.
-!
 !
 !     PEPPER: the file table grows as needed; SPICELIB signaled
 !     SPICE(DAFFTFULL) here when it had FTSIZE (5000) DAFs.
@@ -8335,8 +8437,10 @@ contains
 
       return
       end associate
-      end procedure dafopw
+      end subroutine dafopw
 
+      !> Open a new DAF for subsequent write requests.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a new DAF to be created (and
@@ -8620,13 +8724,19 @@ contains
       !>
       !>        See the $Revisions section under DAFAH for a discussion
       !>        of the impact of the changes made for this version.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dafonw
+      module subroutine dafonw ( ctx, fname, ftype, nd, ni, ifname, resv, handle )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ltrim, rtrim
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of DAF to be opened.
+      character(*), intent(in) :: ftype  !! Mnemonic code for type of data in the DAF file.
+      integer(ip), intent(in) :: nd  !! Number of double precision components in summaries.
+      integer(ip), intent(in) :: ni  !! Number of integer components in summaries.
+      character(*), intent(in) :: ifname  !! Internal file name.
+      integer(ip), intent(in) :: resv  !! Number of records to reserve.
+      integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip) :: findex
@@ -8652,14 +8762,15 @@ contains
       logical :: found
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
 !     Initialize the handle list, if necessary.
 !
-!
 !     Check to see if there is room in the file table.
-!
 !
 !     PEPPER: the file table grows as needed; SPICELIB signaled
 !     SPICE(DAFFTFULL) here when it had FTSIZE (5000) DAFs.
@@ -8886,15 +8997,13 @@ contains
 
       return
       end associate
-      end procedure dafonw
+      end subroutine dafonw
 
-      !>## Abstract
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
+      !> routine [[dafonw]]. NAIF supports this routine only to provide
+      !> backward compatibility.
       !>
-      !>     Deprecated: This routine has been superseded by the SPICELIB
-      !>     routine DAFONW. NAIF supports this routine only to provide
-      !>     backward compatibility.
-      !>
-      !>     Open a new DAF for subsequent write requests.
+      !> Open a new DAF for subsequent write requests.
       !>
       !>## Detailed Input
       !>
@@ -9145,12 +9254,17 @@ contains
       !>
       !>        Some error messages were changed so that they specify
       !>        names of relevant DAFs.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dafopn
+      module subroutine dafopn ( ctx, fname, nd, ni, ifname, resv, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of DAF to be opened.
+      integer(ip), intent(in) :: nd  !! Number of double precision components in summaries.
+      integer(ip), intent(in) :: ni  !! Number of integer components in summaries.
+      character(*), intent(in) :: ifname  !! Internal file name.
+      integer(ip), intent(in) :: resv  !! Number of records to reserve.
+      integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -9174,14 +9288,15 @@ contains
       logical :: found
       associate ( ft => ctx%spice%dafah, &
                   nft => ctx%spice%dafah%nft )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
 !     Initialize the handle list, if necessary.
 !
-!
 !     Check to see if there is room in the file table.
-!
 !
 !     PEPPER: the file table grows as needed; SPICELIB signaled
 !     SPICE(DAFFTFULL) here when it had FTSIZE (5000) DAFs.
@@ -9361,8 +9476,10 @@ contains
 
       return
       end associate
-      end procedure dafopn
+      end subroutine dafopn
 
+      !> Close the DAF associated with a given handle.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a previously opened DAF file.
@@ -9448,76 +9565,78 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFCLS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFCLS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Define the summary parameters appropriate
-      !>        C     for an SPK file.
-      !>        C
-      !>              INTEGER               MAXSUM
-      !>              PARAMETER           ( MAXSUM = 125 )
+      !>C
+      !>C     Define the summary parameters appropriate
+      !>C     for an SPK file.
+      !>C
+      !>      INTEGER               MAXSUM
+      !>      PARAMETER           ( MAXSUM = 125 )
       !>
-      !>              INTEGER               ND
-      !>              PARAMETER           ( ND = 2 )
+      !>      INTEGER               ND
+      !>      PARAMETER           ( ND = 2 )
       !>
-      !>              INTEGER               NI
-      !>              PARAMETER           ( NI = 6 )
+      !>      INTEGER               NI
+      !>      PARAMETER           ( NI = 6 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(32)        KERNEL
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(32)        KERNEL
       !>
-      !>              DOUBLE PRECISION      DC     ( ND     )
-      !>              DOUBLE PRECISION      SUM    ( MAXSUM )
+      !>      DOUBLE PRECISION      DC     ( ND     )
+      !>      DOUBLE PRECISION      SUM    ( MAXSUM )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               IC     ( NI     )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               IC     ( NI     )
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Open a DAF for read. Return a HANDLE referring to the
-      !>        C     file.
-      !>        C
-      !>              KERNEL = 'de421.bsp'
-      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>C
+      !>C     Open a DAF for read. Return a HANDLE referring to the
+      !>C     file.
+      !>C
+      !>      KERNEL = 'de421.bsp'
+      !>      CALL DAFOPR ( KERNEL, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a forward search on the file.
-      !>        C
-      !>              CALL DAFBFS ( HANDLE )
+      !>C
+      !>C     Begin a forward search on the file.
+      !>C
+      !>      CALL DAFBFS ( HANDLE )
       !>
-      !>        C
-      !>        C     Search until a DAF array is found.
-      !>        C
-      !>              CALL DAFFNA ( FOUND )
+      !>C
+      !>C     Search until a DAF array is found.
+      !>C
+      !>      CALL DAFFNA ( FOUND )
       !>
-      !>        C
-      !>        C     Loop while the search finds subsequent DAF arrays.
-      !>        C
-      !>              DO WHILE ( FOUND )
+      !>C
+      !>C     Loop while the search finds subsequent DAF arrays.
+      !>C
+      !>      DO WHILE ( FOUND )
       !>
-      !>                 CALL DAFGS ( SUM )
-      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>         CALL DAFGS ( SUM )
+      !>         CALL DAFUS ( SUM, ND, NI, DC, IC )
       !>
-      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
-      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>         WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>         WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
       !>
-      !>        C
-      !>        C        Check for another segment.
-      !>        C
-      !>                 CALL DAFFNA ( FOUND )
+      !>C
+      !>C        Check for another segment.
+      !>C
+      !>         CALL DAFFNA ( FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Safely close the DAF.
-      !>        C
-      !>              CALL DAFCLS ( HANDLE )
+      !>C
+      !>C     Safely close the DAF.
+      !>C
+      !>      CALL DAFCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -9667,10 +9786,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafcls
+      module subroutine dafcls ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF to be closed.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -9699,7 +9820,6 @@ contains
 !
 !     Initialize the handle list, if necessary.
 !
-!
 !     Is this file even open? If so, decrement the number of links
 !     to the file. If the number of links drops to zero, physically
 !     close the file and remove it from the file buffer.
@@ -9724,8 +9844,10 @@ contains
 
       return
       end associate
-      end procedure dafcls
+      end subroutine dafcls
 
+      !> Return the summary format associated with a handle.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a previously opened
@@ -9774,82 +9896,84 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFHSF_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFHSF_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Count the number of d.p. words of data in a
-      !>        C     DAF.  Exclude array summaries, reserved records,
-      !>        C     the file record, and character records.
-      !>        C
-      !>              INTEGER               FILEN
-      !>              PARAMETER           ( FILEN  = 128 )
+      !>C
+      !>C     Count the number of d.p. words of data in a
+      !>C     DAF.  Exclude array summaries, reserved records,
+      !>C     the file record, and character records.
+      !>C
+      !>      INTEGER               FILEN
+      !>      PARAMETER           ( FILEN  = 128 )
       !>
-      !>              INTEGER               MAXND
-      !>              PARAMETER           ( MAXND  = 124 )
+      !>      INTEGER               MAXND
+      !>      PARAMETER           ( MAXND  = 124 )
       !>
-      !>              INTEGER               MAXNI
-      !>              PARAMETER           ( MAXNI  = 250 )
+      !>      INTEGER               MAXNI
+      !>      PARAMETER           ( MAXNI  = 250 )
       !>
-      !>              INTEGER               MAXSUM
-      !>              PARAMETER           ( MAXSUM = 125 )
+      !>      INTEGER               MAXSUM
+      !>      PARAMETER           ( MAXSUM = 125 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(FILEN)     DAF
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(FILEN)     DAF
       !>
-      !>              DOUBLE PRECISION      DC    ( MAXND  )
-      !>              DOUBLE PRECISION      SUM   ( MAXSUM )
+      !>      DOUBLE PRECISION      DC    ( MAXND  )
+      !>      DOUBLE PRECISION      SUM   ( MAXSUM )
       !>
-      !>              INTEGER               FA
-      !>              INTEGER               HANDLE
-      !>              INTEGER               IA
-      !>              INTEGER               IC    ( MAXNI )
-      !>              INTEGER               N
-      !>              INTEGER               ND
-      !>              INTEGER               NI
+      !>      INTEGER               FA
+      !>      INTEGER               HANDLE
+      !>      INTEGER               IA
+      !>      INTEGER               IC    ( MAXNI )
+      !>      INTEGER               N
+      !>      INTEGER               ND
+      !>      INTEGER               NI
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>              DAF = 'de421.bsp'
+      !>      DAF = 'de421.bsp'
       !>
-      !>        C
-      !>        C     Open the DAF and find the summary format.
-      !>        C
-      !>              CALL DAFOPR ( DAF,    HANDLE )
-      !>              CALL DAFHSF ( HANDLE, ND, NI )
+      !>C
+      !>C     Open the DAF and find the summary format.
+      !>C
+      !>      CALL DAFOPR ( DAF,    HANDLE )
+      !>      CALL DAFHSF ( HANDLE, ND, NI )
       !>
-      !>        C
-      !>        C     Start a forward search and examine each array in
-      !>        C     turn.
-      !>        C
-      !>              CALL DAFBFS ( HANDLE )
-      !>              CALL DAFFNA ( FOUND  )
+      !>C
+      !>C     Start a forward search and examine each array in
+      !>C     turn.
+      !>C
+      !>      CALL DAFBFS ( HANDLE )
+      !>      CALL DAFFNA ( FOUND  )
       !>
-      !>              N = 0
-      !>              DO WHILE ( FOUND )
+      !>      N = 0
+      !>      DO WHILE ( FOUND )
       !>
-      !>        C
-      !>        C        Obtain the array summary, unpack it, and get
-      !>        C        the initial and final array addresses from
-      !>        C        the integer descriptor component.
-      !>        C
-      !>                 CALL DAFGS ( SUM )
-      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>C
+      !>C        Obtain the array summary, unpack it, and get
+      !>C        the initial and final array addresses from
+      !>C        the integer descriptor component.
+      !>C
+      !>         CALL DAFGS ( SUM )
+      !>         CALL DAFUS ( SUM, ND, NI, DC, IC )
       !>
-      !>                 IA  =  IC ( NI - 1 )
-      !>                 FA  =  IC ( NI     )
+      !>         IA  =  IC ( NI - 1 )
+      !>         FA  =  IC ( NI     )
       !>
-      !>                 N   =  FA - IA + 1 + N
+      !>         N   =  FA - IA + 1 + N
       !>
-      !>                 CALL DAFFNA ( FOUND )
+      !>         CALL DAFFNA ( FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              WRITE (*,*) 'Number of d.p. words is ', N
+      !>      WRITE (*,*) 'Number of d.p. words is ', N
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -9939,10 +10063,14 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafhsf
+      module subroutine dafhsf ( ctx, handle, nd, ni )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: nd  !! Number of double precision components in summaries.
+      integer(ip), intent(out) :: ni  !! Number of integer components in summaries.
+      integer(ip), intent(in) :: handle  !! Handle of a DAF file.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -9985,8 +10113,10 @@ contains
 
       return
       end associate
-      end procedure dafhsf
+      end subroutine dafhsf
 
+      !> Return the logical unit associated with a handle.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a previously opened
@@ -10144,12 +10274,13 @@ contains
       !>        occurs. The purpose of this change was to help speed up a
       !>        routine that gets called constantly by higher level DAF
       !>        routines.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dafhlu
+      module subroutine dafhlu ( ctx, handle, unit )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF file.
+      integer(ip), intent(out) :: unit  !! Corresponding logical unit.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -10171,13 +10302,18 @@ contains
       integer(ip) :: iostat
       integer(ip) :: lun
       logical :: found
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       call zzddhhlu ( ctx, handle, 'DAF', .true., unit )
 
       return
-      end procedure dafhlu
+      end subroutine dafhlu
 
+      !> Return the handle associated with a logical unit.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the logical unit to which a DAF has been
@@ -10301,10 +10437,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafluh
+      module subroutine dafluh ( ctx, unit, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: handle  !! Corresponding DAF file handle.
+      integer(ip), intent(in) :: unit  !! Logical unit connected to a DAF.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -10355,8 +10494,10 @@ contains
       end if
 
       return
-      end procedure dafluh
+      end subroutine dafluh
 
+      !> Return the name of the file associated with a handle.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a previously opened
@@ -10499,10 +10640,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafhfn
+      module subroutine dafhfn ( ctx, handle, fname )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: fname  !! Corresponding file name.
+      integer(ip), intent(in) :: handle  !! Handle of a DAF file.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -10537,8 +10681,10 @@ contains
       end if
       fname = file_name ( ctx%spice, handle )
       return
-      end procedure dafhfn
+      end subroutine dafhfn
 
+      !> Return handle associated with a file name.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a previously opened DAF file.
@@ -10713,10 +10859,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure daffnh
+      module subroutine daffnh ( ctx, fname, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DAF file.
+      integer(ip), intent(out) :: handle  !! Corresponding DAF file handle.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -10766,8 +10915,11 @@ contains
       end if
 
       return
-      end procedure daffnh
+      end subroutine daffnh
 
+      !> Return a SPICE set containing the handles of all currently
+      !> open DAFS.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -10886,12 +11038,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1991 (NJB) (WLT)
-      module procedure dafhof
+      module subroutine dafhof ( ctx, fhset )
       use pepper_arrays, only: shelli
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: lbcell = -5
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: fhset ( lbcell : * )  !! A set containing handles of
+                                                          !! currently
+                                                        !! open DAFS.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -10936,8 +11092,11 @@ contains
 
       return
       end associate
-      end procedure dafhof
+      end subroutine dafhof
 
+      !> Signal an error if a DAF file handle does not designate a DAF
+      !> that is open for a specified type of access.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a DAF handle to validate. For HANDLE to be
@@ -11137,11 +11296,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1991 (NJB) (WLT)
-      module procedure dafsih
+      module subroutine dafsih ( ctx, handle, access )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! HANDLE to be validated.
+      character(*), intent(in) :: access  !! String indicating access type.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -11169,7 +11331,6 @@ contains
 
 !
 !     Initialize the handle list, if necessary.
-!
 !
 !     Get an upper case, left-justified copy of ACCESS.
 !
@@ -11227,8 +11388,11 @@ contains
 !
       return
       end associate
-      end procedure dafsih
+      end subroutine dafsih
 
+      !> Convert a record/word pair to its equivalent address within
+      !> a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     RECNO,
@@ -11301,9 +11465,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafrwa
+      module subroutine dafrwa ( ctx, recno, wordno, addr )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: recno  !! Record, word numbers of a location within DAF.
+      integer(ip), intent(in) :: wordno  !! Record, word numbers of a location within DAF.
+      integer(ip), intent(out) :: addr  !! Corresponding address.
       if ( ctx%failed() ) then
          return
 
@@ -11322,8 +11490,11 @@ contains
       addr = wordno + ( recno - 1 ) * 128
 
       return
-      end procedure dafrwa
+      end subroutine dafrwa
 
+      !> Convert an address within a DAF to its equivalent
+      !> record/word representation.
+      !>
       !>## Detailed Input
       !>
       !>     ADDR     is an arbitrary address within a DAF.
@@ -11396,9 +11567,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafarw
+      module subroutine dafarw ( ctx, addr, recno, wordno )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: recno  !! Corresponding record, word numbers.
+      integer(ip), intent(out) :: wordno  !! Corresponding record, word numbers.
+      integer(ip), intent(in) :: addr  !! Address within DAF.
       if ( ctx%failed() ) then
          return
 
@@ -11416,8 +11591,11 @@ contains
       wordno = addr - ( recno - 1 ) * 128
 
       return
-      end procedure dafarw
+      end subroutine dafarw
 
+      !> Pack (assemble) an array summary from its double precision and
+      !> integer components.
+      !>
       !>## Detailed Input
       !>
       !>     ND       is the number of double precision components in
@@ -11482,130 +11660,132 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFPS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFPS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER               CARDI
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER               CARDI
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5   )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5   )
       !>
-      !>              INTEGER               DSCSIZ
-      !>              PARAMETER           ( DSCSIZ = 5    )
+      !>      INTEGER               DSCSIZ
+      !>      PARAMETER           ( DSCSIZ = 5    )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 256  )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 256  )
       !>
-      !>              INTEGER               MAXOBJ
-      !>              PARAMETER           ( MAXOBJ = 1000 )
+      !>      INTEGER               MAXOBJ
+      !>      PARAMETER           ( MAXOBJ = 1000 )
       !>
-      !>              INTEGER               ND
-      !>              PARAMETER           ( ND     = 2    )
+      !>      INTEGER               ND
+      !>      PARAMETER           ( ND     = 2    )
       !>
-      !>              INTEGER               NI
-      !>              PARAMETER           ( NI     = 6    )
+      !>      INTEGER               NI
+      !>      PARAMETER           ( NI     = 6    )
       !>
-      !>              INTEGER               NEWCOD
-      !>              PARAMETER           ( NEWCOD = -999 )
+      !>      INTEGER               NEWCOD
+      !>      PARAMETER           ( NEWCOD = -999 )
       !>
-      !>              INTEGER               OLDCOD
-      !>              PARAMETER           ( OLDCOD =  301 )
+      !>      INTEGER               OLDCOD
+      !>      PARAMETER           ( OLDCOD =  301 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(FILSIZ)    FNAME
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(FILSIZ)    FNAME
       !>
-      !>              DOUBLE PRECISION      DC     ( ND )
-      !>              DOUBLE PRECISION      SUM    ( DSCSIZ )
+      !>      DOUBLE PRECISION      DC     ( ND )
+      !>      DOUBLE PRECISION      SUM    ( DSCSIZ )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               IC     ( NI )
-      !>              INTEGER               IDS    ( LBCELL : MAXOBJ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               IC     ( NI )
+      !>      INTEGER               IDS    ( LBCELL : MAXOBJ )
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Get the SPK file name.
-      !>        C
-      !>              CALL PROMPT ( 'Enter name of the SPK file > ', FNAME )
+      !>C
+      !>C     Get the SPK file name.
+      !>C
+      !>      CALL PROMPT ( 'Enter name of the SPK file > ', FNAME )
       !>
-      !>        C
-      !>        C     Initialize the set IDS.
-      !>        C
-      !>              CALL SSIZEI ( MAXOBJ, IDS )
+      !>C
+      !>C     Initialize the set IDS.
+      !>C
+      !>      CALL SSIZEI ( MAXOBJ, IDS )
       !>
-      !>        C
-      !>        C     Open for writing the SPK file.
-      !>        C
-      !>              CALL DAFOPW ( FNAME, HANDLE )
+      !>C
+      !>C     Open for writing the SPK file.
+      !>C
+      !>      CALL DAFOPW ( FNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Search the file in forward order.
-      !>        C
-      !>              CALL DAFBFS ( HANDLE )
-      !>              CALL DAFFNA ( FOUND )
+      !>C
+      !>C     Search the file in forward order.
+      !>C
+      !>      CALL DAFBFS ( HANDLE )
+      !>      CALL DAFFNA ( FOUND )
       !>
-      !>              DO WHILE ( FOUND )
+      !>      DO WHILE ( FOUND )
       !>
-      !>        C
-      !>        C        Fetch and unpack the descriptor (aka summary)
-      !>        C        of the current segment.
-      !>        C
-      !>                 CALL DAFGS ( SUM )
-      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>C
+      !>C        Fetch and unpack the descriptor (aka summary)
+      !>C        of the current segment.
+      !>C
+      !>         CALL DAFGS ( SUM )
+      !>         CALL DAFUS ( SUM, ND, NI, DC, IC )
       !>
-      !>        C
-      !>        C        Replace ID codes if necessary.
-      !>        C
-      !>                 IF ( IC(1) .EQ. OLDCOD ) THEN
+      !>C
+      !>C        Replace ID codes if necessary.
+      !>C
+      !>         IF ( IC(1) .EQ. OLDCOD ) THEN
       !>
-      !>                    IC(1) = NEWCOD
+      !>            IC(1) = NEWCOD
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 IF ( IC(2) .EQ. OLDCOD ) THEN
+      !>         IF ( IC(2) .EQ. OLDCOD ) THEN
       !>
-      !>                    IC(2) = NEWCOD
+      !>            IC(2) = NEWCOD
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>        C
-      !>        C        Re-pack the descriptor; replace the descriptor
-      !>        C        in the file.
-      !>        C
-      !>                 CALL DAFPS ( ND, NI, DC, IC, SUM )
-      !>                 CALL DAFRS ( SUM )
+      !>C
+      !>C        Re-pack the descriptor; replace the descriptor
+      !>C        in the file.
+      !>C
+      !>         CALL DAFPS ( ND, NI, DC, IC, SUM )
+      !>         CALL DAFRS ( SUM )
       !>
-      !>        C
-      !>        C        Find the next segment.
-      !>        C
-      !>                 CALL DAFFNA ( FOUND )
+      !>C
+      !>C        Find the next segment.
+      !>C
+      !>         CALL DAFFNA ( FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DAFCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DAFCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Find the set of objects in the SPK file.
-      !>        C
-      !>              CALL SPKOBJ ( FNAME, IDS )
+      !>C
+      !>C     Find the set of objects in the SPK file.
+      !>C
+      !>      CALL SPKOBJ ( FNAME, IDS )
       !>
-      !>              WRITE(*,'(A)') 'Objects in the DAF file:'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,'(20I4)') ( IDS(I), I= 1, CARDI ( IDS ) )
+      !>      WRITE(*,'(A)') 'Objects in the DAF file:'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,'(20I4)') ( IDS(I), I= 1, CARDI ( IDS ) )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the SPK file named de430.bsp, the output was:
@@ -11657,10 +11837,16 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafps
+      module subroutine dafps ( ctx, nd, ni, dc, ic, sum )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: pack_integers
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nd  !! Number of double precision components.
+      integer(ip), intent(in) :: ni  !! Number of integer components.
+      real(wp), intent(in) :: dc       ( * )  !! Double precision components.
+      integer(ip), intent(in) :: ic       ( * )  !! Integer components.
+      real(wp), intent(out) :: sum      ( * )  !! Array summary.
       integer(ip) :: n
       integer(ip) :: m
       n = min ( 125, max ( 0, nd ) )
@@ -11677,8 +11863,11 @@ contains
       sum(n+1:n+(m+1)/2) = pack_integers ( ic(1:m) )
 
       return
-      end procedure dafps
+      end subroutine dafps
 
+      !> Unpack an array summary into its double precision and integer
+      !> components.
+      !>
       !>## Detailed Input
       !>
       !>     SUM      is an array summary. This identifies the contents and
@@ -11749,76 +11938,78 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFUS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFUS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Define the summary parameters appropriate
-      !>        C     for an SPK file.
-      !>        C
-      !>              INTEGER               MAXSUM
-      !>              PARAMETER           ( MAXSUM = 125 )
+      !>C
+      !>C     Define the summary parameters appropriate
+      !>C     for an SPK file.
+      !>C
+      !>      INTEGER               MAXSUM
+      !>      PARAMETER           ( MAXSUM = 125 )
       !>
-      !>              INTEGER               ND
-      !>              PARAMETER           ( ND = 2       )
+      !>      INTEGER               ND
+      !>      PARAMETER           ( ND = 2       )
       !>
-      !>              INTEGER               NI
-      !>              PARAMETER           ( NI = 6       )
+      !>      INTEGER               NI
+      !>      PARAMETER           ( NI = 6       )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(32)        KERNEL
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(32)        KERNEL
       !>
-      !>              DOUBLE PRECISION      DC     ( ND     )
-      !>              DOUBLE PRECISION      SUM    ( MAXSUM )
+      !>      DOUBLE PRECISION      DC     ( ND     )
+      !>      DOUBLE PRECISION      SUM    ( MAXSUM )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               IC     ( NI )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               IC     ( NI )
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Open a DAF for read. Return a HANDLE referring to the
-      !>        C     file.
-      !>        C
-      !>              KERNEL = 'de421.bsp'
-      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>C
+      !>C     Open a DAF for read. Return a HANDLE referring to the
+      !>C     file.
+      !>C
+      !>      KERNEL = 'de421.bsp'
+      !>      CALL DAFOPR ( KERNEL, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a forward search on the file.
-      !>        C
-      !>              CALL DAFBFS ( HANDLE )
+      !>C
+      !>C     Begin a forward search on the file.
+      !>C
+      !>      CALL DAFBFS ( HANDLE )
       !>
-      !>        C
-      !>        C     Search until a DAF array is found.
-      !>        C
-      !>              CALL DAFFNA ( FOUND )
+      !>C
+      !>C     Search until a DAF array is found.
+      !>C
+      !>      CALL DAFFNA ( FOUND )
       !>
-      !>        C
-      !>        C     Loop while the search finds subsequent DAF arrays.
-      !>        C
-      !>              DO WHILE ( FOUND )
+      !>C
+      !>C     Loop while the search finds subsequent DAF arrays.
+      !>C
+      !>      DO WHILE ( FOUND )
       !>
-      !>                 CALL DAFGS ( SUM )
-      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>         CALL DAFGS ( SUM )
+      !>         CALL DAFUS ( SUM, ND, NI, DC, IC )
       !>
-      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
-      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>         WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>         WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
       !>
-      !>        C
-      !>        C        Check for another segment.
-      !>        C
-      !>                 CALL DAFFNA ( FOUND )
+      !>C
+      !>C        Check for another segment.
+      !>C
+      !>         CALL DAFFNA ( FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Safely close the DAF.
-      !>        C
-      !>              CALL DAFCLS ( HANDLE )
+      !>C
+      !>C     Safely close the DAF.
+      !>C
+      !>      CALL DAFCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -11909,14 +12100,21 @@ contains
       !>-    SPICELIB Version 1.1.0, 04-AUG-2020 (JDR)
       !>
       !>        Added IMPLICIT NONE statement.
-      !>
-      !>     Just undo whatever DAFPS did.
-      module procedure dafus
+      module subroutine dafus ( ctx, sum, nd, ni, dc, ic )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: unpack_integers
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nd  !! Number of double precision components.
+      integer(ip), intent(in) :: ni  !! Number of integer components.
+      real(wp), intent(out) :: dc       ( * )  !! Double precision components.
+      integer(ip), intent(out) :: ic       ( * )  !! Integer components.
+      real(wp), intent(in) :: sum      ( * )  !! Array summary.
       integer(ip) :: n
       integer(ip) :: m
+!
+!     Just undo whatever DAFPS did.
+!
       n = min ( 125, max ( 0, nd ) )
 
       dc(1:n) = sum(1:n)
@@ -11930,8 +12128,11 @@ contains
       ic(1:m) = unpack_integers ( sum(n+1:n+(m+1)/2), m )
 
       return
-      end procedure dafus
+      end subroutine dafus
 
+      !> Read a portion of the contents of a double precision record in a
+      !> DAF file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF.
@@ -12045,10 +12246,17 @@ contains
       !>        Removed DAF required reading from $Literature_References.
       !>
       !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-      module procedure dafgdr
+      module subroutine dafgdr ( ctx, handle, recno, begin, end, data, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: begin  !! First word to read from record.
+      integer(ip), intent(in) :: end  !! Last word to read from record.
+      real(wp), intent(out) :: data     (  *  )  !! Contents of record.
+      logical, intent(out) :: found  !! .TRUE. if record is found.
       integer(ip) :: unit
       integer(ip) :: iostat
       integer(ip) :: bufloc
@@ -12173,8 +12381,10 @@ contains
 
       return
       end associate
-      end procedure dafgdr
+      end subroutine dafgdr
 
+      !> Read a portion of the contents of a summary record in a DAF file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF.
@@ -12300,10 +12510,17 @@ contains
       !>        Removed DAF required reading from $Literature_References.
       !>
       !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-      module procedure dafgsr
+      module subroutine dafgsr ( ctx, handle, recno, begin, end, data, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: begin  !! First word to read from record.
+      integer(ip), intent(in) :: end  !! Last word to read from record.
+      real(wp), intent(out) :: data     (  *  )  !! Contents of record.
+      logical, intent(out) :: found  !! .TRUE. if record is found.
       integer(ip) :: unit
       integer(ip) :: iostat
       integer(ip) :: bufloc
@@ -12431,14 +12648,12 @@ contains
 
       return
       end associate
-      end procedure dafgsr
+      end subroutine dafgsr
 
-      !>## Abstract
-      !>
-      !>     Read a portion of the contents of a double precision record in a
-      !>     DAF file.
-      !>     Obsolete: This routine has been superseded by DAFGDR, and it is
-      !>     supported for purposes of backwards compatibility only.
+      !> Read a portion of the contents of a double precision record in a
+      !> DAF file.
+      !> **Obsolete:** This routine has been superseded by [[dafgdr]], and it is
+      !> supported for purposes of backwards compatibility only.
       !>
       !>## Detailed Input
       !>
@@ -12661,12 +12876,17 @@ contains
       !>        signal an error). The purpose of this change was to help
       !>        speed up a routine that gets called constantly by higher level
       !>        DAF routines.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dafrdr
+      module subroutine dafrdr ( ctx, handle, recno, begin, end, data, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: begin  !! First word to read from record.
+      integer(ip), intent(in) :: end  !! Last word to read from record.
+      real(wp), intent(out) :: data     (  *  )  !! Contents of record.
+      logical, intent(out) :: found  !! .TRUE. if record is found.
       integer(ip) :: unit
       integer(ip) :: iostat
       integer(ip) :: bufloc
@@ -12692,6 +12912,9 @@ contains
                   rbnbr => ctx%dafrwd%rbnbr, &
                   nread => ctx%dafrwd%nread, &
                   nreq => ctx%dafrwd%nreq )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -12809,8 +13032,11 @@ contains
 
       return
       end associate
-      end procedure dafrdr
+      end subroutine dafrdr
 
+      !> Write or rewrite the contents of a double precision record in
+      !> a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF.
@@ -12920,9 +13146,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafwdr
+      module subroutine dafwdr ( ctx, handle, recno, drec )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      integer(ip), intent(in) :: recno  !! Record number.
+      real(wp), intent(in) :: drec     ( 128 )  !! Contents of record.
       integer(ip) :: unit
       integer(ip) :: iostat
       integer(ip) :: bufloc
@@ -13014,8 +13244,10 @@ contains
 
       return
       end associate
-      end procedure dafwdr
+      end subroutine dafwdr
 
+      !> Return the number of reads and requests fielded by [[dafrdr]].
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -13112,9 +13344,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafnrr
+      module subroutine dafnrr ( ctx, reads, reqs )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: reads  !! Reads, requests in this execution.
+      integer(ip), intent(out) :: reqs  !! Reads, requests in this execution.
       logical :: return
       integer(ip) :: unit
       integer(ip) :: iostat
@@ -13141,8 +13376,11 @@ contains
 
       return
       end associate
-      end procedure dafnrr
+      end subroutine dafnrr
 
+      !> Read the double precision data bounded by two addresses within
+      !> a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF.
@@ -13216,89 +13454,91 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFGDA_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFGDA_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              CHARACTER*(*)         FMT
-      !>              PARAMETER           ( FMT = '(6F10.3)' )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      CHARACTER*(*)         FMT
+      !>      PARAMETER           ( FMT = '(6F10.3)' )
       !>
-      !>              INTEGER               MAXDAT
-      !>              PARAMETER           ( MAXDAT = 1000 )
+      !>      INTEGER               MAXDAT
+      !>      PARAMETER           ( MAXDAT = 1000 )
       !>
-      !>              INTEGER               MAXSUM
-      !>              PARAMETER           ( MAXSUM = 125  )
+      !>      INTEGER               MAXSUM
+      !>      PARAMETER           ( MAXSUM = 125  )
       !>
-      !>              INTEGER               ND
-      !>              PARAMETER           ( ND     = 2    )
+      !>      INTEGER               ND
+      !>      PARAMETER           ( ND     = 2    )
       !>
-      !>              INTEGER               NI
-      !>              PARAMETER           ( NI     = 6    )
+      !>      INTEGER               NI
+      !>      PARAMETER           ( NI     = 6    )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      DAFSUM ( MAXSUM )
-      !>              DOUBLE PRECISION      DATA   ( MAXDAT )
-      !>              DOUBLE PRECISION      DC     ( ND )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      DAFSUM ( MAXSUM )
+      !>      DOUBLE PRECISION      DATA   ( MAXDAT )
+      !>      DOUBLE PRECISION      DC     ( ND )
       !>
-      !>              INTEGER               BADDR
-      !>              INTEGER               EADDR
-      !>              INTEGER               HANDLE
-      !>              INTEGER               IC     ( NI )
-      !>              INTEGER               SIZE
+      !>      INTEGER               BADDR
+      !>      INTEGER               EADDR
+      !>      INTEGER               HANDLE
+      !>      INTEGER               IC     ( NI )
+      !>      INTEGER               SIZE
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Open the type 8 SPK for read access, then read the
-      !>        C     data from the first segment.
-      !>        C
-      !>              CALL DAFOPR ( 'mer1_ls_040128_iau2000_v1.bsp', HANDLE )
+      !>C
+      !>C     Open the type 8 SPK for read access, then read the
+      !>C     data from the first segment.
+      !>C
+      !>      CALL DAFOPR ( 'mer1_ls_040128_iau2000_v1.bsp', HANDLE )
       !>
-      !>        C
-      !>        C     Begin a forward search; find the first segment; read the
-      !>        C     segment summary.
-      !>        C
-      !>              CALL DAFBFS ( HANDLE )
-      !>              CALL DAFFNA ( FOUND  )
-      !>              CALL DAFGS  ( DAFSUM )
-      !>              CALL DAFUS  ( DAFSUM, ND, NI, DC, IC )
+      !>C
+      !>C     Begin a forward search; find the first segment; read the
+      !>C     segment summary.
+      !>C
+      !>      CALL DAFBFS ( HANDLE )
+      !>      CALL DAFFNA ( FOUND  )
+      !>      CALL DAFGS  ( DAFSUM )
+      !>      CALL DAFUS  ( DAFSUM, ND, NI, DC, IC )
       !>
-      !>        C
-      !>        C     Retrieve the data begin and end addresses.
-      !>        C
-      !>              BADDR = IC(5)
-      !>              EADDR = IC(6)
+      !>C
+      !>C     Retrieve the data begin and end addresses.
+      !>C
+      !>      BADDR = IC(5)
+      !>      EADDR = IC(6)
       !>
-      !>              WRITE(*,'(A,I4)') 'Beginning address       : ', BADDR
-      !>              WRITE(*,'(A,I4)') 'Ending address          : ', EADDR
-      !>              WRITE(*,'(A,I4)') 'Number of data elements : ',
-      !>             .                                    EADDR - BADDR + 1
+      !>      WRITE(*,'(A,I4)') 'Beginning address       : ', BADDR
+      !>      WRITE(*,'(A,I4)') 'Ending address          : ', EADDR
+      !>      WRITE(*,'(A,I4)') 'Number of data elements : ',
+      !>     .                                    EADDR - BADDR + 1
       !>
-      !>        C
-      !>        C     Extract all data bounded by the begin and end addresses.
-      !>        C
-      !>              CALL DAFGDA ( HANDLE, BADDR, EADDR, DATA )
+      !>C
+      !>C     Extract all data bounded by the begin and end addresses.
+      !>C
+      !>      CALL DAFGDA ( HANDLE, BADDR, EADDR, DATA )
       !>
-      !>        C
-      !>        C     Check the data.
-      !>        C
-      !>              WRITE(*,'(A)') 'The first and second states '
-      !>             .            // 'stored in the segment:'
-      !>              WRITE(*,FMT) DATA(1),  DATA(2),  DATA(3),
-      !>             .             DATA(4),  DATA(5),  DATA(6)
-      !>              WRITE(*,FMT) DATA(7),  DATA(8),  DATA(9),
-      !>             .             DATA(10), DATA(11), DATA(12)
+      !>C
+      !>C     Check the data.
+      !>C
+      !>      WRITE(*,'(A)') 'The first and second states '
+      !>     .            // 'stored in the segment:'
+      !>      WRITE(*,FMT) DATA(1),  DATA(2),  DATA(3),
+      !>     .             DATA(4),  DATA(5),  DATA(6)
+      !>      WRITE(*,FMT) DATA(7),  DATA(8),  DATA(9),
+      !>     .             DATA(10), DATA(11), DATA(12)
       !>
-      !>        C
-      !>        C     Safely close the file
-      !>        C
-      !>              CALL DAFCLS ( HANDLE )
+      !>C
+      !>C     Safely close the file
+      !>C
+      !>      CALL DAFCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -13339,9 +13579,14 @@ contains
       !>        complete code example. Removed unnecessary $Revisions section.
       !>
       !>-    SPICELIB Version 1.0.0, 16-NOV-2001 (FST)
-      module procedure dafgda
+      module subroutine dafgda ( ctx, handle, baddr, eaddr, data )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF.
+      integer(ip), intent(in) :: baddr  !! Initial, final address within file.
+      integer(ip), intent(in) :: eaddr  !! Initial, final address within file.
+      real(wp), intent(out) :: data     ( * )  !! Data contained between BADDR and EADDR.
 
 
       integer(ip) :: begr
@@ -13439,16 +13684,14 @@ contains
       end do
 
       return
-      end procedure dafgda
+      end subroutine dafgda
 
-      !>## Abstract
+      !> Convert double precision values from one binary file format
+      !> to another.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Convert double precision values from one binary file format
-      !>     to another.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -13655,51 +13898,34 @@ contains
       !>        Added MAC-OSX environments.
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
-      !>
-      !>     SPICELIB Functions
-      !>
-      !>     Local Parameters
-      !>
-      !>     Length of the double precision and integer buffers that
-      !>     are equivalenced. (PEPPER: the integer buffer only; its
-      !>     integers are copied to OUTPUT as doubles with TRANSFER.)
-      !>
-      !>     These parameters are used for arithmetic shifting.
-      !>
-      !>     Local Variables
-      !>
-      !>     Equivalence DPBUFR to INBUFR. (PEPPER: no DPBUFR; TRANSFER of
-      !>     INBUFR.)
-      !>
-      !>     Statement Functions
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     Statement Function Definitions
-      !>
-      !>     This function controls the conversion of characters to integers.
-      !>     On some supported environments, ICHAR is not sufficient to
-      !>     produce the desired results.  This, however, is not the case
-      !>     with this particular environment.
-      !>     Some versions of the g77 implement ICHAR with a signed integer.
-      !>     This function computes the value of ICHAR that this code requires
-      !>     on any version of g77 for x86 Linux.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzxlated
+      module subroutine zzxlated ( ctx, inbff, input, space, output )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: pack_integers
       use pepper_constants, only: intmin
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: inbff  !! Binary file format of d.p. values in INPUT.
+      character(*), intent(in) :: input  !! String containing d.p. values read as characters.
+      integer(ip), intent(in) :: space  !! Number of d.p. values that can be placed in OUTPUT.
+      real(wp), intent(out) :: output ( * )  !! Translated d.p. values.
+!
+!     Length of the double precision and integer buffers that
+!     are equivalenced. (PEPPER: the integer buffer only; its
+!     integers are copied to OUTPUT as doubles with TRANSFER.)
+!
       integer(ip), parameter :: dpblen = 128
       integer(ip), parameter :: inblen = 2 * dpblen
+!
+!     These parameters are used for arithmetic shifting.
+!
       integer(ip), parameter :: shft8 = 2**8
       integer(ip), parameter :: shft16 = 2**16
       integer(ip), parameter :: shft24 = 2**24
+!
+!     Local Variables
+!
       character(1) :: carg
       character(strsiz) :: tmpstr
       integer(ip) :: i
@@ -13711,6 +13937,19 @@ contains
       integer(ip) :: osign
       integer(ip) :: outpos
       integer(ip) :: value
+!
+!     Statement Function Definitions
+!
+!     This function controls the conversion of characters to integers.
+!     On some supported environments, ICHAR is not sufficient to
+!     produce the desired results.  This, however, is not the case
+!     with this particular environment.
+!     Some versions of the g77 implement ICHAR with a signed integer.
+!     This function computes the value of ICHAR that this code requires
+!     on any version of g77 for x86 Linux.
+!
+!     Statement Functions
+!
       integer(ip) :: zzichr
 !     PEPPER: one portable form (ICHAR is 0:255 with current compilers; the
 !     MODULO also maps a signed ICHAR, as SPICELIB's g77 branch did).
@@ -13721,6 +13960,9 @@ contains
                   strbff => ctx%zzxlated_state%strbff, &
                   natbff => ctx%zzxlated_state%natbff, &
                   first => ctx%zzxlated_state%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -14392,16 +14634,14 @@ contains
 
       return
       end associate
-      end procedure zzxlated
+      end subroutine zzxlated
 
-      !>## Abstract
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
+      !> routines [[dafgda]] and [[dafgsr]]. This routine is supported for purposes
+      !> of backward compatibility only.
       !>
-      !>     Deprecated: This routine has been superseded by the SPICELIB
-      !>     routines DAFGDA and DAFGSR. This routine is supported for purposes
-      !>     of backward compatibility only.
-      !>
-      !>     Read the double precision data bounded by two addresses within
-      !>     a DAF.
+      !> Read the double precision data bounded by two addresses within
+      !> a DAF.
       !>
       !>## Detailed Input
       !>
@@ -14550,9 +14790,14 @@ contains
       !>        possible exceptions occurs. The purpose of this change was to
       !>        help speed up a routine that gets called constantly by higher
       !>        level DAF routines.
-      module procedure dafrda
+      module subroutine dafrda ( ctx, handle, begin, end, data )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF.
+      integer(ip), intent(in) :: begin  !! Initial, final address within file.
+      integer(ip), intent(in) :: end  !! Initial, final address within file.
+      real(wp), intent(out) :: data     ( * )  !! Data contained between BEGIN and END.
 
 
       integer(ip) :: begr
@@ -14656,8 +14901,10 @@ contains
       end do
 
       return
-      end procedure dafrda
+      end subroutine dafrda
 
+      !> Read the contents of the file record of a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle assigned to a DAF file opened for
@@ -14812,9 +15059,17 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafrfr
+      module subroutine dafrfr ( ctx, handle, nd, ni, ifname, fward, bward, free )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an open DAF file.
+      integer(ip), intent(out) :: nd  !! Number of double precision components in summaries.
+      integer(ip), intent(out) :: ni  !! Number of integer components in summaries.
+      character(*), intent(out) :: ifname  !! Internal file name.
+      integer(ip), intent(out) :: fward  !! Forward list pointer.
+      integer(ip), intent(out) :: bward  !! Backward list pointer.
+      integer(ip), intent(out) :: free  !! Free address pointer.
 
 
 
@@ -14868,8 +15123,10 @@ contains
       end if
 
       return
-      end procedure dafrfr
+      end subroutine dafrfr
 
+      !> Write or rewrite the contents of the file record of a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF file opened for
@@ -15057,9 +15314,17 @@ contains
       !>        was open for write access, HANDLE < 0. This test was no longer
       !>        necessary, as the call to DASSIH performs this test as well. No
       !>        sense doing it twice.
-      module procedure dafwfr
+      module subroutine dafwfr ( ctx, handle, nd, ni, ifname, fward, bward, free )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an open DAF file.
+      integer(ip), intent(in) :: nd  !! Number of double precision components in summaries.
+      integer(ip), intent(in) :: ni  !! Number of integer components in summaries.
+      character(*), intent(in) :: ifname  !! Internal filename.
+      integer(ip), intent(in) :: fward  !! Forward list pointer.
+      integer(ip), intent(in) :: bward  !! Backward list pointer.
+      integer(ip), intent(in) :: free  !! Free address pointer.
 
 
 
@@ -15197,8 +15462,11 @@ contains
       end if
 
       return
-      end procedure dafwfr
+      end subroutine dafwfr
 
+      !> Write or rewrite the double precision data bounded by two
+      !> addresses within a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF.
@@ -15307,9 +15575,14 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafwda
+      module subroutine dafwda ( ctx, handle, begin, end, data )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF.
+      integer(ip), intent(in) :: begin  !! Initial, final address within file.
+      integer(ip), intent(in) :: end  !! Initial, final address within file.
+      real(wp), intent(in) :: data     ( * )  !! Data to be stored between BEGIN and END.
       integer(ip) :: begr
       integer(ip) :: begw
       integer(ip) :: endr
@@ -15389,8 +15662,11 @@ contains
 
       return
       end associate
-      end procedure dafwda
+      end subroutine dafwda
 
+      !> Add a specified number of reserved records to a Double Precision
+      !> Array File (DAF).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF file that has
@@ -15579,27 +15855,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 17-JUL-1990 (IMU)
-      module procedure dafarr
+      module subroutine dafarr ( ctx, handle, resv )
       use pepper_kinds, only: ip, wp
       implicit none
-
-!     IFNLEN      is the length of a DAF internal file name.
-!
-
-!
-!     WPR         is the maximum number of double precision numbers
-!                 (words) per record.
-!
-!     MAXD,       are the maximum number of double precision
-!     MAXI,       numbers, integers, and characters, respectively,
-!     MAXC        per record, not including space reserved for
-!                 control information (3 dp numbers are reserved).
-!                 There are two integers per double precision word,
-!                 and eight characters per word.
-!
-
-
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF file opened for writing.
+      integer(ip), intent(in) :: resv  !! Number of records to reserve.
 
       character(maxc) :: crec
       character(ifnlen) :: ifname
@@ -15791,8 +16052,10 @@ contains
       end do
 
       return
-      end procedure dafarr
+      end subroutine dafarr
 
+      !> Read the contents of a character record from a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF.
@@ -15902,12 +16165,17 @@ contains
       !>        The call to DAFHLU has been replaced with ZZDDHHLU,
       !>        since calls to DAFHLU locks handles to their logical
       !>        units.
-      module procedure dafrcr
+      module subroutine dafrcr ( ctx, handle, recno, crec )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      integer(ip), intent(in) :: recno  !! Record number of character record.
+      character(*), intent(out) :: crec  !! Character record.
 
       integer(ip) :: unit
       integer(ip) :: iostat
+      integer(ip) :: k
 
 !
 !     Standard SPICE error handling.
@@ -15955,6 +16223,24 @@ contains
 !        Retrieve a logical unit for this handle.  This has the
 !        side-effect of locking this UNIT to HANDLE.
 !
+!        PEPPER: a DAF built in memory has no file: the record is in its
+!        image.
+!
+         k = daf_synthetic_slot ( ctx, handle )
+         if ( k > 0 ) then
+            associate ( image => ctx%spice%zzddhman%files(k)%image )
+               if ( recno >= 1 .and. recno <= size(image)/128 ) then
+                  crec = daf_image_chars ( image, recno )
+               else
+                  call ctx%setmsg ( 'Could not read record #. IOSTAT was #.' )
+                  call ctx%errint ( '#', recno                               )
+                  call ctx%errint ( '#', -1_ip                               )
+                  call ctx%sigerr ( 'SPICE(DAFCRNOTFOUND)'                   )
+               end if
+            end associate
+            return
+         end if
+
          call zzddhhlu ( ctx, handle, 'DAF', .false., unit )
 
          if ( ctx%failed() ) return
@@ -15973,8 +16259,11 @@ contains
       end if
 
       return
-      end procedure dafrcr
+      end subroutine dafrcr
 
+      !> Write or rewrite the contents of a character record to
+      !> a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF.
@@ -16079,9 +16368,13 @@ contains
       !>        in the handle manager. A call to DAFSIH was inserted to
       !>        make certain that HANDLE is present in DAFAH's file table,
       !>        rather than simply checking the sign of HANDLE.
-      module procedure dafwcr
+      module subroutine dafwcr ( ctx, handle, recno, crec )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      integer(ip), intent(in) :: recno  !! Record number of character record.
+      character(*), intent(in) :: crec  !! Character record.
 
       integer(ip) :: unit
       integer(ip) :: iostat
@@ -16128,8 +16421,10 @@ contains
       end if
 
       return
-      end procedure dafwcr
+      end subroutine dafwcr
 
+      !> Reorder the arrays in a DAF according to a given order vector.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF that has been opened for
@@ -16258,10 +16553,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 28-MAR-1991 (IMU)
-      module procedure dafra
+      module subroutine dafra ( ctx, handle, iorder, n )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isordv
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      integer(ip), intent(inout) :: iorder ( * )  !! Order vector.
+      integer(ip), intent(in) :: n  !! Dimension of IORDER.
 
       integer(ip), parameter :: namlen = 1000
 
@@ -16441,8 +16740,11 @@ contains
       end do
 
       return
-      end procedure dafra
+      end subroutine dafra
 
+      !> Remove a specified number of reserved records from a Double
+      !> Precision Array File (DAF).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle associated with a DAF that has been
@@ -16566,26 +16868,12 @@ contains
       !>
       !>        Added calls to the intrinsic function DBLE to convert an
       !>        integer, REMOVE, into a DP number when doing some arithmetic.
-      module procedure dafrrr
+      module subroutine dafrrr ( ctx, handle, resv )
       use pepper_kinds, only: ip, wp
       implicit none
-
-!     IFNLEN      is the length of a DAF internal file name.
-!
-
-!
-!     WPR         is the maximum number of double precision
-!                 numbers per record.  WPR stands for words
-!                 per record.
-!
-
-!
-!     MAXD,       are the maximum number of double precision
-!     MAXI,       numbers, integers, and characters, respectively,
-!     MAXC        not including space reserved for control information.
-!
-
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAF, opened for writing.
+      integer(ip), intent(in) :: resv  !! Number of records to remove.
 
       character(maxc) :: crec
       character(ifnlen) :: ifname
@@ -16755,8 +17043,12 @@ contains
       end do
 
       return
-      end procedure dafrrr
+      end subroutine dafrrr
 
+      !> Add comments from a buffer of character strings to the comment
+      !> area of a binary DAF file, appending them to any comments which
+      !> are already present in the file's comment area.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a binary DAF which has been opened
@@ -16840,138 +17132,140 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFAC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFAC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               RTRIM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               RTRIM
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         KERNEL
-      !>              PARAMETER           ( KERNEL =
-      !>             .                         'earthstns_itrf93_201023.bsp' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         KERNEL
+      !>      PARAMETER           ( KERNEL =
+      !>     .                         'earthstns_itrf93_201023.bsp' )
       !>
-      !>              INTEGER               BUFSIZ
-      !>              PARAMETER           ( BUFSIZ = 25 )
+      !>      INTEGER               BUFSIZ
+      !>      PARAMETER           ( BUFSIZ = 25 )
       !>
-      !>              INTEGER               CMTSIZ
-      !>              PARAMETER           ( CMTSIZ = 7  )
+      !>      INTEGER               CMTSIZ
+      !>      PARAMETER           ( CMTSIZ = 7  )
       !>
-      !>              INTEGER               LINLEN
-      !>              PARAMETER           ( LINLEN = 1000 )
+      !>      INTEGER               LINLEN
+      !>      PARAMETER           ( LINLEN = 1000 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(LINLEN)    BUFFER ( BUFSIZ )
-      !>              CHARACTER*(LINLEN)    NEWCMT ( CMTSIZ )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(LINLEN)    BUFFER ( BUFSIZ )
+      !>      CHARACTER*(LINLEN)    NEWCMT ( CMTSIZ )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               N
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               DONE
+      !>      LOGICAL               DONE
       !>
-      !>        C
-      !>        C     Set the new comments to be added to the DAF file.
-      !>        C
-      !>              DATA                  NEWCMT /
-      !>             .  '================== NEW COMMENTS ==================',
-      !>             .  '',
-      !>             .  '   New comments can be appended to the end of the',
-      !>             .  '   comment area of a DAF file, with a single',
-      !>             .  '   operation.',
-      !>             .  '',
-      !>             .  '================ END NEW COMMENTS ================' /
+      !>C
+      !>C     Set the new comments to be added to the DAF file.
+      !>C
+      !>      DATA                  NEWCMT /
+      !>     .  '================== NEW COMMENTS ==================',
+      !>     .  '',
+      !>     .  '   New comments can be appended to the end of the',
+      !>     .  '   comment area of a DAF file, with a single',
+      !>     .  '   operation.',
+      !>     .  '',
+      !>     .  '================ END NEW COMMENTS ================' /
       !>
-      !>        C
-      !>        C     Open a DAF for write. Return a HANDLE referring to the
-      !>        C     file.
-      !>        C
-      !>              CALL DAFOPW ( KERNEL, HANDLE )
+      !>C
+      !>C     Open a DAF for write. Return a HANDLE referring to the
+      !>C     file.
+      !>C
+      !>      CALL DAFOPW ( KERNEL, HANDLE )
       !>
-      !>        C
-      !>        C     Print the end of comment area from the DAF file.
-      !>        C     (Maximum 15 lines.)
-      !>        C
-      !>              DONE = .FALSE.
+      !>C
+      !>C     Print the end of comment area from the DAF file.
+      !>C     (Maximum 15 lines.)
+      !>C
+      !>      DONE = .FALSE.
       !>
-      !>              DO WHILE ( .NOT. DONE )
+      !>      DO WHILE ( .NOT. DONE )
       !>
-      !>                 CALL DAFEC  ( HANDLE, 15, N, BUFFER, DONE )
+      !>         CALL DAFEC  ( HANDLE, 15, N, BUFFER, DONE )
       !>
-      !>                 IF ( DONE ) THEN
+      !>         IF ( DONE ) THEN
       !>
-      !>                    WRITE(*,'(A)') 'End of comment area of input '
-      !>             .                  // 'DAF file (max. 15 lines): '
-      !>                    WRITE(*,'(A)') '-------------------------------'
-      !>             .                  // '-------------------------------'
+      !>            WRITE(*,'(A)') 'End of comment area of input '
+      !>     .                  // 'DAF file (max. 15 lines): '
+      !>            WRITE(*,'(A)') '-------------------------------'
+      !>     .                  // '-------------------------------'
       !>
-      !>                    DO I = 1, N
+      !>            DO I = 1, N
       !>
-      !>                       WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
+      !>               WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                    WRITE(*,'(A)') '-------------------------------'
-      !>             .                  // '-------------------------------'
+      !>            WRITE(*,'(A)') '-------------------------------'
+      !>     .                  // '-------------------------------'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Append the new comments to the DAF file.
-      !>        C
-      !>              CALL DAFAC ( HANDLE, CMTSIZ, NEWCMT )
+      !>C
+      !>C     Append the new comments to the DAF file.
+      !>C
+      !>      CALL DAFAC ( HANDLE, CMTSIZ, NEWCMT )
       !>
-      !>        C
-      !>        C     Safely close the DAF.
-      !>        C
-      !>              CALL DAFCLS ( HANDLE )
+      !>C
+      !>C     Safely close the DAF.
+      !>C
+      !>      CALL DAFCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Check if the comments have indeed appended.
-      !>        C
-      !>        C     Open a DAF for read.
-      !>        C
-      !>              CALL DAFOPR ( KERNEL, HANDLE )
-      !>              DONE = .FALSE.
+      !>C
+      !>C     Check if the comments have indeed appended.
+      !>C
+      !>C     Open a DAF for read.
+      !>C
+      !>      CALL DAFOPR ( KERNEL, HANDLE )
+      !>      DONE = .FALSE.
       !>
-      !>              DO WHILE ( .NOT. DONE )
+      !>      DO WHILE ( .NOT. DONE )
       !>
-      !>                 CALL DAFEC  ( HANDLE, BUFSIZ, N, BUFFER, DONE )
+      !>         CALL DAFEC  ( HANDLE, BUFSIZ, N, BUFFER, DONE )
       !>
-      !>                 IF ( DONE ) THEN
+      !>         IF ( DONE ) THEN
       !>
-      !>                    WRITE(*,'(A)') 'End of comment area of input '
-      !>             .                  // 'DAF file (max. 25 lines): '
-      !>                    WRITE(*,'(A)') '-------------------------------'
-      !>             .                  // '-------------------------------'
+      !>            WRITE(*,'(A)') 'End of comment area of input '
+      !>     .                  // 'DAF file (max. 25 lines): '
+      !>            WRITE(*,'(A)') '-------------------------------'
+      !>     .                  // '-------------------------------'
       !>
-      !>                    DO I = 1, N
+      !>            DO I = 1, N
       !>
-      !>                       WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
+      !>               WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                    WRITE(*,'(A)') '-------------------------------'
-      !>             .                  // '-------------------------------'
+      !>            WRITE(*,'(A)') '-------------------------------'
+      !>     .                  // '-------------------------------'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Safely close the DAF.
-      !>        C
-      !>              CALL DAFCLS ( HANDLE )
+      !>C
+      !>C     Safely close the DAF.
+      !>C
+      !>      CALL DAFCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -17051,23 +17345,15 @@ contains
       !>        the handle manager interface for retrieving a logical unit.
       !>        DAFHLU is no longer used, since it locks the unit returned to
       !>        its HANDLE, tying up resources in the handle manager.
-      module procedure dafac
+      module subroutine dafac ( ctx, handle, n, buffer )
       use pepper_kinds, only: ip
       use pepper_strings, only: cpos, ncpos
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF opened with write access.
+      integer(ip), intent(in) :: n  !! Number of comments to put into the comment area.
+      character(*), intent(in) :: buffer(*)  !! Buffer of comments to put into the comment area.
 
-!     Length of a DAF file internal filename.
-!
-!
-!     Decimal value for the DAF comment area end-of-comment (EOC)
-!     marker.
-!
-!
-!     Decimal value for the DAF comment area end-of-line (EOL) marker.
-!
-!
-!     Length of a DAF character record, in characters.
-!
 !
 !     Maximum and minimum decimal values for the printable ASCII
 !     characters.
@@ -17103,7 +17389,6 @@ contains
 
       logical :: empty
       logical :: found
-!     Initial values
 !
 !     Constants (SPICELIB computed them on the first call).
 !
@@ -17535,8 +17820,11 @@ contains
 !     Check out and leave DAFAC.
 !
       return
-      end procedure dafac
+      end subroutine dafac
 
+      !> Delete the entire comment area of a previously opened binary
+      !> DAF attached to HANDLE.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a binary DAF that is to have its entire
@@ -17597,103 +17885,105 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFDC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFDC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               RTRIM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               RTRIM
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         KERNEL
-      !>              PARAMETER           ( KERNEL =
-      !>             .                         'earthstns_itrf93_201023.bsp' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         KERNEL
+      !>      PARAMETER           ( KERNEL =
+      !>     .                         'earthstns_itrf93_201023.bsp' )
       !>
-      !>              INTEGER               BUFFSZ
-      !>              PARAMETER           ( BUFFSZ = 10 )
+      !>      INTEGER               BUFFSZ
+      !>      PARAMETER           ( BUFFSZ = 10 )
       !>
-      !>              INTEGER               LINLEN
-      !>              PARAMETER           ( LINLEN = 1000 )
+      !>      INTEGER               LINLEN
+      !>      PARAMETER           ( LINLEN = 1000 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(LINLEN)    BUFFER ( BUFFSZ )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(LINLEN)    BUFFER ( BUFFSZ )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               N
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               DONE
+      !>      LOGICAL               DONE
       !>
-      !>        C
-      !>        C     Open a DAF for write. Return a HANDLE referring to the
-      !>        C     file.
-      !>        C
-      !>              CALL DAFOPW ( KERNEL, HANDLE )
+      !>C
+      !>C     Open a DAF for write. Return a HANDLE referring to the
+      !>C     file.
+      !>C
+      !>      CALL DAFOPW ( KERNEL, HANDLE )
       !>
-      !>        C
-      !>        C     Print the first 10 lines of comments from the DAF file.
-      !>        C
-      !>              WRITE(*,'(A)') 'Comment area of input DAF file '
-      !>             .            // '(max. 10 lines): '
-      !>              WRITE(*,'(A)') '---------------------------------------'
-      !>             .            // '-----------------------'
+      !>C
+      !>C     Print the first 10 lines of comments from the DAF file.
+      !>C
+      !>      WRITE(*,'(A)') 'Comment area of input DAF file '
+      !>     .            // '(max. 10 lines): '
+      !>      WRITE(*,'(A)') '---------------------------------------'
+      !>     .            // '-----------------------'
       !>
-      !>              CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
+      !>      CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
       !>
-      !>              DO I = 1, N
+      !>      DO I = 1, N
       !>
-      !>                 WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
+      !>         WRITE (*,*) BUFFER(I)(:RTRIM(BUFFER(I)))
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              WRITE(*,'(A)') '---------------------------------------'
-      !>             .            // '-----------------------'
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Deleting entire comment area...'
+      !>      WRITE(*,'(A)') '---------------------------------------'
+      !>     .            // '-----------------------'
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Deleting entire comment area...'
       !>
-      !>        C
-      !>        C     Delete all the comments from the DAF file.
-      !>        C
-      !>              CALL DAFDC ( HANDLE )
+      !>C
+      !>C     Delete all the comments from the DAF file.
+      !>C
+      !>      CALL DAFDC ( HANDLE )
       !>
-      !>        C
-      !>        C     Close the DAF file and re-open it for read
-      !>        C     access to work around the DAFEC restriction
-      !>        C     on comments not to be modified while they are
-      !>        C     being extracted.
-      !>        C
-      !>              CALL DAFCLS( HANDLE  )
+      !>C
+      !>C     Close the DAF file and re-open it for read
+      !>C     access to work around the DAFEC restriction
+      !>C     on comments not to be modified while they are
+      !>C     being extracted.
+      !>C
+      !>      CALL DAFCLS( HANDLE  )
       !>
-      !>              CALL DAFOPR( KERNEL, HANDLE  )
+      !>      CALL DAFOPR( KERNEL, HANDLE  )
       !>
-      !>        C
-      !>        C     Check if the comments have indeed been deleted.
-      !>        C
-      !>              CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
+      !>C
+      !>C     Check if the comments have indeed been deleted.
+      !>C
+      !>      CALL DAFEC  ( HANDLE, BUFFSZ, N, BUFFER, DONE )
       !>
-      !>              IF ( DONE .AND. N .EQ. 0 ) THEN
+      !>      IF ( DONE .AND. N .EQ. 0 ) THEN
       !>
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) '   Successful operation.'
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) '   Successful operation.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) '   Operation failed.'
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) '   Operation failed.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Safely close the DAF.
-      !>        C
-      !>              CALL DAFCLS ( HANDLE )
+      !>C
+      !>C     Safely close the DAF.
+      !>C
+      !>      CALL DAFCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -17742,14 +18032,12 @@ contains
       !>        Added complete code example.
       !>
       !>-    SPICELIB Version 1.0.0, 23-SEP-1994 (KRG)
-      module procedure dafdc
+      module subroutine dafdc ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of a binary DAF opened for writing.
 
-!     Local parameters
-!
-!     Length of a DAF file internal filename.
-!
       character(ifnlen) :: ifname
 
       integer(ip) :: bward
@@ -17797,8 +18085,10 @@ contains
 !     We're done now, so goodbye.
 !
       return
-      end procedure dafdc
+      end subroutine dafdc
 
+      !> Extract comments from the comment area of a binary DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a binary DAF which has been opened
@@ -17910,86 +18200,88 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFEC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFEC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               RTRIM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               RTRIM
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         KERNEL
-      !>              PARAMETER           ( KERNEL =
-      !>             .                         'earthstns_itrf93_201023.bsp' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         KERNEL
+      !>      PARAMETER           ( KERNEL =
+      !>     .                         'earthstns_itrf93_201023.bsp' )
       !>
-      !>              INTEGER               BUFSIZ
-      !>              PARAMETER           ( BUFSIZ = 10 )
+      !>      INTEGER               BUFSIZ
+      !>      PARAMETER           ( BUFSIZ = 10 )
       !>
-      !>              INTEGER               LINLEN
-      !>              PARAMETER           ( LINLEN = 1000 )
+      !>      INTEGER               LINLEN
+      !>      PARAMETER           ( LINLEN = 1000 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(LINLEN)    BUFFER ( BUFSIZ )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(LINLEN)    BUFFER ( BUFSIZ )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               N
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               DONE
+      !>      LOGICAL               DONE
       !>
-      !>        C
-      !>        C     Open a DAF for read. Return a HANDLE referring to the
-      !>        C     file.
-      !>        C
-      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>C
+      !>C     Open a DAF for read. Return a HANDLE referring to the
+      !>C     file.
+      !>C
+      !>      CALL DAFOPR ( KERNEL, HANDLE )
       !>
-      !>        C
-      !>        C     Read a maximum of 30 lines of comments.
-      !>        C
-      !>              WRITE(*,'(A)') 'Comment area of input DAF file '
-      !>             .            // '(max. 30 lines): '
-      !>              WRITE(*,'(A)') '---------------------------------------'
-      !>             .            // '-----------------------'
-      !>              DO I = 0, 2
+      !>C
+      !>C     Read a maximum of 30 lines of comments.
+      !>C
+      !>      WRITE(*,'(A)') 'Comment area of input DAF file '
+      !>     .            // '(max. 30 lines): '
+      !>      WRITE(*,'(A)') '---------------------------------------'
+      !>     .            // '-----------------------'
+      !>      DO I = 0, 2
       !>
-      !>                 CALL DAFEC  ( HANDLE, BUFSIZ, N, BUFFER, DONE )
+      !>         CALL DAFEC  ( HANDLE, BUFSIZ, N, BUFFER, DONE )
       !>
-      !>        C
-      !>        C        Write the N lines to the terminal screen.
-      !>        C
-      !>                 DO J = 1, N
+      !>C
+      !>C        Write the N lines to the terminal screen.
+      !>C
+      !>         DO J = 1, N
       !>
-      !>                    WRITE (*,*) BUFFER(J)(:RTRIM(BUFFER(J)))
+      !>            WRITE (*,*) BUFFER(J)(:RTRIM(BUFFER(J)))
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              WRITE(*,'(A)') '---------------------------------------'
-      !>             .            // '-----------------------'
+      !>      WRITE(*,'(A)') '---------------------------------------'
+      !>     .            // '-----------------------'
       !>
-      !>        C
-      !>        C     Have all the comments been read?
-      !>        C
-      !>              IF ( .NOT. DONE ) THEN
+      !>C
+      !>C     Have all the comments been read?
+      !>C
+      !>      IF ( .NOT. DONE ) THEN
       !>
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) 'Warning: Not all comments have been read!'
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) 'Warning: Not all comments have been read!'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Safely close the DAF.
-      !>        C
-      !>              CALL DAFCLS ( HANDLE )
+      !>C
+      !>C     Safely close the DAF.
+      !>C
+      !>      CALL DAFCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -18050,112 +18342,114 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFEC_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFEC_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               RTRIM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               RTRIM
       !>
-      !>              LOGICAL               ALLTRU
+      !>      LOGICAL               ALLTRU
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               BUFSIZ
-      !>              PARAMETER           ( BUFSIZ = 10   )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               BUFSIZ
+      !>      PARAMETER           ( BUFSIZ = 10   )
       !>
-      !>              INTEGER               FNAMLN
-      !>              PARAMETER           ( FNAMLN = 255  )
+      !>      INTEGER               FNAMLN
+      !>      PARAMETER           ( FNAMLN = 255  )
       !>
-      !>              INTEGER               LINLEN
-      !>              PARAMETER           ( LINLEN = 1000 )
+      !>      INTEGER               LINLEN
+      !>      PARAMETER           ( LINLEN = 1000 )
       !>
-      !>              INTEGER               NUMFIL
-      !>              PARAMETER           ( NUMFIL = 2    )
+      !>      INTEGER               NUMFIL
+      !>      PARAMETER           ( NUMFIL = 2    )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(FNAMLN)    DAFNAM ( NUMFIL )
-      !>              CHARACTER*(LINLEN)    BUFFER ( BUFSIZ )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(FNAMLN)    DAFNAM ( NUMFIL )
+      !>      CHARACTER*(LINLEN)    BUFFER ( BUFSIZ )
       !>
-      !>              INTEGER               HANDLE ( NUMFIL )
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               N
+      !>      INTEGER               HANDLE ( NUMFIL )
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               DONE   ( NUMFIL )
+      !>      LOGICAL               DONE   ( NUMFIL )
       !>
-      !>        C
-      !>        C     Set the DAF file names.
-      !>        C
-      !>              DATA                  DAFNAM /
-      !>             .                          'earthstns_itrf93_201023.bsp',
-      !>             .                          'vo2_swu_ck2.bc'          /
+      !>C
+      !>C     Set the DAF file names.
+      !>C
+      !>      DATA                  DAFNAM /
+      !>     .                          'earthstns_itrf93_201023.bsp',
+      !>     .                          'vo2_swu_ck2.bc'          /
       !>
-      !>        C
-      !>        C     Set the initial values for DONE and HANDLE.
-      !>        C
-      !>              DO I = 1, NUMFIL
+      !>C
+      !>C     Set the initial values for DONE and HANDLE.
+      !>C
+      !>      DO I = 1, NUMFIL
       !>
-      !>                 DONE(I)   = .FALSE.
-      !>                 HANDLE(I) = 0
+      !>         DONE(I)   = .FALSE.
+      !>         HANDLE(I) = 0
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Open the DAFs.
-      !>        C
-      !>              DO I = 1, NUMFIL
+      !>C
+      !>C     Open the DAFs.
+      !>C
+      !>      DO I = 1, NUMFIL
       !>
-      !>                 CALL DAFOPR ( DAFNAM(I), HANDLE(I) )
+      !>         CALL DAFOPR ( DAFNAM(I), HANDLE(I) )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     While there are still some comments left to read in at
-      !>        C     least one of the files, read them and display them.
-      !>        C
-      !>              DO WHILE ( .NOT. ALLTRU( DONE, NUMFIL ) )
+      !>C
+      !>C     While there are still some comments left to read in at
+      !>C     least one of the files, read them and display them.
+      !>C
+      !>      DO WHILE ( .NOT. ALLTRU( DONE, NUMFIL ) )
       !>
-      !>                 DO I = 1, NUMFIL
+      !>         DO I = 1, NUMFIL
       !>
-      !>                    IF ( .NOT. DONE(I) ) THEN
+      !>            IF ( .NOT. DONE(I) ) THEN
       !>
-      !>                       WRITE (*,*)
-      !>                       WRITE (*,*) 'File: ',
-      !>             .                     DAFNAM(I)(:RTRIM(DAFNAM(I)))
-      !>                       WRITE (*,*) '---------------------------------'
-      !>             .                 //  '-----------------------------'
-      !>                       N = 0
+      !>               WRITE (*,*)
+      !>               WRITE (*,*) 'File: ',
+      !>     .                     DAFNAM(I)(:RTRIM(DAFNAM(I)))
+      !>               WRITE (*,*) '---------------------------------'
+      !>     .                 //  '-----------------------------'
+      !>               N = 0
       !>
-      !>                       CALL DAFEC ( HANDLE(I), BUFSIZ, N,
-      !>             .                      BUFFER,    DONE(I)   )
+      !>               CALL DAFEC ( HANDLE(I), BUFSIZ, N,
+      !>     .                      BUFFER,    DONE(I)   )
       !>
-      !>                       DO J = 1, N
+      !>               DO J = 1, N
       !>
-      !>                          WRITE (*,*) BUFFER(J)(:RTRIM(BUFFER(J)))
+      !>                  WRITE (*,*) BUFFER(J)(:RTRIM(BUFFER(J)))
       !>
-      !>                       END DO
+      !>               END DO
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Safely close the DAF files.
-      !>        C
-      !>              DO I = 1, NUMFIL
+      !>C
+      !>C     Safely close the DAF files.
+      !>C
+      !>      DO I = 1, NUMFIL
       !>
-      !>                 CALL DAFCLS ( HANDLE(I) )
+      !>         CALL DAFCLS ( HANDLE(I) )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -18321,11 +18615,17 @@ contains
       !>-    SPICELIB Version 1.0.0, 08-NOV-2006 (NJB) (KRG) (FST)
       !>
       !>        Based on Support Version 2.0.0, 16-NOV-2001 (FST)
-      module procedure dafec
+      module subroutine dafec ( ctx, handle, bufsiz, n, buffer, done )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip
       use pepper_strings, only: cpos, ncpos
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of binary DAF opened with read access.
+      integer(ip), intent(in) :: bufsiz  !! Maximum size, in lines, of BUFFER.
+      integer(ip), intent(out) :: n  !! Number of extracted comment lines.
+      character(*), intent(out) :: buffer(*)  !! Buffer where extracted comment lines are placed.
+      logical, intent(out) :: done  !! Indicates whether all comments have been extracted.
       character(1) :: ch
       character(ifnlen) :: ifname
       integer(ip) :: curpos
@@ -18415,6 +18715,15 @@ contains
 !     Convert the DAF handle to its corresponding Fortran logical
 !     unit number for reading the comment records (unless in memory).
 !
+!
+!     PEPPER: a DAF built in memory has no comments.
+!
+      if ( daf_synthetic_slot ( ctx, handle ) > 0 ) then
+         n    = 0
+         done = .true.
+         return
+      end if
+
       raw_slot = daf_raw_slot ( ctx, handle )
       if ( raw_slot == 0 ) then
          call zzddhhlu ( ctx, handle, 'DAF', .false., daflun )
@@ -18835,12 +19144,19 @@ contains
 
       return
       end associate
-      end procedure dafec
+      end subroutine dafec
 
-      !> All the comment lines of a DAF, each of any length (PEPPER).
-      module procedure daf_comments
+      !> All the comment lines of a DAF, each of any length (PEPPER; [[dafec]]
+      !> without a buffer). It reads the comment area directly: it does not
+      !> change the position of [[dafec]] in the file.
+      !>
+      !> The errors are those of [[dafec]], without SPICE(COMMENTTOOLONG).
+      module subroutine daf_comments ( ctx, handle, lines )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of a DAF open for reading
+      type(string), allocatable, intent(out) :: lines(:)  !! the comment lines (size 0 after an error)
       integer(ip), parameter :: inteoc = 4  ! end of the comments
       integer(ip), parameter :: mxcrec = 1000  ! comment characters in a record
       character(60) :: ifname
@@ -18860,6 +19176,9 @@ contains
       allocate ( lines(0) )
       if ( ctx%failed() ) return
       call dafsih ( ctx, handle, 'READ' )
+      if ( ctx%failed() ) return
+      ! PEPPER: a DAF built in memory has no comments
+      if ( daf_synthetic_slot ( ctx, handle ) > 0 ) return
       raw_slot = daf_raw_slot ( ctx, handle )
       if ( raw_slot == 0 ) then
          call zzddhhlu ( ctx, handle, 'DAF', .false., daflun )
@@ -18914,12 +19233,16 @@ contains
          return
       end if
       call split_comment_lines ( text(1:eoc-1), lines )
-      end procedure daf_comments
+      end subroutine daf_comments
 
-      !> Split a comment area's text into lines (PEPPER).
-      module procedure split_comment_lines
+      !> Split a comment area's text into lines at its end-of-line marks
+      !> (NUL) (PEPPER; used by [[daf_comments]] and [[das_comments]]). Text
+      !> after the last mark is a line too.
+      pure module subroutine split_comment_lines ( text, lines )
       use pepper_kinds, only: ip
       implicit none
+      character(*), intent(in) :: text  !! the comment text
+      type(string), allocatable, intent(out) :: lines(:)  !! the lines
       integer(ip) :: b
       integer(ip) :: e
       integer(ip) :: k
@@ -18942,8 +19265,10 @@ contains
             b = b + e
          end if
       end do
-      end procedure split_comment_lines
+      end subroutine split_comment_lines
 
+      !> Begin a new array in a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF opened for write access
@@ -19048,12 +19373,14 @@ contains
       !>        DAFBNA now adds information about DAFs to the state table,
       !>        deletes information about closed DAFs from the state table,
       !>        and initializes the state pool.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dafbna
+      module subroutine dafbna ( ctx, handle, sum, name )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      real(wp), intent(in) :: sum      ( * )  !! Summary of new array.
+      character(*), intent(in) :: name  !! Name of new array.
       integer(ip) :: sumsiz
       integer(ip) :: p
       integer(ip) :: i
@@ -19083,6 +19410,9 @@ contains
                   stpool => ctx%dafana%stpool, &
                   sthead => ctx%dafana%sthead, &
                   stfptr => ctx%dafana%stfptr )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -19396,8 +19726,11 @@ contains
 
       return
       end associate
-      end procedure dafbna
+      end subroutine dafbna
 
+      !> Add one or more double precision words of data to the newest
+      !> array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     DATA     is an arbitrary number of double precision words to
@@ -19495,12 +19828,13 @@ contains
       !>        Updated to work with new DAF routines that allow writing
       !>        to multiple DAFs simultaneously. Functionality for
       !>        applications that write to one DAF at a time is unchanged.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dafada
+      module subroutine dafada ( ctx, data, n )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: data     ( * )  !! Elements of the new array.
+      integer(ip), intent(in) :: n  !! Number of elements in DATA.
       integer(ip) :: p
       if ( .not. allocated ( ctx%dafana ) ) then
          allocate ( ctx%dafana )
@@ -19510,6 +19844,9 @@ contains
                   staddg => ctx%dafana%staddg, &
                   stfree => ctx%dafana%stfree, &
                   sthead => ctx%dafana%sthead )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -19559,8 +19896,10 @@ contains
 
       return
       end associate
-      end procedure dafada
+      end subroutine dafada
 
+      !> End the addition of data to the newest array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -19675,12 +20014,11 @@ contains
       !>
       !>        Also changed was a numeric constant from 1.D0 to the
       !>        equivalent, but more aesthetically pleasing 1.0D0.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dafena
+      module subroutine dafena ( ctx )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), parameter :: arycnt = 3
       integer(ip), parameter :: bwdptr = 2
       integer(ip), parameter :: fwdptr = 1
@@ -19713,6 +20051,9 @@ contains
                   stlsum => ctx%dafana%stlsum, &
                   stname => ctx%dafana%stname, &
                   sthead => ctx%dafana%sthead )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -19861,8 +20202,11 @@ contains
 
       return
       end associate
-      end procedure dafena
+      end subroutine dafena
 
+      !> Select a DAF that already has a new array in progress as the
+      !> one to continue adding data to.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF that is open for write
@@ -19986,10 +20330,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 04-SEP-1991 (NJB) (WLT)
-      module procedure dafcad
+      module subroutine dafcad ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF to continue adding data to.
       integer(ip) :: p
       integer(ip) :: prev
       logical :: found
@@ -20080,8 +20426,10 @@ contains
 
       return
       end associate
-      end procedure dafcad
+      end subroutine dafcad
 
+      !> Begin a forward search for arrays in a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF on which a forward
@@ -20127,76 +20475,78 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFBFS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFBFS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Define the summary parameters appropriate
-      !>        C     for an SPK file.
-      !>        C
-      !>              INTEGER               MAXSUM
-      !>              PARAMETER           ( MAXSUM = 125 )
+      !>C
+      !>C     Define the summary parameters appropriate
+      !>C     for an SPK file.
+      !>C
+      !>      INTEGER               MAXSUM
+      !>      PARAMETER           ( MAXSUM = 125 )
       !>
-      !>              INTEGER               ND
-      !>              PARAMETER           ( ND = 2 )
+      !>      INTEGER               ND
+      !>      PARAMETER           ( ND = 2 )
       !>
-      !>              INTEGER               NI
-      !>              PARAMETER           ( NI = 6 )
+      !>      INTEGER               NI
+      !>      PARAMETER           ( NI = 6 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(32)        KERNEL
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(32)        KERNEL
       !>
-      !>              DOUBLE PRECISION      DC ( ND     )
-      !>              DOUBLE PRECISION      SUM( MAXSUM )
+      !>      DOUBLE PRECISION      DC ( ND     )
+      !>      DOUBLE PRECISION      SUM( MAXSUM )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               IC( NI )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               IC( NI )
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Open a DAF for read. Return a HANDLE referring to the
-      !>        C     file.
-      !>        C
-      !>              KERNEL = 'de421.bsp'
-      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>C
+      !>C     Open a DAF for read. Return a HANDLE referring to the
+      !>C     file.
+      !>C
+      !>      KERNEL = 'de421.bsp'
+      !>      CALL DAFOPR ( KERNEL, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a forward search on the file.
-      !>        C
-      !>              CALL DAFBFS ( HANDLE )
+      !>C
+      !>C     Begin a forward search on the file.
+      !>C
+      !>      CALL DAFBFS ( HANDLE )
       !>
-      !>        C
-      !>        C     Search until a DAF array is found.
-      !>        C
-      !>              CALL DAFFNA ( FOUND )
+      !>C
+      !>C     Search until a DAF array is found.
+      !>C
+      !>      CALL DAFFNA ( FOUND )
       !>
-      !>        C
-      !>        C     Loop while the search finds subsequent DAF arrays.
-      !>        C
-      !>              DO WHILE ( FOUND )
+      !>C
+      !>C     Loop while the search finds subsequent DAF arrays.
+      !>C
+      !>      DO WHILE ( FOUND )
       !>
-      !>                 CALL DAFGS ( SUM )
-      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>         CALL DAFGS ( SUM )
+      !>         CALL DAFUS ( SUM, ND, NI, DC, IC )
       !>
-      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
-      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>         WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>         WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
       !>
-      !>        C
-      !>        C        Check for another segment.
-      !>        C
-      !>                 CALL DAFFNA ( FOUND )
+      !>C
+      !>C        Check for another segment.
+      !>C
+      !>         CALL DAFFNA ( FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Safely close the DAF.
-      !>        C
-      !>              CALL DAFCLS ( HANDLE )
+      !>C
+      !>C     Safely close the DAF.
+      !>C
+      !>      CALL DAFCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -20314,10 +20664,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafbfs
+      module subroutine dafbfs ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of file to be searched.
       integer(ip) :: i
       integer(ip) :: prev
       integer(ip) :: nextp
@@ -20492,8 +20844,10 @@ contains
 
       return
       end associate
-      end procedure dafbfs
+      end subroutine dafbfs
 
+      !> Find the next (forward) array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -20549,76 +20903,78 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFFNA_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFFNA_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Define the summary parameters appropriate
-      !>        C     for an SPK file.
-      !>        C
-      !>              INTEGER               MAXSUM
-      !>              PARAMETER           ( MAXSUM = 125 )
+      !>C
+      !>C     Define the summary parameters appropriate
+      !>C     for an SPK file.
+      !>C
+      !>      INTEGER               MAXSUM
+      !>      PARAMETER           ( MAXSUM = 125 )
       !>
-      !>              INTEGER               ND
-      !>              PARAMETER           ( ND = 2 )
+      !>      INTEGER               ND
+      !>      PARAMETER           ( ND = 2 )
       !>
-      !>              INTEGER               NI
-      !>              PARAMETER           ( NI = 6 )
+      !>      INTEGER               NI
+      !>      PARAMETER           ( NI = 6 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(32)        KERNEL
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(32)        KERNEL
       !>
-      !>              DOUBLE PRECISION      DC ( ND     )
-      !>              DOUBLE PRECISION      SUM( MAXSUM )
+      !>      DOUBLE PRECISION      DC ( ND     )
+      !>      DOUBLE PRECISION      SUM( MAXSUM )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               IC( NI )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               IC( NI )
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Open a DAF for read. Return a HANDLE referring to the
-      !>        C     file.
-      !>        C
-      !>              KERNEL = 'de421.bsp'
-      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>C
+      !>C     Open a DAF for read. Return a HANDLE referring to the
+      !>C     file.
+      !>C
+      !>      KERNEL = 'de421.bsp'
+      !>      CALL DAFOPR ( KERNEL, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a forward search on the file.
-      !>        C
-      !>              CALL DAFBFS ( HANDLE )
+      !>C
+      !>C     Begin a forward search on the file.
+      !>C
+      !>      CALL DAFBFS ( HANDLE )
       !>
-      !>        C
-      !>        C     Search until a DAF array is found.
-      !>        C
-      !>              CALL DAFFNA ( FOUND )
+      !>C
+      !>C     Search until a DAF array is found.
+      !>C
+      !>      CALL DAFFNA ( FOUND )
       !>
-      !>        C
-      !>        C     Loop while the search finds subsequent DAF arrays.
-      !>        C
-      !>              DO WHILE ( FOUND )
+      !>C
+      !>C     Loop while the search finds subsequent DAF arrays.
+      !>C
+      !>      DO WHILE ( FOUND )
       !>
-      !>                 CALL DAFGS ( SUM )
-      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>         CALL DAFGS ( SUM )
+      !>         CALL DAFUS ( SUM, ND, NI, DC, IC )
       !>
-      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
-      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>         WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>         WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
       !>
-      !>        C
-      !>        C        Check for another segment.
-      !>        C
-      !>                 CALL DAFFNA ( FOUND )
+      !>C
+      !>C        Check for another segment.
+      !>C
+      !>         CALL DAFFNA ( FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Safely close the DAF.
-      !>        C
-      !>              CALL DAFCLS ( HANDLE )
+      !>C
+      !>C     Safely close the DAF.
+      !>C
+      !>      CALL DAFCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -20734,10 +21090,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure daffna
+      module subroutine daffna ( ctx, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(out) :: found  !! .TRUE. if an array was found.
       integer(ip) :: p
       logical :: fnd
       if ( .not. allocated ( ctx%daffa ) ) then
@@ -20866,8 +21224,10 @@ contains
 
       return
       end associate
-      end procedure daffna
+      end subroutine daffna
 
+      !> Begin a backward search for arrays in a DAF.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF on which a backward
@@ -20913,76 +21273,78 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFBBS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFBBS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Define the summary parameters appropriate
-      !>        C     for an SPK file.
-      !>        C
-      !>              INTEGER               MAXSUM
-      !>              PARAMETER           ( MAXSUM = 125 )
+      !>C
+      !>C     Define the summary parameters appropriate
+      !>C     for an SPK file.
+      !>C
+      !>      INTEGER               MAXSUM
+      !>      PARAMETER           ( MAXSUM = 125 )
       !>
-      !>              INTEGER               ND
-      !>              PARAMETER           ( ND = 2 )
+      !>      INTEGER               ND
+      !>      PARAMETER           ( ND = 2 )
       !>
-      !>              INTEGER               NI
-      !>              PARAMETER           ( NI = 6 )
+      !>      INTEGER               NI
+      !>      PARAMETER           ( NI = 6 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(32)        KERNEL
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(32)        KERNEL
       !>
-      !>              DOUBLE PRECISION      DC ( ND     )
-      !>              DOUBLE PRECISION      SUM( MAXSUM )
+      !>      DOUBLE PRECISION      DC ( ND     )
+      !>      DOUBLE PRECISION      SUM( MAXSUM )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               IC( NI )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               IC( NI )
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Open a DAF for read. Return a HANDLE referring to the
-      !>        C     file.
-      !>        C
-      !>              KERNEL = 'de421.bsp'
-      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>C
+      !>C     Open a DAF for read. Return a HANDLE referring to the
+      !>C     file.
+      !>C
+      !>      KERNEL = 'de421.bsp'
+      !>      CALL DAFOPR ( KERNEL, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a backward search on the file.
-      !>        C
-      !>              CALL DAFBBS ( HANDLE )
+      !>C
+      !>C     Begin a backward search on the file.
+      !>C
+      !>      CALL DAFBBS ( HANDLE )
       !>
-      !>        C
-      !>        C     Search until a DAF array is found.
-      !>        C
-      !>              CALL DAFFPA ( FOUND )
+      !>C
+      !>C     Search until a DAF array is found.
+      !>C
+      !>      CALL DAFFPA ( FOUND )
       !>
-      !>        C
-      !>        C     Loop while the search finds subsequent DAF arrays.
-      !>        C
-      !>              DO WHILE ( FOUND )
+      !>C
+      !>C     Loop while the search finds subsequent DAF arrays.
+      !>C
+      !>      DO WHILE ( FOUND )
       !>
-      !>                 CALL DAFGS ( SUM )
-      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>         CALL DAFGS ( SUM )
+      !>         CALL DAFUS ( SUM, ND, NI, DC, IC )
       !>
-      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
-      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>         WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>         WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
       !>
-      !>        C
-      !>        C        Check for another segment.
-      !>        C
-      !>                 CALL DAFFPA ( FOUND )
+      !>C
+      !>C        Check for another segment.
+      !>C
+      !>         CALL DAFFPA ( FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Safely close the DAF.
-      !>        C
-      !>              CALL DAFCLS ( HANDLE )
+      !>C
+      !>C     Safely close the DAF.
+      !>C
+      !>      CALL DAFCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -21100,10 +21462,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafbbs
+      module subroutine dafbbs ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF to be searched.
       integer(ip) :: i
       integer(ip) :: prev
       integer(ip) :: nextp
@@ -21272,8 +21636,10 @@ contains
 
       return
       end associate
-      end procedure dafbbs
+      end subroutine dafbbs
 
+      !> Find the previous (backward) array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -21331,76 +21697,78 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFFPA_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFFPA_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Define the summary parameters appropriate
-      !>        C     for an SPK file.
-      !>        C
-      !>              INTEGER               MAXSUM
-      !>              PARAMETER           ( MAXSUM = 125 )
+      !>C
+      !>C     Define the summary parameters appropriate
+      !>C     for an SPK file.
+      !>C
+      !>      INTEGER               MAXSUM
+      !>      PARAMETER           ( MAXSUM = 125 )
       !>
-      !>              INTEGER               ND
-      !>              PARAMETER           ( ND = 2 )
+      !>      INTEGER               ND
+      !>      PARAMETER           ( ND = 2 )
       !>
-      !>              INTEGER               NI
-      !>              PARAMETER           ( NI = 6 )
+      !>      INTEGER               NI
+      !>      PARAMETER           ( NI = 6 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(32)        KERNEL
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(32)        KERNEL
       !>
-      !>              DOUBLE PRECISION      DC ( ND     )
-      !>              DOUBLE PRECISION      SUM( MAXSUM )
+      !>      DOUBLE PRECISION      DC ( ND     )
+      !>      DOUBLE PRECISION      SUM( MAXSUM )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               IC( NI )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               IC( NI )
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Open a DAF for read. Return a HANDLE referring to the
-      !>        C     file.
-      !>        C
-      !>              KERNEL = 'de421.bsp'
-      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>C
+      !>C     Open a DAF for read. Return a HANDLE referring to the
+      !>C     file.
+      !>C
+      !>      KERNEL = 'de421.bsp'
+      !>      CALL DAFOPR ( KERNEL, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a backward search on the file.
-      !>        C
-      !>              CALL DAFBBS ( HANDLE )
+      !>C
+      !>C     Begin a backward search on the file.
+      !>C
+      !>      CALL DAFBBS ( HANDLE )
       !>
-      !>        C
-      !>        C     Search until a DAF array is found.
-      !>        C
-      !>              CALL DAFFPA ( FOUND )
+      !>C
+      !>C     Search until a DAF array is found.
+      !>C
+      !>      CALL DAFFPA ( FOUND )
       !>
-      !>        C
-      !>        C     Loop while the search finds subsequent DAF arrays.
-      !>        C
-      !>              DO WHILE ( FOUND )
+      !>C
+      !>C     Loop while the search finds subsequent DAF arrays.
+      !>C
+      !>      DO WHILE ( FOUND )
       !>
-      !>                 CALL DAFGS ( SUM )
-      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>         CALL DAFGS ( SUM )
+      !>         CALL DAFUS ( SUM, ND, NI, DC, IC )
       !>
-      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
-      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>         WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>         WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
       !>
-      !>        C
-      !>        C        Check for another segment.
-      !>        C
-      !>                 CALL DAFFPA ( FOUND )
+      !>C
+      !>C        Check for another segment.
+      !>C
+      !>         CALL DAFFPA ( FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Safely close the DAF.
-      !>        C
-      !>              CALL DAFCLS ( HANDLE )
+      !>C
+      !>C     Safely close the DAF.
+      !>C
+      !>      CALL DAFCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -21529,10 +21897,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure daffpa
+      module subroutine daffpa ( ctx, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(out) :: found  !! .TRUE. if an array was found.
       integer(ip) :: p
       logical :: fnd
       if ( .not. allocated ( ctx%daffa ) ) then
@@ -21660,8 +22030,11 @@ contains
 
       return
       end associate
-      end procedure daffpa
+      end subroutine daffpa
 
+      !> Return (get) the summary for the current array in the current
+      !> DAF.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -21714,76 +22087,78 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DAFGS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DAFGS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Define the summary parameters appropriate
-      !>        C     for an SPK file.
-      !>        C
-      !>              INTEGER               MAXSUM
-      !>              PARAMETER           ( MAXSUM = 125 )
+      !>C
+      !>C     Define the summary parameters appropriate
+      !>C     for an SPK file.
+      !>C
+      !>      INTEGER               MAXSUM
+      !>      PARAMETER           ( MAXSUM = 125 )
       !>
-      !>              INTEGER               ND
-      !>              PARAMETER           ( ND = 2 )
+      !>      INTEGER               ND
+      !>      PARAMETER           ( ND = 2 )
       !>
-      !>              INTEGER               NI
-      !>              PARAMETER           ( NI = 6 )
+      !>      INTEGER               NI
+      !>      PARAMETER           ( NI = 6 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(32)        KERNEL
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(32)        KERNEL
       !>
-      !>              DOUBLE PRECISION      DC ( ND     )
-      !>              DOUBLE PRECISION      SUM( MAXSUM )
+      !>      DOUBLE PRECISION      DC ( ND     )
+      !>      DOUBLE PRECISION      SUM( MAXSUM )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               IC( NI )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               IC( NI )
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Open a DAF for read. Return a HANDLE referring to the
-      !>        C     file.
-      !>        C
-      !>              KERNEL = 'de421.bsp'
-      !>              CALL DAFOPR ( KERNEL, HANDLE )
+      !>C
+      !>C     Open a DAF for read. Return a HANDLE referring to the
+      !>C     file.
+      !>C
+      !>      KERNEL = 'de421.bsp'
+      !>      CALL DAFOPR ( KERNEL, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a forward search on the file.
-      !>        C
-      !>              CALL DAFBFS ( HANDLE )
+      !>C
+      !>C     Begin a forward search on the file.
+      !>C
+      !>      CALL DAFBFS ( HANDLE )
       !>
-      !>        C
-      !>        C     Search until a DAF array is found.
-      !>        C
-      !>              CALL DAFFNA ( FOUND )
+      !>C
+      !>C     Search until a DAF array is found.
+      !>C
+      !>      CALL DAFFNA ( FOUND )
       !>
-      !>        C
-      !>        C     Loop while the search finds subsequent DAF arrays.
-      !>        C
-      !>              DO WHILE ( FOUND )
+      !>C
+      !>C     Loop while the search finds subsequent DAF arrays.
+      !>C
+      !>      DO WHILE ( FOUND )
       !>
-      !>                 CALL DAFGS ( SUM )
-      !>                 CALL DAFUS ( SUM, ND, NI, DC, IC )
+      !>         CALL DAFGS ( SUM )
+      !>         CALL DAFUS ( SUM, ND, NI, DC, IC )
       !>
-      !>                 WRITE(*,*)                'Doubles:', DC(1:ND)
-      !>                 WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
+      !>         WRITE(*,*)                'Doubles:', DC(1:ND)
+      !>         WRITE(*, FMT='(A,6I9)' ) 'Integers:', IC(1:NI)
       !>
-      !>        C
-      !>        C        Check for another segment.
-      !>        C
-      !>                 CALL DAFFNA ( FOUND )
+      !>C
+      !>C        Check for another segment.
+      !>C
+      !>         CALL DAFFNA ( FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Safely close the DAF.
-      !>        C
-      !>              CALL DAFCLS ( HANDLE )
+      !>C
+      !>C     Safely close the DAF.
+      !>C
+      !>      CALL DAFCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -21903,10 +22278,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafgs
+      module subroutine dafgs ( ctx, sum )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(out) :: sum    ( * )  !! Summary for current array.
       integer(ip) :: offset
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -21987,8 +22364,10 @@ contains
 
       return
       end associate
-      end procedure dafgs
+      end subroutine dafgs
 
+      !> Return (get) the name for the current array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -22105,10 +22484,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafgn
+      module subroutine dafgn ( ctx, name )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: name  !! Name of current array.
       integer(ip) :: offset
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -22206,8 +22587,10 @@ contains
 
       return
       end associate
-      end procedure dafgn
+      end subroutine dafgn
 
+      !> Return (get) the handle of the DAF currently being searched.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -22364,10 +22747,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafgh
+      module subroutine dafgh ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: handle  !! Handle for current DAF.
       integer(ip) :: p
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
@@ -22406,8 +22791,10 @@ contains
 
       return
       end associate
-      end procedure dafgh
+      end subroutine dafgh
 
+      !> Change the summary for the current array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     SUM      is the new summary for the current array. This
@@ -22532,10 +22919,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafrs
+      module subroutine dafrs ( ctx, sum )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: sum    ( * )  !! New summary for current array.
       integer(ip) :: offset
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -22642,8 +23031,10 @@ contains
 
       return
       end associate
-      end procedure dafrs
+      end subroutine dafrs
 
+      !> Replace the name for the current array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the new name for the current array.
@@ -22761,10 +23152,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafrn
+      module subroutine dafrn ( ctx, name )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! New name for current array.
       integer(ip) :: offset
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -22868,8 +23261,10 @@ contains
 
       return
       end associate
-      end procedure dafrn
+      end subroutine dafrn
 
+      !> Write a new summary for the current array in the current DAF.
+      !>
       !>## Detailed Input
       !>
       !>     SUM      is the new summary for the current array. This
@@ -22989,10 +23384,12 @@ contains
       !>        previously crashed under these conditions.
       !>
       !>-    SPICELIB Version 1.0.0, 28-MAR-1991 (IMU)
-      module procedure dafws
+      module subroutine dafws ( ctx, sum )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: sum    ( * )  !! New summary for current array in the current DAF.
       integer(ip) :: offset
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -23080,8 +23477,11 @@ contains
 
       return
       end associate
-      end procedure dafws
+      end subroutine dafws
 
+      !> Select a DAF that already has a search in progress as the
+      !> one to continue searching.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF in which either a forward
@@ -23171,10 +23571,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 04-SEP-1991 (NJB) (WLT)
-      module procedure dafcs
+      module subroutine dafcs ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF to continue searching.
       integer(ip) :: prev
       integer(ip) :: p
       logical :: fnd
@@ -23255,8 +23657,11 @@ contains
 
       return
       end associate
-      end procedure dafcs
+      end subroutine dafcs
 
+      !> Convert the contents of a binary DAF file to an equivalent DAF
+      !> transfer file.
+      !>
       !>## Detailed Input
       !>
       !>     BINFIL   is the name of a binary DAF file which is to be converted
@@ -23447,10 +23852,13 @@ contains
       !>        low level routines which encode and write the data were
       !>        modified to fix a problem. See the routines WRENCD and WRENCI
       !>        for details of the modification.
-      module procedure dafbt
+      module subroutine dafbt ( ctx, binfil, xfrlun )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rtrim, repmi_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: binfil  !! The name of a binary DAF file to be converted.
+      integer(ip), intent(in) :: xfrlun  !! Logical unit of a previously opened file.
 
       character(*), parameter :: quote = ''''
 
@@ -23963,15 +24371,13 @@ contains
       call dafcls ( ctx, binhdl )
 
       return
-      end procedure dafbt
+      end subroutine dafbt
 
-      !>## Abstract
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
+      !> routine [[daftb]]. NAIF supports this routine only to provide backward
+      !> compatibility.
       !>
-      !>     Deprecated: This routine has been superseded by the SPICELIB
-      !>     routine DAFTB. NAIF supports this routine only to provide backward
-      !>     compatibility.
-      !>
-      !>     Convert an ASCII (text) DAF to an equivalent binary DAF.
+      !> Convert an ASCII (text) DAF to an equivalent binary DAF.
       !>
       !>## Detailed Input
       !>
@@ -24108,9 +24514,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafa2b
+      module subroutine dafa2b ( ctx, ascii, binary, resv )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: ascii  !! Name of an existing ASCII (text) DAF.
+      character(*), intent(in) :: binary  !! Name of a binary DAF to be created.
+      integer(ip), intent(in) :: resv  !! Number of records to reserve.
 
       integer(ip) :: unit
 
@@ -24148,15 +24558,13 @@ contains
       close ( unit )
 
       return
-      end procedure dafa2b
+      end subroutine dafa2b
 
-      !>## Abstract
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
+      !> routine [[dafbt]]. NAIF supports this routine only to provide backward
+      !> compatibility.
       !>
-      !>     Deprecated: This routine has been superseded by the SPICELIB
-      !>     routine DAFBT. NAIF supports this routine only to provide backward
-      !>     compatibility.
-      !>
-      !>     Convert a binary DAF to an equivalent ASCII (text) DAF.
+      !> Convert a binary DAF to an equivalent ASCII (text) DAF.
       !>
       !>## Detailed Input
       !>
@@ -24290,9 +24698,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafb2a
+      module subroutine dafb2a ( ctx, binary, ascii )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: binary  !! Name of an existing binary DAF.
+      character(*), intent(in) :: ascii  !! Name of an ASCII (text) DAF to be created.
 
       integer(ip) :: unit
 
@@ -24327,16 +24738,14 @@ contains
       close ( unit )
 
       return
-      end procedure dafb2a
+      end subroutine dafb2a
 
-      !>## Abstract
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
+      !> routine [[dafbt]]. NAIF supports this routine only to provide backward
+      !> compatibility.
       !>
-      !>     Deprecated: This routine has been superseded by the SPICELIB
-      !>     routine DAFBT. NAIF supports this routine only to provide backward
-      !>     compatibility.
-      !>
-      !>     Write the contents of a binary DAF to a text file opened by
-      !>     the calling program.
+      !> Write the contents of a binary DAF to a text file opened by
+      !> the calling program.
       !>
       !>## Detailed Input
       !>
@@ -24565,9 +24974,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafb2t
+      module subroutine dafb2t ( ctx, binary, text )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: binary  !! Name of an existing binary DAF.
+      integer(ip), intent(in) :: text  !! Logical unit connected to text file.
 
       integer(ip), parameter :: bsize = 100
 
@@ -24904,16 +25316,14 @@ contains
       call dafcls ( ctx, handle )
 
       return
-      end procedure dafb2t
+      end subroutine dafb2t
 
-      !>## Abstract
+      !> **Deprecated:** This routine has been superseded by the SPICELIB
+      !> routine [[daftb]]. NAIF supports this routine only to provide backward
+      !> compatibility.
       !>
-      !>     Deprecated: This routine has been superseded by the SPICELIB
-      !>     routine DAFTB. NAIF supports this routine only to provide backward
-      !>     compatibility.
-      !>
-      !>     Reconstruct a binary DAF from a text file opened by
-      !>     the calling program.
+      !> Reconstruct a binary DAF from a text file opened by
+      !> the calling program.
       !>
       !>## Detailed Input
       !>
@@ -25161,10 +25571,14 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure daft2b
+      module subroutine daft2b ( ctx, text, binary, resv )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: decimal_value
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: text  !! Logical unit connected to text file.
+      character(*), intent(in) :: binary  !! Name of a binary DAF to be created.
+      integer(ip), intent(in) :: resv  !! Number of records to reserve.
 
       integer(ip), parameter :: bsize = 1024
 
@@ -25536,8 +25950,11 @@ contains
             end do
          end do
       end subroutine read_doubles
-      end procedure daft2b
+      end subroutine daft2b
 
+      !> Convert the contents of an DAF transfer file into an equivalent
+      !> binary DAF file.
+      !>
       !>## Detailed Input
       !>
       !>     XFRLUN   is the Fortran logical unit number of a previously opened
@@ -25726,10 +26143,13 @@ contains
       !>        low level routines which encode and write the data were
       !>        modified to fix a problem. See the routines WRENCD and WRENCI
       !>        for details of the modification.
-      module procedure daftb
+      module subroutine daftb ( ctx, xfrlun, binfil )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: nextwd, nparsi, nextwd_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: xfrlun  !! Logical unit of an open DAF transfer file.
+      character(*), intent(in) :: binfil  !! Name of a binary DAF file to be created.
 
 !     Local Parameters
 !
@@ -26322,7 +26742,7 @@ contains
       call dafcls ( ctx, binhdl )
 
       return
-      end procedure daftb
+      end subroutine daftb
 
    !> PEPPER: make room in the DAFFA state table for one more search (as
    !> [[dafbfs]] and [[dafbbs]] need when they start a search of a DAF not in the

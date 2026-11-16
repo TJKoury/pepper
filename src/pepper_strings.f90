@@ -1,9 +1,7 @@
 !> Character string operations.
 !>
 !> The procedures keep SPICELIB's names, arguments and documentation. They
-!> have no saved state and do not signal SPICE errors. Moved here from
-!> src/spicelib by tools/modularize.py; the external procedures with the
-!> original interface are in tspice/src/legacy/pepper_legacy_strings.f90.
+!> have no saved state and do not signal SPICE errors.
 !>
 !> The `_inplace` variants ([[ucase_inplace]], [[repmc_inplace]], ...) change
 !> one `intent(inout)` string. The library calls them where SPICELIB passes
@@ -1568,76 +1566,78 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EQSTR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EQSTR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              LOGICAL               EQSTR
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      LOGICAL               EQSTR
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               SETSIZ
-      !>              PARAMETER           ( SETSIZ = 9  )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               SETSIZ
+      !>      PARAMETER           ( SETSIZ = 9  )
       !>
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 22 )
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 22 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)    STR1   ( SETSIZ )
-      !>              CHARACTER*(STRLEN)    STR2   ( SETSIZ )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)    STR1   ( SETSIZ )
+      !>      CHARACTER*(STRLEN)    STR2   ( SETSIZ )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Initialize the two arrays of strings.
-      !>        C
-      !>              DATA                  STR1   / 'A short string   ',
-      !>             .                               'Embedded        blanks',
-      !>             .                               'Embedded        blanks',
-      !>             .                               ' ',
-      !>             .                               'One word left out',
-      !>             .                               'Extra [] delimiters',
-      !>             .                               'Testing 1, 2, 3',
-      !>             .                               'Case insensitive',
-      !>             .                               'Steve'  /
+      !>C
+      !>C     Initialize the two arrays of strings.
+      !>C
+      !>      DATA                  STR1   / 'A short string   ',
+      !>     .                               'Embedded        blanks',
+      !>     .                               'Embedded        blanks',
+      !>     .                               ' ',
+      !>     .                               'One word left out',
+      !>     .                               'Extra [] delimiters',
+      !>     .                               'Testing 1, 2, 3',
+      !>     .                               'Case insensitive',
+      !>     .                               'Steve'  /
       !>
-      !>              DATA                  STR2   / 'ashortstring',
-      !>             .                               'Em be dd ed bl an ks',
-      !>             .                               '   Embeddedblanks',
-      !>             .                               '          ',
-      !>             .                               'WORD LEFT OUT',
-      !>             .                               'extradelimiters',
-      !>             .                               'TESTING123',
-      !>             .                               'Case Insensitive',
-      !>             .                               '  S t E v E  '  /
+      !>      DATA                  STR2   / 'ashortstring',
+      !>     .                               'Em be dd ed bl an ks',
+      !>     .                               '   Embeddedblanks',
+      !>     .                               '          ',
+      !>     .                               'WORD LEFT OUT',
+      !>     .                               'extradelimiters',
+      !>     .                               'TESTING123',
+      !>     .                               'Case Insensitive',
+      !>     .                               '  S t E v E  '  /
       !>
-      !>        C
-      !>        C     Compare the two arrays.
-      !>        C
-      !>              DO I = 1, SETSIZ
+      !>C
+      !>C     Compare the two arrays.
+      !>C
+      !>      DO I = 1, SETSIZ
       !>
-      !>                 WRITE(*,*)
-      !>                 WRITE(*,*) 'STR1 : ', STR1(I)
-      !>                 WRITE(*,*) 'STR2 : ', STR2(I)
+      !>         WRITE(*,*)
+      !>         WRITE(*,*) 'STR1 : ', STR1(I)
+      !>         WRITE(*,*) 'STR2 : ', STR2(I)
       !>
-      !>                 IF ( EQSTR( STR1(I), STR2(I) ) ) THEN
+      !>         IF ( EQSTR( STR1(I), STR2(I) ) ) THEN
       !>
-      !>                    WRITE(*,*) 'EQSTR: equivalent.'
+      !>            WRITE(*,*) 'EQSTR: equivalent.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'EQSTR: NOT equivalent.'
+      !>            WRITE(*,*) 'EQSTR: NOT equivalent.'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2368,38 +2368,40 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM FRSTNP_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM FRSTNP_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               FRSTNP
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               FRSTNP
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*10    S
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*10    S
       !>
-      !>        C
-      !>        C     Add some random characters to the string, some of them
-      !>        C     non-printable.
-      !>        C
-      !>              S( 1: 1) = 'A'
-      !>              S( 2: 2) = ' '
-      !>              S( 3: 3) = CHAR ( 3 )
-      !>              S( 4: 4) = 'A'
-      !>              S( 5: 5) = 'B'
-      !>              S( 6: 6) = 'C'
-      !>              S( 7: 7) = CHAR ( 7 )
-      !>              S( 8: 8) = CHAR ( 8 )
-      !>              S( 9: 9) = CHAR ( 9 )
-      !>              S(10:10) = ' '
+      !>C
+      !>C     Add some random characters to the string, some of them
+      !>C     non-printable.
+      !>C
+      !>      S( 1: 1) = 'A'
+      !>      S( 2: 2) = ' '
+      !>      S( 3: 3) = CHAR ( 3 )
+      !>      S( 4: 4) = 'A'
+      !>      S( 5: 5) = 'B'
+      !>      S( 6: 6) = 'C'
+      !>      S( 7: 7) = CHAR ( 7 )
+      !>      S( 8: 8) = CHAR ( 8 )
+      !>      S( 9: 9) = CHAR ( 9 )
+      !>      S(10:10) = ' '
       !>
-      !>              WRITE (*,'(A,I2)') 'First non-printable character '
-      !>             .//                 'found at index', FRSTNP(S)
+      !>      WRITE (*,'(A,I2)') 'First non-printable character '
+      !>     .//                 'found at index', FRSTNP(S)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -3723,52 +3725,54 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM LPARSE_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM LPARSE_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 NMAX
-      !>              PARAMETER             ( NMAX   = 25  )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 NMAX
+      !>      PARAMETER             ( NMAX   = 25  )
       !>
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 255 )
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 255 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(1)           DELIM
-      !>              CHARACTER*(STRLEN)      ITEMS  ( NMAX )
-      !>              CHARACTER*(STRLEN)      LIST
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(1)           DELIM
+      !>      CHARACTER*(STRLEN)      ITEMS  ( NMAX )
+      !>      CHARACTER*(STRLEN)      LIST
       !>
-      !>              INTEGER                 I
-      !>              INTEGER                 N
+      !>      INTEGER                 I
+      !>      INTEGER                 N
       !>
-      !>        C
-      !>        C     Define the list of delimited items.
-      !>        C
-      !>        C     Think of a sentence as a list delimited by a space.
-      !>        C     DELIM is assigned to a space.
-      !>        C
-      !>              LIST  = 'Run and find out.'
-      !>              DELIM = ' '
+      !>C
+      !>C     Define the list of delimited items.
+      !>C
+      !>C     Think of a sentence as a list delimited by a space.
+      !>C     DELIM is assigned to a space.
+      !>C
+      !>      LIST  = 'Run and find out.'
+      !>      DELIM = ' '
       !>
-      !>        C
-      !>        C     Parse the items from LIST.
-      !>        C
-      !>              CALL LPARSE ( LIST, DELIM, NMAX, N, ITEMS )
+      !>C
+      !>C     Parse the items from LIST.
+      !>C
+      !>      CALL LPARSE ( LIST, DELIM, NMAX, N, ITEMS )
       !>
-      !>        C
-      !>        C     Output the ITEMS.
-      !>        C
-      !>              DO I = 1, N
+      !>C
+      !>C     Output the ITEMS.
+      !>C
+      !>      DO I = 1, N
       !>
-      !>                 WRITE(*,'(A,I3,2A)') 'Item', I, ': ', ITEMS(I)
+      !>         WRITE(*,'(A,I3,2A)') 'Item', I, ': ', ITEMS(I)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -3784,77 +3788,79 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM LPARSE_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM LPARSE_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 RTRIM
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 RTRIM
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 NCASES
-      !>              PARAMETER             ( NCASES = 2   )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 NCASES
+      !>      PARAMETER             ( NCASES = 2   )
       !>
-      !>              INTEGER                 NMAXT
-      !>              PARAMETER             ( NMAXT  = 25  )
+      !>      INTEGER                 NMAXT
+      !>      PARAMETER             ( NMAXT  = 25  )
       !>
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 255 )
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 255 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(1)           DELIM  ( NCASES )
-      !>              CHARACTER*(STRLEN)      ITEMS  ( NMAXT  )
-      !>              CHARACTER*(STRLEN)      LIST   ( NCASES )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(1)           DELIM  ( NCASES )
+      !>      CHARACTER*(STRLEN)      ITEMS  ( NMAXT  )
+      !>      CHARACTER*(STRLEN)      LIST   ( NCASES )
       !>
-      !>              INTEGER                 I
-      !>              INTEGER                 J
-      !>              INTEGER                 N
-      !>              INTEGER                 NMAX   ( NCASES )
+      !>      INTEGER                 I
+      !>      INTEGER                 J
+      !>      INTEGER                 N
+      !>      INTEGER                 NMAX   ( NCASES )
       !>
-      !>        C
-      !>        C     Define the lists of delimited items, the delimiting
-      !>        C     character and the maximum number of items to return.
-      !>        C
-      !>              LIST(1)  = '//option1//option2/ //'
-      !>              DELIM(1) = '/'
-      !>              NMAX(1)  = 20
+      !>C
+      !>C     Define the lists of delimited items, the delimiting
+      !>C     character and the maximum number of items to return.
+      !>C
+      !>      LIST(1)  = '//option1//option2/ //'
+      !>      DELIM(1) = '/'
+      !>      NMAX(1)  = 20
       !>
-      !>              LIST(2)  = ' ,bob,   carol,, ted,  alice'
-      !>              DELIM(2) = ','
-      !>              NMAX(2)  = 4
+      !>      LIST(2)  = ' ,bob,   carol,, ted,  alice'
+      !>      DELIM(2) = ','
+      !>      NMAX(2)  = 4
       !>
-      !>              DO I = 1, NCASES
+      !>      DO I = 1, NCASES
       !>
-      !>                 WRITE(*,'(A,I2,A)') 'Case', I, ':'
-      !>                 WRITE(*,'(3A)')   '   String: ''',
-      !>             .                     LIST(I)(:RTRIM(LIST(I))), ''''
-      !>                 WRITE(*,'(3A)')   '   DELIM : ''', DELIM(I), ''''
-      !>                 WRITE(*,'(A,I3)') '   NMAX  :', NMAX(I)
-      !>                 WRITE(*,'(A)')    '   Output items:'
+      !>         WRITE(*,'(A,I2,A)') 'Case', I, ':'
+      !>         WRITE(*,'(3A)')   '   String: ''',
+      !>     .                     LIST(I)(:RTRIM(LIST(I))), ''''
+      !>         WRITE(*,'(3A)')   '   DELIM : ''', DELIM(I), ''''
+      !>         WRITE(*,'(A,I3)') '   NMAX  :', NMAX(I)
+      !>         WRITE(*,'(A)')    '   Output items:'
       !>
-      !>        C
-      !>        C        Parse the items from LIST.
-      !>        C
-      !>                 CALL LPARSE ( LIST(I), DELIM(I), NMAX(I), N, ITEMS )
+      !>C
+      !>C        Parse the items from LIST.
+      !>C
+      !>         CALL LPARSE ( LIST(I), DELIM(I), NMAX(I), N, ITEMS )
       !>
-      !>        C
-      !>        C        Output the ITEMS.
-      !>        C
-      !>                 DO J = 1, N
+      !>C
+      !>C        Output the ITEMS.
+      !>C
+      !>         DO J = 1, N
       !>
-      !>                    WRITE(*,'(A,I3,3A)') '      Item', J, ': ''',
-      !>             .                  ITEMS(J)(:RTRIM(ITEMS(J))), ''''
+      !>            WRITE(*,'(A,I3,3A)') '      Item', J, ': ''',
+      !>     .                  ITEMS(J)(:RTRIM(ITEMS(J))), ''''
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4152,55 +4158,57 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM LPARSM_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM LPARSM_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 DELMLN
-      !>              PARAMETER             ( DELMLN = 1   )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 DELMLN
+      !>      PARAMETER             ( DELMLN = 1   )
       !>
-      !>              INTEGER                 NMAX
-      !>              PARAMETER             ( NMAX   = 25  )
+      !>      INTEGER                 NMAX
+      !>      PARAMETER             ( NMAX   = 25  )
       !>
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 255 )
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 255 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(DELMLN)      DELIMS
-      !>              CHARACTER*(STRLEN)      ITEMS  ( NMAX )
-      !>              CHARACTER*(STRLEN)      LIST
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(DELMLN)      DELIMS
+      !>      CHARACTER*(STRLEN)      ITEMS  ( NMAX )
+      !>      CHARACTER*(STRLEN)      LIST
       !>
-      !>              INTEGER                 I
-      !>              INTEGER                 N
+      !>      INTEGER                 I
+      !>      INTEGER                 N
       !>
-      !>        C
-      !>        C     Define the list of delimited items.
-      !>        C
-      !>        C     Think of a sentence as a list delimited by a space.
-      !>        C     DELIMS is assigned to a space.
-      !>        C
-      !>              LIST   = 'Run and find out.'
-      !>              DELIMS = ' '
+      !>C
+      !>C     Define the list of delimited items.
+      !>C
+      !>C     Think of a sentence as a list delimited by a space.
+      !>C     DELIMS is assigned to a space.
+      !>C
+      !>      LIST   = 'Run and find out.'
+      !>      DELIMS = ' '
       !>
-      !>        C
-      !>        C     Parse the items from LIST.
-      !>        C
-      !>              CALL LPARSM ( LIST, DELIMS, NMAX, N, ITEMS )
+      !>C
+      !>C     Parse the items from LIST.
+      !>C
+      !>      CALL LPARSM ( LIST, DELIMS, NMAX, N, ITEMS )
       !>
-      !>        C
-      !>        C     Output the ITEMS.
-      !>        C
-      !>              DO I = 1, N
+      !>C
+      !>C     Output the ITEMS.
+      !>C
+      !>      DO I = 1, N
       !>
-      !>                 WRITE(*,'(A,I3,2A)') 'Item', I, ': ', ITEMS(I)
+      !>         WRITE(*,'(A,I3,2A)') 'Item', I, ': ', ITEMS(I)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4215,61 +4223,63 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM LPARSM_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM LPARSM_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 RTRIM
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 RTRIM
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 DELMLN
-      !>              PARAMETER             ( DELMLN = 5   )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 DELMLN
+      !>      PARAMETER             ( DELMLN = 5   )
       !>
-      !>              INTEGER                 NMAX
-      !>              PARAMETER             ( NMAX   = 25  )
+      !>      INTEGER                 NMAX
+      !>      PARAMETER             ( NMAX   = 25  )
       !>
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 255 )
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 255 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(DELMLN)      DELIMS
-      !>              CHARACTER*(STRLEN)      ITEMS  ( NMAX )
-      !>              CHARACTER*(STRLEN)      LIST
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(DELMLN)      DELIMS
+      !>      CHARACTER*(STRLEN)      ITEMS  ( NMAX )
+      !>      CHARACTER*(STRLEN)      LIST
       !>
-      !>              INTEGER                 I
-      !>              INTEGER                 N
+      !>      INTEGER                 I
+      !>      INTEGER                 N
       !>
-      !>        C
-      !>        C     Define the list of delimited items.
-      !>        C
-      !>        C     Think of a sentence as a list delimited by a space.
-      !>        C     DELIMS is assigned to a space.
-      !>        C
-      !>              LIST   = '  1986-187// 13:15:12.184 '
-      !>              DELIMS = ' ,/-:'
+      !>C
+      !>C     Define the list of delimited items.
+      !>C
+      !>C     Think of a sentence as a list delimited by a space.
+      !>C     DELIMS is assigned to a space.
+      !>C
+      !>      LIST   = '  1986-187// 13:15:12.184 '
+      !>      DELIMS = ' ,/-:'
       !>
-      !>        C
-      !>        C     Parse the items from LIST.
-      !>        C
-      !>              CALL LPARSM ( LIST, DELIMS, NMAX, N, ITEMS )
+      !>C
+      !>C     Parse the items from LIST.
+      !>C
+      !>      CALL LPARSM ( LIST, DELIMS, NMAX, N, ITEMS )
       !>
-      !>        C
-      !>        C     Output the ITEMS.
-      !>        C
-      !>              DO I = 1, N
+      !>C
+      !>C     Output the ITEMS.
+      !>C
+      !>      DO I = 1, N
       !>
-      !>                 WRITE(*,'(A,I3,3A)') 'Item', I, ': ''',
-      !>             .                        ITEMS(I)(:RTRIM(ITEMS(I))), ''''
+      !>         WRITE(*,'(A,I3,3A)') 'Item', I, ': ''',
+      !>     .                        ITEMS(I)(:RTRIM(ITEMS(I))), ''''
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5954,46 +5964,48 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM NEXTWD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM NEXTWD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              LOGICAL               EQSTR
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      LOGICAL               EQSTR
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               LINZS
-      !>              PARAMETER           ( LINZS = 47 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               LINZS
+      !>      PARAMETER           ( LINZS = 47 )
       !>
-      !>              INTEGER               WRDSZ
-      !>              PARAMETER           ( WRDSZ = 5  )
+      !>      INTEGER               WRDSZ
+      !>      PARAMETER           ( WRDSZ = 5  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(WRDSZ)     NEXT
-      !>              CHARACTER*(LINZS)     REST
-      !>              CHARACTER*(LINZS)     STRING
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(WRDSZ)     NEXT
+      !>      CHARACTER*(LINZS)     REST
+      !>      CHARACTER*(LINZS)     STRING
       !>
-      !>              REST = '  Now is the time,  for all good men to come.'
+      !>      REST = '  Now is the time,  for all good men to come.'
       !>
-      !>              WRITE(*,'(A)') 'Next   Rest of the string'
-      !>              WRITE(*,'(A)') '-----  ---'
-      !>             .            // '---------------------------------------'
+      !>      WRITE(*,'(A)') 'Next   Rest of the string'
+      !>      WRITE(*,'(A)') '-----  ---'
+      !>     .            // '---------------------------------------'
       !>
-      !>              DO WHILE ( .NOT. EQSTR ( REST, ' ' ) )
+      !>      DO WHILE ( .NOT. EQSTR ( REST, ' ' ) )
       !>
-      !>                 STRING = REST
-      !>                 CALL NEXTWD ( STRING, NEXT, REST )
+      !>         STRING = REST
+      !>         CALL NEXTWD ( STRING, NEXT, REST )
       !>
-      !>                 WRITE(*,'(A5,2X,A)') NEXT, REST
+      !>         WRITE(*,'(A5,2X,A)') NEXT, REST
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6215,44 +6227,46 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM NTHWD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM NTHWD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER               RTRIM
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER               RTRIM
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         STRING
-      !>              PARAMETER           ( STRING = ' Now is the time,   '
-      !>             .                  //  'for all good men     to come.' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         STRING
+      !>      PARAMETER           ( STRING = ' Now is the time,   '
+      !>     .                  //  'for all good men     to come.' )
       !>
-      !>              CHARACTER*(*)         FMT
-      !>              PARAMETER           ( FMT = '(A,I3,3A,I3)' )
+      !>      CHARACTER*(*)         FMT
+      !>      PARAMETER           ( FMT = '(A,I3,3A,I3)' )
       !>
-      !>              INTEGER               WRDSZ
-      !>              PARAMETER           ( WRDSZ = 5 )
+      !>      INTEGER               WRDSZ
+      !>      PARAMETER           ( WRDSZ = 5 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(WRDSZ)     WORD
-      !>              INTEGER               LOC
-      !>              INTEGER               NTH
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(WRDSZ)     WORD
+      !>      INTEGER               LOC
+      !>      INTEGER               NTH
       !>
-      !>              DO NTH = -1, 11
+      !>      DO NTH = -1, 11
       !>
-      !>                 CALL NTHWD ( STRING, NTH, WORD, LOC )
-      !>                 WRITE(*,FMT) 'Word #', NTH, '  is <',
-      !>             .                WORD(:RTRIM(WORD)),
-      !>             .                '>, starting at position', LOC
+      !>         CALL NTHWD ( STRING, NTH, WORD, LOC )
+      !>         WRITE(*,FMT) 'Word #', NTH, '  is <',
+      !>     .                WORD(:RTRIM(WORD)),
+      !>     .                '>, starting at position', LOC
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -8022,49 +8036,51 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REPMC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REPMC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 80 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 80 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)      INSTR
-      !>              CHARACTER*(STRLEN)      MARKER
-      !>              CHARACTER*(STRLEN)      OUTSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)      INSTR
+      !>      CHARACTER*(STRLEN)      MARKER
+      !>      CHARACTER*(STRLEN)      OUTSTR
       !>
-      !>        C
-      !>        C     1. Single marker
-      !>        C
-      !>              MARKER = '#'
-      !>              INSTR  = 'Invalid value. The value was:  #'
+      !>C
+      !>C     1. Single marker
+      !>C
+      !>      MARKER = '#'
+      !>      INSTR  = 'Invalid value. The value was:  #'
       !>
-      !>              CALL REPMC ( INSTR, MARKER, 'append', OUTSTR )
+      !>      CALL REPMC ( INSTR, MARKER, 'append', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 1: Single marker.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 1: Single marker.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>        C
-      !>        C     2. Multiple markers
-      !>        C
-      !>              MARKER = ' XX '
-      !>              INSTR  = 'The token XX was not recognized. Was it XX?'
+      !>C
+      !>C     2. Multiple markers
+      !>C
+      !>      MARKER = ' XX '
+      !>      INSTR  = 'The token XX was not recognized. Was it XX?'
       !>
-      !>              CALL REPMC ( INSTR, MARKER, '  FND  ', OUTSTR )
+      !>      CALL REPMC ( INSTR, MARKER, '  FND  ', OUTSTR )
       !>
-      !>              WRITE(*,*) 'Case 2: Multiple markers.'
-      !>              WRITE(*,*) '   Input : ', INSTR
-      !>              WRITE(*,*) '   Output: ', OUTSTR
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Case 2: Multiple markers.'
+      !>      WRITE(*,*) '   Input : ', INSTR
+      !>      WRITE(*,*) '   Output: ', OUTSTR
+      !>      WRITE(*,*)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:

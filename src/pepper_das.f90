@@ -4,9 +4,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_das.f90.
+!> [[pepper_instance_module]]).
 !>
 !>## DASFM (DAS, file manager)
 !>
@@ -1036,6 +1034,35 @@ submodule (pepper_instance_module) pepper_das
    integer(ip), parameter :: nwd = 128  !! number of double precision numbers in a DAS record
    integer(ip), parameter :: nwi = 256  !! number of integers in a DAS record
    integer(ip), parameter :: rngbas = 2  !! index in a directory record before the address ranges
+   ! The parameter TAILEN determines the tail length of a DAS file
+   ! record.  This is the number of bytes (characters) that
+   ! occupy the portion of the file record that follows the
+   ! integer holding the first free address.  For environments
+   ! with a 32 bit word length, 1 byte characters, and DAS
+   ! record sizes of 1024 bytes, we have:
+   !
+   !       8 bytes - IDWORD
+   !      60 bytes - IFNAME
+   !       4 bytes - NRESVR (32 bit integer)
+   !       4 bytes - NRESVC (32 bit integer)
+   !       4 bytes - NCOMR  (32 bit integer)
+   !     + 4 bytes - NCOMC  (32 bit integer)
+   !      ---------
+   !      84 bytes - (All file records utilize this space.)
+   !
+   ! So the size of the remaining portion (or tail) of the DAS
+   ! file record for computing environments as described above
+   ! would be:
+   !
+   !    1024 bytes - DAS record size
+   !  -    8 bytes - DAS Binary File Format Word
+   !  -   84 bytes - (from above)
+   !   ------------
+   !     932 bytes - DAS file record tail length
+   !
+   ! Note: environments that do not have a 32 bit word length,
+   ! 1 byte characters, and a DAS record size of 1024 bytes, will
+   ! require the adjustment of this parameter.
    integer(ip), parameter :: tailen = 932  !! length of the unused tail of the file record
    character(*), parameter :: tcblks = 'TOTAL_CHARACTER_BLOCKS'  !! transfer file: the line with the number of character blocks
    character(*), parameter :: tcmblk = 'TOTAL_COMMENT_BLOCKS'  !! transfer file: the line with the number of comment blocks
@@ -1045,6 +1072,8 @@ submodule (pepper_instance_module) pepper_das
 
 contains
 
+      !> Read and decode encoded characters from a text file.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for a previously opened text
@@ -1274,9 +1303,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 20-OCT-1992 (KRG)
-      module procedure rdencc
+      module subroutine rdencc ( ctx, unit, n, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Fortran unit number of input text file.
+      integer(ip), intent(in) :: n  !! Number of characters to be read and decoded.
+      character(*), intent(out) :: data(*)  !! List of decoded characters to be returned.
 
 !     Local parameters
 !
@@ -1506,8 +1539,10 @@ contains
       end do
 
       return
-      end procedure rdencc
+      end subroutine rdencc
 
+      !> Encode and write characters to a text file.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for a previously opened text
@@ -1907,39 +1942,31 @@ contains
       !>        environments, so references to ICHAR were replaced
       !>        with a ZZICHR statement function that returns values
       !>        in this range for all supported environments.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Statement Functions
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Define the hexadecimal digits
-      !>
-      !>     Statement Function Definitions
-      !>
-      !>     This function controls the conversion of characters to integers.
-      !>     Some compilers implement ICHAR with a signed integer; this computes
-      !>     the (non-negative) value this code requires. (PEPPER: one form for
-      !>     all compilers; it equals ICHAR where ICHAR is not negative.)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure wrencc
+      module subroutine wrencc ( ctx, unit, n, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Fortran unit number of output text file.
+      integer(ip), intent(in) :: n  !! Number of characters to encode and write.
+      character(*), intent(in) :: data ( * )  !! List of characters to encode and write.
+!
+!     Local parameters
+!
       character(1), parameter :: quote = ''''
       character(1), parameter :: chrfpc = ' '
       character(1), parameter :: chrlpc = '~'
       integer(ip), parameter :: hexbas = 16
+!
+!     Local variables
+!
       character(1) :: carg
       character(1) :: ch
       character(maxenc) :: encchr
+!
+!     Initial values
+!
+!     Define the hexadecimal digits
+!
       character(1), parameter :: hexdig(0:15) = &
          [ character(1) :: '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', &
            'C', 'D', 'E', 'F' ]
@@ -1955,6 +1982,16 @@ contains
       integer(ip) :: nchars
       integer(ip) :: nchout
       integer(ip) :: room
+!
+!     Statement Function Definitions
+!
+!     This function controls the conversion of characters to integers.
+!     Some compilers implement ICHAR with a signed integer; this computes
+!     the (non-negative) value this code requires. (PEPPER: one form for
+!     all compilers; it equals ICHAR where ICHAR is not negative.)
+!
+!     Statement Functions
+!
       integer(ip) :: zzichr
       zzichr(carg) = ichar(carg) - max( -1, min(0,ichar(carg)) )*256
       if ( .not. allocated ( ctx%wrencc_state ) ) allocate ( ctx%wrencc_state )
@@ -1963,6 +2000,9 @@ contains
                   intlpc => ctx%wrencc_state%intlpc, &
                   intquo => ctx%wrencc_state%intquo, &
                   first => ctx%wrencc_state%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       if ( first ) then
@@ -2200,8 +2240,10 @@ contains
 
       return
       end associate
-      end procedure wrencc
+      end subroutine wrencc
 
+      !> Write a single line of text to the Fortran logical unit UNIT.
+      !>
       !>## Detailed Input
       !>
       !>     LINE     is the text line which is to be written to UNIT.
@@ -2460,10 +2502,13 @@ contains
       !>        DEC Alpha-OSF/1, and NeXT/Absoft Fortran.
       !>
       !>     Beta Version 1.0.0, 17-DEC-1992 (KRG)
-      module procedure writln
+      module subroutine writln ( ctx, line, unit )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: line  !! The line which is to be written to UNIT.
+      integer(ip), intent(in) :: unit  !! The Fortran unit number to use for output.
 
 !     Local variables
 !
@@ -2492,8 +2537,10 @@ contains
       end if
 
       return
-      end procedure writln
+      end subroutine writln
 
+      !> Write an array of text lines to a Fortran logical unit.
+      !>
       !>## Detailed Input
       !>
       !>     NUMLIN   is the number of text lines in ARRAY which are to be
@@ -2548,22 +2595,24 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM WRITLA_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM WRITLA_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Example program for WRITLA.
-      !>        C
-      !>              CHARACTER*(80) LINES(4)
+      !>C
+      !>C     Example program for WRITLA.
+      !>C
+      !>      CHARACTER*(80) LINES(4)
       !>
-      !>              LINES(1) = 'Mary had a little lamb'
-      !>              LINES(2) = 'Whose fleece was white as snow'
-      !>              LINES(3) = 'And everywhere that mary went'
-      !>              LINES(4) = 'The lamb was sure to go'
+      !>      LINES(1) = 'Mary had a little lamb'
+      !>      LINES(2) = 'Whose fleece was white as snow'
+      !>      LINES(3) = 'And everywhere that mary went'
+      !>      LINES(4) = 'The lamb was sure to go'
       !>
-      !>              CALL WRITLA ( 4, LINES, 6 )
+      !>      CALL WRITLA ( 4, LINES, 6 )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2609,9 +2658,13 @@ contains
       !>        significant relative to the operation of this routine.
       !>
       !>     Beta Version 1.0.0, 18-DEC-1992 (KRG)
-      module procedure writla
+      module subroutine writla ( ctx, numlin, array, unit )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: numlin  !! Number of lines to be written to the file.
+      character(*), intent(in) :: array(*)  !! Array containing the lines to be written.
+      integer(ip), intent(in) :: unit  !! Fortran unit number to use for output.
 
 !     Local variables
 !
@@ -2657,8 +2710,11 @@ contains
 
       return
 
-      end procedure writla
+      end subroutine writla
 
+      !> Read a single line of text from the Fortran logical unit UNIT,
+      !> reporting the end of file if it occurs.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for the input. This may
@@ -2740,8 +2796,12 @@ contains
       !>        unnecessary $Version history entries for Beta versions.
       !>
       !>-    SPICELIB Version 1.0.0, 20-DEC-1995 (KRG)
-      module procedure readln
+      module subroutine readln ( ctx, unit, line, eof )
       use pepper_kinds, only: ip
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! The Fortran unit number to use for input.
+      character(*), intent(out) :: line  !! The line read from the file.
+      logical, intent(out) :: eof  !! A logical flag indicating the end of file.
       integer(ip) :: iostat
 !
 !     Standard SPICE error handling.
@@ -2776,8 +2836,11 @@ contains
       end if
 
       return
-      end procedure readln
+      end subroutine readln
 
+      !> Read lines from a Fortran logical unit and place them in a
+      !> character string array.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the Fortran unit number for the input. This may
@@ -2973,9 +3036,15 @@ contains
       !>
       !>        Added a local variable MYEOF so that a value of the variable
       !>        EOF does not affect the termination of the read loop.
-      module procedure readla
+      module subroutine readla ( ctx, unit, maxlin, numlin, array, eof )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Fortran unit number to use for input.
+      integer(ip), intent(in) :: maxlin  !! Maximum number of lines ARRAY can hold.
+      integer(ip), intent(out) :: numlin  !! Number of lines read from the file.
+      character(*), intent(out) :: array(*)  !! Array containing the lines read from the file.
+      logical, intent(out) :: eof  !! Logical flag indicating the end of file.
 
 !     Local variables
 !
@@ -3041,16 +3110,14 @@ contains
 
       return
 
-      end procedure readla
+      end subroutine readla
 
-      !>## Abstract
+      !> Read DAS double precision physical records from native
+      !> or non-native DAS files.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read DAS double precision physical records from native
-      !>     or non-native DAS files.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3115,10 +3182,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 10-FEB-2017 (NJB)
-      module procedure zzdasgrd
+      module subroutine zzdasgrd ( ctx, handle, recno, record )
       use pepper_kinds, only: ip, wp
       use pepper_inc_das
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      real(wp), intent(out) :: record ( nwd )  !! Double precision data read from record.
       character(nwc) :: chrrec
       character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       integer(ip) :: intamh
@@ -3223,16 +3294,14 @@ contains
 
       return
       end associate
-      end procedure zzdasgrd
+      end subroutine zzdasgrd
 
-      !>## Abstract
+      !> Read DAS integer physical records from native or non-native DAS
+      !> files.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read DAS integer physical records from native or non-native DAS
-      !>     files.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3297,10 +3366,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 10-FEB-2017 (NJB)
-      module procedure zzdasgri
+      module subroutine zzdasgri ( ctx, handle, recno, record )
       use pepper_kinds, only: ip
       use pepper_inc_das
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(out) :: record ( nwi )  !! Integer data read from record.
       character(nwc) :: chrrec
       character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       integer(ip) :: intamh
@@ -3404,8 +3477,10 @@ contains
 
       return
       end associate
-      end procedure zzdasgri
+      end subroutine zzdasgri
 
+      !> Write the file record to a new DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     LUN        is a logical unit number of a DAS whose first record is
@@ -3490,37 +3565,39 @@ contains
       !>        Reordered header sections. Corrected typo in comments.
       !>
       !>-    SPICELIB Version 1.0.0, 11-DEC-2001 (FST)
-      !>
-      !>     SPICELIB Functions
-      !>
-      !>     Local Parameters
-      !>
-      !>     Amount of space measured in characters necessary to null pad
-      !>     between the last character of FORMAT and the first character
-      !>     of FTPSTR to keep FTPSTR at character 700 in a 1024 byte
-      !>     record.
-      !>
-      !>     Amount of space measured in characters necessary to
-      !>     null pad from the last character of FTPSTR to the
-      !>     end of the file record. Note: This value assumes the
-      !>     length of the file record is 1024 bytes.
-      !>
-      !>     Lengths of internal file name, ID word, and format word.
-      !>
-      !>     Local Variables
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzdasnfr
+      module subroutine zzdasnfr ( ctx, lun, idword, ifname, nresvr, nresvc, ncomr, ncomc, format )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       use pepper_inc_zzftprms
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: lun  !! Logical unit number of an open DAS file.
+      character(*), intent(in) :: idword  !! DAS File ID word.
+      character(*), intent(in) :: ifname  !! DAS internal file name.
+      integer(ip), intent(in) :: nresvr  !! Number of reserved records in file.
+      integer(ip), intent(in) :: nresvc  !! Number of characters in use in reserved rec. area.
+      integer(ip), intent(in) :: ncomr  !! Number of comment records in file.
+      integer(ip), intent(in) :: ncomc  !! Number of characters in use in comment area.
+      character(*), intent(in) :: format  !! File binary format identifier string.
+!
+!     Local Parameters
+!
+!     Amount of space measured in characters necessary to null pad
+!     between the last character of FORMAT and the first character
+!     of FTPSTR to keep FTPSTR at character 700 in a 1024 byte
+!     record.
+!
       integer(ip), parameter :: preftp = 607
+!
+!     Amount of space measured in characters necessary to
+!     null pad from the last character of FTPSTR to the
+!     end of the file record. Note: This value assumes the
+!     length of the file record is 1024 bytes.
+!
       integer(ip), parameter :: pstftp = 297
+!
+!     Local Variables
+!
       character(1) :: nullch
       character(fmtlen) :: locfmt
       character(idwlen) :: locidw
@@ -3536,6 +3613,9 @@ contains
                   ftpstr => ctx%zzdasnfr_state%ftpstr, &
                   prenul => ctx%zzdasnfr_state%prenul, &
                   pstnul => ctx%zzdasnfr_state%pstnul )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -3645,8 +3725,10 @@ contains
 
       return
       end associate
-      end procedure zzdasnfr
+      end subroutine zzdasnfr
 
+      !> Return the contents of the file record of a specified DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle for a previously opened DAS file.
@@ -3752,52 +3834,55 @@ contains
       !>## Revisions
       !>
       !>     None.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Parameters for positions of file record elements:
-      !>
-      !>     ID word begin and end:
-      !>
-      !>     Internal file name begin and end:
-      !>
-      !>     Reserved record count begin and end:
-      !>
-      !>     Reserved record character count begin and end:
-      !>
-      !>     Comment area record count begin and end:
-      !>
-      !>     Comment area character count begin and end:
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzdasrfr
+      module subroutine zzdasrfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
       use pepper_kinds, only: ip
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      character(*), intent(out) :: idword  !! ID word.
+      character(*), intent(out) :: ifname  !! DAS internal file name.
+      integer(ip), intent(out) :: nresvr  !! Number of reserved records in file.
+      integer(ip), intent(out) :: nresvc  !! Number of characters in use in reserved rec. area.
+      integer(ip), intent(out) :: ncomr  !! Number of comment records in file.
+      integer(ip), intent(out) :: ncomc  !! Number of characters in use in comment area.
       integer(ip) :: ncomc_1(1)  !! one-element copy of ncomc (array argument)
       integer(ip) :: ncomr_1(1)  !! one-element copy of ncomr (array argument)
       integer(ip) :: nresvc_1(1)  !! one-element copy of nresvc (array argument)
       integer(ip) :: nresvr_1(1)  !! one-element copy of nresvr (array argument)
+!
+!     ID word begin and end:
+!
       integer(ip), parameter :: begidw = 1
       integer(ip), parameter :: endidw = 8
+!
+!     Internal file name begin and end:
+!
       integer(ip), parameter :: begifn = 9
       integer(ip), parameter :: endifn = 68
+!
+!     Reserved record count begin and end:
+!
       integer(ip), parameter :: begnrr = 69
       integer(ip), parameter :: endnrr = 72
+!
+!     Reserved record character count begin and end:
+!
       integer(ip), parameter :: begnrc = 73
       integer(ip), parameter :: endnrc = 76
+!
+!     Comment area record count begin and end:
+!
       integer(ip), parameter :: begncr = 77
       integer(ip), parameter :: endncr = 80
+!
+!     Comment area character count begin and end:
+!
       integer(ip), parameter :: begncc = 81
       integer(ip), parameter :: endncc = 84
+!
+!     Local variables
+!
       character(nwc) :: chrbuf
       character(idwlen) :: tmpidw
       character(ifnlen) :: tmpifn
@@ -3807,6 +3892,9 @@ contains
       if ( .not. allocated ( ctx%zzdasrfr_state ) ) allocate ( ctx%zzdasrfr_state )
       associate ( first => ctx%zzdasrfr_state%first, &
                   natbff => ctx%zzdasrfr_state%natbff )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -3911,8 +3999,10 @@ contains
 
       return
       end associate
-      end procedure zzdasrfr
+      end subroutine zzdasrfr
 
+      !> Open a DAS file for reading.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a DAS file to be opened with read
@@ -3985,114 +4075,116 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASOPR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASOPR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dskdsc.inc'
-      !>              INCLUDE 'dsk02.inc'
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dskdsc.inc'
+      !>      INCLUDE 'dsk02.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    DSK
-      !>              CHARACTER*(LNSIZE)    OUTLIN
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    DSK
+      !>      CHARACTER*(LNSIZE)    OUTLIN
       !>
-      !>              DOUBLE PRECISION      VOXORI ( 3 )
-      !>              DOUBLE PRECISION      VOXSIZ
-      !>              DOUBLE PRECISION      VTXBDS ( 2, 3 )
+      !>      DOUBLE PRECISION      VOXORI ( 3 )
+      !>      DOUBLE PRECISION      VOXSIZ
+      !>      DOUBLE PRECISION      VTXBDS ( 2, 3 )
       !>
-      !>              INTEGER               CGSCAL
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NP
-      !>              INTEGER               NV
-      !>              INTEGER               NVXTOT
-      !>              INTEGER               VGREXT ( 3 )
-      !>              INTEGER               VOXNPL
-      !>              INTEGER               VOXNPT
-      !>              INTEGER               VTXNPL
+      !>      INTEGER               CGSCAL
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NP
+      !>      INTEGER               NV
+      !>      INTEGER               NVXTOT
+      !>      INTEGER               VGREXT ( 3 )
+      !>      INTEGER               VOXNPL
+      !>      INTEGER               VOXNPT
+      !>      INTEGER               VTXNPL
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the name of the DSK to read.
-      !>        C
-      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
-      !>        C
-      !>        C     Open the DSK file for read access.
-      !>        C     We use the DAS-level interface for
-      !>        C     this function.
-      !>        C
-      !>              CALL DASOPR ( DSK, HANDLE )
+      !>C
+      !>C     Prompt for the name of the DSK to read.
+      !>C
+      !>      CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>C
+      !>C     Open the DSK file for read access.
+      !>C     We use the DAS-level interface for
+      !>C     this function.
+      !>C
+      !>      CALL DASOPR ( DSK, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a forward search through the
-      !>        C     kernel, treating the file as a DLA.
-      !>        C     In this example, it's a very short
-      !>        C     search.
-      !>        C
-      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>C
+      !>C     Begin a forward search through the
+      !>C     kernel, treating the file as a DLA.
+      !>C     In this example, it's a very short
+      !>C     search.
+      !>C
+      !>      CALL DLABFS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
-      !>        C
-      !>        C        We arrive here only if the kernel
-      !>        C        contains no segments.  This is
-      !>        C        unexpected, but we're prepared for it.
-      !>        C
-      !>                 CALL SETMSG ( 'No segments found '
-      !>             .   //            'in DSK file #.'    )
-      !>                 CALL ERRCH  ( '#',  DSK           )
-      !>                 CALL SIGERR ( 'SPICE(NODATA)'     )
+      !>      IF ( .NOT. FOUND ) THEN
+      !>C
+      !>C        We arrive here only if the kernel
+      !>C        contains no segments.  This is
+      !>C        unexpected, but we're prepared for it.
+      !>C
+      !>         CALL SETMSG ( 'No segments found '
+      !>     .   //            'in DSK file #.'    )
+      !>         CALL ERRCH  ( '#',  DSK           )
+      !>         CALL SIGERR ( 'SPICE(NODATA)'     )
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     If we made it this far, DLADSC is the
-      !>        C     DLA descriptor of the first segment.
-      !>        C
-      !>        C     Read and display type 2 bookkeeping data.
-      !>        C
-      !>              CALL DSKB02 ( HANDLE, DLADSC, NV,     NP,     NVXTOT,
-      !>             .              VTXBDS, VOXSIZ, VOXORI, VGREXT, CGSCAL,
-      !>             .              VTXNPL, VOXNPT, VOXNPL                 )
+      !>C
+      !>C     If we made it this far, DLADSC is the
+      !>C     DLA descriptor of the first segment.
+      !>C
+      !>C     Read and display type 2 bookkeeping data.
+      !>C
+      !>      CALL DSKB02 ( HANDLE, DLADSC, NV,     NP,     NVXTOT,
+      !>     .              VTXBDS, VOXSIZ, VOXORI, VGREXT, CGSCAL,
+      !>     .              VTXNPL, VOXNPT, VOXNPL                 )
       !>
-      !>        C
-      !>        C     Show vertex and plate counts.
-      !>        C
-      !>              OUTLIN = 'Number of vertices:                 #'
-      !>              CALL REPMI  ( OUTLIN, '#', NV, OUTLIN )
-      !>              CALL TOSTDO ( OUTLIN )
+      !>C
+      !>C     Show vertex and plate counts.
+      !>C
+      !>      OUTLIN = 'Number of vertices:                 #'
+      !>      CALL REPMI  ( OUTLIN, '#', NV, OUTLIN )
+      !>      CALL TOSTDO ( OUTLIN )
       !>
-      !>              OUTLIN = 'Number of plates:                   #'
-      !>              CALL REPMI  ( OUTLIN, '#', NP, OUTLIN )
-      !>              CALL TOSTDO ( OUTLIN )
+      !>      OUTLIN = 'Number of plates:                   #'
+      !>      CALL REPMI  ( OUTLIN, '#', NP, OUTLIN )
+      !>      CALL TOSTDO ( OUTLIN )
       !>
-      !>              OUTLIN = 'Voxel edge length (km):             #'
-      !>              CALL REPMF  ( OUTLIN, '#', VOXSIZ, 6, 'E', OUTLIN )
-      !>              CALL TOSTDO ( OUTLIN )
+      !>      OUTLIN = 'Voxel edge length (km):             #'
+      !>      CALL REPMF  ( OUTLIN, '#', VOXSIZ, 6, 'E', OUTLIN )
+      !>      CALL TOSTDO ( OUTLIN )
       !>
-      !>              OUTLIN = 'Number of voxels:                   #'
-      !>              CALL REPMI  ( OUTLIN, '#', NVXTOT, OUTLIN )
-      !>              CALL TOSTDO ( OUTLIN )
+      !>      OUTLIN = 'Number of voxels:                   #'
+      !>      CALL REPMI  ( OUTLIN, '#', NVXTOT, OUTLIN )
+      !>      CALL TOSTDO ( OUTLIN )
       !>
-      !>        C
-      !>        C     Close the kernel.  This isn't necessary in a stand-
-      !>        C     alone program, but it's good practice in subroutines
-      !>        C     because it frees program and system resources.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the kernel.  This isn't necessary in a stand-
+      !>C     alone program, but it's good practice in subroutines
+      !>C     because it frees program and system resources.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -4251,13 +4343,14 @@ contains
       !>        points affected are: DASFM, DASOPR.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasopr
+      module subroutine dasopr ( ctx, fname, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
+      integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
@@ -4300,6 +4393,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -4338,7 +4434,6 @@ contains
 !
 !     This file has no entry in the file table. We need to
 !     create a new entry. See whether there's room for it.
-!
 !
 !     PEPPER: the file table grows as needed; SPICELIB signaled
 !     SPICE(DASFTFULL) here when it had FTSIZE (5000) DASs.
@@ -4534,8 +4629,10 @@ contains
 
       return
       end associate
-      end procedure dasopr
+      end subroutine dasopr
 
+      !> Open a DAS file for writing.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a DAS file to be opened with write
@@ -4605,103 +4702,105 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASOPW_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASOPW_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local Parameters
-      !>        C
-      !>              CHARACTER*(*)         DASNAM
-      !>              PARAMETER           ( DASNAM   = 'dasopw_ex1.das' )
+      !>C
+      !>C     Local Parameters
+      !>C
+      !>      CHARACTER*(*)         DASNAM
+      !>      PARAMETER           ( DASNAM   = 'dasopw_ex1.das' )
       !>
-      !>              INTEGER               IDATLN
-      !>              PARAMETER           ( IDATLN = 200 )
+      !>      INTEGER               IDATLN
+      !>      PARAMETER           ( IDATLN = 200 )
       !>
-      !>              INTEGER               TYPELN
-      !>              PARAMETER           ( TYPELN = 4   )
+      !>      INTEGER               TYPELN
+      !>      PARAMETER           ( TYPELN = 4   )
       !>
-      !>        C
-      !>        C     Local Variables
-      !>        C
-      !>              CHARACTER*(TYPELN)    TYPE
+      !>C
+      !>C     Local Variables
+      !>C
+      !>      CHARACTER*(TYPELN)    TYPE
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               IDATA   ( IDATLN )
-      !>              INTEGER               J
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               IDATA   ( IDATLN )
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Open a new DAS file. Reserve no comment records.
-      !>        C
-      !>              TYPE = 'TEST'
-      !>              CALL DASONW ( DASNAM, TYPE,  'TEST/DASOPW_EX1',
-      !>             .              0,      HANDLE                  )
+      !>C
+      !>C     Open a new DAS file. Reserve no comment records.
+      !>C
+      !>      TYPE = 'TEST'
+      !>      CALL DASONW ( DASNAM, TYPE,  'TEST/DASOPW_EX1',
+      !>     .              0,      HANDLE                  )
       !>
-      !>        C
-      !>        C     Append 200 integers to the file; after the data are
-      !>        C     present, we're free to update it in any order we
-      !>        C     please. (CLEARI zeros out an integer array.)
-      !>        C
-      !>              CALL CLEARI (         IDATLN, IDATA )
-      !>              CALL DASADI ( HANDLE, IDATLN, IDATA )
+      !>C
+      !>C     Append 200 integers to the file; after the data are
+      !>C     present, we're free to update it in any order we
+      !>C     please. (CLEARI zeros out an integer array.)
+      !>C
+      !>      CALL CLEARI (         IDATLN, IDATA )
+      !>      CALL DASADI ( HANDLE, IDATLN, IDATA )
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the file again for writing.
-      !>        C
-      !>              CALL DASOPW ( DASNAM, HANDLE )
+      !>C
+      !>C     Open the file again for writing.
+      !>C
+      !>      CALL DASOPW ( DASNAM, HANDLE )
       !>
-      !>        C
-      !>        C     Reset the data array, and read the data into it.
-      !>        C
-      !>              CALL FILLI  ( -1, IDATLN, IDATA )
-      !>              CALL DASRDI ( HANDLE,  1, IDATLN, IDATA )
+      !>C
+      !>C     Reset the data array, and read the data into it.
+      !>C
+      !>      CALL FILLI  ( -1, IDATLN, IDATA )
+      !>      CALL DASRDI ( HANDLE,  1, IDATLN, IDATA )
       !>
-      !>        C
-      !>        C     Print the contents of the file before updating it.
-      !>        C
-      !>              WRITE(*,*) 'Contents of ' // DASNAM // ' before update:'
-      !>              WRITE(*,*) ' '
-      !>              DO I = 1, 20
-      !>                 WRITE (*,'(10I5)') (IDATA((I-1)*10+J), J = 1, 10)
-      !>              END DO
+      !>C
+      !>C     Print the contents of the file before updating it.
+      !>C
+      !>      WRITE(*,*) 'Contents of ' // DASNAM // ' before update:'
+      !>      WRITE(*,*) ' '
+      !>      DO I = 1, 20
+      !>         WRITE (*,'(10I5)') (IDATA((I-1)*10+J), J = 1, 10)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Now the integer logical addresses 1:200 can be
-      !>        C     written to in random-access fashion. We'll fill them
-      !>        C     in reverse order.
-      !>        C
-      !>              DO I = IDATLN, 1, -1
-      !>                 CALL DASUDI ( HANDLE, I, I, I )
-      !>              END DO
+      !>C
+      !>C     Now the integer logical addresses 1:200 can be
+      !>C     written to in random-access fashion. We'll fill them
+      !>C     in reverse order.
+      !>C
+      !>      DO I = IDATLN, 1, -1
+      !>         CALL DASUDI ( HANDLE, I, I, I )
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now make sure that we updated the file properly.
-      !>        C     Open the file for reading and dump the contents
-      !>        C     of the integer logical addresses 1:200.
-      !>        C
-      !>              CALL DASOPR ( DASNAM, HANDLE )
+      !>C
+      !>C     Now make sure that we updated the file properly.
+      !>C     Open the file for reading and dump the contents
+      !>C     of the integer logical addresses 1:200.
+      !>C
+      !>      CALL DASOPR ( DASNAM, HANDLE )
       !>
-      !>              CALL CLEARI (             IDATLN, IDATA )
-      !>              CALL DASRDI ( HANDLE,  1, IDATLN, IDATA )
+      !>      CALL CLEARI (             IDATLN, IDATA )
+      !>      CALL DASRDI ( HANDLE,  1, IDATLN, IDATA )
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Contents of ' // DASNAM // ' after update:'
-      !>              WRITE(*,*) ' '
-      !>              DO I = 1, 20
-      !>                 WRITE (*,'(10I5)') (IDATA((I-1)*10+J), J = 1, 10)
-      !>              END DO
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Contents of ' // DASNAM // ' after update:'
+      !>      WRITE(*,*) ' '
+      !>      DO I = 1, 20
+      !>         WRITE (*,'(10I5)') (IDATA((I-1)*10+J), J = 1, 10)
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4871,13 +4970,14 @@ contains
       !>        than the binary version.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasopw
+      module subroutine dasopw ( ctx, fname, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
+      integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
       integer(ip), parameter :: next   ( 3 ) = &
@@ -4921,6 +5021,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -5137,8 +5240,10 @@ contains
 
       return
       end associate
-      end procedure dasopw
+      end subroutine dasopw
 
+      !> Open a new DAS file and set the file type.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a new DAS file to be created (and
@@ -5229,77 +5334,79 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASONW_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASONW_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'dasonw_ex1.das' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'dasonw_ex1.das' )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(4)         TYPE
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(4)         TYPE
       !>
-      !>              INTEGER               DATA   ( 200 )
+      !>      INTEGER               DATA   ( 200 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Open a new DAS file. Use the file name as the internal
-      !>        C     file name, and reserve no records for comments.
-      !>        C
-      !>              TYPE = 'TEST'
-      !>              CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
+      !>C
+      !>C     Open a new DAS file. Use the file name as the internal
+      !>C     file name, and reserve no records for comments.
+      !>C
+      !>      TYPE = 'TEST'
+      !>      CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
       !>
-      !>        C
-      !>        C     Fill the array DATA with the integers 1 through
-      !>        C     100, and add this array to the file.
-      !>        C
-      !>              DO I = 1, 100
-      !>                 DATA(I) = I
-      !>              END DO
+      !>C
+      !>C     Fill the array DATA with the integers 1 through
+      !>C     100, and add this array to the file.
+      !>C
+      !>      DO I = 1, 100
+      !>         DATA(I) = I
+      !>      END DO
       !>
-      !>              CALL DASADI ( HANDLE, 100, DATA )
+      !>      CALL DASADI ( HANDLE, 100, DATA )
       !>
-      !>        C
-      !>        C     Now append the array DATA to the file again.
-      !>        C
-      !>              CALL DASADI ( HANDLE, 100, DATA )
+      !>C
+      !>C     Now append the array DATA to the file again.
+      !>C
+      !>      CALL DASADI ( HANDLE, 100, DATA )
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now verify the addition of data by opening the
-      !>        C     file for read access and retrieving the data.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
-      !>              CALL DASRDI ( HANDLE, 1, 200, DATA )
+      !>C
+      !>C     Now verify the addition of data by opening the
+      !>C     file for read access and retrieving the data.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
+      !>      CALL DASRDI ( HANDLE, 1, 200, DATA )
       !>
-      !>        C
-      !>        C     Dump the data to the screen.  We should see the
-      !>        C     sequence  1, 2, ..., 100, 1, 2, ... , 100.
-      !>        C
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Data from "', FNAME, '":'
-      !>              WRITE (*,*) ' '
-      !>              DO I = 1, 20
-      !>                 WRITE (*,'(10I5)') (DATA((I-1)*10+J), J = 1, 10)
-      !>              END DO
+      !>C
+      !>C     Dump the data to the screen.  We should see the
+      !>C     sequence  1, 2, ..., 100, 1, 2, ... , 100.
+      !>C
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Data from "', FNAME, '":'
+      !>      WRITE (*,*) ' '
+      !>      DO I = 1, 20
+      !>         WRITE (*,'(10I5)') (DATA((I-1)*10+J), J = 1, 10)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5411,14 +5518,18 @@ contains
       !>
       !>        See the $Revisions section under DASFM for a discussion of
       !>        the various changes made for this version.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasonw
+      module subroutine dasonw ( ctx, fname, ftype, ifname, ncomr, handle )
       use pepper_kinds, only: ip
       use pepper_strings, only: ltrim, rtrim
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
+      character(*), intent(in) :: ftype  !! Mnemonic code for type of data in the DAS file.
+      character(*), intent(in) :: ifname  !! Internal file name.
+      integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
+      integer(ip), intent(in) :: ncomr  !! Number of comment records to allocate.
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip), parameter :: read = 1
@@ -5463,6 +5574,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -5530,7 +5644,6 @@ contains
 
 !
 !     The file can be opened only if there is room for another file.
-!
 !
 !     PEPPER: the file table grows as needed; SPICELIB signaled
 !     SPICE(DASFTFULL) here when it had FTSIZE (5000) DASs.
@@ -5638,14 +5751,12 @@ contains
 
       return
       end associate
-      end procedure dasonw
+      end subroutine dasonw
 
-      !>## Abstract
+      !> **Obsolete:** This routine has been superseded by [[dasonw]], and it is
+      !> supported for purposes of backward compatibility only.
       !>
-      !>     Obsolete: This routine has been superseded by DASONW, and it is
-      !>     supported for purposes of backward compatibility only.
-      !>
-      !>     Open a new DAS file for writing.
+      !> Open a new DAS file for writing.
       !>
       !>## Detailed Input
       !>
@@ -5712,77 +5823,79 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASOPN_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASOPN_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'dasopn_ex1.das' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'dasopn_ex1.das' )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(4)         TYPE
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(4)         TYPE
       !>
-      !>              INTEGER               DATA   ( 200 )
+      !>      INTEGER               DATA   ( 200 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Open a new DAS file. Use the file name as the internal
-      !>        C     file name.
-      !>        C
-      !>              TYPE = 'TEST'
-      !>              CALL DASOPN ( FNAME, FNAME, HANDLE )
+      !>C
+      !>C     Open a new DAS file. Use the file name as the internal
+      !>C     file name.
+      !>C
+      !>      TYPE = 'TEST'
+      !>      CALL DASOPN ( FNAME, FNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Fill the array DATA with the integers 1 through
-      !>        C     100, and add this array to the file.
-      !>        C
-      !>              DO I = 1, 100
-      !>                 DATA(I) = I
-      !>              END DO
+      !>C
+      !>C     Fill the array DATA with the integers 1 through
+      !>C     100, and add this array to the file.
+      !>C
+      !>      DO I = 1, 100
+      !>         DATA(I) = I
+      !>      END DO
       !>
-      !>              CALL DASADI ( HANDLE, 100, DATA )
+      !>      CALL DASADI ( HANDLE, 100, DATA )
       !>
-      !>        C
-      !>        C     Now append the array DATA to the file again.
-      !>        C
-      !>              CALL DASADI ( HANDLE, 100, DATA )
+      !>C
+      !>C     Now append the array DATA to the file again.
+      !>C
+      !>      CALL DASADI ( HANDLE, 100, DATA )
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now verify the addition of data by opening the
-      !>        C     file for read access and retrieving the data.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
-      !>              CALL DASRDI ( HANDLE, 1, 200, DATA )
+      !>C
+      !>C     Now verify the addition of data by opening the
+      !>C     file for read access and retrieving the data.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
+      !>      CALL DASRDI ( HANDLE, 1, 200, DATA )
       !>
-      !>        C
-      !>        C     Dump the data to the screen.  We should see the
-      !>        C     sequence  1, 2, ..., 100, 1, 2, ... , 100.
-      !>        C
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Data from "', FNAME, '":'
-      !>              WRITE (*,*) ' '
-      !>              DO I = 1, 20
-      !>                 WRITE (*,'(10I5)') (DATA((I-1)*10+J), J = 1, 10)
-      !>              END DO
+      !>C
+      !>C     Dump the data to the screen.  We should see the
+      !>C     sequence  1, 2, ..., 100, 1, 2, ... , 100.
+      !>C
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Data from "', FNAME, '":'
+      !>      WRITE (*,*) ' '
+      !>      DO I = 1, 20
+      !>         WRITE (*,'(10I5)') (DATA((I-1)*10+J), J = 1, 10)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5906,13 +6019,15 @@ contains
       !>
       !>        See the $Revisions section under DASFM for a discussion
       !>        of the changes made for this version.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasopn
+      module subroutine dasopn ( ctx, fname, ifname, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
+      character(*), intent(in) :: ifname  !! Internal file name.
+      integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
       integer(ip), parameter :: next   ( 3 ) = &
@@ -5955,6 +6070,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -5971,7 +6089,6 @@ contains
 
 !
 !     The file can be opened only if there is room for another file.
-!
 !
 !     PEPPER: the file table grows as needed; SPICELIB signaled
 !     SPICE(DASFTFULL) here when it had FTSIZE (5000) DASs.
@@ -6074,8 +6191,10 @@ contains
 
       return
       end associate
-      end procedure dasopn
+      end subroutine dasopn
 
+      !> Open a scratch DAS file for writing.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -6157,56 +6276,58 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASOPS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASOPS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               LASTC
-      !>              INTEGER               LASTD
-      !>              INTEGER               LASTI
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               LASTC
+      !>      INTEGER               LASTD
+      !>      INTEGER               LASTI
       !>
-      !>        C
-      !>        C     Use a scratch file, since there's no reason to keep
-      !>        C     the file.
-      !>        C
-      !>              CALL DASOPS ( HANDLE )
+      !>C
+      !>C     Use a scratch file, since there's no reason to keep
+      !>C     the file.
+      !>C
+      !>      CALL DASOPS ( HANDLE )
       !>
-      !>              DO I = 1, 10
-      !>                 CALL DASADI ( HANDLE, 1, I )
-      !>              END DO
+      !>      DO I = 1, 10
+      !>         CALL DASADI ( HANDLE, 1, I )
+      !>      END DO
       !>
-      !>              DO I = 1, 5
-      !>                 CALL DASADD ( HANDLE, 1, DBLE(I) )
-      !>              END DO
+      !>      DO I = 1, 5
+      !>         CALL DASADD ( HANDLE, 1, DBLE(I) )
+      !>      END DO
       !>
-      !>        C
-      !>        C     Add character data to the file. DAS character data are
-      !>        C     treated as a character array, not as a string. The
-      !>        C     following call adds only the first 4 characters to the
-      !>        C     DAS file.
-      !>        C
-      !>              CALL DASADC ( HANDLE, 4, 1, 4, 'SPUDWXY' )
+      !>C
+      !>C     Add character data to the file. DAS character data are
+      !>C     treated as a character array, not as a string. The
+      !>C     following call adds only the first 4 characters to the
+      !>C     DAS file.
+      !>C
+      !>      CALL DASADC ( HANDLE, 4, 1, 4, 'SPUDWXY' )
       !>
-      !>        C
-      !>        C     Now check the logical address ranges.
-      !>        C
-      !>              CALL DASLLA ( HANDLE, LASTC, LASTD, LASTI )
+      !>C
+      !>C     Now check the logical address ranges.
+      !>C
+      !>      CALL DASLLA ( HANDLE, LASTC, LASTD, LASTI )
       !>
-      !>              WRITE (*,*) 'Last character address in use: ', LASTC
-      !>              WRITE (*,*) 'Last d.p. address in use     : ', LASTD
-      !>              WRITE (*,*) 'Last integer address in use  : ', LASTI
+      !>      WRITE (*,*) 'Last character address in use: ', LASTC
+      !>      WRITE (*,*) 'Last d.p. address in use     : ', LASTD
+      !>      WRITE (*,*) 'Last integer address in use  : ', LASTI
       !>
-      !>        C
-      !>        C     Scratch files are automatically deleted when they are
-      !>        C     closed.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Scratch files are automatically deleted when they are
+      !>C     closed.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6333,13 +6454,13 @@ contains
       !>
       !>        Bug fix: removed unneeded file name variable FNAME from
       !>        error message.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasops
+      module subroutine dasops ( ctx, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: handle  !! Handle assigned to a scratch DAS file.
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
       integer(ip), parameter :: next   ( 3 ) = &
@@ -6383,11 +6504,13 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
 !     The file can be opened only if there is room for another file.
-!
 !
 !     PEPPER: the file table grows as needed; SPICELIB signaled
 !     SPICE(DASFTFULL) here when it had FTSIZE (5000) DASs.
@@ -6473,8 +6596,11 @@ contains
 
       return
       end associate
-      end procedure dasops
+      end subroutine dasops
 
+      !> Close the DAS file associated with a given handle, without
+      !> flushing buffered data or segregating the file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file.
@@ -6551,242 +6677,244 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASLLC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASLLC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               FTYPLN
-      !>              PARAMETER           ( FTYPLN = 3 )
+      !>      INTEGER               FTYPLN
+      !>      PARAMETER           ( FTYPLN = 3 )
       !>
-      !>              INTEGER               CHRLEN
-      !>              PARAMETER           ( CHRLEN = 50 )
+      !>      INTEGER               CHRLEN
+      !>      PARAMETER           ( CHRLEN = 50 )
       !>
-      !>              INTEGER               IBUFSZ
-      !>              PARAMETER           ( IBUFSZ = 20 )
+      !>      INTEGER               IBUFSZ
+      !>      PARAMETER           ( IBUFSZ = 20 )
       !>
-      !>              INTEGER               DBUFSZ
-      !>              PARAMETER           ( DBUFSZ = 30 )
+      !>      INTEGER               DBUFSZ
+      !>      PARAMETER           ( DBUFSZ = 30 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CHRLEN)    CHRBUF
-      !>              CHARACTER*(FILSIZ)    FNAME
-      !>              CHARACTER*(FTYPLN)    FTYPE
-      !>              CHARACTER*(CHRLEN)    XCHRBF
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CHRLEN)    CHRBUF
+      !>      CHARACTER*(FILSIZ)    FNAME
+      !>      CHARACTER*(FTYPLN)    FTYPE
+      !>      CHARACTER*(CHRLEN)    XCHRBF
       !>
-      !>              DOUBLE PRECISION      DPBUF  ( DBUFSZ )
-      !>              DOUBLE PRECISION      XDPBUF ( DBUFSZ )
+      !>      DOUBLE PRECISION      DPBUF  ( DBUFSZ )
+      !>      DOUBLE PRECISION      XDPBUF ( DBUFSZ )
       !>
-      !>              INTEGER               FIRSTC
-      !>              INTEGER               FIRSTD
-      !>              INTEGER               FIRSTI
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               INTBUF ( IBUFSZ )
-      !>              INTEGER               J
-      !>              INTEGER               LASTC
-      !>              INTEGER               LASTD
-      !>              INTEGER               LASTI
-      !>              INTEGER               NCALL
-      !>              INTEGER               NCOMR
-      !>              INTEGER               NPASS
-      !>              INTEGER               PASSNO
-      !>              INTEGER               XINTBF ( IBUFSZ )
+      !>      INTEGER               FIRSTC
+      !>      INTEGER               FIRSTD
+      !>      INTEGER               FIRSTI
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               INTBUF ( IBUFSZ )
+      !>      INTEGER               J
+      !>      INTEGER               LASTC
+      !>      INTEGER               LASTD
+      !>      INTEGER               LASTI
+      !>      INTEGER               NCALL
+      !>      INTEGER               NCOMR
+      !>      INTEGER               NPASS
+      !>      INTEGER               PASSNO
+      !>      INTEGER               XINTBF ( IBUFSZ )
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  FNAME  / 'dasllc_ex1.das' /
-      !>              DATA                  FTYPE  / 'ANG' /
-      !>              DATA                  NCALL  / 1000  /
-      !>              DATA                  NCOMR  / 10    /
-      !>              DATA                  NPASS  / 3     /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  FNAME  / 'dasllc_ex1.das' /
+      !>      DATA                  FTYPE  / 'ANG' /
+      !>      DATA                  NCALL  / 1000  /
+      !>      DATA                  NCOMR  / 10    /
+      !>      DATA                  NPASS  / 3     /
       !>
-      !>        C
-      !>        C     Open a new DAS file. We'll allocate NCOMR records
-      !>        C     for comments. The file type is not one of the standard
-      !>        C     types recognized by SPICE; however it can be used to
-      !>        C     ensure the database file is of the correct type.
-      !>        C
-      !>        C     We'll use the file name as the internal file name.
-      !>        C
-      !>              CALL DASONW ( FNAME, FTYPE, FNAME, NCOMR, HANDLE )
+      !>C
+      !>C     Open a new DAS file. We'll allocate NCOMR records
+      !>C     for comments. The file type is not one of the standard
+      !>C     types recognized by SPICE; however it can be used to
+      !>C     ensure the database file is of the correct type.
+      !>C
+      !>C     We'll use the file name as the internal file name.
+      !>C
+      !>      CALL DASONW ( FNAME, FTYPE, FNAME, NCOMR, HANDLE )
       !>
-      !>        C
-      !>        C     Add data of character, integer, and double precision
-      !>        C     types to the file in interleaved fashion. We'll add to
-      !>        C     the file over NPASS "passes," in each of which we close
-      !>        C     the file after writing.
-      !>        C
-      !>              DO PASSNO = 1, NPASS
+      !>C
+      !>C     Add data of character, integer, and double precision
+      !>C     types to the file in interleaved fashion. We'll add to
+      !>C     the file over NPASS "passes," in each of which we close
+      !>C     the file after writing.
+      !>C
+      !>      DO PASSNO = 1, NPASS
       !>
-      !>                 IF ( PASSNO .GT. 1 ) THEN
+      !>         IF ( PASSNO .GT. 1 ) THEN
       !>
-      !>                    WRITE (*,*) 'Opening file for write access...'
+      !>            WRITE (*,*) 'Opening file for write access...'
       !>
-      !>                    CALL DASOPW( FNAME, HANDLE )
+      !>            CALL DASOPW( FNAME, HANDLE )
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 DO I = 1, NCALL
-      !>        C
-      !>        C           Add string data to the file.
-      !>        C
-      !>                    CHRBUF = 'Character value #'
-      !>                    CALL REPMI( CHRBUF, '#', I, CHRBUF )
+      !>         DO I = 1, NCALL
+      !>C
+      !>C           Add string data to the file.
+      !>C
+      !>            CHRBUF = 'Character value #'
+      !>            CALL REPMI( CHRBUF, '#', I, CHRBUF )
       !>
-      !>                    CALL DASADC ( HANDLE, CHRLEN, 1, CHRLEN, CHRBUF )
+      !>            CALL DASADC ( HANDLE, CHRLEN, 1, CHRLEN, CHRBUF )
       !>
-      !>        C
-      !>        C           Add double precision data to the file.
-      !>        C
-      !>                    DO J = 1, DBUFSZ
-      !>                       DPBUF(J) = DBLE( 100000000*PASSNO + 100*I + J )
-      !>                    END DO
+      !>C
+      !>C           Add double precision data to the file.
+      !>C
+      !>            DO J = 1, DBUFSZ
+      !>               DPBUF(J) = DBLE( 100000000*PASSNO + 100*I + J )
+      !>            END DO
       !>
-      !>                    CALL DASADD ( HANDLE, DBUFSZ, DPBUF )
+      !>            CALL DASADD ( HANDLE, DBUFSZ, DPBUF )
       !>
-      !>        C
-      !>        C           Add integer data to the file.
-      !>        C
-      !>                    DO J = 1, IBUFSZ
-      !>                       INTBUF(J) = 100000000*PASSNO  +  100 * I  +  J
-      !>                    END DO
+      !>C
+      !>C           Add integer data to the file.
+      !>C
+      !>            DO J = 1, IBUFSZ
+      !>               INTBUF(J) = 100000000*PASSNO  +  100 * I  +  J
+      !>            END DO
       !>
-      !>                    CALL DASADI ( HANDLE, IBUFSZ, INTBUF )
+      !>            CALL DASADI ( HANDLE, IBUFSZ, INTBUF )
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>        C
-      !>        C        Write buffered data to the file.
-      !>        C
-      !>                 WRITE (*,*) 'Writing buffered data...'
-      !>                 CALL DASWBR ( HANDLE )
+      !>C
+      !>C        Write buffered data to the file.
+      !>C
+      !>         WRITE (*,*) 'Writing buffered data...'
+      !>         CALL DASWBR ( HANDLE )
       !>
-      !>        C
-      !>        C        Close the file without segregating it.
-      !>        C
-      !>                 WRITE (*,*) 'Closing DAS file...'
-      !>                 CALL DASLLC ( HANDLE )
+      !>C
+      !>C        Close the file without segregating it.
+      !>C
+      !>         WRITE (*,*) 'Closing DAS file...'
+      !>         CALL DASLLC ( HANDLE )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              WRITE (*,*) 'File write is done.'
+      !>      WRITE (*,*) 'File write is done.'
       !>
-      !>        C
-      !>        C     Check file contents.
-      !>        C
-      !>              CALL DASOPR( FNAME, HANDLE )
+      !>C
+      !>C     Check file contents.
+      !>C
+      !>      CALL DASOPR( FNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Read data from the file; compare to expected values.
-      !>        C
-      !>        C     Initialize end addresses.
-      !>        C
-      !>              LASTC = 0
-      !>              LASTD = 0
-      !>              LASTI = 0
+      !>C
+      !>C     Read data from the file; compare to expected values.
+      !>C
+      !>C     Initialize end addresses.
+      !>C
+      !>      LASTC = 0
+      !>      LASTD = 0
+      !>      LASTI = 0
       !>
-      !>              DO PASSNO = 1, NPASS
+      !>      DO PASSNO = 1, NPASS
       !>
-      !>                 DO I = 1, NCALL
-      !>        C
-      !>        C           Check string data.
-      !>        C
-      !>                    XCHRBF = 'Character value #'
-      !>                    CALL REPMI( XCHRBF, '#', I, XCHRBF )
+      !>         DO I = 1, NCALL
+      !>C
+      !>C           Check string data.
+      !>C
+      !>            XCHRBF = 'Character value #'
+      !>            CALL REPMI( XCHRBF, '#', I, XCHRBF )
       !>
-      !>                    FIRSTC = LASTC + 1
-      !>                    LASTC  = LASTC + CHRLEN
+      !>            FIRSTC = LASTC + 1
+      !>            LASTC  = LASTC + CHRLEN
       !>
-      !>                    CALL DASRDC ( HANDLE, FIRSTC, LASTC,
-      !>             .                    1,      CHRLEN, CHRBUF )
+      !>            CALL DASRDC ( HANDLE, FIRSTC, LASTC,
+      !>     .                    1,      CHRLEN, CHRBUF )
       !>
-      !>                    IF ( CHRBUF .NE. XCHRBF ) THEN
-      !>                       WRITE (*,*) 'Character data mismatch: '
-      !>                       WRITE (*,*) 'PASS     = ', PASSNO
-      !>                       WRITE (*,*) 'I        = ', I
-      !>                       WRITE (*,*) 'Expected = ', XCHRBF
-      !>                       WRITE (*,*) 'Actual   = ', CHRBUF
-      !>                       STOP
-      !>                    END IF
+      !>            IF ( CHRBUF .NE. XCHRBF ) THEN
+      !>               WRITE (*,*) 'Character data mismatch: '
+      !>               WRITE (*,*) 'PASS     = ', PASSNO
+      !>               WRITE (*,*) 'I        = ', I
+      !>               WRITE (*,*) 'Expected = ', XCHRBF
+      !>               WRITE (*,*) 'Actual   = ', CHRBUF
+      !>               STOP
+      !>            END IF
       !>
-      !>        C
-      !>        C           Check double precision data.
-      !>        C
-      !>                    DO J = 1, DBUFSZ
-      !>                       XDPBUF(J) = DBLE(   100000000*PASSNO
-      !>             .                           + 100*I + J        )
-      !>                    END DO
+      !>C
+      !>C           Check double precision data.
+      !>C
+      !>            DO J = 1, DBUFSZ
+      !>               XDPBUF(J) = DBLE(   100000000*PASSNO
+      !>     .                           + 100*I + J        )
+      !>            END DO
       !>
-      !>                    FIRSTD = LASTD + 1
-      !>                    LASTD  = LASTD + DBUFSZ
+      !>            FIRSTD = LASTD + 1
+      !>            LASTD  = LASTD + DBUFSZ
       !>
-      !>                    CALL DASRDD ( HANDLE, FIRSTD, LASTD, DPBUF )
+      !>            CALL DASRDD ( HANDLE, FIRSTD, LASTD, DPBUF )
       !>
-      !>                    DO J = 1, DBUFSZ
+      !>            DO J = 1, DBUFSZ
       !>
-      !>                       IF ( DPBUF(J) .NE. XDPBUF(J) ) THEN
+      !>               IF ( DPBUF(J) .NE. XDPBUF(J) ) THEN
       !>
-      !>                          WRITE (*,*)
-      !>             .                      'Double precision data mismatch: '
-      !>                          WRITE (*,*) 'PASS     = ', PASSNO
-      !>                          WRITE (*,*) 'I        = ', I
-      !>                          WRITE (*,*) 'J        = ', J
-      !>                          WRITE (*,*) 'Expected = ', XDPBUF(J)
-      !>                          WRITE (*,*) 'Actual   = ', DPBUF(J)
-      !>                          STOP
+      !>                  WRITE (*,*)
+      !>     .                      'Double precision data mismatch: '
+      !>                  WRITE (*,*) 'PASS     = ', PASSNO
+      !>                  WRITE (*,*) 'I        = ', I
+      !>                  WRITE (*,*) 'J        = ', J
+      !>                  WRITE (*,*) 'Expected = ', XDPBUF(J)
+      !>                  WRITE (*,*) 'Actual   = ', DPBUF(J)
+      !>                  STOP
       !>
-      !>                       END IF
+      !>               END IF
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>        C
-      !>        C           Check integer data.
-      !>        C
-      !>                    DO J = 1, IBUFSZ
-      !>                       XINTBF(J) = 100000000*PASSNO  +  100 * I  +  J
-      !>                    END DO
+      !>C
+      !>C           Check integer data.
+      !>C
+      !>            DO J = 1, IBUFSZ
+      !>               XINTBF(J) = 100000000*PASSNO  +  100 * I  +  J
+      !>            END DO
       !>
-      !>                    FIRSTI = LASTI + 1
-      !>                    LASTI  = LASTI + IBUFSZ
+      !>            FIRSTI = LASTI + 1
+      !>            LASTI  = LASTI + IBUFSZ
       !>
-      !>                    CALL DASRDI ( HANDLE, FIRSTI, LASTI, INTBUF )
+      !>            CALL DASRDI ( HANDLE, FIRSTI, LASTI, INTBUF )
       !>
-      !>                    DO J = 1, IBUFSZ
+      !>            DO J = 1, IBUFSZ
       !>
-      !>                       IF ( INTBUF(J) .NE. XINTBF(J) ) THEN
+      !>               IF ( INTBUF(J) .NE. XINTBF(J) ) THEN
       !>
-      !>                          WRITE (*,*) 'Integer data mismatch: '
-      !>                          WRITE (*,*) 'PASS     = ', PASSNO
-      !>                          WRITE (*,*) 'I        = ', I
-      !>                          WRITE (*,*) 'J        = ', J
-      !>                          WRITE (*,*) 'Expected = ', XINTBF(J)
-      !>                          WRITE (*,*) 'Actual   = ', INTBUF(J)
-      !>                          STOP
+      !>                  WRITE (*,*) 'Integer data mismatch: '
+      !>                  WRITE (*,*) 'PASS     = ', PASSNO
+      !>                  WRITE (*,*) 'I        = ', I
+      !>                  WRITE (*,*) 'J        = ', J
+      !>                  WRITE (*,*) 'Expected = ', XINTBF(J)
+      !>                  WRITE (*,*) 'Actual   = ', INTBUF(J)
+      !>                  STOP
       !>
-      !>                       END IF
+      !>               END IF
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              WRITE (*,*) 'File check is done.'
+      !>      WRITE (*,*) 'File check is done.'
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6890,13 +7018,13 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasllc
+      module subroutine dasllc ( ctx, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAS file to be closed.
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -6937,6 +7065,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -6975,8 +7106,10 @@ contains
 
       return
       end associate
-      end procedure dasllc
+      end subroutine dasllc
 
+      !> Return a file summary for a specified DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file. The file
@@ -7071,197 +7204,199 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASHFS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASHFS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'das.inc'
+      !>      INCLUDE 'das.inc'
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'dashfs_ex1.das' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'dashfs_ex1.das' )
       !>
-      !>              INTEGER               IFNMLN
-      !>              PARAMETER           ( IFNMLN = 60 )
+      !>      INTEGER               IFNMLN
+      !>      PARAMETER           ( IFNMLN = 60 )
       !>
-      !>              INTEGER               LINLEN
-      !>              PARAMETER           ( LINLEN = 2  )
+      !>      INTEGER               LINLEN
+      !>      PARAMETER           ( LINLEN = 2  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(IFNMLN)    IFNAME
-      !>              CHARACTER*(4)         TYPE
-      !>              CHARACTER*(LINLEN)    LINE
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(IFNMLN)    IFNAME
+      !>      CHARACTER*(4)         TYPE
+      !>      CHARACTER*(LINLEN)    LINE
       !>
-      !>              DOUBLE PRECISION      X
+      !>      DOUBLE PRECISION      X
       !>
-      !>              INTEGER               FIRST
-      !>              INTEGER               FREE
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               LAST
-      !>              INTEGER               LASTLA ( 3 )
-      !>              INTEGER               LASTRC ( 3 )
-      !>              INTEGER               LASTWD ( 3 )
-      !>              INTEGER               N
-      !>              INTEGER               NCOMC
-      !>              INTEGER               NCOMR
-      !>              INTEGER               NREAD
-      !>              INTEGER               NRESVC
-      !>              INTEGER               NRESVR
-      !>              INTEGER               REMAIN
+      !>      INTEGER               FIRST
+      !>      INTEGER               FREE
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               LAST
+      !>      INTEGER               LASTLA ( 3 )
+      !>      INTEGER               LASTRC ( 3 )
+      !>      INTEGER               LASTWD ( 3 )
+      !>      INTEGER               N
+      !>      INTEGER               NCOMC
+      !>      INTEGER               NCOMR
+      !>      INTEGER               NREAD
+      !>      INTEGER               NRESVC
+      !>      INTEGER               NRESVR
+      !>      INTEGER               REMAIN
       !>
-      !>        C
-      !>        C     Open a new DAS file. Reserve no records for comments.
-      !>        C
-      !>              TYPE   = 'TEST'
-      !>              IFNAME = 'TEST.DAS/NAIF/NJB/11-NOV-1992-20:12:20'
+      !>C
+      !>C     Open a new DAS file. Reserve no records for comments.
+      !>C
+      !>      TYPE   = 'TEST'
+      !>      IFNAME = 'TEST.DAS/NAIF/NJB/11-NOV-1992-20:12:20'
       !>
-      !>              CALL DASONW ( FNAME, TYPE, IFNAME, 0, HANDLE )
+      !>      CALL DASONW ( FNAME, TYPE, IFNAME, 0, HANDLE )
       !>
-      !>        C
-      !>        C     Obtain the file summary.
-      !>        C
-      !>              CALL DASHFS ( HANDLE, NRESVR, NRESVC, NCOMR, NCOMC,
-      !>             .              FREE,   LASTLA, LASTRC, LASTWD       )
+      !>C
+      !>C     Obtain the file summary.
+      !>C
+      !>      CALL DASHFS ( HANDLE, NRESVR, NRESVC, NCOMR, NCOMC,
+      !>     .              FREE,   LASTLA, LASTRC, LASTWD       )
       !>
-      !>        C
-      !>        C     Print the summary of the new file.
-      !>        C
-      !>              WRITE(*,*) 'Summary before adding data:'
-      !>              WRITE(*,*) '   Number of reserved records     :', NRESVR
-      !>              WRITE(*,*) '   Characters in reserved records :', NRESVC
-      !>              WRITE(*,*) '   Number of comment records      :', NCOMR
-      !>              WRITE(*,*) '   Characters in comment area     :', NCOMC
-      !>              WRITE(*,*) '   Number of first free record    :', FREE
-      !>              WRITE(*,*) '   Last logical character address :',
-      !>             .                                          LASTLA(CHARDT)
-      !>              WRITE(*,*) '   Last logical d.p. address      :',
-      !>             .                                          LASTLA(DPDT)
-      !>              WRITE(*,*) '   Last logical integer address   :',
-      !>             .                                          LASTLA(INTDT)
-      !>              WRITE(*,*) '   Last character descriptor      :',
-      !>             .                                          LASTRC(CHARDT)
-      !>              WRITE(*,*) '   Last d.p descriptor            :',
-      !>             .                                          LASTRC(DPDT)
-      !>              WRITE(*,*) '   Last integer descriptor        :',
-      !>             .                                          LASTRC(INTDT)
-      !>              WRITE(*,*) '   Character word position in desc:',
-      !>             .                                          LASTWD(CHARDT)
-      !>              WRITE(*,*) '   d.p. word position in desc     :',
-      !>             .                                          LASTWD(DPDT)
-      !>              WRITE(*,*) '   Integer word position in desc  :',
-      !>             .                                          LASTWD(INTDT)
-      !>              WRITE(*,*)
+      !>C
+      !>C     Print the summary of the new file.
+      !>C
+      !>      WRITE(*,*) 'Summary before adding data:'
+      !>      WRITE(*,*) '   Number of reserved records     :', NRESVR
+      !>      WRITE(*,*) '   Characters in reserved records :', NRESVC
+      !>      WRITE(*,*) '   Number of comment records      :', NCOMR
+      !>      WRITE(*,*) '   Characters in comment area     :', NCOMC
+      !>      WRITE(*,*) '   Number of first free record    :', FREE
+      !>      WRITE(*,*) '   Last logical character address :',
+      !>     .                                          LASTLA(CHARDT)
+      !>      WRITE(*,*) '   Last logical d.p. address      :',
+      !>     .                                          LASTLA(DPDT)
+      !>      WRITE(*,*) '   Last logical integer address   :',
+      !>     .                                          LASTLA(INTDT)
+      !>      WRITE(*,*) '   Last character descriptor      :',
+      !>     .                                          LASTRC(CHARDT)
+      !>      WRITE(*,*) '   Last d.p descriptor            :',
+      !>     .                                          LASTRC(DPDT)
+      !>      WRITE(*,*) '   Last integer descriptor        :',
+      !>     .                                          LASTRC(INTDT)
+      !>      WRITE(*,*) '   Character word position in desc:',
+      !>     .                                          LASTWD(CHARDT)
+      !>      WRITE(*,*) '   d.p. word position in desc     :',
+      !>     .                                          LASTWD(DPDT)
+      !>      WRITE(*,*) '   Integer word position in desc  :',
+      !>     .                                          LASTWD(INTDT)
+      !>      WRITE(*,*)
       !>
-      !>        C
-      !>        C     Add the data.
-      !>        C
-      !>              DO I = 1, 10
-      !>                 CALL DASADI ( HANDLE, 1, I )
-      !>              END DO
+      !>C
+      !>C     Add the data.
+      !>C
+      !>      DO I = 1, 10
+      !>         CALL DASADI ( HANDLE, 1, I )
+      !>      END DO
       !>
-      !>              DO I = 1, 5
-      !>                 CALL DASADD ( HANDLE, 1, DBLE(I) )
-      !>              END DO
+      !>      DO I = 1, 5
+      !>         CALL DASADD ( HANDLE, 1, DBLE(I) )
+      !>      END DO
       !>
-      !>        C
-      !>        C     Add character data to the file. DAS character data are
-      !>        C     treated as a character array, not as a string. The
-      !>        C     following call adds only the first 4 characters to the
-      !>        C     DAS file.
-      !>        C
-      !>              CALL DASADC ( HANDLE, 4, 1, 4, 'SPUDWXY' )
+      !>C
+      !>C     Add character data to the file. DAS character data are
+      !>C     treated as a character array, not as a string. The
+      !>C     following call adds only the first 4 characters to the
+      !>C     DAS file.
+      !>C
+      !>      CALL DASADC ( HANDLE, 4, 1, 4, 'SPUDWXY' )
       !>
-      !>        C
-      !>        C     Close the file and open it for reading.
-      !>        C
-      !>              CALL DASCLS ( HANDLE        )
-      !>              CALL DASOPR ( FNAME, HANDLE )
+      !>C
+      !>C     Close the file and open it for reading.
+      !>C
+      !>      CALL DASCLS ( HANDLE        )
+      !>      CALL DASOPR ( FNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Obtain again the file summary.
-      !>        C
-      !>              CALL DASHFS ( HANDLE, NRESVR, NRESVC, NCOMR, NCOMC,
-      !>             .              FREE,   LASTLA, LASTRC, LASTWD       )
+      !>C
+      !>C     Obtain again the file summary.
+      !>C
+      !>      CALL DASHFS ( HANDLE, NRESVR, NRESVC, NCOMR, NCOMC,
+      !>     .              FREE,   LASTLA, LASTRC, LASTWD       )
       !>
-      !>              WRITE(*,*) 'Summary after adding data:'
-      !>              WRITE(*,*) '   Number of reserved records     :', NRESVR
-      !>              WRITE(*,*) '   Characters in reserved records :', NRESVC
-      !>              WRITE(*,*) '   Number of comment records      :', NCOMR
-      !>              WRITE(*,*) '   Characters in comment area     :', NCOMC
-      !>              WRITE(*,*) '   Number of first free record    :', FREE
-      !>              WRITE(*,*) '   Last logical character address :',
-      !>             .                                          LASTLA(CHARDT)
-      !>              WRITE(*,*) '   Last logical d.p. address      :',
-      !>             .                                          LASTLA(DPDT)
-      !>              WRITE(*,*) '   Last logical integer address   :',
-      !>             .                                          LASTLA(INTDT)
-      !>              WRITE(*,*) '   Last character descriptor      :',
-      !>             .                                          LASTRC(CHARDT)
-      !>              WRITE(*,*) '   Last d.p descriptor            :',
-      !>             .                                          LASTRC(DPDT)
-      !>              WRITE(*,*) '   Last integer descriptor        :',
-      !>             .                                          LASTRC(INTDT)
-      !>              WRITE(*,*) '   Character word position in desc:',
-      !>             .                                          LASTWD(CHARDT)
-      !>              WRITE(*,*) '   d.p. word position in desc     :',
-      !>             .                                          LASTWD(DPDT)
-      !>              WRITE(*,*) '   Integer word position in desc  :',
-      !>             .                                          LASTWD(INTDT)
-      !>              WRITE(*,*)
+      !>      WRITE(*,*) 'Summary after adding data:'
+      !>      WRITE(*,*) '   Number of reserved records     :', NRESVR
+      !>      WRITE(*,*) '   Characters in reserved records :', NRESVC
+      !>      WRITE(*,*) '   Number of comment records      :', NCOMR
+      !>      WRITE(*,*) '   Characters in comment area     :', NCOMC
+      !>      WRITE(*,*) '   Number of first free record    :', FREE
+      !>      WRITE(*,*) '   Last logical character address :',
+      !>     .                                          LASTLA(CHARDT)
+      !>      WRITE(*,*) '   Last logical d.p. address      :',
+      !>     .                                          LASTLA(DPDT)
+      !>      WRITE(*,*) '   Last logical integer address   :',
+      !>     .                                          LASTLA(INTDT)
+      !>      WRITE(*,*) '   Last character descriptor      :',
+      !>     .                                          LASTRC(CHARDT)
+      !>      WRITE(*,*) '   Last d.p descriptor            :',
+      !>     .                                          LASTRC(DPDT)
+      !>      WRITE(*,*) '   Last integer descriptor        :',
+      !>     .                                          LASTRC(INTDT)
+      !>      WRITE(*,*) '   Character word position in desc:',
+      !>     .                                          LASTWD(CHARDT)
+      !>      WRITE(*,*) '   d.p. word position in desc     :',
+      !>     .                                          LASTWD(DPDT)
+      !>      WRITE(*,*) '   Integer word position in desc  :',
+      !>     .                                          LASTWD(INTDT)
+      !>      WRITE(*,*)
       !>
-      !>        C
-      !>        C     Read the integers and dump them.
-      !>        C
-      !>              WRITE(*,*) 'Integer data in the DAS file:'
-      !>              DO I = 1, LASTLA(INTDT)
-      !>                 CALL DASRDI ( HANDLE, I, I, N )
-      !>                 WRITE (*,*) '   ', N
-      !>              END DO
+      !>C
+      !>C     Read the integers and dump them.
+      !>C
+      !>      WRITE(*,*) 'Integer data in the DAS file:'
+      !>      DO I = 1, LASTLA(INTDT)
+      !>         CALL DASRDI ( HANDLE, I, I, N )
+      !>         WRITE (*,*) '   ', N
+      !>      END DO
       !>
-      !>        C
-      !>        C     Now the d.p. numbers:
-      !>        C
-      !>              WRITE(*,*)
-      !>              WRITE(*,*) 'Double precision data in the DAS file:'
-      !>              DO I = 1, LASTLA(DPDT)
-      !>                 CALL DASRDD ( HANDLE, I, I, X )
-      !>                 WRITE (*,*) '   ', X
-      !>              END DO
+      !>C
+      !>C     Now the d.p. numbers:
+      !>C
+      !>      WRITE(*,*)
+      !>      WRITE(*,*) 'Double precision data in the DAS file:'
+      !>      DO I = 1, LASTLA(DPDT)
+      !>         CALL DASRDD ( HANDLE, I, I, X )
+      !>         WRITE (*,*) '   ', X
+      !>      END DO
       !>
-      !>        C
-      !>        C     Now the characters. In this case, we read the
-      !>        C     data one line at a time.
-      !>        C
-      !>              FIRST   =  0
-      !>              LAST    =  0
-      !>              REMAIN  =  LASTLA(CHARDT)
+      !>C
+      !>C     Now the characters. In this case, we read the
+      !>C     data one line at a time.
+      !>C
+      !>      FIRST   =  0
+      !>      LAST    =  0
+      !>      REMAIN  =  LASTLA(CHARDT)
       !>
-      !>              WRITE(*,*)
-      !>              WRITE(*,*) 'Character data in the DAS file:'
-      !>              DO WHILE ( REMAIN .GT. 0 )
+      !>      WRITE(*,*)
+      !>      WRITE(*,*) 'Character data in the DAS file:'
+      !>      DO WHILE ( REMAIN .GT. 0 )
       !>
-      !>                 NREAD = MIN ( LINLEN, REMAIN )
-      !>                 FIRST = LAST + 1
-      !>                 LAST  = LAST + NREAD
+      !>         NREAD = MIN ( LINLEN, REMAIN )
+      !>         FIRST = LAST + 1
+      !>         LAST  = LAST + NREAD
       !>
-      !>                 CALL DASRDC ( HANDLE, FIRST, LAST, 1, LINLEN, LINE )
+      !>         CALL DASRDC ( HANDLE, FIRST, LAST, 1, LINLEN, LINE )
       !>
-      !>                 WRITE (*,*) '   ', LINE(:NREAD)
+      !>         WRITE (*,*) '   ', LINE(:NREAD)
       !>
-      !>                 REMAIN = REMAIN - NREAD
+      !>         REMAIN = REMAIN - NREAD
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -7396,13 +7531,24 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUL-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dashfs
+      module subroutine dashfs ( ctx, handle, nresvr, nresvc, ncomr, ncomc, free, lastla, lastrc, lastwd )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAS file.
+      integer(ip), intent(out) :: free  !! Number of first free record.
+      integer(ip), intent(out) :: lastla ( 3 )  !! Array of last logical addresses for each data
+                                                !! type.
+      integer(ip), intent(out) :: lastrc ( 3 )  !! Record number of last descriptor of each data
+                                                !! type.
+      integer(ip), intent(out) :: lastwd ( 3 )  !! Word number of last descriptor of each data
+                                                !! type.
+      integer(ip), intent(out) :: nresvr  !! Number of reserved records in file.
+      integer(ip), intent(out) :: nresvc  !! Number of characters in use in reserved rec. area.
+      integer(ip), intent(out) :: ncomr  !! Number of comment records in file.
+      integer(ip), intent(out) :: ncomc  !! Number of characters in use in comment area.
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -7443,6 +7589,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       findex  =  ft%find ( handle )
@@ -7473,8 +7622,10 @@ contains
 
       return
       end associate
-      end procedure dashfs
+      end subroutine dashfs
 
+      !> Update the file summary in a specified DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file.
@@ -7695,13 +7846,24 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUL-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasufs
+      module subroutine dasufs ( ctx, handle, nresvr, nresvc, ncomr, ncomc, free, lastla, lastrc, lastwd )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an open DAS file.
+      integer(ip), intent(in) :: free  !! Number of first free record.
+      integer(ip), intent(in) :: lastla ( 3 )  !! Array of last logical addresses for each data
+                                               !! type.
+      integer(ip), intent(in) :: lastrc ( 3 )  !! Record number of last descriptor of each data
+                                               !! type.
+      integer(ip), intent(in) :: lastwd ( 3 )  !! Word number of last descriptor of each data
+                                               !! type.
+      integer(ip), intent(in) :: nresvr  !! Number of reserved records in file.
+      integer(ip), intent(in) :: nresvc  !! Number of characters in use in reserved rec. area.
+      integer(ip), intent(in) :: ncomr  !! Number of comment records in file.
+      integer(ip), intent(in) :: ncomc  !! Number of characters in use in comment area.
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
       integer(ip), parameter :: next   ( 3 ) = &
@@ -7745,6 +7907,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -7874,8 +8039,12 @@ contains
 
       return
       end associate
-      end procedure dasufs
+      end subroutine dasufs
 
+      !> Return the logical unit associated with a handle. The unit
+      !> is "locked" to the handle by the DAF/DAS handle manager
+      !> subsystem.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file.
@@ -8001,13 +8170,14 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     We use discovery check-ins in this routine.
-      module procedure dashlu
+      module subroutine dashlu ( ctx, handle, unit )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAS file.
+      integer(ip), intent(out) :: unit  !! Corresponding logical unit.
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -8048,6 +8218,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     We use discovery check-ins in this routine.
+!
       if ( ctx%failed() ) return
 
 !
@@ -8073,8 +8246,10 @@ contains
 
       return
       end associate
-      end procedure dashlu
+      end subroutine dashlu
 
+      !> Return the handle associated with a logical unit.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the logical unit to which a DAS file has been
@@ -8189,13 +8364,14 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasluh
+      module subroutine dasluh ( ctx, unit, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: handle  !! Corresponding handle.
+      integer(ip), intent(in) :: unit  !! Logical unit connected to a DAS file.
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -8236,6 +8412,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -8253,8 +8432,10 @@ contains
 
       return
       end associate
-      end procedure dasluh
+      end subroutine dasluh
 
+      !> Return the name of the DAS file associated with a handle.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file.
@@ -8306,44 +8487,46 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASHFN_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASHFN_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               RTRIM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               RTRIM
       !>
-      !>        C
-      !>        C     Local constants
-      !>        C
-      !>              CHARACTER*(*)         DAS
-      !>              PARAMETER           ( DAS    = 'phobos512.bds' )
+      !>C
+      !>C     Local constants
+      !>C
+      !>      CHARACTER*(*)         DAS
+      !>      PARAMETER           ( DAS    = 'phobos512.bds' )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 256 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 256 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    FNAME
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    FNAME
       !>
-      !>              INTEGER               HANDLE
+      !>      INTEGER               HANDLE
       !>
-      !>        C
-      !>        C     Open the DAS file for read access.
-      !>        C
-      !>              CALL DASOPR ( DAS, HANDLE )
+      !>C
+      !>C     Open the DAS file for read access.
+      !>C
+      !>      CALL DASOPR ( DAS, HANDLE )
       !>
-      !>        C
-      !>        C     Map the handle to a file name.
-      !>        C
-      !>              CALL DASHFN ( HANDLE, FNAME )
+      !>C
+      !>C     Map the handle to a file name.
+      !>C
+      !>      CALL DASHFN ( HANDLE, FNAME )
       !>
-      !>              WRITE(*,*) 'DAS file name = <', FNAME(:RTRIM(FNAME)),
-      !>             .           '>.'
+      !>      WRITE(*,*) 'DAS file name = <', FNAME(:RTRIM(FNAME)),
+      !>     .           '>.'
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -8426,13 +8609,14 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dashfn
+      module subroutine dashfn ( ctx, handle, fname )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: fname  !! Corresponding file name.
+      integer(ip), intent(in) :: handle  !! Handle of a DAS file.
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -8473,6 +8657,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -8498,8 +8685,10 @@ contains
 
       return
       end associate
-      end procedure dashfn
+      end subroutine dashfn
 
+      !> Return handle associated with a file name.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a previously opened DAS file.
@@ -8615,13 +8804,14 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasfnh
+      module subroutine dasfnh ( ctx, fname, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DAS file.
+      integer(ip), intent(out) :: handle  !! Corresponding handle.
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -8662,6 +8852,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
       call zzddhfnh ( ctx, fname, handle, found )
@@ -8677,8 +8870,11 @@ contains
 
       return
       end associate
-      end procedure dasfnh
+      end subroutine dasfnh
 
+      !> Return a SPICE set containing the handles of all currently
+      !> open DAS files.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -8786,13 +8982,17 @@ contains
       !>        by the environment label SUN.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      module procedure dashof
+      module subroutine dashof ( ctx, fhset )
       use pepper_arrays, only: shelli
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
       integer(ip), parameter :: lbcell = -5
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: fhset  ( lbcell : * )  !! A set containing handles of
+                                                           !! currently
+                                                         !! open DAS files.
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -8858,8 +9058,11 @@ contains
 
       return
       end associate
-      end procedure dashof
+      end subroutine dashof
 
+      !> Signal an error if a DAS file file handle does not designate a
+      !> DAS file that is open for a specified type of access.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a DAS file handle to validate. For HANDLE to be
@@ -9018,14 +9221,15 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dassih
+      module subroutine dassih ( ctx, handle, access )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! HANDLE to be validated.
+      character(*), intent(in) :: access  !! String indicating access type.
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
       integer(ip), parameter :: next   ( 3 ) = &
@@ -9068,6 +9272,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -9135,8 +9342,10 @@ contains
 !
       return
       end associate
-      end procedure dassih
+      end subroutine dassih
 
+      !> Return the allowed access method for a specified DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a previously opened DAS file.
@@ -9258,13 +9467,14 @@ contains
       !>        routines ever change.
       !>
       !>-    SPICELIB Version 1.0.0, 01-FEB-1993 (NJB) (WLT) (IMU)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasham
+      module subroutine dasham ( ctx, handle, access )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! HANDLE of a DAS file.
+      character(*), intent(out) :: access  !! String indicating allowed access method.
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
@@ -9306,6 +9516,9 @@ contains
       integer(ip) :: type
       logical :: found
       associate ( ft => ctx%spice%dasfm )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -9337,8 +9550,10 @@ contains
 
       return
       end associate
-      end procedure dasham
+      end subroutine dasham
 
+      !> Read DAS double precision physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an open DAS file.
@@ -9486,11 +9701,15 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     If it hasn't been done yet, initialize the pointer list pools.
-      module procedure dasrrd
+      module subroutine dasrrd ( ctx, handle, recno, first, last, datad )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: first  !! First and last indices of range within record.
+      integer(ip), intent(in) :: last  !! First and last indices of range within record.
+      real(wp), intent(out) :: datad   ( * )  !! Double precision data read from record.
       logical :: return
       integer(ip) :: node
       integer(ip) :: wrunit
@@ -9509,6 +9728,9 @@ contains
                   headd => ctx%dasrwr%headd, &
                   usedd => ctx%dasrwr%usedd, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     If it hasn't been done yet, initialize the pointer list pools.
+!
       if ( pass1 ) then
 
          call lnkini ( ctx, bufszd, poold )
@@ -9673,8 +9895,10 @@ contains
 
       return
       end associate
-      end procedure dasrrd
+      end subroutine dasrrd
 
+      !> Read DAS integer physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an open DAS file.
@@ -9817,13 +10041,15 @@ contains
       !>        Made modifications to enhance efficiency. Removed references
       !>        to the function RETURN. For buffered reads, MOVEI is not
       !>        called when a single word is to be read.
-      !>
-      !>     Non-standard SPICE error handling.
-      !>
-      !>     If it hasn't been done yet, initialize the pointer list pools.
-      module procedure dasrri
+      module subroutine dasrri ( ctx, handle, recno, first, last, datai )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: first  !! First and last indices of range within record.
+      integer(ip), intent(in) :: last  !! First and last indices of range within record.
+      integer(ip), intent(out) :: datai   ( * )  !! Integer data read from record.
       logical :: return
       integer(ip) :: node
       integer(ip) :: wrunit
@@ -9842,6 +10068,9 @@ contains
                   headi => ctx%dasrwr%headi, &
                   usedi => ctx%dasrwr%usedi, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     If it hasn't been done yet, initialize the pointer list pools.
+!
       if ( pass1 ) then
 
          call lnkini ( ctx, bufszd, poold )
@@ -10002,8 +10231,10 @@ contains
 
       return
       end associate
-      end procedure dasrri
+      end subroutine dasrri
 
+      !> Read DAS character physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an open DAS file.
@@ -10143,11 +10374,15 @@ contains
       !>
       !>        Made modifications to enhance efficiency. Removed references
       !>        to the function RETURN.
-      !>
-      !>     If it hasn't been done yet, initialize the pointer list pools.
-      module procedure dasrrc
+      module subroutine dasrrc ( ctx, handle, recno, first, last, datac )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: first  !! First and last indices of range within record.
+      integer(ip), intent(in) :: last  !! First and last indices of range within record.
+      character(*), intent(out) :: datac  !! Character data read from record.
       logical :: return
       integer(ip) :: node
       integer(ip) :: unit
@@ -10167,6 +10402,9 @@ contains
                   headc => ctx%dasrwr%headc, &
                   usedc => ctx%dasrwr%usedc, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     If it hasn't been done yet, initialize the pointer list pools.
+!
       if ( pass1 ) then
 
          call lnkini ( ctx, bufszd, poold )
@@ -10321,8 +10559,10 @@ contains
 
       return
       end associate
-      end procedure dasrrc
+      end subroutine dasrrc
 
+      !> Write DAS double precision physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
@@ -10451,11 +10691,14 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure daswrd
+      module subroutine daswrd ( ctx, handle, recno, recd )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: nwd = 128
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      real(wp), intent(in) :: recd    ( nwd )  !! Double precision data to be written to record.
       integer(ip) :: node
       integer(ip) :: wrunit
       call files_check ( ctx )
@@ -10473,6 +10716,9 @@ contains
                   headd => ctx%dasrwr%headd, &
                   usedd => ctx%dasrwr%usedd, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -10604,8 +10850,10 @@ contains
 
       return
       end associate
-      end procedure daswrd
+      end subroutine daswrd
 
+      !> Write DAS integer physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
@@ -10733,11 +10981,14 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure daswri
+      module subroutine daswri ( ctx, handle, recno, reci )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: nwi = 256
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: reci    ( nwi )  !! Integer data to be written to record.
       integer(ip) :: node
       integer(ip) :: unit
       integer(ip) :: wrunit
@@ -10756,6 +11007,9 @@ contains
                   headi => ctx%dasrwr%headi, &
                   usedi => ctx%dasrwr%usedi, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -10888,8 +11142,10 @@ contains
 
       return
       end associate
-      end procedure daswri
+      end subroutine daswri
 
+      !> Write DAS character physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
@@ -11018,11 +11274,13 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure daswrc
+      module subroutine daswrc ( ctx, handle, recno, recc )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      character(*), intent(in) :: recc  !! Character data to be written to record.
       integer(ip) :: node
       integer(ip) :: wrunit
       call files_check ( ctx )
@@ -11040,6 +11298,9 @@ contains
                   headc => ctx%dasrwr%headc, &
                   usedc => ctx%dasrwr%usedc, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -11170,8 +11431,10 @@ contains
 
       return
       end associate
-      end procedure daswrc
+      end subroutine daswrc
 
+      !> Update DAS double precision physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
@@ -11329,11 +11592,15 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasurd
+      module subroutine dasurd ( ctx, handle, recno, first, last, datad )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: first  !! First and last indices of range within record.
+      integer(ip), intent(in) :: last  !! First and last indices of range within record.
+      real(wp), intent(in) :: datad   ( * )  !! Double precision data to write to record.
       integer(ip) :: node
       integer(ip) :: wrunit
       call files_check ( ctx )
@@ -11351,6 +11618,9 @@ contains
                   headd => ctx%dasrwr%headd, &
                   usedd => ctx%dasrwr%usedd, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -11518,8 +11788,10 @@ contains
 
       return
       end associate
-      end procedure dasurd
+      end subroutine dasurd
 
+      !> Update DAS integer physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
@@ -11677,11 +11949,15 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasuri
+      module subroutine dasuri ( ctx, handle, recno, first, last, datai )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: first  !! First and last indices of range within record.
+      integer(ip), intent(in) :: last  !! First and last indices of range within record.
+      integer(ip), intent(in) :: datai   ( * )  !! Integer data to write to record.
       integer(ip) :: node
       integer(ip) :: wrunit
       call files_check ( ctx )
@@ -11699,6 +11975,9 @@ contains
                   headi => ctx%dasrwr%headi, &
                   usedi => ctx%dasrwr%usedi, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -11864,8 +12143,10 @@ contains
 
       return
       end associate
-      end procedure dasuri
+      end subroutine dasuri
 
+      !> Update DAS character physical records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
@@ -12028,11 +12309,15 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasurc
+      module subroutine dasurc ( ctx, handle, recno, first, last, datac )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: first  !! First and last indices of range within record.
+      integer(ip), intent(in) :: last  !! First and last indices of range within record.
+      character(*), intent(in) :: datac  !! Character data to write to record.
       integer(ip) :: node
       integer(ip) :: unit
       integer(ip) :: wrunit
@@ -12051,6 +12336,9 @@ contains
                   headc => ctx%dasrwr%headc, &
                   usedc => ctx%dasrwr%usedc, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -12218,8 +12506,10 @@ contains
 
       return
       end associate
-      end procedure dasurc
+      end subroutine dasurc
 
+      !> Write out all buffered records of a specified DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAS file opened for writing.
@@ -12306,243 +12596,245 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASWBR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASWBR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               FTYPLN
-      !>              PARAMETER           ( FTYPLN = 3 )
+      !>      INTEGER               FTYPLN
+      !>      PARAMETER           ( FTYPLN = 3 )
       !>
-      !>              INTEGER               CHRLEN
-      !>              PARAMETER           ( CHRLEN = 50 )
+      !>      INTEGER               CHRLEN
+      !>      PARAMETER           ( CHRLEN = 50 )
       !>
-      !>              INTEGER               IBUFSZ
-      !>              PARAMETER           ( IBUFSZ = 20 )
+      !>      INTEGER               IBUFSZ
+      !>      PARAMETER           ( IBUFSZ = 20 )
       !>
-      !>              INTEGER               DBUFSZ
-      !>              PARAMETER           ( DBUFSZ = 30 )
+      !>      INTEGER               DBUFSZ
+      !>      PARAMETER           ( DBUFSZ = 30 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CHRLEN)    CHRBUF
-      !>              CHARACTER*(FILSIZ)    FNAME
-      !>              CHARACTER*(FTYPLN)    FTYPE
-      !>              CHARACTER*(CHRLEN)    XCHRBF
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CHRLEN)    CHRBUF
+      !>      CHARACTER*(FILSIZ)    FNAME
+      !>      CHARACTER*(FTYPLN)    FTYPE
+      !>      CHARACTER*(CHRLEN)    XCHRBF
       !>
-      !>              DOUBLE PRECISION      DPBUF  ( DBUFSZ )
-      !>              DOUBLE PRECISION      XDPBUF ( DBUFSZ )
+      !>      DOUBLE PRECISION      DPBUF  ( DBUFSZ )
+      !>      DOUBLE PRECISION      XDPBUF ( DBUFSZ )
       !>
-      !>              INTEGER               FIRSTC
-      !>              INTEGER               FIRSTD
-      !>              INTEGER               FIRSTI
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               INTBUF ( IBUFSZ )
-      !>              INTEGER               J
-      !>              INTEGER               LASTC
-      !>              INTEGER               LASTD
-      !>              INTEGER               LASTI
-      !>              INTEGER               NCALL
-      !>              INTEGER               NCOMR
-      !>              INTEGER               NPASS
-      !>              INTEGER               PASSNO
-      !>              INTEGER               XINTBF ( IBUFSZ )
+      !>      INTEGER               FIRSTC
+      !>      INTEGER               FIRSTD
+      !>      INTEGER               FIRSTI
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               INTBUF ( IBUFSZ )
+      !>      INTEGER               J
+      !>      INTEGER               LASTC
+      !>      INTEGER               LASTD
+      !>      INTEGER               LASTI
+      !>      INTEGER               NCALL
+      !>      INTEGER               NCOMR
+      !>      INTEGER               NPASS
+      !>      INTEGER               PASSNO
+      !>      INTEGER               XINTBF ( IBUFSZ )
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  FNAME  / 'daswbr_ex1.das' /
-      !>              DATA                  FTYPE  / 'ANG' /
-      !>              DATA                  NCALL  / 1000  /
-      !>              DATA                  NCOMR  / 10    /
-      !>              DATA                  NPASS  / 3     /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  FNAME  / 'daswbr_ex1.das' /
+      !>      DATA                  FTYPE  / 'ANG' /
+      !>      DATA                  NCALL  / 1000  /
+      !>      DATA                  NCOMR  / 10    /
+      !>      DATA                  NPASS  / 3     /
       !>
-      !>        C
-      !>        C     Open a new DAS file. We'll allocate NCOMR records
-      !>        C     for comments. The file type is not one of the standard
-      !>        C     types recognized by SPICE; however it can be used to
-      !>        C     ensure the database file is of the correct type.
-      !>        C
-      !>        C     We'll use the file name as the internal file name.
-      !>        C
-      !>              CALL DASONW ( FNAME, FTYPE, FNAME, NCOMR, HANDLE )
+      !>C
+      !>C     Open a new DAS file. We'll allocate NCOMR records
+      !>C     for comments. The file type is not one of the standard
+      !>C     types recognized by SPICE; however it can be used to
+      !>C     ensure the database file is of the correct type.
+      !>C
+      !>C     We'll use the file name as the internal file name.
+      !>C
+      !>      CALL DASONW ( FNAME, FTYPE, FNAME, NCOMR, HANDLE )
       !>
-      !>        C
-      !>        C     Add data of character, integer, and double precision
-      !>        C     types to the file in interleaved fashion. We'll add to
-      !>        C     the file over NPASS "passes," in each of which we close
-      !>        C     the file after writing.
-      !>        C
-      !>              DO PASSNO = 1, NPASS
+      !>C
+      !>C     Add data of character, integer, and double precision
+      !>C     types to the file in interleaved fashion. We'll add to
+      !>C     the file over NPASS "passes," in each of which we close
+      !>C     the file after writing.
+      !>C
+      !>      DO PASSNO = 1, NPASS
       !>
-      !>                 IF ( PASSNO .GT. 1 ) THEN
+      !>         IF ( PASSNO .GT. 1 ) THEN
       !>
-      !>                    WRITE (*,*) 'Opening file for write access...'
+      !>            WRITE (*,*) 'Opening file for write access...'
       !>
-      !>                    CALL DASOPW( FNAME, HANDLE )
+      !>            CALL DASOPW( FNAME, HANDLE )
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 DO I = 1, NCALL
-      !>        C
-      !>        C           Add string data to the file.
-      !>        C
-      !>                    CHRBUF = 'Character value #'
-      !>                    CALL REPMI( CHRBUF, '#', I, CHRBUF )
+      !>         DO I = 1, NCALL
+      !>C
+      !>C           Add string data to the file.
+      !>C
+      !>            CHRBUF = 'Character value #'
+      !>            CALL REPMI( CHRBUF, '#', I, CHRBUF )
       !>
-      !>                    CALL DASADC ( HANDLE, CHRLEN, 1, CHRLEN, CHRBUF )
+      !>            CALL DASADC ( HANDLE, CHRLEN, 1, CHRLEN, CHRBUF )
       !>
-      !>        C
-      !>        C           Add double precision data to the file.
-      !>        C
-      !>                    DO J = 1, DBUFSZ
-      !>                       DPBUF(J) = DBLE( 100000000*PASSNO + 100*I + J )
-      !>                    END DO
+      !>C
+      !>C           Add double precision data to the file.
+      !>C
+      !>            DO J = 1, DBUFSZ
+      !>               DPBUF(J) = DBLE( 100000000*PASSNO + 100*I + J )
+      !>            END DO
       !>
-      !>                    CALL DASADD ( HANDLE, DBUFSZ, DPBUF )
+      !>            CALL DASADD ( HANDLE, DBUFSZ, DPBUF )
       !>
-      !>        C
-      !>        C           Add integer data to the file.
-      !>        C
-      !>                    DO J = 1, IBUFSZ
-      !>                       INTBUF(J) = 100000000*PASSNO  +  100 * I  +  J
-      !>                    END DO
+      !>C
+      !>C           Add integer data to the file.
+      !>C
+      !>            DO J = 1, IBUFSZ
+      !>               INTBUF(J) = 100000000*PASSNO  +  100 * I  +  J
+      !>            END DO
       !>
-      !>                    CALL DASADI ( HANDLE, IBUFSZ, INTBUF )
+      !>            CALL DASADI ( HANDLE, IBUFSZ, INTBUF )
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>        C
-      !>        C        Write buffered data to the file.
-      !>        C
-      !>                 WRITE (*,*) 'Writing buffered data...'
-      !>                 CALL DASWBR ( HANDLE )
+      !>C
+      !>C        Write buffered data to the file.
+      !>C
+      !>         WRITE (*,*) 'Writing buffered data...'
+      !>         CALL DASWBR ( HANDLE )
       !>
-      !>        C
-      !>        C        Close the file without segregating it.
-      !>        C
-      !>                 WRITE (*,*) 'Closing DAS file...'
-      !>                 CALL DASLLC ( HANDLE )
+      !>C
+      !>C        Close the file without segregating it.
+      !>C
+      !>         WRITE (*,*) 'Closing DAS file...'
+      !>         CALL DASLLC ( HANDLE )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              WRITE (*,*) 'File write is done.'
+      !>      WRITE (*,*) 'File write is done.'
       !>
-      !>        C
-      !>        C     Check file contents.
-      !>        C
-      !>              CALL DASOPR( FNAME, HANDLE )
+      !>C
+      !>C     Check file contents.
+      !>C
+      !>      CALL DASOPR( FNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Read data from the file; compare to expected values.
-      !>        C
-      !>        C     Initialize end addresses.
-      !>        C
-      !>              LASTC = 0
-      !>              LASTD = 0
-      !>              LASTI = 0
+      !>C
+      !>C     Read data from the file; compare to expected values.
+      !>C
+      !>C     Initialize end addresses.
+      !>C
+      !>      LASTC = 0
+      !>      LASTD = 0
+      !>      LASTI = 0
       !>
-      !>              DO PASSNO = 1, NPASS
+      !>      DO PASSNO = 1, NPASS
       !>
-      !>                 DO I = 1, NCALL
+      !>         DO I = 1, NCALL
       !>
-      !>        C
-      !>        C           Check string data.
-      !>        C
-      !>                    XCHRBF = 'Character value #'
-      !>                    CALL REPMI( XCHRBF, '#', I, XCHRBF )
+      !>C
+      !>C           Check string data.
+      !>C
+      !>            XCHRBF = 'Character value #'
+      !>            CALL REPMI( XCHRBF, '#', I, XCHRBF )
       !>
-      !>                    FIRSTC = LASTC + 1
-      !>                    LASTC  = LASTC + CHRLEN
+      !>            FIRSTC = LASTC + 1
+      !>            LASTC  = LASTC + CHRLEN
       !>
-      !>                    CALL DASRDC ( HANDLE, FIRSTC, LASTC,
-      !>             .                    1,      CHRLEN, CHRBUF )
+      !>            CALL DASRDC ( HANDLE, FIRSTC, LASTC,
+      !>     .                    1,      CHRLEN, CHRBUF )
       !>
-      !>                    IF ( CHRBUF .NE. XCHRBF ) THEN
-      !>                       WRITE (*,*) 'Character data mismatch: '
-      !>                       WRITE (*,*) 'PASS     = ', PASSNO
-      !>                       WRITE (*,*) 'I        = ', I
-      !>                       WRITE (*,*) 'Expected = ', XCHRBF
-      !>                       WRITE (*,*) 'Actual   = ', CHRBUF
-      !>                       STOP
-      !>                    END IF
+      !>            IF ( CHRBUF .NE. XCHRBF ) THEN
+      !>               WRITE (*,*) 'Character data mismatch: '
+      !>               WRITE (*,*) 'PASS     = ', PASSNO
+      !>               WRITE (*,*) 'I        = ', I
+      !>               WRITE (*,*) 'Expected = ', XCHRBF
+      !>               WRITE (*,*) 'Actual   = ', CHRBUF
+      !>               STOP
+      !>            END IF
       !>
-      !>        C
-      !>        C           Check double precision data.
-      !>        C
-      !>                    DO J = 1, DBUFSZ
-      !>                       XDPBUF(J) = DBLE(   100000000*PASSNO
-      !>             .                           + 100*I + J        )
-      !>                    END DO
+      !>C
+      !>C           Check double precision data.
+      !>C
+      !>            DO J = 1, DBUFSZ
+      !>               XDPBUF(J) = DBLE(   100000000*PASSNO
+      !>     .                           + 100*I + J        )
+      !>            END DO
       !>
-      !>                    FIRSTD = LASTD + 1
-      !>                    LASTD  = LASTD + DBUFSZ
+      !>            FIRSTD = LASTD + 1
+      !>            LASTD  = LASTD + DBUFSZ
       !>
-      !>                    CALL DASRDD ( HANDLE, FIRSTD, LASTD, DPBUF )
+      !>            CALL DASRDD ( HANDLE, FIRSTD, LASTD, DPBUF )
       !>
-      !>                    DO J = 1, DBUFSZ
+      !>            DO J = 1, DBUFSZ
       !>
-      !>                       IF ( DPBUF(J) .NE. XDPBUF(J) ) THEN
+      !>               IF ( DPBUF(J) .NE. XDPBUF(J) ) THEN
       !>
-      !>                          WRITE (*,*)
-      !>             .                   'Double precision data mismatch: '
-      !>                          WRITE (*,*) 'PASS     = ', PASSNO
-      !>                          WRITE (*,*) 'I        = ', I
-      !>                          WRITE (*,*) 'J        = ', J
-      !>                          WRITE (*,*) 'Expected = ', XDPBUF(J)
-      !>                          WRITE (*,*) 'Actual   = ', DPBUF(J)
-      !>                          STOP
+      !>                  WRITE (*,*)
+      !>     .                   'Double precision data mismatch: '
+      !>                  WRITE (*,*) 'PASS     = ', PASSNO
+      !>                  WRITE (*,*) 'I        = ', I
+      !>                  WRITE (*,*) 'J        = ', J
+      !>                  WRITE (*,*) 'Expected = ', XDPBUF(J)
+      !>                  WRITE (*,*) 'Actual   = ', DPBUF(J)
+      !>                  STOP
       !>
-      !>                       END IF
+      !>               END IF
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>        C
-      !>        C           Check integer data.
-      !>        C
-      !>                    DO J = 1, IBUFSZ
-      !>                       XINTBF(J) = 100000000*PASSNO  +  100 * I  +  J
-      !>                    END DO
+      !>C
+      !>C           Check integer data.
+      !>C
+      !>            DO J = 1, IBUFSZ
+      !>               XINTBF(J) = 100000000*PASSNO  +  100 * I  +  J
+      !>            END DO
       !>
-      !>                    FIRSTI = LASTI + 1
-      !>                    LASTI  = LASTI + IBUFSZ
+      !>            FIRSTI = LASTI + 1
+      !>            LASTI  = LASTI + IBUFSZ
       !>
-      !>                    CALL DASRDI ( HANDLE, FIRSTI, LASTI, INTBUF )
+      !>            CALL DASRDI ( HANDLE, FIRSTI, LASTI, INTBUF )
       !>
-      !>                    DO J = 1, IBUFSZ
+      !>            DO J = 1, IBUFSZ
       !>
-      !>                       IF ( INTBUF(J) .NE. XINTBF(J) ) THEN
+      !>               IF ( INTBUF(J) .NE. XINTBF(J) ) THEN
       !>
-      !>                          WRITE (*,*) 'Integer data mismatch: '
-      !>                          WRITE (*,*) 'PASS     = ', PASSNO
-      !>                          WRITE (*,*) 'I        = ', I
-      !>                          WRITE (*,*) 'J        = ', J
-      !>                          WRITE (*,*) 'Expected = ', XINTBF(J)
-      !>                          WRITE (*,*) 'Actual   = ', INTBUF(J)
-      !>                          STOP
+      !>                  WRITE (*,*) 'Integer data mismatch: '
+      !>                  WRITE (*,*) 'PASS     = ', PASSNO
+      !>                  WRITE (*,*) 'I        = ', I
+      !>                  WRITE (*,*) 'J        = ', J
+      !>                  WRITE (*,*) 'Expected = ', XINTBF(J)
+      !>                  WRITE (*,*) 'Actual   = ', INTBUF(J)
+      !>                  STOP
       !>
-      !>                       END IF
+      !>               END IF
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              WRITE (*,*) 'File check is done.'
+      !>      WRITE (*,*) 'File check is done.'
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -12613,11 +12905,11 @@ contains
       !>        change.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure daswbr
+      module subroutine daswbr ( ctx, handle )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
       integer(ip) :: node
       integer(ip) :: wrunit
       integer(ip) :: next
@@ -12645,6 +12937,9 @@ contains
                   usedd => ctx%dasrwr%usedd, &
                   usedi => ctx%dasrwr%usedi, &
                   pass1 => ctx%dasrwr%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -12820,8 +13115,10 @@ contains
 
       return
       end associate
-      end procedure daswbr
+      end subroutine daswbr
 
+      !> Perform Fortran reads and writes of DAS character records.
+      !>
       !>## Detailed Input
       !>
       !>     ACTION   is a character string specifying whether to read
@@ -12956,10 +13253,16 @@ contains
       !>        Header was updated to refer to ZZDDHHLU.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      module procedure dasioc
+      module subroutine dasioc ( ctx, action, unit, recno, record )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: nwc = 1024
+      character(*), intent(in) :: action  !! Action to take (read or write).
+      integer(ip), intent(in) :: unit  !! Fortran unit connected to DAS file.
+      integer(ip), intent(in) :: recno  !! Number of record to read or write.
+      character(nwc), intent(inout) :: record  !! DAS character record.
 
 
       integer(ip) :: iostat
@@ -13021,8 +13324,11 @@ contains
       end if
 
       return
-      end procedure dasioc
+      end subroutine dasioc
 
+      !> Perform Fortran reads and writes of DAS double precision records.
+      !> This routine operates on DAS files having native binary format.
+      !>
       !>## Detailed Input
       !>
       !>     ACTION   is a character string specifying whether to read
@@ -13161,10 +13467,16 @@ contains
       !>        was updated.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      module procedure dasiod
+      module subroutine dasiod ( ctx, action, unit, recno, record )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: nwd = 128
+      character(*), intent(in) :: action  !! Action to take (read or write).
+      integer(ip), intent(in) :: unit  !! Fortran unit connected to DAS file.
+      integer(ip), intent(in) :: recno  !! Number of record to read or write.
+      real(wp), intent(inout) :: record ( nwd )  !! DAS double precision record.
 
 
       integer(ip) :: iostat
@@ -13228,8 +13540,12 @@ contains
       end if
 
       return
-      end procedure dasiod
+      end subroutine dasiod
 
+      !> Perform Fortran reads and writes of DAS integer records.
+      !> This routine operates on DAS files having native binary
+      !> format.
+      !>
       !>## Detailed Input
       !>
       !>     ACTION   is a character string specifying whether to read
@@ -13367,10 +13683,16 @@ contains
       !>        was updated.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      module procedure dasioi
+      module subroutine dasioi ( ctx, action, unit, recno, record )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: nwi = 256
+      character(*), intent(in) :: action  !! Action to take (read or write).
+      integer(ip), intent(in) :: unit  !! Fortran unit connected to DAS file.
+      integer(ip), intent(in) :: recno  !! Number of record to read or write.
+      integer(ip), intent(inout) :: record ( nwi )  !! DAS integer record.
 
 
       integer(ip) :: iostat
@@ -13432,8 +13754,10 @@ contains
       end if
 
       return
-      end procedure dasioi
+      end subroutine dasioi
 
+      !> Map a DAS address to a physical location in a specified DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an open DAS file.
@@ -13719,230 +14043,31 @@ contains
       !>        that data type in a DAS record. The correct product involves
       !>        the number of records in the cluster and the number of words of
       !>        that data type in a DAS record.
-      !>
-      !>     Programmer's note: the TSPICE routine P_DASA2L must be
-      !>     kept in sync with this routine. Current version of that
-      !>     routine is
-      !>
-      !>        TSPICE Version 1.0.0 APR-11-2014 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Words per data record, for each data type:
-      !>
-      !>     Directory forward pointer location
-      !>
-      !>     Directory address range locations
-      !>
-      !>     Index of highest address in a `range array':
-      !>
-      !>     Location of first type descriptor
-      !>
-      !>     Access word length
-      !>
-      !>     File table size
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     NEXT and PREV map the DAS data type codes to their
-      !>     successors and predecessors, respectively.
-      !>
-      !>     Discovery check-in is used in this routine, even though
-      !>     this routine calls routines that can signal errors. This
-      !>     routine is a special case, because fast operation is very
-      !>     important.
-      !>
-      !>     DAS files have the following general structure:
-      !>
-      !>           +------------------------+
-      !>           |      file record       |
-      !>           +------------------------+
-      !>           |    reserved records    |
-      !>           |                        |
-      !>           +------------------------+
-      !>           |     comment records    |
-      !>           |                        |
-      !>           |                        |
-      !>           |                        |
-      !>           +------------------------+
-      !>           | first data directory   |
-      !>           +------------------------+
-      !>           |      data records      |
-      !>           |                        |
-      !>           |                        |
-      !>           |                        |
-      !>           |                        |
-      !>           +------------------------+
-      !>                       .
-      !>                       .
-      !>           +------------------------+
-      !>           | last data directory    |
-      !>           +------------------------+
-      !>           |     data records       |
-      !>           |                        |
-      !>           |                        |
-      !>           +------------------------+
-      !>
-      !>        Within each DAS data record, word numbers start at one and
-      !>        increase up to NWI, NWD, or NWC: the number of words in an
-      !>        integer, double precision, or character data record.
-      !>
-      !>           +--------------------------------+
-      !>           |       |       |   ...  |       |
-      !>           +--------------------------------+
-      !>               1      2                NWD
-      !>
-      !>           +--------------------------------+
-      !>           |   |   |       ...          |   |
-      !>           +--------------------------------+
-      !>             1   2                       NWI
-      !>
-      !>           +------------------------------------+
-      !>           | | |           ...                | |
-      !>           +------------------------------------+
-      !>            1 2                               NWC
-      !>
-      !>        Directories are single records that describe the data
-      !>        types of data records that follow. The directories
-      !>        in a DAS file form a doubly linked list: each directory
-      !>        contains forward and backward pointers to the next and
-      !>        previous directories.
-      !>
-      !>        Each directory also contains, for each data type, the lowest
-      !>        and highest logical address occurring in any of the records
-      !>        described by the directory.
-      !>
-      !>        Following the pointers and address range information is
-      !>        a sequence of data type descriptors. These descriptors
-      !>        indicate the data type of data records following the
-      !>        directory record. Each descriptor gives the data type
-      !>        of a maximal set of contiguous data records, all having the
-      !>        same type. By `maximal set' we mean that no data records of
-      !>        the same type bound the set of records in question.
-      !>
-      !>        Pictorially, the structure of a directory is as follows:
-      !>
-      !>           +----------------------------------------------------+
-      !>           | <pointers> | <address ranges> | <type descriptors> |
-      !>           +----------------------------------------------------+
-      !>
-      !>        where the <pointers> section looks like
-      !>
-      !>           +-----------------------------------------+
-      !>           | <backward pointer> | <forward pointer>  |
-      !>           +-----------------------------------------+
-      !>
-      !>        the <address ranges> section looks like
-      !>
-      !>           +-------------------------------------------+
-      !>           | <char range> | <d.p. range> | <int range> |
-      !>           +-------------------------------------------+
-      !>
-      !>        and each range looks like one of:
-      !>
-      !>           +------------------------------------------------+
-      !>           | <lowest char address> | <highest char address> |
-      !>           +------------------------------------------------+
-      !>
-      !>           +------------------------------------------------+
-      !>           | <lowest d.p. address> | <highest d.p. address> |
-      !>           +------------------------------------------------+
-      !>
-      !>           +------------------------------------------------+
-      !>           | <lowest int address>  | <highest int address>  |
-      !>           +------------------------------------------------+
-      !>
-      !>        The type descriptors implement a run-length encoding
-      !>        scheme. The first element of the series of descriptors
-      !>        occupies two integers: it contains a type code and a count.
-      !>        The rest of the descriptors are just signed counts; the data
-      !>        types of the records they describe are deduced from the sign
-      !>        of the count and the data type of the previous descriptor.
-      !>        The method of finding the data type for a given descriptor
-      !>        in terms of its predecessor is as follows: if the sign of a
-      !>        descriptor is positive, the type of that descriptor is the
-      !>        successor of the type of the preceding descriptor in the
-      !>        sequence of types below. If the sign of a descriptor is
-      !>        negative, the type of the descriptor is the predecessor of the
-      !>        type of the preceding descriptor.
-      !>
-      !>           C  -->  D  -->  I  -->  C
-      !>
-      !>        For example, if the preceding type is `I', and a descriptor
-      !>        contains the number 16, the type of the descriptor is `C',
-      !>        whereas if the descriptor contained the number -800, the type
-      !>        of the descriptor would be `D'.
-      !>
-      !>     Logic cases
-      !>     ===========
-      !>
-      !>     There are three kinds of file attributes that this
-      !>     routine distinguishes:
-      !>
-      !>        Attributes
-      !>        ----------
-      !>        "FAST"           read-only and segregated
-      !>        "READONLY"       read-only and unsegregated
-      !>        "WRITABLE"       writable
-      !>
-      !>     There are three kinds of file histories that this
-      !>     routine distinguishes:
-      !>
-      !>        History
-      !>        -------
-      !>        "SAME"           file is the same as seen on
-      !>                         the previous call
-      !>
-      !>        "KNOWN"          file is not the same as seen
-      !>                         on the previous call, but file
-      !>                         information is buffered
-      !>
-      !>        "UNKNOWN"        file information is not buffered.
-      !>
-      !>     All combinations of attributes and history are possible,
-      !>     so there are nine cases.
-      !>
-      !>     Mapping actions to cases
-      !>     ========================
-      !>
-      !>        Action                             Cases
-      !>        ------                             -----
-      !>        Set SAMFIL, PRVOK                  ALL
-      !>        Data type check                    ALL
-      !>        Set KNOWN                          not (FAST and SAME)
-      !>        Get access method                  UNKNOWN
-      !>        Buffer insertion                   UNKNOWN
-      !>        Set
-      !>            TBHAN
-      !>            TBRDON
-      !>            TBFAST
-      !>            TBFWRD                         UNKNOWN
-      !>        Get file summary                   UNKNOWN or WRITABLE
-      !>        Set TBMXAD                         UNKNOWN or WRITABLE
-      !>        Segregation check                  UNKNOWN and not WRITABLE
-      !>        Set TBBASE, TBSIZE                 FAST and UNKNOWN
-      !>        Set FAST                           not SAME
-      !>        Address range check                ALL
-      !>        Address search                     READONLY or WRITABLE
-      !>        Set CLBASE, CLSIZE                 ALL
-      !>
-      !>     ========================
-      !>
-      !>     Make sure the data type is valid.
-      module procedure dasa2l
+      module subroutine dasa2l ( ctx, handle, type, addrss, clbase, clsize, recno, wordno )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: type  !! Data type specifier.
+      integer(ip), intent(in) :: addrss  !! DAS address of a word of data type TYPE.
+      integer(ip), intent(out) :: clbase  !! Cluster base record number and size.
+      integer(ip), intent(out) :: clsize  !! Cluster base record number and size.
+      integer(ip), intent(out) :: recno  !! Record/word pair corresponding to ADDRSS.
+      integer(ip), intent(out) :: wordno  !! Record/word pair corresponding to ADDRSS.
       integer(ip) :: nxtrec_1(1)  !! one-element copy of nxtrec (array argument)
       integer(ip), parameter :: char = 1
       integer(ip), parameter :: int = 3
+!
+!     Index of highest address in a `range array':
+!
       integer(ip), parameter :: high = 2
+!
+!     File table size
+!
       integer(ip), parameter :: maxfil = 20
+!
+!     Local variables
+!
       integer(ip) :: curtyp
       integer(ip) :: lstrec ( 3 )
       integer(ip) :: hiaddr
@@ -13952,6 +14077,10 @@ contains
       integer(ip) :: dscloc
       integer(ip) :: baserc
       integer(ip) :: j
+!
+!     NEXT and PREV map the DAS data type codes to their
+!     successors and predecessors, respectively.
+!
       logical :: known
       integer(ip) :: nrec
       integer(ip) :: ndirs
@@ -13987,6 +14116,190 @@ contains
                   prvok => ctx%dasa2l_state%prvok, &
                   tbfast => ctx%dasa2l_state%tbfast, &
                   tbrdon => ctx%dasa2l_state%tbrdon )
+!
+!     Discovery check-in is used in this routine, even though
+!     this routine calls routines that can signal errors. This
+!     routine is a special case, because fast operation is very
+!     important.
+!
+!     DAS files have the following general structure:
+!
+!           +------------------------+
+!           |      file record       |
+!           +------------------------+
+!           |    reserved records    |
+!           |                        |
+!           +------------------------+
+!           |     comment records    |
+!           |                        |
+!           |                        |
+!           |                        |
+!           +------------------------+
+!           | first data directory   |
+!           +------------------------+
+!           |      data records      |
+!           |                        |
+!           |                        |
+!           |                        |
+!           |                        |
+!           +------------------------+
+!                       .
+!                       .
+!           +------------------------+
+!           | last data directory    |
+!           +------------------------+
+!           |     data records       |
+!           |                        |
+!           |                        |
+!           +------------------------+
+!
+!        Within each DAS data record, word numbers start at one and
+!        increase up to NWI, NWD, or NWC: the number of words in an
+!        integer, double precision, or character data record.
+!
+!           +--------------------------------+
+!           |       |       |   ...  |       |
+!           +--------------------------------+
+!               1      2                NWD
+!
+!           +--------------------------------+
+!           |   |   |       ...          |   |
+!           +--------------------------------+
+!             1   2                       NWI
+!
+!           +------------------------------------+
+!           | | |           ...                | |
+!           +------------------------------------+
+!            1 2                               NWC
+!
+!        Directories are single records that describe the data
+!        types of data records that follow. The directories
+!        in a DAS file form a doubly linked list: each directory
+!        contains forward and backward pointers to the next and
+!        previous directories.
+!
+!        Each directory also contains, for each data type, the lowest
+!        and highest logical address occurring in any of the records
+!        described by the directory.
+!
+!        Following the pointers and address range information is
+!        a sequence of data type descriptors. These descriptors
+!        indicate the data type of data records following the
+!        directory record. Each descriptor gives the data type
+!        of a maximal set of contiguous data records, all having the
+!        same type. By `maximal set' we mean that no data records of
+!        the same type bound the set of records in question.
+!
+!        Pictorially, the structure of a directory is as follows:
+!
+!           +----------------------------------------------------+
+!           | <pointers> | <address ranges> | <type descriptors> |
+!           +----------------------------------------------------+
+!
+!        where the <pointers> section looks like
+!
+!           +-----------------------------------------+
+!           | <backward pointer> | <forward pointer>  |
+!           +-----------------------------------------+
+!
+!        the <address ranges> section looks like
+!
+!           +-------------------------------------------+
+!           | <char range> | <d.p. range> | <int range> |
+!           +-------------------------------------------+
+!
+!        and each range looks like one of:
+!
+!           +------------------------------------------------+
+!           | <lowest char address> | <highest char address> |
+!           +------------------------------------------------+
+!
+!           +------------------------------------------------+
+!           | <lowest d.p. address> | <highest d.p. address> |
+!           +------------------------------------------------+
+!
+!           +------------------------------------------------+
+!           | <lowest int address>  | <highest int address>  |
+!           +------------------------------------------------+
+!
+!        The type descriptors implement a run-length encoding
+!        scheme. The first element of the series of descriptors
+!        occupies two integers: it contains a type code and a count.
+!        The rest of the descriptors are just signed counts; the data
+!        types of the records they describe are deduced from the sign
+!        of the count and the data type of the previous descriptor.
+!        The method of finding the data type for a given descriptor
+!        in terms of its predecessor is as follows: if the sign of a
+!        descriptor is positive, the type of that descriptor is the
+!        successor of the type of the preceding descriptor in the
+!        sequence of types below. If the sign of a descriptor is
+!        negative, the type of the descriptor is the predecessor of the
+!        type of the preceding descriptor.
+!
+!           C  -->  D  -->  I  -->  C
+!
+!        For example, if the preceding type is `I', and a descriptor
+!        contains the number 16, the type of the descriptor is `C',
+!        whereas if the descriptor contained the number -800, the type
+!        of the descriptor would be `D'.
+!
+!     Logic cases
+!     ===========
+!
+!     There are three kinds of file attributes that this
+!     routine distinguishes:
+!
+!        Attributes
+!        ----------
+!        "FAST"           read-only and segregated
+!        "READONLY"       read-only and unsegregated
+!        "WRITABLE"       writable
+!
+!     There are three kinds of file histories that this
+!     routine distinguishes:
+!
+!        History
+!        -------
+!        "SAME"           file is the same as seen on
+!                         the previous call
+!
+!        "KNOWN"          file is not the same as seen
+!                         on the previous call, but file
+!                         information is buffered
+!
+!        "UNKNOWN"        file information is not buffered.
+!
+!     All combinations of attributes and history are possible,
+!     so there are nine cases.
+!
+!     Mapping actions to cases
+!     ========================
+!
+!        Action                             Cases
+!        ------                             -----
+!        Set SAMFIL, PRVOK                  ALL
+!        Data type check                    ALL
+!        Set KNOWN                          not (FAST and SAME)
+!        Get access method                  UNKNOWN
+!        Buffer insertion                   UNKNOWN
+!        Set
+!            TBHAN
+!            TBRDON
+!            TBFAST
+!            TBFWRD                         UNKNOWN
+!        Get file summary                   UNKNOWN or WRITABLE
+!        Set TBMXAD                         UNKNOWN or WRITABLE
+!        Segregation check                  UNKNOWN and not WRITABLE
+!        Set TBBASE, TBSIZE                 FAST and UNKNOWN
+!        Set FAST                           not SAME
+!        Address range check                ALL
+!        Address search                     READONLY or WRITABLE
+!        Set CLBASE, CLSIZE                 ALL
+!
+!     ========================
+!
+!     Make sure the data type is valid.
+!
       if (  ( type < char ) .or. ( type > int )  ) then
 
          call ctx%setmsg ( 'Invalid data type: #. File was #' )
@@ -14510,8 +14823,11 @@ contains
 
       return
       end associate
-      end procedure dasa2l
+      end subroutine dasa2l
 
+      !> Create or update directories in a DAS file to reflect addition
+      !> of a specified number of words of a specified data type.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a DAS file open for writing.
@@ -14702,9 +15018,13 @@ contains
       !>        Removed an unused variable, PREV.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      module procedure dascud
+      module subroutine dascud ( ctx, handle, type, nwords )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: type  !! Data type specifier.
+      integer(ip), intent(in) :: nwords  !! Number of words of data being added.
       integer(ip) :: recno_1(1)  !! one-element copy of recno (array argument)
       integer(ip) :: descr_1(1)  !! one-element copy of descr (array argument)
 
@@ -14714,17 +15034,6 @@ contains
       integer(ip), parameter :: int = 3
 
 !
-!     Words per data record, for each data type:
-!
-
-
-
-!
-!     Directory pointer locations (backward and forward):
-!
-
-
-!
 !     Directory address range locations
 !
       integer(ip), parameter :: chrrng = 3
@@ -14732,10 +15041,6 @@ contains
       integer(ip), parameter :: dprng = chrrng + 2
 
       integer(ip), parameter :: intrng = dprng  + 2
-
-!
-!     Location of first type descriptor
-!
 
       integer(ip) :: descr
       integer(ip) :: dirrec ( nwi )
@@ -15340,8 +15645,11 @@ contains
       end if
 
       return
-      end procedure dascud
+      end subroutine dascud
 
+      !> Increase the size of the comment area in a DAS file to accommodate
+      !> a specified number of additional comment records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an existing DAS file opened for
@@ -15465,30 +15773,19 @@ contains
       !>        once a DAS file is segregated, this bug had no effect on
       !>        DAS files that were created and closed via DASCLS, then
       !>        commented via the commnt utility.
-      module procedure dasacr
+      module subroutine dasacr ( ctx, handle, n )
       use pepper_kinds, only: ip, wp
       implicit none
-
-!
-!     Words per data record, for each data type:
-!
-
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! A DAS file handle.
+      integer(ip), intent(in) :: n  !! Number of comment records to append to the comment area of
+                                    !! the specified file.
 
 !
 !     Data type parameters
 !
       integer(ip), parameter :: char = 1
 
-
-!
-!     Directory pointer locations (backward and forward):
-!
-
-
-!
-!     Location of first type descriptor
-!
 
       character(nwc) :: recc
 
@@ -15811,8 +16108,12 @@ contains
                     lastwd )
 
       return
-      end procedure dasacr
+      end subroutine dasacr
 
+      !> Decrease the size of the comment area in a DAS file to reclaim
+      !> space freed by the removal of a specified number of comment
+      !> records.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an existing DAS file opened for
@@ -15927,15 +16228,12 @@ contains
       !>        declarations.
       !>
       !>-    SPICELIB Version 1.0.0, 15-NOV-1992 (NJB) (WLT)
-      module procedure dasrcr
+      module subroutine dasrcr ( ctx, handle, n )
       use pepper_kinds, only: ip, wp
       implicit none
-
-!
-!     Words per data record, for each data type:
-!
-
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! A DAS file handle.
+      integer(ip), intent(in) :: n  !! Number of comment records to remove.
 
 !
 !     Data type parameters
@@ -15947,10 +16245,6 @@ contains
 !     Directory pointer location (forward):
 !
       integer(ip), parameter :: fwdloc = 1
-
-!
-!     Location of first type descriptor
-!
 
       character(nwc) :: recc
 
@@ -16223,8 +16517,11 @@ contains
                     lastwd )
 
       return
-      end procedure dasrcr
+      end subroutine dasrcr
 
+      !> Segregate the data records in a DAS file into clusters, using
+      !> one cluster per data type present in the file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
@@ -16383,9 +16680,11 @@ contains
       !>        in calls to DASADI. This bug had no visible effect on
       !>        VAX and Sun systems, but generated a compile error under
       !>        Lahey Fortran.
-      module procedure dassdr
+      module subroutine dassdr ( ctx, handle )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
       integer(ip) :: offset_1(1)  !! one-element copy of offset (array argument)
       integer(ip) :: savtyp_1(1)  !! one-element copy of savtyp (array argument)
       integer(ip) :: dest_1(1)  !! one-element copy of dest (array argument)
@@ -16402,19 +16701,6 @@ contains
 
 
       integer(ip), parameter :: dir = 4
-
-!
-!     Directory pointer locations (backward and forward):
-!
-
-
-!
-!     Directory address range location base
-!
-
-!
-!     Location of first type descriptor
-!
 
       character(nwc) :: crec
       character(nwc) :: savec
@@ -17114,8 +17400,10 @@ contains
       call dasllc ( ctx, scrhan )
 
       return
-      end procedure dassdr
+      end subroutine dassdr
 
+      !> Add character data to a DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
@@ -17282,108 +17570,110 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASADC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASADC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'dasadc_ex1.das' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'dasadc_ex1.das' )
       !>
-      !>              CHARACTER*(*)         TYPE
-      !>              PARAMETER           ( TYPE  = 'TEST'           )
+      !>      CHARACTER*(*)         TYPE
+      !>      PARAMETER           ( TYPE  = 'TEST'           )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(22)        CDATIN ( 3  )
-      !>              CHARACTER*(30)        CDATOU ( 10 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(22)        CDATIN ( 3  )
+      !>      CHARACTER*(30)        CDATOU ( 10 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
       !>
-      !>              DATA CDATOU  / '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '         1         2         3',
-      !>             .               '123456789012345678901234567890' /
+      !>      DATA CDATOU  / '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '         1         2         3',
+      !>     .               '123456789012345678901234567890' /
       !>
-      !>        C
-      !>        C     Open a new DAS file. Use the file name as the internal
-      !>        C     file name, and reserve no records for comments.
-      !>        C
-      !>              CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
+      !>C
+      !>C     Open a new DAS file. Use the file name as the internal
+      !>C     file name, and reserve no records for comments.
+      !>C
+      !>      CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
       !>
-      !>        C
-      !>        C     Set the input data. Note that these data will be
-      !>        C     considered as a binary data stream: DAS character data
-      !>        C     are not limited to human-readable text. For example,
-      !>        C     one can store images or DEM data as DAS character data.
-      !>        C
-      !>              CDATIN ( 1 ) = '--F-345678901234567890'
-      !>              CDATIN ( 2 ) = '--S-345678901234567890'
-      !>              CDATIN ( 3 ) = '--T-IRDxxxxxxxxxxxxxxx'
+      !>C
+      !>C     Set the input data. Note that these data will be
+      !>C     considered as a binary data stream: DAS character data
+      !>C     are not limited to human-readable text. For example,
+      !>C     one can store images or DEM data as DAS character data.
+      !>C
+      !>      CDATIN ( 1 ) = '--F-345678901234567890'
+      !>      CDATIN ( 2 ) = '--S-345678901234567890'
+      !>      CDATIN ( 3 ) = '--T-IRDxxxxxxxxxxxxxxx'
       !>
-      !>        C
-      !>        C     Add the last 20 characters of the first two elements
-      !>        C     of CDATIN, and the 3rd character from the third one.
-      !>        C
-      !>              CALL DASADC ( HANDLE, 41, 3, 22, CDATIN )
+      !>C
+      !>C     Add the last 20 characters of the first two elements
+      !>C     of CDATIN, and the 3rd character from the third one.
+      !>C
+      !>      CALL DASADC ( HANDLE, 41, 3, 22, CDATIN )
       !>
-      !>        C
-      !>        C     Update the 10th, 20th and 30th character in the DAS
-      !>        C     file with a vertical bar.
-      !>        C
-      !>              DO I = 1, 3
+      !>C
+      !>C     Update the 10th, 20th and 30th character in the DAS
+      !>C     file with a vertical bar.
+      !>C
+      !>      DO I = 1, 3
       !>
-      !>                 CALL DASUDC ( HANDLE, I*10, I*10, 1, 1, '|' )
+      !>         CALL DASUDC ( HANDLE, I*10, I*10, 1, 1, '|' )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now verify the addition of data by opening the
-      !>        C     file for read access and retrieving the data.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
+      !>C
+      !>C     Now verify the addition of data by opening the
+      !>C     file for read access and retrieving the data.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Read the 41 characters that we stored on the DAS
-      !>        C     file. Update the data on the CDATOU array, placing
-      !>        C     6 characters on each element, starting from the
-      !>        C     10th position.
-      !>        C
-      !>              CALL DASRDC ( HANDLE, 1, 41, 10, 15, CDATOU )
+      !>C
+      !>C     Read the 41 characters that we stored on the DAS
+      !>C     file. Update the data on the CDATOU array, placing
+      !>C     6 characters on each element, starting from the
+      !>C     10th position.
+      !>C
+      !>      CALL DASRDC ( HANDLE, 1, 41, 10, 15, CDATOU )
       !>
-      !>        C
-      !>        C     Dump the data to the screen. Note that the last
-      !>        C     three lines should remain unmodified, and that
-      !>        C     only 5 characters will be written on the 7th line.
-      !>        C
-      !>              WRITE (*,*)
-      !>              WRITE (*,*) 'Data from "', FNAME, '":'
-      !>              WRITE (*,*)
+      !>C
+      !>C     Dump the data to the screen. Note that the last
+      !>C     three lines should remain unmodified, and that
+      !>C     only 5 characters will be written on the 7th line.
+      !>C
+      !>      WRITE (*,*)
+      !>      WRITE (*,*) 'Data from "', FNAME, '":'
+      !>      WRITE (*,*)
       !>
-      !>              DO I = 1, 10
-      !>                 WRITE (*,*) CDATOU(I)
-      !>              END DO
+      !>      DO I = 1, 10
+      !>         WRITE (*,*) CDATOU(I)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -17474,22 +17764,23 @@ contains
       !>        Test of FAILED() added to loop termination condition. Without
       !>        this test, an infinite loop could result if DASA2L, DASURC or
       !>        DASWRC signaled an error inside the loop.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasadc
+      module subroutine dasadc ( ctx, handle, n, bpos, epos, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: n  !! Number of characters to add to file.
+      integer(ip), intent(in) :: bpos  !! Begin and end positions of substrings.
+      integer(ip), intent(in) :: epos  !! Begin and end positions of substrings.
+      character(*), intent(in) :: data   ( * )  !! Array providing the set of substrings to be
+                                                !! added to the character data in the DAS file.
+!
+!     Local parameters
+!
       integer(ip), parameter :: char = 1
+!
+!     Local variables
+!
       integer(ip) :: chr
       integer(ip) :: clbase
       integer(ip) :: clsize
@@ -17512,6 +17803,9 @@ contains
       integer(ip) :: wordno
       if ( .not. allocated ( ctx%dasadc_state ) ) allocate ( ctx%dasadc_state )
       associate ( record => ctx%dasadc_state%record )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -17708,8 +18002,10 @@ contains
 
       return
       end associate
-      end procedure dasadc
+      end subroutine dasadc
 
+      !> Add an array of double precision numbers to a DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
@@ -17805,80 +18101,82 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASADD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASADD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'dasadd_ex1.das' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'dasadd_ex1.das' )
       !>
-      !>              CHARACTER*(*)         TYPE
-      !>              PARAMETER           ( TYPE  = 'TEST' )
+      !>      CHARACTER*(*)         TYPE
+      !>      PARAMETER           ( TYPE  = 'TEST' )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      DATA   ( 200 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      DATA   ( 200 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Open a new DAS file. Use the file name as the internal
-      !>        C     file name, and reserve no records for comments.
-      !>        C
-      !>              CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
+      !>C
+      !>C     Open a new DAS file. Use the file name as the internal
+      !>C     file name, and reserve no records for comments.
+      !>C
+      !>      CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
       !>
-      !>        C
-      !>        C     Fill the array DATA with the double precision
-      !>        C     numbers 1.D0 through 100.D0, and add this array
-      !>        C     to the file.
-      !>        C
-      !>              DO I = 1, 100
-      !>                 DATA(I) = DBLE(I)
-      !>              END DO
+      !>C
+      !>C     Fill the array DATA with the double precision
+      !>C     numbers 1.D0 through 100.D0, and add this array
+      !>C     to the file.
+      !>C
+      !>      DO I = 1, 100
+      !>         DATA(I) = DBLE(I)
+      !>      END DO
       !>
-      !>              CALL DASADD ( HANDLE, 100, DATA )
+      !>      CALL DASADD ( HANDLE, 100, DATA )
       !>
-      !>        C
-      !>        C     Now append the array DATA to the file again.
-      !>        C
-      !>              CALL DASADD ( HANDLE, 100, DATA )
+      !>C
+      !>C     Now append the array DATA to the file again.
+      !>C
+      !>      CALL DASADD ( HANDLE, 100, DATA )
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now verify the addition of data by opening the
-      !>        C     file for read access and retrieving the data.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
-      !>              CALL DASRDD ( HANDLE, 1, 200, DATA )
+      !>C
+      !>C     Now verify the addition of data by opening the
+      !>C     file for read access and retrieving the data.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
+      !>      CALL DASRDD ( HANDLE, 1, 200, DATA )
       !>
-      !>        C
-      !>        C     Dump the data to the screen. We should see the
-      !>        C     sequence 1.0, 2.0, ..., 100.0, 1.0, 2.0, ... , 100.0.
-      !>        C     The numbers will be represented as double precision
-      !>        C     numbers in the output.
-      !>        C
-      !>              WRITE (*,*)
-      !>              WRITE (*,*) 'Data from "', FNAME, '":'
-      !>              WRITE (*,*)
-      !>              DO I = 1, 25
-      !>                 WRITE (*,'(8F7.1)') (DATA((I-1)*8+J), J = 1, 8)
-      !>              END DO
+      !>C
+      !>C     Dump the data to the screen. We should see the
+      !>C     sequence 1.0, 2.0, ..., 100.0, 1.0, 2.0, ... , 100.0.
+      !>C     The numbers will be represented as double precision
+      !>C     numbers in the output.
+      !>C
+      !>      WRITE (*,*)
+      !>      WRITE (*,*) 'Data from "', FNAME, '":'
+      !>      WRITE (*,*)
+      !>      DO I = 1, 25
+      !>         WRITE (*,'(8F7.1)') (DATA((I-1)*8+J), J = 1, 8)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -17983,21 +18281,16 @@ contains
       !>        Test of FAILED() added to loop termination condition. Without
       !>        this test, an infinite loop could result if DASA2L, DASURD or
       !>        DASWRD signaled an error inside the loop.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasadd
+      module subroutine dasadd ( ctx, handle, n, data )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: n  !! Number of d.p. numbers to add to DAS file.
+      real(wp), intent(in) :: data   ( * )  !! Array of d.p. numbers to add.
+!
+!     Local variables
+!
       integer(ip) :: clbase
       integer(ip) :: clsize
       integer(ip) :: free
@@ -18015,6 +18308,9 @@ contains
       integer(ip) :: wordno
       if ( .not. allocated ( ctx%dasadd_state ) ) allocate ( ctx%dasadd_state )
       associate ( record => ctx%dasadd_state%record )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -18142,8 +18438,10 @@ contains
 
       return
       end associate
-      end procedure dasadd
+      end subroutine dasadd
 
+      !> Add an array of integers to a DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
@@ -18238,77 +18536,79 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASADI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASADI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'dasadi_ex1.das' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'dasadi_ex1.das' )
       !>
-      !>              CHARACTER*(*)         TYPE
-      !>              PARAMETER           ( TYPE  = 'TEST' )
+      !>      CHARACTER*(*)         TYPE
+      !>      PARAMETER           ( TYPE  = 'TEST' )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               DATA   ( 200 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               DATA   ( 200 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Open a new DAS file. Use the file name as the internal
-      !>        C     file name, and reserve no records for comments.
-      !>        C
-      !>              CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
+      !>C
+      !>C     Open a new DAS file. Use the file name as the internal
+      !>C     file name, and reserve no records for comments.
+      !>C
+      !>      CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
       !>
-      !>        C
-      !>        C     Fill the array DATA with the integers 1 through
-      !>        C     100, and add this array to the file.
-      !>        C
-      !>              DO I = 1, 100
-      !>                 DATA(I) = I
-      !>              END DO
+      !>C
+      !>C     Fill the array DATA with the integers 1 through
+      !>C     100, and add this array to the file.
+      !>C
+      !>      DO I = 1, 100
+      !>         DATA(I) = I
+      !>      END DO
       !>
-      !>              CALL DASADI ( HANDLE, 100, DATA )
+      !>      CALL DASADI ( HANDLE, 100, DATA )
       !>
-      !>        C
-      !>        C     Now append the array DATA to the file again.
-      !>        C
-      !>              CALL DASADI ( HANDLE, 100, DATA )
+      !>C
+      !>C     Now append the array DATA to the file again.
+      !>C
+      !>      CALL DASADI ( HANDLE, 100, DATA )
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now verify the addition of data by opening the
-      !>        C     file for read access and retrieving the data.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
-      !>              CALL DASRDI ( HANDLE, 1, 200, DATA )
+      !>C
+      !>C     Now verify the addition of data by opening the
+      !>C     file for read access and retrieving the data.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
+      !>      CALL DASRDI ( HANDLE, 1, 200, DATA )
       !>
-      !>        C
-      !>        C     Dump the data to the screen.  We should see the
-      !>        C     sequence  1, 2, ..., 100, 1, 2, ... , 100.
-      !>        C
-      !>              WRITE (*,*)
-      !>              WRITE (*,*) 'Data from "', FNAME, '":'
-      !>              WRITE (*,*)
-      !>              DO I = 1, 20
-      !>                 WRITE (*,'(10I5)') (DATA((I-1)*10+J), J = 1, 10)
-      !>              END DO
+      !>C
+      !>C     Dump the data to the screen.  We should see the
+      !>C     sequence  1, 2, ..., 100, 1, 2, ... , 100.
+      !>C
+      !>      WRITE (*,*)
+      !>      WRITE (*,*) 'Data from "', FNAME, '":'
+      !>      WRITE (*,*)
+      !>      DO I = 1, 20
+      !>         WRITE (*,'(10I5)') (DATA((I-1)*10+J), J = 1, 10)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -18406,22 +18706,20 @@ contains
       !>        Test of FAILED() added to loop termination condition. Without
       !>        this test, an infinite loop could result if DASA2L, DASURI or
       !>        DASWRI signaled an error inside the loop.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasadi
+      module subroutine dasadi ( ctx, handle, n, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: n  !! Number of integers to add to DAS file.
+      integer(ip), intent(in) :: data   ( * )  !! Array of integers to add.
+!
+!     Local parameters
+!
       integer(ip), parameter :: int = 3
+!
+!     Local variables
+!
       integer(ip) :: clbase
       integer(ip) :: clsize
       integer(ip) :: free
@@ -18439,6 +18737,9 @@ contains
       integer(ip) :: wordno
       if ( .not. allocated ( ctx%dasadi_state ) ) allocate ( ctx%dasadi_state )
       associate ( record => ctx%dasadi_state%record )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -18562,8 +18863,10 @@ contains
 
       return
       end associate
-      end procedure dasadi
+      end subroutine dasadi
 
+      !> Read character data from a range of DAS logical addresses.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle for an open DAS file.
@@ -18702,108 +19005,110 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASRDC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASRDC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'dasrdc_ex1.das' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'dasrdc_ex1.das' )
       !>
-      !>              CHARACTER*(*)         TYPE
-      !>              PARAMETER           ( TYPE  = 'TEST'           )
+      !>      CHARACTER*(*)         TYPE
+      !>      PARAMETER           ( TYPE  = 'TEST'           )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(22)        CDATIN ( 3  )
-      !>              CHARACTER*(30)        CDATOU ( 10 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(22)        CDATIN ( 3  )
+      !>      CHARACTER*(30)        CDATOU ( 10 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
       !>
-      !>              DATA CDATOU  / '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '         1         2         3',
-      !>             .               '123456789012345678901234567890' /
+      !>      DATA CDATOU  / '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '         1         2         3',
+      !>     .               '123456789012345678901234567890' /
       !>
-      !>        C
-      !>        C     Open a new DAS file. Use the file name as the internal
-      !>        C     file name, and reserve no records for comments.
-      !>        C
-      !>              CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
+      !>C
+      !>C     Open a new DAS file. Use the file name as the internal
+      !>C     file name, and reserve no records for comments.
+      !>C
+      !>      CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
       !>
-      !>        C
-      !>        C     Set the input data. Note that these data will be
-      !>        C     considered as a binary data stream: DAS character data
-      !>        C     are not limited to human-readable text. For example,
-      !>        C     one can store images or DEM data as DAS character data.
-      !>        C
-      !>              CDATIN ( 1 ) = '--F-345678901234567890'
-      !>              CDATIN ( 2 ) = '--S-345678901234567890'
-      !>              CDATIN ( 3 ) = '--T-IRDxxxxxxxxxxxxxxx'
+      !>C
+      !>C     Set the input data. Note that these data will be
+      !>C     considered as a binary data stream: DAS character data
+      !>C     are not limited to human-readable text. For example,
+      !>C     one can store images or DEM data as DAS character data.
+      !>C
+      !>      CDATIN ( 1 ) = '--F-345678901234567890'
+      !>      CDATIN ( 2 ) = '--S-345678901234567890'
+      !>      CDATIN ( 3 ) = '--T-IRDxxxxxxxxxxxxxxx'
       !>
-      !>        C
-      !>        C     Add the last 20 characters of the first two elements
-      !>        C     of CDATIN, and the 3rd character from the third one.
-      !>        C
-      !>              CALL DASADC ( HANDLE, 41, 3, 22, CDATIN )
+      !>C
+      !>C     Add the last 20 characters of the first two elements
+      !>C     of CDATIN, and the 3rd character from the third one.
+      !>C
+      !>      CALL DASADC ( HANDLE, 41, 3, 22, CDATIN )
       !>
-      !>        C
-      !>        C     Update the 10th, 20th and 30th character in the DAS
-      !>        C     file with a vertical bar.
-      !>        C
-      !>              DO I = 1, 3
+      !>C
+      !>C     Update the 10th, 20th and 30th character in the DAS
+      !>C     file with a vertical bar.
+      !>C
+      !>      DO I = 1, 3
       !>
-      !>                 CALL DASUDC ( HANDLE, I*10, I*10, 1, 1, '|' )
+      !>         CALL DASUDC ( HANDLE, I*10, I*10, 1, 1, '|' )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now verify the addition of data by opening the
-      !>        C     file for read access and retrieving the data.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
+      !>C
+      !>C     Now verify the addition of data by opening the
+      !>C     file for read access and retrieving the data.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Read the 41 characters that we stored on the DAS
-      !>        C     file. Update the data on the CDATOU array, placing
-      !>        C     6 characters on each element, starting from the
-      !>        C     10th position.
-      !>        C
-      !>              CALL DASRDC ( HANDLE, 1, 41, 10, 15, CDATOU )
+      !>C
+      !>C     Read the 41 characters that we stored on the DAS
+      !>C     file. Update the data on the CDATOU array, placing
+      !>C     6 characters on each element, starting from the
+      !>C     10th position.
+      !>C
+      !>      CALL DASRDC ( HANDLE, 1, 41, 10, 15, CDATOU )
       !>
-      !>        C
-      !>        C     Dump the data to the screen. Note that the last
-      !>        C     three lines should remain unmodified, and that
-      !>        C     only 5 characters will be written on the 7th line.
-      !>        C
-      !>              WRITE (*,*)
-      !>              WRITE (*,*) 'Data from "', FNAME, '":'
-      !>              WRITE (*,*)
+      !>C
+      !>C     Dump the data to the screen. Note that the last
+      !>C     three lines should remain unmodified, and that
+      !>C     only 5 characters will be written on the 7th line.
+      !>C
+      !>      WRITE (*,*)
+      !>      WRITE (*,*) 'Data from "', FNAME, '":'
+      !>      WRITE (*,*)
       !>
-      !>              DO I = 1, 10
-      !>                 WRITE (*,*) CDATOU(I)
-      !>              END DO
+      !>      DO I = 1, 10
+      !>         WRITE (*,*) CDATOU(I)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -18905,9 +19210,16 @@ contains
       !>        Test of FAILED() added to loop termination conditions. Without
       !>        this test, an infinite loop could result if DASA2L or DASRRC
       !>        signaled an error inside the loops.
-      module procedure dasrdc
+      module subroutine dasrdc ( ctx, handle, first, last, bpos, epos, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: first  !! Range of DAS character logical addresses.
+      integer(ip), intent(in) :: last  !! Range of DAS character logical addresses.
+      integer(ip), intent(in) :: bpos  !! Begin and end positions of substrings.
+      integer(ip), intent(in) :: epos  !! Begin and end positions of substrings.
+      character(*), intent(out) :: data   ( * )  !! Data having addresses FIRST through LAST.
 
 
       integer(ip), parameter :: char = 1
@@ -19079,8 +19391,10 @@ contains
       end do
 
       return
-      end procedure dasrdc
+      end subroutine dasrdc
 
+      !> Read double precision data from a range of DAS logical addresses.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle for an open DAS file.
@@ -19141,80 +19455,82 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASRDD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASRDD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'dasrdd_ex1.das' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'dasrdd_ex1.das' )
       !>
-      !>              CHARACTER*(*)         TYPE
-      !>              PARAMETER           ( TYPE  = 'TEST' )
+      !>      CHARACTER*(*)         TYPE
+      !>      PARAMETER           ( TYPE  = 'TEST' )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      DATA   ( 200 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      DATA   ( 200 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Open a new DAS file. Use the file name as the internal
-      !>        C     file name, and reserve no records for comments.
-      !>        C
-      !>              CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
+      !>C
+      !>C     Open a new DAS file. Use the file name as the internal
+      !>C     file name, and reserve no records for comments.
+      !>C
+      !>      CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
       !>
-      !>        C
-      !>        C     Fill the array DATA with the double precision
-      !>        C     numbers 1.D0 through 100.D0, and add this array
-      !>        C     to the file.
-      !>        C
-      !>              DO I = 1, 100
-      !>                 DATA(I) = DBLE(I)
-      !>              END DO
+      !>C
+      !>C     Fill the array DATA with the double precision
+      !>C     numbers 1.D0 through 100.D0, and add this array
+      !>C     to the file.
+      !>C
+      !>      DO I = 1, 100
+      !>         DATA(I) = DBLE(I)
+      !>      END DO
       !>
-      !>              CALL DASADD ( HANDLE, 100, DATA )
+      !>      CALL DASADD ( HANDLE, 100, DATA )
       !>
-      !>        C
-      !>        C     Now append the array DATA to the file again.
-      !>        C
-      !>              CALL DASADD ( HANDLE, 100, DATA )
+      !>C
+      !>C     Now append the array DATA to the file again.
+      !>C
+      !>      CALL DASADD ( HANDLE, 100, DATA )
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now verify the addition of data by opening the
-      !>        C     file for read access and retrieving the data.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
-      !>              CALL DASRDD ( HANDLE, 1, 200, DATA )
+      !>C
+      !>C     Now verify the addition of data by opening the
+      !>C     file for read access and retrieving the data.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
+      !>      CALL DASRDD ( HANDLE, 1, 200, DATA )
       !>
-      !>        C
-      !>        C     Dump the data to the screen.  We should see the
-      !>        C     sequence 1.0, 2.0, ..., 100.0, 1.0, 2.0, ..., 100.0.
-      !>        C     The numbers will be represented as double precision
-      !>        C     numbers in the output.
-      !>        C
-      !>              WRITE (*,*)
-      !>              WRITE (*,*) 'Data from "', FNAME, '":'
-      !>              WRITE (*,*)
-      !>              DO I = 1, 25
-      !>                 WRITE (*,'(8F7.1)') (DATA((I-1)*8+J), J = 1, 8)
-      !>              END DO
+      !>C
+      !>C     Dump the data to the screen.  We should see the
+      !>C     sequence 1.0, 2.0, ..., 100.0, 1.0, 2.0, ..., 100.0.
+      !>C     The numbers will be represented as double precision
+      !>C     numbers in the output.
+      !>C
+      !>      WRITE (*,*)
+      !>      WRITE (*,*) 'Data from "', FNAME, '":'
+      !>      WRITE (*,*)
+      !>      DO I = 1, 25
+      !>         WRITE (*,'(8F7.1)') (DATA((I-1)*8+J), J = 1, 8)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -19314,9 +19630,16 @@ contains
       !>        Test of FAILED() added to loop termination condition. Without
       !>        this test, an infinite loop could result if DASA2L or DASRRD
       !>        signaled an error inside the loop.
-      module procedure dasrdd
+      module subroutine dasrdd ( ctx, handle, first, last, data )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: first  !! Bounds of range of DAS double precision logical
+                                        !! addresses.
+      integer(ip), intent(in) :: last  !! Bounds of range of DAS double precision logical
+                                       !! addresses.
+      real(wp), intent(out) :: data   ( * )  !! Data having addresses FIRST through LAST.
 
 
 
@@ -19396,8 +19719,10 @@ contains
       end do
 
       return
-      end procedure dasrdd
+      end subroutine dasrdd
 
+      !> Read integer data from a range of DAS logical addresses.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle for an open DAS file.
@@ -19457,77 +19782,79 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASRDI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASRDI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'dasrdi_ex1.das' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'dasrdi_ex1.das' )
       !>
-      !>              CHARACTER*(*)         TYPE
-      !>              PARAMETER           ( TYPE  = 'TEST' )
+      !>      CHARACTER*(*)         TYPE
+      !>      PARAMETER           ( TYPE  = 'TEST' )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               DATA   ( 200 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               DATA   ( 200 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Open a new DAS file. Use the file name as the internal
-      !>        C     file name, and reserve no records for comments.
-      !>        C
-      !>              CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
+      !>C
+      !>C     Open a new DAS file. Use the file name as the internal
+      !>C     file name, and reserve no records for comments.
+      !>C
+      !>      CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
       !>
-      !>        C
-      !>        C     Fill the array DATA with the integers 1 through
-      !>        C     100, and add this array to the file.
-      !>        C
-      !>              DO I = 1, 100
-      !>                 DATA(I) = I
-      !>              END DO
+      !>C
+      !>C     Fill the array DATA with the integers 1 through
+      !>C     100, and add this array to the file.
+      !>C
+      !>      DO I = 1, 100
+      !>         DATA(I) = I
+      !>      END DO
       !>
-      !>              CALL DASADI ( HANDLE, 100, DATA )
+      !>      CALL DASADI ( HANDLE, 100, DATA )
       !>
-      !>        C
-      !>        C     Now append the array DATA to the file again.
-      !>        C
-      !>              CALL DASADI ( HANDLE, 100, DATA )
+      !>C
+      !>C     Now append the array DATA to the file again.
+      !>C
+      !>      CALL DASADI ( HANDLE, 100, DATA )
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now verify the addition of data by opening the
-      !>        C     file for read access and retrieving the data.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
-      !>              CALL DASRDI ( HANDLE, 1, 200, DATA )
+      !>C
+      !>C     Now verify the addition of data by opening the
+      !>C     file for read access and retrieving the data.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
+      !>      CALL DASRDI ( HANDLE, 1, 200, DATA )
       !>
-      !>        C
-      !>        C     Dump the data to the screen.  We should see the
-      !>        C     sequence  1, 2, ..., 100, 1, 2, ... , 100.
-      !>        C
-      !>              WRITE (*,*)
-      !>              WRITE (*,*) 'Data from "', FNAME, '":'
-      !>              WRITE (*,*)
-      !>              DO I = 1, 20
-      !>                 WRITE (*,'(10I5)') (DATA((I-1)*10+J), J = 1, 10)
-      !>              END DO
+      !>C
+      !>C     Dump the data to the screen.  We should see the
+      !>C     sequence  1, 2, ..., 100, 1, 2, ... , 100.
+      !>C
+      !>      WRITE (*,*)
+      !>      WRITE (*,*) 'Data from "', FNAME, '":'
+      !>      WRITE (*,*)
+      !>      DO I = 1, 20
+      !>         WRITE (*,'(10I5)') (DATA((I-1)*10+J), J = 1, 10)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -19622,9 +19949,14 @@ contains
       !>        Test of FAILED() added to loop termination condition. Without
       !>        this test, an infinite loop could result if DASA2L or DASRRI
       !>        signaled an error inside the loop.
-      module procedure dasrdi
+      module subroutine dasrdi ( ctx, handle, first, last, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: first  !! Bounds of range of DAS integer logical addresses.
+      integer(ip), intent(in) :: last  !! Bounds of range of DAS integer logical addresses.
+      integer(ip), intent(out) :: data   ( * )  !! Data having addresses FIRST through LAST.
 
 
       integer(ip), parameter :: int = 3
@@ -19705,8 +20037,11 @@ contains
       end do
 
       return
-      end procedure dasrdi
+      end subroutine dasrdi
 
+      !> Update character data in a specified range of DAS logical
+      !> addresses with substrings of a character array.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
@@ -19845,108 +20180,110 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASUDC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASUDC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'dasudc_ex1.das' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'dasudc_ex1.das' )
       !>
-      !>              CHARACTER*(*)         TYPE
-      !>              PARAMETER           ( TYPE  = 'TEST'           )
+      !>      CHARACTER*(*)         TYPE
+      !>      PARAMETER           ( TYPE  = 'TEST'           )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(22)        CDATIN ( 3  )
-      !>              CHARACTER*(30)        CDATOU ( 10 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(22)        CDATIN ( 3  )
+      !>      CHARACTER*(30)        CDATOU ( 10 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
       !>
-      !>              DATA CDATOU  / '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '..............................',
-      !>             .               '         1         2         3',
-      !>             .               '123456789012345678901234567890' /
+      !>      DATA CDATOU  / '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '..............................',
+      !>     .               '         1         2         3',
+      !>     .               '123456789012345678901234567890' /
       !>
-      !>        C
-      !>        C     Open a new DAS file. Use the file name as the internal
-      !>        C     file name, and reserve no records for comments.
-      !>        C
-      !>              CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
+      !>C
+      !>C     Open a new DAS file. Use the file name as the internal
+      !>C     file name, and reserve no records for comments.
+      !>C
+      !>      CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
       !>
-      !>        C
-      !>        C     Set the input data. Note that these data will be
-      !>        C     considered as a binary data stream: DAS character data
-      !>        C     are not limited to human-readable text. For example,
-      !>        C     one can store images or DEM data as DAS character data.
-      !>        C
-      !>              CDATIN ( 1 ) = '--F-345678901234567890'
-      !>              CDATIN ( 2 ) = '--S-345678901234567890'
-      !>              CDATIN ( 3 ) = '--T-IRDxxxxxxxxxxxxxxx'
+      !>C
+      !>C     Set the input data. Note that these data will be
+      !>C     considered as a binary data stream: DAS character data
+      !>C     are not limited to human-readable text. For example,
+      !>C     one can store images or DEM data as DAS character data.
+      !>C
+      !>      CDATIN ( 1 ) = '--F-345678901234567890'
+      !>      CDATIN ( 2 ) = '--S-345678901234567890'
+      !>      CDATIN ( 3 ) = '--T-IRDxxxxxxxxxxxxxxx'
       !>
-      !>        C
-      !>        C     Add the last 20 characters of the first two elements
-      !>        C     of CDATIN, and the 3rd character from the third one.
-      !>        C
-      !>              CALL DASADC ( HANDLE, 41, 3, 22, CDATIN )
+      !>C
+      !>C     Add the last 20 characters of the first two elements
+      !>C     of CDATIN, and the 3rd character from the third one.
+      !>C
+      !>      CALL DASADC ( HANDLE, 41, 3, 22, CDATIN )
       !>
-      !>        C
-      !>        C     Update the 10th, 20th and 30th character in the DAS
-      !>        C     file with a vertical bar.
-      !>        C
-      !>              DO I = 1, 3
+      !>C
+      !>C     Update the 10th, 20th and 30th character in the DAS
+      !>C     file with a vertical bar.
+      !>C
+      !>      DO I = 1, 3
       !>
-      !>                 CALL DASUDC ( HANDLE, I*10, I*10, 1, 1, '|' )
+      !>         CALL DASUDC ( HANDLE, I*10, I*10, 1, 1, '|' )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now verify the addition of data by opening the
-      !>        C     file for read access and retrieving the data.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
+      !>C
+      !>C     Now verify the addition of data by opening the
+      !>C     file for read access and retrieving the data.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Read the 41 characters that we stored on the DAS
-      !>        C     file. Update the data on the CDATOU array, placing
-      !>        C     6 characters on each element, starting from the
-      !>        C     10th position.
-      !>        C
-      !>              CALL DASRDC ( HANDLE, 1, 41, 10, 15, CDATOU )
+      !>C
+      !>C     Read the 41 characters that we stored on the DAS
+      !>C     file. Update the data on the CDATOU array, placing
+      !>C     6 characters on each element, starting from the
+      !>C     10th position.
+      !>C
+      !>      CALL DASRDC ( HANDLE, 1, 41, 10, 15, CDATOU )
       !>
-      !>        C
-      !>        C     Dump the data to the screen. Note that the last
-      !>        C     three lines should remain unmodified, and that
-      !>        C     only 5 characters will be written on the 7th line.
-      !>        C
-      !>              WRITE (*,*)
-      !>              WRITE (*,*) 'Data from "', FNAME, '":'
-      !>              WRITE (*,*)
+      !>C
+      !>C     Dump the data to the screen. Note that the last
+      !>C     three lines should remain unmodified, and that
+      !>C     only 5 characters will be written on the 7th line.
+      !>C
+      !>      WRITE (*,*)
+      !>      WRITE (*,*) 'Data from "', FNAME, '":'
+      !>      WRITE (*,*)
       !>
-      !>              DO I = 1, 10
-      !>                 WRITE (*,*) CDATOU(I)
-      !>              END DO
+      !>      DO I = 1, 10
+      !>         WRITE (*,*) CDATOU(I)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -20048,9 +20385,16 @@ contains
       !>        Tests of FAILED() added to loop termination conditions.
       !>        Without these tests, infinite loops could result if DASA2L or
       !>        DASURC signaled an error inside the loops.
-      module procedure dasudc
+      module subroutine dasudc ( ctx, handle, first, last, bpos, epos, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: first  !! Range of DAS character logical addresses.
+      integer(ip), intent(in) :: last  !! Range of DAS character logical addresses.
+      integer(ip), intent(in) :: bpos  !! Begin and end positions of substrings.
+      integer(ip), intent(in) :: epos  !! Begin and end positions of substrings.
+      character(*), intent(in) :: data   ( * )  !! Data having addresses FIRST through LAST.
 
 
       integer(ip), parameter :: char = 1
@@ -20272,8 +20616,11 @@ contains
       end do
 
       return
-      end procedure dasudc
+      end subroutine dasudc
 
+      !> Update data in a specified range of double precision addresses
+      !> in a DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
@@ -20365,79 +20712,81 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASUDD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASUDD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'dasudd_ex1.das' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'dasudd_ex1.das' )
       !>
-      !>              CHARACTER*(*)         TYPE
-      !>              PARAMETER           ( TYPE  = 'TEST' )
+      !>      CHARACTER*(*)         TYPE
+      !>      PARAMETER           ( TYPE  = 'TEST' )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      DATA   ( 200 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      DATA   ( 200 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Open a new DAS file. Use the file name as the internal
-      !>        C     file name, and reserve no records for comments.
-      !>        C
-      !>              CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
+      !>C
+      !>C     Open a new DAS file. Use the file name as the internal
+      !>C     file name, and reserve no records for comments.
+      !>C
+      !>      CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
       !>
-      !>        C
-      !>        C     Append 200 double precision numbers to the file;
-      !>        C     after the data are present, we're free to update it
-      !>        C     in any order we please.  (CLEARD zeros out a double
-      !>        C     precision array.)
-      !>        C
-      !>              CALL CLEARD (          200,  DATA )
-      !>              CALL DASADD ( HANDLE,  200,  DATA )
+      !>C
+      !>C     Append 200 double precision numbers to the file;
+      !>C     after the data are present, we're free to update it
+      !>C     in any order we please.  (CLEARD zeros out a double
+      !>C     precision array.)
+      !>C
+      !>      CALL CLEARD (          200,  DATA )
+      !>      CALL DASADD ( HANDLE,  200,  DATA )
       !>
-      !>        C
-      !>        C     Now the double precision logical addresses 1:200
-      !>        C     can be written to in random-access fashion.  We'll
-      !>        C     fill them in reverse order.
-      !>        C
-      !>              DO I = 200, 1, -1
-      !>                 CALL DASUDD ( HANDLE, I, I, DBLE(I) )
-      !>              END DO
+      !>C
+      !>C     Now the double precision logical addresses 1:200
+      !>C     can be written to in random-access fashion.  We'll
+      !>C     fill them in reverse order.
+      !>C
+      !>      DO I = 200, 1, -1
+      !>         CALL DASUDD ( HANDLE, I, I, DBLE(I) )
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now make sure that we updated the file properly.
-      !>        C     Open the file for reading and dump the contents
-      !>        C     of the double precision logical addresses 1:200.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
+      !>C
+      !>C     Now make sure that we updated the file properly.
+      !>C     Open the file for reading and dump the contents
+      !>C     of the double precision logical addresses 1:200.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
       !>
-      !>              CALL CLEARD (              200,  DATA  )
-      !>              CALL DASRDD (  HANDLE,  1, 200,  DATA  )
+      !>      CALL CLEARD (              200,  DATA  )
+      !>      CALL DASRDD (  HANDLE,  1, 200,  DATA  )
       !>
-      !>              WRITE (*,*)
-      !>              WRITE (*,*) 'Data from "', FNAME, '":'
-      !>              WRITE (*,*)
-      !>              DO I = 1, 25
-      !>                 WRITE (*,'(8F7.1)') (DATA((I-1)*8+J), J = 1, 8)
-      !>              END DO
+      !>      WRITE (*,*)
+      !>      WRITE (*,*) 'Data from "', FNAME, '":'
+      !>      WRITE (*,*)
+      !>      DO I = 1, 25
+      !>         WRITE (*,'(8F7.1)') (DATA((I-1)*8+J), J = 1, 8)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -20535,9 +20884,14 @@ contains
       !>        Test of FAILED() added to loop termination condition. Without
       !>        this test, an infinite loop could result if DASA2L or DASURD
       !>        signaled an error inside the loop.
-      module procedure dasudd
+      module subroutine dasudd ( ctx, handle, first, last, data )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: first  !! Range of d.p. addresses to write to.
+      integer(ip), intent(in) :: last  !! Range of d.p. addresses to write to.
+      real(wp), intent(in) :: data   ( * )  !! An array of d.p. numbers.
 
 
 
@@ -20659,8 +21013,11 @@ contains
       end do
 
       return
-      end procedure dasudd
+      end subroutine dasudd
 
+      !> Update data in a specified range of integer addresses in a DAS
+      !> file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of a DAS file opened for writing.
@@ -20749,78 +21106,80 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASUDI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASUDI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'dasudi_ex1.das' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'dasudi_ex1.das' )
       !>
-      !>              CHARACTER*(*)         TYPE
-      !>              PARAMETER           ( TYPE  = 'TEST' )
+      !>      CHARACTER*(*)         TYPE
+      !>      PARAMETER           ( TYPE  = 'TEST' )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               DATA   ( 200 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               DATA   ( 200 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Open a new DAS file. Use the file name as the internal
-      !>        C     file name, and reserve no records for comments.
-      !>        C
-      !>              CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
+      !>C
+      !>C     Open a new DAS file. Use the file name as the internal
+      !>C     file name, and reserve no records for comments.
+      !>C
+      !>      CALL DASONW ( FNAME, TYPE, FNAME, 0, HANDLE )
       !>
-      !>        C
-      !>        C     Append 200 integers to the file; after the data are
-      !>        C     present, we're free to update it in any order we
-      !>        C     please.  (CLEARI zeros out an integer array.)
-      !>        C
-      !>              CALL CLEARI (           200,  DATA )
-      !>              CALL DASADI (  HANDLE,  200,  DATA )
+      !>C
+      !>C     Append 200 integers to the file; after the data are
+      !>C     present, we're free to update it in any order we
+      !>C     please.  (CLEARI zeros out an integer array.)
+      !>C
+      !>      CALL CLEARI (           200,  DATA )
+      !>      CALL DASADI (  HANDLE,  200,  DATA )
       !>
-      !>        C
-      !>        C     Now the integer logical addresses 1:200 can be
-      !>        C     written to in random-access fashion.  We'll fill them
-      !>        C     in reverse order.
-      !>        C
-      !>              DO I = 200, 1, -1
-      !>                 CALL DASUDI ( HANDLE, I, I, I )
-      !>              END DO
+      !>C
+      !>C     Now the integer logical addresses 1:200 can be
+      !>C     written to in random-access fashion.  We'll fill them
+      !>C     in reverse order.
+      !>C
+      !>      DO I = 200, 1, -1
+      !>         CALL DASUDI ( HANDLE, I, I, I )
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now make sure that we updated the file properly.
-      !>        C     Open the file for reading and dump the contents
-      !>        C     of the integer logical addresses 1:200.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
+      !>C
+      !>C     Now make sure that we updated the file properly.
+      !>C     Open the file for reading and dump the contents
+      !>C     of the integer logical addresses 1:200.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
       !>
-      !>              CALL CLEARI (              200,  DATA  )
-      !>              CALL DASRDI (  HANDLE,  1, 200,  DATA  )
+      !>      CALL CLEARI (              200,  DATA  )
+      !>      CALL DASRDI (  HANDLE,  1, 200,  DATA  )
       !>
-      !>              WRITE (*,*)
-      !>              WRITE (*,*) 'Data from "', FNAME, '":'
-      !>              WRITE (*,*)
-      !>              DO I = 1, 20
-      !>                 WRITE (*,'(10I5)') (DATA((I-1)*10+J), J = 1, 10)
-      !>              END DO
+      !>      WRITE (*,*)
+      !>      WRITE (*,*) 'Data from "', FNAME, '":'
+      !>      WRITE (*,*)
+      !>      DO I = 1, 20
+      !>         WRITE (*,'(10I5)') (DATA((I-1)*10+J), J = 1, 10)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -20913,9 +21272,14 @@ contains
       !>        Test of FAILED() added to loop termination condition. Without
       !>        this test, an infinite loop could result if DASA2L or DASURI
       !>        signaled an error inside the loop.
-      module procedure dasudi
+      module subroutine dasudi ( ctx, handle, first, last, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: first  !! Range of integer addresses to write to.
+      integer(ip), intent(in) :: last  !! Range of integer addresses to write to.
+      integer(ip), intent(in) :: data   ( * )  !! An array of integers.
 
       integer(ip), parameter :: int = 3
 
@@ -21038,8 +21402,10 @@ contains
       end do
 
       return
-      end procedure dasudi
+      end subroutine dasudi
 
+      !> Close a DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an open DAS file.
@@ -21091,51 +21457,53 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASCLS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASCLS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INTEGER               NMAX
-      !>              PARAMETER           ( NMAX   = 100 )
+      !>      INTEGER               NMAX
+      !>      PARAMETER           ( NMAX   = 100 )
       !>
-      !>              CHARACTER*(15)        FNAME
-      !>              CHARACTER*(5)         FTYPE
-      !>              CHARACTER*(15)        IFNAME
+      !>      CHARACTER*(15)        FNAME
+      !>      CHARACTER*(5)         FTYPE
+      !>      CHARACTER*(15)        IFNAME
       !>
-      !>              DOUBLE PRECISION      DDATA  ( NMAX )
+      !>      DOUBLE PRECISION      DDATA  ( NMAX )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               N
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               N
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     We'll give the file the same internal file name
-      !>        C     as the file's actual name.  We don't require any
-      !>        C     comment records.
-      !>        C
-      !>              FNAME  = 'dascls_ex1.das'
-      !>              FTYPE  = 'TEST'
-      !>              IFNAME = FNAME
-      !>              NCOMCH = 0
+      !>C
+      !>C     We'll give the file the same internal file name
+      !>C     as the file's actual name.  We don't require any
+      !>C     comment records.
+      !>C
+      !>      FNAME  = 'dascls_ex1.das'
+      !>      FTYPE  = 'TEST'
+      !>      IFNAME = FNAME
+      !>      NCOMCH = 0
       !>
-      !>              WRITE(*,*) 'Opening the DAS file for writing...'
-      !>              CALL DASONW ( FNAME, FTYPE,  FNAME, NCOMCH, HANDLE )
+      !>      WRITE(*,*) 'Opening the DAS file for writing...'
+      !>      CALL DASONW ( FNAME, FTYPE,  FNAME, NCOMCH, HANDLE )
       !>
-      !>              DO I = 1, NMAX
-      !>                 DDATA(I)  =  DBLE(I)
-      !>              END DO
+      !>      DO I = 1, NMAX
+      !>         DDATA(I)  =  DBLE(I)
+      !>      END DO
       !>
-      !>              N = NMAX
+      !>      N = NMAX
       !>
-      !>              WRITE(*,*) 'Adding the double precision numbers...'
-      !>              CALL DASADD ( HANDLE, N, DDATA )
+      !>      WRITE(*,*) 'Adding the double precision numbers...'
+      !>      CALL DASADD ( HANDLE, N, DDATA )
       !>
-      !>              WRITE(*,*) 'Closing the DAS file...'
-      !>              CALL DASCLS ( HANDLE )
+      !>      WRITE(*,*) 'Closing the DAS file...'
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              WRITE(*,*) 'All ok.'
+      !>      WRITE(*,*) 'All ok.'
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -21154,114 +21522,116 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASCLS_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASCLS_EX2
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dskdsc.inc'
-      !>              INCLUDE 'dsk02.inc'
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dskdsc.inc'
+      !>      INCLUDE 'dsk02.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    DSK
-      !>              CHARACTER*(LNSIZE)    OUTLIN
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    DSK
+      !>      CHARACTER*(LNSIZE)    OUTLIN
       !>
-      !>              DOUBLE PRECISION      VOXORI ( 3 )
-      !>              DOUBLE PRECISION      VOXSIZ
-      !>              DOUBLE PRECISION      VTXBDS ( 2, 3 )
+      !>      DOUBLE PRECISION      VOXORI ( 3 )
+      !>      DOUBLE PRECISION      VOXSIZ
+      !>      DOUBLE PRECISION      VTXBDS ( 2, 3 )
       !>
-      !>              INTEGER               CGSCAL
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NP
-      !>              INTEGER               NV
-      !>              INTEGER               NVXTOT
-      !>              INTEGER               VGREXT ( 3 )
-      !>              INTEGER               VOXNPL
-      !>              INTEGER               VOXNPT
-      !>              INTEGER               VTXNPL
+      !>      INTEGER               CGSCAL
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NP
+      !>      INTEGER               NV
+      !>      INTEGER               NVXTOT
+      !>      INTEGER               VGREXT ( 3 )
+      !>      INTEGER               VOXNPL
+      !>      INTEGER               VOXNPT
+      !>      INTEGER               VTXNPL
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the name of the DSK to read.
-      !>        C
-      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
-      !>        C
-      !>        C     Open the DSK file for read access.
-      !>        C     We use the DAS-level interface for
-      !>        C     this function.
-      !>        C
-      !>              CALL DASOPR ( DSK, HANDLE )
+      !>C
+      !>C     Prompt for the name of the DSK to read.
+      !>C
+      !>      CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>C
+      !>C     Open the DSK file for read access.
+      !>C     We use the DAS-level interface for
+      !>C     this function.
+      !>C
+      !>      CALL DASOPR ( DSK, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a forward search through the
-      !>        C     kernel, treating the file as a DLA.
-      !>        C     In this example, it's a very short
-      !>        C     search.
-      !>        C
-      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>C
+      !>C     Begin a forward search through the
+      !>C     kernel, treating the file as a DLA.
+      !>C     In this example, it's a very short
+      !>C     search.
+      !>C
+      !>      CALL DLABFS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
-      !>        C
-      !>        C        We arrive here only if the kernel
-      !>        C        contains no segments.  This is
-      !>        C        unexpected, but we're prepared for it.
-      !>        C
-      !>                 CALL SETMSG ( 'No segments found '
-      !>             .   //            'in DSK file #.'    )
-      !>                 CALL ERRCH  ( '#',  DSK           )
-      !>                 CALL SIGERR ( 'SPICE(NODATA)'     )
+      !>      IF ( .NOT. FOUND ) THEN
+      !>C
+      !>C        We arrive here only if the kernel
+      !>C        contains no segments.  This is
+      !>C        unexpected, but we're prepared for it.
+      !>C
+      !>         CALL SETMSG ( 'No segments found '
+      !>     .   //            'in DSK file #.'    )
+      !>         CALL ERRCH  ( '#',  DSK           )
+      !>         CALL SIGERR ( 'SPICE(NODATA)'     )
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     If we made it this far, DLADSC is the
-      !>        C     DLA descriptor of the first segment.
-      !>        C
-      !>        C     Read and display type 2 bookkeeping data.
-      !>        C
-      !>              CALL DSKB02 ( HANDLE, DLADSC, NV,     NP,     NVXTOT,
-      !>             .              VTXBDS, VOXSIZ, VOXORI, VGREXT, CGSCAL,
-      !>             .              VTXNPL, VOXNPT, VOXNPL                 )
+      !>C
+      !>C     If we made it this far, DLADSC is the
+      !>C     DLA descriptor of the first segment.
+      !>C
+      !>C     Read and display type 2 bookkeeping data.
+      !>C
+      !>      CALL DSKB02 ( HANDLE, DLADSC, NV,     NP,     NVXTOT,
+      !>     .              VTXBDS, VOXSIZ, VOXORI, VGREXT, CGSCAL,
+      !>     .              VTXNPL, VOXNPT, VOXNPL                 )
       !>
-      !>        C
-      !>        C     Show vertex and plate counts.
-      !>        C
-      !>              OUTLIN = 'Number of vertices:                 #'
-      !>              CALL REPMI  ( OUTLIN, '#', NV, OUTLIN )
-      !>              CALL TOSTDO ( OUTLIN )
+      !>C
+      !>C     Show vertex and plate counts.
+      !>C
+      !>      OUTLIN = 'Number of vertices:                 #'
+      !>      CALL REPMI  ( OUTLIN, '#', NV, OUTLIN )
+      !>      CALL TOSTDO ( OUTLIN )
       !>
-      !>              OUTLIN = 'Number of plates:                   #'
-      !>              CALL REPMI  ( OUTLIN, '#', NP, OUTLIN )
-      !>              CALL TOSTDO ( OUTLIN )
+      !>      OUTLIN = 'Number of plates:                   #'
+      !>      CALL REPMI  ( OUTLIN, '#', NP, OUTLIN )
+      !>      CALL TOSTDO ( OUTLIN )
       !>
-      !>              OUTLIN = 'Voxel edge length (km):             #'
-      !>              CALL REPMF  ( OUTLIN, '#', VOXSIZ, 6, 'E', OUTLIN )
-      !>              CALL TOSTDO ( OUTLIN )
+      !>      OUTLIN = 'Voxel edge length (km):             #'
+      !>      CALL REPMF  ( OUTLIN, '#', VOXSIZ, 6, 'E', OUTLIN )
+      !>      CALL TOSTDO ( OUTLIN )
       !>
-      !>              OUTLIN = 'Number of voxels:                   #'
-      !>              CALL REPMI  ( OUTLIN, '#', NVXTOT, OUTLIN )
-      !>              CALL TOSTDO ( OUTLIN )
+      !>      OUTLIN = 'Number of voxels:                   #'
+      !>      CALL REPMI  ( OUTLIN, '#', NVXTOT, OUTLIN )
+      !>      CALL TOSTDO ( OUTLIN )
       !>
-      !>        C
-      !>        C     Close the kernel.  This isn't necessary in a stand-
-      !>        C     alone program, but it's good practice in subroutines
-      !>        C     because it frees program and system resources.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the kernel.  This isn't necessary in a stand-
+      !>C     alone program, but it's good practice in subroutines
+      !>C     because it frees program and system resources.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -21368,26 +21738,22 @@ contains
       !>        change makes the value of FTSIZE in DASCLS compatible with the
       !>        value in DASFM. See DASFM for a discussion of the reasons for
       !>        the increase in the value.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dascls
+      module subroutine dascls ( ctx, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an open DAS file.
+!
+!     Local variables
+!
       character(10) :: method
       integer(ip) :: iostat
       integer(ip) :: unit
       logical :: notscr
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -21475,8 +21841,11 @@ contains
       call dasllc ( ctx, handle )
 
       return
-      end procedure dascls
+      end subroutine dascls
 
+      !> Return the contents of the file record of a specified DAS
+      !> file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle for a previously opened DAS file.
@@ -21547,55 +21916,57 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASRFR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASRFR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants
-      !>        C
-      !>              INTEGER               IDWLEN
-      !>              PARAMETER           ( IDWLEN = 9 )
+      !>C
+      !>C     Local constants
+      !>C
+      !>      INTEGER               IDWLEN
+      !>      PARAMETER           ( IDWLEN = 9 )
       !>
-      !>              INTEGER               IFNLEN
-      !>              PARAMETER           ( IFNLEN = 61 )
+      !>      INTEGER               IFNLEN
+      !>      PARAMETER           ( IFNLEN = 61 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 256 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 256 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    FNAME
-      !>              CHARACTER*(IDWLEN)    IDWORD
-      !>              CHARACTER*(IFNLEN)    IFNAME
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    FNAME
+      !>      CHARACTER*(IDWLEN)    IDWORD
+      !>      CHARACTER*(IFNLEN)    IFNAME
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NCOMC
-      !>              INTEGER               NCOMR
-      !>              INTEGER               NRESVC
-      !>              INTEGER               NRESVR
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NCOMC
+      !>      INTEGER               NCOMR
+      !>      INTEGER               NRESVC
+      !>      INTEGER               NRESVR
       !>
-      !>        C
-      !>        C     Obtain the file name.
-      !>        C
-      !>              CALL PROMPT ( 'Enter DAS file name > ', FNAME )
+      !>C
+      !>C     Obtain the file name.
+      !>C
+      !>      CALL PROMPT ( 'Enter DAS file name > ', FNAME )
       !>
-      !>        C
-      !>        C     Open the file for reading.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
+      !>C
+      !>C     Open the file for reading.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Retrieve the internal file name and print it.
-      !>        C
-      !>              CALL DASRFR ( HANDLE, IDWORD, IFNAME, NRESVR,
-      !>             .              NRESVC, NCOMR,  NCOMC           )
+      !>C
+      !>C     Retrieve the internal file name and print it.
+      !>C
+      !>      CALL DASRFR ( HANDLE, IDWORD, IFNAME, NRESVR,
+      !>     .              NRESVC, NCOMR,  NCOMC           )
       !>
-      !>              WRITE(*,*) 'Internal file name is:           ', IFNAME
-      !>              WRITE(*,*) 'Number of comment records is:    ', NCOMR
-      !>              WRITE(*,*) 'Number of comment characters is: ', NCOMC
+      !>      WRITE(*,*) 'Internal file name is:           ', IFNAME
+      !>      WRITE(*,*) 'Number of comment records is:    ', NCOMR
+      !>      WRITE(*,*) 'Number of comment characters is: ', NCOMC
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds as input
@@ -21691,9 +22062,17 @@ contains
       !>        check out and return if DASHLU fails. This is so that when in
       !>        return mode of the error handling the READ following the call
       !>        to DASHLU will not be executed.
-      module procedure dasrfr
+      module subroutine dasrfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      character(*), intent(out) :: idword  !! ID word.
+      character(*), intent(out) :: ifname  !! DAS internal file name.
+      integer(ip), intent(out) :: nresvr  !! Number of reserved records in file.
+      integer(ip), intent(out) :: nresvc  !! Number of characters in use in reserved rec. area.
+      integer(ip), intent(out) :: ncomr  !! Number of comment records in file.
+      integer(ip), intent(out) :: ncomc  !! Number of characters in use in comment area.
 
 !
 !     Standard SPICE error handling.
@@ -21706,8 +22085,10 @@ contains
       if ( ctx%failed() ) return
 
       return
-      end procedure dasrfr
+      end subroutine dasrfr
 
+      !> Update the contents of the file record of a specified DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle for a DAS file open for writing.
@@ -21895,44 +22276,20 @@ contains
       !>        clear.
       !>
       !>-    SPICELIB Version 1.0.0, 24-NOV-1992 (NJB) (WLT)
-      module procedure daswfr
+      module subroutine daswfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      character(*), intent(in) :: idword  !! ID word.
+      character(*), intent(in) :: ifname  !! DAS internal file name.
+      integer(ip), intent(in) :: nresvr  !! Number of reserved records in file.
+      integer(ip), intent(in) :: nresvc  !! Number of characters in use in reserved rec. area.
+      integer(ip), intent(in) :: ncomr  !! Number of comment records in file.
+      integer(ip), intent(in) :: ncomc  !! Number of characters in use in comment area.
 
 
 
-
-!
-!     The parameter TAILEN determines the tail length of a DAS file
-!     record.  This is the number of bytes (characters) that
-!     occupy the portion of the file record that follows the
-!     integer holding the first free address.  For environments
-!     with a 32 bit word length, 1 byte characters, and DAS
-!     record sizes of 1024 bytes, we have:
-!
-!           8 bytes - IDWORD
-!          60 bytes - IFNAME
-!           4 bytes - NRESVR (32 bit integer)
-!           4 bytes - NRESVC (32 bit integer)
-!           4 bytes - NCOMR  (32 bit integer)
-!         + 4 bytes - NCOMC  (32 bit integer)
-!          ---------
-!          84 bytes - (All file records utilize this space.)
-!
-!     So the size of the remaining portion (or tail) of the DAS
-!     file record for computing environments as described above
-!     would be:
-!
-!        1024 bytes - DAS record size
-!      -    8 bytes - DAS Binary File Format Word
-!      -   84 bytes - (from above)
-!       ------------
-!         932 bytes - DAS file record tail length
-!
-!     Note: environments that do not have a 32 bit word length,
-!     1 byte characters, and a DAS record size of 1024 bytes, will
-!     require the adjustment of this parameter.
-!
 
       character(fmtlen) :: format
       character(idwlen) :: locidw
@@ -22056,8 +22413,12 @@ contains
                     lastwd )
 
       return
-      end procedure daswfr
+      end subroutine daswfr
 
+      !> Add comments from a buffer of character strings to the comment
+      !> area of a binary DAS file, appending them to any comments which
+      !> are already present in the file's comment area.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a binary DAS file which has been
@@ -22180,26 +22541,14 @@ contains
       !>        Fixed a typo in the $Particulars section.
       !>
       !>-    SPICELIB Version 1.0.0, 23-NOV-1992 (KRG)
-      module procedure dasac
+      module subroutine dasac ( ctx, handle, n, buffer )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS handle of a file opened with write access.
+      integer(ip), intent(in) :: n  !! Number of comments to put into the comment area.
+      character(*), intent(in) :: buffer(*)  !! Buffer of lines to be put into the comment area.
 
-!     Length of a DAS character record, in characters.
-!
-!
-!     Maximum and minimum decimal values for the printable ASCII
-!     characters.
-!
-
-!
-!     Decimal value for the DAS comment area end-of-line (EOL) marker.
-!
-!
-!     Length of a DAS file ID word.
-!
-!
-!     Length of a DAS file internal filename.
-!
       character(mxcrec) :: crecrd
       character(idwlen) :: idword
       character(ifnlen) :: ifname
@@ -22219,7 +22568,6 @@ contains
       integer(ip) :: rinuse
       integer(ip) :: space
 
-!     Initial values
 !
 !     Constants (SPICELIB computed them on the first call).
 !
@@ -22515,8 +22863,11 @@ contains
 !     the call to DASWFR.
 !
       return
-      end procedure dasac
+      end subroutine dasac
 
+      !> Add comments to a previously opened binary DAS file from a
+      !> previously opened text file attached to a Fortran logical unit.
+      !>
       !>## Detailed Input
       !>
       !>     COMLUN   is the Fortran logical unit of a previously opened text
@@ -22841,25 +23192,15 @@ contains
       !>        Added a check of FAILED after the call to GETLUN to trap
       !>        an error, if one is signaled by GETLUN, before attempting to
       !>        open the SCRATCH file.
-      module procedure dasacu
+      module subroutine dasacu ( ctx, comlun, begmrk, endmrk, insbln, handle )
       use pepper_kinds, only: ip
       implicit none
-
-!     Set the value for the maximum length of a text line.
-!
-!
-!     Set the length of a DAS file ID word.
-!
-!
-!     Set the length of a DAS file internal filename.
-!
-!
-!     Set the size of the comment buffer.
-!
-!
-!     Maximum and minimum decimal values for the printable ASCII
-!     characters.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: comlun  !! Logical unit of the open comment text file.
+      character(*), intent(in) :: begmrk  !! The begin comments marker in the comment text file.
+      character(*), intent(in) :: endmrk  !! The end comments marker in the comment text file.
+      logical, intent(in) :: insbln  !! A flag indicating whether to insert a blank line.
+      integer(ip), intent(in) :: handle  !! Handle of a DAS file opened with write access.
 
       character(linlen) :: combuf(bufsiz)
       character(idwlen) :: idword
@@ -23214,8 +23555,11 @@ contains
       close ( scrlun )
 
       return
-      end procedure dasacu
+      end subroutine dasacu
 
+      !> Delete the entire comment area of a previously opened binary
+      !> DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a binary DAS file that is to have its
@@ -23307,17 +23651,12 @@ contains
       !>        should have been opened with write access.
       !>
       !>-    SPICELIB Version 1.0.0, 24-NOV-1992 (KRG)
-      module procedure dasdc
+      module subroutine dasdc ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of a binary DAS file opened for writing.
 
-!     Local parameters
-!
-!     Length of a DAS file ID word.
-!
-!
-!     Length of a DAS file internal filename.
-!
       character(idwlen) :: idword
       character(ifnlen) :: ifname
 
@@ -23387,8 +23726,10 @@ contains
 !     We're done now, so goodbye.
 !
       return
-      end procedure dasdc
+      end subroutine dasdc
 
+      !> Extract comments from the comment area of a binary DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a binary DAS file which has been
@@ -23679,41 +24020,20 @@ contains
       !>        the increase in the value.
       !>
       !>-    SPICELIB Version 1.0.0, 23-NOV-1992 (KRG)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Length of a DAS character record, in characters.
-      !>
-      !>     Maximum and minimum decimal values for the printable ASCII
-      !>     characters.
-      !>
-      !>     Decimal value for the DAS comment area end-of-line (EOL) marker.
-      !>
-      !>     Maximum length of a filename.
-      !>
-      !>     Length of a DAS file ID word.
-      !>
-      !>     Length of a DAS file internal filename.
-      !>
-      !>     Local variables
-      !>
-      !>     The file table declarations for keeping track of which files
-      !>     are currently in the process of having comments extracted.
-      !>
-      !>     Saved variables
-      !>
-      !>     Save all of the file table information.
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dasec
+      module subroutine dasec ( ctx, handle, bufsiz, n, buffer, done )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip
       use pepper_inc_das
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of binary DAS file open with read access.
+      integer(ip), intent(in) :: bufsiz  !! Maximum size, in lines, of BUFFER.
+      integer(ip), intent(out) :: n  !! Number of comments extracted from the DAS file.
+      character(*), intent(out) :: buffer(*)  !! Buffer in which extracted comments are placed.
+      logical, intent(out) :: done  !! Indicates whether all comments have been extracted.
+!
+!     Local variables
+!
       character(1) :: ch
       character(idwlen) :: idword
       character(ifnlen) :: ifname
@@ -23731,6 +24051,10 @@ contains
       integer(ip) :: nresvr
       integer(ip) :: numcom
       integer(ip) :: recno
+!
+!     The file table declarations for keeping track of which files
+!     are currently in the process of having comments extracted.
+!
       logical :: eol
       if ( .not. allocated ( ctx%dasec_state ) ) then
          allocate ( ctx%dasec_state )
@@ -23755,6 +24079,9 @@ contains
                   lstrec => ctx%dasec_state%lstrec, &
                   nfiles => ctx%dasec_state%nfiles, &
                   first => ctx%dasec_state%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 !
 !     If this is the first time that this routine has been called,
@@ -24054,12 +24381,19 @@ contains
 
       return
       end associate
-      end procedure dasec
+      end subroutine dasec
 
-      !> All the comment lines of a DAS file, each of any length (PEPPER).
-      module procedure das_comments
+      !> All the comment lines of a DAS file, each of any length (PEPPER;
+      !> [[dasec]] without a buffer). It reads the comment area directly: it
+      !> does not change the position of [[dasec]] in the file.
+      !>
+      !> The errors are those of [[dasec]], without SPICE(COMMENTTOOLONG).
+      module subroutine das_comments ( ctx, handle, lines )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of a DAS file open for reading
+      type(string), allocatable, intent(out) :: lines(:)  !! the comment lines (size 0 after an error)
       integer(ip), parameter :: nchrec = 1024  ! characters in a record
       character(8) :: idword
       character(60) :: ifname
@@ -24088,8 +24422,11 @@ contains
          text((k-1)*nchrec+1:k*nchrec) = crecrd
       end do
       call split_comment_lines ( text(1:min(ncomc, len(text))), lines )
-      end procedure das_comments
+      end subroutine das_comments
 
+      !> Extract comments from a previously opened binary DAS file to a
+      !> previously opened text file attached to a Fortran logical unit.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle for a binary DAS file that has been
@@ -24181,15 +24518,14 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 05-JAN-1993 (KRG)
-      module procedure dasecu
+      module subroutine dasecu ( ctx, handle, comlun, comnts )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAS file opened with read access.
+      integer(ip), intent(in) :: comlun  !! Logical unit of an opened text file.
+      logical, intent(out) :: comnts  !! Logical flag, indicating comments were found.
 
-!     Set the value for the maximum length of a text line.
-!
-!
-!     Set the size of the comment buffer.
-!
       character(linlen) :: combuf(bufsiz)
 
       integer(ip) :: numcom
@@ -24248,8 +24584,11 @@ contains
       comnts = gotsom
 
       return
-      end procedure dasecu
+      end subroutine dasecu
 
+      !> Convert the contents of a binary DAS file to an equivalent DAS
+      !> transfer file.
+      !>
       !>## Detailed Input
       !>
       !>     BINFIL   is the name of a binary DAS file which is to be converted
@@ -24387,10 +24726,13 @@ contains
       !>        into a character string and then write the character string.
       !>
       !>-    SPICELIB Version 1.0.0, 29-OCT-1992 (KRG)
-      module procedure dasbt
+      module subroutine dasbt ( ctx, binfil, xfrlun )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rtrim, repmi_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: binfil  !! Name of the binary DAS file to be converted.
+      integer(ip), intent(in) :: xfrlun  !! Logical unit of a previously opened file.
 
       character(*), parameter :: quote = ''''
 !
@@ -24423,26 +24765,9 @@ contains
 !
       integer(ip), parameter :: linlen = 80
 !
-!     Length of a character buffer array element.
-!
-!
-!     Length of a DAS file ID word.
-!
-!
-!     Length of a DAS internal filename.
-!
-!
-!     Length of a DAS comment record, in characters.
-!
-!
 !     Size of the character, double precision, and integer data buffers.
 !
       integer(ip), parameter :: bufsiz = 1024
-!
-!     Beginning and ending string positions for reading/writing
-!     character data from/to a DAS file using the character data
-!     buffer.
-!
 
       character(cbflen) :: cbuffr(bufsiz)
       character(crlen) :: crecrd
@@ -25323,8 +25648,11 @@ contains
       call dascls ( ctx, handle )
 
       return
-      end procedure dasbt
+      end subroutine dasbt
 
+      !> Convert the contents of a DAS transfer file into an equivalent
+      !> binary DAS file.
+      !>
       !>## Detailed Input
       !>
       !>     XFRLUN   is the Fortran logical unit number of a previously opened
@@ -25517,10 +25845,13 @@ contains
       !>        ncomc appeared where nresvc should have been.
       !>
       !>-    SPICELIB Version 1.0.0, 02-NOV-1992 (KRG)
-      module procedure dastb
+      module subroutine dastb ( ctx, xfrlun, binfil )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: nextwd, nparsi, nextwd_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: xfrlun  !! Logical unit of an open DAS transfer file.
+      character(*), intent(in) :: binfil  !! Name of the binary DAS file to be created.
       integer(ip) :: nidata_1(1)  !! one-element copy of nidata (array argument)
       integer(ip) :: nddata_1(1)  !! one-element copy of nddata (array argument)
       integer(ip) :: ncdata_1(1)  !! one-element copy of ncdata (array argument)
@@ -27524,8 +27855,12 @@ contains
       call dascls ( ctx, handle )
 
       return
-      end procedure dastb
+      end subroutine dastb
 
+      !> Return last DAS logical addresses of character, double precision
+      !> and integer type that are currently in use in a specified DAS
+      !> file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a DAS file whose active
@@ -27571,70 +27906,72 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DASLLA_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DASLLA_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'daslla_ex1.das' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'daslla_ex1.das' )
       !>
-      !>              INTEGER               IFNMLN
-      !>              PARAMETER           ( IFNMLN = 60 )
+      !>      INTEGER               IFNMLN
+      !>      PARAMETER           ( IFNMLN = 60 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(IFNMLN)    IFNAME
-      !>              CHARACTER*(4)         TYPE
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(IFNMLN)    IFNAME
+      !>      CHARACTER*(4)         TYPE
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               LASTC
-      !>              INTEGER               LASTD
-      !>              INTEGER               LASTI
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               LASTC
+      !>      INTEGER               LASTD
+      !>      INTEGER               LASTI
       !>
-      !>        C
-      !>        C     Open a new DAS file. Use the file name as the internal
-      !>        C     file name, and reserve no records for comments.
-      !>        C
-      !>              TYPE   = 'TEST'
-      !>              IFNAME = 'TEST.DAS/NAIF/NJB/11-NOV-1992-20:12:20'
+      !>C
+      !>C     Open a new DAS file. Use the file name as the internal
+      !>C     file name, and reserve no records for comments.
+      !>C
+      !>      TYPE   = 'TEST'
+      !>      IFNAME = 'TEST.DAS/NAIF/NJB/11-NOV-1992-20:12:20'
       !>
-      !>              CALL DASONW ( FNAME, TYPE, IFNAME, 0, HANDLE )
+      !>      CALL DASONW ( FNAME, TYPE, IFNAME, 0, HANDLE )
       !>
-      !>              DO I = 1, 10
-      !>                 CALL DASADI ( HANDLE, 1, I )
-      !>              END DO
+      !>      DO I = 1, 10
+      !>         CALL DASADI ( HANDLE, 1, I )
+      !>      END DO
       !>
-      !>              DO I = 1, 5
-      !>                 CALL DASADD ( HANDLE, 1, DBLE(I) )
-      !>              END DO
+      !>      DO I = 1, 5
+      !>         CALL DASADD ( HANDLE, 1, DBLE(I) )
+      !>      END DO
       !>
-      !>        C
-      !>        C     Add character data to the file. DAS character data are
-      !>        C     treated as a character array, not as a string. The
-      !>        C     following call adds only the first 4 characters to the
-      !>        C     DAS file.
-      !>        C
-      !>              CALL DASADC ( HANDLE, 4, 1, 4, 'SPUDWXY' )
+      !>C
+      !>C     Add character data to the file. DAS character data are
+      !>C     treated as a character array, not as a string. The
+      !>C     following call adds only the first 4 characters to the
+      !>C     DAS file.
+      !>C
+      !>      CALL DASADC ( HANDLE, 4, 1, 4, 'SPUDWXY' )
       !>
-      !>        C
-      !>        C     Now check the logical address ranges.
-      !>        C
-      !>              CALL DASLLA ( HANDLE, LASTC, LASTD, LASTI )
+      !>C
+      !>C     Now check the logical address ranges.
+      !>C
+      !>      CALL DASLLA ( HANDLE, LASTC, LASTD, LASTI )
       !>
-      !>              WRITE (*,*) 'Last character address in use: ', LASTC
-      !>              WRITE (*,*) 'Last d.p. address in use     : ', LASTD
-      !>              WRITE (*,*) 'Last integer address in use  : ', LASTI
+      !>      WRITE (*,*) 'Last character address in use: ', LASTC
+      !>      WRITE (*,*) 'Last d.p. address in use     : ', LASTD
+      !>      WRITE (*,*) 'Last integer address in use  : ', LASTI
       !>
-      !>        C
-      !>        C     Close the DAS file.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the DAS file.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -27672,9 +28009,14 @@ contains
       !>        code example from existing fragment.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT)
-      module procedure daslla
+      module subroutine daslla ( ctx, handle, lastc, lastd, lasti )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(out) :: lastc  !! Last character address in use.
+      integer(ip), intent(out) :: lastd  !! Last double precision address in use.
+      integer(ip), intent(out) :: lasti  !! Last integer address in use.
 
 !
 !     Local parameters.
@@ -27717,6 +28059,6 @@ contains
       lasti = lastla(int)
 
       return
-      end procedure daslla
+      end subroutine daslla
 
 end submodule pepper_das

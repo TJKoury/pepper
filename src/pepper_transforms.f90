@@ -2,9 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_transforms.f90.
+!> [[pepper_instance_module]]).
 submodule (pepper_instance_module) pepper_transforms
 
    implicit none
@@ -18,6 +16,9 @@ submodule (pepper_instance_module) pepper_transforms
 
 contains
 
+      !> Find the transformation from a user specified frame to
+      !> another frame at a user specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     INFRM    is the SPICE ID-code for some reference frame.
@@ -125,10 +126,16 @@ contains
       !>        now checks FAILED after "getting" the frame transformation.
       !>
       !>-    SPICELIB Version 1.0.0, 20-OCT-1994 (WLT)
-      module procedure frmget
+      recursive module subroutine frmget ( ctx, infrm, et, xform, outfrm, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
+      real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
+      real(wp), intent(out) :: xform ( 6, 6 )  !! A state transformation matrix.
+      integer(ip), intent(out) :: outfrm  !! The frame that XFORM transforms INFRM to.
+      logical, intent(out) :: found  !! .TRUE. if a frame transformation can be found.
       integer(ip) :: center
       integer(ip) :: i
       integer(ip) :: j
@@ -291,8 +298,11 @@ contains
 
       return
       end associate
-      end procedure frmget
+      end subroutine frmget
 
+      !> Find the rotation from a user specified frame to another frame at
+      !> a user specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     INFRM    is the SPICE ID-code for some reference frame.
@@ -400,10 +410,16 @@ contains
       !>        types recognized by ROTGET.
       !>
       !>-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
-      module procedure rotget
+      recursive module subroutine rotget ( ctx, infrm, et, rotate, outfrm, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: infrm  !! The integer code for a SPICE reference frame.
+      real(wp), intent(in) :: et  !! An epoch in seconds past J2000.
+      real(wp), intent(out) :: rotate ( 3, 3 )  !! A rotation matrix.
+      integer(ip), intent(out) :: outfrm  !! The frame that [[rotate]] transforms INFRM to.
+      logical, intent(out) :: found  !! .TRUE. if a rotation can be found.
       integer(ip) :: center
       integer(ip) :: type
       integer(ip) :: typeid
@@ -526,8 +542,11 @@ contains
 
       return
       end associate
-      end procedure rotget
+      end subroutine rotget
 
+      !> Return the state transformation matrix from one
+      !> frame to another.
+      !>
       !>## Detailed Input
       !>
       !>     FRAME1   is the frame id-code in which some states are known.
@@ -738,22 +757,17 @@ contains
       !>        to say TDT instead of the correct time system TDB.
       !>
       !>-    SPICELIB Version 1.0.0, 28-SEP-1994 (WLT)
-      module procedure frmchg
+      recursive module subroutine frmchg ( ctx, frame1, frame2, et, xform )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: zzmsxf
       use pepper_inc_errhnd
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       implicit none
-
-!
-!     SPICE functions
-!
-
-
-
-!
-!     The root of all reference frames is J2000 (Frame ID = 1).
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
+      integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
+      real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
+      real(wp), intent(out) :: xform ( 6, 6 )  !! a state transformation matrix
 
       character(lmsgln) :: errmsg
 
@@ -1181,8 +1195,11 @@ contains
 
       return
 
-      end procedure frmchg
+      end subroutine frmchg
 
+      !> Return the transformation matrix from one
+      !> frame to another.
+      !>
       !>## Detailed Input
       !>
       !>     FRAME1   is the frame id-code in which some positions
@@ -1278,22 +1295,17 @@ contains
       !>        A typo was corrected in the long error message.
       !>
       !>-    SPICELIB Version 1.0.0, 09-JUL-1998 (WLT)
-      module procedure refchg
+      recursive module subroutine refchg ( ctx, frame1, frame2, et, rotate )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ident, zzrxr
       use pepper_inc_errhnd
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       implicit none
-
-!
-!     SPICE functions
-!
-
-
-
-!
-!     The root of all reference frames is J2000 (Frame ID = 1).
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: frame1  !! the frame id-code for some reference frame
+      integer(ip), intent(in) :: frame2  !! the frame id-code for some reference frame
+      real(wp), intent(in) :: et  !! an epoch in TDB seconds past J2000.
+      real(wp), intent(out) :: rotate ( 3, 3 )  !! a rotation matrix
 
       character(lmsgln) :: errmsg
 
@@ -1671,8 +1683,11 @@ contains
 
       return
 
-      end procedure refchg
+      end subroutine refchg
 
+      !> Return the matrix that transforms position vectors from one
+      !> specified frame to another at a specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     FROM     is the name of a reference frame in which a position
@@ -1803,10 +1818,15 @@ contains
       !>        Various header corrections were made.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1999 (WLT)
-      module procedure pxform
+      recursive module subroutine pxform ( ctx, from, to, et, rotate )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: from  !! Name of the frame to transform from.
+      character(*), intent(in) :: to  !! Name of the frame to transform to.
+      real(wp), intent(in) :: et  !! Epoch of the rotation matrix.
+      real(wp), intent(out) :: rotate  ( 3, 3 )  !! A rotation matrix.
       integer(ip) :: fcode
       integer(ip) :: tcode
       if ( .not. allocated ( ctx%pxform_state ) ) allocate ( ctx%pxform_state )
@@ -1871,8 +1891,11 @@ contains
 
       return
       end associate
-      end procedure pxform
+      end subroutine pxform
 
+      !> Return the state transformation matrix from one frame to
+      !> another at a specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     FROM     is the name of a reference frame in which a state is
@@ -2000,10 +2023,15 @@ contains
       !>        Minor header changes were made to improve clarity.
       !>
       !>-    SPICELIB Version 1.0.0, 19-SEP-1995 (WLT)
-      module procedure sxform
+      recursive module subroutine sxform ( ctx, from, to, et, xform )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: from  !! Name of the frame to transform from.
+      character(*), intent(in) :: to  !! Name of the frame to transform to.
+      real(wp), intent(in) :: et  !! Epoch of the state transformation matrix.
+      real(wp), intent(out) :: xform  ( 6, 6 )  !! A state transformation matrix.
       integer(ip) :: fcode
       integer(ip) :: tcode
       if ( .not. allocated ( ctx%sxform_state ) ) allocate ( ctx%sxform_state )
@@ -2068,6 +2096,6 @@ contains
 
       return
       end associate
-      end procedure sxform
+      end subroutine sxform
 
 end submodule pepper_transforms

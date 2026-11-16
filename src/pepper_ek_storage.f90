@@ -2,9 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_ek_storage.f90.
+!> [[pepper_instance_module]]).
 !>
 !>## ZZEKSCA (EK, scratch area)
 !>
@@ -505,6 +503,8 @@ submodule (pepper_instance_module) pepper_ek_storage
 
 contains
 
+      !> Close an E-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an EK to be closed. Note
@@ -562,199 +562,201 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKCLS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKCLS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME = 'ekcls_ex1.bdb' )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME = 'ekcls_ex1.bdb' )
       !>
-      !>              CHARACTER*(*)         IFNAME
-      !>              PARAMETER           ( IFNAME = 'Test EK'  )
+      !>      CHARACTER*(*)         IFNAME
+      !>      PARAMETER           ( IFNAME = 'Test EK'  )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE  = 'CHR_DATA' )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE  = 'CHR_DATA' )
       !>
-      !>              INTEGER               CVLEN
-      !>              PARAMETER           ( CVLEN  = 9  )
+      !>      INTEGER               CVLEN
+      !>      PARAMETER           ( CVLEN  = 9  )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               MAXVAL
-      !>              PARAMETER           ( MAXVAL = 4  )
+      !>      INTEGER               MAXVAL
+      !>      PARAMETER           ( MAXVAL = 4  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 2  )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 2  )
       !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 6  )
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 6  )
       !>
-      !>              INTEGER               NRESVC
-      !>              PARAMETER           ( NRESVC = 0  )
+      !>      INTEGER               NRESVC
+      !>      PARAMETER           ( NRESVC = 0  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-      !>              CHARACTER*(CVLEN)     CVALS  ( MAXVAL )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+      !>      CHARACTER*(CVLEN)     CVALS  ( MAXVAL )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               NVALS
-      !>              INTEGER               RECNO
-      !>              INTEGER               SEGNO
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               NVALS
+      !>      INTEGER               RECNO
+      !>      INTEGER               SEGNO
       !>
-      !>              LOGICAL               ISNULL
+      !>      LOGICAL               ISNULL
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we won't
-      !>        C     reserve space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The constant IFNAME is the internal file name.
-      !>        C
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>C
+      !>C     Open a new EK file.  For simplicity, we won't
+      !>C     reserve space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The constant IFNAME is the internal file name.
+      !>C
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the CHR_DATA segment.  We'll index all of
-      !>        C     the columns.
-      !>        C
-      !>              CNAMES(1) =  'CHR_COL_1'
-      !>              CDECLS(1) =  'DATATYPE = CHARACTER*(*), '
-      !>             .       //    'INDEXED = TRUE, NULLS_OK = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the CHR_DATA segment.  We'll index all of
+      !>C     the columns.
+      !>C
+      !>      CNAMES(1) =  'CHR_COL_1'
+      !>      CDECLS(1) =  'DATATYPE = CHARACTER*(*), '
+      !>     .       //    'INDEXED = TRUE, NULLS_OK = TRUE'
       !>
-      !>              CNAMES(2) =  'CHR_COL_2'
-      !>              CDECLS(2) =  'DATATYPE = CHARACTER*(9), '
-      !>             .       //    'SIZE = VARIABLE, NULLS_OK = TRUE'
+      !>      CNAMES(2) =  'CHR_COL_2'
+      !>      CDECLS(2) =  'DATATYPE = CHARACTER*(9), '
+      !>     .       //    'SIZE = VARIABLE, NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
+      !>C
+      !>C     Start the segment.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
       !>
-      !>              DO I = 0, NROWS-1
+      !>      DO I = 0, NROWS-1
       !>
-      !>                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>         CALL EKAPPR ( HANDLE, SEGNO, RECNO )
       !>
-      !>                 ISNULL = ( I .EQ. 1 )
+      !>         ISNULL = ( I .EQ. 1 )
       !>
-      !>                 CALL INTSTR ( I, CVALS(1) )
-      !>                 CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
-      !>             .                 1,      CVALS, ISNULL           )
+      !>         CALL INTSTR ( I, CVALS(1) )
+      !>         CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
+      !>     .                 1,      CVALS, ISNULL           )
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL INTSTR ( 10*I,     CVALS(1) )
-      !>                 CALL INTSTR ( 10*I + 1, CVALS(2) )
-      !>                 CALL INTSTR ( 10*I + 2, CVALS(3) )
-      !>                 CALL INTSTR ( 10*I + 3, CVALS(4) )
-      !>                 CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
-      !>             .                 4,      CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL INTSTR ( 10*I,     CVALS(1) )
+      !>         CALL INTSTR ( 10*I + 1, CVALS(2) )
+      !>         CALL INTSTR ( 10*I + 2, CVALS(3) )
+      !>         CALL INTSTR ( 10*I + 3, CVALS(4) )
+      !>         CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
+      !>     .                 4,      CVALS, ISNULL           )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     End the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     End the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the EK for write access.
-      !>        C
-      !>              CALL EKOPW ( EKNAME, HANDLE )
+      !>C
+      !>C     Open the EK for write access.
+      !>C
+      !>      CALL EKOPW ( EKNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Negate the values in the odd-numbered records
-      !>        C     using the update routines.
-      !>        C
-      !>              DO I = 1, NROWS, 2
+      !>C
+      !>C     Negate the values in the odd-numbered records
+      !>C     using the update routines.
+      !>C
+      !>      DO I = 1, NROWS, 2
       !>
-      !>                 RECNO  = I+1
+      !>         RECNO  = I+1
       !>
-      !>                 ISNULL = ( I .EQ. 1 )
+      !>         ISNULL = ( I .EQ. 1 )
       !>
-      !>                 CALL INTSTR ( -I, CVALS(1) )
-      !>                 CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
-      !>             .                 1,      CVALS, ISNULL           )
+      !>         CALL INTSTR ( -I, CVALS(1) )
+      !>         CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
+      !>     .                 1,      CVALS, ISNULL           )
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL INTSTR ( -10*I,       CVALS(1) )
-      !>                 CALL INTSTR ( -(10*I + 1), CVALS(2) )
-      !>                 CALL INTSTR ( -(10*I + 2), CVALS(3) )
-      !>                 CALL INTSTR ( -(10*I + 3), CVALS(4) )
-      !>                 CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
-      !>             .                 4,      CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL INTSTR ( -10*I,       CVALS(1) )
+      !>         CALL INTSTR ( -(10*I + 1), CVALS(2) )
+      !>         CALL INTSTR ( -(10*I + 2), CVALS(3) )
+      !>         CALL INTSTR ( -(10*I + 3), CVALS(4) )
+      !>         CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
+      !>     .                 4,      CVALS, ISNULL           )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the created file. Show the values added.
-      !>        C
-      !>              CALL EKOPR ( EKNAME, HANDLE )
+      !>C
+      !>C     Open the created file. Show the values added.
+      !>C
+      !>      CALL EKOPR ( EKNAME, HANDLE )
       !>
-      !>              DO I = 1, NROWS
+      !>      DO I = 1, NROWS
       !>
-      !>                 CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(1),
-      !>             .                 NVALS,  CVALS, ISNULL           )
+      !>         CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(1),
+      !>     .                 NVALS,  CVALS, ISNULL           )
       !>
-      !>                 IF ( .NOT. ISNULL ) THEN
+      !>         IF ( .NOT. ISNULL ) THEN
       !>
-      !>                    WRITE(*,*) 'Data from column: ', CNAMES(1)
-      !>                    WRITE(*,*) '   record number: ', I
-      !>                    WRITE(*,*) '   values       : ',
-      !>             .                                ( CVALS(J), J=1,NVALS )
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Data from column: ', CNAMES(1)
+      !>            WRITE(*,*) '   record number: ', I
+      !>            WRITE(*,*) '   values       : ',
+      !>     .                                ( CVALS(J), J=1,NVALS )
+      !>            WRITE(*,*) ' '
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'Record ', I, 'flag is NULL.'
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Record ', I, 'flag is NULL.'
+      !>            WRITE(*,*) ' '
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(2),
-      !>             .                 NVALS,  CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(2),
+      !>     .                 NVALS,  CVALS, ISNULL           )
       !>
-      !>                 IF ( .NOT. ISNULL ) THEN
+      !>         IF ( .NOT. ISNULL ) THEN
       !>
-      !>                    WRITE(*,*) 'Data from column: ', CNAMES(2)
-      !>                    WRITE(*,*) '   record number: ', I
-      !>                    WRITE(*,*) '   values       : ',
-      !>             .                                ( CVALS(J), J=1,NVALS )
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Data from column: ', CNAMES(2)
+      !>            WRITE(*,*) '   record number: ', I
+      !>            WRITE(*,*) '   values       : ',
+      !>     .                                ( CVALS(J), J=1,NVALS )
+      !>            WRITE(*,*) ' '
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -834,9 +836,11 @@ contains
       !>        Corrected $Index_Entries section.
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekcls
+      module subroutine ekcls ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
 
 !
 !     Standard SPICE error handling.
@@ -849,8 +853,11 @@ contains
       call dascls ( ctx, handle )
 
       return
-      end procedure ekcls
+      end subroutine ekcls
 
+      !> Return shadowing status of a specified EK file. THIS IS A
+      !> STUB ROUTINE.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an EK open for writing.
@@ -911,25 +918,26 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB)
-      module procedure ekshdw
+      module subroutine ekshdw ( ctx, handle, isshad )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      logical, intent(out) :: isshad  !! Logical flag indicating whether EK is shadowed.
 
       integer(ip) :: i
 
       i      =  handle
       isshad = .false.
       return
-      end procedure ekshdw
+      end subroutine ekshdw
 
-      !>## Abstract
+      !> Look up the column descriptor for a column of a given name
+      !> in a specified segment.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Look up the column descriptor for a column of a given name
-      !>     in a specified segment.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -994,16 +1002,20 @@ contains
       !>        long error message.
       !>
       !>-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekcdsc
+      module subroutine zzekcdsc ( ctx, handle, segdsc, column, coldsc )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to an EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      character(*), intent(in) :: column  !! Name of column.
+      integer(ip), intent(out) :: coldsc ( cdscsz )  !! Descriptor for specified column.
+!
+!     Local variables
+!
       character(cnamsz) :: cname
 
       integer(ip) :: dscbas
@@ -1069,8 +1081,10 @@ contains
 
       end if
 
-      end procedure zzekcdsc
+      end subroutine zzekcdsc
 
+      !> Look up the name of a column, given the column's descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -1126,13 +1140,18 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     Local variables
-      module procedure zzekcnam
+      module subroutine zzekcnam ( ctx, handle, coldsc, column )
       use pepper_kinds, only: ip
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      character(*), intent(out) :: column  !! Column name.
+!
+!     Local variables
+!
       integer(ip) :: nambas
 
 !
@@ -1143,16 +1162,14 @@ contains
       call dasrdc ( ctx, handle,  nambas+1,  nambas+cnamsz, &
                     1,       cnamsz,    column         )
 
-      end procedure zzekcnam
+      end subroutine zzekcnam
 
-      !>## Abstract
+      !> Get an encoded integer at a specified address from a character
+      !> data page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Get an encoded integer at a specified address from a character
-      !>     data page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1225,11 +1242,16 @@ contains
       !>        Corrected typo in comments.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     Local variables
-      module procedure zzekgei
+      module subroutine zzekgei ( ctx, handle, addrss, ival )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(in) :: addrss  !! DAS character address to read encoded value from.
+      integer(ip), intent(out) :: ival  !! Decoded integer value.
+!
+!     Local variables
+!
       character(encsiz) :: cval
 
 !
@@ -1246,8 +1268,10 @@ contains
       call prtdec ( ctx, cval, ival )
 
       return
-      end procedure zzekgei
+      end subroutine zzekgei
 
+      !> Return the status of a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -1301,12 +1325,17 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     Local variables
-      module procedure zzekgrs
+      module subroutine zzekgrs ( ctx, handle, recptr, status )
       use pepper_kinds, only: ip
       use pepper_inc_ekrecptr
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(out) :: status  !! Status of specified EK record.
       integer(ip) :: status_1(1)  !! one-element copy of status (array argument)
+!
+!     Local variables
+!
       integer(ip) :: loc
 
 !
@@ -1318,8 +1347,12 @@ contains
       status = status_1(1)
 
       return
-      end procedure zzekgrs
+      end subroutine zzekgrs
 
+      !> Determine the order of elements in a character EK column,
+      !> using dictionary ordering on character data values and array
+      !> indices.
+      !>
       !>## Detailed Input
       !>
       !>     CVALS          is an array of character string EK column values,
@@ -1440,9 +1473,15 @@ contains
       !>         Renamed as a private routine.
       !>
       !>-     Beta Version 1.0.0, 13-APR-1994 (NJB) (IMU)
-      module procedure zzekordc
+      module subroutine zzekordc ( ctx, cvals, nullok, nlflgs, nvals, iorder )
       use pepper_kinds, only: ip
       use pepper_arrays, only: swapi
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: cvals  ( * )  !! Array of character string column values.
+      logical, intent(in) :: nullok  !! Logical flag indicating whether nulls are allowed.
+      logical, intent(in) :: nlflgs ( * )  !! Flags indicating whether column entries are null.
+      integer(ip), intent(in) :: nvals  !! Dimension of CVALS.
+      integer(ip), intent(out) :: iorder ( * )  !! Order vector for CVALS.
       integer(ip) :: gap
       integer(ip) :: i
       integer(ip) :: i1
@@ -1547,8 +1586,12 @@ contains
       end do
 
       return
-      end procedure zzekordc
+      end subroutine zzekordc
 
+      !> Determine the order of elements in a double precision EK column,
+      !> using dictionary ordering on d.p. data values and array
+      !> indices.
+      !>
       !>## Detailed Input
       !>
       !>     DVALS          is an array of double precision EK column values,
@@ -1670,11 +1713,18 @@ contains
       !>         Renamed as a private routine.
       !>
       !>-     Beta Version 1.0.0, 13-APR-1994 (NJB) (IMU)
-      !>
-      !>     Local variables
-      module procedure zzekordd
+      module subroutine zzekordd ( ctx, dvals, nullok, nlflgs, nvals, iorder )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: swapi
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: dvals  ( * )  !! Array of d.p. column values.
+      logical, intent(in) :: nullok  !! Logical flag indicating whether nulls are allowed.
+      logical, intent(in) :: nlflgs ( * )  !! Flags indicating whether column entries are null.
+      integer(ip), intent(in) :: nvals  !! Dimension of DVALS.
+      integer(ip), intent(out) :: iorder ( * )  !! Order vector for DVALS.
+!
+!     Local variables
+!
       real(wp) :: d1
       real(wp) :: d2
 
@@ -1775,8 +1825,11 @@ contains
       end do
 
       return
-      end procedure zzekordd
+      end subroutine zzekordd
 
+      !> Determine the order of elements in an integer EK column, using
+      !> dictionary ordering on integer data values and array indices.
+      !>
       !>## Detailed Input
       !>
       !>      IVALS          is an array of integer EK column values,
@@ -1901,11 +1954,18 @@ contains
       !>         Renamed as a private routine.
       !>
       !>-     Beta Version 1.0.0, 13-APR-1994 (NJB) (IMU)
-      !>
-      !>     Local variables
-      module procedure zzekordi
+      module subroutine zzekordi ( ctx, ivals, nullok, nlflgs, nvals, iorder )
       use pepper_kinds, only: ip
       use pepper_arrays, only: swapi
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ivals  ( * )  !! Array of integer column values.
+      logical, intent(in) :: nullok  !! Logical flag indicating whether nulls are allowed.
+      logical, intent(in) :: nlflgs ( * )  !! Flags indicating whether column entries are null.
+      integer(ip), intent(in) :: nvals  !! Dimension of IVALS.
+      integer(ip), intent(out) :: iorder ( * )  !! Order vector for IVALS.
+!
+!     Local variables
+!
       integer(ip) :: i1
       integer(ip) :: i2
       integer(ip) :: i3
@@ -2006,8 +2066,10 @@ contains
       end do
 
       return
-      end procedure zzekordi
+      end subroutine zzekordi
 
+      !> Parse a declaration of a new EK column.
+      !>
       !>## Detailed Input
       !>
       !>     DECL           is a character string containing a column
@@ -2241,38 +2303,36 @@ contains
       !>        This has been corrected.
       !>
       !>-    Beta Version 1.0.0, 16-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Parameters naming indices of keywords in the attribute list
-      !>     ATTKEY:
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzekpdec
+      module subroutine zzekpdec ( ctx, decl, pardsc )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, lparsm, nparsi, cmprss_inplace, ucase_inplace
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: decl  !! String containing column declaration.
+      integer(ip), intent(out) :: pardsc ( * )  !! Partial column descriptor.
+!
+!     Local parameters
+!
       integer(ip), parameter :: nattr = 5
       integer(ip), parameter :: maxtok = 20
       integer(ip), parameter :: toklen = 32
       integer(ip), parameter :: msglen = 320
       integer(ip), parameter :: nrkey = 1
+!
+!     Parameters naming indices of keywords in the attribute list
+!     ATTKEY:
+!
       integer(ip), parameter :: typpos = 1
       integer(ip), parameter :: sizpos = typpos + 1
       integer(ip), parameter :: idxpos = sizpos + 1
       integer(ip), parameter :: nflpos = idxpos + 1
       integer(ip), parameter :: fxcpos = nflpos + 1
+!
+!     Local variables
+!
       character(msglen) :: msg
       character(toklen) :: tokens ( maxtok )
       integer(ip) :: attloc ( cdscsz )
@@ -2286,6 +2346,9 @@ contains
       if ( .not. allocated ( ctx%zzekpdec_state ) ) allocate ( ctx%zzekpdec_state )
       associate ( attkey => ctx%zzekpdec_state%attkey, &
                   reqkey => ctx%zzekpdec_state%reqkey )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -2779,8 +2842,11 @@ contains
 
       return
       end associate
-      end procedure zzekpdec
+      end subroutine zzekpdec
 
+      !> Check that an EK is valid for a specified type of access by the
+      !> paging system.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The specified file is to be
@@ -2864,19 +2930,21 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekpgch
+      module subroutine zzekpgch ( ctx, handle, access )
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
       use pepper_inc_ekarch
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      character(*), intent(in) :: access  !! Access type.
       integer(ip) :: npi_1(1)  !! one-element copy of npi (array argument)
       integer(ip) :: npd_1(1)  !! one-element copy of npd (array argument)
       integer(ip) :: npc_1(1)  !! one-element copy of npc (array argument)
       integer(ip) :: id_1(1)  !! one-element copy of id (array argument)
+!
+!     Local variables
+!
       integer(ip) :: id
       integer(ip) :: lastc
       integer(ip) :: lastd
@@ -2964,15 +3032,13 @@ contains
       end if
 
       return
-      end procedure zzekpgch
+      end subroutine zzekpgch
 
-      !>## Abstract
+      !> Initialize encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Initialize encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3058,14 +3124,18 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      module procedure zzekqini
+      module subroutine zzekqini ( ctx, isize, dsize, eqryi, eqryc, eqryd )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekquery
       use pepper_inc_ekqlimit
       use pepper_inc_ekbool
-
-!     Minimum upper bound for the integer cell of an encoded query:
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: isize  !! Size of integer component of encoded query.
+      integer(ip), intent(in) :: dsize  !! Size of d.p. component of encoded query.
+      integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
+      character(*), intent(inout) :: eqryc  !! Character component of query.
+      real(wp), intent(inout) :: eqryd ( * )  !! D.p. component of query.
 
       integer(ip) :: i
 
@@ -3076,7 +3146,6 @@ contains
 
 !
 !     Check sizes:
-!
 !
 !     PEPPER: no minimum sizes. The callers size the encoded query from
 !     the query (its integer part grows as it is written; the numbers and
@@ -3132,8 +3201,11 @@ contains
       eqryi(eqinit)    =  itrue
 
       return
-      end procedure zzekqini
+      end subroutine zzekqini
 
+      !> Back up a modified EK record belonging to a shadowed EK.
+      !> This is a stub routine.
+      !>
       !>## Detailed Input
       !>
       !>     ACTION         is a short string indicating the action taken
@@ -3299,7 +3371,7 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 25-OCT-1995 (NJB)
-      module procedure zzekrbck
+      module subroutine zzekrbck ( ctx, action, handle, segdsc, coldsc, recno )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -3308,6 +3380,12 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: action  !! Action necessitating backup.
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recno  !! Record number.
       character(1) :: tmpchr
       integer(ip) :: i
 
@@ -3318,15 +3396,13 @@ contains
       i      = recno
 
       return
-      end procedure zzekrbck
+      end subroutine zzekrbck
 
-      !>## Abstract
+      !> Read scalar integer value from encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read scalar integer value from encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3381,22 +3457,18 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Find the location of the named item.
-      module procedure zzekreqi
+      module subroutine zzekreqi ( ctx, eqryi, name, value )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
       use pepper_inc_ekquery
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
+      character(*), intent(in) :: name  !! Name of scalar item to read.
+      integer(ip), intent(out) :: value  !! Value of item.
+!
+!     Initial values
+!
       character(namlen), parameter :: namlst ( maxnam ) = [ character(namlen) :: &
          'ARCHITECTURE', 'INITIALIZED', 'PARSED', 'NAMES_RESOLVED',&
          'TIMES_RESOLVED', 'SEM_CHECKED', 'NUM_TABLES', 'NUM_CONJUNCTIONS',&
@@ -3407,9 +3479,15 @@ contains
          eqtres, eqschk, eqntab, eqncnj,&
          eqncns, eqnsel, eqnord, eqnsiz,&
          eqnptr, eqcsiz, eqcptr ]
+!
+!     Local variables
+!
       character(namlen) :: tmpnam
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzekreqi_state ) ) allocate ( ctx%zzekreqi_state )
+!
+!     Find the location of the named item.
+!
       tmpnam = adjustl(name)
       call ucase_inplace ( tmpnam )
 
@@ -3430,8 +3508,10 @@ contains
       value  =  eqryi( namidx(i) )
 
       return
-      end procedure zzekreqi
+      end subroutine zzekreqi
 
+      !> Obtain last address in use in EK scratch area.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -3486,8 +3566,10 @@ contains
       !>        Updated for EK architecture 3.
       !>
       !>-    Beta Version 1.0.0, 25-FEB-1993 (NJB)
-      module procedure zzekstop
+      module subroutine zzekstop ( ctx, top )
       use pepper_kinds, only: ip
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: top  !! EK scratch area stack top.
       if ( .not. allocated ( ctx%zzeksca_state ) ) then
          allocate ( ctx%zzeksca_state )
          call init_zzeksca_state ( ctx%zzeksca_state )
@@ -3496,8 +3578,11 @@ contains
       top  =  t
       return
       end associate
-      end procedure zzekstop
+      end subroutine zzekstop
 
+      !> Push the contents of an integer array onto the EK scratch area
+      !> stack.
+      !>
       !>## Detailed Input
       !>
       !>     N              is the number of integers in the array IDATA to
@@ -3569,9 +3654,12 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 15-JAN-1995 (NJB)
-      module procedure zzekspsh
+      module subroutine zzekspsh ( ctx, n, idata )
       use pepper_kinds, only: ip
       use pepper_containers, only: grow
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of integers to push.
+      integer(ip), intent(in) :: idata ( * )  !! Integer data.
       integer(ip) :: remain
       integer(ip) :: numadd
       integer(ip) :: rt
@@ -3641,7 +3729,6 @@ contains
 !     be written to addresses previously written to, and which
 !     part will be appended.
 !
-!
 !     PEPPER: the scratch DAS is opened when the stack first goes past
 !     the in-memory part (SPICELIB: on the first push).
 !
@@ -3692,8 +3779,11 @@ contains
 
       return
       end associate
-      end procedure zzekspsh
+      end subroutine zzekspsh
 
+      !> Pop a specified number of elements from the top of the EK scratch
+      !> area stack, transferring this data to an integer array.
+      !>
       !>## Detailed Input
       !>
       !>     N              is the number of integers to pop from the
@@ -3764,8 +3854,11 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 10-SEP-1994 (NJB)
-      module procedure zzekspop
+      module subroutine zzekspop ( ctx, n, idata )
       use pepper_kinds, only: ip
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of integers to pop.
+      integer(ip), intent(out) :: idata ( * )  !! Integer data.
       integer(ip) :: remain
       integer(ip) :: start
       integer(ip) :: e
@@ -3860,8 +3953,10 @@ contains
 
       return
       end associate
-      end procedure zzekspop
+      end subroutine zzekspop
 
+      !> Decrement the EK scratch area stack pointer by a specified count.
+      !>
       !>## Detailed Input
       !>
       !>     N              is the number to subtract from the EK scratch
@@ -3920,8 +4015,10 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 10-SEP-1994 (NJB)
-      module procedure zzeksdec
+      module subroutine zzeksdec ( ctx, n )
       use pepper_kinds, only: ip
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Decrement count.
       if ( .not. allocated ( ctx%zzeksca_state ) ) then
          allocate ( ctx%zzeksca_state )
          call init_zzeksca_state ( ctx%zzeksca_state )
@@ -3964,8 +4061,11 @@ contains
 
       return
       end associate
-      end procedure zzeksdec
+      end subroutine zzeksdec
 
+      !> Update the contents of a range of addresses already in use in the
+      !> EK scratch area.
+      !>
       !>## Detailed Input
       !>
       !>     BEG,
@@ -4048,8 +4148,12 @@ contains
       !>        Updated for EK architecture 3.
       !>
       !>-    Beta Version 1.0.0, 25-FEB-1993 (NJB)
-      module procedure zzeksupd
+      module subroutine zzeksupd ( ctx, beg, end, idata )
       use pepper_kinds, only: ip
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: beg  !! Begin and end addresses of range to update.
+      integer(ip), intent(in) :: end  !! Begin and end addresses of range to update.
+      integer(ip), intent(in) :: idata ( * )  !! Integer data.
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzeksca_state ) ) then
          allocate ( ctx%zzeksca_state )
@@ -4114,8 +4218,10 @@ contains
 
       return
       end associate
-      end procedure zzeksupd
+      end subroutine zzeksupd
 
+      !> Read from a range of addresses in the EK scratch area.
+      !>
       !>## Detailed Input
       !>
       !>     BEG,
@@ -4196,8 +4302,12 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 23-FEB-1995 (NJB)
-      module procedure zzeksrd
+      module subroutine zzeksrd ( ctx, beg, end, idata )
       use pepper_kinds, only: ip
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: beg  !! Begin and end addresses of range to read from.
+      integer(ip), intent(in) :: end  !! Begin and end addresses of range to read from.
+      integer(ip), intent(out) :: idata ( * )  !! Integer data.
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzeksca_state ) ) then
          allocate ( ctx%zzeksca_state )
@@ -4262,8 +4372,11 @@ contains
 
       return
       end associate
-      end procedure zzeksrd
+      end subroutine zzeksrd
 
+      !> Clean up:  re-initialize the EK scratch area; unload the
+      !> scratch file.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -4314,8 +4427,9 @@ contains
       !>        the scratch file.
       !>
       !>-    SPICELIB Version 3.0.0, 27-DEC-2001 (NJB)
-      module procedure zzekscln
+      module subroutine zzekscln ( ctx )
       use pepper_kinds, only: ip
+      class(pepper_context), intent(inout) :: ctx  !! the context
       if ( .not. allocated ( ctx%zzeksca_state ) ) then
          allocate ( ctx%zzeksca_state )
          call init_zzeksca_state ( ctx%zzeksca_state )
@@ -4356,8 +4470,10 @@ contains
 
       return
       end associate
-      end procedure zzekscln
+      end subroutine zzekscln
 
+      !> Scan tokens in an EK query.
+      !>
       !>## Detailed Input
       !>
       !>     QUERY          is character string containing an EK query.  See
@@ -4567,34 +4683,7 @@ contains
       !>-    Beta Version 3.0.0, 14-NOV-1995 (NJB)
       !>
       !>        Complete re-write for architecture 3.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Number of tokens made up of special characters:
-      !>
-      !>     Max length of any such token:
-      !>
-      !>     Local variables
-      !>
-      !>     Statement Functions
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     These keyword declarations must be made in alphabetical order!
-      !>
-      !>     The following tokens are sequences of special characters.  Some
-      !>     of these are synonyms for keywords; some have other meanings.  In
-      !>     this data statement, the longer sequences must precede the shorter
-      !>     ones, in order for the matching algorithm to work properly.
-      !>
-      !>     Statement Function Definitions
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzekscan
+      module subroutine zzekscan ( ctx, query, maxntk, maxnum, ntoken, tokens, lxbegs, lxends, values, numvls, chrbuf, chbegs, chends, scnerr, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc
       use pepper_strings, only: beint, frstpc, lxqstr, nparsd, parsqs, prefix, rtrim, suffix, &
@@ -4602,6 +4691,24 @@ contains
       use pepper_inc_ekkeyw
       use pepper_inc_ektokn
       use pepper_inc_ekqlimit
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: query  !! Query specifying events to be found.
+      integer(ip), intent(in) :: maxntk  !! Maximum number of tokens to return.
+      integer(ip), intent(in) :: maxnum  !! Maximum number of numeric tokens allowed.
+      integer(ip), intent(out) :: ntoken  !! Number of tokens returned.
+      integer(ip), intent(out) :: tokens ( * )  !! Code numbers of identified tokens.
+      integer(ip), intent(out) :: lxbegs ( * )  !! Start and end locations of lexemes in query.
+      integer(ip), intent(out) :: lxends ( * )  !! Start and end locations of lexemes in query.
+      integer(ip), intent(out) :: values ( * )  !! Token values or value pointers, as needed.
+      real(wp), intent(out) :: numvls ( * )  !! Buffer containing values of numeric tokens.
+      character(*), intent(out) :: chrbuf  !! Buffer containing string tokens and identifiers.
+      integer(ip), intent(out) :: chbegs ( * )  !! Begin locations of string tokens in CHRBUF.
+      integer(ip), intent(out) :: chends ( * )  !! End locations of string tokens in CHRBUF.
+      logical, intent(out) :: scnerr  !! Flag indicating whether query parsed correctly.
+      character(*), intent(out) :: errmsg  !! Scan error description.
+!
+!     Local parameters
+!
       character(*), parameter :: dquote = '"'
       character(*), parameter :: squote = ''''
       integer(ip), parameter :: nxttok = 1
@@ -4613,9 +4720,24 @@ contains
       integer(ip), parameter :: ident = number + 1
       integer(ip), parameter :: spcial = ident + 1
       integer(ip), parameter :: mxspec = 512
+!
+!     Number of tokens made up of special characters:
+!
       integer(ip), parameter :: nspec = 13
+!
+!     Max length of any such token:
+!
       integer(ip), parameter :: spclen = 2
+!
+!     Local variables
+!
       character(1) :: chr
+!
+!     The following tokens are sequences of special characters.  Some
+!     of these are synonyms for keywords; some have other meanings.  In
+!     this data statement, the longer sequences must precede the shorter
+!     ones, in order for the matching algorithm to work properly.
+!
       character(spclen), parameter :: spcstr ( nspec ) = [ character(spclen) :: &
          '!=', '^=', '<>', '<=',&
          '>=', '<', '>', '=',&
@@ -4690,6 +4812,9 @@ contains
       if ( .not. allocated ( ctx%zzekscan_state ) ) allocate ( ctx%zzekscan_state )
       associate ( idspec => ctx%zzekscan_state%idspec, &
                   pass1 => ctx%zzekscan_state%pass1 )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -5204,16 +5329,14 @@ contains
 
       return
       end associate
-      end procedure zzekscan
+      end subroutine zzekscan
 
-      !>## Abstract
+      !> Set an encoded integer at a specified address from a character
+      !> data page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Set an encoded integer at a specified address from a character
-      !>     data page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5286,11 +5409,16 @@ contains
       !>        Corrected typo in comments.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     Local variables
-      module procedure zzeksei
+      module subroutine zzeksei ( ctx, handle, addrss, ival )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(in) :: addrss  !! DAS character address.
+      integer(ip), intent(in) :: ival  !! Integer value to write.
+!
+!     Local variables
+!
       character(encsiz) :: cval
 
 !
@@ -5306,8 +5434,14 @@ contains
       call dasudc ( ctx, handle, addrss, addrss+encsiz-1, 1, encsiz, cval )
 
       return
-      end procedure zzeksei
+      end subroutine zzeksei
 
+      !> Determine the type of segment required to support a specified
+      !> set of columns.
+      !>
+      !> The function returns the type of segment that is compatible with
+      !> the input column descriptors.
+      !>
       !>## Detailed Input
       !>
       !>     NCOLS          is the number of columns in a new segment.
@@ -5372,14 +5506,16 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 06-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekstyp
+      module integer(ip) function zzekstyp ( ctx, ncols, cdscrs )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekglimit
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
+      integer(ip), intent(in) :: cdscrs ( cdscsz, * )  !! Descriptors of columns.
+!
+!     Local variables
+!
       integer(ip) :: i
 
       logical :: fixed
@@ -5438,8 +5574,13 @@ contains
       end if
 
       return
-      end procedure zzekstyp
+      end function zzekstyp
 
+      !> Return the size of a specified entry in a class 4 column.
+      !>
+      !> The function returns the number of elements in the specified
+      !> column entry.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -5509,7 +5650,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      module procedure zzeksz04
+      module integer(ip) function zzeksz04 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -5517,6 +5658,11 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
       integer(ip) :: value_1(1)  !! one-element copy of the result (array argument)
 
@@ -5585,8 +5731,13 @@ contains
       end if
 
       return
-      end procedure zzeksz04
+      end function zzeksz04
 
+      !> Return the size of a specified entry in a class 5 column.
+      !>
+      !> The function returns the number of elements in the specified
+      !> column entry.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -5656,9 +5807,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Local variables
-      module procedure zzeksz05
+      module integer(ip) function zzeksz05 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -5666,8 +5815,16 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
       real(wp) :: dpcnt_1(1)  !! one-element copy of dpcnt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       real(wp) :: dpcnt
 
       integer(ip) :: colidx
@@ -5737,15 +5894,13 @@ contains
       end if
 
       return
-      end procedure zzeksz05
+      end function zzeksz05
 
-      !>## Abstract
+      !> Convert time strings from EK query to ephemeris time.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Convert time strings from EK query to ephemeris time.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5853,16 +6008,20 @@ contains
       !>        FAILED() returns .TRUE. has been changed so that REPMC is
       !>        not called.  Instead, the error-free routine SUFFIX is
       !>        used.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      module procedure zzektcnv
+      module subroutine zzektcnv ( ctx, timstr, et, error, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss, posr, rtrim, suffix, repmc_inplace, ucase_inplace
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: timstr  !! Time string.
+      real(wp), intent(out) :: et  !! Ephemeris time in seconds past J2000, TDB.
+      logical, intent(out) :: error  !! Error flag.
+      character(*), intent(out) :: errmsg  !! Error message.
 
+!
+!     Local parameters
+!
       integer(ip), parameter :: msglen = 160
 
       integer(ip), parameter :: ncomp = 10
@@ -6026,8 +6185,12 @@ contains
 !     We've parsed a time string, if it was an SCLK or standard string.
 !
       return
-      end procedure zzektcnv
+      end subroutine zzektcnv
 
+      !> Locate the first occurrence of a specified token in a tokenized
+      !> EK query.  The input may actually be any subset of token codes
+      !> and corresponding keyword codes from a tokenized query.
+      !>
       !>## Detailed Input
       !>
       !>     TOKID          is a token code identifying the type of token
@@ -6098,12 +6261,21 @@ contains
       !>        Corrected typo in comment.
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      !>
-      !>     Error free.
-      module procedure zzektloc
+      module subroutine zzektloc ( ctx, tokid, kwcode, ntoken, tokens, values, loc, found )
       use pepper_kinds, only: ip
       use pepper_inc_ektokn
       use pepper_inc_ekkeyw
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: tokid  !! Token ID.
+      integer(ip), intent(in) :: kwcode  !! Keyword code.
+      integer(ip), intent(in) :: ntoken  !! Number of tokens in query.
+      integer(ip), intent(in) :: tokens ( * )  !! Token codes.
+      integer(ip), intent(in) :: values ( * )  !! Pointers to numeric and string token values.
+      integer(ip), intent(out) :: loc  !! Location of first occurrence of token.
+      logical, intent(out) :: found  !! Flag indicating whether token was found.
+!
+!     Error free.
+!
       found  = .false.
       loc    =  1
 
@@ -6136,15 +6308,13 @@ contains
       end do
 
       return
-      end procedure zzektloc
+      end subroutine zzektloc
 
-      !>## Abstract
+      !> Write scalar integer value to encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Write scalar integer value to encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6222,22 +6392,18 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 01-AUG-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Find the location of the named item.
-      module procedure zzekweqi
+      module subroutine zzekweqi ( ctx, name, value, eqryi )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
       use pepper_inc_ekquery
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of scalar item to write.
+      integer(ip), intent(in) :: value  !! Value to write.
+      integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
+!
+!     Initial values
+!
       character(namlen), parameter :: namlst ( maxnam ) = [ character(namlen) :: &
          'ARCHITECTURE', 'INITIALIZED', 'PARSED', 'NAMES_RESOLVED',&
          'TIMES_RESOLVED', 'SEM_CHECKED', 'NUM_TABLES', 'NUM_CONJUNCTIONS',&
@@ -6248,9 +6414,15 @@ contains
          eqtres, eqschk, eqntab, eqncnj,&
          eqncns, eqnsel, eqnord, eqnsiz,&
          eqnptr, eqcsiz, eqcptr ]
+!
+!     Local variables
+!
       character(namlen) :: tmpnam
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzekweqi_state ) ) allocate ( ctx%zzekweqi_state )
+!
+!     Find the location of the named item.
+!
       tmpnam = adjustl(name)
       call ucase_inplace ( tmpnam )
 
@@ -6271,8 +6443,10 @@ contains
       eqryi( namidx(i) ) = value
 
       return
-      end procedure zzekweqi
+      end subroutine zzekweqi
 
+      !> Open an existing E-kernel file for reading.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of an existing E-kernel file to be
@@ -6350,39 +6524,41 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKOPR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKOPR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               EKNSEG
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               EKNSEG
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NSEG
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NSEG
       !>
-      !>        C
-      !>        C     Open the EK file, returning the file handle
-      !>        C     associated with the open file to the variable named
-      !>        C     HANDLE.
-      !>        C
-      !>              CALL EKOPR ( 'dif_seq_050112_050729.bes', HANDLE )
+      !>C
+      !>C     Open the EK file, returning the file handle
+      !>C     associated with the open file to the variable named
+      !>C     HANDLE.
+      !>C
+      !>      CALL EKOPR ( 'dif_seq_050112_050729.bes', HANDLE )
       !>
-      !>        C
-      !>        C     Return the number of segments in the EK.
-      !>        C
-      !>              NSEG = EKNSEG( HANDLE )
-      !>              WRITE(*,'(A,I3)') 'Number of segments =', NSEG
+      !>C
+      !>C     Return the number of segments in the EK.
+      !>C
+      !>      NSEG = EKNSEG( HANDLE )
+      !>      WRITE(*,'(A,I3)') 'Number of segments =', NSEG
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6416,9 +6592,12 @@ contains
       !>        input file if the file cannot be opened.
       !>
       !>-    SPICELIB Version 1.0.0, 26-AUG-1995 (NJB)
-      module procedure ekopr
+      module subroutine ekopr ( ctx, fname, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of EK file.
+      integer(ip), intent(out) :: handle  !! Handle attached to EK file.
 
 !
 !     Standard SPICE error handling.
@@ -6439,8 +6618,10 @@ contains
       call zzekpgch ( ctx, handle, 'READ' )
 
       return
-      end procedure ekopr
+      end subroutine ekopr
 
+      !> Open an existing E-kernel file for writing.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of an existing E-kernel file to be
@@ -6549,199 +6730,201 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKOPW_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKOPW_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME = 'ekopw_ex1.bdb' )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME = 'ekopw_ex1.bdb' )
       !>
-      !>              CHARACTER*(*)         IFNAME
-      !>              PARAMETER           ( IFNAME = 'Test EK'  )
+      !>      CHARACTER*(*)         IFNAME
+      !>      PARAMETER           ( IFNAME = 'Test EK'  )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE  = 'CHR_DATA' )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE  = 'CHR_DATA' )
       !>
-      !>              INTEGER               CVLEN
-      !>              PARAMETER           ( CVLEN  = 9  )
+      !>      INTEGER               CVLEN
+      !>      PARAMETER           ( CVLEN  = 9  )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               MAXVAL
-      !>              PARAMETER           ( MAXVAL = 4  )
+      !>      INTEGER               MAXVAL
+      !>      PARAMETER           ( MAXVAL = 4  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 2  )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 2  )
       !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 6  )
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 6  )
       !>
-      !>              INTEGER               NRESVC
-      !>              PARAMETER           ( NRESVC = 0  )
+      !>      INTEGER               NRESVC
+      !>      PARAMETER           ( NRESVC = 0  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-      !>              CHARACTER*(CVLEN)     CVALS  ( MAXVAL )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+      !>      CHARACTER*(CVLEN)     CVALS  ( MAXVAL )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               NVALS
-      !>              INTEGER               RECNO
-      !>              INTEGER               SEGNO
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               NVALS
+      !>      INTEGER               RECNO
+      !>      INTEGER               SEGNO
       !>
-      !>              LOGICAL               ISNULL
+      !>      LOGICAL               ISNULL
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we won't
-      !>        C     reserve space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The constant IFNAME is the internal file name.
-      !>        C
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>C
+      !>C     Open a new EK file.  For simplicity, we won't
+      !>C     reserve space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The constant IFNAME is the internal file name.
+      !>C
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the CHR_DATA segment.  We'll index all of
-      !>        C     the columns.
-      !>        C
-      !>              CNAMES(1) =  'CHR_COL_1'
-      !>              CDECLS(1) =  'DATATYPE = CHARACTER*(*), '
-      !>             .       //    'INDEXED = TRUE, NULLS_OK = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the CHR_DATA segment.  We'll index all of
+      !>C     the columns.
+      !>C
+      !>      CNAMES(1) =  'CHR_COL_1'
+      !>      CDECLS(1) =  'DATATYPE = CHARACTER*(*), '
+      !>     .       //    'INDEXED = TRUE, NULLS_OK = TRUE'
       !>
-      !>              CNAMES(2) =  'CHR_COL_2'
-      !>              CDECLS(2) =  'DATATYPE = CHARACTER*(9), '
-      !>             .       //    'SIZE = VARIABLE, NULLS_OK = TRUE'
+      !>      CNAMES(2) =  'CHR_COL_2'
+      !>      CDECLS(2) =  'DATATYPE = CHARACTER*(9), '
+      !>     .       //    'SIZE = VARIABLE, NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
+      !>C
+      !>C     Start the segment.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
       !>
-      !>              DO I = 0, NROWS-1
+      !>      DO I = 0, NROWS-1
       !>
-      !>                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>         CALL EKAPPR ( HANDLE, SEGNO, RECNO )
       !>
-      !>                 ISNULL = ( I .EQ. 1 )
+      !>         ISNULL = ( I .EQ. 1 )
       !>
-      !>                 CALL INTSTR ( I, CVALS(1) )
-      !>                 CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
-      !>             .                 1,      CVALS, ISNULL           )
+      !>         CALL INTSTR ( I, CVALS(1) )
+      !>         CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
+      !>     .                 1,      CVALS, ISNULL           )
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL INTSTR ( 10*I,     CVALS(1) )
-      !>                 CALL INTSTR ( 10*I + 1, CVALS(2) )
-      !>                 CALL INTSTR ( 10*I + 2, CVALS(3) )
-      !>                 CALL INTSTR ( 10*I + 3, CVALS(4) )
-      !>                 CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
-      !>             .                 4,      CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL INTSTR ( 10*I,     CVALS(1) )
+      !>         CALL INTSTR ( 10*I + 1, CVALS(2) )
+      !>         CALL INTSTR ( 10*I + 2, CVALS(3) )
+      !>         CALL INTSTR ( 10*I + 3, CVALS(4) )
+      !>         CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
+      !>     .                 4,      CVALS, ISNULL           )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     End the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     End the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the EK for write access.
-      !>        C
-      !>              CALL EKOPW ( EKNAME, HANDLE )
+      !>C
+      !>C     Open the EK for write access.
+      !>C
+      !>      CALL EKOPW ( EKNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Negate the values in the even-numbered records
-      !>        C     using the update routines.
-      !>        C
-      !>              DO I = 1, NROWS, 2
+      !>C
+      !>C     Negate the values in the even-numbered records
+      !>C     using the update routines.
+      !>C
+      !>      DO I = 1, NROWS, 2
       !>
-      !>                 RECNO  = I+1
+      !>         RECNO  = I+1
       !>
-      !>                 ISNULL = ( I .EQ. 1 )
+      !>         ISNULL = ( I .EQ. 1 )
       !>
-      !>                 CALL INTSTR ( -I, CVALS(1) )
-      !>                 CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
-      !>             .                 1,      CVALS, ISNULL           )
+      !>         CALL INTSTR ( -I, CVALS(1) )
+      !>         CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
+      !>     .                 1,      CVALS, ISNULL           )
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL INTSTR ( -10*I,       CVALS(1) )
-      !>                 CALL INTSTR ( -(10*I + 1), CVALS(2) )
-      !>                 CALL INTSTR ( -(10*I + 2), CVALS(3) )
-      !>                 CALL INTSTR ( -(10*I + 3), CVALS(4) )
-      !>                 CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
-      !>             .                 4,      CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL INTSTR ( -10*I,       CVALS(1) )
+      !>         CALL INTSTR ( -(10*I + 1), CVALS(2) )
+      !>         CALL INTSTR ( -(10*I + 2), CVALS(3) )
+      !>         CALL INTSTR ( -(10*I + 3), CVALS(4) )
+      !>         CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
+      !>     .                 4,      CVALS, ISNULL           )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the created file. Show the values added.
-      !>        C
-      !>              CALL EKOPR ( EKNAME, HANDLE )
+      !>C
+      !>C     Open the created file. Show the values added.
+      !>C
+      !>      CALL EKOPR ( EKNAME, HANDLE )
       !>
-      !>              DO I = 1, NROWS
+      !>      DO I = 1, NROWS
       !>
-      !>                 CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(1),
-      !>             .                 NVALS,  CVALS, ISNULL           )
+      !>         CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(1),
+      !>     .                 NVALS,  CVALS, ISNULL           )
       !>
-      !>                 IF ( .NOT. ISNULL ) THEN
+      !>         IF ( .NOT. ISNULL ) THEN
       !>
-      !>                    WRITE(*,*) 'Data from column: ', CNAMES(1)
-      !>                    WRITE(*,*) '   record number: ', I
-      !>                    WRITE(*,*) '   values       : ',
-      !>             .                                ( CVALS(J), J=1,NVALS )
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Data from column: ', CNAMES(1)
+      !>            WRITE(*,*) '   record number: ', I
+      !>            WRITE(*,*) '   values       : ',
+      !>     .                                ( CVALS(J), J=1,NVALS )
+      !>            WRITE(*,*) ' '
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'Record ', I, 'flag is NULL.'
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Record ', I, 'flag is NULL.'
+      !>            WRITE(*,*) ' '
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(2),
-      !>             .                 NVALS,  CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(2),
+      !>     .                 NVALS,  CVALS, ISNULL           )
       !>
-      !>                 IF ( .NOT. ISNULL ) THEN
+      !>         IF ( .NOT. ISNULL ) THEN
       !>
-      !>                    WRITE(*,*) 'Data from column: ', CNAMES(2)
-      !>                    WRITE(*,*) '   record number: ', I
-      !>                    WRITE(*,*) '   values       : ',
-      !>             .                                ( CVALS(J), J=1,NVALS )
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Data from column: ', CNAMES(2)
+      !>            WRITE(*,*) '   record number: ', I
+      !>            WRITE(*,*) '   values       : ',
+      !>     .                                ( CVALS(J), J=1,NVALS )
+      !>            WRITE(*,*) ' '
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6831,9 +7014,12 @@ contains
       !>        were replaced with "fast write."
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekopw
+      module subroutine ekopw ( ctx, fname, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of EK file.
+      integer(ip), intent(out) :: handle  !! Handle attached to EK file.
 
 !
 !     Standard SPICE error handling.
@@ -6854,8 +7040,10 @@ contains
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       return
-      end procedure ekopw
+      end subroutine ekopw
 
+      !> Get the companion pointer of a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -6914,15 +7102,18 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekgrcp
+      module subroutine zzekgrcp ( ctx, handle, recptr, ptr )
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
       use pepper_inc_ekrecptr
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(out) :: ptr  !! Pointer to companion of specified EK record.
       integer(ip) :: ptr_1(1)  !! one-element copy of ptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: loc
 
 !
@@ -6942,16 +7133,14 @@ contains
       ptr = ptr_1(1)
 
       return
-      end procedure zzekgrcp
+      end subroutine zzekgrcp
 
-      !>## Abstract
+      !> Insert a character value into a specified encoded EK query, and
+      !> obtain a descriptor for the stored value.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Insert a character value into a specified encoded EK query, and
-      !>     obtain a descriptor for the stored value.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7034,11 +7223,20 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      module procedure zzekinqc
+      module subroutine zzekinqc ( ctx, value, length, lexbeg, lexend, eqryi, eqryc, descr )
       use pepper_kinds, only: ip
       use pepper_inc_ekquery
       use pepper_inc_ektype
       use pepper_inc_ekbool
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: value  !! Character value.
+      integer(ip), intent(in) :: length  !! Length of item to insert.
+      integer(ip), intent(in) :: lexbeg  !! Begin and end positions of value's lexeme.
+      integer(ip), intent(in) :: lexend  !! Begin and end positions of value's lexeme.
+      integer(ip), intent(inout) :: eqryi  ( lbcell : * )  !! Integer portion of encoded query.
+      character(*), intent(inout) :: eqryc  !! Character portion of encoded query.
+      integer(ip), intent(out) :: descr  ( * )  !! Descriptor for value.
 
       integer(ip) :: free
       integer(ip) :: init
@@ -7112,16 +7310,14 @@ contains
       call zzekweqi ( ctx, 'FREE_CHR', free+length, eqryi )
 
       return
-      end procedure zzekinqc
+      end subroutine zzekinqc
 
-      !>## Abstract
+      !> Insert a numeric value into a specified encoded EK query, and
+      !> obtain a descriptor for the stored value.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Insert a numeric value into a specified encoded EK query, and
-      !>     obtain a descriptor for the stored value.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7199,11 +7395,20 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      module procedure zzekinqn
+      module subroutine zzekinqn ( ctx, value, type, lexbeg, lexend, eqryi, eqryd, descr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekquery
       use pepper_inc_ektype
       use pepper_inc_ekbool
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      real(wp), intent(in) :: value  !! Numeric value.
+      integer(ip), intent(in) :: type  !! Data type.  May be INT, DP, or TIME.
+      integer(ip), intent(in) :: lexbeg  !! Begin and end positions of value's lexeme.
+      integer(ip), intent(in) :: lexend  !! Begin and end positions of value's lexeme.
+      integer(ip), intent(inout) :: eqryi  ( lbcell : * )  !! Integer portion of encoded query.
+      real(wp), intent(inout) :: eqryd  ( * )  !! Numeric portion of encoded query.
+      integer(ip), intent(out) :: descr  ( * )  !! Descriptor for value.
 
       integer(ip) :: free
       integer(ip) :: init
@@ -7261,16 +7466,14 @@ contains
       call zzekweqi ( ctx, 'FREE_NUM', free+1, eqryi )
 
       return
-      end procedure zzekinqn
+      end subroutine zzekinqn
 
-      !>## Abstract
+      !> Compress a join row set by eliminating segment vectors for
+      !> which there are no corresponding row vectors.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Compress a join row set by eliminating segment vectors for
-      !>     which there are no corresponding row vectors.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7365,19 +7568,20 @@ contains
       !>        However, the Intel Fortran compiler for the Mac flags a runtime
       !>        error when the above code is exercised.  So NRVDEL is now
       !>        initialized prior to the above IF statement.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekjsqz
+      module subroutine zzekjsqz ( ctx, jrsbas )
       use pepper_kinds, only: ip
       use pepper_inc_ekjrs
       use pepper_inc_ekqlimit
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: jrsbas  !! Scratch area base address of join row set.
       integer(ip) :: setbas_1(1)  !! one-element copy of setbas (array argument)
       integer(ip) :: rc_1(1)  !! one-element copy of rc (array argument)
       integer(ip) :: nsv_1(1)  !! one-element copy of nsv (array argument)
       integer(ip) :: ntab_1(1)  !! one-element copy of ntab (array argument)
       integer(ip) :: size_1(1)  !! one-element copy of size (array argument)
+!
+!     Local variables
+!
       integer(ip) :: cntloc
       integer(ip) :: delta
       integer(ip) :: i
@@ -7676,15 +7880,13 @@ contains
       call zzeksupd ( ctx, sizloc, sizloc, [ size ] )
 
       return
-      end procedure zzekjsqz
+      end subroutine zzekjsqz
 
-      !>## Abstract
+      !> Initialize an open DAS file for paged access.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Initialize an open DAS file for paged access.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7753,13 +7955,13 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     The file must be open for write access.
-      module procedure zzekpgin
+      module subroutine zzekpgin ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
       integer(ip) :: lastd
       integer(ip) :: lasti
       integer(ip) :: lastc
@@ -7767,6 +7969,9 @@ contains
       associate ( cfill => ctx%zzekpage_state%cfill, &
                   dfill => ctx%zzekpage_state%dfill, &
                   ifill => ctx%zzekpage_state%ifill )
+!
+!     The file must be open for write access.
+!
       call dassih ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -7826,15 +8031,13 @@ contains
 !
       return
       end associate
-      end procedure zzekpgin
+      end subroutine zzekpgin
 
-      !>## Abstract
+      !> Allocate a new page of a specified data type.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Allocate a new page of a specified data type.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7908,13 +8111,16 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Validate the file.
-      module procedure zzekpgan
+      module subroutine zzekpgan ( ctx, handle, type, p, base )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Paged EK file handle.
+      integer(ip), intent(in) :: type  !! Data type of page to allocate.
+      integer(ip), intent(out) :: p  !! Page number.
+      integer(ip), intent(out) :: base  !! DAS base address of page.
       integer(ip) :: npi_1(1)  !! one-element copy of npi (array argument)
       integer(ip) :: npd_1(1)  !! one-element copy of npd (array argument)
       integer(ip) :: npc_1(1)  !! one-element copy of npc (array argument)
@@ -7925,6 +8131,9 @@ contains
       associate ( cfill => ctx%zzekpage_state%cfill, &
                   dfill => ctx%zzekpage_state%dfill, &
                   ifill => ctx%zzekpage_state%ifill )
+!
+!     Validate the file.
+!
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -7981,16 +8190,14 @@ contains
 
       return
       end associate
-      end procedure zzekpgan
+      end subroutine zzekpgan
 
-      !>## Abstract
+      !> Allocate a page of a specified data type.  The page need not
+      !> be new:  free pages are returned if possible.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Allocate a page of a specified data type.  The page need not
-      !>     be new:  free pages are returned if possible.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8059,13 +8266,16 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Validate the file.
-      module procedure zzekpgal
+      module subroutine zzekpgal ( ctx, handle, type, p, base )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Paged EK file handle.
+      integer(ip), intent(in) :: type  !! Data type of page to allocate.
+      integer(ip), intent(out) :: p  !! Page number.
+      integer(ip), intent(out) :: base  !! DAS base address of page.
       integer(ip) :: npi_1(1)  !! one-element copy of npi (array argument)
       integer(ip) :: nfreei_1(1)  !! one-element copy of nfreei (array argument)
       integer(ip) :: freei_1(1)  !! one-element copy of freei (array argument)
@@ -8093,6 +8303,9 @@ contains
       associate ( cfill => ctx%zzekpage_state%cfill, &
                   dfill => ctx%zzekpage_state%dfill, &
                   ifill => ctx%zzekpage_state%ifill )
+!
+!     Validate the file.
+!
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -8274,15 +8487,13 @@ contains
 
       return
       end associate
-      end procedure zzekpgal
+      end subroutine zzekpgal
 
-      !>## Abstract
+      !> Free a specified page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Free a specified page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8352,13 +8563,15 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Check the file.
-      module procedure zzekpgfr
+      module subroutine zzekpgfr ( ctx, handle, type, p )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Paged EK file handle.
+      integer(ip), intent(in) :: type  !! Data type of page to allocate.
+      integer(ip), intent(in) :: p  !! Page number.
       integer(ip) :: nfreei_1(1)  !! one-element copy of nfreei (array argument)
       integer(ip) :: freei_1(1)  !! one-element copy of freei (array argument)
       integer(ip) :: npi_1(1)  !! one-element copy of npi (array argument)
@@ -8380,6 +8593,9 @@ contains
       integer(ip) :: nfreed
       integer(ip) :: nfreec
       if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
+!
+!     Check the file.
+!
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -8518,15 +8734,13 @@ contains
       end if
 
       return
-      end procedure zzekpgfr
+      end subroutine zzekpgfr
 
-      !>## Abstract
+      !> Read a specified character page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read a specified character page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8589,21 +8803,26 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Use discovery check-in.
-      !>
-      !>     Find out how many character pages are in use.
-      module procedure zzekpgrc
+      module subroutine zzekpgrc ( ctx, handle, p, pagec )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Paged EK file handle.
+      integer(ip), intent(in) :: p  !! Page number.
+      character(*), intent(out) :: pagec  !! Character page.
       integer(ip) :: npc_1(1)  !! one-element copy of npc (array argument)
       integer(ip) :: addr
       integer(ip) :: e
       integer(ip) :: npc
       integer(ip) :: l
       if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
+!
+!     Use discovery check-in.
+!
+!     Find out how many character pages are in use.
+!
       call dasrdi ( ctx, handle, epnpc, epnpc, npc_1 )
       npc = npc_1(1)
 
@@ -8629,15 +8848,13 @@ contains
       end if
 
       return
-      end procedure zzekpgrc
+      end subroutine zzekpgrc
 
-      !>## Abstract
+      !> Read a specified double precision page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read a specified double precision page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8695,19 +8912,24 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Use discovery check-in.
-      !>
-      !>     Find out how many d.p. pages are in use.
-      module procedure zzekpgrd
+      module subroutine zzekpgrd ( ctx, handle, p, paged )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Paged EK file handle.
+      integer(ip), intent(in) :: p  !! Page number.
+      real(wp), intent(out) :: paged ( * )  !! Double precision page.
       integer(ip) :: npd_1(1)  !! one-element copy of npd (array argument)
       integer(ip) :: npd
       integer(ip) :: addr
       if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
+!
+!     Use discovery check-in.
+!
+!     Find out how many d.p. pages are in use.
+!
       call dasrdi ( ctx, handle, epnpd, epnpd, npd_1 )
       npd = npd_1(1)
 
@@ -8726,15 +8948,13 @@ contains
       call dasrdd ( ctx, handle, addr, addr+pgsizd-1, paged )
 
       return
-      end procedure zzekpgrd
+      end subroutine zzekpgrd
 
-      !>## Abstract
+      !> Read a specified integer page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read a specified integer page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8792,19 +9012,24 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Use discovery check-in.
-      !>
-      !>     Find out how many integer pages are in use.
-      module procedure zzekpgri
+      module subroutine zzekpgri ( ctx, handle, p, pagei )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Paged EK file handle.
+      integer(ip), intent(in) :: p  !! Page number.
+      integer(ip), intent(out) :: pagei ( * )  !! Integer page.
       integer(ip) :: npi_1(1)  !! one-element copy of npi (array argument)
       integer(ip) :: addr
       integer(ip) :: npi
       if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
+!
+!     Use discovery check-in.
+!
+!     Find out how many integer pages are in use.
+!
       call dasrdi ( ctx, handle, epnpi, epnpi, npi_1 )
       npi = npi_1(1)
 
@@ -8823,15 +9048,13 @@ contains
       call dasrdi ( ctx, handle, addr, addr+pgsizi-1, pagei )
 
       return
-      end procedure zzekpgri
+      end subroutine zzekpgri
 
-      !>## Abstract
+      !> Write a specified character page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Write a specified character page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8898,20 +9121,25 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Use discovery check-in.
-      !>
-      !>     Validate the file.
-      module procedure zzekpgwc
+      module subroutine zzekpgwc ( ctx, handle, p, pagec )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Paged EK file handle.
+      integer(ip), intent(in) :: p  !! Page number.
+      character(*), intent(in) :: pagec  !! Character page.
       integer(ip) :: npc_1(1)  !! one-element copy of npc (array argument)
       integer(ip) :: addr
       integer(ip) :: npc
       integer(ip) :: l
       if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
+!
+!     Use discovery check-in.
+!
+!     Validate the file.
+!
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -8949,15 +9177,13 @@ contains
       call dasudc ( ctx, handle, addr, addr+pgsizc-1, 1, pgsizc, pagec )
 
       return
-      end procedure zzekpgwc
+      end subroutine zzekpgwc
 
-      !>## Abstract
+      !> Write a specified double precision page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Write a specified double precision page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9021,19 +9247,24 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Use discovery check-in.
-      !>
-      !>     Validate the file.
-      module procedure zzekpgwd
+      module subroutine zzekpgwd ( ctx, handle, p, paged )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Paged EK file handle.
+      integer(ip), intent(in) :: p  !! Page number.
+      real(wp), intent(in) :: paged ( * )  !! Double precision page.
       integer(ip) :: npd_1(1)  !! one-element copy of npd (array argument)
       integer(ip) :: npd
       integer(ip) :: addr
       if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
+!
+!     Use discovery check-in.
+!
+!     Validate the file.
+!
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -9059,15 +9290,13 @@ contains
       call dasudd ( ctx, handle, addr, addr+pgsizd-1, paged )
 
       return
-      end procedure zzekpgwd
+      end subroutine zzekpgwd
 
-      !>## Abstract
+      !> Write a specified integer page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Write a specified integer page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9131,19 +9360,24 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Use discovery check-in.
-      !>
-      !>     Validate the file.
-      module procedure zzekpgwi
+      module subroutine zzekpgwi ( ctx, handle, p, pagei )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Paged EK file handle.
+      integer(ip), intent(in) :: p  !! Page number.
+      integer(ip), intent(in) :: pagei ( * )  !! Integer page.
       integer(ip) :: npi_1(1)  !! one-element copy of npi (array argument)
       integer(ip) :: addr
       integer(ip) :: npi
       if ( .not. allocated ( ctx%zzekpage_state ) ) allocate ( ctx%zzekpage_state )
+!
+!     Use discovery check-in.
+!
+!     Validate the file.
+!
       call zzekpgch ( ctx, handle, 'WRITE' )
 
       if ( ctx%failed() ) return
@@ -9169,15 +9403,13 @@ contains
       call dasudi ( ctx, handle, addr, addr+pgsizi-1, pagei )
 
       return
-      end procedure zzekpgwi
+      end subroutine zzekpgwi
 
-      !>## Abstract
+      !> Map a page to its base address.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Map a page to its base address.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9235,11 +9467,15 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      module procedure zzekpgbs
+      module subroutine zzekpgbs ( ctx, type, p, base )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: type  !! Data type of page.
+      integer(ip), intent(in) :: p  !! Page number.
+      integer(ip), intent(out) :: base  !! DAS base address of page.
       if ( type == chr ) then
 
          base  =   ( p - 1 ) * pgsizc
@@ -9262,16 +9498,14 @@ contains
       end if
 
       return
-      end procedure zzekpgbs
+      end subroutine zzekpgbs
 
-      !>## Abstract
+      !> Map a DAS address to the number of the page containing it.  Also
+      !> return the base address of the page.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Map a DAS address to the number of the page containing it.  Also
-      !>     return the base address of the page.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9338,11 +9572,16 @@ contains
       !>        -> ZZEKPGPG).
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      module procedure zzekpgpg
+      module subroutine zzekpgpg ( ctx, type, addrss, p, base )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekarch
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: type  !! Data type of address.
+      integer(ip), intent(in) :: addrss  !! DAS address to be mapped.
+      integer(ip), intent(out) :: p  !! Page number.
+      integer(ip), intent(out) :: base  !! DAS base address of page.
       if ( type == chr ) then
 
          p     =   ( addrss  + pgsizc - 1 ) / pgsizc
@@ -9368,15 +9607,13 @@ contains
       end if
 
       return
-      end procedure zzekpgpg
+      end subroutine zzekpgpg
 
-      !>## Abstract
+      !> Return paging statistics.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return paging statistics.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9450,12 +9687,16 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      module procedure zzekpgst
+      module subroutine zzekpgst ( ctx, handle, stat, value )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       use pepper_inc_ekarch
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Paged EK file handle.
+      character(*), intent(in) :: stat  !! Name of requested statistic.
+      integer(ip), intent(out) :: value  !! Value of requested statistic.
       integer(ip) :: value_1(1)  !! one-element copy of value (array argument)
       if (  eqstr( stat, 'N_C_ALLOC' )  ) then
 
@@ -9497,15 +9738,13 @@ contains
       end if
 
       return
-      end procedure zzekpgst
+      end subroutine zzekpgst
 
-      !>## Abstract
+      !> Read conjunction sizes from an encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read conjunction sizes from an encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9578,10 +9817,15 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      module procedure zzekqcnj
+      module subroutine zzekqcnj ( ctx, eqryi, n, size )
       use pepper_kinds, only: ip
       use pepper_inc_ekquery
       use pepper_inc_ekbool
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
+      integer(ip), intent(in) :: n  !! Index within FROM clause of table name to read.
+      integer(ip), intent(out) :: size  !! Size of Nth conjunction in WHERE clause.
 
       integer(ip) :: iparse
       integer(ip) :: loc
@@ -9626,16 +9870,14 @@ contains
       size   =  eqryi ( loc )
 
       return
-      end procedure zzekqcnj
+      end subroutine zzekqcnj
 
-      !>## Abstract
+      !> Return elements of a specified constraint from an encoded EK
+      !> query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return elements of a specified constraint from an encoded EK
-      !>     query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9773,13 +10015,34 @@ contains
       !>        indicated by the opcode.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      module procedure zzekqcon
+      module subroutine zzekqcon ( ctx, eqryi, eqryc, eqryd, n, cnstyp, ltname, ltidx, lcname, lcidx, opcode, rtname, rtidx, rcname, rcidx, dtype, cbeg, cend, dval, ival )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekquery
       use pepper_inc_ekbool
       use pepper_inc_ekopcd
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
+      character(*), intent(in) :: eqryc  !! Character component of query.
+      real(wp), intent(in) :: eqryd ( * )  !! Numeric component of query.
+      integer(ip), intent(in) :: n  !! Index of constraint to read.
+      integer(ip), intent(out) :: cnstyp  !! Type of constraint (column or value comparison).
+      character(*), intent(out) :: ltname  !! LHS table name.
+      integer(ip), intent(out) :: ltidx  !! LHS table index in FROM clause.
+      character(*), intent(out) :: lcname  !! LHS column name.
+      integer(ip), intent(out) :: lcidx  !! LHS column index in virtual parent table.
+      integer(ip), intent(out) :: opcode  !! Operation code.
+      character(*), intent(out) :: rtname  !! RHS table name.
+      integer(ip), intent(out) :: rtidx  !! RHS table index in FROM clause.
+      character(*), intent(out) :: rcname  !! RHS column name.
+      integer(ip), intent(out) :: rcidx  !! RHS column index in virtual parent table.
+      integer(ip), intent(out) :: dtype  !! Data type of RHS value.
+      integer(ip), intent(out) :: cbeg  !! Character begin pointer for RHS value.
+      integer(ip), intent(out) :: cend  !! Character end pointer for RHS value.
+      real(wp), intent(out) :: dval  !! RHS double precision value.
+      integer(ip), intent(out) :: ival  !! RHS integer value.
 
 
       integer(ip) :: base
@@ -9944,16 +10207,14 @@ contains
       end if
 
       return
-      end procedure zzekqcon
+      end subroutine zzekqcon
 
-      !>## Abstract
+      !> Read a specified order-by table and column name, along with the
+      !> corresponding order sense, from an encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read a specified order-by table and column name, along with the
-      !>     corresponding order sense, from an encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -10053,10 +10314,20 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      module procedure zzekqord
+      module subroutine zzekqord ( ctx, eqryi, eqryc, n, table, tabidx, column, colidx, sense )
       use pepper_kinds, only: ip
       use pepper_inc_ekquery
       use pepper_inc_ekbool
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
+      character(*), intent(in) :: eqryc  !! Character component of query.
+      integer(ip), intent(in) :: n  !! Index within FROM clause of table name to read.
+      character(*), intent(out) :: table  !! Name of table qualifying Nth ORDER BY column.
+      integer(ip), intent(out) :: tabidx  !! Index of TABLE in FROM clause, if known.
+      character(*), intent(out) :: column  !! Nth column in ORDER BY clause of query.
+      integer(ip), intent(out) :: colidx  !! Index of column in TABLE, if known.
+      integer(ip), intent(out) :: sense  !! Code giving order sense for Nth column.
 
       integer(ip) :: base
       integer(ip) :: buflen
@@ -10206,16 +10477,14 @@ contains
       end if
 
       return
-      end procedure zzekqord
+      end subroutine zzekqord
 
-      !>## Abstract
+      !> Read a specified SELECT clause table and column name from an
+      !> encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read a specified SELECT clause table and column name from an
-      !>     encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -10308,10 +10577,21 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      module procedure zzekqsel
+      module subroutine zzekqsel ( ctx, eqryi, eqryc, n, lxbeg, lxend, table, tabidx, column, colidx )
       use pepper_kinds, only: ip
       use pepper_inc_ekquery
       use pepper_inc_ekbool
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
+      character(*), intent(in) :: eqryc  !! Character component of query.
+      integer(ip), intent(in) :: n  !! Index within SELECT clause of table name to read.
+      integer(ip), intent(out) :: lxbeg  !! Begin index in query of selected item.
+      integer(ip), intent(out) :: lxend  !! End index in query of selected item.
+      character(*), intent(out) :: table  !! Name of table qualifying Nth SELECT column.
+      integer(ip), intent(out) :: tabidx  !! Index of TABLE in FROM clause, if known.
+      character(*), intent(out) :: column  !! Nth column in SELECT clause of query.
+      integer(ip), intent(out) :: colidx  !! Index of column in TABLE, if known.
 
       integer(ip) :: base
       integer(ip) :: buflen
@@ -10486,15 +10766,13 @@ contains
       end if
 
       return
-      end procedure zzekqsel
+      end subroutine zzekqsel
 
-      !>## Abstract
+      !> Read table names and aliases from an encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Read table names and aliases from an encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -10568,10 +10846,17 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      module procedure zzekqtab
+      module subroutine zzekqtab ( ctx, eqryi, eqryc, n, table, alias )
       use pepper_kinds, only: ip
       use pepper_inc_ekquery
       use pepper_inc_ekbool
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
+      character(*), intent(in) :: eqryc  !! Character component of query.
+      integer(ip), intent(in) :: n  !! Index within FROM clause of table name to read.
+      character(*), intent(out) :: table  !! Name of Nth table in FROM clause.
+      character(*), intent(out) :: alias  !! Alias of Nth table in FROM clause.
 
       integer(ip) :: ab
       integer(ip) :: ae
@@ -10680,8 +10965,12 @@ contains
       end if
 
       return
-      end procedure zzekqtab
+      end subroutine zzekqtab
 
+      !> Read a column entry from a specified record in a class 9 column.
+      !> Class 9 columns contain fixed record count, fixed-length,
+      !> scalar character values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -10793,9 +11082,7 @@ contains
       !>
       !>        The argument RECPTR was renamed to RECNO.  The reference to
       !>        ZZEKRP2N was removed.
-      !>
-      !>     Local variables
-      module procedure zzekrd09
+      module subroutine zzekrd09 ( ctx, handle, segdsc, coldsc, recno, cvlen, cval, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekclas09
@@ -10807,6 +11094,17 @@ contains
       use pepper_inc_ektype
 
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(out) :: cvlen  !! Length of returned character value.
+      character(*), intent(out) :: cval  !! Character value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+!
+!     Local variables
+!
       character(1) :: cflag
       character(cnamsz) :: column
 
@@ -10936,8 +11234,10 @@ contains
       end if
 
       return
-      end procedure zzekrd09
+      end subroutine zzekrd09
 
+      !> Set the companion pointer of a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -11005,13 +11305,16 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzeksrcp
+      module subroutine zzeksrcp ( ctx, handle, recptr, recno )
       use pepper_kinds, only: ip
       use pepper_inc_ekrecptr
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: recno  !! Record number of companion of specified EK record.
+!
+!     Local variables
+!
       integer(ip) :: loc
 
 !
@@ -11030,8 +11333,10 @@ contains
       call dasudi ( ctx, handle, loc, loc, [ recno ] )
 
       return
-      end procedure zzeksrcp
+      end subroutine zzeksrcp
 
+      !> Set the status of a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -11089,13 +11394,16 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzeksrs
+      module subroutine zzeksrs ( ctx, handle, recptr, status )
       use pepper_kinds, only: ip
       use pepper_inc_ekrecptr
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: status  !! Status of specified EK record.
+!
+!     Local variables
+!
       integer(ip) :: loc
 
 !
@@ -11114,8 +11422,13 @@ contains
       call dasudi ( ctx, handle, loc, loc, [ status ] )
 
       return
-      end procedure zzeksrs
+      end subroutine zzeksrs
 
+      !> Return the size of a specified entry in a class 6 column.
+      !>
+      !> The function returns the number of elements in the specified
+      !> column entry.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -11185,9 +11498,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      !>
-      !>     Local variables
-      module procedure zzeksz06
+      module integer(ip) function zzeksz06 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -11195,7 +11506,15 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: datptr
       integer(ip) :: ncols
@@ -11260,8 +11579,11 @@ contains
       end if
 
       return
-      end procedure zzeksz06
+      end function zzeksz06
 
+      !> Given a union of EK join row sets, prepare EKVCAL to
+      !> compute addresses of row vectors in that union.
+      !>
       !>## Detailed Input
       !>
       !>     NJRS           is the number of join row sets in a join row set
@@ -11344,9 +11666,12 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 28-SEP-1994 (NJB) (WLT)
-      module procedure zzekvset
+      module subroutine zzekvset ( ctx, njrs, bases )
       use pepper_kinds, only: ip
       use pepper_containers, only: grow
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: njrs  !! Number of join row sets in union.
+      integer(ip), intent(in) :: bases  ( * )  !! EK scratch area base addresses of join row sets.
       integer(ip) :: nsv_1(1)  !! one-element copy of nsv (array argument)
       integer(ip) :: j_1(1)  !! one-element copy of j (array argument)
       integer(ip) :: ntabs_1(1)  !! one-element copy of ntabs (array argument)
@@ -11521,8 +11846,12 @@ contains
 
       return
       end associate
-      end procedure zzekvset
+      end subroutine zzekvset
 
+      !> Find the EK scratch area base address of a row vector and the
+      !> corresponding segment vector, where the row vector has a
+      !> specified index within a union of join row sets.
+      !>
       !>## Detailed Input
       !>
       !>     RWVIDX         is the index of a row vector in a join row set
@@ -11588,9 +11917,13 @@ contains
       !>        previous version line's product from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 22-SEP-1994 (NJB) (WLT)
-      module procedure zzekvcal
+      module subroutine zzekvcal ( ctx, rwvidx, rwvbas, sgvbas )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlei
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: rwvidx  !! Index of row vector.
+      integer(ip), intent(out) :: rwvbas  !! EK scratch area base address of row vector.
+      integer(ip), intent(out) :: sgvbas  !! Base address of parent segment vector.
       integer(ip) :: sgvbas_1(1)  !! one-element copy of sgvbas (array argument)
       logical :: return
       integer(ip) :: reloff
@@ -11647,8 +11980,10 @@ contains
 
       return
       end associate
-      end procedure zzekvcal
+      end subroutine zzekvcal
 
+      !> Return the forward data pointer for a specified EK data page.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -11712,17 +12047,21 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekgfwd
+      module subroutine zzekgfwd ( ctx, handle, type, p, fward )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekdatpag
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: type  !! Data type of page.
+      integer(ip), intent(in) :: p  !! Page number.
+      integer(ip), intent(out) :: fward  !! Forward data pointer.
       integer(ip) :: fward_1(1)  !! one-element copy of fward (array argument)
       real(wp) :: dpptr_1(1)  !! one-element copy of dpptr (array argument)
+!
+!     Local variables
+!
       real(wp) :: dpptr
       integer(ip) :: base
 
@@ -11759,8 +12098,10 @@ contains
       end if
 
       return
-      end procedure zzekgfwd
+      end subroutine zzekgfwd
 
+      !> Return the link count for a specified EK data page.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -11820,17 +12161,21 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekglnk
+      module subroutine zzekglnk ( ctx, handle, type, p, nlinks )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekdatpag
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: type  !! Data type of page.
+      integer(ip), intent(in) :: p  !! Page number.
+      integer(ip), intent(out) :: nlinks  !! Number of links to page.
       integer(ip) :: nlinks_1(1)  !! one-element copy of nlinks (array argument)
       real(wp) :: dplnk_1(1)  !! one-element copy of dplnk (array argument)
+!
+!     Local variables
+!
       real(wp) :: dplnk
       integer(ip) :: base
 
@@ -11867,8 +12212,10 @@ contains
       end if
 
       return
-      end procedure zzekglnk
+      end subroutine zzekglnk
 
+      !> Convert the WHERE clause of an EK query to a normalized form.
+      !>
       !>## Detailed Input
       !>
       !>     QUERY          is an EK query to be parsed.  The tokens of the
@@ -12114,104 +12461,7 @@ contains
       !>-    Beta Version 3.0.0, 17-NOV-1995 (NJB)
       !>
       !>        Significantly re-written for architecture 3.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Data structure bounds:
-      !>
-      !>     MAXREL is the maximum number of relations that can be handled
-      !>     by this routine.
-      !>
-      !>     MAXMET is the maximum number of meta-tokens making up any
-      !>     expression.
-      !>
-      !>     LBPOOL is the lower bound of the second index of a linked list
-      !>     pool array.
-      !>
-      !>     Stack parameters:
-      !>
-      !>     Operator parameters:
-      !>
-      !>     NLOGOP is the number of recognized logical operators.  These
-      !>     are AND, OR, and NOT.
-      !>
-      !>     NRELOP is the number of arithmetic and character comparison
-      !>     operators.
-      !>
-      !>     Meta-token codes, excluding codes for relational operators:
-      !>
-      !>     Number of keywords that can terminate a WHERE clause.
-      !>
-      !>     State parameters:
-      !>
-      !>     'Pop condition' codes:
-      !>
-      !>     Token descriptor size:
-      !>
-      !>     Local variables
-      !>
-      !>     Each comparison relation is expressed by three tokens, so the
-      !>     comparison relations are represented by a 3 x MAXREL array.  The
-      !>     first and third elements of each row of RELS are array indices
-      !>     that point into the input array TOKENS; the middle element
-      !>     of each row is an operator code.  The set of triples representing
-      !>     comparison relations is indexed by a doubly linked list pool.
-      !>     Each conjunction of comparison relations is represented by a
-      !>     linked list of pointers to entries in the RELS array.  These
-      !>     pointers are contained in the CJPTRS array.  The pointers are
-      !>     linked via entries in the double linked list pool CJPOOL.
-      !>
-      !>     Each normalized expression is a disjunction of conjunctions.  Each
-      !>     such disjunction is represented by a linked list of nodes
-      !>     associated with pointers to entries in the CJPOOL array.  DJPTRS
-      !>     is the parallel array used to associate each node of a disjunction
-      !>     with the head node of a conjunction list in CJPOOL.
-      !>
-      !>     Meta-tokens are groups of tokens that comprise syntactic units
-      !>     in a query.  Each symbol that appears on the left hand side of
-      !>     a production rule in the grammar corresponds to a type of
-      !>     meta-token.
-      !>
-      !>     Throughout the parsing process, the meta-tokens representing the
-      !>     query are organized as a linked list.  Each meta-token is also
-      !>     associated with a more detailed classification MTCODE.
-      !>
-      !>     For each meta-token that represents an identifier, a value,
-      !>     a name, or an expression, there is a corresponding element of
-      !>     MTEXPR.  This element contains a pointer to a token or to a
-      !>     normalized expression.  In the latter case, the pointer is the
-      !>     head node of a list in the disjunction table.
-      !>
-      !>     Stack variables
-      !>
-      !>     These variables have the following meanings:
-      !>
-      !>        MSTART is the node number of the first meta-token of
-      !>        the current expression being parsed.
-      !>
-      !>        NMETA is the number of meta-tokens in the query.
-      !>
-      !>        POPCND is the `pop condition'.  This is a code indicating
-      !>        what event must occur to trigger popping the current state.
-      !>        The two events that can cause the state to be popped are
-      !>        the execution of a reduction and encountering a right grouper.
-      !>
-      !>     Other local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Note:  there is no "UNLIKE" keyword, but there is an UNLIKE
-      !>     operator, which is the complement of the LIKE operator.
-      !>
-      !>     PEPPER: the tables of the comparison operators (CMPOPS, CMPCDE,
-      !>     CMPNEG) are parameters, declared above.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzeknrml
+      module subroutine zzeknrml ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, eqryi, eqryc, eqryd, error, prserr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc_inplace, repmi_inplace
       use pepper_inc_ekkeyw
@@ -12221,11 +12471,47 @@ contains
       use pepper_inc_ektokn
       use pepper_inc_ektype
       use pepper_containers, only: grow, grow_cell, grown_capacity, lnkgrow
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: query  !! Input EK query.
+      integer(ip), intent(in) :: ntoken  !! Number of tokens in query.
+      integer(ip), intent(in) :: lxbegs ( * )  !! Start positions of lexemes comprising WHERE clause.
+      integer(ip), intent(in) :: lxends ( * )  !! End positions of lexemes comprising WHERE clause.
+      integer(ip), intent(in) :: tokens ( * )  !! Tokens comprising query.
+      integer(ip), intent(in) :: values ( * )  !! Values associated with tokens.
+      real(wp), intent(in) :: numvls ( * )  !! Buffer containing numeric token values.
+      character(*), intent(in) :: chrbuf  !! Buffer containing string token values.
+      integer(ip), intent(in) :: chbegs ( * )  !! String token begin and end character positions.
+      integer(ip), intent(in) :: chends ( * )  !! String token begin and end character positions.
+      integer(ip), allocatable, intent(inout) :: eqryi ( : )  !! Parsed query and string and number value buffers. PEPPER: allocatable, lower bound LBCELL; grows as the query is encoded.
+      character(*), intent(out) :: eqryc  !! Parsed query and string and number value buffers.
+      real(wp), intent(out) :: eqryd  ( * )  !! Parsed query and string and number value buffers.
+      logical, intent(out) :: error  !! Parse error flag.
+      character(*), intent(out) :: prserr  !! Parse error message.
       integer(ip), parameter :: lbcell = -5
+!
+!     Local parameters
+!
       integer(ip), parameter :: nil = 0
+!
+!     LBPOOL is the lower bound of the second index of a linked list
+!     pool array.
+!
       integer(ip), parameter :: lbpool = -5
+!
+!     Operator parameters:
+!
+!     NLOGOP is the number of recognized logical operators.  These
+!     are AND, OR, and NOT.
+!
       integer(ip), parameter :: nlogop = 3
+!
+!     NRELOP is the number of arithmetic and character comparison
+!     operators.
+!
       integer(ip), parameter :: nrelop = 8
+!
+!     Meta-token codes, excluding codes for relational operators:
+!
       integer(ip), parameter :: rgroup = -1
       integer(ip), parameter :: lgroup = rgroup - 1
       integer(ip), parameter :: btween = lgroup - 1
@@ -12239,24 +12525,46 @@ contains
       integer(ip), parameter :: or = and    - 1
       integer(ip), parameter :: not = or     - 1
       integer(ip), parameter :: expr = not    - 1
+!
+!     Number of keywords that can terminate a WHERE clause.
+!
       integer(ip), parameter :: nendkw = 3
+!
+!     State parameters:
+!
       integer(ip), parameter :: push = 0
       integer(ip), parameter :: pop = push   + 1
       integer(ip), parameter :: parse = pop    + 1
       integer(ip), parameter :: reducd = parse  + 1
       integer(ip), parameter :: term = reducd + 1
+!
+!     'Pop condition' codes:
+!
       integer(ip), parameter :: none = 0
       integer(ip), parameter :: reduce = 1
       integer(ip), parameter :: endgrp = reduce + 1
+!
+!     Token descriptor size:
+!
       integer(ip), parameter :: dscsiz = eqvdsz + 1
+!
+!     Note:  there is no "UNLIKE" keyword, but there is an UNLIKE
+!     operator, which is the complement of the LIKE operator.
+!
       integer(ip), parameter :: endkw  ( nendkw ) = [ kwfrom, kwordr, kwsel ]
       integer(ip), parameter :: cmpcde ( nrelop     ) = [ eq, ge, gt, le, lt, ne, like, unlike ]
       integer(ip), parameter :: cmpneg ( nrelop     ) = [ ne, lt, le, gt, ge, eq, unlike, like ]
       integer(ip), parameter :: cmpops ( nrelop - 1 ) = [ kweq, kwge, kwgt, kwle, kwlt, kwne, kwlike ]
+!
+!     Initial values
+!
       integer(ip), parameter :: logcde ( nlogop     ) = [ &
          and, or, not ]
       integer(ip), parameter :: logops ( nlogop     ) = [ &
          kwand, kwor, kwnot ]
+!
+!     Other local variables
+!
       integer(ip) :: colptr
       integer(ip) :: metahd
       logical :: donow
@@ -12287,6 +12595,21 @@ contains
       integer(ip) :: type
       integer(ip) :: nconj
       integer(ip) :: next
+!
+!     Stack variables
+!
+!     These variables have the following meanings:
+!
+!        MSTART is the node number of the first meta-token of
+!        the current expression being parsed.
+!
+!        NMETA is the number of meta-tokens in the query.
+!
+!        POPCND is the `pop condition'.  This is a code indicating
+!        what event must occur to trigger popping the current state.
+!        The two events that can cause the state to be popped are
+!        the execution of a reduction and encountering a right grouper.
+!
       integer(ip) :: nmeta
       integer(ip) :: lxb
       logical :: qual
@@ -12296,6 +12619,17 @@ contains
       logical :: fnd
       integer(ip) :: exprhd
       integer(ip) :: skip
+!
+!     Each comparison relation is expressed by three tokens, so the
+!     comparison relations are represented by a 3 x MAXREL array.  The
+!     first and third elements of each row of RELS are array indices
+!     that point into the input array TOKENS; the middle element
+!     of each row is an operator code.  The set of triples representing
+!     comparison relations is indexed by a doubly linked list pool.
+!     Each conjunction of comparison relations is represented by a
+!     linked list of pointers to entries in the RELS array.  These
+!     pointers are contained in the CJPTRS array.  The pointers are
+!     linked via entries in the double linked list pool CJPOOL.
 !
 !     PEPPER: the work arrays are local and sized from the number of
 !     tokens (SPICELIB: saved arrays for MAXTOK = 500 tokens and 10*MAXTOK
@@ -12309,8 +12643,31 @@ contains
       integer(ip), allocatable :: rlpool ( :, : )  !! linked list pool of the relations (rels)
       integer(ip), allocatable :: cjpool ( :, : )  !! linked list pool of the conjunctions (one list per conjunction)
       integer(ip), allocatable :: cjptrs ( : )  !! relation (index in rels) of each conjunction list node
+!
+!     Each normalized expression is a disjunction of conjunctions.  Each
+!     such disjunction is represented by a linked list of nodes
+!     associated with pointers to entries in the CJPOOL array.  DJPTRS
+!     is the parallel array used to associate each node of a disjunction
+!     with the head node of a conjunction list in CJPOOL.
+!
       integer(ip), allocatable :: djpool ( :, : )  !! linked list pool of the disjunctions (one per expression)
       integer(ip), allocatable :: djptrs ( : )  !! head of the conjunction list (cjpool) of each disjunction node
+!
+!     Meta-tokens are groups of tokens that comprise syntactic units
+!     in a query.  Each symbol that appears on the left hand side of
+!     a production rule in the grammar corresponds to a type of
+!     meta-token.
+!
+!     Throughout the parsing process, the meta-tokens representing the
+!     query are organized as a linked list.  Each meta-token is also
+!     associated with a more detailed classification MTCODE.
+!
+!     For each meta-token that represents an identifier, a value,
+!     a name, or an expression, there is a corresponding element of
+!     MTEXPR.  This element contains a pointer to a token or to a
+!     normalized expression.  In the latter case, the pointer is the
+!     head node of a list in the disjunction table.
+!
       integer(ip), allocatable :: mtpool ( :, : )  !! linked list pool of the meta-tokens of the query
       integer(ip), allocatable :: mtcode ( : )  !! classification code of each meta-token
       integer(ip), allocatable :: mtexpr ( : )  !! token, descriptor or disjunction list pointer of each meta-token
@@ -12330,7 +12687,14 @@ contains
       integer(ip) :: second  !! node of the second meta-token of the current expression
       integer(ip) :: start  !! node of the first meta-token of the subexpression to push
       integer(ip) :: state  !! state of the parser (push, pop, parse, reduced or terminated)
+!
+!     Stack parameters:
+!
       integer(ip) :: maxstk  !! size of the stack
+!
+!     MAXREL is the maximum number of relations that can be handled
+!     by this routine.
+!
       integer(ip) :: maxrel  !! initial size of the relation, conjunction, disjunction and descriptor pools
       integer(ip) :: mtsize  !! size of the meta-token pool
 
@@ -12347,6 +12711,9 @@ contains
       cj = 0
       dj = 0
       rel = 0
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -14426,8 +14793,10 @@ contains
             call lnkgrow ( dspool, n )
             call grow ( dscbuf, n, dscsiz )
          end subroutine more_descriptors
-      end procedure zzeknrml
+      end subroutine zzeknrml
 
+      !> Set the forward data pointer for a specified EK data page.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -14492,15 +14861,19 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzeksfwd
+      module subroutine zzeksfwd ( ctx, handle, type, p, fward )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekdatpag
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: type  !! Data type of page.
+      integer(ip), intent(in) :: p  !! Page number.
+      integer(ip), intent(in) :: fward  !! Forward data pointer.
+!
+!     Local variables
+!
       real(wp) :: dpptr
       integer(ip) :: base
 
@@ -14535,8 +14908,10 @@ contains
       end if
 
       return
-      end procedure zzeksfwd
+      end subroutine zzeksfwd
 
+      !> Set the link count for a specified EK data page.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -14603,15 +14978,19 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekslnk
+      module subroutine zzekslnk ( ctx, handle, type, p, nlinks )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekdatpag
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: type  !! Data type of page.
+      integer(ip), intent(in) :: p  !! Page number.
+      integer(ip), intent(in) :: nlinks  !! Number of links to page.
+!
+!     Local variables
+!
       real(wp) :: dplnk
       integer(ip) :: base
 
@@ -14646,8 +15025,11 @@ contains
       end if
 
       return
-      end procedure zzekslnk
+      end subroutine zzekslnk
 
+      !> Execute a 1-3 split:  split the root node to create two new
+      !> children, leaving a single key in the root.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -14765,13 +15147,17 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 26-OCT-1995 (NJB)
-      !>
-      !>     Local variables
-      module procedure zzektr13
+      module subroutine zzektr13 ( ctx, handle, tree )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: c1page ( pgsizi )
       integer(ip) :: c2page ( pgsizi )
@@ -14883,8 +15269,11 @@ contains
       call zzekpgwi ( ctx, handle,  child(2),  c2page )
 
       return
-      end procedure zzektr13
+      end subroutine zzektr13
 
+      !> Execute a 3-1 merge:  move the contents of two children into
+      !> the root node and delete the children.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -15029,13 +15418,17 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 27-OCT-1995 (NJB)
-      !>
-      !>     Local variables
-      module procedure zzektr31
+      module subroutine zzektr31 ( ctx, handle, tree )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+!
+!     Local variables
+!
       integer(ip) :: c1page ( pgsizi )
       integer(ip) :: c2page ( pgsizi )
       integer(ip) :: child  ( 2 )
@@ -15150,8 +15543,13 @@ contains
       end do
 
       return
-      end procedure zzektr31
+      end subroutine zzektr31
 
+      !> Map a node in a tree to its DAS base integer address.
+      !>
+      !> The function returns the DAS integer base address of the
+      !> specified node.
+      !>
       !>## Detailed Input
       !>
       !>     NODE           is the number of a node in an EK tree.
@@ -15200,16 +15598,21 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
-      !>
-      !>     Just use the mapping supplied by the paging system.
-      module procedure zzektrbs
+      module integer(ip) function zzektrbs ( ctx, node )
       use pepper_kinds, only: ip
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: node  !! Node number.
+!
+!     Just use the mapping supplied by the paging system.
+!
       call zzekpgbs ( ctx, int, node, zzektrbs )
 
       return
-      end procedure zzektrbs
+      end function zzektrbs
 
+      !> Free a tree:  deallocate all pages belonging to the tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -15297,19 +15700,19 @@ contains
       !>
       !>        Bug fix:  the original version was untested and had numerous
       !>        problems.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local parameters
-      module procedure zzektrfr
+      module subroutine zzektrfr ( ctx, handle, tree )
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
       use pepper_inc_ektree
       use pepper_inc_ektype
 
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+!
+!     Local parameters
+!
       integer(ip), parameter :: paridx = 1
 
       integer(ip), parameter :: nkdidx = 2
@@ -15473,8 +15876,10 @@ contains
       end do
 
       return
-      end procedure zzektrfr
+      end subroutine zzektrfr
 
+      !> Initialize an EK tree, returning the root of the tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -15537,25 +15942,24 @@ contains
       !>        it was done to pacify Valgrind.
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzektrit
+      module subroutine zzektrit ( ctx, handle, tree )
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
       use pepper_inc_ektree
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(out) :: tree  !! Root of tree.
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: p
       if ( .not. allocated ( ctx%zzektrit_state ) ) allocate ( ctx%zzektrit_state )
       associate ( page => ctx%zzektrit_state%page )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -15590,8 +15994,11 @@ contains
 
       return
       end associate
-      end procedure zzektrit
+      end subroutine zzektrit
 
+      !> Locate a specified key.  Return metadata describing the node
+      !> containing the key.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -15692,26 +16099,21 @@ contains
       !>        values.
       !>
       !>-    Beta Version 1.0.0, 26-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !> in this puppy.
-      !>
-      !>     Nothing found to begin with.
-      module procedure zzektrlk
+      module subroutine zzektrlk ( ctx, handle, tree, key, idx, node, noffst, level, value )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlei
       use pepper_inc_ekpage
       use pepper_inc_ektree
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: key  !! Key corresponding to value.
+      integer(ip), intent(out) :: idx  !! Node-relative index of KEY.
+      integer(ip), intent(out) :: node  !! Node containing key.
+      integer(ip), intent(out) :: noffst  !! Offset of NODE.
+      integer(ip), intent(out) :: level  !! Level of NODE.
+      integer(ip), intent(out) :: value  !! Value associated with KEY.
       integer(ip), parameter :: acclen = 15
       integer(ip) :: depth
       integer(ip) :: plus
@@ -15740,6 +16142,11 @@ contains
                   first => ctx%zzektrlk_state%first, &
                   leaf => ctx%zzektrlk_state%leaf, &
                   rdonly => ctx%zzektrlk_state%rdonly )
+!
+!     Use discovery check-in in this puppy.
+!
+!     Nothing found to begin with.
+!
       found  =  .false.
 
       if ( first ) then
@@ -16001,8 +16408,11 @@ contains
 
       return
       end associate
-      end procedure zzektrlk
+      end subroutine zzektrlk
 
+      !> Given a key, return general information pertaining to the key's
+      !> parent node.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -16119,16 +16529,28 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzektrpi
+      module subroutine zzektrpi ( ctx, handle, tree, key, parent, pkey, poffst, lpidx, lpkey, lsib, rpidx, rpkey, rsib )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlei
       use pepper_inc_ekpage
       use pepper_inc_ektree
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: key  !! Key belonging to node of interest.
+      integer(ip), intent(out) :: parent  !! Parent node of the node containing KEY.
+      integer(ip), intent(out) :: pkey  !! A key in the parent node.
+      integer(ip), intent(out) :: poffst  !! Key offset of the parent node.
+      integer(ip), intent(out) :: lpidx  !! Node-relative index of the left parent key.
+      integer(ip), intent(out) :: lpkey  !! Left parent key.
+      integer(ip), intent(out) :: lsib  !! Node number of left sibling.
+      integer(ip), intent(out) :: rpidx  !! Node-relative index of the right parent key.
+      integer(ip), intent(out) :: rpkey  !! Right parent key.
+      integer(ip), intent(out) :: rsib  !! Node number of right sibling.
+!
+!     Local variables
+!
       integer(ip) :: child
       integer(ip) :: lkey
       integer(ip) :: maxkey
@@ -16142,7 +16564,7 @@ contains
       logical :: found
 
 !
-! in this puppy.
+!     Use discovery check-in in this puppy.
 !
 !     Nothing found to begin with.
 !
@@ -16328,8 +16750,11 @@ contains
       end if
 
       return
-      end procedure zzektrpi
+      end subroutine zzektrpi
 
+      !> Rotate a specified number of keys from one node, through
+      !> the parent, into a neighboring sibling node.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -16455,14 +16880,21 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 16-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzektrrk
+      module subroutine zzektrrk ( ctx, handle, tree, left, right, parent, pkidx, nrot )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
       use pepper_inc_ekpage
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: left  !! Left node of pair to participate in rotation.
+      integer(ip), intent(in) :: right  !! Right node of pair to participate in rotation.
+      integer(ip), intent(in) :: parent  !! Parent node of pair to participate in rotation.
+      integer(ip), intent(in) :: pkidx  !! Parent key index.
+      integer(ip), intent(in) :: nrot  !! Number of keys to rotate.
+!
+!     Local variables
+!
       integer(ip) :: datbas
       integer(ip) :: dpar
       integer(ip) :: drotat
@@ -16852,16 +17284,14 @@ contains
       end if
 
       return
-      end procedure zzektrrk
+      end subroutine zzektrrk
 
-      !>## Abstract
+      !> Weed out redundant, fully qualified row vectors from a join row
+      !> set union.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Weed out redundant, fully qualified row vectors from a join row
-      !>     set union.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -16963,14 +17393,14 @@ contains
       !>        error check.
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekweed
+      module subroutine zzekweed ( ctx, njrs, bases, nrows )
       use pepper_kinds, only: ip
       use pepper_inc_ekjrs
       use pepper_inc_ekqlimit
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: njrs  !! Number of join row sets in union.
+      integer(ip), intent(inout) :: bases ( * )  !! Scratch area base addresses of join row sets.
+      integer(ip), intent(out) :: nrows  !! Total number of row vectors in join row set union.
       integer(ip) :: nr_1(1)  !! one-element copy of nr (array argument)
       integer(ip) :: nprdrv_1(1)  !! one-element copy of nprdrv (array argument)
       integer(ip) :: prwbas_1(1)  !! one-element copy of prwbas (array argument)
@@ -16979,6 +17409,9 @@ contains
       integer(ip) :: crwbas_1(1)  !! one-element copy of crwbas (array argument)
       integer(ip) :: ncndsv_1(1)  !! one-element copy of ncndsv (array argument)
       integer(ip) :: ntab_1(1)  !! one-element copy of ntab (array argument)
+!
+!     Local variables
+!
       integer(ip) :: i
       integer(ip) :: base
       integer(ip) :: cand
@@ -17266,8 +17699,10 @@ contains
       end do
 
       return
-      end procedure zzekweed
+      end subroutine zzekweed
 
+      !> Open a new E-kernel file and prepare the file for writing.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a new E-kernel file to be created.
@@ -17374,132 +17809,134 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKOPN_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKOPN_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME  = 'ekopn_ex1.bdb' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME  = 'ekopn_ex1.bdb' )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 6   )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 6   )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
-      !>              CHARACTER*(NAMLEN)    IFNAME
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
+      !>      CHARACTER*(NAMLEN)    IFNAME
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NRESVC
-      !>              INTEGER               SEGNO
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NRESVC
+      !>      INTEGER               SEGNO
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 01-JUN-2019'
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 01-JUN-2019'
       !>
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAORDERS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.  Only the COST column may take
-      !>        C     null values.
-      !>        C
-      !>              CNAMES(1) =  'ORDER_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAORDERS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.  Only the COST column may take
+      !>C     null values.
+      !>C
+      !>      CNAMES(1) =  'ORDER_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'CUSTOMER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'CUSTOMER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'LAST_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*), ' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'LAST_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*), ' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'FIRST_NAME'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*), ' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'FIRST_NAME'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*), ' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'ORDER_DATE'
-      !>              CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
+      !>      CNAMES(5) =  'ORDER_DATE'
+      !>      CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
       !>
-      !>              CNAMES(6) =  'COST'
-      !>              CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE,'             //
-      !>             .             'NULLS_OK = TRUE'
+      !>      CNAMES(6) =  'COST'
+      !>      CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE,'             //
+      !>     .             'NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the first segment. Since we have no data for this
-      !>        C     segment, start the segment by just defining the new
-      !>        C     segment's schema.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, 'DATAORDERS', 6,
-      !>             .              CNAMES, CDECLS,       SEGNO )
+      !>C
+      !>C     Start the first segment. Since we have no data for this
+      !>C     segment, start the segment by just defining the new
+      !>C     segment's schema.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, 'DATAORDERS', 6,
+      !>     .              CNAMES, CDECLS,       SEGNO )
       !>
-      !>        C
-      !>        C     At this point, the second segment could be
-      !>        C     created by an analogous process.  In fact, the
-      !>        C     second segment could be created at any time; it is
-      !>        C     not necessary to populate the first segment with
-      !>        C     data before starting the second segment.
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAITEMS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.
-      !>        C
-      !>              CNAMES(1) =  'ITEM_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     At this point, the second segment could be
+      !>C     created by an analogous process.  In fact, the
+      !>C     second segment could be created at any time; it is
+      !>C     not necessary to populate the first segment with
+      !>C     data before starting the second segment.
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAITEMS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.
+      !>C
+      !>      CNAMES(1) =  'ITEM_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'ORDER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'ORDER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'ITEM_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'ITEM_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'DESCRIPTION'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'DESCRIPTION'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'PRICE'
-      !>              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(5) =  'PRICE'
+      !>      CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>        C
-      !>        C     Start the new segment. Since we have no data for this
-      !>        C     segment, start the segment by just defining the new
-      !>        C     segment's schema.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, 'DATAITEMS', 5,
-      !>             .              CNAMES, CDECLS,      SEGNO )
+      !>C
+      !>C     Start the new segment. Since we have no data for this
+      !>C     segment, start the segment by just defining the new
+      !>C     segment's schema.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, 'DATAITEMS', 5,
+      !>     .              CNAMES, CDECLS,      SEGNO )
       !>
-      !>        C
-      !>        C     Close the file by a call to EKCLS.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file by a call to EKCLS.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new EK file exists in the
@@ -17530,11 +17967,16 @@ contains
       !>        $Parameters sections.
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekopn
+      module subroutine ekopn ( ctx, fname, ifname, ncomch, handle )
       use pepper_kinds, only: ip
       use pepper_inc_ektype
       use pepper_inc_ekfilpar
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of EK file.
+      character(*), intent(in) :: ifname  !! Internal file name.
+      integer(ip), intent(in) :: ncomch  !! The number of characters to reserve for comments.
+      integer(ip), intent(out) :: handle  !! Handle attached to new EK file.
 
       integer(ip), parameter :: nwc = 1024
 
@@ -17600,8 +18042,11 @@ contains
 !     That's it.  We're ready to add data to the file.
 !
       return
-      end procedure ekopn
+      end subroutine ekopn
 
+      !> Open a scratch (temporary) E-kernel file and prepare the file
+      !> for writing.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -17674,271 +18119,273 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKOPS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKOPS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ); the maximum
-      !>        C     length of an input query (MAXQRY), the maximum number of
-      !>        C     columns per segment (MXCLSG); and the maximum length of
-      !>        C     a table name (TNAMSZ).
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
-      !>              INCLUDE 'ekglimit.inc'
-      !>              INCLUDE 'ekqlimit.inc'
-      !>              INCLUDE 'ektnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ); the maximum
+      !>C     length of an input query (MAXQRY), the maximum number of
+      !>C     columns per segment (MXCLSG); and the maximum length of
+      !>C     a table name (TNAMSZ).
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
+      !>      INCLUDE 'ekglimit.inc'
+      !>      INCLUDE 'ekqlimit.inc'
+      !>      INCLUDE 'ektnamsz.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               EKNSEG
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               EKNSEG
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE   = 'DATAITEMS'      )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE   = 'DATAITEMS'      )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               DESCLN
-      !>              PARAMETER           ( DESCLN = 80  )
+      !>      INTEGER               DESCLN
+      !>      PARAMETER           ( DESCLN = 80  )
       !>
-      !>        C
-      !>        C     One value per row/column element.
-      !>        C
-      !>              INTEGER               MAXVAL
-      !>              PARAMETER           ( MAXVAL = 1  )
+      !>C
+      !>C     One value per row/column element.
+      !>C
+      !>      INTEGER               MAXVAL
+      !>      PARAMETER           ( MAXVAL = 1  )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               COLSLN
-      !>              PARAMETER           ( COLSLN = 5   )
+      !>      INTEGER               COLSLN
+      !>      PARAMETER           ( COLSLN = 5   )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( MXCLSG )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( MXCLSG )
-      !>              CHARACTER*(NAMLEN)    CVALS  ( MAXVAL )
-      !>              CHARACTER*(DESCLN)    DESCRP
-      !>              CHARACTER*(4)         DTYPES ( MXCLSG )
-      !>              CHARACTER*(NAMLEN)    ITEMNM
-      !>              CHARACTER*(TNAMSZ)    TABNAM
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( MXCLSG )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( MXCLSG )
+      !>      CHARACTER*(NAMLEN)    CVALS  ( MAXVAL )
+      !>      CHARACTER*(DESCLN)    DESCRP
+      !>      CHARACTER*(4)         DTYPES ( MXCLSG )
+      !>      CHARACTER*(NAMLEN)    ITEMNM
+      !>      CHARACTER*(TNAMSZ)    TABNAM
       !>
-      !>              DOUBLE PRECISION      DVALS  ( MAXVAL )
-      !>              DOUBLE PRECISION      PRICE
+      !>      DOUBLE PRECISION      DVALS  ( MAXVAL )
+      !>      DOUBLE PRECISION      PRICE
       !>
-      !>              INTEGER               ESIZE
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               ITEMID
-      !>              INTEGER               IVALS  ( MAXVAL )
-      !>              INTEGER               NCOLS
-      !>              INTEGER               NROWS
-      !>              INTEGER               NSEG
-      !>              INTEGER               NVALS
-      !>              INTEGER               ORDID
-      !>              INTEGER               RECNO
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SIZES  ( MXCLSG )
-      !>              INTEGER               STRLNS ( MXCLSG )
+      !>      INTEGER               ESIZE
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               ITEMID
+      !>      INTEGER               IVALS  ( MAXVAL )
+      !>      INTEGER               NCOLS
+      !>      INTEGER               NROWS
+      !>      INTEGER               NSEG
+      !>      INTEGER               NVALS
+      !>      INTEGER               ORDID
+      !>      INTEGER               RECNO
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SIZES  ( MXCLSG )
+      !>      INTEGER               STRLNS ( MXCLSG )
       !>
-      !>              LOGICAL               INDEXD ( MXCLSG )
-      !>              LOGICAL               ISNULL
-      !>              LOGICAL               NULLOK ( MXCLSG )
+      !>      LOGICAL               INDEXD ( MXCLSG )
+      !>      LOGICAL               ISNULL
+      !>      LOGICAL               NULLOK ( MXCLSG )
       !>
-      !>        C
-      !>        C     Open a scratch EK file to use for temporary
-      !>        C     storage.
-      !>        C
-      !>              CALL EKOPS ( HANDLE )
+      !>C
+      !>C     Open a scratch EK file to use for temporary
+      !>C     storage.
+      !>C
+      !>      CALL EKOPS ( HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAITEMS segment. We'll index all of
-      !>        C     the columns. All columns are scalar, so we omit
-      !>        C     the size declaration.
-      !>        C
-      !>              CNAMES(1) =  'ITEM_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAITEMS segment. We'll index all of
+      !>C     the columns. All columns are scalar, so we omit
+      !>C     the size declaration.
+      !>C
+      !>      CNAMES(1) =  'ITEM_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'ORDER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'ORDER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'ITEM_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'ITEM_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'DESCRIPTION'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'DESCRIPTION'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'PRICE'
-      !>              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(5) =  'PRICE'
+      !>      CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment. Since we have no data for this
-      !>        C     segment, start the segment by just defining the new
-      !>        C     segment's schema.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  COLSLN,
-      !>             .              CNAMES, CDECLS, SEGNO  )
+      !>C
+      !>C     Start the segment. Since we have no data for this
+      !>C     segment, start the segment by just defining the new
+      !>C     segment's schema.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  COLSLN,
+      !>     .              CNAMES, CDECLS, SEGNO  )
       !>
-      !>        C
-      !>        C     Append a new, empty record to the DATAITEMS
-      !>        C     table. Recall that the DATAITEMS table
-      !>        C     is in the first segment.  The call will return
-      !>        C     the number of the new, empty record.
-      !>        C
-      !>              SEGNO = 1
-      !>              CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>C
+      !>C     Append a new, empty record to the DATAITEMS
+      !>C     table. Recall that the DATAITEMS table
+      !>C     is in the first segment.  The call will return
+      !>C     the number of the new, empty record.
+      !>C
+      !>      SEGNO = 1
+      !>      CALL EKAPPR ( HANDLE, SEGNO, RECNO )
       !>
-      !>        C
-      !>        C     At this point, the new record is empty. We fill in the
-      !>        C     data here. Data items are filled in one column at a
-      !>        C     time. The order in which the columns are filled in is
-      !>        C     not important.  We use the different add column entry
-      !>        C     routines to fill in column entries.  We'll assume
-      !>        C     that no entries are null. All entries are scalar,
-      !>        C     so the entry size is 1.
-      !>        C
-      !>              ISNULL   =  .FALSE.
-      !>              ESIZE    =  1
+      !>C
+      !>C     At this point, the new record is empty. We fill in the
+      !>C     data here. Data items are filled in one column at a
+      !>C     time. The order in which the columns are filled in is
+      !>C     not important.  We use the different add column entry
+      !>C     routines to fill in column entries.  We'll assume
+      !>C     that no entries are null. All entries are scalar,
+      !>C     so the entry size is 1.
+      !>C
+      !>      ISNULL   =  .FALSE.
+      !>      ESIZE    =  1
       !>
-      !>        C
-      !>        C     The following variables will contain the data for
-      !>        C     the new record.
-      !>        C
-      !>              ORDID    =   10011
-      !>              ITEMID   =   531
-      !>              ITEMNM   =  'Sample item'
-      !>              DESCRP   =  'This sample item is used only in tests.'
-      !>              PRICE    =   1345.67D0
+      !>C
+      !>C     The following variables will contain the data for
+      !>C     the new record.
+      !>C
+      !>      ORDID    =   10011
+      !>      ITEMID   =   531
+      !>      ITEMNM   =  'Sample item'
+      !>      DESCRP   =  'This sample item is used only in tests.'
+      !>      PRICE    =   1345.67D0
       !>
-      !>        C
-      !>        C     Note that the names of the routines called
-      !>        C     correspond to the data types of the columns.
-      !>        C
-      !>              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
-      !>             .              ESIZE,  ORDID,  ISNULL               )
+      !>C
+      !>C     Note that the names of the routines called
+      !>C     correspond to the data types of the columns.
+      !>C
+      !>      CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
+      !>     .              ESIZE,  ORDID,  ISNULL               )
       !>
-      !>              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
-      !>             .              ESIZE,  ITEMID, ISNULL               )
+      !>      CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
+      !>     .              ESIZE,  ITEMID, ISNULL               )
       !>
-      !>              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
-      !>             .              ESIZE,  ITEMNM, ISNULL               )
+      !>      CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
+      !>     .              ESIZE,  ITEMNM, ISNULL               )
       !>
-      !>              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
-      !>             .              ESIZE,  DESCRP, ISNULL               )
+      !>      CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
+      !>     .              ESIZE,  DESCRP, ISNULL               )
       !>
-      !>              CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
-      !>             .              ESIZE,  PRICE,  ISNULL               )
+      !>      CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
+      !>     .              ESIZE,  PRICE,  ISNULL               )
       !>
-      !>        C
-      !>        C     At this point, we could perform read operations
-      !>        C     on the EK.
-      !>        C
-      !>        C     Return the number of segments in the EK. Dump the
-      !>        C     desired summary information for each one.
-      !>        C
-      !>              NSEG = EKNSEG( HANDLE )
-      !>              WRITE(*,'(A,I3)') 'Number of segments =', NSEG
-      !>              WRITE(*,*)
+      !>C
+      !>C     At this point, we could perform read operations
+      !>C     on the EK.
+      !>C
+      !>C     Return the number of segments in the EK. Dump the
+      !>C     desired summary information for each one.
+      !>C
+      !>      NSEG = EKNSEG( HANDLE )
+      !>      WRITE(*,'(A,I3)') 'Number of segments =', NSEG
+      !>      WRITE(*,*)
       !>
-      !>              DO SEGNO = 1, NSEG
+      !>      DO SEGNO = 1, NSEG
       !>
-      !>                 CALL EKSSUM (  HANDLE,  SEGNO,   TABNAM,  NROWS,
-      !>             .                  NCOLS,   CNAMES,  DTYPES,  SIZES,
-      !>             .                  STRLNS,  INDEXD,  NULLOK         )
+      !>         CALL EKSSUM (  HANDLE,  SEGNO,   TABNAM,  NROWS,
+      !>     .                  NCOLS,   CNAMES,  DTYPES,  SIZES,
+      !>     .                  STRLNS,  INDEXD,  NULLOK         )
       !>
-      !>                 WRITE(*,'(2A)')   'Table containing segment: ', TABNAM
-      !>                 WRITE(*,'(A,I2)') 'Number of rows          : ', NROWS
-      !>                 WRITE(*,'(A,I2)') 'Number of columns       : ', NCOLS
-      !>                 WRITE(*,'(A)')    'Table data              : '
+      !>         WRITE(*,'(2A)')   'Table containing segment: ', TABNAM
+      !>         WRITE(*,'(A,I2)') 'Number of rows          : ', NROWS
+      !>         WRITE(*,'(A,I2)') 'Number of columns       : ', NCOLS
+      !>         WRITE(*,'(A)')    'Table data              : '
       !>
-      !>                 DO I = 1, NCOLS
+      !>         DO I = 1, NCOLS
       !>
-      !>                    WRITE(*,'(2A)') '  Column: ', CNAMES(I)
-      !>                    WRITE(*,'(2A)') '  Type  : ', DTYPES(I)
+      !>            WRITE(*,'(2A)') '  Column: ', CNAMES(I)
+      !>            WRITE(*,'(2A)') '  Type  : ', DTYPES(I)
       !>
-      !>                    DO RECNO = 1, NROWS
+      !>            DO RECNO = 1, NROWS
       !>
-      !>                       IF ( DTYPES(I) .EQ. 'CHR' ) THEN
+      !>               IF ( DTYPES(I) .EQ. 'CHR' ) THEN
       !>
-      !>                          CALL EKRCEC ( HANDLE,    SEGNO, RECNO,
-      !>             .                          CNAMES(I), NVALS,
-      !>             .                          CVALS,     ISNULL       )
+      !>                  CALL EKRCEC ( HANDLE,    SEGNO, RECNO,
+      !>     .                          CNAMES(I), NVALS,
+      !>     .                          CVALS,     ISNULL       )
       !>
-      !>                          IF ( ISNULL ) THEN
+      !>                  IF ( ISNULL ) THEN
       !>
-      !>                             WRITE(*,'(A)') '  Data  : <null>'
+      !>                     WRITE(*,'(A)') '  Data  : <null>'
       !>
-      !>                          ELSE
+      !>                  ELSE
       !>
-      !>                             WRITE(*,'(2A)') '  Data  : ', CVALS
+      !>                     WRITE(*,'(2A)') '  Data  : ', CVALS
       !>
-      !>                          END IF
+      !>                  END IF
       !>
-      !>                       ELSE IF ( DTYPES(I) .EQ. 'DP' ) THEN
+      !>               ELSE IF ( DTYPES(I) .EQ. 'DP' ) THEN
       !>
-      !>                          CALL EKRCED ( HANDLE,    SEGNO, RECNO,
-      !>             .                          CNAMES(I), NVALS,
-      !>             .                          DVALS,     ISNULL       )
+      !>                  CALL EKRCED ( HANDLE,    SEGNO, RECNO,
+      !>     .                          CNAMES(I), NVALS,
+      !>     .                          DVALS,     ISNULL       )
       !>
-      !>                          IF ( ISNULL ) THEN
+      !>                  IF ( ISNULL ) THEN
       !>
-      !>                             WRITE(*,'(A)') '  Data  : <null>'
+      !>                     WRITE(*,'(A)') '  Data  : <null>'
       !>
-      !>                          ELSE
+      !>                  ELSE
       !>
-      !>                             WRITE(*,'(A,F9.2)') '  Data  : ', DVALS
+      !>                     WRITE(*,'(A,F9.2)') '  Data  : ', DVALS
       !>
-      !>                          END IF
+      !>                  END IF
       !>
-      !>                       ELSE IF ( DTYPES(I) .EQ. 'INT' ) THEN
+      !>               ELSE IF ( DTYPES(I) .EQ. 'INT' ) THEN
       !>
-      !>                          CALL EKRCEI ( HANDLE,    SEGNO, RECNO,
-      !>             .                          CNAMES(I), NVALS,
-      !>             .                          IVALS,     ISNULL       )
+      !>                  CALL EKRCEI ( HANDLE,    SEGNO, RECNO,
+      !>     .                          CNAMES(I), NVALS,
+      !>     .                          IVALS,     ISNULL       )
       !>
-      !>                          IF ( ISNULL ) THEN
+      !>                  IF ( ISNULL ) THEN
       !>
-      !>                             WRITE(*,'(A)') '  Data  : <null>'
+      !>                     WRITE(*,'(A)') '  Data  : <null>'
       !>
-      !>                          ELSE
+      !>                  ELSE
       !>
-      !>                             WRITE(*,'(A,I6)') '  Data  : ', IVALS
+      !>                     WRITE(*,'(A,I6)') '  Data  : ', IVALS
       !>
-      !>                          END IF
+      !>                  END IF
       !>
-      !>                       ENDIF
+      !>               ENDIF
       !>
-      !>        C
-      !>        C              There is no time data. Otherwise, we would need
-      !>        C              to use an LSK and EKRCED to read it
-      !>        C              (internally, it is stored as double precision).
-      !>        C
-      !>                       WRITE(*,*)
+      !>C
+      !>C              There is no time data. Otherwise, we would need
+      !>C              to use an LSK and EKRCED to read it
+      !>C              (internally, it is stored as double precision).
+      !>C
+      !>               WRITE(*,*)
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 WRITE(*,*) '----------------------------------------'
+      !>         WRITE(*,*) '----------------------------------------'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file. This will delete the scratch file
-      !>        C     and all the data will be lost.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file. This will delete the scratch file
+      !>C     and all the data will be lost.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -18000,11 +18447,13 @@ contains
       !>        $Parameters section.
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekops
+      module subroutine ekops ( ctx, handle )
       use pepper_kinds, only: ip
       use pepper_inc_ektype
       use pepper_inc_ekfilpar
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: handle  !! File handle attached to new EK file.
 
       integer(ip) :: base
       integer(ip) :: p
@@ -18047,8 +18496,10 @@ contains
 !     That's it.  We're ready to add data to the file.
 !
       return
-      end procedure ekops
+      end subroutine ekops
 
+      !> Create a new type 1 index for a specified EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK that is open for write
@@ -18116,13 +18567,15 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 06-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzekcix1
+      module subroutine zzekcix1 ( ctx, handle, coldsc )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: coldsc ( cdscsz )  !! Column descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -18145,8 +18598,11 @@ contains
       call zzektrit ( ctx, handle, coldsc(ixpidx) )
 
       return
-      end procedure zzekcix1
+      end subroutine zzekcix1
 
+      !> Parse an EK query that has been scanned and tokenized.
+      !> Represent the result as an encoded EK query.
+      !>
       !>## Detailed Input
       !>
       !>     QUERY          is a string containing the original input query.
@@ -18326,7 +18782,7 @@ contains
       !>        clause was not the last clause of the query.  The old algorithm
       !>        assumed that no clauses followed the ORDER-BY clause, which
       !>        at one time was a limitation of the EK query language.
-      module procedure zzekpars
+      module subroutine zzekpars ( ctx, query, ntoken, lxbegs, lxends, tokens, values, numvls, chrbuf, chbegs, chends, eqryi, eqryc, eqryd, error, prserr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc_inplace, repmi_inplace
       use pepper_inc_ektokn
@@ -18338,6 +18794,22 @@ contains
       use pepper_inc_ekqlimit
 
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: query  !! Query in string form.
+      integer(ip), intent(in) :: ntoken  !! Number of tokens in query.
+      integer(ip), intent(in) :: lxbegs ( * )  !! Lexeme begin and end positions in QUERY.
+      integer(ip), intent(in) :: lxends ( * )  !! Lexeme begin and end positions in QUERY.
+      integer(ip), intent(in) :: tokens ( * )  !! Token codes.
+      integer(ip), intent(in) :: values ( * )  !! Values associated with tokens.
+      real(wp), intent(in) :: numvls ( * )  !! Buffer containing numeric token values.
+      character(*), intent(in) :: chrbuf  !! Buffer containing string token values.
+      integer(ip), intent(in) :: chbegs ( * )  !! String token begin and end character positions.
+      integer(ip), intent(in) :: chends ( * )  !! String token begin and end character positions.
+      integer(ip), allocatable, intent(inout) :: eqryi ( : )  !! Parsed query and string and number value buffers. PEPPER: allocatable, lower bound LBCELL; grows as the query is encoded.
+      character(*), intent(out) :: eqryc  !! Parsed query and string and number value buffers.
+      real(wp), intent(out) :: eqryd  ( * )  !! Parsed query and string and number value buffers.
+      logical, intent(out) :: error  !! Flag indicating whether query parsed correctly.
+      character(*), intent(out) :: prserr  !! Parse error description.
       integer(ip) :: dsize
 
 !
@@ -18417,7 +18889,6 @@ contains
 
 !
 !     Initialize the encoded query each time, for safety.
-!
 !
 !     PEPPER: the encoded query is initialized at the sizes the caller
 !     allocated (SPICELIB: EQIMIN and MAXQNM); its integer part grows as
@@ -19676,8 +20147,11 @@ contains
       end if
 
       return
-      end procedure zzekpars
+      end subroutine zzekpars
 
+      !> Execute a 2-3 split:  split two sibling nodes into three nodes,
+      !> each one approximately 2/3 full.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -19856,16 +20330,23 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 16-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzektr23
+      module subroutine zzektr23 ( ctx, handle, tree, left, right, parent, pkidx, overfl )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: left  !! Left sibling node.
+      integer(ip), intent(in) :: right  !! Right sibling node.
+      integer(ip), intent(in) :: parent  !! Common parent node.
+      integer(ip), intent(in) :: pkidx  !! Node-relative index of parent key.
+      logical, intent(out) :: overfl  !! Overflow flag.
       integer(ip) :: nnode_1(1)  !! one-element copy of nnode (array argument)
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: c1page ( pgsizi )
       integer(ip) :: c2page ( pgsizi )
@@ -20245,8 +20726,13 @@ contains
       call zzekpgwi ( ctx, handle,  new,     c3page )
 
       return
-      end procedure zzektr23
+      end subroutine zzektr23
 
+      !> Execute a 3-2 merge:  merge three neighboring sibling nodes, two
+      !> of which contain the minimum number of keys and one of which
+      !> has an underflow of one key, into two nodes, each one
+      !> approximately full.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -20456,16 +20942,24 @@ contains
       !>        Fixed typo in comments.
       !>
       !>-    Beta Version 1.0.0, 16-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local parameters
-      module procedure zzektr32
+      module subroutine zzektr32 ( ctx, handle, tree, left, middle, right, parent, lpkidx, undrfl )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
       use pepper_inc_ekpage
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: left  !! Left sibling node.
+      integer(ip), intent(in) :: middle  !! Middle sibling node.
+      integer(ip), intent(in) :: right  !! Right sibling node.
+      integer(ip), intent(in) :: parent  !! Common parent node.
+      integer(ip), intent(in) :: lpkidx  !! Node-relative index of left parent key of MIDDLE.
+      logical, intent(out) :: undrfl  !! Underflow flag.
       integer(ip) :: nnode_1(1)  !! one-element copy of nnode (array argument)
+!
+!     Local parameters
+!
       integer(ip), parameter :: lsize = (3*mnkeyc)/2
 
       integer(ip), parameter :: rsize = 3*mnkeyc - lsize
@@ -20896,8 +21390,10 @@ contains
       call zzekpgfr ( ctx, handle, int, middle )
 
       return
-      end procedure zzektr32
+      end subroutine zzektr32
 
+      !> Return the data pointer from a specified location in an EK tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -20972,24 +21468,35 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 26-OCT-1995 (NJB)
-      !>
-      !>     Local variables
-      module procedure zzektrdp
+      module subroutine zzektrdp ( ctx, handle, tree, key, ptr )
       use pepper_kinds, only: ip
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: key  !! Key corresponding to pointer.
+      integer(ip), intent(out) :: ptr  !! Data pointer.
+!
+!     Local variables
+!
       integer(ip) :: idx
       integer(ip) :: node
       integer(ip) :: noffst
       integer(ip) :: level
 
 !
-! in this puppy.
+!     Use discovery check-in in this puppy.
 !
       call zzektrlk ( ctx, handle, tree,   key,   idx, &
                       node,   noffst, level, ptr  )
 
       return
-      end procedure zzektrdp
+      end subroutine zzektrdp
 
+      !> Return the number of keys in a node.
+      !>
+      !> The function returns the total number of keys in the specified
+      !> node of an EK tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -21046,14 +21553,14 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
-      module procedure zzektrnk
+      module integer(ip) function zzektrnk ( ctx, handle, tree, node )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: node  !! Node of interest.
       integer(ip) :: value_1(1)  !! one-element copy of the result (array argument)
-
-!
-!     Other functions
-!
 
       integer(ip) :: addrss
 
@@ -21071,8 +21578,11 @@ contains
       zzektrnk = value_1(1)
 
       return
-      end procedure zzektrnk
+      end function zzektrnk
 
+      !> Identify the immediate siblings of a node:  return a key in each
+      !> sibling and the siblings' node numbers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -21148,18 +21658,23 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Other functions
-      !>
-      !>     Local variables
-      module procedure zzektrsb
+      module subroutine zzektrsb ( ctx, handle, tree, key, lsib, lkey, rsib, rkey )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: key  !! Key of interest.
+      integer(ip), intent(out) :: lsib  !! Left sibling node.
+      integer(ip), intent(out) :: lkey  !! Key in left sibling.
+      integer(ip), intent(out) :: rsib  !! Right sibling node.
+      integer(ip), intent(out) :: rkey  !! Key in right sibling.
       integer(ip) :: rkey_1(1)  !! one-element copy of rkey (array argument)
       integer(ip) :: lkey_1(1)  !! one-element copy of lkey (array argument)
       integer(ip) :: loffst_1(1)  !! one-element copy of loffst (array argument)
+!
+!     Local variables
+!
       integer(ip) :: addrss
       integer(ip) :: base
       integer(ip) :: keybas
@@ -21292,8 +21807,13 @@ contains
 !
 
       return
-      end procedure zzektrsb
+      end subroutine zzektrsb
 
+      !> Return the number of keys in a tree.
+      !>
+      !> The function returns the total number of keys in the specified
+      !> EK tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -21348,9 +21868,12 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
-      module procedure zzektrsz
+      module integer(ip) function zzektrsz ( ctx, handle, tree )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
       integer(ip) :: value_1(1)  !! one-element copy of the result (array argument)
 
       integer(ip) :: addrss
@@ -21364,8 +21887,11 @@ contains
       zzektrsz = value_1(1)
 
       return
-      end procedure zzektrsz
+      end function zzektrsz
 
+      !> Delete a value from a tree at a specified location without
+      !> balancing the tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -21479,14 +22005,19 @@ contains
       !>        is used throughout the routine.
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzektrud
+      module subroutine zzektrud ( ctx, handle, tree, key, trgkey, undrfl )
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
       use pepper_inc_ektree
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: key  !! Key to delete.
+      integer(ip), intent(out) :: trgkey  !! Key identifying node from which deletion occurred.
+      logical, intent(out) :: undrfl  !! Underflow flag.
+!
+!     Local variables
+!
       integer(ip) :: datptr
       integer(ip) :: depth
       integer(ip) :: i
@@ -21937,8 +22468,11 @@ contains
       end if
 
       return
-      end procedure zzektrud
+      end subroutine zzektrud
 
+      !> Insert a value into a tree at a specified location without
+      !> balancing the tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -22043,15 +22577,20 @@ contains
       !>        Removed redundant calls to CHKIN.
       !>
       !>-    Beta Version 1.0.0, 20-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzektrui
+      module subroutine zzektrui ( ctx, handle, tree, key, value, overfl )
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
       use pepper_inc_ektree
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: key  !! Key to insert.
+      integer(ip), intent(in) :: value  !! Value to insert.
+      logical, intent(out) :: overfl  !! Overflow flag.
+!
+!     Local variables
+!
       integer(ip) :: datloc
       integer(ip) :: datptr
       integer(ip) :: depth
@@ -22454,8 +22993,13 @@ contains
       end if
 
       return
-      end procedure zzektrui
+      end subroutine zzektrui
 
+      !> Return the number of segments in a specified EK.
+      !>
+      !> The function returns the number of segments in the specified
+      !> E-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file opened for read access.
@@ -22506,39 +23050,41 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKNSEG_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKNSEG_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               EKNSEG
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               EKNSEG
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NSEG
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NSEG
       !>
-      !>        C
-      !>        C     Open the EK file, returning the file handle
-      !>        C     associated with the open file to the variable named
-      !>        C     HANDLE.
-      !>        C
-      !>              CALL EKOPR ( 'dif_seq_050112_050729.bes', HANDLE )
+      !>C
+      !>C     Open the EK file, returning the file handle
+      !>C     associated with the open file to the variable named
+      !>C     HANDLE.
+      !>C
+      !>      CALL EKOPR ( 'dif_seq_050112_050729.bes', HANDLE )
       !>
-      !>        C
-      !>        C     Return the number of segments in the EK.
-      !>        C
-      !>              NSEG = EKNSEG( HANDLE )
-      !>              WRITE(*,*) 'Number of segments = ', NSEG
+      !>C
+      !>C     Return the number of segments in the EK.
+      !>C
+      !>      NSEG = EKNSEG( HANDLE )
+      !>      WRITE(*,*) 'Number of segments = ', NSEG
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -22568,10 +23114,12 @@ contains
       !>        Added complete code example.
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure eknseg
+      module integer(ip) function eknseg ( ctx, handle )
       use pepper_kinds, only: ip
       use pepper_inc_ekfilpar
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
       integer(ip) :: tree_1(1)  !! one-element copy of tree (array argument)
 
       integer(ip) :: base
@@ -22611,8 +23159,10 @@ contains
       eknseg  =  zzektrsz ( ctx, handle, tree )
 
       return
-      end procedure eknseg
+      end function eknseg
 
+      !> Look up a specified record pointer from an EK index.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -22679,14 +23229,20 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     Local variables
-      module procedure zzekixlk
+      module subroutine zzekixlk ( ctx, handle, coldsc, key, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekdatpag
       use pepper_inc_ekpage
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: key  !! Key.
+      integer(ip), intent(out) :: recptr  !! Record pointer.
       integer(ip) :: recptr_1(1)  !! one-element copy of recptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: addrss
       integer(ip) :: base
       integer(ip) :: itype
@@ -22730,8 +23286,11 @@ contains
 
       end if
 
-      end procedure zzekixlk
+      end subroutine zzekixlk
 
+      !> Look up the record pointer of an EK record having a specified
+      !> ordinal position in a specified EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -22795,13 +23354,19 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     Local variables
-      module procedure zzekrplk
+      module subroutine zzekrplk ( ctx, handle, segdsc, n, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: n  !! Ordinal position of record.
+      integer(ip), intent(out) :: recptr  !! Record pointer.
+!
+!     Local variables
+!
       integer(ip) :: stype
       integer(ip) :: tree
 
@@ -22834,8 +23399,11 @@ contains
 
       end if
 
-      end procedure zzekrplk
+      end subroutine zzekrplk
 
+      !> One-shot tree load:  insert an entire array into an empty
+      !> tree.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -22928,12 +23496,17 @@ contains
       !>        Removed redundant calls to CHKIN
       !>
       !>-    Beta Version 1.0.0, 22-OCT-1995 (NJB)
-      module procedure zzektr1s
+      module subroutine zzektr1s ( ctx, handle, tree, size, values )
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
       use pepper_inc_ektree
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: size  !! Size of tree.
+      integer(ip), intent(in) :: values  ( * )  !! Values to insert.
 
       integer(ip) :: base
       integer(ip) :: basidx
@@ -23608,8 +24181,11 @@ contains
       call dasudi ( ctx, handle, base+trnnod, base+trnnod, [ totnod ] )
 
       return
-      end procedure zzektr1s
+      end subroutine zzektr1s
 
+      !> Solve overflow in a node by balancing the node
+      !> with one of its sibling nodes.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -23729,13 +24305,19 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 27-OCT-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzektrbn
+      module subroutine zzektrbn ( ctx, handle, tree, left, right, parent, pkidx )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: left  !! Left node of pair to be balanced.
+      integer(ip), intent(in) :: right  !! Right node of pair to be balanced.
+      integer(ip), intent(in) :: parent  !! Parent node of pair to be balanced.
+      integer(ip), intent(in) :: pkidx  !! Parent key index.
+!
+!     Local variables
+!
       integer(ip) :: lnkeys
       integer(ip) :: rnkeys
       integer(ip) :: root
@@ -23810,8 +24392,12 @@ contains
       call zzektrrk ( ctx, handle, tree, left, right, parent, pkidx, schlep )
 
       return
-      end procedure zzektrbn
+      end subroutine zzektrbn
 
+      !> Get a key from a node by index:  return the key having a specified
+      !> index in a specified node.  The node of interest is identified
+      !> by a key in the node.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -23886,14 +24472,19 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
-      !>
-      !>     Functions
-      !>
-      !>     Local variables
-      module procedure zzektrki
+      module subroutine zzektrki ( ctx, handle, tree, nodkey, n, key )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: nodkey  !! Key identifying node containing key of interest.
+      integer(ip), intent(in) :: n  !! Index of key of interest.
+      integer(ip), intent(out) :: key  !! Key located at index N.
       integer(ip) :: key_1(1)  !! one-element copy of key (array argument)
+!
+!     Local variables
+!
       integer(ip) :: addrss
       integer(ip) :: base
       integer(ip) :: idx
@@ -23939,8 +24530,14 @@ contains
 !
       key  =  key + noffst
 
-      end procedure zzektrki
+      end subroutine zzektrki
 
+      !> Search an EK tree linearly to find a specified data value.  The
+      !> function returns the index at which the value is found.
+      !>
+      !> The function returns the lowest index at which the input value
+      !> is found, or zero if the value is not found.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -24001,13 +24598,16 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzektrls
+      module integer(ip) function zzektrls ( ctx, handle, tree, ival )
       use pepper_kinds, only: ip
       use pepper_inc_ektree
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Tree root.
+      integer(ip), intent(in) :: ival  !! Value to search for.
+!
+!     Local variables
+!
       integer(ip) :: i
       integer(ip) :: n
       integer(ip) :: value
@@ -24027,8 +24627,12 @@ contains
       end do
 
       return
-      end procedure zzektrls
+      end function zzektrls
 
+      !> Return the integer metadata location of a specified segment.  The
+      !> number and DAS integer base address of the first integer
+      !> page of the metadata are returned.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The EK may be open for read
@@ -24122,16 +24726,18 @@ contains
       !>        Added the required discovery CHKIN.
       !>
       !>-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekmloc
+      module subroutine zzekmloc ( ctx, handle, segno, page, base )
       use pepper_kinds, only: ip
       use pepper_inc_ekfilpar
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segno  !! Segment number.
+      integer(ip), intent(out) :: page  !! Integer metadata start page number.
+      integer(ip), intent(out) :: base  !! Page base.
       integer(ip) :: tree_1(1)  !! one-element copy of tree (array argument)
+!
+!     Local variables
+!
       integer(ip) :: nseg
       integer(ip) :: tbase
       integer(ip) :: tree
@@ -24179,8 +24785,10 @@ contains
 !
       base  =  zzektrbs ( ctx, page )
 
-      end procedure zzekmloc
+      end subroutine zzekmloc
 
+      !> Delete a value from an EK tree at a specified location.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -24318,20 +24926,21 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Other functions
-      !>
-      !>     Local parameters
-      module procedure zzektrdl
+      module subroutine zzektrdl ( ctx, handle, tree, key )
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
       use pepper_inc_ektree
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: key  !! Key at which to delete value.
 
 
 
 
+!
+!     Local parameters
+!
       integer(ip), parameter :: merg32 = balnce + 1
 
       integer(ip), parameter :: merg31 = merg32 + 1
@@ -24742,8 +25351,10 @@ contains
       end do
 
       return
-      end procedure zzektrdl
+      end subroutine zzektrdl
 
+      !> Insert a value into an EK tree at a specified location.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -24861,20 +25472,22 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 01-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Other functions
-      !>
-      !>     Local parameters
-      module procedure zzektrin
+      module subroutine zzektrin ( ctx, handle, tree, key, value )
       use pepper_kinds, only: ip
       use pepper_inc_ekpage
       use pepper_inc_ektree
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: key  !! Key at which to insert value.
+      integer(ip), intent(in) :: value  !! Value to insert.
 
 
 
 
+!
+!     Local parameters
+!
       integer(ip), parameter :: splt23 = balnce + 1
 
       integer(ip), parameter :: splt13 = splt23 + 1
@@ -25105,8 +25718,10 @@ contains
       end do
 
       return
-      end procedure zzektrin
+      end subroutine zzektrin
 
+      !> Delete a specified data page for a specified EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -25185,17 +25800,19 @@ contains
       !>        from the parent data page tree was corrected.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekdps
+      module subroutine zzekdps ( ctx, handle, segdsc, type, p )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: type  !! Data type of page.
+      integer(ip), intent(in) :: p  !! Page number.
+!
+!     Local variables
+!
       integer(ip) :: mbase
       integer(ip) :: loc
       integer(ip) :: tree
@@ -25269,8 +25886,10 @@ contains
       call zzektrdl ( ctx,  handle, tree, loc )
 
       return
-      end procedure zzekdps
+      end subroutine zzekdps
 
+      !> Complete a fast load operation on a new type 1 E-kernel segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -25350,11 +25969,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 08-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      module procedure zzekff01
+      module subroutine zzekff01 ( ctx, handle, segno, rcptrs )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
       use pepper_inc_ekglimit
@@ -25362,9 +25977,16 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segno  !! Segment number.
+      integer(ip), intent(inout) :: rcptrs ( * )  !! Record pointers.
       integer(ip) :: colidx_1(1)  !! one-element copy of colidx (array argument)
       integer(ip) :: stkseg_1(1)  !! one-element copy of stkseg (array argument)
       integer(ip) :: stkhan_1(1)  !! one-element copy of stkhan (array argument)
+!
+!     Local parameters
+!
       integer(ip), parameter :: bufsiz = 100
 
       integer(ip) :: addrss
@@ -25566,8 +26188,10 @@ contains
       call dasudi ( ctx, handle, base+liwidx, base+liwidx, [ ipsize ] )
 
       return
-      end procedure zzekff01
+      end subroutine zzekff01
 
+      !> Look up the descriptor of a specified EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -25627,11 +26251,16 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     Local variables
-      module procedure zzeksdsc
+      module subroutine zzeksdsc ( ctx, handle, segno, segdsc )
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segno  !! Segment number.
+      integer(ip), intent(out) :: segdsc ( sdscsz )  !! Segment descriptor.
+!
+!     Local variables
+!
       integer(ip) :: mp
       integer(ip) :: mbase
 
@@ -25639,8 +26268,11 @@ contains
       call dasrdi   ( ctx,  handle,  mbase+1,  mbase+sdscsz,  segdsc  )
 
       return
-      end procedure zzeksdsc
+      end subroutine zzeksdsc
 
+      !> Return general segment information for a specified segment in a
+      !> specified EK.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -25832,16 +26464,22 @@ contains
       !>        TNAMSZ and CNAMSZ respectively, the trailing characters
       !>        at positions past those designated by these parameters were
       !>        left unassigned on output.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzeksinf
+      module subroutine zzeksinf ( ctx, handle, segno, tabnam, segdsc, cnames, cdscrs )
       use pepper_kinds, only: ip
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektnamsz
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of EK.
+      integer(ip), intent(in) :: segno  !! Number of segment to be summarized.
+      character(*), intent(out) :: tabnam  !! Name of table containing segment.
+      integer(ip), intent(out) :: segdsc ( sdscsz    )  !! Segment descriptor.
+      character(*), intent(out) :: cnames (         * )  !! Names of columns in segment.
+      integer(ip), intent(out) :: cdscrs ( cdscsz, * )  !! Descriptors of columns in segment.
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: i
       integer(ip) :: ncols
@@ -25935,8 +26573,11 @@ contains
 !
 
       return
-      end procedure zzeksinf
+      end subroutine zzeksinf
 
+      !> Append an item to a tree.  The key indicating the location of
+      !> the new item is returned.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -26013,16 +26654,21 @@ contains
       !>        $Procedure line was corrected.
       !>
       !>-    Beta Version 1.0.0, 22-OCT-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      module procedure zzektrap
+      module subroutine zzektrap ( ctx, handle, tree, value, key )
       use pepper_kinds, only: ip
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: tree  !! Root of tree.
+      integer(ip), intent(in) :: value  !! Value to append.
+      integer(ip), intent(out) :: key  !! Key pointing to new value.
       key  =  zzektrsz ( ctx, handle, tree )   +   1
 
       call zzektrin ( ctx, handle, tree, key, value )
 
-      end procedure zzektrap
+      end subroutine zzektrap
 
+      !> Complete a fast write operation on a new E-kernel segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file that is open for writing.
@@ -26132,208 +26778,210 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKFFLD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKFFLD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         LSK
-      !>              PARAMETER           ( LSK    = 'naif0012.tls' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         LSK
+      !>      PARAMETER           ( LSK    = 'naif0012.tls' )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE  = 'DATAORDERS'   )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE  = 'DATAORDERS'   )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               FNMLEN
-      !>              PARAMETER           ( FNMLEN = 50  )
+      !>      INTEGER               FNMLEN
+      !>      PARAMETER           ( FNMLEN = 50  )
       !>
-      !>              INTEGER               LNMLEN
-      !>              PARAMETER           ( LNMLEN = 50  )
+      !>      INTEGER               LNMLEN
+      !>      PARAMETER           ( LNMLEN = 50  )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 6   )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 6   )
       !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 9   )
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 9   )
       !>
-      !>              INTEGER               UTCLEN
-      !>              PARAMETER           ( UTCLEN = 30  )
+      !>      INTEGER               UTCLEN
+      !>      PARAMETER           ( UTCLEN = 30  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS )
-      !>              CHARACTER*(32)        CNAMES ( NCOLS )
-      !>              CHARACTER*(FNMLEN)    FNAMES ( NROWS )
-      !>              CHARACTER*(LNMLEN)    LNAMES ( NROWS )
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(UTCLEN)    ODATE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS )
+      !>      CHARACTER*(32)        CNAMES ( NCOLS )
+      !>      CHARACTER*(FNMLEN)    FNAMES ( NROWS )
+      !>      CHARACTER*(LNMLEN)    LNAMES ( NROWS )
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(UTCLEN)    ODATE
       !>
-      !>              DOUBLE PRECISION      COSTS  ( NROWS )
-      !>              DOUBLE PRECISION      ETS    ( NROWS )
+      !>      DOUBLE PRECISION      COSTS  ( NROWS )
+      !>      DOUBLE PRECISION      ETS    ( NROWS )
       !>
-      !>              INTEGER               CSTIDS ( NROWS )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               NRESVC
-      !>              INTEGER               ORDIDS ( NROWS )
-      !>              INTEGER               RCPTRS ( NROWS )
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SIZES  ( NROWS )
-      !>              INTEGER               WKINDX ( NROWS )
+      !>      INTEGER               CSTIDS ( NROWS )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               NRESVC
+      !>      INTEGER               ORDIDS ( NROWS )
+      !>      INTEGER               RCPTRS ( NROWS )
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SIZES  ( NROWS )
+      !>      INTEGER               WKINDX ( NROWS )
       !>
-      !>              LOGICAL               NLFLGS ( NROWS )
+      !>      LOGICAL               NLFLGS ( NROWS )
       !>
-      !>        C
-      !>        C     Load a leapseconds kernel for UTC/ET conversion.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load a leapseconds kernel for UTC/ET conversion.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 20-SEP-1995'
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 20-SEP-1995'
       !>
-      !>              CALL EKOPN ( 'ekffld_ex1.bes', IFNAME, NRESVC, HANDLE )
+      !>      CALL EKOPN ( 'ekffld_ex1.bes', IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAORDERS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.  Only the COST column may take
-      !>        C     null values.
-      !>        C
-      !>              CNAMES(1) =  'ORDER_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAORDERS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.  Only the COST column may take
+      !>C     null values.
+      !>C
+      !>      CNAMES(1) =  'ORDER_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'CUSTOMER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'CUSTOMER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'LAST_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'LAST_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'FIRST_NAME'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'FIRST_NAME'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'ORDER_DATE'
-      !>              CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
+      !>      CNAMES(5) =  'ORDER_DATE'
+      !>      CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
       !>
-      !>              CNAMES(6) =  'COST'
-      !>              CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE,'             //
-      !>             .             'NULLS_OK = TRUE'
+      !>      CNAMES(6) =  'COST'
+      !>      CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE,'             //
+      !>     .             'NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment.  We presume the number of  rows
-      !>        C     of data is known in advance.
-      !>        C
-      !>              CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
-      !>             .              CNAMES,  CDECLS, SEGNO, RCPTRS )
+      !>C
+      !>C     Start the segment.  We presume the number of  rows
+      !>C     of data is known in advance.
+      !>C
+      !>      CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
+      !>     .              CNAMES,  CDECLS, SEGNO, RCPTRS )
       !>
-      !>        C
-      !>        C     At this point, arrays containing data for the
-      !>        C     segment's columns may be filled in.  The names
-      !>        C     of the data arrays are shown below.
-      !>        C
-      !>        C        Column           Data array
-      !>        C
-      !>        C        'ORDER_ID'       ORDIDS
-      !>        C        'CUSTOMER_ID'    CSTIDS
-      !>        C        'LAST_NAME'      LNAMES
-      !>        C        'FIRST_NAME'     FNAMES
-      !>        C        'ORDER_DATE'     ETS
-      !>        C        'COST'           COSTS
-      !>        C
-      !>              DO I = 1, NROWS
+      !>C
+      !>C     At this point, arrays containing data for the
+      !>C     segment's columns may be filled in.  The names
+      !>C     of the data arrays are shown below.
+      !>C
+      !>C        Column           Data array
+      !>C
+      !>C        'ORDER_ID'       ORDIDS
+      !>C        'CUSTOMER_ID'    CSTIDS
+      !>C        'LAST_NAME'      LNAMES
+      !>C        'FIRST_NAME'     FNAMES
+      !>C        'ORDER_DATE'     ETS
+      !>C        'COST'           COSTS
+      !>C
+      !>      DO I = 1, NROWS
       !>
-      !>                 ORDIDS(I) = I
-      !>                 CSTIDS(I) = I * 100
-      !>                 COSTS(I)  = I * 100.D0
+      !>         ORDIDS(I) = I
+      !>         CSTIDS(I) = I * 100
+      !>         COSTS(I)  = I * 100.D0
       !>
-      !>                 CALL REPMI ( 'Order # Customer first name',
-      !>             .                '#', I, FNAMES(I)             )
-      !>                 CALL REPMI ( 'Order # Customer last name',
-      !>             .                '#', I, LNAMES(I)             )
-      !>                 CALL REPMI ( '1998 Mar #', '#', I, ODATE   )
+      !>         CALL REPMI ( 'Order # Customer first name',
+      !>     .                '#', I, FNAMES(I)             )
+      !>         CALL REPMI ( 'Order # Customer last name',
+      !>     .                '#', I, LNAMES(I)             )
+      !>         CALL REPMI ( '1998 Mar #', '#', I, ODATE   )
       !>
-      !>                 CALL UTC2ET ( ODATE,  ETS(I) )
+      !>         CALL UTC2ET ( ODATE,  ETS(I) )
       !>
-      !>                 NLFLGS(I) = .FALSE.
+      !>         NLFLGS(I) = .FALSE.
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              NLFLGS(2) = .TRUE.
+      !>      NLFLGS(2) = .TRUE.
       !>
-      !>        C
-      !>        C     The SIZES array shown below is ignored for scalar
-      !>        C     and fixed-size array columns, so we need not
-      !>        C     initialize it.  For variable-size arrays, the
-      !>        C     Ith element of the SIZES array must contain the size
-      !>        C     of the Ith column entry in the column being written.
-      !>        C     Normally, the SIZES array would be reset for each
-      !>        C     variable-size column.
-      !>        C
-      !>        C     The NLFLGS array indicates which entries are null.
-      !>        C     It is ignored for columns that don't allow null
-      !>        C     values.  In this case, only the COST column allows
-      !>        C     nulls.
-      !>        C
-      !>        C     Add the columns of data to the segment.  All of the
-      !>        C     data for each column is written in one shot.
-      !>        C
-      !>              CALL EKACLI ( HANDLE, SEGNO,  'ORDER_ID',
-      !>             .              ORDIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>C
+      !>C     The SIZES array shown below is ignored for scalar
+      !>C     and fixed-size array columns, so we need not
+      !>C     initialize it.  For variable-size arrays, the
+      !>C     Ith element of the SIZES array must contain the size
+      !>C     of the Ith column entry in the column being written.
+      !>C     Normally, the SIZES array would be reset for each
+      !>C     variable-size column.
+      !>C
+      !>C     The NLFLGS array indicates which entries are null.
+      !>C     It is ignored for columns that don't allow null
+      !>C     values.  In this case, only the COST column allows
+      !>C     nulls.
+      !>C
+      !>C     Add the columns of data to the segment.  All of the
+      !>C     data for each column is written in one shot.
+      !>C
+      !>      CALL EKACLI ( HANDLE, SEGNO,  'ORDER_ID',
+      !>     .              ORDIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLI ( HANDLE, SEGNO,  'CUSTOMER_ID',
-      !>             .              CSTIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLI ( HANDLE, SEGNO,  'CUSTOMER_ID',
+      !>     .              CSTIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLC ( HANDLE, SEGNO,  'LAST_NAME',
-      !>             .              LNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLC ( HANDLE, SEGNO,  'LAST_NAME',
+      !>     .              LNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLC ( HANDLE, SEGNO,  'FIRST_NAME',
-      !>             .              FNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLC ( HANDLE, SEGNO,  'FIRST_NAME',
+      !>     .              FNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLD ( HANDLE, SEGNO,  'ORDER_DATE',
-      !>             .              ETS,    SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLD ( HANDLE, SEGNO,  'ORDER_DATE',
+      !>     .              ETS,    SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLD ( HANDLE, SEGNO,  'COST',
-      !>             .              COSTS,  SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLD ( HANDLE, SEGNO,  'COST',
+      !>     .              COSTS,  SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>        C
-      !>        C     Complete the segment.  The RCPTRS array is that
-      !>        C     returned by EKIFLD.
-      !>        C
-      !>              CALL EKFFLD ( HANDLE, SEGNO, RCPTRS )
+      !>C
+      !>C     Complete the segment.  The RCPTRS array is that
+      !>C     returned by EKIFLD.
+      !>C
+      !>      CALL EKFFLD ( HANDLE, SEGNO, RCPTRS )
       !>
-      !>        C
-      !>        C     At this point, the second segment could be
-      !>        C     created by an analogous process.  In fact, the
-      !>        C     second segment could be created at any time; it is
-      !>        C     not necessary to populate the first segment with
-      !>        C     data before starting the second segment.
-      !>        C
-      !>        C     The file must be closed by a call to EKCLS.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     At this point, the second segment could be
+      !>C     created by an analogous process.  In fact, the
+      !>C     second segment could be created at any time; it is
+      !>C     not necessary to populate the first segment with
+      !>C     data before starting the second segment.
+      !>C
+      !>C     The file must be closed by a call to EKCLS.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new EK file exists in the
@@ -26381,10 +27029,14 @@ contains
       !>        Made miscellaneous header corrections.
       !>
       !>-    SPICELIB Version 1.0.0, 08-NOV-1995 (NJB)
-      module procedure ekffld
+      module subroutine ekffld ( ctx, handle, segno, rcptrs )
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segno  !! Segment number.
+      integer(ip), intent(inout) :: rcptrs ( * )  !! Record pointers. (PEPPER: changed by the routine, an input in SPICELIB's table)
 
       integer(ip) :: segdsc ( sdscsz )
       integer(ip) :: stype
@@ -26424,8 +27076,11 @@ contains
       end if
 
       return
-      end procedure ekffld
+      end subroutine ekffld
 
+      !> Return summary information for a specified segment in a
+      !> specified EK.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is an EK file handle specifying the EK containing
@@ -26634,7 +27289,7 @@ contains
       !>        Bug fix: correct parameter SDSCSZ is now used to set dimension
       !>        of local variable SEGDSC. Previously, the parameter
       !>        CDSCSZ had been used.
-      module procedure ekssum
+      module subroutine ekssum ( ctx, handle, segno, tabnam, nrows, ncols, cnames, dtypes, sizes, strlns, indexd, nullok )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -26642,6 +27297,18 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of EK.
+      integer(ip), intent(in) :: segno  !! Number of segment to be summarized.
+      character(*), intent(out) :: tabnam  !! Name of table containing segment.
+      integer(ip), intent(out) :: nrows  !! Number of rows in segment.
+      integer(ip), intent(out) :: ncols  !! Number of columns in segment.
+      character(*), intent(out) :: cnames ( * )  !! Names of columns in segment.
+      character(*), intent(out) :: dtypes ( * )  !! Data types of columns in segment.
+      integer(ip), intent(out) :: sizes  ( * )  !! Entry sizes of columns in segment.
+      integer(ip), intent(out) :: strlns ( * )  !! String lengths of columns in segment.
+      logical, intent(out) :: indexd ( * )  !! Flags indicating whether columns are indexed.
+      logical, intent(out) :: nullok ( * )  !! Flags indicating whether columns allow nulls.
 
       integer(ip), parameter :: ntypes = 4
 
@@ -26687,8 +27354,11 @@ contains
       end do
 
       return
-      end procedure ekssum
+      end subroutine ekssum
 
+      !> Allocate a series of contiguous data pages for a specified EK
+      !> segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -26779,14 +27449,20 @@ contains
       !>        Corrected typo in comments.
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekacps
+      module subroutine zzekacps ( ctx, handle, segdsc, type, n, p, base )
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: type  !! Data type of page.
+      integer(ip), intent(in) :: n  !! Number of pages to allocate.
+      integer(ip), intent(out) :: p  !! Page number.
+      integer(ip), intent(out) :: base  !! DAS base address of page.
+!
+!     Local variables
+!
       integer(ip) :: b
       integer(ip) :: i
       integer(ip) :: idx
@@ -26843,8 +27519,10 @@ contains
       end do
 
       return
-      end procedure zzekacps
+      end subroutine zzekacps
 
+      !> Allocate a data page for a specified EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -26928,14 +27606,20 @@ contains
       !>        Corrected typo in comments.
       !>
       !>-    Beta Version 1.0.0, 08-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekaps
+      module subroutine zzekaps ( ctx, handle, segdsc, type, new, p, base )
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: type  !! Data type of page.
+      logical, intent(in) :: new  !! Flag indicating whether page is new.
+      integer(ip), intent(out) :: p  !! Page number.
+      integer(ip), intent(out) :: base  !! DAS base address of page.
+!
+!     Local variables
+!
       integer(ip) :: idx
       integer(ip) :: tree
 
@@ -26987,8 +27671,10 @@ contains
       call zzektrap ( ctx, handle, tree, p, idx )
 
       return
-      end procedure zzekaps
+      end subroutine zzekaps
 
+      !> Start a new type 1 segment in an E-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -27063,11 +27749,7 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 17-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      module procedure zzekbs01
+      module subroutine zzekbs01 ( ctx, handle, tabnam, ncols, cnames, cdscrs, segno )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase, ucase_inplace
       use pepper_inc_ekbool
@@ -27081,6 +27763,13 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      character(*), intent(in) :: tabnam  !! Table name.
+      integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
+      character(*), intent(in) :: cnames ( * )  !! Names of columns.
+      integer(ip), intent(inout) :: cdscrs ( cdscsz, * )  !! Descriptors of columns. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(out) :: segno  !! Segment number.
       integer(ip) :: sgtree_1(1)  !! one-element copy of sgtree (array argument)
 
 
@@ -27400,8 +28089,10 @@ contains
       call zzektrap ( ctx, handle, sgtree, p1, segno )
 
       return
-      end procedure zzekbs01
+      end subroutine zzekbs01
 
+      !> Start a new type 2 segment in an E-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -27482,11 +28173,7 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 17-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      module procedure zzekbs02
+      module subroutine zzekbs02 ( ctx, handle, tabnam, ncols, cnames, cdscrs, segno )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase, ucase_inplace
       use pepper_inc_ekbool
@@ -27500,6 +28187,13 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      character(*), intent(in) :: tabnam  !! Table name.
+      integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
+      character(*), intent(in) :: cnames ( * )  !! Names of columns.
+      integer(ip), intent(inout) :: cdscrs ( cdscsz, * )  !! Descriptors of columns.
+      integer(ip), intent(out) :: segno  !! Segment number.
       integer(ip) :: sgtree_1(1)  !! one-element copy of sgtree (array argument)
 
 
@@ -27799,8 +28493,10 @@ contains
       call zzektrap ( ctx, handle, sgtree, p1, segno )
 
       return
-      end procedure zzekbs02
+      end subroutine zzekbs02
 
+      !> Delete a specified class 4 column entry from an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -27881,19 +28577,23 @@ contains
       !>        Deleted unneeded declarations and code.
       !>
       !>-    Beta Version 1.0.0, 28-SEP-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekde04
+      module subroutine zzekde04 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekdatpag
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip) :: nelts_1(1)  !! one-element copy of nelts (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: datptr
       integer(ip) :: nelts
@@ -28039,8 +28739,15 @@ contains
       call dasudi ( ctx, handle, recptr+staidx, recptr+staidx, [ update ] )
 
       return
-      end procedure zzekde04
+      end subroutine zzekde04
 
+      !> Find the EK record number corresponding to a specified record
+      !> pointer.  Beware, for type 1 segments, this is done by linear
+      !> searching.
+      !>
+      !> The function returns the number of the record having the
+      !> specified record pointer.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -28113,13 +28820,16 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekrp2n
+      module integer(ip) function zzekrp2n ( ctx, handle, segno, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segno  !! Segment number.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+!
+!     Local variables
+!
       integer(ip) :: segdsc ( sdscsz )
       integer(ip) :: stype
 
@@ -28162,7 +28872,7 @@ contains
       end if
 
       return
-      end procedure zzekrp2n
+      end function zzekrp2n
 
    !> PEPPER: [[appndi]] for the integer part of an encoded query, which grows
    !> (SPICELIB: a cell of EQIMIN elements, sized for the largest query).

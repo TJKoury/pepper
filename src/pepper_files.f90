@@ -3,9 +3,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_files.f90.
+!> [[pepper_instance_module]]).
 !>
 !>## ZZDDHMAN (Private --- DAF/DAS Handle Manager)
 !>
@@ -216,6 +214,9 @@ submodule (pepper_instance_module) pepper_files
 
 contains
 
+      !> Return platform ID and various attributes of the intended
+      !> environment
+      !>
       !>## Detailed Input
       !>
       !>     KEY         is a string value that indicates which platform
@@ -415,11 +416,14 @@ contains
       !>        offering from Lahey.
       !>
       !>-    SPICELIB Version 1.0.0, 22-FEB-1999 (FST)
-      module procedure zzplatfm
+      module subroutine zzplatfm ( ctx, key, value )
       use, intrinsic :: iso_fortran_env, only: compiler_version
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: key  !! String indicating what information to return.
+      character(*), intent(out) :: value  !! String containing the requested information.
       integer(ip), parameter :: idxsys = 1
       integer(ip), parameter :: idxos = idxsys + 1
       integer(ip), parameter :: idxcmp = idxos  + 1
@@ -489,7 +493,7 @@ contains
 
       return
       end associate
-      end procedure zzplatfm
+      end subroutine zzplatfm
 
       !> The system, the operating system and the line terminator of text
       !> files of the platform the program runs on (PEPPER; for
@@ -532,14 +536,12 @@ contains
          end function exists
       end subroutine platform_system
 
-      !>## Abstract
+      !> Validate the runtime environment against values assumed by the
+      !> current toolkit source package.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Validate the runtime environment against values assumed by the
-      !>     current toolkit source package.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -591,10 +593,12 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 07-AUG-2002 (FST)
-      module procedure zzpltchk
+      module subroutine zzpltchk ( ctx, ok )
       use pepper_kinds, only: ip
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(out) :: ok  !! Logical indicating the runtime environment is ok.
 
 
       character(wdsize) :: strbff
@@ -662,8 +666,10 @@ contains
 
       return
 
-      end procedure zzpltchk
+      end subroutine zzpltchk
 
+      !> Retrieve the components of the FTP validation string.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -838,40 +844,39 @@ contains
       !>               indicate the new sizes of the various string
       !>               components. Routines that include this must
       !>               then be recompiled.
-      !>
-      !>     Local Parameters
-      !>
-      !>     Maximum size of an individual test cluster component
-      !>     including the ':'.
-      !>
-      !>     Integer codes of characters appearing in test clusters.
-      !>
-      !>     Local Variables
-      !>
-      !>     Non-printing character values.
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     Set up the components of the FTP validation string that
-      !>     are not supposed to change for forward and backward
-      !>     compatibility.
-      !>
-      !>     On the first invocation initialize the string values.
-      module procedure zzftpstr
+      module subroutine zzftpstr ( ctx, tstcom, lend, rend, delim )
       use pepper_kinds, only: ip
       use pepper_strings, only: suffix
       use pepper_inc_zzftprms
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: tstcom  !! The FTP test component string.
+      character(*), intent(out) :: lend  !! String that brackets TSTCOM on the left in a file.
+      character(*), intent(out) :: rend  !! String that brackets TSTCOM on the right in a file.
+      character(*), intent(out) :: delim  !! Delimiter that separates the pieces of TSTCOM.
+!
+!     Local Parameters
+!
+!     Maximum size of an individual test cluster component
+!     including the ':'.
+!
       integer(ip), parameter :: siztsq = 5
+!
+!     Integer codes of characters appearing in test clusters.
+!
       integer(ip), parameter :: int000 = 0
       integer(ip), parameter :: int010 = 10
       integer(ip), parameter :: int013 = 13
       integer(ip), parameter :: int016 = 16
       integer(ip), parameter :: int129 = 129
       integer(ip), parameter :: int206 = 206
+!
+!     Local Variables
+!
       character(siztsq) :: testsq ( numtst )
+!
+!     Non-printing character values.
+!
       character(1) :: asc000
       character(1) :: asc010
       character(1) :: asc013
@@ -885,6 +890,9 @@ contains
                   loclnd => ctx%zzftpstr%loclnd, &
                   locrnd => ctx%zzftpstr%locrnd, &
                   locstr => ctx%zzftpstr%locstr )
+!
+!     On the first invocation initialize the string values.
+!
       if ( first ) then
 !
 !        Convert the integer parameters to their non-printing ASCII
@@ -976,8 +984,11 @@ contains
 
       return
       end associate
-      end procedure zzftpstr
+      end subroutine zzftpstr
 
+      !> Check a character string that may contain the FTP validation
+      !> string for FTP based errors.
+      !>
       !>## Detailed Input
       !>
       !>     STRING     is a string read in directly from a binary file.  This
@@ -1144,22 +1155,17 @@ contains
       !>               chunk from STRING.  If it is, then the file is
       !>               as valid as far as this version of the toolkit is
       !>               concerned.  Otherwise, the file is damaged.
-      !>
-      !>     SPICELIB Functions
-      !>
-      !>     Local Variables
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     On the first pass through, fetch a copy of the current FTP
-      !>     validation string.
-      module procedure zzftpchk
+      module subroutine zzftpchk ( ctx, string, ftperr )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos, rtrim
       use pepper_inc_zzftprms
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! String that may contain the FTP validation string.
+      logical, intent(out) :: ftperr  !! Logical indicating if FTP corruption occurred.
+!
+!     Local Variables
+!
       character(sizdlm) :: delim
       character(sizexp) :: filstr
       integer(ip) :: fsmidx
@@ -1171,6 +1177,10 @@ contains
                   lftbkt => ctx%zzftpchk%lftbkt, &
                   memstr => ctx%zzftpchk%memstr, &
                   rgtbkt => ctx%zzftpchk%rgtbkt )
+!
+!     On the first pass through, fetch a copy of the current FTP
+!     validation string.
+!
       if ( first ) then
 
          call zzftpstr ( ctx, memstr, lftbkt, rgtbkt, delim )
@@ -1264,8 +1274,11 @@ contains
 
       return
       end associate
-      end procedure zzftpchk
+      end subroutine zzftpchk
 
+      !> Extract from a string the last instance of a substring bracketed
+      !> by specified left and right strings .
+      !>
       !>## Detailed Input
       !>
       !>     STRING     is a string to be searched for a substring bracketed
@@ -1367,10 +1380,17 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 22-MAR-1999 (FST)
-      module procedure zzrbrkst
+      module subroutine zzrbrkst ( ctx, string, lftend, rgtend, substr, length, bkpres )
       use pepper_kinds, only: ip
       use pepper_strings, only: posr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! A string from which to extract SUBSTR.
+      character(*), intent(in) :: lftend  !! A string that brackets SUBSTR on the left.
+      character(*), intent(in) :: rgtend  !! A string that brackets SUBSTR on the right.
+      character(*), intent(out) :: substr  !! The extracted substring.
+      integer(ip), intent(out) :: length  !! The length of the extracted substring.
+      logical, intent(out) :: bkpres  !! Logical indicating if either bracket is present.
 
       integer(ip) :: bsize
       integer(ip) :: lindex
@@ -1449,15 +1469,13 @@ contains
       end if
 
       return
-      end procedure zzrbrkst
+      end subroutine zzrbrkst
 
-      !>## Abstract
+      !> Initialize ZZDDHMAN data structures.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Initialize ZZDDHMAN data structures.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1537,11 +1555,19 @@ contains
       !>        sections.
       !>
       !>-    SPICELIB Version 1.0.0, 13-AUGUST-2001 (FST)
-      module procedure zzddhini
+      module subroutine zzddhini ( ctx, natbff, supbff, numsup, stramh, strarc, strbff )
       use pepper_kinds, only: ip
       use pepper_strings, only: nextwd_inplace, ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: natbff  !! Native binary file format.
+      integer(ip), intent(out) :: supbff ( * )  !! List of supported binary file formats for
+                                                !! reading.
+      integer(ip), intent(out) :: numsup  !! Number of entries returned in SUPBFF.
+      character(*), intent(out) :: stramh ( * )  !! List of labels for METHOD ID codes
+      character(*), intent(out) :: strarc ( * )  !! List of labels for ARCH ID codes
+      character(*), intent(out) :: strbff ( * )  !! List of labels for BFF ID codes
 
 !
 !     Local Variables.
@@ -1653,15 +1679,13 @@ contains
       numsup = i - 1
 
       return
-      end procedure zzddhini
+      end subroutine zzddhini
 
-      !>## Abstract
+      !> Fetch binary file format.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Fetch binary file format.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1767,16 +1791,20 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-AUG-2002 (FST)
-      !>
-      !>     Local Parameters
-      !>
-      !>     Local Variables
-      module procedure zzgetbff
+      module subroutine zzgetbff ( ctx, bffid )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: unpack_integers
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: bffid  !! Binary file format code for this system.
+!
+!     Local Parameters
+!
       real(wp), parameter :: dpvalu = 7.0_wp
+!
+!     Local Variables
+!
       integer(ip) :: i
       integer(ip) :: iequiv ( 2 )
 !
@@ -1813,15 +1841,13 @@ contains
       end do
 
       return
-      end procedure zzgetbff
+      end subroutine zzgetbff
 
-      !>## Abstract
+      !> Retrieve string definitions for various CLASS and ID pairs.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Retrieve string definitions for various CLASS and ID pairs.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -1888,32 +1914,28 @@ contains
       !>        for Fortran compilers but was irritating for human readers.
       !>
       !>-    SPICELIB Version 1.0.0, 07-JUN-2001 (FST)
-      !>
-      !>     SPICELIB Functions
-      !>
-      !>     Local Parameters
-      !>
-      !>     Number of classes of label/ID pairs of which this routine is
-      !>     aware.
-      !>
-      !>     Integer codes for the currently supported classes.
-      !>
-      !>     Local Variables
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     Left justify and convert the input to upper case.
-      module procedure zzddhgsd
+      module subroutine zzddhgsd ( ctx, class, id, label )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: class  !! String indicating the class of label requested.
+      integer(ip), intent(in) :: id  !! Integer ID desired for the decoding.
+      character(*), intent(out) :: label  !! Corresponding label for the CLASS/ID pair.
+!
+!     Local Parameters
+!
       integer(ip), parameter :: locsiz = 8
+!
+!     Integer codes for the currently supported classes.
+!
       integer(ip), parameter :: method = 1
       integer(ip), parameter :: arch = method + 1
       integer(ip), parameter :: bff = arch   + 1
+!
+!     Local Variables
+!
       character(locsiz) :: tmpstr
       integer(ip) :: clsid
       if ( .not. allocated ( ctx%zzddhgsd ) ) allocate ( ctx%zzddhgsd )
@@ -1921,6 +1943,9 @@ contains
                   stramh => ctx%zzddhgsd%stramh, &
                   strarc => ctx%zzddhgsd%strarc, &
                   strbff => ctx%zzddhgsd%strbff )
+!
+!     Left justify and convert the input to upper case.
+!
       tmpstr = adjustl(class)
       call ucase_inplace ( tmpstr )
 
@@ -1957,16 +1982,17 @@ contains
 
       return
       end associate
-      end procedure zzddhgsd
+      end subroutine zzddhgsd
 
-      !>## Abstract
+      !> The function returns a unique enough DP number computed
+      !> using the contents of the file attached to the UNIT.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Return a unique enough DP number ("Magic NuMber") computed
+      !> using the contents of the file attached to the specified unit.
       !>
-      !>     Return a unique enough DP number ("Magic NuMber") computed
-      !>     using the contents of the file attached to the specified unit.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -2063,33 +2089,30 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 26-APR-2012 (BVS)
-      !>
-      !>     SPICELIB Functions
-      !>
-      !>     Local parameters.
-      !>
-      !>     Character buffer size consistent with the number of integers
-      !>     that will be read from the file.
-      !>
-      !>     Minimum and maximum values for the range of ASCII printing
-      !>     characters.
-      !>
-      !>     Local variables.
-      !>
-      !>     Saved variables.
-      !>
-      !>     Data statements.
-      !>
-      !>     Set default output value to zero.
-      module procedure zzddhmnm
+      module real(wp) function zzddhmnm ( ctx, unit )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Logical unit attached to a file.
       integer(ip), parameter :: idlen = 8
       integer(ip), parameter :: nints = 20
+!
+!     Local parameters.
+!
+!     Character buffer size consistent with the number of integers
+!     that will be read from the file.
+!
       integer(ip), parameter :: nchars = nints * 4
+!
+!     Minimum and maximum values for the range of ASCII printing
+!     characters.
+!
       integer(ip), parameter :: minpch = 32
       integer(ip), parameter :: maxpch = 126
+!
+!     Local variables.
+!
       character(idlen) :: arch
       character(idlen) :: idword
       character(idlen) :: type
@@ -2108,6 +2131,9 @@ contains
                   natbff => ctx%zzddhmnm%natbff, &
                   supbff => ctx%zzddhmnm%supbff, &
                   numsup => ctx%zzddhmnm%numsup )
+!
+!     Set default output value to zero.
+!
       mnm      = 0.0_wp
       zzddhmnm = 0.0_wp
 
@@ -2260,16 +2286,14 @@ contains
 
       return
       end associate
-      end procedure zzddhmnm
+      end function zzddhmnm
 
-      !>## Abstract
+      !> Prepare preexisting binary file for entry into the handle
+      !> table.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Prepare preexisting binary file for entry into the handle
-      !>     table.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -2540,73 +2564,69 @@ contains
       !>        a null binary file format ID, and apply the byte
       !>        examination algorithm used on pre-N0050 DAFs to determine
       !>        its format.
-      !>
-      !>     SPICELIB Functions
-      !>
-      !>     Local Parameters
-      !>
-      !>     Number of characters to be read in from a record.
-      !>
-      !>     Bounding indices for the window that brackets the FTP
-      !>     error detection string in the file record.
-      !>
-      !>     Index of the start of the binary file format identification
-      !>     string in DAF binaries.
-      !>
-      !>     Index of the start of the binary file format identification
-      !>     string in DAS binaries.
-      !>
-      !>     Size of the binary format identification string.
-      !>
-      !>     Index of the first byte of NI in the DAF file record.
-      !>
-      !>     Index of the first byte of NSUM in the DAF descriptor record.
-      !>
-      !>     Index of the first byte of FDREC in the DAF file record.
-      !>
-      !>     Integer code such that CHAR(INTNUL) produces the NULL character.
-      !>
-      !>     IDW2AT Output Argument Lengths.
-      !>
-      !>     NULLID is the index of the extended STRBFF "NULL" string ID.
-      !>
-      !>     Local Variables
-      !>
-      !>     Statement Functions
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     Statement Function Definitions
-      !>
-      !>     This function controls the conversion of characters to integers.
-      !>     On some supported environments, ICHAR is not sufficient to
-      !>     produce the desired results.  This however, is not the case
-      !>     with this particular environment.
-      !>     Some versions of the g77 implement ICHAR with a signed integer.
-      !>     This function computes the value of ICHAR that this code requires
-      !>     on any version of g77 for x86 Linux.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzddhppf
+      module subroutine zzddhppf ( ctx, unit, arch, bff )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos, ucase_inplace
       use pepper_inc_zzddhman
       use pepper_inc_zzftprms
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Logical unit attached to the binary file.
+      integer(ip), intent(in) :: arch  !! Integer code indicating the file architecture.
+      integer(ip), intent(out) :: bff  !! Integer code indicating the binary file format.
+!
+!     Local Parameters
+!
+!     Number of characters to be read in from a record.
+!
       integer(ip), parameter :: numchr = 1000
+!
+!     Bounding indices for the window that brackets the FTP
+!     error detection string in the file record.
+!
       integer(ip), parameter :: ftpstr = 500
       integer(ip), parameter :: ftpend = 1000
+!
+!     Index of the start of the binary file format identification
+!     string in DAF binaries.
+!
       integer(ip), parameter :: dafbff = 89
+!
+!     Index of the start of the binary file format identification
+!     string in DAS binaries.
+!
       integer(ip), parameter :: dasbff = 85
+!
+!     Size of the binary format identification string.
+!
       integer(ip), parameter :: bffsiz = 8
+!
+!     Index of the first byte of NI in the DAF file record.
+!
       integer(ip), parameter :: nipos = 13
+!
+!     Index of the first byte of NSUM in the DAF descriptor record.
+!
       integer(ip), parameter :: nsmpos = 17
+!
+!     Index of the first byte of FDREC in the DAF file record.
+!
       integer(ip), parameter :: fdrpos = 77
+!
+!     Integer code such that CHAR(INTNUL) produces the NULL character.
+!
       integer(ip), parameter :: intnul = 0
+!
+!     IDW2AT Output Argument Lengths.
+!
       integer(ip), parameter :: idwlen = 4
+!
+!     NULLID is the index of the extended STRBFF "NULL" string ID.
+!
       integer(ip), parameter :: nullid = numbff+1
+!
+!     Local Variables
+!
       character(1) :: carg
       character(numchr) :: chrrec
       character(bffsiz) :: bffidw
@@ -2619,6 +2639,19 @@ contains
       integer(ip) :: tstarc
       logical :: found
       logical :: ftperr
+!
+!     Statement Function Definitions
+!
+!     This function controls the conversion of characters to integers.
+!     On some supported environments, ICHAR is not sufficient to
+!     produce the desired results.  This however, is not the case
+!     with this particular environment.
+!     Some versions of the g77 implement ICHAR with a signed integer.
+!     This function computes the value of ICHAR that this code requires
+!     on any version of g77 for x86 Linux.
+!
+!     Statement Functions
+!
       integer(ip) :: zzichr
 !     PEPPER: one portable form (ICHAR is 0:255 with current compilers; the
 !     MODULO also maps a signed ICHAR, as SPICELIB's g77 branch did).
@@ -2632,6 +2665,9 @@ contains
                   null => ctx%zzddhppf%null, &
                   strarc => ctx%zzddhppf%strarc, &
                   strbff => ctx%zzddhppf%strbff )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -3005,8 +3041,11 @@ contains
 
       return
       end associate
-      end procedure zzddhppf
+      end subroutine zzddhppf
 
+      !> Extract the architecture and type of a SPICE binary kernel file
+      !> from a file ID word.
+      !>
       !>## Detailed Input
       !>
       !>     IDWORD   is the ID word from a SPICE binary kernel file or a
@@ -3167,14 +3206,14 @@ contains
       !>         Changed the response foe the ID word 'NAIF/DAS' to be
       !>         consistent with GETFAT. It now sets the architecture to 'DAS'
       !>         and the type to 'PRE', for pre-release version.
-      module procedure idw2at
+      module subroutine idw2at ( ctx, idword, arch, type )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos
       implicit none
-
-!
-!     Spicelib Routines
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: idword  !! The IDWORD to be examined.
+      character(*), intent(out) :: arch  !! The file architecture DAS or DAF.
+      character(*), intent(out) :: type  !! The type of the file.
 
 !
 !     Set the length of a SPICE file ID word.
@@ -3337,15 +3376,13 @@ contains
 
       return
 
-      end procedure idw2at
+      end subroutine idw2at
 
-      !>## Abstract
+      !> Convert integers from one binary file format to another.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Convert integers from one binary file format to another.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3560,41 +3597,28 @@ contains
       !>        Added MAC-OSX environments.
       !>
       !>-    SPICELIB Version 1.0.0, 12-NOV-2001 (FST)
-      !>
-      !>     SPICELIB Functions
-      !>
-      !>     Local Parameters
-      !>
-      !>     These parameters are used for arithmetic shifting.
-      !>
-      !>     Local Variables
-      !>
-      !>     Statement Functions
-      !>
-      !>     Saved Variables
-      !>
-      !>     Data Statements
-      !>
-      !>     Statement Function Definitions
-      !>
-      !>     This function controls the conversion of characters to integers.
-      !>     On some supported environments, ICHAR is not sufficient to
-      !>     produce the desired results.  This however, is not the case
-      !>     with this particular environment.
-      !>     Some versions of the g77 implement ICHAR with a signed integer.
-      !>     This function computes the value of ICHAR that this code requires
-      !>     on any version of g77 for x86 Linux.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzxlatei
+      module subroutine zzxlatei ( ctx, inbff, input, space, output )
       use pepper_kinds, only: ip
       use pepper_constants, only: intmin
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: inbff  !! Binary file format code for integers in INPUT.
+      character(*), intent(in) :: input  !! String containing integers read as characters.
+      integer(ip), intent(in) :: space  !! Number of integers that can be placed in OUTPUT.
+      integer(ip), intent(out) :: output ( * )  !! Translated integer values.
+!
+!     Local Parameters
+!
+!     These parameters are used for arithmetic shifting.
+!
       integer(ip), parameter :: shft8 = 2**8
       integer(ip), parameter :: shft16 = 2**16
       integer(ip), parameter :: shft24 = 2**24
+!
+!     Local Variables
+!
       character(1) :: carg
       character(strsiz) :: tmpstr
       integer(ip) :: i
@@ -3603,6 +3627,19 @@ contains
       integer(ip) :: numint
       integer(ip) :: osign
       integer(ip) :: value
+!
+!     Statement Function Definitions
+!
+!     This function controls the conversion of characters to integers.
+!     On some supported environments, ICHAR is not sufficient to
+!     produce the desired results.  This however, is not the case
+!     with this particular environment.
+!     Some versions of the g77 implement ICHAR with a signed integer.
+!     This function computes the value of ICHAR that this code requires
+!     on any version of g77 for x86 Linux.
+!
+!     Statement Functions
+!
       integer(ip) :: zzichr
 !     PEPPER: one portable form (ICHAR is 0:255 with current compilers; the
 !     MODULO also maps a signed ICHAR, as SPICELIB's g77 branch did).
@@ -3613,6 +3650,9 @@ contains
                   strbff => ctx%zzxlatei%strbff, &
                   smlint => ctx%zzxlatei%smlint, &
                   bigint => ctx%zzxlatei%bigint )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -4065,15 +4105,13 @@ contains
 
       return
       end associate
-      end procedure zzxlatei
+      end subroutine zzxlatei
 
-      !>## Abstract
+      !> Identify VAX DAF file format.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Identify VAX DAF file format.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4260,10 +4298,14 @@ contains
       !>        Added MAC-OSX environments.
       !>
       !>-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
-      module procedure zzddhivf
+      module subroutine zzddhivf ( ctx, nsum, bff, found )
       use pepper_kinds, only: ip
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: nsum  !! String storing the 8 bytes of the FDREC NSUM DP.
+      integer(ip), intent(out) :: bff  !! Integer code indicating the binary file format.
+      logical, intent(out) :: found  !! Logical indicating that BFF was determined.
 
       character(1) :: carg
 
@@ -4451,15 +4493,13 @@ contains
       end if
 
       return
-      end procedure zzddhivf
+      end subroutine zzddhivf
 
-      !>## Abstract
+      !> Convert filename to a handle.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Convert filename to a handle.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4639,11 +4679,25 @@ contains
       !>
       !>        This file was promoted from a standard portable module
       !>        to a master file.
-      module procedure zzddhf2h
+      module subroutine zzddhf2h ( ctx, fname, ft, utcst, uthan, utlck, utlun, nut, exists, opened, handle, found, mnm, tabsiz )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rtrim
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of the file to convert to a handle.
+      type(zzddhman_state), intent(inout) :: ft  !! File table. (PEPPER: inout, for the result kept during a load)
+      integer(ip), intent(inout) :: utcst ( * )  !! Unit table.
+      integer(ip), intent(inout) :: uthan ( * )  !! Unit table.
+      logical, intent(inout) :: utlck ( * )  !! Unit table.
+      integer(ip), intent(inout) :: utlun ( * )  !! Unit table.
+      integer(ip), intent(inout) :: nut  !! Number of entries in the unit table.
+      logical, intent(out) :: exists  !! Logical indicating if FNAME exists.
+      logical, intent(out) :: opened  !! Logical indicating if FNAME is opened.
+      integer(ip), intent(out) :: handle  !! Handle associated with FNAME.
+      logical, intent(out) :: found  !! Logical indicating if FNAME's HANDLE was found.
+      real(wp), intent(out) :: mnm  !! Unique DP (Magic NuMber) associated with FNAME.
+      integer(ip), intent(in), optional :: tabsiz  !! PEPPER: size of the unit table (default UTSIZE, 23)
 
       integer(ip) :: i
       integer(ip) :: iostat
@@ -4681,20 +4735,22 @@ contains
 
 !
 !     PEPPER: in-memory binary kernels (furnsh_memory) have no OS file;
-!     match their virtual name directly in the file table.
+!     match their virtual name directly in the file table (unless files_only).
 !
-      do i = 1, ft%nft
-         if ( allocated ( ft%files(i)%raw_records ) ) then
-            if ( ft%files(i)%name == fname( 1:rchar ) ) then
-               exists = .true.
-               opened = .false.
-               found  = .true.
-               handle = ft%files(i)%handle
-               mnm    = ft%files(i)%mnm
-               return
+      if ( .not. ft%files_only ) then
+         do i = ft%nft, 1, -1
+            if ( allocated ( ft%files(i)%raw_records ) ) then
+               if ( ft%files(i)%name == fname( 1:rchar ) ) then
+                  exists = .true.
+                  opened = .false.
+                  found  = .true.
+                  handle = ft%files(i)%handle
+                  mnm    = ft%files(i)%mnm
+                  return
+               end if
             end if
-         end if
-      end do
+         end do
+      end if
 
 !
 !     Now INQUIRE on the input file FNAME.
@@ -4779,7 +4835,6 @@ contains
 !     file table that isn't open.  To determine this, we open FNAME,
 !     and then INQUIRE on every file in the table.  To do this, we
 !     need a unit. Get one.
-!
 !
 !     PEPPER: during a load, the result for this file may have been kept
 !     by the previous call (see zzddhman_state): it is not in the table.
@@ -4871,8 +4926,11 @@ contains
 !        and will skip INQUIRE. In all other cases we will do INQUIRE
 !        and check UNITs.
 !
-         if (   mnm /= 0.0_wp                               .and. &
-              ( mnm /= ft%files(i)%mnm .and. ft%files(i)%method == read )     ) then
+!        PEPPER: a DAF built in memory has no file: it is not this one.
+!
+         if ( ft%files(i)%synthetic .or. allocated ( ft%files(i)%raw_records ) .or. &
+              ( mnm /= 0.0_wp                               .and. &
+              ( mnm /= ft%files(i)%mnm .and. ft%files(i)%method == read ) ) ) then
 
 !
 !           These files are not the same file. Clear IOSTAT and set
@@ -4967,16 +5025,14 @@ contains
 
       return
 
-      end procedure zzddhf2h
+      end subroutine zzddhf2h
 
-      !>## Abstract
+      !> Manage augmentation of the handle to logical unit request counter
+      !> and the cost column in the unit table.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Manage augmentation of the handle to logical unit request counter
-      !>     and the cost column in the unit table.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5052,10 +5108,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
-      module procedure zzddhrcm
+      module subroutine zzddhrcm ( ctx, nut, utcst, reqcnt )
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nut  !! Number of entries in the unit table.
+      integer(ip), intent(inout) :: utcst  ( * )  !! Cost column of the unit table.
+      integer(ip), intent(inout) :: reqcnt  !! Value of the HLU request counter.
 
       integer(ip) :: i
 
@@ -5078,16 +5138,14 @@ contains
       end if
 
       return
-      end procedure zzddhrcm
+      end subroutine zzddhrcm
 
-      !>## Abstract
+      !> Get or prepare an entry in the unit table to receive a new
+      !> file.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Get or prepare an entry in the unit table to receive a new
-      !>     file.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5162,11 +5220,19 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 29-MAY-2001 (FST)
-      module procedure zzddhgtu
+      module subroutine zzddhgtu ( ctx, utcst, uthan, utlck, utlun, nut, uindex, tabsiz )
       use pepper_kinds, only: ip
       use pepper_arrays, only: orderi
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: utcst  ( * )  !! Unit table.
+      integer(ip), intent(inout) :: uthan  ( * )  !! Unit table.
+      logical, intent(inout) :: utlck  ( * )  !! Unit table.
+      integer(ip), intent(inout) :: utlun  ( * )  !! Unit table.
+      integer(ip), intent(inout) :: nut  !! Number of entries in the unit table.
+      integer(ip), intent(out) :: uindex  !! Row in the unit table that can be replaced.
+      integer(ip), intent(in), optional :: tabsiz  !! PEPPER: size of the unit table (default UTSIZE, 23)
 
       integer(ip) :: i
       integer(ip), allocatable :: orderv ( : )
@@ -5332,15 +5398,13 @@ contains
             n = utsize
             if ( present ( tabsiz ) ) n = tabsiz
          end function size_of_table
-      end procedure zzddhgtu
+      end subroutine zzddhgtu
 
-      !>## Abstract
+      !> Remove an entry from the unit table.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Remove an entry from the unit table.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5439,10 +5503,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-NOV-2001 (FST)
-      module procedure zzddhrmu
+      module subroutine zzddhrmu ( ctx, uindex, nft, utcst, uthan, utlck, utlun, nut )
       use pepper_kinds, only: ip
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: uindex  !! Row index to remove from the unit table.
+      integer(ip), intent(in) :: nft  !! Number of entries in the file table.
+      integer(ip), intent(inout) :: utcst ( * )  !! Unit table.
+      integer(ip), intent(inout) :: uthan ( * )  !! Unit table.
+      logical, intent(inout) :: utlck ( * )  !! Unit table.
+      integer(ip), intent(inout) :: utlun ( * )  !! Unit table.
+      integer(ip), intent(inout) :: nut  !! Number of entries in the unit table.
 
       integer(ip) :: i
 
@@ -5511,15 +5583,15 @@ contains
       nut = nut - 1
 
       return
-      end procedure zzddhrmu
+      end subroutine zzddhrmu
 
-      !>## Abstract
+      !> This function return the number of locked units in the unit table.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Retrieve the number of locked units in the unit table.
       !>
-      !>     Retrieve the number of locked units in the unit table.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5569,9 +5641,12 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
-      module procedure zzddhclu
+      module integer(ip) function zzddhclu ( ctx, utlck, nut )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(in) :: utlck ( * )  !! Lock column of the unit table.
+      integer(ip), intent(in) :: nut  !! Number of entries in the unit table.
 
       integer(ip) :: i
 
@@ -5589,16 +5664,14 @@ contains
       end do
 
       return
-      end procedure zzddhclu
+      end function zzddhclu
 
-      !>## Abstract
+      !> Return the integer code for the native binary file format
+      !> of the host system.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the integer code for the native binary file format
-      !>     of the host system.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5651,11 +5724,13 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-FEB-2015 (NJB)
-      module procedure zzddhnfc
+      module subroutine zzddhnfc ( ctx, natbff )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: natbff  !! Native binary file format code.
       character(strsiz) :: tmpstr
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzddhnfc ) ) allocate ( ctx%zzddhnfc )
@@ -5705,15 +5780,13 @@ contains
 
       return
       end associate
-      end procedure zzddhnfc
+      end subroutine zzddhnfc
 
-      !>## Abstract
+      !> Load a new direct access file.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Load a new direct access file.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5868,14 +5941,17 @@ contains
       !>        Revisions section of ZZDDHMAN for details.
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzddhopn
+      module subroutine zzddhopn ( ctx, fname, method, arch, handle )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_strings, only: rtrim, ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: arch  !! Expected architecture of the file to load.
+      character(*), intent(in) :: fname  !! Name of file to be loaded.
+      character(*), intent(in) :: method  !! Access method used to load the file.
+      integer(ip), intent(out) :: handle  !! Handle assigned to file.
       integer(ip), parameter :: scrlen = 4096  !! PEPPER: room for the OS's name of a scratch file
       character(:), allocatable :: locfnm
       character(scrlen) :: scrnam
@@ -5916,6 +5992,9 @@ contains
                   utlck => ctx%zzddhman_units%utlck, &
                   utlun => ctx%zzddhman_units%utlun, &
                   reqcnt => ctx%zzddhman_units%reqcnt )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -6073,6 +6152,40 @@ contains
 
          end if
 
+      end if
+
+!
+!     PEPPER: a DAF built in memory (a kernel with no file behind it) is
+!     found by its name (the most recently loaded, if several); it can
+!     only be read.
+!
+      if ( (( accmet == read  ) .or. &
+            ( accmet == write )) .and. .not. ft%files_only ) then
+         do i = nft, 1, -1
+            if ( .not. ( ft%files(i)%synthetic .or. allocated ( ft%files(i)%raw_records ) ) ) cycle
+            if ( ft%files(i)%name /= locfnm ) cycle
+            if ( accmet /= read ) then
+               call ctx%setmsg ( 'The kernel ''#'' was built in memory: ' &
+               //            'it has no file, and it cannot be opened ' &
+               //            'for # access.' )
+               call ctx%errch  ( '#', locfnm          )
+               call ctx%errch  ( '#', stramh(accmet)  )
+               call ctx%sigerr ( 'SPICE(FILEOPENCONFLICT)' )
+               return
+            end if
+            if ( filarc /= ft%files(i)%arch ) then
+               call ctx%setmsg ( 'The attempt to load file ''#'' as a # ' &
+               //            'has failed because it is already loaded ' &
+               //            'as a #.'                                 )
+               call ctx%errch  ( '#', locfnm                               )
+               call ctx%errch  ( '#', strarc(filarc)                       )
+               call ctx%errch  ( '#', strarc(ft%files(i)%arch)             )
+               call ctx%sigerr ( 'SPICE(FILARCMISMATCH)'                   )
+               return
+            end if
+            handle = ft%files(i)%handle
+            return
+         end do
       end if
 
       mnm = 0.0_wp
@@ -6274,7 +6387,6 @@ contains
 
 !
 !     (PEPPER: the filename was trimmed when LOCFNM was set.)
-!
 !
 !     If we have made it this far, then we're ready to perform the
 !     appropriate open.  First get the handle ready.
@@ -6614,15 +6726,13 @@ contains
 
       return
       end associate
-      end procedure zzddhopn
+      end subroutine zzddhopn
 
-      !>## Abstract
+      !> Close the file associated with HANDLE.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Close the file associated with HANDLE.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6728,14 +6838,16 @@ contains
       !>        the decision was made to signal the error
       !>        SPICE(FILENOTCONNECTED) rather than connect a file not
       !>        present in the unit table when KILL is set.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzddhcls
+      module subroutine zzddhcls ( ctx, handle, arch, kill )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: arch  !! Expected architecture of the handle to close.
+      integer(ip), intent(in) :: handle  !! File handle associated with the file to close.
+      logical, intent(in) :: kill  !! Logical indicating whether to delete the file.
       character(strsiz) :: tmpstr
       real(wp) :: mnm
       integer(ip) :: accmet
@@ -6771,6 +6883,9 @@ contains
                   uthan => ctx%zzddhman_units%uthan, &
                   utlck => ctx%zzddhman_units%utlck, &
                   utlun => ctx%zzddhman_units%utlun )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -6951,16 +7066,14 @@ contains
 
       return
       end associate
-      end procedure zzddhcls
+      end subroutine zzddhcls
 
-      !>## Abstract
+      !> Return the logical unit associated with a handle, in the event
+      !> the handle is not connected to a unit, connect it to one.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the logical unit associated with a handle, in the event
-      !>     the handle is not connected to a unit, connect it to one.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7044,14 +7157,17 @@ contains
       !>        Fixed typo in long error message and in comments.
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzddhhlu
+      module subroutine zzddhhlu ( ctx, handle, arch, lock, unit )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(in) :: lock  !! Logical indicating to lock UNIT to HANDLE.
+      character(*), intent(in) :: arch  !! Expected file architecture.
+      integer(ip), intent(in) :: handle  !! Handle associated with the file of interest.
+      integer(ip), intent(out) :: unit  !! Corresponding logical unit.
       character(strsiz) :: tmpstr
       real(wp) :: mnm
       integer(ip) :: accmet
@@ -7088,6 +7204,9 @@ contains
                   utlck => ctx%zzddhman_units%utlck, &
                   utlun => ctx%zzddhman_units%utlun, &
                   reqcnt => ctx%zzddhman_units%reqcnt )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -7132,6 +7251,20 @@ contains
          call ctx%setmsg ( 'There is no file loaded with handle = #' )
          call ctx%errint ( '#', handle                               )
          call ctx%sigerr ( 'SPICE(NOSUCHHANDLE)'                     )
+         return
+      end if
+
+!
+!     PEPPER: a DAF built in memory has no file, so it has no unit.
+!
+      if ( ft%files(findex)%synthetic .or. allocated ( ft%files(findex)%raw_records ) ) then
+         unit = 0
+         call ctx%setmsg ( 'The kernel ''#'' (handle #) was built in ' &
+         //            'memory: it has no file, and this operation ' &
+         //            'needs one.' )
+         call ctx%errch  ( '#', ft%files(findex)%name )
+         call ctx%errint ( '#', handle                )
+         call ctx%sigerr ( 'SPICE(NOFILEFORKERNEL)'   )
          return
       end if
 
@@ -7309,15 +7442,13 @@ contains
 
       return
       end associate
-      end procedure zzddhhlu
+      end subroutine zzddhhlu
 
-      !>## Abstract
+      !> Unlock a logical unit from the specified handle.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Unlock a logical unit from the specified handle.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7388,14 +7519,15 @@ contains
       !>        Corrected typo in comments.
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-      !>
-      !>     Standard SPICE discovery error handling.
-      module procedure zzddhunl
+      module subroutine zzddhunl ( ctx, handle, arch )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: arch  !! Expected architecture of the handle to unlock.
+      integer(ip), intent(in) :: handle  !! File handle assigned to the file to unlock.
       character(strsiz) :: tmpstr
       real(wp) :: mnm
       integer(ip) :: accmet
@@ -7429,6 +7561,9 @@ contains
                   nut => ctx%zzddhman_units%nut, &
                   uthan => ctx%zzddhman_units%uthan, &
                   utlck => ctx%zzddhman_units%utlck )
+!
+!     Standard SPICE discovery error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -7536,15 +7671,13 @@ contains
 
       return
       end associate
-      end procedure zzddhunl
+      end subroutine zzddhunl
 
-      !>## Abstract
+      !> Get information about the file attached to HANDLE.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Get information about the file attached to HANDLE.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7629,13 +7762,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-      !>
-      !>     Do the initialization tasks.
-      module procedure zzddhnfo
+      module subroutine zzddhnfo ( ctx, handle, fname, intarc, intbff, intamh, found )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: fname  !! Name of the file associated with HANDLE.
+      integer(ip), intent(in) :: handle  !! File handle assigned to file of interest.
+      integer(ip), intent(out) :: intamh  !! Integer code for FNAME's access method.
+      integer(ip), intent(out) :: intarc  !! Integer code for FNAME's file architecture.
+      integer(ip), intent(out) :: intbff  !! Integer code for FNAME's binary file format.
+      logical, intent(out) :: found  !! Logical that indicates if HANDLE was found.
       logical :: return
       character(strsiz) :: tmpstr
       real(wp) :: mnm
@@ -7667,6 +7805,9 @@ contains
                   natbff => ctx%zzddhman_units%natbff, &
                   supbff => ctx%zzddhman_units%supbff, &
                   numsup => ctx%zzddhman_units%numsup )
+!
+!     Do the initialization tasks.
+!
       if ( first ) then
 
          call zzddhini ( ctx, natbff, supbff, numsup, &
@@ -7719,16 +7860,14 @@ contains
 
       return
       end associate
-      end procedure zzddhnfo
+      end subroutine zzddhnfo
 
-      !>## Abstract
+      !> Determine whether the file attached to HANDLE is uses the
+      !> binary file format native to the system.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine whether the file attached to HANDLE is uses the
-      !>     binary file format native to the system.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7790,13 +7929,15 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-      !>
-      !>     Do the initialization tasks.
-      module procedure zzddhisn
+      module subroutine zzddhisn ( ctx, handle, native, found )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle assigned to file to determine format.
+      logical, intent(out) :: native  !! Indicates if the file format is native.
+      logical, intent(out) :: found  !! Indicates if HANDLE is currently attached to file.
       logical :: return
       character(strsiz) :: tmpstr
       real(wp) :: mnm
@@ -7828,6 +7969,9 @@ contains
                   natbff => ctx%zzddhman_units%natbff, &
                   supbff => ctx%zzddhman_units%supbff, &
                   numsup => ctx%zzddhman_units%numsup )
+!
+!     Do the initialization tasks.
+!
       if ( first ) then
 
          call zzddhini ( ctx, natbff, supbff, numsup, &
@@ -7873,15 +8017,13 @@ contains
 
       return
       end associate
-      end procedure zzddhisn
+      end subroutine zzddhisn
 
-      !>## Abstract
+      !> Retrieve handle associated with filename.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Retrieve handle associated with filename.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7941,10 +8083,14 @@ contains
       !>        Updated for the new "magic number" column in the file table.
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-      module procedure zzddhfnh
+      module subroutine zzddhfnh ( ctx, fname, handle, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a file previously loaded with [[zzddhopn]].
+      integer(ip), intent(out) :: handle  !! Corresponding file handle.
+      logical, intent(out) :: found  !! Logical indicating whether HANDLE was located.
       character(:), allocatable :: locfnm
       character(strsiz) :: tmpstr
       real(wp) :: mnm
@@ -8032,15 +8178,13 @@ contains
 
       return
       end associate
-      end procedure zzddhfnh
+      end subroutine zzddhfnh
 
-      !>## Abstract
+      !> Return the handle associated with a logical unit.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the handle associated with a logical unit.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8099,12 +8243,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-      !>
-      !>     Do the initialization tasks.
-      module procedure zzddhluh
+      module subroutine zzddhluh ( ctx, unit, handle, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: handle  !! Corresponding handle.
+      integer(ip), intent(in) :: unit  !! Logical unit connected to a file.
+      logical, intent(out) :: found  !! Logical indicating the handle was located.
       logical :: return
       character(strsiz) :: tmpstr
       real(wp) :: mnm
@@ -8137,6 +8283,9 @@ contains
                   nut => ctx%zzddhman_units%nut, &
                   uthan => ctx%zzddhman_units%uthan, &
                   utlun => ctx%zzddhman_units%utlun )
+!
+!     Do the initialization tasks.
+!
       if ( first ) then
 
          call zzddhini ( ctx, natbff, supbff, numsup, &
@@ -8183,7 +8332,7 @@ contains
 
       return
       end associate
-      end procedure zzddhluh
+      end subroutine zzddhluh
 
    !> PEPPER: allocate the unit table of a context, with the instance's
    !> [[max_open_files]] entries (SPICELIB: UTSIZE).

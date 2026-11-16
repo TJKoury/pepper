@@ -2,9 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_time_api.f90.
+!> [[pepper_instance_module]]).
 !>
 !>## SCANIT (Scan a character string)
 !>
@@ -338,6 +336,8 @@ submodule (pepper_instance_module) pepper_time_api
 
 contains
 
+      !> Return the value of Delta ET (ET-UTC) for an input epoch.
+      !>
       !>## Detailed Input
       !>
       !>     EPOCH    is the epoch at which "delta ET" is to be computed.
@@ -503,12 +503,15 @@ contains
       !>
       !>        Multiple FOUND flags and a bevy of new error messages
       !>        were implemented to cope with this unfortunate oversight.
-
-      module procedure deltet
+      module subroutine deltet ( ctx, epoch, eptype, delta )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase
       use pepper_containers, only: grow
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: epoch  !! Input epoch (seconds past J2000).
+      character(*), intent(in) :: eptype  !! Type of input epoch ('UTC' or 'ET').
+      real(wp), intent(out) :: delta  !! Delta ET (ET-UTC) at input epoch.
       character(4) :: type
       real(wp) :: aet
       real(wp) :: ea
@@ -707,8 +710,11 @@ contains
             st%valid = .true.
             end associate
          end subroutine read_constants
-      end procedure deltet
+      end subroutine deltet
 
+      !> Convert an input time from ephemeris seconds past J2000
+      !> to Calendar, Day-of-Year, or Julian Date format, UTC.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the input epoch, ephemeris seconds past J2000.
@@ -1053,11 +1059,15 @@ contains
       !>               before supplying it to DPSTRF. This integer
       !>               `anchors' the first significant digit of the input
       !>               value in the units place.
-
-      module procedure et2utc
+      module subroutine et2utc ( ctx, et, format, prec, utcstr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, prefix, suffix, ucase
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch, given in ephemeris seconds past J2000.
+      character(*), intent(in) :: format  !! Format of output epoch.
+      integer(ip), intent(in) :: prec  !! Digits of precision in fractional seconds or days.
+      character(*), intent(out) :: utcstr  !! Output time string, UTC.
       integer(ip) :: ndigit !! The function NDIGIT gives the number of digits required to
                             !! display a non-negative integer that is less than 10000
       integer(ip) :: day
@@ -1405,8 +1415,11 @@ contains
 
       return
       end associate
-      end procedure et2utc
+      end subroutine et2utc
 
+      !> Prepare recognized markers and auxiliary arrays for the
+      !> routine [[scan]].
+      !>
       !>## Detailed Input
       !>
       !>     NMARKS   is the number of recognized marks that will be
@@ -1734,11 +1747,16 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT)
-      module procedure scanpr
+      module subroutine scanpr ( ctx, nmarks, marks, mrklen, pnters )
       use pepper_kinds, only: ip
       use pepper_arrays, only: rmdupc
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: nmarks  !! Number of recognizable substrings.
+      character(*), intent(inout) :: marks   ( * )  !! Recognizable substrings.
+      integer(ip), intent(out) :: mrklen  ( * )  !! auxiliary array describing MARKS.
+      integer(ip), intent(out) :: pnters  ( * )  !! auxiliary array describing MARKS.
       logical :: return
       character(1) :: letter
       integer(ip) :: backup
@@ -1896,8 +1914,12 @@ contains
       nmarks         = n
 
       return
-      end procedure scanpr
+      end subroutine scanpr
 
+      !> Scan a string and return the beginnings and ends of recognized
+      !> and unrecognized substrings. The full collection of these
+      !> substrings partitions the string.
+      !>
       !>## Detailed Input
       !>
       !>     STRING   is any character string that is to be scanned
@@ -2230,10 +2252,21 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT)
-      module procedure scan
+      module subroutine scan ( ctx, string, marks, mrklen, pnters, room, start, ntokns, ident, beg, end )
       use pepper_kinds, only: ip
       use pepper_strings, only: ncpos
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! string to be scanned.
+      integer(ip), intent(in) :: room  !! space available for storing substring descriptions.
+      character(*), intent(in) :: marks   ( * )  !! recognizable substrings.
+      integer(ip), intent(in) :: mrklen  ( * )  !! an auxiliary array describing MARKS.
+      integer(ip), intent(in) :: pnters  ( * )  !! an auxiliary array describing MARKS.
+      integer(ip), intent(inout) :: start  !! position from which to begin/resume scanning.
+      integer(ip), intent(out) :: ntokns  !! number of scanned substrings.
+      integer(ip), intent(out) :: beg     ( * )  !! beginnings of scanned substrings.
+      integer(ip), intent(out) :: end     ( * )  !! endings of scanned substrings.
+      integer(ip), intent(out) :: ident   ( * )  !! position of scanned substring within array MARKS.
       logical :: return
       character(1) :: letter
       integer(ip) :: backup
@@ -2418,8 +2451,11 @@ contains
       end do
 
       return
-      end procedure scan
+      end subroutine scan
 
+      !> Create a time format picture suitable for use by the routine
+      !> [[timout]] from a given sample time string.
+      !>
       !>## Detailed Input
       !>
       !>     SAMPLE   is a representative time string that to use
@@ -2508,69 +2544,71 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TPICTR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TPICTR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN  = 400 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN  = 400 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN  = 64  )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN  = 64  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(ERRLEN)    ERR
-      !>              CHARACTER*(TIMLEN)    PICTUR
-      !>              CHARACTER*(TIMLEN)    SAMPLE
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(TIMLEN)    UTCSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(ERRLEN)    ERR
+      !>      CHARACTER*(TIMLEN)    PICTUR
+      !>      CHARACTER*(TIMLEN)    SAMPLE
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(TIMLEN)    UTCSTR
       !>
-      !>              DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ET
       !>
-      !>              LOGICAL               OK
+      !>      LOGICAL               OK
       !>
-      !>        C
-      !>        C     Load LSK file.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load LSK file.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Create the required time picture.
-      !>        C
-      !>              SAMPLE = 'Thu Oct 01 11:11:11 PDT 1111'
+      !>C
+      !>C     Create the required time picture.
+      !>C
+      !>      SAMPLE = 'Thu Oct 01 11:11:11 PDT 1111'
       !>
-      !>              CALL TPICTR ( SAMPLE, PICTUR, OK, ERR )
+      !>      CALL TPICTR ( SAMPLE, PICTUR, OK, ERR )
       !>
-      !>              IF ( .NOT. OK ) THEN
+      !>      IF ( .NOT. OK ) THEN
       !>
-      !>                 WRITE(*,*) 'Invalid time picture.'
-      !>                 WRITE(*,*) ERR
+      !>         WRITE(*,*) 'Invalid time picture.'
+      !>         WRITE(*,*) ERR
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>        C
-      !>        C        Convert the input UTC time to ephemeris time.
-      !>        C
-      !>                 UTCSTR = '24 Mar 2018  16:23:00 UTC'
-      !>                 CALL STR2ET ( UTCSTR, ET )
+      !>C
+      !>C        Convert the input UTC time to ephemeris time.
+      !>C
+      !>         UTCSTR = '24 Mar 2018  16:23:00 UTC'
+      !>         CALL STR2ET ( UTCSTR, ET )
       !>
-      !>        C
-      !>        C         Now convert ET to the desired output format.
-      !>        C
-      !>                  CALL TIMOUT ( ET, PICTUR, TIMSTR )
-      !>                  WRITE (*,*) 'Sample format: ', SAMPLE
-      !>                  WRITE (*,*) 'Time picture : ', PICTUR
-      !>                  WRITE (*,*)
-      !>                  WRITE (*,*) 'Input UTC    : ', UTCSTR
-      !>                  WRITE (*,*) 'Output       : ', TIMSTR
+      !>C
+      !>C         Now convert ET to the desired output format.
+      !>C
+      !>          CALL TIMOUT ( ET, PICTUR, TIMSTR )
+      !>          WRITE (*,*) 'Sample format: ', SAMPLE
+      !>          WRITE (*,*) 'Time picture : ', PICTUR
+      !>          WRITE (*,*)
+      !>          WRITE (*,*) 'Input UTC    : ', UTCSTR
+      !>          WRITE (*,*) 'Output       : ', TIMSTR
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2610,9 +2648,14 @@ contains
       !>        Corrected a minor spelling error in the header comments.
       !>
       !>-    SPICELIB Version 1.0.0, 10-AUG-1996 (WLT)
-      module procedure tpictr
+      module subroutine tpictr ( ctx, sample, pictur, ok, errmsg )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: sample  !! is a sample date time string
+      character(*), intent(out) :: pictur  !! is a format picture that describes SAMPLE
+      logical, intent(out) :: ok  !! indicates success or failure to parse SAMPLE
+      character(*), intent(out) :: errmsg  !! a diagnostic returned if SAMPLE cannot be parsed
 
       character(5) :: type
       character(8) :: modify   ( 5 )
@@ -2644,8 +2687,11 @@ contains
       end if
 
       return
-      end procedure tpictr
+      end subroutine tpictr
 
+      !> Convert an input time from Calendar or Julian Date format, UTC,
+      !> to ephemeris seconds past J2000.
+      !>
       !>## Detailed Input
       !>
       !>     UTCSTR   is an input time string, containing a Calendar or Julian
@@ -2822,46 +2868,48 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM UTC2ET_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM UTC2ET_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      UNITIM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      UNITIM
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              CHARACTER*(*)         UTCSTR
-      !>              PARAMETER           ( UTCSTR = 'Dec 19 2003  16:48:00' )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      CHARACTER*(*)         UTCSTR
+      !>      PARAMETER           ( UTCSTR = 'Dec 19 2003  16:48:00' )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      JED
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      JED
       !>
-      !>        C
-      !>        C     Load the LSK file.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load the LSK file.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Convert input UTC string to Ephemeris Time.
-      !>        C
-      !>              CALL UTC2ET ( UTCSTR, ET )
-      !>              WRITE(*,'(2A)') 'UTC time             : ', UTCSTR
-      !>              WRITE(*,'(A,F22.9)') 'Ephemeris time       :', ET
+      !>C
+      !>C     Convert input UTC string to Ephemeris Time.
+      !>C
+      !>      CALL UTC2ET ( UTCSTR, ET )
+      !>      WRITE(*,'(2A)') 'UTC time             : ', UTCSTR
+      !>      WRITE(*,'(A,F22.9)') 'Ephemeris time       :', ET
       !>
-      !>        C
-      !>        C     Convert the Ephemeris Time to Julian ephemeris date,
-      !>        C     i.e. Julian date relative to TDB time scale.
-      !>        C
-      !>              JED = UNITIM( ET, 'ET', 'JED' )
-      !>              WRITE(*,'(A,F22.9)') 'Julian Ephemeris Date:', JED
+      !>C
+      !>C     Convert the Ephemeris Time to Julian ephemeris date,
+      !>C     i.e. Julian date relative to TDB time scale.
+      !>C
+      !>      JED = UNITIM( ET, 'ET', 'JED' )
+      !>      WRITE(*,'(A,F22.9)') 'Julian Ephemeris Date:', JED
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2927,10 +2975,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO) (IMU)
-      module procedure utc2et
+      module subroutine utc2et ( ctx, utcstr, et )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: utcstr  !! Input time string, UTC.
+      real(wp), intent(out) :: et  !! Output epoch, ephemeris seconds past J2000.
 
 !
 !     Parameters
@@ -3093,8 +3144,12 @@ contains
 
       return
 
-      end procedure utc2et
+      end subroutine utc2et
 
+      !> Convert an input epoch represented in TDB seconds past the TDB
+      !> epoch of J2000 to a character string formatted to the
+      !> specifications of a user's format picture.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a double precision representation of time in seconds
@@ -3504,69 +3559,71 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TIMOUT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TIMOUT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN  = 400 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN  = 400 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN  = 64  )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN  = 64  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(ERRLEN)    ERR
-      !>              CHARACTER*(TIMLEN)    PICTUR
-      !>              CHARACTER*(TIMLEN)    SAMPLE
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(TIMLEN)    UTCSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(ERRLEN)    ERR
+      !>      CHARACTER*(TIMLEN)    PICTUR
+      !>      CHARACTER*(TIMLEN)    SAMPLE
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(TIMLEN)    UTCSTR
       !>
-      !>              DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ET
       !>
-      !>              LOGICAL               OK
+      !>      LOGICAL               OK
       !>
-      !>        C
-      !>        C     Load LSK file.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load LSK file.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Create the required time picture.
-      !>        C
-      !>              SAMPLE = 'Thu Oct 01 11:11:11 PDT 1111'
+      !>C
+      !>C     Create the required time picture.
+      !>C
+      !>      SAMPLE = 'Thu Oct 01 11:11:11 PDT 1111'
       !>
-      !>              CALL TPICTR ( SAMPLE, PICTUR, OK, ERR )
+      !>      CALL TPICTR ( SAMPLE, PICTUR, OK, ERR )
       !>
-      !>              IF ( .NOT. OK ) THEN
+      !>      IF ( .NOT. OK ) THEN
       !>
-      !>                 WRITE(*,*) 'Invalid time picture.'
-      !>                 WRITE(*,*) ERR
+      !>         WRITE(*,*) 'Invalid time picture.'
+      !>         WRITE(*,*) ERR
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>        C
-      !>        C        Convert the input UTC time to ephemeris time.
-      !>        C
-      !>                 UTCSTR = '26 Nov 2018  23:23:00 UTC'
-      !>                 CALL STR2ET ( UTCSTR, ET )
+      !>C
+      !>C        Convert the input UTC time to ephemeris time.
+      !>C
+      !>         UTCSTR = '26 Nov 2018  23:23:00 UTC'
+      !>         CALL STR2ET ( UTCSTR, ET )
       !>
-      !>        C
-      !>        C         Now convert ET to the desired output format.
-      !>        C
-      !>                  CALL TIMOUT ( ET, PICTUR, TIMSTR )
-      !>                  WRITE (*,*) 'Sample format: ', SAMPLE
-      !>                  WRITE (*,*) 'Time picture : ', PICTUR
-      !>                  WRITE (*,*)
-      !>                  WRITE (*,*) 'Input UTC    : ', UTCSTR
-      !>                  WRITE (*,*) 'Output       : ', TIMSTR
+      !>C
+      !>C         Now convert ET to the desired output format.
+      !>C
+      !>          CALL TIMOUT ( ET, PICTUR, TIMSTR )
+      !>          WRITE (*,*) 'Sample format: ', SAMPLE
+      !>          WRITE (*,*) 'Time picture : ', PICTUR
+      !>          WRITE (*,*)
+      !>          WRITE (*,*) 'Input UTC    : ', UTCSTR
+      !>          WRITE (*,*) 'Output       : ', TIMSTR
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -3590,50 +3647,52 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TIMOUT_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TIMOUT_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN  = 80 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN  = 80 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(TIMLEN)    PICTUR
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(TIMLEN)    UTCSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(TIMLEN)    PICTUR
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(TIMLEN)    UTCSTR
       !>
-      !>              DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ET
       !>
-      !>        C
-      !>        C     Load LSK file.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load LSK file.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Convert the input UTC time to ephemeris time.
-      !>        C
-      !>              UTCSTR = '26 Nov 2018  16:23:00 UTC'
-      !>              CALL STR2ET ( UTCSTR, ET )
+      !>C
+      !>C     Convert the input UTC time to ephemeris time.
+      !>C
+      !>      UTCSTR = '26 Nov 2018  16:23:00 UTC'
+      !>      CALL STR2ET ( UTCSTR, ET )
       !>
-      !>        C
-      !>        C     Create the required time picture. This could be done
-      !>        C     using TPICTR.
-      !>        C
-      !>              PICTUR = 'Wkd Mon DD HR:MN ::UTC-7 YYYY '
-      !>             .      // '(JULIAND.#### JDUTC)'
+      !>C
+      !>C     Create the required time picture. This could be done
+      !>C     using TPICTR.
+      !>C
+      !>      PICTUR = 'Wkd Mon DD HR:MN ::UTC-7 YYYY '
+      !>     .      // '(JULIAND.#### JDUTC)'
       !>
-      !>        C
-      !>        C      Now convert ET to the desired output format.
-      !>        C
-      !>               CALL TIMOUT ( ET, PICTUR, TIMSTR )
-      !>               WRITE (*,*) 'Input UTC: ', UTCSTR
-      !>               WRITE (*,*) 'Output   : ', TIMSTR
+      !>C
+      !>C      Now convert ET to the desired output format.
+      !>C
+      !>       CALL TIMOUT ( ET, PICTUR, TIMSTR )
+      !>       WRITE (*,*) 'Input UTC: ', UTCSTR
+      !>       WRITE (*,*) 'Output   : ', TIMSTR
       !>
-      !>               END
+      !>       END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -3782,69 +3841,23 @@ contains
       !>-    Beta Version 2.1.0, 17-MAR-1994 (MJS) (NJB)
       !>
       !>        Integer argument to BRCKTD changed from 0 to 0.0D0.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     The parameters below act essentially as an enumeration
-      !>     of the various kinds of components we will be looking at in the
-      !>     input time string.
-      !>
-      !>     The following parameters serve as an enumeration of the various
-      !>     time formats that are recognized.
-      !>
-      !>     The parameters below are used to declare the space needed for
-      !>     scanning the input format string.
-      !>
-      !>     The length of the local string that we will use for copying
-      !>     the format string.
-      !>
-      !>     Local variables
-      !>
-      !>     The next set of variables holds the marks and auxiliary
-      !>     arrays used for scanning the format string.
-      !>
-      !>     The variables below are used to hold, base formats, values of
-      !>     time vector components, adjustments to use when rounding,
-      !>     the lengths of the format pictures and whether or not various
-      !>     components have already been computed.
-      !>
-      !>     The array below contains the indexes of the various values
-      !>     associated with the three different times of time vectors
-      !>     that we will be using YMD, YD, CONTIN.
-      !>
-      !>     We will be making a local copy of the input format string
-      !>     and the input time.
-      !>
-      !>     The integers below are used to mark substring boundaries.
-      !>
-      !>     Times come in three flavors: TT or TDT, TDB, UTC.  The one used
-      !>     on this particular invocation of TIMOUT is stored in TIMTYP.
-      !>     The routine TTRANS needs to have input and output time vector
-      !>     types.  The one used based upon the input PICTUR is stored
-      !>     in BASTYP.
-      !>
-      !>     Loop counters and delimiters
-      !>
-      !>     Utility double precision numbers
-      !>
-      !>     The array power is used to assist in the truncation of double
-      !>     precision values.
-      !>
-      !>     calendar variables.
-      !>
-      !>     Character string representations for months and week days.
-      !>
-      !>     Save everything.
-      !>
-      !>     Initial values
-      module procedure timout
+      module subroutine timout ( ctx, et, pictur, output )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j1950, j2000, spd
       use pepper_arrays, only: bsrchc
       use pepper_strings, only: prefix, rtrim, scanrj, lcase_inplace, ucase_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch in seconds past the ephemeris epoch J2000.
+      character(*), intent(in) :: pictur  !! A format specification for the output string.
+      character(*), intent(out) :: output  !! A string representation of the input epoch.
+!
+!     Local parameters
+!
+!     The parameters below act essentially as an enumeration
+!     of the various kinds of components we will be looking at in the
+!     input time string.
+!
       integer(ip), parameter :: currnt = 1
       integer(ip), parameter :: begin = currnt
       integer(ip), parameter :: noname = currnt  + 1
@@ -3899,10 +3912,25 @@ contains
       integer(ip), parameter :: noon = era    + 1
       integer(ip), parameter :: rlyear = noon   + 1
       integer(ip), parameter :: finish = rlyear
+!
+!     The following parameters serve as an enumeration of the various
+!     time formats that are recognized.
+!
       integer(ip), parameter :: ymd = 1
       integer(ip), parameter :: contin = ymd + 1
+!
+!     The parameters below are used to declare the space needed for
+!     scanning the input format string.
+!
       integer(ip), parameter :: room = 100
+!
+!     The length of the local string that we will use for copying
+!     the format string.
+!
       integer(ip), parameter :: maxlen = 256
+!
+!     Initial values
+!
       real(wp), parameter :: power  ( 0 : 14 ) = &
          [ 1.0_wp, 1.0e1_wp, 1.0e2_wp, 1.0e3_wp, 1.0e4_wp, 1.0e5_wp, &
            1.0e6_wp, 1.0e7_wp, 1.0e8_wp, 1.0e9_wp, 1.0e10_wp, 1.0e11_wp, &
@@ -3918,22 +3946,56 @@ contains
            'Friday', 'Saturday' ]
       integer(ip), parameter :: wklen  (  7 ) = &
          [ 6, 6, 7, 9, 8, 6, 8 ]
+!
+!     Utility double precision numbers
+!
       real(wp) :: timpad
+!
+!     The integers below are used to mark substring boundaries.
+!
       integer(ip) :: ident  (  room   )
       integer(ip) :: start
       integer(ip) :: end    (  room   )
+!
+!     Times come in three flavors: TT or TDT, TDB, UTC.  The one used
+!     on this particular invocation of TIMOUT is stored in TIMTYP.
+!     The routine TTRANS needs to have input and output time vector
+!     types.  The one used based upon the input PICTUR is stored
+!     in BASTYP.
+!
       logical :: doera
+!
+!     Character string representations for months and week days.
+!
       character(9) :: mywkd
       logical :: unknwn
       integer(ip) :: ntokns
       logical :: ok
       real(wp) :: incr
+!
+!     We will be making a local copy of the input format string
+!     and the input time.
+!
       character(maxlen) :: mystr
+!
+!     The array power is used to assist in the truncation of double
+!     precision values.
+!
       real(wp) :: x
+!
+!     Loop counters and delimiters
+!
       integer(ip) :: part
+!
+!     The next set of variables holds the marks and auxiliary
+!     arrays used for scanning the format string.
+!
       integer(ip) :: type
       character(8) :: ymdfmt
       real(wp) :: factor
+!
+!     calendar variables.
+!
       integer(ip) :: jmonth
       character(9) :: mymon
       integer(ip) :: jday
@@ -5342,6 +5404,6 @@ contains
 
       return
       end associate
-      end procedure timout
+      end subroutine timout
 
 end submodule pepper_time_api

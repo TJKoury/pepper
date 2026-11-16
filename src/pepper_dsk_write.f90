@@ -2,15 +2,15 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_dsk_write.f90.
+!> [[pepper_instance_module]]).
 submodule (pepper_instance_module) pepper_dsk_write
 
    implicit none
 
 contains
 
+      !> Write a type 2 segment to a DSK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the DAS file handle associated with a DSK file.
@@ -431,278 +431,280 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     Example program for DSKW02, DSKMI2, and DSKRB2
-      !>        C
-      !>        C        Create a three-segment DSK file using plate model
-      !>        C        data for Phobos. Use latitudinal, rectangular, and
-      !>        C        planetodetic coordinates in the respective segments.
-      !>        C
-      !>        C        For simplicity, use an existing DSK file to provide
-      !>        C        the input plate and vertex data. The selected input
-      !>        C        file has one segment.
-      !>        C
-      !>        C           Version 1.0.0 22-JAN-2016 (NJB)
-      !>        C
-      !>              PROGRAM DSKW02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>C
+      !>C     Example program for DSKW02, DSKMI2, and DSKRB2
+      !>C
+      !>C        Create a three-segment DSK file using plate model
+      !>C        data for Phobos. Use latitudinal, rectangular, and
+      !>C        planetodetic coordinates in the respective segments.
+      !>C
+      !>C        For simplicity, use an existing DSK file to provide
+      !>C        the input plate and vertex data. The selected input
+      !>C        file has one segment.
+      !>C
+      !>C           Version 1.0.0 22-JAN-2016 (NJB)
+      !>C
+      !>      PROGRAM DSKW02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dskdsc.inc'
-      !>              INCLUDE 'dsk02.inc'
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dskdsc.inc'
+      !>      INCLUDE 'dsk02.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      JYEAR
-      !>              DOUBLE PRECISION      PI
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      JYEAR
+      !>      DOUBLE PRECISION      PI
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               NSEG
-      !>              PARAMETER           ( NSEG   = 3 )
+      !>      INTEGER               NSEG
+      !>      PARAMETER           ( NSEG   = 3 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 20 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 20 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>              INTEGER               NCOR
-      !>              PARAMETER           ( NCOR   = 4 )
+      !>      INTEGER               NCOR
+      !>      PARAMETER           ( NCOR   = 4 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(NAMLEN)    CORNAM ( NCOR )
-      !>              CHARACTER*(FILSIZ)    DSK
-      !>              CHARACTER*(FRNMLN)    FRAME
-      !>              CHARACTER*(FILSIZ)    INDSK
-      !>              CHARACTER*(LNSIZE)    LINE
-      !>        C
-      !>        C     Note: the values of MAXVRT and MAXPLT declared
-      !>        C     in dsk02.inc, and the integer spatial index
-      !>        C     dimension SPAISZ are very large. Smaller buffers
-      !>        C     can be used for most applications.
-      !>        C
-      !>              DOUBLE PRECISION      CORPAR ( NSYPAR )
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      FINSCL
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
-      !>              DOUBLE PRECISION      MNCOR1
-      !>              DOUBLE PRECISION      MNCOR2
-      !>              DOUBLE PRECISION      MNCOR3
-      !>              DOUBLE PRECISION      MXCOR1
-      !>              DOUBLE PRECISION      MXCOR2
-      !>              DOUBLE PRECISION      MXCOR3
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RP
-      !>              DOUBLE PRECISION      SPAIXD ( IXDFIX )
-      !>              DOUBLE PRECISION      VRTCES ( 3, MAXVRT )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(NAMLEN)    CORNAM ( NCOR )
+      !>      CHARACTER*(FILSIZ)    DSK
+      !>      CHARACTER*(FRNMLN)    FRAME
+      !>      CHARACTER*(FILSIZ)    INDSK
+      !>      CHARACTER*(LNSIZE)    LINE
+      !>C
+      !>C     Note: the values of MAXVRT and MAXPLT declared
+      !>C     in dsk02.inc, and the integer spatial index
+      !>C     dimension SPAISZ are very large. Smaller buffers
+      !>C     can be used for most applications.
+      !>C
+      !>      DOUBLE PRECISION      CORPAR ( NSYPAR )
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      FINSCL
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      MNCOR1
+      !>      DOUBLE PRECISION      MNCOR2
+      !>      DOUBLE PRECISION      MNCOR3
+      !>      DOUBLE PRECISION      MXCOR1
+      !>      DOUBLE PRECISION      MXCOR2
+      !>      DOUBLE PRECISION      MXCOR3
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RP
+      !>      DOUBLE PRECISION      SPAIXD ( IXDFIX )
+      !>      DOUBLE PRECISION      VRTCES ( 3, MAXVRT )
       !>
-      !>              INTEGER               CENTER
-      !>              INTEGER               CORSCL
-      !>              INTEGER               CORSYS
-      !>              INTEGER               DCLASS
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               INHAN
-      !>              INTEGER               NP
-      !>              INTEGER               NV
-      !>              INTEGER               PLATES ( 3, MAXPLT )
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SPAIXI ( SPAISZ )
-      !>              INTEGER               SURFID
-      !>              INTEGER               VOXPSZ
-      !>              INTEGER               VOXLSZ
-      !>              INTEGER               WORK   ( 2, MAXCEL )
-      !>              INTEGER               WORKSZ
+      !>      INTEGER               CENTER
+      !>      INTEGER               CORSCL
+      !>      INTEGER               CORSYS
+      !>      INTEGER               DCLASS
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               INHAN
+      !>      INTEGER               NP
+      !>      INTEGER               NV
+      !>      INTEGER               PLATES ( 3, MAXPLT )
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SPAIXI ( SPAISZ )
+      !>      INTEGER               SURFID
+      !>      INTEGER               VOXPSZ
+      !>      INTEGER               VOXLSZ
+      !>      INTEGER               WORK   ( 2, MAXCEL )
+      !>      INTEGER               WORKSZ
       !>
-      !>              LOGICAL               FOUND
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     Save all large arrays to avoid stack problems.
-      !>        C
-      !>              SAVE
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  CORNAM / 'radius',
-      !>             .                               'Z-coordinate',
-      !>             .                               'Z-coordinate',
-      !>             .                               'altitude'     /
+      !>      LOGICAL               FOUND
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     Save all large arrays to avoid stack problems.
+      !>C
+      !>      SAVE
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  CORNAM / 'radius',
+      !>     .                               'Z-coordinate',
+      !>     .                               'Z-coordinate',
+      !>     .                               'altitude'     /
       !>
-      !>        C
-      !>        C     Assign names of input and output DSK files.
-      !>        C
-      !>              INDSK = 'phobos_3_3.bds'
-      !>              DSK   = 'phobos_3_3_3seg.bds'
-      !>        C
-      !>        C     Open input DSK for read access; find first segment.
-      !>        C
-      !>              CALL DASOPR ( INDSK, INHAN )
-      !>              CALL DLABFS ( INHAN, DLADSC, FOUND )
-      !>        C
-      !>        C     Fetch vertices and plates from input DSK file.
-      !>        C
-      !>              WRITE (*,*) 'Reading input data...'
+      !>C
+      !>C     Assign names of input and output DSK files.
+      !>C
+      !>      INDSK = 'phobos_3_3.bds'
+      !>      DSK   = 'phobos_3_3_3seg.bds'
+      !>C
+      !>C     Open input DSK for read access; find first segment.
+      !>C
+      !>      CALL DASOPR ( INDSK, INHAN )
+      !>      CALL DLABFS ( INHAN, DLADSC, FOUND )
+      !>C
+      !>C     Fetch vertices and plates from input DSK file.
+      !>C
+      !>      WRITE (*,*) 'Reading input data...'
       !>
-      !>              CALL DSKV02 ( INHAN, DLADSC, 1, MAXVRT, NV, VRTCES )
-      !>              CALL DSKP02 ( INHAN, DLADSC, 1, MAXPLT, NP, PLATES )
+      !>      CALL DSKV02 ( INHAN, DLADSC, 1, MAXVRT, NV, VRTCES )
+      !>      CALL DSKP02 ( INHAN, DLADSC, 1, MAXPLT, NP, PLATES )
       !>
-      !>              WRITE (*,*) 'Done.'
-      !>        C
-      !>        C     Set input array sizes required by DSKMI2.
-      !>        C
-      !>              VOXPSZ = MAXVXP
-      !>              VOXLSZ = MXNVLS
-      !>              WORKSZ = MAXCEL
-      !>        C
-      !>        C     Set fine and coarse voxel scales. (These usually
-      !>        C     need to determined by experimentation.)
-      !>        C
-      !>              FINSCL = 5.D0
-      !>              CORSCL = 4
-      !>        C
-      !>        C     Open a new DSK file.
-      !>        C
-      !>              CALL DSKOPN ( DSK, DSK, 0, HANDLE )
-      !>        C
-      !>        C     Create three segments and add them to the file.
-      !>        C
-      !>              DO SEGNO = 1, NSEG
-      !>        C
-      !>        C        Create spatial index.
-      !>        C
-      !>                 WRITE (*,*) 'Creating segment ', SEGNO
-      !>                 WRITE (*,*) 'Creating spatial index...'
+      !>      WRITE (*,*) 'Done.'
+      !>C
+      !>C     Set input array sizes required by DSKMI2.
+      !>C
+      !>      VOXPSZ = MAXVXP
+      !>      VOXLSZ = MXNVLS
+      !>      WORKSZ = MAXCEL
+      !>C
+      !>C     Set fine and coarse voxel scales. (These usually
+      !>C     need to determined by experimentation.)
+      !>C
+      !>      FINSCL = 5.D0
+      !>      CORSCL = 4
+      !>C
+      !>C     Open a new DSK file.
+      !>C
+      !>      CALL DSKOPN ( DSK, DSK, 0, HANDLE )
+      !>C
+      !>C     Create three segments and add them to the file.
+      !>C
+      !>      DO SEGNO = 1, NSEG
+      !>C
+      !>C        Create spatial index.
+      !>C
+      !>         WRITE (*,*) 'Creating segment ', SEGNO
+      !>         WRITE (*,*) 'Creating spatial index...'
       !>
-      !>                 CALL DSKMI2 ( NV,     VRTCES, NP,     PLATES, FINSCL,
-      !>             .                 CORSCL, WORKSZ, VOXPSZ, VOXLSZ, .TRUE.,
-      !>             .                 SPAISZ, WORK,   SPAIXD, SPAIXI        )
+      !>         CALL DSKMI2 ( NV,     VRTCES, NP,     PLATES, FINSCL,
+      !>     .                 CORSCL, WORKSZ, VOXPSZ, VOXLSZ, .TRUE.,
+      !>     .                 SPAISZ, WORK,   SPAIXD, SPAIXI        )
       !>
-      !>                 WRITE (*,*) 'Done.'
-      !>        C
-      !>        C        Set up inputs describing segment attributes:
-      !>        C
-      !>        C        - Central body: Phobos
-      !>        C        - Surface ID code: user's choice.
-      !>        C          We use the segment number here.
-      !>        C        - Data class: general (arbitrary) shape
-      !>        C        - Body-fixed reference frame
-      !>        C        - Time coverage bounds (TBD)
-      !>        C
-      !>                 CENTER = 401
-      !>                 SURFID = SEGNO
-      !>                 DCLASS = GENCLS
-      !>                 FRAME  = 'IAU_PHOBOS'
+      !>         WRITE (*,*) 'Done.'
+      !>C
+      !>C        Set up inputs describing segment attributes:
+      !>C
+      !>C        - Central body: Phobos
+      !>C        - Surface ID code: user's choice.
+      !>C          We use the segment number here.
+      !>C        - Data class: general (arbitrary) shape
+      !>C        - Body-fixed reference frame
+      !>C        - Time coverage bounds (TBD)
+      !>C
+      !>         CENTER = 401
+      !>         SURFID = SEGNO
+      !>         DCLASS = GENCLS
+      !>         FRAME  = 'IAU_PHOBOS'
       !>
-      !>                 FIRST = -50 * JYEAR()
-      !>                 LAST  =  50 * JYEAR()
-      !>        C
-      !>        C        Set the coordinate system and coordinate system
-      !>        C        bounds based on the segment index.
-      !>        C
-      !>        C        Zero out the coordinate parameters to start.
-      !>        C
-      !>                 CALL CLEARD ( NSYPAR, CORPAR )
+      !>         FIRST = -50 * JYEAR()
+      !>         LAST  =  50 * JYEAR()
+      !>C
+      !>C        Set the coordinate system and coordinate system
+      !>C        bounds based on the segment index.
+      !>C
+      !>C        Zero out the coordinate parameters to start.
+      !>C
+      !>         CALL CLEARD ( NSYPAR, CORPAR )
       !>
-      !>                 IF ( SEGNO .EQ. 1 ) THEN
-      !>        C
-      !>        C           Use planetocentric latitudinal coordinates. Set
-      !>        C           the longitude and latitude bounds.
-      !>        C
-      !>                    CORSYS = LATSYS
+      !>         IF ( SEGNO .EQ. 1 ) THEN
+      !>C
+      !>C           Use planetocentric latitudinal coordinates. Set
+      !>C           the longitude and latitude bounds.
+      !>C
+      !>            CORSYS = LATSYS
       !>
-      !>                    MNCOR1 = -PI()
-      !>                    MXCOR1 =  PI()
-      !>                    MNCOR2 = -PI()/2
-      !>                    MXCOR2 =  PI()/2
+      !>            MNCOR1 = -PI()
+      !>            MXCOR1 =  PI()
+      !>            MNCOR2 = -PI()/2
+      !>            MXCOR2 =  PI()/2
       !>
-      !>                 ELSE IF ( SEGNO .EQ. 2 ) THEN
-      !>        C
-      !>        C           Use rectangular coordinates. Set the
-      !>        C           X and Y bounds.
-      !>        C
-      !>        C           The bounds shown here were derived from
-      !>        C           the plate data. They lie slightly outside
-      !>        C           of the range spanned by the plates.
-      !>        C
-      !>                    CORSYS = RECSYS
+      !>         ELSE IF ( SEGNO .EQ. 2 ) THEN
+      !>C
+      !>C           Use rectangular coordinates. Set the
+      !>C           X and Y bounds.
+      !>C
+      !>C           The bounds shown here were derived from
+      !>C           the plate data. They lie slightly outside
+      !>C           of the range spanned by the plates.
+      !>C
+      !>            CORSYS = RECSYS
       !>
-      !>                    MNCOR1 = -1.3D0
-      !>                    MXCOR1 =  1.31D0
-      !>                    MNCOR2 = -1.21D0
-      !>                    MXCOR2 =  1.2D0
+      !>            MNCOR1 = -1.3D0
+      !>            MXCOR1 =  1.31D0
+      !>            MNCOR2 = -1.21D0
+      !>            MXCOR2 =  1.2D0
       !>
-      !>                 ELSE
-      !>        C
-      !>        C           Set the coordinate system to planetodetic.
-      !>        C
-      !>                    CORSYS    = PDTSYS
+      !>         ELSE
+      !>C
+      !>C           Set the coordinate system to planetodetic.
+      !>C
+      !>            CORSYS    = PDTSYS
       !>
-      !>                    MNCOR1    = -PI()
-      !>                    MXCOR1    =  PI()
-      !>                    MNCOR2    = -PI()/2
-      !>                    MXCOR2    =  PI()/2
-      !>        C
-      !>        C           We'll use equatorial and polar radii from
-      !>        C           pck00010.tpc. These normally would be fetched
-      !>        C           at run time, but for simplicity, we'll use
-      !>        C           hard-coded values.
+      !>            MNCOR1    = -PI()
+      !>            MXCOR1    =  PI()
+      !>            MNCOR2    = -PI()/2
+      !>            MXCOR2    =  PI()/2
+      !>C
+      !>C           We'll use equatorial and polar radii from
+      !>C           pck00010.tpc. These normally would be fetched
+      !>C           at run time, but for simplicity, we'll use
+      !>C           hard-coded values.
       !>
-      !>                    RE        = 13.0D0
-      !>                    RP        =  9.1D0
-      !>                    F         = ( RE - RP ) / RE
+      !>            RE        = 13.0D0
+      !>            RP        =  9.1D0
+      !>            F         = ( RE - RP ) / RE
       !>
-      !>                    CORPAR(1) = RE
-      !>                    CORPAR(2) = F
+      !>            CORPAR(1) = RE
+      !>            CORPAR(2) = F
       !>
-      !>                 END IF
-      !>        C
-      !>        C        Compute plate model radius bounds.
-      !>        C
-      !>                 LINE = 'Computing # bounds of plate set...'
+      !>         END IF
+      !>C
+      !>C        Compute plate model radius bounds.
+      !>C
+      !>         LINE = 'Computing # bounds of plate set...'
       !>
-      !>                 CALL REPMC ( LINE, '#', CORNAM(CORSYS), LINE )
-      !>                 WRITE (*,*) LINE
+      !>         CALL REPMC ( LINE, '#', CORNAM(CORSYS), LINE )
+      !>         WRITE (*,*) LINE
       !>
-      !>                 CALL DSKRB2 ( NV,     VRTCES, NP,     PLATES,
-      !>             .                 CORSYS, CORPAR, MNCOR3, MXCOR3 )
+      !>         CALL DSKRB2 ( NV,     VRTCES, NP,     PLATES,
+      !>     .                 CORSYS, CORPAR, MNCOR3, MXCOR3 )
       !>
-      !>                 WRITE (*,*) 'Done.'
-      !>        C
-      !>        C        Write the segment to the file.
-      !>        C
-      !>                 WRITE (*,*) 'Writing segment...'
+      !>         WRITE (*,*) 'Done.'
+      !>C
+      !>C        Write the segment to the file.
+      !>C
+      !>         WRITE (*,*) 'Writing segment...'
       !>
-      !>                 CALL DSKW02 ( HANDLE,
-      !>             .                 CENTER, SURFID, DCLASS, FRAME,  CORSYS,
-      !>             .                 CORPAR, MNCOR1, MXCOR1, MNCOR2, MXCOR2,
-      !>             .                 MNCOR3, MXCOR3, FIRST,  LAST,   NV,
-      !>             .                 VRTCES, NP,     PLATES, SPAIXD, SPAIXI )
+      !>         CALL DSKW02 ( HANDLE,
+      !>     .                 CENTER, SURFID, DCLASS, FRAME,  CORSYS,
+      !>     .                 CORPAR, MNCOR1, MXCOR1, MNCOR2, MXCOR2,
+      !>     .                 MNCOR3, MXCOR3, FIRST,  LAST,   NV,
+      !>     .                 VRTCES, NP,     PLATES, SPAIXD, SPAIXI )
       !>
-      !>                 WRITE (*,*) 'Done.'
+      !>         WRITE (*,*) 'Done.'
       !>
-      !>              END DO
-      !>        C
-      !>        C     Segregate the data records in the DSK file and
-      !>        C     close the file.
-      !>        C
-      !>              WRITE (*,*) 'Segregating and closing DSK file...'
+      !>      END DO
+      !>C
+      !>C     Segregate the data records in the DSK file and
+      !>C     close the file.
+      !>C
+      !>      WRITE (*,*) 'Segregating and closing DSK file...'
       !>
-      !>              CALL DSKCLS ( HANDLE, .TRUE. )
+      !>      CALL DSKCLS ( HANDLE, .TRUE. )
       !>
-      !>              WRITE (*,*) 'Done.'
-      !>              END
+      !>      WRITE (*,*) 'Done.'
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -812,13 +814,35 @@ contains
       !>        27-JUN-2006 (NJB)
       !>
       !>           Initial version.
-      module procedure dskw02
+      module subroutine dskw02 ( ctx, handle, center, surfid, dclass, frame, corsys, corpar, mncor1, mxcor1, mncor2, mxcor2, mncor3, mxcor3, first, last, nv, vrtces, np, plates, spaixd, spaixi )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr, halfpi, twopi
       use pepper_inc_dskdsc
       use pepper_inc_dsktol
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle assigned to the opened DSK file.
+      integer(ip), intent(in) :: center  !! Central body ID code.
+      integer(ip), intent(in) :: surfid  !! Surface ID code.
+      integer(ip), intent(in) :: dclass  !! Data class.
+      character(*), intent(in) :: frame  !! Reference frame.
+      integer(ip), intent(in) :: corsys  !! Coordinate system code.
+      real(wp), intent(in) :: corpar ( * )  !! Coordinate system parameters.
+      real(wp), intent(in) :: mncor1  !! Minimum value of first coordinate.
+      real(wp), intent(in) :: mxcor1  !! Maximum value of first coordinate.
+      real(wp), intent(in) :: mncor2  !! Minimum value of second coordinate.
+      real(wp), intent(in) :: mxcor2  !! Maximum value of second coordinate.
+      real(wp), intent(in) :: mncor3  !! Minimum value of third coordinate.
+      real(wp), intent(in) :: mxcor3  !! Maximum value of third coordinate.
+      real(wp), intent(in) :: first  !! Coverage start time.
+      real(wp), intent(in) :: last  !! Coverage stop time.
+      integer(ip), intent(in) :: nv  !! Number of vertices.
+      real(wp), intent(in) :: vrtces ( 3, nv )  !! Vertices.
+      integer(ip), intent(in) :: np  !! Number of plates.
+      integer(ip), intent(in) :: plates ( 3, np )  !! Plates.
+      real(wp), intent(in) :: spaixd ( * )  !! Double precision component of spatial index.
+      integer(ip), intent(in) :: spaixi ( * )  !! Integer component of spatial index.
 
       real(wp) :: a
       real(wp) :: altlim
@@ -1576,6 +1600,6 @@ contains
       call dlaens ( ctx, handle )
 
       return
-      end procedure dskw02
+      end subroutine dskw02
 
 end submodule pepper_dsk_write

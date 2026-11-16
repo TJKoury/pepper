@@ -2,9 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_pck_api.f90.
+!> [[pepper_instance_module]]).
 submodule (pepper_instance_module) pepper_pck_api
 
    implicit none
@@ -18,6 +16,9 @@ submodule (pepper_instance_module) pepper_pck_api
 
 contains
 
+      !> Find the coverage window for a specified reference frame in a
+      !> specified binary PCK file.
+      !>
       !>## Detailed Input
       !>
       !>     PCKFNM   is the name of a binary PCK file.
@@ -102,146 +103,148 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PCKCOV_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PCKCOV_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
-      !>              INTEGER               CARDI
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>        C
-      !>        C     Declare the coverage window.  Make enough room
-      !>        C     for MAXIV intervals.
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
+      !>      INTEGER               CARDI
+      !>C
+      !>C     Local parameters
+      !>C
+      !>C
+      !>C     Declare the coverage window.  Make enough room
+      !>C     for MAXIV intervals.
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               MAXIV
-      !>              PARAMETER           ( MAXIV  = 1000 )
+      !>      INTEGER               MAXIV
+      !>      PARAMETER           ( MAXIV  = 1000 )
       !>
-      !>              INTEGER               WINSIZ
-      !>              PARAMETER           ( WINSIZ = 2 * MAXIV )
+      !>      INTEGER               WINSIZ
+      !>      PARAMETER           ( WINSIZ = 2 * MAXIV )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 50 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 50 )
       !>
-      !>              INTEGER               MAXFRM
-      !>              PARAMETER           ( MAXFRM = 1000 )
+      !>      INTEGER               MAXFRM
+      !>      PARAMETER           ( MAXFRM = 1000 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    LSK
-      !>              CHARACTER*(FILSIZ)    PCKFNM
-      !>              CHARACTER*(TIMLEN)    TIMSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    LSK
+      !>      CHARACTER*(FILSIZ)    PCKFNM
+      !>      CHARACTER*(TIMLEN)    TIMSTR
       !>
-      !>              DOUBLE PRECISION      B
-      !>              DOUBLE PRECISION      COVER ( LBCELL : WINSIZ )
-      !>              DOUBLE PRECISION      E
+      !>      DOUBLE PRECISION      B
+      !>      DOUBLE PRECISION      COVER ( LBCELL : WINSIZ )
+      !>      DOUBLE PRECISION      E
       !>
-      !>              INTEGER               I
-      !>              INTEGER               IDS   ( LBCELL : MAXFRM )
-      !>              INTEGER               J
-      !>              INTEGER               NIV
+      !>      INTEGER               I
+      !>      INTEGER               IDS   ( LBCELL : MAXFRM )
+      !>      INTEGER               J
+      !>      INTEGER               NIV
       !>
-      !>        C
-      !>        C     Load a leapseconds kernel for output time conversion.
-      !>        C     PCKCOV itself does not require a leapseconds kernel.
-      !>        C
-      !>              CALL PROMPT ( 'Name of leapseconds kernel > ', LSK )
-      !>              CALL FURNSH ( LSK )
+      !>C
+      !>C     Load a leapseconds kernel for output time conversion.
+      !>C     PCKCOV itself does not require a leapseconds kernel.
+      !>C
+      !>      CALL PROMPT ( 'Name of leapseconds kernel > ', LSK )
+      !>      CALL FURNSH ( LSK )
       !>
-      !>        C
-      !>        C     Get name of PCK file.
-      !>        C
-      !>              CALL PROMPT ( 'Name of PCK file           > ', PCKFNM )
+      !>C
+      !>C     Get name of PCK file.
+      !>C
+      !>      CALL PROMPT ( 'Name of PCK file           > ', PCKFNM )
       !>
-      !>        C
-      !>        C     Initialize the set IDS.
-      !>        C
-      !>              CALL SSIZEI ( MAXFRM, IDS )
+      !>C
+      !>C     Initialize the set IDS.
+      !>C
+      !>      CALL SSIZEI ( MAXFRM, IDS )
       !>
-      !>        C
-      !>        C     Initialize the window COVER.
-      !>        C
-      !>              CALL SSIZED ( WINSIZ, COVER )
+      !>C
+      !>C     Initialize the window COVER.
+      !>C
+      !>      CALL SSIZED ( WINSIZ, COVER )
       !>
-      !>        C
-      !>        C     Find the set of frames in the PCK file.
-      !>        C
-      !>              CALL PCKFRM ( PCKFNM, IDS )
+      !>C
+      !>C     Find the set of frames in the PCK file.
+      !>C
+      !>      CALL PCKFRM ( PCKFNM, IDS )
       !>
-      !>        C
-      !>        C     We want to display the coverage for each frame.  Loop
-      !>        C     over the contents of the ID code set, find the coverage
-      !>        C     for each item in the set, and display the coverage.
-      !>        C
-      !>              DO I = 1, CARDI( IDS )
+      !>C
+      !>C     We want to display the coverage for each frame.  Loop
+      !>C     over the contents of the ID code set, find the coverage
+      !>C     for each item in the set, and display the coverage.
+      !>C
+      !>      DO I = 1, CARDI( IDS )
       !>
-      !>        C
-      !>        C        Find the coverage window for the current frame.
-      !>        C        Empty the coverage window each time so
-      !>        C        we don't include data for the previous frame.
-      !>        C
-      !>                 CALL SCARDD ( 0,      COVER )
-      !>                 CALL PCKCOV ( PCKFNM, IDS(I), COVER )
+      !>C
+      !>C        Find the coverage window for the current frame.
+      !>C        Empty the coverage window each time so
+      !>C        we don't include data for the previous frame.
+      !>C
+      !>         CALL SCARDD ( 0,      COVER )
+      !>         CALL PCKCOV ( PCKFNM, IDS(I), COVER )
       !>
-      !>        C
-      !>        C        Get the number of intervals in the coverage
-      !>        C        window.
-      !>        C
-      !>                 NIV = WNCARD( COVER )
+      !>C
+      !>C        Get the number of intervals in the coverage
+      !>C        window.
+      !>C
+      !>         NIV = WNCARD( COVER )
       !>
-      !>        C
-      !>        C        Display a simple banner.
-      !>        C
-      !>                 WRITE (*,*) '========================================'
-      !>                 WRITE (*,*) 'Coverage for reference frame ', IDS(I)
+      !>C
+      !>C        Display a simple banner.
+      !>C
+      !>         WRITE (*,*) '========================================'
+      !>         WRITE (*,*) 'Coverage for reference frame ', IDS(I)
       !>
-      !>        C
-      !>        C        Convert the coverage interval start and stop
-      !>        C        times to TDB calendar strings.
-      !>        C
-      !>                 DO J = 1, NIV
+      !>C
+      !>C        Convert the coverage interval start and stop
+      !>C        times to TDB calendar strings.
+      !>C
+      !>         DO J = 1, NIV
       !>
-      !>        C
-      !>        C           Get the endpoints of the Jth interval.
-      !>        C
-      !>                    CALL WNFETD ( COVER, J, B, E )
+      !>C
+      !>C           Get the endpoints of the Jth interval.
+      !>C
+      !>            CALL WNFETD ( COVER, J, B, E )
       !>
-      !>        C
-      !>        C           Convert the endpoints to TDB calendar
-      !>        C           format time strings and display them.
-      !>        C
-      !>                    CALL TIMOUT ( B,
-      !>             .                    'YYYY MON DD HR:MN:SC.### ' //
-      !>             .                    '(TDB) ::TDB',
-      !>             .                    TIMSTR                        )
-      !>                    WRITE (*,*) ' '
-      !>                    WRITE (*,*) 'Interval: ', J
-      !>                    WRITE (*,*) 'Start:    ', TIMSTR
+      !>C
+      !>C           Convert the endpoints to TDB calendar
+      !>C           format time strings and display them.
+      !>C
+      !>            CALL TIMOUT ( B,
+      !>     .                    'YYYY MON DD HR:MN:SC.### ' //
+      !>     .                    '(TDB) ::TDB',
+      !>     .                    TIMSTR                        )
+      !>            WRITE (*,*) ' '
+      !>            WRITE (*,*) 'Interval: ', J
+      !>            WRITE (*,*) 'Start:    ', TIMSTR
       !>
-      !>                    CALL TIMOUT ( E,
-      !>             .                    'YYYY MON DD HR:MN:SC.### ' //
-      !>             .                    '(TDB) ::TDB',
-      !>             .                    TIMSTR                        )
-      !>                    WRITE (*,*) 'Stop:     ', TIMSTR
-      !>                    WRITE (*,*) ' '
+      !>            CALL TIMOUT ( E,
+      !>     .                    'YYYY MON DD HR:MN:SC.### ' //
+      !>     .                    '(TDB) ::TDB',
+      !>     .                    TIMSTR                        )
+      !>            WRITE (*,*) 'Stop:     ', TIMSTR
+      !>            WRITE (*,*) ' '
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 WRITE (*,*) '========================================'
+      !>         WRITE (*,*) '========================================'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the LSK file named naif0012.tls, and the PCK
@@ -300,139 +303,141 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PCKCOV_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PCKCOV_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>              INTEGER               MAXCOV
-      !>              PARAMETER           ( MAXCOV = 100000 )
+      !>      INTEGER               MAXCOV
+      !>      PARAMETER           ( MAXCOV = 100000 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 50 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 50 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    FILE
-      !>              CHARACTER*(LNSIZE)    IDCH
-      !>              CHARACTER*(FILSIZ)    META
-      !>              CHARACTER*(FILSIZ)    SOURCE
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(LNSIZE)    TYPE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    FILE
+      !>      CHARACTER*(LNSIZE)    IDCH
+      !>      CHARACTER*(FILSIZ)    META
+      !>      CHARACTER*(FILSIZ)    SOURCE
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(LNSIZE)    TYPE
       !>
-      !>              DOUBLE PRECISION      B
-      !>              DOUBLE PRECISION      COVER  ( LBCELL : 2*MAXCOV )
-      !>              DOUBLE PRECISION      E
+      !>      DOUBLE PRECISION      B
+      !>      DOUBLE PRECISION      COVER  ( LBCELL : 2*MAXCOV )
+      !>      DOUBLE PRECISION      E
       !>
-      !>              INTEGER               COUNT
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               IDCODE
-      !>              INTEGER               NIV
+      !>      INTEGER               COUNT
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               IDCODE
+      !>      INTEGER               NIV
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the metakernel name; load the metakernel.
-      !>        C     The metakernel lists the PCK files whose coverage
-      !>        C     for IDCODE we'd like to determine.  The metakernel
-      !>        C     must also specify a leapseconds kernel.
-      !>        C
-      !>              CALL PROMPT ( 'Enter name of metakernel > ', META )
+      !>C
+      !>C     Prompt for the metakernel name; load the metakernel.
+      !>C     The metakernel lists the PCK files whose coverage
+      !>C     for IDCODE we'd like to determine.  The metakernel
+      !>C     must also specify a leapseconds kernel.
+      !>C
+      !>      CALL PROMPT ( 'Enter name of metakernel > ', META )
       !>
-      !>              CALL FURNSH ( META )
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Get the ID code of interest.
-      !>        C
-      !>              CALL PROMPT ( 'Enter ID code            > ', IDCH )
+      !>C
+      !>C     Get the ID code of interest.
+      !>C
+      !>      CALL PROMPT ( 'Enter ID code            > ', IDCH )
       !>
-      !>              CALL PRSINT ( IDCH,  IDCODE )
+      !>      CALL PRSINT ( IDCH,  IDCODE )
       !>
-      !>        C
-      !>        C     Initialize the coverage window.
-      !>        C
-      !>              CALL SSIZED ( MAXCOV, COVER )
+      !>C
+      !>C     Initialize the coverage window.
+      !>C
+      !>      CALL SSIZED ( MAXCOV, COVER )
       !>
-      !>        C
-      !>        C     Find out how many kernels are loaded.  Loop over the
-      !>        C     kernels:  for each loaded PCK file, add its coverage
-      !>        C     for IDCODE, if any, to the coverage window.
-      !>        C
-      !>              CALL KTOTAL ( 'PCK', COUNT )
+      !>C
+      !>C     Find out how many kernels are loaded.  Loop over the
+      !>C     kernels:  for each loaded PCK file, add its coverage
+      !>C     for IDCODE, if any, to the coverage window.
+      !>C
+      !>      CALL KTOTAL ( 'PCK', COUNT )
       !>
-      !>              DO I = 1, COUNT
+      !>      DO I = 1, COUNT
       !>
-      !>                 CALL KDATA  ( I,       'PCK',   FILE,  TYPE,
-      !>             .                 SOURCE,  HANDLE,  FOUND       )
+      !>         CALL KDATA  ( I,       'PCK',   FILE,  TYPE,
+      !>     .                 SOURCE,  HANDLE,  FOUND       )
       !>
-      !>                 CALL PCKCOV ( FILE,    IDCODE,  COVER )
+      !>         CALL PCKCOV ( FILE,    IDCODE,  COVER )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Display results.
-      !>        C
-      !>        C     Get the number of intervals in the coverage
-      !>        C     window.
-      !>        C
-      !>              NIV = WNCARD( COVER )
+      !>C
+      !>C     Display results.
+      !>C
+      !>C     Get the number of intervals in the coverage
+      !>C     window.
+      !>C
+      !>      NIV = WNCARD( COVER )
       !>
-      !>        C
-      !>        C     Display a simple banner.
-      !>        C
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Coverage for frame ', IDCODE
+      !>C
+      !>C     Display a simple banner.
+      !>C
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Coverage for frame ', IDCODE
       !>
-      !>        C
-      !>        C     Convert the coverage interval start and stop
-      !>        C     times to TDB calendar strings.
-      !>        C
-      !>              DO I = 1, NIV
+      !>C
+      !>C     Convert the coverage interval start and stop
+      !>C     times to TDB calendar strings.
+      !>C
+      !>      DO I = 1, NIV
       !>
-      !>        C
-      !>        C        Get the endpoints of the Ith interval.
-      !>        C
-      !>                 CALL WNFETD ( COVER, I, B, E )
+      !>C
+      !>C        Get the endpoints of the Ith interval.
+      !>C
+      !>         CALL WNFETD ( COVER, I, B, E )
       !>
-      !>        C
-      !>        C        Convert the endpoints to TDB calendar
-      !>        C        format time strings and display them.
-      !>        C
-      !>                 CALL TIMOUT ( B,
-      !>             .                 'YYYY MON DD HR:MN:SC.### ' //
-      !>             .                 '(TDB) ::TDB',
-      !>             .                 TIMSTR                        )
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Interval: ', I
-      !>                 WRITE (*,*) 'Start:    ', TIMSTR
+      !>C
+      !>C        Convert the endpoints to TDB calendar
+      !>C        format time strings and display them.
+      !>C
+      !>         CALL TIMOUT ( B,
+      !>     .                 'YYYY MON DD HR:MN:SC.### ' //
+      !>     .                 '(TDB) ::TDB',
+      !>     .                 TIMSTR                        )
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Interval: ', I
+      !>         WRITE (*,*) 'Start:    ', TIMSTR
       !>
-      !>                 CALL TIMOUT ( E,
-      !>             .                 'YYYY MON DD HR:MN:SC.### ' //
-      !>             .                 '(TDB) ::TDB',
-      !>             .                 TIMSTR                        )
-      !>                 WRITE (*,*) 'Stop:     ', TIMSTR
-      !>                 WRITE (*,*) ' '
+      !>         CALL TIMOUT ( E,
+      !>     .                 'YYYY MON DD HR:MN:SC.### ' //
+      !>     .                 '(TDB) ::TDB',
+      !>     .                 TIMSTR                        )
+      !>         WRITE (*,*) 'Stop:     ', TIMSTR
+      !>         WRITE (*,*) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the meta-kernel named pckcov_ex2.tm provided
@@ -485,9 +490,14 @@ contains
       !>        Minor edits to $Procedure; clean trailing whitespace.
       !>
       !>-    SPICELIB Version 1.0.0, 30-NOV-2007 (NJB)
-      module procedure pckcov
+      module subroutine pckcov ( ctx, pckfnm, idcode, cover )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: pckfnm  !! Name of PCK file.
+      integer(ip), intent(in) :: idcode  !! Class ID code of PCK reference frame.
+      real(wp), intent(inout) :: cover  ( lbcell : * )  !! Window giving coverage in PCKFNM for IDCODE.
       real(wp), allocatable :: intervals(:,:)
       integer(ip) :: k
 !
@@ -500,11 +510,22 @@ contains
          if ( ctx%failed() ) return
          call wninsd ( ctx, intervals(1,k), intervals(2,k), cover )
       end do
-      end procedure pckcov
+      end subroutine pckcov
 
-      module procedure pck_coverage
+      !> The coverage of a frame in a binary PCK file (PEPPER; [[pckcov]]
+      !> without a window cell).
+      !>
+      !> The result is a window as an array: each column an interval
+      !> [start, stop] (TDB seconds past J2000), sorted and disjoint
+      !> ([[pepper_windows]]). The errors are those of [[pckcov]],
+      !> without SPICE(WINDOWEXCESS).
+      module subroutine pck_coverage ( ctx, file, frame, intervals )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the binary PCK file
+      integer(ip), intent(in) :: frame  !! the frame class ID code
+      real(wp), allocatable, intent(out) :: intervals(:,:)  !! the coverage, shape (2, n) (n = 0 after an error)
       type(interval_list) :: window  ! the coverage being built
 
 
@@ -629,16 +650,14 @@ contains
 
       if ( .not. ctx%failed() ) call window%window ( intervals )
       return
-      end procedure pck_coverage
+      end subroutine pck_coverage
 
-      !>## Abstract
+      !> This routine is obsolete. It supports only the type 02 binary
+      !> PCK format. It is maintained only for backward compatibility
       !>
-      !>     This routine is obsolete. It supports only the type 02 binary
-      !>     PCK format. It is maintained only for backward compatibility
-      !>
-      !>     Return Euler angles and their derivatives and their reference
-      !>     frame, given an input time and body and reference frame from
-      !>     a PCK binary file.
+      !> Return Euler angles and their derivatives and their reference
+      !> frame, given an input time and body and reference frame from
+      !> a PCK binary file.
       !>
       !>## Detailed Input
       !>
@@ -740,9 +759,15 @@ contains
       !>        Fixed bug which incorrectly modded DW by two pi.
       !>
       !>-    SPICELIB Version 1.0.0, 11-MAR-1994 (KSZ)
-      module procedure pckeul
+      module subroutine pckeul ( ctx, body, et, found, ref, eulang )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! ID code of body
+      real(wp), intent(in) :: et  !! Epoch of transformation
+      logical, intent(out) :: found  !! .TRUE. if ET, BODY found in a PCK file
+      character(*), intent(out) :: ref  !! Name of inertial ref. frame of state
+      real(wp), intent(out) :: eulang   ( 6 )  !! Euler angles and their derivatives.
 
 !
 !     Parameters
@@ -820,8 +845,11 @@ contains
       end if
 
       return
-      end procedure pckeul
+      end subroutine pckeul
 
+      !> Find the set of reference frame class ID codes of all frames
+      !> in a specified binary PCK file.
+      !>
       !>## Detailed Input
       !>
       !>     PCKFNM   is the name of a binary PCK file.
@@ -894,143 +922,145 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PCKFRM_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PCKFRM_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
-      !>              INTEGER               CARDI
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>        C
-      !>        C     Declare the coverage window.  Make enough room
-      !>        C     for MAXIV intervals.
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
+      !>      INTEGER               CARDI
+      !>C
+      !>C     Local parameters
+      !>C
+      !>C
+      !>C     Declare the coverage window.  Make enough room
+      !>C     for MAXIV intervals.
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               MAXIV
-      !>              PARAMETER           ( MAXIV  = 1000 )
+      !>      INTEGER               MAXIV
+      !>      PARAMETER           ( MAXIV  = 1000 )
       !>
-      !>              INTEGER               WINSIZ
-      !>              PARAMETER           ( WINSIZ = 2 * MAXIV )
+      !>      INTEGER               WINSIZ
+      !>      PARAMETER           ( WINSIZ = 2 * MAXIV )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 50 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 50 )
       !>
-      !>              INTEGER               MAXFRM
-      !>              PARAMETER           ( MAXFRM = 1000 )
+      !>      INTEGER               MAXFRM
+      !>      PARAMETER           ( MAXFRM = 1000 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    LSK
-      !>              CHARACTER*(FILSIZ)    PCKFNM
-      !>              CHARACTER*(TIMLEN)    TIMSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    LSK
+      !>      CHARACTER*(FILSIZ)    PCKFNM
+      !>      CHARACTER*(TIMLEN)    TIMSTR
       !>
-      !>              DOUBLE PRECISION      B
-      !>              DOUBLE PRECISION      COVER ( LBCELL : WINSIZ )
-      !>              DOUBLE PRECISION      E
+      !>      DOUBLE PRECISION      B
+      !>      DOUBLE PRECISION      COVER ( LBCELL : WINSIZ )
+      !>      DOUBLE PRECISION      E
       !>
-      !>              INTEGER               I
-      !>              INTEGER               IDS   ( LBCELL : MAXFRM )
-      !>              INTEGER               J
-      !>              INTEGER               NIV
+      !>      INTEGER               I
+      !>      INTEGER               IDS   ( LBCELL : MAXFRM )
+      !>      INTEGER               J
+      !>      INTEGER               NIV
       !>
-      !>        C
-      !>        C     Load a leapseconds kernel for output time conversion.
-      !>        C     PCKCOV itself does not require a leapseconds kernel.
-      !>        C
-      !>              CALL PROMPT ( 'Name of leapseconds kernel > ', LSK )
-      !>              CALL FURNSH ( LSK )
+      !>C
+      !>C     Load a leapseconds kernel for output time conversion.
+      !>C     PCKCOV itself does not require a leapseconds kernel.
+      !>C
+      !>      CALL PROMPT ( 'Name of leapseconds kernel > ', LSK )
+      !>      CALL FURNSH ( LSK )
       !>
-      !>        C
-      !>        C     Get name of PCK file.
-      !>        C
-      !>              CALL PROMPT ( 'Name of PCK file           > ', PCKFNM )
+      !>C
+      !>C     Get name of PCK file.
+      !>C
+      !>      CALL PROMPT ( 'Name of PCK file           > ', PCKFNM )
       !>
-      !>        C
-      !>        C     Initialize the set IDS.
-      !>        C
-      !>              CALL SSIZEI ( MAXFRM, IDS )
+      !>C
+      !>C     Initialize the set IDS.
+      !>C
+      !>      CALL SSIZEI ( MAXFRM, IDS )
       !>
-      !>        C
-      !>        C     Initialize the window COVER.
-      !>        C
-      !>              CALL SSIZED ( WINSIZ, COVER )
+      !>C
+      !>C     Initialize the window COVER.
+      !>C
+      !>      CALL SSIZED ( WINSIZ, COVER )
       !>
-      !>        C
-      !>        C     Find the set of frames in the PCK file.
-      !>        C
-      !>              CALL PCKFRM ( PCKFNM, IDS )
+      !>C
+      !>C     Find the set of frames in the PCK file.
+      !>C
+      !>      CALL PCKFRM ( PCKFNM, IDS )
       !>
-      !>        C
-      !>        C     We want to display the coverage for each frame.  Loop
-      !>        C     over the contents of the ID code set, find the coverage
-      !>        C     for each item in the set, and display the coverage.
-      !>        C
-      !>              DO I = 1, CARDI( IDS )
-      !>        C
-      !>        C        Find the coverage window for the current frame.
-      !>        C        Empty the coverage window each time so
-      !>        C        we don't include data for the previous frame.
-      !>        C
-      !>                 CALL SCARDD ( 0,      COVER )
-      !>                 CALL PCKCOV ( PCKFNM, IDS(I), COVER )
+      !>C
+      !>C     We want to display the coverage for each frame.  Loop
+      !>C     over the contents of the ID code set, find the coverage
+      !>C     for each item in the set, and display the coverage.
+      !>C
+      !>      DO I = 1, CARDI( IDS )
+      !>C
+      !>C        Find the coverage window for the current frame.
+      !>C        Empty the coverage window each time so
+      !>C        we don't include data for the previous frame.
+      !>C
+      !>         CALL SCARDD ( 0,      COVER )
+      !>         CALL PCKCOV ( PCKFNM, IDS(I), COVER )
       !>
-      !>        C
-      !>        C        Get the number of intervals in the coverage
-      !>        C        window.
-      !>        C
-      !>                 NIV = WNCARD( COVER )
+      !>C
+      !>C        Get the number of intervals in the coverage
+      !>C        window.
+      !>C
+      !>         NIV = WNCARD( COVER )
       !>
-      !>        C
-      !>        C        Display a simple banner.
-      !>        C
-      !>                 WRITE (*,*) '========================================'
-      !>                 WRITE (*,*) 'Coverage for reference frame ', IDS(I)
+      !>C
+      !>C        Display a simple banner.
+      !>C
+      !>         WRITE (*,*) '========================================'
+      !>         WRITE (*,*) 'Coverage for reference frame ', IDS(I)
       !>
-      !>        C
-      !>        C        Convert the coverage interval start and stop
-      !>        C        times to TDB calendar strings.
-      !>        C
-      !>                 DO J = 1, NIV
-      !>        C
-      !>        C           Get the endpoints of the Jth interval.
-      !>        C
-      !>                    CALL WNFETD ( COVER, J, B, E )
-      !>        C
-      !>        C           Convert the endpoints to TDB calendar
-      !>        C           format time strings and display them.
-      !>        C
-      !>                    CALL TIMOUT ( B,
-      !>             .                    'YYYY MON DD HR:MN:SC.### ' //
-      !>             .                    '(TDB) ::TDB',
-      !>             .                    TIMSTR                        )
-      !>                    WRITE (*,*) ' '
-      !>                    WRITE (*,*) 'Interval: ', J
-      !>                    WRITE (*,*) 'Start:    ', TIMSTR
+      !>C
+      !>C        Convert the coverage interval start and stop
+      !>C        times to TDB calendar strings.
+      !>C
+      !>         DO J = 1, NIV
+      !>C
+      !>C           Get the endpoints of the Jth interval.
+      !>C
+      !>            CALL WNFETD ( COVER, J, B, E )
+      !>C
+      !>C           Convert the endpoints to TDB calendar
+      !>C           format time strings and display them.
+      !>C
+      !>            CALL TIMOUT ( B,
+      !>     .                    'YYYY MON DD HR:MN:SC.### ' //
+      !>     .                    '(TDB) ::TDB',
+      !>     .                    TIMSTR                        )
+      !>            WRITE (*,*) ' '
+      !>            WRITE (*,*) 'Interval: ', J
+      !>            WRITE (*,*) 'Start:    ', TIMSTR
       !>
-      !>                    CALL TIMOUT ( E,
-      !>             .                    'YYYY MON DD HR:MN:SC.### ' //
-      !>             .                    '(TDB) ::TDB',
-      !>             .                    TIMSTR                        )
-      !>                    WRITE (*,*) 'Stop:     ', TIMSTR
-      !>                    WRITE (*,*) ' '
+      !>            CALL TIMOUT ( E,
+      !>     .                    'YYYY MON DD HR:MN:SC.### ' //
+      !>     .                    '(TDB) ::TDB',
+      !>     .                    TIMSTR                        )
+      !>            WRITE (*,*) 'Stop:     ', TIMSTR
+      !>            WRITE (*,*) ' '
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 WRITE (*,*) '========================================'
+      !>         WRITE (*,*) '========================================'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the LSK file named naif0012.tls, and the PCK
@@ -1082,9 +1112,13 @@ contains
       !>        Minor edits to $Procedure; clean trailing whitespace.
       !>
       !>-    SPICELIB Version 1.0.0, 01-DEC-2007 (NJB)
-      module procedure pckfrm
+      module subroutine pckfrm ( ctx, pckfnm, ids )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: pckfnm  !! Name of PCK file.
+      integer(ip), intent(inout) :: ids    ( lbcell : * )  !! Set of frame class ID codes of frames in PCK file.
       integer(ip), allocatable :: list(:)
       integer(ip) :: k
 !
@@ -1097,12 +1131,17 @@ contains
          if ( ctx%failed() ) return
          call insrti ( ctx, list(k), ids )
       end do
-      end procedure pckfrm
+      end subroutine pckfrm
 
-      module procedure pck_frames
+      !> The frames of a binary PCK file (PEPPER; [[pckfrm]] without a set
+      !> cell): their class ID codes, sorted, without duplicates.
+      module subroutine pck_frames ( ctx, file, ids )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: append_id, sort_unique
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the binary PCK file
+      integer(ip), allocatable, intent(out) :: ids(:)  !! the frame class ID codes (size 0 after an error)
       integer(ip), allocatable :: list(:)  ! the IDs found (unsorted, with duplicates)
       integer(ip) :: nlist  ! the number of IDs in LIST
 
@@ -1229,8 +1268,12 @@ contains
          call sort_unique ( ids )
       end if
       return
-      end procedure pck_frames
+      end subroutine pck_frames
 
+      !> Return the Euler angles needed to compute the transformation from
+      !> inertial to body-fixed coordinates for any body in the kernel
+      !> pool.
+      !>
       !>## Detailed Input
       !>
       !>     BODY     is the integer ID code of the body for which the
@@ -1573,33 +1616,32 @@ contains
       !>
       !>        $Examples section completed. Declarations of unused variables
       !>        HALFPI and N removed.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Maximum number of coefficients per phase angle polynomial.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
-      module procedure bodeul
+      module subroutine bodeul ( ctx, body, et, ra, dec, w, lambda )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, j2000, rpd, spd, twopi
       use pepper_math, only: mxm, vdotg
       use pepper_strings, only: repmi_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! ID code of body.
+      real(wp), intent(in) :: et  !! Epoch of transformation.
+      real(wp), intent(out) :: ra  !! Right ascension of the (IAU) north pole.
+      real(wp), intent(out) :: dec  !! Declination of the (IAU) north pole of the body.
+      real(wp), intent(out) :: w  !! Prime meridian rotation angle.
+      real(wp), intent(out) :: lambda  !! Angle between the prime meridian and longitude of longest axis.
       ! PEPPER: work arrays of the kernel variables' sizes (SPICELIB: saved
       ! arrays of MAXANG, 200, values)
+!
+!     Local variables
+!
       real(wp), allocatable :: ac(:), dc(:), wc(:), tcoef(:), sinth(:), costh(:)
       real(wp) :: dpval_1(1)  !! one-element copy of dpval (array argument)
       integer(ip) :: ref_1(1)  !! one-element copy of ref (array argument)
       real(wp) :: conepc_1(1)  !! one-element copy of conepc (array argument)
       real(wp) :: lambda_1(1)  !! one-element copy of lambda (array argument)
+!
+!     Maximum number of coefficients per phase angle polynomial.
+!
       integer(ip), parameter :: mxphas = 4
       integer(ip), parameter :: mxpoly = 3
       integer(ip), parameter :: namlen = 32
@@ -1642,6 +1684,9 @@ contains
                   nphase => ctx%bodeul_state%nphase, &
                   nphsco => ctx%bodeul_state%nphsco, &
                   first => ctx%bodeul_state%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -2073,6 +2118,6 @@ contains
 
       return
       end associate
-      end procedure bodeul
+      end subroutine bodeul
 
 end submodule pepper_pck_api

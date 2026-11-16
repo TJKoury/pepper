@@ -1,9 +1,7 @@
 !> Searching, sorting and other operations on arrays.
 !>
 !> The procedures keep SPICELIB's names, arguments and documentation. They
-!> have no saved state and do not signal SPICE errors. Moved here from
-!> src/spicelib by tools/modularize.py; the external procedures with the
-!> original interface are in tspice/src/legacy/pepper_legacy_arrays.f90.
+!> have no saved state and do not signal SPICE errors.
 module pepper_arrays
 
    implicit none
@@ -203,69 +201,71 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM BSCHOC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM BSCHOC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 BSCHOC
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 BSCHOC
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 NDIM
-      !>              PARAMETER             ( NDIM   = 5  )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 NDIM
+      !>      PARAMETER             ( NDIM   = 5  )
       !>
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 8  )
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 8  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)      ARRAY  ( NDIM )
-      !>              CHARACTER*(STRLEN)      NAMES  ( NDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)      ARRAY  ( NDIM )
+      !>      CHARACTER*(STRLEN)      NAMES  ( NDIM )
       !>
-      !>              INTEGER                 I
-      !>              INTEGER                 IDX
-      !>              INTEGER                 ORDER  ( NDIM )
+      !>      INTEGER                 I
+      !>      INTEGER                 IDX
+      !>      INTEGER                 ORDER  ( NDIM )
       !>
-      !>        C
-      !>        C     Let ARRAY and ORDER contain the following elements:
-      !>        C
-      !>              DATA                    ARRAY  / 'FEYNMAN', 'BOHR',
-      !>             .                     'EINSTEIN', 'NEWTON',  'GALILEO' /
+      !>C
+      !>C     Let ARRAY and ORDER contain the following elements:
+      !>C
+      !>      DATA                    ARRAY  / 'FEYNMAN', 'BOHR',
+      !>     .                     'EINSTEIN', 'NEWTON',  'GALILEO' /
       !>
-      !>              DATA                    ORDER  / 2, 3, 1, 5, 4 /
+      !>      DATA                    ORDER  / 2, 3, 1, 5, 4 /
       !>
-      !>        C
-      !>        C     Set the list of NAMES to be searched.
-      !>        C
-      !>              DATA                    NAMES /  'NEWTON',  'EINSTEIN',
-      !>             .                      'GALILEO', 'Galileo', 'BETHE'    /
+      !>C
+      !>C     Set the list of NAMES to be searched.
+      !>C
+      !>      DATA                    NAMES /  'NEWTON',  'EINSTEIN',
+      !>     .                      'GALILEO', 'Galileo', 'BETHE'    /
       !>
-      !>        C
-      !>        C     Search for the NAMES.
-      !>        C
-      !>              DO I = 1, NDIM
+      !>C
+      !>C     Search for the NAMES.
+      !>C
+      !>      DO I = 1, NDIM
       !>
-      !>                 IDX = BSCHOC ( NAMES(I), NDIM, ARRAY, ORDER )
+      !>         IDX = BSCHOC ( NAMES(I), NDIM, ARRAY, ORDER )
       !>
-      !>                 IF ( IDX .EQ. 0 ) THEN
+      !>         IF ( IDX .EQ. 0 ) THEN
       !>
-      !>                    WRITE(*,*) 'Name ', NAMES(I),
-      !>             .                 ' not found in ARRAY.'
+      !>            WRITE(*,*) 'Name ', NAMES(I),
+      !>     .                 ' not found in ARRAY.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'Name ', NAMES(I),
-      !>             .                 ' found in position', IDX
+      !>            WRITE(*,*) 'Name ', NAMES(I),
+      !>     .                 ' found in position', IDX
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1016,51 +1016,53 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CLEARC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CLEARC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               STRSZ
-      !>              PARAMETER           ( STRSZ = 21 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               STRSZ
+      !>      PARAMETER           ( STRSZ = 21 )
       !>
-      !>              INTEGER               NDIM
-      !>              PARAMETER           ( NDIM = 4   )
+      !>      INTEGER               NDIM
+      !>      PARAMETER           ( NDIM = 4   )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRSZ)     ARRAY(NDIM)
-      !>              INTEGER               I
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRSZ)     ARRAY(NDIM)
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Initialize ARRAY.
-      !>        C
-      !>              ARRAY(1) = 'Element #1'
-      !>              ARRAY(2) = 'Element #2'
-      !>              ARRAY(3) = 'Element #3'
-      !>              ARRAY(4) = 'Element #4'
+      !>C
+      !>C     Initialize ARRAY.
+      !>C
+      !>      ARRAY(1) = 'Element #1'
+      !>      ARRAY(2) = 'Element #2'
+      !>      ARRAY(3) = 'Element #3'
+      !>      ARRAY(4) = 'Element #4'
       !>
-      !>              WRITE(*,'(A)') 'Contents of ARRAY before CLEARC:'
-      !>              WRITE(*,*)
-      !>              DO I = 1, NDIM
-      !>                 WRITE(*,'(A,I1,2A)') 'Position #', I , ': ', ARRAY(I)
-      !>              END DO
+      !>      WRITE(*,'(A)') 'Contents of ARRAY before CLEARC:'
+      !>      WRITE(*,*)
+      !>      DO I = 1, NDIM
+      !>         WRITE(*,'(A,I1,2A)') 'Position #', I , ': ', ARRAY(I)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Clear the first 2 elements.
-      !>        C
-      !>              CALL CLEARC ( 2, ARRAY )
+      !>C
+      !>C     Clear the first 2 elements.
+      !>C
+      !>      CALL CLEARC ( 2, ARRAY )
       !>
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'Contents of ARRAY after CLEARC:'
-      !>              WRITE(*,*)
-      !>              DO I = 1, NDIM
-      !>                 WRITE(*,'(A,I1,2A)') 'Position #', I , ': ', ARRAY(I)
-      !>              END DO
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'Contents of ARRAY after CLEARC:'
+      !>      WRITE(*,*)
+      !>      DO I = 1, NDIM
+      !>         WRITE(*,'(A,I1,2A)') 'Position #', I , ': ', ARRAY(I)
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1164,41 +1166,43 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CLEARD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CLEARD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NDIM
-      !>              PARAMETER           ( NDIM = 4 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NDIM
+      !>      PARAMETER           ( NDIM = 4 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      ARRAY ( NDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      ARRAY ( NDIM )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Initialize all member of the array ARRAY to 11.5, and
-      !>        C     print out its contents.
-      !>        C
-      !>              CALL FILLD ( 11.5D0, NDIM, ARRAY )
+      !>C
+      !>C     Initialize all member of the array ARRAY to 11.5, and
+      !>C     print out its contents.
+      !>C
+      !>      CALL FILLD ( 11.5D0, NDIM, ARRAY )
       !>
-      !>              WRITE(*,'(A)') 'Contents of ARRAY before CLEARD:'
-      !>              WRITE(*,'(4F6.1)') ( ARRAY(I), I=1, NDIM )
+      !>      WRITE(*,'(A)') 'Contents of ARRAY before CLEARD:'
+      !>      WRITE(*,'(4F6.1)') ( ARRAY(I), I=1, NDIM )
       !>
-      !>        C
-      !>        C     Clear the contents of ARRAY and print it.
-      !>        C
-      !>              CALL CLEARD ( NDIM, ARRAY )
+      !>C
+      !>C     Clear the contents of ARRAY and print it.
+      !>C
+      !>      CALL CLEARD ( NDIM, ARRAY )
       !>
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'Contents of ARRAY after CLEARD:'
-      !>              WRITE(*,'(4F6.1)') ( ARRAY(I), I=1, NDIM )
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'Contents of ARRAY after CLEARD:'
+      !>      WRITE(*,'(4F6.1)') ( ARRAY(I), I=1, NDIM )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1288,40 +1292,42 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CLEARI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CLEARI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NDIM
-      !>              PARAMETER           ( NDIM = 4 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NDIM
+      !>      PARAMETER           ( NDIM = 4 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               ARRAY ( NDIM )
-      !>              INTEGER               I
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               ARRAY ( NDIM )
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Initialize all member of the array ARRAY to 11, and
-      !>        C     print out its contents.
-      !>        C
-      !>              CALL FILLI ( 11, NDIM, ARRAY )
+      !>C
+      !>C     Initialize all member of the array ARRAY to 11, and
+      !>C     print out its contents.
+      !>C
+      !>      CALL FILLI ( 11, NDIM, ARRAY )
       !>
-      !>              WRITE(*,'(A)') 'Contents of ARRAY before CLEARI:'
-      !>              WRITE(*,'(4I4)') ( ARRAY(I), I=1, NDIM )
+      !>      WRITE(*,'(A)') 'Contents of ARRAY before CLEARI:'
+      !>      WRITE(*,'(4I4)') ( ARRAY(I), I=1, NDIM )
       !>
-      !>        C
-      !>        C     Clear the contents of ARRAY and print it.
-      !>        C
-      !>              CALL CLEARI ( NDIM, ARRAY )
+      !>C
+      !>C     Clear the contents of ARRAY and print it.
+      !>C
+      !>      CALL CLEARI ( NDIM, ARRAY )
       !>
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'Contents of ARRAY after CLEARI:'
-      !>              WRITE(*,'(4I4)') ( ARRAY(I), I=1, NDIM )
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'Contents of ARRAY after CLEARI:'
+      !>      WRITE(*,'(4I4)') ( ARRAY(I), I=1, NDIM )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1505,37 +1511,39 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM FILLD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM FILLD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NDIM
-      !>              PARAMETER           ( NDIM = 4 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NDIM
+      !>      PARAMETER           ( NDIM = 4 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      ARRAY ( NDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      ARRAY ( NDIM )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Initialize all members of the array ARRAY to 1, and
-      !>        C     print out its contents.
-      !>        C
-      !>              CALL FILLD ( 1.D0, NDIM, ARRAY )
+      !>C
+      !>C     Initialize all members of the array ARRAY to 1, and
+      !>C     print out its contents.
+      !>C
+      !>      CALL FILLD ( 1.D0, NDIM, ARRAY )
       !>
-      !>              WRITE(*,'(A)') 'Contents of ARRAY:'
-      !>              DO I=1, NDIM
+      !>      WRITE(*,'(A)') 'Contents of ARRAY:'
+      !>      DO I=1, NDIM
       !>
-      !>                 WRITE(*,'(A,I2,A,F4.1)') '   Index:', I,
-      !>             .                            '; value:',  ARRAY(I)
+      !>         WRITE(*,'(A,I2,A,F4.1)') '   Index:', I,
+      !>     .                            '; value:',  ARRAY(I)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1633,36 +1641,38 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM FILLI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM FILLI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NDIM
-      !>              PARAMETER           ( NDIM = 4 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NDIM
+      !>      PARAMETER           ( NDIM = 4 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               ARRAY ( NDIM )
-      !>              INTEGER               I
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               ARRAY ( NDIM )
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Initialize all members of the array ARRAY to 11, and
-      !>        C     print out its contents.
-      !>        C
-      !>              CALL FILLI ( 11, NDIM, ARRAY )
+      !>C
+      !>C     Initialize all members of the array ARRAY to 11, and
+      !>C     print out its contents.
+      !>C
+      !>      CALL FILLI ( 11, NDIM, ARRAY )
       !>
-      !>              WRITE(*,'(A)') 'Contents of ARRAY:'
-      !>              DO I=1, NDIM
+      !>      WRITE(*,'(A)') 'Contents of ARRAY:'
+      !>      DO I=1, NDIM
       !>
-      !>                 WRITE(*,'(A,I2,A,I3)') '   Index:', I,
-      !>             .                          '; value:', ARRAY(I)
+      !>         WRITE(*,'(A,I2,A,I3)') '   Index:', I,
+      !>     .                          '; value:', ARRAY(I)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5301,78 +5311,80 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM ORDERC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM ORDERC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 NDIM
-      !>              PARAMETER             ( NDIM   = 8  )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 NDIM
+      !>      PARAMETER             ( NDIM   = 8  )
       !>
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 7  )
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 7  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)      NAMES  ( NDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)      NAMES  ( NDIM )
       !>
-      !>              DOUBLE PRECISION        MASSES ( NDIM )
+      !>      DOUBLE PRECISION        MASSES ( NDIM )
       !>
-      !>              INTEGER                 CODES  ( NDIM )
-      !>              INTEGER                 I
-      !>              INTEGER                 IORDER ( NDIM )
+      !>      INTEGER                 CODES  ( NDIM )
+      !>      INTEGER                 I
+      !>      INTEGER                 IORDER ( NDIM )
       !>
-      !>              LOGICAL                 RINGS  ( NDIM )
+      !>      LOGICAL                 RINGS  ( NDIM )
       !>
-      !>        C
-      !>        C     Set the arrays containing the names, masses (given as
-      !>        C     ratios to of Solar GM to barycenter GM), integer ID
-      !>        C     codes, and flags indicating whether they have a ring
-      !>        C     system.
-      !>        C
-      !>              DATA                    NAMES  /
-      !>             .            'MERCURY', 'VENUS',  'EARTH',  'MARS',
-      !>             .            'JUPITER', 'SATURN', 'URANUS', 'NEPTUNE' /
+      !>C
+      !>C     Set the arrays containing the names, masses (given as
+      !>C     ratios to of Solar GM to barycenter GM), integer ID
+      !>C     codes, and flags indicating whether they have a ring
+      !>C     system.
+      !>C
+      !>      DATA                    NAMES  /
+      !>     .            'MERCURY', 'VENUS',  'EARTH',  'MARS',
+      !>     .            'JUPITER', 'SATURN', 'URANUS', 'NEPTUNE' /
       !>
-      !>              DATA                    MASSES /
-      !>             .                       22032.080D0,   324858.599D0,
-      !>             .                      398600.436D0,    42828.314D0,
-      !>             .                   126712767.881D0, 37940626.068D0,
-      !>             .                     5794559.128D0,  6836534.065D0 /
+      !>      DATA                    MASSES /
+      !>     .                       22032.080D0,   324858.599D0,
+      !>     .                      398600.436D0,    42828.314D0,
+      !>     .                   126712767.881D0, 37940626.068D0,
+      !>     .                     5794559.128D0,  6836534.065D0 /
       !>
-      !>              DATA                    CODES  / 199, 299, 399, 499,
-      !>             .                                 599, 699, 799, 899 /
+      !>      DATA                    CODES  / 199, 299, 399, 499,
+      !>     .                                 599, 699, 799, 899 /
       !>
-      !>              DATA                    RINGS  /
-      !>             .                   .FALSE., .FALSE., .FALSE., .FALSE.,
-      !>             .                   .TRUE.,  .TRUE.,  .TRUE., .TRUE.   /
+      !>      DATA                    RINGS  /
+      !>     .                   .FALSE., .FALSE., .FALSE., .FALSE.,
+      !>     .                   .TRUE.,  .TRUE.,  .TRUE., .TRUE.   /
       !>
-      !>        C
-      !>        C     Sort the object arrays by name.
-      !>        C
-      !>              CALL ORDERC ( NAMES,  NDIM, IORDER )
+      !>C
+      !>C     Sort the object arrays by name.
+      !>C
+      !>      CALL ORDERC ( NAMES,  NDIM, IORDER )
       !>
-      !>              CALL REORDC ( IORDER, NDIM, NAMES  )
-      !>              CALL REORDD ( IORDER, NDIM, MASSES )
-      !>              CALL REORDI ( IORDER, NDIM, CODES  )
-      !>              CALL REORDL ( IORDER, NDIM, RINGS  )
+      !>      CALL REORDC ( IORDER, NDIM, NAMES  )
+      !>      CALL REORDD ( IORDER, NDIM, MASSES )
+      !>      CALL REORDI ( IORDER, NDIM, CODES  )
+      !>      CALL REORDL ( IORDER, NDIM, RINGS  )
       !>
-      !>        C
-      !>        C     Output the resulting table.
-      !>        C
-      !>              WRITE(*,'(A)') ' Planet   Mass(GMS/GM)  ID Code  Rings?'
-      !>              WRITE(*,'(A)') '-------  -------------  -------  ------'
+      !>C
+      !>C     Output the resulting table.
+      !>C
+      !>      WRITE(*,'(A)') ' Planet   Mass(GMS/GM)  ID Code  Rings?'
+      !>      WRITE(*,'(A)') '-------  -------------  -------  ------'
       !>
-      !>              DO I = 1, NDIM
+      !>      DO I = 1, NDIM
       !>
-      !>                 WRITE(*,'(A,F15.3,I9,L5)') NAMES(I), MASSES(I),
-      !>             .                              CODES(I), RINGS(I)
+      !>         WRITE(*,'(A,F15.3,I9,L5)') NAMES(I), MASSES(I),
+      !>     .                              CODES(I), RINGS(I)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6052,78 +6064,80 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REORDC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REORDC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 NDIM
-      !>              PARAMETER             ( NDIM   = 8  )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 NDIM
+      !>      PARAMETER             ( NDIM   = 8  )
       !>
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 7  )
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 7  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)      NAMES  ( NDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)      NAMES  ( NDIM )
       !>
-      !>              DOUBLE PRECISION        MASSES ( NDIM )
+      !>      DOUBLE PRECISION        MASSES ( NDIM )
       !>
-      !>              INTEGER                 CODES  ( NDIM )
-      !>              INTEGER                 I
-      !>              INTEGER                 IORDER ( NDIM )
+      !>      INTEGER                 CODES  ( NDIM )
+      !>      INTEGER                 I
+      !>      INTEGER                 IORDER ( NDIM )
       !>
-      !>              LOGICAL                 RINGS  ( NDIM )
+      !>      LOGICAL                 RINGS  ( NDIM )
       !>
-      !>        C
-      !>        C     Set the arrays containing the names, masses (given as
-      !>        C     ratios to of Solar GM to barycenter GM), integer ID
-      !>        C     codes, and flags indicating whether they have a ring
-      !>        C     system.
-      !>        C
-      !>              DATA                    NAMES  /
-      !>             .            'MERCURY', 'VENUS',  'EARTH',  'MARS',
-      !>             .            'JUPITER', 'SATURN', 'URANUS', 'NEPTUNE' /
+      !>C
+      !>C     Set the arrays containing the names, masses (given as
+      !>C     ratios to of Solar GM to barycenter GM), integer ID
+      !>C     codes, and flags indicating whether they have a ring
+      !>C     system.
+      !>C
+      !>      DATA                    NAMES  /
+      !>     .            'MERCURY', 'VENUS',  'EARTH',  'MARS',
+      !>     .            'JUPITER', 'SATURN', 'URANUS', 'NEPTUNE' /
       !>
-      !>              DATA                    MASSES /
-      !>             .                       22032.080D0,   324858.599D0,
-      !>             .                      398600.436D0,    42828.314D0,
-      !>             .                   126712767.881D0, 37940626.068D0,
-      !>             .                     5794559.128D0,  6836534.065D0 /
+      !>      DATA                    MASSES /
+      !>     .                       22032.080D0,   324858.599D0,
+      !>     .                      398600.436D0,    42828.314D0,
+      !>     .                   126712767.881D0, 37940626.068D0,
+      !>     .                     5794559.128D0,  6836534.065D0 /
       !>
-      !>              DATA                    CODES  / 199, 299, 399, 499,
-      !>             .                                 599, 699, 799, 899 /
+      !>      DATA                    CODES  / 199, 299, 399, 499,
+      !>     .                                 599, 699, 799, 899 /
       !>
-      !>              DATA                    RINGS  /
-      !>             .                   .FALSE., .FALSE., .FALSE., .FALSE.,
-      !>             .                   .TRUE.,  .TRUE.,  .TRUE., .TRUE.   /
+      !>      DATA                    RINGS  /
+      !>     .                   .FALSE., .FALSE., .FALSE., .FALSE.,
+      !>     .                   .TRUE.,  .TRUE.,  .TRUE., .TRUE.   /
       !>
-      !>        C
-      !>        C     Sort the object arrays by name.
-      !>        C
-      !>              CALL ORDERC ( NAMES,  NDIM, IORDER )
+      !>C
+      !>C     Sort the object arrays by name.
+      !>C
+      !>      CALL ORDERC ( NAMES,  NDIM, IORDER )
       !>
-      !>              CALL REORDC ( IORDER, NDIM, NAMES  )
-      !>              CALL REORDD ( IORDER, NDIM, MASSES )
-      !>              CALL REORDI ( IORDER, NDIM, CODES  )
-      !>              CALL REORDL ( IORDER, NDIM, RINGS  )
+      !>      CALL REORDC ( IORDER, NDIM, NAMES  )
+      !>      CALL REORDD ( IORDER, NDIM, MASSES )
+      !>      CALL REORDI ( IORDER, NDIM, CODES  )
+      !>      CALL REORDL ( IORDER, NDIM, RINGS  )
       !>
-      !>        C
-      !>        C     Output the resulting table.
-      !>        C
-      !>              WRITE(*,'(A)') ' Planet   Mass(GMS/GM)  ID Code  Rings?'
-      !>              WRITE(*,'(A)') '-------  -------------  -------  ------'
+      !>C
+      !>C     Output the resulting table.
+      !>C
+      !>      WRITE(*,'(A)') ' Planet   Mass(GMS/GM)  ID Code  Rings?'
+      !>      WRITE(*,'(A)') '-------  -------------  -------  ------'
       !>
-      !>              DO I = 1, NDIM
+      !>      DO I = 1, NDIM
       !>
-      !>                 WRITE(*,'(A,F15.3,I9,L5)') NAMES(I), MASSES(I),
-      !>             .                              CODES(I), RINGS(I)
+      !>         WRITE(*,'(A,F15.3,I9,L5)') NAMES(I), MASSES(I),
+      !>     .                              CODES(I), RINGS(I)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6339,78 +6353,80 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REORDD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REORDD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 NDIM
-      !>              PARAMETER             ( NDIM   = 8  )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 NDIM
+      !>      PARAMETER             ( NDIM   = 8  )
       !>
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 7  )
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 7  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)      NAMES  ( NDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)      NAMES  ( NDIM )
       !>
-      !>              DOUBLE PRECISION        MASSES ( NDIM )
+      !>      DOUBLE PRECISION        MASSES ( NDIM )
       !>
-      !>              INTEGER                 CODES  ( NDIM )
-      !>              INTEGER                 I
-      !>              INTEGER                 IORDER ( NDIM )
+      !>      INTEGER                 CODES  ( NDIM )
+      !>      INTEGER                 I
+      !>      INTEGER                 IORDER ( NDIM )
       !>
-      !>              LOGICAL                 RINGS  ( NDIM )
+      !>      LOGICAL                 RINGS  ( NDIM )
       !>
-      !>        C
-      !>        C     Set the arrays containing the names, masses (given as
-      !>        C     ratios to of Solar GM to barycenter GM), integer ID
-      !>        C     codes, and flags indicating whether they have a ring
-      !>        C     system.
-      !>        C
-      !>              DATA                    NAMES  /
-      !>             .            'MERCURY', 'VENUS',  'EARTH',  'MARS',
-      !>             .            'JUPITER', 'SATURN', 'URANUS', 'NEPTUNE' /
+      !>C
+      !>C     Set the arrays containing the names, masses (given as
+      !>C     ratios to of Solar GM to barycenter GM), integer ID
+      !>C     codes, and flags indicating whether they have a ring
+      !>C     system.
+      !>C
+      !>      DATA                    NAMES  /
+      !>     .            'MERCURY', 'VENUS',  'EARTH',  'MARS',
+      !>     .            'JUPITER', 'SATURN', 'URANUS', 'NEPTUNE' /
       !>
-      !>              DATA                    MASSES /
-      !>             .                       22032.080D0,   324858.599D0,
-      !>             .                      398600.436D0,    42828.314D0,
-      !>             .                   126712767.881D0, 37940626.068D0,
-      !>             .                     5794559.128D0,  6836534.065D0 /
+      !>      DATA                    MASSES /
+      !>     .                       22032.080D0,   324858.599D0,
+      !>     .                      398600.436D0,    42828.314D0,
+      !>     .                   126712767.881D0, 37940626.068D0,
+      !>     .                     5794559.128D0,  6836534.065D0 /
       !>
-      !>              DATA                    CODES  / 199, 299, 399, 499,
-      !>             .                                 599, 699, 799, 899 /
+      !>      DATA                    CODES  / 199, 299, 399, 499,
+      !>     .                                 599, 699, 799, 899 /
       !>
-      !>              DATA                    RINGS  /
-      !>             .                   .FALSE., .FALSE., .FALSE., .FALSE.,
-      !>             .                   .TRUE.,  .TRUE.,  .TRUE., .TRUE.   /
+      !>      DATA                    RINGS  /
+      !>     .                   .FALSE., .FALSE., .FALSE., .FALSE.,
+      !>     .                   .TRUE.,  .TRUE.,  .TRUE., .TRUE.   /
       !>
-      !>        C
-      !>        C     Sort the object arrays by name.
-      !>        C
-      !>              CALL ORDERC ( NAMES,  NDIM, IORDER )
+      !>C
+      !>C     Sort the object arrays by name.
+      !>C
+      !>      CALL ORDERC ( NAMES,  NDIM, IORDER )
       !>
-      !>              CALL REORDC ( IORDER, NDIM, NAMES  )
-      !>              CALL REORDD ( IORDER, NDIM, MASSES )
-      !>              CALL REORDI ( IORDER, NDIM, CODES  )
-      !>              CALL REORDL ( IORDER, NDIM, RINGS  )
+      !>      CALL REORDC ( IORDER, NDIM, NAMES  )
+      !>      CALL REORDD ( IORDER, NDIM, MASSES )
+      !>      CALL REORDI ( IORDER, NDIM, CODES  )
+      !>      CALL REORDL ( IORDER, NDIM, RINGS  )
       !>
-      !>        C
-      !>        C     Output the resulting table.
-      !>        C
-      !>              WRITE(*,'(A)') ' Planet   Mass(GMS/GM)  ID Code  Rings?'
-      !>              WRITE(*,'(A)') '-------  -------------  -------  ------'
+      !>C
+      !>C     Output the resulting table.
+      !>C
+      !>      WRITE(*,'(A)') ' Planet   Mass(GMS/GM)  ID Code  Rings?'
+      !>      WRITE(*,'(A)') '-------  -------------  -------  ------'
       !>
-      !>              DO I = 1, NDIM
+      !>      DO I = 1, NDIM
       !>
-      !>                 WRITE(*,'(A,F15.3,I9,L5)') NAMES(I), MASSES(I),
-      !>             .                              CODES(I), RINGS(I)
+      !>         WRITE(*,'(A,F15.3,I9,L5)') NAMES(I), MASSES(I),
+      !>     .                              CODES(I), RINGS(I)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6610,78 +6626,80 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REORDI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REORDI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 NDIM
-      !>              PARAMETER             ( NDIM   = 8  )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 NDIM
+      !>      PARAMETER             ( NDIM   = 8  )
       !>
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 7  )
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 7  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)      NAMES  ( NDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)      NAMES  ( NDIM )
       !>
-      !>              DOUBLE PRECISION        MASSES ( NDIM )
+      !>      DOUBLE PRECISION        MASSES ( NDIM )
       !>
-      !>              INTEGER                 CODES  ( NDIM )
-      !>              INTEGER                 I
-      !>              INTEGER                 IORDER ( NDIM )
+      !>      INTEGER                 CODES  ( NDIM )
+      !>      INTEGER                 I
+      !>      INTEGER                 IORDER ( NDIM )
       !>
-      !>              LOGICAL                 RINGS  ( NDIM )
+      !>      LOGICAL                 RINGS  ( NDIM )
       !>
-      !>        C
-      !>        C     Set the arrays containing the names, masses (given as
-      !>        C     ratios to of Solar GM to barycenter GM), integer ID
-      !>        C     codes, and flags indicating whether they have a ring
-      !>        C     system.
-      !>        C
-      !>              DATA                    NAMES  /
-      !>             .            'MERCURY', 'VENUS',  'EARTH',  'MARS',
-      !>             .            'JUPITER', 'SATURN', 'URANUS', 'NEPTUNE' /
+      !>C
+      !>C     Set the arrays containing the names, masses (given as
+      !>C     ratios to of Solar GM to barycenter GM), integer ID
+      !>C     codes, and flags indicating whether they have a ring
+      !>C     system.
+      !>C
+      !>      DATA                    NAMES  /
+      !>     .            'MERCURY', 'VENUS',  'EARTH',  'MARS',
+      !>     .            'JUPITER', 'SATURN', 'URANUS', 'NEPTUNE' /
       !>
-      !>              DATA                    MASSES /
-      !>             .                       22032.080D0,   324858.599D0,
-      !>             .                      398600.436D0,    42828.314D0,
-      !>             .                   126712767.881D0, 37940626.068D0,
-      !>             .                     5794559.128D0,  6836534.065D0 /
+      !>      DATA                    MASSES /
+      !>     .                       22032.080D0,   324858.599D0,
+      !>     .                      398600.436D0,    42828.314D0,
+      !>     .                   126712767.881D0, 37940626.068D0,
+      !>     .                     5794559.128D0,  6836534.065D0 /
       !>
-      !>              DATA                    CODES  / 199, 299, 399, 499,
-      !>             .                                 599, 699, 799, 899 /
+      !>      DATA                    CODES  / 199, 299, 399, 499,
+      !>     .                                 599, 699, 799, 899 /
       !>
-      !>              DATA                    RINGS  /
-      !>             .                   .FALSE., .FALSE., .FALSE., .FALSE.,
-      !>             .                   .TRUE.,  .TRUE.,  .TRUE., .TRUE.   /
+      !>      DATA                    RINGS  /
+      !>     .                   .FALSE., .FALSE., .FALSE., .FALSE.,
+      !>     .                   .TRUE.,  .TRUE.,  .TRUE., .TRUE.   /
       !>
-      !>        C
-      !>        C     Sort the object arrays by name.
-      !>        C
-      !>              CALL ORDERC ( NAMES,  NDIM, IORDER )
+      !>C
+      !>C     Sort the object arrays by name.
+      !>C
+      !>      CALL ORDERC ( NAMES,  NDIM, IORDER )
       !>
-      !>              CALL REORDC ( IORDER, NDIM, NAMES  )
-      !>              CALL REORDD ( IORDER, NDIM, MASSES )
-      !>              CALL REORDI ( IORDER, NDIM, CODES  )
-      !>              CALL REORDL ( IORDER, NDIM, RINGS  )
+      !>      CALL REORDC ( IORDER, NDIM, NAMES  )
+      !>      CALL REORDD ( IORDER, NDIM, MASSES )
+      !>      CALL REORDI ( IORDER, NDIM, CODES  )
+      !>      CALL REORDL ( IORDER, NDIM, RINGS  )
       !>
-      !>        C
-      !>        C     Output the resulting table.
-      !>        C
-      !>              WRITE(*,'(A)') ' Planet   Mass(GMS/GM)  ID Code  Rings?'
-      !>              WRITE(*,'(A)') '-------  -------------  -------  ------'
+      !>C
+      !>C     Output the resulting table.
+      !>C
+      !>      WRITE(*,'(A)') ' Planet   Mass(GMS/GM)  ID Code  Rings?'
+      !>      WRITE(*,'(A)') '-------  -------------  -------  ------'
       !>
-      !>              DO I = 1, NDIM
+      !>      DO I = 1, NDIM
       !>
-      !>                 WRITE(*,'(A,F15.3,I9,L5)') NAMES(I), MASSES(I),
-      !>             .                              CODES(I), RINGS(I)
+      !>         WRITE(*,'(A,F15.3,I9,L5)') NAMES(I), MASSES(I),
+      !>     .                              CODES(I), RINGS(I)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6881,78 +6899,80 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REORDL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REORDL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 NDIM
-      !>              PARAMETER             ( NDIM   = 8  )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 NDIM
+      !>      PARAMETER             ( NDIM   = 8  )
       !>
-      !>              INTEGER                 STRLEN
-      !>              PARAMETER             ( STRLEN = 7  )
+      !>      INTEGER                 STRLEN
+      !>      PARAMETER             ( STRLEN = 7  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(STRLEN)      NAMES  ( NDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(STRLEN)      NAMES  ( NDIM )
       !>
-      !>              DOUBLE PRECISION        MASSES ( NDIM )
+      !>      DOUBLE PRECISION        MASSES ( NDIM )
       !>
-      !>              INTEGER                 CODES  ( NDIM )
-      !>              INTEGER                 I
-      !>              INTEGER                 IORDER ( NDIM )
+      !>      INTEGER                 CODES  ( NDIM )
+      !>      INTEGER                 I
+      !>      INTEGER                 IORDER ( NDIM )
       !>
-      !>              LOGICAL                 RINGS  ( NDIM )
+      !>      LOGICAL                 RINGS  ( NDIM )
       !>
-      !>        C
-      !>        C     Set the arrays containing the names, masses (given as
-      !>        C     ratios to of Solar GM to barycenter GM), integer ID
-      !>        C     codes, and flags indicating whether they have a ring
-      !>        C     system.
-      !>        C
-      !>              DATA                    NAMES  /
-      !>             .            'MERCURY', 'VENUS',  'EARTH',  'MARS',
-      !>             .            'JUPITER', 'SATURN', 'URANUS', 'NEPTUNE' /
+      !>C
+      !>C     Set the arrays containing the names, masses (given as
+      !>C     ratios to of Solar GM to barycenter GM), integer ID
+      !>C     codes, and flags indicating whether they have a ring
+      !>C     system.
+      !>C
+      !>      DATA                    NAMES  /
+      !>     .            'MERCURY', 'VENUS',  'EARTH',  'MARS',
+      !>     .            'JUPITER', 'SATURN', 'URANUS', 'NEPTUNE' /
       !>
-      !>              DATA                    MASSES /
-      !>             .                       22032.080D0,   324858.599D0,
-      !>             .                      398600.436D0,    42828.314D0,
-      !>             .                   126712767.881D0, 37940626.068D0,
-      !>             .                     5794559.128D0,  6836534.065D0 /
+      !>      DATA                    MASSES /
+      !>     .                       22032.080D0,   324858.599D0,
+      !>     .                      398600.436D0,    42828.314D0,
+      !>     .                   126712767.881D0, 37940626.068D0,
+      !>     .                     5794559.128D0,  6836534.065D0 /
       !>
-      !>              DATA                    CODES  / 199, 299, 399, 499,
-      !>             .                                 599, 699, 799, 899 /
+      !>      DATA                    CODES  / 199, 299, 399, 499,
+      !>     .                                 599, 699, 799, 899 /
       !>
-      !>              DATA                    RINGS  /
-      !>             .                   .FALSE., .FALSE., .FALSE., .FALSE.,
-      !>             .                   .TRUE.,  .TRUE.,  .TRUE., .TRUE.   /
+      !>      DATA                    RINGS  /
+      !>     .                   .FALSE., .FALSE., .FALSE., .FALSE.,
+      !>     .                   .TRUE.,  .TRUE.,  .TRUE., .TRUE.   /
       !>
-      !>        C
-      !>        C     Sort the object arrays by name.
-      !>        C
-      !>              CALL ORDERC ( NAMES,  NDIM, IORDER )
+      !>C
+      !>C     Sort the object arrays by name.
+      !>C
+      !>      CALL ORDERC ( NAMES,  NDIM, IORDER )
       !>
-      !>              CALL REORDC ( IORDER, NDIM, NAMES  )
-      !>              CALL REORDD ( IORDER, NDIM, MASSES )
-      !>              CALL REORDI ( IORDER, NDIM, CODES  )
-      !>              CALL REORDL ( IORDER, NDIM, RINGS  )
+      !>      CALL REORDC ( IORDER, NDIM, NAMES  )
+      !>      CALL REORDD ( IORDER, NDIM, MASSES )
+      !>      CALL REORDI ( IORDER, NDIM, CODES  )
+      !>      CALL REORDL ( IORDER, NDIM, RINGS  )
       !>
-      !>        C
-      !>        C     Output the resulting table.
-      !>        C
-      !>              WRITE(*,'(A)') ' Planet   Mass(GMS/GM)  ID Code  Rings?'
-      !>              WRITE(*,'(A)') '-------  -------------  -------  ------'
+      !>C
+      !>C     Output the resulting table.
+      !>C
+      !>      WRITE(*,'(A)') ' Planet   Mass(GMS/GM)  ID Code  Rings?'
+      !>      WRITE(*,'(A)') '-------  -------------  -------  ------'
       !>
-      !>              DO I = 1, NDIM
+      !>      DO I = 1, NDIM
       !>
-      !>                 WRITE(*,'(A,F15.3,I9,L5)') NAMES(I), MASSES(I),
-      !>             .                              CODES(I), RINGS(I)
+      !>         WRITE(*,'(A,F15.3,I9,L5)') NAMES(I), MASSES(I),
+      !>     .                              CODES(I), RINGS(I)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -7621,56 +7641,58 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SHELLC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SHELLC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NDIM
-      !>              PARAMETER           ( NDIM  = 6 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NDIM
+      !>      PARAMETER           ( NDIM  = 6 )
       !>
-      !>              INTEGER               WRDSZ
-      !>              PARAMETER           ( WRDSZ = 8 )
+      !>      INTEGER               WRDSZ
+      !>      PARAMETER           ( WRDSZ = 8 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(WRDSZ)     ARRAY  ( NDIM )
-      !>              INTEGER               I
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(WRDSZ)     ARRAY  ( NDIM )
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Let ARRAY contain the following elements:
-      !>        C
-      !>              ARRAY(1) = 'FEYNMAN'
-      !>              ARRAY(2) = 'NEWTON'
-      !>              ARRAY(3) = 'EINSTEIN'
-      !>              ARRAY(4) = 'GALILEO'
-      !>              ARRAY(5) = 'EUCLID'
-      !>              ARRAY(6) = 'Galileo'
+      !>C
+      !>C     Let ARRAY contain the following elements:
+      !>C
+      !>      ARRAY(1) = 'FEYNMAN'
+      !>      ARRAY(2) = 'NEWTON'
+      !>      ARRAY(3) = 'EINSTEIN'
+      !>      ARRAY(4) = 'GALILEO'
+      !>      ARRAY(5) = 'EUCLID'
+      !>      ARRAY(6) = 'Galileo'
       !>
-      !>        C
-      !>        C     Print ARRAY before calling SHELLC.
-      !>        C
-      !>              WRITE(*,*) 'Array before calling SHELLC:'
-      !>              WRITE(*,*)
-      !>              DO I = 1, NDIM
-      !>                 WRITE(*,*) '   ', ARRAY(I)
-      !>              END DO
-      !>              WRITE(*,*)
+      !>C
+      !>C     Print ARRAY before calling SHELLC.
+      !>C
+      !>      WRITE(*,*) 'Array before calling SHELLC:'
+      !>      WRITE(*,*)
+      !>      DO I = 1, NDIM
+      !>         WRITE(*,*) '   ', ARRAY(I)
+      !>      END DO
+      !>      WRITE(*,*)
       !>
-      !>        C
-      !>        C     Call SHELLC and print ARRAY again.
-      !>        C
-      !>              CALL SHELLC ( NDIM, ARRAY )
+      !>C
+      !>C     Call SHELLC and print ARRAY again.
+      !>C
+      !>      CALL SHELLC ( NDIM, ARRAY )
       !>
-      !>              WRITE(*,*) 'Array after calling SHELLC:'
-      !>              WRITE(*,*)
-      !>              DO I = 1, NDIM
-      !>                 WRITE(*,*) '   ', ARRAY(I)
-      !>              END DO
+      !>      WRITE(*,*) 'Array after calling SHELLC:'
+      !>      WRITE(*,*)
+      !>      DO I = 1, NDIM
+      !>         WRITE(*,*) '   ', ARRAY(I)
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:

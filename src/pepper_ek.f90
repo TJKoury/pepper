@@ -2,9 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_ek.f90.
+!> [[pepper_instance_module]]).
 !>
 !>## ZZEKJTST (Test join candidates)
 !>
@@ -228,221 +226,223 @@
 !>
 !>        Example code begins here.
 !>
-!>              PROGRAM EKQMGR_EX1
-!>              IMPLICIT NONE
+!>```fortran
+!>      PROGRAM EKQMGR_EX1
+!>      IMPLICIT NONE
 !>
-!>        C
-!>        C     Include EK Query Limit Parameters
-!>        C
-!>              INCLUDE 'ekqlimit.inc'
+!>C
+!>C     Include EK Query Limit Parameters
+!>C
+!>      INCLUDE 'ekqlimit.inc'
 !>
-!>        C
-!>        C     SPICELIB functions
-!>        C
-!>              INTEGER               RTRIM
+!>C
+!>C     SPICELIB functions
+!>C
+!>      INTEGER               RTRIM
 !>
-!>        C
-!>        C     Local parameters
-!>        C
-!>              CHARACTER*(*)         EKNAME
-!>              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
+!>C
+!>C     Local parameters
+!>C
+!>      CHARACTER*(*)         EKNAME
+!>      PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
 !>
-!>              CHARACTER*(*)         LSKNAM
-!>              PARAMETER           ( LSKNAM = 'naif0012.tls' )
+!>      CHARACTER*(*)         LSKNAM
+!>      PARAMETER           ( LSKNAM = 'naif0012.tls' )
 !>
-!>              INTEGER               DESCSZ
-!>              PARAMETER           ( DESCSZ = 31   )
+!>      INTEGER               DESCSZ
+!>      PARAMETER           ( DESCSZ = 31   )
 !>
-!>              INTEGER               ERRLEN
-!>              PARAMETER           ( ERRLEN = 1840 )
+!>      INTEGER               ERRLEN
+!>      PARAMETER           ( ERRLEN = 1840 )
 !>
-!>              INTEGER               ITEMSZ
-!>              PARAMETER           ( ITEMSZ = DESCSZ + 4 )
+!>      INTEGER               ITEMSZ
+!>      PARAMETER           ( ITEMSZ = DESCSZ + 4 )
 !>
-!>              INTEGER               TIMLEN
-!>              PARAMETER           ( TIMLEN = 27   )
+!>      INTEGER               TIMLEN
+!>      PARAMETER           ( TIMLEN = 27   )
 !>
-!>              INTEGER               TYPLEN
-!>              PARAMETER           ( TYPLEN = 4    )
+!>      INTEGER               TYPLEN
+!>      PARAMETER           ( TYPLEN = 4    )
 !>
-!>              INTEGER               XCLSLN
-!>              PARAMETER           ( XCLSLN = 4    )
+!>      INTEGER               XCLSLN
+!>      PARAMETER           ( XCLSLN = 4    )
 !>
-!>        C
-!>        C     Local variables
-!>        C
-!>              CHARACTER*(MAXSTR)    CDATA
-!>              CHARACTER*(MAXCLN)    COLS   ( MAXSEL )
-!>              CHARACTER*(ERRLEN)    ERRMSG
-!>              CHARACTER*(ITEMSZ)    ITEM
-!>              CHARACTER*(DESCSZ)    OUTSTR
-!>              CHARACTER*(MAXQRY)    QUERY
-!>              CHARACTER*(TIMLEN)    UTCSTR
-!>              CHARACTER*(MAXCLN)    TABS   ( MAXTAB )
-!>              CHARACTER*(XCLSLN)    XCLASS ( MAXSEL )
-!>              CHARACTER*(TYPLEN)    XTYPES ( MAXSEL )
+!>C
+!>C     Local variables
+!>C
+!>      CHARACTER*(MAXSTR)    CDATA
+!>      CHARACTER*(MAXCLN)    COLS   ( MAXSEL )
+!>      CHARACTER*(ERRLEN)    ERRMSG
+!>      CHARACTER*(ITEMSZ)    ITEM
+!>      CHARACTER*(DESCSZ)    OUTSTR
+!>      CHARACTER*(MAXQRY)    QUERY
+!>      CHARACTER*(TIMLEN)    UTCSTR
+!>      CHARACTER*(MAXCLN)    TABS   ( MAXTAB )
+!>      CHARACTER*(XCLSLN)    XCLASS ( MAXSEL )
+!>      CHARACTER*(TYPLEN)    XTYPES ( MAXSEL )
 !>
-!>              DOUBLE PRECISION      DDATA
-!>              DOUBLE PRECISION      TDATA
+!>      DOUBLE PRECISION      DDATA
+!>      DOUBLE PRECISION      TDATA
 !>
-!>              INTEGER               B
-!>              INTEGER               COLNO
-!>              INTEGER               E
-!>              INTEGER               HANDLE
-!>              INTEGER               IDATA
-!>              INTEGER               N
-!>              INTEGER               NMROWS
-!>              INTEGER               ROW
-!>              INTEGER               XBEGS  ( MAXSEL )
-!>              INTEGER               XENDS  ( MAXSEL )
+!>      INTEGER               B
+!>      INTEGER               COLNO
+!>      INTEGER               E
+!>      INTEGER               HANDLE
+!>      INTEGER               IDATA
+!>      INTEGER               N
+!>      INTEGER               NMROWS
+!>      INTEGER               ROW
+!>      INTEGER               XBEGS  ( MAXSEL )
+!>      INTEGER               XENDS  ( MAXSEL )
 !>
-!>              LOGICAL               ERROR
-!>              LOGICAL               FOUND
-!>              LOGICAL               NULL
+!>      LOGICAL               ERROR
+!>      LOGICAL               FOUND
+!>      LOGICAL               NULL
 !>
-!>        C
-!>        C     Load leapseconds file for time conversion.
-!>        C
-!>              CALL FURNSH ( LSKNAM )
+!>C
+!>C     Load leapseconds file for time conversion.
+!>C
+!>      CALL FURNSH ( LSKNAM )
 !>
-!>        C
-!>        C     Load EK.
-!>        C
-!>              CALL EKLEF  ( EKNAME, HANDLE )
+!>C
+!>C     Load EK.
+!>C
+!>      CALL EKLEF  ( EKNAME, HANDLE )
 !>
-!>        C
-!>        C     Setup the query.  Parse the SELECT clause using
-!>        C     EKPSEL.
-!>        C
-!>              QUERY = 'Select IMAGE_NUMBER, IMAGE_ID, '
-!>             .   //          'PLATFORM_CLOCK, IMAGE_TIME '
-!>             .   //   'from VIKING_SEDR_DATA '
-!>             .   //   'where IMAGE_NUMBER < 25850000 '
-!>             .   //   'order by IMAGE_NUMBER'
+!>C
+!>C     Setup the query.  Parse the SELECT clause using
+!>C     EKPSEL.
+!>C
+!>      QUERY = 'Select IMAGE_NUMBER, IMAGE_ID, '
+!>     .   //          'PLATFORM_CLOCK, IMAGE_TIME '
+!>     .   //   'from VIKING_SEDR_DATA '
+!>     .   //   'where IMAGE_NUMBER < 25850000 '
+!>     .   //   'order by IMAGE_NUMBER'
 !>
-!>              CALL EKPSEL ( QUERY,  N,    XBEGS, XENDS, XTYPES,
-!>             .              XCLASS, TABS, COLS,  ERROR, ERRMSG )
+!>      CALL EKPSEL ( QUERY,  N,    XBEGS, XENDS, XTYPES,
+!>     .              XCLASS, TABS, COLS,  ERROR, ERRMSG )
 !>
-!>              IF ( ERROR ) THEN
+!>      IF ( ERROR ) THEN
 !>
-!>                 WRITE(*,*) ERRMSG
+!>         WRITE(*,*) ERRMSG
 !>
-!>              ELSE
+!>      ELSE
 !>
-!>        C
-!>        C        Submit query to the EK query system.
-!>        C
-!>                 CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+!>C
+!>C        Submit query to the EK query system.
+!>C
+!>         CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
 !>
-!>                 IF ( ERROR ) THEN
+!>         IF ( ERROR ) THEN
 !>
-!>                    WRITE(*,*) ERRMSG
+!>            WRITE(*,*) ERRMSG
 !>
-!>                 ELSE
+!>         ELSE
 !>
-!>        C
-!>        C           Fetch the rows that matched the query.
-!>        C
-!>                    DO ROW = 1, NMROWS
+!>C
+!>C           Fetch the rows that matched the query.
+!>C
+!>            DO ROW = 1, NMROWS
 !>
-!>        C
-!>        C              Fetch data from the Ith row.
-!>        C
-!>                       WRITE (*,*) ' '
-!>                       WRITE (*,*) 'ROW = ', ROW
+!>C
+!>C              Fetch data from the Ith row.
+!>C
+!>               WRITE (*,*) ' '
+!>               WRITE (*,*) 'ROW = ', ROW
 !>
-!>                       DO COLNO = 1, N
+!>               DO COLNO = 1, N
 !>
-!>        C
-!>        C                 Fetch the data from the Jth selected
-!>        C                 column.
-!>        C
-!>                          IF ( XCLASS(COLNO) .EQ. 'COL' ) THEN
+!>C
+!>C                 Fetch the data from the Jth selected
+!>C                 column.
+!>C
+!>                  IF ( XCLASS(COLNO) .EQ. 'COL' ) THEN
 !>
-!>                             OUTSTR  =  COLS(COLNO)
-!>                             CALL PREFIX ( '.',         0, OUTSTR )
-!>                             CALL PREFIX ( TABS(COLNO), 0, OUTSTR )
-!>                             ITEM = '  ' // OUTSTR // ':'
+!>                     OUTSTR  =  COLS(COLNO)
+!>                     CALL PREFIX ( '.',         0, OUTSTR )
+!>                     CALL PREFIX ( TABS(COLNO), 0, OUTSTR )
+!>                     ITEM = '  ' // OUTSTR // ':'
 !>
-!>                          ELSE
+!>                  ELSE
 !>
-!>                             B  =  XBEGS(COLNO)
-!>                             E  =  XENDS(COLNO)
-!>                             ITEM = '  ITEM = ' // QUERY(B:E)
+!>                     B  =  XBEGS(COLNO)
+!>                     E  =  XENDS(COLNO)
+!>                     ITEM = '  ITEM = ' // QUERY(B:E)
 !>
-!>                          END IF
+!>                  END IF
 !>
-!>                          IF ( XTYPES(COLNO) .EQ. 'CHR' ) THEN
+!>                  IF ( XTYPES(COLNO) .EQ. 'CHR' ) THEN
 !>
-!>                             CALL EKGC ( COLNO,  ROW,  1,
-!>             .                           CDATA, NULL, FOUND )
+!>                     CALL EKGC ( COLNO,  ROW,  1,
+!>     .                           CDATA, NULL, FOUND )
 !>
-!>                             IF ( NULL ) THEN
-!>                                WRITE(*,*) ITEM, '<Null>'
-!>                             ELSE
-!>                                WRITE(*,*) ITEM, CDATA(:RTRIM(CDATA))
-!>                             END IF
+!>                     IF ( NULL ) THEN
+!>                        WRITE(*,*) ITEM, '<Null>'
+!>                     ELSE
+!>                        WRITE(*,*) ITEM, CDATA(:RTRIM(CDATA))
+!>                     END IF
 !>
-!>                          ELSE IF ( XTYPES(COLNO) .EQ. 'DP' ) THEN
+!>                  ELSE IF ( XTYPES(COLNO) .EQ. 'DP' ) THEN
 !>
-!>                             CALL EKGD ( COLNO,  ROW,  1,
-!>             .                           DDATA, NULL, FOUND )
+!>                     CALL EKGD ( COLNO,  ROW,  1,
+!>     .                           DDATA, NULL, FOUND )
 !>
-!>                             IF ( NULL ) THEN
-!>                                WRITE(*,*) ITEM, '<Null>'
-!>                             ELSE
-!>                                WRITE(*,*) ITEM, DDATA
-!>                             END IF
+!>                     IF ( NULL ) THEN
+!>                        WRITE(*,*) ITEM, '<Null>'
+!>                     ELSE
+!>                        WRITE(*,*) ITEM, DDATA
+!>                     END IF
 !>
-!>                          ELSE IF ( XTYPES(COLNO) .EQ. 'INT' ) THEN
+!>                  ELSE IF ( XTYPES(COLNO) .EQ. 'INT' ) THEN
 !>
-!>                             CALL EKGI ( COLNO,  ROW,  1,
-!>             .                           IDATA, NULL, FOUND )
+!>                     CALL EKGI ( COLNO,  ROW,  1,
+!>     .                           IDATA, NULL, FOUND )
 !>
-!>                             IF ( NULL ) THEN
-!>                                WRITE(*,*) ITEM, '<Null>'
-!>                             ELSE
-!>                                WRITE(*,*) ITEM, IDATA
-!>                             END IF
+!>                     IF ( NULL ) THEN
+!>                        WRITE(*,*) ITEM, '<Null>'
+!>                     ELSE
+!>                        WRITE(*,*) ITEM, IDATA
+!>                     END IF
 !>
-!>                          ELSE
-!>        C
-!>        C                    The item is a time value.  Convert it
-!>        C                    to UTC for output.
-!>        C
-!>                             CALL EKGD ( COLNO,  ROW,  1,
-!>             .                           TDATA, NULL, FOUND )
+!>                  ELSE
+!>C
+!>C                    The item is a time value.  Convert it
+!>C                    to UTC for output.
+!>C
+!>                     CALL EKGD ( COLNO,  ROW,  1,
+!>     .                           TDATA, NULL, FOUND )
 !>
-!>                             IF ( NULL ) THEN
-!>                                WRITE(*,*) ITEM, '<Null>'
-!>                             ELSE
-!>                                CALL ET2UTC ( TDATA, 'C', 3, UTCSTR )
-!>                                WRITE(*,*) ITEM, UTCSTR
-!>                             END IF
+!>                     IF ( NULL ) THEN
+!>                        WRITE(*,*) ITEM, '<Null>'
+!>                     ELSE
+!>                        CALL ET2UTC ( TDATA, 'C', 3, UTCSTR )
+!>                        WRITE(*,*) ITEM, UTCSTR
+!>                     END IF
 !>
-!>                          END IF
+!>                  END IF
 !>
-!>        C
-!>        C              We're done with the column having index COLNO.
-!>        C
-!>                       END DO
+!>C
+!>C              We're done with the column having index COLNO.
+!>C
+!>               END DO
 !>
-!>        C
-!>        C           We're done with the row having index ROW.
-!>        C
-!>                    END DO
+!>C
+!>C           We're done with the row having index ROW.
+!>C
+!>            END DO
 !>
-!>        C
-!>        C        We either processed the query or had an error.
-!>        C
-!>                 END IF
+!>C
+!>C        We either processed the query or had an error.
+!>C
+!>         END IF
 !>
-!>        C
-!>        C     We either parsed the SELECT clause or had an error.
-!>        C
-!>              END IF
+!>C
+!>C     We either parsed the SELECT clause or had an error.
+!>C
+!>      END IF
 !>
-!>              END
+!>      END
+!>```
 !>
 !>        When this program was executed on a Mac/Intel/gfortran/64-bit
 !>        platform, the output was:
@@ -751,6 +751,8 @@ submodule (pepper_instance_module) pepper_ek
 
 contains
 
+      !> Start a new segment in an E-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file that is open for writing.
@@ -945,158 +947,160 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKBSEG_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKBSEG_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME  = 'ekbseg_ex1.bdb' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME  = 'ekbseg_ex1.bdb' )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE   = 'DATAITEMS'      )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE   = 'DATAITEMS'      )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               DESCLN
-      !>              PARAMETER           ( DESCLN = 80  )
+      !>      INTEGER               DESCLN
+      !>      PARAMETER           ( DESCLN = 80  )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 5   )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 5   )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
-      !>              CHARACTER*(DESCLN)    DESCRP
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    ITEMNM
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
+      !>      CHARACTER*(DESCLN)    DESCRP
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    ITEMNM
       !>
-      !>              DOUBLE PRECISION      PRICE
+      !>      DOUBLE PRECISION      PRICE
       !>
-      !>              INTEGER               ESIZE
-      !>              INTEGER               HANDLE
-      !>              INTEGER               ITEMID
-      !>              INTEGER               NRESVC
-      !>              INTEGER               ORDID
-      !>              INTEGER               RECNO
-      !>              INTEGER               SEGNO
+      !>      INTEGER               ESIZE
+      !>      INTEGER               HANDLE
+      !>      INTEGER               ITEMID
+      !>      INTEGER               NRESVC
+      !>      INTEGER               ORDID
+      !>      INTEGER               RECNO
+      !>      INTEGER               SEGNO
       !>
-      !>              LOGICAL               ISNULL
+      !>      LOGICAL               ISNULL
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK;Created 21-JUN-2019'
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK;Created 21-JUN-2019'
       !>
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAITEMS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.
-      !>        C
-      !>              CNAMES(1) =  'ITEM_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAITEMS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.
+      !>C
+      !>      CNAMES(1) =  'ITEM_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'ORDER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'ORDER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'ITEM_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'ITEM_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'DESCRIPTION'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'DESCRIPTION'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'PRICE'
-      !>              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(5) =  'PRICE'
+      !>      CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment. Since we have no data for this
-      !>        C     segment, start the segment by just defining the new
-      !>        C     segment's schema.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
+      !>C
+      !>C     Start the segment. Since we have no data for this
+      !>C     segment, start the segment by just defining the new
+      !>C     segment's schema.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
       !>
-      !>        C
-      !>        C     Append a new, empty record to the DATAITEMS
-      !>        C     table. Recall that the DATAITEMS table
-      !>        C     is in segment number 1.  The call will return
-      !>        C     the number of the new, empty record.
-      !>        C
-      !>              SEGNO = 1
-      !>              CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>C
+      !>C     Append a new, empty record to the DATAITEMS
+      !>C     table. Recall that the DATAITEMS table
+      !>C     is in segment number 1.  The call will return
+      !>C     the number of the new, empty record.
+      !>C
+      !>      SEGNO = 1
+      !>      CALL EKAPPR ( HANDLE, SEGNO, RECNO )
       !>
-      !>        C
-      !>        C     At this point, the new record is empty.  A valid EK
-      !>        C     cannot contain empty records.  We fill in the data
-      !>        C     here.  Data items are filled in one column at a time.
-      !>        C     The order in which the columns are filled in is not
-      !>        C     important.  We use the EKACEx (add column entry)
-      !>        C     routines to fill in column entries.  We'll assume
-      !>        C     that no entries are null.  All entries are scalar,
-      !>        C     so the entry size is 1.
-      !>        C
-      !>              ISNULL   =  .FALSE.
-      !>              ESIZE    =  1
+      !>C
+      !>C     At this point, the new record is empty.  A valid EK
+      !>C     cannot contain empty records.  We fill in the data
+      !>C     here.  Data items are filled in one column at a time.
+      !>C     The order in which the columns are filled in is not
+      !>C     important.  We use the EKACEx (add column entry)
+      !>C     routines to fill in column entries.  We'll assume
+      !>C     that no entries are null.  All entries are scalar,
+      !>C     so the entry size is 1.
+      !>C
+      !>      ISNULL   =  .FALSE.
+      !>      ESIZE    =  1
       !>
-      !>        C
-      !>        C     The following variables will contain the data for
-      !>        C     the new record.
-      !>        C
-      !>              ORDID    =   10011
-      !>              ITEMID   =   531
-      !>              ITEMNM   =  'Sample item'
-      !>              DESCRP   =  'This sample item is used only in tests.'
-      !>              PRICE    =   1345.678D0
+      !>C
+      !>C     The following variables will contain the data for
+      !>C     the new record.
+      !>C
+      !>      ORDID    =   10011
+      !>      ITEMID   =   531
+      !>      ITEMNM   =  'Sample item'
+      !>      DESCRP   =  'This sample item is used only in tests.'
+      !>      PRICE    =   1345.678D0
       !>
-      !>        C
-      !>        C     Note that the names of the routines called
-      !>        C     correspond to the data types of the columns:  the
-      !>        C     last letter of the routine name is C, I, or D,
-      !>        C     depending on the data type.
-      !>        C
-      !>              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
-      !>             .              ESIZE,  ORDID,  ISNULL               )
+      !>C
+      !>C     Note that the names of the routines called
+      !>C     correspond to the data types of the columns:  the
+      !>C     last letter of the routine name is C, I, or D,
+      !>C     depending on the data type.
+      !>C
+      !>      CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
+      !>     .              ESIZE,  ORDID,  ISNULL               )
       !>
-      !>              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
-      !>             .              ESIZE,  ITEMID, ISNULL               )
+      !>      CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
+      !>     .              ESIZE,  ITEMID, ISNULL               )
       !>
-      !>              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
-      !>             .              ESIZE,  ITEMNM, ISNULL               )
+      !>      CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
+      !>     .              ESIZE,  ITEMNM, ISNULL               )
       !>
-      !>              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
-      !>             .              ESIZE,  DESCRP, ISNULL               )
+      !>      CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
+      !>     .              ESIZE,  DESCRP, ISNULL               )
       !>
-      !>              CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
-      !>             .              ESIZE,  PRICE,  ISNULL               )
+      !>      CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
+      !>     .              ESIZE,  PRICE,  ISNULL               )
       !>
-      !>        C
-      !>        C     Close the file to make the update permanent.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file to make the update permanent.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new EK file exists in the
@@ -1130,7 +1134,7 @@ contains
       !>        Previous version line was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-1995 (NJB)
-      module procedure ekbseg
+      module subroutine ekbseg ( ctx, handle, tabnam, ncols, cnames, decls, segno )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -1144,6 +1148,13 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      character(*), intent(in) :: tabnam  !! Table name.
+      integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
+      character(*), intent(in) :: cnames ( * )  !! Names of columns.
+      character(*), intent(in) :: decls  ( * )  !! Declarations of columns.
+      integer(ip), intent(out) :: segno  !! Segment number.
       integer(ip), parameter :: mxspec = 512
       integer(ip), parameter :: namlim = 32
       integer(ip) :: cdscrs ( cdscsz, mxclsg )
@@ -1281,8 +1292,11 @@ contains
 
       return
       end associate
-      end procedure ekbseg
+      end subroutine ekbseg
 
+      !> Add a new, empty record to a specified E-kernel segment at
+      !> a specified index.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of an EK open for write access.
@@ -1496,7 +1510,7 @@ contains
       !>        were replaced with "fast write."
       !>
       !>-    Beta Version 1.0.0, 19-DEC-1995 (NJB)
-      module procedure ekinsr
+      module subroutine ekinsr ( ctx, handle, segno, recno )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekdatpag
@@ -1505,6 +1519,10 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segno  !! Segment number.
+      integer(ip), intent(in) :: recno  !! Record number.
       integer(ip) :: nlinks_1(1)  !! one-element copy of nlinks (array argument)
 
       integer(ip) :: base
@@ -1695,8 +1713,11 @@ contains
       call dasudi ( ctx, handle,  mbase+1,  mbase+sdscsz,  segdsc )
 
       return
-      end procedure ekinsr
+      end subroutine ekinsr
 
+      !> Check whether a file is a type 1 star catalog and return the
+      !> catalog's table name if it is.
+      !>
       !>## Detailed Input
       !>
       !>     CATFNM   is the name of the catalog file.
@@ -1808,13 +1829,18 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 15-MAY-1996 (BVS)
-      module procedure stcc01
+      module subroutine stcc01 ( ctx, catfnm, tabnam, istyp1, errmsg )
       use pepper_kinds, only: ip
       use pepper_strings, only: nblen
       use pepper_inc_ekcnamsz
       use pepper_inc_ektnamsz
       use pepper_inc_ekglimit
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: catfnm  !! Catalog file name.
+      character(*), intent(out) :: tabnam  !! Catalog table name.
+      logical, intent(out) :: istyp1  !! .TRUE. when file is type 1 star catalog.
+      character(*), intent(out) :: errmsg  !! Error message.
       integer(ip), parameter :: cat1nc = 7
       character(4), parameter :: cat1dt ( cat1nc ) = &
          [ character(4) :: 'INT', 'DP', 'DP', 'DP', 'DP', 'DP', 'CHR' ]
@@ -1940,8 +1966,10 @@ contains
 
       return
       end associate
-      end procedure stcc01
+      end subroutine stcc01
 
+      !> Add an entire class 1 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -2067,11 +2095,7 @@ contains
       !>
       !>        Previous version line was changed from "Beta"
       !>        to "SPICELIB."
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      module procedure zzekac01
+      module subroutine zzekac01 ( ctx, handle, segdsc, coldsc, ivals, nlflgs, rcptrs, wkindx )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -2081,6 +2105,17 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(in) :: rcptrs ( * )  !! Array of record pointers for segment.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+!
+!     Local parameters
+!
       integer(ip), parameter :: bufsiz = ipsize
 
       character(cnamsz) :: column
@@ -2324,8 +2359,10 @@ contains
       end if
 
       return
-      end procedure zzekac01
+      end subroutine zzekac01
 
+      !> Add an entire class 2 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -2451,11 +2488,7 @@ contains
       !>
       !>        Previous version line was changed from "Beta"
       !>        to "SPICELIB."
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      module procedure zzekac02
+      module subroutine zzekac02 ( ctx, handle, segdsc, coldsc, dvals, nlflgs, rcptrs, wkindx )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -2465,6 +2498,17 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      real(wp), intent(in) :: dvals  ( * )  !! D.p. values to add to column.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(in) :: rcptrs ( * )  !! Array of record pointers for segment.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+!
+!     Local parameters
+!
       integer(ip), parameter :: bufsiz = dpsize
 
       character(cnamsz) :: column
@@ -2709,8 +2753,10 @@ contains
       end if
 
       return
-      end procedure zzekac02
+      end subroutine zzekac02
 
+      !> Add an entire class 3 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -2819,11 +2865,7 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 26-SEP-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      module procedure zzekac03
+      module subroutine zzekac03 ( ctx, handle, segdsc, coldsc, cvals, nlflgs, rcptrs, wkindx )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       use pepper_inc_ekbool
@@ -2834,6 +2876,17 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(in) :: rcptrs ( * )  !! Array of record pointers for segment.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+!
+!     Local parameters
+!
       integer(ip), parameter :: bufsiz = cpsize
 
       character(cnamsz) :: column
@@ -3193,8 +3246,10 @@ contains
       end if
 
       return
-      end procedure zzekac03
+      end subroutine zzekac03
 
+      !> Add an entire class 4 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -3339,11 +3394,7 @@ contains
       !>
       !>        Previous version line was changed from "Beta"
       !>        to "SPICELIB."
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      module procedure zzekac04
+      module subroutine zzekac04 ( ctx, handle, segdsc, coldsc, ivals, entszs, nlflgs )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -3353,6 +3404,16 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+      integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+!
+!     Local parameters
+!
       integer(ip), parameter :: bufsiz = ipsize
 
       character(cnamsz) :: column
@@ -3658,8 +3719,10 @@ contains
 !
 
       return
-      end procedure zzekac04
+      end subroutine zzekac04
 
+      !> Add an entire class 5 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -3804,11 +3867,7 @@ contains
       !>
       !>        Previous version line was changed from "Beta"
       !>        to "SPICELIB."
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      module procedure zzekac05
+      module subroutine zzekac05 ( ctx, handle, segdsc, coldsc, dvals, entszs, nlflgs )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -3818,6 +3877,16 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      real(wp), intent(in) :: dvals  ( * )  !! D.p. values to add to column.
+      integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+!
+!     Local parameters
+!
       integer(ip), parameter :: bufsiz = dpsize
 
       character(cnamsz) :: column
@@ -4123,8 +4192,10 @@ contains
 !
 
       return
-      end procedure zzekac05
+      end subroutine zzekac05
 
+      !> Add an entire class 6 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -4268,11 +4339,7 @@ contains
       !>
       !>        Previous version line was changed from "Beta"
       !>        to "SPICELIB."
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      module procedure zzekac06
+      module subroutine zzekac06 ( ctx, handle, segdsc, coldsc, cvals, entszs, nlflgs )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -4282,6 +4349,16 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+      integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+!
+!     Local parameters
+!
       integer(ip), parameter :: bufsiz = cpsize
 
       character(cnamsz) :: column
@@ -4715,8 +4792,11 @@ contains
 !
 
       return
-      end procedure zzekac06
+      end subroutine zzekac06
 
+      !> Add a column entry to a specified record in a class 4 column.
+      !> The entries of class 4 columns are arrays of integer values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -4828,11 +4908,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 26-SEP-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekad04
+      module subroutine zzekad04 ( ctx, handle, segdsc, coldsc, recptr, nvals, ivals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -4840,6 +4916,17 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: datptr
       integer(ip) :: lastw
@@ -5053,8 +5140,11 @@ contains
 !
 
       return
-      end procedure zzekad04
+      end subroutine zzekad04
 
+      !> Add a column entry to a specified record in a class 5 column.
+      !> The entries of class 5 columns are arrays of d.p. values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -5168,11 +5258,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekad05
+      module subroutine zzekad05 ( ctx, handle, segdsc, coldsc, recptr, nvals, dvals, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -5180,6 +5266,17 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Pointer to the record to which data is to be added.
+      integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+      real(wp), intent(in) :: dvals  ( * )  !! Double precision values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: datptr
       integer(ip) :: lastw
@@ -5394,8 +5491,12 @@ contains
 !
 
       return
-      end procedure zzekad05
+      end subroutine zzekad05
 
+      !> Add a column entry to a specified record in a class 6 column.
+      !> The entries of class 6 columns are arrays of character string
+      !> values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is the handle of an EK file that is open for write
@@ -5510,19 +5611,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      module procedure zzekad06
+      module subroutine zzekad06 ( ctx, handle, segdsc, coldsc, recptr, nvals, cvals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -5530,7 +5619,21 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Pointer to the record to which data is to be added.
+      integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+      character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
+!
+!     Local parameters
+!
       integer(ip), parameter :: maxpad = 100
+!
+!     Local variables
+!
       integer(ip) :: mbase
       integer(ip) :: nwrite
       integer(ip) :: cvlen
@@ -5872,8 +5975,10 @@ contains
 
       return
       end associate
-      end procedure zzekad06
+      end subroutine zzekad06
 
+      !> Delete a specified class 5 column entry from an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -5954,13 +6059,7 @@ contains
       !>        Deleted unneeded declarations and code.
       !>
       !>-    Beta Version 1.0.0, 28-SEP-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekde05
+      module subroutine zzekde05 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -5968,8 +6067,16 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
       real(wp) :: dpnelt_1(1)  !! one-element copy of dpnelt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       real(wp) :: dpnelt
 
       integer(ip) :: base
@@ -6121,8 +6228,10 @@ contains
       call dasudi ( ctx, handle, recptr+staidx, recptr+staidx, [ update ] )
 
       return
-      end procedure zzekde05
+      end subroutine zzekde05
 
+      !> Delete a specified class 6 column entry from an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -6203,7 +6312,7 @@ contains
       !>        Deleted unneeded declarations and code.
       !>
       !>-    Beta Version 1.0.0, 28-SEP-1995 (NJB)
-      module procedure zzekde06
+      module subroutine zzekde06 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -6212,6 +6321,11 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
       integer(ip) :: base
@@ -6364,8 +6478,13 @@ contains
       call dasudi ( ctx, handle, recptr+staidx, recptr+staidx, [ update ] )
 
       return
-      end procedure zzekde06
+      end subroutine zzekde06
 
+      !> Return the size of a specified column entry.
+      !>
+      !> The function returns the number of elements in the specified
+      !> column entry.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -6432,15 +6551,19 @@ contains
       !>        long error message.
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekesiz
+      module integer(ip) function zzekesiz ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekcnamsz
       use pepper_inc_eksegdsc
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: class
@@ -6518,8 +6641,10 @@ contains
       end if
 
       return
-      end procedure zzekesiz
+      end function zzekesiz
 
+      !> Return the data pointer for a specified EK column entry.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -6591,17 +6716,22 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekgcdp
+      module subroutine zzekgcdp ( ctx, handle, segdsc, coldsc, recptr, datptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ekrecptr
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(out) :: datptr  !! Data pointer of column entry.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: ncols
       integer(ip) :: ptrloc
@@ -6638,8 +6768,10 @@ contains
       datptr = datptr_1(1)
 
       return
-      end procedure zzekgcdp
+      end subroutine zzekgcdp
 
+      !> Initialize a new type 1 EK segment to allow fast loading.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is the handle of an EK file open for write access.
@@ -6712,16 +6844,19 @@ contains
       !>        previous version line's product from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekif01
+      module subroutine zzekif01 ( ctx, handle, segno, rcptrs )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segno  !! Segment number.
+      integer(ip), intent(out) :: rcptrs ( * )  !! Array of record pointers.
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: i
       integer(ip) :: j
@@ -6813,8 +6948,10 @@ contains
       end do
 
       return
-      end procedure zzekif01
+      end subroutine zzekif01
 
+      !> Initialize a new type 2 EK segment to allow fast loading.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is the handle of an EK file open for write access.
@@ -6880,11 +7017,7 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekif02
+      module subroutine zzekif02 ( ctx, handle, segno )
       use pepper_kinds, only: ip
       use pepper_inc_ekclas07
       use pepper_inc_ekclas08
@@ -6893,7 +7026,13 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segno  !! Segment number.
       integer(ip) :: class_1(1)  !! one-element copy of class (array argument)
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: class
       integer(ip) :: dscbas
@@ -6974,8 +7113,11 @@ contains
       end do
 
       return
-      end procedure zzekif02
+      end subroutine zzekif02
 
+      !> Read a column entry from a specified record in a class 1 column.
+      !> Class 1 columns contain scalar integer values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -7051,7 +7193,7 @@ contains
       !>        message from NREC to NCOLS.
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      module procedure zzekrd01
+      module subroutine zzekrd01 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -7060,6 +7202,13 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(out) :: ival  !! Integer value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       integer(ip) :: ival_1(1)  !! one-element copy of ival (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
@@ -7148,8 +7297,11 @@ contains
       end if
 
       return
-      end procedure zzekrd01
+      end subroutine zzekrd01
 
+      !> Read a column entry from a specified record in a class 2 column.
+      !> Class 2 columns contain scalar double precision values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -7225,7 +7377,7 @@ contains
       !>        message from NREC to NCOLS.
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      module procedure zzekrd02
+      module subroutine zzekrd02 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -7234,6 +7386,13 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      real(wp), intent(out) :: dval  !! Double precision value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       real(wp) :: dval_1(1)  !! one-element copy of dval (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
@@ -7314,8 +7473,11 @@ contains
       end if
 
       return
-      end procedure zzekrd02
+      end subroutine zzekrd02
 
+      !> Read a column entry from a specified record in a class 3 column.
+      !> Class 3 columns contain scalar character values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -7451,11 +7613,7 @@ contains
       !>
       !>        Error messages were enhanced so as to use column names rather
       !>        than indices.
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekrd03
+      module subroutine zzekrd03 ( ctx, handle, segdsc, coldsc, recptr, cvlen, cval, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -7466,7 +7624,18 @@ contains
       use pepper_inc_ektype
 
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(out) :: cvlen  !! Length of returned character value.
+      character(*), intent(out) :: cval  !! Character value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: avail
@@ -7630,8 +7799,12 @@ contains
       end if
 
       return
-      end procedure zzekrd03
+      end subroutine zzekrd03
 
+      !> Read a specified element range from a column entry in a specified
+      !> record in a class 4 column.  Class 4 columns have integer arrays
+      !> as column entries.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -7746,7 +7919,7 @@ contains
       !>
       !>        Updated to remove non-standard use of duplicate arguments
       !>        in ZZEKGFWD call.
-      module procedure zzekrd04
+      module subroutine zzekrd04 ( ctx, handle, segdsc, coldsc, recptr, beg, end, ivals, isnull, found )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -7755,6 +7928,16 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: beg  !! Start element index.
+      integer(ip), intent(in) :: end  !! End element index.
+      integer(ip), intent(out) :: ivals  ( * )  !! Integer values in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      logical, intent(out) :: found  !! Flag indicating whether elements were found.
       integer(ip) :: p_1(1)  !! one-element copy of p (array argument)
       integer(ip) :: nelt_1(1)  !! one-element copy of nelt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
@@ -7940,8 +8123,12 @@ contains
       end if
 
       return
-      end procedure zzekrd04
+      end subroutine zzekrd04
 
+      !> Read a specified element range from a column entry in a specified
+      !> record in a class 5 column.  Class 5 columns have d.p. arrays
+      !> as column entries.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -8056,21 +8243,28 @@ contains
       !>
       !>        Updated to remove non-standard use of duplicate arguments
       !>        in ZZEKGFWD calls.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekrd05
+      module subroutine zzekrd05 ( ctx, handle, segdsc, coldsc, recptr, beg, end, dvals, isnull, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_ekdatpag
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: beg  !! Start element index.
+      integer(ip), intent(in) :: end  !! End element index.
+      real(wp), intent(out) :: dvals  ( * )  !! Double precision values in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      logical, intent(out) :: found  !! Flag indicating whether elements were found.
       real(wp) :: dpnelt_1(1)  !! one-element copy of dpnelt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       real(wp) :: dpnelt
 
       integer(ip) :: base
@@ -8258,8 +8452,12 @@ contains
       end if
 
       return
-      end procedure zzekrd05
+      end subroutine zzekrd05
 
+      !> Read a specified element range from a column entry in a specified
+      !> record in a class 6 column.  Class 6 columns have character arrays
+      !> as column entries.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -8387,13 +8585,7 @@ contains
       !>        SHORT error message SPICE(UNINITIALIZEDVALUE) was shortened
       !>        to SPICE(UNINITIALIZED).  Error messages were enhanced so
       !>        as to use column names rather than indices.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekrd06
+      module subroutine zzekrd06 ( ctx, handle, segdsc, coldsc, recptr, beg, end, cvals, isnull, found )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -8404,7 +8596,20 @@ contains
       use pepper_inc_ektype
 
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: beg  !! Start element index.
+      integer(ip), intent(in) :: end  !! End element index.
+      character(*), intent(out) :: cvals  ( * )  !! Character values in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      logical, intent(out) :: found  !! Flag indicating whether elements were found.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: avail
@@ -8716,8 +8921,11 @@ contains
       end if
 
       return
-      end procedure zzekrd06
+      end subroutine zzekrd06
 
+      !> Read a column entry from a specified record in a class 7 column.
+      !> Class 7 columns contain fixed-count, scalar integer values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -8791,11 +8999,7 @@ contains
       !>        message from NREC to NCOLS.
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekrd07
+      module subroutine zzekrd07 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekclas07
@@ -8804,7 +9008,17 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(out) :: ival  !! Integer value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       integer(ip) :: ival_1(1)  !! one-element copy of ival (array argument)
+!
+!     Local variables
+!
       character(1) :: cflag
 
       integer(ip) :: addrss
@@ -8898,8 +9112,12 @@ contains
       ival = ival_1(1)
 
       return
-      end procedure zzekrd07
+      end subroutine zzekrd07
 
+      !> Read a column entry from a specified record in a class 8 column.
+      !> Class 8 columns contain fixed-count, scalar, double precision
+      !> values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -8973,11 +9191,7 @@ contains
       !>        message from NREC to NCOLS.
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekrd08
+      module subroutine zzekrd08 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekclas08
@@ -8986,7 +9200,17 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      real(wp), intent(out) :: dval  !! Double precision value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       real(wp) :: dval_1(1)  !! one-element copy of dval (array argument)
+!
+!     Local variables
+!
       character(1) :: cflag
 
       integer(ip) :: addrss
@@ -9080,8 +9304,10 @@ contains
       dval = dval_1(1)
 
       return
-      end procedure zzekrd08
+      end subroutine zzekrd08
 
+      !> Set the data pointer for a specified EK column entry.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -9161,17 +9387,20 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekscdp
+      module subroutine zzekscdp ( ctx, handle, segdsc, coldsc, recptr, datptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ekrecptr
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: datptr  !! Data pointer of column entry.
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: ncols
       integer(ip) :: ptrloc
@@ -9215,8 +9444,10 @@ contains
       call dasudi ( ctx, handle, ptrloc, ptrloc, [ datptr ] )
 
       return
-      end procedure zzekscdp
+      end subroutine zzekscdp
 
+      !> Write a character array out to a contiguous set of EK pages.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -9318,16 +9549,23 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 07-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekwpac
+      module subroutine zzekwpac ( ctx, handle, segdsc, nvals, l, cvals, p, base )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Descriptor of segment that owns the array.
+      integer(ip), intent(in) :: nvals  !! Number of values to write.
+      integer(ip), intent(in) :: l  !! String length.
+      character(*), intent(in) :: cvals  ( * )  !! Character values.
+      integer(ip), intent(out) :: p  !! Number of first page containing array.
+      integer(ip), intent(out) :: base  !! Base address of first page.
+!
+!     Local variables
+!
       character(pgsizc) :: page
 
       integer(ip) :: from
@@ -9407,8 +9645,10 @@ contains
       end do
 
       return
-      end procedure zzekwpac
+      end subroutine zzekwpac
 
+      !> Write an integer array out to a contiguous set of EK pages.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -9487,16 +9727,22 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 08-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekwpai
+      module subroutine zzekwpai ( ctx, handle, segdsc, nvals, ivals, p, base )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Descriptor of segment that owns the array.
+      integer(ip), intent(in) :: nvals  !! Number of values to write.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values.
+      integer(ip), intent(out) :: p  !! Number of first page containing array.
+      integer(ip), intent(out) :: base  !! Base address of first page.
+!
+!     Local variables
+!
       integer(ip) :: from
       integer(ip) :: npage
       integer(ip) :: page   ( pgsizi )
@@ -9554,8 +9800,10 @@ contains
       end do
 
       return
-      end procedure zzekwpai
+      end subroutine zzekwpai
 
+      !> Write a logical array out to a contiguous set of EK pages.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -9635,17 +9883,23 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 08-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekwpal
+      module subroutine zzekwpal ( ctx, handle, segdsc, nvals, lvals, p, base )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekdatpag
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Descriptor of segment that owns the array.
+      integer(ip), intent(in) :: nvals  !! Number of values to write.
+      logical, intent(in) :: lvals  ( * )  !! Logical values.
+      integer(ip), intent(out) :: p  !! Number of first page containing array.
+      integer(ip), intent(out) :: base  !! Base address of first page.
+!
+!     Local variables
+!
       character(pgsizc) :: page
 
       integer(ip) :: from
@@ -9714,8 +9968,11 @@ contains
       end do
 
       return
-      end procedure zzekwpal
+      end subroutine zzekwpal
 
+      !> Append a new, empty record at the end of a specified E-kernel
+      !> segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of an EK open for write access.
@@ -9827,212 +10084,214 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKAPPR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKAPPR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME  = 'ekappr_ex1.bdb' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME  = 'ekappr_ex1.bdb' )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               DESCLN
-      !>              PARAMETER           ( DESCLN = 80  )
+      !>      INTEGER               DESCLN
+      !>      PARAMETER           ( DESCLN = 80  )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 6   )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 6   )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
-      !>              CHARACTER*(DESCLN)    DESCRP
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    ITEMNM
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
+      !>      CHARACTER*(DESCLN)    DESCRP
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    ITEMNM
       !>
-      !>              DOUBLE PRECISION      PRICE
+      !>      DOUBLE PRECISION      PRICE
       !>
-      !>              INTEGER               ESIZE
-      !>              INTEGER               HANDLE
-      !>              INTEGER               ITEMID
-      !>              INTEGER               NRESVC
-      !>              INTEGER               ORDID
-      !>              INTEGER               RECNO
-      !>              INTEGER               SEGNO
+      !>      INTEGER               ESIZE
+      !>      INTEGER               HANDLE
+      !>      INTEGER               ITEMID
+      !>      INTEGER               NRESVC
+      !>      INTEGER               ORDID
+      !>      INTEGER               RECNO
+      !>      INTEGER               SEGNO
       !>
-      !>              LOGICAL               ISNULL
+      !>      LOGICAL               ISNULL
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 01-JUN-2019'
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 01-JUN-2019'
       !>
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAORDERS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.  Only the COST column may take
-      !>        C     null values.
-      !>        C
-      !>              CNAMES(1) =  'ORDER_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAORDERS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.  Only the COST column may take
+      !>C     null values.
+      !>C
+      !>      CNAMES(1) =  'ORDER_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'CUSTOMER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'CUSTOMER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'LAST_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*), ' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'LAST_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*), ' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'FIRST_NAME'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*), ' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'FIRST_NAME'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*), ' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'ORDER_DATE'
-      !>              CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
+      !>      CNAMES(5) =  'ORDER_DATE'
+      !>      CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
       !>
-      !>              CNAMES(6) =  'COST'
-      !>              CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE,'             //
-      !>             .             'NULLS_OK = TRUE'
+      !>      CNAMES(6) =  'COST'
+      !>      CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE,'             //
+      !>     .             'NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the first segment. Since we have no data for this
-      !>        C     segment, start the segment by just defining the new
-      !>        C     segment's schema.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, 'DATAORDERS', NCOLS,
-      !>             .              CNAMES, CDECLS,       SEGNO )
+      !>C
+      !>C     Start the first segment. Since we have no data for this
+      !>C     segment, start the segment by just defining the new
+      !>C     segment's schema.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, 'DATAORDERS', NCOLS,
+      !>     .              CNAMES, CDECLS,       SEGNO )
       !>
-      !>        C
-      !>        C     At this point, the second segment could be
-      !>        C     created by an analogous process.  In fact, the
-      !>        C     second segment could be created at any time; it is
-      !>        C     not necessary to populate the first segment with
-      !>        C     data before starting the second segment.
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAITEMS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.
-      !>        C
-      !>              CNAMES(1) =  'ITEM_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     At this point, the second segment could be
+      !>C     created by an analogous process.  In fact, the
+      !>C     second segment could be created at any time; it is
+      !>C     not necessary to populate the first segment with
+      !>C     data before starting the second segment.
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAITEMS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.
+      !>C
+      !>      CNAMES(1) =  'ITEM_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'ORDER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'ORDER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'ITEM_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'ITEM_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'DESCRIPTION'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'DESCRIPTION'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'PRICE'
-      !>              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(5) =  'PRICE'
+      !>      CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>        C
-      !>        C     Start the new segment. Since we have no data for this
-      !>        C     segment, start the segment by just defining the new
-      !>        C     segment's schema.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, 'DATAITEMS', 5,
-      !>             .              CNAMES, CDECLS,      SEGNO )
+      !>C
+      !>C     Start the new segment. Since we have no data for this
+      !>C     segment, start the segment by just defining the new
+      !>C     segment's schema.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, 'DATAITEMS', 5,
+      !>     .              CNAMES, CDECLS,      SEGNO )
       !>
-      !>        C
-      !>        C     End the file by a call to EKCLS.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     End the file by a call to EKCLS.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now, we want to insert a new record into the DATAITEMS
-      !>        C     table.
-      !>        C
-      !>        C     Open the database for write access.  This call is
-      !>        C     made when the file already exists.
-      !>        C
-      !>              CALL EKOPW ( EKNAME, HANDLE )
+      !>C
+      !>C     Now, we want to insert a new record into the DATAITEMS
+      !>C     table.
+      !>C
+      !>C     Open the database for write access.  This call is
+      !>C     made when the file already exists.
+      !>C
+      !>      CALL EKOPW ( EKNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Append a new, empty record to the DATAITEMS
-      !>        C     table. Recall that the DATAITEMS table
-      !>        C     is in segment number 2.  The call will return
-      !>        C     the number of the new, empty record.
-      !>        C
-      !>              SEGNO = 2
-      !>              CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>C
+      !>C     Append a new, empty record to the DATAITEMS
+      !>C     table. Recall that the DATAITEMS table
+      !>C     is in segment number 2.  The call will return
+      !>C     the number of the new, empty record.
+      !>C
+      !>      SEGNO = 2
+      !>      CALL EKAPPR ( HANDLE, SEGNO, RECNO )
       !>
-      !>        C
-      !>        C     At this point, the new record is empty.  A valid EK
-      !>        C     cannot contain empty records.  We fill in the data
-      !>        C     here.  Data items are filled in one column at a time.
-      !>        C     The order in which the columns are filled in is not
-      !>        C     important.  We use the EKACEx (add column entry)
-      !>        C     routines to fill in column entries.  We'll assume
-      !>        C     that no entries are null.  All entries are scalar,
-      !>        C     so the entry size is 1.
-      !>        C
-      !>              ISNULL =  .FALSE.
-      !>              ESIZE  =  1
+      !>C
+      !>C     At this point, the new record is empty.  A valid EK
+      !>C     cannot contain empty records.  We fill in the data
+      !>C     here.  Data items are filled in one column at a time.
+      !>C     The order in which the columns are filled in is not
+      !>C     important.  We use the EKACEx (add column entry)
+      !>C     routines to fill in column entries.  We'll assume
+      !>C     that no entries are null.  All entries are scalar,
+      !>C     so the entry size is 1.
+      !>C
+      !>      ISNULL =  .FALSE.
+      !>      ESIZE  =  1
       !>
-      !>        C
-      !>        C     The following variables will contain the data for
-      !>        C     the new record.
-      !>        C
-      !>              ORDID  =   10011
-      !>              ITEMID =   531
-      !>              ITEMNM =  'Sample item'
-      !>              DESCRP =  'This sample item is used only in tests.'
-      !>              PRICE  =   1345.678D0
+      !>C
+      !>C     The following variables will contain the data for
+      !>C     the new record.
+      !>C
+      !>      ORDID  =   10011
+      !>      ITEMID =   531
+      !>      ITEMNM =  'Sample item'
+      !>      DESCRP =  'This sample item is used only in tests.'
+      !>      PRICE  =   1345.678D0
       !>
-      !>        C
-      !>        C     Note that the names of the routines called
-      !>        C     correspond to the data types of the columns:  the
-      !>        C     last letter of the routine name is C, I, or D,
-      !>        C     depending on the data type.
-      !>        C
-      !>              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
-      !>             .              ESIZE,  ORDID,  ISNULL               )
+      !>C
+      !>C     Note that the names of the routines called
+      !>C     correspond to the data types of the columns:  the
+      !>C     last letter of the routine name is C, I, or D,
+      !>C     depending on the data type.
+      !>C
+      !>      CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
+      !>     .              ESIZE,  ORDID,  ISNULL               )
       !>
-      !>              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
-      !>             .              ESIZE,  ITEMID, ISNULL               )
+      !>      CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
+      !>     .              ESIZE,  ITEMID, ISNULL               )
       !>
-      !>              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
-      !>             .              ESIZE,  ITEMNM, ISNULL               )
+      !>      CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
+      !>     .              ESIZE,  ITEMNM, ISNULL               )
       !>
-      !>              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
-      !>             .              ESIZE,  DESCRP, ISNULL               )
+      !>      CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
+      !>     .              ESIZE,  DESCRP, ISNULL               )
       !>
-      !>              CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
-      !>             .              ESIZE,  PRICE,  ISNULL               )
+      !>      CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
+      !>     .              ESIZE,  PRICE,  ISNULL               )
       !>
-      !>        C
-      !>        C     Close the file to make the update permanent.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file to make the update permanent.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new EK file exists in the
@@ -10066,7 +10325,7 @@ contains
       !>        were replaced with "fast write."
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB)
-      module procedure ekappr
+      module subroutine ekappr ( ctx, handle, segno, recno )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
       use pepper_inc_ekpage
@@ -10074,6 +10333,10 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segno  !! Segment number.
+      integer(ip), intent(out) :: recno  !! Number of appended record.
 
       integer(ip) :: mbase
       integer(ip) :: mp
@@ -10120,8 +10383,10 @@ contains
       call ekinsr ( ctx, handle, segno, recno )
 
       return
-      end procedure ekappr
+      end subroutine ekappr
 
+      !> Initialize a new E-kernel segment to allow fast writing.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file open for write access. A new
@@ -10363,208 +10628,210 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKIFLD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKIFLD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         LSK
-      !>              PARAMETER           ( LSK    = 'naif0012.tls' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         LSK
+      !>      PARAMETER           ( LSK    = 'naif0012.tls' )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE  = 'DATAORDERS'   )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE  = 'DATAORDERS'   )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               FNMLEN
-      !>              PARAMETER           ( FNMLEN = 50  )
+      !>      INTEGER               FNMLEN
+      !>      PARAMETER           ( FNMLEN = 50  )
       !>
-      !>              INTEGER               LNMLEN
-      !>              PARAMETER           ( LNMLEN = 50  )
+      !>      INTEGER               LNMLEN
+      !>      PARAMETER           ( LNMLEN = 50  )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 6   )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 6   )
       !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 9   )
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 9   )
       !>
-      !>              INTEGER               UTCLEN
-      !>              PARAMETER           ( UTCLEN = 30  )
+      !>      INTEGER               UTCLEN
+      !>      PARAMETER           ( UTCLEN = 30  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS )
-      !>              CHARACTER*(32)        CNAMES ( NCOLS )
-      !>              CHARACTER*(FNMLEN)    FNAMES ( NROWS )
-      !>              CHARACTER*(LNMLEN)    LNAMES ( NROWS )
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(UTCLEN)    ODATE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS )
+      !>      CHARACTER*(32)        CNAMES ( NCOLS )
+      !>      CHARACTER*(FNMLEN)    FNAMES ( NROWS )
+      !>      CHARACTER*(LNMLEN)    LNAMES ( NROWS )
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(UTCLEN)    ODATE
       !>
-      !>              DOUBLE PRECISION      COSTS  ( NROWS )
-      !>              DOUBLE PRECISION      ETS    ( NROWS )
+      !>      DOUBLE PRECISION      COSTS  ( NROWS )
+      !>      DOUBLE PRECISION      ETS    ( NROWS )
       !>
-      !>              INTEGER               CSTIDS ( NROWS )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               NRESVC
-      !>              INTEGER               ORDIDS ( NROWS )
-      !>              INTEGER               RCPTRS ( NROWS )
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SIZES  ( NROWS )
-      !>              INTEGER               WKINDX ( NROWS )
+      !>      INTEGER               CSTIDS ( NROWS )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               NRESVC
+      !>      INTEGER               ORDIDS ( NROWS )
+      !>      INTEGER               RCPTRS ( NROWS )
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SIZES  ( NROWS )
+      !>      INTEGER               WKINDX ( NROWS )
       !>
-      !>              LOGICAL               NLFLGS ( NROWS )
+      !>      LOGICAL               NLFLGS ( NROWS )
       !>
-      !>        C
-      !>        C     Load a leapseconds kernel for UTC/ET conversion.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load a leapseconds kernel for UTC/ET conversion.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 20-SEP-1995'
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 20-SEP-1995'
       !>
-      !>              CALL EKOPN ( 'ekifld_ex1.bes', IFNAME, NRESVC, HANDLE )
+      !>      CALL EKOPN ( 'ekifld_ex1.bes', IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAORDERS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.  Only the COST column may take
-      !>        C     null values.
-      !>        C
-      !>              CNAMES(1) =  'ORDER_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAORDERS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.  Only the COST column may take
+      !>C     null values.
+      !>C
+      !>      CNAMES(1) =  'ORDER_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'CUSTOMER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'CUSTOMER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'LAST_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'LAST_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'FIRST_NAME'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'FIRST_NAME'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'ORDER_DATE'
-      !>              CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
+      !>      CNAMES(5) =  'ORDER_DATE'
+      !>      CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
       !>
-      !>              CNAMES(6) =  'COST'
-      !>              CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE,'             //
-      !>             .             'NULLS_OK = TRUE'
+      !>      CNAMES(6) =  'COST'
+      !>      CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE,'             //
+      !>     .             'NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment.  We presume the number of  rows
-      !>        C     of data is known in advance.
-      !>        C
-      !>              CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
-      !>             .              CNAMES,  CDECLS, SEGNO, RCPTRS )
+      !>C
+      !>C     Start the segment.  We presume the number of  rows
+      !>C     of data is known in advance.
+      !>C
+      !>      CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
+      !>     .              CNAMES,  CDECLS, SEGNO, RCPTRS )
       !>
-      !>        C
-      !>        C     At this point, arrays containing data for the
-      !>        C     segment's columns may be filled in.  The names
-      !>        C     of the data arrays are shown below.
-      !>        C
-      !>        C        Column           Data array
-      !>        C
-      !>        C        'ORDER_ID'       ORDIDS
-      !>        C        'CUSTOMER_ID'    CSTIDS
-      !>        C        'LAST_NAME'      LNAMES
-      !>        C        'FIRST_NAME'     FNAMES
-      !>        C        'ORDER_DATE'     ETS
-      !>        C        'COST'           COSTS
-      !>        C
-      !>              DO I = 1, NROWS
+      !>C
+      !>C     At this point, arrays containing data for the
+      !>C     segment's columns may be filled in.  The names
+      !>C     of the data arrays are shown below.
+      !>C
+      !>C        Column           Data array
+      !>C
+      !>C        'ORDER_ID'       ORDIDS
+      !>C        'CUSTOMER_ID'    CSTIDS
+      !>C        'LAST_NAME'      LNAMES
+      !>C        'FIRST_NAME'     FNAMES
+      !>C        'ORDER_DATE'     ETS
+      !>C        'COST'           COSTS
+      !>C
+      !>      DO I = 1, NROWS
       !>
-      !>                 ORDIDS(I) = I
-      !>                 CSTIDS(I) = I * 100
-      !>                 COSTS(I)  = I * 100.D0
+      !>         ORDIDS(I) = I
+      !>         CSTIDS(I) = I * 100
+      !>         COSTS(I)  = I * 100.D0
       !>
-      !>                 CALL REPMI ( 'Order # Customer first name',
-      !>             .                '#', I, FNAMES(I)             )
-      !>                 CALL REPMI ( 'Order # Customer last name',
-      !>             .                '#', I, LNAMES(I)             )
-      !>                 CALL REPMI ( '1998 Mar #', '#', I, ODATE   )
+      !>         CALL REPMI ( 'Order # Customer first name',
+      !>     .                '#', I, FNAMES(I)             )
+      !>         CALL REPMI ( 'Order # Customer last name',
+      !>     .                '#', I, LNAMES(I)             )
+      !>         CALL REPMI ( '1998 Mar #', '#', I, ODATE   )
       !>
-      !>                 CALL UTC2ET ( ODATE,  ETS(I) )
+      !>         CALL UTC2ET ( ODATE,  ETS(I) )
       !>
-      !>                 NLFLGS(I) = .FALSE.
+      !>         NLFLGS(I) = .FALSE.
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              NLFLGS(2) = .TRUE.
+      !>      NLFLGS(2) = .TRUE.
       !>
-      !>        C
-      !>        C     The SIZES array shown below is ignored for scalar
-      !>        C     and fixed-size array columns, so we need not
-      !>        C     initialize it.  For variable-size arrays, the
-      !>        C     Ith element of the SIZES array must contain the size
-      !>        C     of the Ith column entry in the column being written.
-      !>        C     Normally, the SIZES array would be reset for each
-      !>        C     variable-size column.
-      !>        C
-      !>        C     The NLFLGS array indicates which entries are null.
-      !>        C     It is ignored for columns that don't allow null
-      !>        C     values.  In this case, only the COST column allows
-      !>        C     nulls.
-      !>        C
-      !>        C     Add the columns of data to the segment.  All of the
-      !>        C     data for each column is written in one shot.
-      !>        C
-      !>              CALL EKACLI ( HANDLE, SEGNO,  'ORDER_ID',
-      !>             .              ORDIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>C
+      !>C     The SIZES array shown below is ignored for scalar
+      !>C     and fixed-size array columns, so we need not
+      !>C     initialize it.  For variable-size arrays, the
+      !>C     Ith element of the SIZES array must contain the size
+      !>C     of the Ith column entry in the column being written.
+      !>C     Normally, the SIZES array would be reset for each
+      !>C     variable-size column.
+      !>C
+      !>C     The NLFLGS array indicates which entries are null.
+      !>C     It is ignored for columns that don't allow null
+      !>C     values.  In this case, only the COST column allows
+      !>C     nulls.
+      !>C
+      !>C     Add the columns of data to the segment.  All of the
+      !>C     data for each column is written in one shot.
+      !>C
+      !>      CALL EKACLI ( HANDLE, SEGNO,  'ORDER_ID',
+      !>     .              ORDIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLI ( HANDLE, SEGNO,  'CUSTOMER_ID',
-      !>             .              CSTIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLI ( HANDLE, SEGNO,  'CUSTOMER_ID',
+      !>     .              CSTIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLC ( HANDLE, SEGNO,  'LAST_NAME',
-      !>             .              LNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLC ( HANDLE, SEGNO,  'LAST_NAME',
+      !>     .              LNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLC ( HANDLE, SEGNO,  'FIRST_NAME',
-      !>             .              FNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLC ( HANDLE, SEGNO,  'FIRST_NAME',
+      !>     .              FNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLD ( HANDLE, SEGNO,  'ORDER_DATE',
-      !>             .              ETS,    SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLD ( HANDLE, SEGNO,  'ORDER_DATE',
+      !>     .              ETS,    SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLD ( HANDLE, SEGNO,  'COST',
-      !>             .              COSTS,  SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLD ( HANDLE, SEGNO,  'COST',
+      !>     .              COSTS,  SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>        C
-      !>        C     Complete the segment.  The RCPTRS array is that
-      !>        C     returned by EKIFLD.
-      !>        C
-      !>              CALL EKFFLD ( HANDLE, SEGNO, RCPTRS )
+      !>C
+      !>C     Complete the segment.  The RCPTRS array is that
+      !>C     returned by EKIFLD.
+      !>C
+      !>      CALL EKFFLD ( HANDLE, SEGNO, RCPTRS )
       !>
-      !>        C
-      !>        C     At this point, the second segment could be
-      !>        C     created by an analogous process.  In fact, the
-      !>        C     second segment could be created at any time; it is
-      !>        C     not necessary to populate the first segment with
-      !>        C     data before starting the second segment.
-      !>        C
-      !>        C     The file must be closed by a call to EKCLS.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     At this point, the second segment could be
+      !>C     created by an analogous process.  In fact, the
+      !>C     second segment could be created at any time; it is
+      !>C     not necessary to populate the first segment with
+      !>C     data before starting the second segment.
+      !>C
+      !>C     The file must be closed by a call to EKCLS.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new EK file exists in the
@@ -10614,11 +10881,20 @@ contains
       !>        Balanced CHKIN/CHKOUT calls.
       !>
       !>-    SPICELIB Version 1.0.0, 25-OCT-1995 (NJB)
-      module procedure ekifld
+      module subroutine ekifld ( ctx, handle, tabnam, ncols, nrows, cnames, decls, segno, rcptrs )
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      character(*), intent(in) :: tabnam  !! Table name.
+      integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
+      integer(ip), intent(in) :: nrows  !! Number of rows in the segment.
+      character(*), intent(in) :: cnames ( * )  !! Names of columns.
+      character(*), intent(in) :: decls  ( * )  !! Declarations of columns.
+      integer(ip), intent(out) :: segno  !! Segment number.
+      integer(ip), intent(out) :: rcptrs ( * )  !! Array of record pointers.
 
       integer(ip) :: mbase
       integer(ip) :: p
@@ -10684,8 +10960,10 @@ contains
       end if
 
       return
-      end procedure ekifld
+      end subroutine ekifld
 
+      !> Read data from a character column in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is an EK file handle. The file may be open for read or
@@ -10779,158 +11057,160 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKRCEC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKRCEC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME = 'ekrcec_ex1.bdb' )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME = 'ekrcec_ex1.bdb' )
       !>
-      !>              CHARACTER*(*)         IFNAME
-      !>              PARAMETER           ( IFNAME = 'Test EK'  )
+      !>      CHARACTER*(*)         IFNAME
+      !>      PARAMETER           ( IFNAME = 'Test EK'  )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE  = 'CHR_DATA' )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE  = 'CHR_DATA' )
       !>
-      !>              INTEGER               CVLEN
-      !>              PARAMETER           ( CVLEN  = 9  )
+      !>      INTEGER               CVLEN
+      !>      PARAMETER           ( CVLEN  = 9  )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               MAXVAL
-      !>              PARAMETER           ( MAXVAL = 4  )
+      !>      INTEGER               MAXVAL
+      !>      PARAMETER           ( MAXVAL = 4  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 2  )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 2  )
       !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 6  )
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 6  )
       !>
-      !>              INTEGER               NRESVC
-      !>              PARAMETER           ( NRESVC = 0  )
+      !>      INTEGER               NRESVC
+      !>      PARAMETER           ( NRESVC = 0  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-      !>              CHARACTER*(CVLEN)     CVALS  ( MAXVAL )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+      !>      CHARACTER*(CVLEN)     CVALS  ( MAXVAL )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               NVALS
-      !>              INTEGER               RECNO
-      !>              INTEGER               SEGNO
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               NVALS
+      !>      INTEGER               RECNO
+      !>      INTEGER               SEGNO
       !>
-      !>              LOGICAL               ISNULL
+      !>      LOGICAL               ISNULL
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we won't
-      !>        C     reserve space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The constant IFNAME is the internal file name.
-      !>        C
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>C
+      !>C     Open a new EK file.  For simplicity, we won't
+      !>C     reserve space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The constant IFNAME is the internal file name.
+      !>C
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the CHR_DATA segment.  We'll index all of
-      !>        C     the columns.
-      !>        C
-      !>              CNAMES(1) =  'CHR_COL_1'
-      !>              CDECLS(1) =  'DATATYPE = CHARACTER*(*), '
-      !>             .       //    'INDEXED = TRUE, NULLS_OK = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the CHR_DATA segment.  We'll index all of
+      !>C     the columns.
+      !>C
+      !>      CNAMES(1) =  'CHR_COL_1'
+      !>      CDECLS(1) =  'DATATYPE = CHARACTER*(*), '
+      !>     .       //    'INDEXED = TRUE, NULLS_OK = TRUE'
       !>
-      !>              CNAMES(2) =  'CHR_COL_2'
-      !>              CDECLS(2) =  'DATATYPE = CHARACTER*(9), '
-      !>             .       //    'SIZE = VARIABLE, NULLS_OK = TRUE'
+      !>      CNAMES(2) =  'CHR_COL_2'
+      !>      CDECLS(2) =  'DATATYPE = CHARACTER*(9), '
+      !>     .       //    'SIZE = VARIABLE, NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
+      !>C
+      !>C     Start the segment.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
       !>
-      !>              DO I = 0, NROWS-1
+      !>      DO I = 0, NROWS-1
       !>
-      !>                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>         CALL EKAPPR ( HANDLE, SEGNO, RECNO )
       !>
-      !>                 ISNULL = ( I .EQ. 1 )
+      !>         ISNULL = ( I .EQ. 1 )
       !>
-      !>                 CALL INTSTR ( I, CVALS(1) )
-      !>                 CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
-      !>             .                 1,      CVALS, ISNULL           )
+      !>         CALL INTSTR ( I, CVALS(1) )
+      !>         CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
+      !>     .                 1,      CVALS, ISNULL           )
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL INTSTR ( 10*I,     CVALS(1) )
-      !>                 CALL INTSTR ( 10*I + 1, CVALS(2) )
-      !>                 CALL INTSTR ( 10*I + 2, CVALS(3) )
-      !>                 CALL INTSTR ( 10*I + 3, CVALS(4) )
-      !>                 CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
-      !>             .                 4,      CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL INTSTR ( 10*I,     CVALS(1) )
+      !>         CALL INTSTR ( 10*I + 1, CVALS(2) )
+      !>         CALL INTSTR ( 10*I + 2, CVALS(3) )
+      !>         CALL INTSTR ( 10*I + 3, CVALS(4) )
+      !>         CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
+      !>     .                 4,      CVALS, ISNULL           )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     End the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     End the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the created file. Show the values added.
-      !>        C
-      !>              CALL EKOPR ( EKNAME, HANDLE )
+      !>C
+      !>C     Open the created file. Show the values added.
+      !>C
+      !>      CALL EKOPR ( EKNAME, HANDLE )
       !>
-      !>              DO I = 1, NROWS
+      !>      DO I = 1, NROWS
       !>
-      !>                 CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(1),
-      !>             .                 NVALS,  CVALS, ISNULL           )
+      !>         CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(1),
+      !>     .                 NVALS,  CVALS, ISNULL           )
       !>
-      !>                 IF ( .NOT. ISNULL ) THEN
+      !>         IF ( .NOT. ISNULL ) THEN
       !>
-      !>                    WRITE(*,*) 'Data from column: ', CNAMES(1)
-      !>                    WRITE(*,*) '   record number: ', I
-      !>                    WRITE(*,*) '   values       : ',
-      !>             .                                ( CVALS(J), J=1,NVALS )
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Data from column: ', CNAMES(1)
+      !>            WRITE(*,*) '   record number: ', I
+      !>            WRITE(*,*) '   values       : ',
+      !>     .                                ( CVALS(J), J=1,NVALS )
+      !>            WRITE(*,*) ' '
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'Record ', I, 'flag is NULL.'
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Record ', I, 'flag is NULL.'
+      !>            WRITE(*,*) ' '
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(2),
-      !>             .                 NVALS,  CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(2),
+      !>     .                 NVALS,  CVALS, ISNULL           )
       !>
-      !>                 IF ( .NOT. ISNULL ) THEN
+      !>         IF ( .NOT. ISNULL ) THEN
       !>
-      !>                    WRITE(*,*) 'Data from column: ', CNAMES(2)
-      !>                    WRITE(*,*) '   record number: ', I
-      !>                    WRITE(*,*) '   values       : ',
-      !>             .                                ( CVALS(J), J=1,NVALS )
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Data from column: ', CNAMES(2)
+      !>            WRITE(*,*) '   record number: ', I
+      !>            WRITE(*,*) '   values       : ',
+      !>     .                                ( CVALS(J), J=1,NVALS )
+      !>            WRITE(*,*) ' '
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -11045,12 +11325,20 @@ contains
       !>
       !>        now check for string truncation on output and signal errors
       !>        if truncation occurs.
-      module procedure ekrcec
+      module subroutine ekrcec ( ctx, handle, segno, recno, column, nvals, cvals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record from which data is to be read.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(out) :: nvals  !! Number of values in column entry.
+      character(*), intent(out) :: cvals  ( * )  !! Character values in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -11145,8 +11433,11 @@ contains
       end if
 
       return
-      end procedure ekrcec
+      end subroutine ekrcec
 
+      !> Read data from a double precision column in a specified EK
+      !> record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is an EK file handle. The file may be open for read or
@@ -11277,12 +11568,20 @@ contains
       !>        numbers; no indirection is used.
       !>
       !>        Miscellaneous header changes were made as well.
-      module procedure ekrced
+      module subroutine ekrced ( ctx, handle, segno, recno, column, nvals, dvals, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record from which data is to be read.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(out) :: nvals  !! Number of values in column entry.
+      real(wp), intent(out) :: dvals  ( * )  !! D.p. values in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -11374,8 +11673,10 @@ contains
       end if
 
       return
-      end procedure ekrced
+      end subroutine ekrced
 
+      !> Read data from an integer column in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is an EK file handle. The file may be open for read or
@@ -11506,12 +11807,20 @@ contains
       !>        numbers; no indirection is used.
       !>
       !>        Miscellaneous header changes were made as well.
-      module procedure ekrcei
+      module subroutine ekrcei ( ctx, handle, segno, recno, column, nvals, ivals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record from which data is to be read.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(out) :: nvals  !! Number of values in column entry.
+      integer(ip), intent(out) :: ivals  ( * )  !! Integer values in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -11603,13 +11912,21 @@ contains
       end if
 
       return
-      end procedure ekrcei
+      end subroutine ekrcei
 
       !> All the values of a double precision or time column entry of an EK
-      !> record (PEPPER).
-      module procedure ek_values_real
+      !> record (PEPPER; [[ekrced]] with the size of the entry). Bound as the
+      !> generic `ek_values`.
+      module subroutine ek_values_real ( ctx, handle, segno, recno, column, values, isnull )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of the EK file
+      integer(ip), intent(in) :: segno  !! the segment number
+      integer(ip), intent(in) :: recno  !! the record number
+      character(*), intent(in) :: column  !! the column name
+      real(wp), allocatable, intent(out) :: values(:)  !! the values (size 0 if null, or after an error)
+      logical, intent(out) :: isnull  !! the entry is null
       integer(ip) :: n
       integer(ip) :: nvals
       integer(ip) :: seg
@@ -11628,12 +11945,21 @@ contains
       else
          values = values(1:nvals)
       end if
-      end procedure ek_values_real
+      end subroutine ek_values_real
 
-      !> All the values of an integer column entry of an EK record (PEPPER).
-      module procedure ek_values_int
+      !> All the values of an integer column entry of an EK record (PEPPER;
+      !> [[ekrcei]] with the size of the entry). Bound as the generic
+      !> `ek_values`.
+      module subroutine ek_values_int ( ctx, handle, segno, recno, column, values, isnull )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of the EK file
+      integer(ip), intent(in) :: segno  !! the segment number
+      integer(ip), intent(in) :: recno  !! the record number
+      character(*), intent(in) :: column  !! the column name
+      integer(ip), allocatable, intent(out) :: values(:)  !! the values (size 0 if null, or after an error)
+      logical, intent(out) :: isnull  !! the entry is null
       integer(ip) :: n
       integer(ip) :: nvals
       integer(ip) :: seg
@@ -11652,16 +11978,25 @@ contains
       else
          values = values(1:nvals)
       end if
-      end procedure ek_values_int
+      end subroutine ek_values_int
 
-      !> All the values of a character column entry of an EK record, each
-      !> of its full length (PEPPER).
-      module procedure ek_values_str
+      !> All the values of a character column entry of an EK record, each of
+      !> its full length (PEPPER; [[ekrcec]] with the size of the entry).
+      !> Bound as the generic `ek_values`. Values of fixed-length columns
+      !> are returned without their trailing blanks.
+      module subroutine ek_values_str ( ctx, handle, segno, recno, column, values, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of the EK file
+      integer(ip), intent(in) :: segno  !! the segment number
+      integer(ip), intent(in) :: recno  !! the record number
+      character(*), intent(in) :: column  !! the column name
+      type(string), allocatable, intent(out) :: values(:)  !! the values (size 0 if null, or after an error)
+      logical, intent(out) :: isnull  !! the entry is null
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: segdsc ( sdscsz )
       integer(ip) :: class
@@ -11719,7 +12054,7 @@ contains
             end do
          end block
       end if
-      end procedure ek_values_str
+      end subroutine ek_values_str
 
       !> The number of values of a column entry of an EK record: 1 for the
       !> scalar column classes, the size of the entry for the array classes
@@ -11749,6 +12084,8 @@ contains
       end if
       end subroutine ek_entry_size
 
+      !> Add an entire class 7 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -11852,11 +12189,7 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 13-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekac07
+      module subroutine zzekac07 ( ctx, handle, segdsc, coldsc, ivals, nlflgs, wkindx )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekclas07
@@ -11866,6 +12199,16 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: class
@@ -12031,8 +12374,10 @@ contains
       end if
 
       return
-      end procedure zzekac07
+      end subroutine zzekac07
 
+      !> Add an entire class 8 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -12136,11 +12481,7 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 13-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekac08
+      module subroutine zzekac08 ( ctx, handle, segdsc, coldsc, dvals, nlflgs, wkindx )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekclas08
@@ -12150,6 +12491,16 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      real(wp), intent(in) :: dvals  ( * )  !! D.p. values to add to column.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       real(wp) :: page   ( pgsizd )
@@ -12316,8 +12667,10 @@ contains
       end if
 
       return
-      end procedure zzekac08
+      end subroutine zzekac08
 
+      !> Add an entire class 9 column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         the handle of an EK file that is open for writing.
@@ -12421,11 +12774,7 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekac09
+      module subroutine zzekac09 ( ctx, handle, segdsc, coldsc, cvals, nlflgs, wkindx )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekclas09
@@ -12435,6 +12784,16 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
+!
+!     Local variables
+!
       character(cnamsz) :: column
       character(pgsizc) :: page
 
@@ -12638,8 +12997,11 @@ contains
       end if
 
       return
-      end procedure zzekac09
+      end subroutine zzekac09
 
+      !> Read scalar data from a character column in a specified EK
+      !> record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -12746,16 +13108,25 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 06-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekrsc
+      module subroutine zzekrsc ( ctx, handle, segdsc, coldsc, recptr, eltidx, cvlen, cval, isnull, found )
       use pepper_kinds, only: ip
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Pointer to record from which data is to be read.
+      integer(ip), intent(in) :: eltidx  !! Index of column entry element to be read.
+      integer(ip), intent(out) :: cvlen  !! Length of stored string.
+      character(*), intent(out) :: cval  !! Character value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      logical, intent(out) :: found  !! Flag indicting whether entry element was found.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: class
@@ -12849,8 +13220,11 @@ contains
       end if
 
       return
-      end procedure zzekrsc
+      end subroutine zzekrsc
 
+      !> Read scalar data from a double precision column in a specified EK
+      !> record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -12950,13 +13324,22 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 06-NOV-1995 (NJB)
-      module procedure zzekrsd
+      module subroutine zzekrsd ( ctx, handle, segdsc, coldsc, recptr, eltidx, dval, isnull, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Pointer to record from which data is to be read.
+      integer(ip), intent(in) :: eltidx  !! Index of column entry element to be read.
+      real(wp), intent(out) :: dval  !! D.p. value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      logical, intent(out) :: found  !! Flag indicting whether entry element was found.
       real(wp) :: dval_1(1)  !! one-element copy of dval (array argument)
 
       character(cnamsz) :: column
@@ -13045,8 +13428,10 @@ contains
       end if
 
       return
-      end procedure zzekrsd
+      end subroutine zzekrsd
 
+      !> Read scalar data from an integer column in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.
@@ -13146,13 +13531,22 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 06-NOV-1995 (NJB)
-      module procedure zzekrsi
+      module subroutine zzekrsi ( ctx, handle, segdsc, coldsc, recptr, eltidx, ival, isnull, found )
       use pepper_kinds, only: ip
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Pointer to record from which data is to be read.
+      integer(ip), intent(in) :: eltidx  !! Index of column entry element to be read.
+      integer(ip), intent(out) :: ival  !! Integer value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      logical, intent(out) :: found  !! Flag indicting whether entry element was found.
       integer(ip) :: ival_1(1)  !! one-element copy of ival (array argument)
 
       character(cnamsz) :: column
@@ -13246,8 +13640,10 @@ contains
       end if
 
       return
-      end procedure zzekrsi
+      end subroutine zzekrsi
 
+      !> Update a specified class 4 column entry in an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -13324,15 +13720,22 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzekue04
+      module subroutine zzekue04 ( ctx, handle, segdsc, coldsc, recptr, nvals, ivals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: nvals  !! Number of values.
+      integer(ip), intent(in) :: ivals ( * )  !! Integer values.
+      logical, intent(in) :: isnull  !! Null flag.
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -13349,8 +13752,10 @@ contains
       call zzekad04 ( ctx, handle, segdsc, coldsc, recptr, nvals, ivals, isnull )
 
       return
-      end procedure zzekue04
+      end subroutine zzekue04
 
+      !> Update a specified class 5 column entry in an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -13427,15 +13832,22 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzekue05
+      module subroutine zzekue05 ( ctx, handle, segdsc, coldsc, recptr, nvals, dvals, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: nvals  !! Number of values.
+      real(wp), intent(in) :: dvals ( * )  !! Double precision values.
+      logical, intent(in) :: isnull  !! Null flag.
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -13452,8 +13864,10 @@ contains
       call zzekad05 ( ctx, handle, segdsc, coldsc, recptr, nvals, dvals, isnull )
 
       return
-      end procedure zzekue05
+      end subroutine zzekue05
 
+      !> Update a specified class 6 column entry in an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -13530,11 +13944,7 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzekue06
+      module subroutine zzekue06 ( ctx, handle, segdsc, coldsc, recptr, nvals, cvals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -13542,6 +13952,17 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: nvals  !! Number of values.
+      character(*), intent(in) :: cvals ( * )  !! Character string values.
+      logical, intent(in) :: isnull  !! Null flag.
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -13559,8 +13980,10 @@ contains
                        recptr,  nvals,   cvals,  isnull )
 
       return
-      end procedure zzekue06
+      end subroutine zzekue06
 
+      !> Add an entire character column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file that is open for writing.
@@ -13718,208 +14141,210 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKACLC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKACLC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         LSK
-      !>              PARAMETER           ( LSK    = 'naif0012.tls' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         LSK
+      !>      PARAMETER           ( LSK    = 'naif0012.tls' )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE  = 'DATAORDERS'   )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE  = 'DATAORDERS'   )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               FNMLEN
-      !>              PARAMETER           ( FNMLEN = 50  )
+      !>      INTEGER               FNMLEN
+      !>      PARAMETER           ( FNMLEN = 50  )
       !>
-      !>              INTEGER               LNMLEN
-      !>              PARAMETER           ( LNMLEN = 50  )
+      !>      INTEGER               LNMLEN
+      !>      PARAMETER           ( LNMLEN = 50  )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 6   )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 6   )
       !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 9   )
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 9   )
       !>
-      !>              INTEGER               UTCLEN
-      !>              PARAMETER           ( UTCLEN = 30  )
+      !>      INTEGER               UTCLEN
+      !>      PARAMETER           ( UTCLEN = 30  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
-      !>              CHARACTER*(FNMLEN)    FNAMES ( NROWS )
-      !>              CHARACTER*(LNMLEN)    LNAMES ( NROWS )
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(UTCLEN)    ODATE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
+      !>      CHARACTER*(FNMLEN)    FNAMES ( NROWS )
+      !>      CHARACTER*(LNMLEN)    LNAMES ( NROWS )
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(UTCLEN)    ODATE
       !>
-      !>              DOUBLE PRECISION      COSTS  ( NROWS )
-      !>              DOUBLE PRECISION      ETS    ( NROWS )
+      !>      DOUBLE PRECISION      COSTS  ( NROWS )
+      !>      DOUBLE PRECISION      ETS    ( NROWS )
       !>
-      !>              INTEGER               CSTIDS ( NROWS )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               NRESVC
-      !>              INTEGER               ORDIDS ( NROWS )
-      !>              INTEGER               RCPTRS ( NROWS )
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SIZES  ( NROWS )
-      !>              INTEGER               WKINDX ( NROWS )
+      !>      INTEGER               CSTIDS ( NROWS )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               NRESVC
+      !>      INTEGER               ORDIDS ( NROWS )
+      !>      INTEGER               RCPTRS ( NROWS )
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SIZES  ( NROWS )
+      !>      INTEGER               WKINDX ( NROWS )
       !>
-      !>              LOGICAL               NLFLGS ( NROWS )
+      !>      LOGICAL               NLFLGS ( NROWS )
       !>
-      !>        C
-      !>        C     Load a leapseconds kernel for UTC/ET conversion.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load a leapseconds kernel for UTC/ET conversion.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 20-SEP-1995'
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 20-SEP-1995'
       !>
-      !>              CALL EKOPN ( 'ekaclc_ex1.bes', IFNAME, NRESVC, HANDLE )
+      !>      CALL EKOPN ( 'ekaclc_ex1.bes', IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAORDERS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.  Only the COST column may take
-      !>        C     null values.
-      !>        C
-      !>              CNAMES(1) =  'ORDER_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAORDERS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.  Only the COST column may take
+      !>C     null values.
+      !>C
+      !>      CNAMES(1) =  'ORDER_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'CUSTOMER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'CUSTOMER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'LAST_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'LAST_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'FIRST_NAME'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'FIRST_NAME'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'ORDER_DATE'
-      !>              CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
+      !>      CNAMES(5) =  'ORDER_DATE'
+      !>      CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
       !>
-      !>              CNAMES(6) =  'COST'
-      !>              CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE,'             //
-      !>             .             'NULLS_OK = TRUE'
+      !>      CNAMES(6) =  'COST'
+      !>      CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE,'             //
+      !>     .             'NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment.  We presume the number of  rows
-      !>        C     of data is known in advance.
-      !>        C
-      !>              CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
-      !>             .              CNAMES,  CDECLS, SEGNO, RCPTRS )
+      !>C
+      !>C     Start the segment.  We presume the number of  rows
+      !>C     of data is known in advance.
+      !>C
+      !>      CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
+      !>     .              CNAMES,  CDECLS, SEGNO, RCPTRS )
       !>
-      !>        C
-      !>        C     At this point, arrays containing data for the
-      !>        C     segment's columns may be filled in.  The names
-      !>        C     of the data arrays are shown below.
-      !>        C
-      !>        C        Column           Data array
-      !>        C
-      !>        C        'ORDER_ID'       ORDIDS
-      !>        C        'CUSTOMER_ID'    CSTIDS
-      !>        C        'LAST_NAME'      LNAMES
-      !>        C        'FIRST_NAME'     FNAMES
-      !>        C        'ORDER_DATE'     ETS
-      !>        C        'COST'           COSTS
-      !>        C
-      !>              DO I = 1, NROWS
+      !>C
+      !>C     At this point, arrays containing data for the
+      !>C     segment's columns may be filled in.  The names
+      !>C     of the data arrays are shown below.
+      !>C
+      !>C        Column           Data array
+      !>C
+      !>C        'ORDER_ID'       ORDIDS
+      !>C        'CUSTOMER_ID'    CSTIDS
+      !>C        'LAST_NAME'      LNAMES
+      !>C        'FIRST_NAME'     FNAMES
+      !>C        'ORDER_DATE'     ETS
+      !>C        'COST'           COSTS
+      !>C
+      !>      DO I = 1, NROWS
       !>
-      !>                 ORDIDS(I) = I
-      !>                 CSTIDS(I) = I * 100
-      !>                 COSTS(I)  = I * 100.D0
+      !>         ORDIDS(I) = I
+      !>         CSTIDS(I) = I * 100
+      !>         COSTS(I)  = I * 100.D0
       !>
-      !>                 CALL REPMI ( 'Order # Customer first name',
-      !>             .                '#', I, FNAMES(I)             )
-      !>                 CALL REPMI ( 'Order # Customer last name',
-      !>             .                '#', I, LNAMES(I)             )
-      !>                 CALL REPMI ( '1998 Mar #', '#', I, ODATE   )
+      !>         CALL REPMI ( 'Order # Customer first name',
+      !>     .                '#', I, FNAMES(I)             )
+      !>         CALL REPMI ( 'Order # Customer last name',
+      !>     .                '#', I, LNAMES(I)             )
+      !>         CALL REPMI ( '1998 Mar #', '#', I, ODATE   )
       !>
-      !>                 CALL UTC2ET ( ODATE,  ETS(I) )
+      !>         CALL UTC2ET ( ODATE,  ETS(I) )
       !>
-      !>                 NLFLGS(I) = .FALSE.
+      !>         NLFLGS(I) = .FALSE.
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              NLFLGS(2) = .TRUE.
+      !>      NLFLGS(2) = .TRUE.
       !>
-      !>        C
-      !>        C     The SIZES array shown below is ignored for scalar
-      !>        C     and fixed-size array columns, so we need not
-      !>        C     initialize it.  For variable-size arrays, the
-      !>        C     Ith element of the SIZES array must contain the size
-      !>        C     of the Ith column entry in the column being written.
-      !>        C     Normally, the SIZES array would be reset for each
-      !>        C     variable-size column.
-      !>        C
-      !>        C     The NLFLGS array indicates which entries are null.
-      !>        C     It is ignored for columns that don't allow null
-      !>        C     values.  In this case, only the COST column allows
-      !>        C     nulls.
-      !>        C
-      !>        C     Add the columns of data to the segment.  All of the
-      !>        C     data for each column is written in one shot.
-      !>        C
-      !>              CALL EKACLI ( HANDLE, SEGNO,  'ORDER_ID',
-      !>             .              ORDIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>C
+      !>C     The SIZES array shown below is ignored for scalar
+      !>C     and fixed-size array columns, so we need not
+      !>C     initialize it.  For variable-size arrays, the
+      !>C     Ith element of the SIZES array must contain the size
+      !>C     of the Ith column entry in the column being written.
+      !>C     Normally, the SIZES array would be reset for each
+      !>C     variable-size column.
+      !>C
+      !>C     The NLFLGS array indicates which entries are null.
+      !>C     It is ignored for columns that don't allow null
+      !>C     values.  In this case, only the COST column allows
+      !>C     nulls.
+      !>C
+      !>C     Add the columns of data to the segment.  All of the
+      !>C     data for each column is written in one shot.
+      !>C
+      !>      CALL EKACLI ( HANDLE, SEGNO,  'ORDER_ID',
+      !>     .              ORDIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLI ( HANDLE, SEGNO,  'CUSTOMER_ID',
-      !>             .              CSTIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLI ( HANDLE, SEGNO,  'CUSTOMER_ID',
+      !>     .              CSTIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLC ( HANDLE, SEGNO,  'LAST_NAME',
-      !>             .              LNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLC ( HANDLE, SEGNO,  'LAST_NAME',
+      !>     .              LNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLC ( HANDLE, SEGNO,  'FIRST_NAME',
-      !>             .              FNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLC ( HANDLE, SEGNO,  'FIRST_NAME',
+      !>     .              FNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLD ( HANDLE, SEGNO,  'ORDER_DATE',
-      !>             .              ETS,    SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLD ( HANDLE, SEGNO,  'ORDER_DATE',
+      !>     .              ETS,    SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLD ( HANDLE, SEGNO,  'COST',
-      !>             .              COSTS,  SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLD ( HANDLE, SEGNO,  'COST',
+      !>     .              COSTS,  SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>        C
-      !>        C     Complete the segment.  The RCPTRS array is that
-      !>        C     returned by EKIFLD.
-      !>        C
-      !>              CALL EKFFLD ( HANDLE, SEGNO, RCPTRS )
+      !>C
+      !>C     Complete the segment.  The RCPTRS array is that
+      !>C     returned by EKIFLD.
+      !>C
+      !>      CALL EKFFLD ( HANDLE, SEGNO, RCPTRS )
       !>
-      !>        C
-      !>        C     At this point, the second segment could be
-      !>        C     created by an analogous process.  In fact, the
-      !>        C     second segment could be created at any time; it is
-      !>        C     not necessary to populate the first segment with
-      !>        C     data before starting the second segment.
-      !>        C
-      !>        C     The file must be closed by a call to EKCLS.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     At this point, the second segment could be
+      !>C     created by an analogous process.  In fact, the
+      !>C     second segment could be created at any time; it is
+      !>C     not necessary to populate the first segment with
+      !>C     data before starting the second segment.
+      !>C
+      !>C     The file must be closed by a call to EKCLS.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new EK file exists in the
@@ -13959,12 +14384,21 @@ contains
       !>        were replaced with "fast write."
       !>
       !>     Beta Version 1.0.0, 08-NOV-1995 (NJB)
-      module procedure ekaclc
+      module subroutine ekaclc ( ctx, handle, segno, column, cvals, entszs, nlflgs, rcptrs, wkindx )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(in) :: segno  !! Number of segment to add column to.
+      character(*), intent(in) :: column  !! Column name.
+      character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+      integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(in) :: rcptrs ( * )  !! Record pointers for segment.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
 
       integer(ip) :: class
       integer(ip) :: coldsc ( cdscsz )
@@ -14038,8 +14472,10 @@ contains
       end if
 
       return
-      end procedure ekaclc
+      end subroutine ekaclc
 
+      !> Add an entire double precision column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file that is open for writing.
@@ -14197,208 +14633,210 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKACLD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKACLD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         LSK
-      !>              PARAMETER           ( LSK    = 'naif0012.tls' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         LSK
+      !>      PARAMETER           ( LSK    = 'naif0012.tls' )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE  = 'DATAORDERS'   )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE  = 'DATAORDERS'   )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               FNMLEN
-      !>              PARAMETER           ( FNMLEN = 50  )
+      !>      INTEGER               FNMLEN
+      !>      PARAMETER           ( FNMLEN = 50  )
       !>
-      !>              INTEGER               LNMLEN
-      !>              PARAMETER           ( LNMLEN = 50  )
+      !>      INTEGER               LNMLEN
+      !>      PARAMETER           ( LNMLEN = 50  )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 6   )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 6   )
       !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 9   )
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 9   )
       !>
-      !>              INTEGER               UTCLEN
-      !>              PARAMETER           ( UTCLEN = 30  )
+      !>      INTEGER               UTCLEN
+      !>      PARAMETER           ( UTCLEN = 30  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
-      !>              CHARACTER*(FNMLEN)    FNAMES ( NROWS )
-      !>              CHARACTER*(LNMLEN)    LNAMES ( NROWS )
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(UTCLEN)    ODATE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
+      !>      CHARACTER*(FNMLEN)    FNAMES ( NROWS )
+      !>      CHARACTER*(LNMLEN)    LNAMES ( NROWS )
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(UTCLEN)    ODATE
       !>
-      !>              DOUBLE PRECISION      COSTS  ( NROWS )
-      !>              DOUBLE PRECISION      ETS    ( NROWS )
+      !>      DOUBLE PRECISION      COSTS  ( NROWS )
+      !>      DOUBLE PRECISION      ETS    ( NROWS )
       !>
-      !>              INTEGER               CSTIDS ( NROWS )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               NRESVC
-      !>              INTEGER               ORDIDS ( NROWS )
-      !>              INTEGER               RCPTRS ( NROWS )
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SIZES  ( NROWS )
-      !>              INTEGER               WKINDX ( NROWS )
+      !>      INTEGER               CSTIDS ( NROWS )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               NRESVC
+      !>      INTEGER               ORDIDS ( NROWS )
+      !>      INTEGER               RCPTRS ( NROWS )
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SIZES  ( NROWS )
+      !>      INTEGER               WKINDX ( NROWS )
       !>
-      !>              LOGICAL               NLFLGS ( NROWS )
+      !>      LOGICAL               NLFLGS ( NROWS )
       !>
-      !>        C
-      !>        C     Load a leapseconds kernel for UTC/ET conversion.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load a leapseconds kernel for UTC/ET conversion.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 20-SEP-1995'
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 20-SEP-1995'
       !>
-      !>              CALL EKOPN ( 'ekacld_ex1.bes', IFNAME, NRESVC, HANDLE )
+      !>      CALL EKOPN ( 'ekacld_ex1.bes', IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAORDERS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.  Only the COST column may take
-      !>        C     null values.
-      !>        C
-      !>              CNAMES(1) =  'ORDER_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAORDERS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.  Only the COST column may take
+      !>C     null values.
+      !>C
+      !>      CNAMES(1) =  'ORDER_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'CUSTOMER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'CUSTOMER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'LAST_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'LAST_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'FIRST_NAME'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'FIRST_NAME'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'ORDER_DATE'
-      !>              CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
+      !>      CNAMES(5) =  'ORDER_DATE'
+      !>      CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
       !>
-      !>              CNAMES(6) =  'COST'
-      !>              CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE,'             //
-      !>             .             'NULLS_OK = TRUE'
+      !>      CNAMES(6) =  'COST'
+      !>      CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE,'             //
+      !>     .             'NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment.  We presume the number of  rows
-      !>        C     of data is known in advance.
-      !>        C
-      !>              CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
-      !>             .              CNAMES,  CDECLS, SEGNO, RCPTRS )
+      !>C
+      !>C     Start the segment.  We presume the number of  rows
+      !>C     of data is known in advance.
+      !>C
+      !>      CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
+      !>     .              CNAMES,  CDECLS, SEGNO, RCPTRS )
       !>
-      !>        C
-      !>        C     At this point, arrays containing data for the
-      !>        C     segment's columns may be filled in.  The names
-      !>        C     of the data arrays are shown below.
-      !>        C
-      !>        C        Column           Data array
-      !>        C
-      !>        C        'ORDER_ID'       ORDIDS
-      !>        C        'CUSTOMER_ID'    CSTIDS
-      !>        C        'LAST_NAME'      LNAMES
-      !>        C        'FIRST_NAME'     FNAMES
-      !>        C        'ORDER_DATE'     ETS
-      !>        C        'COST'           COSTS
-      !>        C
-      !>              DO I = 1, NROWS
+      !>C
+      !>C     At this point, arrays containing data for the
+      !>C     segment's columns may be filled in.  The names
+      !>C     of the data arrays are shown below.
+      !>C
+      !>C        Column           Data array
+      !>C
+      !>C        'ORDER_ID'       ORDIDS
+      !>C        'CUSTOMER_ID'    CSTIDS
+      !>C        'LAST_NAME'      LNAMES
+      !>C        'FIRST_NAME'     FNAMES
+      !>C        'ORDER_DATE'     ETS
+      !>C        'COST'           COSTS
+      !>C
+      !>      DO I = 1, NROWS
       !>
-      !>                 ORDIDS(I) = I
-      !>                 CSTIDS(I) = I * 100
-      !>                 COSTS(I)  = I * 100.D0
+      !>         ORDIDS(I) = I
+      !>         CSTIDS(I) = I * 100
+      !>         COSTS(I)  = I * 100.D0
       !>
-      !>                 CALL REPMI ( 'Order # Customer first name',
-      !>             .                '#', I, FNAMES(I)             )
-      !>                 CALL REPMI ( 'Order # Customer last name',
-      !>             .                '#', I, LNAMES(I)             )
-      !>                 CALL REPMI ( '1998 Mar #', '#', I, ODATE   )
+      !>         CALL REPMI ( 'Order # Customer first name',
+      !>     .                '#', I, FNAMES(I)             )
+      !>         CALL REPMI ( 'Order # Customer last name',
+      !>     .                '#', I, LNAMES(I)             )
+      !>         CALL REPMI ( '1998 Mar #', '#', I, ODATE   )
       !>
-      !>                 CALL UTC2ET ( ODATE,  ETS(I) )
+      !>         CALL UTC2ET ( ODATE,  ETS(I) )
       !>
-      !>                 NLFLGS(I) = .FALSE.
+      !>         NLFLGS(I) = .FALSE.
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              NLFLGS(2) = .TRUE.
+      !>      NLFLGS(2) = .TRUE.
       !>
-      !>        C
-      !>        C     The SIZES array shown below is ignored for scalar
-      !>        C     and fixed-size array columns, so we need not
-      !>        C     initialize it.  For variable-size arrays, the
-      !>        C     Ith element of the SIZES array must contain the size
-      !>        C     of the Ith column entry in the column being written.
-      !>        C     Normally, the SIZES array would be reset for each
-      !>        C     variable-size column.
-      !>        C
-      !>        C     The NLFLGS array indicates which entries are null.
-      !>        C     It is ignored for columns that don't allow null
-      !>        C     values.  In this case, only the COST column allows
-      !>        C     nulls.
-      !>        C
-      !>        C     Add the columns of data to the segment.  All of the
-      !>        C     data for each column is written in one shot.
-      !>        C
-      !>              CALL EKACLI ( HANDLE, SEGNO,  'ORDER_ID',
-      !>             .              ORDIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>C
+      !>C     The SIZES array shown below is ignored for scalar
+      !>C     and fixed-size array columns, so we need not
+      !>C     initialize it.  For variable-size arrays, the
+      !>C     Ith element of the SIZES array must contain the size
+      !>C     of the Ith column entry in the column being written.
+      !>C     Normally, the SIZES array would be reset for each
+      !>C     variable-size column.
+      !>C
+      !>C     The NLFLGS array indicates which entries are null.
+      !>C     It is ignored for columns that don't allow null
+      !>C     values.  In this case, only the COST column allows
+      !>C     nulls.
+      !>C
+      !>C     Add the columns of data to the segment.  All of the
+      !>C     data for each column is written in one shot.
+      !>C
+      !>      CALL EKACLI ( HANDLE, SEGNO,  'ORDER_ID',
+      !>     .              ORDIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLI ( HANDLE, SEGNO,  'CUSTOMER_ID',
-      !>             .              CSTIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLI ( HANDLE, SEGNO,  'CUSTOMER_ID',
+      !>     .              CSTIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLC ( HANDLE, SEGNO,  'LAST_NAME',
-      !>             .              LNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLC ( HANDLE, SEGNO,  'LAST_NAME',
+      !>     .              LNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLC ( HANDLE, SEGNO,  'FIRST_NAME',
-      !>             .              FNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLC ( HANDLE, SEGNO,  'FIRST_NAME',
+      !>     .              FNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLD ( HANDLE, SEGNO,  'ORDER_DATE',
-      !>             .              ETS,    SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLD ( HANDLE, SEGNO,  'ORDER_DATE',
+      !>     .              ETS,    SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLD ( HANDLE, SEGNO,  'COST',
-      !>             .              COSTS,  SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLD ( HANDLE, SEGNO,  'COST',
+      !>     .              COSTS,  SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>        C
-      !>        C     Complete the segment.  The RCPTRS array is that
-      !>        C     returned by EKIFLD.
-      !>        C
-      !>              CALL EKFFLD ( HANDLE, SEGNO, RCPTRS )
+      !>C
+      !>C     Complete the segment.  The RCPTRS array is that
+      !>C     returned by EKIFLD.
+      !>C
+      !>      CALL EKFFLD ( HANDLE, SEGNO, RCPTRS )
       !>
-      !>        C
-      !>        C     At this point, the second segment could be
-      !>        C     created by an analogous process.  In fact, the
-      !>        C     second segment could be created at any time; it is
-      !>        C     not necessary to populate the first segment with
-      !>        C     data before starting the second segment.
-      !>        C
-      !>        C     The file must be closed by a call to EKCLS.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     At this point, the second segment could be
+      !>C     created by an analogous process.  In fact, the
+      !>C     second segment could be created at any time; it is
+      !>C     not necessary to populate the first segment with
+      !>C     data before starting the second segment.
+      !>C
+      !>C     The file must be closed by a call to EKCLS.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new EK file exists in the
@@ -14438,12 +14876,21 @@ contains
       !>        were replaced with "fast write."
       !>
       !>     Beta Version 1.0.0, 08-NOV-1995 (NJB)
-      module procedure ekacld
+      module subroutine ekacld ( ctx, handle, segno, column, dvals, entszs, nlflgs, rcptrs, wkindx )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(in) :: segno  !! Number of segment to add column to.
+      character(*), intent(in) :: column  !! Column name.
+      real(wp), intent(in) :: dvals  ( * )  !! Double precision values to add to column.
+      integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(in) :: rcptrs ( * )  !! Record pointers for segment.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
 
       integer(ip) :: class
       integer(ip) :: coldsc ( cdscsz )
@@ -14516,8 +14963,10 @@ contains
       end if
 
       return
-      end procedure ekacld
+      end subroutine ekacld
 
+      !> Add an entire integer column to an EK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file that is open for writing.
@@ -14675,208 +15124,210 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKACLI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKACLI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         LSK
-      !>              PARAMETER           ( LSK    = 'naif0012.tls' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         LSK
+      !>      PARAMETER           ( LSK    = 'naif0012.tls' )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE  = 'DATAORDERS'   )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE  = 'DATAORDERS'   )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               FNMLEN
-      !>              PARAMETER           ( FNMLEN = 50  )
+      !>      INTEGER               FNMLEN
+      !>      PARAMETER           ( FNMLEN = 50  )
       !>
-      !>              INTEGER               LNMLEN
-      !>              PARAMETER           ( LNMLEN = 50  )
+      !>      INTEGER               LNMLEN
+      !>      PARAMETER           ( LNMLEN = 50  )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 6   )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 6   )
       !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 9   )
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 9   )
       !>
-      !>              INTEGER               UTCLEN
-      !>              PARAMETER           ( UTCLEN = 30  )
+      !>      INTEGER               UTCLEN
+      !>      PARAMETER           ( UTCLEN = 30  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
-      !>              CHARACTER*(FNMLEN)    FNAMES ( NROWS )
-      !>              CHARACTER*(LNMLEN)    LNAMES ( NROWS )
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(UTCLEN)    ODATE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
+      !>      CHARACTER*(FNMLEN)    FNAMES ( NROWS )
+      !>      CHARACTER*(LNMLEN)    LNAMES ( NROWS )
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(UTCLEN)    ODATE
       !>
-      !>              DOUBLE PRECISION      COSTS  ( NROWS )
-      !>              DOUBLE PRECISION      ETS    ( NROWS )
+      !>      DOUBLE PRECISION      COSTS  ( NROWS )
+      !>      DOUBLE PRECISION      ETS    ( NROWS )
       !>
-      !>              INTEGER               CSTIDS ( NROWS )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               NRESVC
-      !>              INTEGER               ORDIDS ( NROWS )
-      !>              INTEGER               RCPTRS ( NROWS )
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SIZES  ( NROWS )
-      !>              INTEGER               WKINDX ( NROWS )
+      !>      INTEGER               CSTIDS ( NROWS )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               NRESVC
+      !>      INTEGER               ORDIDS ( NROWS )
+      !>      INTEGER               RCPTRS ( NROWS )
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SIZES  ( NROWS )
+      !>      INTEGER               WKINDX ( NROWS )
       !>
-      !>              LOGICAL               NLFLGS ( NROWS )
+      !>      LOGICAL               NLFLGS ( NROWS )
       !>
-      !>        C
-      !>        C     Load a leapseconds kernel for UTC/ET conversion.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load a leapseconds kernel for UTC/ET conversion.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 20-SEP-1995'
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 20-SEP-1995'
       !>
-      !>              CALL EKOPN ( 'ekacli_ex1.bes', IFNAME, NRESVC, HANDLE )
+      !>      CALL EKOPN ( 'ekacli_ex1.bes', IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAORDERS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.  Only the COST column may take
-      !>        C     null values.
-      !>        C
-      !>              CNAMES(1) =  'ORDER_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAORDERS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.  Only the COST column may take
+      !>C     null values.
+      !>C
+      !>      CNAMES(1) =  'ORDER_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'CUSTOMER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'CUSTOMER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'LAST_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'LAST_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'FIRST_NAME'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'FIRST_NAME'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'ORDER_DATE'
-      !>              CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
+      !>      CNAMES(5) =  'ORDER_DATE'
+      !>      CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
       !>
-      !>              CNAMES(6) =  'COST'
-      !>              CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE,'             //
-      !>             .             'NULLS_OK = TRUE'
+      !>      CNAMES(6) =  'COST'
+      !>      CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE,'             //
+      !>     .             'NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment.  We presume the number of  rows
-      !>        C     of data is known in advance.
-      !>        C
-      !>              CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
-      !>             .              CNAMES,  CDECLS, SEGNO, RCPTRS )
+      !>C
+      !>C     Start the segment.  We presume the number of  rows
+      !>C     of data is known in advance.
+      !>C
+      !>      CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
+      !>     .              CNAMES,  CDECLS, SEGNO, RCPTRS )
       !>
-      !>        C
-      !>        C     At this point, arrays containing data for the
-      !>        C     segment's columns may be filled in.  The names
-      !>        C     of the data arrays are shown below.
-      !>        C
-      !>        C        Column           Data array
-      !>        C
-      !>        C        'ORDER_ID'       ORDIDS
-      !>        C        'CUSTOMER_ID'    CSTIDS
-      !>        C        'LAST_NAME'      LNAMES
-      !>        C        'FIRST_NAME'     FNAMES
-      !>        C        'ORDER_DATE'     ETS
-      !>        C        'COST'           COSTS
-      !>        C
-      !>              DO I = 1, NROWS
+      !>C
+      !>C     At this point, arrays containing data for the
+      !>C     segment's columns may be filled in.  The names
+      !>C     of the data arrays are shown below.
+      !>C
+      !>C        Column           Data array
+      !>C
+      !>C        'ORDER_ID'       ORDIDS
+      !>C        'CUSTOMER_ID'    CSTIDS
+      !>C        'LAST_NAME'      LNAMES
+      !>C        'FIRST_NAME'     FNAMES
+      !>C        'ORDER_DATE'     ETS
+      !>C        'COST'           COSTS
+      !>C
+      !>      DO I = 1, NROWS
       !>
-      !>                 ORDIDS(I) = I
-      !>                 CSTIDS(I) = I * 100
-      !>                 COSTS(I)  = I * 100.D0
+      !>         ORDIDS(I) = I
+      !>         CSTIDS(I) = I * 100
+      !>         COSTS(I)  = I * 100.D0
       !>
-      !>                 CALL REPMI ( 'Order # Customer first name',
-      !>             .                '#', I, FNAMES(I)             )
-      !>                 CALL REPMI ( 'Order # Customer last name',
-      !>             .                '#', I, LNAMES(I)             )
-      !>                 CALL REPMI ( '1998 Mar #', '#', I, ODATE   )
+      !>         CALL REPMI ( 'Order # Customer first name',
+      !>     .                '#', I, FNAMES(I)             )
+      !>         CALL REPMI ( 'Order # Customer last name',
+      !>     .                '#', I, LNAMES(I)             )
+      !>         CALL REPMI ( '1998 Mar #', '#', I, ODATE   )
       !>
-      !>                 CALL UTC2ET ( ODATE,  ETS(I) )
+      !>         CALL UTC2ET ( ODATE,  ETS(I) )
       !>
-      !>                 NLFLGS(I) = .FALSE.
+      !>         NLFLGS(I) = .FALSE.
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              NLFLGS(2) = .TRUE.
+      !>      NLFLGS(2) = .TRUE.
       !>
-      !>        C
-      !>        C     The SIZES array shown below is ignored for scalar
-      !>        C     and fixed-size array columns, so we need not
-      !>        C     initialize it.  For variable-size arrays, the
-      !>        C     Ith element of the SIZES array must contain the size
-      !>        C     of the Ith column entry in the column being written.
-      !>        C     Normally, the SIZES array would be reset for each
-      !>        C     variable-size column.
-      !>        C
-      !>        C     The NLFLGS array indicates which entries are null.
-      !>        C     It is ignored for columns that don't allow null
-      !>        C     values.  In this case, only the COST column allows
-      !>        C     nulls.
-      !>        C
-      !>        C     Add the columns of data to the segment.  All of the
-      !>        C     data for each column is written in one shot.
-      !>        C
-      !>              CALL EKACLI ( HANDLE, SEGNO,  'ORDER_ID',
-      !>             .              ORDIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>C
+      !>C     The SIZES array shown below is ignored for scalar
+      !>C     and fixed-size array columns, so we need not
+      !>C     initialize it.  For variable-size arrays, the
+      !>C     Ith element of the SIZES array must contain the size
+      !>C     of the Ith column entry in the column being written.
+      !>C     Normally, the SIZES array would be reset for each
+      !>C     variable-size column.
+      !>C
+      !>C     The NLFLGS array indicates which entries are null.
+      !>C     It is ignored for columns that don't allow null
+      !>C     values.  In this case, only the COST column allows
+      !>C     nulls.
+      !>C
+      !>C     Add the columns of data to the segment.  All of the
+      !>C     data for each column is written in one shot.
+      !>C
+      !>      CALL EKACLI ( HANDLE, SEGNO,  'ORDER_ID',
+      !>     .              ORDIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLI ( HANDLE, SEGNO,  'CUSTOMER_ID',
-      !>             .              CSTIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLI ( HANDLE, SEGNO,  'CUSTOMER_ID',
+      !>     .              CSTIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLC ( HANDLE, SEGNO,  'LAST_NAME',
-      !>             .              LNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLC ( HANDLE, SEGNO,  'LAST_NAME',
+      !>     .              LNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLC ( HANDLE, SEGNO,  'FIRST_NAME',
-      !>             .              FNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLC ( HANDLE, SEGNO,  'FIRST_NAME',
+      !>     .              FNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLD ( HANDLE, SEGNO,  'ORDER_DATE',
-      !>             .              ETS,    SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLD ( HANDLE, SEGNO,  'ORDER_DATE',
+      !>     .              ETS,    SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLD ( HANDLE, SEGNO,  'COST',
-      !>             .              COSTS,  SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLD ( HANDLE, SEGNO,  'COST',
+      !>     .              COSTS,  SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>        C
-      !>        C     Complete the segment.  The RCPTRS array is that
-      !>        C     returned by EKIFLD.
-      !>        C
-      !>              CALL EKFFLD ( HANDLE, SEGNO, RCPTRS )
+      !>C
+      !>C     Complete the segment.  The RCPTRS array is that
+      !>C     returned by EKIFLD.
+      !>C
+      !>      CALL EKFFLD ( HANDLE, SEGNO, RCPTRS )
       !>
-      !>        C
-      !>        C     At this point, the second segment could be
-      !>        C     created by an analogous process.  In fact, the
-      !>        C     second segment could be created at any time; it is
-      !>        C     not necessary to populate the first segment with
-      !>        C     data before starting the second segment.
-      !>        C
-      !>        C     The file must be closed by a call to EKCLS.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     At this point, the second segment could be
+      !>C     created by an analogous process.  In fact, the
+      !>C     second segment could be created at any time; it is
+      !>C     not necessary to populate the first segment with
+      !>C     data before starting the second segment.
+      !>C
+      !>C     The file must be closed by a call to EKCLS.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new EK file exists in the
@@ -14915,12 +15366,21 @@ contains
       !>        were replaced with "fast write."
       !>
       !>     Beta Version 1.0.0, 08-NOV-1995 (NJB)
-      module procedure ekacli
+      module subroutine ekacli ( ctx, handle, segno, column, ivals, entszs, nlflgs, rcptrs, wkindx )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(in) :: segno  !! Number of segment to add column to.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+      integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(in) :: rcptrs ( * )  !! Record pointers for segment.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
 
       integer(ip) :: class
       integer(ip) :: coldsc ( cdscsz )
@@ -14993,8 +15453,15 @@ contains
       end if
 
       return
-      end procedure ekacli
+      end subroutine ekacli
 
+      !> Compare two column entry elements, and return the relation of the
+      !> first to the second:  LT, EQ, or GT.
+      !>
+      !> The function returns a parameter indicating the order relation
+      !> satisfied by the input arguments.  Possible values are LT, EQ,
+      !> and GT.
+      !>
       !>## Detailed Input
       !>
       !>     HANS           is an array containing file handles of two EKs
@@ -15102,17 +15569,24 @@ contains
       !>        corrected. Also updated Restrictions header section.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     Local variables
-      module procedure zzekecmp
+      module integer(ip) function zzekecmp ( ctx, hans, sgdscs, cldscs, rows, elts )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: hans   ( * )  !! EK handles.
+      integer(ip), intent(in) :: sgdscs ( sdscsz, * )  !! Segment descriptors.
+      integer(ip), intent(in) :: cldscs ( cdscsz, * )  !! Column descriptors.
+      integer(ip), intent(in) :: rows   ( * )  !! Row numbers.
+      integer(ip), intent(in) :: elts   ( * )  !! Element indices.
       character(:), allocatable :: cval1  !! the left-hand string (PEPPER: SPICELIB's CHARACTER*(MAXSTR) CVAL(2))
       character(:), allocatable :: cval2  !! the right-hand string
 
+!
+!     Local variables
+!
       real(wp) :: dval   ( 2 )
 
       integer(ip) :: cvlen  ( 2 )
@@ -15493,8 +15967,14 @@ contains
       end if
 
       return
-      end procedure zzekecmp
+      end function zzekecmp
 
+      !> Compare a specified scalar EK column entry with a scalar value.
+      !>
+      !> The function returns .TRUE. if and only if the specified column
+      !> entry and input value of the corresponding data type satisfy the
+      !> relation specified by the input argument OP.
+      !>
       !>## Detailed Input
       !>
       !>     OP             is an integer code representing a binary relational
@@ -15673,7 +16153,7 @@ contains
       !>        is LIKE or UNLIKE and column entry is null.
       !>
       !>-    SPICELIB Version 1.0.0, 17-OCT-1995 (NJB)
-      module procedure zzekscmp
+      module logical function zzekscmp ( ctx, op, handle, segdsc, coldsc, row, eltidx, dtype, cval, dval, ival, null )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: matchi
       use pepper_inc_ekcoldsc
@@ -15682,6 +16162,18 @@ contains
       use pepper_inc_ektype
       use pepper_inc_ekwild
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: op  !! Relational operator code.
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: row  !! ID of row containing column entry to compare.
+      integer(ip), intent(in) :: eltidx  !! Index of element in array-valued column entry.
+      integer(ip), intent(in) :: dtype  !! Data type of input value.
+      character(*), intent(in) :: cval  !! Character string to compare with column entry.
+      real(wp), intent(in) :: dval  !! D.p. value to compare with column entry.
+      integer(ip), intent(in) :: ival  !! Integer value to compare with column entry.
+      logical, intent(in) :: null  !! Flag indicating whether scalar is null.
 
       character(:), allocatable :: eltc  !! the column entry (PEPPER: SPICELIB's CHARACTER*(MAXSTR))
 
@@ -15981,8 +16473,12 @@ contains
       end if
 
       return
-      end procedure zzekscmp
+      end function zzekscmp
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified character EK column having a type 1 index, using
+      !> dictionary ordering on character data values and record pointers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for read or write
@@ -16095,18 +16591,24 @@ contains
       !>        their record pointers.
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekerc1
+      module subroutine zzekerc1 ( ctx, handle, segdsc, coldsc, ckey, recptr, null, prvidx, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      character(*), intent(in) :: ckey  !! Character key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
+      integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of CKEY.
+      integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of CKEY.
+!
+!     Local variables
+!
       integer(ip) :: begin
       integer(ip) :: begptr
       integer(ip) :: end
@@ -16301,8 +16803,12 @@ contains
       call zzektrdp ( ctx, handle, tree, prvidx, prvptr )
 
       return
-      end procedure zzekerc1
+      end subroutine zzekerc1
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified d.p. EK column having a type 1 index, using
+      !> dictionary ordering on d.p. data values and record pointers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -16415,18 +16921,24 @@ contains
       !>        their record pointers.
       !>
       !>-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekerd1
+      module subroutine zzekerd1 ( ctx, handle, segdsc, coldsc, dkey, recptr, null, prvidx, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      real(wp), intent(in) :: dkey  !! Double precision key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
+      integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of DKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of DKEY.
+!
+!     Local variables
+!
       integer(ip) :: begin
       integer(ip) :: begptr
       integer(ip) :: end
@@ -16621,8 +17133,12 @@ contains
       call zzektrdp ( ctx, handle, tree, prvidx, prvptr )
 
       return
-      end procedure zzekerd1
+      end subroutine zzekerd1
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified integer EK column having a type 1 index, using
+      !> dictionary ordering on integer data values and record pointers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -16735,18 +17251,24 @@ contains
       !>        their record pointers.
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekeri1
+      module subroutine zzekeri1 ( ctx, handle, segdsc, coldsc, ikey, recptr, null, prvidx, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: ikey  !! Integer key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
+      integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of IKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of IKEY.
+!
+!     Local variables
+!
       integer(ip) :: begin
       integer(ip) :: begptr
       integer(ip) :: end
@@ -16941,8 +17463,11 @@ contains
       call zzektrdp ( ctx, handle, tree, prvidx, prvptr )
 
       return
-      end procedure zzekeri1
+      end subroutine zzekeri1
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed character EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -17039,11 +17564,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekllec
+      module subroutine zzekllec ( ctx, handle, segdsc, coldsc, ckey, prvloc, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -17051,6 +17572,16 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      character(*), intent(in) :: ckey  !! Character key.
+      integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of CKEY.
+      integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of CKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -17185,8 +17716,11 @@ contains
       end if
 
       return
-      end procedure zzekllec
+      end subroutine zzekllec
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed double precision EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -17283,11 +17817,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzeklled
+      module subroutine zzeklled ( ctx, handle, segdsc, coldsc, dkey, prvloc, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -17295,6 +17825,16 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      real(wp), intent(in) :: dkey  !! Double precision key.
+      integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of DKEY.
+      integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of DKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -17429,8 +17969,11 @@ contains
       end if
 
       return
-      end procedure zzeklled
+      end subroutine zzeklled
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed integer EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -17527,11 +18070,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekllei
+      module subroutine zzekllei ( ctx, handle, segdsc, coldsc, ikey, prvloc, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -17539,6 +18078,16 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: ikey  !! Integer key.
+      integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of IKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to a record containing predecessor of IKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -17673,8 +18222,11 @@ contains
       end if
 
       return
-      end procedure zzekllei
+      end subroutine zzekllei
 
+      !> Find the last column value less than a specified key,
+      !> for a specified, indexed character EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -17767,11 +18319,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzeklltc
+      module subroutine zzeklltc ( ctx, handle, segdsc, coldsc, ckey, prvloc, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -17779,6 +18327,16 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      character(*), intent(in) :: ckey  !! Character key.
+      integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of CKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of CKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -17914,8 +18472,11 @@ contains
       end if
 
       return
-      end procedure zzeklltc
+      end subroutine zzeklltc
 
+      !> Find the last column value less than a specified key,
+      !> for a specified, indexed double precision EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -18007,11 +18568,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzeklltd
+      module subroutine zzeklltd ( ctx, handle, segdsc, coldsc, dkey, prvloc, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -18019,6 +18576,16 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      real(wp), intent(in) :: dkey  !! Double precision key.
+      integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of DKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to a record containing predecessor of DKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -18154,8 +18721,11 @@ contains
       end if
 
       return
-      end procedure zzeklltd
+      end subroutine zzeklltd
 
+      !> Find the last column value less than a specified key,
+      !> for a specified, indexed integer EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -18248,11 +18818,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 09-NOV-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekllti
+      module subroutine zzekllti ( ctx, handle, segdsc, coldsc, ikey, prvloc, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -18260,6 +18826,16 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: ikey  !! Integer key.
+      integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of IKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of IKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -18395,8 +18971,14 @@ contains
       end if
 
       return
-      end procedure zzekllti
+      end subroutine zzekllti
 
+      !> Compare two EK rows, using as the order relation dictionary
+      !> ordering on a specified list of columns.
+      !>
+      !> The function returns .TRUE. if and only if the two rows
+      !> satisfy the order relation specified by the input arguments.
+      !>
       !>## Detailed Input
       !>
       !>     OP             is an integer code representing a binary operator
@@ -18570,17 +19152,29 @@ contains
       !>        marker.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekrcmp
+      module logical function zzekrcmp ( ctx, op, ncols, han1, sgdsc1, cdlst1, row1, elts1, han2, sgdsc2, cdlst2, row2, elts2 )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_ekqlimit
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: op  !! Code for relational operator.
+      integer(ip), intent(in) :: ncols  !! Number of columns used to define order relation.
+      integer(ip), intent(in) :: han1  !! Handle of EK containing first row to compare.
+      integer(ip), intent(in) :: sgdsc1 ( sdscsz )  !! Descriptor of segment containing first row.
+      integer(ip), intent(in) :: cdlst1 ( cdscsz, * )  !! List of column descriptors for first row.
+      integer(ip), intent(in) :: row1  !! Number of first row (relative to segment).
+      integer(ip), intent(in) :: elts1  ( * )  !! List of element indices for first row.
+      integer(ip), intent(in) :: han2  !! Handle of EK containing second row to compare.
+      integer(ip), intent(in) :: sgdsc2 ( sdscsz )  !! Descriptor of segment containing second row.
+      integer(ip), intent(in) :: cdlst2 ( cdscsz, * )  !! List of column descriptors for second row.
+      integer(ip), intent(in) :: row2  !! Number of second row (relative to segment).
+      integer(ip), intent(in) :: elts2  ( * )  !! List of element indices for second row.
+!
+!     Local variables
+!
       integer(ip) :: cldscs ( cdscsz, 2 )
       integer(ip) :: col
       integer(ip) :: elts   ( 2 )
@@ -18678,8 +19272,14 @@ contains
       end if
 
       return
-      end procedure zzekrcmp
+      end function zzekrcmp
 
+      !> Determine whether a specified row in an EK file satisfies
+      !> a specified set of constraints.
+      !>
+      !> The function returns .TRUE. if and only if the specified
+      !> EK row satisfies the input constraints.
+      !>
       !>## Detailed Input
       !>
       !>     NCNSTR         is the number of input constraints against which
@@ -18832,7 +19432,7 @@ contains
       !>        Corrected typo in comments.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      module procedure zzekrmch
+      module logical function zzekrmch ( ctx, ncnstr, active, handle, segdsc, cdscrs, row, elts, ops, vtypes, chrbuf, cbegs, cends, dvals, ivals )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
@@ -18840,6 +19440,21 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_ekwild
       use pepper_inc_ekqlimit
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ncnstr  !! Number of constraints present in query.
+      logical, intent(in) :: active ( * )  !! Array of flags indicating applicable constraints.
+      integer(ip), intent(in) :: handle  !! Handle of EK file containing row.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: cdscrs ( cdscsz, * )  !! Descriptors of columns referenced in query.
+      integer(ip), intent(in) :: row  !! Index of row to match.
+      integer(ip), intent(in) :: elts   ( * )  !! Indices of column entry elements to match.
+      integer(ip), intent(in) :: ops    ( * )  !! Operators used in query constraints.
+      integer(ip), intent(in) :: vtypes ( * )  !! Data types of values on RHS of constraints.
+      character(*), intent(in) :: chrbuf  !! Buffer containing query tokens.
+      integer(ip), intent(in) :: cbegs  ( * )  !! Begin indices of character query tokens.
+      integer(ip), intent(in) :: cends  ( * )  !! End indices of character query tokens.
+      real(wp), intent(in) :: dvals  ( * )  !! D.p. values used in query constraints.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values used in query constraints.
 
       integer(ip) :: i
 
@@ -18882,8 +19497,14 @@ contains
 !     It's a match if we got this far.
 !
       return
-      end procedure zzekrmch
+      end function zzekrmch
 
+      !> Compare two row vectors, using dictionary ordering on a
+      !> specified list of columns as the order relation.
+      !>
+      !> The function returns .TRUE. if and only if the two rows
+      !> satisfy the order relation specified by the input arguments.
+      !>
       !>## Detailed Input
       !>
       !>     OP             is an integer code representing a binary operator
@@ -19069,7 +19690,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
-      module procedure zzekvcmp
+      module logical function zzekvcmp ( ctx, op, ncols, tabs, cols, elts, senses, sthan, stsdsc, stdtpt, dtpool, dtdscs, sgvec1, rwvec1, sgvec2, rwvec2 )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
@@ -19077,6 +19698,23 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: op  !! Code for relational operator.
+      integer(ip), intent(in) :: ncols  !! Number of columns used to define order relation.
+      integer(ip), intent(in) :: tabs   ( * )  !! Indices of tables containing order-by columns.
+      integer(ip), intent(in) :: cols   ( * )  !! Indices of order-by columns within parent tables.
+      integer(ip), intent(in) :: elts   ( * )  !! Element indices.
+      integer(ip), intent(in) :: senses ( * )  !! Order senses.
+      integer(ip), intent(in) :: sthan  ( * )  !! Array of handles of loaded EKs.
+      integer(ip), intent(in) :: stsdsc ( sdscsz, * )  !! Array of segment descriptors.
+      integer(ip), intent(in) :: stdtpt ( * )  !! Array of pointers to column descriptors.
+      integer(ip), intent(in) :: dtpool ( 2, lbpool : * )  !! Column descriptor index pool.
+      integer(ip), intent(in) :: dtdscs ( cdscsz, * )  !! Array of column descriptors.
+      integer(ip), intent(in) :: sgvec1 ( * )  !! First segment vector.
+      integer(ip), intent(in) :: rwvec1 ( * )  !! First row vector.
+      integer(ip), intent(in) :: sgvec2 ( * )  !! Second segment vector.
+      integer(ip), intent(in) :: rwvec2 ( * )  !! Second row vector.
 
       integer(ip) :: cldscs ( cdscsz, 2 )
       integer(ip) :: col
@@ -19226,8 +19864,14 @@ contains
       end if
 
       return
-      end procedure zzekvcmp
+      end function zzekvcmp
 
+      !> Determine whether a vector of constraints involving comparisons of
+      !> specified EK column elements is satisfied.
+      !>
+      !> The function returns .TRUE. if and only if all of the relational
+      !> constraints specified by the input arguments are satisfied.
+      !>
       !>## Detailed Input
       !>
       !>     NCNSTR         is the number of input join constraints.   Each
@@ -19416,13 +20060,7 @@ contains
       !>        corrected. Also updated Restrictions header section.
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekvmch
+      module logical function zzekvmch ( ctx, ncnstr, active, lhans, lsdscs, lcdscs, lrows, lelts, ops, rhans, rsdscs, rcdscs, rrows, relts )
       use pepper_kinds, only: ip
       use pepper_strings, only: matchi
       use pepper_inc_ekbool
@@ -19431,9 +20069,26 @@ contains
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ekwild
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ncnstr  !! Number of join constraints.
+      logical, intent(in) :: active ( * )  !! Array of flags indicating applicable constraints.
+      integer(ip), intent(in) :: lhans  ( * )  !! Handles of EKs for columns on LHS's of constraints.
+      integer(ip), intent(in) :: lsdscs ( sdscsz, * )  !! Descriptors of segments on LHS's of constraints.
+      integer(ip), intent(in) :: lcdscs ( cdscsz, * )  !! Column descriptors for LHS's of constraints.
+      integer(ip), intent(in) :: lrows  ( * )  !! Row numbers for LHS's of constraints.
+      integer(ip), intent(in) :: lelts  ( * )  !! Column element indices for LHS's of constraints.
+      integer(ip), intent(in) :: ops    ( * )  !! Code for relational operator in constraints.
+      integer(ip), intent(in) :: rhans  ( * )  !! Handles of EKs for columns on RHS's of constraints.
+      integer(ip), intent(in) :: rsdscs ( sdscsz, * )  !! Descriptors of segments on RHS's of constraints.
+      integer(ip), intent(in) :: rcdscs ( cdscsz, * )  !! Column descriptors for RHS's of constraints.
+      integer(ip), intent(in) :: rrows  ( * )  !! Row numbers for RHS's of constraints.
+      integer(ip), intent(in) :: relts  ( * )  !! Column element indices for RHS's of constraints.
       character(:), allocatable :: cval1  !! the left-hand string (PEPPER: SPICELIB's CHARACTER*(MAXSTR) CVAL(2))
       character(:), allocatable :: cval2  !! the right-hand string
 
+!
+!     Local variables
+!
       integer(ip) :: cldscs ( cdscsz, 2 )
       integer(ip) :: cmplen ( 2 )
       integer(ip) :: cvlen  ( 2 )
@@ -19633,8 +20288,17 @@ contains
       end do
 
       return
-      end procedure zzekvmch
+      end function zzekvmch
 
+      !> Find the ordinal position of the row, in an specified EK segment,
+      !> whose value in a specified column is the last last element less
+      !> than or equal to a specified value, where the order relation is
+      !> given by an order vector in a specified DAS file.
+      !>
+      !> The function returns the index of the last order vector element
+      !> that points to an array element that is less than or equal to
+      !> the input value of the same data type as the column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is the file handle of the EK containing the
@@ -19722,16 +20386,24 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekille
+      module integer(ip) function zzekille ( ctx, handle, segdsc, coldsc, nrows, dtype, cval, dval, ival )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! HANDLE of EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Descriptor of column to be searched.
+      integer(ip), intent(in) :: nrows  !! Number of rows in column.
+      integer(ip), intent(in) :: dtype  !! Data type of input value.
+      character(*), intent(in) :: cval  !! Character string value.
+      real(wp), intent(in) :: dval  !! Double precision value.
+      integer(ip), intent(in) :: ival  !! Integer value.
+!
+!     Local variables
+!
       real(wp) :: dnum
 
       integer(ip) :: coltyp
@@ -19806,8 +20478,17 @@ contains
       end if
 
       return
-      end procedure zzekille
+      end function zzekille
 
+      !> Find the ordinal position of the row, in an specified EK segment,
+      !> whose value in a specified column is the last last element less
+      !> than a specified value, where the order relation is given by an
+      !> order vector in a specified DAS file.
+      !>
+      !> The function returns the index of the last order vector element
+      !> that points to an array element that is less than the input
+      !> value of the same data type as the column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is the file handle of the EK containing the
@@ -19894,16 +20575,24 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekillt
+      module integer(ip) function zzekillt ( ctx, handle, segdsc, coldsc, nrows, dtype, cval, dval, ival )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! HANDLE of EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Descriptor of column to be searched.
+      integer(ip), intent(in) :: nrows  !! Number of rows in column.
+      integer(ip), intent(in) :: dtype  !! Data type of input value.
+      character(*), intent(in) :: cval  !! Character string value.
+      real(wp), intent(in) :: dval  !! Double precision value.
+      integer(ip), intent(in) :: ival  !! Integer value.
+!
+!     Local variables
+!
       real(wp) :: dnum
 
       integer(ip) :: coltyp
@@ -19978,8 +20667,11 @@ contains
       end if
 
       return
-      end procedure zzekillt
+      end function zzekillt
 
+      !> Sort the row vectors of a join row set union, given an order
+      !> relation defined by a set of qualified order-by columns.
+      !>
       !>## Detailed Input
       !>
       !>     NJRS,
@@ -20172,39 +20864,7 @@ contains
       !>          IDAT
       !>          NF
       !>          ORDVEC
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Other functions
-      !>
-      !>     Other local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     The following variables are saved in order to prevent
-      !>     memory errors under Cygwin and in shared object libraries
-      !>     under various Unix systems.
-      !>
-      !>     Statement functions
-      !>
-      !>     The following functions test whether two column entries
-      !>     are equal.  In the integer and d.p. cases, the test is conclusive.
-      !>     In the character case, the test indicates whether the initial
-      !>     substrings consisting of the first INISUB characters of each of
-      !>     the two entries are equal.
-      !>
-      !>     The following functions indicate whether the first of two column
-      !>     entries is less than or equal to the second.  In the integer and
-      !>     d.p. cases, the test is conclusive.  In the character case, the
-      !>     test indicates whether the initial substring consisting of the
-      !>     first INISUB characters of the first entry is less than or equal
-      !>     to the corresponding initial substring of length INISUB of the
-      !>     second entry.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzekjsrt
+      module subroutine zzekjsrt ( ctx, njrs, ubases, norder, otabs, ocols, oelts, senses, sthan, stsdsc, stdtpt, dtpool, dtdscs, ordbas )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: swapi
       use pepper_inc_ekbool
@@ -20216,12 +20876,37 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: njrs  !! Number of join row sets in union.
+      integer(ip), intent(in) :: ubases ( * )  !! Base addresses of join row sets of union.
+      integer(ip), intent(in) :: norder  !! Number of order-by columns.
+      integer(ip), intent(in) :: otabs  ( * )  !! Order-by table indices relative to FROM clause.
+      integer(ip), intent(in) :: ocols  ( * )  !! Order-by column indices.
+      integer(ip), intent(in) :: oelts  ( * )  !! Order-by element indices.
+      integer(ip), intent(in) :: senses ( * )  !! Order directions.
+      integer(ip), intent(in) :: sthan  ( * )  !! Handles of loaded files from segment table.
+      integer(ip), intent(in) :: stsdsc ( sdscsz, * )  !! Array of descriptors of loaded segments.
+      integer(ip), intent(in) :: stdtpt ( * )  !! Array of pointers to column descriptors.
+      integer(ip), intent(in) :: dtpool ( 2,      lbpool : * )  !! Column descriptor table pool.
+      integer(ip), intent(in) :: dtdscs ( cdscsz,          * )  !! Column descriptor table.
+      integer(ip), intent(out) :: ordbas  !! Scratch area base address for order vector.
       integer(ip) :: rjg_1(1)  !! one-element copy of rjg (array argument)
       integer(ip) :: rj_1(1)  !! one-element copy of rj (array argument)
       integer(ip) :: ntab_1(1)  !! one-element copy of ntab (array argument)
       integer(ip) :: nr_1(1)  !! one-element copy of nr (array argument)
+!
+!     Other local parameters
+!
       integer(ip), parameter :: inisub = 32
       integer(ip), parameter :: limit1 = 250000
+!
+!     The following variables are saved in order to prevent
+!     memory errors under Cygwin and in shared object libraries
+!     under various Unix systems.
+!
+!     Local variables
+!
       character(inisub), allocatable :: cdat ( : )  !! first INISUB characters of the primary order-by column's entry in each row
       real(wp), allocatable :: ddat ( : )  !! d.p. entry of the primary order-by column in each row
       integer(ip), allocatable :: idat ( : )  !! integer entry of the primary order-by column in each row
@@ -20276,6 +20961,15 @@ contains
       logical :: nfjg
       logical :: null
       logical :: trunc
+!
+!     Statement functions
+!
+!     The following functions test whether two column entries
+!     are equal.  In the integer and d.p. cases, the test is conclusive.
+!     In the character case, the test indicates whether the initial
+!     substrings consisting of the first INISUB characters of each of
+!     the two entries are equal.
+!
       logical :: inteq
       logical :: dpeq
       logical :: chreq
@@ -20335,6 +21029,9 @@ contains
 
            n1  .or.  (       ( .not. ( n1 .or. n2 )  ) &
                        .and. (         c1 <= c2    )    )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -20900,8 +21597,12 @@ contains
 !
 
       return
-      end procedure zzekjsrt
+      end subroutine zzekjsrt
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed character EK column, using dictionary
+      !> ordering on character data values and record pointers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK that is open for read or
@@ -21010,17 +21711,25 @@ contains
       !>        Removed an unbalanced call to CHKOUT.
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzeklerc
+      module subroutine zzeklerc ( ctx, handle, segdsc, coldsc, ckey, recptr, null, prvidx, prvptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      character(*), intent(in) :: ckey  !! Double precision key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
+      integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of CKEY.
+      integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of CKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -21087,8 +21796,12 @@ contains
       end if
 
       return
-      end procedure zzeklerc
+      end subroutine zzeklerc
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed d.p. EK column, using dictionary
+      !> ordering on d.p. data values and record pointers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -21198,17 +21911,25 @@ contains
       !>        Removed an unbalanced call to CHKOUT.
       !>
       !>-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzeklerd
+      module subroutine zzeklerd ( ctx, handle, segdsc, coldsc, dkey, recptr, null, prvidx, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      real(wp), intent(in) :: dkey  !! Double precision key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
+      integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of DKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of DKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -21275,8 +21996,12 @@ contains
       end if
 
       return
-      end procedure zzeklerd
+      end subroutine zzeklerd
 
+      !> Find the last column value less than or equal to a specified key,
+      !> for a specified, indexed integer EK column, using dictionary
+      !> ordering on integer data values and record pointers.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -21386,17 +22111,25 @@ contains
       !>        Removed an unbalanced call to CHKOUT
       !>
       !>-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekleri
+      module subroutine zzekleri ( ctx, handle, segdsc, coldsc, ikey, recptr, null, prvidx, prvptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: ikey  !! Integer key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
+      integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of IKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of IKEY.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -21463,8 +22196,11 @@ contains
       end if
 
       return
-      end procedure zzekleri
+      end subroutine zzekleri
 
+      !> Find the ordinal position of a specified record in a specified,
+      !> indexed EK column.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is an EK file handle.  The file may be open for
@@ -21543,17 +22279,20 @@ contains
       !>        class 3 column entry had length exceeding MAXSTR.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekfrx
+      module subroutine zzekfrx ( ctx, handle, segdsc, coldsc, recptr, pos )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Pointer to record to locate.
+      integer(ip), intent(out) :: pos  !! Ordinal position of record.
+!
+!     Local variables
+!
       character(:), allocatable :: cval  !! the column entry (PEPPER: SPICELIB's CHARACTER*(MAXSTR))
 
       real(wp) :: dval
@@ -21684,8 +22423,12 @@ contains
       end if
 
       return
-      end procedure zzekfrx
+      end subroutine zzekfrx
 
+      !> Insert into a type 1 EK index a record pointer associated with a
+      !> character key.  The key and record pointer determine the insertion
+      !> point via dictionary ordering on (value, record pointer) pairs.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -21780,11 +22523,7 @@ contains
       !>        Removed an unbalanced call to CHKOUT
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekiic1
+      module subroutine zzekiic1 ( ctx, handle, segdsc, coldsc, ckey, recptr, null )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -21792,6 +22531,16 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      character(*), intent(in) :: ckey  !! Character key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -21869,8 +22618,12 @@ contains
       end if
 
       return
-      end procedure zzekiic1
+      end subroutine zzekiic1
 
+      !> Insert into a type 1 EK index a record pointer associated with a
+      !> d.p. key.  The key and record pointer determine the insertion
+      !> point via dictionary ordering on (value, record pointer) pairs.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -21965,11 +22718,7 @@ contains
       !>        Removed an unbalanced call to CHKOUT.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekiid1
+      module subroutine zzekiid1 ( ctx, handle, segdsc, coldsc, dkey, recptr, null )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -21977,6 +22726,16 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      real(wp), intent(in) :: dkey  !! Double precision key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -22054,8 +22813,12 @@ contains
       end if
 
       return
-      end procedure zzekiid1
+      end subroutine zzekiid1
 
+      !> Insert into a type 1 EK index a record pointer associated with an
+      !> integer key.  The key and record pointer determine the insertion
+      !> point via dictionary ordering on (value, record pointer) pairs.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -22146,11 +22909,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekiii1
+      module subroutine zzekiii1 ( ctx, handle, segdsc, coldsc, ikey, recptr, null )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -22158,6 +22917,16 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: ikey  !! Integer key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
+!
+!     Local variables
+!
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -22235,16 +23004,14 @@ contains
       end if
 
       return
-      end procedure zzekiii1
+      end subroutine zzekiii1
 
-      !>## Abstract
+      !> Prepare to test a set of candidate row vectors, all corresponding
+      !> to the same segment vector, against join constraints.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Prepare to test a set of candidate row vectors, all corresponding
-      !>     to the same segment vector, against join constraints.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -22437,7 +23204,7 @@ contains
       !>        input row count is zero.
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      module procedure zzekjprp
+      module subroutine zzekjprp ( ctx, segvec, jbase1, nt1, rb1, nr1, jbase2, nt2, rb2, nr2, njcnst, active, cpidx1, clidx1, elts1, ops, cpidx2, clidx2, elts2, sthan, stsdsc, stdtpt, dtpool, dtdscs )
       use pepper_kinds, only: ip
       use pepper_containers, only: grow
       use pepper_inc_ekcoldsc
@@ -22446,6 +23213,31 @@ contains
       use pepper_inc_ekqlimit
       use pepper_inc_ekquery
       use pepper_inc_eksegdsc
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: segvec ( * )  !! Composite segment vector for joined table.
+      integer(ip), intent(in) :: jbase1  !! Scratch area base address of first join row set.
+      integer(ip), intent(in) :: nt1  !! Width of first table.
+      integer(ip), intent(in) :: rb1  !! Row vector base address from first join row set.
+      integer(ip), intent(in) :: nr1  !! Number of row vectors from first join row set.
+      integer(ip), intent(in) :: jbase2  !! Scratch area base address of second join row set.
+      integer(ip), intent(in) :: nt2  !! Width of second table.
+      integer(ip), intent(in) :: rb2  !! Row vector base address from second join row set.
+      integer(ip), intent(in) :: nr2  !! Number of row vectors from second join row set.
+      integer(ip), intent(in) :: njcnst  !! Number of join constraints.
+      logical, intent(in) :: active ( * )  !! Array of flags indicating applicable constraints.
+      integer(ip), intent(in) :: cpidx1 ( * )  !! Cross product indices for LHS's of constraints.
+      integer(ip), intent(in) :: clidx1 ( * )  !! Column indices for LHS's of constraints.
+      integer(ip), intent(in) :: elts1  ( * )  !! Column element indices for LHS's of constraints.
+      integer(ip), intent(in) :: ops    ( * )  !! Operator codes for constraints.
+      integer(ip), intent(in) :: cpidx2 ( * )  !! Cross product indices for RHS's of constraints.
+      integer(ip), intent(in) :: clidx2 ( * )  !! Column indices for RHS's of constraints.
+      integer(ip), intent(in) :: elts2  ( * )  !! Column element indices for RHS's of constraints.
+      integer(ip), intent(in) :: sthan  ( * )  !! Array of EK handles corresponding to segments.
+      integer(ip), intent(in) :: stsdsc ( sdscsz,          * )  !! Array of segment descriptors.
+      integer(ip), intent(in) :: stdtpt ( * )  !! Array of set table column descriptor pointers.
+      integer(ip), intent(in) :: dtpool ( 2,      lbpool : * )  !! Linked list pool for column descriptors.
+      integer(ip), intent(in) :: dtdscs ( cdscsz,          * )  !! Array of column descriptors.
       integer(ip), parameter :: noluck = 3
       integer(ip) :: tab
       integer(ip) :: n
@@ -22896,16 +23688,14 @@ contains
 
       return
       end associate
-      end procedure zzekjprp
+      end subroutine zzekjprp
 
-      !>## Abstract
+      !> Return row vectors resulting from the join of two collections
+      !> of row vectors from two join row sets.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return row vectors resulting from the join of two collections
-      !>     of row vectors from two join row sets.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -22985,9 +23775,7 @@ contains
       !>        first pass when CASE is EMPTY.
       !>
       !>-    Beta Version 1.0.0, 08-AUG-1995 (NJB)
-      !>
-      !>     No row vector found to start with.
-      module procedure zzekjnxt
+      module subroutine zzekjnxt ( ctx, found, rowvec )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekjrs
@@ -22995,6 +23783,9 @@ contains
       use pepper_inc_ekqlimit
       use pepper_inc_ekquery
       use pepper_inc_eksegdsc
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(out) :: found  !! Flag indicating whether a row vector was found.
+      integer(ip), intent(out) :: rowvec ( * )  !! Row vector matching join constraints.
       integer(ip) :: rrow_1(1)  !! one-element copy of rrow (array argument)
       integer(ip) :: lrow_1(1)  !! one-element copy of lrow (array argument)
       integer(ip) :: rrvidx_1(1)  !! one-element copy of rrvidx (array argument)
@@ -23050,6 +23841,9 @@ contains
                   svrb2 => ctx%zzekjtst_state%svrb2, &
                   done => ctx%zzekjtst_state%done, &
                   lsmall => ctx%zzekjtst_state%lsmall )
+!
+!     No row vector found to start with.
+!
       found = .false.
 
 !
@@ -23479,8 +24273,11 @@ contains
 
       return
       end associate
-      end procedure zzekjnxt
+      end subroutine zzekjnxt
 
+      !> Determine the key column to use when searching an EK segment
+      !> for rows matching query constraints.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is the handle of the EK file containing the
@@ -23699,13 +24496,7 @@ contains
       !>-    SPICELIB Version 1.2.0, 26-JUL-1996 (NJB)
       !>
       !>        Added check of FAILED after calls to the EK search functions.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Other functions
-      !>
-      !>     Local parameters
-      module procedure zzekkey
+      module subroutine zzekkey ( ctx, handle, segdsc, nrows, ncnstr, clidxs, dsclst, ops, dtypes, chrbuf, cbegs, cends, dvals, ivals, active, key, keydsc, begidx, endidx, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -23713,6 +24504,26 @@ contains
       use pepper_inc_ekqlimit
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of EK file containing segment.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: nrows  !! Number of rows in segment.
+      integer(ip), intent(in) :: ncnstr  !! Number of relational constraints in query.
+      integer(ip), intent(in) :: clidxs ( * )  !! Column attribute table indices for columns.
+      integer(ip), intent(in) :: dsclst ( cdscsz, * )  !! Array of column descriptors for constraints.
+      integer(ip), intent(in) :: ops    ( * )  !! Operations used in query constraints.
+      integer(ip), intent(in) :: dtypes ( * )  !! Data types of scalar values used in constraints.
+      character(*), intent(in) :: chrbuf  !! Buffer containing query tokens.
+      integer(ip), intent(in) :: cbegs  ( * )  !! Begin indices of character query tokens.
+      integer(ip), intent(in) :: cends  ( * )  !! End indices of character query tokens.
+      real(wp), intent(in) :: dvals  ( * )  !! D.p. values used in query constraints.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values used in query constraints.
+      logical, intent(inout) :: active ( * )  !! Array of flags indicating applicable constraints.
+      integer(ip), intent(out) :: key  !! Index of key column.
+      integer(ip), intent(out) :: keydsc ( * )  !! Descriptor of key column.
+      integer(ip), intent(out) :: begidx  !! Begin index of candidate row set.
+      integer(ip), intent(out) :: endidx  !! End index of candidate row set.
+      logical, intent(out) :: found  !! Flag indicating whether a key column was found.
 
       integer(ip) :: b
       integer(ip) :: best
@@ -24070,8 +24881,11 @@ contains
       found = .true.
 
       return
-      end procedure zzekkey
+      end subroutine zzekkey
 
+      !> Add a column entry to a class 1 column in a specified EK record.
+      !> Class 1 columns contain scalar, integer values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -24168,11 +24982,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekad01
+      module subroutine zzekad01 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -24180,7 +24990,17 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: ival  !! Integer value.
+      logical, intent(in) :: isnull  !! Null flag.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: datptr
       integer(ip) :: itype
@@ -24361,8 +25181,11 @@ contains
       end if
 
       return
-      end procedure zzekad01
+      end subroutine zzekad01
 
+      !> Add a column entry to a specified record in a class 2 column.
+      !> Class 2 columns contain scalar double precision values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -24459,11 +25282,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekad02
+      module subroutine zzekad02 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -24471,7 +25290,17 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      real(wp), intent(in) :: dval  !! Double precision value.
+      logical, intent(in) :: isnull  !! Null flag.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: datptr
       integer(ip) :: itype
@@ -24646,8 +25475,11 @@ contains
       end if
 
       return
-      end procedure zzekad02
+      end subroutine zzekad02
 
+      !> Add a column entry to a class 3 column in a specified EK record.
+      !> Class 3 columns contain scalar, character values.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -24744,13 +25576,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekad03
+      module subroutine zzekad03 ( ctx, handle, segdsc, coldsc, recptr, cval, isnull )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       use pepper_inc_ekbool
@@ -24759,6 +25585,16 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      character(*), intent(in) :: cval  !! Character string value.
+      logical, intent(in) :: isnull  !! Null flag.
+!
+!     Local variables
+!
       integer(ip) :: colidx
       integer(ip) :: datptr
       integer(ip) :: itype
@@ -25002,8 +25838,11 @@ contains
       end if
 
       return
-      end procedure zzekad03
+      end subroutine zzekad03
 
+      !> Update an EK column index to reflect deletion of a record
+      !> specified by a record pointer.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a handle of an EK file open for write access.
@@ -25069,18 +25908,20 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekixdl
+      module subroutine zzekixdl ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer to locate.
+!
+!     Local variables
+!
       integer(ip) :: idx
       integer(ip) :: idxtyp
       integer(ip) :: recno
@@ -25140,8 +25981,11 @@ contains
       end if
 
       return
-      end procedure zzekixdl
+      end subroutine zzekixdl
 
+      !> Perform join of two EK join row sets, subject to a specified set
+      !> of EK join constraints, yielding an EK join row set.
+      !>
       !>## Detailed Input
       !>
       !>     JBASE1         is the EK scratch area base address of the first
@@ -25344,12 +26188,32 @@ contains
       !>        a call to ZZEKJSQZ.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      module procedure zzekjoin
+      module subroutine zzekjoin ( ctx, jbase1, jbase2, njcnst, active, cpidx1, clidx1, elts1, ops, cpidx2, clidx2, elts2, sthan, stsdsc, stdtpt, dtpool, dtdscs, jbase3, nrows )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekjrs
       use pepper_inc_ekqlimit
       use pepper_inc_eksegdsc
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: jbase1  !! Scratch area base address of first join row set.
+      integer(ip), intent(in) :: jbase2  !! Scratch area base address of second join row set.
+      integer(ip), intent(in) :: njcnst  !! Number of join constraints.
+      logical, intent(in) :: active ( * )  !! Array of flags indicating applicable constraints.
+      integer(ip), intent(in) :: cpidx1 ( * )  !! Cross product indices for LHS's of constraints.
+      integer(ip), intent(in) :: clidx1 ( * )  !! Column indices for LHS's of constraints.
+      integer(ip), intent(in) :: elts1  ( * )  !! Column entry elt. indices for LHS'of constraints.
+      integer(ip), intent(in) :: ops    ( * )  !! Operator codes for constraints.
+      integer(ip), intent(in) :: cpidx2 ( * )  !! Cross product indices for RHS's of constraints.
+      integer(ip), intent(in) :: clidx2 ( * )  !! Column indices for RHS's of constraints.
+      integer(ip), intent(in) :: elts2  ( * )  !! Column entry elt. indices for RHS'of constraints.
+      integer(ip), intent(in) :: sthan  ( * )  !! Array of EK handles corresponding to segments.
+      integer(ip), intent(in) :: stsdsc ( sdscsz, * )  !! Array of segment descriptors.
+      integer(ip), intent(in) :: stdtpt ( * )  !! Array of set table column descriptor pointers.
+      integer(ip), intent(in) :: dtpool ( 2,      lbpool : * )  !! Linked list pool for column descriptors.
+      integer(ip), intent(in) :: dtdscs ( cdscsz,          * )  !! Array of column descriptors.
+      integer(ip), intent(out) :: jbase3  !! Scratch area base address of output join row set.
+      integer(ip), intent(out) :: nrows  !! Number of rows in output join row set.
       integer(ip) :: nr2_1(1)  !! one-element copy of nr2 (array argument)
       integer(ip) :: rb2_1(1)  !! one-element copy of rb2 (array argument)
       integer(ip) :: nr1_1(1)  !! one-element copy of nr1 (array argument)
@@ -25668,8 +26532,10 @@ contains
 !
 
       return
-      end procedure zzekjoin
+      end subroutine zzekjoin
 
+      !> Add data to a character column in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file open for write access.
@@ -25779,186 +26645,188 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKACEC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKACEC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME  = 'ekacec_ex1.bdb' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME  = 'ekacec_ex1.bdb' )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE   = 'TABLENAME'      )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE   = 'TABLENAME'      )
       !>
-      !>              INTEGER               CBUFSZ
-      !>              PARAMETER           ( CBUFSZ = 4   )
+      !>      INTEGER               CBUFSZ
+      !>      PARAMETER           ( CBUFSZ = 4   )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               LINESZ
-      !>              PARAMETER           ( LINESZ = 6   )
+      !>      INTEGER               LINESZ
+      !>      PARAMETER           ( LINESZ = 6   )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 2   )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 2   )
       !>
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 6   )
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 6   )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(STRLEN)    CBUF   ( CBUFSZ )
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-      !>              CHARACTER*(LINESZ)    CVALS  ( CBUFSZ )
-      !>              CHARACTER*(NAMLEN)    IFNAME
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(STRLEN)    CBUF   ( CBUFSZ )
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+      !>      CHARACTER*(LINESZ)    CVALS  ( CBUFSZ )
+      !>      CHARACTER*(NAMLEN)    IFNAME
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               K
-      !>              INTEGER               NRESVC
-      !>              INTEGER               NVALS
-      !>              INTEGER               RECNO
-      !>              INTEGER               SEGNO
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               K
+      !>      INTEGER               NRESVC
+      !>      INTEGER               NVALS
+      !>      INTEGER               RECNO
+      !>      INTEGER               SEGNO
       !>
-      !>              LOGICAL               ISNULL
+      !>      LOGICAL               ISNULL
       !>
-      !>        C
-      !>        C     Create a list of character strings.
-      !>        C
-      !>              DATA                  CBUF / 'CHSTR1', 'CHSTR2',
-      !>             .                             'CHSTR3', 'CHSTR4' /
+      !>C
+      !>C     Create a list of character strings.
+      !>C
+      !>      DATA                  CBUF / 'CHSTR1', 'CHSTR2',
+      !>     .                             'CHSTR3', 'CHSTR4' /
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 31-MAY-2019'
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 31-MAY-2019'
       !>
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Define the column names and formats.
-      !>        C
-      !>              CNAMES(1) = 'CCOL'
-      !>              CDECLS(1) = 'DATATYPE = CHARACTER*(*), ' //
-      !>             .            'INDEXED = TRUE, NULLS_OK = TRUE'
+      !>C
+      !>C     Define the column names and formats.
+      !>C
+      !>      CNAMES(1) = 'CCOL'
+      !>      CDECLS(1) = 'DATATYPE = CHARACTER*(*), ' //
+      !>     .            'INDEXED = TRUE, NULLS_OK = TRUE'
       !>
-      !>              CNAMES(2) = 'CARRAY'
-      !>              CDECLS(2) = 'DATATYPE = CHARACTER*(6), ' //
-      !>             .            'SIZE = VARIABLE, NULLS_OK = TRUE'
+      !>      CNAMES(2) = 'CARRAY'
+      !>      CDECLS(2) = 'DATATYPE = CHARACTER*(6), ' //
+      !>     .            'SIZE = VARIABLE, NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
+      !>C
+      !>C     Start the segment.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
       !>
-      !>        C
-      !>        C     Append a new record to the EK.
-      !>        C
-      !>              CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>C
+      !>C     Append a new record to the EK.
+      !>C
+      !>      CALL EKAPPR ( HANDLE, SEGNO, RECNO )
       !>
-      !>        C
-      !>        C     Add the value '999' to the first record of the column
-      !>        C     CCOL in the SEGNO segment of the EK file designated
-      !>        C     by HANDLE.
-      !>        C
-      !>              CALL EKACEC ( HANDLE, SEGNO, RECNO,
-      !>             .              'CCOL', 1,     '999', .FALSE. )
+      !>C
+      !>C     Add the value '999' to the first record of the column
+      !>C     CCOL in the SEGNO segment of the EK file designated
+      !>C     by HANDLE.
+      !>C
+      !>      CALL EKACEC ( HANDLE, SEGNO, RECNO,
+      !>     .              'CCOL', 1,     '999', .FALSE. )
       !>
-      !>        C
-      !>        C     Add an array CBUF of 4 values to the first record of
-      !>        C     the column CARRAY in the SEGNO segment of the EK file
-      !>        C     designated by HANDLE.
-      !>        C
-      !>              CALL EKACEC ( HANDLE,   SEGNO,  RECNO,
-      !>             .              'CARRAY', CBUFSZ, CBUF, .FALSE. )
+      !>C
+      !>C     Add an array CBUF of 4 values to the first record of
+      !>C     the column CARRAY in the SEGNO segment of the EK file
+      !>C     designated by HANDLE.
+      !>C
+      !>      CALL EKACEC ( HANDLE,   SEGNO,  RECNO,
+      !>     .              'CARRAY', CBUFSZ, CBUF, .FALSE. )
       !>
-      !>        C
-      !>        C     Append a second record to the EK.
-      !>        C
-      !>              CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>C
+      !>C     Append a second record to the EK.
+      !>C
+      !>      CALL EKAPPR ( HANDLE, SEGNO, RECNO )
       !>
-      !>        C
-      !>        C     Repeat the operation again for the second record, but
-      !>        C     this time, add only 2 values of CBUF.
-      !>        C
-      !>              CALL EKACEC ( HANDLE,   SEGNO, RECNO,
-      !>             .              'CARRAY', 2,     CBUF, .FALSE. )
+      !>C
+      !>C     Repeat the operation again for the second record, but
+      !>C     this time, add only 2 values of CBUF.
+      !>C
+      !>      CALL EKACEC ( HANDLE,   SEGNO, RECNO,
+      !>     .              'CARRAY', 2,     CBUF, .FALSE. )
       !>
-      !>        C
-      !>        C     Add a null value to the CCOL in the second record.
-      !>        C     The argument 999 is ignored because the null flag is
-      !>        C     set to .TRUE.
-      !>        C
-      !>              CALL EKACEC ( HANDLE, SEGNO, RECNO,
-      !>             .              'CCOL', 1,     '999', .TRUE. )
+      !>C
+      !>C     Add a null value to the CCOL in the second record.
+      !>C     The argument 999 is ignored because the null flag is
+      !>C     set to .TRUE.
+      !>C
+      !>      CALL EKACEC ( HANDLE, SEGNO, RECNO,
+      !>     .              'CCOL', 1,     '999', .TRUE. )
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the created file. Show the values added.
-      !>        C
-      !>              CALL EKOPR ( EKNAME, HANDLE )
+      !>C
+      !>C     Open the created file. Show the values added.
+      !>C
+      !>      CALL EKOPR ( EKNAME, HANDLE )
       !>
-      !>        C
-      !>        C     The file we have created has only one segment and
-      !>        C     two records within. Each record has two columns.
-      !>        C
-      !>              SEGNO = 1
+      !>C
+      !>C     The file we have created has only one segment and
+      !>C     two records within. Each record has two columns.
+      !>C
+      !>      SEGNO = 1
       !>
-      !>        C
-      !>        C     Go over each record...
-      !>        C
-      !>              DO I = 1, 2
+      !>C
+      !>C     Go over each record...
+      !>C
+      !>      DO I = 1, 2
       !>
-      !>                 WRITE(*,'(A,I4)') 'Record', I
+      !>         WRITE(*,'(A,I4)') 'Record', I
       !>
-      !>        C
-      !>        C        ... and each column.
-      !>        C
-      !>                 DO J = 1, NCOLS
+      !>C
+      !>C        ... and each column.
+      !>C
+      !>         DO J = 1, NCOLS
       !>
-      !>        C
-      !>        C        Read the data from the first column.
-      !>        C
-      !>                    CALL EKRCEC ( HANDLE, SEGNO, I, CNAMES(J),
-      !>             .                    NVALS,  CVALS,    ISNULL    )
+      !>C
+      !>C        Read the data from the first column.
+      !>C
+      !>            CALL EKRCEC ( HANDLE, SEGNO, I, CNAMES(J),
+      !>     .                    NVALS,  CVALS,    ISNULL    )
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                       WRITE(*,'(A,A6,A)') '   ', CNAMES(J), ': NULL '
+      !>               WRITE(*,'(A,A6,A)') '   ', CNAMES(J), ': NULL '
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE(*,'(A,A6,A,4A9)') '   ', CNAMES(J), ': ',
-      !>             .                              ( CVALS(K), K = 1, NVALS )
+      !>               WRITE(*,'(A,A6,A,4A9)') '   ', CNAMES(J), ': ',
+      !>     .                              ( CVALS(K), K = 1, NVALS )
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -26018,321 +26886,323 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKACEC_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKACEC_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME  = 'ekacec_ex2.bes' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME  = 'ekacec_ex2.bes' )
       !>
-      !>              CHARACTER*(*)         LSK
-      !>              PARAMETER           ( LSK     = 'naif0012.tls'   )
+      !>      CHARACTER*(*)         LSK
+      !>      PARAMETER           ( LSK     = 'naif0012.tls'   )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE   = 'DATAORDERS'     )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE   = 'DATAORDERS'     )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               DESCLN
-      !>              PARAMETER           ( DESCLN = 80  )
+      !>      INTEGER               DESCLN
+      !>      PARAMETER           ( DESCLN = 80  )
       !>
-      !>              INTEGER               FNMLEN
-      !>              PARAMETER           ( FNMLEN = 50  )
+      !>      INTEGER               FNMLEN
+      !>      PARAMETER           ( FNMLEN = 50  )
       !>
-      !>              INTEGER               LNMLEN
-      !>              PARAMETER           ( LNMLEN = 50  )
+      !>      INTEGER               LNMLEN
+      !>      PARAMETER           ( LNMLEN = 50  )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 6   )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 6   )
       !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 9   )
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 9   )
       !>
-      !>              INTEGER               UTCLEN
-      !>              PARAMETER           ( UTCLEN = 30  )
+      !>      INTEGER               UTCLEN
+      !>      PARAMETER           ( UTCLEN = 30  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
-      !>              CHARACTER*(DESCLN)    DESCRP
-      !>              CHARACTER*(FNMLEN)    FNAMES ( NROWS )
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    ITEMNM
-      !>              CHARACTER*(LNMLEN)    LNAMES ( NROWS )
-      !>              CHARACTER*(UTCLEN)    ODATE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
+      !>      CHARACTER*(DESCLN)    DESCRP
+      !>      CHARACTER*(FNMLEN)    FNAMES ( NROWS )
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    ITEMNM
+      !>      CHARACTER*(LNMLEN)    LNAMES ( NROWS )
+      !>      CHARACTER*(UTCLEN)    ODATE
       !>
-      !>              DOUBLE PRECISION      COSTS  ( NROWS )
-      !>              DOUBLE PRECISION      ETS    ( NROWS )
-      !>              DOUBLE PRECISION      PRICE
+      !>      DOUBLE PRECISION      COSTS  ( NROWS )
+      !>      DOUBLE PRECISION      ETS    ( NROWS )
+      !>      DOUBLE PRECISION      PRICE
       !>
-      !>              INTEGER               CSTIDS ( NROWS )
-      !>              INTEGER               ESIZE
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               ITEMID
-      !>              INTEGER               NRESVC
-      !>              INTEGER               ORDID
-      !>              INTEGER               ORDIDS ( NROWS )
-      !>              INTEGER               RCPTRS ( NROWS )
-      !>              INTEGER               RECNO
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SIZES  ( NROWS )
-      !>              INTEGER               WKINDX ( NROWS )
+      !>      INTEGER               CSTIDS ( NROWS )
+      !>      INTEGER               ESIZE
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               ITEMID
+      !>      INTEGER               NRESVC
+      !>      INTEGER               ORDID
+      !>      INTEGER               ORDIDS ( NROWS )
+      !>      INTEGER               RCPTRS ( NROWS )
+      !>      INTEGER               RECNO
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SIZES  ( NROWS )
+      !>      INTEGER               WKINDX ( NROWS )
       !>
-      !>              LOGICAL               ISNULL
-      !>              LOGICAL               NLFLGS ( NROWS )
+      !>      LOGICAL               ISNULL
+      !>      LOGICAL               NLFLGS ( NROWS )
       !>
-      !>        C
-      !>        C     Load a leapseconds kernel for UTC/ET conversion.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load a leapseconds kernel for UTC/ET conversion.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 01-JUN-2019'
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 01-JUN-2019'
       !>
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAORDERS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.  Only the COST column may take
-      !>        C     null values.
-      !>        C
-      !>              CNAMES(1) =  'ORDER_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAORDERS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.  Only the COST column may take
+      !>C     null values.
+      !>C
+      !>      CNAMES(1) =  'ORDER_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'CUSTOMER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'CUSTOMER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'LAST_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*), ' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'LAST_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*), ' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'FIRST_NAME'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*), ' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'FIRST_NAME'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*), ' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'ORDER_DATE'
-      !>              CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
+      !>      CNAMES(5) =  'ORDER_DATE'
+      !>      CDECLS(5) =  'DATATYPE = TIME, INDEXED  = TRUE'
       !>
-      !>              CNAMES(6) =  'COST'
-      !>              CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE,'             //
-      !>             .             'NULLS_OK = TRUE'
+      !>      CNAMES(6) =  'COST'
+      !>      CDECLS(6) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE,'             //
+      !>     .             'NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment.  We presume the number of  rows
-      !>        C     of data is known in advance.
-      !>        C
-      !>              CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
-      !>             .              CNAMES,  CDECLS, SEGNO, RCPTRS )
+      !>C
+      !>C     Start the segment.  We presume the number of  rows
+      !>C     of data is known in advance.
+      !>C
+      !>      CALL EKIFLD ( HANDLE,  TABLE,  NCOLS, NROWS,
+      !>     .              CNAMES,  CDECLS, SEGNO, RCPTRS )
       !>
-      !>        C
-      !>        C     At this point, arrays containing data for the
-      !>        C     segment's columns may be filled in.  The names
-      !>        C     of the data arrays are shown below.
-      !>        C
-      !>        C        Column           Data array
-      !>        C
-      !>        C        'ORDER_ID'       ORDIDS
-      !>        C        'CUSTOMER_ID'    CSTIDS
-      !>        C        'LAST_NAME'      LNAMES
-      !>        C        'FIRST_NAME'     FNAMES
-      !>        C        'ORDER_DATE'     ETS
-      !>        C        'COST'           COSTS
-      !>        C
-      !>              DO I = 1, NROWS
+      !>C
+      !>C     At this point, arrays containing data for the
+      !>C     segment's columns may be filled in.  The names
+      !>C     of the data arrays are shown below.
+      !>C
+      !>C        Column           Data array
+      !>C
+      !>C        'ORDER_ID'       ORDIDS
+      !>C        'CUSTOMER_ID'    CSTIDS
+      !>C        'LAST_NAME'      LNAMES
+      !>C        'FIRST_NAME'     FNAMES
+      !>C        'ORDER_DATE'     ETS
+      !>C        'COST'           COSTS
+      !>C
+      !>      DO I = 1, NROWS
       !>
-      !>                 ORDIDS(I) = I
-      !>                 CSTIDS(I) = I * 100
-      !>                 COSTS(I)  = I * 100.D0
+      !>         ORDIDS(I) = I
+      !>         CSTIDS(I) = I * 100
+      !>         COSTS(I)  = I * 100.D0
       !>
-      !>                 CALL REPMI ( 'Order # Customer first name',
-      !>             .                '#', I, FNAMES(I)             )
-      !>                 CALL REPMI ( 'Order # Customer last name',
-      !>             .                '#', I, LNAMES(I)             )
-      !>                 CALL REPMI ( '1998 Mar #', '#', I, ODATE   )
+      !>         CALL REPMI ( 'Order # Customer first name',
+      !>     .                '#', I, FNAMES(I)             )
+      !>         CALL REPMI ( 'Order # Customer last name',
+      !>     .                '#', I, LNAMES(I)             )
+      !>         CALL REPMI ( '1998 Mar #', '#', I, ODATE   )
       !>
-      !>                 CALL UTC2ET ( ODATE,  ETS(I) )
+      !>         CALL UTC2ET ( ODATE,  ETS(I) )
       !>
-      !>                 NLFLGS(I) = .FALSE.
+      !>         NLFLGS(I) = .FALSE.
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              NLFLGS(2) = .TRUE.
+      !>      NLFLGS(2) = .TRUE.
       !>
-      !>        C
-      !>        C     The SIZES array shown below is ignored for scalar
-      !>        C     and fixed-size array columns, so we need not
-      !>        C     initialize it.  For variable-size arrays, the
-      !>        C     Ith element of the SIZES array must contain the size
-      !>        C     of the Ith column entry in the column being written.
-      !>        C     Normally, the SIZES array would be reset for each
-      !>        C     variable-size column.
-      !>        C
-      !>        C     The NLFLGS array indicates which entries are null.
-      !>        C     It is ignored for columns that don't allow null
-      !>        C     values.  In this case, only the COST column allows
-      !>        C     nulls.
-      !>        C
-      !>        C     Add the columns of data to the segment.  All of the
-      !>        C     data for each column is written in one shot.
-      !>        C
-      !>              CALL EKACLI ( HANDLE, SEGNO,  'ORDER_ID',
-      !>             .              ORDIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>C
+      !>C     The SIZES array shown below is ignored for scalar
+      !>C     and fixed-size array columns, so we need not
+      !>C     initialize it.  For variable-size arrays, the
+      !>C     Ith element of the SIZES array must contain the size
+      !>C     of the Ith column entry in the column being written.
+      !>C     Normally, the SIZES array would be reset for each
+      !>C     variable-size column.
+      !>C
+      !>C     The NLFLGS array indicates which entries are null.
+      !>C     It is ignored for columns that don't allow null
+      !>C     values.  In this case, only the COST column allows
+      !>C     nulls.
+      !>C
+      !>C     Add the columns of data to the segment.  All of the
+      !>C     data for each column is written in one shot.
+      !>C
+      !>      CALL EKACLI ( HANDLE, SEGNO,  'ORDER_ID',
+      !>     .              ORDIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLI ( HANDLE, SEGNO,  'CUSTOMER_ID',
-      !>             .              CSTIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLI ( HANDLE, SEGNO,  'CUSTOMER_ID',
+      !>     .              CSTIDS, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLC ( HANDLE, SEGNO,  'LAST_NAME',
-      !>             .              LNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLC ( HANDLE, SEGNO,  'LAST_NAME',
+      !>     .              LNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLC ( HANDLE, SEGNO,  'FIRST_NAME',
-      !>             .              FNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLC ( HANDLE, SEGNO,  'FIRST_NAME',
+      !>     .              FNAMES, SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLD ( HANDLE, SEGNO,  'ORDER_DATE',
-      !>             .              ETS,    SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLD ( HANDLE, SEGNO,  'ORDER_DATE',
+      !>     .              ETS,    SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>              CALL EKACLD ( HANDLE, SEGNO,  'COST',
-      !>             .              COSTS,  SIZES,  NLFLGS,  RCPTRS, WKINDX )
+      !>      CALL EKACLD ( HANDLE, SEGNO,  'COST',
+      !>     .              COSTS,  SIZES,  NLFLGS,  RCPTRS, WKINDX )
       !>
-      !>        C
-      !>        C     Complete the segment.  The RCPTRS array is that
-      !>        C     returned by EKIFLD.
-      !>        C
-      !>              CALL EKFFLD ( HANDLE, SEGNO, RCPTRS )
+      !>C
+      !>C     Complete the segment.  The RCPTRS array is that
+      !>C     returned by EKIFLD.
+      !>C
+      !>      CALL EKFFLD ( HANDLE, SEGNO, RCPTRS )
       !>
-      !>        C
-      !>        C     At this point, the second segment could be
-      !>        C     created by an analogous process.  In fact, the
-      !>        C     second segment could be created at any time; it is
-      !>        C     not necessary to populate the first segment with
-      !>        C     data before starting the second segment.
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAITEMS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.
-      !>        C
-      !>              CNAMES(1) =  'ITEM_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     At this point, the second segment could be
+      !>C     created by an analogous process.  In fact, the
+      !>C     second segment could be created at any time; it is
+      !>C     not necessary to populate the first segment with
+      !>C     data before starting the second segment.
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAITEMS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.
+      !>C
+      !>      CNAMES(1) =  'ITEM_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'ORDER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'ORDER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'ITEM_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'ITEM_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'DESCRIPTION'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'DESCRIPTION'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'PRICE'
-      !>              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(5) =  'PRICE'
+      !>      CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>        C
-      !>        C     Start the new segment. Since we have no data for this
-      !>        C     segment, start the segment by just defining the new
-      !>        C     segment's schema.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, 'DATAITEMS', 5,
-      !>             .              CNAMES, CDECLS,      SEGNO )
+      !>C
+      !>C     Start the new segment. Since we have no data for this
+      !>C     segment, start the segment by just defining the new
+      !>C     segment's schema.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, 'DATAITEMS', 5,
+      !>     .              CNAMES, CDECLS,      SEGNO )
       !>
-      !>        C
-      !>        C     Close the file by a call to EKCLS.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file by a call to EKCLS.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now, we want to insert a new record into the DATAITEMS
-      !>        C     table.
-      !>        C
-      !>        C     Open the database for write access.  This call is
-      !>        C     made when the file already exists.
-      !>        C
-      !>              CALL EKOPW ( EKNAME, HANDLE )
+      !>C
+      !>C     Now, we want to insert a new record into the DATAITEMS
+      !>C     table.
+      !>C
+      !>C     Open the database for write access.  This call is
+      !>C     made when the file already exists.
+      !>C
+      !>      CALL EKOPW ( EKNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Append a new, empty record to the DATAITEMS
-      !>        C     table. Recall that the DATAITEMS table
-      !>        C     is in segment number 2.  The call will return
-      !>        C     the number of the new, empty record.
-      !>        C
-      !>              SEGNO = 2
-      !>              CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>C
+      !>C     Append a new, empty record to the DATAITEMS
+      !>C     table. Recall that the DATAITEMS table
+      !>C     is in segment number 2.  The call will return
+      !>C     the number of the new, empty record.
+      !>C
+      !>      SEGNO = 2
+      !>      CALL EKAPPR ( HANDLE, SEGNO, RECNO )
       !>
-      !>        C
-      !>        C     At this point, the new record is empty.  A valid EK
-      !>        C     cannot contain empty records.  We fill in the data
-      !>        C     here.  Data items are filled in one column at a time.
-      !>        C     The order in which the columns are filled in is not
-      !>        C     important.  We use the EKACEx (add column entry)
-      !>        C     routines to fill in column entries.  We'll assume
-      !>        C     that no entries are null.  All entries are scalar,
-      !>        C     so the entry size is 1.
-      !>        C
-      !>              ISNULL   =  .FALSE.
-      !>              ESIZE    =  1
+      !>C
+      !>C     At this point, the new record is empty.  A valid EK
+      !>C     cannot contain empty records.  We fill in the data
+      !>C     here.  Data items are filled in one column at a time.
+      !>C     The order in which the columns are filled in is not
+      !>C     important.  We use the EKACEx (add column entry)
+      !>C     routines to fill in column entries.  We'll assume
+      !>C     that no entries are null.  All entries are scalar,
+      !>C     so the entry size is 1.
+      !>C
+      !>      ISNULL   =  .FALSE.
+      !>      ESIZE    =  1
       !>
-      !>        C
-      !>        C     The following variables will contain the data for
-      !>        C     the new record.
-      !>        C
-      !>              ORDID    =   10011
-      !>              ITEMID   =   531
-      !>              ITEMNM   =  'Sample item'
-      !>              DESCRP   =  'This sample item is used only in tests.'
-      !>              PRICE    =   1345.678D0
+      !>C
+      !>C     The following variables will contain the data for
+      !>C     the new record.
+      !>C
+      !>      ORDID    =   10011
+      !>      ITEMID   =   531
+      !>      ITEMNM   =  'Sample item'
+      !>      DESCRP   =  'This sample item is used only in tests.'
+      !>      PRICE    =   1345.678D0
       !>
-      !>        C
-      !>        C     Note that the names of the routines called
-      !>        C     correspond to the data types of the columns:  the
-      !>        C     last letter of the routine name is C, I, or D,
-      !>        C     depending on the data type.
-      !>        C
-      !>              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
-      !>             .              ESIZE,  ORDID,  ISNULL               )
+      !>C
+      !>C     Note that the names of the routines called
+      !>C     correspond to the data types of the columns:  the
+      !>C     last letter of the routine name is C, I, or D,
+      !>C     depending on the data type.
+      !>C
+      !>      CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
+      !>     .              ESIZE,  ORDID,  ISNULL               )
       !>
-      !>              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
-      !>             .              ESIZE,  ITEMID, ISNULL               )
+      !>      CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
+      !>     .              ESIZE,  ITEMID, ISNULL               )
       !>
-      !>              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
-      !>             .              ESIZE,  ITEMNM, ISNULL               )
+      !>      CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
+      !>     .              ESIZE,  ITEMNM, ISNULL               )
       !>
-      !>              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
-      !>             .              ESIZE,  DESCRP, ISNULL               )
+      !>      CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
+      !>     .              ESIZE,  DESCRP, ISNULL               )
       !>
-      !>              CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
-      !>             .              ESIZE,  PRICE,  ISNULL               )
+      !>      CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
+      !>     .              ESIZE,  PRICE,  ISNULL               )
       !>
-      !>        C
-      !>        C     Close the file to make the update permanent.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file to make the update permanent.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new EK file exists in the
@@ -26365,12 +27235,20 @@ contains
       !>        Updated to use ERRHAN.
       !>
       !>-    Beta Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekacec
+      module subroutine ekacec ( ctx, handle, segno, recno, column, nvals, cvals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(in) :: segno  !! Index of segment containing record.
+      integer(ip), intent(in) :: recno  !! Record to which data is to be added.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+      character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -26449,8 +27327,10 @@ contains
       end if
 
       return
-      end procedure ekacec
+      end subroutine ekacec
 
+      !> Add data to an double precision column in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file open for write access.
@@ -26576,281 +27456,283 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKACED_EX1
-      !>              IMPLICIT NONE
-      !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C     and EK Query Limit Parameters (MAXQRY)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
-      !>              INCLUDE 'ekqlimit.inc'
-      !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME  = 'ekaced_ex1.bdb' )
-      !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE   = 'TAB' )
-      !>
-      !>              INTEGER               COL3SZ
-      !>              PARAMETER           ( COL3SZ = 3   )
-      !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
-      !>
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 1840 )
-      !>
-      !>              INTEGER               MXC2SZ
-      !>              PARAMETER           ( MXC2SZ = 4   )
-      !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
-      !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 3   )
-      !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 4   )
-      !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(MAXQRY)    QUERY
-      !>
-      !>              DOUBLE PRECISION      COL1
-      !>              DOUBLE PRECISION      COL2   ( MXC2SZ )
-      !>              DOUBLE PRECISION      COL3   ( COL3SZ )
-      !>              DOUBLE PRECISION      DVALS  ( MXC2SZ )
-      !>
-      !>              INTEGER               ELTIDX
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               NELT
-      !>              INTEGER               NMROWS
-      !>              INTEGER               NRESVC
-      !>              INTEGER               RECNO
-      !>              INTEGER               ROW
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SELIDX
-      !>
-      !>              LOGICAL               ERROR
-      !>              LOGICAL               FOUND
-      !>              LOGICAL               ISNULL
-      !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 13-JUN-2019'
-      !>
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
-      !>
-      !>        C
-      !>        C     Set up the column names and declarations
-      !>        C     for the TAB segment.  We'll index all of
-      !>        C     the columns.
-      !>        C
-      !>              CNAMES(1) = 'DP_COL_1'
-      !>              CDECLS(1) = 'DATATYPE = DOUBLE PRECISION, ' //
-      !>             .            'INDEXED  = TRUE'
-      !>
-      !>              CNAMES(2) = 'DP_COL_2'
-      !>              CDECLS(2) = 'DATATYPE = DOUBLE PRECISION, ' //
-      !>             .            'SIZE = VARIABLE, NULLS_OK = TRUE'
-      !>
-      !>              CNAMES(3) = 'DP_COL_3'
-      !>              CDECLS(3) = 'DATATYPE = DOUBLE PRECISION, ' //
-      !>             .            'SIZE = 3'
-      !>
-      !>        C
-      !>        C     Start the segment.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
+      !>```fortran
+      !>      PROGRAM EKACED_EX1
+      !>      IMPLICIT NONE
+      !>
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C     and EK Query Limit Parameters (MAXQRY)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
+      !>      INCLUDE 'ekqlimit.inc'
+      !>
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME  = 'ekaced_ex1.bdb' )
+      !>
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE   = 'TAB' )
+      !>
+      !>      INTEGER               COL3SZ
+      !>      PARAMETER           ( COL3SZ = 3   )
+      !>
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
+      !>
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 1840 )
+      !>
+      !>      INTEGER               MXC2SZ
+      !>      PARAMETER           ( MXC2SZ = 4   )
+      !>
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
+      !>
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 3   )
+      !>
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 4   )
+      !>
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(MAXQRY)    QUERY
+      !>
+      !>      DOUBLE PRECISION      COL1
+      !>      DOUBLE PRECISION      COL2   ( MXC2SZ )
+      !>      DOUBLE PRECISION      COL3   ( COL3SZ )
+      !>      DOUBLE PRECISION      DVALS  ( MXC2SZ )
+      !>
+      !>      INTEGER               ELTIDX
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               NELT
+      !>      INTEGER               NMROWS
+      !>      INTEGER               NRESVC
+      !>      INTEGER               RECNO
+      !>      INTEGER               ROW
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SELIDX
+      !>
+      !>      LOGICAL               ERROR
+      !>      LOGICAL               FOUND
+      !>      LOGICAL               ISNULL
+      !>
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 13-JUN-2019'
+      !>
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>
+      !>C
+      !>C     Set up the column names and declarations
+      !>C     for the TAB segment.  We'll index all of
+      !>C     the columns.
+      !>C
+      !>      CNAMES(1) = 'DP_COL_1'
+      !>      CDECLS(1) = 'DATATYPE = DOUBLE PRECISION, ' //
+      !>     .            'INDEXED  = TRUE'
+      !>
+      !>      CNAMES(2) = 'DP_COL_2'
+      !>      CDECLS(2) = 'DATATYPE = DOUBLE PRECISION, ' //
+      !>     .            'SIZE = VARIABLE, NULLS_OK = TRUE'
+      !>
+      !>      CNAMES(3) = 'DP_COL_3'
+      !>      CDECLS(3) = 'DATATYPE = DOUBLE PRECISION, ' //
+      !>     .            'SIZE = 3'
+      !>
+      !>C
+      !>C     Start the segment.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
       !>
-      !>        C
-      !>        C     At the records to the table.
-      !>        C
-      !>              DO I = 1, NROWS
-      !>
-      !>        C
-      !>        C        Append a new record to the EK.
-      !>        C
-      !>                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
-      !>
-      !>        C
-      !>        C        Add DP_COL_1
-      !>        C
-      !>                 COL1 = I * 100.D0
+      !>C
+      !>C     At the records to the table.
+      !>C
+      !>      DO I = 1, NROWS
+      !>
+      !>C
+      !>C        Append a new record to the EK.
+      !>C
+      !>         CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>
+      !>C
+      !>C        Add DP_COL_1
+      !>C
+      !>         COL1 = I * 100.D0
       !>
-      !>                 CALL EKACED ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(1), 1,     COL1,  .FALSE. )
+      !>         CALL EKACED ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(1), 1,     COL1,  .FALSE. )
       !>
-      !>        C
-      !>        C        Add I items to DP_COL_2
-      !>        C
-      !>                 DO J = 1, I
-      !>                    COL2(J) = J + I*200.D0
-      !>                 END DO
+      !>C
+      !>C        Add I items to DP_COL_2
+      !>C
+      !>         DO J = 1, I
+      !>            COL2(J) = J + I*200.D0
+      !>         END DO
       !>
-      !>                 ISNULL = ( I .EQ. 2 )
+      !>         ISNULL = ( I .EQ. 2 )
       !>
-      !>                 CALL EKACED ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(2), I,     COL2,  ISNULL )
+      !>         CALL EKACED ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(2), I,     COL2,  ISNULL )
       !>
-      !>        C
-      !>        C        Add 3 items to DP_COL_3
-      !>        C
-      !>                 DO J = 1, 3
-      !>                    COL3(J) =  I + J*100.D0
-      !>                 END DO
+      !>C
+      !>C        Add 3 items to DP_COL_3
+      !>C
+      !>         DO J = 1, 3
+      !>            COL3(J) =  I + J*100.D0
+      !>         END DO
       !>
-      !>                 CALL EKACED ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(3), 3,     COL3, .FALSE. )
+      !>         CALL EKACED ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(3), 3,     COL3, .FALSE. )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the created file. Perform the query and show the
-      !>        C     results.
-      !>        C
-      !>              CALL FURNSH ( EKNAME )
+      !>C
+      !>C     Open the created file. Perform the query and show the
+      !>C     results.
+      !>C
+      !>      CALL FURNSH ( EKNAME )
       !>
-      !>              QUERY = 'SELECT DP_COL_1, DP_COL_2, DP_COL_3 FROM TAB'
+      !>      QUERY = 'SELECT DP_COL_1, DP_COL_2, DP_COL_3 FROM TAB'
       !>
-      !>        C
-      !>        C     Query the EK system for data rows matching the
-      !>        C     SELECT constraints.
-      !>        C
-      !>              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+      !>C
+      !>C     Query the EK system for data rows matching the
+      !>C     SELECT constraints.
+      !>C
+      !>      CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
       !>
-      !>        C
-      !>        C     Check whether an error occurred while processing the
-      !>        C     SELECT clause. If so, output the error message.
-      !>        C
-      !>              IF ( ERROR ) THEN
+      !>C
+      !>C     Check whether an error occurred while processing the
+      !>C     SELECT clause. If so, output the error message.
+      !>C
+      !>      IF ( ERROR ) THEN
       !>
-      !>                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+      !>         WRITE(*,*) 'SELECT clause error: ', ERRMSG
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO ROW = 1, NMROWS
+      !>         DO ROW = 1, NMROWS
       !>
-      !>                    WRITE(*,*) ' '
-      !>                    WRITE(*,'(A,I3)') 'ROW  = ', ROW
+      !>            WRITE(*,*) ' '
+      !>            WRITE(*,'(A,I3)') 'ROW  = ', ROW
       !>
-      !>        C
-      !>        C           Fetch values from column DP_COL_1.  Since
-      !>        C           DP_COL_1 was the first column selected, the
-      !>        C           selection index SELIDX is set to 1.
-      !>        C
-      !>                    SELIDX = 1
-      !>                    ELTIDX = 1
-      !>                    CALL EKGD ( SELIDX,    ROW,     ELTIDX,
-      !>             .                  DVALS(1),  ISNULL,  FOUND   )
+      !>C
+      !>C           Fetch values from column DP_COL_1.  Since
+      !>C           DP_COL_1 was the first column selected, the
+      !>C           selection index SELIDX is set to 1.
+      !>C
+      !>            SELIDX = 1
+      !>            ELTIDX = 1
+      !>            CALL EKGD ( SELIDX,    ROW,     ELTIDX,
+      !>     .                  DVALS(1),  ISNULL,  FOUND   )
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                       WRITE(*,*) '  COLUMN = DP_COL_1: <Null>'
+      !>               WRITE(*,*) '  COLUMN = DP_COL_1: <Null>'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE(*,*) '  COLUMN = DP_COL_1:', DVALS(1)
+      !>               WRITE(*,*) '  COLUMN = DP_COL_1:', DVALS(1)
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>        C
-      !>        C           Fetch values from column DP_COL_2 in the current
-      !>        C           row.  Since DP_COL_2 contains variable-size array
-      !>        C           elements, we call EKNELT to determine how many
-      !>        C           elements to fetch.
-      !>        C
-      !>                    SELIDX = 2
-      !>                    CALL EKNELT ( SELIDX, ROW, NELT )
+      !>C
+      !>C           Fetch values from column DP_COL_2 in the current
+      !>C           row.  Since DP_COL_2 contains variable-size array
+      !>C           elements, we call EKNELT to determine how many
+      !>C           elements to fetch.
+      !>C
+      !>            SELIDX = 2
+      !>            CALL EKNELT ( SELIDX, ROW, NELT )
       !>
-      !>                    ELTIDX = 1
-      !>                    ISNULL = .FALSE.
+      !>            ELTIDX = 1
+      !>            ISNULL = .FALSE.
       !>
-      !>                    DO WHILE (       ( ELTIDX .LE.  NELT   )
-      !>             .                 .AND. (        .NOT. ISNULL )  )
+      !>            DO WHILE (       ( ELTIDX .LE.  NELT   )
+      !>     .                 .AND. (        .NOT. ISNULL )  )
       !>
-      !>                       CALL EKGD ( SELIDX,         ROW,     ELTIDX,
-      !>             .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
+      !>               CALL EKGD ( SELIDX,         ROW,     ELTIDX,
+      !>     .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
       !>
-      !>                       ELTIDX = ELTIDX + 1
+      !>               ELTIDX = ELTIDX + 1
       !>
-      !>        C
-      !>        C           If the column entry is null, we'll be kicked
-      !>        C           out of this loop after the first iteration.
-      !>        C
-      !>                    END DO
+      !>C
+      !>C           If the column entry is null, we'll be kicked
+      !>C           out of this loop after the first iteration.
+      !>C
+      !>            END DO
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                       WRITE(*,*) '  COLUMN = DP_COL_2: <Null>'
+      !>               WRITE(*,*) '  COLUMN = DP_COL_2: <Null>'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE(*,'(A,4F6.1)') '   COLUMN = DP_COL_2:',
-      !>             .                              ( DVALS(I), I = 1, NELT )
+      !>               WRITE(*,'(A,4F6.1)') '   COLUMN = DP_COL_2:',
+      !>     .                              ( DVALS(I), I = 1, NELT )
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>        C
-      !>        C           Fetch values from column DP_COL_3 in the current
-      !>        C           row.  We need not call EKNELT since we know how
-      !>        C           many elements are in each column entry.
-      !>        C
-      !>                    SELIDX = 3
-      !>                    ELTIDX = 1
-      !>                    ISNULL = .FALSE.
+      !>C
+      !>C           Fetch values from column DP_COL_3 in the current
+      !>C           row.  We need not call EKNELT since we know how
+      !>C           many elements are in each column entry.
+      !>C
+      !>            SELIDX = 3
+      !>            ELTIDX = 1
+      !>            ISNULL = .FALSE.
       !>
-      !>                    DO WHILE (       ( ELTIDX .LE.  COL3SZ )
-      !>             .                 .AND. (        .NOT. ISNULL )  )
+      !>            DO WHILE (       ( ELTIDX .LE.  COL3SZ )
+      !>     .                 .AND. (        .NOT. ISNULL )  )
       !>
-      !>                       CALL EKGD ( SELIDX,         ROW,     ELTIDX,
-      !>             .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
+      !>               CALL EKGD ( SELIDX,         ROW,     ELTIDX,
+      !>     .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
       !>
-      !>                       ELTIDX = ELTIDX + 1
+      !>               ELTIDX = ELTIDX + 1
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                       WRITE(*,*) '  COLUMN = DP_COL_3: <Null>'
+      !>               WRITE(*,*) '  COLUMN = DP_COL_3: <Null>'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE(*,'(A,3F6.1)') '   COLUMN = DP_COL_3:',
-      !>             .                           ( DVALS(I), I = 1, COL3SZ )
+      !>               WRITE(*,'(A,3F6.1)') '   COLUMN = DP_COL_3:',
+      !>     .                           ( DVALS(I), I = 1, COL3SZ )
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>        C
-      !>        C     We either parsed the SELECT clause or had an error.
-      !>        C
-      !>              END IF
+      !>C
+      !>C     We either parsed the SELECT clause or had an error.
+      !>C
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -26898,158 +27780,160 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKACED_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKACED_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME  = 'ekaced_ex2.bdb' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME  = 'ekaced_ex2.bdb' )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE   = 'DATAITEMS'      )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE   = 'DATAITEMS'      )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               DESCLN
-      !>              PARAMETER           ( DESCLN = 80  )
+      !>      INTEGER               DESCLN
+      !>      PARAMETER           ( DESCLN = 80  )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 5   )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 5   )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
-      !>              CHARACTER*(DESCLN)    DESCRP
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    ITEMNM
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
+      !>      CHARACTER*(DESCLN)    DESCRP
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    ITEMNM
       !>
-      !>              DOUBLE PRECISION      PRICE
+      !>      DOUBLE PRECISION      PRICE
       !>
-      !>              INTEGER               ESIZE
-      !>              INTEGER               HANDLE
-      !>              INTEGER               ITEMID
-      !>              INTEGER               NRESVC
-      !>              INTEGER               ORDID
-      !>              INTEGER               RECNO
-      !>              INTEGER               SEGNO
+      !>      INTEGER               ESIZE
+      !>      INTEGER               HANDLE
+      !>      INTEGER               ITEMID
+      !>      INTEGER               NRESVC
+      !>      INTEGER               ORDID
+      !>      INTEGER               RECNO
+      !>      INTEGER               SEGNO
       !>
-      !>              LOGICAL               ISNULL
+      !>      LOGICAL               ISNULL
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK;Created 21-JUN-2019'
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK;Created 21-JUN-2019'
       !>
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAITEMS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.
-      !>        C
-      !>              CNAMES(1) =  'ITEM_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAITEMS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.
+      !>C
+      !>      CNAMES(1) =  'ITEM_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'ORDER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'ORDER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'ITEM_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'ITEM_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'DESCRIPTION'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'DESCRIPTION'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'PRICE'
-      !>              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(5) =  'PRICE'
+      !>      CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment. Since we have no data for this
-      !>        C     segment, start the segment by just defining the new
-      !>        C     segment's schema.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
+      !>C
+      !>C     Start the segment. Since we have no data for this
+      !>C     segment, start the segment by just defining the new
+      !>C     segment's schema.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
       !>
-      !>        C
-      !>        C     Append a new, empty record to the DATAITEMS
-      !>        C     table. Recall that the DATAITEMS table
-      !>        C     is in segment number 1.  The call will return
-      !>        C     the number of the new, empty record.
-      !>        C
-      !>              SEGNO = 1
-      !>              CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>C
+      !>C     Append a new, empty record to the DATAITEMS
+      !>C     table. Recall that the DATAITEMS table
+      !>C     is in segment number 1.  The call will return
+      !>C     the number of the new, empty record.
+      !>C
+      !>      SEGNO = 1
+      !>      CALL EKAPPR ( HANDLE, SEGNO, RECNO )
       !>
-      !>        C
-      !>        C     At this point, the new record is empty.  A valid EK
-      !>        C     cannot contain empty records.  We fill in the data
-      !>        C     here.  Data items are filled in one column at a time.
-      !>        C     The order in which the columns are filled in is not
-      !>        C     important.  We use the EKACEx (add column entry)
-      !>        C     routines to fill in column entries.  We'll assume
-      !>        C     that no entries are null.  All entries are scalar,
-      !>        C     so the entry size is 1.
-      !>        C
-      !>              ISNULL   =  .FALSE.
-      !>              ESIZE    =  1
+      !>C
+      !>C     At this point, the new record is empty.  A valid EK
+      !>C     cannot contain empty records.  We fill in the data
+      !>C     here.  Data items are filled in one column at a time.
+      !>C     The order in which the columns are filled in is not
+      !>C     important.  We use the EKACEx (add column entry)
+      !>C     routines to fill in column entries.  We'll assume
+      !>C     that no entries are null.  All entries are scalar,
+      !>C     so the entry size is 1.
+      !>C
+      !>      ISNULL   =  .FALSE.
+      !>      ESIZE    =  1
       !>
-      !>        C
-      !>        C     The following variables will contain the data for
-      !>        C     the new record.
-      !>        C
-      !>              ORDID    =   10011
-      !>              ITEMID   =   531
-      !>              ITEMNM   =  'Sample item'
-      !>              DESCRP   =  'This sample item is used only in tests.'
-      !>              PRICE    =   1345.678D0
+      !>C
+      !>C     The following variables will contain the data for
+      !>C     the new record.
+      !>C
+      !>      ORDID    =   10011
+      !>      ITEMID   =   531
+      !>      ITEMNM   =  'Sample item'
+      !>      DESCRP   =  'This sample item is used only in tests.'
+      !>      PRICE    =   1345.678D0
       !>
-      !>        C
-      !>        C     Note that the names of the routines called
-      !>        C     correspond to the data types of the columns:  the
-      !>        C     last letter of the routine name is C, I, or D,
-      !>        C     depending on the data type.
-      !>        C
-      !>              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
-      !>             .              ESIZE,  ORDID,  ISNULL               )
+      !>C
+      !>C     Note that the names of the routines called
+      !>C     correspond to the data types of the columns:  the
+      !>C     last letter of the routine name is C, I, or D,
+      !>C     depending on the data type.
+      !>C
+      !>      CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
+      !>     .              ESIZE,  ORDID,  ISNULL               )
       !>
-      !>              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
-      !>             .              ESIZE,  ITEMID, ISNULL               )
+      !>      CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
+      !>     .              ESIZE,  ITEMID, ISNULL               )
       !>
-      !>              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
-      !>             .              ESIZE,  ITEMNM, ISNULL               )
+      !>      CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
+      !>     .              ESIZE,  ITEMNM, ISNULL               )
       !>
-      !>              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
-      !>             .              ESIZE,  DESCRP, ISNULL               )
+      !>      CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
+      !>     .              ESIZE,  DESCRP, ISNULL               )
       !>
-      !>              CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
-      !>             .              ESIZE,  PRICE,  ISNULL               )
+      !>      CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
+      !>     .              ESIZE,  PRICE,  ISNULL               )
       !>
-      !>        C
-      !>        C     Close the file to make the update permanent.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file to make the update permanent.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new EK file exists in the
@@ -27085,12 +27969,20 @@ contains
       !>        Removed an unbalanced call to CHKOUT
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekaced
+      module subroutine ekaced ( ctx, handle, segno, recno, column, nvals, dvals, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record to which data is to be added.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+      real(wp), intent(in) :: dvals  ( * )  !! Double precision values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -27171,8 +28063,10 @@ contains
       end if
 
       return
-      end procedure ekaced
+      end subroutine ekaced
 
+      !> Add data to an integer column in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an EK file open for write access.
@@ -27298,280 +28192,282 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKACEI_EX1
-      !>              IMPLICIT NONE
-      !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C     and EK Query Limit Parameters (MAXQRY)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
-      !>              INCLUDE 'ekqlimit.inc'
-      !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME  = 'ekacei_ex1.bdb' )
-      !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE   = 'TAB' )
-      !>
-      !>              INTEGER               COL3SZ
-      !>              PARAMETER           ( COL3SZ = 3   )
-      !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
-      !>
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 1840 )
-      !>
-      !>              INTEGER               MXC2SZ
-      !>              PARAMETER           ( MXC2SZ = 4   )
-      !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
-      !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 3   )
-      !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 4   )
-      !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(MAXQRY)    QUERY
-      !>
-      !>              INTEGER               COL1
-      !>              INTEGER               COL2   ( MXC2SZ )
-      !>              INTEGER               COL3   ( COL3SZ )
-      !>              INTEGER               ELTIDX
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               IVALS  ( MXC2SZ )
-      !>              INTEGER               J
-      !>              INTEGER               NELT
-      !>              INTEGER               NMROWS
-      !>              INTEGER               NRESVC
-      !>              INTEGER               RECNO
-      !>              INTEGER               ROW
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SELIDX
-      !>
-      !>              LOGICAL               ERROR
-      !>              LOGICAL               FOUND
-      !>              LOGICAL               ISNULL
-      !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 13-JUN-2019'
-      !>
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
-      !>
-      !>        C
-      !>        C     Set up the column names and declarations
-      !>        C     for the TAB segment.  We'll index all of
-      !>        C     the columns.
-      !>        C
-      !>              CNAMES(1) = 'INT_COL_1'
-      !>              CDECLS(1) = 'DATATYPE = INTEGER, INDEXED  = TRUE'
-      !>
-      !>              CNAMES(2) = 'INT_COL_2'
-      !>              CDECLS(2) = 'DATATYPE = INTEGER, SIZE = VARIABLE, ' //
-      !>             .            'NULLS_OK = TRUE'
-      !>
-      !>              CNAMES(3) = 'INT_COL_3'
-      !>              CDECLS(3) = 'DATATYPE = INTEGER, SIZE = 3'
-      !>
-      !>        C
-      !>        C     Start the segment.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
-      !>
-      !>        C
-      !>        C     At the records to the table.
-      !>        C
-      !>              DO I = 1, NROWS
-      !>
-      !>        C
-      !>        C        Append a new record to the EK.
-      !>        C
-      !>                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
-      !>
-      !>        C
-      !>        C        Add INT_COL_1
-      !>        C
-      !>                 COL1 = I * 100
+      !>```fortran
+      !>      PROGRAM EKACEI_EX1
+      !>      IMPLICIT NONE
+      !>
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C     and EK Query Limit Parameters (MAXQRY)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
+      !>      INCLUDE 'ekqlimit.inc'
+      !>
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME  = 'ekacei_ex1.bdb' )
+      !>
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE   = 'TAB' )
+      !>
+      !>      INTEGER               COL3SZ
+      !>      PARAMETER           ( COL3SZ = 3   )
+      !>
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
+      !>
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 1840 )
+      !>
+      !>      INTEGER               MXC2SZ
+      !>      PARAMETER           ( MXC2SZ = 4   )
+      !>
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
+      !>
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 3   )
+      !>
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 4   )
+      !>
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(MAXQRY)    QUERY
+      !>
+      !>      INTEGER               COL1
+      !>      INTEGER               COL2   ( MXC2SZ )
+      !>      INTEGER               COL3   ( COL3SZ )
+      !>      INTEGER               ELTIDX
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               IVALS  ( MXC2SZ )
+      !>      INTEGER               J
+      !>      INTEGER               NELT
+      !>      INTEGER               NMROWS
+      !>      INTEGER               NRESVC
+      !>      INTEGER               RECNO
+      !>      INTEGER               ROW
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SELIDX
+      !>
+      !>      LOGICAL               ERROR
+      !>      LOGICAL               FOUND
+      !>      LOGICAL               ISNULL
+      !>
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 13-JUN-2019'
+      !>
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>
+      !>C
+      !>C     Set up the column names and declarations
+      !>C     for the TAB segment.  We'll index all of
+      !>C     the columns.
+      !>C
+      !>      CNAMES(1) = 'INT_COL_1'
+      !>      CDECLS(1) = 'DATATYPE = INTEGER, INDEXED  = TRUE'
+      !>
+      !>      CNAMES(2) = 'INT_COL_2'
+      !>      CDECLS(2) = 'DATATYPE = INTEGER, SIZE = VARIABLE, ' //
+      !>     .            'NULLS_OK = TRUE'
+      !>
+      !>      CNAMES(3) = 'INT_COL_3'
+      !>      CDECLS(3) = 'DATATYPE = INTEGER, SIZE = 3'
+      !>
+      !>C
+      !>C     Start the segment.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
       !>
-      !>                 CALL EKACEI ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(1), 1,     COL1,  .FALSE. )
+      !>C
+      !>C     At the records to the table.
+      !>C
+      !>      DO I = 1, NROWS
+      !>
+      !>C
+      !>C        Append a new record to the EK.
+      !>C
+      !>         CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>
+      !>C
+      !>C        Add INT_COL_1
+      !>C
+      !>         COL1 = I * 100
       !>
-      !>        C
-      !>        C        Add I items to INT_COL_2
-      !>        C
-      !>                 DO J = 1, I
-      !>                    COL2(J) = J + I*200
-      !>                 END DO
+      !>         CALL EKACEI ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(1), 1,     COL1,  .FALSE. )
       !>
-      !>                 ISNULL = ( I .EQ. 2 )
+      !>C
+      !>C        Add I items to INT_COL_2
+      !>C
+      !>         DO J = 1, I
+      !>            COL2(J) = J + I*200
+      !>         END DO
       !>
-      !>                 CALL EKACEI ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(2), I,     COL2,  ISNULL )
+      !>         ISNULL = ( I .EQ. 2 )
       !>
-      !>        C
-      !>        C        Add 3 items to INT_COL_3
-      !>        C
-      !>                 DO J = 1, 3
-      !>                    COL3(J) =  I + J*100.D0
-      !>                 END DO
+      !>         CALL EKACEI ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(2), I,     COL2,  ISNULL )
       !>
-      !>                 CALL EKACEI ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(3), 3,     COL3, .FALSE. )
+      !>C
+      !>C        Add 3 items to INT_COL_3
+      !>C
+      !>         DO J = 1, 3
+      !>            COL3(J) =  I + J*100.D0
+      !>         END DO
       !>
-      !>              END DO
+      !>         CALL EKACEI ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(3), 3,     COL3, .FALSE. )
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>      END DO
       !>
-      !>        C
-      !>        C     Open the created file. Perform the query and show the
-      !>        C     results.
-      !>        C
-      !>              CALL FURNSH ( EKNAME )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              QUERY = 'SELECT INT_COL_1, INT_COL_2, INT_COL_3 '
-      !>             .   //   'FROM TAB'
+      !>C
+      !>C     Open the created file. Perform the query and show the
+      !>C     results.
+      !>C
+      !>      CALL FURNSH ( EKNAME )
       !>
-      !>        C
-      !>        C     Query the EK system for data rows matching the
-      !>        C     SELECT constraints.
-      !>        C
-      !>              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+      !>      QUERY = 'SELECT INT_COL_1, INT_COL_2, INT_COL_3 '
+      !>     .   //   'FROM TAB'
       !>
-      !>        C
-      !>        C     Check whether an error occurred while processing the
-      !>        C     SELECT clause. If so, output the error message.
-      !>        C
-      !>              IF ( ERROR ) THEN
+      !>C
+      !>C     Query the EK system for data rows matching the
+      !>C     SELECT constraints.
+      !>C
+      !>      CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
       !>
-      !>                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+      !>C
+      !>C     Check whether an error occurred while processing the
+      !>C     SELECT clause. If so, output the error message.
+      !>C
+      !>      IF ( ERROR ) THEN
       !>
-      !>              ELSE
+      !>         WRITE(*,*) 'SELECT clause error: ', ERRMSG
       !>
-      !>                 DO ROW = 1, NMROWS
+      !>      ELSE
       !>
-      !>                    WRITE(*,*) ' '
-      !>                    WRITE(*,'(A,I3)') 'ROW  = ', ROW
+      !>         DO ROW = 1, NMROWS
       !>
-      !>        C
-      !>        C           Fetch values from column INT_COL_1.  Since
-      !>        C           INT_COL_1 was the first column selected, the
-      !>        C           selection index SELIDX is set to 1.
-      !>        C
-      !>                    SELIDX = 1
-      !>                    ELTIDX = 1
-      !>                    CALL EKGI ( SELIDX,    ROW,     ELTIDX,
-      !>             .                  IVALS(1),  ISNULL,  FOUND   )
+      !>            WRITE(*,*) ' '
+      !>            WRITE(*,'(A,I3)') 'ROW  = ', ROW
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>C
+      !>C           Fetch values from column INT_COL_1.  Since
+      !>C           INT_COL_1 was the first column selected, the
+      !>C           selection index SELIDX is set to 1.
+      !>C
+      !>            SELIDX = 1
+      !>            ELTIDX = 1
+      !>            CALL EKGI ( SELIDX,    ROW,     ELTIDX,
+      !>     .                  IVALS(1),  ISNULL,  FOUND   )
       !>
-      !>                       WRITE(*,*) '  COLUMN = INT_COL_1: <Null>'
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                    ELSE
+      !>               WRITE(*,*) '  COLUMN = INT_COL_1: <Null>'
       !>
-      !>                       WRITE(*,'(A,I6)') '   COLUMN = INT_COL_1:',
-      !>             .                           IVALS(1)
+      !>            ELSE
       !>
-      !>                    END IF
+      !>               WRITE(*,'(A,I6)') '   COLUMN = INT_COL_1:',
+      !>     .                           IVALS(1)
       !>
-      !>        C
-      !>        C           Fetch values from column INT_COL_2 in the current
-      !>        C           row.  Since INT_COL_2 contains variable-size array
-      !>        C           elements, we call EKNELT to determine how many
-      !>        C           elements to fetch.
-      !>        C
-      !>                    SELIDX = 2
-      !>                    CALL EKNELT ( SELIDX, ROW, NELT )
+      !>            END IF
       !>
-      !>                    ELTIDX = 1
-      !>                    ISNULL = .FALSE.
+      !>C
+      !>C           Fetch values from column INT_COL_2 in the current
+      !>C           row.  Since INT_COL_2 contains variable-size array
+      !>C           elements, we call EKNELT to determine how many
+      !>C           elements to fetch.
+      !>C
+      !>            SELIDX = 2
+      !>            CALL EKNELT ( SELIDX, ROW, NELT )
       !>
-      !>                    DO WHILE (       ( ELTIDX .LE.  NELT   )
-      !>             .                 .AND. (        .NOT. ISNULL )  )
+      !>            ELTIDX = 1
+      !>            ISNULL = .FALSE.
       !>
-      !>                       CALL EKGI ( SELIDX,         ROW,     ELTIDX,
-      !>             .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
+      !>            DO WHILE (       ( ELTIDX .LE.  NELT   )
+      !>     .                 .AND. (        .NOT. ISNULL )  )
       !>
-      !>                       ELTIDX = ELTIDX + 1
+      !>               CALL EKGI ( SELIDX,         ROW,     ELTIDX,
+      !>     .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
       !>
-      !>        C
-      !>        C           If the column entry is null, we'll be kicked
-      !>        C           out of this loop after the first iteration.
-      !>        C
-      !>                    END DO
+      !>               ELTIDX = ELTIDX + 1
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>C
+      !>C           If the column entry is null, we'll be kicked
+      !>C           out of this loop after the first iteration.
+      !>C
+      !>            END DO
       !>
-      !>                       WRITE(*,*) '  COLUMN = INT_COL_2: <Null>'
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                    ELSE
+      !>               WRITE(*,*) '  COLUMN = INT_COL_2: <Null>'
       !>
-      !>                       WRITE(*,'(A,4I6)') '   COLUMN = INT_COL_2:',
-      !>             .                            ( IVALS(I), I = 1, NELT )
+      !>            ELSE
       !>
-      !>                    END IF
+      !>               WRITE(*,'(A,4I6)') '   COLUMN = INT_COL_2:',
+      !>     .                            ( IVALS(I), I = 1, NELT )
       !>
-      !>        C
-      !>        C           Fetch values from column INT_COL_3 in the current
-      !>        C           row.  We need not call EKNELT since we know how
-      !>        C           many elements are in each column entry.
-      !>        C
-      !>                    SELIDX = 3
-      !>                    ELTIDX = 1
-      !>                    ISNULL = .FALSE.
+      !>            END IF
       !>
-      !>                    DO WHILE (       ( ELTIDX .LE.  COL3SZ )
-      !>             .                 .AND. (        .NOT. ISNULL )  )
+      !>C
+      !>C           Fetch values from column INT_COL_3 in the current
+      !>C           row.  We need not call EKNELT since we know how
+      !>C           many elements are in each column entry.
+      !>C
+      !>            SELIDX = 3
+      !>            ELTIDX = 1
+      !>            ISNULL = .FALSE.
       !>
-      !>                       CALL EKGI ( SELIDX,         ROW,     ELTIDX,
-      !>             .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
+      !>            DO WHILE (       ( ELTIDX .LE.  COL3SZ )
+      !>     .                 .AND. (        .NOT. ISNULL )  )
       !>
-      !>                       ELTIDX = ELTIDX + 1
+      !>               CALL EKGI ( SELIDX,         ROW,     ELTIDX,
+      !>     .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
       !>
-      !>                    END DO
+      !>               ELTIDX = ELTIDX + 1
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            END DO
       !>
-      !>                       WRITE(*,*) '  COLUMN = INT_COL_3: <Null>'
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                    ELSE
+      !>               WRITE(*,*) '  COLUMN = INT_COL_3: <Null>'
       !>
-      !>                       WRITE(*,'(A,3I6)') '   COLUMN = INT_COL_3:',
-      !>             .                            ( IVALS(I), I = 1, COL3SZ )
+      !>            ELSE
       !>
-      !>                    END IF
+      !>               WRITE(*,'(A,3I6)') '   COLUMN = INT_COL_3:',
+      !>     .                            ( IVALS(I), I = 1, COL3SZ )
       !>
-      !>                 END DO
+      !>            END IF
       !>
-      !>        C
-      !>        C     We either parsed the SELECT clause or had an error.
-      !>        C
-      !>              END IF
+      !>         END DO
       !>
-      !>              END
+      !>C
+      !>C     We either parsed the SELECT clause or had an error.
+      !>C
+      !>      END IF
+      !>
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -27622,158 +28518,160 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKACEI_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKACEI_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME  = 'ekacei_ex2.bdb' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME  = 'ekacei_ex2.bdb' )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE   = 'DATAITEMS'      )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE   = 'DATAITEMS'      )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               DESCLN
-      !>              PARAMETER           ( DESCLN = 80  )
+      !>      INTEGER               DESCLN
+      !>      PARAMETER           ( DESCLN = 80  )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 5   )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 5   )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
-      !>              CHARACTER*(DESCLN)    DESCRP
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    ITEMNM
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS )
+      !>      CHARACTER*(DESCLN)    DESCRP
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    ITEMNM
       !>
-      !>              DOUBLE PRECISION      PRICE
+      !>      DOUBLE PRECISION      PRICE
       !>
-      !>              INTEGER               ESIZE
-      !>              INTEGER               HANDLE
-      !>              INTEGER               ITEMID
-      !>              INTEGER               NRESVC
-      !>              INTEGER               ORDID
-      !>              INTEGER               RECNO
-      !>              INTEGER               SEGNO
+      !>      INTEGER               ESIZE
+      !>      INTEGER               HANDLE
+      !>      INTEGER               ITEMID
+      !>      INTEGER               NRESVC
+      !>      INTEGER               ORDID
+      !>      INTEGER               RECNO
+      !>      INTEGER               SEGNO
       !>
-      !>              LOGICAL               ISNULL
+      !>      LOGICAL               ISNULL
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK;Created 21-JUN-2019'
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK;Created 21-JUN-2019'
       !>
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the DATAITEMS segment.  We'll index all of
-      !>        C     the columns.  All columns are scalar, so we omit
-      !>        C     the size declaration.
-      !>        C
-      !>              CNAMES(1) =  'ITEM_ID'
-      !>              CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the DATAITEMS segment.  We'll index all of
+      !>C     the columns.  All columns are scalar, so we omit
+      !>C     the size declaration.
+      !>C
+      !>      CNAMES(1) =  'ITEM_ID'
+      !>      CDECLS(1) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(2) =  'ORDER_ID'
-      !>              CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
+      !>      CNAMES(2) =  'ORDER_ID'
+      !>      CDECLS(2) =  'DATATYPE = INTEGER, INDEXED = TRUE'
       !>
-      !>              CNAMES(3) =  'ITEM_NAME'
-      !>              CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(3) =  'ITEM_NAME'
+      !>      CDECLS(3) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(4) =  'DESCRIPTION'
-      !>              CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(4) =  'DESCRIPTION'
+      !>      CDECLS(4) =  'DATATYPE = CHARACTER*(*),' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>              CNAMES(5) =  'PRICE'
-      !>              CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
-      !>             .             'INDEXED  = TRUE'
+      !>      CNAMES(5) =  'PRICE'
+      !>      CDECLS(5) =  'DATATYPE = DOUBLE PRECISION,' //
+      !>     .             'INDEXED  = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment. Since we have no data for this
-      !>        C     segment, start the segment by just defining the new
-      !>        C     segment's schema.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
+      !>C
+      !>C     Start the segment. Since we have no data for this
+      !>C     segment, start the segment by just defining the new
+      !>C     segment's schema.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
       !>
-      !>        C
-      !>        C     Append a new, empty record to the DATAITEMS
-      !>        C     table. Recall that the DATAITEMS table
-      !>        C     is in segment number 1.  The call will return
-      !>        C     the number of the new, empty record.
-      !>        C
-      !>              SEGNO = 1
-      !>              CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>C
+      !>C     Append a new, empty record to the DATAITEMS
+      !>C     table. Recall that the DATAITEMS table
+      !>C     is in segment number 1.  The call will return
+      !>C     the number of the new, empty record.
+      !>C
+      !>      SEGNO = 1
+      !>      CALL EKAPPR ( HANDLE, SEGNO, RECNO )
       !>
-      !>        C
-      !>        C     At this point, the new record is empty.  A valid EK
-      !>        C     cannot contain empty records.  We fill in the data
-      !>        C     here.  Data items are filled in one column at a time.
-      !>        C     The order in which the columns are filled in is not
-      !>        C     important.  We use the EKACEx (add column entry)
-      !>        C     routines to fill in column entries.  We'll assume
-      !>        C     that no entries are null.  All entries are scalar,
-      !>        C     so the entry size is 1.
-      !>        C
-      !>              ISNULL   =  .FALSE.
-      !>              ESIZE    =  1
+      !>C
+      !>C     At this point, the new record is empty.  A valid EK
+      !>C     cannot contain empty records.  We fill in the data
+      !>C     here.  Data items are filled in one column at a time.
+      !>C     The order in which the columns are filled in is not
+      !>C     important.  We use the EKACEx (add column entry)
+      !>C     routines to fill in column entries.  We'll assume
+      !>C     that no entries are null.  All entries are scalar,
+      !>C     so the entry size is 1.
+      !>C
+      !>      ISNULL   =  .FALSE.
+      !>      ESIZE    =  1
       !>
-      !>        C
-      !>        C     The following variables will contain the data for
-      !>        C     the new record.
-      !>        C
-      !>              ORDID    =   10011
-      !>              ITEMID   =   531
-      !>              ITEMNM   =  'Sample item'
-      !>              DESCRP   =  'This sample item is used only in tests.'
-      !>              PRICE    =   1345.678D0
+      !>C
+      !>C     The following variables will contain the data for
+      !>C     the new record.
+      !>C
+      !>      ORDID    =   10011
+      !>      ITEMID   =   531
+      !>      ITEMNM   =  'Sample item'
+      !>      DESCRP   =  'This sample item is used only in tests.'
+      !>      PRICE    =   1345.678D0
       !>
-      !>        C
-      !>        C     Note that the names of the routines called
-      !>        C     correspond to the data types of the columns:  the
-      !>        C     last letter of the routine name is C, I, or D,
-      !>        C     depending on the data type.
-      !>        C
-      !>              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
-      !>             .              ESIZE,  ORDID,  ISNULL               )
+      !>C
+      !>C     Note that the names of the routines called
+      !>C     correspond to the data types of the columns:  the
+      !>C     last letter of the routine name is C, I, or D,
+      !>C     depending on the data type.
+      !>C
+      !>      CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ORDER_ID',
+      !>     .              ESIZE,  ORDID,  ISNULL               )
       !>
-      !>              CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
-      !>             .              ESIZE,  ITEMID, ISNULL               )
+      !>      CALL EKACEI ( HANDLE, SEGNO,  RECNO, 'ITEM_ID',
+      !>     .              ESIZE,  ITEMID, ISNULL               )
       !>
-      !>              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
-      !>             .              ESIZE,  ITEMNM, ISNULL               )
+      !>      CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'ITEM_NAME',
+      !>     .              ESIZE,  ITEMNM, ISNULL               )
       !>
-      !>              CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
-      !>             .              ESIZE,  DESCRP, ISNULL               )
+      !>      CALL EKACEC ( HANDLE, SEGNO,  RECNO, 'DESCRIPTION',
+      !>     .              ESIZE,  DESCRP, ISNULL               )
       !>
-      !>              CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
-      !>             .              ESIZE,  PRICE,  ISNULL               )
+      !>      CALL EKACED ( HANDLE, SEGNO,  RECNO, 'PRICE',
+      !>     .              ESIZE,  PRICE,  ISNULL               )
       !>
-      !>        C
-      !>        C     Close the file to make the update permanent.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file to make the update permanent.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new EK file exists in the
@@ -27811,12 +28709,20 @@ contains
       !>        Removed an unbalanced call to CHKOUT.
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekacei
+      module subroutine ekacei ( ctx, handle, segno, recno, column, nvals, ivals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record to which data is to be added.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -27895,8 +28801,10 @@ contains
       end if
 
       return
-      end procedure ekacei
+      end subroutine ekacei
 
+      !> Load an EK file, making it accessible to the EK readers.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a binary EK file to be loaded.
@@ -27979,98 +28887,100 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKLEF_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKLEF_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Maximum length of an input query,
-      !>        C     MAXQRY.
-      !>        C
-      !>              INCLUDE 'ekqlimit.inc'
+      !>C
+      !>C     Include the EK Maximum length of an input query,
+      !>C     MAXQRY.
+      !>C
+      !>      INCLUDE 'ekqlimit.inc'
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               EKNMLN
-      !>              PARAMETER           ( EKNMLN = 17 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               EKNMLN
+      !>      PARAMETER           ( EKNMLN = 17 )
       !>
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 1840 )
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 1840 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(EKNMLN)    EKNAMS ( 2 )
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(MAXQRY)    QUERY
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(EKNMLN)    EKNAMS ( 2 )
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(MAXQRY)    QUERY
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               N
-      !>              INTEGER               NMROWS
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               N
+      !>      INTEGER               NMROWS
       !>
-      !>              LOGICAL               ERROR
+      !>      LOGICAL               ERROR
       !>
-      !>        C
-      !>        C     Set up the array holding the EK file names.
-      !>        C
-      !>              DATA                  EKNAMS / 'S78_CIMSSSUPa.bep',
-      !>             .                               'S79_CIMSSSUPa.bep'  /
+      !>C
+      !>C     Set up the array holding the EK file names.
+      !>C
+      !>      DATA                  EKNAMS / 'S78_CIMSSSUPa.bep',
+      !>     .                               'S79_CIMSSSUPa.bep'  /
       !>
-      !>        C
-      !>        C     Load the EK files. This call could be replaced by a call
-      !>        C     to FURNSH (in this case, a meta-kernel listing the EKs
-      !>        C     to be loaded could also be used).
-      !>        C
-      !>              DO I = 1, 2
+      !>C
+      !>C     Load the EK files. This call could be replaced by a call
+      !>C     to FURNSH (in this case, a meta-kernel listing the EKs
+      !>C     to be loaded could also be used).
+      !>C
+      !>      DO I = 1, 2
       !>
-      !>                 CALL EKLEF ( EKNAMS(I), HANDLE )
-      !>                 WRITE(*,'(2A)') 'Loading EK: ', EKNAMS(I)
+      !>         CALL EKLEF ( EKNAMS(I), HANDLE )
+      !>         WRITE(*,'(2A)') 'Loading EK: ', EKNAMS(I)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     The EK files contain a table 'CASSINI_SP_OBSERVATION',
-      !>        C     that contains columns named:
-      !>        C
-      !>        C        NOTES, OBSERVATION_ID, OBSERVATION_TITLE,
-      !>        C        OBS_DESCRIPTION, SCIENCE_OBJECTIVE, SEQUENCE,
-      !>        C        SUBSYSTEM
-      !>        C
-      !>        C     Define a set of constraints to perform a query on all
-      !>        C     loaded EK files (the SELECT clause).
-      !>        C
-      !>              QUERY = 'Select SUBSYSTEM, SCIENCE_OBJECTIVE, '
-      !>             .   //   'OBSERVATION_ID from CASSINI_SP_OBSERVATION '
-      !>             .   //   'order by SUBSYSTEM'
+      !>C
+      !>C     The EK files contain a table 'CASSINI_SP_OBSERVATION',
+      !>C     that contains columns named:
+      !>C
+      !>C        NOTES, OBSERVATION_ID, OBSERVATION_TITLE,
+      !>C        OBS_DESCRIPTION, SCIENCE_OBJECTIVE, SEQUENCE,
+      !>C        SUBSYSTEM
+      !>C
+      !>C     Define a set of constraints to perform a query on all
+      !>C     loaded EK files (the SELECT clause).
+      !>C
+      !>      QUERY = 'Select SUBSYSTEM, SCIENCE_OBJECTIVE, '
+      !>     .   //   'OBSERVATION_ID from CASSINI_SP_OBSERVATION '
+      !>     .   //   'order by SUBSYSTEM'
       !>
-      !>        C
-      !>        C     Query the EK system for data rows matching the
-      !>        C     SELECT constraints.
-      !>        C
-      !>              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+      !>C
+      !>C     Query the EK system for data rows matching the
+      !>C     SELECT constraints.
+      !>C
+      !>      CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
       !>
-      !>        C
-      !>        C     Check whether an error occurred while processing the
-      !>        C     SELECT clause. If so, output the error message.
-      !>        C
-      !>              WRITE(*,*)
-      !>              IF ( ERROR ) THEN
+      !>C
+      !>C     Check whether an error occurred while processing the
+      !>C     SELECT clause. If so, output the error message.
+      !>C
+      !>      WRITE(*,*)
+      !>      IF ( ERROR ) THEN
       !>
-      !>                 WRITE(*,'(2A)') 'SELECT clause error: ', ERRMSG
+      !>         WRITE(*,'(2A)') 'SELECT clause error: ', ERRMSG
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>        C
-      !>        C        If no error, NMROWS contains the number of rows
-      !>        C        matching the constraints specified in the query
-      !>        C        string.
-      !>        C
-      !>                 WRITE(*,'(A,I3)') 'Number of matching rows: ', NMROWS
+      !>C
+      !>C        If no error, NMROWS contains the number of rows
+      !>C        matching the constraints specified in the query
+      !>C        string.
+      !>C
+      !>         WRITE(*,'(A,I3)') 'Number of matching rows: ', NMROWS
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -28087,105 +28997,107 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKLEF_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKLEF_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Maximum length of an input query,
-      !>        C     MAXQRY.
-      !>        C
-      !>              INCLUDE 'ekqlimit.inc'
+      !>C
+      !>C     Include the EK Maximum length of an input query,
+      !>C     MAXQRY.
+      !>C
+      !>      INCLUDE 'ekqlimit.inc'
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               EKNMLN
-      !>              PARAMETER           ( EKNMLN = 17 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               EKNMLN
+      !>      PARAMETER           ( EKNMLN = 17 )
       !>
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 1840 )
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 1840 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(EKNMLN)    EKNAMS ( 2 )
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(MAXQRY)    QUERY
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(EKNMLN)    EKNAMS ( 2 )
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(MAXQRY)    QUERY
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               N
-      !>              INTEGER               NMROWS
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               N
+      !>      INTEGER               NMROWS
       !>
-      !>              LOGICAL               ERROR
+      !>      LOGICAL               ERROR
       !>
-      !>        C
-      !>        C     Set up the array holding the EK file names.
-      !>        C
-      !>              DATA                  EKNAMS / 'S78_CIMSSSUPa.bep',
-      !>             .                               'S79_CIMSSSUPa.bep'  /
+      !>C
+      !>C     Set up the array holding the EK file names.
+      !>C
+      !>      DATA                  EKNAMS / 'S78_CIMSSSUPa.bep',
+      !>     .                               'S79_CIMSSSUPa.bep'  /
       !>
-      !>        C
-      !>        C     The EK files contain a table 'CASSINI_SP_OBSERVATION',
-      !>        C     that contains columns named:
-      !>        C
-      !>        C        NOTES, OBSERVATION_ID, OBSERVATION_TITLE,
-      !>        C        OBS_DESCRIPTION, SCIENCE_OBJECTIVE, SEQUENCE,
-      !>        C        SUBSYSTEM
-      !>        C
-      !>        C     Define a set of constraints to perform a query on all
-      !>        C     loaded EK files (the SELECT clause).
-      !>        C
-      !>              QUERY = 'Select SUBSYSTEM, SCIENCE_OBJECTIVE, '
-      !>             .   //   'OBSERVATION_ID from CASSINI_SP_OBSERVATION '
-      !>             .   //   'order by SUBSYSTEM'
+      !>C
+      !>C     The EK files contain a table 'CASSINI_SP_OBSERVATION',
+      !>C     that contains columns named:
+      !>C
+      !>C        NOTES, OBSERVATION_ID, OBSERVATION_TITLE,
+      !>C        OBS_DESCRIPTION, SCIENCE_OBJECTIVE, SEQUENCE,
+      !>C        SUBSYSTEM
+      !>C
+      !>C     Define a set of constraints to perform a query on all
+      !>C     loaded EK files (the SELECT clause).
+      !>C
+      !>      QUERY = 'Select SUBSYSTEM, SCIENCE_OBJECTIVE, '
+      !>     .   //   'OBSERVATION_ID from CASSINI_SP_OBSERVATION '
+      !>     .   //   'order by SUBSYSTEM'
       !>
-      !>        C
-      !>        C     Load the EK files. This call could be replaced by a call
-      !>        C     to FURNSH.
-      !>        C
-      !>              DO I = 1, 2
+      !>C
+      !>C     Load the EK files. This call could be replaced by a call
+      !>C     to FURNSH.
+      !>C
+      !>      DO I = 1, 2
       !>
-      !>                 CALL EKLEF ( EKNAMS(I), HANDLE )
-      !>                 WRITE(*,'(2A)') 'Loading EK: ', EKNAMS(I)
+      !>         CALL EKLEF ( EKNAMS(I), HANDLE )
+      !>         WRITE(*,'(2A)') 'Loading EK: ', EKNAMS(I)
       !>
-      !>        C
-      !>        C        Query the EK system for data rows matching the
-      !>        C        SELECT constraints.
-      !>        C
-      !>                 CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+      !>C
+      !>C        Query the EK system for data rows matching the
+      !>C        SELECT constraints.
+      !>C
+      !>         CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
       !>
-      !>        C
-      !>        C        Check whether an error occurred while processing the
-      !>        C        SELECT clause. If so, output the error message.
-      !>        C
-      !>                 IF ( ERROR ) THEN
+      !>C
+      !>C        Check whether an error occurred while processing the
+      !>C        SELECT clause. If so, output the error message.
+      !>C
+      !>         IF ( ERROR ) THEN
       !>
-      !>                    WRITE(*,'(2A)') 'SELECT clause error: ', ERRMSG
+      !>            WRITE(*,'(2A)') 'SELECT clause error: ', ERRMSG
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>        C
-      !>        C           If no error, NMROWS contains the number of rows
-      !>        C           matching the constraints specified in the query
-      !>        C           string.
-      !>        C
-      !>                    WRITE(*,'(A,I3)') 'Number of matching rows: ',
-      !>             .                        NMROWS
+      !>C
+      !>C           If no error, NMROWS contains the number of rows
+      !>C           matching the constraints specified in the query
+      !>C           string.
+      !>C
+      !>            WRITE(*,'(A,I3)') 'Number of matching rows: ',
+      !>     .                        NMROWS
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>        C
-      !>        C        Unload the current file. Unloading files prevents
-      !>        C        them from being searched during query execution.
-      !>        C
-      !>                 CALL EKUEF ( HANDLE )
-      !>                 WRITE(*,'(2A)') 'Unloading EK: ', EKNAMS(I)
-      !>                 WRITE(*,*)
+      !>C
+      !>C        Unload the current file. Unloading files prevents
+      !>C        them from being searched during query execution.
+      !>C
+      !>         CALL EKUEF ( HANDLE )
+      !>         WRITE(*,'(2A)') 'Unloading EK: ', EKNAMS(I)
+      !>         WRITE(*,*)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -28237,7 +29149,7 @@ contains
       !>        Previous version line was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure eklef
+      module subroutine eklef ( ctx, fname, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -28251,6 +29163,9 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of EK file to load.
+      integer(ip), intent(out) :: handle  !! File handle of loaded EK file.
       integer(ip), parameter :: mxclld = 500
       integer(ip), parameter :: short = 80
       character(typlen), parameter :: chtype ( ntypes ) = &
@@ -29177,7 +30092,6 @@ contains
 !           Now that the mess has been arranged, tell the user what the
 !           problem was.
 !
-!
 !           PEPPER: TABLE_LIST_FULL, DESCRIPTOR_TABLE_FULL and
 !           ATTRIBUTE_TABLE_FULL cannot occur: EKQMGR_ROOM made room
 !           for the whole file before it was loaded.
@@ -29280,8 +30194,12 @@ contains
 
       return
       end associate
-      end procedure eklef
+      end subroutine eklef
 
+      !> Unload an EK file, making its contents inaccessible to the
+      !> EK reader routines, and clearing space in order to allow other
+      !> EK files to be loaded.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle returned by EKLEF.
@@ -29336,105 +30254,107 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKUEF_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKUEF_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Maximum length of an input query,
-      !>        C     MAXQRY.
-      !>        C
-      !>              INCLUDE 'ekqlimit.inc'
+      !>C
+      !>C     Include the EK Maximum length of an input query,
+      !>C     MAXQRY.
+      !>C
+      !>      INCLUDE 'ekqlimit.inc'
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               EKNMLN
-      !>              PARAMETER           ( EKNMLN = 17 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               EKNMLN
+      !>      PARAMETER           ( EKNMLN = 17 )
       !>
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 1840 )
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 1840 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(EKNMLN)    EKNAMS ( 2 )
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(MAXQRY)    QUERY
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(EKNMLN)    EKNAMS ( 2 )
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(MAXQRY)    QUERY
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               N
-      !>              INTEGER               NMROWS
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               N
+      !>      INTEGER               NMROWS
       !>
-      !>              LOGICAL               ERROR
+      !>      LOGICAL               ERROR
       !>
-      !>        C
-      !>        C     Set up the array holding the EK file names.
-      !>        C
-      !>              DATA                  EKNAMS / 'S78_CIMSSSUPa.bep',
-      !>             .                               'S79_CIMSSSUPa.bep'  /
+      !>C
+      !>C     Set up the array holding the EK file names.
+      !>C
+      !>      DATA                  EKNAMS / 'S78_CIMSSSUPa.bep',
+      !>     .                               'S79_CIMSSSUPa.bep'  /
       !>
-      !>        C
-      !>        C     The EK files contain a table 'CASSINI_SP_OBSERVATION',
-      !>        C     that contains columns named:
-      !>        C
-      !>        C        NOTES, OBSERVATION_ID, OBSERVATION_TITLE,
-      !>        C        OBS_DESCRIPTION, SCIENCE_OBJECTIVE, SEQUENCE,
-      !>        C        SUBSYSTEM
-      !>        C
-      !>        C     Define a set of constraints to perform a query on all
-      !>        C     loaded EK files (the SELECT clause).
-      !>        C
-      !>              QUERY = 'Select SUBSYSTEM, SCIENCE_OBJECTIVE, '
-      !>             .   //   'OBSERVATION_ID from CASSINI_SP_OBSERVATION '
-      !>             .   //   'order by SUBSYSTEM'
+      !>C
+      !>C     The EK files contain a table 'CASSINI_SP_OBSERVATION',
+      !>C     that contains columns named:
+      !>C
+      !>C        NOTES, OBSERVATION_ID, OBSERVATION_TITLE,
+      !>C        OBS_DESCRIPTION, SCIENCE_OBJECTIVE, SEQUENCE,
+      !>C        SUBSYSTEM
+      !>C
+      !>C     Define a set of constraints to perform a query on all
+      !>C     loaded EK files (the SELECT clause).
+      !>C
+      !>      QUERY = 'Select SUBSYSTEM, SCIENCE_OBJECTIVE, '
+      !>     .   //   'OBSERVATION_ID from CASSINI_SP_OBSERVATION '
+      !>     .   //   'order by SUBSYSTEM'
       !>
-      !>        C
-      !>        C     Load the EK files. This call could be replaced by a call
-      !>        C     to FURNSH.
-      !>        C
-      !>              DO I = 1, 2
+      !>C
+      !>C     Load the EK files. This call could be replaced by a call
+      !>C     to FURNSH.
+      !>C
+      !>      DO I = 1, 2
       !>
-      !>                 CALL EKLEF ( EKNAMS(I), HANDLE )
-      !>                 WRITE(*,'(2A)') 'Loading EK: ', EKNAMS(I)
+      !>         CALL EKLEF ( EKNAMS(I), HANDLE )
+      !>         WRITE(*,'(2A)') 'Loading EK: ', EKNAMS(I)
       !>
-      !>        C
-      !>        C        Query the EK system for data rows matching the
-      !>        C        SELECT constraints.
-      !>        C
-      !>                 CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+      !>C
+      !>C        Query the EK system for data rows matching the
+      !>C        SELECT constraints.
+      !>C
+      !>         CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
       !>
-      !>        C
-      !>        C        Check whether an error occurred while processing the
-      !>        C        SELECT clause. If so, output the error message.
-      !>        C
-      !>                 IF ( ERROR ) THEN
+      !>C
+      !>C        Check whether an error occurred while processing the
+      !>C        SELECT clause. If so, output the error message.
+      !>C
+      !>         IF ( ERROR ) THEN
       !>
-      !>                    WRITE(*,'(2A)') 'SELECT clause error: ', ERRMSG
+      !>            WRITE(*,'(2A)') 'SELECT clause error: ', ERRMSG
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>        C
-      !>        C           If no error, NMROWS contains the number of rows
-      !>        C           matching the constraints specified in the query
-      !>        C           string.
-      !>        C
-      !>                    WRITE(*,'(A,I3)') 'Number of matching rows: ',
-      !>             .                        NMROWS
+      !>C
+      !>C           If no error, NMROWS contains the number of rows
+      !>C           matching the constraints specified in the query
+      !>C           string.
+      !>C
+      !>            WRITE(*,'(A,I3)') 'Number of matching rows: ',
+      !>     .                        NMROWS
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>        C
-      !>        C        Unload the current file. Unloading files prevents
-      !>        C        them from being searched during query execution.
-      !>        C
-      !>                 CALL EKUEF ( HANDLE )
-      !>                 WRITE(*,'(2A)') 'Unloading EK: ', EKNAMS(I)
-      !>                 WRITE(*,*)
+      !>C
+      !>C        Unload the current file. Unloading files prevents
+      !>C        them from being searched during query execution.
+      !>C
+      !>         CALL EKUEF ( HANDLE )
+      !>         WRITE(*,'(2A)') 'Unloading EK: ', EKNAMS(I)
+      !>         WRITE(*,*)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -29479,7 +30399,7 @@ contains
       !>        Previous version line was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ekuef
+      module subroutine ekuef ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -29493,6 +30413,8 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of EK file.
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: j
@@ -29771,8 +30693,10 @@ contains
 
       return
       end associate
-      end procedure ekuef
+      end subroutine ekuef
 
+      !> Return the number of loaded EK tables.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -29829,39 +30753,41 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKNTAB_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKNTAB_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              INTEGER               N
+      !>C
+      !>C     Local variables
+      !>C
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     Load the first EK.
-      !>        C
-      !>              CALL FURNSH ( 'S79_CIMSSSUPa.bep' )
+      !>C
+      !>C     Load the first EK.
+      !>C
+      !>      CALL FURNSH ( 'S79_CIMSSSUPa.bep' )
       !>
-      !>        C
-      !>        C     Display the number of EK tables in the system after
-      !>        C     the first EK file is loaded.
-      !>        C
-      !>              CALL EKNTAB ( N )
-      !>              WRITE(*,'(A,I3)') 'EK tables in the system (1 EK):', N
+      !>C
+      !>C     Display the number of EK tables in the system after
+      !>C     the first EK file is loaded.
+      !>C
+      !>      CALL EKNTAB ( N )
+      !>      WRITE(*,'(A,I3)') 'EK tables in the system (1 EK):', N
       !>
-      !>        C
-      !>        C     Load the second EK.
-      !>        C
-      !>              CALL FURNSH ( 'S79_status_pf.bes' )
+      !>C
+      !>C     Load the second EK.
+      !>C
+      !>      CALL FURNSH ( 'S79_status_pf.bes' )
       !>
-      !>        C
-      !>        C     Display the number of EK tables in the system after
-      !>        C     the second EK file is loaded.
-      !>        C
-      !>              CALL EKNTAB ( N )
-      !>              WRITE(*,'(A,I3)') 'EK tables in the system (2 EK):', N
+      !>C
+      !>C     Display the number of EK tables in the system after
+      !>C     the second EK file is loaded.
+      !>C
+      !>      CALL EKNTAB ( N )
+      !>      WRITE(*,'(A,I3)') 'EK tables in the system (2 EK):', N
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -29904,7 +30830,7 @@ contains
       !>        Previous version line was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ekntab
+      module subroutine ekntab ( ctx, n )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -29918,6 +30844,8 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: n  !! Number of loaded tables.
       logical :: return
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
@@ -29943,8 +30871,10 @@ contains
       n  =   ubound ( tbpool, 2, kind=ip ) - lnknfn( ctx, tbpool )
       return
       end associate
-      end procedure ekntab
+      end subroutine ekntab
 
+      !> Return the name of a specified, loaded table.
+      !>
       !>## Detailed Input
       !>
       !>     N        is the index of the table whose name is desired.
@@ -30030,57 +30960,59 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKTNAM_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKTNAM_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include EK parameter declarations:
-      !>        C
-      !>        C        EK Table Name Size
-      !>        C
-      !>              INCLUDE 'ektnamsz.inc'
+      !>C
+      !>C     Include EK parameter declarations:
+      !>C
+      !>C        EK Table Name Size
+      !>C
+      !>      INCLUDE 'ektnamsz.inc'
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'ektnam_ex1.tm' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'ektnam_ex1.tm' )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(TNAMSZ)      TABNAM
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(TNAMSZ)      TABNAM
       !>
-      !>              INTEGER                 NTAB
-      !>              INTEGER                 TAB
+      !>      INTEGER                 NTAB
+      !>      INTEGER                 TAB
       !>
-      !>        C
-      !>        C     Load the EK files. Use a meta-kernel for convenience.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load the EK files. Use a meta-kernel for convenience.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Get the number of loaded tables. The count refers to the
-      !>        C     number of logical tables; if multiple EKs contain data
-      !>        C     for the same table, these EKs collectively contribute
-      !>        C     only one table to the count.
-      !>        C
-      !>              CALL EKNTAB ( NTAB )
+      !>C
+      !>C     Get the number of loaded tables. The count refers to the
+      !>C     number of logical tables; if multiple EKs contain data
+      !>C     for the same table, these EKs collectively contribute
+      !>C     only one table to the count.
+      !>C
+      !>      CALL EKNTAB ( NTAB )
       !>
-      !>              WRITE(*,'(A,I3)') 'Number of tables in EK subsystem:',
-      !>             .                   NTAB
+      !>      WRITE(*,'(A,I3)') 'Number of tables in EK subsystem:',
+      !>     .                   NTAB
       !>
-      !>              DO TAB = 1, NTAB
+      !>      DO TAB = 1, NTAB
       !>
-      !>        C
-      !>        C        Get the name of the current table, and display it.
-      !>        C
-      !>                 CALL EKTNAM ( TAB, TABNAM )
-      !>                 WRITE(*,'(2A)') '   TABLE = ', TABNAM
+      !>C
+      !>C        Get the name of the current table, and display it.
+      !>C
+      !>         CALL EKTNAM ( TAB, TABNAM )
+      !>         WRITE(*,'(2A)') '   TABLE = ', TABNAM
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -30125,7 +31057,7 @@ contains
       !>        Previous version line was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ektnam
+      module subroutine ektnam ( ctx, n, table )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -30139,6 +31071,9 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Index of table.
+      character(*), intent(out) :: table  !! Name of table.
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: i
@@ -30205,8 +31140,11 @@ contains
 
       return
       end associate
-      end procedure ektnam
+      end subroutine ektnam
 
+      !> Return the number of distinct columns in a specified, currently
+      !> loaded table.
+      !>
       !>## Detailed Input
       !>
       !>     TABLE    is the name of a currently loaded table. Case
@@ -30252,135 +31190,137 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKCCNT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKCCNT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include EK parameter declarations:
-      !>        C
-      !>        C        ekattdsc.inc: EK Column Attribute Descriptor
-      !>        C                      Parameters
-      !>        C        ekcnamsz.inc: EK Column Name Size
-      !>        C        ektnamsz.inc: EK Table Name Size
-      !>        C        ektype.inc:   EK Data Types
-      !>        C
-      !>              INCLUDE 'ekattdsc.inc'
-      !>              INCLUDE 'ekcnamsz.inc'
-      !>              INCLUDE 'ektnamsz.inc'
-      !>              INCLUDE 'ektype.inc'
+      !>C
+      !>C     Include EK parameter declarations:
+      !>C
+      !>C        ekattdsc.inc: EK Column Attribute Descriptor
+      !>C                      Parameters
+      !>C        ekcnamsz.inc: EK Column Name Size
+      !>C        ektnamsz.inc: EK Table Name Size
+      !>C        ektype.inc:   EK Data Types
+      !>C
+      !>      INCLUDE 'ekattdsc.inc'
+      !>      INCLUDE 'ekcnamsz.inc'
+      !>      INCLUDE 'ektnamsz.inc'
+      !>      INCLUDE 'ektype.inc'
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER                 FILEN
-      !>              PARAMETER             ( FILEN = 255 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER                 FILEN
+      !>      PARAMETER             ( FILEN = 255 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(CNAMSZ)      COLNAM
-      !>              CHARACTER*(FILEN)       EKFILE
-      !>              CHARACTER*(TNAMSZ)      TABNAM
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(CNAMSZ)      COLNAM
+      !>      CHARACTER*(FILEN)       EKFILE
+      !>      CHARACTER*(TNAMSZ)      TABNAM
       !>
-      !>              INTEGER                 ATTDSC ( ADSCSZ )
-      !>              INTEGER                 I
-      !>              INTEGER                 NCOLS
-      !>              INTEGER                 NTAB
-      !>              INTEGER                 TAB
+      !>      INTEGER                 ATTDSC ( ADSCSZ )
+      !>      INTEGER                 I
+      !>      INTEGER                 NCOLS
+      !>      INTEGER                 NTAB
+      !>      INTEGER                 TAB
       !>
-      !>        C
-      !>        C     Prompt for the EK file name.
-      !>        C
-      !>              CALL PROMPT ( 'Enter name of EK to examine > ', EKFILE )
+      !>C
+      !>C     Prompt for the EK file name.
+      !>C
+      !>      CALL PROMPT ( 'Enter name of EK to examine > ', EKFILE )
       !>
-      !>              CALL FURNSH ( EKFILE )
+      !>      CALL FURNSH ( EKFILE )
       !>
-      !>        C
-      !>        C     Get the number of loaded tables.
-      !>        C
-      !>              CALL EKNTAB ( NTAB )
+      !>C
+      !>C     Get the number of loaded tables.
+      !>C
+      !>      CALL EKNTAB ( NTAB )
       !>
-      !>              WRITE(*,*) 'Number of tables in EK:', NTAB
+      !>      WRITE(*,*) 'Number of tables in EK:', NTAB
       !>
-      !>              DO TAB = 1, NTAB
+      !>      DO TAB = 1, NTAB
       !>
-      !>        C
-      !>        C        Get the name of the current table, and look up
-      !>        C        the column count for this table.
-      !>        C
-      !>                 CALL EKTNAM ( TAB,    TABNAM )
-      !>                 CALL EKCCNT ( TABNAM, NCOLS  )
+      !>C
+      !>C        Get the name of the current table, and look up
+      !>C        the column count for this table.
+      !>C
+      !>         CALL EKTNAM ( TAB,    TABNAM )
+      !>         CALL EKCCNT ( TABNAM, NCOLS  )
       !>
-      !>                 WRITE(*,*) '------------------------------'
-      !>             .           // '------------------------------'
-      !>                 WRITE(*,*) 'TABLE = ', TABNAM
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) '------------------------------'
+      !>     .           // '------------------------------'
+      !>         WRITE(*,*) 'TABLE = ', TABNAM
+      !>         WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C        For each column in the current table, look up the
-      !>        C        column's attributes.  The attribute block
-      !>        C        index parameters are defined in the include file
-      !>        C        ekattdsc.inc.
-      !>        C
-      !>                 DO I = 1, NCOLS
+      !>C
+      !>C        For each column in the current table, look up the
+      !>C        column's attributes.  The attribute block
+      !>C        index parameters are defined in the include file
+      !>C        ekattdsc.inc.
+      !>C
+      !>         DO I = 1, NCOLS
       !>
-      !>                    CALL EKCII ( TABNAM, I, COLNAM, ATTDSC )
+      !>            CALL EKCII ( TABNAM, I, COLNAM, ATTDSC )
       !>
-      !>                    WRITE (*,*) 'COLUMN = ', COLNAM
+      !>            WRITE (*,*) 'COLUMN = ', COLNAM
       !>
-      !>        C
-      !>        C           Write out the current column's data type.
-      !>        C
-      !>                    IF ( ATTDSC(ATTTYP) .EQ. CHR ) THEN
+      !>C
+      !>C           Write out the current column's data type.
+      !>C
+      !>            IF ( ATTDSC(ATTTYP) .EQ. CHR ) THEN
       !>
-      !>                       WRITE (*,*) '   TYPE   =  CHR'
+      !>               WRITE (*,*) '   TYPE   =  CHR'
       !>
-      !>                       IF ( ATTDSC(ATTLEN) .EQ. -1 ) THEN
-      !>                          WRITE (*,*) '   STRING LENGTH = VARIABLE.'
-      !>                       ELSE
-      !>                          WRITE (*,'(A,I2)') '    STRING LENGTH = ',
-      !>             .                         ATTDSC(ATTLEN)
-      !>                       END IF
+      !>               IF ( ATTDSC(ATTLEN) .EQ. -1 ) THEN
+      !>                  WRITE (*,*) '   STRING LENGTH = VARIABLE.'
+      !>               ELSE
+      !>                  WRITE (*,'(A,I2)') '    STRING LENGTH = ',
+      !>     .                         ATTDSC(ATTLEN)
+      !>               END IF
       !>
-      !>                    ELSE IF ( ATTDSC(ATTTYP) .EQ. DP ) THEN
-      !>                       WRITE (*,*) '   TYPE   =  DP'
+      !>            ELSE IF ( ATTDSC(ATTTYP) .EQ. DP ) THEN
+      !>               WRITE (*,*) '   TYPE   =  DP'
       !>
-      !>                    ELSE IF ( ATTDSC(ATTTYP) .EQ. INT ) THEN
-      !>                       WRITE (*,*) '   TYPE   =  INT'
+      !>            ELSE IF ( ATTDSC(ATTTYP) .EQ. INT ) THEN
+      !>               WRITE (*,*) '   TYPE   =  INT'
       !>
-      !>                    ELSE
-      !>                       WRITE (*,*) '   TYPE   =  TIME'
-      !>                    END IF
+      !>            ELSE
+      !>               WRITE (*,*) '   TYPE   =  TIME'
+      !>            END IF
       !>
-      !>        C
-      !>        C           Write out the current column's entry size.
-      !>        C
-      !>                    WRITE (*,'(A,I2)') '    SIZE   = ', ATTDSC(ATTSIZ)
+      !>C
+      !>C           Write out the current column's entry size.
+      !>C
+      !>            WRITE (*,'(A,I2)') '    SIZE   = ', ATTDSC(ATTSIZ)
       !>
-      !>        C
-      !>        C           Indicate whether the current column is indexed.
-      !>        C
-      !>                    IF ( ATTDSC(ATTIDX) .EQ. -1 ) THEN
-      !>                       WRITE (*,*) '   NOT INDEXED'
-      !>                    ELSE
-      !>                       WRITE (*,*) '   INDEXED'
-      !>                    END IF
+      !>C
+      !>C           Indicate whether the current column is indexed.
+      !>C
+      !>            IF ( ATTDSC(ATTIDX) .EQ. -1 ) THEN
+      !>               WRITE (*,*) '   NOT INDEXED'
+      !>            ELSE
+      !>               WRITE (*,*) '   INDEXED'
+      !>            END IF
       !>
-      !>        C
-      !>        C           Indicate whether the current column allows
-      !>        C           null values.
-      !>        C
-      !>                    IF ( ATTDSC(ATTNFL) .EQ. -1 ) THEN
-      !>                       WRITE (*,*) '   NULL VALUES NOT ALLOWED'
-      !>                    ELSE
-      !>                       WRITE (*,*) '   NULL VALUES ALLOWED'
-      !>                    END IF
+      !>C
+      !>C           Indicate whether the current column allows
+      !>C           null values.
+      !>C
+      !>            IF ( ATTDSC(ATTNFL) .EQ. -1 ) THEN
+      !>               WRITE (*,*) '   NULL VALUES NOT ALLOWED'
+      !>            ELSE
+      !>               WRITE (*,*) '   NULL VALUES ALLOWED'
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the EK named S79_CIMSSSUPa.bep to load the
@@ -30525,7 +31465,7 @@ contains
       !>        Misspelling of "conjunction" was fixed.
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ekccnt
+      module subroutine ekccnt ( ctx, table, ccount )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       use pepper_inc_ekattdsc
@@ -30540,6 +31480,9 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: table  !! Name of table.
+      integer(ip), intent(out) :: ccount  !! Count of distinct, currently loaded columns.
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: col
@@ -30613,8 +31556,11 @@ contains
 
       return
       end associate
-      end procedure ekccnt
+      end subroutine ekccnt
 
+      !> Return attribute information about a column belonging to a loaded
+      !> EK table, specifying the column by table and index.
+      !>
       !>## Detailed Input
       !>
       !>     TABLE    is the name of a loaded EK table. Case is not
@@ -30706,135 +31652,137 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKCII_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKCII_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include EK parameter declarations:
-      !>        C
-      !>        C        ekattdsc.inc: EK Column Attribute Descriptor
-      !>        C                      Parameters
-      !>        C        ekcnamsz.inc: EK Column Name Size
-      !>        C        ektnamsz.inc: EK Table Name Size
-      !>        C        ektype.inc:   EK Data Types
-      !>        C
-      !>              INCLUDE 'ekattdsc.inc'
-      !>              INCLUDE 'ekcnamsz.inc'
-      !>              INCLUDE 'ektnamsz.inc'
-      !>              INCLUDE 'ektype.inc'
+      !>C
+      !>C     Include EK parameter declarations:
+      !>C
+      !>C        ekattdsc.inc: EK Column Attribute Descriptor
+      !>C                      Parameters
+      !>C        ekcnamsz.inc: EK Column Name Size
+      !>C        ektnamsz.inc: EK Table Name Size
+      !>C        ektype.inc:   EK Data Types
+      !>C
+      !>      INCLUDE 'ekattdsc.inc'
+      !>      INCLUDE 'ekcnamsz.inc'
+      !>      INCLUDE 'ektnamsz.inc'
+      !>      INCLUDE 'ektype.inc'
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 FILEN
-      !>              PARAMETER             ( FILEN = 255 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 FILEN
+      !>      PARAMETER             ( FILEN = 255 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(CNAMSZ)      COLNAM
-      !>              CHARACTER*(FILEN)       EKFILE
-      !>              CHARACTER*(TNAMSZ)      TABNAM
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(CNAMSZ)      COLNAM
+      !>      CHARACTER*(FILEN)       EKFILE
+      !>      CHARACTER*(TNAMSZ)      TABNAM
       !>
-      !>              INTEGER                 ATTDSC ( ADSCSZ )
-      !>              INTEGER                 I
-      !>              INTEGER                 NCOLS
-      !>              INTEGER                 NTAB
-      !>              INTEGER                 TAB
+      !>      INTEGER                 ATTDSC ( ADSCSZ )
+      !>      INTEGER                 I
+      !>      INTEGER                 NCOLS
+      !>      INTEGER                 NTAB
+      !>      INTEGER                 TAB
       !>
-      !>        C
-      !>        C     Prompt for the EK file name.
-      !>        C
-      !>              CALL PROMPT ( 'Enter name of EK to examine > ', EKFILE )
+      !>C
+      !>C     Prompt for the EK file name.
+      !>C
+      !>      CALL PROMPT ( 'Enter name of EK to examine > ', EKFILE )
       !>
-      !>              CALL FURNSH ( EKFILE )
+      !>      CALL FURNSH ( EKFILE )
       !>
-      !>        C
-      !>        C     Get the number of loaded tables.
-      !>        C
-      !>              CALL EKNTAB ( NTAB )
+      !>C
+      !>C     Get the number of loaded tables.
+      !>C
+      !>      CALL EKNTAB ( NTAB )
       !>
-      !>              WRITE(*,*) 'Number of tables in EK:', NTAB
+      !>      WRITE(*,*) 'Number of tables in EK:', NTAB
       !>
-      !>              DO TAB = 1, NTAB
+      !>      DO TAB = 1, NTAB
       !>
-      !>        C
-      !>        C        Get the name of the current table, and look up
-      !>        C        the column count for this table.
-      !>        C
-      !>                 CALL EKTNAM ( TAB,    TABNAM )
-      !>                 CALL EKCCNT ( TABNAM, NCOLS  )
+      !>C
+      !>C        Get the name of the current table, and look up
+      !>C        the column count for this table.
+      !>C
+      !>         CALL EKTNAM ( TAB,    TABNAM )
+      !>         CALL EKCCNT ( TABNAM, NCOLS  )
       !>
-      !>                 WRITE(*,*) '------------------------------'
-      !>             .           // '------------------------------'
-      !>                 WRITE(*,*) 'TABLE = ', TABNAM
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) '------------------------------'
+      !>     .           // '------------------------------'
+      !>         WRITE(*,*) 'TABLE = ', TABNAM
+      !>         WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C        For each column in the current table, look up the
-      !>        C        column's attributes.  The attribute block
-      !>        C        index parameters are defined in the include file
-      !>        C        ekattdsc.inc.
-      !>        C
-      !>                 DO I = 1, NCOLS
+      !>C
+      !>C        For each column in the current table, look up the
+      !>C        column's attributes.  The attribute block
+      !>C        index parameters are defined in the include file
+      !>C        ekattdsc.inc.
+      !>C
+      !>         DO I = 1, NCOLS
       !>
-      !>                    CALL EKCII ( TABNAM, I, COLNAM, ATTDSC )
+      !>            CALL EKCII ( TABNAM, I, COLNAM, ATTDSC )
       !>
-      !>                    WRITE (*,*) 'COLUMN = ', COLNAM
+      !>            WRITE (*,*) 'COLUMN = ', COLNAM
       !>
-      !>        C
-      !>        C           Write out the current column's data type.
-      !>        C
-      !>                    IF ( ATTDSC(ATTTYP) .EQ. CHR ) THEN
+      !>C
+      !>C           Write out the current column's data type.
+      !>C
+      !>            IF ( ATTDSC(ATTTYP) .EQ. CHR ) THEN
       !>
-      !>                       WRITE (*,*) '   TYPE   =  CHR'
+      !>               WRITE (*,*) '   TYPE   =  CHR'
       !>
-      !>                       IF ( ATTDSC(ATTLEN) .EQ. -1 ) THEN
-      !>                          WRITE (*,*) '   STRING LENGTH = VARIABLE.'
-      !>                       ELSE
-      !>                          WRITE (*,'(A,I2)') '    STRING LENGTH = ',
-      !>             .                         ATTDSC(ATTLEN)
-      !>                       END IF
+      !>               IF ( ATTDSC(ATTLEN) .EQ. -1 ) THEN
+      !>                  WRITE (*,*) '   STRING LENGTH = VARIABLE.'
+      !>               ELSE
+      !>                  WRITE (*,'(A,I2)') '    STRING LENGTH = ',
+      !>     .                         ATTDSC(ATTLEN)
+      !>               END IF
       !>
-      !>                    ELSE IF ( ATTDSC(ATTTYP) .EQ. DP ) THEN
-      !>                       WRITE (*,*) '   TYPE   =  DP'
+      !>            ELSE IF ( ATTDSC(ATTTYP) .EQ. DP ) THEN
+      !>               WRITE (*,*) '   TYPE   =  DP'
       !>
-      !>                    ELSE IF ( ATTDSC(ATTTYP) .EQ. INT ) THEN
-      !>                       WRITE (*,*) '   TYPE   =  INT'
+      !>            ELSE IF ( ATTDSC(ATTTYP) .EQ. INT ) THEN
+      !>               WRITE (*,*) '   TYPE   =  INT'
       !>
-      !>                    ELSE
-      !>                       WRITE (*,*) '   TYPE   =  TIME'
-      !>                    END IF
+      !>            ELSE
+      !>               WRITE (*,*) '   TYPE   =  TIME'
+      !>            END IF
       !>
-      !>        C
-      !>        C           Write out the current column's entry size.
-      !>        C
-      !>                    WRITE (*,'(A,I2)') '    SIZE   = ', ATTDSC(ATTSIZ)
+      !>C
+      !>C           Write out the current column's entry size.
+      !>C
+      !>            WRITE (*,'(A,I2)') '    SIZE   = ', ATTDSC(ATTSIZ)
       !>
-      !>        C
-      !>        C           Indicate whether the current column is indexed.
-      !>        C
-      !>                    IF ( ATTDSC(ATTIDX) .EQ. -1 ) THEN
-      !>                       WRITE (*,*) '   NOT INDEXED'
-      !>                    ELSE
-      !>                       WRITE (*,*) '   INDEXED'
-      !>                    END IF
+      !>C
+      !>C           Indicate whether the current column is indexed.
+      !>C
+      !>            IF ( ATTDSC(ATTIDX) .EQ. -1 ) THEN
+      !>               WRITE (*,*) '   NOT INDEXED'
+      !>            ELSE
+      !>               WRITE (*,*) '   INDEXED'
+      !>            END IF
       !>
-      !>        C
-      !>        C           Indicate whether the current column allows
-      !>        C           null values.
-      !>        C
-      !>                    IF ( ATTDSC(ATTNFL) .EQ. -1 ) THEN
-      !>                       WRITE (*,*) '   NULL VALUES NOT ALLOWED'
-      !>                    ELSE
-      !>                       WRITE (*,*) '   NULL VALUES ALLOWED'
-      !>                    END IF
+      !>C
+      !>C           Indicate whether the current column allows
+      !>C           null values.
+      !>C
+      !>            IF ( ATTDSC(ATTNFL) .EQ. -1 ) THEN
+      !>               WRITE (*,*) '   NULL VALUES NOT ALLOWED'
+      !>            ELSE
+      !>               WRITE (*,*) '   NULL VALUES ALLOWED'
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the EK file named vo_sedr.bdb to load the
@@ -30961,7 +31909,7 @@ contains
       !>        Previous version line was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ekcii
+      module subroutine ekcii ( ctx, table, cindex, column, attdsc )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       use pepper_inc_ekattdsc
@@ -30976,6 +31924,11 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: cindex  !! Index of column whose attributes are to be found.
+      character(*), intent(out) :: column  !! Name of column.
+      character(*), intent(in) :: table  !! Name of table containing column.
+      integer(ip), intent(out) :: attdsc ( adscsz )  !! Column attribute descriptor.
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: col
@@ -31098,8 +32051,10 @@ contains
 
       return
       end associate
-      end procedure ekcii
+      end subroutine ekcii
 
+      !> Search for EK events matching a specified set of constraints.
+      !>
       !>## Detailed Input
       !>
       !>     EQRYI,
@@ -31207,7 +32162,7 @@ contains
       !>        Previous version line was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure eksrch
+      module subroutine eksrch ( ctx, eqryi, eqryc, eqryd, nmrows, semerr, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -31221,6 +32176,14 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: eqryc  !! Character component of encoded query.
+      real(wp), intent(in) :: eqryd  ( * )  !! D.p. component of encoded query.
+      integer(ip), intent(in) :: eqryi  ( lbcell : * )  !! Integer component of encoded query.
+      integer(ip), intent(out) :: nmrows  !! Number of rows matching query constraints.
+      logical, intent(out) :: semerr  !! Flag indicating whether semantic error occurred.
+      character(*), intent(out) :: errmsg  !! Message describing semantic error, if any.
       integer(ip) :: cjrows_1(1)  !! one-element copy of cjrows (array argument)
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
@@ -32055,8 +33018,11 @@ contains
 
       return
       end associate
-      end procedure eksrch
+      end subroutine eksrch
 
+      !> Return the number of elements in a specified column entry in
+      !> the current row.
+      !>
       !>## Detailed Input
       !>
       !>     SELIDX   is the SELECT clause index of the column to
@@ -32139,307 +33105,309 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKNELT_EX1
-      !>              IMPLICIT NONE
-      !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C     and EK Query Limit Parameters (MAXQRY)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
-      !>              INCLUDE 'ekqlimit.inc'
-      !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               RTRIM
-      !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME  = 'eknelt_ex1.bdb' )
-      !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE   = 'TAB' )
-      !>
-      !>              INTEGER               CHRSLN
-      !>              PARAMETER           ( CHRSLN = 5   )
-      !>
-      !>              INTEGER               COL1SZ
-      !>              PARAMETER           ( COL1SZ = 3   )
-      !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
-      !>
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 1840 )
-      !>
-      !>              INTEGER               MXC2SZ
-      !>              PARAMETER           ( MXC2SZ = 4   )
-      !>
-      !>              INTEGER               MXC3SZ
-      !>              PARAMETER           ( MXC3SZ = 7   )
-      !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
-      !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 3   )
-      !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 4   )
-      !>
-      !>              INTEGER               STRSIZ
-      !>              PARAMETER           ( STRSIZ  = 30 )
-      !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-      !>              CHARACTER*(CHRSLN)    COL3   ( MXC3SZ )
-      !>              CHARACTER*(STRSIZ)    CVALS  ( MXC3SZ )
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(MAXQRY)    QUERY
-      !>
-      !>              DOUBLE PRECISION      COL2   ( MXC2SZ )
-      !>              DOUBLE PRECISION      DVALS  ( MXC2SZ )
-      !>
-      !>              INTEGER               COL1   ( COL1SZ )
-      !>              INTEGER               ELTIDX
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               IVALS ( COL1SZ )
-      !>              INTEGER               J
-      !>              INTEGER               NELT
-      !>              INTEGER               NMROWS
-      !>              INTEGER               NRESVC
-      !>              INTEGER               RECNO
-      !>              INTEGER               ROW
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SELIDX
-      !>
-      !>              LOGICAL               ERROR
-      !>              LOGICAL               FOUND
-      !>              LOGICAL               ISNULL
-      !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 13-JUN-2019'
-      !>
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
-      !>
-      !>        C
-      !>        C     Set up the column names and declarations
-      !>        C     for the TAB segment.  We'll index all of
-      !>        C     the columns.
-      !>        C
-      !>              CNAMES(1) = 'IARRAY'
-      !>              CDECLS(1) = 'DATATYPE = INTEGER, SIZE = 3'
-      !>
-      !>              CNAMES(2) = 'DARRAY'
-      !>              CDECLS(2) = 'DATATYPE = DOUBLE PRECISION, ' //
-      !>             .            'SIZE = VARIABLE'
-      !>
-      !>              CNAMES(3) = 'CARRAY'
-      !>              CDECLS(3) = 'DATATYPE = CHARACTER*(5), ' //
-      !>             .            'SIZE = VARIABLE'
-      !>
-      !>        C
-      !>        C     Start the segment.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
-      !>
-      !>        C
-      !>        C     At the records to the table.
-      !>        C
-      !>              DO I = 1, NROWS
-      !>
-      !>        C
-      !>        C        Append a new record to the EK.
-      !>        C
-      !>                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
-      !>
-      !>        C
-      !>        C        Add 3 items to IARRAY
-      !>        C
-      !>                 DO J = 1, COL1SZ
-      !>                    COL1(J) =  I + J*100.D0
-      !>                 END DO
-      !>
-      !>                 CALL EKACEI ( HANDLE,    SEGNO,  RECNO,
-      !>             .                 CNAMES(1), COL1SZ, COL1,  .FALSE. )
-      !>
-      !>        C
-      !>        C        Add I items to DARRAY
-      !>        C
-      !>                 DO J = 1, I
-      !>                    COL2(J) = J + I*200.D0
-      !>                 END DO
-      !>
-      !>                 CALL EKACED ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(2), I,     COL2,  .FALSE. )
-      !>
-      !>        C
-      !>        C        Add 3+I items to CARRAY
-      !>        C
-      !>                 DO J = 1, 3+I
-      !>                    CALL REPMI ( 'ST#', '#', J + I*100, COL3(J) )
-      !>                 END DO
+      !>```fortran
+      !>      PROGRAM EKNELT_EX1
+      !>      IMPLICIT NONE
+      !>
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C     and EK Query Limit Parameters (MAXQRY)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
+      !>      INCLUDE 'ekqlimit.inc'
+      !>
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               RTRIM
+      !>
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME  = 'eknelt_ex1.bdb' )
+      !>
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE   = 'TAB' )
+      !>
+      !>      INTEGER               CHRSLN
+      !>      PARAMETER           ( CHRSLN = 5   )
+      !>
+      !>      INTEGER               COL1SZ
+      !>      PARAMETER           ( COL1SZ = 3   )
+      !>
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
+      !>
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 1840 )
+      !>
+      !>      INTEGER               MXC2SZ
+      !>      PARAMETER           ( MXC2SZ = 4   )
+      !>
+      !>      INTEGER               MXC3SZ
+      !>      PARAMETER           ( MXC3SZ = 7   )
+      !>
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
+      !>
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 3   )
+      !>
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 4   )
+      !>
+      !>      INTEGER               STRSIZ
+      !>      PARAMETER           ( STRSIZ  = 30 )
+      !>
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+      !>      CHARACTER*(CHRSLN)    COL3   ( MXC3SZ )
+      !>      CHARACTER*(STRSIZ)    CVALS  ( MXC3SZ )
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(MAXQRY)    QUERY
+      !>
+      !>      DOUBLE PRECISION      COL2   ( MXC2SZ )
+      !>      DOUBLE PRECISION      DVALS  ( MXC2SZ )
+      !>
+      !>      INTEGER               COL1   ( COL1SZ )
+      !>      INTEGER               ELTIDX
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               IVALS ( COL1SZ )
+      !>      INTEGER               J
+      !>      INTEGER               NELT
+      !>      INTEGER               NMROWS
+      !>      INTEGER               NRESVC
+      !>      INTEGER               RECNO
+      !>      INTEGER               ROW
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SELIDX
+      !>
+      !>      LOGICAL               ERROR
+      !>      LOGICAL               FOUND
+      !>      LOGICAL               ISNULL
+      !>
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 13-JUN-2019'
+      !>
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>
+      !>C
+      !>C     Set up the column names and declarations
+      !>C     for the TAB segment.  We'll index all of
+      !>C     the columns.
+      !>C
+      !>      CNAMES(1) = 'IARRAY'
+      !>      CDECLS(1) = 'DATATYPE = INTEGER, SIZE = 3'
+      !>
+      !>      CNAMES(2) = 'DARRAY'
+      !>      CDECLS(2) = 'DATATYPE = DOUBLE PRECISION, ' //
+      !>     .            'SIZE = VARIABLE'
+      !>
+      !>      CNAMES(3) = 'CARRAY'
+      !>      CDECLS(3) = 'DATATYPE = CHARACTER*(5), ' //
+      !>     .            'SIZE = VARIABLE'
+      !>
+      !>C
+      !>C     Start the segment.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
+      !>
+      !>C
+      !>C     At the records to the table.
+      !>C
+      !>      DO I = 1, NROWS
+      !>
+      !>C
+      !>C        Append a new record to the EK.
+      !>C
+      !>         CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>
+      !>C
+      !>C        Add 3 items to IARRAY
+      !>C
+      !>         DO J = 1, COL1SZ
+      !>            COL1(J) =  I + J*100.D0
+      !>         END DO
+      !>
+      !>         CALL EKACEI ( HANDLE,    SEGNO,  RECNO,
+      !>     .                 CNAMES(1), COL1SZ, COL1,  .FALSE. )
+      !>
+      !>C
+      !>C        Add I items to DARRAY
+      !>C
+      !>         DO J = 1, I
+      !>            COL2(J) = J + I*200.D0
+      !>         END DO
+      !>
+      !>         CALL EKACED ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(2), I,     COL2,  .FALSE. )
+      !>
+      !>C
+      !>C        Add 3+I items to CARRAY
+      !>C
+      !>         DO J = 1, 3+I
+      !>            CALL REPMI ( 'ST#', '#', J + I*100, COL3(J) )
+      !>         END DO
       !>
-      !>                 CALL EKACEC ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(3), I+3,   COL3,  .FALSE. )
+      !>         CALL EKACEC ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(3), I+3,   COL3,  .FALSE. )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the created file. Perform the query and show the
-      !>        C     results.
-      !>        C
-      !>              CALL FURNSH ( EKNAME )
+      !>C
+      !>C     Open the created file. Perform the query and show the
+      !>C     results.
+      !>C
+      !>      CALL FURNSH ( EKNAME )
       !>
-      !>              QUERY = 'SELECT IARRAY, DARRAY, CARRAY FROM TAB'
+      !>      QUERY = 'SELECT IARRAY, DARRAY, CARRAY FROM TAB'
       !>
-      !>        C
-      !>        C     Query the EK system for data rows matching the
-      !>        C     SELECT constraints.
-      !>        C
-      !>              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+      !>C
+      !>C     Query the EK system for data rows matching the
+      !>C     SELECT constraints.
+      !>C
+      !>      CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
       !>
-      !>        C
-      !>        C     Check whether an error occurred while processing the
-      !>        C     SELECT clause. If so, output the error message.
-      !>        C
-      !>              IF ( ERROR ) THEN
+      !>C
+      !>C     Check whether an error occurred while processing the
+      !>C     SELECT clause. If so, output the error message.
+      !>C
+      !>      IF ( ERROR ) THEN
       !>
-      !>                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+      !>         WRITE(*,*) 'SELECT clause error: ', ERRMSG
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO ROW = 1, NMROWS
+      !>         DO ROW = 1, NMROWS
       !>
-      !>                    WRITE(*,*) ' '
-      !>                    WRITE(*,'(A,I3)') 'ROW  = ', ROW
+      !>            WRITE(*,*) ' '
+      !>            WRITE(*,'(A,I3)') 'ROW  = ', ROW
       !>
-      !>        C
-      !>        C           Fetch values from column IARRAY in the current
-      !>        C           row.  Since IARRAY was the first column selected,
-      !>        C           the selection index SELIDX is set to 1.
-      !>        C
-      !>                    SELIDX = 1
-      !>                    ELTIDX = 1
-      !>                    ISNULL = .FALSE.
+      !>C
+      !>C           Fetch values from column IARRAY in the current
+      !>C           row.  Since IARRAY was the first column selected,
+      !>C           the selection index SELIDX is set to 1.
+      !>C
+      !>            SELIDX = 1
+      !>            ELTIDX = 1
+      !>            ISNULL = .FALSE.
       !>
-      !>                    DO WHILE (       ( ELTIDX .LE.  COL1SZ )
-      !>             .                 .AND. (        .NOT. ISNULL )  )
-      !>        C
-      !>        C              If the column entry is null, we'll be kicked
-      !>        C              out of this loop after the first iteration.
-      !>        C
-      !>                       CALL EKGI ( SELIDX,         ROW,     ELTIDX,
-      !>             .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
+      !>            DO WHILE (       ( ELTIDX .LE.  COL1SZ )
+      !>     .                 .AND. (        .NOT. ISNULL )  )
+      !>C
+      !>C              If the column entry is null, we'll be kicked
+      !>C              out of this loop after the first iteration.
+      !>C
+      !>               CALL EKGI ( SELIDX,         ROW,     ELTIDX,
+      !>     .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
       !>
-      !>                       ELTIDX = ELTIDX + 1
+      !>               ELTIDX = ELTIDX + 1
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                       WRITE(*,'(A)') '   COLUMN = IARRAY: <Null>'
+      !>               WRITE(*,'(A)') '   COLUMN = IARRAY: <Null>'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE(*,'(A,3I6)') '   COLUMN = IARRAY:',
-      !>             .                            ( IVALS(I), I = 1, COL1SZ )
+      !>               WRITE(*,'(A,3I6)') '   COLUMN = IARRAY:',
+      !>     .                            ( IVALS(I), I = 1, COL1SZ )
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>        C
-      !>        C           Fetch values from column DARRAY in the current
-      !>        C           row.  Since DARRAY contains variable-size array
-      !>        C           elements, we call EKNELT to determine how many
-      !>        C           elements to fetch.
-      !>        C
-      !>                    SELIDX = 2
-      !>                    CALL EKNELT ( SELIDX, ROW, NELT )
+      !>C
+      !>C           Fetch values from column DARRAY in the current
+      !>C           row.  Since DARRAY contains variable-size array
+      !>C           elements, we call EKNELT to determine how many
+      !>C           elements to fetch.
+      !>C
+      !>            SELIDX = 2
+      !>            CALL EKNELT ( SELIDX, ROW, NELT )
       !>
-      !>                    ELTIDX = 1
-      !>                    ISNULL = .FALSE.
+      !>            ELTIDX = 1
+      !>            ISNULL = .FALSE.
       !>
-      !>                    DO WHILE (       ( ELTIDX .LE.  NELT   )
-      !>             .                 .AND. (        .NOT. ISNULL )  )
+      !>            DO WHILE (       ( ELTIDX .LE.  NELT   )
+      !>     .                 .AND. (        .NOT. ISNULL )  )
       !>
-      !>                       CALL EKGD ( SELIDX,         ROW,     ELTIDX,
-      !>             .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
+      !>               CALL EKGD ( SELIDX,         ROW,     ELTIDX,
+      !>     .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
       !>
-      !>                       ELTIDX = ELTIDX + 1
+      !>               ELTIDX = ELTIDX + 1
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                       WRITE(*,'(A)') '   COLUMN = DARRAY: <Null>'
+      !>               WRITE(*,'(A)') '   COLUMN = DARRAY: <Null>'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE(*,'(A,4F6.1)') '   COLUMN = DARRAY:',
-      !>             .                              ( DVALS(I), I = 1, NELT )
+      !>               WRITE(*,'(A,4F6.1)') '   COLUMN = DARRAY:',
+      !>     .                              ( DVALS(I), I = 1, NELT )
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>        C
-      !>        C           Fetch values from column CARRAY in the current
-      !>        C           row.
-      !>        C
-      !>                    SELIDX = 3
-      !>                    CALL EKNELT ( SELIDX, ROW, NELT )
+      !>C
+      !>C           Fetch values from column CARRAY in the current
+      !>C           row.
+      !>C
+      !>            SELIDX = 3
+      !>            CALL EKNELT ( SELIDX, ROW, NELT )
       !>
-      !>                    ELTIDX = 1
-      !>                    ISNULL = .FALSE.
+      !>            ELTIDX = 1
+      !>            ISNULL = .FALSE.
       !>
-      !>                    DO WHILE (       ( ELTIDX .LE.  NELT   )
-      !>             .                 .AND. (        .NOT. ISNULL )  )
+      !>            DO WHILE (       ( ELTIDX .LE.  NELT   )
+      !>     .                 .AND. (        .NOT. ISNULL )  )
       !>
-      !>                       CALL EKGC ( SELIDX,         ROW,     ELTIDX,
-      !>             .                     CVALS(ELTIDX),  ISNULL,  FOUND   )
+      !>               CALL EKGC ( SELIDX,         ROW,     ELTIDX,
+      !>     .                     CVALS(ELTIDX),  ISNULL,  FOUND   )
       !>
-      !>                       ELTIDX = ELTIDX + 1
+      !>               ELTIDX = ELTIDX + 1
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                       WRITE(*,'(A)') '   COLUMN = CARRAY: <Null>'
+      !>               WRITE(*,'(A)') '   COLUMN = CARRAY: <Null>'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE(*,'(8A)') '   COLUMN = CARRAY: ',
-      !>             .                     ( CVALS(I)(:RTRIM(CVALS(I))) //' ',
-      !>             .                                         I = 1, NELT   )
+      !>               WRITE(*,'(8A)') '   COLUMN = CARRAY: ',
+      !>     .                     ( CVALS(I)(:RTRIM(CVALS(I))) //' ',
+      !>     .                                         I = 1, NELT   )
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>        C
-      !>        C     We either parsed the SELECT clause or had an error.
-      !>        C
-      !>              END IF
+      !>C
+      !>C     We either parsed the SELECT clause or had an error.
+      !>C
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -32510,7 +33478,7 @@ contains
       !>        changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure eknelt
+      module subroutine eknelt ( ctx, selidx, row, nelt )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -32524,6 +33492,10 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: row  !! Row containing element.
+      integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
+      integer(ip), intent(out) :: nelt  !! Number of elements in entry in current row.
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
@@ -32655,8 +33627,11 @@ contains
 
       return
       end associate
-      end procedure eknelt
+      end subroutine eknelt
 
+      !> Return an element of an entry in a column of character
+      !> type in a specified row.
+      !>
       !>## Detailed Input
       !>
       !>     SELIDX   is the SELECT clause index of the column to
@@ -32759,110 +33734,112 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKGC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKGC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Maximum length of an input query,
-      !>        C     MAXQRY, and the maximum length of literal string
-      !>        C     values, MAXSTR, from eklimit.inc.
-      !>        C
-      !>              INCLUDE 'ekqlimit.inc'
+      !>C
+      !>C     Include the EK Maximum length of an input query,
+      !>C     MAXQRY, and the maximum length of literal string
+      !>C     values, MAXSTR, from eklimit.inc.
+      !>C
+      !>      INCLUDE 'ekqlimit.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
       !>
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 1840 )
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 1840 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(MAXSTR)    CDATA
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(MAXQRY)    QUERY
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(MAXSTR)    CDATA
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(MAXQRY)    QUERY
       !>
-      !>              INTEGER               ELTIDX
-      !>              INTEGER               NMROWS
-      !>              INTEGER               ROWNO
-      !>              INTEGER               SELIDX
+      !>      INTEGER               ELTIDX
+      !>      INTEGER               NMROWS
+      !>      INTEGER               ROWNO
+      !>      INTEGER               SELIDX
       !>
-      !>              LOGICAL               ERROR
-      !>              LOGICAL               FOUND
-      !>              LOGICAL               ISNULL
+      !>      LOGICAL               ERROR
+      !>      LOGICAL               FOUND
+      !>      LOGICAL               ISNULL
       !>
-      !>        C
-      !>        C     Open an EK file.
-      !>        C
-      !>              CALL FURNSH ( EKNAME )
+      !>C
+      !>C     Open an EK file.
+      !>C
+      !>      CALL FURNSH ( EKNAME )
       !>
-      !>        C
-      !>        C     The table 'VIKING_SEDR_DATA' has a column 'IMAGE_ID'
-      !>        C     of scalar strings.
-      !>        C
-      !>        C     Define a set of constraints to perform a query on
-      !>        C     all loaded EK files (the SELECT clause). In this
-      !>        C     case select the column 'IMAGE_ID' from table
-      !>        C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
-      !>        C
-      !>              QUERY = 'Select IMAGE_ID from VIKING_SEDR_DATA '
-      !>             .   //   'where IMAGE_NUMBER < 25860000 '
-      !>             .   //   'order by IMAGE_NUMBER'
+      !>C
+      !>C     The table 'VIKING_SEDR_DATA' has a column 'IMAGE_ID'
+      !>C     of scalar strings.
+      !>C
+      !>C     Define a set of constraints to perform a query on
+      !>C     all loaded EK files (the SELECT clause). In this
+      !>C     case select the column 'IMAGE_ID' from table
+      !>C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
+      !>C
+      !>      QUERY = 'Select IMAGE_ID from VIKING_SEDR_DATA '
+      !>     .   //   'where IMAGE_NUMBER < 25860000 '
+      !>     .   //   'order by IMAGE_NUMBER'
       !>
-      !>        C
-      !>        C     Query the EK system for data rows matching the
-      !>        C     SELECT constraints.
-      !>        C
-      !>              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+      !>C
+      !>C     Query the EK system for data rows matching the
+      !>C     SELECT constraints.
+      !>C
+      !>      CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
       !>
-      !>        C
-      !>        C     Check whether an error occurred while processing the
-      !>        C     SELECT clause. If so, output the error message.
-      !>        C
-      !>              IF ( ERROR ) THEN
+      !>C
+      !>C     Check whether an error occurred while processing the
+      !>C     SELECT clause. If so, output the error message.
+      !>C
+      !>      IF ( ERROR ) THEN
       !>
-      !>                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+      !>         WRITE(*,*) 'SELECT clause error: ', ERRMSG
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>        C
-      !>        C        Fetch the character data. We know the query returned
-      !>        C        one column and the column contains only scalar data,
-      !>        C        so the index of all elements is 1.
-      !>        C
-      !>                 SELIDX = 1
-      !>                 ELTIDX = 1
+      !>C
+      !>C        Fetch the character data. We know the query returned
+      !>C        one column and the column contains only scalar data,
+      !>C        so the index of all elements is 1.
+      !>C
+      !>         SELIDX = 1
+      !>         ELTIDX = 1
       !>
-      !>        C
-      !>        C        Loop over each row found matching the query.
-      !>        C
-      !>                 DO ROWNO = 1, NMROWS
+      !>C
+      !>C        Loop over each row found matching the query.
+      !>C
+      !>         DO ROWNO = 1, NMROWS
       !>
-      !>        C
-      !>        C           Use EKGC to retrieve the string from
-      !>        C
-      !>                    CALL EKGC ( SELIDX,  ROWNO,  ELTIDX,
-      !>             .                  CDATA,   ISNULL, FOUND   )
+      !>C
+      !>C           Use EKGC to retrieve the string from
+      !>C
+      !>            CALL EKGC ( SELIDX,  ROWNO,  ELTIDX,
+      !>     .                  CDATA,   ISNULL, FOUND   )
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                       WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
-      !>             .                  ': Character data: <Null>'
+      !>               WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
+      !>     .                  ': Character data: <Null>'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE (*,'(A,I3,2A)') 'Row ', ROWNO,
-      !>             .                  ': Character data: ', CDATA
-      !>                    END IF
+      !>               WRITE (*,'(A,I3,2A)') 'Row ', ROWNO,
+      !>     .                  ': Character data: ', CDATA
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -32916,288 +33893,290 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKGC_EX2
-      !>              IMPLICIT NONE
-      !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C     and EK Query Limit Parameters (MAXQRY)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
-      !>              INCLUDE 'ekqlimit.inc'
-      !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               RTRIM
-      !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME  = 'ekgc_ex2.bdb' )
-      !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE   = 'TAB' )
-      !>
-      !>              INTEGER               CHRSLN
-      !>              PARAMETER           ( CHRSLN = 3   )
-      !>
-      !>              INTEGER               COL3SZ
-      !>              PARAMETER           ( COL3SZ = 3   )
-      !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
-      !>
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 1840 )
-      !>
-      !>              INTEGER               MXC2SZ
-      !>              PARAMETER           ( MXC2SZ = 8   )
-      !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
-      !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 3   )
-      !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 4   )
-      !>
-      !>              INTEGER               STRSIZ
-      !>              PARAMETER           ( STRSIZ  = 30 )
-      !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-      !>              CHARACTER*(STRSIZ)    COL1
-      !>              CHARACTER*(CHRSLN)    COL2   ( MXC2SZ )
-      !>              CHARACTER*(CHRSLN)    COL3   ( COL3SZ )
-      !>              CHARACTER*(STRSIZ)    CVALS  ( MXC2SZ )
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(MAXQRY)    QUERY
-      !>
-      !>              INTEGER               ELTIDX
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               NELT
-      !>              INTEGER               NMROWS
-      !>              INTEGER               NRESVC
-      !>              INTEGER               RECNO
-      !>              INTEGER               ROW
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SELIDX
-      !>
-      !>              LOGICAL               ERROR
-      !>              LOGICAL               FOUND
-      !>              LOGICAL               ISNULL
-      !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 13-JUN-2019'
-      !>
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
-      !>
-      !>        C
-      !>        C     Set up the column names and declarations
-      !>        C     for the TAB segment.  We'll index all of
-      !>        C     the columns.
-      !>        C
-      !>              CNAMES(1) = 'CHR_COL_1'
-      !>              CDECLS(1) = 'DATATYPE = CHARACTER*(*), ' //
-      !>             .            'INDEXED  = TRUE'
-      !>
-      !>              CNAMES(2) = 'CHR_COL_2'
-      !>              CDECLS(2) = 'DATATYPE = CHARACTER*(3), ' //
-      !>             .            'SIZE = VARIABLE'
-      !>
-      !>              CNAMES(3) = 'CHR_COL_3'
-      !>              CDECLS(3) = 'DATATYPE = CHARACTER*(3), ' //
-      !>             .            'SIZE = 3'
-      !>
-      !>        C
-      !>        C     Start the segment.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
-      !>
-      !>        C
-      !>        C     At the records to the table.
-      !>        C
-      !>              DO I = 1, NROWS
-      !>
-      !>        C
-      !>        C        Append a new record to the EK.
-      !>        C
-      !>                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
-      !>
-      !>        C
-      !>        C        Add CHR_COL_1
-      !>        C
-      !>                 CALL REPMI ( 'Column #2 has $ elements.',
-      !>             .                '$', I*2, COL1              )
-      !>
-      !>                 CALL EKACEC ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(1), 1,     COL1, .FALSE. )
-      !>
-      !>        C
-      !>        C        Add I*2 items to CHR_COL_2
-      !>        C
-      !>                 DO J = 1, I*2
-      !>                    CALL INTSTR( J + I*100, COL2(J) )
-      !>                 END DO
+      !>```fortran
+      !>      PROGRAM EKGC_EX2
+      !>      IMPLICIT NONE
+      !>
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C     and EK Query Limit Parameters (MAXQRY)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
+      !>      INCLUDE 'ekqlimit.inc'
+      !>
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               RTRIM
+      !>
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME  = 'ekgc_ex2.bdb' )
+      !>
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE   = 'TAB' )
+      !>
+      !>      INTEGER               CHRSLN
+      !>      PARAMETER           ( CHRSLN = 3   )
+      !>
+      !>      INTEGER               COL3SZ
+      !>      PARAMETER           ( COL3SZ = 3   )
+      !>
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
+      !>
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 1840 )
+      !>
+      !>      INTEGER               MXC2SZ
+      !>      PARAMETER           ( MXC2SZ = 8   )
+      !>
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
+      !>
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 3   )
+      !>
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 4   )
+      !>
+      !>      INTEGER               STRSIZ
+      !>      PARAMETER           ( STRSIZ  = 30 )
+      !>
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+      !>      CHARACTER*(STRSIZ)    COL1
+      !>      CHARACTER*(CHRSLN)    COL2   ( MXC2SZ )
+      !>      CHARACTER*(CHRSLN)    COL3   ( COL3SZ )
+      !>      CHARACTER*(STRSIZ)    CVALS  ( MXC2SZ )
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(MAXQRY)    QUERY
+      !>
+      !>      INTEGER               ELTIDX
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               NELT
+      !>      INTEGER               NMROWS
+      !>      INTEGER               NRESVC
+      !>      INTEGER               RECNO
+      !>      INTEGER               ROW
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SELIDX
+      !>
+      !>      LOGICAL               ERROR
+      !>      LOGICAL               FOUND
+      !>      LOGICAL               ISNULL
+      !>
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 13-JUN-2019'
+      !>
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>
+      !>C
+      !>C     Set up the column names and declarations
+      !>C     for the TAB segment.  We'll index all of
+      !>C     the columns.
+      !>C
+      !>      CNAMES(1) = 'CHR_COL_1'
+      !>      CDECLS(1) = 'DATATYPE = CHARACTER*(*), ' //
+      !>     .            'INDEXED  = TRUE'
+      !>
+      !>      CNAMES(2) = 'CHR_COL_2'
+      !>      CDECLS(2) = 'DATATYPE = CHARACTER*(3), ' //
+      !>     .            'SIZE = VARIABLE'
+      !>
+      !>      CNAMES(3) = 'CHR_COL_3'
+      !>      CDECLS(3) = 'DATATYPE = CHARACTER*(3), ' //
+      !>     .            'SIZE = 3'
       !>
-      !>                 CALL EKACEC ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(2), I*2,   COL2, .FALSE. )
+      !>C
+      !>C     Start the segment.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
+      !>
+      !>C
+      !>C     At the records to the table.
+      !>C
+      !>      DO I = 1, NROWS
+      !>
+      !>C
+      !>C        Append a new record to the EK.
+      !>C
+      !>         CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>
+      !>C
+      !>C        Add CHR_COL_1
+      !>C
+      !>         CALL REPMI ( 'Column #2 has $ elements.',
+      !>     .                '$', I*2, COL1              )
       !>
-      !>        C
-      !>        C        Add 3 items to CHR_COL_3
-      !>        C
-      !>                 DO J = 1, 3
-      !>                    CALL INTSTR( I + J*100, COL3(J) )
-      !>                 END DO
+      !>         CALL EKACEC ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(1), 1,     COL1, .FALSE. )
+      !>
+      !>C
+      !>C        Add I*2 items to CHR_COL_2
+      !>C
+      !>         DO J = 1, I*2
+      !>            CALL INTSTR( J + I*100, COL2(J) )
+      !>         END DO
       !>
-      !>                 CALL EKACEC ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(3), 3,     COL3, .FALSE. )
+      !>         CALL EKACEC ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(2), I*2,   COL2, .FALSE. )
       !>
-      !>              END DO
-      !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C        Add 3 items to CHR_COL_3
+      !>C
+      !>         DO J = 1, 3
+      !>            CALL INTSTR( I + J*100, COL3(J) )
+      !>         END DO
       !>
-      !>        C
-      !>        C     Open the created file. Perform the query and show the
-      !>        C     results.
-      !>        C
-      !>              CALL FURNSH ( EKNAME )
+      !>         CALL EKACEC ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(3), 3,     COL3, .FALSE. )
       !>
-      !>              QUERY = 'SELECT CHR_COL_1, CHR_COL_2, CHR_COL_3 FROM TAB'
+      !>      END DO
       !>
-      !>        C
-      !>        C     Query the EK system for data rows matching the
-      !>        C     SELECT constraints.
-      !>        C
-      !>              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
-      !>
-      !>        C
-      !>        C     Check whether an error occurred while processing the
-      !>        C     SELECT clause. If so, output the error message.
-      !>        C
-      !>              IF ( ERROR ) THEN
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+      !>C
+      !>C     Open the created file. Perform the query and show the
+      !>C     results.
+      !>C
+      !>      CALL FURNSH ( EKNAME )
       !>
-      !>              ELSE
+      !>      QUERY = 'SELECT CHR_COL_1, CHR_COL_2, CHR_COL_3 FROM TAB'
       !>
-      !>                 DO ROW = 1, NMROWS
+      !>C
+      !>C     Query the EK system for data rows matching the
+      !>C     SELECT constraints.
+      !>C
+      !>      CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
       !>
-      !>                    WRITE(*,*) ' '
-      !>                    WRITE(*,'(A,I3)') 'ROW  = ', ROW
+      !>C
+      !>C     Check whether an error occurred while processing the
+      !>C     SELECT clause. If so, output the error message.
+      !>C
+      !>      IF ( ERROR ) THEN
       !>
-      !>        C
-      !>        C           Fetch values from column CHR_COL_1.  Since
-      !>        C           CHR_COL_1 was the first column selected, the
-      !>        C           selection index SELIDX is set to 1.
-      !>        C
-      !>                    SELIDX = 1
-      !>                    ELTIDX = 1
-      !>                    CALL EKGC ( SELIDX,    ROW,     ELTIDX,
-      !>             .                  CVALS(1),  ISNULL,  FOUND   )
+      !>         WRITE(*,*) 'SELECT clause error: ', ERRMSG
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>      ELSE
       !>
-      !>                       WRITE(*,*) '  COLUMN = CHR_COL_1: <Null>'
+      !>         DO ROW = 1, NMROWS
       !>
-      !>                    ELSE
+      !>            WRITE(*,*) ' '
+      !>            WRITE(*,'(A,I3)') 'ROW  = ', ROW
       !>
-      !>                       WRITE(*,*) '  COLUMN = CHR_COL_1: ', CVALS(1)
+      !>C
+      !>C           Fetch values from column CHR_COL_1.  Since
+      !>C           CHR_COL_1 was the first column selected, the
+      !>C           selection index SELIDX is set to 1.
+      !>C
+      !>            SELIDX = 1
+      !>            ELTIDX = 1
+      !>            CALL EKGC ( SELIDX,    ROW,     ELTIDX,
+      !>     .                  CVALS(1),  ISNULL,  FOUND   )
       !>
-      !>                    END IF
+      !>            IF ( ISNULL ) THEN
       !>
-      !>        C
-      !>        C           Fetch values from column CHR_COL_2 in the current
-      !>        C           row.  Since CHR_COL_2 contains variable-size array
-      !>        C           elements, we call EKNELT to determine how many
-      !>        C           elements to fetch.
-      !>        C
-      !>                    SELIDX = 2
-      !>                    CALL EKNELT ( SELIDX, ROW, NELT )
+      !>               WRITE(*,*) '  COLUMN = CHR_COL_1: <Null>'
       !>
-      !>                    ELTIDX = 1
-      !>                    ISNULL = .FALSE.
+      !>            ELSE
       !>
-      !>                    DO WHILE (       ( ELTIDX .LE.  NELT   )
-      !>             .                 .AND. (        .NOT. ISNULL )  )
+      !>               WRITE(*,*) '  COLUMN = CHR_COL_1: ', CVALS(1)
       !>
-      !>                       CALL EKGC ( SELIDX,         ROW,     ELTIDX,
-      !>             .                     CVALS(ELTIDX),  ISNULL,  FOUND   )
+      !>            END IF
       !>
-      !>                       ELTIDX = ELTIDX + 1
+      !>C
+      !>C           Fetch values from column CHR_COL_2 in the current
+      !>C           row.  Since CHR_COL_2 contains variable-size array
+      !>C           elements, we call EKNELT to determine how many
+      !>C           elements to fetch.
+      !>C
+      !>            SELIDX = 2
+      !>            CALL EKNELT ( SELIDX, ROW, NELT )
       !>
-      !>        C
-      !>        C           If the column entry is null, we'll be kicked
-      !>        C           out of this loop after the first iteration.
-      !>        C
-      !>                    END DO
+      !>            ELTIDX = 1
+      !>            ISNULL = .FALSE.
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            DO WHILE (       ( ELTIDX .LE.  NELT   )
+      !>     .                 .AND. (        .NOT. ISNULL )  )
       !>
-      !>                       WRITE(*,*) '  COLUMN = CHR_COL_2: <Null>'
+      !>               CALL EKGC ( SELIDX,         ROW,     ELTIDX,
+      !>     .                     CVALS(ELTIDX),  ISNULL,  FOUND   )
       !>
-      !>                    ELSE
+      !>               ELTIDX = ELTIDX + 1
       !>
-      !>                        WRITE(*,*) '  COLUMN = CHR_COL_2: ',
-      !>             .                     ( CVALS(I)(:RTRIM(CVALS(I))) //' ',
-      !>             .                                           I = 1, NELT )
+      !>C
+      !>C           If the column entry is null, we'll be kicked
+      !>C           out of this loop after the first iteration.
+      !>C
+      !>            END DO
       !>
-      !>                    END IF
+      !>            IF ( ISNULL ) THEN
       !>
-      !>        C
-      !>        C           Fetch values from column CHR_COL_3 in the current
-      !>        C           row.  We need not call EKNELT since we know how
-      !>        C           many elements are in each column entry.
-      !>        C
-      !>                    SELIDX = 3
-      !>                    ELTIDX = 1
-      !>                    ISNULL = .FALSE.
+      !>               WRITE(*,*) '  COLUMN = CHR_COL_2: <Null>'
       !>
-      !>                    DO WHILE (       ( ELTIDX .LE.  COL3SZ )
-      !>             .                 .AND. (        .NOT. ISNULL )  )
+      !>            ELSE
       !>
-      !>                       CALL EKGC ( SELIDX,         ROW,     ELTIDX,
-      !>             .                     CVALS(ELTIDX),  ISNULL,  FOUND   )
+      !>                WRITE(*,*) '  COLUMN = CHR_COL_2: ',
+      !>     .                     ( CVALS(I)(:RTRIM(CVALS(I))) //' ',
+      !>     .                                           I = 1, NELT )
       !>
-      !>                       ELTIDX = ELTIDX + 1
+      !>            END IF
       !>
-      !>                    END DO
+      !>C
+      !>C           Fetch values from column CHR_COL_3 in the current
+      !>C           row.  We need not call EKNELT since we know how
+      !>C           many elements are in each column entry.
+      !>C
+      !>            SELIDX = 3
+      !>            ELTIDX = 1
+      !>            ISNULL = .FALSE.
       !>
-      !>                    IF ( ISNULL ) THEN
-      !>                       WRITE(*,*) '  COLUMN = CHR_COL_3: <Null>'
-      !>                    ELSE
-      !>                        WRITE(*,*) '  COLUMN = CHR_COL_3: ',
-      !>             .                     ( CVALS(I)(:RTRIM(CVALS(I))) //' ',
-      !>             .                                         I = 1, COL3SZ )
-      !>                    END IF
+      !>            DO WHILE (       ( ELTIDX .LE.  COL3SZ )
+      !>     .                 .AND. (        .NOT. ISNULL )  )
       !>
-      !>                 END DO
+      !>               CALL EKGC ( SELIDX,         ROW,     ELTIDX,
+      !>     .                     CVALS(ELTIDX),  ISNULL,  FOUND   )
       !>
-      !>        C
-      !>        C     We either parsed the SELECT clause or had an error.
-      !>        C
-      !>              END IF
+      !>               ELTIDX = ELTIDX + 1
       !>
-      !>              END
+      !>            END DO
+      !>
+      !>            IF ( ISNULL ) THEN
+      !>               WRITE(*,*) '  COLUMN = CHR_COL_3: <Null>'
+      !>            ELSE
+      !>                WRITE(*,*) '  COLUMN = CHR_COL_3: ',
+      !>     .                     ( CVALS(I)(:RTRIM(CVALS(I))) //' ',
+      !>     .                                         I = 1, COL3SZ )
+      !>            END IF
+      !>
+      !>         END DO
+      !>
+      !>C
+      !>C     We either parsed the SELECT clause or had an error.
+      !>C
+      !>      END IF
+      !>
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -33264,7 +34243,7 @@ contains
       !>        was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ekgc
+      module subroutine ekgc ( ctx, selidx, row, elment, cdata, null, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -33278,6 +34257,13 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: elment  !! Index of element, within column entry, to fetch.
+      integer(ip), intent(in) :: row  !! Row to fetch from.
+      integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
+      logical, intent(out) :: found  !! Flag indicating whether column was present in row.
+      character(*), intent(out) :: cdata  !! Character string element of column entry.
+      logical, intent(out) :: null  !! Flag indicating whether column entry was null.
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
@@ -33463,8 +34449,11 @@ contains
 
       return
       end associate
-      end procedure ekgc
+      end subroutine ekgc
 
+      !> Return an element of an entry in a column of double precision
+      !> or `time' type in a specified row.
+      !>
       !>## Detailed Input
       !>
       !>     SELIDX   is the SELECT clause index of the column to
@@ -33562,112 +34551,114 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKGD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKGD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Maximum length of an input query,
-      !>        C     MAXQRY, and the maximum length of literal string
-      !>        C     values, MAXSTR, from eklimit.inc.
-      !>        C
-      !>              INCLUDE 'ekqlimit.inc'
+      !>C
+      !>C     Include the EK Maximum length of an input query,
+      !>C     MAXQRY, and the maximum length of literal string
+      !>C     values, MAXSTR, from eklimit.inc.
+      !>C
+      !>      INCLUDE 'ekqlimit.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
       !>
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 1840 )
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 1840 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(MAXQRY)    QUERY
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(MAXQRY)    QUERY
       !>
-      !>              DOUBLE PRECISION      DDATA
+      !>      DOUBLE PRECISION      DDATA
       !>
-      !>              INTEGER               ELTIDX
-      !>              INTEGER               NMROWS
-      !>              INTEGER               ROWNO
-      !>              INTEGER               SELIDX
+      !>      INTEGER               ELTIDX
+      !>      INTEGER               NMROWS
+      !>      INTEGER               ROWNO
+      !>      INTEGER               SELIDX
       !>
-      !>              LOGICAL               ERROR
-      !>              LOGICAL               FOUND
-      !>              LOGICAL               ISNULL
+      !>      LOGICAL               ERROR
+      !>      LOGICAL               FOUND
+      !>      LOGICAL               ISNULL
       !>
-      !>        C
-      !>        C     Open an EK file.
-      !>        C
-      !>              CALL FURNSH ( EKNAME )
+      !>C
+      !>C     Open an EK file.
+      !>C
+      !>      CALL FURNSH ( EKNAME )
       !>
-      !>        C
-      !>        C     The table 'VIKING_SEDR_DATA' has a column
-      !>        C     'PLATFORM_CLOCK' of double precision values.
-      !>        C
-      !>        C     Define a set of constraints to perform a query on
-      !>        C     all loaded EK files (the SELECT clause). In this
-      !>        C     case select the column 'PLATFORM_CLOCK' from table
-      !>        C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
-      !>        C
-      !>              QUERY = 'Select PLATFORM_CLOCK from VIKING_SEDR_DATA '
-      !>             .   //   'where IMAGE_NUMBER < 25860000 '
-      !>             .   //   'order by IMAGE_NUMBER'
+      !>C
+      !>C     The table 'VIKING_SEDR_DATA' has a column
+      !>C     'PLATFORM_CLOCK' of double precision values.
+      !>C
+      !>C     Define a set of constraints to perform a query on
+      !>C     all loaded EK files (the SELECT clause). In this
+      !>C     case select the column 'PLATFORM_CLOCK' from table
+      !>C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
+      !>C
+      !>      QUERY = 'Select PLATFORM_CLOCK from VIKING_SEDR_DATA '
+      !>     .   //   'where IMAGE_NUMBER < 25860000 '
+      !>     .   //   'order by IMAGE_NUMBER'
       !>
-      !>        C
-      !>        C     Query the EK system for data rows matching the
-      !>        C     SELECT constraints.
-      !>        C
-      !>              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+      !>C
+      !>C     Query the EK system for data rows matching the
+      !>C     SELECT constraints.
+      !>C
+      !>      CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
       !>
-      !>        C
-      !>        C     Check whether an error occurred while processing the
-      !>        C     SELECT clause. If so, output the error message.
-      !>        C
-      !>              IF ( ERROR ) THEN
+      !>C
+      !>C     Check whether an error occurred while processing the
+      !>C     SELECT clause. If so, output the error message.
+      !>C
+      !>      IF ( ERROR ) THEN
       !>
-      !>                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+      !>         WRITE(*,*) 'SELECT clause error: ', ERRMSG
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>        C
-      !>        C        Fetch the character data. We know the query returned
-      !>        C        one column and the column contains only scalar data,
-      !>        C        so the index of all elements is 1.
-      !>        C
-      !>                 SELIDX = 1
-      !>                 ELTIDX = 1
+      !>C
+      !>C        Fetch the character data. We know the query returned
+      !>C        one column and the column contains only scalar data,
+      !>C        so the index of all elements is 1.
+      !>C
+      !>         SELIDX = 1
+      !>         ELTIDX = 1
       !>
-      !>        C
-      !>        C        Loop over each row found matching the query.
-      !>        C
-      !>                 DO ROWNO = 1, NMROWS
+      !>C
+      !>C        Loop over each row found matching the query.
+      !>C
+      !>         DO ROWNO = 1, NMROWS
       !>
-      !>        C
-      !>        C           Use EKGD to retrieve the string from
-      !>        C
-      !>                    CALL EKGD ( SELIDX, ROWNO,  ELTIDX,
-      !>             .                  DDATA,  ISNULL, FOUND   )
+      !>C
+      !>C           Use EKGD to retrieve the string from
+      !>C
+      !>            CALL EKGD ( SELIDX, ROWNO,  ELTIDX,
+      !>     .                  DDATA,  ISNULL, FOUND   )
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                       WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
-      !>             .                  ': Double precision data: <Null>'
+      !>               WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
+      !>     .                  ': Double precision data: <Null>'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE (*,'(A,I3,A,F10.6)') 'Row ', ROWNO,
-      !>             .                  ': Double precision data: ', DDATA
+      !>               WRITE (*,'(A,I3,A,F10.6)') 'Row ', ROWNO,
+      !>     .                  ': Double precision data: ', DDATA
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -33719,127 +34710,129 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKGD_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKGD_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Maximum length of an input query,
-      !>        C     MAXQRY, and the maximum length of literal string
-      !>        C     values, MAXSTR, from eklimit.inc.
-      !>        C
-      !>              INCLUDE 'ekqlimit.inc'
+      !>C
+      !>C     Include the EK Maximum length of an input query,
+      !>C     MAXQRY, and the maximum length of literal string
+      !>C     values, MAXSTR, from eklimit.inc.
+      !>C
+      !>      INCLUDE 'ekqlimit.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
       !>
-      !>              CHARACTER*(*)         LSKNAM
-      !>              PARAMETER           ( LSKNAM = 'naif0012.tls' )
+      !>      CHARACTER*(*)         LSKNAM
+      !>      PARAMETER           ( LSKNAM = 'naif0012.tls' )
       !>
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 1840 )
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 1840 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 24   )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 24   )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(MAXQRY)    QUERY
-      !>              CHARACTER*(TIMLEN)    UTCSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(MAXQRY)    QUERY
+      !>      CHARACTER*(TIMLEN)    UTCSTR
       !>
-      !>              DOUBLE PRECISION      DDATA
+      !>      DOUBLE PRECISION      DDATA
       !>
-      !>              INTEGER               ELTIDX
-      !>              INTEGER               NMROWS
-      !>              INTEGER               ROWNO
-      !>              INTEGER               SELIDX
+      !>      INTEGER               ELTIDX
+      !>      INTEGER               NMROWS
+      !>      INTEGER               ROWNO
+      !>      INTEGER               SELIDX
       !>
-      !>              LOGICAL               ERROR
-      !>              LOGICAL               FOUND
-      !>              LOGICAL               ISNULL
+      !>      LOGICAL               ERROR
+      !>      LOGICAL               FOUND
+      !>      LOGICAL               ISNULL
       !>
-      !>        C
-      !>        C     Load leapseconds file for time conversion.
-      !>        C
-      !>              CALL FURNSH ( LSKNAM )
+      !>C
+      !>C     Load leapseconds file for time conversion.
+      !>C
+      !>      CALL FURNSH ( LSKNAM )
       !>
-      !>        C
-      !>        C     Open an EK file.
-      !>        C
-      !>              CALL FURNSH ( EKNAME )
+      !>C
+      !>C     Open an EK file.
+      !>C
+      !>      CALL FURNSH ( EKNAME )
       !>
-      !>        C
-      !>        C     The table 'VIKING_SEDR_DATA' has a column
-      !>        C     'IMAGE_TIME' of time values (stored as double
-      !>        C     precision items).
-      !>        C
-      !>        C     Define a set of constraints to perform a query on
-      !>        C     all loaded EK files (the SELECT clause). In this
-      !>        C     case select the column 'IMAGE_TIME' from table
-      !>        C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
-      !>        C
-      !>              QUERY = 'Select IMAGE_TIME from VIKING_SEDR_DATA '
-      !>             .   //   'where IMAGE_NUMBER < 25860000 '
-      !>             .   //   'order by IMAGE_NUMBER'
+      !>C
+      !>C     The table 'VIKING_SEDR_DATA' has a column
+      !>C     'IMAGE_TIME' of time values (stored as double
+      !>C     precision items).
+      !>C
+      !>C     Define a set of constraints to perform a query on
+      !>C     all loaded EK files (the SELECT clause). In this
+      !>C     case select the column 'IMAGE_TIME' from table
+      !>C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
+      !>C
+      !>      QUERY = 'Select IMAGE_TIME from VIKING_SEDR_DATA '
+      !>     .   //   'where IMAGE_NUMBER < 25860000 '
+      !>     .   //   'order by IMAGE_NUMBER'
       !>
-      !>        C
-      !>        C     Query the EK system for data rows matching the
-      !>        C     SELECT constraints.
-      !>        C
-      !>              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+      !>C
+      !>C     Query the EK system for data rows matching the
+      !>C     SELECT constraints.
+      !>C
+      !>      CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
       !>
-      !>        C
-      !>        C     Check whether an error occurred while processing the
-      !>        C     SELECT clause. If so, output the error message.
-      !>        C
-      !>              IF ( ERROR ) THEN
+      !>C
+      !>C     Check whether an error occurred while processing the
+      !>C     SELECT clause. If so, output the error message.
+      !>C
+      !>      IF ( ERROR ) THEN
       !>
-      !>                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+      !>         WRITE(*,*) 'SELECT clause error: ', ERRMSG
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>        C
-      !>        C        Fetch the character data. We know the query returned
-      !>        C        one column and the column contains only scalar data,
-      !>        C        so the index of all elements is 1.
-      !>        C
-      !>                 SELIDX = 1
-      !>                 ELTIDX = 1
+      !>C
+      !>C        Fetch the character data. We know the query returned
+      !>C        one column and the column contains only scalar data,
+      !>C        so the index of all elements is 1.
+      !>C
+      !>         SELIDX = 1
+      !>         ELTIDX = 1
       !>
-      !>        C
-      !>        C        Loop over each row found matching the query.
-      !>        C
-      !>                 DO ROWNO = 1, NMROWS
+      !>C
+      !>C        Loop over each row found matching the query.
+      !>C
+      !>         DO ROWNO = 1, NMROWS
       !>
-      !>        C
-      !>        C           Use EKGD to retrieve the string from
-      !>        C
-      !>                    CALL EKGD ( SELIDX, ROWNO,  ELTIDX,
-      !>             .                  DDATA,  ISNULL, FOUND   )
+      !>C
+      !>C           Use EKGD to retrieve the string from
+      !>C
+      !>            CALL EKGD ( SELIDX, ROWNO,  ELTIDX,
+      !>     .                  DDATA,  ISNULL, FOUND   )
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                       WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
-      !>             .                              ': Time data: <Null>'
+      !>               WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
+      !>     .                              ': Time data: <Null>'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       CALL ET2UTC ( DDATA, 'C', 3, UTCSTR )
+      !>               CALL ET2UTC ( DDATA, 'C', 3, UTCSTR )
       !>
-      !>                       WRITE (*,'(A,I3,2A)') 'Row ', ROWNO,
-      !>             .                               ': Time data:  ', UTCSTR
+      !>               WRITE (*,'(A,I3,2A)') 'Row ', ROWNO,
+      !>     .                               ': Time data:  ', UTCSTR
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -33893,279 +34886,281 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKGD_EX3
-      !>              IMPLICIT NONE
-      !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C     and EK Query Limit Parameters (MAXQRY)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
-      !>              INCLUDE 'ekqlimit.inc'
-      !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME  = 'ekgd_ex3.bdb' )
-      !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE   = 'TAB' )
-      !>
-      !>              INTEGER               COL3SZ
-      !>              PARAMETER           ( COL3SZ = 3   )
-      !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
-      !>
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 1840 )
-      !>
-      !>              INTEGER               MXC2SZ
-      !>              PARAMETER           ( MXC2SZ = 4   )
-      !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
-      !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 3   )
-      !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 4   )
-      !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(MAXQRY)    QUERY
-      !>
-      !>              DOUBLE PRECISION      COL1
-      !>              DOUBLE PRECISION      COL2   ( MXC2SZ )
-      !>              DOUBLE PRECISION      COL3   ( COL3SZ )
-      !>              DOUBLE PRECISION      DVALS  ( MXC2SZ )
-      !>
-      !>              INTEGER               ELTIDX
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               NELT
-      !>              INTEGER               NMROWS
-      !>              INTEGER               NRESVC
-      !>              INTEGER               RECNO
-      !>              INTEGER               ROW
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SELIDX
-      !>
-      !>              LOGICAL               ERROR
-      !>              LOGICAL               FOUND
-      !>              LOGICAL               ISNULL
-      !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 13-JUN-2019'
-      !>
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
-      !>
-      !>        C
-      !>        C     Set up the column names and declarations
-      !>        C     for the TAB segment.  We'll index all of
-      !>        C     the columns.
-      !>        C
-      !>              CNAMES(1) = 'DP_COL_1'
-      !>              CDECLS(1) = 'DATATYPE = DOUBLE PRECISION, ' //
-      !>             .            'INDEXED  = TRUE'
-      !>
-      !>              CNAMES(2) = 'DP_COL_2'
-      !>              CDECLS(2) = 'DATATYPE = DOUBLE PRECISION, ' //
-      !>             .            'SIZE = VARIABLE'
-      !>
-      !>              CNAMES(3) = 'DP_COL_3'
-      !>              CDECLS(3) = 'DATATYPE = DOUBLE PRECISION, ' //
-      !>             .            'SIZE = 3'
-      !>
-      !>        C
-      !>        C     Start the segment.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
-      !>
-      !>        C
-      !>        C     At the records to the table.
-      !>        C
-      !>              DO I = 1, NROWS
-      !>
-      !>        C
-      !>        C        Append a new record to the EK.
-      !>        C
-      !>                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
-      !>
-      !>        C
-      !>        C        Add DP_COL_1
-      !>        C
-      !>                 COL1 = I * 100.D0
+      !>```fortran
+      !>      PROGRAM EKGD_EX3
+      !>      IMPLICIT NONE
+      !>
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C     and EK Query Limit Parameters (MAXQRY)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
+      !>      INCLUDE 'ekqlimit.inc'
+      !>
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME  = 'ekgd_ex3.bdb' )
+      !>
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE   = 'TAB' )
+      !>
+      !>      INTEGER               COL3SZ
+      !>      PARAMETER           ( COL3SZ = 3   )
+      !>
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
+      !>
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 1840 )
+      !>
+      !>      INTEGER               MXC2SZ
+      !>      PARAMETER           ( MXC2SZ = 4   )
+      !>
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
+      !>
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 3   )
+      !>
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 4   )
+      !>
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(MAXQRY)    QUERY
+      !>
+      !>      DOUBLE PRECISION      COL1
+      !>      DOUBLE PRECISION      COL2   ( MXC2SZ )
+      !>      DOUBLE PRECISION      COL3   ( COL3SZ )
+      !>      DOUBLE PRECISION      DVALS  ( MXC2SZ )
+      !>
+      !>      INTEGER               ELTIDX
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               NELT
+      !>      INTEGER               NMROWS
+      !>      INTEGER               NRESVC
+      !>      INTEGER               RECNO
+      !>      INTEGER               ROW
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SELIDX
+      !>
+      !>      LOGICAL               ERROR
+      !>      LOGICAL               FOUND
+      !>      LOGICAL               ISNULL
+      !>
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 13-JUN-2019'
+      !>
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>
+      !>C
+      !>C     Set up the column names and declarations
+      !>C     for the TAB segment.  We'll index all of
+      !>C     the columns.
+      !>C
+      !>      CNAMES(1) = 'DP_COL_1'
+      !>      CDECLS(1) = 'DATATYPE = DOUBLE PRECISION, ' //
+      !>     .            'INDEXED  = TRUE'
+      !>
+      !>      CNAMES(2) = 'DP_COL_2'
+      !>      CDECLS(2) = 'DATATYPE = DOUBLE PRECISION, ' //
+      !>     .            'SIZE = VARIABLE'
+      !>
+      !>      CNAMES(3) = 'DP_COL_3'
+      !>      CDECLS(3) = 'DATATYPE = DOUBLE PRECISION, ' //
+      !>     .            'SIZE = 3'
+      !>
+      !>C
+      !>C     Start the segment.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
+      !>
+      !>C
+      !>C     At the records to the table.
+      !>C
+      !>      DO I = 1, NROWS
+      !>
+      !>C
+      !>C        Append a new record to the EK.
+      !>C
+      !>         CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>
+      !>C
+      !>C        Add DP_COL_1
+      !>C
+      !>         COL1 = I * 100.D0
       !>
-      !>                 CALL EKACED ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(1), 1,     COL1,  .FALSE. )
-      !>
-      !>        C
-      !>        C        Add I items to DP_COL_2
-      !>        C
-      !>                 DO J = 1, I
-      !>                    COL2(J) = J + I*200.D0
-      !>                 END DO
+      !>         CALL EKACED ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(1), 1,     COL1,  .FALSE. )
+      !>
+      !>C
+      !>C        Add I items to DP_COL_2
+      !>C
+      !>         DO J = 1, I
+      !>            COL2(J) = J + I*200.D0
+      !>         END DO
       !>
-      !>                 CALL EKACED ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(2), I,     COL2,  .FALSE. )
+      !>         CALL EKACED ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(2), I,     COL2,  .FALSE. )
       !>
-      !>        C
-      !>        C        Add 3 items to DP_COL_3
-      !>        C
-      !>                 DO J = 1, 3
-      !>                    COL3(J) =  I + J*100.D0
-      !>                 END DO
+      !>C
+      !>C        Add 3 items to DP_COL_3
+      !>C
+      !>         DO J = 1, 3
+      !>            COL3(J) =  I + J*100.D0
+      !>         END DO
       !>
-      !>                 CALL EKACED ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(3), 3,     COL3, .FALSE. )
+      !>         CALL EKACED ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(3), 3,     COL3, .FALSE. )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the created file. Perform the query and show the
-      !>        C     results.
-      !>        C
-      !>              CALL FURNSH ( EKNAME )
+      !>C
+      !>C     Open the created file. Perform the query and show the
+      !>C     results.
+      !>C
+      !>      CALL FURNSH ( EKNAME )
       !>
-      !>              QUERY = 'SELECT DP_COL_1, DP_COL_2, DP_COL_3 FROM TAB'
+      !>      QUERY = 'SELECT DP_COL_1, DP_COL_2, DP_COL_3 FROM TAB'
       !>
-      !>        C
-      !>        C     Query the EK system for data rows matching the
-      !>        C     SELECT constraints.
-      !>        C
-      !>              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+      !>C
+      !>C     Query the EK system for data rows matching the
+      !>C     SELECT constraints.
+      !>C
+      !>      CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
       !>
-      !>        C
-      !>        C     Check whether an error occurred while processing the
-      !>        C     SELECT clause. If so, output the error message.
-      !>        C
-      !>              IF ( ERROR ) THEN
+      !>C
+      !>C     Check whether an error occurred while processing the
+      !>C     SELECT clause. If so, output the error message.
+      !>C
+      !>      IF ( ERROR ) THEN
       !>
-      !>                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+      !>         WRITE(*,*) 'SELECT clause error: ', ERRMSG
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO ROW = 1, NMROWS
+      !>         DO ROW = 1, NMROWS
       !>
-      !>                    WRITE(*,*) ' '
-      !>                    WRITE(*,'(A,I3)') 'ROW  = ', ROW
+      !>            WRITE(*,*) ' '
+      !>            WRITE(*,'(A,I3)') 'ROW  = ', ROW
       !>
-      !>        C
-      !>        C           Fetch values from column DP_COL_1.  Since
-      !>        C           DP_COL_1 was the first column selected, the
-      !>        C           selection index SELIDX is set to 1.
-      !>        C
-      !>                    SELIDX = 1
-      !>                    ELTIDX = 1
-      !>                    CALL EKGD ( SELIDX,    ROW,     ELTIDX,
-      !>             .                  DVALS(1),  ISNULL,  FOUND   )
+      !>C
+      !>C           Fetch values from column DP_COL_1.  Since
+      !>C           DP_COL_1 was the first column selected, the
+      !>C           selection index SELIDX is set to 1.
+      !>C
+      !>            SELIDX = 1
+      !>            ELTIDX = 1
+      !>            CALL EKGD ( SELIDX,    ROW,     ELTIDX,
+      !>     .                  DVALS(1),  ISNULL,  FOUND   )
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                       WRITE(*,*) '  COLUMN = DP_COL_1: <Null>'
+      !>               WRITE(*,*) '  COLUMN = DP_COL_1: <Null>'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE(*,*) '  COLUMN = DP_COL_1:', DVALS(1)
+      !>               WRITE(*,*) '  COLUMN = DP_COL_1:', DVALS(1)
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>        C
-      !>        C           Fetch values from column DP_COL_2 in the current
-      !>        C           row.  Since DP_COL_2 contains variable-size array
-      !>        C           elements, we call EKNELT to determine how many
-      !>        C           elements to fetch.
-      !>        C
-      !>                    SELIDX = 2
-      !>                    CALL EKNELT ( SELIDX, ROW, NELT )
+      !>C
+      !>C           Fetch values from column DP_COL_2 in the current
+      !>C           row.  Since DP_COL_2 contains variable-size array
+      !>C           elements, we call EKNELT to determine how many
+      !>C           elements to fetch.
+      !>C
+      !>            SELIDX = 2
+      !>            CALL EKNELT ( SELIDX, ROW, NELT )
       !>
-      !>                    ELTIDX = 1
-      !>                    ISNULL = .FALSE.
+      !>            ELTIDX = 1
+      !>            ISNULL = .FALSE.
       !>
-      !>                    DO WHILE (       ( ELTIDX .LE.  NELT   )
-      !>             .                 .AND. (        .NOT. ISNULL )  )
+      !>            DO WHILE (       ( ELTIDX .LE.  NELT   )
+      !>     .                 .AND. (        .NOT. ISNULL )  )
       !>
-      !>                       CALL EKGD ( SELIDX,         ROW,     ELTIDX,
-      !>             .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
+      !>               CALL EKGD ( SELIDX,         ROW,     ELTIDX,
+      !>     .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
       !>
-      !>                       ELTIDX = ELTIDX + 1
+      !>               ELTIDX = ELTIDX + 1
       !>
-      !>        C
-      !>        C           If the column entry is null, we'll be kicked
-      !>        C           out of this loop after the first iteration.
-      !>        C
-      !>                    END DO
+      !>C
+      !>C           If the column entry is null, we'll be kicked
+      !>C           out of this loop after the first iteration.
+      !>C
+      !>            END DO
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                       WRITE(*,*) '  COLUMN = DP_COL_2: <Null>'
+      !>               WRITE(*,*) '  COLUMN = DP_COL_2: <Null>'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE(*,'(A,4F6.1)') '   COLUMN = DP_COL_2:',
-      !>             .                              ( DVALS(I), I = 1, NELT )
+      !>               WRITE(*,'(A,4F6.1)') '   COLUMN = DP_COL_2:',
+      !>     .                              ( DVALS(I), I = 1, NELT )
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>        C
-      !>        C           Fetch values from column DP_COL_3 in the current
-      !>        C           row.  We need not call EKNELT since we know how
-      !>        C           many elements are in each column entry.
-      !>        C
-      !>                    SELIDX = 3
-      !>                    ELTIDX = 1
-      !>                    ISNULL = .FALSE.
+      !>C
+      !>C           Fetch values from column DP_COL_3 in the current
+      !>C           row.  We need not call EKNELT since we know how
+      !>C           many elements are in each column entry.
+      !>C
+      !>            SELIDX = 3
+      !>            ELTIDX = 1
+      !>            ISNULL = .FALSE.
       !>
-      !>                    DO WHILE (       ( ELTIDX .LE.  COL3SZ )
-      !>             .                 .AND. (        .NOT. ISNULL )  )
+      !>            DO WHILE (       ( ELTIDX .LE.  COL3SZ )
+      !>     .                 .AND. (        .NOT. ISNULL )  )
       !>
-      !>                       CALL EKGD ( SELIDX,         ROW,     ELTIDX,
-      !>             .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
+      !>               CALL EKGD ( SELIDX,         ROW,     ELTIDX,
+      !>     .                     DVALS(ELTIDX),  ISNULL,  FOUND   )
       !>
-      !>                       ELTIDX = ELTIDX + 1
+      !>               ELTIDX = ELTIDX + 1
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                       WRITE(*,*) '  COLUMN = DP_COL_3: <Null>'
+      !>               WRITE(*,*) '  COLUMN = DP_COL_3: <Null>'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE(*,'(A,3F6.1)') '   COLUMN = DP_COL_3:',
-      !>             .                              ( DVALS(I), I = 1, COL3SZ )
+      !>               WRITE(*,'(A,3F6.1)') '   COLUMN = DP_COL_3:',
+      !>     .                              ( DVALS(I), I = 1, COL3SZ )
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>        C
-      !>        C     We either parsed the SELECT clause or had an error.
-      !>        C
-      !>              END IF
+      !>C
+      !>C     We either parsed the SELECT clause or had an error.
+      !>C
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -34232,7 +35227,7 @@ contains
       !>        was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ekgd
+      module subroutine ekgd ( ctx, selidx, row, elment, ddata, null, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -34246,6 +35241,13 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: elment  !! Index of element, within column entry, to fetch.
+      integer(ip), intent(in) :: row  !! Row to fetch from.
+      integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
+      logical, intent(out) :: found  !! Flag indicating whether column was present in row.
+      real(wp), intent(out) :: ddata  !! D.p. element of column entry.
+      logical, intent(out) :: null  !! Flag indicating whether column entry was null.
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
@@ -34430,8 +35432,11 @@ contains
 
       return
       end associate
-      end procedure ekgd
+      end subroutine ekgd
 
+      !> Return an element of an entry in a column of integer
+      !> type in a specified row.
+      !>
       !>## Detailed Input
       !>
       !>     SELIDX   is the SELECT clause index of the column to
@@ -34528,111 +35533,113 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKGI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKGI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Maximum length of an input query,
-      !>        C     MAXQRY, and the maximum length of literal string
-      !>        C     values, MAXSTR, from eklimit.inc.
-      !>        C
-      !>              INCLUDE 'ekqlimit.inc'
+      !>C
+      !>C     Include the EK Maximum length of an input query,
+      !>C     MAXQRY, and the maximum length of literal string
+      !>C     values, MAXSTR, from eklimit.inc.
+      !>C
+      !>      INCLUDE 'ekqlimit.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
       !>
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 1840 )
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 1840 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(MAXQRY)    QUERY
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(MAXQRY)    QUERY
       !>
-      !>              INTEGER               ELTIDX
-      !>              INTEGER               IDATA
-      !>              INTEGER               NMROWS
-      !>              INTEGER               ROWNO
-      !>              INTEGER               SELIDX
+      !>      INTEGER               ELTIDX
+      !>      INTEGER               IDATA
+      !>      INTEGER               NMROWS
+      !>      INTEGER               ROWNO
+      !>      INTEGER               SELIDX
       !>
-      !>              LOGICAL               ERROR
-      !>              LOGICAL               FOUND
-      !>              LOGICAL               ISNULL
+      !>      LOGICAL               ERROR
+      !>      LOGICAL               FOUND
+      !>      LOGICAL               ISNULL
       !>
-      !>        C
-      !>        C     Open an EK file.
-      !>        C
-      !>              CALL FURNSH ( EKNAME )
+      !>C
+      !>C     Open an EK file.
+      !>C
+      !>      CALL FURNSH ( EKNAME )
       !>
-      !>        C
-      !>        C     The table 'VIKING_SEDR_DATA' has a column
-      !>        C     'IMAGE_NUMBER' of double precision values.
-      !>        C
-      !>        C     Define a set of constraints to perform a query on
-      !>        C     all loaded EK files (the SELECT clause). In this
-      !>        C     case select the column 'IMAGE_NUMBER' from table
-      !>        C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
-      !>        C
-      !>              QUERY = 'Select IMAGE_NUMBER from VIKING_SEDR_DATA '
-      !>             .   //   'where IMAGE_NUMBER < 25860000 '
-      !>             .   //   'order by IMAGE_NUMBER'
+      !>C
+      !>C     The table 'VIKING_SEDR_DATA' has a column
+      !>C     'IMAGE_NUMBER' of double precision values.
+      !>C
+      !>C     Define a set of constraints to perform a query on
+      !>C     all loaded EK files (the SELECT clause). In this
+      !>C     case select the column 'IMAGE_NUMBER' from table
+      !>C     'VIKING_SEDR_DATA' sorted by 'IMAGE_NUMBER'.
+      !>C
+      !>      QUERY = 'Select IMAGE_NUMBER from VIKING_SEDR_DATA '
+      !>     .   //   'where IMAGE_NUMBER < 25860000 '
+      !>     .   //   'order by IMAGE_NUMBER'
       !>
-      !>        C
-      !>        C     Query the EK system for data rows matching the
-      !>        C     SELECT constraints.
-      !>        C
-      !>              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+      !>C
+      !>C     Query the EK system for data rows matching the
+      !>C     SELECT constraints.
+      !>C
+      !>      CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
       !>
-      !>        C
-      !>        C     Check whether an error occurred while processing the
-      !>        C     SELECT clause. If so, output the error message.
-      !>        C
-      !>              IF ( ERROR ) THEN
+      !>C
+      !>C     Check whether an error occurred while processing the
+      !>C     SELECT clause. If so, output the error message.
+      !>C
+      !>      IF ( ERROR ) THEN
       !>
-      !>                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+      !>         WRITE(*,*) 'SELECT clause error: ', ERRMSG
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>        C
-      !>        C        Fetch the character data. We know the query returned
-      !>        C        one column and the column contains only scalar data,
-      !>        C        so the index of all elements is 1.
-      !>        C
-      !>                 SELIDX = 1
-      !>                 ELTIDX = 1
+      !>C
+      !>C        Fetch the character data. We know the query returned
+      !>C        one column and the column contains only scalar data,
+      !>C        so the index of all elements is 1.
+      !>C
+      !>         SELIDX = 1
+      !>         ELTIDX = 1
       !>
-      !>        C
-      !>        C        Loop over each row found matching the query.
-      !>        C
-      !>                 DO ROWNO = 1, NMROWS
+      !>C
+      !>C        Loop over each row found matching the query.
+      !>C
+      !>         DO ROWNO = 1, NMROWS
       !>
-      !>        C
-      !>        C           Use EKGD to retrieve the string from
-      !>        C
-      !>                    CALL EKGI ( SELIDX, ROWNO,  ELTIDX,
-      !>             .                  IDATA,  ISNULL, FOUND   )
+      !>C
+      !>C           Use EKGD to retrieve the string from
+      !>C
+      !>            CALL EKGI ( SELIDX, ROWNO,  ELTIDX,
+      !>     .                  IDATA,  ISNULL, FOUND   )
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                       WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
-      !>             .                  ': Integer data: <Null>'
+      !>               WRITE (*,'(A,I3,A)') 'Row ', ROWNO,
+      !>     .                  ': Integer data: <Null>'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE (*,'(A,I3,A,I10)') 'Row ', ROWNO,
-      !>             .                  ': Integer data: ', IDATA
+      !>               WRITE (*,'(A,I3,A,I10)') 'Row ', ROWNO,
+      !>     .                  ': Integer data: ', IDATA
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -34686,275 +35693,277 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKGI_EX2
-      !>              IMPLICIT NONE
-      !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C     and EK Query Limit Parameters (MAXQRY)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
-      !>              INCLUDE 'ekqlimit.inc'
-      !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME  = 'ekgi_ex2.bdb' )
-      !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE   = 'TAB' )
-      !>
-      !>              INTEGER               COL3SZ
-      !>              PARAMETER           ( COL3SZ = 3   )
-      !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
-      !>
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 1840 )
-      !>
-      !>              INTEGER               MXC2SZ
-      !>              PARAMETER           ( MXC2SZ = 4   )
-      !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40  )
-      !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 3   )
-      !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 4   )
-      !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(MAXQRY)    QUERY
-      !>
-      !>              INTEGER               COL1
-      !>              INTEGER               COL2   ( MXC2SZ )
-      !>              INTEGER               COL3   ( COL3SZ )
-      !>              INTEGER               ELTIDX
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               IVALS  ( MXC2SZ )
-      !>              INTEGER               J
-      !>              INTEGER               NELT
-      !>              INTEGER               NMROWS
-      !>              INTEGER               NRESVC
-      !>              INTEGER               RECNO
-      !>              INTEGER               ROW
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SELIDX
-      !>
-      !>              LOGICAL               ERROR
-      !>              LOGICAL               FOUND
-      !>              LOGICAL               ISNULL
-      !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test EK/Created 13-JUN-2019'
-      !>
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
-      !>
-      !>        C
-      !>        C     Set up the column names and declarations
-      !>        C     for the TAB segment.  We'll index all of
-      !>        C     the columns.
-      !>        C
-      !>              CNAMES(1) = 'INT_COL_1'
-      !>              CDECLS(1) = 'DATATYPE = INTEGER, INDEXED  = TRUE'
-      !>
-      !>              CNAMES(2) = 'INT_COL_2'
-      !>              CDECLS(2) = 'DATATYPE = INTEGER, SIZE = VARIABLE'
-      !>
-      !>              CNAMES(3) = 'INT_COL_3'
-      !>              CDECLS(3) = 'DATATYPE = INTEGER, SIZE = 3'
-      !>
-      !>        C
-      !>        C     Start the segment.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
-      !>
-      !>        C
-      !>        C     At the records to the table.
-      !>        C
-      !>              DO I = 1, NROWS
-      !>
-      !>        C
-      !>        C        Append a new record to the EK.
-      !>        C
-      !>                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
-      !>
-      !>        C
-      !>        C        Add INT_COL_1
-      !>        C
-      !>                 COL1 = I * 100
-      !>
-      !>                 CALL EKACEI ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(1), 1,     COL1,  .FALSE. )
-      !>
-      !>        C
-      !>        C        Add I items to INT_COL_2
-      !>        C
-      !>                 DO J = 1, I
-      !>                    COL2(J) = J + I*200
-      !>                 END DO
-      !>
-      !>                 CALL EKACEI ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(2), I,     COL2,  .FALSE. )
-      !>
-      !>        C
-      !>        C        Add 3 items to INT_COL_3
-      !>        C
-      !>                 DO J = 1, 3
-      !>                    COL3(J) =  I + J*100.D0
-      !>                 END DO
-      !>
-      !>                 CALL EKACEI ( HANDLE,    SEGNO, RECNO,
-      !>             .                 CNAMES(3), 3,     COL3, .FALSE. )
-      !>
-      !>              END DO
-      !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
-      !>
-      !>        C
-      !>        C     Open the created file. Perform the query and show the
-      !>        C     results.
-      !>        C
-      !>              CALL FURNSH ( EKNAME )
+      !>```fortran
+      !>      PROGRAM EKGI_EX2
+      !>      IMPLICIT NONE
+      !>
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C     and EK Query Limit Parameters (MAXQRY)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
+      !>      INCLUDE 'ekqlimit.inc'
+      !>
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME  = 'ekgi_ex2.bdb' )
+      !>
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE   = 'TAB' )
+      !>
+      !>      INTEGER               COL3SZ
+      !>      PARAMETER           ( COL3SZ = 3   )
+      !>
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
+      !>
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 1840 )
+      !>
+      !>      INTEGER               MXC2SZ
+      !>      PARAMETER           ( MXC2SZ = 4   )
+      !>
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40  )
+      !>
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 3   )
+      !>
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 4   )
+      !>
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(MAXQRY)    QUERY
+      !>
+      !>      INTEGER               COL1
+      !>      INTEGER               COL2   ( MXC2SZ )
+      !>      INTEGER               COL3   ( COL3SZ )
+      !>      INTEGER               ELTIDX
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               IVALS  ( MXC2SZ )
+      !>      INTEGER               J
+      !>      INTEGER               NELT
+      !>      INTEGER               NMROWS
+      !>      INTEGER               NRESVC
+      !>      INTEGER               RECNO
+      !>      INTEGER               ROW
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SELIDX
+      !>
+      !>      LOGICAL               ERROR
+      !>      LOGICAL               FOUND
+      !>      LOGICAL               ISNULL
+      !>
+      !>C
+      !>C     Open a new EK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test EK/Created 13-JUN-2019'
+      !>
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>
+      !>C
+      !>C     Set up the column names and declarations
+      !>C     for the TAB segment.  We'll index all of
+      !>C     the columns.
+      !>C
+      !>      CNAMES(1) = 'INT_COL_1'
+      !>      CDECLS(1) = 'DATATYPE = INTEGER, INDEXED  = TRUE'
+      !>
+      !>      CNAMES(2) = 'INT_COL_2'
+      !>      CDECLS(2) = 'DATATYPE = INTEGER, SIZE = VARIABLE'
+      !>
+      !>      CNAMES(3) = 'INT_COL_3'
+      !>      CDECLS(3) = 'DATATYPE = INTEGER, SIZE = 3'
+      !>
+      !>C
+      !>C     Start the segment.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
+      !>
+      !>C
+      !>C     At the records to the table.
+      !>C
+      !>      DO I = 1, NROWS
+      !>
+      !>C
+      !>C        Append a new record to the EK.
+      !>C
+      !>         CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>
+      !>C
+      !>C        Add INT_COL_1
+      !>C
+      !>         COL1 = I * 100
       !>
-      !>              QUERY = 'SELECT INT_COL_1, INT_COL_2, INT_COL_3 '
-      !>             .   //   'FROM TAB'
+      !>         CALL EKACEI ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(1), 1,     COL1,  .FALSE. )
       !>
-      !>        C
-      !>        C     Query the EK system for data rows matching the
-      !>        C     SELECT constraints.
-      !>        C
-      !>              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+      !>C
+      !>C        Add I items to INT_COL_2
+      !>C
+      !>         DO J = 1, I
+      !>            COL2(J) = J + I*200
+      !>         END DO
+      !>
+      !>         CALL EKACEI ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(2), I,     COL2,  .FALSE. )
       !>
-      !>        C
-      !>        C     Check whether an error occurred while processing the
-      !>        C     SELECT clause. If so, output the error message.
-      !>        C
-      !>              IF ( ERROR ) THEN
+      !>C
+      !>C        Add 3 items to INT_COL_3
+      !>C
+      !>         DO J = 1, 3
+      !>            COL3(J) =  I + J*100.D0
+      !>         END DO
       !>
-      !>                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+      !>         CALL EKACEI ( HANDLE,    SEGNO, RECNO,
+      !>     .                 CNAMES(3), 3,     COL3, .FALSE. )
+      !>
+      !>      END DO
+      !>
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
+      !>
+      !>C
+      !>C     Open the created file. Perform the query and show the
+      !>C     results.
+      !>C
+      !>      CALL FURNSH ( EKNAME )
       !>
-      !>              ELSE
+      !>      QUERY = 'SELECT INT_COL_1, INT_COL_2, INT_COL_3 '
+      !>     .   //   'FROM TAB'
       !>
-      !>                 DO ROW = 1, NMROWS
+      !>C
+      !>C     Query the EK system for data rows matching the
+      !>C     SELECT constraints.
+      !>C
+      !>      CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
       !>
-      !>                    WRITE(*,*) ' '
-      !>                    WRITE(*,'(A,I3)') 'ROW  = ', ROW
+      !>C
+      !>C     Check whether an error occurred while processing the
+      !>C     SELECT clause. If so, output the error message.
+      !>C
+      !>      IF ( ERROR ) THEN
       !>
-      !>        C
-      !>        C           Fetch values from column INT_COL_1.  Since
-      !>        C           INT_COL_1 was the first column selected, the
-      !>        C           selection index SELIDX is set to 1.
-      !>        C
-      !>                    SELIDX = 1
-      !>                    ELTIDX = 1
-      !>                    CALL EKGI ( SELIDX,    ROW,     ELTIDX,
-      !>             .                  IVALS(1),  ISNULL,  FOUND   )
+      !>         WRITE(*,*) 'SELECT clause error: ', ERRMSG
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>      ELSE
       !>
-      !>                       WRITE(*,*) '  COLUMN = INT_COL_1: <Null>'
+      !>         DO ROW = 1, NMROWS
       !>
-      !>                    ELSE
+      !>            WRITE(*,*) ' '
+      !>            WRITE(*,'(A,I3)') 'ROW  = ', ROW
       !>
-      !>                       WRITE(*,'(A,I6)') '   COLUMN = INT_COL_1:',
-      !>             .                           IVALS(1)
+      !>C
+      !>C           Fetch values from column INT_COL_1.  Since
+      !>C           INT_COL_1 was the first column selected, the
+      !>C           selection index SELIDX is set to 1.
+      !>C
+      !>            SELIDX = 1
+      !>            ELTIDX = 1
+      !>            CALL EKGI ( SELIDX,    ROW,     ELTIDX,
+      !>     .                  IVALS(1),  ISNULL,  FOUND   )
       !>
-      !>                    END IF
+      !>            IF ( ISNULL ) THEN
       !>
-      !>        C
-      !>        C           Fetch values from column INT_COL_2 in the current
-      !>        C           row.  Since INT_COL_2 contains variable-size array
-      !>        C           elements, we call EKNELT to determine how many
-      !>        C           elements to fetch.
-      !>        C
-      !>                    SELIDX = 2
-      !>                    CALL EKNELT ( SELIDX, ROW, NELT )
+      !>               WRITE(*,*) '  COLUMN = INT_COL_1: <Null>'
       !>
-      !>                    ELTIDX = 1
-      !>                    ISNULL = .FALSE.
+      !>            ELSE
       !>
-      !>                    DO WHILE (       ( ELTIDX .LE.  NELT   )
-      !>             .                 .AND. (        .NOT. ISNULL )  )
+      !>               WRITE(*,'(A,I6)') '   COLUMN = INT_COL_1:',
+      !>     .                           IVALS(1)
       !>
-      !>                       CALL EKGI ( SELIDX,         ROW,     ELTIDX,
-      !>             .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
+      !>            END IF
       !>
-      !>                       ELTIDX = ELTIDX + 1
+      !>C
+      !>C           Fetch values from column INT_COL_2 in the current
+      !>C           row.  Since INT_COL_2 contains variable-size array
+      !>C           elements, we call EKNELT to determine how many
+      !>C           elements to fetch.
+      !>C
+      !>            SELIDX = 2
+      !>            CALL EKNELT ( SELIDX, ROW, NELT )
       !>
-      !>        C
-      !>        C           If the column entry is null, we'll be kicked
-      !>        C           out of this loop after the first iteration.
-      !>        C
-      !>                    END DO
+      !>            ELTIDX = 1
+      !>            ISNULL = .FALSE.
       !>
-      !>                    IF ( ISNULL ) THEN
-      !>                       WRITE(*,*) '  COLUMN = INT_COL_2: <Null>'
-      !>                    ELSE
+      !>            DO WHILE (       ( ELTIDX .LE.  NELT   )
+      !>     .                 .AND. (        .NOT. ISNULL )  )
       !>
-      !>                       WRITE(*,'(A,4I6)') '   COLUMN = INT_COL_2:',
-      !>             .                            ( IVALS(I), I = 1, NELT )
+      !>               CALL EKGI ( SELIDX,         ROW,     ELTIDX,
+      !>     .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
       !>
-      !>                    END IF
+      !>               ELTIDX = ELTIDX + 1
       !>
-      !>        C
-      !>        C           Fetch values from column INT_COL_3 in the current
-      !>        C           row.  We need not call EKNELT since we know how
-      !>        C           many elements are in each column entry.
-      !>        C
-      !>                    SELIDX = 3
-      !>                    ELTIDX = 1
-      !>                    ISNULL = .FALSE.
+      !>C
+      !>C           If the column entry is null, we'll be kicked
+      !>C           out of this loop after the first iteration.
+      !>C
+      !>            END DO
       !>
-      !>                    DO WHILE (       ( ELTIDX .LE.  COL3SZ )
-      !>             .                 .AND. (        .NOT. ISNULL )  )
+      !>            IF ( ISNULL ) THEN
+      !>               WRITE(*,*) '  COLUMN = INT_COL_2: <Null>'
+      !>            ELSE
       !>
-      !>                       CALL EKGI ( SELIDX,         ROW,     ELTIDX,
-      !>             .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
+      !>               WRITE(*,'(A,4I6)') '   COLUMN = INT_COL_2:',
+      !>     .                            ( IVALS(I), I = 1, NELT )
       !>
-      !>                       ELTIDX = ELTIDX + 1
+      !>            END IF
       !>
-      !>                    END DO
+      !>C
+      !>C           Fetch values from column INT_COL_3 in the current
+      !>C           row.  We need not call EKNELT since we know how
+      !>C           many elements are in each column entry.
+      !>C
+      !>            SELIDX = 3
+      !>            ELTIDX = 1
+      !>            ISNULL = .FALSE.
       !>
-      !>                    IF ( ISNULL ) THEN
+      !>            DO WHILE (       ( ELTIDX .LE.  COL3SZ )
+      !>     .                 .AND. (        .NOT. ISNULL )  )
       !>
-      !>                       WRITE(*,*) '  COLUMN = INT_COL_3: <Null>'
+      !>               CALL EKGI ( SELIDX,         ROW,     ELTIDX,
+      !>     .                     IVALS(ELTIDX),  ISNULL,  FOUND   )
       !>
-      !>                    ELSE
+      !>               ELTIDX = ELTIDX + 1
       !>
-      !>                       WRITE(*,'(A,3I6)') '   COLUMN = INT_COL_3:',
-      !>             .                            ( IVALS(I), I = 1, COL3SZ )
+      !>            END DO
       !>
-      !>                    END IF
+      !>            IF ( ISNULL ) THEN
       !>
-      !>                 END DO
+      !>               WRITE(*,*) '  COLUMN = INT_COL_3: <Null>'
       !>
-      !>        C
-      !>        C     We either parsed the SELECT clause or had an error.
-      !>        C
-      !>              END IF
+      !>            ELSE
       !>
-      !>              END
+      !>               WRITE(*,'(A,3I6)') '   COLUMN = INT_COL_3:',
+      !>     .                            ( IVALS(I), I = 1, COL3SZ )
+      !>
+      !>            END IF
+      !>
+      !>         END DO
+      !>
+      !>C
+      !>C     We either parsed the SELECT clause or had an error.
+      !>C
+      !>      END IF
+      !>
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -35028,7 +36037,7 @@ contains
       !>        line was corrected to indicate integer data type.
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ekgi
+      module subroutine ekgi ( ctx, selidx, row, elment, idata, null, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -35042,6 +36051,13 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: elment  !! Index of element, within column entry, to fetch.
+      integer(ip), intent(in) :: row  !! Row to fetch from.
+      integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
+      logical, intent(out) :: found  !! Flag indicating whether column was present in row.
+      integer(ip), intent(out) :: idata  !! Integer element of column entry.
+      logical, intent(out) :: null  !! Flag indicating whether column entry was null.
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
@@ -35225,8 +36241,10 @@ contains
 
       return
       end associate
-      end procedure ekgi
+      end subroutine ekgi
 
+      !> Delete a specified class 1 column entry from an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -35307,7 +36325,7 @@ contains
       !>        Deleted unneeded declarations and code.
       !>
       !>-    Beta Version 1.0.0, 28-SEP-1995 (NJB)
-      module procedure zzekde01
+      module subroutine zzekde01 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -35316,6 +36334,11 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
       integer(ip) :: base
@@ -35439,8 +36462,10 @@ contains
       end if
 
       return
-      end procedure zzekde01
+      end subroutine zzekde01
 
+      !> Delete a specified class 2 column entry from an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -35522,7 +36547,7 @@ contains
       !>        Deleted unneeded declarations and code.
       !>
       !>-    Beta Version 1.0.0, 28-SEP-1995 (NJB)
-      module procedure zzekde02
+      module subroutine zzekde02 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -35531,6 +36556,11 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
       integer(ip) :: base
@@ -35654,8 +36684,10 @@ contains
       end if
 
       return
-      end procedure zzekde02
+      end subroutine zzekde02
 
+      !> Delete a specified class 3 column entry from an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -35740,13 +36772,7 @@ contains
       !>        Deleted unneeded declarations and code.
       !>
       !>-    Beta Version 1.0.0, 28-SEP-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekde03
+      module subroutine zzekde03 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -35754,7 +36780,15 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: base
       integer(ip) :: datptr
       integer(ip) :: idxtyp
@@ -35925,8 +36959,10 @@ contains
       end if
 
       return
-      end procedure zzekde03
+      end subroutine zzekde03
 
+      !> Update a specified class 1 column entry in an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -36016,7 +37052,7 @@ contains
       !>        Removed redundant calls to CHKIN.
       !>
       !>-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-      module procedure zzekue01
+      module subroutine zzekue01 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -36025,6 +37061,13 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: ival  !! Integer value.
+      logical, intent(in) :: isnull  !! Null flag.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
       integer(ip) :: datptr
@@ -36179,8 +37222,10 @@ contains
       end if
 
       return
-      end procedure zzekue01
+      end subroutine zzekue01
 
+      !> Update a specified class 2 column entry in an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -36270,13 +37315,7 @@ contains
       !>        Removed redundant calls to CHKIN.
       !>
       !>-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Non-SPICELIB functions
-      !>
-      !>     Local variables
-      module procedure zzekue02
+      module subroutine zzekue02 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -36284,7 +37323,17 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      real(wp), intent(in) :: dval  !! Double precision value.
+      logical, intent(in) :: isnull  !! Null flag.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
+!
+!     Local variables
+!
       integer(ip) :: datptr
       integer(ip) :: idxtyp
       integer(ip) :: nlinks
@@ -36437,8 +37486,10 @@ contains
       end if
 
       return
-      end procedure zzekue02
+      end subroutine zzekue02
 
+      !> Delete a specified record from a specified E-kernel segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle of an EK open for write access.
@@ -36559,7 +37610,7 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB)
-      module procedure ekdelr
+      module subroutine ekdelr ( ctx, handle, segno, recno )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -36567,6 +37618,10 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segno  !! Segment number.
+      integer(ip), intent(inout) :: recno  !! Record number. (PEPPER: changed by the routine, an input in SPICELIB's table)
 
       character(cnamsz) :: column
 
@@ -36752,8 +37807,10 @@ contains
       call dasudi ( ctx, handle,  mbase+1,  mbase+sdscsz,  segdsc )
 
       return
-      end procedure ekdelr
+      end subroutine ekdelr
 
+      !> Update a double precision column entry in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle attached to an EK open for
@@ -36911,12 +37968,20 @@ contains
       !>        Removed unbalanced call to CHKOUT.
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekuced
+      module subroutine ekuced ( ctx, handle, segno, recno, column, nvals, dvals, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record in which entry is to be updated.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(in) :: nvals  !! Number of values in new column entry.
+      real(wp), intent(in) :: dvals  ( * )  !! Double precision values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -37012,8 +38077,10 @@ contains
       end if
 
       return
-      end procedure ekuced
+      end subroutine ekuced
 
+      !> Update an integer column entry in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle attached to an EK open for
@@ -37167,12 +38234,20 @@ contains
       !>        Removed unbalanced call to CHKOUT.
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekucei
+      module subroutine ekucei ( ctx, handle, segno, recno, column, nvals, ivals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record in which entry is to be updated.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(in) :: nvals  !! Number of values in new column entry.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -37268,8 +38343,10 @@ contains
       end if
 
       return
-      end procedure ekucei
+      end subroutine ekucei
 
+      !> Get data for a single star from a SPICE type 1 star catalog.
+      !>
       !>## Detailed Input
       !>
       !>     INDEX    is the index of the star in the list of stars
@@ -37412,10 +38489,19 @@ contains
       !>        Updated entry #3 in $Exceptions section.
       !>
       !>-    SPICELIB Version 1.0.0, 15-MAY-1996 (BVS)
-      module procedure stcg01
+      module subroutine stcg01 ( ctx, index, ra, dec, rasig, decsig, catnum, sptype, vmag )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: rpd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: index  !! Star index.
+      real(wp), intent(out) :: ra  !! Right ascension in radians.
+      real(wp), intent(out) :: dec  !! Declination in radians.
+      real(wp), intent(out) :: rasig  !! Right ascension uncertainty in radians.
+      real(wp), intent(out) :: decsig  !! Declination uncertainty in radians.
+      integer(ip), intent(out) :: catnum  !! Catalog number.
+      character(*), intent(out) :: sptype  !! Spectral type.
+      real(wp), intent(out) :: vmag  !! Visual magnitude.
 
 !
 !     Local variables.
@@ -37505,8 +38591,11 @@ contains
       decsig = decsig * rpd
 
       return
-      end procedure stcg01
+      end subroutine stcg01
 
+      !> Load SPICE type 1 star catalog and return the catalog's
+      !> table name.
+      !>
       !>## Detailed Input
       !>
       !>     CATFNM   is the name of the catalog file.
@@ -37634,9 +38723,13 @@ contains
       !>        Balanced calls to CHKIN/CHKOUT.
       !>
       !>-    SPICELIB Version 1.0.0, 15-MAY-1996 (BVS)
-      module procedure stcl01
+      module subroutine stcl01 ( ctx, catfnm, tabnam, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: catfnm  !! Catalog file name.
+      character(*), intent(out) :: tabnam  !! Catalog table name.
+      integer(ip), intent(out) :: handle  !! Catalog file handle.
 
       logical :: istyp1
       character(256) :: errmsg
@@ -37666,15 +38759,13 @@ contains
       call eklef  ( ctx, catfnm, handle )
 
       return
-      end procedure stcl01
+      end subroutine stcl01
 
-      !>## Abstract
+      !> Check and resolve a specified column name in an encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Check and resolve a specified column name in an encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -37806,7 +38897,7 @@ contains
       !>        bounds should never be out of range, but if they are, the
       !>        error diagnosis should be more graceful than a memory
       !>        violation.
-      module procedure zzekcchk
+      module subroutine zzekcchk ( ctx, query, eqryi, eqryc, ntab, tablst, alslst, base, error, errmsg, errptr )
       use pepper_kinds, only: ip
       use pepper_strings, only: repmc_inplace
       use pepper_inc_ekattdsc
@@ -37814,6 +38905,18 @@ contains
       use pepper_inc_ekcnamsz
       use pepper_inc_ekqlimit
       use pepper_inc_ekquery
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: query  !! Original query string.
+      integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
+      character(*), intent(inout) :: eqryc  !! Character component of query.
+      integer(ip), intent(in) :: ntab  !! Number of tables in FROM clause.
+      character(*), intent(in) :: tablst ( * )  !! List of table names.
+      character(*), intent(in) :: alslst ( * )  !! List of table aliases.
+      integer(ip), intent(in) :: base  !! Base address of table/column descriptor pair.
+      logical, intent(out) :: error  !! Error flag.
+      character(*), intent(out) :: errmsg  !! Error message.
+      integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
 
       character(cnamsz) :: column
       character(1) :: ctouch
@@ -38008,17 +39111,15 @@ contains
       eqryi ( base + eqvdsz + eqcidx )  =  colidx
 
       return
-      end procedure zzekcchk
+      end subroutine zzekcchk
 
-      !>## Abstract
+      !> Given an encoded query, parse the name of a column appearing in
+      !> that query, returning full particulars concerning the column and
+      !> its parent table.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Given an encoded query, parse the name of a column appearing in
-      !>     that query, returning full particulars concerning the column and
-      !>     its parent table.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -38144,7 +39245,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      module procedure zzekpcol
+      module subroutine zzekpcol ( ctx, qcol, eqryi, eqryc, table, alias, tabidx, column, colidx, error, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase, repmc_inplace
       use pepper_inc_ekattdsc
@@ -38154,6 +39255,18 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_ektnamsz
       use pepper_inc_ektokn
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: qcol  !! Column name, possibly qualified.
+      integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
+      character(*), intent(in) :: eqryc  !! Character component of query.
+      character(*), intent(out) :: table  !! Name of table qualifying column.
+      character(*), intent(out) :: alias  !! Alias of table, if present.
+      integer(ip), intent(out) :: tabidx  !! Index of TABLE in FROM clause, if known.
+      character(*), intent(out) :: column  !! Name of QCOL, unqualified.
+      integer(ip), intent(out) :: colidx  !! Index of QCOL within its parent virtual table.
+      logical, intent(out) :: error  !! Error flag.
+      character(*), intent(out) :: errmsg  !! Parse error message.
 
       integer(ip), parameter :: long = 160
 
@@ -38415,15 +39528,13 @@ contains
       alias  =  alslst ( tabidx )
 
       return
-      end procedure zzekpcol
+      end subroutine zzekpcol
 
-      !>## Abstract
+      !> Semantically check an encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Semantically check an encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -38544,17 +39655,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 23-OCT-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      module procedure zzeksemc
+      module subroutine zzeksemc ( ctx, query, eqryi, eqryc, error, errmsg, errptr )
       use pepper_kinds, only: ip
       use pepper_strings, only: repmc_inplace, repmi_inplace
       use pepper_inc_ekattdsc
@@ -38564,6 +39665,17 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: query  !! Original query.
+      integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
+      character(*), intent(inout) :: eqryc  !! Character component of query.
+      logical, intent(out) :: error  !! Error flag.
+      character(*), intent(out) :: errmsg  !! Semantic error message.
+      integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
+!
+!     Local variables
+!
       character(tnamsz) :: alias
       character(cnamsz) :: colnam
       character(tnamsz) :: lhstab
@@ -38870,15 +39982,13 @@ contains
 
       return
       end associate
-      end procedure zzeksemc
+      end subroutine zzeksemc
 
-      !>## Abstract
+      !> Resolve time values in an encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Resolve time values in an encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -38989,7 +40099,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      module procedure zzektres
+      module subroutine zzektres ( ctx, query, eqryi, eqryc, eqryd, error, errmsg, errptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -38999,6 +40109,15 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: query  !! Original query string.
+      integer(ip), intent(inout) :: eqryi  ( lbcell : * )  !! Integer component of query.
+      character(*), intent(inout) :: eqryc  !! Character component of query.
+      real(wp), intent(inout) :: eqryd  ( * )  !! Numeric component of query.
+      logical, intent(out) :: error  !! Error flag.
+      character(*), intent(out) :: errmsg  !! Error message.
+      integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
 
       integer(ip), parameter :: short = 32
 
@@ -39139,8 +40258,10 @@ contains
       call zzekweqi ( ctx,  'TIMES_RESOLVED',  itrue,  eqryi  )
 
       return
-      end procedure zzektres
+      end subroutine zzektres
 
+      !> Update a specified class 3 column entry in an EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE         is a file handle of an EK open for write access.
@@ -39226,11 +40347,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzekue03
+      module subroutine zzekue03 ( ctx, handle, segdsc, coldsc, recptr, cval, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -39238,6 +40355,16 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      character(*), intent(in) :: cval  !! Character string value.
+      logical, intent(in) :: isnull  !! Null flag.
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -39254,8 +40381,10 @@ contains
       call zzekad03 ( ctx, handle, segdsc, coldsc, recptr, cval, isnull )
 
       return
-      end procedure zzekue03
+      end subroutine zzekue03
 
+      !> Update a character column entry in a specified EK record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is a file handle attached to an EK open for
@@ -39374,194 +40503,196 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKUCEC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKUCEC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Column Name Size (CNAMSZ)
-      !>        C
-      !>              INCLUDE 'ekcnamsz.inc'
+      !>C
+      !>C     Include the EK Column Name Size (CNAMSZ)
+      !>C
+      !>      INCLUDE 'ekcnamsz.inc'
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME = 'ekucec_ex1.bdb' )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME = 'ekucec_ex1.bdb' )
       !>
-      !>              CHARACTER*(*)         IFNAME
-      !>              PARAMETER           ( IFNAME = 'Test EK'  )
+      !>      CHARACTER*(*)         IFNAME
+      !>      PARAMETER           ( IFNAME = 'Test EK'  )
       !>
-      !>              CHARACTER*(*)         TABLE
-      !>              PARAMETER           ( TABLE  = 'CHR_DATA' )
+      !>      CHARACTER*(*)         TABLE
+      !>      PARAMETER           ( TABLE  = 'CHR_DATA' )
       !>
-      !>              INTEGER               CVLEN
-      !>              PARAMETER           ( CVLEN  = 9  )
+      !>      INTEGER               CVLEN
+      !>      PARAMETER           ( CVLEN  = 9  )
       !>
-      !>              INTEGER               DECLEN
-      !>              PARAMETER           ( DECLEN = 200 )
+      !>      INTEGER               DECLEN
+      !>      PARAMETER           ( DECLEN = 200 )
       !>
-      !>              INTEGER               MAXVAL
-      !>              PARAMETER           ( MAXVAL = 4  )
+      !>      INTEGER               MAXVAL
+      !>      PARAMETER           ( MAXVAL = 4  )
       !>
-      !>              INTEGER               NCOLS
-      !>              PARAMETER           ( NCOLS  = 2  )
+      !>      INTEGER               NCOLS
+      !>      PARAMETER           ( NCOLS  = 2  )
       !>
-      !>              INTEGER               NROWS
-      !>              PARAMETER           ( NROWS  = 6  )
+      !>      INTEGER               NROWS
+      !>      PARAMETER           ( NROWS  = 6  )
       !>
-      !>              INTEGER               NRESVC
-      !>              PARAMETER           ( NRESVC = 0  )
+      !>      INTEGER               NRESVC
+      !>      PARAMETER           ( NRESVC = 0  )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
-      !>              CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
-      !>              CHARACTER*(CVLEN)     CVALS  ( MAXVAL )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(DECLEN)    CDECLS ( NCOLS  )
+      !>      CHARACTER*(CNAMSZ)    CNAMES ( NCOLS  )
+      !>      CHARACTER*(CVLEN)     CVALS  ( MAXVAL )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               NVALS
-      !>              INTEGER               RECNO
-      !>              INTEGER               SEGNO
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               NVALS
+      !>      INTEGER               RECNO
+      !>      INTEGER               SEGNO
       !>
-      !>              LOGICAL               ISNULL
+      !>      LOGICAL               ISNULL
       !>
-      !>        C
-      !>        C     Open a new EK file.  For simplicity, we won't
-      !>        C     reserve space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The constant IFNAME is the internal file name.
-      !>        C
-      !>              CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
+      !>C
+      !>C     Open a new EK file.  For simplicity, we won't
+      !>C     reserve space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The constant IFNAME is the internal file name.
+      !>C
+      !>      CALL EKOPN ( EKNAME, IFNAME, NRESVC, HANDLE )
       !>
-      !>        C
-      !>        C     Set up the table and column names and declarations
-      !>        C     for the CHR_DATA segment.  We'll index all of
-      !>        C     the columns.
-      !>        C
-      !>              CNAMES(1) =  'CHR_COL_1'
-      !>              CDECLS(1) =  'DATATYPE = CHARACTER*(*), '
-      !>             .       //    'INDEXED = TRUE, NULLS_OK = TRUE'
+      !>C
+      !>C     Set up the table and column names and declarations
+      !>C     for the CHR_DATA segment.  We'll index all of
+      !>C     the columns.
+      !>C
+      !>      CNAMES(1) =  'CHR_COL_1'
+      !>      CDECLS(1) =  'DATATYPE = CHARACTER*(*), '
+      !>     .       //    'INDEXED = TRUE, NULLS_OK = TRUE'
       !>
-      !>              CNAMES(2) =  'CHR_COL_2'
-      !>              CDECLS(2) =  'DATATYPE = CHARACTER*(9), '
-      !>             .       //    'SIZE = VARIABLE, NULLS_OK = TRUE'
+      !>      CNAMES(2) =  'CHR_COL_2'
+      !>      CDECLS(2) =  'DATATYPE = CHARACTER*(9), '
+      !>     .       //    'SIZE = VARIABLE, NULLS_OK = TRUE'
       !>
-      !>        C
-      !>        C     Start the segment.
-      !>        C
-      !>              CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
-      !>             .              CNAMES, CDECLS, SEGNO )
+      !>C
+      !>C     Start the segment.
+      !>C
+      !>      CALL EKBSEG ( HANDLE, TABLE,  NCOLS,
+      !>     .              CNAMES, CDECLS, SEGNO )
       !>
-      !>              DO I = 0, NROWS-1
+      !>      DO I = 0, NROWS-1
       !>
-      !>                 CALL EKAPPR ( HANDLE, SEGNO, RECNO )
+      !>         CALL EKAPPR ( HANDLE, SEGNO, RECNO )
       !>
-      !>                 ISNULL = ( I .EQ. 1 )
+      !>         ISNULL = ( I .EQ. 1 )
       !>
-      !>                 CALL INTSTR ( I, CVALS(1) )
-      !>                 CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
-      !>             .                 1,      CVALS, ISNULL           )
+      !>         CALL INTSTR ( I, CVALS(1) )
+      !>         CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
+      !>     .                 1,      CVALS, ISNULL           )
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL INTSTR ( 10*I,     CVALS(1) )
-      !>                 CALL INTSTR ( 10*I + 1, CVALS(2) )
-      !>                 CALL INTSTR ( 10*I + 2, CVALS(3) )
-      !>                 CALL INTSTR ( 10*I + 3, CVALS(4) )
-      !>                 CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
-      !>             .                 4,      CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL INTSTR ( 10*I,     CVALS(1) )
+      !>         CALL INTSTR ( 10*I + 1, CVALS(2) )
+      !>         CALL INTSTR ( 10*I + 2, CVALS(3) )
+      !>         CALL INTSTR ( 10*I + 3, CVALS(4) )
+      !>         CALL EKACEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
+      !>     .                 4,      CVALS, ISNULL           )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     End the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     End the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the EK for write access.
-      !>        C
-      !>              CALL EKOPW ( EKNAME, HANDLE )
+      !>C
+      !>C     Open the EK for write access.
+      !>C
+      !>      CALL EKOPW ( EKNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Negate the values in the odd-numbered records
-      !>        C     using the update routines.
-      !>        C
-      !>              DO I = 1, NROWS, 2
+      !>C
+      !>C     Negate the values in the odd-numbered records
+      !>C     using the update routines.
+      !>C
+      !>      DO I = 1, NROWS, 2
       !>
-      !>                 RECNO  = I+1
+      !>         RECNO  = I+1
       !>
-      !>                 ISNULL = ( I .EQ. 1 )
+      !>         ISNULL = ( I .EQ. 1 )
       !>
-      !>                 CALL INTSTR ( -I, CVALS(1) )
-      !>                 CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
-      !>             .                 1,      CVALS, ISNULL           )
+      !>         CALL INTSTR ( -I, CVALS(1) )
+      !>         CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(1),
+      !>     .                 1,      CVALS, ISNULL           )
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL INTSTR ( -10*I,       CVALS(1) )
-      !>                 CALL INTSTR ( -(10*I + 1), CVALS(2) )
-      !>                 CALL INTSTR ( -(10*I + 2), CVALS(3) )
-      !>                 CALL INTSTR ( -(10*I + 3), CVALS(4) )
-      !>                 CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
-      !>             .                 4,      CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL INTSTR ( -10*I,       CVALS(1) )
+      !>         CALL INTSTR ( -(10*I + 1), CVALS(2) )
+      !>         CALL INTSTR ( -(10*I + 2), CVALS(3) )
+      !>         CALL INTSTR ( -(10*I + 3), CVALS(4) )
+      !>         CALL EKUCEC ( HANDLE, SEGNO, RECNO, CNAMES(2),
+      !>     .                 4,      CVALS, ISNULL           )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL EKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL EKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Open the created file. Show the values added.
-      !>        C
-      !>              CALL EKOPR ( EKNAME, HANDLE )
+      !>C
+      !>C     Open the created file. Show the values added.
+      !>C
+      !>      CALL EKOPR ( EKNAME, HANDLE )
       !>
-      !>              DO I = 1, NROWS
+      !>      DO I = 1, NROWS
       !>
-      !>                 CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(1),
-      !>             .                 NVALS,  CVALS, ISNULL           )
+      !>         CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(1),
+      !>     .                 NVALS,  CVALS, ISNULL           )
       !>
-      !>                 IF ( .NOT. ISNULL ) THEN
+      !>         IF ( .NOT. ISNULL ) THEN
       !>
-      !>                    WRITE(*,*) 'Data from column: ', CNAMES(1)
-      !>                    WRITE(*,*) '   record number: ', I
-      !>                    WRITE(*,*) '   values       : ',
-      !>             .                                ( CVALS(J), J=1,NVALS )
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Data from column: ', CNAMES(1)
+      !>            WRITE(*,*) '   record number: ', I
+      !>            WRITE(*,*) '   values       : ',
+      !>     .                                ( CVALS(J), J=1,NVALS )
+      !>            WRITE(*,*) ' '
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'Record ', I, 'flag is NULL.'
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Record ', I, 'flag is NULL.'
+      !>            WRITE(*,*) ' '
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>        C
-      !>        C        Array-valued columns follow.
-      !>        C
-      !>                 CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(2),
-      !>             .                 NVALS,  CVALS, ISNULL           )
+      !>C
+      !>C        Array-valued columns follow.
+      !>C
+      !>         CALL EKRCEC ( HANDLE, SEGNO, I,     CNAMES(2),
+      !>     .                 NVALS,  CVALS, ISNULL           )
       !>
-      !>                 IF ( .NOT. ISNULL ) THEN
+      !>         IF ( .NOT. ISNULL ) THEN
       !>
-      !>                    WRITE(*,*) 'Data from column: ', CNAMES(2)
-      !>                    WRITE(*,*) '   record number: ', I
-      !>                    WRITE(*,*) '   values       : ',
-      !>             .                                ( CVALS(J), J=1,NVALS )
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Data from column: ', CNAMES(2)
+      !>            WRITE(*,*) '   record number: ', I
+      !>            WRITE(*,*) '   values       : ',
+      !>     .                                ( CVALS(J), J=1,NVALS )
+      !>            WRITE(*,*) ' '
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -39648,12 +40779,20 @@ contains
       !>        Removed unbalanced call to CHKOUT.
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekucec
+      module subroutine ekucec ( ctx, handle, segno, recno, column, nvals, cvals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record in which entry is to be updated.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(in) :: nvals  !! Number of values in new column entry.
+      character(*), intent(in) :: cvals  ( * )  !! Character string values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -39749,16 +40888,14 @@ contains
       end if
 
       return
-      end procedure ekucec
+      end subroutine ekucec
 
-      !>## Abstract
+      !> Resolve and semantically check table names, aliases, and column
+      !> names in an encoded EK query.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Resolve and semantically check table names, aliases, and column
-      !>     names in an encoded EK query.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -39864,13 +41001,21 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      module procedure zzeknres
+      module subroutine zzeknres ( ctx, query, eqryi, eqryc, error, errmsg, errptr )
       use pepper_kinds, only: ip
       use pepper_strings, only: repmc_inplace
       use pepper_inc_ekbool
       use pepper_inc_ekqlimit
       use pepper_inc_ekquery
       use pepper_inc_ektnamsz
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: query  !! Original query string.
+      integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
+      character(*), intent(inout) :: eqryc  !! Character component of query.
+      logical, intent(out) :: error  !! Error flag.
+      character(*), intent(out) :: errmsg  !! Error message.
+      integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
 
 
       character(tnamsz), allocatable :: alias ( : )
@@ -40145,8 +41290,10 @@ contains
 !
       call zzekweqi ( ctx, 'NAMES_RESOLVED',  itrue,  eqryi  )
 
-      end procedure zzeknres
+      end subroutine zzeknres
 
+      !> Find E-kernel data that satisfy a set of constraints.
+      !>
       !>## Detailed Input
       !>
       !>     QUERY    is a character string that specifies a set of EK
@@ -40521,80 +41668,82 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKFIND_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKFIND_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the EK Maximum length of an input query,
-      !>        C     MAXQRY, and the maximum length of literal string
-      !>        C     values, MAXSTR, from eklimit.inc.
-      !>        C
-      !>              INCLUDE 'ekqlimit.inc'
+      !>C
+      !>C     Include the EK Maximum length of an input query,
+      !>C     MAXQRY, and the maximum length of literal string
+      !>C     values, MAXSTR, from eklimit.inc.
+      !>C
+      !>      INCLUDE 'ekqlimit.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME =
-      !>             .                         'dif_cmdict_128_20050620.bdb' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME =
+      !>     .                         'dif_cmdict_128_20050620.bdb' )
       !>
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 1840 )
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 1840 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(MAXQRY)    QUERY
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(MAXQRY)    QUERY
       !>
-      !>              INTEGER               NMROWS
+      !>      INTEGER               NMROWS
       !>
-      !>              LOGICAL               ERROR
+      !>      LOGICAL               ERROR
       !>
-      !>        C
-      !>        C     Open an EK file.
-      !>        C
-      !>              CALL FURNSH ( EKNAME )
+      !>C
+      !>C     Open an EK file.
+      !>C
+      !>      CALL FURNSH ( EKNAME )
       !>
-      !>        C
-      !>        C     The EK file contains the table 'DIF_COMMANDS',
-      !>        C     and that 'DIF_COMMANDS' contains columns named:
-      !>        C
-      !>        C       SUBSYSTEM, COMMAND, PARAMETER_NAME, DESCRIPTION
-      !>        C
-      !>        C     Define a set of constraints to perform a query on all
-      !>        C     loaded EK files (the SELECT clause).
-      !>        C
-      !>              QUERY = 'Select SUBSYSTEM, COMMAND, PARAMETER_NAME, '
-      !>             .   //   'DESCRIPTION from DIF_COMMANDS '
-      !>             .   //   'order by SUBSYSTEM'
+      !>C
+      !>C     The EK file contains the table 'DIF_COMMANDS',
+      !>C     and that 'DIF_COMMANDS' contains columns named:
+      !>C
+      !>C       SUBSYSTEM, COMMAND, PARAMETER_NAME, DESCRIPTION
+      !>C
+      !>C     Define a set of constraints to perform a query on all
+      !>C     loaded EK files (the SELECT clause).
+      !>C
+      !>      QUERY = 'Select SUBSYSTEM, COMMAND, PARAMETER_NAME, '
+      !>     .   //   'DESCRIPTION from DIF_COMMANDS '
+      !>     .   //   'order by SUBSYSTEM'
       !>
-      !>        C
-      !>        C     Query the EK system for data rows matching the
-      !>        C     SELECT constraints.
-      !>        C
-      !>              CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+      !>C
+      !>C     Query the EK system for data rows matching the
+      !>C     SELECT constraints.
+      !>C
+      !>      CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
       !>
-      !>        C
-      !>        C     Check whether an error occurred while processing the
-      !>        C     SELECT clause. If so, output the error message.
-      !>        C
-      !>              IF ( ERROR ) THEN
+      !>C
+      !>C     Check whether an error occurred while processing the
+      !>C     SELECT clause. If so, output the error message.
+      !>C
+      !>      IF ( ERROR ) THEN
       !>
-      !>                 WRITE(*,*) 'SELECT clause error: ', ERRMSG
+      !>         WRITE(*,*) 'SELECT clause error: ', ERRMSG
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>        C
-      !>        C        If no error, NMROWS contains the number of rows
-      !>        C        matching the constraints specified in the query
-      !>        C        string.
-      !>        C
-      !>                 WRITE(*,*) 'Number of matching rows: ', NMROWS
+      !>C
+      !>C        If no error, NMROWS contains the number of rows
+      !>C        matching the constraints specified in the query
+      !>C        string.
+      !>C
+      !>         WRITE(*,*) 'Number of matching rows: ', NMROWS
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -40780,7 +41929,7 @@ contains
       !>        corrected to 1.0.0.
       !>
       !>-    SPICELIB Version 1.0.0, 24-OCT-1995 (NJB)
-      module procedure ekfind
+      module subroutine ekfind ( ctx, query, nmrows, error, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekquery
       use pepper_inc_ekqlimit
@@ -40788,12 +41937,13 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_ekcnamsz
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: query  !! Query specifying data to be found.
+      integer(ip), intent(out) :: nmrows  !! Number of matching rows.
+      logical, intent(out) :: error  !! Flag indicating whether query parsed correctly.
+      character(*), intent(out) :: errmsg  !! Parse error description.
 
       integer(ip) :: room
-
-!
-!     Storage limits:
-!
 
       character(:), allocatable :: chrbuf
       character(:), allocatable :: eqryc
@@ -40818,7 +41968,6 @@ contains
 
 !
 !     Initialize the encoded query each time, for safety.
-!
 !
 !     PEPPER: the buffers are sized from the query: it has at most one
 !     token, and one number, per character, and its strings and names fit
@@ -40885,8 +42034,10 @@ contains
       call eksrch ( ctx, eqryi, eqryc, eqryd, nmrows, error, errmsg )
 
       return
-      end procedure ekfind
+      end subroutine ekfind
 
+      !> Convert an EK query to encoded form.
+      !>
       !>## Detailed Input
       !>
       !>     QUERY          is an EK query, starting after the FROM keyword.
@@ -40962,17 +42113,22 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 4.0.0, 10-OCT-1995 (NJB)
-      module procedure zzekencd
+      module subroutine zzekencd ( ctx, query, eqryi, eqryc, eqryd, error, errmsg, errptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekopcd
       use pepper_inc_ekqlimit
       use pepper_inc_ekquery
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: query  !! Query specifying events to be found.
+      integer(ip), allocatable, intent(inout) :: eqryi ( : )  !! Integer component of encoded query. PEPPER: allocatable, lower bound LBCELL; grows as the query is encoded.
+      character(*), intent(out) :: eqryc  !! Character component of encoded query.
+      real(wp), intent(out) :: eqryd  ( * )  !! Numeric component of encoded query.
+      logical, intent(out) :: error  !! Flag indicating whether query parsed correctly.
+      character(*), intent(out) :: errmsg  !! Parse error description.
+      integer(ip), intent(out) :: errptr  !! Error pointer.
       integer(ip) :: room
       integer(ip) :: dsize
-
-!     Storage limits:
-!
 
       character(:), allocatable :: chrbuf
 
@@ -40993,7 +42149,6 @@ contains
 
 !
 !     Initialize the encoded query each time, for safety.
-!
 !
 !     PEPPER: the scanner's buffers are sized from the query (at most one
 !     token per character); the encoded query keeps the sizes its caller
@@ -41059,8 +42214,11 @@ contains
       if ( error ) return
 
       return
-      end procedure zzekencd
+      end subroutine zzekencd
 
+      !> Parse the SELECT clause of an EK query, returning full particulars
+      !> concerning each selected item.
+      !>
       !>## Detailed Input
       !>
       !>     QUERY    is a character string containing an EK query.
@@ -41239,221 +42397,223 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EKPSEL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EKPSEL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include EK Query Limit Parameters
-      !>        C
-      !>              INCLUDE 'ekqlimit.inc'
+      !>C
+      !>C     Include EK Query Limit Parameters
+      !>C
+      !>      INCLUDE 'ekqlimit.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               RTRIM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               RTRIM
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         EKNAME
-      !>              PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         EKNAME
+      !>      PARAMETER           ( EKNAME = 'vo_sedr.bdb' )
       !>
-      !>              CHARACTER*(*)         LSKNAM
-      !>              PARAMETER           ( LSKNAM = 'naif0012.tls' )
+      !>      CHARACTER*(*)         LSKNAM
+      !>      PARAMETER           ( LSKNAM = 'naif0012.tls' )
       !>
-      !>              INTEGER               DESCSZ
-      !>              PARAMETER           ( DESCSZ = 31   )
+      !>      INTEGER               DESCSZ
+      !>      PARAMETER           ( DESCSZ = 31   )
       !>
-      !>              INTEGER               ERRLEN
-      !>              PARAMETER           ( ERRLEN = 1840 )
+      !>      INTEGER               ERRLEN
+      !>      PARAMETER           ( ERRLEN = 1840 )
       !>
-      !>              INTEGER               ITEMSZ
-      !>              PARAMETER           ( ITEMSZ = DESCSZ + 4 )
+      !>      INTEGER               ITEMSZ
+      !>      PARAMETER           ( ITEMSZ = DESCSZ + 4 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 27   )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 27   )
       !>
-      !>              INTEGER               TYPLEN
-      !>              PARAMETER           ( TYPLEN = 4    )
+      !>      INTEGER               TYPLEN
+      !>      PARAMETER           ( TYPLEN = 4    )
       !>
-      !>              INTEGER               XCLSLN
-      !>              PARAMETER           ( XCLSLN = 4    )
+      !>      INTEGER               XCLSLN
+      !>      PARAMETER           ( XCLSLN = 4    )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(MAXSTR)    CDATA
-      !>              CHARACTER*(MAXCLN)    COLS   ( MAXSEL )
-      !>              CHARACTER*(ERRLEN)    ERRMSG
-      !>              CHARACTER*(ITEMSZ)    ITEM
-      !>              CHARACTER*(DESCSZ)    OUTSTR
-      !>              CHARACTER*(MAXQRY)    QUERY
-      !>              CHARACTER*(TIMLEN)    UTCSTR
-      !>              CHARACTER*(MAXCLN)    TABS   ( MAXTAB )
-      !>              CHARACTER*(XCLSLN)    XCLASS ( MAXSEL )
-      !>              CHARACTER*(TYPLEN)    XTYPES ( MAXSEL )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(MAXSTR)    CDATA
+      !>      CHARACTER*(MAXCLN)    COLS   ( MAXSEL )
+      !>      CHARACTER*(ERRLEN)    ERRMSG
+      !>      CHARACTER*(ITEMSZ)    ITEM
+      !>      CHARACTER*(DESCSZ)    OUTSTR
+      !>      CHARACTER*(MAXQRY)    QUERY
+      !>      CHARACTER*(TIMLEN)    UTCSTR
+      !>      CHARACTER*(MAXCLN)    TABS   ( MAXTAB )
+      !>      CHARACTER*(XCLSLN)    XCLASS ( MAXSEL )
+      !>      CHARACTER*(TYPLEN)    XTYPES ( MAXSEL )
       !>
-      !>              DOUBLE PRECISION      DDATA
-      !>              DOUBLE PRECISION      TDATA
+      !>      DOUBLE PRECISION      DDATA
+      !>      DOUBLE PRECISION      TDATA
       !>
-      !>              INTEGER               B
-      !>              INTEGER               COLNO
-      !>              INTEGER               E
-      !>              INTEGER               HANDLE
-      !>              INTEGER               IDATA
-      !>              INTEGER               N
-      !>              INTEGER               NMROWS
-      !>              INTEGER               ROW
-      !>              INTEGER               XBEGS  ( MAXSEL )
-      !>              INTEGER               XENDS  ( MAXSEL )
+      !>      INTEGER               B
+      !>      INTEGER               COLNO
+      !>      INTEGER               E
+      !>      INTEGER               HANDLE
+      !>      INTEGER               IDATA
+      !>      INTEGER               N
+      !>      INTEGER               NMROWS
+      !>      INTEGER               ROW
+      !>      INTEGER               XBEGS  ( MAXSEL )
+      !>      INTEGER               XENDS  ( MAXSEL )
       !>
-      !>              LOGICAL               ERROR
-      !>              LOGICAL               FOUND
-      !>              LOGICAL               NULL
+      !>      LOGICAL               ERROR
+      !>      LOGICAL               FOUND
+      !>      LOGICAL               NULL
       !>
-      !>        C
-      !>        C     Load leapseconds file for time conversion.
-      !>        C
-      !>              CALL FURNSH ( LSKNAM )
+      !>C
+      !>C     Load leapseconds file for time conversion.
+      !>C
+      !>      CALL FURNSH ( LSKNAM )
       !>
-      !>        C
-      !>        C     Load EK.
-      !>        C
-      !>              CALL EKLEF  ( EKNAME, HANDLE )
+      !>C
+      !>C     Load EK.
+      !>C
+      !>      CALL EKLEF  ( EKNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Setup the query.  Parse the SELECT clause using
-      !>        C     EKPSEL.
-      !>        C
-      !>              QUERY = 'Select IMAGE_NUMBER, IMAGE_ID, '
-      !>             .   //          'PLATFORM_CLOCK, IMAGE_TIME '
-      !>             .   //   'from VIKING_SEDR_DATA '
-      !>             .   //   'where IMAGE_NUMBER < 25850000 '
-      !>             .   //   'order by IMAGE_NUMBER'
+      !>C
+      !>C     Setup the query.  Parse the SELECT clause using
+      !>C     EKPSEL.
+      !>C
+      !>      QUERY = 'Select IMAGE_NUMBER, IMAGE_ID, '
+      !>     .   //          'PLATFORM_CLOCK, IMAGE_TIME '
+      !>     .   //   'from VIKING_SEDR_DATA '
+      !>     .   //   'where IMAGE_NUMBER < 25850000 '
+      !>     .   //   'order by IMAGE_NUMBER'
       !>
-      !>              CALL EKPSEL ( QUERY,  N,    XBEGS, XENDS, XTYPES,
-      !>             .              XCLASS, TABS, COLS,  ERROR, ERRMSG )
+      !>      CALL EKPSEL ( QUERY,  N,    XBEGS, XENDS, XTYPES,
+      !>     .              XCLASS, TABS, COLS,  ERROR, ERRMSG )
       !>
-      !>              IF ( ERROR ) THEN
+      !>      IF ( ERROR ) THEN
       !>
-      !>                 WRITE(*,*) ERRMSG
+      !>         WRITE(*,*) ERRMSG
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>        C
-      !>        C        Submit query to the EK query system.
-      !>        C
-      !>                 CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
+      !>C
+      !>C        Submit query to the EK query system.
+      !>C
+      !>         CALL EKFIND ( QUERY, NMROWS, ERROR, ERRMSG )
       !>
-      !>                 IF ( ERROR ) THEN
+      !>         IF ( ERROR ) THEN
       !>
-      !>                    WRITE(*,*) ERRMSG
+      !>            WRITE(*,*) ERRMSG
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>        C
-      !>        C           Fetch the rows that matched the query.
-      !>        C
-      !>                    DO ROW = 1, NMROWS
+      !>C
+      !>C           Fetch the rows that matched the query.
+      !>C
+      !>            DO ROW = 1, NMROWS
       !>
-      !>        C
-      !>        C              Fetch data from the Ith row.
-      !>        C
-      !>                       WRITE (*,*) ' '
-      !>                       WRITE (*,*) 'ROW = ', ROW
+      !>C
+      !>C              Fetch data from the Ith row.
+      !>C
+      !>               WRITE (*,*) ' '
+      !>               WRITE (*,*) 'ROW = ', ROW
       !>
-      !>                       DO COLNO = 1, N
+      !>               DO COLNO = 1, N
       !>
-      !>        C
-      !>        C                 Fetch the data from the Jth selected
-      !>        C                 column.
-      !>        C
-      !>                          IF ( XCLASS(COLNO) .EQ. 'COL' ) THEN
+      !>C
+      !>C                 Fetch the data from the Jth selected
+      !>C                 column.
+      !>C
+      !>                  IF ( XCLASS(COLNO) .EQ. 'COL' ) THEN
       !>
-      !>                             OUTSTR  =  COLS(COLNO)
-      !>                             CALL PREFIX ( '.',         0, OUTSTR )
-      !>                             CALL PREFIX ( TABS(COLNO), 0, OUTSTR )
-      !>                             ITEM = '  ' // OUTSTR // ':'
+      !>                     OUTSTR  =  COLS(COLNO)
+      !>                     CALL PREFIX ( '.',         0, OUTSTR )
+      !>                     CALL PREFIX ( TABS(COLNO), 0, OUTSTR )
+      !>                     ITEM = '  ' // OUTSTR // ':'
       !>
-      !>                          ELSE
+      !>                  ELSE
       !>
-      !>                             B  =  XBEGS(COLNO)
-      !>                             E  =  XENDS(COLNO)
-      !>                             ITEM = '  ITEM = ' // QUERY(B:E)
+      !>                     B  =  XBEGS(COLNO)
+      !>                     E  =  XENDS(COLNO)
+      !>                     ITEM = '  ITEM = ' // QUERY(B:E)
       !>
-      !>                          END IF
+      !>                  END IF
       !>
-      !>                          IF ( XTYPES(COLNO) .EQ. 'CHR' ) THEN
+      !>                  IF ( XTYPES(COLNO) .EQ. 'CHR' ) THEN
       !>
-      !>                             CALL EKGC ( COLNO,  ROW,  1,
-      !>             .                           CDATA, NULL, FOUND )
+      !>                     CALL EKGC ( COLNO,  ROW,  1,
+      !>     .                           CDATA, NULL, FOUND )
       !>
-      !>                             IF ( NULL ) THEN
-      !>                                WRITE(*,*) ITEM, '<Null>'
-      !>                             ELSE
-      !>                                WRITE(*,*) ITEM, CDATA(:RTRIM(CDATA))
-      !>                             END IF
+      !>                     IF ( NULL ) THEN
+      !>                        WRITE(*,*) ITEM, '<Null>'
+      !>                     ELSE
+      !>                        WRITE(*,*) ITEM, CDATA(:RTRIM(CDATA))
+      !>                     END IF
       !>
-      !>                          ELSE IF ( XTYPES(COLNO) .EQ. 'DP' ) THEN
+      !>                  ELSE IF ( XTYPES(COLNO) .EQ. 'DP' ) THEN
       !>
-      !>                             CALL EKGD ( COLNO,  ROW,  1,
-      !>             .                           DDATA, NULL, FOUND )
+      !>                     CALL EKGD ( COLNO,  ROW,  1,
+      !>     .                           DDATA, NULL, FOUND )
       !>
-      !>                             IF ( NULL ) THEN
-      !>                                WRITE(*,*) ITEM, '<Null>'
-      !>                             ELSE
-      !>                                WRITE(*,*) ITEM, DDATA
-      !>                             END IF
+      !>                     IF ( NULL ) THEN
+      !>                        WRITE(*,*) ITEM, '<Null>'
+      !>                     ELSE
+      !>                        WRITE(*,*) ITEM, DDATA
+      !>                     END IF
       !>
-      !>                          ELSE IF ( XTYPES(COLNO) .EQ. 'INT' ) THEN
+      !>                  ELSE IF ( XTYPES(COLNO) .EQ. 'INT' ) THEN
       !>
-      !>                             CALL EKGI ( COLNO,  ROW,  1,
-      !>             .                           IDATA, NULL, FOUND )
+      !>                     CALL EKGI ( COLNO,  ROW,  1,
+      !>     .                           IDATA, NULL, FOUND )
       !>
-      !>                             IF ( NULL ) THEN
-      !>                                WRITE(*,*) ITEM, '<Null>'
-      !>                             ELSE
-      !>                                WRITE(*,*) ITEM, IDATA
-      !>                             END IF
+      !>                     IF ( NULL ) THEN
+      !>                        WRITE(*,*) ITEM, '<Null>'
+      !>                     ELSE
+      !>                        WRITE(*,*) ITEM, IDATA
+      !>                     END IF
       !>
-      !>                          ELSE
-      !>        C
-      !>        C                    The item is a time value.  Convert it
-      !>        C                    to UTC for output.
-      !>        C
-      !>                             CALL EKGD ( COLNO,  ROW,  1,
-      !>             .                           TDATA, NULL, FOUND )
+      !>                  ELSE
+      !>C
+      !>C                    The item is a time value.  Convert it
+      !>C                    to UTC for output.
+      !>C
+      !>                     CALL EKGD ( COLNO,  ROW,  1,
+      !>     .                           TDATA, NULL, FOUND )
       !>
-      !>                             IF ( NULL ) THEN
-      !>                                WRITE(*,*) ITEM, '<Null>'
-      !>                             ELSE
-      !>                                CALL ET2UTC ( TDATA, 'C', 3, UTCSTR )
-      !>                                WRITE(*,*) ITEM, UTCSTR
-      !>                             END IF
+      !>                     IF ( NULL ) THEN
+      !>                        WRITE(*,*) ITEM, '<Null>'
+      !>                     ELSE
+      !>                        CALL ET2UTC ( TDATA, 'C', 3, UTCSTR )
+      !>                        WRITE(*,*) ITEM, UTCSTR
+      !>                     END IF
       !>
-      !>                          END IF
+      !>                  END IF
       !>
-      !>        C
-      !>        C              We're done with the column having index COLNO.
-      !>        C
-      !>                       END DO
+      !>C
+      !>C              We're done with the column having index COLNO.
+      !>C
+      !>               END DO
       !>
-      !>        C
-      !>        C           We're done with the row having index ROW.
-      !>        C
-      !>                    END DO
+      !>C
+      !>C           We're done with the row having index ROW.
+      !>C
+      !>            END DO
       !>
-      !>        C
-      !>        C        We either processed the query or had an error.
-      !>        C
-      !>                 END IF
+      !>C
+      !>C        We either processed the query or had an error.
+      !>C
+      !>         END IF
       !>
-      !>        C
-      !>        C     We either parsed the SELECT clause or had an error.
-      !>        C
-      !>              END IF
+      !>C
+      !>C     We either parsed the SELECT clause or had an error.
+      !>C
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -41547,7 +42707,7 @@ contains
       !>        code example based on existing fragment.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB)
-      module procedure ekpsel
+      module subroutine ekpsel ( ctx, query, n, xbegs, xends, xtypes, xclass, tabs, cols, error, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekcnamsz
@@ -41556,6 +42716,17 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: query  !! EK query.
+      integer(ip), intent(out) :: n  !! Number of items in SELECT clause of QUERY.
+      integer(ip), intent(out) :: xbegs  ( * )  !! Begin positions of expressions in SELECT clause.
+      integer(ip), intent(out) :: xends  ( * )  !! End positions of expressions in SELECT clause.
+      character(*), intent(out) :: xtypes ( * )  !! Data types of expressions.
+      character(*), intent(out) :: xclass ( * )  !! Classes of expressions.
+      character(*), intent(out) :: tabs   ( * )  !! Names of tables qualifying SELECT columns.
+      character(*), intent(out) :: cols   ( * )  !! Names of columns in SELECT clause of QUERY.
+      logical, intent(out) :: error  !! Error flag.
+      character(*), intent(out) :: errmsg  !! Parse error message.
 
       integer(ip) :: room
 
@@ -41589,7 +42760,6 @@ contains
 
 !
 !     Initialize the encoded query each time, for safety.
-!
 !
 !     PEPPER: the encoded query is sized from the query (see EKFIND).
 !
@@ -41639,8 +42809,11 @@ contains
       end do
 
       return
-      end procedure ekpsel
+      end subroutine ekpsel
 
+      !> Search through a type 1 star catalog and return the number of
+      !> stars within a specified RA - DEC rectangle.
+      !>
       !>## Detailed Input
       !>
       !>     CATNAM   is name of the catalog data table. This name is
@@ -41815,11 +42988,18 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 15-MAY-1996 (BVS)
-      module procedure stcf01
+      module subroutine stcf01 ( ctx, catnam, westra, eastra, sthdec, nthdec, nstars )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr
       use pepper_strings, only: repmc_inplace, repmd_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: catnam  !! Catalog table name.
+      real(wp), intent(in) :: westra  !! Western most right ascension in radians.
+      real(wp), intent(in) :: eastra  !! Eastern most right ascension in radians.
+      real(wp), intent(in) :: sthdec  !! Southern most declination in radians.
+      real(wp), intent(in) :: nthdec  !! Northern most declination in radians.
+      integer(ip), intent(out) :: nstars  !! Number of stars found.
 
 !
 !     Local parameters.
@@ -41908,7 +43088,7 @@ contains
       end if
 
       return
-      end procedure stcf01
+      end subroutine stcf01
 
    !> PEPPER: initialize EKQMGR's five linked list pools (the file table,
    !> segment table, column descriptor table, column attribute table and

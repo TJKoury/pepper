@@ -3,9 +3,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_pool.f90.
+!> [[pepper_instance_module]]).
 !>
 !>## ZZCTR (Manipulate Counter Array)
 !>
@@ -1544,6 +1542,24 @@ submodule (pepper_instance_module) pepper_pool
 
    ! Parameters shared by this file's procedures (PEPPER: SPICELIB
    ! declared them in each routine that used them).
+   !
+   ! Below are a collection of enumerated lists that are used
+   ! to discern what part of the processing we are in and what
+   ! kind of entity we are dealing with.  First the overall
+   ! processing flow of a variable assignment.
+   !
+   ! Next we have the various types of tokens that can be found
+   ! in the parsing of an input line
+   !
+   ! Q   --- quoted (or protected tokens)
+   ! NQ  --- unquoted tokens
+   ! BV  --- beginning of a vector
+   ! EV  --- ending of a vector
+   ! EQ  --- equal sign
+   ! EQP --- equal sign plus
+   !
+   ! A variable can have one of three types as we process
+   ! it.  It can have an unknown type UNKNWN, STRTYP or NUMTYP.
    integer(ip), parameter :: begin = 1  !! reading state: start
    integer(ip), parameter :: bslash = 92  !! character code of the backslash
    integer(ip), parameter :: q = 1  !! token class: quoted string
@@ -1582,6 +1598,8 @@ submodule (pepper_instance_module) pepper_pool
 
 contains
 
+      !> Set counter array to the initial values for the user routines.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -1629,11 +1647,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
-      module procedure zzctruin
+      module subroutine zzctruin ( ctx, oldctr )
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: oldctr ( ctrsiz )  !! Counter array to be set to initial user
+                                                     !! values.
       integer(ip), parameter :: ctrhgh = intmax
       if ( ctx%failed() ) return
 
@@ -1648,8 +1669,11 @@ contains
       oldctr(2) = ctrhgh
 
       return
-      end procedure zzctruin
+      end subroutine zzctruin
 
+      !> Set counter array to the initial values for the subsystem
+      !> routines.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -1697,11 +1721,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
-      module procedure zzctrsin
+      module subroutine zzctrsin ( ctx, oldctr )
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: oldctr ( ctrsiz )  !! Counter array to be set to initial
+                                                     !! subsystem values
       integer(ip), parameter :: ctrlow = intmin
       if ( ctx%failed() ) return
 
@@ -1716,8 +1743,10 @@ contains
       oldctr(2) = ctrlow
 
       return
-      end procedure zzctrsin
+      end subroutine zzctrsin
 
+      !> Increment counter array.
+      !>
       !>## Detailed Input
       !>
       !>     OLDCTR      is the counter array to be incremented.
@@ -1764,11 +1793,13 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
-      module procedure zzctrinc
+      module subroutine zzctrinc ( ctx, oldctr )
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: oldctr ( ctrsiz )  !! Counter array to be incremented.
       integer(ip), parameter :: ctrhgh = intmax
       integer(ip), parameter :: ctrlow = intmin
       if ( ctx%failed() ) return
@@ -1812,8 +1843,10 @@ contains
       end if
 
       return
-      end procedure zzctrinc
+      end subroutine zzctrinc
 
+      !> Check and update, if needed, counter array.
+      !>
       !>## Detailed Input
       !>
       !>     NEWCTR      is the new counter value against which the old
@@ -1867,11 +1900,15 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 29-JUL-2013 (BVS)
-      module procedure zzctrchk
+      module subroutine zzctrchk ( ctx, newctr, oldctr, update )
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: newctr ( ctrsiz )  !! New counter value.
+      integer(ip), intent(inout) :: oldctr ( ctrsiz )  !! Old counter value.
+      logical, intent(out) :: update  !! Update flag.
       if ( ctx%failed() ) return
 
 !
@@ -1890,8 +1927,12 @@ contains
       end if
 
       return
-      end procedure zzctrchk
+      end subroutine zzctrchk
 
+      !> Set the long error message equal to a standard I/O error message
+      !> composed from an action, the name of a file, and a value of
+      !> IOSTAT.
+      !>
       !>## Detailed Input
       !>
       !>     ACTION   is the action which caused the error. This may
@@ -2029,10 +2070,14 @@ contains
       !>        changed accordingly, and a call to SETMSG has been added.
       !>        Also, the name of the calling routine no longer appears
       !>        in the constructed message.
-      module procedure ioerr
+      module subroutine ioerr ( ctx, action, file, iostat )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, suffix
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: action  !! Action which caused the error.
+      character(*), intent(in) :: file  !! The name of the file involved.
+      integer(ip), intent(in) :: iostat  !! The value of IOSTAT returned by ACTION.
 
       character(10) :: iochar
 
@@ -2081,8 +2126,10 @@ contains
       call ctx%setmsg ( error )
 
       return
-      end procedure ioerr
+      end subroutine ioerr
 
+      !> Read the next line of text from a text file.
+      !>
       !>## Detailed Input
       !>
       !>     FILE     is the name of the text file from which the next
@@ -2536,21 +2583,17 @@ contains
       !>        function FAILED was deleted. Finally, all internal references
       !>        to the entry point WRTEXT (which was dropped when the routine
       !>        left OPTLIB) were removed.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      !>
-      !>     Save the names of the files, their associated logical units, and
-      !>     the number of files opened.
-      !>
-      !>     Initial values
-      !>
-      !>     Set up the error processing.
-      module procedure rdtext
+      module subroutine rdtext ( ctx, file, line, eof )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! Name of text file.
+      character(*), intent(out) :: line  !! Next line from the text file.
+      logical, intent(out) :: eof  !! End-of-file indicator.
       integer(ip), parameter :: maxopn = 96  !! maximum number of text files open at once
+!
+!     Local variables
+!
       integer(ip) :: unit
       integer(ip) :: number
       integer(ip) :: iostat
@@ -2561,6 +2604,9 @@ contains
                   n => ctx%spice%rdtext%n, &
                   lstunt => ctx%spice%rdtext%lstunt, &
                   index => ctx%spice%rdtext%index )
+!
+!     Set up the error processing.
+!
       if ( ctx%failed() ) return
 
 !
@@ -2786,8 +2832,10 @@ contains
             end do
          end subroutine next_line
 
-      end procedure rdtext
+      end subroutine rdtext
 
+      !> Close a text file currently opened by [[rdtext]].
+      !>
       !>## Detailed Input
       !>
       !>     FILE     is the name of a text file which is currently
@@ -2926,13 +2974,11 @@ contains
       !>-    Beta Version 1.1.0, 8-JAN-1989 (IMU)
       !>
       !>        References to WRTEXT removed.
-      !>
-      !>     Set up the error processing.
-      !>
-      !>     Which file?
-      module procedure cltext
+      module subroutine cltext ( ctx, file )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! Text file to be closed.
       logical :: return
       integer(ip) :: unit
       integer(ip) :: number
@@ -2944,6 +2990,9 @@ contains
                   n => ctx%spice%rdtext%n, &
                   lstunt => ctx%spice%rdtext%lstunt, &
                   index => ctx%spice%rdtext%index )
+!
+!     Which file?
+!
       number = 0
 
       inquire (  file    =  file, &
@@ -2989,8 +3038,10 @@ contains
 
       return
       end associate
-      end procedure cltext
+      end subroutine cltext
 
+      !> Open and initialize a SPICE ASCII kernel file.
+      !>
       !>## Detailed Input
       !>
       !>     KERNEL   is the name of the SPICE ASCII kernel file to be opened
@@ -3125,10 +3176,12 @@ contains
       !>         following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure rdknew
+      module subroutine rdknew ( ctx, kernel )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: kernel  !! Kernel file.
       character(*), parameter :: dat = 'begindata'  !! the marker that begins a data section of a text kernel
       character(*), parameter :: txt = 'begintext'  !! the marker that begins a text section of a text kernel
       character(lnsize) :: first
@@ -3220,8 +3273,10 @@ contains
 
       return
       end associate
-      end procedure rdknew
+      end subroutine rdknew
 
+      !> Read the next line of data from a SPICE ASCII kernel file.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -3371,12 +3426,13 @@ contains
       !>        If the error action was set to 'RETURN' an infinite loop
       !>        could have resulted if RDTEXT failed and the loop conditions
       !>        were satisfied.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure rdkdat
+      module subroutine rdkdat ( ctx, line, eof )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: line  !! Next line of kernel data.
+      logical, intent(out) :: eof  !! End of file indicator.
       character(*), parameter :: blank = ' '  !! a blank
       character(lnsize) :: first
       integer(ip) :: i
@@ -3387,6 +3443,9 @@ contains
                   status => ctx%spice%rdker%status, &
                   begdat => ctx%spice%rdker%begdat, &
                   begtxt => ctx%spice%rdker%begtxt )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -3449,8 +3508,11 @@ contains
 
       return
       end associate
-      end procedure rdkdat
+      end subroutine rdkdat
 
+      !> Return the name of file and line number of the last line read by
+      !> the entry point [[rdkdat]].
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -3543,9 +3605,12 @@ contains
       !>        CSPICE toolkit.
       !>
       !>-    SPICELIB Version 2.0.0, 20-SEP-1995 (WLT)
-      module procedure rdklin
+      module subroutine rdklin ( ctx, kernel, number )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: kernel  !! The name of the current file that is being read.
+      integer(ip), intent(out) :: number  !! The line number of the last line read in the file.
       logical :: return
       character(lnsize) :: first
       integer(ip) :: i
@@ -3558,16 +3623,14 @@ contains
 
       return
       end associate
-      end procedure rdklin
+      end subroutine rdklin
 
-      !>## Abstract
+      !> Create an error message for ZZTOKNS token buffer and picture
+      !> overflow exceptions.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Create an error message for ZZTOKNS token buffer and picture
-      !>     overflow exceptions.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3638,26 +3701,30 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-FEB-2014 (BVS)
-      module procedure zztknerr
+      module subroutine zztknerr ( ctx, templt, string, token, error, status )
       use pepper_strings, only: repmc, repmc_inplace
 
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: templt  !! Error message template
+      character(*), intent(in) :: string  !! First string to be substituted
+      character(*), intent(in) :: token  !! Second string to be substituted
+      character(*), intent(out) :: error  !! Complete error message
+      logical, intent(out) :: status  !! Status flag
       call repmc ( templt, '#', string, error )
       call repmc_inplace ( error,  '#', token )
       status = .false.
 
       return
 
-      end procedure zztknerr
+      end subroutine zztknerr
 
-      !>## Abstract
+      !> Given a numeric pattern, construct the appropriate time format
+      !> picture component.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Given a numeric pattern, construct the appropriate time format
-      !>     picture component.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3720,10 +3787,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 25-APR-1996 (WLT)
-      module procedure zzmkpc
+      module subroutine zzmkpc ( ctx, pictur, b, e, mark, pattrn )
       use pepper_kinds, only: ip
       use pepper_strings, only: zzrepsub_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(inout) :: pictur  !! A partially constructed time format picture
+      integer(ip), intent(in) :: b  !! Beginning of substring to place a mark
+      integer(ip), intent(in) :: e  !! End of substring to place a mark
+      character(*), intent(in) :: mark  !! Initial portion of a mark
+      character(*), intent(in) :: pattrn  !! Decimal pattern
 
       integer(ip), parameter :: maxplc = 14
 
@@ -3782,15 +3855,15 @@ contains
 
       return
 
-      end procedure zzmkpc
+      end subroutine zzmkpc
 
-      !>## Abstract
+      !> The function returns TRUE if a replacement is performed
       !>
-      !>    SPICE Private routine intended solely for the support of SPICE
-      !>    routines.  Users should not call this routine directly due
-      !>    to the volatile nature of this routine.
+      !> Replace matching tokens and remove the character "*"
       !>
-      !>    Replace matching tokens and remove the character "*"
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3850,8 +3923,12 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 8-APR-1996 (WLT)
-      module procedure zzrept
+      module logical function zzrept ( ctx, sub, replac, l2r )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: sub  !! is the substring to perform replacements on
+      character(*), intent(in) :: replac  !! is the replacement string
+      logical, intent(in) :: l2r  !! use left to right scanning if L2R is TRUE.
 
       logical :: ok
 
@@ -3859,16 +3936,14 @@ contains
       ok     = zzremt ( ctx, '*' )
 
       return
-      end procedure zzrept
+      end function zzrept
 
-      !>## Abstract
+      !> Determine whether the components of a time vector are in the
+      !> "usual" range for the components, if component checking is
+      !> enabled.
       !>
-      !>     Determine whether the components of a time vector are in the
-      !>     "usual" range for the components, if component checking is
-      !>     enabled.
-      !>
-      !>     If component checking is not enabled, this routine simply
-      !>     returns after setting the outputs.
+      !> If component checking is not enabled, this routine simply
+      !> returns after setting the outputs.
       !>
       !>## Detailed Input
       !>
@@ -4075,10 +4150,17 @@ contains
       !>        STRING -> TYPE.
       !>
       !>-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT)
-      module procedure tcheck
+      module subroutine tcheck ( ctx, tvec, type, mods, modify, ok, error )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc_inplace, repmd_inplace, repmi_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: tvec   ( * )  !! A vector of time components
+      character(*), intent(in) :: type  !! The type of time vector.
+      logical, intent(in) :: mods  !! A logical indicating the presence of modifiers
+      character(*), intent(in) :: modify ( * )  !! The values of the modifiers
+      logical, intent(out) :: ok  !! Indicates success or failure of component checks.
+      character(*), intent(out) :: error  !! Diagnostic message if .NOT. OK.
       integer(ip) :: divble
       integer(ip), parameter :: ampm = zone + 1  !! time string component: AM/PM
       integer(ip), parameter :: lnsize = 200  !! length of the error message
@@ -4380,8 +4462,12 @@ contains
       error = ' '
       return
       end associate
-      end procedure tcheck
+      end subroutine tcheck
 
+      !> Restrict the set of strings that are recognized by SPICE time
+      !> parsing routines to those that have standard values for all time
+      !> components.
+      !>
       !>## Detailed Input
       !>
       !>     TYPE     is a character string that is used to adjust the set of
@@ -4502,59 +4588,61 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TPARCH_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TPARCH_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         TIMSTR
-      !>              PARAMETER           ( TIMSTR = 'FEB 34, 1993' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         TIMSTR
+      !>      PARAMETER           ( TIMSTR = 'FEB 34, 1993' )
       !>
-      !>              INTEGER               ERRMLN
-      !>              PARAMETER           ( ERRMLN = 1000 )
+      !>      INTEGER               ERRMLN
+      !>      PARAMETER           ( ERRMLN = 1000 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(ERRMLN)    ERRMSG
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(ERRMLN)    ERRMSG
       !>
-      !>              DOUBLE PRECISION      SP2000
+      !>      DOUBLE PRECISION      SP2000
       !>
-      !>        C
-      !>        C     First, demonstrate the default behavior of SPICE.
-      !>        C     Let's get the number of UTC seconds past J2000 epoch.
-      !>        C
-      !>              CALL TPARSE ( TIMSTR, SP2000, ERRMSG )
+      !>C
+      !>C     First, demonstrate the default behavior of SPICE.
+      !>C     Let's get the number of UTC seconds past J2000 epoch.
+      !>C
+      !>      CALL TPARSE ( TIMSTR, SP2000, ERRMSG )
       !>
-      !>              IF ( ERRMSG .EQ. ' ' ) THEN
+      !>      IF ( ERRMSG .EQ. ' ' ) THEN
       !>
-      !>                 WRITE(*,'(A,F18.6)') 'UTC (s): ', SP2000
+      !>         WRITE(*,'(A,F18.6)') 'UTC (s): ', SP2000
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,'(2A)') 'Error  : ', ERRMSG
+      !>         WRITE(*,'(2A)') 'Error  : ', ERRMSG
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Now, turn error checking on and parse the time string
-      !>        C     again.
-      !>        C
-      !>              CALL TPARCH ( 'YES' )
-      !>              CALL TPARSE ( TIMSTR, SP2000, ERRMSG )
+      !>C
+      !>C     Now, turn error checking on and parse the time string
+      !>C     again.
+      !>C
+      !>      CALL TPARCH ( 'YES' )
+      !>      CALL TPARSE ( TIMSTR, SP2000, ERRMSG )
       !>
-      !>              IF ( ERRMSG .EQ. ' ' ) THEN
+      !>      IF ( ERRMSG .EQ. ' ' ) THEN
       !>
-      !>                 WRITE(*,'(A,F18.6)') 'UTC (s): ', SP2000
+      !>         WRITE(*,'(A,F18.6)') 'UTC (s): ', SP2000
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,'(2A)') 'Error  : ', ERRMSG
+      !>         WRITE(*,'(2A)') 'Error  : ', ERRMSG
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4601,10 +4689,12 @@ contains
       !>
       !>        The entry point TPARCH was moved from TPARSE to the routine
       !>        TCHECK so that all time parsing actions could be centralized.
-      module procedure tparch
+      module subroutine tparch ( ctx, type )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: type  !! String: Use 'YES' to restrict time inputs.
       integer(ip) :: divble
       integer(ip), parameter :: lnsize = 200  !! length of the error message
       character(lnsize) :: messge
@@ -4639,8 +4729,10 @@ contains
 
       return
       end associate
-      end procedure tparch
+      end subroutine tparch
 
+      !> Determine whether component checking is enabled for time strings.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -4718,9 +4810,11 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 07-APR-1996 (WLT)
-      module procedure tchckd
+      module subroutine tchckd ( ctx, type )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: type  !! Answer to the question: "Is checking enabled?"
       integer(ip) :: divble
       integer(ip), parameter :: lnsize = 200  !! length of the error message
       character(lnsize) :: messge
@@ -4759,8 +4853,10 @@ contains
 
       return
       end associate
-      end procedure tchckd
+      end subroutine tchckd
 
+      !> Expand an abbreviated year to a full year specification.
+      !>
       !>## Detailed Input
       !>
       !>     YEAR     is an "abbreviated year." In other words the 98 of
@@ -4832,72 +4928,74 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TEXPYR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TEXPYR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NYEARS
-      !>              PARAMETER           ( NYEARS = 10 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NYEARS
+      !>      PARAMETER           ( NYEARS = 10 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               I
-      !>              INTEGER               EXYEAR
-      !>              INTEGER               YEARS  ( NYEARS )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               I
+      !>      INTEGER               EXYEAR
+      !>      INTEGER               YEARS  ( NYEARS )
       !>
-      !>        C
-      !>        C     Set the input years.
-      !>        C
-      !>              DATA                  YEARS /  0,  1, 68, 69, 70,
-      !>             .                              78, 79, 80, 81, 99  /
+      !>C
+      !>C     Set the input years.
+      !>C
+      !>      DATA                  YEARS /  0,  1, 68, 69, 70,
+      !>     .                              78, 79, 80, 81, 99  /
       !>
-      !>        C
-      !>        C     Display the default behavior.
-      !>        C
-      !>              WRITE(*,'(A)') 'Default behavior:'
-      !>              WRITE(*,*)
+      !>C
+      !>C     Display the default behavior.
+      !>C
+      !>      WRITE(*,'(A)') 'Default behavior:'
+      !>      WRITE(*,*)
       !>
-      !>              WRITE(*,'(A)') 'In  Expansion'
-      !>              WRITE(*,'(A)') '--  ---------'
+      !>      WRITE(*,'(A)') 'In  Expansion'
+      !>      WRITE(*,'(A)') '--  ---------'
       !>
-      !>              DO I=1, NYEARS
+      !>      DO I=1, NYEARS
       !>
-      !>                 EXYEAR = YEARS(I)
-      !>                 CALL TEXPYR ( EXYEAR )
+      !>         EXYEAR = YEARS(I)
+      !>         CALL TEXPYR ( EXYEAR )
       !>
-      !>                 WRITE(*,'(I2.2,5X,I4)') YEARS(I), EXYEAR
+      !>         WRITE(*,'(I2.2,5X,I4)') YEARS(I), EXYEAR
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Set up the lower bound for the expansion of abbreviated
-      !>        C     years to 1980.
-      !>        C
-      !>              CALL TSETYR ( 1980 )
+      !>C
+      !>C     Set up the lower bound for the expansion of abbreviated
+      !>C     years to 1980.
+      !>C
+      !>      CALL TSETYR ( 1980 )
       !>
-      !>        C
-      !>        C     Display the new behavior.
-      !>        C
-      !>              WRITE(*,*)
-      !>              WRITE(*,'(A)') 'Lower bound for expansion set to 1980:'
-      !>              WRITE(*,*)
+      !>C
+      !>C     Display the new behavior.
+      !>C
+      !>      WRITE(*,*)
+      !>      WRITE(*,'(A)') 'Lower bound for expansion set to 1980:'
+      !>      WRITE(*,*)
       !>
-      !>              WRITE(*,'(A)') 'In  Expansion'
-      !>              WRITE(*,'(A)') '--  ---------'
+      !>      WRITE(*,'(A)') 'In  Expansion'
+      !>      WRITE(*,'(A)') '--  ---------'
       !>
-      !>              DO I=1, NYEARS
+      !>      DO I=1, NYEARS
       !>
-      !>                 EXYEAR = YEARS(I)
-      !>                 CALL TEXPYR ( EXYEAR )
+      !>         EXYEAR = YEARS(I)
+      !>         CALL TEXPYR ( EXYEAR )
       !>
-      !>                 WRITE(*,'(I2.2,5X,I4)') YEARS(I), EXYEAR
+      !>         WRITE(*,'(I2.2,5X,I4)') YEARS(I), EXYEAR
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4959,9 +5057,11 @@ contains
       !>        The default century was changed from 1950-2049 to 1969-2068
       !>
       !>-    SPICELIB Version 1.0.0, 08-APR-1996 (WLT)
-      module procedure texpyr
+      module subroutine texpyr ( ctx, year )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: year  !! The year of some epoch abbreviated/expanded.
       associate ( centry => ctx%spice%texpyr%centry, &
                   lbound => ctx%spice%texpyr%lbound )
       if ( year >= 100 .or. year < 0 ) return
@@ -4974,8 +5074,10 @@ contains
 
       return
       end associate
-      end procedure texpyr
+      end subroutine texpyr
 
+      !> Set the lower bound on the 100 year range.
+      !>
       !>## Detailed Input
       !>
       !>     YEAR     is the year associated with the lower bound on all year
@@ -5034,66 +5136,68 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TSETYR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TSETYR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               DATELN
-      !>              PARAMETER           ( DATELN = 11 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               DATELN
+      !>      PARAMETER           ( DATELN = 11 )
       !>
-      !>              INTEGER               NTSTRS
-      !>              PARAMETER           ( NTSTRS = 7 )
+      !>      INTEGER               NTSTRS
+      !>      PARAMETER           ( NTSTRS = 7 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(DATELN)    DATE   (NTSTRS)
-      !>              CHARACTER*(DATELN)    TIMSTR
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(DATELN)    DATE   (NTSTRS)
+      !>      CHARACTER*(DATELN)    TIMSTR
       !>
-      !>              DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ET
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Assign an array of calendar dates.
-      !>        C
-      !>              DATA                  DATE   / '00 JAN 21',
-      !>             .                               '01 FEB 22',
-      !>             .                               '48 MAR 23',
-      !>             .                               '49 APR 24',
-      !>             .                               '79 JUL 14',
-      !>             .                               '80 FEB 02',
-      !>             .                               '99 DEC 31' /
+      !>C
+      !>C     Assign an array of calendar dates.
+      !>C
+      !>      DATA                  DATE   / '00 JAN 21',
+      !>     .                               '01 FEB 22',
+      !>     .                               '48 MAR 23',
+      !>     .                               '49 APR 24',
+      !>     .                               '79 JUL 14',
+      !>     .                               '80 FEB 02',
+      !>     .                               '99 DEC 31' /
       !>
-      !>        C
-      !>        C     Load the required LSK.
-      !>        C
-      !>              CALL FURNSH ( 'naif0012.tls' )
+      !>C
+      !>C     Load the required LSK.
+      !>C
+      !>      CALL FURNSH ( 'naif0012.tls' )
       !>
-      !>        C
-      !>        C     Set up the lower bound for the
-      !>        C     expansion of abbreviated years.
-      !>        C
-      !>              CALL TSETYR ( 1980 )
+      !>C
+      !>C     Set up the lower bound for the
+      !>C     expansion of abbreviated years.
+      !>C
+      !>      CALL TSETYR ( 1980 )
       !>
-      !>        C
-      !>        C     Expand the years in input time strings.
-      !>        C
-      !>              WRITE(*,*) 'Time string    Expansion'
-      !>              WRITE(*,*) '-----------    -----------'
+      !>C
+      !>C     Expand the years in input time strings.
+      !>C
+      !>      WRITE(*,*) 'Time string    Expansion'
+      !>      WRITE(*,*) '-----------    -----------'
       !>
-      !>              DO I = 1, NTSTRS
+      !>      DO I = 1, NTSTRS
       !>
-      !>                 CALL STR2ET ( DATE(I), ET )
-      !>                 CALL TIMOUT ( ET, 'YYYY MON DD', TIMSTR )
+      !>         CALL STR2ET ( DATE(I), ET )
+      !>         CALL TIMOUT ( ET, 'YYYY MON DD', TIMSTR )
       !>
-      !>                 WRITE(*,*) DATE(I), '    ', TIMSTR
+      !>         WRITE(*,*) DATE(I), '    ', TIMSTR
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5140,9 +5244,11 @@ contains
       !>        The default century was change from 1950-2049 to 1969-2068.
       !>
       !>-    SPICELIB Version 1.0.0, 08-APR-1996 (WLT)
-      module procedure tsetyr
+      module subroutine tsetyr ( ctx, year )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: year  !! Lower bound on the 100 year interval of expansion
       associate ( centry => ctx%spice%texpyr%centry, &
                   lbound => ctx%spice%texpyr%lbound )
       if ( year > 0 ) then
@@ -5154,15 +5260,13 @@ contains
 
       return
       end associate
-      end procedure tsetyr
+      end subroutine tsetyr
 
-      !>## Abstract
+      !> Initialize the built-in time patterns.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Initialize the built-in time patterns.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5270,9 +5374,15 @@ contains
       !>        begin at KNOWN(186) below.
       !>
       !>-    SPICELIB Version 1.0.0, 02-APR-1996 (WLT)
-      module procedure zztpats
+      module logical function zztpats ( ctx, room, nknown, known, meanng )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: room  !! The declared space available for patterns
+      integer(ip), intent(out) :: nknown  !! The number of patterns returned.
+      character(*), intent(out) :: known  ( * )  !! The patterns that are automatically
+                                                 !! recognized
+      character(*), intent(out) :: meanng ( * )  !! The meaning associated with the patterns.
 
       integer(ip), parameter :: count = ntpats  !! number of the known time patterns
 
@@ -5309,8 +5419,15 @@ contains
       zztpats = .true.
 
       return
-      end procedure zztpats
+      end function zztpats
 
+      !> Parse the components of a time string and return a vector of the
+      !> components of that string. Also return an array of any modifiers
+      !> present in the input string; these may alter the interpretation
+      !> of the components.
+      !>
+      !> The function returns
+      !>
       !>## Detailed Input
       !>
       !>     STRING   is a character string that represents some
@@ -5806,16 +5923,23 @@ contains
       !>        from 185 to 203. See ZZTPATS for more details.
       !>
       !>-    SPICELIB Version 1.0.0, 10-AUG-1996 (WLT)
-      module procedure tpartv
+      module subroutine tpartv ( ctx, string, tvec, ntvec, type, modify, mods, yabbrv, succes, pictur, error )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       use pepper_arrays, only: bsrchc
       use pepper_strings, only: prefix, rtrim, suffix, ucase, repmc_inplace, zzinssub_inplace
       implicit none
-
-!
-!     Private Functions
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! A string to be parsed as a time
+      real(wp), intent(out) :: tvec   ( * )  !! A vector giving the components of the time.
+      integer(ip), intent(out) :: ntvec  !! The number of components supplied for TVEC
+      character(*), intent(out) :: type  !! The type of the "time vector" TVEC
+      character(*), intent(out) :: modify ( * )  !! A list of modifiers present in STRING.
+      logical, intent(out) :: mods  !! A logical indicating the presence of a modifier
+      logical, intent(out) :: yabbrv  !! A logical indicating that a year was abbreviated
+      logical, intent(out) :: succes  !! A logical indicating whether STRING was parsed.
+      character(*), intent(out) :: pictur  !! A time format picture associated with STRING
+      character(*), intent(out) :: error  !! A diagnostic message if STRING couldn't be parsed
 
 !
 !     Parameters
@@ -6586,15 +6710,15 @@ contains
 
       return
 
-      end procedure tpartv
+      end subroutine tpartv
 
-      !>## Abstract
+      !> The function returns TRUE is a combination was performed.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Combine several token representatives into a single token.
       !>
-      !>     Combine several token representatives into a single token.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6671,12 +6795,14 @@ contains
       !>        to ZZTOKNS has a non-printing character.
       !>
       !>-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-      !>
-      !>     So far we haven't combined anything.
-      module procedure zzcmbt
+      module logical function zzcmbt ( ctx, string, letter, l2r )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: pos, posr, zzrepsub_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! A sequence of tokens to be combined.
+      character(1), intent(in) :: letter  !! The replacement token for the combination
+      logical, intent(in) :: l2r  !! If TRUE scan left to right, else scan right to left
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
@@ -6693,6 +6819,9 @@ contains
                   pbegs => ctx%zztime%pbegs, &
                   pends => ctx%zztime%pends, &
                   to => ctx%zztime%to )
+!
+!     So far we haven't combined anything.
+!
       did = no
 !
 !     Look for the substring either looking from the
@@ -6739,15 +6868,13 @@ contains
       zzcmbt = did
       return
       end associate
-      end procedure zzcmbt
+      end function zzcmbt
 
-      !>## Abstract
+      !> Return the internal representation of the time string.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the internal representation of the time string.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6809,9 +6936,11 @@ contains
       !>        to ZZTOKNS has a non-printing character.
       !>
       !>-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-      module procedure zzgrep
+      module logical function zzgrep ( ctx, string )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: string  !! The current representation of tokenized time
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
@@ -6823,16 +6952,16 @@ contains
 
       return
       end associate
-      end procedure zzgrep
+      end function zzgrep
 
-      !>## Abstract
+      !> The function returns TRUE if a pair is found.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Determine if there is a pair of consecutive tokens from
+      !> a user specified list of tokens.
       !>
-      !>     Determine if there is a pair of consecutive tokens from
-      !>     a user specified list of tokens.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6903,10 +7032,14 @@ contains
       !>        to ZZTOKNS has a non-printing character.
       !>
       !>-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-      module procedure zzispt
+      module logical function zzispt ( ctx, string, b, e )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cpos
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! a list of tokens to search for.
+      integer(ip), intent(out) :: b  !! the beginning of the first matching token
+      integer(ip), intent(out) :: e  !! the ending of the last matching token.
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
@@ -6950,16 +7083,18 @@ contains
 
       return
       end associate
-      end procedure zzispt
+      end function zzispt
 
-      !>## Abstract
+      !> LETTER     I
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> The function returns
       !>
-      !>     Determine if a token is present in the internal representation
-      !>     of a tokenized time string.
+      !> Determine if a token is present in the internal representation
+      !> of a tokenized time string.
+      !>
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7024,9 +7159,11 @@ contains
       !>        to ZZTOKNS has a non-printing character.
       !>
       !>-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-      module procedure zzist
+      module logical function zzist ( ctx, letter )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(1), intent(in) :: letter
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
@@ -7036,16 +7173,16 @@ contains
       zzist = index ( rep(1:size), letter ) > 0
       return
       end associate
-      end procedure zzist
+      end function zzist
 
-      !>## Abstract
+      !> The function returns TRUE if the token is located.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Return the beginning and ending of a token in a time string
+      !> and remove the token from the internal representation.
       !>
-      !>     Return the beginning and ending of a token in a time string
-      !>     and remove the token from the internal representation.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7121,9 +7258,13 @@ contains
       !>        to ZZTOKNS has a non-printing character.
       !>
       !>-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-      module procedure zznote
+      module logical function zznote ( ctx, letter, b, e )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(1), intent(in) :: letter  !! a token to look for in the internal representation
+      integer(ip), intent(out) :: b  !! is the beginning of the token
+      integer(ip), intent(out) :: e  !! is the end of the token.
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
@@ -7170,15 +7311,15 @@ contains
       zznote = did
       return
       end associate
-      end procedure zznote
+      end function zznote
 
-      !>## Abstract
+      !> The function returns TRUE if any tokens are removed.
       !>
-      !>    SPICE Private routine intended solely for the support of SPICE
-      !>    routines. Users should not call this routine directly due
-      !>    to the volatile nature of this routine.
+      !> Remove a specified token from the internal representation
       !>
-      !>    Remove a specified token from the internal representation
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7245,9 +7386,11 @@ contains
       !>        to ZZTOKNS has a non-printing character.
       !>
       !>-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-      module procedure zzremt
+      module logical function zzremt ( ctx, letter )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(1), intent(in) :: letter  !! token to remove from the internal representation.
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
@@ -7290,16 +7433,16 @@ contains
       zzremt = did
       return
       end associate
-      end procedure zzremt
+      end function zzremt
 
-      !>## Abstract
+      !> The function returns TRUE is a substitution is performed.
       !>
-      !>    SPICE Private routine intended solely for the support of SPICE
-      !>    routines. Users should not call this routine directly due
-      !>    to the volatile nature of this routine.
+      !> Substitute one token for another in the internal representation
+      !> of a tokenized time string.
       !>
-      !>    Substitute one token for another in the internal representation
-      !>    of a tokenized time string.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7392,12 +7535,14 @@ contains
       !>        to ZZTOKNS has a non-printing character.
       !>
       !>-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-      !>
-      !>     So far we haven't combined anything.
-      module procedure zzsubt
+      module logical function zzsubt ( ctx, string, transl, l2r )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: pos, posr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! token pattern to look for.
+      character(*), intent(in) :: transl  !! token replacement pattern.
+      logical, intent(in) :: l2r  !! direction to scan internal representation.
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
@@ -7408,6 +7553,9 @@ contains
       associate ( rep => ctx%zztime%rep, &
                   size => ctx%zztime%size, &
                   to => ctx%zztime%to )
+!
+!     So far we haven't combined anything.
+!
       did = no
       k   = len ( string )
 
@@ -7464,15 +7612,15 @@ contains
       zzsubt = did
       return
       end associate
-      end procedure zzsubt
+      end function zzsubt
 
-      !>## Abstract
+      !> The function returns TRUE is STRING can be tokenized.
       !>
-      !>    SPICE Private routine intended solely for the support of SPICE
-      !>    routines. Users should not call this routine directly due
-      !>    to the volatile nature of this routine.
+      !> Construct an internal tokenized representation of STRING.
       !>
-      !>    Construct an internal tokenized representation of STRING.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7595,14 +7743,14 @@ contains
       !>        to ZZTOKNS has a non-printing character.
       !>
       !>-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-      !>
-      !>     The first time in this routine we initialize our "tokenizing"
-      !>     table.
-      module procedure zztokns
+      module logical function zztokns ( ctx, string, error )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lx4uns, prefix, rtrim, samchi, samsbi, suffix, ucase, &
          repmc_inplace, repmi_inplace, zzinssub_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! A time string to be tokenized and internalized.
+      character(*), intent(out) :: error  !! A diagnostic message
       integer(ip), parameter :: lower = 1  !! case of month and weekday names: lower case
       integer(ip), parameter :: upper = lower + 1  !! case of month and weekday names: upper case
       integer(ip), parameter :: mixed = upper + 1  !! case of month and weekday names: mixed case
@@ -7655,6 +7803,10 @@ contains
                   l => ctx%zztime%l, &
                   ampm => ctx%zztime%ampm, &
                   first => ctx%zztime%first )
+!
+!     The first time in this routine we initialize our "tokenizing"
+!     table.
+!
       zztokns = no
 
       if ( first ) then
@@ -8575,16 +8727,16 @@ contains
       zztokns = yes
       return
       end associate
-      end procedure zztokns
+      end function zztokns
 
-      !>## Abstract
+      !> The function returns TRUE if the string was unpacked completely.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Unpack the time string and parse its components using the
+      !> stored internal representation.
       !>
-      !>     Unpack the time string and parse its components using the
-      !>     stored internal representation.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8693,11 +8845,19 @@ contains
       !>        to ZZTOKNS has a non-printing character.
       !>
       !>-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-      module procedure zzunpck
+      module logical function zzunpck ( ctx, string, yabbrv, tvec, e, transl, pic, error )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: nparsd, pos, prefix, suffix, ucase, repmc_inplace, repmi_inplace, &
          zzinssub_inplace, zzrepsub_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! is a time string that has been tokenized.
+      character(*), intent(out) :: transl  !! is the type TVEC ( YMD or YD )
+      character(*), intent(out) :: error  !! a diagnostic of any problems
+      character(*), intent(out) :: pic  !! is a picture of the format used for the time string
+      real(wp), intent(out) :: tvec  ( * )  !! is a vector of time components
+      integer(ip), intent(out) :: e  !! is the actual number of components present
+      logical, intent(in) :: yabbrv  !! has the year been abbreviated.
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
            'SEP', 'OCT', 'NOV', 'DEC' ]
@@ -9284,17 +9444,17 @@ contains
       zzunpck = no
       return
       end associate
-      end procedure zzunpck
+      end function zzunpck
 
-      !>## Abstract
+      !> The function returns TRUE if any substitutions are performed.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Examine the value of an integer token and if it is within the
+      !> range from B to E replace the token with the new token
+      !> specified by LETTER.
       !>
-      !>     Examine the value of an integer token and if it is within the
-      !>     range from B to E replace the token with the new token
-      !>     specified by LETTER.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9367,12 +9527,15 @@ contains
       !>        to ZZTOKNS has a non-printing character.
       !>
       !>-    SPICELIB Version 1.0.0, 4-APR-1996 (WLT)
-      !>
-      !>     So far no translations have been performed.
-      module procedure zzvalt
+      module logical function zzvalt ( ctx, string, b, e, letter )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: nparsi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! Original time string.
+      character(1), intent(in) :: letter  !! New token if integer is within range.
+      integer(ip), intent(in) :: b  !! Lower bound of value range
+      integer(ip), intent(in) :: e  !! Upper bound of value range
       integer(ip), parameter :: wdsize = 32  !! length of a word of the error message
       character(3), parameter :: months ( 12 ) = &
          [ character(3) :: 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', &
@@ -9390,6 +9553,9 @@ contains
                   size => ctx%zztime%size, &
                   begs => ctx%zztime%begs, &
                   ends => ctx%zztime%ends )
+!
+!     So far no translations have been performed.
+!
       did = no
 !
 !     Examine each token to see if it is an integer.
@@ -9424,8 +9590,11 @@ contains
       zzvalt = did
       return
       end associate
-      end procedure zzvalt
+      end function zzvalt
 
+      !> Parse a time string and return seconds past the J2000 epoch
+      !> on a formal calendar.
+      !>
       !>## Detailed Input
       !>
       !>     STRING   is an input time string, containing a Calendar or Julian
@@ -9619,65 +9788,67 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TPARSE_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TPARSE_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local constants
-      !>        C
-      !>              INTEGER               ERRMLN
-      !>              PARAMETER           ( ERRMLN = 36 )
+      !>C
+      !>C     Local constants
+      !>C
+      !>      INTEGER               ERRMLN
+      !>      PARAMETER           ( ERRMLN = 36 )
       !>
-      !>              INTEGER               DATELN
-      !>              PARAMETER           ( DATELN = 22 )
+      !>      INTEGER               DATELN
+      !>      PARAMETER           ( DATELN = 22 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(DATELN)    DATE   (7)
-      !>              CHARACTER*(ERRMLN)    ERRMSG
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(DATELN)    DATE   (7)
+      !>      CHARACTER*(ERRMLN)    ERRMSG
       !>
-      !>              DOUBLE PRECISION      SP2000
+      !>      DOUBLE PRECISION      SP2000
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Assign an array of calendar dates. Not all of them are
-      !>        C     valid.
-      !>        C
-      !>              DATA                  DATE   / '1986-01-18T12:19:52.18',
-      !>             .                               '17JUN1982 18:28:28',
-      !>             .                               '182-''92/ 12:28:29.182',
-      !>             .                               '''67-271/ 12:28:30.291',
-      !>             .                               '-467-14-25 26:00:75',
-      !>             .                               '1993 FEB 35',
-      !>             .                               '1993 MAR 7' /
+      !>C
+      !>C     Assign an array of calendar dates. Not all of them are
+      !>C     valid.
+      !>C
+      !>      DATA                  DATE   / '1986-01-18T12:19:52.18',
+      !>     .                               '17JUN1982 18:28:28',
+      !>     .                               '182-''92/ 12:28:29.182',
+      !>     .                               '''67-271/ 12:28:30.291',
+      !>     .                               '-467-14-25 26:00:75',
+      !>     .                               '1993 FEB 35',
+      !>     .                               '1993 MAR 7' /
       !>
-      !>        C
-      !>        C     Loop over the DATE array, call TPARSE for each element.
-      !>        C
-      !>              WRITE(*,'(A)') '    Input string        '
-      !>             .            // 'UTC sec past J2000'
-      !>              WRITE(*,'(A)') '----------------------  '
-      !>             .            // '------------------'
+      !>C
+      !>C     Loop over the DATE array, call TPARSE for each element.
+      !>C
+      !>      WRITE(*,'(A)') '    Input string        '
+      !>     .            // 'UTC sec past J2000'
+      !>      WRITE(*,'(A)') '----------------------  '
+      !>     .            // '------------------'
       !>
-      !>              DO I= 1, 7
+      !>      DO I= 1, 7
       !>
-      !>                 CALL TPARSE ( DATE(I), SP2000, ERRMSG )
+      !>         CALL TPARSE ( DATE(I), SP2000, ERRMSG )
       !>
-      !>                 IF ( ERRMSG .EQ. ' ' ) THEN
+      !>         IF ( ERRMSG .EQ. ' ' ) THEN
       !>
-      !>                    WRITE(*,'(A22,2X,F18.6)') DATE(I), SP2000
+      !>            WRITE(*,'(A22,2X,F18.6)') DATE(I), SP2000
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,'(A22,2X,A)') DATE(I), ERRMSG
+      !>            WRITE(*,'(A22,2X,A)') DATE(I), ERRMSG
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a PC/Linux/gfortran/64-bit
       !>        platform, the output was:
@@ -9910,11 +10081,15 @@ contains
       !>        default values to be assigned to tokens missing from the
       !>        middle of a UTC string, consecutive delimiters such as
       !>        // or :: must be included.
-      module procedure tparse
+      module subroutine tparse ( ctx, string, sp2000, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       use pepper_strings, only: repmc_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! Input time string, UTC.
+      real(wp), intent(out) :: sp2000  !! Equivalent UTC seconds past J2000.
+      character(*), intent(out) :: errmsg  !! Descriptive error message.
 
 !
 !     Parameters
@@ -10099,21 +10274,23 @@ contains
 
       return
 
-      end procedure tparse
+      end subroutine tparse
 
-      !>## Abstract
+      !> PEPPER: initializes the pool state PS (SPICELIB passed the arrays).
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> This routine initializes the data structures needed for
+      !> maintaining the kernel pool and initializes the hash function
+      !> used for the name list in the kernel pool.
       !>
-      !>     This routine initializes the data structures needed for
-      !>     maintaining the kernel pool and initializes the hash function
-      !>     used for the name list in the kernel pool.
-      module procedure zzpini
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
+      module subroutine zzpini ( ctx, ps )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      type(pool_state), intent(inout) :: ps  !! the kernel pool
       integer(ip), parameter :: shrtln = 9
       character(shrtln), parameter :: dat = 'begindata'
       character(shrtln), parameter :: txt = 'begintext'
@@ -10127,16 +10304,16 @@ contains
       ps%begtxt = char(bslash) // txt
       call zzctrsin ( ctx, ps%subctr )
       if ( .not. ctx%failed() ) ps%first = .false.
-      end procedure zzpini
+      end subroutine zzpini
 
-      !>## Abstract
+      !> PEPPER: stores into the pool state PS (SPICELIB passed the arrays).
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Read the next variable from a SPICE ASCII kernel file into
+      !> the kernel pool.
       !>
-      !>     Read the next variable from a SPICE ASCII kernel file into
-      !>     the kernel pool.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -10287,59 +10464,20 @@ contains
       !>        line number on which the error occurred.
       !>
       !>-    SPICELIB Version 1.0.0, 20-SEP-1995 (WLT)
-      module procedure zzrvar
+      module subroutine zzrvar ( ctx, ps, varnam, eof )
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_strings, only: lastpc, nparsd, rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      type(pool_state), intent(inout) :: ps  !! the kernel pool
+      character(:), allocatable, intent(out) :: varnam  !! name of variable parsed.
+      logical, intent(out) :: eof  !! if TRUE end of input file has been reached.
 
 
 
 !     The size of the kernel pool's hash table (MAXVAR in POOL).
 !
-
-!
-!     Local parameters.
-!
-!     Below are a collection of enumerated lists that are used
-!     to discern what part of the processing we are in and what
-!     kind of entity we are dealing with.  First the overall
-!     processing flow of a variable assignment.
-!
-
-
-
-
-!
-!     Next we have the various types of tokens that can be found
-!     in the parsing of an input line
-!
-!     Q   --- quoted (or protected tokens)
-!     NQ  --- unquoted tokens
-!     BV  --- beginning of a vector
-!     EV  --- ending of a vector
-!     EQ  --- equal sign
-!     EQP --- equal sign plus
-!
-
-
-
-
-
-
-!
-!     A variable can have one of three types as we process
-!     it.  It can have an unknown type UNKNWN, STRTYP or NUMTYP.
-!
-
-
-
-
-!
-!     The next two parameters indicate which component of a linked
-!     list node point to the previous node and the next node.
-!
-
 
 !
 !     The next collection of variables are set up in first pass
@@ -11157,15 +11295,15 @@ contains
          allocate ( character(n) :: kernel )
          call rdklin ( ctx, kernel, line )
       end subroutine kernel_location
-      end procedure zzrvar
+      end subroutine zzrvar
 
-      !>## Abstract
+      !> PEPPER: stores into the pool state PS (SPICELIB passed the arrays).
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Read the next variable from a text buffer into the kernel pool.
       !>
-      !>     Read the next variable from a text buffer into the kernel pool.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -11297,59 +11435,23 @@ contains
       !>        names read from BUFFER.
       !>
       !>-    SPICELIB Version 1.0.0, 29-MAR-1999 (WLT)
-      module procedure zzrvbf
+      module subroutine zzrvbf ( ctx, buffer, bsize, linnum, ps, varnam, eof )
       use pepper_kinds, only: ip, wp
       use pepper_hash, only: name_hash
       use pepper_strings, only: lastpc, nparsd, rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: buffer     (  * )  !! Array of text to be read and parsed.
+      integer(ip), intent(in) :: bsize  !! Number of lines in text buffer.
+      integer(ip), intent(inout) :: linnum  !! line number to begin reading buffer
+      type(pool_state), intent(inout) :: ps  !! the kernel pool
+      character(:), allocatable, intent(out) :: varnam  !! name of variable parsed
+      logical, intent(out) :: eof  !! if TRUE end of input file has been reached.
 
 
 
 !     The size of the kernel pool's hash table (MAXVAR in POOL).
 !
-
-!
-!     Local parameters.
-!
-!     Below are a collection of enumerated lists that are used
-!     to discern what part of the processing we are in and what
-!     kind of entity we are dealing with.  First the overall
-!     processing flow of a variable assignment.
-!
-
-
-
-
-!
-!     Next we have the various types of tokens that can be found
-!     in the parsing of an input line
-!
-!     Q   --- quoted (or protected tokens)
-!     NQ  --- unquoted tokens
-!     BV  --- beginning of a vector
-!     EV  --- ending of a vector
-!     EQ  --- equal sign
-!     EQP --- equal sign plus
-!
-
-
-
-
-
-
-!
-!     A variable can have one of three types as we process
-!     it.  It can have an unknown type UNKNWN, STRTYP or NUMTYP.
-!
-
-
-
-
-!
-!     The next two parameters indicate which component of a linked
-!     list node point to the previous node and the next node.
-!
-
 
 !
 !     The next collection of variables are set up in first pass
@@ -12097,8 +12199,11 @@ contains
 !
 
       return
-      end procedure zzrvbf
+      end subroutine zzrvbf
 
+      !> Remove all kernel variables from the kernel pool. Watches
+      !> on kernel variables are retained.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -12155,66 +12260,68 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CLPOOL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CLPOOL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      DVALS ( 1 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      DVALS ( 1 )
       !>
-      !>              INTEGER               N
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Place a value into the kernel pool. Recall the routines
-      !>        C     for direct insertion of pool assignments have arrays for
-      !>        C     input.
-      !>        C
-      !>              DVALS( 1 ) = -666.D0
-      !>              CALL PDPOOL ( 'TEST_VAR', 1, DVALS )
+      !>C
+      !>C     Place a value into the kernel pool. Recall the routines
+      !>C     for direct insertion of pool assignments have arrays for
+      !>C     input.
+      !>C
+      !>      DVALS( 1 ) = -666.D0
+      !>      CALL PDPOOL ( 'TEST_VAR', 1, DVALS )
       !>
-      !>        C
-      !>        C     Check for the variable assignment to TEST_VAR.
-      !>        C
-      !>              CALL GDPOOL ( 'TEST_VAR', 1, 1, N, DVALS, FOUND )
+      !>C
+      !>C     Check for the variable assignment to TEST_VAR.
+      !>C
+      !>      CALL GDPOOL ( 'TEST_VAR', 1, 1, N, DVALS, FOUND )
       !>
-      !>              WRITE(*,'(A)') 'First call to GDPOOL:'
+      !>      WRITE(*,'(A)') 'First call to GDPOOL:'
       !>
-      !>              IF ( FOUND ) THEN
+      !>      IF ( FOUND ) THEN
       !>
-      !>                 WRITE(*,'(A,F8.2)') '   TEST_VAR value:', DVALS(1)
+      !>         WRITE(*,'(A,F8.2)') '   TEST_VAR value:', DVALS(1)
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,'(A)') '   TEST_VAR not in kernel pool.'
+      !>         WRITE(*,'(A)') '   TEST_VAR not in kernel pool.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Now clear the kernel pool.
-      !>        C
-      !>              CALL CLPOOL ()
+      !>C
+      !>C     Now clear the kernel pool.
+      !>C
+      !>      CALL CLPOOL ()
       !>
-      !>        C
-      !>        C     Again, check for the TEST_VAR assignment.
-      !>        C
-      !>              CALL GDPOOL ( 'TEST_VAR', 1, 1, N, DVALS, FOUND )
+      !>C
+      !>C     Again, check for the TEST_VAR assignment.
+      !>C
+      !>      CALL GDPOOL ( 'TEST_VAR', 1, 1, N, DVALS, FOUND )
       !>
-      !>              WRITE(*,'(A)') 'Second call to GDPOOL:'
+      !>      WRITE(*,'(A)') 'Second call to GDPOOL:'
       !>
-      !>              IF ( FOUND ) THEN
+      !>      IF ( FOUND ) THEN
       !>
-      !>                 WRITE(*,'(A,F6.2)') '   TEST_VAR value:', DVALS(1)
+      !>         WRITE(*,'(A,F6.2)') '   TEST_VAR value:', DVALS(1)
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,'(A)') '   TEST_VAR not in kernel pool.'
+      !>         WRITE(*,'(A)') '   TEST_VAR not in kernel pool.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -12367,18 +12474,20 @@ contains
       !>        pool if it has not been done yet.
       !>
       !>-    SPICELIB Version 1.0.0, 8-JAN-1989 (IMU)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure clpool
+      module subroutine clpool ( ctx )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
 !
 !     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
 !
       associate ( ps => ctx%spice%pool )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
       call zzctrinc ( ctx, ps%subctr )
@@ -12391,8 +12500,16 @@ contains
 !     pool.
 !
       call write_provided_frames ( ctx )
-      end procedure clpool
+      end subroutine clpool
 
+      !> Load the variables contained in a NAIF ASCII kernel file into the
+      !> kernel pool. Lines have at most 132 characters; a longer line is
+      !> cut without an error (see Restrictions).
+      !>
+      !> PEPPER: a file named `*.json` (in any case) is a JSON kernel (see
+      !> [[pepper_json]]), loaded atomically: on an error nothing in it is
+      !> loaded.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of the text kernel file whose variables will
@@ -12444,74 +12561,76 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM LDPOOL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM LDPOOL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               RTRIM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               RTRIM
       !>
-      !>        C
-      !>        C     Local constants
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 256 )
+      !>C
+      !>C     Local constants
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 256 )
       !>
-      !>              INTEGER               KVNMLN
-      !>              PARAMETER           ( KVNMLN = 33 )
+      !>      INTEGER               KVNMLN
+      !>      PARAMETER           ( KVNMLN = 33 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    FNAME
-      !>              CHARACTER*(KVNMLN)    VARNAM
-      !>              CHARACTER*(1)         VTYPE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    FNAME
+      !>      CHARACTER*(KVNMLN)    VARNAM
+      !>      CHARACTER*(1)         VTYPE
       !>
-      !>              INTEGER               N
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the name of a text-kernel file.
-      !>        C
-      !>              CALL PROMPT ( 'Enter text-kernel name        > ', FNAME )
+      !>C
+      !>C     Prompt for the name of a text-kernel file.
+      !>C
+      !>      CALL PROMPT ( 'Enter text-kernel name        > ', FNAME )
       !>
-      !>        C
-      !>        C     Load the kernel. The same operation could be done using
-      !>        C     a FURNSH call.
-      !>        C
-      !>              CALL LDPOOL ( FNAME )
+      !>C
+      !>C     Load the kernel. The same operation could be done using
+      !>C     a FURNSH call.
+      !>C
+      !>      CALL LDPOOL ( FNAME )
       !>
-      !>              CALL PROMPT ( 'Enter name of kernel variable > ',
-      !>             .               VARNAM )
+      !>      CALL PROMPT ( 'Enter name of kernel variable > ',
+      !>     .               VARNAM )
       !>
-      !>              CALL DTPOOL ( VARNAM, FOUND, N, VTYPE )
+      !>      CALL DTPOOL ( VARNAM, FOUND, N, VTYPE )
       !>
-      !>              IF ( FOUND ) THEN
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) 'Properties of variable ',
-      !>             .               VARNAM(:RTRIM(VARNAM)), ':'
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) '   Size:   ', N
+      !>      IF ( FOUND ) THEN
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) 'Properties of variable ',
+      !>     .               VARNAM(:RTRIM(VARNAM)), ':'
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) '   Size:   ', N
       !>
-      !>                 IF ( VTYPE .EQ. 'C' ) THEN
+      !>         IF ( VTYPE .EQ. 'C' ) THEN
       !>
-      !>                    WRITE(*,*) '   Type:   Character'
+      !>            WRITE(*,*) '   Type:   Character'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) '   Type:   Numeric'
-      !>                 END IF
+      !>            WRITE(*,*) '   Type:   Numeric'
+      !>         END IF
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) VARNAM,
-      !>             .              ' is not present in the kernel pool.'
+      !>         WRITE(*,*) VARNAM,
+      !>     .              ' is not present in the kernel pool.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the PCK file gm_de431.tpc to ask for the
@@ -12745,12 +12864,12 @@ contains
       !>        Declaration of unused function FAILED removed.
       !>
       !>-    SPICELIB Version 1.0.0, 8-JAN-1989 (IMU)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure ldpool
+      module subroutine ldpool ( ctx, fname )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of the text kernel file.
       character(:), allocatable :: varnam
       logical :: eof
 !
@@ -12759,6 +12878,9 @@ contains
 !     and linked lists, and their limits, are gone.
 !
       associate ( ps => ctx%spice%pool )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
       call zzctrinc ( ctx, ps%subctr )
@@ -12779,14 +12901,17 @@ contains
          call cltext ( ctx,  fname  )
       end if
       end associate
-      end procedure ldpool
+      end subroutine ldpool
 
       !> Load an in-memory text or JSON kernel string into the kernel pool
       !> without touching the filesystem (PEPPER).
-      module procedure ldpool_text
+      module subroutine ldpool_text ( ctx, fname, text )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Virtual name of the text or JSON kernel.
+      character(*), intent(in) :: text  !! Kernel contents.
       integer(ip), parameter :: pool_linlen = 132
       character(pool_linlen) :: line
       character(pool_linlen), allocatable :: cvals(:)
@@ -12846,15 +12971,13 @@ contains
       ctx%spice%pool%setter = trim ( fname )
       call lmpool ( ctx, cvals, nlines )
       if ( allocated ( ctx%spice%pool%setter ) ) deallocate ( ctx%spice%pool%setter )
-      end procedure ldpool_text
+      end subroutine ldpool_text
 
-      !>## Abstract
+      !> Return the value of a kernel variable from the kernel pool.
       !>
-      !>     Return the value of a kernel variable from the kernel pool.
-      !>
-      !>     This routine is maintained only for backward compatibility.
-      !>     It should be regarded as obsolete. Use one of the entry points
-      !>     GDPOOL, GIPOOL or GCPOOL in its place.
+      !> This routine is maintained only for backward compatibility.
+      !> It should be regarded as obsolete. Use one of the entry points
+      !> GDPOOL, GIPOOL or GCPOOL in its place.
       !>
       !>## Detailed Input
       !>
@@ -13019,12 +13142,15 @@ contains
       !>        pool if it has not been done yet.
       !>
       !>-    SPICELIB Version 1.0.0, 08-JAN-1989 (IMU)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure rtpool
+      module subroutine rtpool ( ctx, name, n, values, found )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Name of the variable whose value is to be returned.
+      integer(ip), intent(out) :: n  !! Number of values associated with NAME.
+      real(wp), intent(out) :: values    ( * )  !! Values associated with NAME.
+      logical, intent(out) :: found  !! .TRUE. if variable is in pool.
       integer(ip) :: i
 !
 !     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
@@ -13032,6 +13158,9 @@ contains
 !     and linked lists, and their limits, are gone.
 !
       associate ( ps => ctx%spice%pool )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
       i     = ps%find ( name )
@@ -13042,8 +13171,11 @@ contains
       n     = ps%vars(i)%n
       values(1:n) = ps%vars(i)%dvals(1:n)
       end associate
-      end procedure rtpool
+      end subroutine rtpool
 
+      !> Confirm the existence of a numeric kernel variable in the kernel
+      !> pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the numeric kernel variable whose
@@ -13112,68 +13244,70 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM EXPOOL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM EXPOOL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         IKNAME
-      !>              PARAMETER           ( IKNAME = 'expool_ex1.ti' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         IKNAME
+      !>      PARAMETER           ( IKNAME = 'expool_ex1.ti' )
       !>
-      !>              INTEGER               KPVNLN
-      !>              PARAMETER           ( KPVNLN = 32 )
+      !>      INTEGER               KPVNLN
+      !>      PARAMETER           ( KPVNLN = 32 )
       !>
-      !>              INTEGER               NKPVNM
-      !>              PARAMETER           ( NKPVNM = 3  )
+      !>      INTEGER               NKPVNM
+      !>      PARAMETER           ( NKPVNM = 3  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(KPVNLN)    KEYWRD ( NKPVNM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(KPVNLN)    KEYWRD ( NKPVNM )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Define the variable names
-      !>        C
-      !>              DATA                  KEYWRD   /
-      !>             .                             'INS-999001_FREQ_RGB',
-      !>             .                             'NOT_IN_THE_POOL',
-      !>             .                             'INS-999001_FREQ_UNITS' /
+      !>C
+      !>C     Define the variable names
+      !>C
+      !>      DATA                  KEYWRD   /
+      !>     .                             'INS-999001_FREQ_RGB',
+      !>     .                             'NOT_IN_THE_POOL',
+      !>     .                             'INS-999001_FREQ_UNITS' /
       !>
-      !>        C
-      !>        C     Load the instrument kernel.
-      !>        C
-      !>              CALL FURNSH ( IKNAME )
+      !>C
+      !>C     Load the instrument kernel.
+      !>C
+      !>      CALL FURNSH ( IKNAME )
       !>
-      !>              DO I = 1, NKPVNM
+      !>      DO I = 1, NKPVNM
       !>
-      !>        C
-      !>        C        Check if the variable is numeric and present
-      !>        C        in the kernel pool.
-      !>        C
-      !>                 CALL EXPOOL ( KEYWRD(I), FOUND )
+      !>C
+      !>C        Check if the variable is numeric and present
+      !>C        in the kernel pool.
+      !>C
+      !>         CALL EXPOOL ( KEYWRD(I), FOUND )
       !>
-      !>                 WRITE(*,*) 'Variable name: ', KEYWRD(I)
+      !>         WRITE(*,*) 'Variable name: ', KEYWRD(I)
       !>
-      !>                 IF ( FOUND ) THEN
+      !>         IF ( FOUND ) THEN
       !>
-      !>                    WRITE(*,*) '   It is numeric and exists in the '
-      !>             .              // 'kernel pool.'
+      !>            WRITE(*,*) '   It is numeric and exists in the '
+      !>     .              // 'kernel pool.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) '   Either it is not numeric or it is '
-      !>             .              // 'not in the kernel pool.'
+      !>            WRITE(*,*) '   Either it is not numeric or it is '
+      !>     .              // 'not in the kernel pool.'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -13309,12 +13443,13 @@ contains
       !>
       !>        All entry points except POOL and CLPOOL now initialize the
       !>        pool if it has not been done yet.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure expool
+      module subroutine expool ( ctx, name, found )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Name of a numeric kernel variable.
+      logical, intent(out) :: found  !! .TRUE. when the variable is in the pool.
       integer(ip) :: i
 !
 !     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
@@ -13322,14 +13457,22 @@ contains
 !     and linked lists, and their limits, are gone.
 !
       associate ( ps => ctx%spice%pool )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
       i     = ps%find ( name )
       found = .false.
       if ( i > 0 ) found = ps%vars(i)%kind == pool_numeric
       end associate
-      end procedure expool
+      end subroutine expool
 
+      !> Write to a specified unit a set of "keyword = value" assignments
+      !> for all currently defined kernel variables. The assignments
+      !> constitute a text kernel from which the current state of the
+      !> kernel pool can be restored.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the logical unit to which the variables in the pool
@@ -13579,12 +13722,13 @@ contains
       !>        now been made an explicit---and changeable---limit.)
       !>
       !>        Declaration of unused function FAILED removed.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure wrpool
+      module subroutine wrpool ( ctx, unit )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Logical unit to which the variables in the pool will be
+                                       !! written.
       integer(ip), parameter :: maxlen = 32
       character(1), parameter :: quote = char(39)
       character(2) :: finish
@@ -13602,7 +13746,6 @@ contains
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
 !
-!
 !     The variables are written in the order of their slots (the order
 !     in which they were created). PEPPER: a name is padded to MAXLEN
 !     (32) characters as by SPICELIB, or written whole if longer. A line
@@ -13610,6 +13753,9 @@ contains
 !     read back whole: text kernel lines are limited to 132 characters.
 !
       associate ( ps => ctx%spice%pool )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       write ( unit, '(1X,A)', iostat=iostat ) ps%begdat
       write ( unit, '(1X,A)', iostat=iostat )
@@ -13701,8 +13847,11 @@ contains
                if ( str(j:j) == quote ) out = out // quote
             end do
          end subroutine double_quotes
-      end procedure wrpool
+      end subroutine wrpool
 
+      !> Add a name to the list of agents to notify whenever a member of
+      !> a list of kernel variables is updated.
+      !>
       !>## Detailed Input
       !>
       !>     AGENT    is the name of a routine or entry point (agency) that
@@ -13951,10 +14100,15 @@ contains
       !>        looking at the version number. The best way to determine
       !>        the routine you had previously is to compare the dates
       !>        stored in the Version line of the routine.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure swpool
+      module subroutine swpool ( ctx, agent, nnames, names )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: names     ( * )  !! Variable names whose update causes the
+                                                   !! notice.
+      integer(ip), intent(in) :: nnames  !! The number of variables to associate with AGENT.
+      character(*), intent(in) :: agent  !! The name of an agent to be notified after updates.
+!
+!     Standard SPICE error handling.
 !
 !     PEPPER: each context keeps its own watches,
 !     checked against the instance's log of the pool's changes (see
@@ -13968,8 +14122,11 @@ contains
       call swpool_context ( ctx, agent, nnames, names )
 
       return
-      end procedure swpool
+      end subroutine swpool
 
+      !> Indicate whether or not any watched kernel variables that have a
+      !> specified agent on their notification list have been updated.
+      !>
       !>## Detailed Input
       !>
       !>     AGENT    is the name of a subroutine, entry point, or significant
@@ -14231,10 +14388,13 @@ contains
       !>        looking at the version number. The best way to determine
       !>        the routine you had previously is to compare the dates
       !>        stored in the Version line of the routine.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure cvpool
+      module subroutine cvpool ( ctx, agent, update )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: agent  !! Name of the agent to check for notices.
+      logical, intent(out) :: update  !! .TRUE. if variables for AGENT have been updated.
+!
+!     Standard SPICE error handling.
 !
 !     PEPPER: each context keeps its own watches,
 !     checked against the instance's log of the pool's changes (see
@@ -14248,8 +14408,11 @@ contains
       call cvpool_context ( ctx, agent, update )
 
       return
-      end procedure cvpool
+      end subroutine cvpool
 
+      !> Return the character value of a kernel variable from the
+      !> kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the variable whose values are to be
@@ -14439,10 +14602,17 @@ contains
       !>
       !>        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
       !>        to the routine.
-      module procedure gcpool
+      module subroutine gcpool ( ctx, name, start, room, n, cvals, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Name of the variable whose value is to be returned.
+      integer(ip), intent(out) :: n  !! Number of values returned for NAME.
+      logical, intent(out) :: found  !! .TRUE. if variable is in pool.
+      integer(ip), intent(in) :: start  !! Which component to start retrieving for NAME
+      integer(ip), intent(in) :: room  !! The largest number of values to return.
+      character(*), intent(out) :: cvals     ( * )  !! Values associated with NAME.
       integer(ip) :: i
       integer(ip) :: k
 !
@@ -14480,13 +14650,19 @@ contains
          if ( n == room ) exit
       end do
       end associate
-      end procedure gcpool
+      end subroutine gcpool
 
       !> Return one string value of a character kernel variable, of any
-      !> length (PEPPER).
-      module procedure pool_string
+      !> length (PEPPER; [[gcpool]] truncates to the length of its output).
+      module subroutine pool_string ( ctx, name, nth, value, found, n )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! the name of the variable
+      integer(ip), intent(in) :: nth  !! the index of the value
+      character(:), allocatable, intent(out) :: value  !! the value (empty if not found)
+      logical, intent(out) :: found  !! the variable is a character variable with an NTH value
+      integer(ip), intent(out), optional :: n  !! the number of values of the variable (0 if it is not a character variable)
       integer(ip) :: i
       value = ''
       found = .false.
@@ -14502,15 +14678,19 @@ contains
       value = ps%vars(i)%cvals(nth)%s
       found = .true.
       end associate
-      end procedure pool_string
+      end subroutine pool_string
 
-      !> The names of the kernel variables that match a template, of any
-      !> length (PEPPER).
-      module procedure pool_names
+      !> The names of the kernel variables that match a template (wildcards
+      !> * and %, case-insensitive, as [[gnpool]]), of any length, in the order
+      !> of [[gnpool]] (PEPPER).
+      module subroutine pool_names ( ctx, template, names )
       use pepper_kinds, only: ip
       use pepper_containers, only: grow
       use pepper_strings, only: matchi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: template  !! the template
+      type(string), allocatable, intent(out) :: names(:)  !! the matching names
       integer(ip) :: k
       integer(ip) :: n
       allocate ( names(0) )
@@ -14528,12 +14708,17 @@ contains
       end do
       names = names(1:n)
       end associate
-      end procedure pool_names
+      end subroutine pool_names
 
-      !> All the values of a numeric kernel variable (PEPPER).
-      module procedure pool_values
+      !> All the values of a numeric kernel variable (PEPPER; [[gdpool]] with
+      !> the size taken from the pool).
+      module subroutine pool_values ( ctx, name, values, found )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! the name of the variable
+      real(wp), allocatable, intent(out) :: values(:)  !! its values (size 0 if not found)
+      logical, intent(out) :: found  !! the variable is in the pool and numeric
       integer(ip) :: i
       found = .false.
       associate ( ps => ctx%spice%pool )
@@ -14552,14 +14737,20 @@ contains
          found  = .true.
       end if
       end associate
-      end procedure pool_values
+      end subroutine pool_values
 
       !> All the values of a numeric kernel variable, rounded to integers
-      !> (PEPPER).
-      module procedure pool_integers
+      !> (PEPPER; [[gipool]] with the size taken from the pool).
+      !>
+      !> A value outside the range of integers signals SPICE(INTOUTOFRANGE).
+      module subroutine pool_integers ( ctx, name, values, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax, intmin
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! the name of the variable
+      integer(ip), allocatable, intent(out) :: values(:)  !! its values (size 0 if not found)
+      logical, intent(out) :: found  !! the variable is in the pool and numeric
       integer(ip) :: i
       integer(ip) :: k
       found = .false.
@@ -14598,13 +14789,17 @@ contains
       end do
       found = .true.
       end associate
-      end procedure pool_integers
+      end subroutine pool_integers
 
       !> All the values of a character kernel variable, each of any length
-      !> (PEPPER).
-      module procedure pool_strings
+      !> (PEPPER; [[gcpool]] with the size taken from the pool).
+      module subroutine pool_strings ( ctx, name, values, found )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! the name of the variable
+      type(string), allocatable, intent(out) :: values(:)  !! its values (size 0 if not found)
+      logical, intent(out) :: found  !! the variable is in the pool and of character type
       integer(ip) :: i
       integer(ip) :: k
       found = .false.
@@ -14627,12 +14822,29 @@ contains
          found = .true.
       end if
       end associate
-      end procedure pool_strings
+      end subroutine pool_strings
 
-      !> Where the values of a kernel variable came from (PEPPER).
-      module procedure pool_sources
+      !> Where the values of a kernel variable came from (PEPPER): the
+      !> assignments in effect, in order, with the source of each, the line
+      !> where it begins, and the index of its first value. An `=` assignment
+      !> replaces the values, so it is the first one; each `+=` (or `"+NAME"`
+      !> of a JSON kernel) that followed adds one.
+      !>
+      !> The source is the kernel file, named as it was loaded (with
+      !> [[spice_furnsh]], or listed in a meta-kernel), or a tag for the values
+      !> set by a program: `(PCPOOL)`, `(PDPOOL)`, `(PIPOOL)`, `(LMPOOL)` (its
+      !> line is the line of the buffer), `(add_frame)` (the definition of a
+      !> programmatic frame, [[spice_add_frame]]). [[pool_defined_by]] is the
+      !> reverse.
+      module subroutine pool_sources ( ctx, name, sources, lines, found, first )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! the name of the variable
+      type(string), allocatable, intent(out) :: sources(:)  !! the source of each assignment (size 0 if not found)
+      integer(ip), allocatable, intent(out) :: lines(:)  !! the line where each begins (0 for PCPOOL, PDPOOL, PIPOOL, add_frame)
+      logical, intent(out) :: found  !! the variable is in the pool
+      integer(ip), allocatable, intent(out), optional :: first(:)  !! the index of the first value each gave
       integer(ip) :: i
       integer(ip) :: k
       integer(ip) :: n
@@ -14657,13 +14869,19 @@ contains
          end associate
       end do
       end associate
-      end procedure pool_sources
+      end subroutine pool_sources
 
-      !> The kernel variables that a source assigned (PEPPER).
-      module procedure pool_defined_by
+      !> The kernel variables that a source assigned (PEPPER; the reverse of
+      !> [[pool_sources]]): the variables with an assignment in effect from
+      !> it, in the order of [[gnpool]]. A variable that a later `=` from
+      !> another source replaced is not among them.
+      module subroutine pool_defined_by ( ctx, source, names )
       use pepper_kinds, only: ip
       use pepper_containers, only: grow
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: source  !! the kernel file, named as it was loaded, or a tag such as (PDPOOL)
+      type(string), allocatable, intent(out) :: names(:)  !! the variables it assigned
       integer(ip) :: id
       integer(ip) :: k
       integer(ip) :: n
@@ -14686,12 +14904,20 @@ contains
       end do
       names = names(1:n)
       end associate
-      end procedure pool_defined_by
+      end subroutine pool_defined_by
 
-      !> Write the kernel pool as a JSON kernel (PEPPER).
-      module procedure pool_write_json
+      !> Write the kernel pool as a JSON kernel (PEPPER; the JSON counterpart
+      !> of [[wrpool]]): one `"NAME": value` per variable, in the order of
+      !> [[gnpool]], each with a `//` comment naming its sources and lines
+      !> ([[pool_sources]]). Loading the file ([[spice_furnsh]], as a `*.json`
+      !> kernel) gives the same variables and values: the numbers are written
+      !> with as many digits as they need to read back exactly (integers
+      !> without a fraction), and times as the numbers they became.
+      module subroutine pool_write_json ( ctx, unit )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! the unit of the file: open for formatted sequential writing
       integer(ip), parameter :: wrap = 100  !! longest line of values before an array is written on several lines
       character(:), allocatable :: line
       character(:), allocatable :: comment
@@ -14872,8 +15098,10 @@ contains
          write ( buffer, '(i0)' ) n
          text = text // label // trim ( buffer )
       end subroutine append_integer
-      end procedure pool_write_json
+      end subroutine pool_write_json
 
+      !> Return the d.p. value of a kernel variable from the kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the variable whose values are to be
@@ -15055,10 +15283,17 @@ contains
       !>
       !>        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
       !>        to the routine.
-      module procedure gdpool
+      module subroutine gdpool ( ctx, name, start, room, n, values, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Name of the variable whose value is to be returned.
+      integer(ip), intent(out) :: n  !! Number of values returned for NAME.
+      real(wp), intent(out) :: values    ( * )  !! Values associated with NAME.
+      logical, intent(out) :: found  !! .TRUE. if variable is in pool.
+      integer(ip), intent(in) :: start  !! Which component to start retrieving for NAME
+      integer(ip), intent(in) :: room  !! The largest number of values to return.
       integer(ip) :: i
       integer(ip) :: k
 !
@@ -15096,8 +15331,11 @@ contains
          if ( n == room ) exit
       end do
       end associate
-      end procedure gdpool
+      end subroutine gdpool
 
+      !> Return the integer value of a kernel variable from the
+      !> kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the variable whose values are to be
@@ -15285,11 +15523,18 @@ contains
       !>
       !>        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
       !>        to the routine.
-      module procedure gipool
+      module subroutine gipool ( ctx, name, start, room, n, ivals, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax, intmin
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Name of the variable whose value is to be returned.
+      integer(ip), intent(out) :: n  !! Number of values returned for NAME.
+      logical, intent(out) :: found  !! .TRUE. if variable is in pool.
+      integer(ip), intent(in) :: start  !! Which component to start retrieving for NAME
+      integer(ip), intent(in) :: room  !! The largest number of values to return.
+      integer(ip), intent(out) :: ivals     ( * )  !! Values associated with NAME.
       integer(ip) :: i
       integer(ip) :: k
 !
@@ -15340,8 +15585,10 @@ contains
          if ( n == room ) exit
       end do
       end associate
-      end procedure gipool
+      end subroutine gipool
 
+      !> Return the data about a kernel pool variable.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the variable whose values are to be
@@ -15398,73 +15645,75 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DTPOOL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DTPOOL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               RTRIM
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               RTRIM
       !>
-      !>        C
-      !>        C     Local constants
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 256 )
+      !>C
+      !>C     Local constants
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 256 )
       !>
-      !>              INTEGER               KVNMLN
-      !>              PARAMETER           ( KVNMLN = 33 )
+      !>      INTEGER               KVNMLN
+      !>      PARAMETER           ( KVNMLN = 33 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    FNAME
-      !>              CHARACTER*(KVNMLN)    VARNAM
-      !>              CHARACTER*(1)         VTYPE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    FNAME
+      !>      CHARACTER*(KVNMLN)    VARNAM
+      !>      CHARACTER*(1)         VTYPE
       !>
-      !>              INTEGER               N
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the name of a text-kernel file.
-      !>        C
-      !>              CALL PROMPT ( 'Enter text-kernel name        > ', FNAME )
+      !>C
+      !>C     Prompt for the name of a text-kernel file.
+      !>C
+      !>      CALL PROMPT ( 'Enter text-kernel name        > ', FNAME )
       !>
-      !>        C
-      !>        C     Load the kernel.
-      !>        C
-      !>              CALL FURNSH ( FNAME )
+      !>C
+      !>C     Load the kernel.
+      !>C
+      !>      CALL FURNSH ( FNAME )
       !>
-      !>              CALL PROMPT ( 'Enter name of kernel variable > ',
-      !>             .               VARNAM )
+      !>      CALL PROMPT ( 'Enter name of kernel variable > ',
+      !>     .               VARNAM )
       !>
-      !>              CALL DTPOOL ( VARNAM, FOUND, N, VTYPE )
+      !>      CALL DTPOOL ( VARNAM, FOUND, N, VTYPE )
       !>
-      !>              IF ( FOUND ) THEN
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) 'Properties of variable ',
-      !>             .               VARNAM(:RTRIM(VARNAM)), ':'
-      !>                 WRITE(*,*) ' '
-      !>                 WRITE(*,*) '   Size:   ', N
+      !>      IF ( FOUND ) THEN
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) 'Properties of variable ',
+      !>     .               VARNAM(:RTRIM(VARNAM)), ':'
+      !>         WRITE(*,*) ' '
+      !>         WRITE(*,*) '   Size:   ', N
       !>
-      !>                 IF ( VTYPE .EQ. 'C' ) THEN
+      !>         IF ( VTYPE .EQ. 'C' ) THEN
       !>
-      !>                    WRITE(*,*) '   Type:   Character'
+      !>            WRITE(*,*) '   Type:   Character'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) '   Type:   Numeric'
-      !>                 END IF
+      !>            WRITE(*,*) '   Type:   Numeric'
+      !>         END IF
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) VARNAM,
-      !>             .              ' is not present in the kernel pool.'
+      !>         WRITE(*,*) VARNAM,
+      !>     .              ' is not present in the kernel pool.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the FK file named cas_v40.tf to ask for the
@@ -15537,10 +15786,15 @@ contains
       !>
       !>        The entry points GCPOOL, GDPOOL, GIPOOL and DTPOOL were added
       !>        to the routine.
-      module procedure dtpool
+      module subroutine dtpool ( ctx, name, found, n, type )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Name of the variable whose value is to be returned.
+      integer(ip), intent(out) :: n  !! Number of values returned for NAME.
+      logical, intent(out) :: found  !! .TRUE. if variable is in pool.
+      character(*), intent(out) :: type  !! Type of the variable 'C', 'N', 'X'
       integer(ip) :: i
 !
 !     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
@@ -15565,8 +15819,11 @@ contains
       found = .true.
       n     = ps%vars(i)%n
       end associate
-      end procedure dtpool
+      end subroutine dtpool
 
+      !> Provide toolkit programmers a method for programmatically
+      !> inserting character data into the kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the kernel pool variable to associate
@@ -15769,17 +16026,21 @@ contains
       !>
       !>        Added the entry point GNPOOL to allow users to determine
       !>        variables that are present in the kernel pool
-      module procedure pcpool
+      module subroutine pcpool ( ctx, name, n, cvals )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! The kernel pool name to associate with CVALS.
+      integer(ip), intent(in) :: n  !! The number of values to insert.
+      character(*), intent(in) :: cvals     ( * )  !! An array of strings to insert into the
+                                                   !! kernel pool.
       integer(ip) :: i
       integer(ip) :: nameat
 !
 !     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
-!
 !
 !     PEPPER: names have any length (SPICELIB signaled SPICE(BADVARNAME)
 !     for more than 32 characters), and there is no limit on the number
@@ -15803,8 +16064,11 @@ contains
       end do
       call pool_changed ( ctx%spice, name )
       end associate
-      end procedure pcpool
+      end subroutine pcpool
 
+      !> Provide toolkit programmers a method for programmatically
+      !> inserting double precision data into the kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the kernel pool variable to associate
@@ -16006,17 +16270,21 @@ contains
       !>
       !>        Added the entry point GNPOOL to allow users to determine
       !>        variables that are present in the kernel pool
-      module procedure pdpool
+      module subroutine pdpool ( ctx, name, n, values )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! The kernel pool name to associate with VALUES.
+      integer(ip), intent(in) :: n  !! The number of values to insert.
+      real(wp), intent(in) :: values    ( * )  !! An array of values to insert into the kernel
+                                               !! pool.
       integer(ip) :: i
       integer(ip) :: nameat
 !
 !     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
-!
 !
 !     PEPPER: names have any length (SPICELIB signaled SPICE(BADVARNAME)
 !     for more than 32 characters), and there is no limit on the number
@@ -16040,8 +16308,11 @@ contains
       end do
       call pool_changed ( ctx%spice, name )
       end associate
-      end procedure pdpool
+      end subroutine pdpool
 
+      !> Provide toolkit programmers a method for programmatically
+      !> inserting integer data into the kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the kernel pool variable to associate
@@ -16243,17 +16514,21 @@ contains
       !>
       !>        Added the entry point GNPOOL to allow users to determine
       !>        variables that are present in the kernel pool
-      module procedure pipool
+      module subroutine pipool ( ctx, name, n, ivals )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! The kernel pool name to associate with IVALS.
+      integer(ip), intent(in) :: n  !! The number of values to insert.
+      integer(ip), intent(in) :: ivals     ( * )  !! An array of integers to insert into the
+                                                  !! pool.
       integer(ip) :: i
       integer(ip) :: nameat
 !
 !     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
-!
 !
 !     PEPPER: names have any length (SPICELIB signaled SPICE(BADVARNAME)
 !     for more than 32 characters), and there is no limit on the number
@@ -16277,8 +16552,11 @@ contains
       end do
       call pool_changed ( ctx%spice, name )
       end associate
-      end procedure pipool
+      end subroutine pipool
 
+      !> Load the variables contained in an internal buffer into the
+      !> kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     CVALS    is an array that contains lines of text that
@@ -16420,10 +16698,13 @@ contains
       !>
       !>        Added the entry point GNPOOL to allow users to determine
       !>        variables that are present in the kernel pool
-      module procedure lmpool
+      module subroutine lmpool ( ctx, cvals, n )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! The number of entries in CVALS.
+      character(*), intent(in) :: cvals     ( * )  !! An array that contains a SPICE text kernel
       character(:), allocatable :: varnam
       integer(ip) :: linnum
       logical :: eof
@@ -16445,8 +16726,10 @@ contains
          call zzrvbf ( ctx, cvals, n, linnum, ps, varnam, eof )
       end do
       end associate
-      end procedure lmpool
+      end subroutine lmpool
 
+      !> Return the kernel pool size limitations.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of a kernel pool size parameter.
@@ -16561,10 +16844,14 @@ contains
       !>
       !>        Added the entry point GNPOOL to allow users to determine
       !>        variables that are present in the kernel pool
-      module procedure szpool
+      module subroutine szpool ( ctx, name, n, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Name of the parameter to be returned.
+      integer(ip), intent(out) :: n  !! Value of parameter specified by NAME.
+      logical, intent(out) :: found  !! .TRUE. if NAME is recognized.
 !
 !     PEPPER: the pool has none of these limits (variables, values,
 !     string values and their length, name length, agents, notices):
@@ -16581,8 +16868,10 @@ contains
          n     = 0
          found = .false.
       end if
-      end procedure szpool
+      end subroutine szpool
 
+      !> Delete a variable from the kernel pool.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the kernel pool variable to delete.
@@ -16707,12 +16996,12 @@ contains
       !>
       !>        Corrected an in-line comment relating to finding the
       !>        head node of the conflict resolution list for NAME.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dvpool
+      module subroutine dvpool ( ctx, name )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Name of the variable to be deleted.
       integer(ip) :: i
 !
 !     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
@@ -16720,6 +17009,9 @@ contains
 !     and linked lists, and their limits, are gone.
 !
       associate ( ps => ctx%spice%pool )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
       if ( ps%first ) call zzpini ( ctx, ps )
       call zzctrinc ( ctx, ps%subctr )
@@ -16728,8 +17020,10 @@ contains
       call ps%remove ( i )
       call pool_changed ( ctx%spice, name )
       end associate
-      end procedure dvpool
+      end subroutine dvpool
 
+      !> Return names of kernel variables matching a specified template.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is a MATCHI template which will be used when searching
@@ -16919,18 +17213,25 @@ contains
       !>
       !>        Added the entry point GNPOOL to allow users to determine
       !>        variables that are present in the kernel pool
-      module procedure gnpool
+      module subroutine gnpool ( ctx, name, start, room, n, cvals, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: matchi
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Template that names should match.
+      integer(ip), intent(out) :: n  !! Number of values returned for NAME.
+      logical, intent(out) :: found  !! .TRUE. if there is at least one match.
+      integer(ip), intent(in) :: start  !! Index of first matching name to retrieve.
+      integer(ip), intent(in) :: room  !! The largest number of values to return.
+      character(*), intent(out) :: cvals     ( * )  !! Kernel pool variables whose names match
+                                                    !! NAME.
       integer(ip) :: hits
       integer(ip) :: k
 !
 !     PEPPER: the pool is the records of POOL_STATE (pepper_states), with
 !     names and values of any length and number; SPICELIB's hash table
 !     and linked lists, and their limits, are gone.
-!
 !
 !     The variables are searched in the order of their slots (the order
 !     in which they were created; SPICELIB's was the order of its hash
@@ -16968,8 +17269,11 @@ contains
       end do
       found = hits > 0
       end associate
-      end procedure gnpool
+      end subroutine gnpool
 
+      !> Delete a name from the list of agents to notify whenever a member
+      !> of a list of kernel variables is updated.
+      !>
       !>## Detailed Input
       !>
       !>     AGENT    is any agent name that has previously been associated
@@ -17052,8 +17356,10 @@ contains
       !>        of the exception 1).
       !>
       !>-    SPICELIB Version 1.0.0, 19-MAR-2009 (NJB)
-      module procedure dwpool
+      module subroutine dwpool ( ctx, agent )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: agent  !! The name of an agent to be notified after updates.
 !
 !     PEPPER: each context keeps its own watches,
 !     checked against the instance's log of the pool's changes (see
@@ -17067,16 +17373,14 @@ contains
       call dwpool_context ( ctx, agent )
 
       return
-      end procedure dwpool
+      end subroutine dwpool
 
-      !>## Abstract
+      !> Check and update the POOL state counter tracked by a caller
+      !> (user) routine.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Check and update the POOL state counter tracked by a caller
-      !>     (user) routine.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -17202,13 +17506,17 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 27-MAR-2014 (BVS)
-      module procedure zzpctrck
+      module subroutine zzpctrck ( ctx, usrctr, update )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(out) :: update  !! Flag indicating if input counter was updated
+      integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! POOL state counter tracked by the
+                                                          !! caller
       if ( ctx%failed() ) return
       call zzctrchk ( ctx, ctx%spice%pool%subctr, usrctr, update )
-      end procedure zzpctrck
+      end subroutine zzpctrck
 
    !> True if a file is a JSON kernel: its name ends in `.json` (in any
    !> case). PEPPER: no SPICELIB counterpart.

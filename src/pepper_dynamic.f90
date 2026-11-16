@@ -9,9 +9,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_dynamic.f90.
+!> [[pepper_instance_module]]).
 submodule (pepper_instance_module) pepper_dynamic
 
    implicit none
@@ -24,14 +22,12 @@ submodule (pepper_instance_module) pepper_dynamic
 
 contains
 
-      !>## Abstract
+      !> For a specified dynamic frame, find the transformation
+      !> that maps states from the dynamic frame to its base frame.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     For a specified dynamic frame, find the transformation
-      !>     that maps states from the dynamic frame to its base frame.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -311,17 +307,7 @@ contains
       !>        Call to ZZBODVCD was replaced with call to BODVCD.
       !>
       !>-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      module procedure zzdynfrm
+      recursive module subroutine zzdynfrm ( ctx, infram, center, et, xform, basfrm )
 !
 !     PEPPER: the evaluation (dynamic_frame_xform) may need other dynamic frames,
 !     evaluated by nested calls of this routine through FRMCHG, REFCHG,
@@ -332,20 +318,27 @@ contains
 !
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: infram  !! Frame ID code for a SPICE dynamic reference frame.
+      integer(ip), intent(in) :: center  !! ID code for the center of the input frame.
+      real(wp), intent(in) :: et  !! An epoch in seconds past J2000 TDB.
+      real(wp), intent(out) :: xform ( 6, 6 )  !! The requested state transformation matrix.
+      integer(ip), intent(out) :: basfrm  !! Frame ID of base frame associated with INFRAM.
       call enter_dynamic_frame ( ctx, infram )
+!
+!     Initial values
+!
       if ( ctx%failed() ) return
       call dynamic_frame_xform ( ctx, infram, center, et, xform, basfrm )
       ctx%ndynamic = ctx%ndynamic - 1
-      end procedure zzdynfrm
+      end subroutine zzdynfrm
 
-      !>## Abstract
+      !> For a specified dynamic frame, find the rotation that maps
+      !> positions from the dynamic frame to its base frame.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     For a specified dynamic frame, find the rotation that maps
-      !>     positions from the dynamic frame to its base frame.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -606,17 +599,7 @@ contains
       !>        Call to ZZBODVCD was replaced with call to BODVCD.
       !>
       !>-    SPICELIB Version 1.0.0, 10-JAN-2005 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      module procedure zzdynrot
+      recursive module subroutine zzdynrot ( ctx, infram, center, et, rotate, basfrm )
 !
 !     PEPPER: the evaluation (dynamic_frame_rotation) may need other dynamic frames,
 !     evaluated by nested calls of this routine through FRMCHG, REFCHG,
@@ -627,11 +610,20 @@ contains
 !
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: infram  !! Class ID code for a SPICE dynamic reference frame.
+      integer(ip), intent(in) :: center  !! ID code for the center of the input frame.
+      real(wp), intent(in) :: et  !! An epoch in seconds past J2000 TDB.
+      real(wp), intent(out) :: rotate ( 3, 3 )  !! The requested rotation matrix.
+      integer(ip), intent(out) :: basfrm  !! Frame ID of base frame associated with INFRAM.
       call enter_dynamic_frame ( ctx, infram )
+!
+!     Initial values
+!
       if ( ctx%failed() ) return
       call dynamic_frame_rotation ( ctx, infram, center, et, rotate, basfrm )
       ctx%ndynamic = ctx%ndynamic - 1
-      end procedure zzdynrot
+      end subroutine zzdynrot
 
       !> PEPPER: the evaluation of [[zzdynfrm]] (SPICELIB's body of the
       !> routine; see zzdynfrm).

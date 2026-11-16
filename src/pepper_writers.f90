@@ -2,9 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_writers.f90.
+!> [[pepper_instance_module]]).
 submodule (pepper_instance_module) pepper_writers
 
    implicit none
@@ -42,6 +40,8 @@ submodule (pepper_instance_module) pepper_writers
 
 contains
 
+      !> Close an open CK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the CK file that is to be closed.
@@ -85,191 +85,193 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKCLS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKCLS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         CK2
-      !>              PARAMETER           ( CK2 = 'ckcls_ex1.bc' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         CK2
+      !>      PARAMETER           ( CK2 = 'ckcls_ex1.bc' )
       !>
-      !>              DOUBLE PRECISION      SPTICK
-      !>              PARAMETER           ( SPTICK = 0.001D0 )
+      !>      DOUBLE PRECISION      SPTICK
+      !>      PARAMETER           ( SPTICK = 0.001D0 )
       !>
-      !>              INTEGER               INST
-      !>              PARAMETER           ( INST = -77703 )
+      !>      INTEGER               INST
+      !>      PARAMETER           ( INST = -77703 )
       !>
-      !>              INTEGER               MAXREC
-      !>              PARAMETER           ( MAXREC = 201 )
+      !>      INTEGER               MAXREC
+      !>      PARAMETER           ( MAXREC = 201 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 42 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 42 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    REF
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    REF
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      AVVS   (   3,MAXREC )
-      !>              DOUBLE PRECISION      BEGTIM
-      !>              DOUBLE PRECISION      ENDTIM
-      !>              DOUBLE PRECISION      QUATS  ( 0:3,MAXREC )
-      !>              DOUBLE PRECISION      RATE
-      !>              DOUBLE PRECISION      RWMAT  ( 3, 3 )
-      !>              DOUBLE PRECISION      SPACES
-      !>              DOUBLE PRECISION      SCLKDP (     MAXREC )
-      !>              DOUBLE PRECISION      STARTS (    MAXREC/2)
-      !>              DOUBLE PRECISION      STICKS
-      !>              DOUBLE PRECISION      THETA
-      !>              DOUBLE PRECISION      WMAT   ( 3, 3 )
-      !>              DOUBLE PRECISION      WQUAT  ( 0:3 )
+      !>      DOUBLE PRECISION      AVVS   (   3,MAXREC )
+      !>      DOUBLE PRECISION      BEGTIM
+      !>      DOUBLE PRECISION      ENDTIM
+      !>      DOUBLE PRECISION      QUATS  ( 0:3,MAXREC )
+      !>      DOUBLE PRECISION      RATE
+      !>      DOUBLE PRECISION      RWMAT  ( 3, 3 )
+      !>      DOUBLE PRECISION      SPACES
+      !>      DOUBLE PRECISION      SCLKDP (     MAXREC )
+      !>      DOUBLE PRECISION      STARTS (    MAXREC/2)
+      !>      DOUBLE PRECISION      STICKS
+      !>      DOUBLE PRECISION      THETA
+      !>      DOUBLE PRECISION      WMAT   ( 3, 3 )
+      !>      DOUBLE PRECISION      WQUAT  ( 0:3 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               NCOMCH
-      !>              INTEGER               NINTS
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               NCOMCH
+      !>      INTEGER               NINTS
       !>
-      !>              LOGICAL               AVFLAG
+      !>      LOGICAL               AVFLAG
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, but it reserves room for 5000 characters.
-      !>        C
-      !>              NCOMCH = 5000
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, but it reserves room for 5000 characters.
+      !>C
+      !>      NCOMCH = 5000
       !>
-      !>        C
-      !>        C     The base reference from for the rotation data.
-      !>        C
-      !>              REF = 'J2000'
+      !>C
+      !>C     The base reference from for the rotation data.
+      !>C
+      !>      REF = 'J2000'
       !>
-      !>        C
-      !>        C     Time spacing in encoded ticks and in seconds
-      !>        C
-      !>              STICKS = 10.D0
-      !>              SPACES = STICKS * SPTICK
+      !>C
+      !>C     Time spacing in encoded ticks and in seconds
+      !>C
+      !>      STICKS = 10.D0
+      !>      SPACES = STICKS * SPTICK
       !>
-      !>        C
-      !>        C     Declare an angular rate in radians per sec.
-      !>        C
-      !>              RATE = 1.D-2
+      !>C
+      !>C     Declare an angular rate in radians per sec.
+      !>C
+      !>      RATE = 1.D-2
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              SEGID  = 'Test type 3 CK segment'
-      !>              IFNAME = 'Test CK type 3 segment created by CKW03'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      SEGID  = 'Test type 3 CK segment'
+      !>      IFNAME = 'Test CK type 3 segment created by CKW03'
       !>
-      !>        C
-      !>        C     Open a new kernel.
-      !>        C
-      !>              CALL CKOPN ( CK2, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new kernel.
+      !>C
+      !>      CALL CKOPN ( CK2, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Create a 3x3 double precision identity matrix.
-      !>        C
-      !>              CALL IDENT ( WMAT )
+      !>C
+      !>C     Create a 3x3 double precision identity matrix.
+      !>C
+      !>      CALL IDENT ( WMAT )
       !>
-      !>        C
-      !>        C     Convert the matrix to quaternion.
-      !>        C
-      !>              CALL M2Q ( WMAT, WQUAT )
+      !>C
+      !>C     Convert the matrix to quaternion.
+      !>C
+      !>      CALL M2Q ( WMAT, WQUAT )
       !>
-      !>        C
-      !>        C     Copy the work quaternion to the first row of
-      !>        C     QUATS.
-      !>        C
-      !>              CALL MOVED ( WQUAT, 4, QUATS(0,1) )
+      !>C
+      !>C     Copy the work quaternion to the first row of
+      !>C     QUATS.
+      !>C
+      !>      CALL MOVED ( WQUAT, 4, QUATS(0,1) )
       !>
-      !>        C
-      !>        C     Create an angular velocity vector. This vector is in the
-      !>        C     REF reference frame and indicates a constant rotation
-      !>        C     about the Z axis.
-      !>        C
-      !>              CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,1) )
+      !>C
+      !>C     Create an angular velocity vector. This vector is in the
+      !>C     REF reference frame and indicates a constant rotation
+      !>C     about the Z axis.
+      !>C
+      !>      CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,1) )
       !>
-      !>        C
-      !>        C     Set the initial value of the encoded ticks.
-      !>        C
-      !>              SCLKDP(1) = 1000.D0
+      !>C
+      !>C     Set the initial value of the encoded ticks.
+      !>C
+      !>      SCLKDP(1) = 1000.D0
       !>
-      !>        C
-      !>        C     Fill the rest of the AVVS and QUATS matrices
-      !>        C     with simple data.
-      !>        C
-      !>              DO I = 2, MAXREC
+      !>C
+      !>C     Fill the rest of the AVVS and QUATS matrices
+      !>C     with simple data.
+      !>C
+      !>      DO I = 2, MAXREC
       !>
-      !>        C
-      !>        C        Create the corresponding encoded tick value in
-      !>        C        increments of STICKS with an initial value of
-      !>        C        1000.0 ticks.
-      !>        C
-      !>                 SCLKDP(I) = 1000.D0 + (I-1) * STICKS
+      !>C
+      !>C        Create the corresponding encoded tick value in
+      !>C        increments of STICKS with an initial value of
+      !>C        1000.0 ticks.
+      !>C
+      !>         SCLKDP(I) = 1000.D0 + (I-1) * STICKS
       !>
-      !>        C
-      !>        C        Create the transformation matrix for a rotation of
-      !>        C        THETA about the Z axis. Calculate THETA from the
-      !>        C        constant angular rate RATE at increments of SPACES.
-      !>        C
-      !>                 THETA = (I-1) * RATE * SPACES
-      !>                 CALL ROTMAT ( WMAT, THETA, 3, RWMAT )
+      !>C
+      !>C        Create the transformation matrix for a rotation of
+      !>C        THETA about the Z axis. Calculate THETA from the
+      !>C        constant angular rate RATE at increments of SPACES.
+      !>C
+      !>         THETA = (I-1) * RATE * SPACES
+      !>         CALL ROTMAT ( WMAT, THETA, 3, RWMAT )
       !>
-      !>        C
-      !>        C        Convert the RWMAT matrix to SPICE type quaternion.
-      !>        C
-      !>                 CALL M2Q ( RWMAT, WQUAT )
+      !>C
+      !>C        Convert the RWMAT matrix to SPICE type quaternion.
+      !>C
+      !>         CALL M2Q ( RWMAT, WQUAT )
       !>
-      !>        C
-      !>        C        Store the quaternion in the QUATS matrix.
-      !>        C        Store angular velocity in AVVS.
-      !>        C
-      !>                 CALL MOVED ( WQUAT, 4, QUATS(0,I) )
-      !>                 CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,I) )
+      !>C
+      !>C        Store the quaternion in the QUATS matrix.
+      !>C        Store angular velocity in AVVS.
+      !>C
+      !>         CALL MOVED ( WQUAT, 4, QUATS(0,I) )
+      !>         CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,I) )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Create an array start times for the interpolation
-      !>        C     intervals. The end time for a particular interval is
-      !>        C     determined as the time of the final data value prior in
-      !>        C      time to the next start time.
-      !>        C
-      !>              NINTS = MAXREC/2
-      !>              DO I = 1, NINTS
+      !>C
+      !>C     Create an array start times for the interpolation
+      !>C     intervals. The end time for a particular interval is
+      !>C     determined as the time of the final data value prior in
+      !>C      time to the next start time.
+      !>C
+      !>      NINTS = MAXREC/2
+      !>      DO I = 1, NINTS
       !>
-      !>                 STARTS(I) = SCLKDP(I*2 - 1)
+      !>         STARTS(I) = SCLKDP(I*2 - 1)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Set the segment boundaries equal to the first and last
-      !>        C     time for the data arrays.
-      !>        C
-      !>              BEGTIM = SCLKDP(1)
-      !>              ENDTIM = SCLKDP(MAXREC)
+      !>C
+      !>C     Set the segment boundaries equal to the first and last
+      !>C     time for the data arrays.
+      !>C
+      !>      BEGTIM = SCLKDP(1)
+      !>      ENDTIM = SCLKDP(MAXREC)
       !>
-      !>        C
-      !>        C     This segment contains angular velocity.
-      !>        C
-      !>              AVFLAG = .TRUE.
+      !>C
+      !>C     This segment contains angular velocity.
+      !>C
+      !>      AVFLAG = .TRUE.
       !>
-      !>        C
-      !>        C     All information ready to write. Write to a CK type 3
-      !>        C     segment to the file indicated by HANDLE.
-      !>        C
-      !>              CALL CKW03 ( HANDLE, BEGTIM, ENDTIM, INST,   REF,
-      !>             .             AVFLAG, SEGID,  MAXREC, SCLKDP, QUATS,
-      !>             .             AVVS,   NINTS,  STARTS                )
+      !>C
+      !>C     All information ready to write. Write to a CK type 3
+      !>C     segment to the file indicated by HANDLE.
+      !>C
+      !>      CALL CKW03 ( HANDLE, BEGTIM, ENDTIM, INST,   REF,
+      !>     .             AVFLAG, SEGID,  MAXREC, SCLKDP, QUATS,
+      !>     .             AVVS,   NINTS,  STARTS                )
       !>
-      !>        C
-      !>        C     SAFELY close the file.
-      !>        C
-      !>              CALL CKCLS ( HANDLE )
+      !>C
+      !>C     SAFELY close the file.
+      !>C
+      !>      CALL CKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new CK file exists in the
@@ -311,9 +313,11 @@ contains
       !>        unambiguous ID word 'DAF/CK  '.
       !>
       !>-    SPICELIB Version 1.0.0, 27-JAN-1995 (KRG)
-      module procedure ckcls
+      module subroutine ckcls ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of the CK file to be closed.
 
       character(acclen) :: access
 
@@ -375,8 +379,12 @@ contains
 !
       return
 
-      end procedure ckcls
+      end subroutine ckcls
 
+      !> Return a specified pointing instance from a CK type 01 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -598,28 +606,15 @@ contains
       !>        4) The in-code comments were improved.
       !>
       !>-    Beta Version 1.0.0, 23-MAY-1990 (RET) (IMU)
-      module procedure ckgr01
+      module subroutine ckgr01 ( ctx, handle, descr, recno, record )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
+      integer(ip), intent(in) :: recno  !! The number of the pointing record to be returned.
+      real(wp), intent(out) :: record  ( * )  !! The pointing record.
       real(wp) :: n_1(1)  !! one-element copy of n (array argument)
-
-!        NDC        is the number of double precision components in an
-!                   unpacked C-kernel segment descriptor.
-!
-!        NIC        is the number of integer components in an unpacked
-!                   C-kernel segment descriptor.
-!
-!        QSIZ       is the number of double precision numbers making up
-!                   the quaternion portion of a pointing record.
-!
-!        QAVSIZ     is the number of double precision numbers making up
-!                   the quaternion and angular velocity portion of a
-!                   pointing record.
-!
-
-
-
-
 
       integer(ip) :: icd    ( nic )
       integer(ip) :: nrec
@@ -707,8 +702,12 @@ contains
       call dafgda ( ctx, handle, addr, addr, record( 1 ) )
 
       return
-      end procedure ckgr01
+      end subroutine ckgr01
 
+      !> Return a specified pointing instance from a CK type 03 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -806,116 +805,118 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKGR03_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKGR03_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      QUAT    ( 4 )
-      !>              DOUBLE PRECISION      AV      ( 3 )
-      !>              DOUBLE PRECISION      BORE    ( 3 )
-      !>              DOUBLE PRECISION      CMAT    ( 3, 3 )
-      !>              DOUBLE PRECISION      DCD     ( 2 )
-      !>              DOUBLE PRECISION      DESCR   ( 5 )
-      !>              DOUBLE PRECISION      RECORD  ( 8 )
-      !>              DOUBLE PRECISION      SCLKDP
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      QUAT    ( 4 )
+      !>      DOUBLE PRECISION      AV      ( 3 )
+      !>      DOUBLE PRECISION      BORE    ( 3 )
+      !>      DOUBLE PRECISION      CMAT    ( 3, 3 )
+      !>      DOUBLE PRECISION      DCD     ( 2 )
+      !>      DOUBLE PRECISION      DESCR   ( 5 )
+      !>      DOUBLE PRECISION      RECORD  ( 8 )
+      !>      DOUBLE PRECISION      SCLKDP
       !>
-      !>              INTEGER               I
-      !>              INTEGER               ICD     ( 6 )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NREC
+      !>      INTEGER               I
+      !>      INTEGER               ICD     ( 6 )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NREC
       !>
-      !>              LOGICAL               AVSEG
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               AVSEG
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     First load the file (it may also be opened by using
-      !>        C     CKLPF).
-      !>        C
-      !>              CALL DAFOPR ( 'VEX_BOOM_V01.BC', HANDLE )
+      !>C
+      !>C     First load the file (it may also be opened by using
+      !>C     CKLPF).
+      !>C
+      !>      CALL DAFOPR ( 'VEX_BOOM_V01.BC', HANDLE )
       !>
-      !>        C
-      !>        C     Begin forward search.  Find the first array.
-      !>        C
-      !>              CALL DAFBFS ( HANDLE )
-      !>              CALL DAFFNA ( FOUND  )
+      !>C
+      !>C     Begin forward search.  Find the first array.
+      !>C
+      !>      CALL DAFBFS ( HANDLE )
+      !>      CALL DAFFNA ( FOUND  )
       !>
-      !>        C
-      !>        C     Get segment descriptor.
-      !>        C
-      !>              CALL DAFGS ( DESCR )
+      !>C
+      !>C     Get segment descriptor.
+      !>C
+      !>      CALL DAFGS ( DESCR )
       !>
-      !>        C
-      !>        C     Unpack the segment descriptor into its double precision
-      !>        C     and integer components.
-      !>        C
-      !>              CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+      !>C
+      !>C     Unpack the segment descriptor into its double precision
+      !>C     and integer components.
+      !>C
+      !>      CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
       !>
-      !>        C
-      !>        C     The data type for a segment is located in the third
-      !>        C     integer component of the descriptor.
-      !>        C
-      !>              IF ( ICD( 3 ) .EQ. 3 ) THEN
+      !>C
+      !>C     The data type for a segment is located in the third
+      !>C     integer component of the descriptor.
+      !>C
+      !>      IF ( ICD( 3 ) .EQ. 3 ) THEN
       !>
-      !>        C
-      !>        C        Does the segment contain AV data?
-      !>        C
-      !>                 AVSEG =  ( ICD(4) .EQ. 1 )
+      !>C
+      !>C        Does the segment contain AV data?
+      !>C
+      !>         AVSEG =  ( ICD(4) .EQ. 1 )
       !>
-      !>        C
-      !>        C        How many records does this segment contain?
-      !>        C
-      !>                 CALL CKNR03 ( HANDLE, DESCR, NREC )
+      !>C
+      !>C        How many records does this segment contain?
+      !>C
+      !>         CALL CKNR03 ( HANDLE, DESCR, NREC )
       !>
-      !>                 DO I = 1, NREC
+      !>         DO I = 1, NREC
       !>
-      !>        C
-      !>        C           Get the Ith pointing instance in the segment.
-      !>        C
-      !>                    CALL CKGR03 ( HANDLE, DESCR, I, RECORD )
+      !>C
+      !>C           Get the Ith pointing instance in the segment.
+      !>C
+      !>            CALL CKGR03 ( HANDLE, DESCR, I, RECORD )
       !>
-      !>        C
-      !>        C           Unpack RECORD into the time, quaternion, and av.
-      !>        C
-      !>                    SCLKDP = RECORD ( 1 )
+      !>C
+      !>C           Unpack RECORD into the time, quaternion, and av.
+      !>C
+      !>            SCLKDP = RECORD ( 1 )
       !>
-      !>                    CALL MOVED ( RECORD(2), 4, QUAT )
+      !>            CALL MOVED ( RECORD(2), 4, QUAT )
       !>
-      !>                    IF  ( AVSEG )  THEN
-      !>                       CALL MOVED ( RECORD(6), 3, AV   )
-      !>                    END IF
+      !>            IF  ( AVSEG )  THEN
+      !>               CALL MOVED ( RECORD(6), 3, AV   )
+      !>            END IF
       !>
-      !>        C
-      !>        C           The boresight vector is the third row of the
-      !>        C           C-matrix.
-      !>        C
-      !>                    CALL Q2M ( QUAT, CMAT )
+      !>C
+      !>C           The boresight vector is the third row of the
+      !>C           C-matrix.
+      !>C
+      !>            CALL Q2M ( QUAT, CMAT )
       !>
-      !>                    BORE(1) = CMAT(3,1)
-      !>                    BORE(2) = CMAT(3,2)
-      !>                    BORE(3) = CMAT(3,3)
+      !>            BORE(1) = CMAT(3,1)
+      !>            BORE(2) = CMAT(3,2)
+      !>            BORE(3) = CMAT(3,3)
       !>
-      !>        C
-      !>        C           Write out the results.
-      !>        C
-      !>                    WRITE (*,'(A,I2)') 'Record: ', I
-      !>                    WRITE (*,'(A,F25.6)')  '   SCLK time       :',
-      !>             .                               SCLKDP
-      !>                    WRITE (*,'(A,3F14.9)') '   Boresight       :',
-      !>             .                               BORE
+      !>C
+      !>C           Write out the results.
+      !>C
+      !>            WRITE (*,'(A,I2)') 'Record: ', I
+      !>            WRITE (*,'(A,F25.6)')  '   SCLK time       :',
+      !>     .                               SCLKDP
+      !>            WRITE (*,'(A,3F14.9)') '   Boresight       :',
+      !>     .                               BORE
       !>
-      !>                    IF ( AVSEG ) THEN
-      !>                       WRITE (*,'(A,3F14.9)') '   Angular velocity:',
-      !>             .                                  AV
-      !>                    END IF
-      !>                    WRITE (*,*)
+      !>            IF ( AVSEG ) THEN
+      !>               WRITE (*,'(A,3F14.9)') '   Angular velocity:',
+      !>     .                                  AV
+      !>            END IF
+      !>            WRITE (*,*)
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1017,9 +1018,14 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
-      module procedure ckgr03
+      module subroutine ckgr03 ( ctx, handle, descr, recno, record )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the CK file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
+      integer(ip), intent(in) :: recno  !! The number of the pointing instance to be returned.
+      real(wp), intent(out) :: record  ( * )  !! The pointing record.
       real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
 
 !        NDC        is the number of double precision components in an
@@ -1136,8 +1142,12 @@ contains
       call dafgda ( ctx, handle, addr, addr, record( 1 ) )
 
       return
-      end procedure ckgr03
+      end subroutine ckgr03
 
+      !> Return a specified pointing record from a CK type 04 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -1348,10 +1358,15 @@ contains
       !>        Minor header edits.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
-      module procedure ckgr04
+      module subroutine ckgr04 ( ctx, handle, descr, recno, record )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ckparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
+      integer(ip), intent(in) :: recno  !! The number of the pointing record to be returned.
+      real(wp), intent(out) :: record  ( * )  !! The pointing record.
 
 
 
@@ -1445,8 +1460,12 @@ contains
 
       return
 
-      end procedure ckgr04
+      end subroutine ckgr04
 
+      !> Return a specified pointing instance from a CK type 05 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -1676,10 +1695,15 @@ contains
       !>        Added explicit conversion to INTEGER for SUBTYP.
       !>
       !>-    SPICELIB Version 1.0.0, 27-AUG-2002 (NJB) (JML)
-      module procedure ckgr05
+      module subroutine ckgr05 ( ctx, handle, descr, recno, record )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ck05
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
+      integer(ip), intent(in) :: recno  !! The number of the pointing instance to be returned.
+      real(wp), intent(out) :: record  ( * )  !! The pointing record.
       real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
 
 !        NDC        is the number of double precision components in an
@@ -1826,8 +1850,11 @@ contains
       call dafgda ( ctx, handle, addr, addr, record( 1 ) )
 
       return
-      end procedure ckgr05
+      end subroutine ckgr05
 
+      !> Return a specified pointing record from a type 6 CK segment, given
+      !> the CK file's handle and the segment's descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -1978,200 +2005,202 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKGR06_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKGR06_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Dump all records from a CK that
-      !>        C     contains only segments of type 6.
-      !>        C
-      !>              INCLUDE 'ck06.inc'
+      !>C
+      !>C     Dump all records from a CK that
+      !>C     contains only segments of type 6.
+      !>C
+      !>      INCLUDE 'ck06.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               ND
-      !>              PARAMETER           ( ND     = 2 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               ND
+      !>      PARAMETER           ( ND     = 2 )
       !>
-      !>              INTEGER               NI
-      !>              PARAMETER           ( NI     = 6 )
+      !>      INTEGER               NI
+      !>      PARAMETER           ( NI     = 6 )
       !>
-      !>              INTEGER               DSCSIZ
-      !>              PARAMETER           ( DSCSIZ = 5 )
+      !>      INTEGER               DSCSIZ
+      !>      PARAMETER           ( DSCSIZ = 5 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>        C
-      !>        C     RECSIZ is the size of the largest pointing
-      !>        C     record, which corresponds to subtype 2.
-      !>        C
-      !>              INTEGER               RECSIZ
-      !>              PARAMETER           ( RECSIZ = C06PS2 + 3 )
+      !>C
+      !>C     RECSIZ is the size of the largest pointing
+      !>C     record, which corresponds to subtype 2.
+      !>C
+      !>      INTEGER               RECSIZ
+      !>      PARAMETER           ( RECSIZ = C06PS2 + 3 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    CK
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    CK
       !>
-      !>              DOUBLE PRECISION      DC     ( ND )
-      !>              DOUBLE PRECISION      DESCR  ( DSCSIZ )
-      !>              DOUBLE PRECISION      IVLBDS ( 2 )
-      !>              DOUBLE PRECISION      LSTEPC
-      !>              DOUBLE PRECISION      RATE
-      !>              DOUBLE PRECISION      RECORD ( RECSIZ )
+      !>      DOUBLE PRECISION      DC     ( ND )
+      !>      DOUBLE PRECISION      DESCR  ( DSCSIZ )
+      !>      DOUBLE PRECISION      IVLBDS ( 2 )
+      !>      DOUBLE PRECISION      LSTEPC
+      !>      DOUBLE PRECISION      RATE
+      !>      DOUBLE PRECISION      RECORD ( RECSIZ )
       !>
-      !>              INTEGER               DTYPE
-      !>              INTEGER               HANDLE
-      !>              INTEGER               IC     ( NI )
-      !>              INTEGER               RECNO
-      !>              INTEGER               MSNO
-      !>              INTEGER               NMINI
-      !>              INTEGER               NREC
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SUBTYP
-      !>              INTEGER               WINSIZ
+      !>      INTEGER               DTYPE
+      !>      INTEGER               HANDLE
+      !>      INTEGER               IC     ( NI )
+      !>      INTEGER               RECNO
+      !>      INTEGER               MSNO
+      !>      INTEGER               NMINI
+      !>      INTEGER               NREC
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SUBTYP
+      !>      INTEGER               WINSIZ
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>              CALL PROMPT ( 'Enter name of CK to dump > ', CK )
+      !>      CALL PROMPT ( 'Enter name of CK to dump > ', CK )
       !>
-      !>              CALL DAFOPR ( CK, HANDLE )
+      !>      CALL DAFOPR ( CK, HANDLE )
       !>
-      !>        C
-      !>        C     Dump data from each CK segment.
-      !>        C
-      !>              SEGNO = 0
+      !>C
+      !>C     Dump data from each CK segment.
+      !>C
+      !>      SEGNO = 0
       !>
-      !>              CALL DAFBFS ( HANDLE )
-      !>              CALL DAFFNA ( FOUND  )
+      !>      CALL DAFBFS ( HANDLE )
+      !>      CALL DAFFNA ( FOUND  )
       !>
-      !>              DO WHILE ( FOUND )
+      !>      DO WHILE ( FOUND )
       !>
-      !>                 SEGNO = SEGNO + 1
+      !>         SEGNO = SEGNO + 1
       !>
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Segment number: ', SEGNO
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Segment number: ', SEGNO
       !>
-      !>        C
-      !>        C        Fetch and unpack the descriptor of the
-      !>        C        current segment; check the data type.
-      !>        C
-      !>                 CALL DAFGS ( DESCR )
-      !>                 CALL DAFUS ( DESCR, ND, NI, DC, IC )
+      !>C
+      !>C        Fetch and unpack the descriptor of the
+      !>C        current segment; check the data type.
+      !>C
+      !>         CALL DAFGS ( DESCR )
+      !>         CALL DAFUS ( DESCR, ND, NI, DC, IC )
       !>
-      !>                 DTYPE = IC(3)
+      !>         DTYPE = IC(3)
       !>
-      !>                 IF ( DTYPE .NE. 6 ) THEN
+      !>         IF ( DTYPE .NE. 6 ) THEN
       !>
-      !>                    CALL SETMSG ( 'Data type must be 6 but was #.' )
-      !>                    CALL ERRINT ( '#',  DTYPE                      )
-      !>                    CALL SIGERR ( 'SPICE(NOTSUPPORTED)'            )
+      !>            CALL SETMSG ( 'Data type must be 6 but was #.' )
+      !>            CALL ERRINT ( '#',  DTYPE                      )
+      !>            CALL SIGERR ( 'SPICE(NOTSUPPORTED)'            )
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>        C
-      !>        C        Get the mini-segment count for this
-      !>        C        segment.
-      !>        C
-      !>                 CALL CKNM06 ( HANDLE, DESCR, NMINI )
+      !>C
+      !>C        Get the mini-segment count for this
+      !>C        segment.
+      !>C
+      !>         CALL CKNM06 ( HANDLE, DESCR, NMINI )
       !>
-      !>        C
-      !>        C        Dump data from each mini-segment.
-      !>        C
-      !>                 DO MSNO = 1, NMINI
+      !>C
+      !>C        Dump data from each mini-segment.
+      !>C
+      !>         DO MSNO = 1, NMINI
       !>
-      !>        C
-      !>        C           Get the mini-segment's record count
-      !>        C           and time bounds.
-      !>        C
-      !>                    CALL CKMP06 ( HANDLE, DESCR,  MSNO,
-      !>             .                    RATE,   SUBTYP, WINSIZ,
-      !>             .                    NREC,   IVLBDS, LSTEPC )
+      !>C
+      !>C           Get the mini-segment's record count
+      !>C           and time bounds.
+      !>C
+      !>            CALL CKMP06 ( HANDLE, DESCR,  MSNO,
+      !>     .                    RATE,   SUBTYP, WINSIZ,
+      !>     .                    NREC,   IVLBDS, LSTEPC )
       !>
-      !>                    WRITE (*,*) ' '
-      !>                    WRITE (*,*) '   Mini-segment number: ', MSNO
-      !>                    WRITE (*,*) '      Rate:           ',   RATE
-      !>                    WRITE (*,*) '      Subtype:        ',   SUBTYP
-      !>                    WRITE (*,*) '      Window size:    ',   WINSIZ
-      !>                    WRITE (*,*) '      Interval start: ',   IVLBDS(1)
-      !>                    WRITE (*,*) '      Interval stop:  ',   IVLBDS(2)
-      !>                    WRITE (*,*) '      Last epoch:     ',   LSTEPC
-      !>                    WRITE (*,*) ' '
+      !>            WRITE (*,*) ' '
+      !>            WRITE (*,*) '   Mini-segment number: ', MSNO
+      !>            WRITE (*,*) '      Rate:           ',   RATE
+      !>            WRITE (*,*) '      Subtype:        ',   SUBTYP
+      !>            WRITE (*,*) '      Window size:    ',   WINSIZ
+      !>            WRITE (*,*) '      Interval start: ',   IVLBDS(1)
+      !>            WRITE (*,*) '      Interval stop:  ',   IVLBDS(2)
+      !>            WRITE (*,*) '      Last epoch:     ',   LSTEPC
+      !>            WRITE (*,*) ' '
       !>
-      !>                    DO RECNO = 1, NREC
+      !>            DO RECNO = 1, NREC
       !>
-      !>                       CALL CKGR06 ( HANDLE, DESCR,
-      !>             .                       MSNO,   RECNO,  RECORD )
+      !>               CALL CKGR06 ( HANDLE, DESCR,
+      !>     .                       MSNO,   RECNO,  RECORD )
       !>
-      !>                       WRITE (*,*) '      Record number: ', RECNO
-      !>                       WRITE (*,*) '         SCLKDP:     ', RECORD(1)
-      !>                       WRITE (*,*) '         Clock rate: ', RECORD(3)
+      !>               WRITE (*,*) '      Record number: ', RECNO
+      !>               WRITE (*,*) '         SCLKDP:     ', RECORD(1)
+      !>               WRITE (*,*) '         Clock rate: ', RECORD(3)
       !>
-      !>                       IF ( SUBTYP .EQ. C06TP0 ) THEN
+      !>               IF ( SUBTYP .EQ. C06TP0 ) THEN
       !>
-      !>                          WRITE (*,*) '         Q(0): ', RECORD(4)
-      !>                          WRITE (*,*) '         Q(1): ', RECORD(5)
-      !>                          WRITE (*,*) '         Q(2): ', RECORD(6)
-      !>                          WRITE (*,*) '         Q(3): ', RECORD(7)
-      !>                          WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
-      !>                          WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
-      !>                          WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
-      !>                          WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
+      !>                  WRITE (*,*) '         Q(0): ', RECORD(4)
+      !>                  WRITE (*,*) '         Q(1): ', RECORD(5)
+      !>                  WRITE (*,*) '         Q(2): ', RECORD(6)
+      !>                  WRITE (*,*) '         Q(3): ', RECORD(7)
+      !>                  WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
+      !>                  WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
+      !>                  WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
+      !>                  WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
       !>
-      !>                       ELSE IF ( SUBTYP .EQ. C06TP1 ) THEN
+      !>               ELSE IF ( SUBTYP .EQ. C06TP1 ) THEN
       !>
-      !>                          WRITE (*,*) '         Q(0): ', RECORD(4)
-      !>                          WRITE (*,*) '         Q(1): ', RECORD(5)
-      !>                          WRITE (*,*) '         Q(2): ', RECORD(6)
-      !>                          WRITE (*,*) '         Q(3): ', RECORD(7)
+      !>                  WRITE (*,*) '         Q(0): ', RECORD(4)
+      !>                  WRITE (*,*) '         Q(1): ', RECORD(5)
+      !>                  WRITE (*,*) '         Q(2): ', RECORD(6)
+      !>                  WRITE (*,*) '         Q(3): ', RECORD(7)
       !>
-      !>                       ELSE IF ( SUBTYP .EQ. C06TP2 ) THEN
+      !>               ELSE IF ( SUBTYP .EQ. C06TP2 ) THEN
       !>
-      !>                          WRITE (*,*) '         Q(0): ', RECORD(4)
-      !>                          WRITE (*,*) '         Q(1): ', RECORD(5)
-      !>                          WRITE (*,*) '         Q(2): ', RECORD(6)
-      !>                          WRITE (*,*) '         Q(3): ', RECORD(7)
-      !>                          WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
-      !>                          WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
-      !>                          WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
-      !>                          WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
-      !>                          WRITE (*,*) '        AV(1): ', RECORD(12)
-      !>                          WRITE (*,*) '        AV(2): ', RECORD(13)
-      !>                          WRITE (*,*) '        AV(3): ', RECORD(14)
-      !>                          WRITE (*,*) '   d AV(1)/dt: ', RECORD(15)
-      !>                          WRITE (*,*) '   d AV(2)/dt: ', RECORD(16)
-      !>                          WRITE (*,*) '   d AV(3)/dt: ', RECORD(17)
+      !>                  WRITE (*,*) '         Q(0): ', RECORD(4)
+      !>                  WRITE (*,*) '         Q(1): ', RECORD(5)
+      !>                  WRITE (*,*) '         Q(2): ', RECORD(6)
+      !>                  WRITE (*,*) '         Q(3): ', RECORD(7)
+      !>                  WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
+      !>                  WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
+      !>                  WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
+      !>                  WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
+      !>                  WRITE (*,*) '        AV(1): ', RECORD(12)
+      !>                  WRITE (*,*) '        AV(2): ', RECORD(13)
+      !>                  WRITE (*,*) '        AV(3): ', RECORD(14)
+      !>                  WRITE (*,*) '   d AV(1)/dt: ', RECORD(15)
+      !>                  WRITE (*,*) '   d AV(2)/dt: ', RECORD(16)
+      !>                  WRITE (*,*) '   d AV(3)/dt: ', RECORD(17)
       !>
-      !>                       ELSE IF ( SUBTYP .EQ. C06TP3 ) THEN
+      !>               ELSE IF ( SUBTYP .EQ. C06TP3 ) THEN
       !>
-      !>                          WRITE (*,*) '         Q(0): ', RECORD(4)
-      !>                          WRITE (*,*) '         Q(1): ', RECORD(5)
-      !>                          WRITE (*,*) '         Q(2): ', RECORD(6)
-      !>                          WRITE (*,*) '         Q(3): ', RECORD(7)
-      !>                          WRITE (*,*) '        AV(1): ', RECORD(8)
-      !>                          WRITE (*,*) '        AV(2): ', RECORD(9)
-      !>                          WRITE (*,*) '        AV(3): ', RECORD(10)
+      !>                  WRITE (*,*) '         Q(0): ', RECORD(4)
+      !>                  WRITE (*,*) '         Q(1): ', RECORD(5)
+      !>                  WRITE (*,*) '         Q(2): ', RECORD(6)
+      !>                  WRITE (*,*) '         Q(3): ', RECORD(7)
+      !>                  WRITE (*,*) '        AV(1): ', RECORD(8)
+      !>                  WRITE (*,*) '        AV(2): ', RECORD(9)
+      !>                  WRITE (*,*) '        AV(3): ', RECORD(10)
       !>
-      !>                       ELSE
-      !>                          CALL SETMSG ( 'Subtype # is not '
-      !>             .            //            'recognized.'         )
-      !>                          CALL ERRINT ( '#', SUBTYP           )
-      !>                          CALL SIGERR ( 'SPICE(NOTSUPPORTED)' )
-      !>                       END IF
+      !>               ELSE
+      !>                  CALL SETMSG ( 'Subtype # is not '
+      !>     .            //            'recognized.'         )
+      !>                  CALL ERRINT ( '#', SUBTYP           )
+      !>                  CALL SIGERR ( 'SPICE(NOTSUPPORTED)' )
+      !>               END IF
       !>
-      !>                       WRITE (*,*) ' '
+      !>               WRITE (*,*) ' '
       !>
-      !>                   END DO
+      !>           END DO
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 CALL DAFFNA ( FOUND )
+      !>         CALL DAFFNA ( FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the Rosetta CK file named
@@ -2302,10 +2331,16 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (JML) (BVS)
-      module procedure ckgr06
+      module subroutine ckgr06 ( ctx, handle, descr, msno, recno, record )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ck06
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr  ( * )  !! The segment descriptor.
+      integer(ip), intent(in) :: msno  !! Index of the mini-segment containing the record.
+      integer(ip), intent(in) :: recno  !! Index of the pointing record to be returned.
+      real(wp), intent(out) :: record ( * )  !! The pointing record.
 
 !        ND         is the number of double precision components in an
 !                   unpacked C-kernel descriptor.
@@ -2320,12 +2355,6 @@ contains
 
 
       integer(ip), parameter :: dtype = 6
-
-
-!
-!     Mini-segment control area size:
-!
-
 
 
       real(wp) :: buffer ( bufsiz )
@@ -2516,8 +2545,12 @@ contains
 !     check FAILED here since we're about to return.
 !
       return
-      end procedure ckgr06
+      end subroutine ckgr06
 
+      !> Return the mini-segment control parameters, mini-segment interval
+      !> bounds, and last epoch for a specified mini-segment in a type 6
+      !> CK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -2615,200 +2648,202 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKMP06_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKMP06_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Dump all records from a CK that
-      !>        C     contains only segments of type 6.
-      !>        C
-      !>              INCLUDE 'ck06.inc'
+      !>C
+      !>C     Dump all records from a CK that
+      !>C     contains only segments of type 6.
+      !>C
+      !>      INCLUDE 'ck06.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               ND
-      !>              PARAMETER           ( ND     = 2 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               ND
+      !>      PARAMETER           ( ND     = 2 )
       !>
-      !>              INTEGER               NI
-      !>              PARAMETER           ( NI     = 6 )
+      !>      INTEGER               NI
+      !>      PARAMETER           ( NI     = 6 )
       !>
-      !>              INTEGER               DSCSIZ
-      !>              PARAMETER           ( DSCSIZ = 5 )
+      !>      INTEGER               DSCSIZ
+      !>      PARAMETER           ( DSCSIZ = 5 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>        C
-      !>        C     RECSIZ is the size of the largest pointing
-      !>        C     record, which corresponds to subtype 2.
-      !>        C
-      !>              INTEGER               RECSIZ
-      !>              PARAMETER           ( RECSIZ = C06PS2 + 3 )
+      !>C
+      !>C     RECSIZ is the size of the largest pointing
+      !>C     record, which corresponds to subtype 2.
+      !>C
+      !>      INTEGER               RECSIZ
+      !>      PARAMETER           ( RECSIZ = C06PS2 + 3 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    CK
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    CK
       !>
-      !>              DOUBLE PRECISION      DC     ( ND )
-      !>              DOUBLE PRECISION      DESCR  ( DSCSIZ )
-      !>              DOUBLE PRECISION      IVLBDS ( 2 )
-      !>              DOUBLE PRECISION      LSTEPC
-      !>              DOUBLE PRECISION      RATE
-      !>              DOUBLE PRECISION      RECORD ( RECSIZ )
+      !>      DOUBLE PRECISION      DC     ( ND )
+      !>      DOUBLE PRECISION      DESCR  ( DSCSIZ )
+      !>      DOUBLE PRECISION      IVLBDS ( 2 )
+      !>      DOUBLE PRECISION      LSTEPC
+      !>      DOUBLE PRECISION      RATE
+      !>      DOUBLE PRECISION      RECORD ( RECSIZ )
       !>
-      !>              INTEGER               DTYPE
-      !>              INTEGER               HANDLE
-      !>              INTEGER               IC     ( NI )
-      !>              INTEGER               RECNO
-      !>              INTEGER               MSNO
-      !>              INTEGER               NMINI
-      !>              INTEGER               NREC
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SUBTYP
-      !>              INTEGER               WINSIZ
+      !>      INTEGER               DTYPE
+      !>      INTEGER               HANDLE
+      !>      INTEGER               IC     ( NI )
+      !>      INTEGER               RECNO
+      !>      INTEGER               MSNO
+      !>      INTEGER               NMINI
+      !>      INTEGER               NREC
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SUBTYP
+      !>      INTEGER               WINSIZ
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>              CALL PROMPT ( 'Enter name of CK to dump > ', CK )
+      !>      CALL PROMPT ( 'Enter name of CK to dump > ', CK )
       !>
-      !>              CALL DAFOPR ( CK, HANDLE )
+      !>      CALL DAFOPR ( CK, HANDLE )
       !>
-      !>        C
-      !>        C     Dump data from each CK segment.
-      !>        C
-      !>              SEGNO = 0
+      !>C
+      !>C     Dump data from each CK segment.
+      !>C
+      !>      SEGNO = 0
       !>
-      !>              CALL DAFBFS ( HANDLE )
-      !>              CALL DAFFNA ( FOUND  )
+      !>      CALL DAFBFS ( HANDLE )
+      !>      CALL DAFFNA ( FOUND  )
       !>
-      !>              DO WHILE ( FOUND )
+      !>      DO WHILE ( FOUND )
       !>
-      !>                 SEGNO = SEGNO + 1
+      !>         SEGNO = SEGNO + 1
       !>
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Segment number: ', SEGNO
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Segment number: ', SEGNO
       !>
-      !>        C
-      !>        C        Fetch and unpack the descriptor of the
-      !>        C        current segment; check the data type.
-      !>        C
-      !>                 CALL DAFGS ( DESCR )
-      !>                 CALL DAFUS ( DESCR, ND, NI, DC, IC )
+      !>C
+      !>C        Fetch and unpack the descriptor of the
+      !>C        current segment; check the data type.
+      !>C
+      !>         CALL DAFGS ( DESCR )
+      !>         CALL DAFUS ( DESCR, ND, NI, DC, IC )
       !>
-      !>                 DTYPE = IC(3)
+      !>         DTYPE = IC(3)
       !>
-      !>                 IF ( DTYPE .NE. 6 ) THEN
+      !>         IF ( DTYPE .NE. 6 ) THEN
       !>
-      !>                    CALL SETMSG ( 'Data type must be 6 but was #.' )
-      !>                    CALL ERRINT ( '#',  DTYPE                      )
-      !>                    CALL SIGERR ( 'SPICE(NOTSUPPORTED)'            )
+      !>            CALL SETMSG ( 'Data type must be 6 but was #.' )
+      !>            CALL ERRINT ( '#',  DTYPE                      )
+      !>            CALL SIGERR ( 'SPICE(NOTSUPPORTED)'            )
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>        C
-      !>        C        Get the mini-segment count for this
-      !>        C        segment.
-      !>        C
-      !>                 CALL CKNM06 ( HANDLE, DESCR, NMINI )
+      !>C
+      !>C        Get the mini-segment count for this
+      !>C        segment.
+      !>C
+      !>         CALL CKNM06 ( HANDLE, DESCR, NMINI )
       !>
-      !>        C
-      !>        C        Dump data from each mini-segment.
-      !>        C
-      !>                 DO MSNO = 1, NMINI
+      !>C
+      !>C        Dump data from each mini-segment.
+      !>C
+      !>         DO MSNO = 1, NMINI
       !>
-      !>        C
-      !>        C           Get the mini-segment's record count
-      !>        C           and time bounds.
-      !>        C
-      !>                    CALL CKMP06 ( HANDLE, DESCR,  MSNO,
-      !>             .                    RATE,   SUBTYP, WINSIZ,
-      !>             .                    NREC,   IVLBDS, LSTEPC )
+      !>C
+      !>C           Get the mini-segment's record count
+      !>C           and time bounds.
+      !>C
+      !>            CALL CKMP06 ( HANDLE, DESCR,  MSNO,
+      !>     .                    RATE,   SUBTYP, WINSIZ,
+      !>     .                    NREC,   IVLBDS, LSTEPC )
       !>
-      !>                    WRITE (*,*) ' '
-      !>                    WRITE (*,*) '   Mini-segment number: ', MSNO
-      !>                    WRITE (*,*) '      Rate:           ',   RATE
-      !>                    WRITE (*,*) '      Subtype:        ',   SUBTYP
-      !>                    WRITE (*,*) '      Window size:    ',   WINSIZ
-      !>                    WRITE (*,*) '      Interval start: ',   IVLBDS(1)
-      !>                    WRITE (*,*) '      Interval stop:  ',   IVLBDS(2)
-      !>                    WRITE (*,*) '      Last epoch:     ',   LSTEPC
-      !>                    WRITE (*,*) ' '
+      !>            WRITE (*,*) ' '
+      !>            WRITE (*,*) '   Mini-segment number: ', MSNO
+      !>            WRITE (*,*) '      Rate:           ',   RATE
+      !>            WRITE (*,*) '      Subtype:        ',   SUBTYP
+      !>            WRITE (*,*) '      Window size:    ',   WINSIZ
+      !>            WRITE (*,*) '      Interval start: ',   IVLBDS(1)
+      !>            WRITE (*,*) '      Interval stop:  ',   IVLBDS(2)
+      !>            WRITE (*,*) '      Last epoch:     ',   LSTEPC
+      !>            WRITE (*,*) ' '
       !>
-      !>                    DO RECNO = 1, NREC
+      !>            DO RECNO = 1, NREC
       !>
-      !>                       CALL CKGR06 ( HANDLE, DESCR,
-      !>             .                       MSNO,   RECNO,  RECORD )
+      !>               CALL CKGR06 ( HANDLE, DESCR,
+      !>     .                       MSNO,   RECNO,  RECORD )
       !>
-      !>                       WRITE (*,*) '      Record number: ', RECNO
-      !>                       WRITE (*,*) '         SCLKDP:     ', RECORD(1)
-      !>                       WRITE (*,*) '         Clock rate: ', RECORD(3)
+      !>               WRITE (*,*) '      Record number: ', RECNO
+      !>               WRITE (*,*) '         SCLKDP:     ', RECORD(1)
+      !>               WRITE (*,*) '         Clock rate: ', RECORD(3)
       !>
-      !>                       IF ( SUBTYP .EQ. C06TP0 ) THEN
+      !>               IF ( SUBTYP .EQ. C06TP0 ) THEN
       !>
-      !>                          WRITE (*,*) '         Q(0): ', RECORD(4)
-      !>                          WRITE (*,*) '         Q(1): ', RECORD(5)
-      !>                          WRITE (*,*) '         Q(2): ', RECORD(6)
-      !>                          WRITE (*,*) '         Q(3): ', RECORD(7)
-      !>                          WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
-      !>                          WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
-      !>                          WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
-      !>                          WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
+      !>                  WRITE (*,*) '         Q(0): ', RECORD(4)
+      !>                  WRITE (*,*) '         Q(1): ', RECORD(5)
+      !>                  WRITE (*,*) '         Q(2): ', RECORD(6)
+      !>                  WRITE (*,*) '         Q(3): ', RECORD(7)
+      !>                  WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
+      !>                  WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
+      !>                  WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
+      !>                  WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
       !>
-      !>                       ELSE IF ( SUBTYP .EQ. C06TP1 ) THEN
+      !>               ELSE IF ( SUBTYP .EQ. C06TP1 ) THEN
       !>
-      !>                          WRITE (*,*) '         Q(0): ', RECORD(4)
-      !>                          WRITE (*,*) '         Q(1): ', RECORD(5)
-      !>                          WRITE (*,*) '         Q(2): ', RECORD(6)
-      !>                          WRITE (*,*) '         Q(3): ', RECORD(7)
+      !>                  WRITE (*,*) '         Q(0): ', RECORD(4)
+      !>                  WRITE (*,*) '         Q(1): ', RECORD(5)
+      !>                  WRITE (*,*) '         Q(2): ', RECORD(6)
+      !>                  WRITE (*,*) '         Q(3): ', RECORD(7)
       !>
-      !>                       ELSE IF ( SUBTYP .EQ. C06TP2 ) THEN
+      !>               ELSE IF ( SUBTYP .EQ. C06TP2 ) THEN
       !>
-      !>                          WRITE (*,*) '         Q(0): ', RECORD(4)
-      !>                          WRITE (*,*) '         Q(1): ', RECORD(5)
-      !>                          WRITE (*,*) '         Q(2): ', RECORD(6)
-      !>                          WRITE (*,*) '         Q(3): ', RECORD(7)
-      !>                          WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
-      !>                          WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
-      !>                          WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
-      !>                          WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
-      !>                          WRITE (*,*) '        AV(1): ', RECORD(12)
-      !>                          WRITE (*,*) '        AV(2): ', RECORD(13)
-      !>                          WRITE (*,*) '        AV(3): ', RECORD(14)
-      !>                          WRITE (*,*) '   d AV(1)/dt: ', RECORD(15)
-      !>                          WRITE (*,*) '   d AV(2)/dt: ', RECORD(16)
-      !>                          WRITE (*,*) '   d AV(3)/dt: ', RECORD(17)
+      !>                  WRITE (*,*) '         Q(0): ', RECORD(4)
+      !>                  WRITE (*,*) '         Q(1): ', RECORD(5)
+      !>                  WRITE (*,*) '         Q(2): ', RECORD(6)
+      !>                  WRITE (*,*) '         Q(3): ', RECORD(7)
+      !>                  WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
+      !>                  WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
+      !>                  WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
+      !>                  WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
+      !>                  WRITE (*,*) '        AV(1): ', RECORD(12)
+      !>                  WRITE (*,*) '        AV(2): ', RECORD(13)
+      !>                  WRITE (*,*) '        AV(3): ', RECORD(14)
+      !>                  WRITE (*,*) '   d AV(1)/dt: ', RECORD(15)
+      !>                  WRITE (*,*) '   d AV(2)/dt: ', RECORD(16)
+      !>                  WRITE (*,*) '   d AV(3)/dt: ', RECORD(17)
       !>
-      !>                       ELSE IF ( SUBTYP .EQ. C06TP3 ) THEN
+      !>               ELSE IF ( SUBTYP .EQ. C06TP3 ) THEN
       !>
-      !>                          WRITE (*,*) '         Q(0): ', RECORD(4)
-      !>                          WRITE (*,*) '         Q(1): ', RECORD(5)
-      !>                          WRITE (*,*) '         Q(2): ', RECORD(6)
-      !>                          WRITE (*,*) '         Q(3): ', RECORD(7)
-      !>                          WRITE (*,*) '        AV(1): ', RECORD(8)
-      !>                          WRITE (*,*) '        AV(2): ', RECORD(9)
-      !>                          WRITE (*,*) '        AV(3): ', RECORD(10)
+      !>                  WRITE (*,*) '         Q(0): ', RECORD(4)
+      !>                  WRITE (*,*) '         Q(1): ', RECORD(5)
+      !>                  WRITE (*,*) '         Q(2): ', RECORD(6)
+      !>                  WRITE (*,*) '         Q(3): ', RECORD(7)
+      !>                  WRITE (*,*) '        AV(1): ', RECORD(8)
+      !>                  WRITE (*,*) '        AV(2): ', RECORD(9)
+      !>                  WRITE (*,*) '        AV(3): ', RECORD(10)
       !>
-      !>                       ELSE
-      !>                          CALL SETMSG ( 'Subtype # is not '
-      !>             .            //            'recognized.'         )
-      !>                          CALL ERRINT ( '#', SUBTYP           )
-      !>                          CALL SIGERR ( 'SPICE(NOTSUPPORTED)' )
-      !>                       END IF
+      !>               ELSE
+      !>                  CALL SETMSG ( 'Subtype # is not '
+      !>     .            //            'recognized.'         )
+      !>                  CALL ERRINT ( '#', SUBTYP           )
+      !>                  CALL SIGERR ( 'SPICE(NOTSUPPORTED)' )
+      !>               END IF
       !>
-      !>                       WRITE (*,*) ' '
+      !>               WRITE (*,*) ' '
       !>
-      !>                   END DO
+      !>           END DO
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 CALL DAFFNA ( FOUND )
+      !>         CALL DAFFNA ( FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the Rosetta CK file named
@@ -2939,9 +2974,19 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (JML) (BVS)
-      module procedure ckmp06
+      module subroutine ckmp06 ( ctx, handle, descr, msno, rate, subtyp, winsiz, nrec, ivlbds, lstepc )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr  ( * )  !! The descriptor of the type 6 segment.
+      integer(ip), intent(in) :: msno  !! Mini-segment index.
+      real(wp), intent(out) :: rate  !! SCLK rate in seconds/tick.
+      integer(ip), intent(out) :: subtyp  !! Subtype code.
+      integer(ip), intent(out) :: winsiz  !! Interpolation window size.
+      integer(ip), intent(out) :: nrec  !! Number of records in mini-segment.
+      real(wp), intent(out) :: ivlbds ( 2 )  !! Mini-segment interval bounds of mini-segment.
+      real(wp), intent(out) :: lstepc  !! Last epoch of mini-segment.
       real(wp) :: lstepc_1(1)  !! one-element copy of lstepc (array argument)
 
 !        ND         is the number of double precision components in an
@@ -2957,12 +3002,6 @@ contains
 
 
       integer(ip), parameter :: dtype = 6
-
-
-!
-!     Mini-segment control area size:
-!
-
 
 
       real(wp) :: buffer ( bufsiz )
@@ -3104,8 +3143,11 @@ contains
       lstepc = lstepc_1(1)
 
       return
-      end procedure ckmp06
+      end subroutine ckmp06
 
+      !> Return the number of mini-segments in a type 6 CK segment, given
+      !> the handle of the type 6 CK file and the segment's descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -3170,200 +3212,202 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKNM06_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKNM06_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Dump all records from a CK that
-      !>        C     contains only segments of type 6.
-      !>        C
-      !>              INCLUDE 'ck06.inc'
+      !>C
+      !>C     Dump all records from a CK that
+      !>C     contains only segments of type 6.
+      !>C
+      !>      INCLUDE 'ck06.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               ND
-      !>              PARAMETER           ( ND     = 2 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               ND
+      !>      PARAMETER           ( ND     = 2 )
       !>
-      !>              INTEGER               NI
-      !>              PARAMETER           ( NI     = 6 )
+      !>      INTEGER               NI
+      !>      PARAMETER           ( NI     = 6 )
       !>
-      !>              INTEGER               DSCSIZ
-      !>              PARAMETER           ( DSCSIZ = 5 )
+      !>      INTEGER               DSCSIZ
+      !>      PARAMETER           ( DSCSIZ = 5 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>        C
-      !>        C     RECSIZ is the size of the largest pointing
-      !>        C     record, which corresponds to subtype 2.
-      !>        C
-      !>              INTEGER               RECSIZ
-      !>              PARAMETER           ( RECSIZ = C06PS2 + 3 )
+      !>C
+      !>C     RECSIZ is the size of the largest pointing
+      !>C     record, which corresponds to subtype 2.
+      !>C
+      !>      INTEGER               RECSIZ
+      !>      PARAMETER           ( RECSIZ = C06PS2 + 3 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    CK
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    CK
       !>
-      !>              DOUBLE PRECISION      DC     ( ND )
-      !>              DOUBLE PRECISION      DESCR  ( DSCSIZ )
-      !>              DOUBLE PRECISION      IVLBDS ( 2 )
-      !>              DOUBLE PRECISION      LSTEPC
-      !>              DOUBLE PRECISION      RATE
-      !>              DOUBLE PRECISION      RECORD ( RECSIZ )
+      !>      DOUBLE PRECISION      DC     ( ND )
+      !>      DOUBLE PRECISION      DESCR  ( DSCSIZ )
+      !>      DOUBLE PRECISION      IVLBDS ( 2 )
+      !>      DOUBLE PRECISION      LSTEPC
+      !>      DOUBLE PRECISION      RATE
+      !>      DOUBLE PRECISION      RECORD ( RECSIZ )
       !>
-      !>              INTEGER               DTYPE
-      !>              INTEGER               HANDLE
-      !>              INTEGER               IC     ( NI )
-      !>              INTEGER               RECNO
-      !>              INTEGER               MSNO
-      !>              INTEGER               NMINI
-      !>              INTEGER               NREC
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SUBTYP
-      !>              INTEGER               WINSIZ
+      !>      INTEGER               DTYPE
+      !>      INTEGER               HANDLE
+      !>      INTEGER               IC     ( NI )
+      !>      INTEGER               RECNO
+      !>      INTEGER               MSNO
+      !>      INTEGER               NMINI
+      !>      INTEGER               NREC
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SUBTYP
+      !>      INTEGER               WINSIZ
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>              CALL PROMPT ( 'Enter name of CK to dump > ', CK )
+      !>      CALL PROMPT ( 'Enter name of CK to dump > ', CK )
       !>
-      !>              CALL DAFOPR ( CK, HANDLE )
+      !>      CALL DAFOPR ( CK, HANDLE )
       !>
-      !>        C
-      !>        C     Dump data from each CK segment.
-      !>        C
-      !>              SEGNO = 0
+      !>C
+      !>C     Dump data from each CK segment.
+      !>C
+      !>      SEGNO = 0
       !>
-      !>              CALL DAFBFS ( HANDLE )
-      !>              CALL DAFFNA ( FOUND  )
+      !>      CALL DAFBFS ( HANDLE )
+      !>      CALL DAFFNA ( FOUND  )
       !>
-      !>              DO WHILE ( FOUND )
+      !>      DO WHILE ( FOUND )
       !>
-      !>                 SEGNO = SEGNO + 1
+      !>         SEGNO = SEGNO + 1
       !>
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Segment number: ', SEGNO
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Segment number: ', SEGNO
       !>
-      !>        C
-      !>        C        Fetch and unpack the descriptor of the
-      !>        C        current segment; check the data type.
-      !>        C
-      !>                 CALL DAFGS ( DESCR )
-      !>                 CALL DAFUS ( DESCR, ND, NI, DC, IC )
+      !>C
+      !>C        Fetch and unpack the descriptor of the
+      !>C        current segment; check the data type.
+      !>C
+      !>         CALL DAFGS ( DESCR )
+      !>         CALL DAFUS ( DESCR, ND, NI, DC, IC )
       !>
-      !>                 DTYPE = IC(3)
+      !>         DTYPE = IC(3)
       !>
-      !>                 IF ( DTYPE .NE. 6 ) THEN
+      !>         IF ( DTYPE .NE. 6 ) THEN
       !>
-      !>                    CALL SETMSG ( 'Data type must be 6 but was #.' )
-      !>                    CALL ERRINT ( '#',  DTYPE                      )
-      !>                    CALL SIGERR ( 'SPICE(NOTSUPPORTED)'            )
+      !>            CALL SETMSG ( 'Data type must be 6 but was #.' )
+      !>            CALL ERRINT ( '#',  DTYPE                      )
+      !>            CALL SIGERR ( 'SPICE(NOTSUPPORTED)'            )
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>        C
-      !>        C        Get the mini-segment count for this
-      !>        C        segment.
-      !>        C
-      !>                 CALL CKNM06 ( HANDLE, DESCR, NMINI )
+      !>C
+      !>C        Get the mini-segment count for this
+      !>C        segment.
+      !>C
+      !>         CALL CKNM06 ( HANDLE, DESCR, NMINI )
       !>
-      !>        C
-      !>        C        Dump data from each mini-segment.
-      !>        C
-      !>                 DO MSNO = 1, NMINI
+      !>C
+      !>C        Dump data from each mini-segment.
+      !>C
+      !>         DO MSNO = 1, NMINI
       !>
-      !>        C
-      !>        C           Get the mini-segment's record count
-      !>        C           and time bounds.
-      !>        C
-      !>                    CALL CKMP06 ( HANDLE, DESCR,  MSNO,
-      !>             .                    RATE,   SUBTYP, WINSIZ,
-      !>             .                    NREC,   IVLBDS, LSTEPC )
+      !>C
+      !>C           Get the mini-segment's record count
+      !>C           and time bounds.
+      !>C
+      !>            CALL CKMP06 ( HANDLE, DESCR,  MSNO,
+      !>     .                    RATE,   SUBTYP, WINSIZ,
+      !>     .                    NREC,   IVLBDS, LSTEPC )
       !>
-      !>                    WRITE (*,*) ' '
-      !>                    WRITE (*,*) '   Mini-segment number: ', MSNO
-      !>                    WRITE (*,*) '      Rate:           ',   RATE
-      !>                    WRITE (*,*) '      Subtype:        ',   SUBTYP
-      !>                    WRITE (*,*) '      Window size:    ',   WINSIZ
-      !>                    WRITE (*,*) '      Interval start: ',   IVLBDS(1)
-      !>                    WRITE (*,*) '      Interval stop:  ',   IVLBDS(2)
-      !>                    WRITE (*,*) '      Last epoch:     ',   LSTEPC
-      !>                    WRITE (*,*) ' '
+      !>            WRITE (*,*) ' '
+      !>            WRITE (*,*) '   Mini-segment number: ', MSNO
+      !>            WRITE (*,*) '      Rate:           ',   RATE
+      !>            WRITE (*,*) '      Subtype:        ',   SUBTYP
+      !>            WRITE (*,*) '      Window size:    ',   WINSIZ
+      !>            WRITE (*,*) '      Interval start: ',   IVLBDS(1)
+      !>            WRITE (*,*) '      Interval stop:  ',   IVLBDS(2)
+      !>            WRITE (*,*) '      Last epoch:     ',   LSTEPC
+      !>            WRITE (*,*) ' '
       !>
-      !>                    DO RECNO = 1, NREC
+      !>            DO RECNO = 1, NREC
       !>
-      !>                       CALL CKGR06 ( HANDLE, DESCR,
-      !>             .                       MSNO,   RECNO,  RECORD )
+      !>               CALL CKGR06 ( HANDLE, DESCR,
+      !>     .                       MSNO,   RECNO,  RECORD )
       !>
-      !>                       WRITE (*,*) '      Record number: ', RECNO
-      !>                       WRITE (*,*) '         SCLKDP:     ', RECORD(1)
-      !>                       WRITE (*,*) '         Clock rate: ', RECORD(3)
+      !>               WRITE (*,*) '      Record number: ', RECNO
+      !>               WRITE (*,*) '         SCLKDP:     ', RECORD(1)
+      !>               WRITE (*,*) '         Clock rate: ', RECORD(3)
       !>
-      !>                       IF ( SUBTYP .EQ. C06TP0 ) THEN
+      !>               IF ( SUBTYP .EQ. C06TP0 ) THEN
       !>
-      !>                          WRITE (*,*) '         Q(0): ', RECORD(4)
-      !>                          WRITE (*,*) '         Q(1): ', RECORD(5)
-      !>                          WRITE (*,*) '         Q(2): ', RECORD(6)
-      !>                          WRITE (*,*) '         Q(3): ', RECORD(7)
-      !>                          WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
-      !>                          WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
-      !>                          WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
-      !>                          WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
+      !>                  WRITE (*,*) '         Q(0): ', RECORD(4)
+      !>                  WRITE (*,*) '         Q(1): ', RECORD(5)
+      !>                  WRITE (*,*) '         Q(2): ', RECORD(6)
+      !>                  WRITE (*,*) '         Q(3): ', RECORD(7)
+      !>                  WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
+      !>                  WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
+      !>                  WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
+      !>                  WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
       !>
-      !>                       ELSE IF ( SUBTYP .EQ. C06TP1 ) THEN
+      !>               ELSE IF ( SUBTYP .EQ. C06TP1 ) THEN
       !>
-      !>                          WRITE (*,*) '         Q(0): ', RECORD(4)
-      !>                          WRITE (*,*) '         Q(1): ', RECORD(5)
-      !>                          WRITE (*,*) '         Q(2): ', RECORD(6)
-      !>                          WRITE (*,*) '         Q(3): ', RECORD(7)
+      !>                  WRITE (*,*) '         Q(0): ', RECORD(4)
+      !>                  WRITE (*,*) '         Q(1): ', RECORD(5)
+      !>                  WRITE (*,*) '         Q(2): ', RECORD(6)
+      !>                  WRITE (*,*) '         Q(3): ', RECORD(7)
       !>
-      !>                       ELSE IF ( SUBTYP .EQ. C06TP2 ) THEN
+      !>               ELSE IF ( SUBTYP .EQ. C06TP2 ) THEN
       !>
-      !>                          WRITE (*,*) '         Q(0): ', RECORD(4)
-      !>                          WRITE (*,*) '         Q(1): ', RECORD(5)
-      !>                          WRITE (*,*) '         Q(2): ', RECORD(6)
-      !>                          WRITE (*,*) '         Q(3): ', RECORD(7)
-      !>                          WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
-      !>                          WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
-      !>                          WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
-      !>                          WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
-      !>                          WRITE (*,*) '        AV(1): ', RECORD(12)
-      !>                          WRITE (*,*) '        AV(2): ', RECORD(13)
-      !>                          WRITE (*,*) '        AV(3): ', RECORD(14)
-      !>                          WRITE (*,*) '   d AV(1)/dt: ', RECORD(15)
-      !>                          WRITE (*,*) '   d AV(2)/dt: ', RECORD(16)
-      !>                          WRITE (*,*) '   d AV(3)/dt: ', RECORD(17)
+      !>                  WRITE (*,*) '         Q(0): ', RECORD(4)
+      !>                  WRITE (*,*) '         Q(1): ', RECORD(5)
+      !>                  WRITE (*,*) '         Q(2): ', RECORD(6)
+      !>                  WRITE (*,*) '         Q(3): ', RECORD(7)
+      !>                  WRITE (*,*) '    d Q(0)/dt: ', RECORD(8)
+      !>                  WRITE (*,*) '    d Q(1)/dt: ', RECORD(9)
+      !>                  WRITE (*,*) '    d Q(2)/dt: ', RECORD(10)
+      !>                  WRITE (*,*) '    d Q(3)/dt: ', RECORD(11)
+      !>                  WRITE (*,*) '        AV(1): ', RECORD(12)
+      !>                  WRITE (*,*) '        AV(2): ', RECORD(13)
+      !>                  WRITE (*,*) '        AV(3): ', RECORD(14)
+      !>                  WRITE (*,*) '   d AV(1)/dt: ', RECORD(15)
+      !>                  WRITE (*,*) '   d AV(2)/dt: ', RECORD(16)
+      !>                  WRITE (*,*) '   d AV(3)/dt: ', RECORD(17)
       !>
-      !>                       ELSE IF ( SUBTYP .EQ. C06TP3 ) THEN
+      !>               ELSE IF ( SUBTYP .EQ. C06TP3 ) THEN
       !>
-      !>                          WRITE (*,*) '         Q(0): ', RECORD(4)
-      !>                          WRITE (*,*) '         Q(1): ', RECORD(5)
-      !>                          WRITE (*,*) '         Q(2): ', RECORD(6)
-      !>                          WRITE (*,*) '         Q(3): ', RECORD(7)
-      !>                          WRITE (*,*) '        AV(1): ', RECORD(8)
-      !>                          WRITE (*,*) '        AV(2): ', RECORD(9)
-      !>                          WRITE (*,*) '        AV(3): ', RECORD(10)
+      !>                  WRITE (*,*) '         Q(0): ', RECORD(4)
+      !>                  WRITE (*,*) '         Q(1): ', RECORD(5)
+      !>                  WRITE (*,*) '         Q(2): ', RECORD(6)
+      !>                  WRITE (*,*) '         Q(3): ', RECORD(7)
+      !>                  WRITE (*,*) '        AV(1): ', RECORD(8)
+      !>                  WRITE (*,*) '        AV(2): ', RECORD(9)
+      !>                  WRITE (*,*) '        AV(3): ', RECORD(10)
       !>
-      !>                       ELSE
-      !>                          CALL SETMSG ( 'Subtype # is not '
-      !>             .            //            'recognized.'         )
-      !>                          CALL ERRINT ( '#', SUBTYP           )
-      !>                          CALL SIGERR ( 'SPICE(NOTSUPPORTED)' )
-      !>                       END IF
+      !>               ELSE
+      !>                  CALL SETMSG ( 'Subtype # is not '
+      !>     .            //            'recognized.'         )
+      !>                  CALL ERRINT ( '#', SUBTYP           )
+      !>                  CALL SIGERR ( 'SPICE(NOTSUPPORTED)' )
+      !>               END IF
       !>
-      !>                       WRITE (*,*) ' '
+      !>               WRITE (*,*) ' '
       !>
-      !>                   END DO
+      !>           END DO
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 CALL DAFFNA ( FOUND )
+      !>         CALL DAFFNA ( FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the Rosetta CK file named
@@ -3494,9 +3538,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (JML) (BVS)
-      module procedure cknm06
+      module subroutine cknm06 ( ctx, handle, descr, nmini )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 6 segment.
+      integer(ip), intent(out) :: nmini  !! The number of pointing instances in the segment.
 
 !        ND         is the number of double precision components in an
 !                   unpacked C-kernel descriptor.
@@ -3565,8 +3613,12 @@ contains
       nmini = nint ( dpdata(1) )
 
       return
-      end procedure cknm06
+      end subroutine cknm06
 
+      !> Return the number of pointing instances in a CK type 01 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -3751,18 +3803,14 @@ contains
       !>        5) The in-code comments were improved.
       !>
       !>-    Beta Version 1.0.0, 22-MAY-1990 (RET) (IMU)
-      module procedure cknr01
+      module subroutine cknr01 ( ctx, handle, descr, nrec )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 1 segment.
+      integer(ip), intent(out) :: nrec  !! The number of records in the segment.
       real(wp) :: n_1(1)  !! one-element copy of n (array argument)
-
-!        NDC        is the number of double precision components in an
-!                   unpacked C-kernel descriptor.
-!
-!        NIC        is the number of integer components in an unpacked
-!                   C-kernel descriptor.
-!
-
 
       integer(ip) :: icd  ( nic )
 
@@ -3816,8 +3864,12 @@ contains
       nrec = int( n )
 
       return
-      end procedure cknr01
+      end subroutine cknr01
 
+      !> Return the number of pointing records in a CK type 02 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -3882,110 +3934,112 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKNR02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKNR02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              DOUBLE PRECISION      AV      ( 3 )
-      !>              DOUBLE PRECISION      CMAT    ( 3, 3 )
-      !>              DOUBLE PRECISION      DCD     ( 2  )
-      !>              DOUBLE PRECISION      DESCR   ( 5  )
-      !>              DOUBLE PRECISION      QUAT    ( 4 )
-      !>              DOUBLE PRECISION      RECORD  ( 10 )
-      !>              DOUBLE PRECISION      SCLKE
-      !>              DOUBLE PRECISION      SCLKR
-      !>              DOUBLE PRECISION      SCLKS
-      !>              DOUBLE PRECISION      Z       ( 3 )
+      !>      DOUBLE PRECISION      AV      ( 3 )
+      !>      DOUBLE PRECISION      CMAT    ( 3, 3 )
+      !>      DOUBLE PRECISION      DCD     ( 2  )
+      !>      DOUBLE PRECISION      DESCR   ( 5  )
+      !>      DOUBLE PRECISION      QUAT    ( 4 )
+      !>      DOUBLE PRECISION      RECORD  ( 10 )
+      !>      DOUBLE PRECISION      SCLKE
+      !>      DOUBLE PRECISION      SCLKR
+      !>      DOUBLE PRECISION      SCLKS
+      !>      DOUBLE PRECISION      Z       ( 3 )
       !>
-      !>              INTEGER               ICD     ( 6 )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NREC
-      !>              INTEGER               I
+      !>      INTEGER               ICD     ( 6 )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NREC
+      !>      INTEGER               I
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     First load the file. (The file may also be opened by
-      !>        C     using CKLPF).
-      !>        C
-      !>              CALL DAFOPR ( 'vo2_swu_ck2.bc', HANDLE )
+      !>C
+      !>C     First load the file. (The file may also be opened by
+      !>C     using CKLPF).
+      !>C
+      !>      CALL DAFOPR ( 'vo2_swu_ck2.bc', HANDLE )
       !>
-      !>        C
-      !>        C     Begin forward search.  Find the first array.
-      !>        C
-      !>              CALL DAFBFS ( HANDLE )
-      !>              CALL DAFFNA ( FOUND  )
+      !>C
+      !>C     Begin forward search.  Find the first array.
+      !>C
+      !>      CALL DAFBFS ( HANDLE )
+      !>      CALL DAFFNA ( FOUND  )
       !>
-      !>        C
-      !>        C     Get segment descriptor.
-      !>        C
-      !>              CALL DAFGS ( DESCR )
+      !>C
+      !>C     Get segment descriptor.
+      !>C
+      !>      CALL DAFGS ( DESCR )
       !>
-      !>        C
-      !>        C     Unpack the segment descriptor into its double precision
-      !>        C     and integer components.
-      !>        C
-      !>              CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+      !>C
+      !>C     Unpack the segment descriptor into its double precision
+      !>C     and integer components.
+      !>C
+      !>      CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
       !>
-      !>        C
-      !>        C     The data type for a segment is located in the third
-      !>        C     integer component of the descriptor.
-      !>        C
-      !>              IF ( ICD( 3 ) .EQ. 2 ) THEN
+      !>C
+      !>C     The data type for a segment is located in the third
+      !>C     integer component of the descriptor.
+      !>C
+      !>      IF ( ICD( 3 ) .EQ. 2 ) THEN
       !>
-      !>        C
-      !>        C        How many records does this segment contain?
-      !>        C
-      !>                 CALL CKNR02 ( HANDLE, DESCR, NREC )
+      !>C
+      !>C        How many records does this segment contain?
+      !>C
+      !>         CALL CKNR02 ( HANDLE, DESCR, NREC )
       !>
-      !>                 DO I = 1, NREC
+      !>         DO I = 1, NREC
       !>
-      !>        C
-      !>        C           Get the Ith record in the segment.
-      !>        C
-      !>                    CALL CKGR02 ( HANDLE, DESCR, I, RECORD )
+      !>C
+      !>C           Get the Ith record in the segment.
+      !>C
+      !>            CALL CKGR02 ( HANDLE, DESCR, I, RECORD )
       !>
-      !>        C
-      !>        C           Unpack RECORD into the start and end time, rate in
-      !>        C           TDB seconds/tick, quaternion, and av.
-      !>        C
-      !>                    SCLKS = RECORD ( 1 )
-      !>                    SCLKE = RECORD ( 2 )
-      !>                    SCLKR = RECORD ( 3 )
+      !>C
+      !>C           Unpack RECORD into the start and end time, rate in
+      !>C           TDB seconds/tick, quaternion, and av.
+      !>C
+      !>            SCLKS = RECORD ( 1 )
+      !>            SCLKE = RECORD ( 2 )
+      !>            SCLKR = RECORD ( 3 )
       !>
-      !>                    CALL MOVED ( RECORD(4), 4, QUAT )
-      !>                    CALL MOVED ( RECORD(8), 3, AV   )
+      !>            CALL MOVED ( RECORD(4), 4, QUAT )
+      !>            CALL MOVED ( RECORD(8), 3, AV   )
       !>
-      !>        C
-      !>        C           The +Z axis direction is the third row of the
-      !>        C           C-matrix.
-      !>        C
-      !>                    CALL Q2M ( QUAT, CMAT )
+      !>C
+      !>C           The +Z axis direction is the third row of the
+      !>C           C-matrix.
+      !>C
+      !>            CALL Q2M ( QUAT, CMAT )
       !>
-      !>                    Z(1) = CMAT(3,1)
-      !>                    Z(2) = CMAT(3,2)
-      !>                    Z(3) = CMAT(3,3)
+      !>            Z(1) = CMAT(3,1)
+      !>            Z(2) = CMAT(3,2)
+      !>            Z(3) = CMAT(3,3)
       !>
-      !>        C
-      !>        C           Write out the results.
-      !>        C
-      !>                    WRITE (*,'(A,I2)') 'Record: ', I
-      !>                    WRITE (*,'(A,F21.6)') '   Start encoded SCLK:',
-      !>             .                              SCLKS
-      !>                    WRITE (*,'(A,F21.6)') '   End encoded SCLK  :',
-      !>             .                              SCLKE
-      !>                    WRITE (*,'(A,F21.6)') '   TDB Seconds/tick  :',
-      !>             .                              SCLKR
-      !>                    WRITE (*,'(A,3F13.8)') '   +Z axis           :',
-      !>             .                              Z
-      !>                    WRITE (*,'(A,3F13.8)') '   Angular velocity  :',
-      !>             .                              AV
-      !>                    WRITE (*,*)
+      !>C
+      !>C           Write out the results.
+      !>C
+      !>            WRITE (*,'(A,I2)') 'Record: ', I
+      !>            WRITE (*,'(A,F21.6)') '   Start encoded SCLK:',
+      !>     .                              SCLKS
+      !>            WRITE (*,'(A,F21.6)') '   End encoded SCLK  :',
+      !>     .                              SCLKE
+      !>            WRITE (*,'(A,F21.6)') '   TDB Seconds/tick  :',
+      !>     .                              SCLKR
+      !>            WRITE (*,'(A,3F13.8)') '   +Z axis           :',
+      !>     .                              Z
+      !>            WRITE (*,'(A,3F13.8)') '   Angular velocity  :',
+      !>     .                              AV
+      !>            WRITE (*,*)
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4123,21 +4177,13 @@ contains
       !>        Improved text in the $Abstract section.
       !>
       !>-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
-      module procedure cknr02
+      module subroutine cknr02 ( ctx, handle, descr, nrec )
       use pepper_kinds, only: ip, wp
       implicit none
-
-!        NDC        is the number of double precision components in an
-!                   unpacked C-kernel descriptor.
-!
-!        NIC        is the number of integer components in an unpacked
-!                   C-kernel descriptor.
-!
-!        DTYPE      is the data type.
-!
-
-
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the CK file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 2 segment.
+      integer(ip), intent(out) :: nrec  !! The number of records in the segment.
 
       integer(ip) :: beg
       integer(ip) :: end
@@ -4226,8 +4272,12 @@ contains
       nrec   = nint (  ( 100.0_wp * (real(arrsiz, wp)) + 1.0_wp ) / 1001.0_wp  )
 
       return
-      end procedure cknr02
+      end subroutine cknr02
 
+      !> Return the number of pointing instances in a CK type 03 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -4292,116 +4342,118 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKNR03_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKNR03_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      QUAT    ( 4 )
-      !>              DOUBLE PRECISION      AV      ( 3 )
-      !>              DOUBLE PRECISION      BORE    ( 3 )
-      !>              DOUBLE PRECISION      CMAT    ( 3, 3 )
-      !>              DOUBLE PRECISION      DCD     ( 2 )
-      !>              DOUBLE PRECISION      DESCR   ( 5 )
-      !>              DOUBLE PRECISION      RECORD  ( 8 )
-      !>              DOUBLE PRECISION      SCLKDP
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      QUAT    ( 4 )
+      !>      DOUBLE PRECISION      AV      ( 3 )
+      !>      DOUBLE PRECISION      BORE    ( 3 )
+      !>      DOUBLE PRECISION      CMAT    ( 3, 3 )
+      !>      DOUBLE PRECISION      DCD     ( 2 )
+      !>      DOUBLE PRECISION      DESCR   ( 5 )
+      !>      DOUBLE PRECISION      RECORD  ( 8 )
+      !>      DOUBLE PRECISION      SCLKDP
       !>
-      !>              INTEGER               I
-      !>              INTEGER               ICD     ( 6 )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NREC
+      !>      INTEGER               I
+      !>      INTEGER               ICD     ( 6 )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NREC
       !>
-      !>              LOGICAL               AVSEG
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               AVSEG
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     First load the file (it may also be opened by
-      !>        C     using CKLPF).
-      !>        C
-      !>              CALL DAFOPR ( 'VEX_BOOM_V01.BC', HANDLE )
+      !>C
+      !>C     First load the file (it may also be opened by
+      !>C     using CKLPF).
+      !>C
+      !>      CALL DAFOPR ( 'VEX_BOOM_V01.BC', HANDLE )
       !>
-      !>        C
-      !>        C     Begin forward search.  Find the first array.
-      !>        C
-      !>              CALL DAFBFS ( HANDLE )
-      !>              CALL DAFFNA ( FOUND  )
+      !>C
+      !>C     Begin forward search.  Find the first array.
+      !>C
+      !>      CALL DAFBFS ( HANDLE )
+      !>      CALL DAFFNA ( FOUND  )
       !>
-      !>        C
-      !>        C     Get segment descriptor.
-      !>        C
-      !>              CALL DAFGS ( DESCR )
+      !>C
+      !>C     Get segment descriptor.
+      !>C
+      !>      CALL DAFGS ( DESCR )
       !>
-      !>        C
-      !>        C     Unpack the segment descriptor into its double precision
-      !>        C     and integer components.
-      !>        C
-      !>              CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+      !>C
+      !>C     Unpack the segment descriptor into its double precision
+      !>C     and integer components.
+      !>C
+      !>      CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
       !>
-      !>        C
-      !>        C     The data type for a segment is located in the third
-      !>        C     integer component of the descriptor.
-      !>        C
-      !>              IF ( ICD( 3 ) .EQ. 3 ) THEN
+      !>C
+      !>C     The data type for a segment is located in the third
+      !>C     integer component of the descriptor.
+      !>C
+      !>      IF ( ICD( 3 ) .EQ. 3 ) THEN
       !>
-      !>        C
-      !>        C        Does the segment contain AV data?
-      !>        C
-      !>                 AVSEG =  ( ICD(4) .EQ. 1 )
+      !>C
+      !>C        Does the segment contain AV data?
+      !>C
+      !>         AVSEG =  ( ICD(4) .EQ. 1 )
       !>
-      !>        C
-      !>        C        How many records does this segment contain?
-      !>        C
-      !>                 CALL CKNR03 ( HANDLE, DESCR, NREC )
+      !>C
+      !>C        How many records does this segment contain?
+      !>C
+      !>         CALL CKNR03 ( HANDLE, DESCR, NREC )
       !>
-      !>                 DO I = 1, NREC
+      !>         DO I = 1, NREC
       !>
-      !>        C
-      !>        C           Get the Ith pointing instance in the segment.
-      !>        C
-      !>                    CALL CKGR03 ( HANDLE, DESCR, I, RECORD )
+      !>C
+      !>C           Get the Ith pointing instance in the segment.
+      !>C
+      !>            CALL CKGR03 ( HANDLE, DESCR, I, RECORD )
       !>
-      !>        C
-      !>        C           Unpack RECORD into the time, quaternion, and av.
-      !>        C
-      !>                    SCLKDP = RECORD ( 1 )
+      !>C
+      !>C           Unpack RECORD into the time, quaternion, and av.
+      !>C
+      !>            SCLKDP = RECORD ( 1 )
       !>
-      !>                    CALL MOVED ( RECORD(2), 4, QUAT )
+      !>            CALL MOVED ( RECORD(2), 4, QUAT )
       !>
-      !>                    IF  ( AVSEG )  THEN
-      !>                       CALL MOVED ( RECORD(6), 3, AV   )
-      !>                    END IF
+      !>            IF  ( AVSEG )  THEN
+      !>               CALL MOVED ( RECORD(6), 3, AV   )
+      !>            END IF
       !>
-      !>        C
-      !>        C           The boresight vector is the third row of the
-      !>        C           C-matrix.
-      !>        C
-      !>                    CALL Q2M ( QUAT, CMAT )
+      !>C
+      !>C           The boresight vector is the third row of the
+      !>C           C-matrix.
+      !>C
+      !>            CALL Q2M ( QUAT, CMAT )
       !>
-      !>                    BORE(1) = CMAT(3,1)
-      !>                    BORE(2) = CMAT(3,2)
-      !>                    BORE(3) = CMAT(3,3)
+      !>            BORE(1) = CMAT(3,1)
+      !>            BORE(2) = CMAT(3,2)
+      !>            BORE(3) = CMAT(3,3)
       !>
-      !>        C
-      !>        C           Write out the results.
-      !>        C
-      !>                    WRITE (*,'(A,I2)') 'Record: ', I
-      !>                    WRITE (*,'(A,F25.6)')  '   SCLK time       :',
-      !>             .                               SCLKDP
-      !>                    WRITE (*,'(A,3F14.9)') '   Boresight       :',
-      !>             .                               BORE
+      !>C
+      !>C           Write out the results.
+      !>C
+      !>            WRITE (*,'(A,I2)') 'Record: ', I
+      !>            WRITE (*,'(A,F25.6)')  '   SCLK time       :',
+      !>     .                               SCLKDP
+      !>            WRITE (*,'(A,3F14.9)') '   Boresight       :',
+      !>     .                               BORE
       !>
-      !>                    IF ( AVSEG ) THEN
-      !>                       WRITE (*,'(A,3F14.9)') '   Angular velocity:',
-      !>             .                                  AV
-      !>                    END IF
-      !>                    WRITE (*,*)
+      !>            IF ( AVSEG ) THEN
+      !>               WRITE (*,'(A,3F14.9)') '   Angular velocity:',
+      !>     .                                  AV
+      !>            END IF
+      !>            WRITE (*,*)
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4503,9 +4555,13 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
-      module procedure cknr03
+      module subroutine cknr03 ( ctx, handle, descr, nrec )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the CK file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 3 segment.
+      integer(ip), intent(out) :: nrec  !! The number of pointing instances in the segment.
       real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
 
 !        NDC        is the number of double precision components in an
@@ -4574,8 +4630,12 @@ contains
       nrec = nint ( npoint )
 
       return
-      end procedure cknr03
+      end subroutine cknr03
 
+      !> Return the number of pointing instances in a CK type 05 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -4732,9 +4792,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 18-AUG-2002 (NJB) (JML)
-      module procedure cknr05
+      module subroutine cknr05 ( ctx, handle, descr, nrec )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 5 segment.
+      integer(ip), intent(out) :: nrec  !! The number of pointing instances in the segment.
       real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
 
 !        NDC        is the number of double precision components in an
@@ -4803,8 +4867,10 @@ contains
       nrec = nint ( npoint )
 
       return
-      end procedure cknr05
+      end subroutine cknr05
 
+      !> Open a new CK file, returning the handle of the opened file.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of the CK file to be opened.
@@ -4871,191 +4937,193 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKOPN_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKOPN_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         CK3
-      !>              PARAMETER           ( CK3 = 'ckopn_ex1.bc' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         CK3
+      !>      PARAMETER           ( CK3 = 'ckopn_ex1.bc' )
       !>
-      !>              DOUBLE PRECISION      SPTICK
-      !>              PARAMETER           ( SPTICK = 0.001D0 )
+      !>      DOUBLE PRECISION      SPTICK
+      !>      PARAMETER           ( SPTICK = 0.001D0 )
       !>
-      !>              INTEGER               INST
-      !>              PARAMETER           ( INST = -77703 )
+      !>      INTEGER               INST
+      !>      PARAMETER           ( INST = -77703 )
       !>
-      !>              INTEGER               MAXREC
-      !>              PARAMETER           ( MAXREC = 201 )
+      !>      INTEGER               MAXREC
+      !>      PARAMETER           ( MAXREC = 201 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 42 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 42 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    REF
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    REF
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      AVVS   (   3,MAXREC )
-      !>              DOUBLE PRECISION      BEGTIM
-      !>              DOUBLE PRECISION      ENDTIM
-      !>              DOUBLE PRECISION      QUATS  ( 0:3,MAXREC )
-      !>              DOUBLE PRECISION      RATE
-      !>              DOUBLE PRECISION      RWMAT  ( 3, 3 )
-      !>              DOUBLE PRECISION      SPACES
-      !>              DOUBLE PRECISION      SCLKDP (     MAXREC )
-      !>              DOUBLE PRECISION      STARTS (    MAXREC/2)
-      !>              DOUBLE PRECISION      STICKS
-      !>              DOUBLE PRECISION      THETA
-      !>              DOUBLE PRECISION      WMAT   ( 3, 3 )
-      !>              DOUBLE PRECISION      WQUAT  ( 0:3 )
+      !>      DOUBLE PRECISION      AVVS   (   3,MAXREC )
+      !>      DOUBLE PRECISION      BEGTIM
+      !>      DOUBLE PRECISION      ENDTIM
+      !>      DOUBLE PRECISION      QUATS  ( 0:3,MAXREC )
+      !>      DOUBLE PRECISION      RATE
+      !>      DOUBLE PRECISION      RWMAT  ( 3, 3 )
+      !>      DOUBLE PRECISION      SPACES
+      !>      DOUBLE PRECISION      SCLKDP (     MAXREC )
+      !>      DOUBLE PRECISION      STARTS (    MAXREC/2)
+      !>      DOUBLE PRECISION      STICKS
+      !>      DOUBLE PRECISION      THETA
+      !>      DOUBLE PRECISION      WMAT   ( 3, 3 )
+      !>      DOUBLE PRECISION      WQUAT  ( 0:3 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               NCOMCH
-      !>              INTEGER               NINTS
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               NCOMCH
+      !>      INTEGER               NINTS
       !>
-      !>              LOGICAL               AVFLAG
+      !>      LOGICAL               AVFLAG
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, but it reserves room for 5000 characters.
-      !>        C
-      !>              NCOMCH = 5000
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, but it reserves room for 5000 characters.
+      !>C
+      !>      NCOMCH = 5000
       !>
-      !>        C
-      !>        C     The base reference from for the rotation data.
-      !>        C
-      !>              REF = 'J2000'
+      !>C
+      !>C     The base reference from for the rotation data.
+      !>C
+      !>      REF = 'J2000'
       !>
-      !>        C
-      !>        C     Time spacing in encoded ticks and in seconds
-      !>        C
-      !>              STICKS = 10.D0
-      !>              SPACES = STICKS * SPTICK
+      !>C
+      !>C     Time spacing in encoded ticks and in seconds
+      !>C
+      !>      STICKS = 10.D0
+      !>      SPACES = STICKS * SPTICK
       !>
-      !>        C
-      !>        C     Declare an angular rate in radians per sec.
-      !>        C
-      !>              RATE = 1.D-2
+      !>C
+      !>C     Declare an angular rate in radians per sec.
+      !>C
+      !>      RATE = 1.D-2
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              SEGID  = 'Test type 3 CK segment'
-      !>              IFNAME = 'Test CK type 3 segment created by CKW03'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      SEGID  = 'Test type 3 CK segment'
+      !>      IFNAME = 'Test CK type 3 segment created by CKW03'
       !>
-      !>        C
-      !>        C     Open a new kernel.
-      !>        C
-      !>              CALL CKOPN ( CK3, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new kernel.
+      !>C
+      !>      CALL CKOPN ( CK3, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Create a 3x3 double precision identity matrix.
-      !>        C
-      !>              CALL IDENT ( WMAT )
+      !>C
+      !>C     Create a 3x3 double precision identity matrix.
+      !>C
+      !>      CALL IDENT ( WMAT )
       !>
-      !>        C
-      !>        C     Convert the matrix to quaternion.
-      !>        C
-      !>              CALL M2Q ( WMAT, WQUAT )
+      !>C
+      !>C     Convert the matrix to quaternion.
+      !>C
+      !>      CALL M2Q ( WMAT, WQUAT )
       !>
-      !>        C
-      !>        C     Copy the work quaternion to the first row of
-      !>        C     QUATS.
-      !>        C
-      !>              CALL MOVED ( WQUAT, 4, QUATS(0,1) )
+      !>C
+      !>C     Copy the work quaternion to the first row of
+      !>C     QUATS.
+      !>C
+      !>      CALL MOVED ( WQUAT, 4, QUATS(0,1) )
       !>
-      !>        C
-      !>        C     Create an angular velocity vector. This vector is in the
-      !>        C     REF reference frame and indicates a constant rotation
-      !>        C     about the Z axis.
-      !>        C
-      !>              CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,1) )
+      !>C
+      !>C     Create an angular velocity vector. This vector is in the
+      !>C     REF reference frame and indicates a constant rotation
+      !>C     about the Z axis.
+      !>C
+      !>      CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,1) )
       !>
-      !>        C
-      !>        C     Set the initial value of the encoded ticks.
-      !>        C
-      !>              SCLKDP(1) = 1000.D0
+      !>C
+      !>C     Set the initial value of the encoded ticks.
+      !>C
+      !>      SCLKDP(1) = 1000.D0
       !>
-      !>        C
-      !>        C     Fill the rest of the AVVS and QUATS matrices
-      !>        C     with simple data.
-      !>        C
-      !>              DO I = 2, MAXREC
+      !>C
+      !>C     Fill the rest of the AVVS and QUATS matrices
+      !>C     with simple data.
+      !>C
+      !>      DO I = 2, MAXREC
       !>
-      !>        C
-      !>        C        Create the corresponding encoded tick value in
-      !>        C        increments of STICKS with an initial value of
-      !>        C        1000.0 ticks.
-      !>        C
-      !>                 SCLKDP(I) = 1000.D0 + (I-1) * STICKS
+      !>C
+      !>C        Create the corresponding encoded tick value in
+      !>C        increments of STICKS with an initial value of
+      !>C        1000.0 ticks.
+      !>C
+      !>         SCLKDP(I) = 1000.D0 + (I-1) * STICKS
       !>
-      !>        C
-      !>        C        Create the transformation matrix for a rotation of
-      !>        C        THETA about the Z axis. Calculate THETA from the
-      !>        C        constant angular rate RATE at increments of SPACES.
-      !>        C
-      !>                 THETA = (I-1) * RATE * SPACES
-      !>                 CALL ROTMAT ( WMAT, THETA, 3, RWMAT )
+      !>C
+      !>C        Create the transformation matrix for a rotation of
+      !>C        THETA about the Z axis. Calculate THETA from the
+      !>C        constant angular rate RATE at increments of SPACES.
+      !>C
+      !>         THETA = (I-1) * RATE * SPACES
+      !>         CALL ROTMAT ( WMAT, THETA, 3, RWMAT )
       !>
-      !>        C
-      !>        C        Convert the RWMAT matrix to SPICE type quaternion.
-      !>        C
-      !>                 CALL M2Q ( RWMAT, WQUAT )
+      !>C
+      !>C        Convert the RWMAT matrix to SPICE type quaternion.
+      !>C
+      !>         CALL M2Q ( RWMAT, WQUAT )
       !>
-      !>        C
-      !>        C        Store the quaternion in the QUATS matrix.
-      !>        C        Store angular velocity in AVVS.
-      !>        C
-      !>                 CALL MOVED ( WQUAT, 4, QUATS(0,I) )
-      !>                 CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,I) )
+      !>C
+      !>C        Store the quaternion in the QUATS matrix.
+      !>C        Store angular velocity in AVVS.
+      !>C
+      !>         CALL MOVED ( WQUAT, 4, QUATS(0,I) )
+      !>         CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,I) )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Create an array start times for the interpolation
-      !>        C     intervals. The end time for a particular interval is
-      !>        C     determined as the time of the final data value prior in
-      !>        C      time to the next start time.
-      !>        C
-      !>              NINTS = MAXREC/2
-      !>              DO I = 1, NINTS
+      !>C
+      !>C     Create an array start times for the interpolation
+      !>C     intervals. The end time for a particular interval is
+      !>C     determined as the time of the final data value prior in
+      !>C      time to the next start time.
+      !>C
+      !>      NINTS = MAXREC/2
+      !>      DO I = 1, NINTS
       !>
-      !>                 STARTS(I) = SCLKDP(I*2 - 1)
+      !>         STARTS(I) = SCLKDP(I*2 - 1)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Set the segment boundaries equal to the first and last
-      !>        C     time for the data arrays.
-      !>        C
-      !>              BEGTIM = SCLKDP(1)
-      !>              ENDTIM = SCLKDP(MAXREC)
+      !>C
+      !>C     Set the segment boundaries equal to the first and last
+      !>C     time for the data arrays.
+      !>C
+      !>      BEGTIM = SCLKDP(1)
+      !>      ENDTIM = SCLKDP(MAXREC)
       !>
-      !>        C
-      !>        C     This segment contains angular velocity.
-      !>        C
-      !>              AVFLAG = .TRUE.
+      !>C
+      !>C     This segment contains angular velocity.
+      !>C
+      !>      AVFLAG = .TRUE.
       !>
-      !>        C
-      !>        C     All information ready to write. Write to a CK type 3
-      !>        C     segment to the file indicated by HANDLE.
-      !>        C
-      !>              CALL CKW03 ( HANDLE, BEGTIM, ENDTIM, INST,   REF,
-      !>             .             AVFLAG, SEGID,  MAXREC, SCLKDP, QUATS,
-      !>             .             AVVS,   NINTS,  STARTS                )
+      !>C
+      !>C     All information ready to write. Write to a CK type 3
+      !>C     segment to the file indicated by HANDLE.
+      !>C
+      !>      CALL CKW03 ( HANDLE, BEGTIM, ENDTIM, INST,   REF,
+      !>     .             AVFLAG, SEGID,  MAXREC, SCLKDP, QUATS,
+      !>     .             AVVS,   NINTS,  STARTS                )
       !>
-      !>        C
-      !>        C     SAFELY close the file.
-      !>        C
-      !>              CALL CKCLS ( HANDLE )
+      !>C
+      !>C     SAFELY close the file.
+      !>C
+      !>      CALL CKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new CK file exists in the
@@ -5093,19 +5161,17 @@ contains
       !>        area allocation using NCOMCH.
       !>
       !>-    SPICELIB Version 1.0.0, 26-JAN-1995 (KRG)
-      module procedure ckopn
+      module subroutine ckopn ( ctx, fname, ifname, ncomch, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! The name of the CK file to be opened.
+      character(*), intent(in) :: ifname  !! The internal filename for the CK.
+      integer(ip), intent(in) :: ncomch  !! The number of characters to reserve for comments.
+      integer(ip), intent(out) :: handle  !! The handle of the opened CK file.
 
       character(*), parameter :: type = 'CK'
-!
-!     DAF ND and NI values for CK files.
-!
 
-
-!
-!     Length of a DAF comment record, in characters.
-!
 
       integer(ip) :: ncomr
 
@@ -5141,8 +5207,10 @@ contains
       end if
 
       return
-      end procedure ckopn
+      end subroutine ckopn
 
+      !> Add a type 1 segment to a C-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the CK file to which the segment will
@@ -5446,174 +5514,176 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKW01_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKW01_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         CK1
-      !>              PARAMETER           ( CK1 = 'ckw01_ex1.bc' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         CK1
+      !>      PARAMETER           ( CK1 = 'ckw01_ex1.bc' )
       !>
-      !>              DOUBLE PRECISION      SPTICK
-      !>              PARAMETER           ( SPTICK = 0.001D0 )
+      !>      DOUBLE PRECISION      SPTICK
+      !>      PARAMETER           ( SPTICK = 0.001D0 )
       !>
-      !>              INTEGER               INST
-      !>              PARAMETER           ( INST = -77701 )
+      !>      INTEGER               INST
+      !>      PARAMETER           ( INST = -77701 )
       !>
-      !>              INTEGER               MAXREC
-      !>              PARAMETER           ( MAXREC = 201 )
+      !>      INTEGER               MAXREC
+      !>      PARAMETER           ( MAXREC = 201 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 42 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 42 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    REF
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    REF
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      AVVS   (   3,MAXREC )
-      !>              DOUBLE PRECISION      BEGTIM
-      !>              DOUBLE PRECISION      ENDTIM
-      !>              DOUBLE PRECISION      QUATS  ( 0:3,MAXREC )
-      !>              DOUBLE PRECISION      RATE
-      !>              DOUBLE PRECISION      RWMAT  ( 3, 3 )
-      !>              DOUBLE PRECISION      SCLKDP (     MAXREC )
-      !>              DOUBLE PRECISION      SPACES
-      !>              DOUBLE PRECISION      STICKS
-      !>              DOUBLE PRECISION      THETA
-      !>              DOUBLE PRECISION      WMAT   ( 3, 3 )
-      !>              DOUBLE PRECISION      WQUAT  ( 0:3 )
+      !>      DOUBLE PRECISION      AVVS   (   3,MAXREC )
+      !>      DOUBLE PRECISION      BEGTIM
+      !>      DOUBLE PRECISION      ENDTIM
+      !>      DOUBLE PRECISION      QUATS  ( 0:3,MAXREC )
+      !>      DOUBLE PRECISION      RATE
+      !>      DOUBLE PRECISION      RWMAT  ( 3, 3 )
+      !>      DOUBLE PRECISION      SCLKDP (     MAXREC )
+      !>      DOUBLE PRECISION      SPACES
+      !>      DOUBLE PRECISION      STICKS
+      !>      DOUBLE PRECISION      THETA
+      !>      DOUBLE PRECISION      WMAT   ( 3, 3 )
+      !>      DOUBLE PRECISION      WQUAT  ( 0:3 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               NCOMCH
       !>
-      !>              LOGICAL               AVFLAG
+      !>      LOGICAL               AVFLAG
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     The base reference from for the rotation data.
-      !>        C
-      !>              REF = 'J2000'
+      !>C
+      !>C     The base reference from for the rotation data.
+      !>C
+      !>      REF = 'J2000'
       !>
-      !>        C
-      !>        C     Time spacing in encoded ticks and in seconds
-      !>        C
-      !>              STICKS = 10.D0
-      !>              SPACES = STICKS * SPTICK
+      !>C
+      !>C     Time spacing in encoded ticks and in seconds
+      !>C
+      !>      STICKS = 10.D0
+      !>      SPACES = STICKS * SPTICK
       !>
-      !>        C
-      !>        C     Declare an angular rate in radians per sec.
-      !>        C
-      !>              RATE = 1.D-2
+      !>C
+      !>C     Declare an angular rate in radians per sec.
+      !>C
+      !>      RATE = 1.D-2
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              SEGID  = 'Test type 1 CK segment'
-      !>              IFNAME = 'Test CK type 1 segment created by CKW01'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      SEGID  = 'Test type 1 CK segment'
+      !>      IFNAME = 'Test CK type 1 segment created by CKW01'
       !>
-      !>        C
-      !>        C     Open a new kernel.
-      !>        C
-      !>              CALL CKOPN ( CK1, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new kernel.
+      !>C
+      !>      CALL CKOPN ( CK1, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Create a 3x3 double precision identity matrix.
-      !>        C
-      !>              CALL IDENT ( WMAT )
+      !>C
+      !>C     Create a 3x3 double precision identity matrix.
+      !>C
+      !>      CALL IDENT ( WMAT )
       !>
-      !>        C
-      !>        C     Convert the matrix to quaternion.
-      !>        C
-      !>              CALL M2Q ( WMAT, WQUAT )
+      !>C
+      !>C     Convert the matrix to quaternion.
+      !>C
+      !>      CALL M2Q ( WMAT, WQUAT )
       !>
-      !>        C
-      !>        C     Copy the work quaternion to the first row of
-      !>        C     QUATS.
-      !>        C
-      !>              CALL MOVED ( WQUAT, 4, QUATS(0,1) )
+      !>C
+      !>C     Copy the work quaternion to the first row of
+      !>C     QUATS.
+      !>C
+      !>      CALL MOVED ( WQUAT, 4, QUATS(0,1) )
       !>
-      !>        C
-      !>        C     Create an angular velocity vector. This vector is in the
-      !>        C     REF reference frame.
-      !>        C
-      !>              CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,1) )
+      !>C
+      !>C     Create an angular velocity vector. This vector is in the
+      !>C     REF reference frame.
+      !>C
+      !>      CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,1) )
       !>
-      !>        C
-      !>        C     Set the initial value of the encoded ticks.
-      !>        C
-      !>              SCLKDP(1) = 1000.D0
+      !>C
+      !>C     Set the initial value of the encoded ticks.
+      !>C
+      !>      SCLKDP(1) = 1000.D0
       !>
-      !>        C
-      !>        C     Fill the rest of the AVVS and QUATS matrices
-      !>        C     with simple data.
-      !>        C
-      !>              DO I = 2, MAXREC
+      !>C
+      !>C     Fill the rest of the AVVS and QUATS matrices
+      !>C     with simple data.
+      !>C
+      !>      DO I = 2, MAXREC
       !>
-      !>        C
-      !>        C        Create the corresponding encoded tick value in
-      !>        C        increments of STICKS with an initial value of
-      !>        C        1000.0 ticks.
-      !>        C
-      !>                 SCLKDP(I) = 1000.D0 + (I-1) * STICKS
+      !>C
+      !>C        Create the corresponding encoded tick value in
+      !>C        increments of STICKS with an initial value of
+      !>C        1000.0 ticks.
+      !>C
+      !>         SCLKDP(I) = 1000.D0 + (I-1) * STICKS
       !>
-      !>        C
-      !>        C        Create the transformation matrix for a rotation of
-      !>        C        THETA about the Z axis. Calculate THETA from the
-      !>        C        constant angular rate RATE at increments of SPACES.
-      !>        C
-      !>                 THETA = (I-1) * RATE * SPACES
-      !>                 CALL ROTMAT ( WMAT, THETA, 3, RWMAT )
+      !>C
+      !>C        Create the transformation matrix for a rotation of
+      !>C        THETA about the Z axis. Calculate THETA from the
+      !>C        constant angular rate RATE at increments of SPACES.
+      !>C
+      !>         THETA = (I-1) * RATE * SPACES
+      !>         CALL ROTMAT ( WMAT, THETA, 3, RWMAT )
       !>
-      !>        C
-      !>        C        Convert the RWMAT matrix to SPICE type quaternion.
-      !>        C
-      !>                 CALL M2Q ( RWMAT, WQUAT )
+      !>C
+      !>C        Convert the RWMAT matrix to SPICE type quaternion.
+      !>C
+      !>         CALL M2Q ( RWMAT, WQUAT )
       !>
-      !>        C
-      !>        C        Store the quaternion in the QUATS matrix.
-      !>        C        Store angular velocity in AVVS.
-      !>        C
-      !>                 CALL MOVED ( WQUAT, 4, QUATS(0,I) )
-      !>                 CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,I) )
+      !>C
+      !>C        Store the quaternion in the QUATS matrix.
+      !>C        Store angular velocity in AVVS.
+      !>C
+      !>         CALL MOVED ( WQUAT, 4, QUATS(0,I) )
+      !>         CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,I) )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     This segment contains angular velocity.
-      !>        C
-      !>              AVFLAG = .TRUE.
+      !>C
+      !>C     This segment contains angular velocity.
+      !>C
+      !>      AVFLAG = .TRUE.
       !>
-      !>        C
-      !>        C     Set the segment boundaries equal to the first and last
-      !>        C     time for the data arrays.
-      !>        C
-      !>              BEGTIM = SCLKDP(1)
-      !>              ENDTIM = SCLKDP(MAXREC)
+      !>C
+      !>C     Set the segment boundaries equal to the first and last
+      !>C     time for the data arrays.
+      !>C
+      !>      BEGTIM = SCLKDP(1)
+      !>      ENDTIM = SCLKDP(MAXREC)
       !>
-      !>        C
-      !>        C     All information ready to write. Write to a CK type 1
-      !>        C     segment to the file indicated by HANDLE.
-      !>        C
-      !>              CALL CKW01 ( HANDLE, BEGTIM, ENDTIM, INST,  REF, AVFLAG,
-      !>             .             SEGID,  MAXREC, SCLKDP, QUATS, AVVS       )
+      !>C
+      !>C     All information ready to write. Write to a CK type 1
+      !>C     segment to the file indicated by HANDLE.
+      !>C
+      !>      CALL CKW01 ( HANDLE, BEGTIM, ENDTIM, INST,  REF, AVFLAG,
+      !>     .             SEGID,  MAXREC, SCLKDP, QUATS, AVVS       )
       !>
-      !>        C
-      !>        C     SAFELY close the file.
-      !>        C
-      !>              CALL CKCLS ( HANDLE )
+      !>C
+      !>C     SAFELY close the file.
+      !>C
+      !>      CALL CKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new CK file exists in the
@@ -5691,9 +5761,21 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1991 (JML) (NJB)
-      module procedure ckw01
+      module subroutine ckw01 ( ctx, handle, begtim, endtim, inst, ref, avflag, segid, nrec, sclkdp, quats, avvs )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an open CK file.
+      real(wp), intent(in) :: begtim  !! The beginning encoded SCLK of the segment.
+      real(wp), intent(in) :: endtim  !! The ending encoded SCLK of the segment.
+      integer(ip), intent(in) :: inst  !! The NAIF instrument ID code.
+      character(*), intent(in) :: ref  !! The reference frame of the segment.
+      logical, intent(in) :: avflag  !! .TRUE. if the segment will contain angular velocity.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: nrec  !! Number of pointing records.
+      real(wp), intent(in) :: sclkdp (      * )  !! Encoded SCLK times.
+      real(wp), intent(in) :: quats  ( 0:3, * )  !! SPICE quaternions representing instrument pointing.
+      real(wp), intent(in) :: avvs   (   3, * )  !! Angular velocity vectors.
 
 !     SIDLEN    is the maximum number of characters allowed in a CK
 !               segment identifier.
@@ -5968,8 +6050,10 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure ckw01
+      end subroutine ckw01
 
+      !> Write a type 2 segment to a C-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the CK file to which the segment will
@@ -6296,180 +6380,182 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKW02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKW02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         CK2
-      !>              PARAMETER           ( CK2 = 'ckw02_ex1.bc' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         CK2
+      !>      PARAMETER           ( CK2 = 'ckw02_ex1.bc' )
       !>
-      !>              DOUBLE PRECISION      SPTICK
-      !>              PARAMETER           ( SPTICK = 0.001D0 )
+      !>      DOUBLE PRECISION      SPTICK
+      !>      PARAMETER           ( SPTICK = 0.001D0 )
       !>
-      !>              INTEGER               INST
-      !>              PARAMETER           ( INST = -77702 )
+      !>      INTEGER               INST
+      !>      PARAMETER           ( INST = -77702 )
       !>
-      !>              INTEGER               MAXREC
-      !>              PARAMETER           ( MAXREC = 21 )
+      !>      INTEGER               MAXREC
+      !>      PARAMETER           ( MAXREC = 21 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 42 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 42 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    REF
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    REF
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      AVVS   (   3,MAXREC )
-      !>              DOUBLE PRECISION      BEGTIM
-      !>              DOUBLE PRECISION      ENDTIM
-      !>              DOUBLE PRECISION      QUATS  ( 0:3,MAXREC )
-      !>              DOUBLE PRECISION      RATE
-      !>              DOUBLE PRECISION      RATES  (     MAXREC )
-      !>              DOUBLE PRECISION      RWMAT  ( 3, 3 )
-      !>              DOUBLE PRECISION      SPACES
-      !>              DOUBLE PRECISION      STARTS (     MAXREC )
-      !>              DOUBLE PRECISION      STOPS  (     MAXREC )
-      !>              DOUBLE PRECISION      STICKS
-      !>              DOUBLE PRECISION      THETA
-      !>              DOUBLE PRECISION      WMAT   ( 3, 3 )
-      !>              DOUBLE PRECISION      WQUAT  ( 0:3 )
+      !>      DOUBLE PRECISION      AVVS   (   3,MAXREC )
+      !>      DOUBLE PRECISION      BEGTIM
+      !>      DOUBLE PRECISION      ENDTIM
+      !>      DOUBLE PRECISION      QUATS  ( 0:3,MAXREC )
+      !>      DOUBLE PRECISION      RATE
+      !>      DOUBLE PRECISION      RATES  (     MAXREC )
+      !>      DOUBLE PRECISION      RWMAT  ( 3, 3 )
+      !>      DOUBLE PRECISION      SPACES
+      !>      DOUBLE PRECISION      STARTS (     MAXREC )
+      !>      DOUBLE PRECISION      STOPS  (     MAXREC )
+      !>      DOUBLE PRECISION      STICKS
+      !>      DOUBLE PRECISION      THETA
+      !>      DOUBLE PRECISION      WMAT   ( 3, 3 )
+      !>      DOUBLE PRECISION      WQUAT  ( 0:3 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     The base reference from for the rotation data.
-      !>        C
-      !>              REF = 'J2000'
+      !>C
+      !>C     The base reference from for the rotation data.
+      !>C
+      !>      REF = 'J2000'
       !>
-      !>        C
-      !>        C     Time spacing in encoded ticks and in seconds
-      !>        C
-      !>              STICKS = 10.D0
-      !>              SPACES = STICKS * SPTICK
+      !>C
+      !>C     Time spacing in encoded ticks and in seconds
+      !>C
+      !>      STICKS = 10.D0
+      !>      SPACES = STICKS * SPTICK
       !>
-      !>        C
-      !>        C     Declare an angular rate in radians per sec.
-      !>        C
-      !>              RATE = 1.D-2
+      !>C
+      !>C     Declare an angular rate in radians per sec.
+      !>C
+      !>      RATE = 1.D-2
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              SEGID  = 'Test type 2 CK segment'
-      !>              IFNAME = 'Test CK type 2 segment created by CKW02'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      SEGID  = 'Test type 2 CK segment'
+      !>      IFNAME = 'Test CK type 2 segment created by CKW02'
       !>
-      !>        C
-      !>        C     Open a new kernel.
-      !>        C
-      !>              CALL CKOPN ( CK2, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new kernel.
+      !>C
+      !>      CALL CKOPN ( CK2, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Create a 3x3 double precision identity matrix.
-      !>        C
-      !>              CALL IDENT ( WMAT )
+      !>C
+      !>C     Create a 3x3 double precision identity matrix.
+      !>C
+      !>      CALL IDENT ( WMAT )
       !>
-      !>        C
-      !>        C     Convert the matrix to quaternion.
-      !>        C
-      !>              CALL M2Q ( WMAT, WQUAT )
+      !>C
+      !>C     Convert the matrix to quaternion.
+      !>C
+      !>      CALL M2Q ( WMAT, WQUAT )
       !>
-      !>        C
-      !>        C     Copy the work quaternion to the first row of
-      !>        C     QUATS.
-      !>        C
-      !>              CALL MOVED ( WQUAT, 4, QUATS(0,1) )
+      !>C
+      !>C     Copy the work quaternion to the first row of
+      !>C     QUATS.
+      !>C
+      !>      CALL MOVED ( WQUAT, 4, QUATS(0,1) )
       !>
-      !>        C
-      !>        C     Create an angular velocity vector. This vector is in the
-      !>        C     REF reference frame and indicates a constant rotation
-      !>        C     about the Z axis.
-      !>        C
-      !>              CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,1) )
+      !>C
+      !>C     Create an angular velocity vector. This vector is in the
+      !>C     REF reference frame and indicates a constant rotation
+      !>C     about the Z axis.
+      !>C
+      !>      CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,1) )
       !>
-      !>        C
-      !>        C     Set the initial value of the encoded ticks. The interval
-      !>        C     associated with each quaternion will start at the epoch
-      !>        C     of the quaternion and will extend 0.8 * STICKS forward in
-      !>        C     time, leaving small gaps between the intervals.
-      !>        C
-      !>        C     The clock rates array will have a constant SPTICK value.
-      !>        C
-      !>              STARTS(1) = 1000.D0
-      !>              STOPS(1)  = STARTS(1) + ( 0.8D0 * STICKS )
-      !>              RATES(1)  = SPTICK
+      !>C
+      !>C     Set the initial value of the encoded ticks. The interval
+      !>C     associated with each quaternion will start at the epoch
+      !>C     of the quaternion and will extend 0.8 * STICKS forward in
+      !>C     time, leaving small gaps between the intervals.
+      !>C
+      !>C     The clock rates array will have a constant SPTICK value.
+      !>C
+      !>      STARTS(1) = 1000.D0
+      !>      STOPS(1)  = STARTS(1) + ( 0.8D0 * STICKS )
+      !>      RATES(1)  = SPTICK
       !>
-      !>        C
-      !>        C     Fill the rest of the AVVS and QUATS matrices
-      !>        C     with simple data.
-      !>        C
-      !>              DO I = 2, MAXREC
+      !>C
+      !>C     Fill the rest of the AVVS and QUATS matrices
+      !>C     with simple data.
+      !>C
+      !>      DO I = 2, MAXREC
       !>
-      !>        C
-      !>        C        Create the corresponding encoded tick value in
-      !>        C        increments of STICKS with an initial value of
-      !>        C        1000.0 ticks.
-      !>        C
-      !>                 STARTS(I) = 1000.D0 + (I-1) * STICKS
-      !>                 STOPS(I)  = STARTS(I) + ( 0.8D0 * STICKS )
-      !>                 RATES(I)  = SPTICK
+      !>C
+      !>C        Create the corresponding encoded tick value in
+      !>C        increments of STICKS with an initial value of
+      !>C        1000.0 ticks.
+      !>C
+      !>         STARTS(I) = 1000.D0 + (I-1) * STICKS
+      !>         STOPS(I)  = STARTS(I) + ( 0.8D0 * STICKS )
+      !>         RATES(I)  = SPTICK
       !>
-      !>        C
-      !>        C        Create the transformation matrix for a rotation of
-      !>        C        THETA about the Z axis. Calculate THETA from the
-      !>        C        constant angular rate RATE at increments of SPACES.
-      !>        C
-      !>                 THETA = (I-1) * RATE * SPACES
-      !>                 CALL ROTMAT ( WMAT, THETA, 3, RWMAT )
+      !>C
+      !>C        Create the transformation matrix for a rotation of
+      !>C        THETA about the Z axis. Calculate THETA from the
+      !>C        constant angular rate RATE at increments of SPACES.
+      !>C
+      !>         THETA = (I-1) * RATE * SPACES
+      !>         CALL ROTMAT ( WMAT, THETA, 3, RWMAT )
       !>
-      !>        C
-      !>        C        Convert the RWMAT matrix to SPICE type quaternion.
-      !>        C
-      !>                 CALL M2Q ( RWMAT, WQUAT )
+      !>C
+      !>C        Convert the RWMAT matrix to SPICE type quaternion.
+      !>C
+      !>         CALL M2Q ( RWMAT, WQUAT )
       !>
-      !>        C
-      !>        C        Store the quaternion in the QUATS matrix.
-      !>        C        Store angular velocity in AVVS.
-      !>        C
-      !>                 CALL MOVED ( WQUAT, 4, QUATS(0,I) )
-      !>                 CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,I) )
+      !>C
+      !>C        Store the quaternion in the QUATS matrix.
+      !>C        Store angular velocity in AVVS.
+      !>C
+      !>         CALL MOVED ( WQUAT, 4, QUATS(0,I) )
+      !>         CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,I) )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Set the segment boundaries equal to the first and last
-      !>        C     time for the data arrays.
-      !>        C
-      !>              BEGTIM = STARTS(1)
-      !>              ENDTIM = STOPS(MAXREC)
+      !>C
+      !>C     Set the segment boundaries equal to the first and last
+      !>C     time for the data arrays.
+      !>C
+      !>      BEGTIM = STARTS(1)
+      !>      ENDTIM = STOPS(MAXREC)
       !>
-      !>        C
-      !>        C     All information ready to write. Write to a CK type 2
-      !>        C     segment to the file indicated by HANDLE.
-      !>        C
-      !>              CALL CKW02 ( HANDLE, BEGTIM, ENDTIM, INST,  REF,
-      !>             .             SEGID,  MAXREC, STARTS, STOPS, QUATS,
-      !>             .             AVVS,   RATES                       )
+      !>C
+      !>C     All information ready to write. Write to a CK type 2
+      !>C     segment to the file indicated by HANDLE.
+      !>C
+      !>      CALL CKW02 ( HANDLE, BEGTIM, ENDTIM, INST,  REF,
+      !>     .             SEGID,  MAXREC, STARTS, STOPS, QUATS,
+      !>     .             AVVS,   RATES                       )
       !>
-      !>        C
-      !>        C     SAFELY close the file.
-      !>        C
-      !>              CALL CKCLS ( HANDLE )
+      !>C
+      !>C     SAFELY close the file.
+      !>C
+      !>      CALL CKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new CK file exists in the
@@ -6579,9 +6665,22 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1991 (JML)
-      module procedure ckw02
+      module subroutine ckw02 ( ctx, handle, begtim, endtim, inst, ref, segid, nrec, start, stop, quats, avvs, rates )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an open CK file.
+      real(wp), intent(in) :: begtim  !! The beginning encoded SCLK of the segment.
+      real(wp), intent(in) :: endtim  !! The ending encoded SCLK of the segment.
+      integer(ip), intent(in) :: inst  !! The NAIF instrument ID code.
+      character(*), intent(in) :: ref  !! The reference frame of the segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: nrec  !! Number of pointing records.
+      real(wp), intent(in) :: start  (      * )  !! Encoded SCLK interval start times.
+      real(wp), intent(in) :: stop   (      * )  !! Encoded SCLK interval stop times.
+      real(wp), intent(in) :: quats  ( 0:3, * )  !! SPICE quaternions representing instrument pointing.
+      real(wp), intent(in) :: avvs   (   3, * )  !! Angular velocity vectors.
+      real(wp), intent(in) :: rates  (      * )  !! Number of seconds per tick for each interval.
 
 !     SIDLEN   is the maximum number of characters allowed in a CK
 !              segment identifier.
@@ -6886,8 +6985,10 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure ckw02
+      end subroutine ckw02
 
+      !> Add a type 3 segment to a C-kernel.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the CK file to which the segment will
@@ -7265,191 +7366,193 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKW03_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKW03_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         CK3
-      !>              PARAMETER           ( CK3 = 'ckw03_ex1.bc' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         CK3
+      !>      PARAMETER           ( CK3 = 'ckw03_ex1.bc' )
       !>
-      !>              DOUBLE PRECISION      SPTICK
-      !>              PARAMETER           ( SPTICK = 0.001D0 )
+      !>      DOUBLE PRECISION      SPTICK
+      !>      PARAMETER           ( SPTICK = 0.001D0 )
       !>
-      !>              INTEGER               INST
-      !>              PARAMETER           ( INST = -77703 )
+      !>      INTEGER               INST
+      !>      PARAMETER           ( INST = -77703 )
       !>
-      !>              INTEGER               MAXREC
-      !>              PARAMETER           ( MAXREC = 201 )
+      !>      INTEGER               MAXREC
+      !>      PARAMETER           ( MAXREC = 201 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 42 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 42 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    REF
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    REF
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      AVVS   (   3,MAXREC )
-      !>              DOUBLE PRECISION      BEGTIM
-      !>              DOUBLE PRECISION      ENDTIM
-      !>              DOUBLE PRECISION      QUATS  ( 0:3,MAXREC )
-      !>              DOUBLE PRECISION      RATE
-      !>              DOUBLE PRECISION      RWMAT  ( 3, 3 )
-      !>              DOUBLE PRECISION      SPACES
-      !>              DOUBLE PRECISION      SCLKDP (     MAXREC )
-      !>              DOUBLE PRECISION      STARTS (    MAXREC/2)
-      !>              DOUBLE PRECISION      STICKS
-      !>              DOUBLE PRECISION      THETA
-      !>              DOUBLE PRECISION      WMAT   ( 3, 3 )
-      !>              DOUBLE PRECISION      WQUAT  ( 0:3 )
+      !>      DOUBLE PRECISION      AVVS   (   3,MAXREC )
+      !>      DOUBLE PRECISION      BEGTIM
+      !>      DOUBLE PRECISION      ENDTIM
+      !>      DOUBLE PRECISION      QUATS  ( 0:3,MAXREC )
+      !>      DOUBLE PRECISION      RATE
+      !>      DOUBLE PRECISION      RWMAT  ( 3, 3 )
+      !>      DOUBLE PRECISION      SPACES
+      !>      DOUBLE PRECISION      SCLKDP (     MAXREC )
+      !>      DOUBLE PRECISION      STARTS (    MAXREC/2)
+      !>      DOUBLE PRECISION      STICKS
+      !>      DOUBLE PRECISION      THETA
+      !>      DOUBLE PRECISION      WMAT   ( 3, 3 )
+      !>      DOUBLE PRECISION      WQUAT  ( 0:3 )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               NCOMCH
-      !>              INTEGER               NINTS
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               NCOMCH
+      !>      INTEGER               NINTS
       !>
-      !>              LOGICAL               AVFLAG
+      !>      LOGICAL               AVFLAG
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, but it reserves room for 5000 characters.
-      !>        C
-      !>              NCOMCH = 5000
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, but it reserves room for 5000 characters.
+      !>C
+      !>      NCOMCH = 5000
       !>
-      !>        C
-      !>        C     The base reference from for the rotation data.
-      !>        C
-      !>              REF = 'J2000'
+      !>C
+      !>C     The base reference from for the rotation data.
+      !>C
+      !>      REF = 'J2000'
       !>
-      !>        C
-      !>        C     Time spacing in encoded ticks and in seconds
-      !>        C
-      !>              STICKS = 10.D0
-      !>              SPACES = STICKS * SPTICK
+      !>C
+      !>C     Time spacing in encoded ticks and in seconds
+      !>C
+      !>      STICKS = 10.D0
+      !>      SPACES = STICKS * SPTICK
       !>
-      !>        C
-      !>        C     Declare an angular rate in radians per sec.
-      !>        C
-      !>              RATE = 1.D-2
+      !>C
+      !>C     Declare an angular rate in radians per sec.
+      !>C
+      !>      RATE = 1.D-2
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              SEGID  = 'Test type 3 CK segment'
-      !>              IFNAME = 'Test CK type 3 segment created by CKW03'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      SEGID  = 'Test type 3 CK segment'
+      !>      IFNAME = 'Test CK type 3 segment created by CKW03'
       !>
-      !>        C
-      !>        C     Open a new kernel.
-      !>        C
-      !>              CALL CKOPN ( CK3, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new kernel.
+      !>C
+      !>      CALL CKOPN ( CK3, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Create a 3x3 double precision identity matrix.
-      !>        C
-      !>              CALL IDENT ( WMAT )
+      !>C
+      !>C     Create a 3x3 double precision identity matrix.
+      !>C
+      !>      CALL IDENT ( WMAT )
       !>
-      !>        C
-      !>        C     Convert the matrix to quaternion.
-      !>        C
-      !>              CALL M2Q ( WMAT, WQUAT )
+      !>C
+      !>C     Convert the matrix to quaternion.
+      !>C
+      !>      CALL M2Q ( WMAT, WQUAT )
       !>
-      !>        C
-      !>        C     Copy the work quaternion to the first row of
-      !>        C     QUATS.
-      !>        C
-      !>              CALL MOVED ( WQUAT, 4, QUATS(0,1) )
+      !>C
+      !>C     Copy the work quaternion to the first row of
+      !>C     QUATS.
+      !>C
+      !>      CALL MOVED ( WQUAT, 4, QUATS(0,1) )
       !>
-      !>        C
-      !>        C     Create an angular velocity vector. This vector is in the
-      !>        C     REF reference frame and indicates a constant rotation
-      !>        C     about the Z axis.
-      !>        C
-      !>              CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,1) )
+      !>C
+      !>C     Create an angular velocity vector. This vector is in the
+      !>C     REF reference frame and indicates a constant rotation
+      !>C     about the Z axis.
+      !>C
+      !>      CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,1) )
       !>
-      !>        C
-      !>        C     Set the initial value of the encoded ticks.
-      !>        C
-      !>              SCLKDP(1) = 1000.D0
+      !>C
+      !>C     Set the initial value of the encoded ticks.
+      !>C
+      !>      SCLKDP(1) = 1000.D0
       !>
-      !>        C
-      !>        C     Fill the rest of the AVVS and QUATS matrices
-      !>        C     with simple data.
-      !>        C
-      !>              DO I = 2, MAXREC
+      !>C
+      !>C     Fill the rest of the AVVS and QUATS matrices
+      !>C     with simple data.
+      !>C
+      !>      DO I = 2, MAXREC
       !>
-      !>        C
-      !>        C        Create the corresponding encoded tick value in
-      !>        C        increments of STICKS with an initial value of
-      !>        C        1000.0 ticks.
-      !>        C
-      !>                 SCLKDP(I) = 1000.D0 + (I-1) * STICKS
+      !>C
+      !>C        Create the corresponding encoded tick value in
+      !>C        increments of STICKS with an initial value of
+      !>C        1000.0 ticks.
+      !>C
+      !>         SCLKDP(I) = 1000.D0 + (I-1) * STICKS
       !>
-      !>        C
-      !>        C        Create the transformation matrix for a rotation of
-      !>        C        THETA about the Z axis. Calculate THETA from the
-      !>        C        constant angular rate RATE at increments of SPACES.
-      !>        C
-      !>                 THETA = (I-1) * RATE * SPACES
-      !>                 CALL ROTMAT ( WMAT, THETA, 3, RWMAT )
+      !>C
+      !>C        Create the transformation matrix for a rotation of
+      !>C        THETA about the Z axis. Calculate THETA from the
+      !>C        constant angular rate RATE at increments of SPACES.
+      !>C
+      !>         THETA = (I-1) * RATE * SPACES
+      !>         CALL ROTMAT ( WMAT, THETA, 3, RWMAT )
       !>
-      !>        C
-      !>        C        Convert the RWMAT matrix to SPICE type quaternion.
-      !>        C
-      !>                 CALL M2Q ( RWMAT, WQUAT )
+      !>C
+      !>C        Convert the RWMAT matrix to SPICE type quaternion.
+      !>C
+      !>         CALL M2Q ( RWMAT, WQUAT )
       !>
-      !>        C
-      !>        C        Store the quaternion in the QUATS matrix.
-      !>        C        Store angular velocity in AVVS.
-      !>        C
-      !>                 CALL MOVED ( WQUAT, 4, QUATS(0,I) )
-      !>                 CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,I) )
+      !>C
+      !>C        Store the quaternion in the QUATS matrix.
+      !>C        Store angular velocity in AVVS.
+      !>C
+      !>         CALL MOVED ( WQUAT, 4, QUATS(0,I) )
+      !>         CALL VPACK ( 0.D0, 0.D0, RATE, AVVS(1,I) )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Create an array start times for the interpolation
-      !>        C     intervals. The end time for a particular interval is
-      !>        C     determined as the time of the final data value prior in
-      !>        C      time to the next start time.
-      !>        C
-      !>              NINTS = MAXREC/2
-      !>              DO I = 1, NINTS
+      !>C
+      !>C     Create an array start times for the interpolation
+      !>C     intervals. The end time for a particular interval is
+      !>C     determined as the time of the final data value prior in
+      !>C      time to the next start time.
+      !>C
+      !>      NINTS = MAXREC/2
+      !>      DO I = 1, NINTS
       !>
-      !>                 STARTS(I) = SCLKDP(I*2 - 1)
+      !>         STARTS(I) = SCLKDP(I*2 - 1)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Set the segment boundaries equal to the first and last
-      !>        C     time for the data arrays.
-      !>        C
-      !>              BEGTIM = SCLKDP(1)
-      !>              ENDTIM = SCLKDP(MAXREC)
+      !>C
+      !>C     Set the segment boundaries equal to the first and last
+      !>C     time for the data arrays.
+      !>C
+      !>      BEGTIM = SCLKDP(1)
+      !>      ENDTIM = SCLKDP(MAXREC)
       !>
-      !>        C
-      !>        C     This segment contains angular velocity.
-      !>        C
-      !>              AVFLAG = .TRUE.
+      !>C
+      !>C     This segment contains angular velocity.
+      !>C
+      !>      AVFLAG = .TRUE.
       !>
-      !>        C
-      !>        C     All information ready to write. Write to a CK type 3
-      !>        C     segment to the file indicated by HANDLE.
-      !>        C
-      !>              CALL CKW03 ( HANDLE, BEGTIM, ENDTIM, INST,   REF,
-      !>             .             AVFLAG, SEGID,  MAXREC, SCLKDP, QUATS,
-      !>             .             AVVS,   NINTS,  STARTS                )
+      !>C
+      !>C     All information ready to write. Write to a CK type 3
+      !>C     segment to the file indicated by HANDLE.
+      !>C
+      !>      CALL CKW03 ( HANDLE, BEGTIM, ENDTIM, INST,   REF,
+      !>     .             AVFLAG, SEGID,  MAXREC, SCLKDP, QUATS,
+      !>     .             AVVS,   NINTS,  STARTS                )
       !>
-      !>        C
-      !>        C     SAFELY close the file.
-      !>        C
-      !>              CALL CKCLS ( HANDLE )
+      !>C
+      !>C     SAFELY close the file.
+      !>C
+      !>      CALL CKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new CK file exists in the
@@ -7542,9 +7645,23 @@ contains
       !>        system and the methods for obtaining file handles.
       !>
       !>-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
-      module procedure ckw03
+      module subroutine ckw03 ( ctx, handle, begtim, endtim, inst, ref, avflag, segid, nrec, sclkdp, quats, avvs, nints, starts )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an open CK file.
+      real(wp), intent(in) :: begtim  !! Beginning encoded SCLK of the segment.
+      real(wp), intent(in) :: endtim  !! Ending encoded SCLK of the segment.
+      integer(ip), intent(in) :: inst  !! NAIF instrument ID code.
+      character(*), intent(in) :: ref  !! Reference frame of the segment.
+      logical, intent(in) :: avflag  !! .TRUE. if the segment will contain angular velocity.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: nrec  !! Number of pointing records.
+      real(wp), intent(in) :: sclkdp (      * )  !! Encoded SCLK times.
+      real(wp), intent(in) :: quats  ( 0:3, * )  !! SPICE quaternions representing instrument pointing.
+      real(wp), intent(in) :: avvs   (   3, * )  !! Angular velocity vectors.
+      integer(ip), intent(in) :: nints  !! Number of intervals.
+      real(wp), intent(in) :: starts (      * )  !! Encoded SCLK interval start times.
 
 !     SIDLEN   is the maximum number of characters allowed in a CK
 !              segment identifier.
@@ -7933,8 +8050,11 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure ckw03
+      end subroutine ckw03
 
+      !> Begin a type CK04 segment in the DAF file associated with
+      !> HANDLE. See also [[ckw04a]] and [[ckw04e]].
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a CK file that has been
@@ -8148,33 +8268,23 @@ contains
       !>        Minor header edits.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
-      module procedure ckw04b
+      module subroutine ckw04b ( ctx, handle, begtim, inst, ref, avflag, segid )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       use pepper_inc_ckparam
       implicit none
-
-!
-!     DAF ND and NI values for CK files and length of a DAF descriptor.
-!
-
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of an DAF file open for writing.
+      character(*), intent(in) :: segid  !! The string to use for segment identifier.
+      integer(ip), intent(in) :: inst  !! The NAIF ID code for the SC or instrument.
+      logical, intent(in) :: avflag  !! The angular rates flag.
+      character(*), intent(in) :: ref  !! The reference frame for this segment.
+      real(wp), intent(in) :: begtim  !! The segment coverage start encoded SCLK time
 
 !
 !     The number of generic segment constants in a type 4 CK segment.
 !
       integer(ip), parameter :: nconst = 0
-
-!
-!     The integer codes of the first and last printable ASCII
-!     characters.
-!
-
-
-!
-!     The maximum number of characters allowed in a CK segment
-!     identifier.
-!
 
       real(wp) :: dcd    ( nd )
       real(wp) :: dcoeff
@@ -8280,8 +8390,11 @@ contains
 
       return
 
-      end procedure ckw04b
+      end subroutine ckw04b
 
+      !> End the type 04 CK segment currently being written to the DAF
+      !> file associated with HANDLE. See also [[ckw04b]] and [[ckw04e]].
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an CK file that has been
@@ -8473,23 +8586,16 @@ contains
       !>        Minor header edits.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
-      module procedure ckw04e
+      module subroutine ckw04e ( ctx, handle, endtim )
       use pepper_kinds, only: ip, wp
       implicit none
-
-!
-!     SPICELIB functions.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of an CK file open for writing.
+      real(wp), intent(in) :: endtim  !! The segment coverage end encoded SCLK time.
 
 !
 !     Local parameters.
 !
-
-!
-!     DAF ND and NI values for CK files and length of a DAF descriptor.
-!
-
-
 
 !
 !     Local variables.
@@ -8554,8 +8660,10 @@ contains
 
       return
 
-      end procedure ckw04e
+      end subroutine ckw04e
 
+      !> Write a type 5 segment to a CK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a CK file that has been
@@ -9059,12 +9167,29 @@ contains
       !>
       !>        This change was made to accommodate CK generation,
       !>        via the non-SPICE utility MEX2KER, for European missions.
-      module procedure ckw05
+      module subroutine ckw05 ( ctx, handle, subtyp, degree, begtim, endtim, inst, ref, avflag, segid, n, sclkdp, packts, rate, nints, starts )
       use pepper_kinds, only: ip, wp
+      use pepper_spk_packing, only: ck05_data
       use pepper_arrays, only: bsrchd, lstltd
       use pepper_math, only: odd
       use pepper_inc_ck05
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an CK file open for writing.
+      integer(ip), intent(in) :: subtyp  !! CK type 5 subtype code.
+      integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+      real(wp), intent(in) :: begtim  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: endtim  !! End time of interval covered by segment.
+      integer(ip), intent(in) :: inst  !! NAIF code for a s/c instrument or structure.
+      character(*), intent(in) :: ref  !! Reference frame name.
+      logical, intent(in) :: avflag  !! Flag indicating if the segment will contain angular velocity.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: n  !! Number of packets.
+      real(wp), intent(in) :: sclkdp ( * )  !! Encoded SCLK times.
+      real(wp), intent(in) :: packts ( * )  !! Array of packets.
+      real(wp), intent(in) :: rate  !! Nominal SCLK rate in seconds per tick.
+      integer(ip), intent(in) :: nints  !! Number of intervals.
+      real(wp), intent(in) :: starts ( * )  !! Encoded SCLK interval start times.
 
       integer(ip), parameter :: maxdeg = 23
 
@@ -9078,10 +9203,6 @@ contains
       integer(ip), parameter :: dtype = 5
 
 
-
-!
-!     Packet structure parameters
-!
 
       real(wp) :: dc     ( nd )
       real(wp) :: descr  ( dscsiz )
@@ -9483,39 +9604,14 @@ contains
 !        | Number of packets          |
 !        +----------------------------+
 !
-      call dafada ( ctx, packts,  n*packsz )
-      call dafada ( ctx, sclkdp,  n        )
-
-      do i = 1,   (n-1) / dirsiz
-
-         call dafada ( ctx,  sclkdp( dirsiz*i ),  1  )
-
-      end do
-
+!     PEPPER: the data is made by ck05_data (pepper_spk_packing), which the
+!     kernel builder uses too.
 !
-!     Now add the interval start times.
-!
-      call dafada ( ctx, starts, nints )
-
-!
-!     And the directory of interval start times.  The directory of
-!     start times will simply be every (DIRSIZ)th start time.
-!
-      do i = 1, (nints -1) / dirsiz
-
-         call dafada ( ctx, starts( dirsiz*i ), 1 )
-
-      end do
-
-!
-!     Add the SCLK rate, segment subtype, window size, interval
-!     count, and packet count.
-!
-      call dafada ( ctx, [ rate ], 1 )
-      call dafada ( ctx, [ real( subtyp, wp ) ], 1 )
-      call dafada ( ctx, [ real( winsiz, wp ) ], 1 )
-      call dafada ( ctx, [ real( nints, wp  ) ], 1 )
-      call dafada ( ctx, [ real( n, wp      ) ], 1 )
+      block
+         real(wp), allocatable :: data(:)
+         data = ck05_data ( subtyp, winsiz, sclkdp(1:n), packts(1:n*packsz), rate, starts(1:nints) )
+         call dafada ( ctx, data, size ( data, kind=ip ) )
+      end block
 
 !
 !     As long as nothing went wrong, end the segment.
@@ -9525,8 +9621,10 @@ contains
       end if
 
       return
-      end procedure ckw05
+      end subroutine ckw05
 
+      !> Write a type 6 segment to a CK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a CK file that has been opened
@@ -10122,12 +10220,29 @@ contains
       !>        units.
       !>
       !>-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (BVS)
-      module procedure ckw06
+      module subroutine ckw06 ( ctx, handle, inst, ref, avflag, first, last, segid, nmini, npkts, subtps, degres, packts, rates, sclkdp, ivlbds, sellst )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd, vdistg
       use pepper_inc_ck06
       use pepper_inc_ckparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a CK file open for writing.
+      integer(ip), intent(in) :: inst  !! NAIF instrument ID code.
+      character(*), intent(in) :: ref  !! Reference frame name.
+      logical, intent(in) :: avflag  !! Flag indicating if the segment will contain angular velocity.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: nmini  !! Number of mini-segments.
+      integer(ip), intent(in) :: npkts  ( * )  !! Array of packet counts of mini-segments.
+      integer(ip), intent(in) :: subtps ( * )  !! Array of segment subtypes of mini-segments.
+      integer(ip), intent(in) :: degres ( * )  !! Array of polynomial degrees of mini-segments.
+      real(wp), intent(in) :: packts ( * )  !! Array of data packets of mini-segments.
+      real(wp), intent(in) :: rates  ( * )  !! Nominal SCLK rates in seconds per tick.
+      real(wp), intent(in) :: sclkdp ( * )  !! Array of epochs of mini-segments.
+      real(wp), intent(in) :: ivlbds ( * )  !! Mini-segment interval bounds.
+      logical, intent(in) :: sellst  !! Interval selection flag.
 
 
 
@@ -10137,10 +10252,6 @@ contains
 
       integer(ip), parameter :: dtype = 6
 
-
-!
-!     Packet structure parameters
-!
 
       real(wp) :: dc     ( nd )
       real(wp) :: descr  ( dscsiz )
@@ -10871,8 +10982,11 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure ckw06
+      end subroutine ckw06
 
+      !> Add data to a type 03 PCK segment in the binary PCK file
+      !> associated with HANDLE. See also [[pck03b]] and [[pck03e]].
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a PCK file that has been
@@ -11151,9 +11265,14 @@ contains
       !>        Removed DAFHLU call; replaced ERRFN call with ERRHAN.
       !>
       !>-    SPICELIB Version 1.0.0, 06-MAR-1995 (KRG)
-      module procedure pck03a
+      module subroutine pck03a ( ctx, handle, ncsets, coeffs, epochs )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of a DAF file open for writing.
+      integer(ip), intent(in) :: ncsets  !! The number of Cheby coefficient sets and epochs.
+      real(wp), intent(in) :: coeffs ( * )  !! The collection of Cheby coefficient sets.
+      real(wp), intent(in) :: epochs ( * )  !! The epochs associated with the element sets.
 
 !
 !     Standard SPICELIB error handling.
@@ -11188,8 +11307,11 @@ contains
 
       return
 
-      end procedure pck03a
+      end subroutine pck03a
 
+      !> End the type 03 PCK segment currently being written to the binary
+      !> PCK file associated with HANDLE. See also [[pck03b]] and [[pck03a]].
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a binary PCK file that has been
@@ -11451,9 +11573,11 @@ contains
       !>        standard.
       !>
       !>-    SPICELIB Version 1.0.0, 06-MAR-1995 (KRG)
-      module procedure pck03e
+      module subroutine pck03e ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of a binary PCK file open for writing.
 
 !
 !     Standard SPICELIB error handling.
@@ -11472,8 +11596,10 @@ contains
 !
       return
 
-      end procedure pck03e
+      end subroutine pck03e
 
+      !> Close an open PCK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the PCK file that is to be closed.
@@ -11516,122 +11642,124 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PCKCLS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PCKCLS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'pckcls_ex1.bpc' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'pckcls_ex1.bpc' )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 301  )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 301  )
       !>
-      !>              INTEGER               IIDLEN
-      !>              PARAMETER           ( IIDLEN = 40   )
+      !>      INTEGER               IIDLEN
+      !>      PARAMETER           ( IIDLEN = 40   )
       !>
-      !>              INTEGER               POLYDG
-      !>              PARAMETER           ( POLYDG = 9    )
+      !>      INTEGER               POLYDG
+      !>      PARAMETER           ( POLYDG = 9    )
       !>
-      !>              INTEGER               SZCDAT
-      !>              PARAMETER           ( SZCDAT = 60   )
+      !>      INTEGER               SZCDAT
+      !>      PARAMETER           ( SZCDAT = 60   )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(IIDLEN)    IFNAME
-      !>              CHARACTER*(IIDLEN)    SEGID
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(IIDLEN)    IFNAME
+      !>      CHARACTER*(IIDLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      BTIME
-      !>              DOUBLE PRECISION      CDATA  ( SZCDAT )
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      INTLEN
-      !>              DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      BTIME
+      !>      DOUBLE PRECISION      CDATA  ( SZCDAT )
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      INTLEN
+      !>      DOUBLE PRECISION      LAST
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               N
-      !>              INTEGER               NRESVC
+      !>      INTEGER               HANDLE
+      !>      INTEGER               N
+      !>      INTEGER               NRESVC
       !>
-      !>        C
-      !>        C     Set the input data: RA/DEC/W coefficients,
-      !>        C     begin time for the first record, start/end times
-      !>        C     for the segment, length of the time covered by
-      !>        C     each record, and number of logical records.
-      !>        C
-      !>        C     CDATA contains the RA/DEC/W coefficients: first the
-      !>        C     the POLYDEG + 1 for the RA first record, then the
-      !>        C     POLYDEG + 1 for the DEC first record, then the
-      !>        C     POLYDEG +1 for W first record, then the POLYDEG + 1
-      !>        C     for the RA second record, and so on.
-      !>        C
-      !>              DATA                  CDATA /
-      !>             .   -5.4242086033301107D-002, -5.2241405162792561D-005,
-      !>             .    8.9751456289930307D-005, -1.5288696963234620D-005,
-      !>             .    1.3218870864581395D-006,  5.9822156790328180D-007,
-      !>             .   -6.5967702052551211D-008, -9.9084309118396298D-009,
-      !>             .    4.9276055963541578D-010,  1.1612267413829385D-010,
-      !>             .    0.42498898565916610D0,    1.3999219324235620D-004,
-      !>             .   -1.8855140511098865D-005, -2.1964684808526649D-006,
-      !>             .    1.4229817868138752D-006, -1.6991716166847001D-007,
-      !>             .   -3.4824688140649506D-008,  2.9208428745895990D-009,
-      !>             .    4.4217757657060300D-010, -3.9211207055305402D-012,
-      !>             .    2565.0633504619473D0,     0.92003769451305328D0,
-      !>             .   -8.0503797901914501D-005,  1.1960860244433900D-005,
-      !>             .   -1.2237900518372542D-006, -5.3651349407824562D-007,
-      !>             .    6.0843372260403005D-008,  9.0211287487688797D-009,
-      !>             .   -4.6460429330339309D-010, -1.0446918704281774D-010,
-      !>             .   -5.3839796353225056D-002,  4.3378021974424991D-004,
-      !>             .    4.8130091384819459D-005, -1.2283066272873327D-005,
-      !>             .   -5.4099296265403208D-006, -4.4237368347319652D-007,
-      !>             .    1.3004982445546169D-007,  1.9017128275284284D-008,
-      !>             .   -7.0368223839477803D-011, -1.7119414526133175D-010,
-      !>             .    0.42507987850614548D0,   -7.1844899448557937D-005,
-      !>             .   -5.1052122872412865D-005, -8.9810401387721321D-006,
-      !>             .   -1.4611718567948972D-007,  4.0883847771062547D-007,
-      !>             .    4.6812854485029333D-008, -4.5698075960784951D-009,
-      !>             .   -9.8679875320349531D-010, -7.9392503778178240D-011,
-      !>             .    2566.9029069934054D0,     0.91952244801740568D0,
-      !>             .   -6.0426151041179828D-005,  1.0850559330577959D-005,
-      !>             .    5.1756033678137497D-006,  4.2127585555214782D-007,
-      !>             .   -1.1774737441872970D-007, -1.7397191490163833D-008,
-      !>             .    5.8908810244396165D-012,  1.4594279337955166D-010 /
+      !>C
+      !>C     Set the input data: RA/DEC/W coefficients,
+      !>C     begin time for the first record, start/end times
+      !>C     for the segment, length of the time covered by
+      !>C     each record, and number of logical records.
+      !>C
+      !>C     CDATA contains the RA/DEC/W coefficients: first the
+      !>C     the POLYDEG + 1 for the RA first record, then the
+      !>C     POLYDEG + 1 for the DEC first record, then the
+      !>C     POLYDEG +1 for W first record, then the POLYDEG + 1
+      !>C     for the RA second record, and so on.
+      !>C
+      !>      DATA                  CDATA /
+      !>     .   -5.4242086033301107D-002, -5.2241405162792561D-005,
+      !>     .    8.9751456289930307D-005, -1.5288696963234620D-005,
+      !>     .    1.3218870864581395D-006,  5.9822156790328180D-007,
+      !>     .   -6.5967702052551211D-008, -9.9084309118396298D-009,
+      !>     .    4.9276055963541578D-010,  1.1612267413829385D-010,
+      !>     .    0.42498898565916610D0,    1.3999219324235620D-004,
+      !>     .   -1.8855140511098865D-005, -2.1964684808526649D-006,
+      !>     .    1.4229817868138752D-006, -1.6991716166847001D-007,
+      !>     .   -3.4824688140649506D-008,  2.9208428745895990D-009,
+      !>     .    4.4217757657060300D-010, -3.9211207055305402D-012,
+      !>     .    2565.0633504619473D0,     0.92003769451305328D0,
+      !>     .   -8.0503797901914501D-005,  1.1960860244433900D-005,
+      !>     .   -1.2237900518372542D-006, -5.3651349407824562D-007,
+      !>     .    6.0843372260403005D-008,  9.0211287487688797D-009,
+      !>     .   -4.6460429330339309D-010, -1.0446918704281774D-010,
+      !>     .   -5.3839796353225056D-002,  4.3378021974424991D-004,
+      !>     .    4.8130091384819459D-005, -1.2283066272873327D-005,
+      !>     .   -5.4099296265403208D-006, -4.4237368347319652D-007,
+      !>     .    1.3004982445546169D-007,  1.9017128275284284D-008,
+      !>     .   -7.0368223839477803D-011, -1.7119414526133175D-010,
+      !>     .    0.42507987850614548D0,   -7.1844899448557937D-005,
+      !>     .   -5.1052122872412865D-005, -8.9810401387721321D-006,
+      !>     .   -1.4611718567948972D-007,  4.0883847771062547D-007,
+      !>     .    4.6812854485029333D-008, -4.5698075960784951D-009,
+      !>     .   -9.8679875320349531D-010, -7.9392503778178240D-011,
+      !>     .    2566.9029069934054D0,     0.91952244801740568D0,
+      !>     .   -6.0426151041179828D-005,  1.0850559330577959D-005,
+      !>     .    5.1756033678137497D-006,  4.2127585555214782D-007,
+      !>     .   -1.1774737441872970D-007, -1.7397191490163833D-008,
+      !>     .    5.8908810244396165D-012,  1.4594279337955166D-010 /
       !>
-      !>              FIRST  =   -43200.D0
-      !>              LAST   =  1339200.D0
-      !>              BTIME  =  FIRST
-      !>              INTLEN =   691200.D0
-      !>              N      =  2
+      !>      FIRST  =   -43200.D0
+      !>      LAST   =  1339200.D0
+      !>      BTIME  =  FIRST
+      !>      INTLEN =   691200.D0
+      !>      N      =  2
       !>
-      !>        C
-      !>        C     Open a new PCK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test PCK/Created 04-SEP-2019'
+      !>C
+      !>C     Open a new PCK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test PCK/Created 04-SEP-2019'
       !>
-      !>              CALL PCKOPN ( FNAME, IFNAME, NRESVC, HANDLE    )
+      !>      CALL PCKOPN ( FNAME, IFNAME, NRESVC, HANDLE    )
       !>
-      !>        C
-      !>        C     Create a segment identifier.
-      !>        C
-      !>              SEGID = 'MY_SAMPLE_PCK_TYPE_2_SEGMENT'
+      !>C
+      !>C     Create a segment identifier.
+      !>C
+      !>      SEGID = 'MY_SAMPLE_PCK_TYPE_2_SEGMENT'
       !>
-      !>        C
-      !>        C     Write the segment.
-      !>        C
-      !>              CALL PCKW02 (  HANDLE, BODY,  'J2000',
-      !>             .               FIRST,  LAST,   SEGID,   INTLEN,
-      !>             .               N,      POLYDG, CDATA,   BTIME)
+      !>C
+      !>C     Write the segment.
+      !>C
+      !>      CALL PCKW02 (  HANDLE, BODY,  'J2000',
+      !>     .               FIRST,  LAST,   SEGID,   INTLEN,
+      !>     .               N,      POLYDG, CDATA,   BTIME)
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL PCKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL PCKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new PCK type 2 exists in
@@ -11676,9 +11804,11 @@ contains
       !>-    SPICELIB Version 1.1.0, 27-NOV-2001 (FST)
       !>
       !>        Removed DAFHLU call; replaced ERRFN call with ERRHAN.
-      module procedure pckcls
+      module subroutine pckcls ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of the PCK file to be closed.
 
 
       character(acclen) :: access
@@ -11741,8 +11871,10 @@ contains
 !
       return
 
-      end procedure pckcls
+      end subroutine pckcls
 
+      !> Create a new PCK file, returning the handle of the opened file.
+      !>
       !>## Detailed Input
       !>
       !>     NAME     is the name of the PCK file to be created.
@@ -11809,122 +11941,124 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PCKOPN_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PCKOPN_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'pckopn_ex1.bpc' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'pckopn_ex1.bpc' )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 301  )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 301  )
       !>
-      !>              INTEGER               IIDLEN
-      !>              PARAMETER           ( IIDLEN = 40   )
+      !>      INTEGER               IIDLEN
+      !>      PARAMETER           ( IIDLEN = 40   )
       !>
-      !>              INTEGER               POLYDG
-      !>              PARAMETER           ( POLYDG = 9    )
+      !>      INTEGER               POLYDG
+      !>      PARAMETER           ( POLYDG = 9    )
       !>
-      !>              INTEGER               SZCDAT
-      !>              PARAMETER           ( SZCDAT = 60   )
+      !>      INTEGER               SZCDAT
+      !>      PARAMETER           ( SZCDAT = 60   )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(IIDLEN)    IFNAME
-      !>              CHARACTER*(IIDLEN)    SEGID
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(IIDLEN)    IFNAME
+      !>      CHARACTER*(IIDLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      BTIME
-      !>              DOUBLE PRECISION      CDATA  ( SZCDAT )
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      INTLEN
-      !>              DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      BTIME
+      !>      DOUBLE PRECISION      CDATA  ( SZCDAT )
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      INTLEN
+      !>      DOUBLE PRECISION      LAST
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               N
-      !>              INTEGER               NRESVC
+      !>      INTEGER               HANDLE
+      !>      INTEGER               N
+      !>      INTEGER               NRESVC
       !>
-      !>        C
-      !>        C     Set the input data: RA/DEC/W coefficients,
-      !>        C     begin time for the first record, start/end times
-      !>        C     for the segment, length of the time covered by
-      !>        C     each record, and number of logical records.
-      !>        C
-      !>        C     CDATA contains the RA/DEC/W coefficients: first the
-      !>        C     the POLYDEG + 1 for the RA first record, then the
-      !>        C     POLYDEG + 1 for the DEC first record, then the
-      !>        C     POLYDEG +1 for W first record, then the POLYDEG + 1
-      !>        C     for the RA second record, and so on.
-      !>        C
-      !>              DATA                  CDATA /
-      !>             .   -5.4242086033301107D-002, -5.2241405162792561D-005,
-      !>             .    8.9751456289930307D-005, -1.5288696963234620D-005,
-      !>             .    1.3218870864581395D-006,  5.9822156790328180D-007,
-      !>             .   -6.5967702052551211D-008, -9.9084309118396298D-009,
-      !>             .    4.9276055963541578D-010,  1.1612267413829385D-010,
-      !>             .    0.42498898565916610D0,    1.3999219324235620D-004,
-      !>             .   -1.8855140511098865D-005, -2.1964684808526649D-006,
-      !>             .    1.4229817868138752D-006, -1.6991716166847001D-007,
-      !>             .   -3.4824688140649506D-008,  2.9208428745895990D-009,
-      !>             .    4.4217757657060300D-010, -3.9211207055305402D-012,
-      !>             .    2565.0633504619473D0,     0.92003769451305328D0,
-      !>             .   -8.0503797901914501D-005,  1.1960860244433900D-005,
-      !>             .   -1.2237900518372542D-006, -5.3651349407824562D-007,
-      !>             .    6.0843372260403005D-008,  9.0211287487688797D-009,
-      !>             .   -4.6460429330339309D-010, -1.0446918704281774D-010,
-      !>             .   -5.3839796353225056D-002,  4.3378021974424991D-004,
-      !>             .    4.8130091384819459D-005, -1.2283066272873327D-005,
-      !>             .   -5.4099296265403208D-006, -4.4237368347319652D-007,
-      !>             .    1.3004982445546169D-007,  1.9017128275284284D-008,
-      !>             .   -7.0368223839477803D-011, -1.7119414526133175D-010,
-      !>             .    0.42507987850614548D0,   -7.1844899448557937D-005,
-      !>             .   -5.1052122872412865D-005, -8.9810401387721321D-006,
-      !>             .   -1.4611718567948972D-007,  4.0883847771062547D-007,
-      !>             .    4.6812854485029333D-008, -4.5698075960784951D-009,
-      !>             .   -9.8679875320349531D-010, -7.9392503778178240D-011,
-      !>             .    2566.9029069934054D0,     0.91952244801740568D0,
-      !>             .   -6.0426151041179828D-005,  1.0850559330577959D-005,
-      !>             .    5.1756033678137497D-006,  4.2127585555214782D-007,
-      !>             .   -1.1774737441872970D-007, -1.7397191490163833D-008,
-      !>             .    5.8908810244396165D-012,  1.4594279337955166D-010 /
+      !>C
+      !>C     Set the input data: RA/DEC/W coefficients,
+      !>C     begin time for the first record, start/end times
+      !>C     for the segment, length of the time covered by
+      !>C     each record, and number of logical records.
+      !>C
+      !>C     CDATA contains the RA/DEC/W coefficients: first the
+      !>C     the POLYDEG + 1 for the RA first record, then the
+      !>C     POLYDEG + 1 for the DEC first record, then the
+      !>C     POLYDEG +1 for W first record, then the POLYDEG + 1
+      !>C     for the RA second record, and so on.
+      !>C
+      !>      DATA                  CDATA /
+      !>     .   -5.4242086033301107D-002, -5.2241405162792561D-005,
+      !>     .    8.9751456289930307D-005, -1.5288696963234620D-005,
+      !>     .    1.3218870864581395D-006,  5.9822156790328180D-007,
+      !>     .   -6.5967702052551211D-008, -9.9084309118396298D-009,
+      !>     .    4.9276055963541578D-010,  1.1612267413829385D-010,
+      !>     .    0.42498898565916610D0,    1.3999219324235620D-004,
+      !>     .   -1.8855140511098865D-005, -2.1964684808526649D-006,
+      !>     .    1.4229817868138752D-006, -1.6991716166847001D-007,
+      !>     .   -3.4824688140649506D-008,  2.9208428745895990D-009,
+      !>     .    4.4217757657060300D-010, -3.9211207055305402D-012,
+      !>     .    2565.0633504619473D0,     0.92003769451305328D0,
+      !>     .   -8.0503797901914501D-005,  1.1960860244433900D-005,
+      !>     .   -1.2237900518372542D-006, -5.3651349407824562D-007,
+      !>     .    6.0843372260403005D-008,  9.0211287487688797D-009,
+      !>     .   -4.6460429330339309D-010, -1.0446918704281774D-010,
+      !>     .   -5.3839796353225056D-002,  4.3378021974424991D-004,
+      !>     .    4.8130091384819459D-005, -1.2283066272873327D-005,
+      !>     .   -5.4099296265403208D-006, -4.4237368347319652D-007,
+      !>     .    1.3004982445546169D-007,  1.9017128275284284D-008,
+      !>     .   -7.0368223839477803D-011, -1.7119414526133175D-010,
+      !>     .    0.42507987850614548D0,   -7.1844899448557937D-005,
+      !>     .   -5.1052122872412865D-005, -8.9810401387721321D-006,
+      !>     .   -1.4611718567948972D-007,  4.0883847771062547D-007,
+      !>     .    4.6812854485029333D-008, -4.5698075960784951D-009,
+      !>     .   -9.8679875320349531D-010, -7.9392503778178240D-011,
+      !>     .    2566.9029069934054D0,     0.91952244801740568D0,
+      !>     .   -6.0426151041179828D-005,  1.0850559330577959D-005,
+      !>     .    5.1756033678137497D-006,  4.2127585555214782D-007,
+      !>     .   -1.1774737441872970D-007, -1.7397191490163833D-008,
+      !>     .    5.8908810244396165D-012,  1.4594279337955166D-010 /
       !>
-      !>              FIRST  =   -43200.D0
-      !>              LAST   =  1339200.D0
-      !>              BTIME  =  FIRST
-      !>              INTLEN =   691200.D0
-      !>              N      =  2
+      !>      FIRST  =   -43200.D0
+      !>      LAST   =  1339200.D0
+      !>      BTIME  =  FIRST
+      !>      INTLEN =   691200.D0
+      !>      N      =  2
       !>
-      !>        C
-      !>        C     Open a new PCK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test PCK/Created 04-SEP-2019'
+      !>C
+      !>C     Open a new PCK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test PCK/Created 04-SEP-2019'
       !>
-      !>              CALL PCKOPN ( FNAME, IFNAME, NRESVC, HANDLE    )
+      !>      CALL PCKOPN ( FNAME, IFNAME, NRESVC, HANDLE    )
       !>
-      !>        C
-      !>        C     Create a segment identifier.
-      !>        C
-      !>              SEGID = 'MY_SAMPLE_PCK_TYPE_2_SEGMENT'
+      !>C
+      !>C     Create a segment identifier.
+      !>C
+      !>      SEGID = 'MY_SAMPLE_PCK_TYPE_2_SEGMENT'
       !>
-      !>        C
-      !>        C     Write the segment.
-      !>        C
-      !>              CALL PCKW02 (  HANDLE, BODY,  'J2000',
-      !>             .               FIRST,  LAST,   SEGID,   INTLEN,
-      !>             .               N,      POLYDG, CDATA,   BTIME)
+      !>C
+      !>C     Write the segment.
+      !>C
+      !>      CALL PCKW02 (  HANDLE, BODY,  'J2000',
+      !>     .               FIRST,  LAST,   SEGID,   INTLEN,
+      !>     .               N,      POLYDG, CDATA,   BTIME)
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL PCKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL PCKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new PCK type 2 exists in
@@ -11965,9 +12099,14 @@ contains
       !>        area allocation using NCOMCH.
       !>
       !>-    SPICELIB Version 1.0.0, 26-JAN-1995 (KRG)
-      module procedure pckopn
+      module subroutine pckopn ( ctx, name, ifname, ncomch, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! The name of the PCK file to be opened.
+      character(*), intent(in) :: ifname  !! The internal filename for the PCK.
+      integer(ip), intent(in) :: ncomch  !! The number of characters to reserve for comments.
+      integer(ip), intent(out) :: handle  !! The handle of the opened PCK file.
 
       character(*), parameter :: type = 'PCK'
 
@@ -11976,9 +12115,6 @@ contains
 !
 
       integer(ip), parameter :: ni = 5
-!
-!     Length of a DAF comment record, in characters.
-!
 
       integer(ip) :: ncomr
 
@@ -12014,8 +12150,11 @@ contains
       end if
 
       return
-      end procedure pckopn
+      end subroutine pckopn
 
+      !> Perform routine error checks and if all checks pass, pack the
+      !> descriptor for a PCK segment
+      !>
       !>## Detailed Input
       !>
       !>     BODY     is the NAIF ID code for the body of the segment.
@@ -12110,9 +12249,16 @@ contains
       !>        standard.
       !>
       !>-    SPICELIB Version 1.0.0, 04-JAN-1995 (WLT)
-      module procedure pckpds
+      module subroutine pckpds ( ctx, body, frame, type, first, last, descr )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
+      character(*), intent(in) :: frame  !! The inertial frame for this segment.
+      integer(ip), intent(in) :: type  !! The type of PCK segment to create.
+      real(wp), intent(in) :: first  !! The first epoch for which the segment is valid.
+      real(wp), intent(in) :: last  !! The last  epoch for which the segment is valid.
+      real(wp), intent(out) :: descr ( * )  !! A PCK segment descriptor.
 
 !     ND and NI values for a PCK file.
 !
@@ -12212,8 +12358,10 @@ contains
 
       return
 
-      end procedure pckpds
+      end subroutine pckpds
 
+      !> Unpack the contents of a PCK segment descriptor
+      !>
       !>## Detailed Input
       !>
       !>     DESCR    is a PCK segment descriptor.
@@ -12306,9 +12454,18 @@ contains
       !>        standard.
       !>
       !>-    SPICELIB Version 1.0.0, 1994-JAN-4 (WLT)
-      module procedure pckuds
+      module subroutine pckuds ( ctx, descr, body, frame, type, first, last, begin, end )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: descr ( * )  !! A PCK segment descriptor.
+      integer(ip), intent(out) :: body  !! The NAIF ID code for the body of the segment.
+      integer(ip), intent(out) :: frame  !! The code for the inertial frame of this segment.
+      integer(ip), intent(out) :: type  !! The type of PCK segment.
+      real(wp), intent(out) :: first  !! The first epoch for which the segment is valid.
+      real(wp), intent(out) :: last  !! The last  epoch for which the segment is valid.
+      integer(ip), intent(out) :: begin  !! Beginning DAF address of the segment.
+      integer(ip), intent(out) :: end  !! Ending DAF address of the segment.
 
 
       integer(ip), parameter :: ni = 5
@@ -12341,8 +12498,12 @@ contains
 
       return
 
-      end procedure pckuds
+      end subroutine pckuds
 
+      !> Write a type 2 segment to a PCK binary file given the file
+      !> handle, body-fixed frame class ID, frame, time range covered by
+      !> the segment, and the Chebyshev polynomial coefficients.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the DAF handle of an PCK file to which a type 2
@@ -12466,122 +12627,124 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PCKW02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PCKW02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FNAME
-      !>              PARAMETER           ( FNAME = 'pckw02_ex1.bpc' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FNAME
+      !>      PARAMETER           ( FNAME = 'pckw02_ex1.bpc' )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 301  )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 301  )
       !>
-      !>              INTEGER               IIDLEN
-      !>              PARAMETER           ( IIDLEN = 40   )
+      !>      INTEGER               IIDLEN
+      !>      PARAMETER           ( IIDLEN = 40   )
       !>
-      !>              INTEGER               POLYDG
-      !>              PARAMETER           ( POLYDG = 9    )
+      !>      INTEGER               POLYDG
+      !>      PARAMETER           ( POLYDG = 9    )
       !>
-      !>              INTEGER               SZCDAT
-      !>              PARAMETER           ( SZCDAT = 60   )
+      !>      INTEGER               SZCDAT
+      !>      PARAMETER           ( SZCDAT = 60   )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(IIDLEN)    IFNAME
-      !>              CHARACTER*(IIDLEN)    SEGID
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(IIDLEN)    IFNAME
+      !>      CHARACTER*(IIDLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      BTIME
-      !>              DOUBLE PRECISION      CDATA  ( SZCDAT )
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      INTLEN
-      !>              DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      BTIME
+      !>      DOUBLE PRECISION      CDATA  ( SZCDAT )
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      INTLEN
+      !>      DOUBLE PRECISION      LAST
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               N
-      !>              INTEGER               NRESVC
+      !>      INTEGER               HANDLE
+      !>      INTEGER               N
+      !>      INTEGER               NRESVC
       !>
-      !>        C
-      !>        C     Set the input data: RA/DEC/W coefficients,
-      !>        C     begin time for the first record, start/end times
-      !>        C     for the segment, length of the time covered by
-      !>        C     each record, and number of logical records.
-      !>        C
-      !>        C     CDATA contains the RA/DEC/W coefficients: first the
-      !>        C     the POLYDEG + 1 for the RA first record, then the
-      !>        C     POLYDEG + 1 for the DEC first record, then the
-      !>        C     POLYDEG +1 for W first record, then the POLYDEG + 1
-      !>        C     for the RA second record, and so on.
-      !>        C
-      !>              DATA                  CDATA /
-      !>             .   -5.4242086033301107D-002, -5.2241405162792561D-005,
-      !>             .    8.9751456289930307D-005, -1.5288696963234620D-005,
-      !>             .    1.3218870864581395D-006,  5.9822156790328180D-007,
-      !>             .   -6.5967702052551211D-008, -9.9084309118396298D-009,
-      !>             .    4.9276055963541578D-010,  1.1612267413829385D-010,
-      !>             .    0.42498898565916610D0,    1.3999219324235620D-004,
-      !>             .   -1.8855140511098865D-005, -2.1964684808526649D-006,
-      !>             .    1.4229817868138752D-006, -1.6991716166847001D-007,
-      !>             .   -3.4824688140649506D-008,  2.9208428745895990D-009,
-      !>             .    4.4217757657060300D-010, -3.9211207055305402D-012,
-      !>             .    2565.0633504619473D0,     0.92003769451305328D0,
-      !>             .   -8.0503797901914501D-005,  1.1960860244433900D-005,
-      !>             .   -1.2237900518372542D-006, -5.3651349407824562D-007,
-      !>             .    6.0843372260403005D-008,  9.0211287487688797D-009,
-      !>             .   -4.6460429330339309D-010, -1.0446918704281774D-010,
-      !>             .   -5.3839796353225056D-002,  4.3378021974424991D-004,
-      !>             .    4.8130091384819459D-005, -1.2283066272873327D-005,
-      !>             .   -5.4099296265403208D-006, -4.4237368347319652D-007,
-      !>             .    1.3004982445546169D-007,  1.9017128275284284D-008,
-      !>             .   -7.0368223839477803D-011, -1.7119414526133175D-010,
-      !>             .    0.42507987850614548D0,   -7.1844899448557937D-005,
-      !>             .   -5.1052122872412865D-005, -8.9810401387721321D-006,
-      !>             .   -1.4611718567948972D-007,  4.0883847771062547D-007,
-      !>             .    4.6812854485029333D-008, -4.5698075960784951D-009,
-      !>             .   -9.8679875320349531D-010, -7.9392503778178240D-011,
-      !>             .    2566.9029069934054D0,     0.91952244801740568D0,
-      !>             .   -6.0426151041179828D-005,  1.0850559330577959D-005,
-      !>             .    5.1756033678137497D-006,  4.2127585555214782D-007,
-      !>             .   -1.1774737441872970D-007, -1.7397191490163833D-008,
-      !>             .    5.8908810244396165D-012,  1.4594279337955166D-010 /
+      !>C
+      !>C     Set the input data: RA/DEC/W coefficients,
+      !>C     begin time for the first record, start/end times
+      !>C     for the segment, length of the time covered by
+      !>C     each record, and number of logical records.
+      !>C
+      !>C     CDATA contains the RA/DEC/W coefficients: first the
+      !>C     the POLYDEG + 1 for the RA first record, then the
+      !>C     POLYDEG + 1 for the DEC first record, then the
+      !>C     POLYDEG +1 for W first record, then the POLYDEG + 1
+      !>C     for the RA second record, and so on.
+      !>C
+      !>      DATA                  CDATA /
+      !>     .   -5.4242086033301107D-002, -5.2241405162792561D-005,
+      !>     .    8.9751456289930307D-005, -1.5288696963234620D-005,
+      !>     .    1.3218870864581395D-006,  5.9822156790328180D-007,
+      !>     .   -6.5967702052551211D-008, -9.9084309118396298D-009,
+      !>     .    4.9276055963541578D-010,  1.1612267413829385D-010,
+      !>     .    0.42498898565916610D0,    1.3999219324235620D-004,
+      !>     .   -1.8855140511098865D-005, -2.1964684808526649D-006,
+      !>     .    1.4229817868138752D-006, -1.6991716166847001D-007,
+      !>     .   -3.4824688140649506D-008,  2.9208428745895990D-009,
+      !>     .    4.4217757657060300D-010, -3.9211207055305402D-012,
+      !>     .    2565.0633504619473D0,     0.92003769451305328D0,
+      !>     .   -8.0503797901914501D-005,  1.1960860244433900D-005,
+      !>     .   -1.2237900518372542D-006, -5.3651349407824562D-007,
+      !>     .    6.0843372260403005D-008,  9.0211287487688797D-009,
+      !>     .   -4.6460429330339309D-010, -1.0446918704281774D-010,
+      !>     .   -5.3839796353225056D-002,  4.3378021974424991D-004,
+      !>     .    4.8130091384819459D-005, -1.2283066272873327D-005,
+      !>     .   -5.4099296265403208D-006, -4.4237368347319652D-007,
+      !>     .    1.3004982445546169D-007,  1.9017128275284284D-008,
+      !>     .   -7.0368223839477803D-011, -1.7119414526133175D-010,
+      !>     .    0.42507987850614548D0,   -7.1844899448557937D-005,
+      !>     .   -5.1052122872412865D-005, -8.9810401387721321D-006,
+      !>     .   -1.4611718567948972D-007,  4.0883847771062547D-007,
+      !>     .    4.6812854485029333D-008, -4.5698075960784951D-009,
+      !>     .   -9.8679875320349531D-010, -7.9392503778178240D-011,
+      !>     .    2566.9029069934054D0,     0.91952244801740568D0,
+      !>     .   -6.0426151041179828D-005,  1.0850559330577959D-005,
+      !>     .    5.1756033678137497D-006,  4.2127585555214782D-007,
+      !>     .   -1.1774737441872970D-007, -1.7397191490163833D-008,
+      !>     .    5.8908810244396165D-012,  1.4594279337955166D-010 /
       !>
-      !>              FIRST  =   -43200.D0
-      !>              LAST   =  1339200.D0
-      !>              BTIME  =  FIRST
-      !>              INTLEN =   691200.D0
-      !>              N      =  2
+      !>      FIRST  =   -43200.D0
+      !>      LAST   =  1339200.D0
+      !>      BTIME  =  FIRST
+      !>      INTLEN =   691200.D0
+      !>      N      =  2
       !>
-      !>        C
-      !>        C     Open a new PCK file.  For simplicity, we will not
-      !>        C     reserve any space for the comment area, so the
-      !>        C     number of reserved comment characters is zero.
-      !>        C     The variable IFNAME is the internal file name.
-      !>        C
-      !>              NRESVC  =  0
-      !>              IFNAME  =  'Test PCK/Created 04-SEP-2019'
+      !>C
+      !>C     Open a new PCK file.  For simplicity, we will not
+      !>C     reserve any space for the comment area, so the
+      !>C     number of reserved comment characters is zero.
+      !>C     The variable IFNAME is the internal file name.
+      !>C
+      !>      NRESVC  =  0
+      !>      IFNAME  =  'Test PCK/Created 04-SEP-2019'
       !>
-      !>              CALL PCKOPN ( FNAME, IFNAME, NRESVC, HANDLE    )
+      !>      CALL PCKOPN ( FNAME, IFNAME, NRESVC, HANDLE    )
       !>
-      !>        C
-      !>        C     Create a segment identifier.
-      !>        C
-      !>              SEGID = 'MY_SAMPLE_PCK_TYPE_2_SEGMENT'
+      !>C
+      !>C     Create a segment identifier.
+      !>C
+      !>      SEGID = 'MY_SAMPLE_PCK_TYPE_2_SEGMENT'
       !>
-      !>        C
-      !>        C     Write the segment.
-      !>        C
-      !>              CALL PCKW02 (  HANDLE, BODY,  'J2000',
-      !>             .               FIRST,  LAST,   SEGID,   INTLEN,
-      !>             .               N,      POLYDG, CDATA,   BTIME)
+      !>C
+      !>C     Write the segment.
+      !>C
+      !>      CALL PCKW02 (  HANDLE, BODY,  'J2000',
+      !>     .               FIRST,  LAST,   SEGID,   INTLEN,
+      !>     .               N,      POLYDG, CDATA,   BTIME)
       !>
-      !>        C
-      !>        C     Close the file.
-      !>        C
-      !>              CALL PCKCLS ( HANDLE )
+      !>C
+      !>C     Close the file.
+      !>C
+      !>      CALL PCKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new PCK type 2 exists in
@@ -12626,28 +12789,27 @@ contains
       !>        routine CHCKID is called to check segment identifier.
       !>
       !>-    SPICELIB Version 1.0.0, 11-MAR-1994 (KSZ)
-      module procedure pckw02
+      module subroutine pckw02 ( ctx, handle, clssid, frame, first, last, segid, intlen, n, polydg, cdata, btime )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of binary PCK file open for writing.
+      integer(ip), intent(in) :: clssid  !! Frame class ID of body-fixed frame.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: intlen  !! Length of time covered by logical record.
+      integer(ip), intent(in) :: n  !! Number of logical records in segment.
+      integer(ip), intent(in) :: polydg  !! Chebyshev polynomial degree.
+      real(wp), intent(in) :: cdata (*)  !! Array of Chebyshev coefficients.
+      real(wp), intent(in) :: btime  !! Begin time of first logical record.
 
-!     DTYPE is the PCK data type.
-!
-!
-!     NS is the size of a packed PCK segment descriptor.
-!
-!
-!     ND is the number of double precision components in an PCK
-!     segment descriptor. PCK uses ND = 2.
-!
 !
 !     NI is the number of integer components in an PCK segment
 !     descriptor. PCK uses NI = 5.
 !
       integer(ip), parameter :: ni = 5
-!
-!     SIDLEN is the maximum number of characters allowed in an
-!     PCK segment identifier.
-!
 
       character(sidlen) :: etstr
       character(sidlen) :: netstr
@@ -12862,8 +13024,10 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure pckw02
+      end subroutine pckw02
 
+      !> Write a type 20 segment to a PCK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the DAF handle of a PCK file to which a type 20
@@ -13201,11 +13365,26 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 17-JAN-2014 (NJB) (KSZ)
-      module procedure pckw20
+      module subroutine pckw20 ( ctx, handle, clssid, frame, first, last, segid, intlen, n, polydg, cdata, ascale, tscale, initjd, initfr )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       use pepper_inc_spk20
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of PCK file open for writing.
+      integer(ip), intent(in) :: clssid  !! NAIF PCK frame class ID.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: intlen  !! Length of time covered by logical record (days).
+      integer(ip), intent(in) :: n  !! Number of logical records in segment.
+      integer(ip), intent(in) :: polydg  !! Chebyshev polynomial degree.
+      real(wp), intent(in) :: cdata  ( * )  !! Array of Chebyshev coefficients and angles.
+      real(wp), intent(in) :: ascale  !! Angular scale of data.
+      real(wp), intent(in) :: tscale  !! Time scale of data.
+      real(wp), intent(in) :: initjd  !! Integer part of begin time (TDB Julian date) of first record.
+      real(wp), intent(in) :: initfr  !! Fractional part of begin time (TDB Julian date) of first record.
 
 !
 !     DTYPE is the PCK data type.
@@ -13213,24 +13392,10 @@ contains
       integer(ip), parameter :: dtype = 20
 
 !
-!     ND is the number of double precision components in a PCK
-!     segment descriptor. PCK uses ND = 2.
-!
-
-!
 !     NI is the number of integer components in a PCK segment
 !     descriptor. PCK uses NI = 5.
 !
       integer(ip), parameter :: ni = 5
-
-!
-!     NS is the size of a packed PCK segment descriptor.
-!
-
-!
-!     SIDLEN is the maximum number of characters allowed in an
-!     PCK segment identifier.
-!
 
       character(sidlen) :: etstr
       character(sidlen) :: netstr
@@ -13507,8 +13672,12 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure pckw20
+      end subroutine pckw20
 
+      !> Store text from a text file in the comment area of a binary SPK
+      !> or CK file, appending it to whatever text may already have
+      !> been stored there.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle assigned to the binary SPK or CK file
@@ -13763,22 +13932,17 @@ contains
       !>        DAFHLU is no longer used, since it locks the unit
       !>        returned to its HANDLE, tying up resources in the
       !>        handle manager.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     IFNLEN      is the length of a DAF internal file name.
-      !>
-      !>     MAXCPR      is the maximum number of characters per DAF record and
-      !>                 hence the maximum comment line length.
-      !>
-      !>     Local variables
-      !>
-      !>     Standard SPICE error handling.
-      module procedure spcac
+      module subroutine spcac ( ctx, handle, unit, bmark, emark )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
+      integer(ip), intent(in) :: unit  !! Logical unit connected to comment file.
+      character(*), intent(in) :: bmark  !! Beginning marker.
+      character(*), intent(in) :: emark  !! Ending marker.
+!
+!     Local variables
+!
       character(maxcpr+2) :: data
       character(1) :: eot
       character(ifnlen) :: ifname
@@ -13810,6 +13974,9 @@ contains
       integer(ip) :: start
       integer(ip) :: total
       logical :: found
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -14133,8 +14300,10 @@ contains
       end if
 
       return
-      end procedure spcac
+      end subroutine spcac
 
+      !> Empty the comment area of a binary SPK or CK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle assigned to the binary SPK or CK file
@@ -14257,12 +14426,11 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-      module procedure spcdc
+      module subroutine spcdc ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
-
-!     IFNLEN      is the length of a DAF internal file name.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
 
       character(ifnlen) :: ifname
 
@@ -14298,8 +14466,11 @@ contains
       call dafrrr ( ctx, handle, nrr )
 
       return
-      end procedure spcdc
+      end subroutine spcdc
 
+      !> Extract the text from the comment area of a binary SPK or CK file
+      !> and write it to a text file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle assigned to the binary SPK or CK file
@@ -14443,16 +14614,12 @@ contains
       !>        locks the unit returned to its HANDLE, tying up resources
       !>        in the handle manager. A call to DAFSIH was inserted to
       !>        make certain that HANDLE is present in DAFAH's file table.
-      module procedure spcec
+      module subroutine spcec ( ctx, handle, unit )
       use pepper_kinds, only: ip
       implicit none
-
-!     IFNLEN      is the length of a DAF internal file name.
-!
-!     MAXCPR      is the maximum number of characters per DAF record and
-!                 hence the maximum comment line length.
-!
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
+      integer(ip), intent(in) :: unit  !! Logical unit connected to text file.
 
       character(ifnlen) :: ifname
       character(maxcpr) :: line
@@ -14583,8 +14750,10 @@ contains
       end do
 
       return
-      end procedure spcec
+      end subroutine spcec
 
+      !> Open a new SPK or CK file for subsequent write requests.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a new SPK or CK file to be created.
@@ -14702,9 +14871,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-      module procedure spcopn
+      module subroutine spcopn ( ctx, fname, ifname, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of SPK or CK file to be created.
+      character(*), intent(in) :: ifname  !! Internal file name.
+      integer(ip), intent(out) :: handle  !! Handle of new SPK or CK file.
 
 !     ND, NI      are the Number of Double precision and the Number of
 !                 Integer components in an SPK or CK segment descriptor.
@@ -14729,8 +14902,11 @@ contains
       call dafopn ( ctx, fname, nd, ni, ifname, resv, handle )
 
       return
-      end procedure spcopn
+      end subroutine spcopn
 
+      !> Read the first line of text from the comment area
+      !> of a binary SPK or CK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle assigned to the binary SPK or CK file
@@ -14897,25 +15073,17 @@ contains
       !>        to its handle. The value of HANDLE is now buffered in
       !>        HANBUF, to allow the entry point to retrieve a logical
       !>        unit.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     IFNLEN      is the length of a DAF internal file name.
-      !>
-      !>     MAXCPR      is the maximum number of characters per DAF record and
-      !>                 hence the maximum comment line length.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Standard SPICE error handling.
-      module procedure spcrfl
+      module subroutine spcrfl ( ctx, handle, line, eoc )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
+      character(*), intent(out) :: line  !! First line of text from the comment area.
+      logical, intent(out) :: eoc  !! End of comments?
+!
+!     Local variables
+!
       integer(ip) :: nd
       integer(ip) :: posnul
       integer(ip) :: nrr
@@ -14935,6 +15103,9 @@ contains
                   rec => ctx%spcrfl_state%rec, &
                   called => ctx%spcrfl_state%called, &
                   eocsav => ctx%spcrfl_state%eocsav )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -15038,8 +15209,12 @@ contains
 
       return
       end associate
-      end procedure spcrfl
+      end subroutine spcrfl
 
+      !> Continue reading lines from the comment area of a binary
+      !> SPK or CK file specified by the most recent call to
+      !> the routine [[spcrfl]].
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -15194,10 +15369,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-1991 (JEM)
-      module procedure spcrnl
+      module subroutine spcrnl ( ctx, line, eoc )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: line  !! Next line of text from the comment area.
+      logical, intent(out) :: eoc  !! End of comments?
       integer(ip) :: posnul
       integer(ip) :: tmplen
       integer(ip) :: dafu
@@ -15423,8 +15601,10 @@ contains
 
       return
       end associate
-      end procedure spcrnl
+      end subroutine spcrnl
 
+      !> Close an open SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the SPK file that is to be closed.
@@ -15466,111 +15646,113 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKCLS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKCLS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 42 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 42 )
       !>
-      !>        C
-      !>        C     Define the segment identifier parameters.
-      !>        C
-      !>              CHARACTER*(*)         SPK8
-      !>              PARAMETER           ( SPK8   = 'spkcls_ex1.bsp' )
+      !>C
+      !>C     Define the segment identifier parameters.
+      !>C
+      !>      CHARACTER*(*)         SPK8
+      !>      PARAMETER           ( SPK8   = 'spkcls_ex1.bsp' )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000'          )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000'          )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 3  )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 3  )
       !>
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER = 10 )
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER = 10 )
       !>
-      !>              INTEGER               DEGREE
-      !>              PARAMETER           ( DEGREE = 3  )
+      !>      INTEGER               DEGREE
+      !>      PARAMETER           ( DEGREE = 3  )
       !>
-      !>              INTEGER               NSTATS
-      !>              PARAMETER           ( NSTATS = 9  )
+      !>      INTEGER               NSTATS
+      !>      PARAMETER           ( NSTATS = 9  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      BEGTIM
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
-      !>              DOUBLE PRECISION      STATES ( 6, NSTATS )
-      !>              DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      BEGTIM
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      STATES ( 6, NSTATS )
+      !>      DOUBLE PRECISION      STEP
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     Set the array of discrete states to write to the SPK
-      !>        C     segment.
-      !>        C
-      !>              DATA                  STATES /
-      !>             .        101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
-      !>             .        102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
-      !>             .        103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
-      !>             .        104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
-      !>             .        105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
-      !>             .        106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
-      !>             .        107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
-      !>             .        108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
-      !>             .        109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0  /
+      !>C
+      !>C     Set the array of discrete states to write to the SPK
+      !>C     segment.
+      !>C
+      !>      DATA                  STATES /
+      !>     .        101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
+      !>     .        102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
+      !>     .        103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
+      !>     .        104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
+      !>     .        105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
+      !>     .        106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
+      !>     .        107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
+      !>     .        108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
+      !>     .        109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0  /
       !>
-      !>        C
-      !>        C     Set the start and end times of interval covered by
-      !>        C     segment, and the time step separating epochs of states.
-      !>        C
-      !>              FIRST = 100.D0
-      !>              LAST  = 900.D0
-      !>              STEP  = 100.D0
+      !>C
+      !>C     Set the start and end times of interval covered by
+      !>C     segment, and the time step separating epochs of states.
+      !>C
+      !>      FIRST = 100.D0
+      !>      LAST  = 900.D0
+      !>      STEP  = 100.D0
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              IFNAME = 'Type 8 SPK internal file name.'
-      !>              SEGID  = 'SPK type 8 test segment'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      IFNAME = 'Type 8 SPK internal file name.'
+      !>      SEGID  = 'SPK type 8 test segment'
       !>
-      !>        C
-      !>        C     Open a new SPK file.
-      !>        C
-      !>              CALL SPKOPN( SPK8, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new SPK file.
+      !>C
+      !>      CALL SPKOPN( SPK8, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Set the epoch of first state in STATES array to be
-      !>        C     the start time of the interval covered by the segment.
-      !>        C
-      !>              BEGTIM = FIRST
+      !>C
+      !>C     Set the epoch of first state in STATES array to be
+      !>C     the start time of the interval covered by the segment.
+      !>C
+      !>      BEGTIM = FIRST
       !>
-      !>        C
-      !>        C     Create a type 8 segment.
-      !>        C
-      !>              CALL SPKW08 (  HANDLE,  BODY,    CENTER,  REF,
-      !>             .               FIRST,   LAST,    SEGID,   DEGREE,
-      !>             .               NSTATS,  STATES,  BEGTIM,  STEP     )
+      !>C
+      !>C     Create a type 8 segment.
+      !>C
+      !>      CALL SPKW08 (  HANDLE,  BODY,    CENTER,  REF,
+      !>     .               FIRST,   LAST,    SEGID,   DEGREE,
+      !>     .               NSTATS,  STATES,  BEGTIM,  STEP     )
       !>
-      !>        C
-      !>        C     Close the SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new SPK type 8 exists in
@@ -15611,9 +15793,11 @@ contains
       !>        unambiguous ID word 'DAF/SPK '.
       !>
       !>-    SPICELIB Version 1.0.0, 27-JAN-1995 (KRG)
-      module procedure spkcls
+      module subroutine spkcls ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of the SPK file to be closed.
 
       character(acclen) :: access
 
@@ -15675,8 +15859,10 @@ contains
 !
       return
 
-      end procedure spkcls
+      end subroutine spkcls
 
+      !> Open an existing SPK file for subsequent write.
+      !>
       !>## Detailed Input
       !>
       !>     FILE     is the name of an existing SPK file to which
@@ -15752,144 +15938,146 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKOPA_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKOPA_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40 )
       !>
-      !>        C
-      !>        C     Define the segment identifier parameters.
-      !>        C
-      !>              CHARACTER*(*)         SPK5
-      !>              PARAMETER           ( SPK5  = 'spkopa_ex1.bsp' )
+      !>C
+      !>C     Define the segment identifier parameters.
+      !>C
+      !>      CHARACTER*(*)         SPK5
+      !>      PARAMETER           ( SPK5  = 'spkopa_ex1.bsp' )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000'          )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000'          )
       !>
-      !>              DOUBLE PRECISION      GMSUN
-      !>              PARAMETER           ( GMSUN  = 132712440023.310D0 )
+      !>      DOUBLE PRECISION      GMSUN
+      !>      PARAMETER           ( GMSUN  = 132712440023.310D0 )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 3  )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 3  )
       !>
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER = 10 )
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER = 10 )
       !>
-      !>              INTEGER               NSTATS
-      !>              PARAMETER           ( NSTATS = 9  )
+      !>      INTEGER               NSTATS
+      !>      PARAMETER           ( NSTATS = 9  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      EPOCH1 (    NSTATS )
-      !>              DOUBLE PRECISION      EPOCH2 (    NSTATS )
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
-      !>              DOUBLE PRECISION      STATES ( 6, NSTATS )
+      !>      DOUBLE PRECISION      EPOCH1 (    NSTATS )
+      !>      DOUBLE PRECISION      EPOCH2 (    NSTATS )
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      STATES ( 6, NSTATS )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     Define the states and epochs.
-      !>        C
-      !>              DATA                  STATES /
-      !>             .       101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
-      !>             .       102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
-      !>             .       103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
-      !>             .       104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
-      !>             .       105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
-      !>             .       106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
-      !>             .       107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
-      !>             .       108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
-      !>             .       109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0 /
+      !>C
+      !>C     Define the states and epochs.
+      !>C
+      !>      DATA                  STATES /
+      !>     .       101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
+      !>     .       102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
+      !>     .       103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
+      !>     .       104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
+      !>     .       105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
+      !>     .       106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
+      !>     .       107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
+      !>     .       108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
+      !>     .       109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0 /
       !>
-      !>              DATA                  EPOCH1 / 100.D0, 200.D0, 300.D0,
-      !>             .                               400.D0, 500.D0, 600.D0,
-      !>             .                               700.D0, 800.D0, 900.D0 /
+      !>      DATA                  EPOCH1 / 100.D0, 200.D0, 300.D0,
+      !>     .                               400.D0, 500.D0, 600.D0,
+      !>     .                               700.D0, 800.D0, 900.D0 /
       !>
-      !>              DATA                  EPOCH2 /
-      !>             .                            1100.D0, 1200.D0, 1300.D0,
-      !>             .                            1400.D0, 1500.D0, 1600.D0,
-      !>             .                            1700.D0, 1800.D0, 1900.D0 /
+      !>      DATA                  EPOCH2 /
+      !>     .                            1100.D0, 1200.D0, 1300.D0,
+      !>     .                            1400.D0, 1500.D0, 1600.D0,
+      !>     .                            1700.D0, 1800.D0, 1900.D0 /
       !>
-      !>        C
-      !>        C     Set the start and stop times of interval covered by
-      !>        C     the first segment.
-      !>        C
-      !>              FIRST  = EPOCH1(1)
-      !>              LAST   = EPOCH1(NSTATS)
+      !>C
+      !>C     Set the start and stop times of interval covered by
+      !>C     the first segment.
+      !>C
+      !>      FIRST  = EPOCH1(1)
+      !>      LAST   = EPOCH1(NSTATS)
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              IFNAME = 'Type 5 SPK internal file name.'
-      !>              SEGID  = 'SPK type 5 test segment #1'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      IFNAME = 'Type 5 SPK internal file name.'
+      !>      SEGID  = 'SPK type 5 test segment #1'
       !>
-      !>        C
-      !>        C     Open a new SPK file.
-      !>        C
-      !>              CALL SPKOPN( SPK5, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new SPK file.
+      !>C
+      !>      CALL SPKOPN( SPK5, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Write the segment.
-      !>        C
-      !>              CALL SPKW05 ( HANDLE, BODY,   CENTER, REF,
-      !>             .              FIRST,  LAST,   SEGID,  GMSUN,
-      !>             .              NSTATS, STATES, EPOCH1        )
+      !>C
+      !>C     Write the segment.
+      !>C
+      !>      CALL SPKW05 ( HANDLE, BODY,   CENTER, REF,
+      !>     .              FIRST,  LAST,   SEGID,  GMSUN,
+      !>     .              NSTATS, STATES, EPOCH1        )
       !>
-      !>        C
-      !>        C     Close the SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     At this point we have an existing SPK type 5 kernel
-      !>        C     that contains a single segment. Let's now demonstrate
-      !>        C     the use of SPKOPA.
-      !>        C
-      !>        C     Open the an existing SPK file for subsequent write.
-      !>        C
-      !>              CALL SPKOPA ( SPK5, HANDLE )
+      !>C
+      !>C     At this point we have an existing SPK type 5 kernel
+      !>C     that contains a single segment. Let's now demonstrate
+      !>C     the use of SPKOPA.
+      !>C
+      !>C     Open the an existing SPK file for subsequent write.
+      !>C
+      !>      CALL SPKOPA ( SPK5, HANDLE )
       !>
-      !>        C
-      !>        C     Set the start and stop times of interval covered by
-      !>        C     the second segment, and the segment ID.
-      !>        C
-      !>              FIRST  = EPOCH2(1)
-      !>              LAST   = EPOCH2(NSTATS)
+      !>C
+      !>C     Set the start and stop times of interval covered by
+      !>C     the second segment, and the segment ID.
+      !>C
+      !>      FIRST  = EPOCH2(1)
+      !>      LAST   = EPOCH2(NSTATS)
       !>
-      !>              SEGID  = 'SPK type 5 test segment #2'
+      !>      SEGID  = 'SPK type 5 test segment #2'
       !>
-      !>        C
-      !>        C     Now write the second segment. Use the same set of
-      !>        C     states time-ordered set of discrete states and the
-      !>        C     gravitational parameter. Set the epochs to be EPOCH2.
-      !>        C
-      !>              CALL SPKW05 ( HANDLE, BODY,   CENTER, REF,
-      !>             .              FIRST,  LAST,   SEGID,  GMSUN,
-      !>             .              NSTATS, STATES, EPOCH2        )
+      !>C
+      !>C     Now write the second segment. Use the same set of
+      !>C     states time-ordered set of discrete states and the
+      !>C     gravitational parameter. Set the epochs to be EPOCH2.
+      !>C
+      !>      CALL SPKW05 ( HANDLE, BODY,   CENTER, REF,
+      !>     .              FIRST,  LAST,   SEGID,  GMSUN,
+      !>     .              NSTATS, STATES, EPOCH2        )
       !>
-      !>        C
-      !>        C     Finally, close the file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Finally, close the file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new SPK type 5, with two
@@ -15920,9 +16108,12 @@ contains
       !>        Updated the contents of $Detailed_Output and $Exceptions.
       !>
       !>-    SPICELIB Version 1.0.0, 10-MAR-1999 (WLT)
-      module procedure spkopa
+      module subroutine spkopa ( ctx, file, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! The name of an existing SPK file.
+      integer(ip), intent(out) :: handle  !! Handle attached to the SPK file opened to append.
 
       integer(ip), parameter :: smwdsz = 8
 
@@ -15984,8 +16175,10 @@ contains
 
       return
 
-      end procedure spkopa
+      end subroutine spkopa
 
+      !> Create a new SPK file, returning the handle of the opened file.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of the new SPK file to be created.
@@ -16051,111 +16244,113 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKOPN_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKOPN_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 42 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 42 )
       !>
-      !>        C
-      !>        C     Define the segment identifier parameters.
-      !>        C
-      !>              CHARACTER*(*)         SPK8
-      !>              PARAMETER           ( SPK8   = 'spkopn_ex1.bsp' )
+      !>C
+      !>C     Define the segment identifier parameters.
+      !>C
+      !>      CHARACTER*(*)         SPK8
+      !>      PARAMETER           ( SPK8   = 'spkopn_ex1.bsp' )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000'          )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000'          )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 3  )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 3  )
       !>
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER = 10 )
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER = 10 )
       !>
-      !>              INTEGER               DEGREE
-      !>              PARAMETER           ( DEGREE = 3  )
+      !>      INTEGER               DEGREE
+      !>      PARAMETER           ( DEGREE = 3  )
       !>
-      !>              INTEGER               NSTATS
-      !>              PARAMETER           ( NSTATS = 9  )
+      !>      INTEGER               NSTATS
+      !>      PARAMETER           ( NSTATS = 9  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      BEGTIM
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
-      !>              DOUBLE PRECISION      STATES ( 6, NSTATS )
-      !>              DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      BEGTIM
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      STATES ( 6, NSTATS )
+      !>      DOUBLE PRECISION      STEP
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     Set the array of discrete states to write to the SPK
-      !>        C     segment.
-      !>        C
-      !>              DATA                  STATES /
-      !>             .        101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
-      !>             .        102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
-      !>             .        103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
-      !>             .        104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
-      !>             .        105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
-      !>             .        106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
-      !>             .        107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
-      !>             .        108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
-      !>             .        109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0  /
+      !>C
+      !>C     Set the array of discrete states to write to the SPK
+      !>C     segment.
+      !>C
+      !>      DATA                  STATES /
+      !>     .        101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
+      !>     .        102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
+      !>     .        103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
+      !>     .        104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
+      !>     .        105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
+      !>     .        106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
+      !>     .        107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
+      !>     .        108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
+      !>     .        109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0  /
       !>
-      !>        C
-      !>        C     Set the start and end times of interval covered by
-      !>        C     segment, and the time step separating epochs of states.
-      !>        C
-      !>              FIRST = 100.D0
-      !>              LAST  = 900.D0
-      !>              STEP  = 100.D0
+      !>C
+      !>C     Set the start and end times of interval covered by
+      !>C     segment, and the time step separating epochs of states.
+      !>C
+      !>      FIRST = 100.D0
+      !>      LAST  = 900.D0
+      !>      STEP  = 100.D0
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              IFNAME = 'Type 8 SPK internal file name.'
-      !>              SEGID  = 'SPK type 8 test segment'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      IFNAME = 'Type 8 SPK internal file name.'
+      !>      SEGID  = 'SPK type 8 test segment'
       !>
-      !>        C
-      !>        C     Open a new SPK file.
-      !>        C
-      !>              CALL SPKOPN( SPK8, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new SPK file.
+      !>C
+      !>      CALL SPKOPN( SPK8, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Set the epoch of first state in STATES array to be
-      !>        C     the start time of the interval covered by the segment.
-      !>        C
-      !>              BEGTIM = FIRST
+      !>C
+      !>C     Set the epoch of first state in STATES array to be
+      !>C     the start time of the interval covered by the segment.
+      !>C
+      !>      BEGTIM = FIRST
       !>
-      !>        C
-      !>        C     Create a type 8 segment.
-      !>        C
-      !>              CALL SPKW08 (  HANDLE,  BODY,    CENTER,  REF,
-      !>             .               FIRST,   LAST,    SEGID,   DEGREE,
-      !>             .               NSTATS,  STATES,  BEGTIM,  STEP     )
+      !>C
+      !>C     Create a type 8 segment.
+      !>C
+      !>      CALL SPKW08 (  HANDLE,  BODY,    CENTER,  REF,
+      !>     .               FIRST,   LAST,    SEGID,   DEGREE,
+      !>     .               NSTATS,  STATES,  BEGTIM,  STEP     )
       !>
-      !>        C
-      !>        C     Close the SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new SPK type 8 exists in
@@ -16195,20 +16390,16 @@ contains
       !>        area allocation using NCOMCH.
       !>
       !>-    SPICELIB Version 1.0.0, 26-JAN-1995 (KRG)
-      module procedure spkopn
+      module subroutine spkopn ( ctx, fname, ifname, ncomch, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! The name of the new SPK file to be created.
+      character(*), intent(in) :: ifname  !! The internal filename for the SPK file.
+      integer(ip), intent(in) :: ncomch  !! The number of characters to reserve for comments.
+      integer(ip), intent(out) :: handle  !! The handle of the opened SPK file.
 
       character(*), parameter :: type = 'SPK'
-
-!
-!     DAF ND and NI values for SPK files.
-!
-
-
-!
-!     Length of a DAF comment record, in characters.
-!
 
       integer(ip) :: ncomr
 
@@ -16244,8 +16435,10 @@ contains
       end if
 
       return
-      end procedure spkopn
+      end subroutine spkopn
 
+      !> Write a type 1 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -16416,11 +16609,21 @@ contains
       !>        section already described this error condition.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JAN-2003 (NJB)
-      module procedure spkw01
+      module subroutine spkw01 ( ctx, handle, body, center, frame, first, last, segid, n, dlines, epochs )
       use pepper_kinds, only: ip, wp
       implicit none
-
       integer(ip), parameter :: dlsize = 71
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: n  !! Number of difference lines in segment.
+      real(wp), intent(in) :: dlines ( dlsize, * )  !! Array of difference lines.
+      real(wp), intent(in) :: epochs (         * )  !! Coverage end times of difference lines.
 
 
 
@@ -16618,8 +16821,10 @@ contains
       end if
 
       return
-      end procedure spkw01
+      end subroutine spkw01
 
+      !> Write a type 2 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the DAF handle of an SPK file to which a type 2
@@ -16800,110 +17005,112 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKW02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKW02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40 )
       !>
-      !>        C
-      !>        C     Define the segment identifier parameters.
-      !>        C
-      !>              CHARACTER*(*)         SPK2
-      !>              PARAMETER           ( SPK2  = 'spkw02_ex1.bsp' )
+      !>C
+      !>C     Define the segment identifier parameters.
+      !>C
+      !>      CHARACTER*(*)         SPK2
+      !>      PARAMETER           ( SPK2  = 'spkw02_ex1.bsp' )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000'          )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000'          )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 3  )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 3  )
       !>
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER = 10 )
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER = 10 )
       !>
-      !>              INTEGER               CHBDEG
-      !>              PARAMETER           ( CHBDEG = 2  )
+      !>      INTEGER               CHBDEG
+      !>      PARAMETER           ( CHBDEG = 2  )
       !>
-      !>              INTEGER               NRECS
-      !>              PARAMETER           ( NRECS  = 4  )
+      !>      INTEGER               NRECS
+      !>      PARAMETER           ( NRECS  = 4  )
       !>
-      !>              INTEGER               RECSIZ
-      !>              PARAMETER           ( RECSIZ = 3*(CHBDEG+1) )
+      !>      INTEGER               RECSIZ
+      !>      PARAMETER           ( RECSIZ = 3*(CHBDEG+1) )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      INTLEN
-      !>              DOUBLE PRECISION      LAST
-      !>              DOUBLE PRECISION      RECRDS ( RECSIZ, NRECS )
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      INTLEN
+      !>      DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      RECRDS ( RECSIZ, NRECS )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     Define the coefficients.
-      !>        C
-      !>              DATA                  RECRDS /
-      !>             .                      1.0101D0, 1.0102D0, 1.0103D0,
-      !>             .                      1.0201D0, 1.0202D0, 1.0203D0,
-      !>             .                      1.0301D0, 1.0302D0, 1.0303D0,
-      !>             .                      2.0101D0, 2.0102D0, 2.0103D0,
-      !>             .                      2.0201D0, 2.0202D0, 2.0203D0,
-      !>             .                      2.0301D0, 2.0302D0, 2.0303D0,
-      !>             .                      3.0101D0, 3.0102D0, 3.0103D0,
-      !>             .                      3.0201D0, 3.0202D0, 3.0203D0,
-      !>             .                      3.0301D0, 3.0302D0, 3.0303D0,
-      !>             .                      4.0101D0, 4.0102D0, 4.0103D0,
-      !>             .                      4.0201D0, 4.0202D0, 4.0203D0,
-      !>             .                      4.0301D0, 4.0302D0, 4.0303D0 /
+      !>C
+      !>C     Define the coefficients.
+      !>C
+      !>      DATA                  RECRDS /
+      !>     .                      1.0101D0, 1.0102D0, 1.0103D0,
+      !>     .                      1.0201D0, 1.0202D0, 1.0203D0,
+      !>     .                      1.0301D0, 1.0302D0, 1.0303D0,
+      !>     .                      2.0101D0, 2.0102D0, 2.0103D0,
+      !>     .                      2.0201D0, 2.0202D0, 2.0203D0,
+      !>     .                      2.0301D0, 2.0302D0, 2.0303D0,
+      !>     .                      3.0101D0, 3.0102D0, 3.0103D0,
+      !>     .                      3.0201D0, 3.0202D0, 3.0203D0,
+      !>     .                      3.0301D0, 3.0302D0, 3.0303D0,
+      !>     .                      4.0101D0, 4.0102D0, 4.0103D0,
+      !>     .                      4.0201D0, 4.0202D0, 4.0203D0,
+      !>     .                      4.0301D0, 4.0302D0, 4.0303D0 /
       !>
-      !>        C
-      !>        C     Set the start and end times of interval covered by
-      !>        C     segment, and the length of time covered by logical
-      !>        C     record.
-      !>        C
-      !>              FIRST  = 100.D0
-      !>              LAST   = 500.D0
-      !>              INTLEN = 100.D0
+      !>C
+      !>C     Set the start and end times of interval covered by
+      !>C     segment, and the length of time covered by logical
+      !>C     record.
+      !>C
+      !>      FIRST  = 100.D0
+      !>      LAST   = 500.D0
+      !>      INTLEN = 100.D0
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              IFNAME = 'Type 2 SPK internal file name.'
-      !>              SEGID  = 'SPK type 2 test segment'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      IFNAME = 'Type 2 SPK internal file name.'
+      !>      SEGID  = 'SPK type 2 test segment'
       !>
-      !>        C
-      !>        C     Open a new SPK file.
-      !>        C
-      !>              CALL SPKOPN( SPK2, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new SPK file.
+      !>C
+      !>      CALL SPKOPN( SPK2, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Write the segment.
-      !>        C
-      !>              CALL SPKW02 ( HANDLE, BODY,   CENTER, REF,
-      !>             .              FIRST,  LAST,   SEGID,  INTLEN,
-      !>             .              NRECS,  CHBDEG, RECRDS, FIRST  )
+      !>C
+      !>C     Write the segment.
+      !>C
+      !>      CALL SPKW02 ( HANDLE, BODY,   CENTER, REF,
+      !>     .              FIRST,  LAST,   SEGID,  INTLEN,
+      !>     .              NRECS,  CHBDEG, RECRDS, FIRST  )
       !>
-      !>        C
-      !>        C     Close the SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new SPK type 2 exists in
@@ -16958,28 +17165,23 @@ contains
       !>        some comments to the header. Corrected spelling mistakes.
       !>
       !>-    SPICELIB Version 1.0.0, 01-AUG-1995 (KSZ)
-      module procedure spkw02
+      module subroutine spkw02 ( ctx, handle, body, center, frame, first, last, segid, intlen, n, polydg, cdata, btime )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spk02
       implicit none
-
-!     DTYPE is the SPK data type.
-!
-!
-!     ND is the number of double precision components in an SPK
-!     segment descriptor. SPK uses ND = 2.
-!
-!
-!     NI is the number of integer components in an SPK segment
-!     descriptor. SPK uses NI = 6.
-!
-!
-!     NS is the size of a packed SPK segment descriptor.
-!
-!
-!     SIDLEN is the maximum number of characters allowed in an
-!     SPK segment identifier.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for the center of motion of the body.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: intlen  !! Length of time covered by logical record.
+      integer(ip), intent(in) :: n  !! Number of logical records in segment.
+      integer(ip), intent(in) :: polydg  !! Chebyshev polynomial degree.
+      real(wp), intent(in) :: cdata (*)  !! Array of Chebyshev coefficients.
+      real(wp), intent(in) :: btime  !! Begin time of first logical record.
 
       character(sidlen) :: etstr
       character(sidlen) :: netstr
@@ -17230,8 +17432,10 @@ contains
 !     We're done.  Checkout of error trace.
 !
       return
-      end procedure spkw02
+      end subroutine spkw02
 
+      !> Write a type 3 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the DAF handle of an SPK file to which a type 3
@@ -17426,122 +17630,124 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKW03_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKW03_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40 )
       !>
-      !>        C
-      !>        C     Define the segment identifier parameters.
-      !>        C
-      !>              CHARACTER*(*)         SPK3
-      !>              PARAMETER           ( SPK3  = 'spkw03_ex1.bsp' )
+      !>C
+      !>C     Define the segment identifier parameters.
+      !>C
+      !>      CHARACTER*(*)         SPK3
+      !>      PARAMETER           ( SPK3  = 'spkw03_ex1.bsp' )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000'          )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000'          )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 3  )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 3  )
       !>
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER = 10 )
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER = 10 )
       !>
-      !>              INTEGER               CHBDEG
-      !>              PARAMETER           ( CHBDEG = 2  )
+      !>      INTEGER               CHBDEG
+      !>      PARAMETER           ( CHBDEG = 2  )
       !>
-      !>              INTEGER               NRECS
-      !>              PARAMETER           ( NRECS  = 4  )
+      !>      INTEGER               NRECS
+      !>      PARAMETER           ( NRECS  = 4  )
       !>
-      !>              INTEGER               RECSIZ
-      !>              PARAMETER           ( RECSIZ = 6*(CHBDEG+1) )
+      !>      INTEGER               RECSIZ
+      !>      PARAMETER           ( RECSIZ = 6*(CHBDEG+1) )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      INTLEN
-      !>              DOUBLE PRECISION      LAST
-      !>              DOUBLE PRECISION      RECRDS ( RECSIZ, NRECS )
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      INTLEN
+      !>      DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      RECRDS ( RECSIZ, NRECS )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     Define the coefficients.
-      !>        C
-      !>              DATA                  RECRDS /
-      !>             .                      1.0101D0, 1.0102D0, 1.0103D0,
-      !>             .                      1.0201D0, 1.0202D0, 1.0203D0,
-      !>             .                      1.0301D0, 1.0302D0, 1.0303D0,
-      !>             .                      1.0401D0, 1.0402D0, 1.0403D0,
-      !>             .                      1.0501D0, 1.0502D0, 1.0503D0,
-      !>             .                      1.0601D0, 1.0602D0, 1.0603D0,
-      !>             .                      2.0101D0, 2.0102D0, 2.0103D0,
-      !>             .                      2.0201D0, 2.0202D0, 2.0203D0,
-      !>             .                      2.0301D0, 2.0302D0, 2.0303D0,
-      !>             .                      2.0401D0, 2.0402D0, 2.0403D0,
-      !>             .                      2.0501D0, 2.0502D0, 2.0503D0,
-      !>             .                      2.0601D0, 2.0602D0, 2.0603D0,
-      !>             .                      3.0101D0, 3.0102D0, 3.0103D0,
-      !>             .                      3.0201D0, 3.0202D0, 3.0203D0,
-      !>             .                      3.0301D0, 3.0302D0, 3.0303D0,
-      !>             .                      3.0401D0, 3.0402D0, 3.0403D0,
-      !>             .                      3.0501D0, 3.0502D0, 3.0503D0,
-      !>             .                      3.0601D0, 3.0602D0, 3.0603D0,
-      !>             .                      4.0101D0, 4.0102D0, 4.0103D0,
-      !>             .                      4.0201D0, 4.0202D0, 4.0203D0,
-      !>             .                      4.0301D0, 4.0302D0, 4.0303D0,
-      !>             .                      4.0401D0, 4.0402D0, 4.0403D0,
-      !>             .                      4.0501D0, 4.0502D0, 4.0503D0,
-      !>             .                      4.0601D0, 4.0602D0, 4.0603D0 /
+      !>C
+      !>C     Define the coefficients.
+      !>C
+      !>      DATA                  RECRDS /
+      !>     .                      1.0101D0, 1.0102D0, 1.0103D0,
+      !>     .                      1.0201D0, 1.0202D0, 1.0203D0,
+      !>     .                      1.0301D0, 1.0302D0, 1.0303D0,
+      !>     .                      1.0401D0, 1.0402D0, 1.0403D0,
+      !>     .                      1.0501D0, 1.0502D0, 1.0503D0,
+      !>     .                      1.0601D0, 1.0602D0, 1.0603D0,
+      !>     .                      2.0101D0, 2.0102D0, 2.0103D0,
+      !>     .                      2.0201D0, 2.0202D0, 2.0203D0,
+      !>     .                      2.0301D0, 2.0302D0, 2.0303D0,
+      !>     .                      2.0401D0, 2.0402D0, 2.0403D0,
+      !>     .                      2.0501D0, 2.0502D0, 2.0503D0,
+      !>     .                      2.0601D0, 2.0602D0, 2.0603D0,
+      !>     .                      3.0101D0, 3.0102D0, 3.0103D0,
+      !>     .                      3.0201D0, 3.0202D0, 3.0203D0,
+      !>     .                      3.0301D0, 3.0302D0, 3.0303D0,
+      !>     .                      3.0401D0, 3.0402D0, 3.0403D0,
+      !>     .                      3.0501D0, 3.0502D0, 3.0503D0,
+      !>     .                      3.0601D0, 3.0602D0, 3.0603D0,
+      !>     .                      4.0101D0, 4.0102D0, 4.0103D0,
+      !>     .                      4.0201D0, 4.0202D0, 4.0203D0,
+      !>     .                      4.0301D0, 4.0302D0, 4.0303D0,
+      !>     .                      4.0401D0, 4.0402D0, 4.0403D0,
+      !>     .                      4.0501D0, 4.0502D0, 4.0503D0,
+      !>     .                      4.0601D0, 4.0602D0, 4.0603D0 /
       !>
-      !>        C
-      !>        C     Set the start and end times of interval covered by
-      !>        C     segment, and the length of time covered by logical
-      !>        C     record.
-      !>        C
-      !>              FIRST  = 100.D0
-      !>              LAST   = 500.D0
-      !>              INTLEN = 100.D0
+      !>C
+      !>C     Set the start and end times of interval covered by
+      !>C     segment, and the length of time covered by logical
+      !>C     record.
+      !>C
+      !>      FIRST  = 100.D0
+      !>      LAST   = 500.D0
+      !>      INTLEN = 100.D0
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              IFNAME = 'Type 3 SPK internal file name.'
-      !>              SEGID  = 'SPK type 3 test segment'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      IFNAME = 'Type 3 SPK internal file name.'
+      !>      SEGID  = 'SPK type 3 test segment'
       !>
-      !>        C
-      !>        C     Open a new SPK file.
-      !>        C
-      !>              CALL SPKOPN( SPK3, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new SPK file.
+      !>C
+      !>      CALL SPKOPN( SPK3, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Write the segment.
-      !>        C
-      !>              CALL SPKW03 ( HANDLE, BODY,   CENTER, REF,
-      !>             .              FIRST,  LAST,   SEGID,  INTLEN,
-      !>             .              NRECS,  CHBDEG, RECRDS, FIRST  )
+      !>C
+      !>C     Write the segment.
+      !>C
+      !>      CALL SPKW03 ( HANDLE, BODY,   CENTER, REF,
+      !>     .              FIRST,  LAST,   SEGID,  INTLEN,
+      !>     .              NRECS,  CHBDEG, RECRDS, FIRST  )
       !>
-      !>        C
-      !>        C     Close the SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new SPK type 3 exists in
@@ -17595,29 +17801,27 @@ contains
       !>        Corrected typo in the section name ("Example" to "Examples").
       !>
       !>-    SPICELIB Version 1.0.0, 01-AUG-1995 (KSZ)
-      module procedure spkw03
+      module subroutine spkw03 ( ctx, handle, body, center, frame, first, last, segid, intlen, n, polydg, cdata, btime )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spk03
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for the center of motion of the body.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: intlen  !! Length of time covered by record.
+      integer(ip), intent(in) :: n  !! Number of records in segment.
+      integer(ip), intent(in) :: polydg  !! Chebyshev polynomial degree.
+      real(wp), intent(in) :: cdata (*)  !! Array of Chebyshev coefficients.
+      real(wp), intent(in) :: btime  !! Begin time of first record.
 
 !     DTYPE is the SPK data type.
 !
       integer(ip), parameter :: dtype = 3
-!
-!     ND is the number of double precision components in an SPK
-!     segment descriptor. SPK uses ND = 2.
-!
-!
-!     NI is the number of integer components in an SPK segment
-!     descriptor. SPK uses NI = 6.
-!
-!
-!     NS is the size of a packed SPK segment descriptor.
-!
-!
-!     SIDLEN is the maximum number of characters allowed in an
-!     SPK segment identifier.
-!
 
       character(sidlen) :: etstr
       character(sidlen) :: netstr
@@ -17866,8 +18070,12 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure spkw03
+      end subroutine spkw03
 
+      !> Write an SPK segment of type 5 given a time-ordered set of
+      !> discrete states and epochs, and the gravitational parameter
+      !> of a central body.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file
@@ -17963,106 +18171,108 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKW05_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKW05_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40 )
       !>
-      !>        C
-      !>        C     Define the segment identifier parameters.
-      !>        C
-      !>              CHARACTER*(*)         SPK5
-      !>              PARAMETER           ( SPK5  = 'spkw05_ex1.bsp' )
+      !>C
+      !>C     Define the segment identifier parameters.
+      !>C
+      !>      CHARACTER*(*)         SPK5
+      !>      PARAMETER           ( SPK5  = 'spkw05_ex1.bsp' )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000'          )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000'          )
       !>
-      !>              DOUBLE PRECISION      GMSUN
-      !>              PARAMETER           ( GMSUN  = 132712440023.310D0 )
+      !>      DOUBLE PRECISION      GMSUN
+      !>      PARAMETER           ( GMSUN  = 132712440023.310D0 )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 3  )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 3  )
       !>
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER = 10 )
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER = 10 )
       !>
-      !>              INTEGER               NSTATS
-      !>              PARAMETER           ( NSTATS = 9  )
+      !>      INTEGER               NSTATS
+      !>      PARAMETER           ( NSTATS = 9  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      EPOCHS (    NSTATS )
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
-      !>              DOUBLE PRECISION      STATES ( 6, NSTATS )
+      !>      DOUBLE PRECISION      EPOCHS (    NSTATS )
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      STATES ( 6, NSTATS )
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     Define the states and epochs.
-      !>        C
-      !>              DATA                  STATES /
-      !>             .       101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
-      !>             .       102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
-      !>             .       103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
-      !>             .       104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
-      !>             .       105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
-      !>             .       106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
-      !>             .       107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
-      !>             .       108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
-      !>             .       109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0 /
+      !>C
+      !>C     Define the states and epochs.
+      !>C
+      !>      DATA                  STATES /
+      !>     .       101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
+      !>     .       102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
+      !>     .       103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
+      !>     .       104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
+      !>     .       105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
+      !>     .       106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
+      !>     .       107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
+      !>     .       108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
+      !>     .       109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0 /
       !>
-      !>              DATA                  EPOCHS / 100.D0, 200.D0, 300.D0,
-      !>             .                               400.D0, 500.D0, 600.D0,
-      !>             .                               700.D0, 800.D0, 900.D0 /
+      !>      DATA                  EPOCHS / 100.D0, 200.D0, 300.D0,
+      !>     .                               400.D0, 500.D0, 600.D0,
+      !>     .                               700.D0, 800.D0, 900.D0 /
       !>
-      !>        C
-      !>        C     Set the start and end times of interval covered by
-      !>        C     segment.
-      !>        C
-      !>              FIRST  = EPOCHS(1)
-      !>              LAST   = EPOCHS(NSTATS)
+      !>C
+      !>C     Set the start and end times of interval covered by
+      !>C     segment.
+      !>C
+      !>      FIRST  = EPOCHS(1)
+      !>      LAST   = EPOCHS(NSTATS)
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              IFNAME = 'Type 5 SPK internal file name.'
-      !>              SEGID  = 'SPK type 5 test segment'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      IFNAME = 'Type 5 SPK internal file name.'
+      !>      SEGID  = 'SPK type 5 test segment'
       !>
-      !>        C
-      !>        C     Open a new SPK file.
-      !>        C
-      !>              CALL SPKOPN( SPK5, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new SPK file.
+      !>C
+      !>      CALL SPKOPN( SPK5, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Write the segment.
-      !>        C
-      !>              CALL SPKW05 ( HANDLE, BODY,   CENTER, REF,
-      !>             .              FIRST,  LAST,   SEGID,  GMSUN,
-      !>             .              NSTATS, STATES, EPOCHS        )
+      !>C
+      !>C     Write the segment.
+      !>C
+      !>      CALL SPKW05 ( HANDLE, BODY,   CENTER, REF,
+      !>     .              FIRST,  LAST,   SEGID,  GMSUN,
+      !>     .              NSTATS, STATES, EPOCHS        )
       !>
-      !>        C
-      !>        C     Close the SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new SPK type 5 exists in
@@ -18116,9 +18326,21 @@ contains
       !>        methods for obtaining file handles.
       !>
       !>-    SPICELIB Version 1.0.0, 01-APR-1992 (JML) (WLT) (IMU)
-      module procedure spkw05
+      module subroutine spkw05 ( ctx, handle, body, center, frame, first, last, segid, gm, n, states, epochs )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! Body code for ephemeris object.
+      integer(ip), intent(in) :: center  !! Body code for the center of motion of the body.
+      character(*), intent(in) :: frame  !! The reference frame of the states.
+      real(wp), intent(in) :: first  !! First valid time for which states can be computed.
+      real(wp), intent(in) :: last  !! Last valid time for which states can be computed.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: gm  !! Gravitational parameter of central body.
+      integer(ip), intent(in) :: n  !! Number of states and epochs.
+      real(wp), intent(in) :: states   ( 6, * )  !! States.
+      real(wp), intent(in) :: epochs   (    * )  !! Epochs.
 
 !     SIDLEN is the maximum number of characters allowed in an
 !     SPK segment identifier.
@@ -18314,8 +18536,10 @@ contains
       end if
 
       return
-      end procedure spkw05
+      end subroutine spkw05
 
+      !> Write a type 8 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -18456,111 +18680,113 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKW08_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKW08_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40 )
       !>
-      !>        C
-      !>        C     Define the segment identifier parameters.
-      !>        C
-      !>              CHARACTER*(*)         SPK8
-      !>              PARAMETER           ( SPK8   = 'spkw08_ex1.bsp' )
+      !>C
+      !>C     Define the segment identifier parameters.
+      !>C
+      !>      CHARACTER*(*)         SPK8
+      !>      PARAMETER           ( SPK8   = 'spkw08_ex1.bsp' )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000'          )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000'          )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 3  )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 3  )
       !>
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER = 10 )
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER = 10 )
       !>
-      !>              INTEGER               DEGREE
-      !>              PARAMETER           ( DEGREE = 3  )
+      !>      INTEGER               DEGREE
+      !>      PARAMETER           ( DEGREE = 3  )
       !>
-      !>              INTEGER               NSTATS
-      !>              PARAMETER           ( NSTATS = 9  )
+      !>      INTEGER               NSTATS
+      !>      PARAMETER           ( NSTATS = 9  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      BEGTIM
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
-      !>              DOUBLE PRECISION      STATES ( 6, NSTATS )
-      !>              DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      BEGTIM
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      STATES ( 6, NSTATS )
+      !>      DOUBLE PRECISION      STEP
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     Set the array of discrete states to write to the SPK
-      !>        C     segment.
-      !>        C
-      !>              DATA                  STATES /
-      !>             .        101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
-      !>             .        102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
-      !>             .        103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
-      !>             .        104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
-      !>             .        105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
-      !>             .        106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
-      !>             .        107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
-      !>             .        108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
-      !>             .        109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0  /
+      !>C
+      !>C     Set the array of discrete states to write to the SPK
+      !>C     segment.
+      !>C
+      !>      DATA                  STATES /
+      !>     .        101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
+      !>     .        102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
+      !>     .        103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
+      !>     .        104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
+      !>     .        105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
+      !>     .        106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
+      !>     .        107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
+      !>     .        108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
+      !>     .        109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0  /
       !>
-      !>        C
-      !>        C     Set the start and end times of interval covered by
-      !>        C     segment, and the time step separating epochs of states.
-      !>        C
-      !>              FIRST = 100.D0
-      !>              LAST  = 900.D0
-      !>              STEP  = 100.D0
+      !>C
+      !>C     Set the start and end times of interval covered by
+      !>C     segment, and the time step separating epochs of states.
+      !>C
+      !>      FIRST = 100.D0
+      !>      LAST  = 900.D0
+      !>      STEP  = 100.D0
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              IFNAME = 'Type 8 SPK internal file name.'
-      !>              SEGID  = 'SPK type 8 test segment'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      IFNAME = 'Type 8 SPK internal file name.'
+      !>      SEGID  = 'SPK type 8 test segment'
       !>
-      !>        C
-      !>        C     Open a new SPK file.
-      !>        C
-      !>              CALL SPKOPN( SPK8, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new SPK file.
+      !>C
+      !>      CALL SPKOPN( SPK8, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Set the epoch of first state in STATES array to be
-      !>        C     the start time of the interval covered by the segment.
-      !>        C
-      !>              BEGTIM = FIRST
+      !>C
+      !>C     Set the epoch of first state in STATES array to be
+      !>C     the start time of the interval covered by the segment.
+      !>C
+      !>      BEGTIM = FIRST
       !>
-      !>        C
-      !>        C     Create a type 8 segment.
-      !>        C
-      !>              CALL SPKW08 (  HANDLE,  BODY,    CENTER,  REF,
-      !>             .               FIRST,   LAST,    SEGID,   DEGREE,
-      !>             .               NSTATS,  STATES,  BEGTIM,  STEP     )
+      !>C
+      !>C     Create a type 8 segment.
+      !>C
+      !>      CALL SPKW08 (  HANDLE,  BODY,    CENTER,  REF,
+      !>     .               FIRST,   LAST,    SEGID,   DEGREE,
+      !>     .               NSTATS,  STATES,  BEGTIM,  STEP     )
       !>
-      !>        C
-      !>        C     Close the SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new SPK type 8 exists in
@@ -18617,10 +18843,23 @@ contains
       !>        methods for obtaining file handles.
       !>
       !>-    SPICELIB Version 1.0.0, 08-AUG-1993 (NJB) (JML) (WLT)
-      module procedure spkw08
+      module subroutine spkw08 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, begtim, step )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spk08
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+      integer(ip), intent(in) :: n  !! Number of states.
+      real(wp), intent(in) :: states ( 6, * )  !! Array of states.
+      real(wp), intent(in) :: begtim  !! Epoch of first state in STATES array.
+      real(wp), intent(in) :: step  !! Time step separating epochs of states.
 
 !
 !     SIDLEN is the maximum number of characters allowed in an
@@ -18891,8 +19130,10 @@ contains
       end if
 
       return
-      end procedure spkw08
+      end subroutine spkw08
 
+      !> Write a type 9 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -19043,141 +19284,143 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKW09_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKW09_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      HALFPI
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      HALFPI
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         SPKNAM
-      !>              PARAMETER           ( SPKNAM = 'spkw09_ex1.bsp' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         SPKNAM
+      !>      PARAMETER           ( SPKNAM = 'spkw09_ex1.bsp' )
       !>
-      !>              INTEGER               DEGREE
-      !>              PARAMETER           ( DEGREE = 3   )
+      !>      INTEGER               DEGREE
+      !>      PARAMETER           ( DEGREE = 3   )
       !>
-      !>              INTEGER               MARS
-      !>              PARAMETER           ( MARS   = 499 )
+      !>      INTEGER               MARS
+      !>      PARAMETER           ( MARS   = 499 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 255 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 255 )
       !>
-      !>              INTEGER               NEPOCS
-      !>              PARAMETER           ( NEPOCS = 800 )
+      !>      INTEGER               NEPOCS
+      !>      PARAMETER           ( NEPOCS = 800 )
       !>
-      !>              INTEGER               NOBJ
-      !>              PARAMETER           ( NOBJ   = 403 )
+      !>      INTEGER               NOBJ
+      !>      PARAMETER           ( NOBJ   = 403 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      DELTA
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      EPOCHS ( NEPOCS )
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      STATE  ( 6 )
-      !>              DOUBLE PRECISION      STATES ( 6, NEPOCS )
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      TIME
+      !>      DOUBLE PRECISION      DELTA
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      EPOCHS ( NEPOCS )
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STATE  ( 6 )
+      !>      DOUBLE PRECISION      STATES ( 6, NEPOCS )
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      TIME
       !>
-      !>              INTEGER               I
-      !>              INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               HANDLE
       !>
-      !>        C
-      !>        C     Load the input SPK file.
-      !>        C
-      !>              CALL FURNSH ( 'spkw09_ex1.tm' )
+      !>C
+      !>C     Load the input SPK file.
+      !>C
+      !>      CALL FURNSH ( 'spkw09_ex1.tm' )
       !>
-      !>        C
-      !>        C     Convert the input UTC to ephemeris time
-      !>        C
-      !>              CALL STR2ET ( '2018 Apr 03 08:35', ET )
+      !>C
+      !>C     Convert the input UTC to ephemeris time
+      !>C
+      !>      CALL STR2ET ( '2018 Apr 03 08:35', ET )
       !>
-      !>        C
-      !>        C     Create the time-ordered array of geometric states,
-      !>        C     at unequal time steps.
-      !>        C
-      !>              TIME  = ET
-      !>              STEP  = 60.D0
-      !>              DELTA = 10.D0
+      !>C
+      !>C     Create the time-ordered array of geometric states,
+      !>C     at unequal time steps.
+      !>C
+      !>      TIME  = ET
+      !>      STEP  = 60.D0
+      !>      DELTA = 10.D0
       !>
-      !>              DO I=1, NEPOCS
+      !>      DO I=1, NEPOCS
       !>
-      !>                 CALL SPKEZR ( 'PHOBOS', TIME,       'J2000', 'NONE',
-      !>             .                 'MARS',   STATES(1,I), LT             )
+      !>         CALL SPKEZR ( 'PHOBOS', TIME,       'J2000', 'NONE',
+      !>     .                 'MARS',   STATES(1,I), LT             )
       !>
-      !>                 EPOCHS(I) = TIME + 3600.D0
-      !>                 TIME = TIME + STEP +
-      !>             .          SIN( HALFPI() * I / 2.D0 ) * DELTA
+      !>         EPOCHS(I) = TIME + 3600.D0
+      !>         TIME = TIME + STEP +
+      !>     .          SIN( HALFPI() * I / 2.D0 ) * DELTA
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Open a new SPK file, with 5000 characters reserved
-      !>        C     for comments.
-      !>        C
-      !>              IFNAME = 'Test SPK type 9 internal filename.'
-      !>              CALL SPKOPN ( SPKNAM, IFNAME, 5000, HANDLE )
+      !>C
+      !>C     Open a new SPK file, with 5000 characters reserved
+      !>C     for comments.
+      !>C
+      !>      IFNAME = 'Test SPK type 9 internal filename.'
+      !>      CALL SPKOPN ( SPKNAM, IFNAME, 5000, HANDLE )
       !>
-      !>        C
-      !>        C     Create a segment identifier.
-      !>        C
-      !>              SEGID = 'MY_SAMPLE_SPK_TYPE_9_SEGMENT'
+      !>C
+      !>C     Create a segment identifier.
+      !>C
+      !>      SEGID = 'MY_SAMPLE_SPK_TYPE_9_SEGMENT'
       !>
-      !>        C
-      !>        C     Write the segment.
-      !>        C
-      !>              CALL SPKW09 ( HANDLE,    NOBJ,           MARS,  'J2000',
-      !>             .              EPOCHS(1), EPOCHS(NEPOCS), SEGID,  DEGREE,
-      !>             .              NEPOCS,    STATES,         EPOCHS        )
+      !>C
+      !>C     Write the segment.
+      !>C
+      !>      CALL SPKW09 ( HANDLE,    NOBJ,           MARS,  'J2000',
+      !>     .              EPOCHS(1), EPOCHS(NEPOCS), SEGID,  DEGREE,
+      !>     .              NEPOCS,    STATES,         EPOCHS        )
       !>
-      !>        C
-      !>        C     Close the new SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the new SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Compute the state of Phobos as seen from Mars,
-      !>        C     12 hours after the input UTC time.
-      !>        C
-      !>              ET = ET + 43200.0D0
-      !>              CALL SPKEZR ( 'PHOBOS', ET, 'J2000', 'NONE', 'MARS',
-      !>             .               STATE,   LT                          )
+      !>C
+      !>C     Compute the state of Phobos as seen from Mars,
+      !>C     12 hours after the input UTC time.
+      !>C
+      !>      ET = ET + 43200.0D0
+      !>      CALL SPKEZR ( 'PHOBOS', ET, 'J2000', 'NONE', 'MARS',
+      !>     .               STATE,   LT                          )
       !>
-      !>              WRITE (*,'(A)') 'Phobos as seen from Mars'
-      !>              WRITE (*,'(A,F20.6)') '   Epoch       (s):', ET
-      !>              WRITE (*,'(A,3F14.6)') '   Position   (km):',
-      !>             .                                   (STATE(I), I=1,3)
-      !>              WRITE (*,'(A,3F14.6)') '   Velocity (km/s):',
-      !>             .                                   (STATE(I), I=4,6)
-      !>              WRITE (*,*)
+      !>      WRITE (*,'(A)') 'Phobos as seen from Mars'
+      !>      WRITE (*,'(A,F20.6)') '   Epoch       (s):', ET
+      !>      WRITE (*,'(A,3F14.6)') '   Position   (km):',
+      !>     .                                   (STATE(I), I=1,3)
+      !>      WRITE (*,'(A,3F14.6)') '   Velocity (km/s):',
+      !>     .                                   (STATE(I), I=4,6)
+      !>      WRITE (*,*)
       !>
-      !>        C
-      !>        C     Load the newly created kernel, and compute the state
-      !>        C     of the new object as seen from Mars, 13 hours after
-      !>        C     the input UTC time.
-      !>        C
-      !>              CALL FURNSH ( SPKNAM )
-      !>              ET = ET + 3600.0D0
+      !>C
+      !>C     Load the newly created kernel, and compute the state
+      !>C     of the new object as seen from Mars, 13 hours after
+      !>C     the input UTC time.
+      !>C
+      !>      CALL FURNSH ( SPKNAM )
+      !>      ET = ET + 3600.0D0
       !>
-      !>              CALL SPKEZR ( '403', ET, 'J2000', 'NONE', 'MARS',
-      !>             .               STATE,   LT                       )
+      !>      CALL SPKEZR ( '403', ET, 'J2000', 'NONE', 'MARS',
+      !>     .               STATE,   LT                       )
       !>
-      !>              WRITE (*,'(A)') 'Object 403 as seen from Mars'
-      !>              WRITE (*,'(A,F20.6)') '   Epoch       (s):', ET
-      !>              WRITE (*,'(A,3F14.6)') '   Position   (km):',
-      !>             .                                   (STATE(I), I=1,3)
-      !>              WRITE (*,'(A,3F14.6)') '   Velocity (km/s):',
-      !>             .                                   (STATE(I), I=4,6)
+      !>      WRITE (*,'(A)') 'Object 403 as seen from Mars'
+      !>      WRITE (*,'(A,F20.6)') '   Epoch       (s):', ET
+      !>      WRITE (*,'(A,3F14.6)') '   Position   (km):',
+      !>     .                                   (STATE(I), I=1,3)
+      !>      WRITE (*,'(A,3F14.6)') '   Velocity (km/s):',
+      !>     .                                   (STATE(I), I=4,6)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -19238,9 +19481,22 @@ contains
       !>        methods for obtaining file handles.
       !>
       !>-    SPICELIB Version 1.0.0, 05-AUG-1993 (NJB) (JML) (WLT)
-      module procedure spkw09
+      module subroutine spkw09 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, epochs )
       use pepper_kinds, only: ip, wp
+      use pepper_spk_packing, only: spk09_data, spk_data_size
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+      integer(ip), intent(in) :: n  !! Number of states.
+      real(wp), intent(in) :: states ( 6, * )  !! Array of states.
+      real(wp), intent(in) :: epochs (    * )  !! Array of epochs corresponding to states.
 
 
 !
@@ -19488,15 +19744,11 @@ contains
 !        +-----------------------+
 !
 
-      call dafada ( ctx, states,  n*statsz )
-      call dafada ( ctx, epochs,  n        )
-
-      do i = 1,   (n-1) / dirsiz
-         call dafada ( ctx,  epochs( dirsiz*i ),  1  )
-      end do
-
-      call dafada ( ctx, [ real(degree, wp) ], 1 )
-      call dafada ( ctx, [ real(n, wp) ], 1 )
+!
+!     PEPPER: the data is made by spk09_data (pepper_spk_packing), which the
+!     kernel builder uses too.
+!
+      call dafada ( ctx, spk09_data ( states(:, 1:n), epochs(1:n), degree ), spk_data_size ( n ) )
 
 !
 !     As long as nothing went wrong, end the segment.
@@ -19506,8 +19758,11 @@ contains
       end if
 
       return
-      end procedure spkw09
+      end subroutine spkw09
 
+      !> Write an SPK type 10 segment to the file specified by
+      !> the input HANDLE.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been opened
@@ -19703,202 +19958,204 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKW10_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKW10_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              DOUBLE PRECISION      SPD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      DOUBLE PRECISION      SPD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40               )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40               )
       !>
-      !>              INTEGER               PNAMLN
-      !>              PARAMETER           ( PNAMLN = 2                )
+      !>      INTEGER               PNAMLN
+      !>      PARAMETER           ( PNAMLN = 2                )
       !>
-      !>              CHARACTER*(*)         SPK10
-      !>              PARAMETER           ( SPK10  = 'spkw10_ex1.bsp' )
+      !>      CHARACTER*(*)         SPK10
+      !>      PARAMETER           ( SPK10  = 'spkw10_ex1.bsp' )
       !>
-      !>              INTEGER               TLELLN
-      !>              PARAMETER           ( TLELLN = 69               )
+      !>      INTEGER               TLELLN
+      !>      PARAMETER           ( TLELLN = 69               )
       !>
-      !>        C
-      !>        C     The SPK type 10 segment will contain 18 two-line
-      !>        C     elements sets for the NORAD spacecraft 18123 with
-      !>        C     respect to the Earth (ID 399) in the J2000 reference
-      !>        C     frame.
-      !>        C
-      !>        C     As stated in the naif_ids required reading, for Earth
-      !>        C     orbiting spacecraft lacking a DSN identification code,
-      !>        C     the NAIF ID is derived from the tracking ID assigned to
-      !>        C     it by NORAD via:
-      !>        C
-      !>        C        NAIF ID = -100000 - NORAD ID code
-      !>        C
-      !>              INTEGER               TLESSZ
-      !>              PARAMETER           ( TLESSZ = 9       )
+      !>C
+      !>C     The SPK type 10 segment will contain 18 two-line
+      !>C     elements sets for the NORAD spacecraft 18123 with
+      !>C     respect to the Earth (ID 399) in the J2000 reference
+      !>C     frame.
+      !>C
+      !>C     As stated in the naif_ids required reading, for Earth
+      !>C     orbiting spacecraft lacking a DSN identification code,
+      !>C     the NAIF ID is derived from the tracking ID assigned to
+      !>C     it by NORAD via:
+      !>C
+      !>C        NAIF ID = -100000 - NORAD ID code
+      !>C
+      !>      INTEGER               TLESSZ
+      !>      PARAMETER           ( TLESSZ = 9       )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = -118123 )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = -118123 )
       !>
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER = 399     )
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER = 399     )
       !>
-      !>              CHARACTER*(*)         FRMNAM
-      !>              PARAMETER           ( FRMNAM = 'J2000' )
+      !>      CHARACTER*(*)         FRMNAM
+      !>      PARAMETER           ( FRMNAM = 'J2000' )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(PNAMLN)    NOADPN ( 8           )
-      !>              CHARACTER*(NAMLEN)    SEGID
-      !>              CHARACTER*(TLELLN)    TLE    ( 2  * TLESSZ )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(PNAMLN)    NOADPN ( 8           )
+      !>      CHARACTER*(NAMLEN)    SEGID
+      !>      CHARACTER*(TLELLN)    TLE    ( 2  * TLESSZ )
       !>
-      !>              DOUBLE PRECISION      CONSTS ( 8           )
-      !>              DOUBLE PRECISION      ELEMS  ( 10 * TLESSZ )
-      !>              DOUBLE PRECISION      EPOCHS (      TLESSZ )
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      CONSTS ( 8           )
+      !>      DOUBLE PRECISION      ELEMS  ( 10 * TLESSZ )
+      !>      DOUBLE PRECISION      EPOCHS (      TLESSZ )
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               N
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               N
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     These are the variables that will hold the constants
-      !>        C     required by SPK type 10. These constants are available
-      !>        C     from the loaded PCK file, which provides the actual
-      !>        C     values and units as used by NORAD propagation model.
-      !>        C
-      !>        C        Constant   Meaning
-      !>        C        --------   ------------------------------------------
-      !>        C        J2         J2 gravitational harmonic for Earth.
-      !>        C        J3         J3 gravitational harmonic for Earth.
-      !>        C        J4         J4 gravitational harmonic for Earth.
-      !>        C        KE         Square root of the GM for Earth.
-      !>        C        QO         High altitude bound for atmospheric model.
-      !>        C        SO         Low altitude bound for atmospheric model.
-      !>        C        ER         Equatorial radius of the Earth.
-      !>        C        AE         Distance units/earth radius.
-      !>        C
-      !>              DATA          NOADPN  /  'J2', 'J3', 'J4', 'KE',
-      !>             .                         'QO', 'SO', 'ER', 'AE'  /
+      !>C
+      !>C     These are the variables that will hold the constants
+      !>C     required by SPK type 10. These constants are available
+      !>C     from the loaded PCK file, which provides the actual
+      !>C     values and units as used by NORAD propagation model.
+      !>C
+      !>C        Constant   Meaning
+      !>C        --------   ------------------------------------------
+      !>C        J2         J2 gravitational harmonic for Earth.
+      !>C        J3         J3 gravitational harmonic for Earth.
+      !>C        J4         J4 gravitational harmonic for Earth.
+      !>C        KE         Square root of the GM for Earth.
+      !>C        QO         High altitude bound for atmospheric model.
+      !>C        SO         Low altitude bound for atmospheric model.
+      !>C        ER         Equatorial radius of the Earth.
+      !>C        AE         Distance units/earth radius.
+      !>C
+      !>      DATA          NOADPN  /  'J2', 'J3', 'J4', 'KE',
+      !>     .                         'QO', 'SO', 'ER', 'AE'  /
       !>
-      !>        C
-      !>        C     Define the Two-Line Element sets.
-      !>        C
-      !>              TLE(1)  = '1 18123U 87 53  A 87324.61041692 -.00000023'
-      !>             .      //                   '  00000-0 -75103-5 0 00675'
-      !>              TLE(2)  = '2 18123  98.8296 152.0074 0014950 168.7820 '
-      !>             .      //                   '191.3688 14.12912554 21686'
-      !>              TLE(3)  = '1 18123U 87 53  A 87326.73487726  .00000045'
-      !>             .      //                   '  00000-0  28709-4 0 00684'
-      !>              TLE(4)  = '2 18123  98.8335 154.1103 0015643 163.5445 '
-      !>             .      //                   '196.6235 14.12912902 21988'
-      !>              TLE(5)  = '1 18123U 87 53  A 87331.40868801  .00000104'
-      !>             .      //                   '  00000-0  60183-4 0 00690'
-      !>              TLE(6)  = '2 18123  98.8311 158.7160 0015481 149.9848 '
-      !>             .      //                   '210.2220 14.12914624 22644'
-      !>              TLE(7)  = '1 18123U 87 53  A 87334.24129978  .00000086'
-      !>             .      //                   '  00000-0  51111-4 0 00702'
-      !>              TLE(8)  = '2 18123  98.8296 161.5054 0015372 142.4159 '
-      !>             .      //                   '217.8089 14.12914879 23045'
-      !>              TLE(9)  = '1 18123U 87 53  A 87336.93227900 -.00000107'
-      !>             .      //                   '  00000-0 -52860-4 0 00713'
-      !>              TLE(10) = '2 18123  98.8317 164.1627 0014570 135.9191 '
-      !>             .      //                   '224.2321 14.12910572 23425'
-      !>              TLE(11) = '1 18123U 87 53  A 87337.28635487  .00000173'
-      !>             .      //                   '  00000-0  10226-3 0 00726'
-      !>              TLE(12) = '2 18123  98.8284 164.5113 0015289 133.5979 '
-      !>             .      //                   '226.6438 14.12916140 23475'
-      !>              TLE(13) = '1 18123U 87 53  A 87339.05673569  .00000079'
-      !>             .      //                   '  00000-0  47069-4 0 00738'
-      !>              TLE(14) = '2 18123  98.8288 166.2585 0015281 127.9985 '
-      !>             .      //                   '232.2567 14.12916010 24908'
-      !>              TLE(15) = '1 18123U 87 53  A 87345.43010859  .00000022'
-      !>             .      //                   '  00000-0  16481-4 0 00758'
-      !>              TLE(16) = '2 18123  98.8241 172.5226 0015362 109.1515 '
-      !>             .      //                   '251.1323 14.12915487 24626'
-      !>              TLE(17) = '1 18123U 87 53  A 87349.04167543  .00000042'
-      !>             .      //                   '  00000-0  27370-4 0 00764'
-      !>              TLE(18) = '2 18123  98.8301 176.1010 0015565 100.0881 '
-      !>             .      //                   '260.2047 14.12916361 25138'
+      !>C
+      !>C     Define the Two-Line Element sets.
+      !>C
+      !>      TLE(1)  = '1 18123U 87 53  A 87324.61041692 -.00000023'
+      !>     .      //                   '  00000-0 -75103-5 0 00675'
+      !>      TLE(2)  = '2 18123  98.8296 152.0074 0014950 168.7820 '
+      !>     .      //                   '191.3688 14.12912554 21686'
+      !>      TLE(3)  = '1 18123U 87 53  A 87326.73487726  .00000045'
+      !>     .      //                   '  00000-0  28709-4 0 00684'
+      !>      TLE(4)  = '2 18123  98.8335 154.1103 0015643 163.5445 '
+      !>     .      //                   '196.6235 14.12912902 21988'
+      !>      TLE(5)  = '1 18123U 87 53  A 87331.40868801  .00000104'
+      !>     .      //                   '  00000-0  60183-4 0 00690'
+      !>      TLE(6)  = '2 18123  98.8311 158.7160 0015481 149.9848 '
+      !>     .      //                   '210.2220 14.12914624 22644'
+      !>      TLE(7)  = '1 18123U 87 53  A 87334.24129978  .00000086'
+      !>     .      //                   '  00000-0  51111-4 0 00702'
+      !>      TLE(8)  = '2 18123  98.8296 161.5054 0015372 142.4159 '
+      !>     .      //                   '217.8089 14.12914879 23045'
+      !>      TLE(9)  = '1 18123U 87 53  A 87336.93227900 -.00000107'
+      !>     .      //                   '  00000-0 -52860-4 0 00713'
+      !>      TLE(10) = '2 18123  98.8317 164.1627 0014570 135.9191 '
+      !>     .      //                   '224.2321 14.12910572 23425'
+      !>      TLE(11) = '1 18123U 87 53  A 87337.28635487  .00000173'
+      !>     .      //                   '  00000-0  10226-3 0 00726'
+      !>      TLE(12) = '2 18123  98.8284 164.5113 0015289 133.5979 '
+      !>     .      //                   '226.6438 14.12916140 23475'
+      !>      TLE(13) = '1 18123U 87 53  A 87339.05673569  .00000079'
+      !>     .      //                   '  00000-0  47069-4 0 00738'
+      !>      TLE(14) = '2 18123  98.8288 166.2585 0015281 127.9985 '
+      !>     .      //                   '232.2567 14.12916010 24908'
+      !>      TLE(15) = '1 18123U 87 53  A 87345.43010859  .00000022'
+      !>     .      //                   '  00000-0  16481-4 0 00758'
+      !>      TLE(16) = '2 18123  98.8241 172.5226 0015362 109.1515 '
+      !>     .      //                   '251.1323 14.12915487 24626'
+      !>      TLE(17) = '1 18123U 87 53  A 87349.04167543  .00000042'
+      !>     .      //                   '  00000-0  27370-4 0 00764'
+      !>      TLE(18) = '2 18123  98.8301 176.1010 0015565 100.0881 '
+      !>     .      //                   '260.2047 14.12916361 25138'
       !>
-      !>        C
-      !>        C     Load the PCK file that provides the geophysical
-      !>        C     constants required for the evaluation of the two-line
-      !>        C     elements sets. Load also an LSK, as it is required by
-      !>        C     GETELM to perform time conversions. Use a metakernel for
-      !>        C     convenience.
-      !>        C
-      !>              CALL FURNSH ( 'spkw10_ex1.tm' )
+      !>C
+      !>C     Load the PCK file that provides the geophysical
+      !>C     constants required for the evaluation of the two-line
+      !>C     elements sets. Load also an LSK, as it is required by
+      !>C     GETELM to perform time conversions. Use a metakernel for
+      !>C     convenience.
+      !>C
+      !>      CALL FURNSH ( 'spkw10_ex1.tm' )
       !>
-      !>        C
-      !>        C     Retrieve the data from the kernel, and place it on
-      !>        C     the CONSTS array.
-      !>        C
-      !>              DO I = 1, 8
+      !>C
+      !>C     Retrieve the data from the kernel, and place it on
+      !>C     the CONSTS array.
+      !>C
+      !>      DO I = 1, 8
       !>
-      !>                 CALL BODVCD ( CENTER, NOADPN(I), 1, N, CONSTS(I) )
+      !>         CALL BODVCD ( CENTER, NOADPN(I), 1, N, CONSTS(I) )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Convert the Two Line Elements lines to the
-      !>        C     element sets.
-      !>        C
-      !>              DO I = 1, TLESSZ
+      !>C
+      !>C     Convert the Two Line Elements lines to the
+      !>C     element sets.
+      !>C
+      !>      DO I = 1, TLESSZ
       !>
-      !>                 CALL GETELM ( 1950,      TLE( (I-1)*2 + 1 ),
-      !>             .                 EPOCHS(I), ELEMS( (I-1)*10 + 1 ) )
+      !>         CALL GETELM ( 1950,      TLE( (I-1)*2 + 1 ),
+      !>     .                 EPOCHS(I), ELEMS( (I-1)*10 + 1 ) )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Define the beginning and end of the segment to be
-      !>        C     -/+ 12 hours from the first and last epochs,
-      !>        C     respectively.
-      !>        C
-      !>              FIRST = EPOCHS(1     ) - 0.5D0 * SPD()
-      !>              LAST  = EPOCHS(TLESSZ) + 0.5D0 * SPD()
+      !>C
+      !>C     Define the beginning and end of the segment to be
+      !>C     -/+ 12 hours from the first and last epochs,
+      !>C     respectively.
+      !>C
+      !>      FIRST = EPOCHS(1     ) - 0.5D0 * SPD()
+      !>      LAST  = EPOCHS(TLESSZ) + 0.5D0 * SPD()
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              IFNAME = 'Test for type 10 SPK internal file name'
-      !>              SEGID  = 'SPK type 10 test segment'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      IFNAME = 'Test for type 10 SPK internal file name'
+      !>      SEGID  = 'SPK type 10 test segment'
       !>
-      !>        C
-      !>        C     Open a new SPK file.
-      !>        C
-      !>              CALL SPKOPN( SPK10, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new SPK file.
+      !>C
+      !>      CALL SPKOPN( SPK10, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Now add the segment.
-      !>        C
-      !>              CALL SPKW10 ( HANDLE, BODY,  CENTER, FRMNAM,
-      !>             .              FIRST,  LAST,  SEGID,  CONSTS,
-      !>             .              TLESSZ, ELEMS, EPOCHS         )
+      !>C
+      !>C     Now add the segment.
+      !>C
+      !>      CALL SPKW10 ( HANDLE, BODY,  CENTER, FRMNAM,
+      !>     .              FIRST,  LAST,  SEGID,  CONSTS,
+      !>     .              TLESSZ, ELEMS, EPOCHS         )
       !>
-      !>        C
-      !>        C     Close the SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new SPK type 10 exists in
@@ -19961,10 +20218,22 @@ contains
       !>        Cleaned up the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-JAN-1994 (WLT)
-      module procedure spkw10
+      module subroutine spkw10 ( ctx, handle, body, center, frame, first, last, segid, consts, n, elems, epochs )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of a DAF file open for writing.
+      integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
+      integer(ip), intent(in) :: center  !! The center of motion for BODY.
+      character(*), intent(in) :: frame  !! The reference frame for this segment.
+      real(wp), intent(in) :: first  !! The first epoch for which the segment is valid.
+      real(wp), intent(in) :: last  !! The last  epoch for which the segment is valid.
+      character(*), intent(in) :: segid  !! The string to use for segment identifier.
+      real(wp), intent(in) :: consts ( * )  !! Array of geophysical constants for the segment.
+      integer(ip), intent(in) :: n  !! The number of element/epoch pairs to be stored
+      real(wp), intent(in) :: elems  ( * )  !! The collection of "two-line" element sets.
+      real(wp), intent(in) :: epochs ( * )  !! The epochs associated with the element sets.
 
 !
 !     The type of this segment
@@ -20050,8 +20319,10 @@ contains
 
       return
 
-      end procedure spkw10
+      end subroutine spkw10
 
+      !> Write a type 12 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -20198,103 +20469,105 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKW12_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKW12_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40 )
       !>
-      !>        C
-      !>        C     Define the segment identifier parameters.
-      !>        C
-      !>              CHARACTER*(*)         SPK12
-      !>              PARAMETER           ( SPK12 = 'spkw12_ex1.bsp' )
+      !>C
+      !>C     Define the segment identifier parameters.
+      !>C
+      !>      CHARACTER*(*)         SPK12
+      !>      PARAMETER           ( SPK12 = 'spkw12_ex1.bsp' )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000'          )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000'          )
       !>
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 3  )
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 3  )
       !>
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER = 10 )
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER = 10 )
       !>
-      !>              INTEGER               DEGREE
-      !>              PARAMETER           ( DEGREE = 3  )
+      !>      INTEGER               DEGREE
+      !>      PARAMETER           ( DEGREE = 3  )
       !>
-      !>              INTEGER               NSTATS
-      !>              PARAMETER           ( NSTATS = 9  )
+      !>      INTEGER               NSTATS
+      !>      PARAMETER           ( NSTATS = 9  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
-      !>              DOUBLE PRECISION      STATES ( 6, NSTATS )
-      !>              DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      STATES ( 6, NSTATS )
+      !>      DOUBLE PRECISION      STEP
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     Define the states and epochs.
-      !>        C
-      !>              DATA                  STATES /
-      !>             .       101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
-      !>             .       102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
-      !>             .       103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
-      !>             .       104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
-      !>             .       105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
-      !>             .       106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
-      !>             .       107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
-      !>             .       108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
-      !>             .       109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0 /
+      !>C
+      !>C     Define the states and epochs.
+      !>C
+      !>      DATA                  STATES /
+      !>     .       101.D0, 201.D0, 301.D0, 401.D0, 501.D0, 601.D0,
+      !>     .       102.D0, 202.D0, 302.D0, 402.D0, 502.D0, 602.D0,
+      !>     .       103.D0, 203.D0, 303.D0, 403.D0, 503.D0, 603.D0,
+      !>     .       104.D0, 204.D0, 304.D0, 404.D0, 504.D0, 604.D0,
+      !>     .       105.D0, 205.D0, 305.D0, 405.D0, 505.D0, 605.D0,
+      !>     .       106.D0, 206.D0, 306.D0, 406.D0, 506.D0, 606.D0,
+      !>     .       107.D0, 207.D0, 307.D0, 407.D0, 507.D0, 607.D0,
+      !>     .       108.D0, 208.D0, 308.D0, 408.D0, 508.D0, 608.D0,
+      !>     .       109.D0, 209.D0, 309.D0, 409.D0, 509.D0, 609.D0 /
       !>
-      !>        C
-      !>        C     Set the start and end times of interval covered by
-      !>        C     segment, and the time step.
-      !>        C
-      !>              FIRST  = 100.D0
-      !>              LAST   = 900.D0
-      !>              STEP   = 100.D0
+      !>C
+      !>C     Set the start and end times of interval covered by
+      !>C     segment, and the time step.
+      !>C
+      !>      FIRST  = 100.D0
+      !>      LAST   = 900.D0
+      !>      STEP   = 100.D0
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              IFNAME = 'Type 12 SPK internal file name.'
-      !>              SEGID  = 'SPK type 12 test segment'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      IFNAME = 'Type 12 SPK internal file name.'
+      !>      SEGID  = 'SPK type 12 test segment'
       !>
-      !>        C
-      !>        C     Open a new SPK file.
-      !>        C
-      !>              CALL SPKOPN( SPK12, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new SPK file.
+      !>C
+      !>      CALL SPKOPN( SPK12, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Write the segment.
-      !>        C
-      !>              CALL SPKW12 (  HANDLE, BODY,   CENTER, REF,
-      !>             .               FIRST,  LAST,   SEGID,  DEGREE,
-      !>             .               NSTATS, STATES, FIRST,  STEP   )
+      !>C
+      !>C     Write the segment.
+      !>C
+      !>      CALL SPKW12 (  HANDLE, BODY,   CENTER, REF,
+      !>     .               FIRST,  LAST,   SEGID,  DEGREE,
+      !>     .               NSTATS, STATES, FIRST,  STEP   )
       !>
-      !>        C
-      !>        C     Close the SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new SPK type 12 exists in
@@ -20335,10 +20608,23 @@ contains
       !>        Corrected long error message for even degree case.
       !>
       !>-    SPICELIB Version 1.0.0, 25-FEB-2000 (NJB)
-      module procedure spkw12
+      module subroutine spkw12 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, begtim, step )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spk12
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+      integer(ip), intent(in) :: n  !! Number of states.
+      real(wp), intent(in) :: states ( 6, * )  !! Array of states.
+      real(wp), intent(in) :: begtim  !! Epoch of first state in STATES array.
+      real(wp), intent(in) :: step  !! Time step separating epochs of states.
 
 !
 !     SIDLEN is the maximum number of characters allowed in an
@@ -20606,8 +20892,10 @@ contains
       end if
 
       return
-      end procedure spkw12
+      end subroutine spkw12
 
+      !> Write a type 13 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -20761,141 +21049,143 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKW13_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKW13_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      HALFPI
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      HALFPI
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         SPKNAM
-      !>              PARAMETER           ( SPKNAM = 'spkw13_ex1.bsp' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         SPKNAM
+      !>      PARAMETER           ( SPKNAM = 'spkw13_ex1.bsp' )
       !>
-      !>              INTEGER               DEGREE
-      !>              PARAMETER           ( DEGREE = 3   )
+      !>      INTEGER               DEGREE
+      !>      PARAMETER           ( DEGREE = 3   )
       !>
-      !>              INTEGER               MARS
-      !>              PARAMETER           ( MARS   = 499 )
+      !>      INTEGER               MARS
+      !>      PARAMETER           ( MARS   = 499 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 255 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 255 )
       !>
-      !>              INTEGER               NEPOCS
-      !>              PARAMETER           ( NEPOCS = 800 )
+      !>      INTEGER               NEPOCS
+      !>      PARAMETER           ( NEPOCS = 800 )
       !>
-      !>              INTEGER               NOBJ
-      !>              PARAMETER           ( NOBJ   = 403 )
+      !>      INTEGER               NOBJ
+      !>      PARAMETER           ( NOBJ   = 403 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      DELTA
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      EPOCHS ( NEPOCS )
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      STATE  ( 6 )
-      !>              DOUBLE PRECISION      STATES ( 6, NEPOCS )
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      TIME
+      !>      DOUBLE PRECISION      DELTA
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      EPOCHS ( NEPOCS )
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STATE  ( 6 )
+      !>      DOUBLE PRECISION      STATES ( 6, NEPOCS )
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      TIME
       !>
-      !>              INTEGER               I
-      !>              INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               HANDLE
       !>
-      !>        C
-      !>        C     Load the input SPK file.
-      !>        C
-      !>              CALL FURNSH ( 'spkw13_ex1.tm' )
+      !>C
+      !>C     Load the input SPK file.
+      !>C
+      !>      CALL FURNSH ( 'spkw13_ex1.tm' )
       !>
-      !>        C
-      !>        C     Convert the input UTC to ephemeris time
-      !>        C
-      !>              CALL STR2ET ( '2018 Apr 03 08:35', ET )
+      !>C
+      !>C     Convert the input UTC to ephemeris time
+      !>C
+      !>      CALL STR2ET ( '2018 Apr 03 08:35', ET )
       !>
-      !>        C
-      !>        C     Create the time-ordered array of geometric states,
-      !>        C     at unequal time steps.
-      !>        C
-      !>              TIME  = ET
-      !>              STEP  = 60.D0
-      !>              DELTA = 10.D0
+      !>C
+      !>C     Create the time-ordered array of geometric states,
+      !>C     at unequal time steps.
+      !>C
+      !>      TIME  = ET
+      !>      STEP  = 60.D0
+      !>      DELTA = 10.D0
       !>
-      !>              DO I=1, NEPOCS
+      !>      DO I=1, NEPOCS
       !>
-      !>                 CALL SPKEZR ( 'PHOBOS', TIME,       'J2000', 'NONE',
-      !>             .                 'MARS',   STATES(1,I), LT             )
+      !>         CALL SPKEZR ( 'PHOBOS', TIME,       'J2000', 'NONE',
+      !>     .                 'MARS',   STATES(1,I), LT             )
       !>
-      !>                 EPOCHS(I) = TIME + 3600.D0
-      !>                 TIME = TIME + STEP +
-      !>             .          SIN( HALFPI() * I / 2.D0 ) * DELTA
+      !>         EPOCHS(I) = TIME + 3600.D0
+      !>         TIME = TIME + STEP +
+      !>     .          SIN( HALFPI() * I / 2.D0 ) * DELTA
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Open a new SPK file, with 5000 characters reserved
-      !>        C     for comments.
-      !>        C
-      !>              IFNAME = 'Test SPK type 13 internal filename.'
-      !>              CALL SPKOPN ( SPKNAM, IFNAME, 5000, HANDLE )
+      !>C
+      !>C     Open a new SPK file, with 5000 characters reserved
+      !>C     for comments.
+      !>C
+      !>      IFNAME = 'Test SPK type 13 internal filename.'
+      !>      CALL SPKOPN ( SPKNAM, IFNAME, 5000, HANDLE )
       !>
-      !>        C
-      !>        C     Create a segment identifier.
-      !>        C
-      !>              SEGID = 'MY_SAMPLE_SPK_TYPE_13_SEGMENT'
+      !>C
+      !>C     Create a segment identifier.
+      !>C
+      !>      SEGID = 'MY_SAMPLE_SPK_TYPE_13_SEGMENT'
       !>
-      !>        C
-      !>        C     Write the segment.
-      !>        C
-      !>              CALL SPKW13 ( HANDLE,    NOBJ,           MARS,  'J2000',
-      !>             .              EPOCHS(1), EPOCHS(NEPOCS), SEGID,  DEGREE,
-      !>             .              NEPOCS,    STATES,         EPOCHS        )
+      !>C
+      !>C     Write the segment.
+      !>C
+      !>      CALL SPKW13 ( HANDLE,    NOBJ,           MARS,  'J2000',
+      !>     .              EPOCHS(1), EPOCHS(NEPOCS), SEGID,  DEGREE,
+      !>     .              NEPOCS,    STATES,         EPOCHS        )
       !>
-      !>        C
-      !>        C     Close the new SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the new SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Compute the state of Phobos as seen from Mars,
-      !>        C     12 hours after the input UTC time.
-      !>        C
-      !>              ET = ET + 43200.0D0
-      !>              CALL SPKEZR ( 'PHOBOS', ET, 'J2000', 'NONE', 'MARS',
-      !>             .               STATE,   LT                         )
+      !>C
+      !>C     Compute the state of Phobos as seen from Mars,
+      !>C     12 hours after the input UTC time.
+      !>C
+      !>      ET = ET + 43200.0D0
+      !>      CALL SPKEZR ( 'PHOBOS', ET, 'J2000', 'NONE', 'MARS',
+      !>     .               STATE,   LT                         )
       !>
-      !>              WRITE (*,'(A)') 'Phobos as seen from Mars'
-      !>              WRITE (*,'(A,F20.6)') '   Epoch       (s):', ET
-      !>              WRITE (*,'(A,3F14.6)') '   Position   (km):',
-      !>             .                                   (STATE(I), I=1,3)
-      !>              WRITE (*,'(A,3F14.6)') '   Velocity (km/s):',
-      !>             .                                   (STATE(I), I=4,6)
-      !>              WRITE (*,*)
+      !>      WRITE (*,'(A)') 'Phobos as seen from Mars'
+      !>      WRITE (*,'(A,F20.6)') '   Epoch       (s):', ET
+      !>      WRITE (*,'(A,3F14.6)') '   Position   (km):',
+      !>     .                                   (STATE(I), I=1,3)
+      !>      WRITE (*,'(A,3F14.6)') '   Velocity (km/s):',
+      !>     .                                   (STATE(I), I=4,6)
+      !>      WRITE (*,*)
       !>
-      !>        C
-      !>        C     Load the newly created kernel, and compute the state
-      !>        C     of the new object as seen from Mars, 13 hours after
-      !>        C     the input UTC time.
-      !>        C
-      !>              CALL FURNSH ( SPKNAM )
-      !>              ET = ET + 3600.0D0
+      !>C
+      !>C     Load the newly created kernel, and compute the state
+      !>C     of the new object as seen from Mars, 13 hours after
+      !>C     the input UTC time.
+      !>C
+      !>      CALL FURNSH ( SPKNAM )
+      !>      ET = ET + 3600.0D0
       !>
-      !>              CALL SPKEZR ( '403', ET, 'J2000', 'NONE', 'MARS',
-      !>             .               STATE,   LT                       )
+      !>      CALL SPKEZR ( '403', ET, 'J2000', 'NONE', 'MARS',
+      !>     .               STATE,   LT                       )
       !>
-      !>              WRITE (*,'(A)') 'Object 403 as seen from Mars'
-      !>              WRITE (*,'(A,F20.6)') '   Epoch       (s):', ET
-      !>              WRITE (*,'(A,3F14.6)') '   Position   (km):',
-      !>             .                                   (STATE(I), I=1,3)
-      !>              WRITE (*,'(A,3F14.6)') '   Velocity (km/s):',
-      !>             .                                   (STATE(I), I=4,6)
+      !>      WRITE (*,'(A)') 'Object 403 as seen from Mars'
+      !>      WRITE (*,'(A,F20.6)') '   Epoch       (s):', ET
+      !>      WRITE (*,'(A,3F14.6)') '   Position   (km):',
+      !>     .                                   (STATE(I), I=1,3)
+      !>      WRITE (*,'(A,3F14.6)') '   Velocity (km/s):',
+      !>     .                                   (STATE(I), I=4,6)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -20940,9 +21230,22 @@ contains
       !>        unused parameter TYPIDX.
       !>
       !>-    SPICELIB Version 1.0.0, 20-MAR-2000 (NJB)
-      module procedure spkw13
+      module subroutine spkw13 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, epochs )
       use pepper_kinds, only: ip, wp
+      use pepper_spk_packing, only: spk13_data, spk_data_size
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+      integer(ip), intent(in) :: n  !! Number of states.
+      real(wp), intent(in) :: states ( 6, * )  !! Array of states.
+      real(wp), intent(in) :: epochs (    * )  !! Array of epochs corresponding to states.
 
 
 
@@ -21173,15 +21476,11 @@ contains
 !        +-----------------------+
 !
 
-      call dafada ( ctx, states,  n*statsz )
-      call dafada ( ctx, epochs,  n        )
-
-      do i = 1,   (n-1) / dirsiz
-         call dafada ( ctx,  epochs( dirsiz*i ),  1  )
-      end do
-
-      call dafada ( ctx, [ real( winsiz - 1, wp) ], 1 )
-      call dafada ( ctx, [ real( n, wp         ) ], 1 )
+!
+!     PEPPER: the data is made by spk13_data (pepper_spk_packing), which the
+!     kernel builder uses too.
+!
+      call dafada ( ctx, spk13_data ( states(:, 1:n), epochs(1:n), degree ), spk_data_size ( n ) )
 
 !
 !     As long as nothing went wrong, end the segment.
@@ -21191,8 +21490,10 @@ contains
       end if
 
       return
-      end procedure spkw13
+      end subroutine spkw13
 
+      !> Write an SPK segment of type 15 given a type 15 data record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -21408,28 +21709,34 @@ contains
       !>        Some typos in error messages were corrected.
       !>
       !>-    SPICELIB Version 1.0.0, 28-NOV-1994 (WLT)
-      module procedure spkw15
+      module subroutine spkw15 ( ctx, handle, body, center, frame, first, last, segid, epoch, tp, pa, p, ecc, j2flg, pv, gm, j2, radius )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr
       use pepper_math, only: vdot, vhat, vsep
       implicit none
-
-!     Segment descriptor size
-!
-
-!
-!     Segment identifier size
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! Body code for ephemeris object.
+      integer(ip), intent(in) :: center  !! Body code for the center of motion of the body.
+      character(*), intent(in) :: frame  !! The reference frame of the states.
+      real(wp), intent(in) :: first  !! First valid time for which states can be computed.
+      real(wp), intent(in) :: last  !! Last valid time for which states can be computed.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: epoch  !! Epoch of the periapse.
+      real(wp), intent(in) :: tp     ( 3 )  !! Trajectory pole vector.
+      real(wp), intent(in) :: pa     ( 3 )  !! Periapsis vector.
+      real(wp), intent(in) :: p  !! Semi-latus rectum.
+      real(wp), intent(in) :: ecc  !! Eccentricity.
+      real(wp), intent(in) :: j2flg  !! J2 processing flag.
+      real(wp), intent(in) :: pv     ( 3 )  !! Central body pole vector.
+      real(wp), intent(in) :: gm  !! Central body GM.
+      real(wp), intent(in) :: j2  !! Central body J2.
+      real(wp), intent(in) :: radius  !! Equatorial radius of central body.
 
 !
 !     SPK data type
 !
       integer(ip), parameter :: type = 15
-
-!
-!     Range of printing characters
-!
-
 
 !
 !     Number of items in a segment
@@ -21644,8 +21951,10 @@ contains
       end if
 
       return
-      end procedure spkw15
+      end subroutine spkw15
 
+      !> Write an SPK segment of type 17 given a type 17 data record.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -21802,162 +22111,164 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SPKW17_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SPKW17_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 40 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 40 )
       !>
-      !>              CHARACTER*(*)         SPK17
-      !>              PARAMETER           ( SPK17  = 'spkw17_ex1.bsp' )
+      !>      CHARACTER*(*)         SPK17
+      !>      PARAMETER           ( SPK17  = 'spkw17_ex1.bsp' )
       !>
-      !>        C
-      !>        C     The SPK type 17 segment will contain data for Daphnis
-      !>        C     (ID 635) with respect to Saturn (ID 699) in the J2000
-      !>        C     reference frame.
-      !>        C
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 635     )
+      !>C
+      !>C     The SPK type 17 segment will contain data for Daphnis
+      !>C     (ID 635) with respect to Saturn (ID 699) in the J2000
+      !>C     reference frame.
+      !>C
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 635     )
       !>
-      !>              INTEGER               CENTER
-      !>              PARAMETER           ( CENTER = 699     )
+      !>      INTEGER               CENTER
+      !>      PARAMETER           ( CENTER = 699     )
       !>
-      !>              CHARACTER*(*)         FRMNAM
-      !>              PARAMETER           ( FRMNAM = 'J2000' )
+      !>      CHARACTER*(*)         FRMNAM
+      !>      PARAMETER           ( FRMNAM = 'J2000' )
       !>
-      !>        C
-      !>        C     This is the list of parameters used to represent the
-      !>        C     classical elements:
-      !>        C
-      !>        C        Variable     Meaning
-      !>        C        --------     ---------------------------------------
-      !>        C        A            Semi-major axis in km.
-      !>        C        ECC          Eccentricity of orbit.
-      !>        C        INC          Inclination of orbit.
-      !>        C        NODE         Longitude of the ascending node at
-      !>        C                     epoch.
-      !>        C        OMEGA        Argument of periapse at epoch.
-      !>        C        M            Mean anomaly at epoch.
-      !>        C        DMDT         Mean anomaly rate in radians/second.
-      !>        C        DNODE        Rate of change of longitude of
-      !>        C                     ascending node in radians/second.
-      !>        C        DOMEGA       Rate of change of argument of periapse
-      !>        C                     in radians/second.
-      !>        C        EPOCH        The epoch of the elements in seconds
-      !>        C                     past the J2000 epoch.
-      !>        C
-      !>              DOUBLE PRECISION      A
-      !>              PARAMETER           ( A      =  1.36505608D+05  )
+      !>C
+      !>C     This is the list of parameters used to represent the
+      !>C     classical elements:
+      !>C
+      !>C        Variable     Meaning
+      !>C        --------     ---------------------------------------
+      !>C        A            Semi-major axis in km.
+      !>C        ECC          Eccentricity of orbit.
+      !>C        INC          Inclination of orbit.
+      !>C        NODE         Longitude of the ascending node at
+      !>C                     epoch.
+      !>C        OMEGA        Argument of periapse at epoch.
+      !>C        M            Mean anomaly at epoch.
+      !>C        DMDT         Mean anomaly rate in radians/second.
+      !>C        DNODE        Rate of change of longitude of
+      !>C                     ascending node in radians/second.
+      !>C        DOMEGA       Rate of change of argument of periapse
+      !>C                     in radians/second.
+      !>C        EPOCH        The epoch of the elements in seconds
+      !>C                     past the J2000 epoch.
+      !>C
+      !>      DOUBLE PRECISION      A
+      !>      PARAMETER           ( A      =  1.36505608D+05  )
       !>
-      !>              DOUBLE PRECISION      ECC
-      !>              PARAMETER           ( ECC    = -2.105898062D-05 )
+      !>      DOUBLE PRECISION      ECC
+      !>      PARAMETER           ( ECC    = -2.105898062D-05 )
       !>
-      !>              DOUBLE PRECISION      INC
-      !>              PARAMETER           ( INC    = -3.489710429D-05 )
+      !>      DOUBLE PRECISION      INC
+      !>      PARAMETER           ( INC    = -3.489710429D-05 )
       !>
-      !>              DOUBLE PRECISION      NODE
-      !>              PARAMETER           ( NODE   = -3.349237456D-02 )
+      !>      DOUBLE PRECISION      NODE
+      !>      PARAMETER           ( NODE   = -3.349237456D-02 )
       !>
-      !>              DOUBLE PRECISION      OMEGA
-      !>              PARAMETER           ( OMEGA  =  1.52080206722D0 )
+      !>      DOUBLE PRECISION      OMEGA
+      !>      PARAMETER           ( OMEGA  =  1.52080206722D0 )
       !>
-      !>              DOUBLE PRECISION      M
-      !>              PARAMETER           ( M      =  1.21177109734D0 )
+      !>      DOUBLE PRECISION      M
+      !>      PARAMETER           ( M      =  1.21177109734D0 )
       !>
-      !>              DOUBLE PRECISION      DMDT
-      !>              PARAMETER           ( DMDT   =  1.218114014D-04 )
+      !>      DOUBLE PRECISION      DMDT
+      !>      PARAMETER           ( DMDT   =  1.218114014D-04 )
       !>
-      !>              DOUBLE PRECISION      DNODE
-      !>              PARAMETER           ( DNODE  = -5.96845468D-07  )
+      !>      DOUBLE PRECISION      DNODE
+      !>      PARAMETER           ( DNODE  = -5.96845468D-07  )
       !>
-      !>              DOUBLE PRECISION      DOMEGA
-      !>              PARAMETER           ( DOMEGA =  1.196601093D-06 )
+      !>      DOUBLE PRECISION      DOMEGA
+      !>      PARAMETER           ( DOMEGA =  1.196601093D-06 )
       !>
-      !>              DOUBLE PRECISION      EPOCH
-      !>              PARAMETER           ( EPOCH  = 0.D0             )
+      !>      DOUBLE PRECISION      EPOCH
+      !>      PARAMETER           ( EPOCH  = 0.D0             )
       !>
-      !>        C
-      !>        C     In addition, the SPKW17 routine requires the Right
-      !>        C     Ascension and Declination of the pole of the
-      !>        C     reference plane relative to the J2000 frame, in radians.
-      !>        C
-      !>              DOUBLE PRECISION      RAPOL
-      !>              PARAMETER           ( RAPOL  = 7.08332284D-01 )
+      !>C
+      !>C     In addition, the SPKW17 routine requires the Right
+      !>C     Ascension and Declination of the pole of the
+      !>C     reference plane relative to the J2000 frame, in radians.
+      !>C
+      !>      DOUBLE PRECISION      RAPOL
+      !>      PARAMETER           ( RAPOL  = 7.08332284D-01 )
       !>
-      !>              DOUBLE PRECISION      DECPOL
-      !>              PARAMETER           ( DECPOL = 1.45800286D0   )
+      !>      DOUBLE PRECISION      DECPOL
+      !>      PARAMETER           ( DECPOL = 1.45800286D0   )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(NAMLEN)    IFNAME
-      !>              CHARACTER*(NAMLEN)    SEGID
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(NAMLEN)    IFNAME
+      !>      CHARACTER*(NAMLEN)    SEGID
       !>
-      !>              DOUBLE PRECISION      EQEL   ( 9 )
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      EQEL   ( 9 )
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
       !>
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NCOMCH
       !>
-      !>        C
-      !>        C     Set the start and end times of interval covered by
-      !>        C     segment.
-      !>        C
-      !>              FIRST  =  504878400.D0
-      !>              LAST   = 1578657600.D0
+      !>C
+      !>C     Set the start and end times of interval covered by
+      !>C     segment.
+      !>C
+      !>      FIRST  =  504878400.D0
+      !>      LAST   = 1578657600.D0
       !>
-      !>        C
-      !>        C     NCOMCH is the number of characters to reserve for the
-      !>        C     kernel's comment area. This example doesn't write
-      !>        C     comments, so set to zero.
-      !>        C
-      !>              NCOMCH = 0
+      !>C
+      !>C     NCOMCH is the number of characters to reserve for the
+      !>C     kernel's comment area. This example doesn't write
+      !>C     comments, so set to zero.
+      !>C
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Internal file name and segment ID.
-      !>        C
-      !>              IFNAME = 'Test for type 17 SPK internal file name'
-      !>              SEGID  = 'SPK type 17 test segment'
+      !>C
+      !>C     Internal file name and segment ID.
+      !>C
+      !>      IFNAME = 'Test for type 17 SPK internal file name'
+      !>      SEGID  = 'SPK type 17 test segment'
       !>
-      !>        C
-      !>        C     Open a new SPK file.
-      !>        C
-      !>              CALL SPKOPN( SPK17, IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new SPK file.
+      !>C
+      !>      CALL SPKOPN( SPK17, IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Convert the classical elements to equinoctial elements
-      !>        C     (in the order compatible with type 17).
-      !>        C
-      !>              EQEL(1) = A
-      !>              EQEL(2) = ECC * SIN ( OMEGA + NODE )
-      !>              EQEL(3) = ECC * COS ( OMEGA + NODE )
+      !>C
+      !>C     Convert the classical elements to equinoctial elements
+      !>C     (in the order compatible with type 17).
+      !>C
+      !>      EQEL(1) = A
+      !>      EQEL(2) = ECC * SIN ( OMEGA + NODE )
+      !>      EQEL(3) = ECC * COS ( OMEGA + NODE )
       !>
-      !>              EQEL(4) = M + OMEGA + NODE
+      !>      EQEL(4) = M + OMEGA + NODE
       !>
-      !>              EQEL(5) = TAN( INC/2.D0 ) * SIN( NODE )
-      !>              EQEL(6) = TAN( INC/2.D0 ) * COS( NODE )
+      !>      EQEL(5) = TAN( INC/2.D0 ) * SIN( NODE )
+      !>      EQEL(6) = TAN( INC/2.D0 ) * COS( NODE )
       !>
-      !>              EQEL(7) =        DOMEGA + DNODE
-      !>              EQEL(8) = DMDT + DOMEGA + DNODE
-      !>              EQEL(9) = DNODE
+      !>      EQEL(7) =        DOMEGA + DNODE
+      !>      EQEL(8) = DMDT + DOMEGA + DNODE
+      !>      EQEL(9) = DNODE
       !>
-      !>        C
-      !>        C     Now add the segment.
-      !>        C
-      !>              CALL SPKW17 ( HANDLE, BODY,  CENTER, FRMNAM,
-      !>             .              FIRST,  LAST,  SEGID,  EPOCH,
-      !>             .              EQEL,   RAPOL, DECPOL          )
+      !>C
+      !>C     Now add the segment.
+      !>C
+      !>      CALL SPKW17 ( HANDLE, BODY,  CENTER, FRMNAM,
+      !>     .              FIRST,  LAST,  SEGID,  EPOCH,
+      !>     .              EQEL,   RAPOL, DECPOL          )
       !>
-      !>        C
-      !>        C     Close the SPK file.
-      !>        C
-      !>              CALL SPKCLS ( HANDLE )
+      !>C
+      !>C     Close the SPK file.
+      !>C
+      !>      CALL SPKCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program is executed, no output is presented on
       !>        screen. After run completion, a new SPK type 17 exists in
@@ -21990,26 +22301,26 @@ contains
       !>        Corrected typographical errors in the header.
       !>
       !>-    SPICELIB Version 1.0.0, 08-JAN-1997 (WLT)
-      module procedure spkw17
+      module subroutine spkw17 ( ctx, handle, body, center, frame, first, last, segid, epoch, eqel, rapol, decpol )
       use pepper_kinds, only: ip, wp
       implicit none
-
-!     Segment descriptor size
-!
-
-!
-!     Segment identifier size
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! Body code for ephemeris object.
+      integer(ip), intent(in) :: center  !! Body code for the center of motion of the body.
+      character(*), intent(in) :: frame  !! The reference frame of the states.
+      real(wp), intent(in) :: first  !! First valid time for which states can be computed.
+      real(wp), intent(in) :: last  !! Last valid time for which states can be computed.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: epoch  !! Epoch of elements in seconds past J2000.
+      real(wp), intent(in) :: eqel  ( 9 )  !! Array of equinoctial elements.
+      real(wp), intent(in) :: rapol  !! Right Ascension of the reference plane's pole.
+      real(wp), intent(in) :: decpol  !! Declination of the reference plane's pole.
 
 !
 !     SPK data type
 !
       integer(ip), parameter :: type = 17
-
-!
-!     Range of printing characters
-!
-
 
 !
 !     Number of items in a segment
@@ -22133,8 +22444,10 @@ contains
       end if
 
       return
-      end procedure spkw17
+      end subroutine spkw17
 
+      !> Write a type 18 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been opened
@@ -22323,11 +22636,24 @@ contains
       !>        size was corrected.
       !>
       !>-    SPICELIB Version 1.0.0, 13-MAY-2002 (NJB)
-      module procedure spkw18
+      module subroutine spkw18 ( ctx, handle, subtyp, body, center, frame, first, last, segid, degree, n, packts, epochs )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
       use pepper_inc_spk18
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: subtyp  !! SPK type 18 subtype code.
+      integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+      integer(ip), intent(in) :: n  !! Number of packets.
+      real(wp), intent(in) :: packts ( * )  !! Array of packets.
+      real(wp), intent(in) :: epochs ( * )  !! Array of epochs corresponding to packets.
 
       integer(ip), parameter :: maxdeg = 15
 
@@ -22636,8 +22962,10 @@ contains
       end if
 
       return
-      end procedure spkw18
+      end subroutine spkw18
 
+      !> Write a type 19 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of an SPK file that has been opened
@@ -22933,12 +23261,28 @@ contains
       !>        Updated to support subtype 2.
       !>
       !>-    SPICELIB Version 1.0.0, 05-FEB-2014 (NJB) (BVS)
-      module procedure spkw19
+      module subroutine spkw19 ( ctx, handle, body, center, frame, first, last, segid, nintvl, npkts, subtps, degres, packts, epochs, ivlbds, sellst )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
       use pepper_inc_spk19
       use pepper_inc_spkrec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF ID code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF ID code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: nintvl  !! Number of mini-segments and interpolation intervals.
+      integer(ip), intent(in) :: npkts  ( * )  !! Array of packet counts of mini-segments.
+      integer(ip), intent(in) :: subtps ( * )  !! Array of segment subtypes of mini-segments.
+      integer(ip), intent(in) :: degres ( * )  !! Array of polynomial degrees of mini-segments.
+      real(wp), intent(in) :: packts ( * )  !! Array of data packets of mini-segments.
+      real(wp), intent(in) :: epochs ( * )  !! Array of epochs of mini-segments.
+      real(wp), intent(in) :: ivlbds ( * )  !! Interpolation interval bounds.
+      logical, intent(in) :: sellst  !! Interval selection flag.
 
 
 
@@ -23591,8 +23935,10 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure spkw19
+      end subroutine spkw19
 
+      !> Write a type 20 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the DAF handle of an SPK file to which a type 20
@@ -23881,35 +24227,32 @@ contains
       !>        Added missing description of INITFR to $Brief_I/O section.
       !>
       !>-    SPICELIB Version 1.0.0, 17-JAN-2017 (NJB) (KSZ)
-      module procedure spkw20
+      module subroutine spkw20 ( ctx, handle, body, center, frame, first, last, segid, intlen, n, polydg, cdata, dscale, tscale, initjd, initfr )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       use pepper_inc_spk20
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for the center of motion of the body.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: intlen  !! Length of time covered by logical record (days).
+      integer(ip), intent(in) :: n  !! Number of logical records in segment.
+      integer(ip), intent(in) :: polydg  !! Chebyshev polynomial degree.
+      real(wp), intent(in) :: cdata  ( * )  !! Array of Chebyshev coefficients and positions.
+      real(wp), intent(in) :: dscale  !! Distance scale of data.
+      real(wp), intent(in) :: tscale  !! Time scale of data.
+      real(wp), intent(in) :: initjd  !! Integer part of begin time (TDB Julian date) of first record.
+      real(wp), intent(in) :: initfr  !! Fractional part of begin time of first record.
 
 !
 !     DTYPE is the SPK data type.
 !
       integer(ip), parameter :: dtype = 20
-
-!
-!     ND is the number of double precision components in an SPK
-!     segment descriptor. SPK uses ND = 2.
-!
-
-!
-!     NI is the number of integer components in an SPK segment
-!     descriptor. SPK uses NI = 6.
-!
-
-!
-!     NS is the size of a packed SPK segment descriptor.
-!
-
-!
-!     SIDLEN is the maximum number of characters allowed in an
-!     SPK segment identifier.
-!
 
       character(sidlen) :: etstr
       character(sidlen) :: netstr
@@ -24188,8 +24531,10 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure spkw20
+      end subroutine spkw20
 
+      !> Write a type 21 segment to an SPK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of an SPK file that has been
@@ -24388,10 +24733,22 @@ contains
       !>        values in elements indexed greater than KQMAX1-2.
       !>
       !>-    SPICELIB Version 1.0.0, 03-FEB-2014 (NJB)
-      module procedure spkw21
+      module subroutine spkw21 ( ctx, handle, body, center, frame, first, last, segid, n, dlsize, dlines, epochs )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spk21
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: n  !! Number of difference lines in segment.
+      integer(ip), intent(in) :: dlsize  !! Difference line size.
+      real(wp), intent(in) :: dlines ( dlsize, * )  !! Array of difference lines.
+      real(wp), intent(in) :: epochs (         * )  !! Coverage end times of difference lines.
 
 
 
@@ -24662,21 +25019,19 @@ contains
       end if
 
       return
-      end procedure spkw21
+      end subroutine spkw21
 
-      !>## Abstract
+      !> This is the routine that packs a set integer numbers into a
+      !> single double precision number.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Its current specific use is to "compress" seven integer numbers
+      !> representing numbers of polynomial coefficients in a logical
+      !> type 4 CK record into a single DP number stored in a physical
+      !> type 4 CK record in a file.
       !>
-      !>     This is the routine that packs a set integer numbers into a
-      !>     single double precision number.
-      !>
-      !>     Its current specific use is to "compress" seven integer numbers
-      !>     representing numbers of polynomial coefficients in a logical
-      !>     type 4 CK record into a single DP number stored in a physical
-      !>     type 4 CK record in a file.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -24749,9 +25104,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
-      module procedure zzck4i2d
+      module subroutine zzck4i2d ( ctx, i, nsets, parcod, dpcoef )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: i      ( * )  !! Array of NSETS integer components.
+      integer(ip), intent(in) :: nsets  !! Number of integer components in input array I.
+      real(wp), intent(in) :: parcod  !! Packing base.
+      real(wp), intent(out) :: dpcoef  !! DP number containing NSETS packed integer numbers.
 
       real(wp) :: x
       integer(ip) :: k
@@ -24774,8 +25134,12 @@ contains
 !     All done.
 !
       return
-      end procedure zzck4i2d
+      end subroutine zzck4i2d
 
+      !> Return a specified pointing instance from a CK type 02 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -24873,110 +25237,112 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKGR02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKGR02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              DOUBLE PRECISION      AV      ( 3 )
-      !>              DOUBLE PRECISION      CMAT    ( 3, 3 )
-      !>              DOUBLE PRECISION      DCD     ( 2  )
-      !>              DOUBLE PRECISION      DESCR   ( 5  )
-      !>              DOUBLE PRECISION      QUAT    ( 4 )
-      !>              DOUBLE PRECISION      RECORD  ( 10 )
-      !>              DOUBLE PRECISION      SCLKE
-      !>              DOUBLE PRECISION      SCLKR
-      !>              DOUBLE PRECISION      SCLKS
-      !>              DOUBLE PRECISION      Z       ( 3 )
+      !>      DOUBLE PRECISION      AV      ( 3 )
+      !>      DOUBLE PRECISION      CMAT    ( 3, 3 )
+      !>      DOUBLE PRECISION      DCD     ( 2  )
+      !>      DOUBLE PRECISION      DESCR   ( 5  )
+      !>      DOUBLE PRECISION      QUAT    ( 4 )
+      !>      DOUBLE PRECISION      RECORD  ( 10 )
+      !>      DOUBLE PRECISION      SCLKE
+      !>      DOUBLE PRECISION      SCLKR
+      !>      DOUBLE PRECISION      SCLKS
+      !>      DOUBLE PRECISION      Z       ( 3 )
       !>
-      !>              INTEGER               ICD     ( 6 )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NREC
-      !>              INTEGER               I
+      !>      INTEGER               ICD     ( 6 )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NREC
+      !>      INTEGER               I
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     First load the file. (The file may also be opened by
-      !>        C     using CKLPF).
-      !>        C
-      !>              CALL DAFOPR ( 'vo2_swu_ck2.bc', HANDLE )
+      !>C
+      !>C     First load the file. (The file may also be opened by
+      !>C     using CKLPF).
+      !>C
+      !>      CALL DAFOPR ( 'vo2_swu_ck2.bc', HANDLE )
       !>
-      !>        C
-      !>        C     Begin forward search.  Find the first array.
-      !>        C
-      !>              CALL DAFBFS ( HANDLE )
-      !>              CALL DAFFNA ( FOUND  )
+      !>C
+      !>C     Begin forward search.  Find the first array.
+      !>C
+      !>      CALL DAFBFS ( HANDLE )
+      !>      CALL DAFFNA ( FOUND  )
       !>
-      !>        C
-      !>        C     Get segment descriptor.
-      !>        C
-      !>              CALL DAFGS ( DESCR )
+      !>C
+      !>C     Get segment descriptor.
+      !>C
+      !>      CALL DAFGS ( DESCR )
       !>
-      !>        C
-      !>        C     Unpack the segment descriptor into its double precision
-      !>        C     and integer components.
-      !>        C
-      !>              CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
+      !>C
+      !>C     Unpack the segment descriptor into its double precision
+      !>C     and integer components.
+      !>C
+      !>      CALL DAFUS ( DESCR, 2, 6, DCD, ICD )
       !>
-      !>        C
-      !>        C     The data type for a segment is located in the third
-      !>        C     integer component of the descriptor.
-      !>        C
-      !>              IF ( ICD( 3 ) .EQ. 2 ) THEN
+      !>C
+      !>C     The data type for a segment is located in the third
+      !>C     integer component of the descriptor.
+      !>C
+      !>      IF ( ICD( 3 ) .EQ. 2 ) THEN
       !>
-      !>        C
-      !>        C        How many records does this segment contain?
-      !>        C
-      !>                 CALL CKNR02 ( HANDLE, DESCR, NREC )
+      !>C
+      !>C        How many records does this segment contain?
+      !>C
+      !>         CALL CKNR02 ( HANDLE, DESCR, NREC )
       !>
-      !>                 DO I = 1, NREC
+      !>         DO I = 1, NREC
       !>
-      !>        C
-      !>        C           Get the Ith record in the segment.
-      !>        C
-      !>                    CALL CKGR02 ( HANDLE, DESCR, I, RECORD )
+      !>C
+      !>C           Get the Ith record in the segment.
+      !>C
+      !>            CALL CKGR02 ( HANDLE, DESCR, I, RECORD )
       !>
-      !>        C
-      !>        C           Unpack RECORD into the start and end time, rate in
-      !>        C           TDB seconds/tick, quaternion, and av.
-      !>        C
-      !>                    SCLKS = RECORD ( 1 )
-      !>                    SCLKE = RECORD ( 2 )
-      !>                    SCLKR = RECORD ( 3 )
+      !>C
+      !>C           Unpack RECORD into the start and end time, rate in
+      !>C           TDB seconds/tick, quaternion, and av.
+      !>C
+      !>            SCLKS = RECORD ( 1 )
+      !>            SCLKE = RECORD ( 2 )
+      !>            SCLKR = RECORD ( 3 )
       !>
-      !>                    CALL MOVED ( RECORD(4), 4, QUAT )
-      !>                    CALL MOVED ( RECORD(8), 3, AV   )
+      !>            CALL MOVED ( RECORD(4), 4, QUAT )
+      !>            CALL MOVED ( RECORD(8), 3, AV   )
       !>
-      !>        C
-      !>        C           The +Z axis direction is the third row of the
-      !>        C           C-matrix.
-      !>        C
-      !>                    CALL Q2M ( QUAT, CMAT )
+      !>C
+      !>C           The +Z axis direction is the third row of the
+      !>C           C-matrix.
+      !>C
+      !>            CALL Q2M ( QUAT, CMAT )
       !>
-      !>                    Z(1) = CMAT(3,1)
-      !>                    Z(2) = CMAT(3,2)
-      !>                    Z(3) = CMAT(3,3)
+      !>            Z(1) = CMAT(3,1)
+      !>            Z(2) = CMAT(3,2)
+      !>            Z(3) = CMAT(3,3)
       !>
-      !>        C
-      !>        C           Write out the results.
-      !>        C
-      !>                    WRITE (*,'(A,I2)') 'Record: ', I
-      !>                    WRITE (*,'(A,F21.6)') '   Start encoded SCLK:',
-      !>             .                              SCLKS
-      !>                    WRITE (*,'(A,F21.6)') '   End encoded SCLK  :',
-      !>             .                              SCLKE
-      !>                    WRITE (*,'(A,F21.6)') '   TDB Seconds/tick  :',
-      !>             .                              SCLKR
-      !>                    WRITE (*,'(A,3F13.8)') '   +Z axis           :',
-      !>             .                              Z
-      !>                    WRITE (*,'(A,3F13.8)') '   Angular velocity  :',
-      !>             .                              AV
-      !>                    WRITE (*,*)
+      !>C
+      !>C           Write out the results.
+      !>C
+      !>            WRITE (*,'(A,I2)') 'Record: ', I
+      !>            WRITE (*,'(A,F21.6)') '   Start encoded SCLK:',
+      !>     .                              SCLKS
+      !>            WRITE (*,'(A,F21.6)') '   End encoded SCLK  :',
+      !>     .                              SCLKE
+      !>            WRITE (*,'(A,F21.6)') '   TDB Seconds/tick  :',
+      !>     .                              SCLKR
+      !>            WRITE (*,'(A,3F13.8)') '   +Z axis           :',
+      !>     .                              Z
+      !>            WRITE (*,'(A,3F13.8)') '   Angular velocity  :',
+      !>     .                              AV
+      !>            WRITE (*,*)
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -25119,9 +25485,14 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
-      module procedure ckgr02
+      module subroutine ckgr02 ( ctx, handle, descr, recno, record )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the CK file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
+      integer(ip), intent(in) :: recno  !! The number of the pointing record to be returned.
+      real(wp), intent(out) :: record  ( * )  !! The pointing record.
 
 !        NDC        is the number of double precision components in an
 !                   unpacked C-kernel segment descriptor.
@@ -25232,8 +25603,11 @@ contains
       call dafgda ( ctx, handle, addr, addr, record( 2 ) )
 
       return
-      end procedure ckgr02
+      end subroutine ckgr02
 
+      !> Add data to a type 4 CK segment currently being written to
+      !> the file associated with HANDLE. See also [[ckw04b]] and [[ckw04e]].
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a CK file in which a CK type 4
@@ -25643,14 +26017,16 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
-      module procedure ckw04a
+      module subroutine ckw04a ( ctx, handle, npkts, pktsiz, pktdat, sclkdp )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ckparam
       implicit none
-
-!
-!     Spicelib functions.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of an DAF file opened for writing.
+      integer(ip), intent(in) :: npkts  !! Number of data packets to write to a segment.
+      integer(ip), intent(inout) :: pktsiz( * )  !! The numbers of values in the data packets (PEPPER: changed in place)
+      real(wp), intent(inout) :: pktdat( * )  !! The data packets. (PEPPER: packed in place)
+      real(wp), intent(in) :: sclkdp( * )  !! The SCLK times associated with the data packets.
 
 !
 !     Local parameters.
@@ -25781,8 +26157,11 @@ contains
 
       return
 
-      end procedure ckw04a
+      end subroutine ckw04a
 
+      !> Begin a type 03 PCK segment in the binary PCK file associated with
+      !> HANDLE. See also [[pck03a]] and [[pck03e]].
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle of a PCK file that has been
@@ -26077,10 +26456,18 @@ contains
       !>        Removed comments from the $Declarations section.
       !>
       !>-    SPICELIB Version 1.0.0, 06-MAR-1995 (KRG)
-      module procedure pck03b
+      module subroutine pck03b ( ctx, handle, segid, body, frame, first, last, chbdeg )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of a DAF file open for writing.
+      character(*), intent(in) :: segid  !! The string to use for segment identifier.
+      integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
+      character(*), intent(in) :: frame  !! The inertial frame for this segment.
+      real(wp), intent(in) :: first  !! The first epoch for which the segment is valid.
+      real(wp), intent(in) :: last  !! The last epoch for which the segment is valid.
+      integer(ip), intent(in) :: chbdeg  !! The degree of the Chebyshev Polynomial used.
 
 !     DAF ND and NI values for PCK files.
 !
@@ -26152,8 +26539,12 @@ contains
 
       return
 
-      end procedure pck03b
+      end subroutine pck03b
 
+      !> Convert the contents of a binary SPK or CK file to text,
+      !> including comments if present, and write them to a text file
+      !> opened by the calling program.
+      !>
       !>## Detailed Input
       !>
       !>     BINARY   is the name of an existing binary SPK or CK file
@@ -26286,13 +26677,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-      module procedure spcb2t
+      module subroutine spcb2t ( ctx, binary, unit )
       use pepper_kinds, only: ip
       implicit none
-
-!     IFNLEN is the length of a DAF internal file name.
-!
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: binary  !! Name of an existing binary SPK or CK file.
+      integer(ip), intent(in) :: unit  !! Logical unit connected to a text file.
 
       integer(ip) :: handle
       integer(ip) :: iostat
@@ -26348,8 +26738,11 @@ contains
       end if
 
       return
-      end procedure spcb2t
+      end subroutine spcb2t
 
+      !> Reconstruct a binary SPK or CK file including comments
+      !> from a text file opened by the calling program.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT     is the logical unit connected to an existing text
@@ -26528,10 +26921,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-      module procedure spct2b
+      module subroutine spct2b ( ctx, unit, binary )
       use pepper_kinds, only: ip
       use pepper_strings, only: ltrim, rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Logical unit connected to the text format file.
+      character(*), intent(in) :: binary  !! Name of a binary SPK or CK file to be created.
 
 
 
@@ -26660,8 +27056,11 @@ contains
       close ( scrtch )
 
       return
-      end procedure spct2b
+      end subroutine spct2b
 
+      !> Convert a text (ASCII) format SPK or CK file to an equivalent
+      !> binary file, including comments.
+      !>
       !>## Detailed Input
       !>
       !>     TEXT     is the name of an existing text format SPK or CK
@@ -26786,9 +27185,12 @@ contains
       !>        Removed declarations of unused variables.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-      module procedure spca2b
+      module subroutine spca2b ( ctx, text, binary )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: text  !! Name of an existing text format SPK or CK file.
+      character(*), intent(in) :: binary  !! Name of a binary SPK or CK file to be created.
 
 
 
@@ -26813,8 +27215,11 @@ contains
       close       (         unit )
 
       return
-      end procedure spca2b
+      end subroutine spca2b
 
+      !> Convert a binary SPK or CK file to an equivalent text (ASCII)
+      !> file, including the comment area.
+      !>
       !>## Detailed Input
       !>
       !>     BINARY   is the name of an existing binary SPK or CK file
@@ -26930,9 +27335,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-      module procedure spcb2a
+      module subroutine spcb2a ( ctx, binary, text )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: binary  !! Name of an existing binary SPK or CK file.
+      character(*), intent(in) :: text  !! Name of a text file to be created.
 
 
 
@@ -26954,6 +27362,6 @@ contains
       close       (         unit )
 
       return
-      end procedure spcb2a
+      end subroutine spcb2a
 
 end submodule pepper_writers

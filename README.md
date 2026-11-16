@@ -124,6 +124,11 @@ npm run serve:wasm   # or: pixi run wasm-serve — serve web/wasm.html with COOP
 
 ## Usage
 
+**Guides:** [Getting ephemeris data into PEPPER](guides/ephemeris_data.md):
+SPICE kernels, providers (your code computes the states), programmatic
+kernels (your states, PEPPER interpolates), and kernel loaders (files in
+other formats), with examples.
+
 All state belongs to an instance (`type(pepper_instance)`): loaded kernels, the
 kernel pool, file tables, the names defined with `boddef`. The kernels are
 changed through the instance: `spice%furnsh`, `unload`, `kclear`, `ldpool`,
@@ -355,7 +360,8 @@ Bodies and frames can come from the program instead of kernel files: a
 provider computes the states or the orientation, and the body or frame is
 then used everywhere one from a kernel is (states with any correction,
 frame transformations, GF searches, prepared queries). See
-`plans/programmatic_plan.md`.
+`plans/programmatic_plan.md`, and the guide
+[Getting ephemeris data into PEPPER](guides/ephemeris_data.md).
 
 ```fortran
 use pepper_module, only: ephemeris_provider, frame_provider, pepper_context
@@ -383,7 +389,10 @@ call ctx%pxform('MY_FRAME', 'J2000', et, rot)
   it was added: it overrides files loaded before and is overridden by files
   loaded after, within its coverage.
 - `remove_ephemeris` and `remove_frame` remove one; `kclear` removes all
-  (`clpool` keeps the frames, as it keeps the loaded files).
+  (`clpool` keeps the frames, as it keeps the loaded files). A kernel can
+  own programmatic ephemerides too (a file loader's, for a file that holds a
+  model: "Kernels built in memory and kernel loaders" below); those go
+  with their kernel, and `remove_ephemeris` does not remove them.
 - Providers are called from any context, so from several threads at once:
   they must not change shared data.
 - A provider may make queries through the context it is given (states,
@@ -394,6 +403,98 @@ call ctx%pxform('MY_FRAME', 'J2000', et, rot)
   provider calls) gives SPICE(RECURSIONTOODEEP). A provider procedure that
   can be nested (its queries reach bodies or frames of the same provider
   type) must be `recursive`.
+
+## Kernels built in memory and kernel loaders
+
+A program can make an SPK from its own arrays, with no file, and load it
+like an SPK file: states and GF searches, SPKCOV and SPKOBJ by its name,
+KDATA (type SPK), UNLOAD and KCLEAR. A **kernel loader** does the same for a
+file format SPICE does not know: FURNSH hands it the file, it fills a
+builder, and the file is then an SPK in memory. PEPPER has no loader for
+any real format; loaders are separate libraries. The guide
+[Getting ephemeris data into PEPPER](guides/ephemeris_data.md) explains
+all of it with examples; the design is in `plans/external_loaders_plan.md`.
+
+```fortran
+use pepper_module, only: kernel_builder, kernel_loader
+
+type(kernel_builder) :: kb
+call kb%spk_hermite(ctx, -10001, 399, 'J2000', epochs, states, 7)   ! SPK type 13
+call kb%spk_lagrange(ctx, -10002, 399, 'J2000', epochs, states, 8)  ! SPK type 9
+call spice%load_kernel('my_trajectory', kb)       ! a kernel with no file
+call spice%write_kernel('my_trajectory', 'my_trajectory.bsp')       ! to a real SPK
+
+call spice%add_loader('MYFORMAT', my_loader, extensions=['.myeph'])
+call spice%furnsh('sc.myeph')                      ! by extension
+call spice%furnsh('sc_ephem.txt', loader='MYFORMAT')               ! by name
+```
+
+- **The builder** takes states at epochs and uses SPICE's interpolation:
+  Lagrange (SPK type 9) or Hermite (type 13, odd degrees), with SPKW09's and
+  SPKW13's checks and short error messages. `tbeg` and `tend` set coverage
+  bounds inside the epochs. With `adapt`, a segment too short for its degree
+  has its degree lowered (two states make a Hermite cubic, one state is
+  dropped). It does not depend on an instance: threads can fill builders
+  while others query. Frames are resolved when the builder is loaded.
+- **`load_kernel(name, kb, keep)`** loads a builder under a name. A name in
+  use is replaced (the old kernel is unloaded once the new one has loaded;
+  the new kernel has the highest priority). The builder is emptied, unless
+  `keep`. An error, such as an unknown frame, loads nothing and keeps the
+  old kernel.
+- **A loader** extends `kernel_loader` with `load(self, ctx, kb, file)`:
+  read the file, fill the builder, signal errors in `ctx`. Optional:
+  `detect(self, file, head)` (accept a file by its first 4 KB) and
+  `unload(self, file)` (free what the loader kept). The instance keeps its
+  own copy of the loader; `spice%loader(name, ptr)` gives access to it.
+- **How FURNSH chooses** (in full in `spice_furnsh`'s documentation):
+  1. `loader=` (or the meta-kernel variable `KERNEL_LOADERS`, pairs of a
+     file of `KERNELS_TO_LOAD` and a loader's name): the registered loader
+     with that name reads the file, overriding everything else. FURNSH
+     makes no check of the file (that it exists, what it is, its
+     extension); the loader reports its own errors.
+  2. Else SPICE's binary kernels (DAF, DAS), by their ID word: PEPPER
+     loads them; they are never given to a loader by extension or
+     detection.
+  3. Else the longest registered extension that ends the file name.
+  4. Else the loaders' `detect`, the most recently registered first.
+  5. Else the text and JSON readers, as before.
+
+  `loader='PEPPER'` is PEPPER's own loading (steps 2 and 5, registered
+  loaders not asked): for a SPICE text kernel or meta-kernel whose
+  extension a loader also has. PEPPER cannot be a loader's name; any other
+  name no loader has is SPICE(UNKNOWNLOADER).
+- **`kernel_format(file, loader, format, found)`** tells which loader read a
+  kernel, and the builder's description (`set_format`).
+- **A file that holds a model,** not states (elements and a propagator, say):
+  the loader reads it into a provider of its own (an `ephemeris_provider`,
+  as `add_ephemeris` takes) and adds it with `kb%add_ephemeris(ctx, body,
+  center, frame, tbeg, tend, provider)`. Queries call the provider's
+  `state` at any epoch. It belongs to the kernel: SPKCOV and SPKOBJ report
+  it by the kernel's name, UNLOAD and KCLEAR remove it, and kernels of the
+  same body coexist (the last loaded first; unloading it restores the
+  earlier), where `add_ephemeris` replaces the body's earlier registration.
+  `write_kernel` refuses such a kernel (there are no states to write).
+- **Frames a kernel defines:** `kb%frame_rotations(ctx, name, code,
+  center, base, epochs, quats, degree)` (or 3x3 matrices) gives a new
+  frame from rotations at ET epochs relative to a base frame (e.g. J2000),
+  interpolated by SPICE's CK type 5 routines on a table held in memory (no
+  clock); `kb%add_frame(ctx, name, code, center, provider)` a frame
+  computed by code. Both are defined while the kernel is loaded; loaders use
+  them for files of frame data. CKCOV and CKOBJ (`ck_coverage`,
+  `ck_objects`) report the tables by the kernel's name, and
+  `write_kernel(name, file, ck_file, text_file)` writes them as a CK with a
+  text kernel of their clocks and frame definitions, which SPICE loads. See
+  the guide's "Reference frames".
+- **Body names a kernel defines:** `kb%define_body(ctx, name, code)`. While
+  the kernel is loaded, the name works everywhere a body name does
+  (`spkezr('SPACECRAFT1', ...)`, BODN2C, BODC2N); when it is unloaded
+  (UNLOAD, KCLEAR, replaced) the definition goes with it, and an earlier one
+  of the same name (BODDEF's, another kernel's) is in effect again. The
+  latest definition wins, and names from the kernel pool
+  (`NAIF_BODY_NAME`/`CODE`) take precedence, as over BODDEF's. (KCLEAR keeps
+  the program's own BODDEF names, as in SPICELIB.)
+- **Only SPICE's interpolations.** A loader maps the file's method to type 9
+  or 13, or signals an error; it does not substitute another method.
 
 ## Results of any size
 
@@ -459,7 +560,7 @@ states, lts = ctx.prepare_state('MOON', 'EARTH', 'J2000', 'LT+S')(ets)   # (n, 6
 
 It is Cython extension modules over PEPPER's C interface, generated from
 the Fortran interfaces; a call costs 0.2 to 0.8 µs, 3 to 5 times less than
-SpiceyPy's. It has 88% of SpiceyPy's functions, and passes 524 of the 638
+SpiceyPy's. It has 88% of SpiceyPy's functions, and passes 523 of the 639
 tests of SpiceyPy's own suite. See [python/README.md](python/README.md), the coverage of
 SpiceyPy's functions in [python/COVERAGE.md](python/COVERAGE.md), and the
 design in [plans/pepperypy_plan.md](plans/pepperypy_plan.md).
@@ -478,7 +579,11 @@ any size stay in the context's buffers; matrices are column-major. A
 program whose main is not Fortran calls `pepper_runtime_init()` first
 (with gfortran, `-DPEPPER_GFORTRAN`). The shims, the header and PepperyPy's
 wrappers are generated by `tools/gen_capi.py`; `capi/test_capi.c` is a C
-example and test.
+example and test. Kernels built in memory have a builder of their own
+(`pepper_builder_new`, `pepper_builder_spk`, `_add_ephemeris`,
+`_frame_rotations`, `_add_frame`, `_define_body`,
+`pepper_spice_load_kernel`), and kernel loaders written in C are registered
+with `pepper_spice_add_loader` (`pepper_spice_furnsh_loader` names one).
 
 ```c
 #include "pepper.h"

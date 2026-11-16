@@ -2,9 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_ck_api.f90.
+!> [[pepper_instance_module]]).
 submodule (pepper_instance_module) pepper_ck_api
 
    implicit none
@@ -22,6 +20,8 @@ submodule (pepper_instance_module) pepper_ck_api
 
 contains
 
+      !> Find the set of ID codes of all objects in a specified CK file.
+      !>
       !>## Detailed Input
       !>
       !>     CKFNM    is the name of a C-kernel.
@@ -98,150 +98,152 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKOBJ_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKOBJ_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
-      !>              INTEGER               CARDI
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>        C
-      !>        C     Declare the coverage window.  Make enough room
-      !>        C     for MAXIV intervals.
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
+      !>      INTEGER               CARDI
+      !>C
+      !>C     Local parameters
+      !>C
+      !>C
+      !>C     Declare the coverage window.  Make enough room
+      !>C     for MAXIV intervals.
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               MAXIV
-      !>              PARAMETER           ( MAXIV  = 100000 )
+      !>      INTEGER               MAXIV
+      !>      PARAMETER           ( MAXIV  = 100000 )
       !>
-      !>              INTEGER               WINSIZ
-      !>              PARAMETER           ( WINSIZ = 2 * MAXIV )
+      !>      INTEGER               WINSIZ
+      !>      PARAMETER           ( WINSIZ = 2 * MAXIV )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 50 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 50 )
       !>
-      !>              INTEGER               MAXOBJ
-      !>              PARAMETER           ( MAXOBJ = 1000 )
+      !>      INTEGER               MAXOBJ
+      !>      PARAMETER           ( MAXOBJ = 1000 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    CKFNM
-      !>              CHARACTER*(FILSIZ)    LSK
-      !>              CHARACTER*(FILSIZ)    SCLK
-      !>              CHARACTER*(TIMLEN)    TIMSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    CKFNM
+      !>      CHARACTER*(FILSIZ)    LSK
+      !>      CHARACTER*(FILSIZ)    SCLK
+      !>      CHARACTER*(TIMLEN)    TIMSTR
       !>
-      !>              DOUBLE PRECISION      B
-      !>              DOUBLE PRECISION      COVER ( LBCELL : WINSIZ )
-      !>              DOUBLE PRECISION      E
+      !>      DOUBLE PRECISION      B
+      !>      DOUBLE PRECISION      COVER ( LBCELL : WINSIZ )
+      !>      DOUBLE PRECISION      E
       !>
-      !>              INTEGER               I
-      !>              INTEGER               IDS   ( LBCELL : MAXOBJ )
-      !>              INTEGER               J
-      !>              INTEGER               NIV
+      !>      INTEGER               I
+      !>      INTEGER               IDS   ( LBCELL : MAXOBJ )
+      !>      INTEGER               J
+      !>      INTEGER               NIV
       !>
-      !>        C
-      !>        C     Load a leapseconds kernel and SCLK kernel for output
-      !>        C     time conversion.  Note that we assume a single
-      !>        C     spacecraft clock is associated with all of the objects
-      !>        C     in the CK.
-      !>        C
-      !>              CALL PROMPT ( 'Name of leapseconds kernel > ', LSK  )
-      !>              CALL FURNSH ( LSK )
+      !>C
+      !>C     Load a leapseconds kernel and SCLK kernel for output
+      !>C     time conversion.  Note that we assume a single
+      !>C     spacecraft clock is associated with all of the objects
+      !>C     in the CK.
+      !>C
+      !>      CALL PROMPT ( 'Name of leapseconds kernel > ', LSK  )
+      !>      CALL FURNSH ( LSK )
       !>
-      !>              CALL PROMPT ( 'Name of SCLK kernel        > ', SCLK )
-      !>              CALL FURNSH ( SCLK )
+      !>      CALL PROMPT ( 'Name of SCLK kernel        > ', SCLK )
+      !>      CALL FURNSH ( SCLK )
       !>
-      !>        C
-      !>        C     Get name of CK file.
-      !>        C
-      !>              CALL PROMPT ( 'Name of CK file            > ', CKFNM )
+      !>C
+      !>C     Get name of CK file.
+      !>C
+      !>      CALL PROMPT ( 'Name of CK file            > ', CKFNM )
       !>
-      !>        C
-      !>        C     Initialize the set IDS.
-      !>        C
-      !>              CALL SSIZEI ( MAXOBJ, IDS )
+      !>C
+      !>C     Initialize the set IDS.
+      !>C
+      !>      CALL SSIZEI ( MAXOBJ, IDS )
       !>
-      !>        C
-      !>        C     Initialize the window COVER.
-      !>        C
-      !>              CALL SSIZED ( WINSIZ, COVER )
+      !>C
+      !>C     Initialize the window COVER.
+      !>C
+      !>      CALL SSIZED ( WINSIZ, COVER )
       !>
-      !>        C
-      !>        C     Find the set of objects in the CK file.
-      !>        C
-      !>              CALL CKOBJ ( CKFNM, IDS )
+      !>C
+      !>C     Find the set of objects in the CK file.
+      !>C
+      !>      CALL CKOBJ ( CKFNM, IDS )
       !>
-      !>        C
-      !>        C     We want to display the coverage for each object.  Loop
-      !>        C     over the contents of the ID code set, find the coverage
-      !>        C     for each item in the set, and display the coverage.
-      !>        C
-      !>              DO I = 1, CARDI( IDS )
-      !>        C
-      !>        C        Find the coverage window for the current
-      !>        C        object. Empty the coverage window each time
-      !>        C        so we don't include data for the previous object.
-      !>        C
-      !>                 CALL SCARDD ( 0,   COVER )
-      !>                 CALL CKCOV  ( CKFNM,       IDS(I),  .FALSE.,
-      !>             .                 'INTERVAL',  0.D0,    'TDB',    COVER )
+      !>C
+      !>C     We want to display the coverage for each object.  Loop
+      !>C     over the contents of the ID code set, find the coverage
+      !>C     for each item in the set, and display the coverage.
+      !>C
+      !>      DO I = 1, CARDI( IDS )
+      !>C
+      !>C        Find the coverage window for the current
+      !>C        object. Empty the coverage window each time
+      !>C        so we don't include data for the previous object.
+      !>C
+      !>         CALL SCARDD ( 0,   COVER )
+      !>         CALL CKCOV  ( CKFNM,       IDS(I),  .FALSE.,
+      !>     .                 'INTERVAL',  0.D0,    'TDB',    COVER )
       !>
-      !>        C
-      !>        C        Get the number of intervals in the coverage
-      !>        C        window.
-      !>        C
-      !>                 NIV = WNCARD( COVER )
+      !>C
+      !>C        Get the number of intervals in the coverage
+      !>C        window.
+      !>C
+      !>         NIV = WNCARD( COVER )
       !>
-      !>        C
-      !>        C        Display a simple banner.
-      !>        C
-      !>                 WRITE (*,*) '======================================='
-      !>                 WRITE (*,*) 'Coverage for object ', IDS(I)
+      !>C
+      !>C        Display a simple banner.
+      !>C
+      !>         WRITE (*,*) '======================================='
+      !>         WRITE (*,*) 'Coverage for object ', IDS(I)
       !>
-      !>        C
-      !>        C        Convert the coverage interval start and stop
-      !>        C        times to TDB calendar strings.
-      !>        C
-      !>                 DO J = 1, NIV
-      !>        C
-      !>        C           Get the endpoints of the Jth interval.
-      !>        C
-      !>                    CALL WNFETD ( COVER, J, B, E )
-      !>        C
-      !>        C           Convert the endpoints to TDB calendar
-      !>        C           format time strings and display them.
-      !>        C
-      !>                    CALL TIMOUT ( B,
-      !>             .                    'YYYY MON DD HR:MN:SC.###### ' //
-      !>             .                    '(TDB) ::TDB',
-      !>             .                    TIMSTR                           )
-      !>                    WRITE (*,*) ' '
-      !>                    WRITE (*,*) 'Interval: ', J
-      !>                    WRITE (*,*) 'Start:    ', TIMSTR
+      !>C
+      !>C        Convert the coverage interval start and stop
+      !>C        times to TDB calendar strings.
+      !>C
+      !>         DO J = 1, NIV
+      !>C
+      !>C           Get the endpoints of the Jth interval.
+      !>C
+      !>            CALL WNFETD ( COVER, J, B, E )
+      !>C
+      !>C           Convert the endpoints to TDB calendar
+      !>C           format time strings and display them.
+      !>C
+      !>            CALL TIMOUT ( B,
+      !>     .                    'YYYY MON DD HR:MN:SC.###### ' //
+      !>     .                    '(TDB) ::TDB',
+      !>     .                    TIMSTR                           )
+      !>            WRITE (*,*) ' '
+      !>            WRITE (*,*) 'Interval: ', J
+      !>            WRITE (*,*) 'Start:    ', TIMSTR
       !>
-      !>                    CALL TIMOUT ( E,
-      !>             .                    'YYYY MON DD HR:MN:SC.###### ' //
-      !>             .                    '(TDB) ::TDB',
-      !>             .                    TIMSTR                          )
-      !>                    WRITE (*,*) 'Stop:     ', TIMSTR
-      !>                    WRITE (*,*) ' '
+      !>            CALL TIMOUT ( E,
+      !>     .                    'YYYY MON DD HR:MN:SC.###### ' //
+      !>     .                    '(TDB) ::TDB',
+      !>     .                    TIMSTR                          )
+      !>            WRITE (*,*) 'Stop:     ', TIMSTR
+      !>            WRITE (*,*) ' '
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 WRITE (*,*) '======================================='
+      !>         WRITE (*,*) '======================================='
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the LSK file named naif0010.tls, the SCLK file
@@ -320,9 +322,13 @@ contains
       !>        rather than CARDD.
       !>
       !>-    SPICELIB Version 1.0.0, 30-DEC-2004 (NJB)
-      module procedure ckobj
+      module subroutine ckobj ( ctx, ckfnm, ids )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: ckfnm  !! Name of CK file.
+      integer(ip), intent(inout) :: ids ( lbcell : * )  !! Set of ID codes of objects in CK file.
       integer(ip), allocatable :: list(:)
       integer(ip) :: k
 !
@@ -335,12 +341,17 @@ contains
          if ( ctx%failed() ) return
          call insrti ( ctx, list(k), ids )
       end do
-      end procedure ckobj
+      end subroutine ckobj
 
-      module procedure ck_objects
+      !> The objects of a CK file (PEPPER; [[ckobj]] without a set cell):
+      !> their ID codes, sorted, without duplicates.
+      module subroutine ck_objects ( ctx, file, ids )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: append_id, sort_unique
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the CK file
+      integer(ip), allocatable, intent(out) :: ids(:)  !! the ID codes (size 0 after an error)
       integer(ip), allocatable :: list(:)  ! the IDs found (unsorted, with duplicates)
       integer(ip) :: nlist  ! the number of IDs in LIST
 
@@ -369,6 +380,21 @@ contains
 !
 !     See whether GETFAT thinks we've got a CK file.
 !
+!
+!     PEPPER: a kernel built in memory: the frames of its rotation tables
+!     (their CK ID codes are the frames' codes).
+!
+      block
+         integer(ip), allocatable :: codes(:)
+         logical :: is_kernel
+         call kernel_frame_codes ( ctx, file, is_kernel, codes )
+         if ( ctx%failed() ) return
+         if ( is_kernel ) then
+            ids = codes
+            call sort_unique ( ids )
+            return
+         end if
+      end block
       call getfat ( ctx, file, arch, kertyp )
 
       if ( ctx%failed() ) return
@@ -468,8 +494,10 @@ contains
          call sort_unique ( ids )
       end if
       return
-      end procedure ck_objects
+      end subroutine ck_objects
 
+      !> Get pointing (attitude) for a specified spacecraft clock time.
+      !>
       !>## Detailed Input
       !>
       !>     INST     is the NAIF integer ID for the instrument, spacecraft, or
@@ -895,130 +923,132 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKGP_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKGP_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Constants for this program.
-      !>        C
-      !>        C     -- The code for the CASSINI spacecraft clock is -82.
-      !>        C
-      !>        C     -- The code for CASSINI spacecraft reference frame
-      !>        C        is -82000.
-      !>        C
-      !>        C    --  Spacecraft clock times for successive CASSINI
-      !>        C        navigation images always differ by more than 1.0.
-      !>        C        This is an acceptable tolerance, and must be
-      !>        C        converted to "ticks" (units of encoded SCLK) for
-      !>        C        input to CKGP.
-      !>        C
-      !>        C     -- The reference frame we want is J2000.
-      !>        C
-      !>        C     -- The CASSINI ISS camera boresight
-      !>        C        in the spacecraft frame is
-      !>        C        (0.0005760, -0.99999982, -0.0001710).
-      !>        C
-      !>              INTEGER               FILEN
-      !>              PARAMETER           ( FILEN  = 255 )
+      !>C
+      !>C     Constants for this program.
+      !>C
+      !>C     -- The code for the CASSINI spacecraft clock is -82.
+      !>C
+      !>C     -- The code for CASSINI spacecraft reference frame
+      !>C        is -82000.
+      !>C
+      !>C    --  Spacecraft clock times for successive CASSINI
+      !>C        navigation images always differ by more than 1.0.
+      !>C        This is an acceptable tolerance, and must be
+      !>C        converted to "ticks" (units of encoded SCLK) for
+      !>C        input to CKGP.
+      !>C
+      !>C     -- The reference frame we want is J2000.
+      !>C
+      !>C     -- The CASSINI ISS camera boresight
+      !>C        in the spacecraft frame is
+      !>C        (0.0005760, -0.99999982, -0.0001710).
+      !>C
+      !>      INTEGER               FILEN
+      !>      PARAMETER           ( FILEN  = 255 )
       !>
-      !>              INTEGER               NPICS
-      !>              PARAMETER           ( NPICS  = 2 )
+      !>      INTEGER               NPICS
+      !>      PARAMETER           ( NPICS  = 2 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 30 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 30 )
       !>
-      !>              INTEGER               REFLEN
-      !>              PARAMETER           ( REFLEN = 32 )
+      !>      INTEGER               REFLEN
+      !>      PARAMETER           ( REFLEN = 32 )
       !>
-      !>              CHARACTER*(TIMLEN)    CLKCH
-      !>              CHARACTER*(FILEN)     CK
-      !>              CHARACTER*(REFLEN)    REF
-      !>              CHARACTER*(FILEN)     SCLK
-      !>              CHARACTER*(TIMLEN)    SCLKCH ( NPICS )
-      !>              CHARACTER*(TIMLEN)    TOL
+      !>      CHARACTER*(TIMLEN)    CLKCH
+      !>      CHARACTER*(FILEN)     CK
+      !>      CHARACTER*(REFLEN)    REF
+      !>      CHARACTER*(FILEN)     SCLK
+      !>      CHARACTER*(TIMLEN)    SCLKCH ( NPICS )
+      !>      CHARACTER*(TIMLEN)    TOL
       !>
-      !>              DOUBLE PRECISION      CLKOUT
-      !>              DOUBLE PRECISION      CMAT   ( 3, 3 )
-      !>              DOUBLE PRECISION      SCLKDP
-      !>              DOUBLE PRECISION      TOLTIK
-      !>              DOUBLE PRECISION      ISSFIX ( 3 )
-      !>              DOUBLE PRECISION      VINERT ( 3 )
+      !>      DOUBLE PRECISION      CLKOUT
+      !>      DOUBLE PRECISION      CMAT   ( 3, 3 )
+      !>      DOUBLE PRECISION      SCLKDP
+      !>      DOUBLE PRECISION      TOLTIK
+      !>      DOUBLE PRECISION      ISSFIX ( 3 )
+      !>      DOUBLE PRECISION      VINERT ( 3 )
       !>
-      !>              INTEGER               SC
-      !>              INTEGER               I
-      !>              INTEGER               INST
+      !>      INTEGER               SC
+      !>      INTEGER               I
+      !>      INTEGER               INST
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>              DATA                  SCLKCH /  '1465644281.0',
-      !>             .                                '1465644351.0' /
+      !>      DATA                  SCLKCH /  '1465644281.0',
+      !>     .                                '1465644351.0' /
       !>
-      !>              DATA                  ISSFIX /  0.00057600D0,
-      !>             .                               -0.99999982D0,
-      !>             .                               -0.00017100D0  /
+      !>      DATA                  ISSFIX /  0.00057600D0,
+      !>     .                               -0.99999982D0,
+      !>     .                               -0.00017100D0  /
       !>
-      !>              CK         = '04153_04182ca_ISS.bc'
-      !>              SCLK       = 'cas00071.tsc'
-      !>              SC         = -82
-      !>              INST       = -82000
-      !>              TOL        = '1.0'
-      !>              REF        = 'J2000'
+      !>      CK         = '04153_04182ca_ISS.bc'
+      !>      SCLK       = 'cas00071.tsc'
+      !>      SC         = -82
+      !>      INST       = -82000
+      !>      TOL        = '1.0'
+      !>      REF        = 'J2000'
       !>
-      !>        C
-      !>        C     Load the CK file.
-      !>        C
-      !>              CALL FURNSH ( CK )
+      !>C
+      !>C     Load the CK file.
+      !>C
+      !>      CALL FURNSH ( CK )
       !>
-      !>        C
-      !>        C     Need to load a CASSINI SCLK kernel to convert from
-      !>        C     clock string to ticks.  Although not required for
-      !>        C     the CASSINI spacecraft clock, most modern spacecraft
-      !>        C     clocks require a leapseconds kernel to be loaded in
-      !>        C     addition to an SCLK kernel.
-      !>        C
-      !>              CALL FURNSH ( SCLK )
+      !>C
+      !>C     Need to load a CASSINI SCLK kernel to convert from
+      !>C     clock string to ticks.  Although not required for
+      !>C     the CASSINI spacecraft clock, most modern spacecraft
+      !>C     clocks require a leapseconds kernel to be loaded in
+      !>C     addition to an SCLK kernel.
+      !>C
+      !>      CALL FURNSH ( SCLK )
       !>
-      !>        C
-      !>        C     Convert tolerance from CASSINI formatted character
-      !>        C     string SCLK to ticks, which are units of encoded SCLK.
-      !>        C
-      !>              CALL SCTIKS ( SC, TOL, TOLTIK )
+      !>C
+      !>C     Convert tolerance from CASSINI formatted character
+      !>C     string SCLK to ticks, which are units of encoded SCLK.
+      !>C
+      !>      CALL SCTIKS ( SC, TOL, TOLTIK )
       !>
-      !>              DO I = 1, NPICS
-      !>        C
-      !>        C        CKGP requires encoded spacecraft clock.
-      !>        C
-      !>                 CALL SCENCD ( SC, SCLKCH( I ), SCLKDP )
+      !>      DO I = 1, NPICS
+      !>C
+      !>C        CKGP requires encoded spacecraft clock.
+      !>C
+      !>         CALL SCENCD ( SC, SCLKCH( I ), SCLKDP )
       !>
-      !>                 CALL CKGP ( INST,   SCLKDP, TOLTIK, REF, CMAT,
-      !>             .               CLKOUT, FOUND                      )
+      !>         CALL CKGP ( INST,   SCLKDP, TOLTIK, REF, CMAT,
+      !>     .               CLKOUT, FOUND                      )
       !>
-      !>                 IF ( FOUND ) THEN
+      !>         IF ( FOUND ) THEN
       !>
-      !>        C
-      !>        C           Use the transpose of the C-matrix to transform the
-      !>        C           boresight vector from camera-fixed to reference
-      !>        C           coordinates.
-      !>        C
-      !>                    CALL MTXV   ( CMAT, ISSFIX, VINERT )
-      !>                    CALL SCDECD ( SC,   CLKOUT, CLKCH  )
+      !>C
+      !>C           Use the transpose of the C-matrix to transform the
+      !>C           boresight vector from camera-fixed to reference
+      !>C           coordinates.
+      !>C
+      !>            CALL MTXV   ( CMAT, ISSFIX, VINERT )
+      !>            CALL SCDECD ( SC,   CLKOUT, CLKCH  )
       !>
-      !>                    WRITE(*,*) 'Requested SCLK time : ', SCLKCH(I)
-      !>                    WRITE(*,*) '   CASSINI SCLK time: ', CLKCH
-      !>                    WRITE(*,'(A,3F11.7)')
-      !>             .             '    CASSINI ISS boresight:', VINERT
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Requested SCLK time : ', SCLKCH(I)
+      !>            WRITE(*,*) '   CASSINI SCLK time: ', CLKCH
+      !>            WRITE(*,'(A,3F11.7)')
+      !>     .             '    CASSINI ISS boresight:', VINERT
+      !>            WRITE(*,*) ' '
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE (*,*) 'Pointing not found for time ',
-      !>             .                                            SCLKCH(I)
+      !>            WRITE (*,*) 'Pointing not found for time ',
+      !>     .                                            SCLKCH(I)
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1194,46 +1224,23 @@ contains
       !>        5) The header was updated to reflect the changes.
       !>
       !>-    Beta Version 1.0.0, 04-MAY-1990 (RET) (IMU)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>        NDC        is the number of double precision components in an
-      !>                   unpacked C-kernel segment descriptor.
-      !>
-      !>        NIC        is the number of integer components in an unpacked
-      !>                   C-kernel segment descriptor.
-      !>
-      !>        NC         is the number of components in a packed C-kernel
-      !>                   descriptor.  All DAF summaries have this formulaic
-      !>                   relationship between the number of its integer and
-      !>                   double precision components and the number of packed
-      !>                   components.
-      !>
-      !>        IDLEN      is the length of the C-kernel segment identifier.
-      !>                   All DAF names have this formulaic relationship
-      !>                   between the number of summary components and
-      !>                   the length of the name (You will notice that
-      !>                   a name and a summary have the same length in bytes.)
-      !>
-      !>     Saved frame name length.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved frame name/ID item declarations.
-      !>
-      !>     Saved frame name/ID items.
-      !>
-      !>     Initial values.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure ckgp
+      module subroutine ckgp ( ctx, inst, sclkdp, tol, ref, cmat, clkout, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxm
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: inst  !! NAIF ID of instrument, spacecraft, or structure.
+      real(wp), intent(in) :: sclkdp  !! Encoded spacecraft clock time.
+      real(wp), intent(in) :: tol  !! Time tolerance.
+      character(*), intent(in) :: ref  !! Reference frame.
+      real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix pointing data.
+      real(wp), intent(out) :: clkout  !! Output encoded spacecraft clock time.
+      logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
+!
+!     Local variables
+!
       character(idlen) :: segid
       real(wp) :: av     ( 3 )
       real(wp) :: dcd    ( ndc  )
@@ -1259,6 +1266,9 @@ contains
                   svref => ctx%ckgp_state%svref, &
                   svrefr => ctx%ckgp_state%svrefr, &
                   first => ctx%ckgp_state%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -1379,8 +1389,11 @@ contains
 
       return
       end associate
-      end procedure ckgp
+      end subroutine ckgp
 
+      !> Get pointing (attitude) and angular velocity for a specified
+      !> spacecraft clock time.
+      !>
       !>## Detailed Input
       !>
       !>     INST     is the NAIF integer ID for the instrument, spacecraft,
@@ -1855,116 +1868,118 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKGPAV_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKGPAV_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Constants for this program.
-      !>        C
-      !>        C     -- The code for the CASSINI spacecraft clock is -82.
-      !>        C
-      !>        C     -- The code for CASSINI spacecraft reference frame is
-      !>        C        -82000.
-      !>        C
-      !>        C    --  Spacecraft clock times for successive CASSINI
-      !>        C        navigation images always differ by more than 1.0
-      !>        C        seconds. This is an acceptable tolerance, and must
-      !>        C        be converted to "ticks" (units of encoded SCLK) for
-      !>        C        input to CKGPAV.
-      !>        C
-      !>        C     -- The reference frame we want is J2000.
-      !>        C
-      !>        C     -- The CASSINI ISS camera boresight in the spacecraft
-      !>        C        frame is (0.0005760, -0.99999982, -0.0001710).
-      !>        C
-      !>              INTEGER               NPICS
-      !>              PARAMETER           ( NPICS  = 2 )
+      !>C
+      !>C     Constants for this program.
+      !>C
+      !>C     -- The code for the CASSINI spacecraft clock is -82.
+      !>C
+      !>C     -- The code for CASSINI spacecraft reference frame is
+      !>C        -82000.
+      !>C
+      !>C    --  Spacecraft clock times for successive CASSINI
+      !>C        navigation images always differ by more than 1.0
+      !>C        seconds. This is an acceptable tolerance, and must
+      !>C        be converted to "ticks" (units of encoded SCLK) for
+      !>C        input to CKGPAV.
+      !>C
+      !>C     -- The reference frame we want is J2000.
+      !>C
+      !>C     -- The CASSINI ISS camera boresight in the spacecraft
+      !>C        frame is (0.0005760, -0.99999982, -0.0001710).
+      !>C
+      !>      INTEGER               NPICS
+      !>      PARAMETER           ( NPICS  = 2 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 30 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 30 )
       !>
-      !>              INTEGER               REFLEN
-      !>              PARAMETER           ( REFLEN = 32 )
+      !>      INTEGER               REFLEN
+      !>      PARAMETER           ( REFLEN = 32 )
       !>
-      !>              CHARACTER*(TIMLEN)    CLKCH
-      !>              CHARACTER*(REFLEN)    REF
-      !>              CHARACTER*(TIMLEN)    SCLKCH ( NPICS )
-      !>              CHARACTER*(TIMLEN)    TOL
+      !>      CHARACTER*(TIMLEN)    CLKCH
+      !>      CHARACTER*(REFLEN)    REF
+      !>      CHARACTER*(TIMLEN)    SCLKCH ( NPICS )
+      !>      CHARACTER*(TIMLEN)    TOL
       !>
-      !>              DOUBLE PRECISION      AV     ( 3 )
-      !>              DOUBLE PRECISION      CLKOUT
-      !>              DOUBLE PRECISION      CMAT   ( 3, 3 )
-      !>              DOUBLE PRECISION      SCLKDP
-      !>              DOUBLE PRECISION      TOLTIK
-      !>              DOUBLE PRECISION      ISSFIX ( 3 )
-      !>              DOUBLE PRECISION      VINERT ( 3 )
+      !>      DOUBLE PRECISION      AV     ( 3 )
+      !>      DOUBLE PRECISION      CLKOUT
+      !>      DOUBLE PRECISION      CMAT   ( 3, 3 )
+      !>      DOUBLE PRECISION      SCLKDP
+      !>      DOUBLE PRECISION      TOLTIK
+      !>      DOUBLE PRECISION      ISSFIX ( 3 )
+      !>      DOUBLE PRECISION      VINERT ( 3 )
       !>
-      !>              INTEGER               SC
-      !>              INTEGER               I
-      !>              INTEGER               INST
+      !>      INTEGER               SC
+      !>      INTEGER               I
+      !>      INTEGER               INST
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>              DATA                  SCLKCH /  '1465644281.0',
-      !>             .                                '1465644351.0' /
+      !>      DATA                  SCLKCH /  '1465644281.0',
+      !>     .                                '1465644351.0' /
       !>
-      !>              DATA                  ISSFIX /  0.00057600D0,
-      !>             .                               -0.99999982D0,
-      !>             .                               -0.00017100D0  /
+      !>      DATA                  ISSFIX /  0.00057600D0,
+      !>     .                               -0.99999982D0,
+      !>     .                               -0.00017100D0  /
       !>
-      !>              SC   = -82
-      !>              INST = -82000
-      !>              TOL  = '1.0'
-      !>              REF  = 'J2000'
+      !>      SC   = -82
+      !>      INST = -82000
+      !>      TOL  = '1.0'
+      !>      REF  = 'J2000'
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'ckgpav_ex1.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'ckgpav_ex1.tm' )
       !>
-      !>        C
-      !>        C     Convert tolerance from CASSINI formatted character
-      !>        C     string SCLK to ticks which are units of encoded SCLK.
-      !>        C
-      !>              CALL SCTIKS ( SC, TOL, TOLTIK )
+      !>C
+      !>C     Convert tolerance from CASSINI formatted character
+      !>C     string SCLK to ticks which are units of encoded SCLK.
+      !>C
+      !>      CALL SCTIKS ( SC, TOL, TOLTIK )
       !>
-      !>              DO I = 1, NPICS
-      !>        C
-      !>        C        CKGPAV requires encoded spacecraft clock.
-      !>        C
-      !>                 CALL SCENCD ( SC, SCLKCH( I ), SCLKDP )
+      !>      DO I = 1, NPICS
+      !>C
+      !>C        CKGPAV requires encoded spacecraft clock.
+      !>C
+      !>         CALL SCENCD ( SC, SCLKCH( I ), SCLKDP )
       !>
-      !>                 CALL CKGPAV ( INST,   SCLKDP, TOLTIK, REF, CMAT, AV,
-      !>             .                 CLKOUT, FOUND                        )
+      !>         CALL CKGPAV ( INST,   SCLKDP, TOLTIK, REF, CMAT, AV,
+      !>     .                 CLKOUT, FOUND                        )
       !>
-      !>                 IF ( FOUND ) THEN
+      !>         IF ( FOUND ) THEN
       !>
-      !>        C
-      !>        C           Use the transpose of the C-matrix to transform the
-      !>        C           boresight vector from camera-fixed to reference
-      !>        C           coordinates.
-      !>        C
-      !>                    CALL MTXV   ( CMAT, ISSFIX, VINERT )
-      !>                    CALL SCDECD ( SC,   CLKOUT, CLKCH  )
+      !>C
+      !>C           Use the transpose of the C-matrix to transform the
+      !>C           boresight vector from camera-fixed to reference
+      !>C           coordinates.
+      !>C
+      !>            CALL MTXV   ( CMAT, ISSFIX, VINERT )
+      !>            CALL SCDECD ( SC,   CLKOUT, CLKCH  )
       !>
-      !>                    WRITE(*,*) 'Requested SCLK time : ', SCLKCH(I)
-      !>                    WRITE(*,*) '   CASSINI SCLK time: ', CLKCH
-      !>                    WRITE(*,'(A,3F11.7)')
-      !>             .             '    CASSINI ISS boresight  :', VINERT
-      !>                    WRITE(*,'(A,3F11.7)')
-      !>             .             '    Angular velocity vector:', AV
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Requested SCLK time : ', SCLKCH(I)
+      !>            WRITE(*,*) '   CASSINI SCLK time: ', CLKCH
+      !>            WRITE(*,'(A,3F11.7)')
+      !>     .             '    CASSINI ISS boresight  :', VINERT
+      !>            WRITE(*,'(A,3F11.7)')
+      !>     .             '    Angular velocity vector:', AV
+      !>            WRITE(*,*) ' '
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE (*,*) 'Pointing not found for time ',
-      !>             .                   SCLKCH(I)
+      !>            WRITE (*,*) 'Pointing not found for time ',
+      !>     .                   SCLKCH(I)
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2195,46 +2210,24 @@ contains
       !>        5) The header was updated to reflect the changes.
       !>
       !>-    Beta Version 1.0.0, 04-JUN-1990 (RET) (IMU)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>        NDC        is the number of double precision components in an
-      !>                   unpacked C-kernel segment descriptor.
-      !>
-      !>        NIC        is the number of integer components in an unpacked
-      !>                   C-kernel segment descriptor.
-      !>
-      !>        NC         is the number of components in a packed C-kernel
-      !>                   descriptor.  All DAF summaries have this formulaic
-      !>                   relationship between the number of its integer and
-      !>                   double precision components and the number of packed
-      !>                   components.
-      !>
-      !>        IDLEN      is the length of the C-kernel segment identifier.
-      !>                   All DAF names have this formulaic relationship
-      !>                   between the number of summary components and
-      !>                   the length of the name (You will notice that
-      !>                   a name and a summary have the same length in bytes.)
-      !>
-      !>     Saved frame name length.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved frame name/ID item declarations.
-      !>
-      !>     Saved frame name/ID items.
-      !>
-      !>     Initial values.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure ckgpav
+      module subroutine ckgpav ( ctx, inst, sclkdp, tol, ref, cmat, av, clkout, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mtxv, mxm, xf2rav
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: inst  !! NAIF ID of instrument, spacecraft, or structure.
+      real(wp), intent(in) :: sclkdp  !! Encoded spacecraft clock time.
+      real(wp), intent(in) :: tol  !! Time tolerance.
+      character(*), intent(in) :: ref  !! Reference frame.
+      real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix pointing data.
+      real(wp), intent(out) :: av     ( 3    )  !! Angular velocity vector.
+      real(wp), intent(out) :: clkout  !! Output encoded spacecraft clock time.
+      logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
+!
+!     Local variables
+!
       character(idlen) :: segid
       real(wp) :: dcd      ( ndc  )
       real(wp) :: descr    ( nc   )
@@ -2262,6 +2255,9 @@ contains
                   svref => ctx%ckgpav_state%svref, &
                   svrefr => ctx%ckgpav_state%svrefr, &
                   first => ctx%ckgpav_state%first )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -2494,15 +2490,13 @@ contains
 
       return
       end associate
-      end procedure ckgpav
+      end subroutine ckgpav
 
-      !>## Abstract
+      !> Determine the "window" of coverage of a type 01 C-kernel segment.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine the "window" of coverage of a type 01 C-kernel segment.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -2613,10 +2607,18 @@ contains
       !>-    SUPPORT Version 1.0.0, 03-JAN-2005 (WLT)(NJB)(BVS)
       !>
       !>        Initial version.
-      module procedure zzckcv01
+      module subroutine zzckcv01 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
+      integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
+      integer(ip), intent(in) :: arrend  !! Ending DAF address
+      integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+      real(wp), intent(in) :: tol  !! Tolerance in ticks.
+      character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+      type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
 
 
       integer(ip), parameter :: bufsiz = 100
@@ -2800,15 +2802,13 @@ contains
       end do
 
       return
-      end procedure zzckcv01
+      end subroutine zzckcv01
 
-      !>## Abstract
+      !> Determine the "window" of coverage of a type 02 C-kernel segment.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine the "window" of coverage of a type 02 C-kernel segment.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -2909,10 +2909,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 03-JAN-2005 (NJB) (FST) (WLT) (BVS)
-      module procedure zzckcv02
+      module subroutine zzckcv02 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
+      integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
+      integer(ip), intent(in) :: arrend  !! Ending DAF address
+      integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+      real(wp), intent(in) :: tol  !! Tolerance in ticks.
+      character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+      type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
 
 
       integer(ip), parameter :: psize = 8
@@ -3040,15 +3048,13 @@ contains
       end do
 
       return
-      end procedure zzckcv02
+      end subroutine zzckcv02
 
-      !>## Abstract
+      !> Determine the "window" of coverage of a type 03 C-kernel segment.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine the "window" of coverage of a type 03 C-kernel segment.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3152,10 +3158,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 03-JAN-2005 (NJB) (FST) (WLT)
-      module procedure zzckcv03
+      module subroutine zzckcv03 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
+      integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
+      integer(ip), intent(in) :: arrend  !! Ending DAF address
+      integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+      real(wp), intent(in) :: tol  !! Tolerance in ticks.
+      character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+      type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       real(wp) :: finish_1(1)  !! one-element copy of finish (array argument)
       real(wp) :: tick_1(1)  !! one-element copy of tick (array argument)
       real(wp) :: start_1(1)  !! one-element copy of start (array argument)
@@ -3428,15 +3442,13 @@ contains
       end do
 
       return
-      end procedure zzckcv03
+      end subroutine zzckcv03
 
-      !>## Abstract
+      !> Determine the "window" of coverage of a type 04 C-kernel segment.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine the "window" of coverage of a type 04 C-kernel segment.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3536,12 +3548,20 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 30-DEC-2004 (NJB) (FST)
-      module procedure zzckcv04
+      module subroutine zzckcv04 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       use pepper_strings, only: eqstr
       use pepper_inc_ckparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
+      integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
+      integer(ip), intent(in) :: arrend  !! Ending DAF address
+      integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+      real(wp), intent(in) :: tol  !! Tolerance in ticks.
+      character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+      type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
 
 
 
@@ -3671,15 +3691,13 @@ contains
       end do
 
       return
-      end procedure zzckcv04
+      end subroutine zzckcv04
 
-      !>## Abstract
+      !> Determine the "window" of coverage of a type 05 C-kernel segment.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine the "window" of coverage of a type 05 C-kernel segment.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3810,11 +3828,20 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 07-JAN-2005 (NJB) (FST) (WLT)
-      module procedure zzckcv05
+      module subroutine zzckcv05 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, schedl )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       use pepper_inc_ck05
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
+      integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
+      integer(ip), intent(in) :: arrend  !! Ending DAF address
+      integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+      real(wp), intent(in) :: dc     ( 2 )  !! D.p. component of CK segment descriptor.
+      real(wp), intent(in) :: tol  !! Tolerance in ticks.
+      character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+      type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       real(wp) :: finish_1(1)  !! one-element copy of finish (array argument)
       real(wp) :: tick_1(1)  !! one-element copy of tick (array argument)
       real(wp) :: start_1(1)  !! one-element copy of start (array argument)
@@ -4089,15 +4116,13 @@ contains
       end do
 
       return
-      end procedure zzckcv05
+      end subroutine zzckcv05
 
-      !>## Abstract
+      !> Determine the "window" of coverage of a type 06 C-kernel segment.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine the "window" of coverage of a type 06 C-kernel segment.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4230,11 +4255,20 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-FEB-2014 (NJB) (BVS) (FST) (WLT)
-      module procedure zzckcv06
+      module subroutine zzckcv06 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, schedl )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       use pepper_inc_ck06
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access.
+      integer(ip), intent(in) :: arrbeg  !! Beginning DAF address.
+      integer(ip), intent(in) :: arrend  !! Ending DAF address.
+      integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+      real(wp), intent(in) :: dc     ( 2 )  !! D.p. component of CK segment descriptor.
+      real(wp), intent(in) :: tol  !! Tolerance in ticks.
+      character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+      type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       real(wp) :: lstepc_1(1)  !! one-element copy of lstepc (array argument)
 
 
@@ -4463,8 +4497,11 @@ contains
       end do
 
       return
-      end procedure zzckcv06
+      end subroutine zzckcv06
 
+      !> Find the coverage window for a specified object in a specified CK
+      !> file.
+      !>
       !>## Detailed Input
       !>
       !>     CKFNM    is the name of a C-kernel.
@@ -4667,149 +4704,151 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKCOV_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKCOV_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
-      !>              INTEGER               CARDI
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>        C
-      !>        C     Declare the coverage window.  Make enough room
-      !>        C     for MAXIV intervals.
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
+      !>      INTEGER               CARDI
+      !>C
+      !>C     Local parameters
+      !>C
+      !>C
+      !>C     Declare the coverage window.  Make enough room
+      !>C     for MAXIV intervals.
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               MAXIV
-      !>              PARAMETER           ( MAXIV  = 100000 )
+      !>      INTEGER               MAXIV
+      !>      PARAMETER           ( MAXIV  = 100000 )
       !>
-      !>              INTEGER               WINSIZ
-      !>              PARAMETER           ( WINSIZ = 2 * MAXIV )
+      !>      INTEGER               WINSIZ
+      !>      PARAMETER           ( WINSIZ = 2 * MAXIV )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 50 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 50 )
       !>
-      !>              INTEGER               MAXOBJ
-      !>              PARAMETER           ( MAXOBJ = 1000 )
+      !>      INTEGER               MAXOBJ
+      !>      PARAMETER           ( MAXOBJ = 1000 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    CKFNM
-      !>              CHARACTER*(FILSIZ)    LSK
-      !>              CHARACTER*(FILSIZ)    SCLK
-      !>              CHARACTER*(TIMLEN)    TIMSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    CKFNM
+      !>      CHARACTER*(FILSIZ)    LSK
+      !>      CHARACTER*(FILSIZ)    SCLK
+      !>      CHARACTER*(TIMLEN)    TIMSTR
       !>
-      !>              DOUBLE PRECISION      B
-      !>              DOUBLE PRECISION      COVER ( LBCELL : WINSIZ )
-      !>              DOUBLE PRECISION      E
+      !>      DOUBLE PRECISION      B
+      !>      DOUBLE PRECISION      COVER ( LBCELL : WINSIZ )
+      !>      DOUBLE PRECISION      E
       !>
-      !>              INTEGER               I
-      !>              INTEGER               IDS   ( LBCELL : MAXOBJ )
-      !>              INTEGER               J
-      !>              INTEGER               NIV
+      !>      INTEGER               I
+      !>      INTEGER               IDS   ( LBCELL : MAXOBJ )
+      !>      INTEGER               J
+      !>      INTEGER               NIV
       !>
-      !>        C
-      !>        C     Load a leapseconds kernel and SCLK kernel for output
-      !>        C     time conversion.  Note that we assume a single spacecraft
-      !>        C     clock is associated with all of the objects in the CK.
-      !>        C
-      !>              CALL PROMPT ( 'Name of leapseconds kernel > ', LSK  )
-      !>              CALL FURNSH ( LSK )
+      !>C
+      !>C     Load a leapseconds kernel and SCLK kernel for output
+      !>C     time conversion.  Note that we assume a single spacecraft
+      !>C     clock is associated with all of the objects in the CK.
+      !>C
+      !>      CALL PROMPT ( 'Name of leapseconds kernel > ', LSK  )
+      !>      CALL FURNSH ( LSK )
       !>
-      !>              CALL PROMPT ( 'Name of SCLK kernel        > ', SCLK )
-      !>              CALL FURNSH ( SCLK )
+      !>      CALL PROMPT ( 'Name of SCLK kernel        > ', SCLK )
+      !>      CALL FURNSH ( SCLK )
       !>
-      !>        C
-      !>        C     Get name of CK file.
-      !>        C
-      !>              CALL PROMPT ( 'Name of CK file            > ', CKFNM )
+      !>C
+      !>C     Get name of CK file.
+      !>C
+      !>      CALL PROMPT ( 'Name of CK file            > ', CKFNM )
       !>
-      !>        C
-      !>        C     Initialize the set IDS.
-      !>        C
-      !>              CALL SSIZEI ( MAXOBJ, IDS )
+      !>C
+      !>C     Initialize the set IDS.
+      !>C
+      !>      CALL SSIZEI ( MAXOBJ, IDS )
       !>
-      !>        C
-      !>        C     Initialize the window COVER.
-      !>        C
-      !>              CALL SSIZED ( WINSIZ, COVER )
+      !>C
+      !>C     Initialize the window COVER.
+      !>C
+      !>      CALL SSIZED ( WINSIZ, COVER )
       !>
-      !>        C
-      !>        C     Find the set of objects in the CK file.
-      !>        C
-      !>              CALL CKOBJ ( CKFNM, IDS )
+      !>C
+      !>C     Find the set of objects in the CK file.
+      !>C
+      !>      CALL CKOBJ ( CKFNM, IDS )
       !>
-      !>        C
-      !>        C     We want to display the coverage for each object.  Loop
-      !>        C     over the contents of the ID code set, find the coverage
-      !>        C     for each item in the set, and display the coverage.
-      !>        C
-      !>              DO I = 1, CARDI( IDS )
-      !>        C
-      !>        C        Find the coverage window for the current
-      !>        C        object. Empty the coverage window each time
-      !>        C        so we don't include data for the previous object.
-      !>        C
-      !>                 CALL SCARDD ( 0,   COVER )
-      !>                 CALL CKCOV  ( CKFNM,       IDS(I),  .FALSE.,
-      !>             .                 'INTERVAL',  0.D0,    'TDB',    COVER )
+      !>C
+      !>C     We want to display the coverage for each object.  Loop
+      !>C     over the contents of the ID code set, find the coverage
+      !>C     for each item in the set, and display the coverage.
+      !>C
+      !>      DO I = 1, CARDI( IDS )
+      !>C
+      !>C        Find the coverage window for the current
+      !>C        object. Empty the coverage window each time
+      !>C        so we don't include data for the previous object.
+      !>C
+      !>         CALL SCARDD ( 0,   COVER )
+      !>         CALL CKCOV  ( CKFNM,       IDS(I),  .FALSE.,
+      !>     .                 'INTERVAL',  0.D0,    'TDB',    COVER )
       !>
-      !>        C
-      !>        C        Get the number of intervals in the coverage
-      !>        C        window.
-      !>        C
-      !>                 NIV = WNCARD( COVER )
+      !>C
+      !>C        Get the number of intervals in the coverage
+      !>C        window.
+      !>C
+      !>         NIV = WNCARD( COVER )
       !>
-      !>        C
-      !>        C        Display a simple banner.
-      !>        C
-      !>                 WRITE (*,*) '========================================'
-      !>                 WRITE (*,*) 'Coverage for object ', IDS(I)
+      !>C
+      !>C        Display a simple banner.
+      !>C
+      !>         WRITE (*,*) '========================================'
+      !>         WRITE (*,*) 'Coverage for object ', IDS(I)
       !>
-      !>        C
-      !>        C        Convert the coverage interval start and stop
-      !>        C        times to TDB calendar strings.
-      !>        C
-      !>                 DO J = 1, NIV
-      !>        C
-      !>        C           Get the endpoints of the Jth interval.
-      !>        C
-      !>                    CALL WNFETD ( COVER, J, B, E )
-      !>        C
-      !>        C           Convert the endpoints to TDB calendar
-      !>        C           format time strings and display them.
-      !>        C
-      !>                    CALL TIMOUT ( B,
-      !>             .                    'YYYY MON DD HR:MN:SC.###### ' //
-      !>             .                    '(TDB) ::TDB',
-      !>             .                    TIMSTR                           )
-      !>                    WRITE (*,*) ' '
-      !>                    WRITE (*,*) 'Interval: ', J
-      !>                    WRITE (*,*) 'Start:    ', TIMSTR
+      !>C
+      !>C        Convert the coverage interval start and stop
+      !>C        times to TDB calendar strings.
+      !>C
+      !>         DO J = 1, NIV
+      !>C
+      !>C           Get the endpoints of the Jth interval.
+      !>C
+      !>            CALL WNFETD ( COVER, J, B, E )
+      !>C
+      !>C           Convert the endpoints to TDB calendar
+      !>C           format time strings and display them.
+      !>C
+      !>            CALL TIMOUT ( B,
+      !>     .                    'YYYY MON DD HR:MN:SC.###### ' //
+      !>     .                    '(TDB) ::TDB',
+      !>     .                    TIMSTR                           )
+      !>            WRITE (*,*) ' '
+      !>            WRITE (*,*) 'Interval: ', J
+      !>            WRITE (*,*) 'Start:    ', TIMSTR
       !>
-      !>                    CALL TIMOUT ( E,
-      !>             .                    'YYYY MON DD HR:MN:SC.###### ' //
-      !>             .                    '(TDB) ::TDB',
-      !>             .                    TIMSTR                          )
-      !>                    WRITE (*,*) 'Stop:     ', TIMSTR
-      !>                    WRITE (*,*) ' '
+      !>            CALL TIMOUT ( E,
+      !>     .                    'YYYY MON DD HR:MN:SC.###### ' //
+      !>     .                    '(TDB) ::TDB',
+      !>     .                    TIMSTR                          )
+      !>            WRITE (*,*) 'Stop:     ', TIMSTR
+      !>            WRITE (*,*) ' '
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 WRITE (*,*) '========================================'
+      !>         WRITE (*,*) '========================================'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the LSK file named naif0010.tls, the SCLK file
@@ -4895,138 +4934,140 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKCOV_EX2
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
+      !>```fortran
+      !>      PROGRAM CKCOV_EX2
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>              INTEGER               MAXCOV
-      !>              PARAMETER           ( MAXCOV = 100000 )
+      !>      INTEGER               MAXCOV
+      !>      PARAMETER           ( MAXCOV = 100000 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 50 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 50 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    FILE
-      !>              CHARACTER*(LNSIZE)    IDCH
-      !>              CHARACTER*(FILSIZ)    META
-      !>              CHARACTER*(FILSIZ)    SOURCE
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(LNSIZE)    TYPE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    FILE
+      !>      CHARACTER*(LNSIZE)    IDCH
+      !>      CHARACTER*(FILSIZ)    META
+      !>      CHARACTER*(FILSIZ)    SOURCE
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(LNSIZE)    TYPE
       !>
-      !>              DOUBLE PRECISION      B
-      !>              DOUBLE PRECISION      COVER  ( LBCELL : 2*MAXCOV )
-      !>              DOUBLE PRECISION      E
+      !>      DOUBLE PRECISION      B
+      !>      DOUBLE PRECISION      COVER  ( LBCELL : 2*MAXCOV )
+      !>      DOUBLE PRECISION      E
       !>
-      !>              INTEGER               COUNT
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               IDCODE
-      !>              INTEGER               NIV
+      !>      INTEGER               COUNT
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               IDCODE
+      !>      INTEGER               NIV
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the metakernel name; load the metakernel.
-      !>        C     The metakernel lists the CK files whose coverage
-      !>        C     for IDCODE we'd like to determine.  The metakernel
-      !>        C     must also specify a leapseconds kernel and an SCLK
-      !>        C     kernel for the clock associated with IDCODE.
-      !>        C
-      !>              CALL PROMPT ( 'Enter name of metakernel > ', META )
+      !>C
+      !>C     Prompt for the metakernel name; load the metakernel.
+      !>C     The metakernel lists the CK files whose coverage
+      !>C     for IDCODE we'd like to determine.  The metakernel
+      !>C     must also specify a leapseconds kernel and an SCLK
+      !>C     kernel for the clock associated with IDCODE.
+      !>C
+      !>      CALL PROMPT ( 'Enter name of metakernel > ', META )
       !>
-      !>              CALL FURNSH ( META )
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Get the ID code of interest.
-      !>        C
-      !>              CALL PROMPT ( 'Enter ID code            > ', IDCH )
+      !>C
+      !>C     Get the ID code of interest.
+      !>C
+      !>      CALL PROMPT ( 'Enter ID code            > ', IDCH )
       !>
-      !>              CALL PRSINT ( IDCH,  IDCODE )
+      !>      CALL PRSINT ( IDCH,  IDCODE )
       !>
-      !>        C
-      !>        C     Initialize the coverage window.
-      !>        C
-      !>              CALL SSIZED ( MAXCOV, COVER )
+      !>C
+      !>C     Initialize the coverage window.
+      !>C
+      !>      CALL SSIZED ( MAXCOV, COVER )
       !>
-      !>        C
-      !>        C     Find out how many kernels are loaded.  Loop over the
-      !>        C     kernels:  for each loaded CK file, add its coverage
-      !>        C     for IDCODE, if any, to the coverage window.
-      !>        C
-      !>              CALL KTOTAL ( 'CK', COUNT )
+      !>C
+      !>C     Find out how many kernels are loaded.  Loop over the
+      !>C     kernels:  for each loaded CK file, add its coverage
+      !>C     for IDCODE, if any, to the coverage window.
+      !>C
+      !>      CALL KTOTAL ( 'CK', COUNT )
       !>
-      !>              DO I = 1, COUNT
+      !>      DO I = 1, COUNT
       !>
-      !>                 CALL KDATA ( I,       'CK',    FILE,  TYPE,
-      !>             .                SOURCE,  HANDLE,  FOUND       )
+      !>         CALL KDATA ( I,       'CK',    FILE,  TYPE,
+      !>     .                SOURCE,  HANDLE,  FOUND       )
       !>
-      !>                 CALL CKCOV ( FILE,      IDCODE,  .FALSE.,
-      !>             .                'SEGMENT', 0.D0,    'TDB',    COVER )
+      !>         CALL CKCOV ( FILE,      IDCODE,  .FALSE.,
+      !>     .                'SEGMENT', 0.D0,    'TDB',    COVER )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Display results.
-      !>        C
-      !>        C     Get the number of intervals in the coverage
-      !>        C     window.
-      !>        C
-      !>              NIV = WNCARD( COVER )
+      !>C
+      !>C     Display results.
+      !>C
+      !>C     Get the number of intervals in the coverage
+      !>C     window.
+      !>C
+      !>      NIV = WNCARD( COVER )
       !>
-      !>        C
-      !>        C     Display a simple banner.
-      !>        C
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Coverage for object ', IDCODE
+      !>C
+      !>C     Display a simple banner.
+      !>C
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Coverage for object ', IDCODE
       !>
-      !>        C
-      !>        C     Convert the coverage interval start and stop
-      !>        C     times to TDB calendar strings.
-      !>        C
-      !>              DO I = 1, NIV
-      !>        C
-      !>        C        Get the endpoints of the Ith interval.
-      !>        C
-      !>                 CALL WNFETD ( COVER, I, B, E )
-      !>        C
-      !>        C        Convert the endpoints to TDB calendar
-      !>        C        format time strings and display them.
-      !>        C
-      !>                 CALL TIMOUT ( B,
-      !>             .                 'YYYY MON DD HR:MN:SC.###### ' //
-      !>             .                 '(TDB) ::TDB',
-      !>             .                 TIMSTR                           )
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Interval: ', I
-      !>                 WRITE (*,*) 'Start:    ', TIMSTR
+      !>C
+      !>C     Convert the coverage interval start and stop
+      !>C     times to TDB calendar strings.
+      !>C
+      !>      DO I = 1, NIV
+      !>C
+      !>C        Get the endpoints of the Ith interval.
+      !>C
+      !>         CALL WNFETD ( COVER, I, B, E )
+      !>C
+      !>C        Convert the endpoints to TDB calendar
+      !>C        format time strings and display them.
+      !>C
+      !>         CALL TIMOUT ( B,
+      !>     .                 'YYYY MON DD HR:MN:SC.###### ' //
+      !>     .                 '(TDB) ::TDB',
+      !>     .                 TIMSTR                           )
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Interval: ', I
+      !>         WRITE (*,*) 'Start:    ', TIMSTR
       !>
-      !>                 CALL TIMOUT ( E,
-      !>             .                 'YYYY MON DD HR:MN:SC.###### ' //
-      !>             .                 '(TDB) ::TDB',
-      !>             .                 TIMSTR                           )
-      !>                 WRITE (*,*) 'Stop:     ', TIMSTR
-      !>                 WRITE (*,*) ' '
+      !>         CALL TIMOUT ( E,
+      !>     .                 'YYYY MON DD HR:MN:SC.###### ' //
+      !>     .                 '(TDB) ::TDB',
+      !>     .                 TIMSTR                           )
+      !>         WRITE (*,*) 'Stop:     ', TIMSTR
+      !>         WRITE (*,*) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the meta-kernel file named ckcov_ex2.tm and
@@ -5088,9 +5129,18 @@ contains
       !>        rather than CARDD.
       !>
       !>-    SPICELIB Version 1.0.0, 07-JAN-2005 (NJB)
-      module procedure ckcov
+      module subroutine ckcov ( ctx, ckfnm, idcode, needav, level, tol, timsys, cover )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: ckfnm  !! Name of CK file.
+      integer(ip), intent(in) :: idcode  !! ID code of object.
+      logical, intent(in) :: needav  !! Flag indicating whether angular velocity is needed.
+      character(*), intent(in) :: level  !! Coverage level: 'SEGMENT' OR 'INTERVAL'.
+      real(wp), intent(in) :: tol  !! Tolerance in ticks.
+      character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+      real(wp), intent(inout) :: cover ( lbcell : * )  !! Window giving coverage for IDCODE.
       real(wp), allocatable :: intervals(:,:)
       integer(ip) :: k
 !
@@ -5103,12 +5153,28 @@ contains
          if ( ctx%failed() ) return
          call wninsd ( ctx, intervals(1,k), intervals(2,k), cover )
       end do
-      end procedure ckcov
+      end subroutine ckcov
 
-      module procedure ck_coverage
+      !> The coverage of an object in a CK file (PEPPER; [[ckcov]] without
+      !> a window cell).
+      !>
+      !> The result is a window as an array: each column an interval
+      !> [start, stop] (TDB seconds past J2000), sorted and disjoint
+      !> ([[pepper_windows]]). The errors are those of [[ckcov]],
+      !> without SPICE(WINDOWEXCESS). With TIMSYS = 'SCLK' the times are
+      !> encoded spacecraft clock ticks.
+      module subroutine ck_coverage ( ctx, file, inst, needav, level, tol, timsys, intervals )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the CK file
+      integer(ip), intent(in) :: inst  !! the ID code of the object (instrument or structure)
+      logical, intent(in) :: needav  !! only the coverage with angular velocity
+      character(*), intent(in) :: level  !! 'SEGMENT' or 'INTERVAL'
+      real(wp), intent(in) :: tol  !! the tolerance in ticks by which intervals are expanded
+      character(*), intent(in) :: timsys  !! the time system of the result: 'TDB' or 'SCLK'
+      real(wp), allocatable, intent(out) :: intervals(:,:)  !! the coverage, shape (2, n) (n = 0 after an error)
       type(interval_list) :: window  ! the coverage being built
 
 
@@ -5183,6 +5249,24 @@ contains
 !
 !     See whether GETFAT thinks we've got a CK file.
 !
+!
+!     PEPPER: a kernel built in memory: the coverage of its rotation tables
+!     (their time tags are ET, which are also their ticks: TDB and SCLK
+!     give the same values).
+!
+      block
+         real(wp), allocatable :: tb(:), te(:)
+         logical :: is_kernel
+         call kernel_frame_tables ( ctx, file, inst, is_kernel, tb, te )
+         if ( ctx%failed() ) return
+         if ( is_kernel ) then
+            do i = 1, size ( tb )
+               call insert_interval ( ctx, tb(i) - tol, te(i) + tol, window )
+            end do
+            if ( .not. ctx%failed() ) call window%window ( intervals )
+            return
+         end if
+      end block
       call getfat ( ctx, file, arch, kertyp )
 
       if ( ctx%failed() ) return
@@ -5419,6 +5503,6 @@ contains
 
       if ( .not. ctx%failed() ) call window%window ( intervals )
       return
-      end procedure ck_coverage
+      end subroutine ck_coverage
 
 end submodule pepper_ck_api

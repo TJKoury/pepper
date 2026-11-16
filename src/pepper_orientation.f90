@@ -2,9 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_orientation.f90.
+!> [[pepper_instance_module]]).
 submodule (pepper_instance_module) pepper_orientation
 
    implicit none
@@ -20,6 +18,11 @@ submodule (pepper_instance_module) pepper_orientation
 
 contains
 
+      !> Return the spacecraft clock type for a specified spacecraft.
+      !>
+      !> The function returns the spacecraft clock type associated with
+      !> the spacecraft specified by SC.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF ID code for a spacecraft, whose
@@ -149,10 +152,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 04-SEP-1990 (NJB)
-      module procedure sctype
+      module integer(ip) function sctype ( ctx, sc )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
 
 !
 !     Standard SPICE error handling.
@@ -171,8 +176,12 @@ contains
       call scty01 ( ctx, sc, sctype )
 
       return
-      end procedure sctype
+      end function sctype
 
+      !> Return a 6x6 matrix that transforms states in inertial
+      !> coordinates to states in body-equator-and-prime-meridian
+      !> coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     REF      is the NAIF name for an inertial reference frame.
@@ -499,65 +508,67 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TISBOD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TISBOD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      STATE  ( 6    )
-      !>              DOUBLE PRECISION      SATVEC ( 6    )
-      !>              DOUBLE PRECISION      TSIPM  ( 6, 6 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STATE  ( 6    )
+      !>      DOUBLE PRECISION      SATVEC ( 6    )
+      !>      DOUBLE PRECISION      TSIPM  ( 6, 6 )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               SATID
+      !>      INTEGER               I
+      !>      INTEGER               SATID
       !>
-      !>        C
-      !>        C     Load the kernels.
-      !>        C
-      !>              CALL FURNSH ( 'tisbod_ex1.tm' )
+      !>C
+      !>C     Load the kernels.
+      !>C
+      !>      CALL FURNSH ( 'tisbod_ex1.tm' )
       !>
-      !>        C
-      !>        C     The body ID for Saturn.
-      !>        C
-      !>              SATID = 699
+      !>C
+      !>C     The body ID for Saturn.
+      !>C
+      !>      SATID = 699
       !>
-      !>        C
-      !>        C     Retrieve the transformation matrix at some time.
-      !>        C
-      !>              CALL STR2ET ( 'Jan 1 2005',   ET        )
-      !>              CALL TISBOD ( 'J2000', SATID, ET, TSIPM )
+      !>C
+      !>C     Retrieve the transformation matrix at some time.
+      !>C
+      !>      CALL STR2ET ( 'Jan 1 2005',   ET        )
+      !>      CALL TISBOD ( 'J2000', SATID, ET, TSIPM )
       !>
-      !>        C
-      !>        C     Retrieve the state of Titan as seen from Saturn
-      !>        C     in the J2000 frame at ET.
-      !>        C
-      !>              CALL SPKEZR ( 'TITAN',  ET,    'J2000', 'NONE',
-      !>             .              'SATURN', STATE, LT              )
+      !>C
+      !>C     Retrieve the state of Titan as seen from Saturn
+      !>C     in the J2000 frame at ET.
+      !>C
+      !>      CALL SPKEZR ( 'TITAN',  ET,    'J2000', 'NONE',
+      !>     .              'SATURN', STATE, LT              )
       !>
-      !>              WRITE(*,'(A)') 'Titan as seen from Saturn '
-      !>             .            // '(J2000 frame):'
-      !>              WRITE(*,'(A,3F13.3)') '   position   (km):',
-      !>             .               ( STATE(I), I=1,3 )
-      !>              WRITE(*,'(A,3F13.3)') '   velocity (km/s):',
-      !>             .               ( STATE(I), I=4,6 )
+      !>      WRITE(*,'(A)') 'Titan as seen from Saturn '
+      !>     .            // '(J2000 frame):'
+      !>      WRITE(*,'(A,3F13.3)') '   position   (km):',
+      !>     .               ( STATE(I), I=1,3 )
+      !>      WRITE(*,'(A,3F13.3)') '   velocity (km/s):',
+      !>     .               ( STATE(I), I=4,6 )
       !>
-      !>        C
-      !>        C     Rotate the 6-vector STATE into the
-      !>        C     Saturn body-fixed reference frame.
-      !>        C
-      !>              CALL MXVG ( TSIPM, STATE, 6, 6, SATVEC )
+      !>C
+      !>C     Rotate the 6-vector STATE into the
+      !>C     Saturn body-fixed reference frame.
+      !>C
+      !>      CALL MXVG ( TSIPM, STATE, 6, 6, SATVEC )
       !>
-      !>              WRITE(*,'(A)') 'Titan as seen from Saturn '
-      !>             .            // '(IAU_SATURN frame):'
-      !>              WRITE(*,'(A,3F13.3)') '   position   (km):',
-      !>             .               ( SATVEC(I), I=1,3 )
-      !>              WRITE(*,'(A,3F13.3)') '   velocity (km/s):',
-      !>             .               ( SATVEC(I), I=4,6 )
+      !>      WRITE(*,'(A)') 'Titan as seen from Saturn '
+      !>     .            // '(IAU_SATURN frame):'
+      !>      WRITE(*,'(A,3F13.3)') '   position   (km):',
+      !>     .               ( SATVEC(I), I=1,3 )
+      !>      WRITE(*,'(A,3F13.3)') '   velocity (km/s):',
+      !>     .               ( SATVEC(I), I=4,6 )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -583,119 +594,121 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TISBOD_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TISBOD_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      AV     ( 3    )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      DTIPM  ( 3, 3 )
-      !>              DOUBLE PRECISION      OMEGA  ( 3, 3 )
-      !>              DOUBLE PRECISION      ROT    ( 3, 3 )
-      !>              DOUBLE PRECISION      TIPM   ( 3, 3 )
-      !>              DOUBLE PRECISION      TSIPM  ( 6, 6 )
-      !>              DOUBLE PRECISION      V      ( 3    )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      AV     ( 3    )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      DTIPM  ( 3, 3 )
+      !>      DOUBLE PRECISION      OMEGA  ( 3, 3 )
+      !>      DOUBLE PRECISION      ROT    ( 3, 3 )
+      !>      DOUBLE PRECISION      TIPM   ( 3, 3 )
+      !>      DOUBLE PRECISION      TSIPM  ( 6, 6 )
+      !>      DOUBLE PRECISION      V      ( 3    )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               SATID
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               SATID
       !>
-      !>        C
-      !>        C     Load the kernels.
-      !>        C
-      !>              CALL FURNSH ( 'tisbod_ex1.tm' )
+      !>C
+      !>C     Load the kernels.
+      !>C
+      !>      CALL FURNSH ( 'tisbod_ex1.tm' )
       !>
-      !>        C
-      !>        C     The body ID for Saturn.
-      !>        C
-      !>              SATID = 699
+      !>C
+      !>C     The body ID for Saturn.
+      !>C
+      !>      SATID = 699
       !>
-      !>        C
-      !>        C     First get the state transformation matrix.
-      !>        C
-      !>              CALL STR2ET ( 'Jan 1 2005',   ET        )
-      !>              CALL TISBOD ( 'J2000', SATID, ET, TSIPM )
+      !>C
+      !>C     First get the state transformation matrix.
+      !>C
+      !>      CALL STR2ET ( 'Jan 1 2005',   ET        )
+      !>      CALL TISBOD ( 'J2000', SATID, ET, TSIPM )
       !>
-      !>        C
-      !>        C     This matrix has the form:
-      !>        C
-      !>        C          .-            -.
-      !>        C          |       :      |
-      !>        C          | TIPM  :  0   |
-      !>        C          | ......:......|
-      !>        C          |       :      |
-      !>        C          | DTIPM : TIPM |
-      !>        C          |       :      |
-      !>        C          `-            -'
-      !>        C
-      !>        C     We extract TIPM and DTIPM
-      !>        C
-      !>              DO  I = 1,3
-      !>                 DO  J = 1,3
+      !>C
+      !>C     This matrix has the form:
+      !>C
+      !>C          .-            -.
+      !>C          |       :      |
+      !>C          | TIPM  :  0   |
+      !>C          | ......:......|
+      !>C          |       :      |
+      !>C          | DTIPM : TIPM |
+      !>C          |       :      |
+      !>C          `-            -'
+      !>C
+      !>C     We extract TIPM and DTIPM
+      !>C
+      !>      DO  I = 1,3
+      !>         DO  J = 1,3
       !>
-      !>                    TIPM  ( I, J ) = TSIPM ( I,   J )
-      !>                    DTIPM ( I, J ) = TSIPM ( I+3, J )
+      !>            TIPM  ( I, J ) = TSIPM ( I,   J )
+      !>            DTIPM ( I, J ) = TSIPM ( I+3, J )
       !>
-      !>                 END DO
-      !>              END DO
+      !>         END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     The transpose of TIPM and DTIPM, (TPMI and DTPMI), gives
-      !>        C     the transformation from bodyfixed coordinates to inertial
-      !>        C     coordinates.
-      !>        C
-      !>        C     Here is a fact about the relationship between angular
-      !>        C     velocity associated with a time varying rotation matrix
-      !>        C     that gives the orientation of a body with respect to
-      !>        C     an inertial frame.
-      !>        C
-      !>        C        The angular velocity vector can be read from the off
-      !>        C        diagonal components of the matrix product:
-      !>        C
-      !>        C                                t
-      !>        C        OMEGA =     DTPMI * TPMI
-      !>        C
-      !>        C                         t
-      !>        C              =     DTIPM * TIPM
-      !>        C
-      !>        C        the components of the angular velocity V will appear
-      !>        C        in this matrix as:
-      !>        C
-      !>        C            .-                   -.
-      !>        C            |                     |
-      !>        C            |   0    -V(3)  V(2)  |
-      !>        C            |                     |
-      !>        C            |  V(3)    0   -V(1)  |
-      !>        C            |                     |
-      !>        C            | -V(2)   V(1)   0    |
-      !>        C            |                     |
-      !>        C            `-                   -'
-      !>        C
-      !>        C
-      !>              CALL MTXM ( DTIPM, TIPM, OMEGA )
+      !>C
+      !>C     The transpose of TIPM and DTIPM, (TPMI and DTPMI), gives
+      !>C     the transformation from bodyfixed coordinates to inertial
+      !>C     coordinates.
+      !>C
+      !>C     Here is a fact about the relationship between angular
+      !>C     velocity associated with a time varying rotation matrix
+      !>C     that gives the orientation of a body with respect to
+      !>C     an inertial frame.
+      !>C
+      !>C        The angular velocity vector can be read from the off
+      !>C        diagonal components of the matrix product:
+      !>C
+      !>C                                t
+      !>C        OMEGA =     DTPMI * TPMI
+      !>C
+      !>C                         t
+      !>C              =     DTIPM * TIPM
+      !>C
+      !>C        the components of the angular velocity V will appear
+      !>C        in this matrix as:
+      !>C
+      !>C            .-                   -.
+      !>C            |                     |
+      !>C            |   0    -V(3)  V(2)  |
+      !>C            |                     |
+      !>C            |  V(3)    0   -V(1)  |
+      !>C            |                     |
+      !>C            | -V(2)   V(1)   0    |
+      !>C            |                     |
+      !>C            `-                   -'
+      !>C
+      !>C
+      !>      CALL MTXM ( DTIPM, TIPM, OMEGA )
       !>
-      !>              V(1) = OMEGA (3,2)
-      !>              V(2) = OMEGA (1,3)
-      !>              V(3) = OMEGA (2,1)
+      !>      V(1) = OMEGA (3,2)
+      !>      V(2) = OMEGA (1,3)
+      !>      V(3) = OMEGA (2,1)
       !>
-      !>        C
-      !>        C     Display the results.
-      !>        C
-      !>              WRITE(*,'(A)') 'Angular velocity (km/s):'
-      !>              WRITE(*,'(3F16.9)') V
+      !>C
+      !>C     Display the results.
+      !>C
+      !>      WRITE(*,'(A)') 'Angular velocity (km/s):'
+      !>      WRITE(*,'(3F16.9)') V
       !>
-      !>        C
-      !>        C     It is possible to compute the angular velocity using
-      !>        C     a single call to XF2RAV.
-      !>        C
-      !>              CALL XF2RAV ( TSIPM, ROT, AV )
+      !>C
+      !>C     It is possible to compute the angular velocity using
+      !>C     a single call to XF2RAV.
+      !>C
+      !>      CALL XF2RAV ( TSIPM, ROT, AV )
       !>
-      !>              WRITE(*,'(A)') 'Angular velocity using XF2RAV (km/s):'
-      !>              WRITE(*,'(3F16.9)') AV
+      !>      WRITE(*,'(A)') 'Angular velocity using XF2RAV (km/s):'
+      !>      WRITE(*,'(3F16.9)') AV
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -925,8 +938,6 @@ contains
       !>         NAIF_IDS, KERNEL, and TIME Required Reading files have
       !>         been added in the $Required_Reading section.
       !>
-      !>     SPICELIB functions
-      !>
       !>     Local parameters
       !>
       !>     Maximum number of coefficients per phase angle polynomial.
@@ -938,8 +949,7 @@ contains
       !>     ID-based hash for text PCK data. KIDLST, KIDPOL, and KIDIDS
       !>     provide the index in the body PCK data arrays at which the data
       !>     of the body with a given ID are stored.
-
-      module procedure tisbod
+      module subroutine tisbod ( ctx, ref, body, et, tsipm )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, j2000, rpd, spd, twopi
       use pepper_math, only: mxm, vdotg
@@ -948,6 +958,11 @@ contains
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: ref  !! ID of inertial reference frame to transform from
+      integer(ip), intent(in) :: body  !! ID code of body
+      real(wp), intent(in) :: et  !! Epoch of transformation
+      real(wp), intent(out) :: tsipm   ( 6,6 )  !! Transformation (state), inertial to prime meridian
       real(wp), allocatable :: sinth(:), costh(:), dsinth(:), dcosth(:)
       real(wp) :: dpval_1(1)  !! one-element copy of dpval (array argument)
       integer(ip) :: pcref_1(1)  !! one-element copy of pcref (array argument)
@@ -1704,8 +1719,11 @@ contains
 !
       return
       end associate
-      end procedure tisbod
+      end subroutine tisbod
 
+      !> Find the position rotation matrix from a Text Kernel (TK) frame
+      !> with the specified frame class ID to its base frame.
+      !>
       !>## Detailed Input
       !>
       !>     FRCODE   is the unique frame class ID of the TK frame for which
@@ -1812,97 +1830,99 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TKFRAM_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TKFRAM_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              DOUBLE PRECISION      DPR
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      DOUBLE PRECISION      DPR
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         MYTOPO
-      !>              PARAMETER           ( MYTOPO = 'DSS-34_TOPO' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         MYTOPO
+      !>      PARAMETER           ( MYTOPO = 'DSS-34_TOPO' )
       !>
-      !>              INTEGER               MXFRLN
-      !>              PARAMETER           ( MXFRLN = 26 )
+      !>      INTEGER               MXFRLN
+      !>      PARAMETER           ( MXFRLN = 26 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(MXFRLN)    FRNAME
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(MXFRLN)    FRNAME
       !>
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      RAD
-      !>              DOUBLE PRECISION      ROT   ( 3, 3 )
-      !>              DOUBLE PRECISION      Z     ( 3    )
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      RAD
+      !>      DOUBLE PRECISION      ROT   ( 3, 3 )
+      !>      DOUBLE PRECISION      Z     ( 3    )
       !>
-      !>              INTEGER               FRAME
-      !>              INTEGER               FRCODE
+      !>      INTEGER               FRAME
+      !>      INTEGER               FRCODE
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load the FK that contains the topocentric reference
-      !>        C     frame definition for DSS-34.
-      !>        C
-      !>              CALL FURNSH ( 'earth_topo_050714.tf' )
+      !>C
+      !>C     Load the FK that contains the topocentric reference
+      !>C     frame definition for DSS-34.
+      !>C
+      !>      CALL FURNSH ( 'earth_topo_050714.tf' )
       !>
-      !>        C
-      !>        C     The name of the topocentric frame is MYTOPO.
-      !>        C     First we get the ID code of the topocentric frame.
-      !>        C
-      !>              CALL NAMFRM ( MYTOPO, FRCODE )
+      !>C
+      !>C     The name of the topocentric frame is MYTOPO.
+      !>C     First we get the ID code of the topocentric frame.
+      !>C
+      !>      CALL NAMFRM ( MYTOPO, FRCODE )
       !>
-      !>        C
-      !>        C     Next get the rotation from the topocentric frame to
-      !>        C     the body-fixed frame. We can use the TK frame ID in
-      !>        C     place of the TK frame class ID in this call because
-      !>        C     for TK frames these IDs are identical.
-      !>        C
-      !>              CALL TKFRAM ( FRCODE, ROT, FRAME, FOUND )
+      !>C
+      !>C     Next get the rotation from the topocentric frame to
+      !>C     the body-fixed frame. We can use the TK frame ID in
+      !>C     place of the TK frame class ID in this call because
+      !>C     for TK frames these IDs are identical.
+      !>C
+      !>      CALL TKFRAM ( FRCODE, ROT, FRAME, FOUND )
       !>
-      !>        C
-      !>        C     Make sure the topocentric frame is relative to one of
-      !>        C     the Earth fixed frames.
-      !>        C
-      !>              CALL FRMNAM( FRAME, FRNAME )
+      !>C
+      !>C     Make sure the topocentric frame is relative to one of
+      !>C     the Earth fixed frames.
+      !>C
+      !>      CALL FRMNAM( FRAME, FRNAME )
       !>
-      !>              IF (       FRNAME .NE. 'IAU_EARTH'
-      !>             .     .AND. FRNAME .NE. 'EARTH_FIXED'
-      !>             .     .AND. FRNAME .NE. 'ITRF93'  ) THEN
+      !>      IF (       FRNAME .NE. 'IAU_EARTH'
+      !>     .     .AND. FRNAME .NE. 'EARTH_FIXED'
+      !>     .     .AND. FRNAME .NE. 'ITRF93'  ) THEN
       !>
-      !>                 WRITE (*,*) 'The frame ', MYTOPO,
-      !>             .               ' does not appear to be '
-      !>                 WRITE (*,*) 'defined relative to an '
-      !>             .            // 'Earth fixed frame.'
-      !>                 STOP
+      !>         WRITE (*,*) 'The frame ', MYTOPO,
+      !>     .               ' does not appear to be '
+      !>         WRITE (*,*) 'defined relative to an '
+      !>     .            // 'Earth fixed frame.'
+      !>         STOP
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Things look ok. Get the location of the Z-axis in the
-      !>        C     topocentric frame.
-      !>        C
-      !>              Z(1) = ROT(1,3)
-      !>              Z(2) = ROT(2,3)
-      !>              Z(3) = ROT(3,3)
+      !>C
+      !>C     Things look ok. Get the location of the Z-axis in the
+      !>C     topocentric frame.
+      !>C
+      !>      Z(1) = ROT(1,3)
+      !>      Z(2) = ROT(2,3)
+      !>      Z(3) = ROT(3,3)
       !>
-      !>        C
-      !>        C     Convert the Z vector to latitude, longitude and radius.
-      !>        C
-      !>              CALL RECLAT ( Z, RAD, LAT, LON )
+      !>C
+      !>C     Convert the Z vector to latitude, longitude and radius.
+      !>C
+      !>      CALL RECLAT ( Z, RAD, LAT, LON )
       !>
-      !>              WRITE (*,'(A)') 'The geodetic coordinates of the center'
-      !>              WRITE (*,'(A)') 'of the topographic frame are:'
-      !>              WRITE (*,*)
-      !>              WRITE (*,'(A,F20.13)') '   Latitude  (deg): ', LAT*DPR()
-      !>              WRITE (*,'(A,F20.13)') '   Longitude (deg): ', LON*DPR()
+      !>      WRITE (*,'(A)') 'The geodetic coordinates of the center'
+      !>      WRITE (*,'(A)') 'of the topographic frame are:'
+      !>      WRITE (*,*)
+      !>      WRITE (*,'(A,F20.13)') '   Latitude  (deg): ', LAT*DPR()
+      !>      WRITE (*,'(A,F20.13)') '   Longitude (deg): ', LON*DPR()
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2008,11 +2028,16 @@ contains
       !>        properly.
       !>
       !>-    SPICELIB Version 1.0.0, 18-NOV-1996 (WLT)
-      module procedure tkfram
+      module subroutine tkfram ( ctx, frcode, rot, frame, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ident, q2m, sharpr, vdot, vhatg
       use pepper_strings, only: intstr, rtrim, repmi_inplace, ucase_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: frcode  !! Frame class ID of a TK frame.
+      real(wp), intent(out) :: rot   ( 3, 3 )  !! Rotation matrix from TK frame to frame FRAME.
+      integer(ip), intent(out) :: frame  !! Frame ID of the base reference.
+      logical, intent(out) :: found  !! .TRUE. if the rotation could be determined.
       integer(ip), parameter :: bufsiz = 200
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: nitems = 14
@@ -2657,21 +2682,19 @@ contains
 !
       return
       end associate
-      end procedure tkfram
+      end subroutine tkfram
 
-      !>## Abstract
+      !> Look up a frame definition kernel variable whose associated
+      !> value is a frame name or frame ID code.  The returned value is
+      !> always an ID code.  The kernel variable name can refer to
+      !> the frame being defined by either name or ID code.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> If the kernel variable is not present, or if the variable
+      !> is not a frame name or a numeric value, signal an error.
       !>
-      !>     Look up a frame definition kernel variable whose associated
-      !>     value is a frame name or frame ID code.  The returned value is
-      !>     always an ID code.  The kernel variable name can refer to
-      !>     the frame being defined by either name or ID code.
-      !>
-      !>     If the kernel variable is not present, or if the variable
-      !>     is not a frame name or a numeric value, signal an error.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -2841,21 +2864,17 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      module procedure zzdynfid
+      module subroutine zzdynfid ( ctx, frname, frcode, item, idcode )
       use pepper_kinds, only: ip
       use pepper_strings, only: beint, intstr, repmc, rtrim
       use pepper_inc_zzdyn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: frname  !! Frame name.
+      integer(ip), intent(in) :: frcode  !! Frame ID code.
+      character(*), intent(in) :: item  !! Item associated with frame definition.
+      integer(ip), intent(out) :: idcode  !! Output kernel variable.
       integer(ip) :: idcode_1(1)  !! one-element copy of idcode (array argument)
-
-!
-!     TEMPLN is the length of the keyword template, minus
-!     the sum of the lengths of the two substitution markers ('#').
-!
 
       character(:), allocatable :: outnam
       character(1) :: dtype
@@ -2872,7 +2891,6 @@ contains
 !     to look up.
 !
 !     Convert the frame code to a string.
-!
 !
 !     PEPPER: the kernel variable names have any length (SPICELIB:
 !     32 characters, VARNAMETOOLONG); the lookup is shared by the
@@ -3003,18 +3021,16 @@ contains
       end if
 
       return
-      end procedure zzdynfid
+      end subroutine zzdynfid
 
-      !>## Abstract
+      !> Translate a string containing a frame name to its ID code, but
+      !> bypass calling NAMFRM and return saved value provided by the
+      !> caller if the name is the same as the saved name and the POOL
+      !> state did not change.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Translate a string containing a frame name to its ID code, but
-      !>     bypass calling NAMFRM and return saved value provided by the
-      !>     caller if the name is the same as the saved name and the POOL
-      !>     state did not change.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3181,14 +3197,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 23-SEP-2013 (BVS)
-      module procedure zznamfrm
+      module subroutine zznamfrm ( ctx, usrctr, savnam, savcde, frname, frcode )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
-
-!
-!     SPICE functions.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! POOL state counter saved by the caller.
+      character(*), intent(inout) :: savnam  !! Frame name saved by the caller.
+      integer(ip), intent(inout) :: savcde  !! Frame ID code saved by the caller.
+      character(*), intent(in) :: frname  !! Frame name.
+      integer(ip), intent(out) :: frcode  !! Frame ID code.
 
 !
 !     Local variables.
@@ -3254,16 +3272,14 @@ contains
 
       return
 
-      end procedure zznamfrm
+      end subroutine zznamfrm
 
-      !>## Abstract
+      !> Create an informative long error message for cases where the
+      !> frame system signals a SPICE(NOFRAMECONNECT) error.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Create an informative long error message for cases where the
-      !>     frame system signals a SPICE(NOFRAMECONNECT) error.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3472,12 +3488,19 @@ contains
       !>        velocity data.
       !>
       !>-    SPICELIB Version 1.0.0, 14-DEC-2008 (NJB)
-      module procedure zznofcon
+      module subroutine zznofcon ( ctx, et, frame1, endp1, frame2, endp2, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: suffix, repmc_inplace, repmi_inplace
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
 
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch.
+      integer(ip), intent(in) :: frame1  !! "From" frame ID code.
+      integer(ip), intent(in) :: endp1  !! "From" path endpoint frame ID code.
+      integer(ip), intent(in) :: frame2  !! "To" frame ID code.
+      integer(ip), intent(in) :: endp2  !! "To" path endpoint frame ID code.
+      character(*), intent(out) :: errmsg  !! Long error message.
 
 
       integer(ip), parameter :: phrsln = 600
@@ -3788,16 +3811,14 @@ contains
       end if
 
       return
-      end procedure zznofcon
+      end subroutine zznofcon
 
-      !>## Abstract
+      !> Fetch kernel variables for a specified switch frame. Data
+      !> for the new frame are added to the switch frame database.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Fetch kernel variables for a specified switch frame. Data
-      !>     for the new frame are added to the switch frame database.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4062,11 +4083,28 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 15-DEC-2021 (NJB) (BVS)
-      module procedure zzswffet
+      module subroutine zzswffet ( ctx, framid, hdfram, frpool, fidlst, basbeg, free, bascnt, usetim, binary, clsses, clsids, baslst, starts, stops, framat, nroom )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc
       use pepper_inc_zzswtchf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: framid  !! The frame ID of a switch frame.
+      integer(ip), intent(inout) :: hdfram ( * )  !! Array of hash collision list head nodes.
+      integer(ip), intent(inout) :: frpool ( lbsngl : * )  !! Hash collision list pool.
+      integer(ip), intent(inout) :: fidlst ( * )  !! Frame IDs corresponding to list nodes.
+      integer(ip), intent(inout) :: basbeg ( * )  !! Start indices of base lists of switch frames.
+      integer(ip), intent(inout) :: free  !! First free index in base frame arrays.
+      integer(ip), intent(inout) :: bascnt ( * )  !! Counts of base frames for each switch frame.
+      logical, intent(inout) :: usetim ( * )  !! Logical flags indicating presence of time bounds.
+      logical, intent(inout) :: binary ( * )  !! Logical flags indicating binary search usage.
+      integer(ip), intent(inout) :: clsses ( * )  !! Classes of base frames.
+      integer(ip), intent(inout) :: clsids ( * )  !! Frame class IDs of base frames.
+      integer(ip), intent(inout) :: baslst ( * )  !! Array containing lists of base frame IDs.
+      real(wp), intent(inout) :: starts ( * )  !! Lists of interval start times.
+      real(wp), intent(inout) :: stops ( * )  !! Lists of interval stop times.
+      integer(ip), intent(out) :: framat  !! Index in FIDLST of input switch frame ID.
+      integer(ip), intent(in), optional :: nroom  !! PEPPER: size of the base frame arrays (default MAXBAS).
       integer(ip) :: cap
       integer(ip) :: fid_1(1)  !! one-element copy of fid (array argument)
       integer(ip) :: frclid_1(1)  !! one-element copy of frclid (array argument)
@@ -4450,7 +4488,6 @@ contains
 !
 !     Compute room for the output data.
 !
-!
 !     PEPPER: the size of the base frame arrays is NROOM if given (the
 !     library's arrays grow); MAXBAS otherwise.
 !
@@ -4829,8 +4866,10 @@ contains
       free = free + nbases
 
       return
-      end procedure zzswffet
+      end subroutine zzswffet
 
+      !> J2000 to TEME, and TEME to J2000, probably.
+      !>
       !>## Detailed Input
       !>
       !>     ET         time expressed in terms of TDB seconds past epoch J2000
@@ -4888,10 +4927,14 @@ contains
       !>        Routine now returns TEME to J2000 mapping operator.
       !>
       !>-    SPICELIB Version 1.0.0, 06-MAR-2012 (NJB) (SCK) (EDW)
-      module procedure zzteme
+      module subroutine zzteme ( ctx, et, j2tm, tm2j )
       use pepper_kinds, only: wp
       use pepper_math, only: mxvg
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch of the state transformation operator.
+      real(wp), intent(out) :: j2tm    ( 6, 6 )  !! The state transformation operator J2000 to TEME.
+      real(wp), intent(out) :: tm2j    ( 6, 6 )  !! The state transformation operator TEME to J2000.
 
       real(wp) :: m1     ( 6, 6 )
       real(wp) :: m1inv  ( 6, 6 )
@@ -4934,8 +4977,12 @@ contains
       call invstm   ( ctx, tm2j,  j2tm )
 
       return
-      end procedure zzteme
+      end subroutine zzteme
 
+      !> Convert ephemeris seconds past J2000 (ET) to continuous encoded
+      !> spacecraft clock (`ticks').  Non-integral tick values may be
+      !> returned.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF integer code for a spacecraft whose
@@ -5128,9 +5175,13 @@ contains
       !>        to FURNSH.
       !>
       !>-    SPICELIB Version 1.0.0, 09-MAR-1999 (NJB)
-      module procedure sce2c
+      module subroutine sce2c ( ctx, sc, et, sclkdp )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+      real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
+      real(wp), intent(out) :: sclkdp  !! SCLK, encoded as ticks since spacecraft clock start. SCLKDP need not be integral.
 
 !
 !     Standard SPICE error handling.
@@ -5154,8 +5205,12 @@ contains
       end if
 
       return
-      end procedure sce2c
+      end subroutine sce2c
 
+      !> Evaluate a single SPK data record from a segment of type 10
+      !> (NORAD two-line element sets.). This evaluator uses algorithms
+      !> as described in Vallado 2006 [4].
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, specified as ephemeris seconds past
@@ -5332,12 +5387,16 @@ contains
       !>        in MTXV and VADD calls.
       !>
       !>-    SPICELIB Version 1.0.0, 18-JUL-1997 (WLT)
-      module procedure spke10
+      module subroutine spke10 ( ctx, et, record, state )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
       use pepper_math, only: mxvg
       use pepper_inc_zzsgp4
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(in) :: record   ( * )  !! Data record.
+      real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
       integer(ip), parameter :: nangs = 4
       integer(ip), parameter :: time1 = ngeo + kepoch
       integer(ip), parameter :: time2 = nelems + nangs + time1
@@ -5486,8 +5545,12 @@ contains
       state = tmpsta
 
       return
-      end procedure spke10
+      end subroutine spke10
 
+      !> Return a 3x3 matrix that transforms positions in inertial
+      !> coordinates to positions in body-equator-and-prime-meridian
+      !> coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     REF      is the NAIF name for an inertial reference frame.
@@ -5705,55 +5768,57 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM TIPBOD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM TIPBOD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      POS    ( 3    )
-      !>              DOUBLE PRECISION      SATVEC ( 3    )
-      !>              DOUBLE PRECISION      TIPM   ( 3, 3 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      POS    ( 3    )
+      !>      DOUBLE PRECISION      SATVEC ( 3    )
+      !>      DOUBLE PRECISION      TIPM   ( 3, 3 )
       !>
-      !>              INTEGER               SATID
+      !>      INTEGER               SATID
       !>
-      !>        C
-      !>        C     Load the kernels.
-      !>        C
-      !>              CALL FURNSH ( 'tipbod_ex1.tm' )
+      !>C
+      !>C     Load the kernels.
+      !>C
+      !>      CALL FURNSH ( 'tipbod_ex1.tm' )
       !>
-      !>        C
-      !>        C     The body ID for Saturn.
-      !>        C
-      !>              SATID = 699
+      !>C
+      !>C     The body ID for Saturn.
+      !>C
+      !>      SATID = 699
       !>
-      !>        C
-      !>        C     Retrieve the transformation matrix at some time.
-      !>        C
-      !>              CALL STR2ET ( 'Jan 1 2005',   ET       )
-      !>              CALL TIPBOD ( 'J2000', SATID, ET, TIPM )
+      !>C
+      !>C     Retrieve the transformation matrix at some time.
+      !>C
+      !>      CALL STR2ET ( 'Jan 1 2005',   ET       )
+      !>      CALL TIPBOD ( 'J2000', SATID, ET, TIPM )
       !>
-      !>        C
-      !>        C     Retrieve the position of Titan as seen from Saturn
-      !>        C     in the J2000 frame at ET.
-      !>        C
-      !>              CALL SPKPOS ( 'TITAN',  ET, 'J2000', 'NONE',
-      !>             .              'SATURN', POS, LT            )
+      !>C
+      !>C     Retrieve the position of Titan as seen from Saturn
+      !>C     in the J2000 frame at ET.
+      !>C
+      !>      CALL SPKPOS ( 'TITAN',  ET, 'J2000', 'NONE',
+      !>     .              'SATURN', POS, LT            )
       !>
-      !>              WRITE(*,'(A)')        'Titan as seen from Saturn:'
-      !>              WRITE(*,'(A,3F13.3)') '   in J2000 frame     :', POS
+      !>      WRITE(*,'(A)')        'Titan as seen from Saturn:'
+      !>      WRITE(*,'(A,3F13.3)') '   in J2000 frame     :', POS
       !>
-      !>        C
-      !>        C     Rotate the position 3-vector POS into the
-      !>        C     Saturn body-fixed reference frame.
-      !>        C
-      !>              CALL MXV ( TIPM, POS, SATVEC )
+      !>C
+      !>C     Rotate the position 3-vector POS into the
+      !>C     Saturn body-fixed reference frame.
+      !>C
+      !>      CALL MXV ( TIPM, POS, SATVEC )
       !>
-      !>              WRITE(*,'(A,3F13.3)') '   in IAU_SATURN frame:', SATVEC
+      !>      WRITE(*,'(A,3F13.3)') '   in IAU_SATURN frame:', SATVEC
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5843,9 +5908,14 @@ contains
       !>        Tests of routine FAILED() were added. The new checks
       !>        are intended to prevent arithmetic operations from
       !>        being performed with uninitialized or invalid data.
-      module procedure tipbod
+      module subroutine tipbod ( ctx, ref, body, et, tipm )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: ref  !! ID of inertial reference frame to transform from.
+      integer(ip), intent(in) :: body  !! ID code of body.
+      real(wp), intent(in) :: et  !! Epoch of transformation.
+      real(wp), intent(out) :: tipm   ( 3, 3 )  !! Position transformation matrix, inertial to prime meridian.
 
       real(wp) :: tsipm   ( 6, 6 )
 
@@ -5872,8 +5942,13 @@ contains
       end do
 
       return
-      end procedure tipbod
+      end subroutine tipbod
 
+      !> Find the position rotation matrix from a C-kernel (CK) frame with
+      !> the specified frame class ID (CK ID) to the base frame of the
+      !> highest priority CK segment containing orientation data for this
+      !> CK frame at the time requested.
+      !>
       !>## Detailed Input
       !>
       !>     INST     is the unique frame class ID (CK ID) of the CK frame for
@@ -6021,96 +6096,98 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKFROT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKFROT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         EPOCH
-      !>              PARAMETER           ( EPOCH  = '2003-JUL-25 13:00:00' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         EPOCH
+      !>      PARAMETER           ( EPOCH  = '2003-JUL-25 13:00:00' )
       !>
-      !>              INTEGER               INST
-      !>              PARAMETER           ( INST   = -94000 )
+      !>      INTEGER               INST
+      !>      PARAMETER           ( INST   = -94000 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      ANGLE
-      !>              DOUBLE PRECISION      ANGVEL ( 3    )
-      !>              DOUBLE PRECISION      AXIS   ( 3    )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      INFROT ( 3, 3 )
-      !>              DOUBLE PRECISION      H
-      !>              DOUBLE PRECISION      RET    ( 3, 3 )
-      !>              DOUBLE PRECISION      RETH   ( 3, 3 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      ANGLE
+      !>      DOUBLE PRECISION      ANGVEL ( 3    )
+      !>      DOUBLE PRECISION      AXIS   ( 3    )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      INFROT ( 3, 3 )
+      !>      DOUBLE PRECISION      H
+      !>      DOUBLE PRECISION      RET    ( 3, 3 )
+      !>      DOUBLE PRECISION      RETH   ( 3, 3 )
       !>
-      !>              INTEGER               REF
-      !>              INTEGER               REFH
+      !>      INTEGER               REF
+      !>      INTEGER               REFH
       !>
-      !>              LOGICAL               FOUND
-      !>              LOGICAL               FOUNDH
+      !>      LOGICAL               FOUND
+      !>      LOGICAL               FOUNDH
       !>
-      !>        C
-      !>        C     Load the required LSK, SCLK and CK. Use a
-      !>        C     meta-kernel for convenience.
-      !>        C
-      !>              CALL FURNSH ( 'ckfrot_ex1.tm' )
+      !>C
+      !>C     Load the required LSK, SCLK and CK. Use a
+      !>C     meta-kernel for convenience.
+      !>C
+      !>      CALL FURNSH ( 'ckfrot_ex1.tm' )
       !>
-      !>        C
-      !>        C     First convert the time to seconds past J2000. Set the
-      !>        C     delta time (1 ms).
-      !>        C
-      !>              CALL STR2ET ( EPOCH, ET )
-      !>              H = 1.D-3
+      !>C
+      !>C     First convert the time to seconds past J2000. Set the
+      !>C     delta time (1 ms).
+      !>C
+      !>      CALL STR2ET ( EPOCH, ET )
+      !>      H = 1.D-3
       !>
-      !>        C
-      !>        C     Now, look up the rotation from the MGS spacecraft
-      !>        C     frame specified by its frame class ID (CK ID) to a
-      !>        C     base reference frame (returned by CKFROT), at ET
-      !>        C     and ET+H.
-      !>        C
-      !>              CALL CKFROT ( INST, ET,   RET,  REF,  FOUND  )
-      !>              CALL CKFROT ( INST, ET+H, RETH, REFH, FOUNDH )
+      !>C
+      !>C     Now, look up the rotation from the MGS spacecraft
+      !>C     frame specified by its frame class ID (CK ID) to a
+      !>C     base reference frame (returned by CKFROT), at ET
+      !>C     and ET+H.
+      !>C
+      !>      CALL CKFROT ( INST, ET,   RET,  REF,  FOUND  )
+      !>      CALL CKFROT ( INST, ET+H, RETH, REFH, FOUNDH )
       !>
-      !>        C
-      !>        C     If both rotations were computed and if the base
-      !>        C     reference frames are the same, compute the
-      !>        C     instantaneous angular velocity vector.
-      !>        C
-      !>              IF ( FOUND .AND. FOUNDH .AND. REF .EQ. REFH ) THEN
+      !>C
+      !>C     If both rotations were computed and if the base
+      !>C     reference frames are the same, compute the
+      !>C     instantaneous angular velocity vector.
+      !>C
+      !>      IF ( FOUND .AND. FOUNDH .AND. REF .EQ. REFH ) THEN
       !>
-      !>        C
-      !>        C        Compute the infinitesimal rotation R(t+h)R(t)**T.
-      !>        C
-      !>                 CALL MXMT ( RETH, RET, INFROT )
+      !>C
+      !>C        Compute the infinitesimal rotation R(t+h)R(t)**T.
+      !>C
+      !>         CALL MXMT ( RETH, RET, INFROT )
       !>
-      !>        C
-      !>        C        Compute the AXIS and ANGLE of the infinitesimal
-      !>        C        rotation.
-      !>        C
-      !>                 CALL RAXISA ( INFROT, AXIS, ANGLE )
+      !>C
+      !>C        Compute the AXIS and ANGLE of the infinitesimal
+      !>C        rotation.
+      !>C
+      !>         CALL RAXISA ( INFROT, AXIS, ANGLE )
       !>
-      !>        C
-      !>        C        Scale AXIS to get the angular velocity vector.
-      !>        C
-      !>                 CALL VSCL ( ANGLE/H, AXIS, ANGVEL )
+      !>C
+      !>C        Scale AXIS to get the angular velocity vector.
+      !>C
+      !>         CALL VSCL ( ANGLE/H, AXIS, ANGVEL )
       !>
-      !>        C
-      !>        C        Output the results.
-      !>        C
-      !>                 WRITE(*,'(A)')
-      !>             .           'Instantaneous angular velocity vector:'
-      !>                 WRITE(*,'(3F15.10)') ANGVEL
-      !>                 WRITE(*,'(A,I5)') 'Reference frame ID:', REF
+      !>C
+      !>C        Output the results.
+      !>C
+      !>         WRITE(*,'(A)')
+      !>     .           'Instantaneous angular velocity vector:'
+      !>         WRITE(*,'(3F15.10)') ANGVEL
+      !>         WRITE(*,'(A,I5)') 'Reference frame ID:', REF
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) 'ERROR: data not found or frame mismatch.'
+      !>         WRITE(*,*) 'ERROR: data not found or frame mismatch.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6154,32 +6231,15 @@ contains
       !>        SCE2C instead of SCE2T.
       !>
       !>-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
-      module procedure ckfrot
+      module subroutine ckfrot ( ctx, inst, et, rotate, ref, found )
       use pepper_kinds, only: ip, wp
       implicit none
-
-!        NDC        is the number of double precision components in an
-!                   unpacked C-kernel segment descriptor.
-!
-!        NIC        is the number of integer components in an unpacked
-!                   C-kernel segment descriptor.
-!
-!        NC         is the number of components in a packed C-kernel
-!                   descriptor.  All DAF summaries have this formulaic
-!                   relationship between the number of its integer and
-!                   double precision components and the number of packed
-!                   components.
-!
-!        IDLEN      is the length of the C-kernel segment identifier.
-!                   All DAF names have this formulaic relationship
-!                   between the number of summary components and
-!                   the length of the name (You will notice that
-!                   a name and a summary have the same length in bytes.)
-!
-
-
-
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: inst  !! Frame class ID (CK ID) of a CK frame.
+      real(wp), intent(in) :: et  !! Epoch measured in seconds past J2000 TDB.
+      real(wp), intent(out) :: rotate  ( 3, 3 )  !! Rotation matrix from CK frame to frame REF.
+      integer(ip), intent(out) :: ref  !! Frame ID of the base reference.
+      logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
 
       integer(ip) :: handle
       integer(ip) :: icd      ( nic  )
@@ -6279,8 +6339,13 @@ contains
       end do
 
       return
-      end procedure ckfrot
+      end subroutine ckfrot
 
+      !> Find the state transformation matrix from a C-kernel (CK) frame
+      !> with the specified frame class ID (CK ID) to the base frame of
+      !> the highest priority CK segment containing orientation and
+      !> angular velocity data for this CK frame at the time requested.
+      !>
       !>## Detailed Input
       !>
       !>     INST     is the unique frame class ID (CK ID) of the CK frame for
@@ -6412,68 +6477,70 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKFXFM_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKFXFM_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              DOUBLE PRECISION      VNORM
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      DOUBLE PRECISION      VNORM
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         EPOCH
-      !>              PARAMETER           ( EPOCH  = '2003-JUL-25 13:00:00' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         EPOCH
+      !>      PARAMETER           ( EPOCH  = '2003-JUL-25 13:00:00' )
       !>
-      !>              INTEGER               INST
-      !>              PARAMETER           ( INST   = -94000 )
+      !>      INTEGER               INST
+      !>      PARAMETER           ( INST   = -94000 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      AV     ( 3    )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      ROT    ( 3, 3 )
-      !>              DOUBLE PRECISION      XFORM  ( 6, 6 )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      AV     ( 3    )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ROT    ( 3, 3 )
+      !>      DOUBLE PRECISION      XFORM  ( 6, 6 )
       !>
-      !>              INTEGER               REF
+      !>      INTEGER               REF
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load the required LSK, SCLK and CK. Use a
-      !>        C     meta-kernel for convenience.
-      !>        C
-      !>              CALL FURNSH ( 'ckfxfm_ex1.tm' )
+      !>C
+      !>C     Load the required LSK, SCLK and CK. Use a
+      !>C     meta-kernel for convenience.
+      !>C
+      !>      CALL FURNSH ( 'ckfxfm_ex1.tm' )
       !>
-      !>        C
-      !>        C     First convert the time to seconds past J2000.
-      !>        C
-      !>              CALL STR2ET ( EPOCH, ET )
+      !>C
+      !>C     First convert the time to seconds past J2000.
+      !>C
+      !>      CALL STR2ET ( EPOCH, ET )
       !>
-      !>        C
-      !>        C     Now, look up the state transformation from the MGS
-      !>        C     spacecraft frame specified by its frame class ID
-      !>        C     (CK ID) to a base reference frame (returned by
-      !>        C     CKFXFM), at ET.
-      !>        C
-      !>              CALL CKFXFM ( INST, ET, XFORM, REF, FOUND )
+      !>C
+      !>C     Now, look up the state transformation from the MGS
+      !>C     spacecraft frame specified by its frame class ID
+      !>C     (CK ID) to a base reference frame (returned by
+      !>C     CKFXFM), at ET.
+      !>C
+      !>      CALL CKFXFM ( INST, ET, XFORM, REF, FOUND )
       !>
-      !>        C
-      !>        C     Next determine the angular velocity of the
-      !>        C     transformation.
-      !>        C
-      !>              CALL XF2RAV ( XFORM, ROT, AV )
+      !>C
+      !>C     Next determine the angular velocity of the
+      !>C     transformation.
+      !>C
+      !>      CALL XF2RAV ( XFORM, ROT, AV )
       !>
-      !>        C
-      !>        C     The angular rate of change (in radians/second) is just
-      !>        C     the magnitude of AV.
-      !>        C
-      !>              WRITE(*,'(A,F20.16)') 'Angular rate of change (rad/s):',
-      !>             .                       VNORM ( AV )
+      !>C
+      !>C     The angular rate of change (in radians/second) is just
+      !>C     the magnitude of AV.
+      !>C
+      !>      WRITE(*,'(A,F20.16)') 'Angular rate of change (rad/s):',
+      !>     .                       VNORM ( AV )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6543,33 +6610,16 @@ contains
       !>        routine performs conversion of ET to continuous ticks,
       !>        reducing truncation error in the representation of the input
       !>        time value.
-      module procedure ckfxfm
+      module subroutine ckfxfm ( ctx, inst, et, xform, ref, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: rav2xf
       implicit none
-
-!        NDC        is the number of double precision components in an
-!                   unpacked C-kernel segment descriptor.
-!
-!        NIC        is the number of integer components in an unpacked
-!                   C-kernel segment descriptor.
-!
-!        NC         is the number of components in a packed C-kernel
-!                   descriptor.  All DAF summaries have this formulaic
-!                   relationship between the number of its integer and
-!                   double precision components and the number of packed
-!                   components.
-!
-!        IDLEN      is the length of the C-kernel segment identifier.
-!                   All DAF names have this formulaic relationship
-!                   between the number of summary components and
-!                   the length of the name (You will notice that
-!                   a name and a summary have the same length in bytes.)
-!
-
-
-
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: inst  !! Frame class ID (CK ID) of a CK frame.
+      real(wp), intent(in) :: et  !! Epoch measured in seconds past J2000 TDB.
+      real(wp), intent(out) :: xform  ( 6, 6 )  !! Transformation from CK frame to frame REF.
+      integer(ip), intent(out) :: ref  !! Frame ID of the base reference.
+      logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
 
       integer(ip) :: handle
       integer(ip) :: icd      ( nic  )
@@ -6676,8 +6726,12 @@ contains
       end do
 
       return
-      end procedure ckfxfm
+      end subroutine ckfxfm
 
+      !> Return, for a specified SPK segment and time, the state (position
+      !> and velocity) of the segment's target body relative to its center
+      !> of motion.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -6866,10 +6920,17 @@ contains
       !>        Added support for type 17.
       !>
       !>-    SPICELIB Version 1.0.0, 19-SEP-1995 (WLT)
-      module procedure spkpvn
+      recursive module subroutine spkpvn ( ctx, handle, descr, et, ref, state, center )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spkrec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Target epoch.
+      integer(ip), intent(out) :: ref  !! Target reference frame.
+      real(wp), intent(out) :: state    ( 6 )  !! Position, velocity.
+      integer(ip), intent(out) :: center  !! Center of state.
 
 !
 !     Some local space is needed in which to return records, and
@@ -7025,15 +7086,13 @@ contains
       end if
 
       return
-      end procedure spkpvn
+      end subroutine spkpvn
 
-      !>## Abstract
+      !> Return switch frame state or position transformation matrix.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return switch frame state or position transformation matrix.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7241,7 +7300,7 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 15-DEC-2021 (NJB) (BVS)
-      module procedure zzswfxfm
+      module subroutine zzswfxfm ( ctx, infrm, et, ndim, xform, outfrm, found )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled
@@ -7250,6 +7309,13 @@ contains
       use pepper_inc_zzswtchf
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: infrm  !! Frame ID code of switch frame.
+      real(wp), intent(in) :: et  !! Time, expressed as seconds past J2000 TDB.
+      integer(ip), intent(in) :: ndim  !! Dimension: 3 or 6.
+      real(wp), intent(out) :: xform ( ndim, ndim )  !! Transformation from switch to selected base frame.
+      integer(ip), intent(out) :: outfrm  !! ID code of selected base frame.
+      logical, intent(out) :: found  !! Flag indicating whether transformation was found.
       integer(ip), parameter :: j2code = 1
       integer(ip), parameter :: d3 = 3
       integer(ip), parameter :: d6 = 6
@@ -7718,6 +7784,6 @@ contains
 
       return
       end associate
-      end procedure zzswfxfm
+      end subroutine zzswfxfm
 
 end submodule pepper_orientation

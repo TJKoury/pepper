@@ -3,9 +3,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_array_ops.f90.
+!> [[pepper_instance_module]]).
 submodule (pepper_instance_module) pepper_array_ops
 
    implicit none
@@ -13,9 +11,36 @@ submodule (pepper_instance_module) pepper_array_ops
 
    ! Parameters shared by this file's procedures (PEPPER: SPICELIB
    ! declared them in each routine that used them).
+   !
+   ! The control area contains 3 elements.  They are:
+   !
+   !    The "size" of the pool, that is, the number
+   !    of nodes in the pool.
+   !
+   !    The number of free nodes in the pool.
+   !
+   !    The "free pointer," which is the column index of the first free
+   !    node.
+   !
+   ! Parameters defining the row and column indices of these control
+   ! elements are given below.
+   !
+   ! Each assigned node consists of a backward pointer and a forward
+   ! pointer.
+   !
+   !    +-------------+       +-------------+       +-------------+
+   !    |  forward--> |       |  forward--> |       |  forward--> |
+   !    +-------------+  ...  +-------------+  ...  +-------------+
+   !    | <--backward |       | <--backward |       | <--backward |
+   !    +-------------+       +-------------+       +-------------+
+   !
+   !        node 1                 node I              node SIZE
    integer(ip), parameter :: bckwrd = 2  !! row of the backward pointers of a linked list pool
    integer(ip), parameter :: forwrd = 1  !! row of the forward pointers of a linked list pool
    integer(ip), parameter :: frecol = -1  !! column of the head of the free list (in row FREROW)
+   ! Free nodes say that that's what they are.  The way they say it
+   ! is by containing the value FREE in their backward pointers.
+   ! Needless to say, FREE is a value that cannot be a valid pointer.
    integer(ip), parameter :: free = 0  !! backward pointer of a node that is free (not in a list)
    integer(ip), parameter :: frerow = 1  !! row of the head of the free list (in column FRECOL)
    integer(ip), parameter :: nfrcol = 0  !! column of the number of free nodes (in row NFRROW)
@@ -25,6 +50,9 @@ submodule (pepper_instance_module) pepper_array_ops
 
 contains
 
+      !> Cycle the elements of a character array forward or backward
+      !> in place.
+      !>
       !>## Detailed Input
       !>
       !>     NELT     is the number of elements in the input array.
@@ -123,10 +151,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 09-SEP-2005 (NJB) (HAN) (WLT) (IMU)
-      module procedure cyacip
+      module subroutine cyacip ( ctx, nelt, dir, ncycle, array )
       use pepper_kinds, only: ip
       use pepper_math, only: gcd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nelt  !! Number of elements.
+      character(1), intent(in) :: dir  !! Direction to cycle: 'F' or 'B'.
+      integer(ip), intent(in) :: ncycle  !! Number of times to cycle.
+      character(*), intent(inout) :: array    ( * )  !! Array to be cycled/cycled array.
 
       integer(ip) :: outlen
       integer(ip) :: widest
@@ -254,8 +287,11 @@ contains
       end if
 
       return
-      end procedure cyacip
+      end subroutine cyacip
 
+      !> Cycle the elements of a double precision array forward
+      !> or backward in place.
+      !>
       !>## Detailed Input
       !>
       !>     NELT     is the number of elements in the input array.
@@ -354,10 +390,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 09-SEP-2005 (NJB) (HAN) (WLT) (IMU)
-      module procedure cyadip
+      module subroutine cyadip ( ctx, nelt, dir, ncycle, array )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: gcd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nelt  !! Number of elements.
+      character(1), intent(in) :: dir  !! Direction to cycle: 'F' or 'B'.
+      integer(ip), intent(in) :: ncycle  !! Number of times to cycle.
+      real(wp), intent(inout) :: array    ( * )  !! Array to be cycled/cycled array.
 
       real(wp) :: last
       real(wp) :: temp
@@ -444,8 +485,11 @@ contains
       end do
 
       return
-      end procedure cyadip
+      end subroutine cyadip
 
+      !> Cycle the elements of an integer array forward or backward
+      !> in place.
+      !>
       !>## Detailed Input
       !>
       !>     NELT     is the number of elements in the input array.
@@ -544,10 +588,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 09-SEP-2005 (NJB) (HAN) (WLT) (IMU)
-      module procedure cyaiip
+      module subroutine cyaiip ( ctx, nelt, dir, ncycle, array )
       use pepper_kinds, only: ip
       use pepper_math, only: gcd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nelt  !! Number of elements.
+      character(1), intent(in) :: dir  !! Direction to cycle: 'F' or 'B'.
+      integer(ip), intent(in) :: ncycle  !! Number of times to cycle.
+      integer(ip), intent(inout) :: array    ( * )  !! Array to be cycled/cycled array.
 
       integer(ip) :: last
       integer(ip) :: temp
@@ -634,8 +683,10 @@ contains
       end do
 
       return
-      end procedure cyaiip
+      end subroutine cyaiip
 
+      !> Cycle the elements of a character array forward or backward.
+      !>
       !>## Detailed Input
       !>
       !>     ARRAY    is the array to be cycled.
@@ -765,10 +816,16 @@ contains
       !>         recognized.)
       !>
       !>         The "Exceptions" section was filled out in more detail.
-      module procedure cyclac
+      module subroutine cyclac ( ctx, array, nelt, dir, ncycle, out )
       use pepper_kinds, only: ip
       use pepper_math, only: gcd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: array    ( * )  !! Input array.
+      integer(ip), intent(in) :: nelt  !! Number of elements.
+      character(1), intent(in) :: dir  !! Direction to cycle: 'F' or 'B'.
+      integer(ip), intent(in) :: ncycle  !! Number of times to cycle.
+      character(*), intent(out) :: out      ( * )  !! Cycled array.
 
       integer(ip) :: outlen
       integer(ip) :: widest
@@ -901,8 +958,11 @@ contains
       end if
 
       return
-      end procedure cyclac
+      end subroutine cyclac
 
+      !> Cycle the elements of a double precision array forward
+      !> or backward.
+      !>
       !>## Detailed Input
       !>
       !>     ARRAY    is the array to be cycled.
@@ -1027,10 +1087,16 @@ contains
       !>         recognized.)
       !>
       !>         The "Exceptions" section was filled out in more detail.
-      module procedure cyclad
+      module subroutine cyclad ( ctx, array, nelt, dir, ncycle, out )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: gcd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: array    ( * )  !! Input array.
+      integer(ip), intent(in) :: nelt  !! Number of elements.
+      character(1), intent(in) :: dir  !! Direction to cycle: 'F' or 'B'.
+      integer(ip), intent(in) :: ncycle  !! Number of times to cycle.
+      real(wp), intent(out) :: out      ( * )  !! Cycled array.
 
       real(wp) :: last
       real(wp) :: temp
@@ -1117,8 +1183,10 @@ contains
       end do
 
       return
-      end procedure cyclad
+      end subroutine cyclad
 
+      !> Cycle the elements of an integer array forward or backward.
+      !>
       !>## Detailed Input
       !>
       !>     ARRAY    is the array to be cycled.
@@ -1243,10 +1311,16 @@ contains
       !>         recognized.)
       !>
       !>         The "Exceptions" section was filled out in more detail.
-      module procedure cyclai
+      module subroutine cyclai ( ctx, array, nelt, dir, ncycle, out )
       use pepper_kinds, only: ip
       use pepper_math, only: gcd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: array    ( * )  !! Input array.
+      integer(ip), intent(in) :: nelt  !! Number of elements.
+      character(1), intent(in) :: dir  !! Direction to cycle: 'F' or 'B'.
+      integer(ip), intent(in) :: ncycle  !! Number of times to cycle.
+      integer(ip), intent(out) :: out      ( * )  !! Cycled array.
 
       integer(ip) :: last
       integer(ip) :: temp
@@ -1333,8 +1407,11 @@ contains
       end do
 
       return
-      end procedure cyclai
+      end subroutine cyclai
 
+      !> Insert one or more elements into a character array at the
+      !> indicated location.
+      !>
       !>## Detailed Input
       !>
       !>     ELTS     contains one or more elements which are to be
@@ -1465,9 +1542,15 @@ contains
       !>         the routine. In this case, the only valid location at which
       !>         to insert is 1. If it is not 1, an error is signaled
       !>         when the location is checked.
-      module procedure inslac
+      module subroutine inslac ( ctx, elts, ne, loc, array, na )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: elts  ( * )  !! Elements to be inserted.
+      integer(ip), intent(in) :: ne  !! Number of elements to be inserted.
+      integer(ip), intent(in) :: loc  !! Location of the first inserted element.
+      character(*), intent(inout) :: array ( * )  !! Input/output array.
+      integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
 
 !
 !     Other functions
@@ -1529,8 +1612,11 @@ contains
       end if
 
       return
-      end procedure inslac
+      end subroutine inslac
 
+      !> Insert one or more elements into a double precision array at
+      !> the indicated location.
+      !>
       !>## Detailed Input
       !>
       !>     ELTS     contains one or more elements which are to be
@@ -1659,9 +1745,15 @@ contains
       !>         the routine. In this case, the only valid location at which
       !>         to insert is 1. If it is not 1, an error is signaled
       !>         when the location is checked.
-      module procedure inslad
+      module subroutine inslad ( ctx, elts, ne, loc, array, na )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: elts  ( * )  !! Elements to be inserted.
+      integer(ip), intent(in) :: ne  !! Number of elements to be inserted.
+      integer(ip), intent(in) :: loc  !! Location of the first inserted element.
+      real(wp), intent(inout) :: array ( * )  !! Input/output array.
+      integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
 
 !
 !     Other functions
@@ -1723,8 +1815,11 @@ contains
       end if
 
       return
-      end procedure inslad
+      end subroutine inslad
 
+      !> Insert one or more elements into an integer array at
+      !> the indicated location.
+      !>
       !>## Detailed Input
       !>
       !>     ELTS     contains one or more elements which are to be
@@ -1853,9 +1948,15 @@ contains
       !>         the routine. In this case, the only valid location at which
       !>         to insert is 1. If it is not 1, an error is signaled
       !>         when the location is checked.
-      module procedure inslai
+      module subroutine inslai ( ctx, elts, ne, loc, array, na )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: elts  ( * )  !! Elements to be inserted.
+      integer(ip), intent(in) :: ne  !! Number of elements to be inserted.
+      integer(ip), intent(in) :: loc  !! Location of the first inserted element.
+      integer(ip), intent(inout) :: array ( * )  !! Input/output array.
+      integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
 
 !
 !     Other functions
@@ -1917,8 +2018,11 @@ contains
       end if
 
       return
-      end procedure inslai
+      end subroutine inslai
 
+      !> Remove one or more elements from a character array at the
+      !> indicated location.
+      !>
       !>## Detailed Input
       !>
       !>     NE       is the number of elements to be removed.
@@ -2045,9 +2149,14 @@ contains
       !>         number of elements can be removed, an error is signaled.
       !>         In the old version, only those elements that could be
       !>         removed were removed, and no error was signaled.
-      module procedure remlac
+      module subroutine remlac ( ctx, ne, loc, array, na )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ne  !! Number of elements to be removed.
+      integer(ip), intent(in) :: loc  !! Location of the first removed element.
+      character(*), intent(inout) :: array ( * )  !! Input/output array.
+      integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
 
       integer(ip) :: i
 
@@ -2101,8 +2210,11 @@ contains
       end if
 
       return
-      end procedure remlac
+      end subroutine remlac
 
+      !> Remove one or more elements from a double precision array at the
+      !> indicated location.
+      !>
       !>## Detailed Input
       !>
       !>     NE       is the number of elements to be removed.
@@ -2230,9 +2342,14 @@ contains
       !>         number of elements can be removed, an error is signaled.
       !>         In the old version, only those elements that could be
       !>         removed were removed, and no error was signaled.
-      module procedure remlad
+      module subroutine remlad ( ctx, ne, loc, array, na )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ne  !! Number of elements to be removed.
+      integer(ip), intent(in) :: loc  !! Location of the first removed element.
+      real(wp), intent(inout) :: array ( * )  !! Input/output array.
+      integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
 
       integer(ip) :: i
 
@@ -2286,8 +2403,11 @@ contains
       end if
 
       return
-      end procedure remlad
+      end subroutine remlad
 
+      !> Remove one or more elements from an integer array at the
+      !> indicated location.
+      !>
       !>## Detailed Input
       !>
       !>     NE       is the number of elements to be removed.
@@ -2415,9 +2535,14 @@ contains
       !>         number of elements can be removed, an error is signaled.
       !>         In the old version, only those elements that could be
       !>         removed were removed, and no error was signaled.
-      module procedure remlai
+      module subroutine remlai ( ctx, ne, loc, array, na )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ne  !! Number of elements to be removed.
+      integer(ip), intent(in) :: loc  !! Location of the first removed element.
+      integer(ip), intent(inout) :: array ( * )  !! Input/output array.
+      integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
 
       integer(ip) :: i
 
@@ -2471,8 +2596,11 @@ contains
       end if
 
       return
-      end procedure remlai
+      end subroutine remlai
 
+      !> Swap (exchange) two non-intersecting groups of contiguous
+      !> elements of a character array.
+      !>
       !>## Detailed Input
       !>
       !>     N,
@@ -2654,10 +2782,16 @@ contains
       !>
       !>        More examples were added to the "Examples" section, and
       !>        the long error messages were revised.
-      module procedure swapac
+      module subroutine swapac ( ctx, n, locn, m, locm, array )
       use pepper_kinds, only: ip
       use pepper_arrays, only: swapc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of elements in the first group.
+      integer(ip), intent(in) :: locn  !! Location of the first group.
+      integer(ip), intent(in) :: m  !! Number of elements in the second group.
+      integer(ip), intent(in) :: locm  !! Location of the second group.
+      character(*), intent(inout) :: array  ( * )  !! The array.
 
       integer(ip) :: nn
       integer(ip) :: ln
@@ -2856,8 +2990,11 @@ contains
       end if
 
       return
-      end procedure swapac
+      end subroutine swapac
 
+      !> Swap (exchange) two non-intersecting groups of contiguous
+      !> elements of a double precision array.
+      !>
       !>## Detailed Input
       !>
       !>     N,
@@ -3040,10 +3177,16 @@ contains
       !>
       !>        More examples were added to the "Examples" section, and
       !>        the long error messages were revised.
-      module procedure swapad
+      module subroutine swapad ( ctx, n, locn, m, locm, array )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: swapd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of elements in the first group.
+      integer(ip), intent(in) :: locn  !! Location of the first group.
+      integer(ip), intent(in) :: m  !! Number of elements in the second group.
+      integer(ip), intent(in) :: locm  !! Location of the second group.
+      real(wp), intent(inout) :: array  ( * )  !! The array.
 
       integer(ip) :: nn
       integer(ip) :: ln
@@ -3243,8 +3386,11 @@ contains
       end if
 
       return
-      end procedure swapad
+      end subroutine swapad
 
+      !> Swap (exchange) two non-intersecting groups of contiguous
+      !> elements of an integer array.
+      !>
       !>## Detailed Input
       !>
       !>     N,
@@ -3427,10 +3573,16 @@ contains
       !>
       !>        More examples were added to the "Examples" section, and
       !>        the long error messages were revised.
-      module procedure swapai
+      module subroutine swapai ( ctx, n, locn, m, locm, array )
       use pepper_kinds, only: ip
       use pepper_arrays, only: swapi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of elements in the first group.
+      integer(ip), intent(in) :: locn  !! Location of the first group.
+      integer(ip), intent(in) :: m  !! Number of elements in the second group.
+      integer(ip), intent(in) :: locm  !! Location of the second group.
+      integer(ip), intent(inout) :: array  ( * )  !! The array.
 
       integer(ip) :: nn
       integer(ip) :: ln
@@ -3629,8 +3781,12 @@ contains
       end if
 
       return
-      end procedure swapai
+      end subroutine swapai
 
+      !> Pack the contents of a CHARACTER array. That is, take
+      !> a set of arbitrarily spaced elements from an input array,
+      !> and make them adjacent elements in an output array.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is the input array.
@@ -3763,9 +3919,16 @@ contains
       !>         out of bound. If any element contained in the PACK array is
       !>         less than one, an error is signaled, and the output array is
       !>         not packed.
-      module procedure packac
+      module subroutine packac ( ctx, in, pack, npack, maxout, nout, out )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: in      ( * )  !! Input array.
+      integer(ip), intent(in) :: pack    ( * )  !! Indices of elements to be packed.
+      integer(ip), intent(in) :: npack  !! Number of indices.
+      integer(ip), intent(in) :: maxout  !! Maximum number of elements in the output array.
+      integer(ip), intent(out) :: nout  !! Number of elements in the output array.
+      character(*), intent(out) :: out     ( * )  !! Output array.
 
       integer(ip) :: i
 
@@ -3802,8 +3965,12 @@ contains
       end do
 
       return
-      end procedure packac
+      end subroutine packac
 
+      !> Pack the contents of a double precision array. That is,
+      !> take a set of arbitrarily spaced elements from an input
+      !> array, and make them adjacent elements in an output array.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is the input array.
@@ -3936,9 +4103,16 @@ contains
       !>         out of bound. If any element contained in the PACK array is
       !>         less than one, an error is signaled, and the output array is
       !>         not packed.
-      module procedure packad
+      module subroutine packad ( ctx, in, pack, npack, maxout, nout, out )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: in      ( * )  !! Input array.
+      integer(ip), intent(in) :: pack    ( * )  !! Indices of elements to be packed.
+      integer(ip), intent(in) :: npack  !! Number of indices.
+      integer(ip), intent(in) :: maxout  !! Maximum number of elements in the output array.
+      integer(ip), intent(out) :: nout  !! Number of elements in the output array.
+      real(wp), intent(out) :: out     ( * )  !! Output array.
 
       integer(ip) :: i
 
@@ -3975,8 +4149,12 @@ contains
       end do
 
       return
-      end procedure packad
+      end subroutine packad
 
+      !> Pack the contents of an integer array. That is,
+      !> take a set of arbitrarily spaced elements from an input
+      !> array, and make them adjacent elements in an output array.
+      !>
       !>## Detailed Input
       !>
       !>     IN       is the input array.
@@ -4109,9 +4287,16 @@ contains
       !>         out of bound. If any element contained in the PACK array is
       !>         less than one, an error is signaled, and the output array is
       !>         not packed.
-      module procedure packai
+      module subroutine packai ( ctx, in, pack, npack, maxout, nout, out )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: in      ( * )  !! Input array.
+      integer(ip), intent(in) :: pack    ( * )  !! Indices of elements to be packed.
+      integer(ip), intent(in) :: npack  !! Number of indices.
+      integer(ip), intent(in) :: maxout  !! Maximum number of elements in the output array.
+      integer(ip), intent(out) :: nout  !! Number of elements in the output array.
+      integer(ip), intent(out) :: out     ( * )  !! Output array.
 
       integer(ip) :: i
 
@@ -4148,8 +4333,10 @@ contains
       end do
 
       return
-      end procedure packai
+      end subroutine packai
 
+      !> Allocate a node in a doubly linked list pool.
+      !>
       !>## Detailed Input
       !>
       !>     POOL     is a doubly linked list pool.
@@ -4259,50 +4446,14 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkan
+      module subroutine lnkan ( ctx, pool, new )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
+      integer(ip), intent(out) :: new  !! Number of new node that was allocated.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
 !
 !     Discovery check-in is used in place of standard SPICE error
@@ -4338,8 +4489,10 @@ contains
       pool( bckwrd, new )   =   -new
 
       return
-      end procedure lnkan
+      end subroutine lnkan
 
+      !> Free a specified sublist in a list.
+      !>
       !>## Detailed Input
       !>
       !>     HEAD,
@@ -4450,50 +4603,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkfsl
+      module subroutine lnkfsl ( ctx, head, tail, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: head  !! Head and tail nodes of a sublist to be freed.
+      integer(ip), intent(in) :: tail  !! Head and tail nodes of a sublist to be freed.
+      integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
       integer(ip) :: count
       integer(ip) :: next
@@ -4676,8 +4794,13 @@ contains
       pool ( nfrrow, nfrcol )  =  pool ( nfrrow, nfrcol )  +  count
 
       return
-      end procedure lnkfsl
+      end subroutine lnkfsl
 
+      !> Return the head node of the list containing a specified node.
+      !>
+      !> The function returns the number of the head node of the list
+      !> containing NODE.
+      !>
       !>## Detailed Input
       !>
       !>     NODE     is the number of a node in POOL. Normally,
@@ -4770,50 +4893,14 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkhl
+      module integer(ip) function lnkhl ( ctx, node, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: node  !! Number of a node.
+      integer(ip), intent(in) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
       integer(ip) :: prev
 
@@ -4873,8 +4960,11 @@ contains
 !     LNKHL is now the head of the list.
 !
       return
-      end procedure lnkhl
+      end function lnkhl
 
+      !> Insert the list containing a specified node into a another list,
+      !> following a specified node.
+      !>
       !>## Detailed Input
       !>
       !>     PREV     is a node in a list. PREV is permitted to be
@@ -5010,50 +5100,15 @@ contains
       !>        Added note about efficiency in $Restrictions section.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkila
+      module subroutine lnkila ( ctx, prev, list, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: prev  !! Node after which a new list is to be inserted.
+      integer(ip), intent(in) :: list  !! Node in the list to be inserted.
+      integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
       integer(ip) :: next
       integer(ip) :: head
@@ -5140,8 +5195,11 @@ contains
       pool( forwrd, tail )  =  next
 
       return
-      end procedure lnkila
+      end subroutine lnkila
 
+      !> Insert the list containing a specified node into a another list,
+      !> preceding a specified node.
+      !>
       !>## Detailed Input
       !>
       !>     LIST     is a node in the list to be inserted. The entire
@@ -5280,50 +5338,15 @@ contains
       !>        Added note about efficiency in $Restrictions section.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkilb
+      module subroutine lnkilb ( ctx, list, next, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: list  !! Node in the list to be inserted.
+      integer(ip), intent(in) :: next  !! Node before which a new list is to be inserted.
+      integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
       integer(ip) :: head
       integer(ip) :: prev
@@ -5410,8 +5433,10 @@ contains
       pool( bckwrd, head )  =  prev
 
       return
-      end procedure lnkilb
+      end subroutine lnkilb
 
+      !> Initialize a doubly linked list pool.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the number of nodes in the pool.
@@ -5500,50 +5525,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkini
+      module subroutine lnkini ( ctx, size, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: size  !! Number of nodes in the pool.
+      integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! An array that is a linked pool on
+                                                             !! output.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
       integer(ip) :: i
 
@@ -5594,8 +5584,12 @@ contains
       pool ( bckwrd, size )   =  free
 
       return
-      end procedure lnkini
+      end subroutine lnkini
 
+      !> Return the number of free nodes in a doubly linked list pool.
+      !>
+      !> The function returns the number of free nodes in the pool.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the number of nodes in the pool.
@@ -5667,50 +5661,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnknfn
+      module integer(ip) function lnknfn ( ctx, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
 !
 !     Grab the number of free nodes from the control area.
@@ -5718,8 +5675,14 @@ contains
       lnknfn  =  pool ( nfrrow, nfrcol )
 
       return
-      end procedure lnknfn
+      end function lnknfn
 
+      !> Find the node following a specified node in a doubly linked list
+      !> pool.
+      !>
+      !> The function returns the number of the successor of the node
+      !> indicated by NODE.
+      !>
       !>## Detailed Input
       !>
       !>     NODE     is the number of an allocated node in POOL.
@@ -5829,49 +5792,14 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnknxt
+      module integer(ip) function lnknxt ( ctx, node, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: pool ( 2,  lbpool :  *  )  !! A doubly linked list pool.
+      integer(ip), intent(in) :: node  !! Number of an allocated node.
 
-
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
 !
 !     If the node is out of range, something's very wrong.
@@ -5911,8 +5839,14 @@ contains
       lnknxt = pool ( forwrd, node )
 
       return
-      end procedure lnknxt
+      end function lnknxt
 
+      !> Find the node preceding a specified node in a doubly linked list
+      !> pool.
+      !>
+      !> The function returns the number of the predecessor of the node
+      !> indicated by NODE.
+      !>
       !>## Detailed Input
       !>
       !>     NODE     is the number of an allocated node in POOL.
@@ -6022,50 +5956,14 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkprv
+      module integer(ip) function lnkprv ( ctx, node, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
+      integer(ip), intent(in) :: node  !! Number of an allocated node.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
 !
 !     If the node is out of range, something's very wrong.
@@ -6105,8 +6003,12 @@ contains
       lnkprv = pool ( bckwrd, node )
 
       return
-      end procedure lnkprv
+      end function lnkprv
 
+      !> Return the size of a doubly linked list pool.
+      !>
+      !> The function returns the size of the pool.
+      !>
       !>## Detailed Input
       !>
       !>     POOL     is a doubly linked list pool.
@@ -6172,50 +6074,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnksiz
+      module integer(ip) function lnksiz ( ctx, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
 !
 !     Grab the pool size from the control area.
@@ -6223,8 +6088,13 @@ contains
       lnksiz  =  pool ( sizrow, sizcol )
 
       return
-      end procedure lnksiz
+      end function lnksiz
 
+      !> Return the tail node of the list containing a specified node.
+      !>
+      !> The function returns the number of the tail node of the list
+      !> containing NODE.
+      !>
       !>## Detailed Input
       !>
       !>     NODE     is the number of a node in POOL. Normally,
@@ -6329,50 +6199,14 @@ contains
       !>        Corrected module name in one pair of CHKIN/CHKOUT calls. The
       !>        affected error case was the check for a node number being out
       !>        of range.
-      module procedure lnktl
+      module integer(ip) function lnktl ( ctx, node, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: node  !! Number of a node.
+      integer(ip), intent(in) :: pool (  2,  lbpool : *  )  !! A doubly linked list pool.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
       integer(ip) :: next
 
@@ -6432,8 +6266,10 @@ contains
 !     LNKTL is now the tail of the list.
 !
       return
-      end procedure lnktl
+      end function lnktl
 
+      !> Extract a specified sublist from a list.
+      !>
       !>## Detailed Input
       !>
       !>     HEAD,
@@ -6550,50 +6386,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkxsl
+      module subroutine lnkxsl ( ctx, head, tail, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: head  !! Head and tail nodes of a sublist to be extracted.
+      integer(ip), intent(in) :: tail  !! Head and tail nodes of a sublist to be extracted.
+      integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
-
-!
-!     The control area contains 3 elements.  They are:
-!
-!        The "size" of the pool, that is, the number
-!        of nodes in the pool.
-!
-!        The number of free nodes in the pool.
-!
-!        The "free pointer," which is the column index of the first free
-!        node.
-!
-!     Parameters defining the row and column indices of these control
-!     elements are given below.
-!
-
-
-
-
-
-
-!
-!     Each assigned node consists of a backward pointer and a forward
-!     pointer.
-!
-!        +-------------+       +-------------+       +-------------+
-!        |  forward--> |       |  forward--> |       |  forward--> |
-!        +-------------+  ...  +-------------+  ...  +-------------+
-!        | <--backward |       | <--backward |       | <--backward |
-!        +-------------+       +-------------+       +-------------+
-!
-!            node 1                 node I              node SIZE
-!
-
-
-!
-!     Free nodes say that that's what they are.  The way they say it
-!     is by containing the value FREE in their backward pointers.
-!     Needless to say, FREE is a value that cannot be a valid pointer.
-!
 
       integer(ip) :: next
       integer(ip) :: node
@@ -6760,6 +6561,6 @@ contains
       pool ( forwrd, tail )  =  -head
 
       return
-      end procedure lnkxsl
+      end subroutine lnkxsl
 
 end submodule pepper_array_ops

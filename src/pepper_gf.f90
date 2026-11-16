@@ -2,9 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_gf.f90.
+!> [[pepper_instance_module]]).
 !>
 !>## ZZGFFVU (GF, instrument FOV utilities)
 !>
@@ -1424,158 +1422,160 @@
 !>
 !>        Example code begins here.
 !>
-!>              PROGRAM GFRPRT_EX1
-!>              IMPLICIT NONE
+!>```fortran
+!>      PROGRAM GFRPRT_EX1
+!>      IMPLICIT NONE
 !>
-!>        C
-!>        C     SPICELIB functions
-!>        C
-!>              INTEGER               WNCARD
+!>C
+!>C     SPICELIB functions
+!>C
+!>      INTEGER               WNCARD
 !>
-!>        C
-!>        C     SPICELIB default functions for
-!>        C
-!>        C        - Interrupt handling (no-op function):   GFBAIL
-!>        C        - Search refinement:                     GFREFN
-!>        C        - Progress report termination:           GFREPF
-!>        C        - Progress report initialization:        GFREPI
-!>        C        - Progress report update:                GFREPU
-!>        C        - Search step size "get" function:       GFSTEP
-!>        C
-!>              LOGICAL               GFBAIL
-!>              EXTERNAL              GFBAIL
+!>C
+!>C     SPICELIB default functions for
+!>C
+!>C        - Interrupt handling (no-op function):   GFBAIL
+!>C        - Search refinement:                     GFREFN
+!>C        - Progress report termination:           GFREPF
+!>C        - Progress report initialization:        GFREPI
+!>C        - Progress report update:                GFREPU
+!>C        - Search step size "get" function:       GFSTEP
+!>C
+!>      LOGICAL               GFBAIL
+!>      EXTERNAL              GFBAIL
 !>
-!>              EXTERNAL              GFREFN
-!>              EXTERNAL              GFREPI
-!>              EXTERNAL              GFREPU
-!>              EXTERNAL              GFREPF
-!>              EXTERNAL              GFSTEP
+!>      EXTERNAL              GFREFN
+!>      EXTERNAL              GFREPI
+!>      EXTERNAL              GFREPU
+!>      EXTERNAL              GFREPF
+!>      EXTERNAL              GFSTEP
 !>
-!>        C
-!>        C     Local parameters
-!>        C
-!>              CHARACTER*(*)         TIMFMT
-!>              PARAMETER           ( TIMFMT =
-!>             .   'YYYY MON DD HR:MN:SC.###### ::TDB (TDB)' )
+!>C
+!>C     Local parameters
+!>C
+!>      CHARACTER*(*)         TIMFMT
+!>      PARAMETER           ( TIMFMT =
+!>     .   'YYYY MON DD HR:MN:SC.###### ::TDB (TDB)' )
 !>
-!>              DOUBLE PRECISION      CNVTOL
-!>              PARAMETER           ( CNVTOL = 1.D-6 )
+!>      DOUBLE PRECISION      CNVTOL
+!>      PARAMETER           ( CNVTOL = 1.D-6 )
 !>
-!>              INTEGER               MAXWIN
-!>              PARAMETER           ( MAXWIN = 2 * 100 )
+!>      INTEGER               MAXWIN
+!>      PARAMETER           ( MAXWIN = 2 * 100 )
 !>
-!>              INTEGER               TIMLEN
-!>              PARAMETER           ( TIMLEN = 40 )
+!>      INTEGER               TIMLEN
+!>      PARAMETER           ( TIMLEN = 40 )
 !>
-!>              INTEGER               LBCELL
-!>              PARAMETER           ( LBCELL = -5 )
+!>      INTEGER               LBCELL
+!>      PARAMETER           ( LBCELL = -5 )
 !>
-!>        C
-!>        C     Local variables
-!>        C
-!>              CHARACTER*(TIMLEN)    WIN0
-!>              CHARACTER*(TIMLEN)    WIN1
-!>              CHARACTER*(TIMLEN)    BEGSTR
-!>              CHARACTER*(TIMLEN)    ENDSTR
+!>C
+!>C     Local variables
+!>C
+!>      CHARACTER*(TIMLEN)    WIN0
+!>      CHARACTER*(TIMLEN)    WIN1
+!>      CHARACTER*(TIMLEN)    BEGSTR
+!>      CHARACTER*(TIMLEN)    ENDSTR
 !>
-!>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-!>              DOUBLE PRECISION      ET0
-!>              DOUBLE PRECISION      ET1
-!>              DOUBLE PRECISION      LEFT
-!>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-!>              DOUBLE PRECISION      RIGHT
+!>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+!>      DOUBLE PRECISION      ET0
+!>      DOUBLE PRECISION      ET1
+!>      DOUBLE PRECISION      LEFT
+!>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+!>      DOUBLE PRECISION      RIGHT
 !>
-!>              INTEGER               I
+!>      INTEGER               I
 !>
-!>              LOGICAL               BAIL
-!>              LOGICAL               RPT
+!>      LOGICAL               BAIL
+!>      LOGICAL               RPT
 !>
-!>        C
-!>        C     Saved variables
-!>        C
-!>        C     The confinement and result windows CNFINE and RESULT are
-!>        C     saved because this practice helps to prevent stack
-!>        C     overflow.
-!>        C
-!>              SAVE                  CNFINE
-!>              SAVE                  RESULT
+!>C
+!>C     Saved variables
+!>C
+!>C     The confinement and result windows CNFINE and RESULT are
+!>C     saved because this practice helps to prevent stack
+!>C     overflow.
+!>C
+!>      SAVE                  CNFINE
+!>      SAVE                  RESULT
 !>
-!>        C
-!>        C     Load kernels.
-!>        C
-!>              CALL FURNSH ( 'gfrprt_ex1.tm' )
+!>C
+!>C     Load kernels.
+!>C
+!>      CALL FURNSH ( 'gfrprt_ex1.tm' )
 !>
-!>        C
-!>        C     Initialize the confinement and result windows.
-!>        C
-!>              CALL SSIZED ( 2,      CNFINE )
-!>              CALL SSIZED ( MAXWIN, RESULT )
+!>C
+!>C     Initialize the confinement and result windows.
+!>C
+!>      CALL SSIZED ( 2,      CNFINE )
+!>      CALL SSIZED ( MAXWIN, RESULT )
 !>
-!>        C
-!>        C     Obtain the TDB time bounds of the confinement
-!>        C     window, which is a single interval in this case.
-!>        C
-!>              WIN0 = '2001 DEC 01 00:00:00 TDB'
-!>              WIN1 = '2002 JAN 01 00:00:00 TDB'
+!>C
+!>C     Obtain the TDB time bounds of the confinement
+!>C     window, which is a single interval in this case.
+!>C
+!>      WIN0 = '2001 DEC 01 00:00:00 TDB'
+!>      WIN1 = '2002 JAN 01 00:00:00 TDB'
 !>
-!>              CALL STR2ET ( WIN0, ET0 )
-!>              CALL STR2ET ( WIN1, ET1 )
+!>      CALL STR2ET ( WIN0, ET0 )
+!>      CALL STR2ET ( WIN1, ET1 )
 !>
-!>        C
-!>        C     Insert the time bounds into the confinement
-!>        C     window.
-!>        C
-!>              CALL WNINSD ( ET0, ET1, CNFINE )
+!>C
+!>C     Insert the time bounds into the confinement
+!>C     window.
+!>C
+!>      CALL WNINSD ( ET0, ET1, CNFINE )
 !>
-!>        C
-!>        C     Select a 20 second step. We'll ignore any occultations
-!>        C     lasting less than 20 seconds.
-!>        C
-!>              CALL GFSSTP ( 20.D0 )
+!>C
+!>C     Select a 20 second step. We'll ignore any occultations
+!>C     lasting less than 20 seconds.
+!>C
+!>      CALL GFSSTP ( 20.D0 )
 !>
-!>        C
-!>        C     Turn on progress reporting; turn off interrupt
-!>        C     handling.
-!>        C
-!>              RPT  = .TRUE.
-!>              BAIL = .FALSE.
+!>C
+!>C     Turn on progress reporting; turn off interrupt
+!>C     handling.
+!>C
+!>      RPT  = .TRUE.
+!>      BAIL = .FALSE.
 !>
-!>        C
-!>        C     Perform the search.
-!>        C
-!>              CALL GFOCCE ( 'ANY',
-!>             .              'MOON',   'ellipsoid',  'IAU_MOON',
-!>             .              'SUN',    'ellipsoid',  'IAU_SUN',
-!>             .              'LT',     'EARTH',      CNVTOL,
-!>             .              GFSTEP,   GFREFN,       RPT,
-!>             .              GFREPI,   GFREPU,       GFREPF,
-!>             .              BAIL,     GFBAIL,       CNFINE,  RESULT )
+!>C
+!>C     Perform the search.
+!>C
+!>      CALL GFOCCE ( 'ANY',
+!>     .              'MOON',   'ellipsoid',  'IAU_MOON',
+!>     .              'SUN',    'ellipsoid',  'IAU_SUN',
+!>     .              'LT',     'EARTH',      CNVTOL,
+!>     .              GFSTEP,   GFREFN,       RPT,
+!>     .              GFREPI,   GFREPU,       GFREPF,
+!>     .              BAIL,     GFBAIL,       CNFINE,  RESULT )
 !>
-!>              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+!>      IF ( WNCARD(RESULT) .EQ. 0 ) THEN
 !>
-!>                 WRITE (*,*) 'No occultation was found.'
+!>         WRITE (*,*) 'No occultation was found.'
 !>
-!>              ELSE
+!>      ELSE
 !>
-!>                 DO I = 1, WNCARD(RESULT)
+!>         DO I = 1, WNCARD(RESULT)
 !>
-!>        C
-!>        C           Fetch and display each occultation interval.
-!>        C
-!>                    CALL WNFETD ( RESULT, I, LEFT, RIGHT )
+!>C
+!>C           Fetch and display each occultation interval.
+!>C
+!>            CALL WNFETD ( RESULT, I, LEFT, RIGHT )
 !>
-!>                    CALL TIMOUT ( LEFT,  TIMFMT, BEGSTR )
-!>                    CALL TIMOUT ( RIGHT, TIMFMT, ENDSTR )
+!>            CALL TIMOUT ( LEFT,  TIMFMT, BEGSTR )
+!>            CALL TIMOUT ( RIGHT, TIMFMT, ENDSTR )
 !>
-!>                    WRITE (*,*) 'Interval ', I
-!>                    WRITE (*,*) '   Start time: '//BEGSTR
-!>                    WRITE (*,*) '   Stop time:  '//ENDSTR
+!>            WRITE (*,*) 'Interval ', I
+!>            WRITE (*,*) '   Start time: '//BEGSTR
+!>            WRITE (*,*) '   Stop time:  '//ENDSTR
 !>
-!>                 END DO
+!>         END DO
 !>
-!>              END IF
+!>      END IF
 !>
-!>              END
+!>      END
+!>```
 !>
 !>        When this program was executed on a Mac/Intel/gfortran/64-bit
 !>        platform, the output was:
@@ -1926,6 +1926,13 @@ submodule (pepper_instance_module) pepper_gf
    integer(ip), parameter :: lnsize = 80  !! length of a line of text (messages, kernel lines)
    integer(ip), parameter :: maxcln = 80  !! length of a relation name
    integer(ip), parameter :: maxop = 6  !! length of a relational operator
+   ! The maximum number of search loop iterations to execute.
+   ! The default refinement method is bisection, a very slow
+   ! method to convergence. Since 2**1000 ~ 10**301,
+   ! 1000 loop iterations represents enough effort to assume
+   ! either the search will not converge or that the refinement
+   ! function operates slower than would bisection, in which
+   ! case the user should use the default GFREFN function.
    integer(ip), parameter :: mxloop = 1000  !! maximum number of iterations of the root finding loop
    logical, parameter :: nobail = .false.  !! interrupt handling: off
    logical, parameter :: norpt = .false.  !! progress reporting: off
@@ -1943,6 +1950,10 @@ submodule (pepper_instance_module) pepper_gf
 
 contains
 
+      !> Serve as a placeholder for an interrupt detection function.
+      !>
+      !> The function returns the value .FALSE. in all cases.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -2095,14 +2106,18 @@ contains
       !>        Minor edit to $Declarations for correct header format.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB) (LSE) (EDW)
-      module procedure gfbail
+      module logical function gfbail ( ctx )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
 
       gfbail  =  .false.
 
       return
-      end procedure gfbail
+      end function gfbail
 
+      !> Override the default GF convergence value used in the high
+      !> level GF routines.
+      !>
       !>## Detailed Input
       !>
       !>     VALUE    is the scalar double precision value to use as the GF
@@ -2187,140 +2202,142 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFSTOL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFSTOL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .             'YYYY ERA MON DD HR:MN:SC.#### ::JCAL' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .             'YYYY ERA MON DD HR:MN:SC.#### ::JCAL' )
       !>
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 2 * 100 )
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 2 * 100 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(TIMLEN)    WIN0
-      !>              CHARACTER*(TIMLEN)    WIN1
-      !>              CHARACTER*(TIMLEN)    BEGSTR
-      !>              CHARACTER*(TIMLEN)    ENDSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(TIMLEN)    WIN0
+      !>      CHARACTER*(TIMLEN)    WIN1
+      !>      CHARACTER*(TIMLEN)    BEGSTR
+      !>      CHARACTER*(TIMLEN)    ENDSTR
       !>
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2      )
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RIGHT
-      !>              DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2      )
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RIGHT
+      !>      DOUBLE PRECISION      STEP
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>              LOGICAL               OK
+      !>      LOGICAL               OK
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement and result windows CNFINE and RESULT are
-      !>        C     saved because this practice helps to prevent stack
-      !>        C     overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement and result windows CNFINE and RESULT are
+      !>C     saved because this practice helps to prevent stack
+      !>C     overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfstol_ex1.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfstol_ex1.tm' )
       !>
-      !>        C
-      !>        C     Use an SPK covering year 14 AD.
-      !>        C
-      !>              CALL FURNSH ( 'de408.bsp' )
+      !>C
+      !>C     Use an SPK covering year 14 AD.
+      !>C
+      !>      CALL FURNSH ( 'de408.bsp' )
       !>
-      !>        C
-      !>        C     Initialize the confinement and result windows.
-      !>        C
-      !>              CALL SSIZED ( 2,      CNFINE )
-      !>              CALL SSIZED ( MAXWIN, RESULT )
+      !>C
+      !>C     Initialize the confinement and result windows.
+      !>C
+      !>      CALL SSIZED ( 2,      CNFINE )
+      !>      CALL SSIZED ( MAXWIN, RESULT )
       !>
-      !>        C
-      !>        C     Obtain the TDB time bounds of the confinement
-      !>        C     window, which is a single interval in this case.
-      !>        C
-      !>              WIN0 = '14 A.D. SEP 1  00:00:00'
-      !>              WIN1 = '14 A.D. SEP 30 00:00:00'
+      !>C
+      !>C     Obtain the TDB time bounds of the confinement
+      !>C     window, which is a single interval in this case.
+      !>C
+      !>      WIN0 = '14 A.D. SEP 1  00:00:00'
+      !>      WIN1 = '14 A.D. SEP 30 00:00:00'
       !>
-      !>              CALL STR2ET ( WIN0, ET0 )
-      !>              CALL STR2ET ( WIN1, ET1 )
+      !>      CALL STR2ET ( WIN0, ET0 )
+      !>      CALL STR2ET ( WIN1, ET1 )
       !>
-      !>        C
-      !>        C     Insert the time bounds into the confinement
-      !>        C     window.
-      !>        C
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>C
+      !>C     Insert the time bounds into the confinement
+      !>C     window.
+      !>C
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Select a 3-minute step. We'll ignore any occultations
-      !>        C     lasting less than 3 minutes.
-      !>        C
-      !>              STEP = 180.D0
+      !>C
+      !>C     Select a 3-minute step. We'll ignore any occultations
+      !>C     lasting less than 3 minutes.
+      !>C
+      !>      STEP = 180.D0
       !>
-      !>        C
-      !>        C     Perform the search. ET0 and ET1 have values ~-6*10^10,
-      !>        C     CNVTOL has value 10^-6, so double precision addition or
-      !>        C     subtraction of ET0 and ET1 with CNVTOL returns a result
-      !>        C     indistinguishable from ET0 and ET1.
-      !>        C
-      !>        C     Reduce the GF convergence tolerance by an order of
-      !>        C     magnitude to resolve this condition.
-      !>        C
-      !>              CALL GFSTOL ( 1D-5 )
+      !>C
+      !>C     Perform the search. ET0 and ET1 have values ~-6*10^10,
+      !>C     CNVTOL has value 10^-6, so double precision addition or
+      !>C     subtraction of ET0 and ET1 with CNVTOL returns a result
+      !>C     indistinguishable from ET0 and ET1.
+      !>C
+      !>C     Reduce the GF convergence tolerance by an order of
+      !>C     magnitude to resolve this condition.
+      !>C
+      !>      CALL GFSTOL ( 1D-5 )
       !>
-      !>              CALL GFOCLT ( 'ANY',
-      !>             .              'EARTH', 'ellipsoid', 'IAU_EARTH',
-      !>             .              'SUN',   'ellipsoid', 'IAU_SUN',
-      !>             .              'LT',    'MOON',       STEP,
-      !>             .               CNFINE,  RESULT  )
+      !>      CALL GFOCLT ( 'ANY',
+      !>     .              'EARTH', 'ellipsoid', 'IAU_EARTH',
+      !>     .              'SUN',   'ellipsoid', 'IAU_SUN',
+      !>     .              'LT',    'MOON',       STEP,
+      !>     .               CNFINE,  RESULT  )
       !>
-      !>              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>      IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                 WRITE (*,*) 'No occultation was found.'
+      !>         WRITE (*,*) 'No occultation was found.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO I = 1, WNCARD(RESULT)
+      !>         DO I = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C           Fetch and display each occultation interval.
-      !>        C
-      !>                    CALL WNFETD ( RESULT, I, LEFT, RIGHT )
+      !>C
+      !>C           Fetch and display each occultation interval.
+      !>C
+      !>            CALL WNFETD ( RESULT, I, LEFT, RIGHT )
       !>
-      !>                    CALL TIMOUT ( LEFT,  TIMFMT, BEGSTR )
-      !>                    CALL TIMOUT ( RIGHT, TIMFMT, ENDSTR )
+      !>            CALL TIMOUT ( LEFT,  TIMFMT, BEGSTR )
+      !>            CALL TIMOUT ( RIGHT, TIMFMT, ENDSTR )
       !>
-      !>                    WRITE (*,*) 'Interval ', I
-      !>                    WRITE (*,*) '   Start time: '//BEGSTR
-      !>                    WRITE (*,*) '   Stop time:  '//ENDSTR
+      !>            WRITE (*,*) 'Interval ', I
+      !>            WRITE (*,*) '   Start time: '//BEGSTR
+      !>            WRITE (*,*) '   Stop time:  '//ENDSTR
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2352,10 +2369,12 @@ contains
       !>        example.
       !>
       !>-    SPICELIB Version 1.0.0, 18-APR-2014 (EDW)
-      module procedure gfstol
+      module subroutine gfstol ( ctx, value )
       use pepper_kinds, only: wp
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: value  !! Double precision value returned or to store.
       real(wp) :: putval  !! copy of the value to store
 
 !
@@ -2394,15 +2413,13 @@ contains
 
       end if
 
-      end procedure gfstol
+      end subroutine gfstol
 
-      !>## Abstract
+      !> Return the value of a specified coordinate of a vector.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Return the value of a specified coordinate of a vector.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -2711,12 +2728,29 @@ contains
       !>        no names associated with their ID codes.
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB)
-      module procedure zzgfcoq
+      module subroutine zzgfcoq ( ctx, vecdef, method, trgid, et, ref, abcorr, obsid, dref, dvec, crdsys, ctrid, re, f, crdnam, value, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: reccyl, reclat, recrad, recsph
       use pepper_inc_gf
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: vecdef  !! Vector definition.
+      character(*), intent(in) :: method  !! Computation method.
+      integer(ip), intent(in) :: trgid  !! Target ID code.
+      real(wp), intent(in) :: et  !! Computation epoch.
+      character(*), intent(in) :: ref  !! Reference frame name.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      integer(ip), intent(in) :: obsid  !! Observer ID code.
+      character(*), intent(in) :: dref  !! Reference frame of ray's direction vector.
+      real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+      character(*), intent(in) :: crdsys  !! Coordinate system name.
+      integer(ip), intent(in) :: ctrid  !! Frame center ID code.
+      real(wp), intent(in) :: re  !! Equatorial radius of central body.
+      real(wp), intent(in) :: f  !! Flattening coefficient of central body.
+      character(*), intent(in) :: crdnam  !! Coordinate name.
+      real(wp), intent(out) :: value  !! Coordinate value.
+      logical, intent(out) :: found  !! Flag indicating if coordinate was computed.
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -2926,16 +2960,14 @@ contains
 
       return
       end associate
-      end procedure zzgfcoq
+      end subroutine zzgfcoq
 
-      !>## Abstract
+      !> Return the signs of a Cartesian velocity vector's coordinates
+      !> when the velocity is transformed to a given coordinate system.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Return the signs of a Cartesian velocity vector's coordinates
-      !>     when the velocity is transformed to a given coordinate system.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3154,11 +3186,18 @@ contains
       !>        Added FAILED() check to avoid numeric problems.
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-2009 (NJB)
-      module procedure zzgfcprx
+      module subroutine zzgfcprx ( ctx, state, corsys, re, f, sense, cdsign )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: latrec, mxv, vdot, vhat, vhatip
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: state  ( 6 )  !! A 6-dimensional Cartesian state vector.
+      character(*), intent(in) :: corsys  !! A coordinate system name parameter.
+      real(wp), intent(in) :: re  !! Ellipsoid equatorial radius.
+      real(wp), intent(in) :: f  !! Ellipsoid flattening coefficient.
+      integer(ip), intent(in) :: sense  !! Reference body longitude sense.
+      integer(ip), intent(out) :: cdsign ( 3 )  !! Velocity sign vector.
 
       integer(ip), parameter :: upidx = 1
 
@@ -3564,16 +3603,14 @@ contains
       end if
 
       return
-      end procedure zzgfcprx
+      end subroutine zzgfcprx
 
-      !>## Abstract
+      !> Return the distance between two ephemeris objects, optionally
+      !> corrected for light time and stellar aberration.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Return the distance between two ephemeris objects, optionally
-      !>     corrected for light time and stellar aberration.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3663,10 +3700,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
-      module procedure zzgfdiq
+      module subroutine zzgfdiq ( ctx, targid, et, abcorr, obsid, dist )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: targid  !! Target body.
+      real(wp), intent(in) :: et  !! Observer epoch.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      integer(ip), intent(in) :: obsid  !! Observing body.
+      real(wp), intent(out) :: dist  !! Distance between target and observer.
 
       real(wp) :: lt
       real(wp) :: pos   ( 3 )
@@ -3686,16 +3729,14 @@ contains
       dist = vnorm ( pos )
 
       return
-      end procedure zzgfdiq
+      end subroutine zzgfdiq
 
-      !>## Abstract
+      !> Display a character string at a position at the first column on
+      !> the previous line on the screen.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Display a character string at a position at the first column on
-      !>     the previous line on the screen.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -3845,10 +3886,15 @@ contains
       !>        Updated for MAC-OSX-64BIT-GFORTRAN.
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-2009 (NJB)
-      module procedure zzgfdsps
+      module subroutine zzgfdsps ( ctx, nlead, string, fmt, ntrail )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nlead  !! Number of leading blank lines to write.
+      character(*), intent(in) :: string  !! The string to display.
+      character(*), intent(in) :: fmt  !! Format in which the string is to be written.
+      integer(ip), intent(in) :: ntrail  !! Number of trailing blank lines to write.
 
 
       character(lnsize) :: tmpstr
@@ -3879,8 +3925,11 @@ contains
       end do
 
       return
-      end procedure zzgfdsps
+      end subroutine zzgfdsps
 
+      !> Perform initialization functions for visibility state
+      !> determination.
+      !>
       !>## Detailed Input
       !>
       !>     INST       indicates the name of the instrument, such as a
@@ -4238,9 +4287,7 @@ contains
       !>        to SVETRG (save ellipsoidal target), since it does not apply
       !>        to DSK targets. Note that DSK targets currently are not
       !>        supported.
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzgffvin
+      module subroutine zzgffvin ( ctx, inst, tshape, raydir, target, tframe, abcorr, obsrvr )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr, halfpi
       use pepper_containers, only: grow
@@ -4250,6 +4297,14 @@ contains
       use pepper_inc_zzocced
       use pepper_inc_gf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: inst  !! Name of the instrument.
+      character(*), intent(in) :: tshape  !! Type of shape model used for target body.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: tframe  !! Body-fixed, body-centered frame for target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
       real(wp), parameter :: atol = 1.0e-6_wp
       real(wp), parameter :: fvemax = 1.0e-5_wp
       real(wp) :: bsite  ( 3 )
@@ -4319,6 +4374,9 @@ contains
                   svustl => ctx%zzgffvu_state%svustl, &
                   svxmag => ctx%zzgffvu_state%svxmag, &
                   svxmit => ctx%zzgffvu_state%svxmit )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -4654,7 +4712,6 @@ contains
 
 !
 !     Look up the instrument parameters.
-!
 !
 !     PEPPER: the instrument frame name is saved at the length of its
 !     kernel variable's value (SPICELIB: 32 characters).
@@ -5026,8 +5083,10 @@ contains
       return
       end associate
       end associate
-      end procedure zzgffvin
+      end subroutine zzgffvin
 
+      !> Indicate whether the target is currently in the instrument FOV.
+      !>
       !>## Detailed Input
       !>
       !>     TIME       is the epoch of interest in TDB seconds past the
@@ -5109,15 +5168,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB) (LSE) (WLT) (EDW)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure zzgffvst
+      module subroutine zzgffvst ( ctx, time, vistat )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: el2cgv, mtxv, mxm, mxv, vdot, vsep
       use pepper_inc_zzabcorr
       use pepper_inc_zzocced
       use pepper_inc_gf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: time  !! TDB epoch (in seconds past J2000)
+      logical, intent(out) :: vistat  !! .TRUE. if the object is visible, .FALSE. otherwise.
       real(wp) :: bsite  ( 3 )
       real(wp) :: coord  ( 2 )
       real(wp) :: ctrext
@@ -5190,6 +5250,9 @@ contains
                   svustl => ctx%zzgffvu_state%svustl, &
                   svxmag => ctx%zzgffvu_state%svxmag, &
                   svxmit => ctx%zzgffvu_state%svxmit )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -5587,8 +5650,10 @@ contains
 
       return
       end associate
-      end procedure zzgffvst
+      end subroutine zzgffvst
 
+      !> Initialize the GF illumination angle constraint search utilities.
+      !>
       !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining
@@ -5765,11 +5830,20 @@ contains
       !>        and after the BODVRD call.
       !>
       !>-    SPICELIB Version 1.0.0, 23-MAY-2012 (NJB) (EDW)
-      module procedure zzgfilin
+      module subroutine zzgfilin ( ctx, method, angtyp, target, illum, fixref, abcorr, obsrvr, spoint )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss, esrchc, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: angtyp  !! Type of illumination angle.
+      character(*), intent(in) :: target  !! Target body name.
+      character(*), intent(in) :: illum  !! Illumination source name.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      character(*), intent(in) :: abcorr  !! Aberration correction specifier.
+      character(*), intent(in) :: obsrvr  !! Observer name.
+      real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
       real(wp) :: angles ( 3 )
       real(wp) :: emista ( 2 )
       real(wp) :: ettarg
@@ -6027,8 +6101,11 @@ contains
 
       return
       end associate
-      end procedure zzgfilin
+      end subroutine zzgfilin
 
+      !> Indicate whether a specified illumination angle is decreasing at
+      !> a specified time.
+      !>
       !>## Detailed Input
       !>
       !>     UDFUNC   is a placeholder subroutine argument. This argument is
@@ -6124,9 +6201,6 @@ contains
       integer(ip) :: fxtyid
       integer(ip) :: fxcent
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! Flag indicating whether illumination angle is decreasing.
@@ -6184,6 +6258,8 @@ contains
       end associate
       end subroutine zzgfildc
 
+      !> Return the specified illumination angle at a specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the time, expressed as seconds past J2000 TDB, at
@@ -6250,10 +6326,13 @@ contains
       !>        Bug fix: now checks FAILED after ILLUMG call.
       !>
       !>-    SPICELIB Version 1.0.0, 23-MAY-2012 (NJB) (EDW)
-      module procedure zzgfilgq
+      module subroutine zzgfilgq ( ctx, et, angle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+      real(wp), intent(out) :: angle  !! Illumination angle at time ET.
       real(wp) :: angles ( 3 )
       real(wp) :: emista ( 2 )
       real(wp) :: ettarg
@@ -6291,8 +6370,11 @@ contains
 
       return
       end associate
-      end procedure zzgfilgq
+      end subroutine zzgfilgq
 
+      !> Perform initialization functions for occultation state
+      !> determination.
+      !>
       !>## Detailed Input
       !>
       !>     OCCTYP   indicates the type of occultation that is to be found.
@@ -6610,7 +6692,7 @@ contains
       !>        body.
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-2009 (LSE) (WLT) (NJB) (EDW)
-      module procedure zzgfocin
+      module subroutine zzgfocin ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, obsrvr, abcorr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr, suffix, ucase_inplace
       use pepper_inc_gf
@@ -6618,6 +6700,16 @@ contains
       use pepper_inc_zzdsk
       use pepper_inc_zzocced
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: occtyp  !! Type of occultation.
+      character(*), intent(in) :: front  !! Name of body occulting the other.
+      character(*), intent(in) :: fshape  !! Type of shape model used for front body.
+      character(*), intent(in) :: fframe  !! Body-fixed, body-centered frame for front body.
+      character(*), intent(in) :: back  !! Name of body occulted by the other.
+      character(*), intent(in) :: bshape  !! Type of shape model used for back body.
+      character(*), intent(in) :: bframe  !! Body-fixed, body-centered frame for back body.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
       character(:), allocatable :: fixfrm
       character(cvtlen) :: pntdef
       character(poslen) :: posnam
@@ -7183,8 +7275,10 @@ contains
 !
       return
       end associate
-      end procedure zzgfocin
+      end subroutine zzgfocin
 
+      !> See if the object is currently occulted.
+      !>
       !>## Detailed Input
       !>
       !>     TIME     is the epoch of interest in TDB seconds past the
@@ -7275,7 +7369,7 @@ contains
       !>        Initial updates to support surfaces represented by DSKs.
       !>
       !>-    SPICELIB Version 1.0.0, 30-DEC-2008 (NJB) (LSE) (WLT) (EDW)
-      module procedure zzgfocst
+      module subroutine zzgfocst ( ctx, time, ocstat )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
       use pepper_math, only: vnorm, vsep
@@ -7284,6 +7378,9 @@ contains
       use pepper_inc_zzdsk
       use pepper_inc_zzocced
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: time  !! TDB epoch (in seconds past J2000)
+      logical, intent(out) :: ocstat  !! .TRUE. if the object is occulted, .FALSE. otherwise.
       real(wp), parameter :: alpha = 1.0e-2_wp
       character(cvtlen) :: pntdef
       character(poslen) :: posnam
@@ -7785,16 +7882,14 @@ contains
 
       return
       end associate
-      end procedure zzgfocst
+      end subroutine zzgfocst
 
-      !>## Abstract
+      !> Compute the apparent phase angle for a target, observer,
+      !> illuminator set of ephemeris objects.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Compute the apparent phase angle for a target, observer,
-      !>     illuminator set of ephemeris objects.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -7881,16 +7976,19 @@ contains
       !>## Version
       !>
       !>-    SPICELIB version 1.0.0 23-JUN-2010 (EDW)
-      module procedure zzgfpaq
+      module subroutine zzgfpaq ( ctx, et, targ, illmn, obs, abcorr, value )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
       use pepper_math, only: vsep
       use pepper_strings, only: eqstr
       implicit none
-
-!
-!     SPICELIB functions.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+      integer(ip), intent(in) :: targ  !! Target body ID.
+      integer(ip), intent(in) :: illmn  !! Illuminating body ID.
+      integer(ip), intent(in) :: obs  !! Observer body ID.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      real(wp), intent(out) :: value  !! Value of phase angle.
 
 !
 !     Local Variables.
@@ -7972,15 +8070,13 @@ contains
 !
       return
 
-      end procedure zzgfpaq
+      end subroutine zzgfpaq
 
-      !>## Abstract
+      !> Set reference value in the GF sub-system.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Set reference value in the GF sub-system.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8032,10 +8128,12 @@ contains
       !>       call and inclusion of "zzholdd.inc" parameters file.
       !>
       !>-   SPICELIB Version 1.0.0  28-NOV-2009 (EDW)
-      module procedure zzgfref
+      module subroutine zzgfref ( ctx, refval )
       use pepper_kinds, only: wp
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: refval  !! The value to set as the reference value.
       real(wp) :: putval  !! copy of the value to store
 
       logical :: ok
@@ -8047,15 +8145,13 @@ contains
       putval = refval
       call zzholdd ( ctx, zzput, gf_ref, ok, putval )
 
-      end procedure zzgfref
+      end subroutine zzgfref
 
-      !>## Abstract
+      !> Compute the apparent range rate between two ephemeris objects.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Compute the apparent range rate between two ephemeris objects.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8160,14 +8256,16 @@ contains
       !>        Minor typo correction to comments.
       !>
       !>-    SPICELIB version 1.0.0 09-JUN-2009 (NJB)(EDW)
-      module procedure zzgfrrq
+      module subroutine zzgfrrq ( ctx, et, targ, obs, abcorr, value )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: dvnorm
       implicit none
-
-!
-!     SPICELIB functions.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB
+      integer(ip), intent(in) :: targ  !! Target body ID
+      integer(ip), intent(in) :: obs  !! Observer body ID
+      character(*), intent(in) :: abcorr  !! Aberration correction flag
+      real(wp), intent(out) :: value  !! Value of range rate between objects
 
 !
 !     Local Variables.
@@ -8202,20 +8300,18 @@ contains
 !
       return
 
-      end procedure zzgfrrq
+      end subroutine zzgfrrq
 
-      !>## Abstract
+      !> This routine is a root finding general purpose event location
+      !> routine. Most of the HARD work has been delegated to other
+      !> routines (In particular, how the dynamic step size is chosen).
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Sister routine to ZZGFSOLVX. Copy any edits to ZZGFSOLV or
+      !> ZZGFSOLVX to the sister routine.
       !>
-      !>     This routine is a root finding general purpose event location
-      !>     routine. Most of the HARD work has been delegated to other
-      !>     routines (In particular, how the dynamic step size is chosen).
-      !>
-      !>     Sister routine to ZZGFSOLVX. Copy any edits to ZZGFSOLV or
-      !>     ZZGFSOLVX to the sister routine.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -8507,10 +8603,6 @@ contains
       implicit none
 
 
-!
-!     SPICELIB functions.
-!
-
       real(wp) :: begin
       real(wp) :: curtim
       real(wp) :: diff
@@ -8534,18 +8626,6 @@ contains
 
       integer(ip) :: nloop
 
-!
-!     The maximum number of search loop iterations to execute.
-!     The default refinement method is bisection, a very slow
-!     method to convergence. Since 2**1000 ~ 10**301,
-!     1000 loop iterations represents enough effort to assume
-!     either the search will not converge or that the refinement
-!     function operates slower than would bisection, in which
-!     case the user should use the default GFREFN function.
-!
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
       logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
@@ -8991,18 +9071,16 @@ contains
       return
       end subroutine zzgfsolv
 
-      !>## Abstract
+      !> This routine is a root finding general purpose event location
+      !> routine. Most of the HARD work has been delegated to other
+      !> routines (In particular, how the dynamic step size is chosen).
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Sister routine to ZZGFSOLV. Copy any edits to ZZGFSOLV or
+      !> ZZGFSOLVX to the sister routine.
       !>
-      !>     This routine is a root finding general purpose event location
-      !>     routine. Most of the HARD work has been delegated to other
-      !>     routines (In particular, how the dynamic step size is chosen).
-      !>
-      !>     Sister routine to ZZGFSOLV. Copy any edits to ZZGFSOLV or
-      !>     ZZGFSOLVX to the sister routine.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9327,18 +9405,6 @@ contains
 
       integer(ip) :: nloop
 
-!
-!     The maximum number of search loop iterations to execute.
-!     The default refinement method is bisection, a very slow
-!     method to convergence. Since 2**1000 ~ 10**301,
-!     1000 loop iterations represents enough effort to assume
-!     either the search will not converge or that the refinement
-!     function operates slower than would bisection, in which
-!     case the user should use the default GFREFN function.
-!
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
       logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
@@ -9786,13 +9852,11 @@ contains
       return
       end subroutine zzgfsolvx
 
-      !>## Abstract
+      !> Compute the angular separation between the limbs of two objects.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Compute the angular separation between the limbs of two objects.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -9928,15 +9992,21 @@ contains
       !>        the error message output.
       !>
       !>-    SPICELIB Version 1.0.0, 03-MAR-2009 (EDW)
-      module procedure zzgfspq
+      module subroutine zzgfspq ( ctx, et, targ1, targ2, r1, r2, obs, abcorr, ref, value )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
       use pepper_math, only: vnorm, vsep
       implicit none
-
-!
-!     SPICELIB functions.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB
+      integer(ip), intent(in) :: targ1  !! NAIF ID for first target
+      integer(ip), intent(in) :: targ2  !! NAIF ID for second target
+      real(wp), intent(in) :: r1  !! Radius of a spherical model for TARG1
+      real(wp), intent(in) :: r2  !! Radius of a spherical model for TARG2
+      integer(ip), intent(in) :: obs  !! NAIF ID of observer
+      character(*), intent(in) :: abcorr  !! Aberration correction flag
+      character(*), intent(in) :: ref  !! Reference frame of the angular separation
+      real(wp), intent(out) :: value  !! Value of angular separation between objects
 
 !
 !     Local Variables.
@@ -9949,11 +10019,6 @@ contains
       real(wp) :: range2
       real(wp) :: theta
       real(wp) :: lt
-
-!
-!     ATOL is a tolerance value for computing arc sine.
-!
-
 
 !
 !     Standard SPICE error handling.
@@ -10028,8 +10093,11 @@ contains
       value = theta - ang1 - ang2
 
       return
-      end procedure zzgfspq
+      end subroutine zzgfspq
 
+      !> This routine initializes variables that describe an angular
+      !> separation event of interest for solution by [[zzgfsolv]].
+      !>
       !>## Detailed Input
       !>
       !>     OF       the string array naming the bodies whose angular
@@ -10206,11 +10274,17 @@ contains
       !>        execute for this version of the routine.
       !>
       !>-    SPICELIB Version 1.0.0, 14-APR-2008 (NJB) (EDW)
-      module procedure zzgfspin
+      module subroutine zzgfspin ( ctx, of, from, shape, frame, abcorr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: of    (2)  !! Body id's of the angular separation objects
+      character(*), intent(in) :: from  !! Observer name
+      character(*), intent(inout) :: shape (2)  !! Array of shape IDs corresponding to OF (PEPPER: normalized in place, as by SPICELIB)
+      character(*), intent(in) :: frame (2)  !! Array of frame names corresponding to OF
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
       real(wp) :: axes1 (3)
       real(wp) :: axes2 (3)
       real(wp) :: pv1   (6)
@@ -10493,8 +10567,11 @@ contains
 
       return
       end associate
-      end procedure zzgfspin
+      end subroutine zzgfspin
 
+      !> Computes whether or not the angular separation between SVBOD1 and
+      !> SVBOD2 is decreasing at time ET.
+      !>
       !>## Detailed Input
       !>
       !>     ET       time in seconds past J2000 at which one wishes to
@@ -10592,9 +10669,6 @@ contains
       integer(ip) :: ctr2
       character(32), parameter :: svshap ( spshpn ) = &
          [ character(32) :: 'POINT', 'SPHERE' ]
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! .TRUE. if angular separation is decreasing .FALSE. otherwise.
@@ -10664,6 +10738,9 @@ contains
       end associate
       end subroutine zzgfspdc
 
+      !> Determine the angular separation between the limbs of the two
+      !> bodies.
+      !>
       !>## Detailed Input
       !>
       !>     ET       time in ephemeris seconds past J2000 when the
@@ -10726,10 +10803,13 @@ contains
       !>        finder naming convention.
       !>
       !>-    SPICELIB Version 1.0.0, 26-AUG-2003 (LSE)
-      module procedure zzgfspgq
+      module subroutine zzgfspgq ( ctx, et, sep )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+      real(wp), intent(out) :: sep  !! Separation at time ET.
       logical :: return
       real(wp) :: axes1 (3)
       real(wp) :: axes2 (3)
@@ -10766,8 +10846,10 @@ contains
 
       return
       end associate
-      end procedure zzgfspgq
+      end subroutine zzgfspgq
 
+      !> Retrieve values set in [[zzgfspin]].
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -10838,10 +10920,18 @@ contains
       !>        Completed descriptions for $Brief_I/O.
       !>
       !>-    SPICELIB Version 1.0.0, 24-SEP-2012 (EDW)
-      module procedure zzgfspx
+      module subroutine zzgfspx ( ctx, xabcr, xbod, yref, xref, xobs, xrad, xshp )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: xabcr  !! Saved value SVABCR.
+      integer(ip), intent(out) :: xbod  (2)  !! Saved values SVBOD1 and SVBOD2.
+      character(*), intent(out) :: yref  !! Saved value SVREF.
+      character(*), intent(out) :: xref  (2)  !! Saved values SVREF1 and SVREF2.
+      integer(ip), intent(out) :: xobs  !! Saved value SVOBS.
+      real(wp), intent(out) :: xrad  (2)  !! Saved values SVRAD1 and SVRAD2.
+      integer(ip), intent(out) :: xshp  (2)  !! Saved values SVSHP1 and SVSHP2.
       logical :: return
       real(wp) :: axes1 (3)
       real(wp) :: axes2 (3)
@@ -10887,16 +10977,14 @@ contains
 
       return
       end associate
-      end procedure zzgfspx
+      end subroutine zzgfspx
 
-      !>## Abstract
+      !> Return the state of a ray-target surface intercept point used to
+      !> define coordinates referenced in a GF search.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Return the state of a ray-target surface intercept point used to
-      !>     define coordinates referenced in a GF search.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -11156,7 +11244,7 @@ contains
       !>        no names associated with their ID codes.
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB)
-      module procedure zzgfssin
+      module subroutine zzgfssin ( ctx, method, trgid, et, fixref, abcorr, obsid, dref, dctr, dvec, radii, state, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: mxvg, vdot, vhat
@@ -11165,6 +11253,19 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      integer(ip), intent(in) :: trgid  !! Target ID code.
+      real(wp), intent(in) :: et  !! Computation epoch.
+      character(*), intent(in) :: fixref  !! Reference frame name.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      integer(ip), intent(in) :: obsid  !! Observer ID code.
+      character(*), intent(in) :: dref  !! Reference frame of ray's direction vector.
+      integer(ip), intent(in) :: dctr  !! DREF's center ID code.
+      real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+      real(wp), intent(in) :: radii  ( 3 )  !! Target radii.
+      real(wp), intent(out) :: state  ( 6 )  !! State used to define coordinates.
+      logical, intent(out) :: found  !! Flag indicating whether state was found.
       real(wp) :: acc    ( 3 )
       real(wp) :: corxfi ( 6, 6 )
       real(wp) :: corxfm ( 6, 6 )
@@ -11710,16 +11811,14 @@ contains
 
       return
       end associate
-      end procedure zzgfssin
+      end subroutine zzgfssin
 
-      !>## Abstract
+      !> Return the state of a sub-observer point used to define
+      !> coordinates referenced in a GF search.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Return the state of a sub-observer point used to define
-      !>     coordinates referenced in a GF search.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -11912,7 +12011,7 @@ contains
       !>        no names associated with their ID codes.
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB)
-      module procedure zzgfssob
+      module subroutine zzgfssob ( ctx, method, trgid, et, fixref, abcorr, obsid, radii, state )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: mxvg, vdot, vhat
@@ -11921,6 +12020,15 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      integer(ip), intent(in) :: trgid  !! Target ID code.
+      real(wp), intent(in) :: et  !! Computation epoch.
+      character(*), intent(in) :: fixref  !! Reference frame name.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      integer(ip), intent(in) :: obsid  !! Observer ID code.
+      real(wp), intent(in) :: radii  ( 3 )  !! Target radii.
+      real(wp), intent(out) :: state  ( 6 )  !! State used to define coordinates.
       real(wp) :: acc    ( 3 )
       real(wp) :: corxfi ( 6, 6 )
       real(wp) :: corxfm ( 6, 6 )
@@ -12445,16 +12553,14 @@ contains
 
       return
       end associate
-      end procedure zzgfssob
+      end subroutine zzgfssob
 
-      !>## Abstract
+      !> This routine determines if the value of the scalar quantity
+      !> function is less than a previously defined reference value.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     This routine determines if the value of the scalar quantity
-      !>     function is less than a previously defined reference value.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -12540,9 +12646,6 @@ contains
       real(wp) :: refval
 
       logical :: ok
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Time in TDB seconds for which to evaluate UDFUNC.
       logical, intent(out) :: isless  !! Boolean indicating if the scalar value is less than reference value.
@@ -12589,14 +12692,12 @@ contains
 
       end subroutine zzgfudlt
 
-      !>## Abstract
+      !> Determine those intervals of the first window that are
+      !> properly contained in an interval of the second.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Determine those intervals of the first window that are
-      !>     properly contained in an interval of the second.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -12689,10 +12790,16 @@ contains
       !>        Edit to replaced term "schedule" with "window."
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB) (LSE) (WLT)
-      module procedure zzgfwsts
+      module subroutine zzgfwsts ( ctx, wndw1, wndw2, inclsn, wndw3 )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      real(wp), intent(in) :: wndw1 ( lbcell : * )  !! Input window 1.
+      real(wp), intent(in) :: wndw2 ( lbcell : * )  !! Input window 2.
+      character(*), intent(in) :: inclsn  !! Flag indicating inclusion desired.
+      real(wp), intent(inout) :: wndw3 ( lbcell : * )  !! Result of sifting WNDW1 through WNDW2.
 
 
       integer(ip), parameter :: inclen = 2
@@ -12894,8 +13001,11 @@ contains
       end if
 
       return
-      end procedure zzgfwsts
+      end subroutine zzgfwsts
 
+      !> Determine if a specified ray is within the field-of-view (FOV) of
+      !> a specified instrument at a given time.
+      !>
       !>## Detailed Input
       !>
       !>     INST     indicates the name of an instrument, such as a
@@ -13163,85 +13273,87 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM FOVRAY_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>        C     Returns radians per degree.
-      !>        C
-      !>              DOUBLE PRECISION      RPD
+      !>```fortran
+      !>      PROGRAM FOVRAY_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>C     Returns radians per degree.
+      !>C
+      !>      DOUBLE PRECISION      RPD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   =  'fovray_ex1.tm' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   =  'fovray_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .      'YYYY-MON-DD HR:MN:SC.##::TDB (TDB)' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .      'YYYY-MON-DD HR:MN:SC.##::TDB (TDB)' )
       !>
-      !>        C
-      !>        C     This is the UTC time of the observation.
-      !>        C
-      !>              CHARACTER*(*)         TIME
-      !>              PARAMETER           ( TIME = '2008-054T21:31:55.158' )
+      !>C
+      !>C     This is the UTC time of the observation.
+      !>C
+      !>      CHARACTER*(*)         TIME
+      !>      PARAMETER           ( TIME = '2008-054T21:31:55.158' )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(30)        TIMSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(30)        TIMSTR
       !>
-      !>              DOUBLE PRECISION      DEC
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      RA
-      !>              DOUBLE PRECISION      RAYDIR ( 3 )
+      !>      DOUBLE PRECISION      DEC
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      RA
+      !>      DOUBLE PRECISION      RAYDIR ( 3 )
       !>
-      !>              LOGICAL               VISIBL
+      !>      LOGICAL               VISIBL
       !>
-      !>        C
-      !>        C     RA and DEC are the right ascension and declination
-      !>        C     of Epsilon CMa in degrees.
-      !>        C
-      !>              RA   = 104.656
-      !>              DEC  = -28.972
+      !>C
+      !>C     RA and DEC are the right ascension and declination
+      !>C     of Epsilon CMa in degrees.
+      !>C
+      !>      RA   = 104.656
+      !>      DEC  = -28.972
       !>
-      !>        C
-      !>        C     Load the kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load the kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Convert the observation time from UTC to ET.
-      !>        C
-      !>              CALL STR2ET ( TIME, ET )
+      !>C
+      !>C     Convert the observation time from UTC to ET.
+      !>C
+      !>      CALL STR2ET ( TIME, ET )
       !>
-      !>        C
-      !>        C     Create a unit direction vector pointing from Cassini
-      !>        C     to the specified star. For details on corrections such
-      !>        C     as parallax, please see the example in GFRFOV.
-      !>        C
-      !>              CALL RADREC ( 1.D0, RA*RPD(), DEC*RPD(), RAYDIR )
+      !>C
+      !>C     Create a unit direction vector pointing from Cassini
+      !>C     to the specified star. For details on corrections such
+      !>C     as parallax, please see the example in GFRFOV.
+      !>C
+      !>      CALL RADREC ( 1.D0, RA*RPD(), DEC*RPD(), RAYDIR )
       !>
-      !>        C
-      !>        C     Is the star in the field-of-view of Cassini's UVIS?
-      !>        C
-      !>              CALL FOVRAY ( 'CASSINI_UVIS_FUV_OCC',  RAYDIR,
-      !>             .              'J2000', 'S', 'CASSINI', ET, VISIBL )
+      !>C
+      !>C     Is the star in the field-of-view of Cassini's UVIS?
+      !>C
+      !>      CALL FOVRAY ( 'CASSINI_UVIS_FUV_OCC',  RAYDIR,
+      !>     .              'J2000', 'S', 'CASSINI', ET, VISIBL )
       !>
-      !>        C
-      !>        C     Put the time in a specified format for output.
-      !>        C
-      !>              CALL TIMOUT ( ET, TIMFMT, TIMSTR )
+      !>C
+      !>C     Put the time in a specified format for output.
+      !>C
+      !>      CALL TIMOUT ( ET, TIMFMT, TIMSTR )
       !>
-      !>              IF ( VISIBL ) THEN
-      !>                 WRITE(*,*) 'Epsilon CMa was visible from the ',
-      !>             .              'Cassini UVIS instrument at '
-      !>                 WRITE(*,*) TIMSTR
-      !>              END IF
+      !>      IF ( VISIBL ) THEN
+      !>         WRITE(*,*) 'Epsilon CMa was visible from the ',
+      !>     .              'Cassini UVIS instrument at '
+      !>         WRITE(*,*) TIMSTR
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -13271,10 +13383,18 @@ contains
       !>        value of MARGIN in the $Parameters section.
       !>
       !>-    SPICELIB Version 1.0.0, 15-FEB-2012 (SCK) (NJB)
-      module procedure fovray
+      module subroutine fovray ( ctx, inst, raydir, rframe, abcorr, obsrvr, et, visibl )
       use pepper_kinds, only: wp
       use pepper_inc_gf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: inst  !! Name or ID code string of the instrument.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      character(*), intent(in) :: rframe  !! Reference frame of ray's direction vector.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name or ID code string of the observer.
+      real(wp), intent(in) :: et  !! Time of the observation (seconds past J2000).
+      logical, intent(out) :: visibl  !! Visibility flag (.TRUE./.FALSE.).
 
 !
 !     Standard SPICE error handling.
@@ -13301,8 +13421,11 @@ contains
       call zzgffvst ( ctx, et, visibl )
 
       return
-      end procedure fovray
+      end subroutine fovray
 
+      !> Determine if a specified ephemeris object is within the
+      !> field-of-view (FOV) of a specified instrument at a given time.
+      !>
       !>## Detailed Input
       !>
       !>     INST     indicates the name of an instrument, such as a
@@ -13660,110 +13783,112 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM FOVTRG_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM FOVTRG_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   =  'fovtrg_ex1.tm' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   =  'fovtrg_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .      'YYYY-MON-DD HR:MN:SC.#####::TDB (TDB)' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .      'YYYY-MON-DD HR:MN:SC.#####::TDB (TDB)' )
       !>
-      !>        C
-      !>        C     This is the spacecraft clock time of the image.
-      !>        C
-      !>              CHARACTER*(*)         SCLK
-      !>              PARAMETER           ( SCLK = '1665078907.122' )
+      !>C
+      !>C     This is the spacecraft clock time of the image.
+      !>C
+      !>      CHARACTER*(*)         SCLK
+      !>      PARAMETER           ( SCLK = '1665078907.122' )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(32)        BODY
-      !>              CHARACTER*(32)        FRNAME
-      !>              CHARACTER*(32)        TIME
-      !>              DOUBLE PRECISION      ET
-      !>              INTEGER               BODYID
-      !>              INTEGER               CAS_ID
-      !>              INTEGER               FRCODE
-      !>              LOGICAL               FOUND
-      !>              LOGICAL               VISIBL
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(32)        BODY
+      !>      CHARACTER*(32)        FRNAME
+      !>      CHARACTER*(32)        TIME
+      !>      DOUBLE PRECISION      ET
+      !>      INTEGER               BODYID
+      !>      INTEGER               CAS_ID
+      !>      INTEGER               FRCODE
+      !>      LOGICAL               FOUND
+      !>      LOGICAL               VISIBL
       !>
-      !>        C
-      !>        C     Load the kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load the kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Retrieve Cassini's NAIF ID.
-      !>        C
-      !>              CALL BODN2C ( 'CASSINI', CAS_ID, FOUND )
+      !>C
+      !>C     Retrieve Cassini's NAIF ID.
+      !>C
+      !>      CALL BODN2C ( 'CASSINI', CAS_ID, FOUND )
       !>
-      !>              IF (.NOT. FOUND) THEN
-      !>                 CALL SETMSG ( 'Could not find ID code for Cassini.' )
-      !>                 CALL SIGERR ( 'SPICE(NOTRANSLATION)' )
-      !>              END IF
+      !>      IF (.NOT. FOUND) THEN
+      !>         CALL SETMSG ( 'Could not find ID code for Cassini.' )
+      !>         CALL SIGERR ( 'SPICE(NOTRANSLATION)' )
+      !>      END IF
       !>
-      !>        C
-      !>        C     Convert the image tag SCLK to ET.
-      !>        C
-      !>              CALL SCS2E ( CAS_ID, SCLK, ET )
+      !>C
+      !>C     Convert the image tag SCLK to ET.
+      !>C
+      !>      CALL SCS2E ( CAS_ID, SCLK, ET )
       !>
-      !>        C
-      !>        C     Convert the ET to a string format for the output.
-      !>        C
-      !>              CALL TIMOUT ( ET, TIMFMT, TIME )
+      !>C
+      !>C     Convert the ET to a string format for the output.
+      !>C
+      !>      CALL TIMOUT ( ET, TIMFMT, TIME )
       !>
-      !>        C
-      !>        C     Search through all of Saturn's moons to see if each
-      !>        C     satellite was in the ISS NAC's field-of-view at
-      !>        C     the image time. We're going to take advantage of the
-      !>        C     fact that all Saturn's moons have a NAIF ID of 6xx.
-      !>        C
-      !>              WRITE (*,*) 'At time ', TIME, ' the following were '
-      !>              WRITE (*,*) 'in the field of view of CASSINI_ISS_NAC'
+      !>C
+      !>C     Search through all of Saturn's moons to see if each
+      !>C     satellite was in the ISS NAC's field-of-view at
+      !>C     the image time. We're going to take advantage of the
+      !>C     fact that all Saturn's moons have a NAIF ID of 6xx.
+      !>C
+      !>      WRITE (*,*) 'At time ', TIME, ' the following were '
+      !>      WRITE (*,*) 'in the field of view of CASSINI_ISS_NAC'
       !>
-      !>              DO BODYID = 600, 699
-      !>        C
-      !>        C        Check to see if the BODYID has a translation.
-      !>        C
-      !>                 CALL BODC2N ( BODYID, BODY, FOUND )
+      !>      DO BODYID = 600, 699
+      !>C
+      !>C        Check to see if the BODYID has a translation.
+      !>C
+      !>         CALL BODC2N ( BODYID, BODY, FOUND )
       !>
-      !>                 IF ( FOUND ) THEN
-      !>        C
-      !>        C           Check to see if a body-fixed frame for this ID
-      !>        C           exists.  If the frame is not in the kernel pool,
-      !>        C           we cannot perform the visibility test.  The main
-      !>        C           cause of a failure is a missing kernel.
-      !>        C
-      !>                    CALL CIDFRM ( BODYID, FRCODE, FRNAME, FOUND )
+      !>         IF ( FOUND ) THEN
+      !>C
+      !>C           Check to see if a body-fixed frame for this ID
+      !>C           exists.  If the frame is not in the kernel pool,
+      !>C           we cannot perform the visibility test.  The main
+      !>C           cause of a failure is a missing kernel.
+      !>C
+      !>            CALL CIDFRM ( BODYID, FRCODE, FRNAME, FOUND )
       !>
-      !>                    IF ( FOUND ) THEN
-      !>        C
-      !>        C              Is this body in the field-of-view of Cassini's
-      !>        C              ISS narrow-angle camera?
-      !>        C
-      !>                       CALL FOVTRG ( 'CASSINI_ISS_NAC',
-      !>             .                        BODY,  'ellipsoid', FRNAME,
-      !>             .                       'CN+S', 'CASSINI', ET, VISIBL )
+      !>            IF ( FOUND ) THEN
+      !>C
+      !>C              Is this body in the field-of-view of Cassini's
+      !>C              ISS narrow-angle camera?
+      !>C
+      !>               CALL FOVTRG ( 'CASSINI_ISS_NAC',
+      !>     .                        BODY,  'ellipsoid', FRNAME,
+      !>     .                       'CN+S', 'CASSINI', ET, VISIBL )
       !>
-      !>        C
-      !>        C              Report results.
-      !>        C
-      !>                       IF ( VISIBL ) THEN
-      !>                          WRITE (*,*) '  ', BODY
-      !>                       END IF
+      !>C
+      !>C              Report results.
+      !>C
+      !>               IF ( VISIBL ) THEN
+      !>                  WRITE (*,*) '  ', BODY
+      !>               END IF
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -13807,11 +13932,20 @@ contains
       !>        value of MARGIN in the $Parameters section.
       !>
       !>-    SPICELIB Version 1.0.0, 15-FEB-2012 (SCK) (NJB)
-      module procedure fovtrg
+      module subroutine fovtrg ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, et, visibl )
       use pepper_kinds, only: wp
       use pepper_strings, only: eqstr
       use pepper_inc_gf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: inst  !! Name or ID code string of the instrument.
+      character(*), intent(in) :: target  !! Name or ID code string of the target.
+      character(*), intent(in) :: tshape  !! Type of shape model used for the target.
+      character(*), intent(in) :: tframe  !! Body-fixed, body-centered frame for target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name or ID code string of the observer.
+      real(wp), intent(in) :: et  !! Time of the observation (seconds past J2000).
+      logical, intent(out) :: visibl  !! Visibility flag (.TRUE./.FALSE.).
       if ( .not. allocated ( ctx%fovtrg_state ) ) allocate ( ctx%fovtrg_state )
       associate ( raydir => ctx%fovtrg_state%raydir )
       if ( ctx%failed() ) return
@@ -13850,8 +13984,13 @@ contains
 
       return
       end associate
-      end procedure fovtrg
+      end subroutine fovtrg
 
+      !> Determine time intervals when a specified target body or ray
+      !> intersects the space bounded by the field-of-view (FOV) of a
+      !> specified instrument. Report progress and handle interrupts if so
+      !> commanded.
+      !>
       !>## Detailed Input
       !>
       !>     INST     is a string indicates the name of an instrument, such as
@@ -14597,205 +14736,207 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFFOVE_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFFOVE_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     SPICELIB default functions for
-      !>        C
-      !>        C        - Interrupt handling (no-op function):   GFBAIL
-      !>        C        - Search refinement:                     GFREFN
-      !>        C        - Progress report termination:           GFREPF
-      !>        C        - Progress report initialization:        GFREPI
-      !>        C        - Progress report update:                GFREPU
-      !>        C        - Search step size "get" function:       GFSTEP
-      !>        C
-      !>              EXTERNAL              GFBAIL
-      !>              EXTERNAL              GFREFN
-      !>              EXTERNAL              GFREPF
-      !>              EXTERNAL              GFREPI
-      !>              EXTERNAL              GFREPU
-      !>              EXTERNAL              GFSTEP
+      !>C
+      !>C     SPICELIB default functions for
+      !>C
+      !>C        - Interrupt handling (no-op function):   GFBAIL
+      !>C        - Search refinement:                     GFREFN
+      !>C        - Progress report termination:           GFREPF
+      !>C        - Progress report initialization:        GFREPI
+      !>C        - Progress report update:                GFREPU
+      !>C        - Search step size "get" function:       GFSTEP
+      !>C
+      !>      EXTERNAL              GFBAIL
+      !>      EXTERNAL              GFREFN
+      !>      EXTERNAL              GFREPF
+      !>      EXTERNAL              GFREPI
+      !>      EXTERNAL              GFREPU
+      !>      EXTERNAL              GFSTEP
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'gffove_ex1.tm' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'gffove_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .      'YYYY-MON-DD HR:MN:SC.######::TDB' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .      'YYYY-MON-DD HR:MN:SC.######::TDB' )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 10000 )
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 10000 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               SHPLEN
-      !>              PARAMETER           ( SHPLEN = 25 )
+      !>      INTEGER               SHPLEN
+      !>      PARAMETER           ( SHPLEN = 25 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 35 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 35 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(BDNMLN)    INST
-      !>              CHARACTER*(LNSIZE)    LINE
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(BDNMLN)    TARGET
-      !>              CHARACTER*(FRNMLN)    TFRAME
-      !>              CHARACTER*(TIMLEN)    TIMSTR ( 2 )
-      !>              CHARACTER*(SHPLEN)    TSHAPE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(BDNMLN)    INST
+      !>      CHARACTER*(LNSIZE)    LINE
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(BDNMLN)    TARGET
+      !>      CHARACTER*(FRNMLN)    TFRAME
+      !>      CHARACTER*(TIMLEN)    TIMSTR ( 2 )
+      !>      CHARACTER*(SHPLEN)    TSHAPE
       !>
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      ENDPT  ( 2 )
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      RAYDIR ( 3 )
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      TOL
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      ENDPT  ( 2 )
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      RAYDIR ( 3 )
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      TOL
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               N
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               BAIL
-      !>              LOGICAL               RPT
+      !>      LOGICAL               BAIL
+      !>      LOGICAL               RPT
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement and result windows CNFINE and RESULT are
-      !>        C     saved because this practice helps to prevent stack
-      !>        C     overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement and result windows CNFINE and RESULT are
+      !>C     saved because this practice helps to prevent stack
+      !>C     overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
       !>
-      !>        C
-      !>        C     Since we're treating the target as an ephemeris object,
-      !>        C     the ray direction is unused. We simply initialize the
-      !>        C     direction vector to avoid portability problems.
-      !>        C
-      !>              DATA                  RAYDIR / 3*0.D0 /
+      !>C
+      !>C     Since we're treating the target as an ephemeris object,
+      !>C     the ray direction is unused. We simply initialize the
+      !>C     direction vector to avoid portability problems.
+      !>C
+      !>      DATA                  RAYDIR / 3*0.D0 /
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( 2,      CNFINE )
-      !>              CALL SSIZED ( MAXWIN, RESULT )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( 2,      CNFINE )
+      !>      CALL SSIZED ( MAXWIN, RESULT )
       !>
-      !>        C
-      !>        C     Insert search time interval bounds into the
-      !>        C     confinement window.
-      !>        C
-      !>              CALL STR2ET ( '2004 JUN 11 06:30:00 TDB', ET0 )
-      !>              CALL STR2ET ( '2004 JUN 11 12:00:00 TDB', ET1 )
+      !>C
+      !>C     Insert search time interval bounds into the
+      !>C     confinement window.
+      !>C
+      !>      CALL STR2ET ( '2004 JUN 11 06:30:00 TDB', ET0 )
+      !>      CALL STR2ET ( '2004 JUN 11 12:00:00 TDB', ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Initialize inputs for the search.
-      !>        C
-      !>              INST   = 'CASSINI_ISS_NAC'
-      !>              TARGET = 'PHOEBE'
-      !>              TSHAPE = 'ELLIPSOID'
-      !>              TFRAME = 'IAU_PHOEBE'
-      !>              ABCORR = 'LT+S'
-      !>              OBSRVR = 'CASSINI'
+      !>C
+      !>C     Initialize inputs for the search.
+      !>C
+      !>      INST   = 'CASSINI_ISS_NAC'
+      !>      TARGET = 'PHOEBE'
+      !>      TSHAPE = 'ELLIPSOID'
+      !>      TFRAME = 'IAU_PHOEBE'
+      !>      ABCORR = 'LT+S'
+      !>      OBSRVR = 'CASSINI'
       !>
-      !>        C
-      !>        C     Use a particularly short step size to make the progress
-      !>        C     report's updates visible.
-      !>        C
-      !>        C     Pass the step size (1 second) to the GF default step
-      !>        C     size put/get system.
-      !>        C
-      !>              CALL GFSSTP ( 1.D0 )
+      !>C
+      !>C     Use a particularly short step size to make the progress
+      !>C     report's updates visible.
+      !>C
+      !>C     Pass the step size (1 second) to the GF default step
+      !>C     size put/get system.
+      !>C
+      !>      CALL GFSSTP ( 1.D0 )
       !>
-      !>        C
-      !>        C     Set the convergence tolerance to 1 microsecond.
-      !>        C
-      !>              TOL    = 1.D-6
+      !>C
+      !>C     Set the convergence tolerance to 1 microsecond.
+      !>C
+      !>      TOL    = 1.D-6
       !>
-      !>        C
-      !>        C     Use progress reporting; turn off interrupt handling.
-      !>        C
-      !>              RPT  = .TRUE.
-      !>              BAIL = .FALSE.
+      !>C
+      !>C     Use progress reporting; turn off interrupt handling.
+      !>C
+      !>      RPT  = .TRUE.
+      !>      BAIL = .FALSE.
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*, '(A)' ) 'Instrument: '//INST
-      !>              WRITE (*, '(A)' ) 'Target:     '//TARGET
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*, '(A)' ) 'Instrument: '//INST
+      !>      WRITE (*, '(A)' ) 'Target:     '//TARGET
       !>
-      !>        C
-      !>        C     Perform the search.
-      !>        C
-      !>              CALL GFFOVE ( INST,    TSHAPE,  RAYDIR,
-      !>             .              TARGET,  TFRAME,  ABCORR,  OBSRVR,
-      !>             .              TOL,     GFSTEP,  GFREFN,  RPT,
-      !>             .              GFREPI,  GFREPU,  GFREPF,  BAIL,
-      !>             .              GFBAIL,  CNFINE,  RESULT          )
+      !>C
+      !>C     Perform the search.
+      !>C
+      !>      CALL GFFOVE ( INST,    TSHAPE,  RAYDIR,
+      !>     .              TARGET,  TFRAME,  ABCORR,  OBSRVR,
+      !>     .              TOL,     GFSTEP,  GFREFN,  RPT,
+      !>     .              GFREPI,  GFREPU,  GFREPF,  BAIL,
+      !>     .              GFBAIL,  CNFINE,  RESULT          )
       !>
-      !>              N = WNCARD( RESULT )
+      !>      N = WNCARD( RESULT )
       !>
-      !>              IF ( N .EQ. 0 ) THEN
+      !>      IF ( N .EQ. 0 ) THEN
       !>
-      !>                 WRITE (*, '(A)' ) 'No FOV intersection found.'
+      !>         WRITE (*, '(A)' ) 'No FOV intersection found.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE (*, '(A)' ) '  Visibility start time (TDB)'
-      !>             .    //               '           Stop time (TDB)'
-      !>                 WRITE (*, '(A)' ) '  ---------------------------'
-      !>             .    //               '     ---------------------------'
+      !>         WRITE (*, '(A)' ) '  Visibility start time (TDB)'
+      !>     .    //               '           Stop time (TDB)'
+      !>         WRITE (*, '(A)' ) '  ---------------------------'
+      !>     .    //               '     ---------------------------'
       !>
-      !>                 DO I = 1, N
+      !>         DO I = 1, N
       !>
-      !>                    CALL WNFETD ( RESULT, I, ENDPT(1), ENDPT(2) )
+      !>            CALL WNFETD ( RESULT, I, ENDPT(1), ENDPT(2) )
       !>
-      !>                    DO J = 1, 2
-      !>                       CALL TIMOUT ( ENDPT(J), TIMFMT, TIMSTR(J) )
-      !>                    END DO
+      !>            DO J = 1, 2
+      !>               CALL TIMOUT ( ENDPT(J), TIMFMT, TIMSTR(J) )
+      !>            END DO
       !>
-      !>                    LINE( :3) = ' '
-      !>                    LINE(2: ) = TIMSTR(1)
-      !>                    LINE(34:) = TIMSTR(2)
+      !>            LINE( :3) = ' '
+      !>            LINE(2: ) = TIMSTR(1)
+      !>            LINE(34:) = TIMSTR(2)
       !>
-      !>                    WRITE (*,*) LINE
+      !>            WRITE (*,*) LINE
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              WRITE (*,*) ' '
-      !>              END
+      !>      WRITE (*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -14844,299 +14985,301 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFFOVE_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFFOVE_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      J1950
-      !>              DOUBLE PRECISION      J2000
-      !>              DOUBLE PRECISION      JYEAR
-      !>              DOUBLE PRECISION      RPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      J1950
+      !>      DOUBLE PRECISION      J2000
+      !>      DOUBLE PRECISION      JYEAR
+      !>      DOUBLE PRECISION      RPD
       !>
-      !>              INTEGER               WNCARD
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     SPICELIB default functions for
-      !>        C
-      !>        C        - Interrupt handling (no-op function):   GFBAIL
-      !>        C        - Search refinement:                     GFREFN
-      !>        C        - Progress report termination:           GFREPF
-      !>        C        - Progress report initialization:        GFREPI
-      !>        C        - Progress report update:                GFREPU
-      !>        C        - Search step size "get" function:       GFSTEP
-      !>        C
-      !>              EXTERNAL              GFBAIL
-      !>              EXTERNAL              GFREFN
-      !>              EXTERNAL              GFREPF
-      !>              EXTERNAL              GFREPI
-      !>              EXTERNAL              GFREPU
-      !>              EXTERNAL              GFSTEP
+      !>C
+      !>C     SPICELIB default functions for
+      !>C
+      !>C        - Interrupt handling (no-op function):   GFBAIL
+      !>C        - Search refinement:                     GFREFN
+      !>C        - Progress report termination:           GFREPF
+      !>C        - Progress report initialization:        GFREPI
+      !>C        - Progress report update:                GFREPU
+      !>C        - Search step size "get" function:       GFSTEP
+      !>C
+      !>      EXTERNAL              GFBAIL
+      !>      EXTERNAL              GFREFN
+      !>      EXTERNAL              GFREPF
+      !>      EXTERNAL              GFREPI
+      !>      EXTERNAL              GFREPU
+      !>      EXTERNAL              GFSTEP
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'gffove_ex1.tm' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'gffove_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .      'YYYY-MON-DD HR:MN:SC.######::TDB' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .      'YYYY-MON-DD HR:MN:SC.######::TDB' )
       !>
-      !>              DOUBLE PRECISION      AU
-      !>              PARAMETER           ( AU     = 149597870.693D0 )
+      !>      DOUBLE PRECISION      AU
+      !>      PARAMETER           ( AU     = 149597870.693D0 )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 10000 )
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 10000 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               SHPLEN
-      !>              PARAMETER           ( SHPLEN = 25 )
+      !>      INTEGER               SHPLEN
+      !>      PARAMETER           ( SHPLEN = 25 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 35 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 35 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(BDNMLN)    INST
-      !>              CHARACTER*(LNSIZE)    LINE
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(FRNMLN)    RFRAME
-      !>              CHARACTER*(BDNMLN)    TARGET
-      !>              CHARACTER*(TIMLEN)    TIMSTR ( 2 )
-      !>              CHARACTER*(SHPLEN)    TSHAPE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(BDNMLN)    INST
+      !>      CHARACTER*(LNSIZE)    LINE
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(FRNMLN)    RFRAME
+      !>      CHARACTER*(BDNMLN)    TARGET
+      !>      CHARACTER*(TIMLEN)    TIMSTR ( 2 )
+      !>      CHARACTER*(SHPLEN)    TSHAPE
       !>
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      DEC
-      !>              DOUBLE PRECISION      DECEPC
-      !>              DOUBLE PRECISION      DECPM
-      !>              DOUBLE PRECISION      DECDEG
-      !>              DOUBLE PRECISION      DECDG0
-      !>              DOUBLE PRECISION      DTDEC
-      !>              DOUBLE PRECISION      DTRA
-      !>              DOUBLE PRECISION      ENDPT  ( 2 )
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      PARLAX
-      !>              DOUBLE PRECISION      PLXDEG
-      !>              DOUBLE PRECISION      POS    ( 3 )
-      !>              DOUBLE PRECISION      PSTAR  ( 3 )
-      !>              DOUBLE PRECISION      RA
-      !>              DOUBLE PRECISION      RADEG
-      !>              DOUBLE PRECISION      RADEG0
-      !>              DOUBLE PRECISION      RAEPC
-      !>              DOUBLE PRECISION      RAPM
-      !>              DOUBLE PRECISION      RAYDIR ( 3 )
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      RSTAR
-      !>              DOUBLE PRECISION      T
-      !>              DOUBLE PRECISION      TOL
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      DEC
+      !>      DOUBLE PRECISION      DECEPC
+      !>      DOUBLE PRECISION      DECPM
+      !>      DOUBLE PRECISION      DECDEG
+      !>      DOUBLE PRECISION      DECDG0
+      !>      DOUBLE PRECISION      DTDEC
+      !>      DOUBLE PRECISION      DTRA
+      !>      DOUBLE PRECISION      ENDPT  ( 2 )
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      PARLAX
+      !>      DOUBLE PRECISION      PLXDEG
+      !>      DOUBLE PRECISION      POS    ( 3 )
+      !>      DOUBLE PRECISION      PSTAR  ( 3 )
+      !>      DOUBLE PRECISION      RA
+      !>      DOUBLE PRECISION      RADEG
+      !>      DOUBLE PRECISION      RADEG0
+      !>      DOUBLE PRECISION      RAEPC
+      !>      DOUBLE PRECISION      RAPM
+      !>      DOUBLE PRECISION      RAYDIR ( 3 )
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      RSTAR
+      !>      DOUBLE PRECISION      T
+      !>      DOUBLE PRECISION      TOL
       !>
-      !>              INTEGER               CATNO
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               N
+      !>      INTEGER               CATNO
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               N
       !>
-      !>              LOGICAL               BAIL
-      !>              LOGICAL               RPT
+      !>      LOGICAL               BAIL
+      !>      LOGICAL               RPT
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement and result windows CNFINE and RESULT are
-      !>        C     saved because this practice helps to prevent stack
-      !>        C     overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement and result windows CNFINE and RESULT are
+      !>C     saved because this practice helps to prevent stack
+      !>C     overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( 2,      CNFINE )
-      !>              CALL SSIZED ( MAXWIN, RESULT )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( 2,      CNFINE )
+      !>      CALL SSIZED ( MAXWIN, RESULT )
       !>
-      !>        C
-      !>        C     Insert search time interval bounds into the
-      !>        C     confinement window.
-      !>        C
-      !>              CALL STR2ET ( '2004 JUN 11 06:30:00 TDB', ET0 )
-      !>              CALL STR2ET ( '2004 JUN 11 12:00:00 TDB', ET1 )
+      !>C
+      !>C     Insert search time interval bounds into the
+      !>C     confinement window.
+      !>C
+      !>      CALL STR2ET ( '2004 JUN 11 06:30:00 TDB', ET0 )
+      !>      CALL STR2ET ( '2004 JUN 11 12:00:00 TDB', ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Initialize inputs for the search.
-      !>        C
-      !>              INST   = 'CASSINI_ISS_WAC'
-      !>              TARGET = ' '
-      !>              TSHAPE = 'RAY'
+      !>C
+      !>C     Initialize inputs for the search.
+      !>C
+      !>      INST   = 'CASSINI_ISS_WAC'
+      !>      TARGET = ' '
+      !>      TSHAPE = 'RAY'
       !>
-      !>        C
-      !>        C     Create a unit direction vector pointing from
-      !>        C     observer to star. We'll assume the direction
-      !>        C     is constant during the confinement window, and
-      !>        C     we'll use et0 as the epoch at which to compute the
-      !>        C     direction from the spacecraft to the star.
-      !>        C
-      !>        C     The data below are for the star with catalog
-      !>        C     number 6000 in the Hipparcos catalog. Angular
-      !>        C     units are degrees; epochs have units of Julian
-      !>        C     years and have a reference epoch of J1950.
-      !>        C     The reference frame is J2000.
-      !>        C
-      !>              CATNO  = 6000
+      !>C
+      !>C     Create a unit direction vector pointing from
+      !>C     observer to star. We'll assume the direction
+      !>C     is constant during the confinement window, and
+      !>C     we'll use et0 as the epoch at which to compute the
+      !>C     direction from the spacecraft to the star.
+      !>C
+      !>C     The data below are for the star with catalog
+      !>C     number 6000 in the Hipparcos catalog. Angular
+      !>C     units are degrees; epochs have units of Julian
+      !>C     years and have a reference epoch of J1950.
+      !>C     The reference frame is J2000.
+      !>C
+      !>      CATNO  = 6000
       !>
-      !>              PLXDEG = 0.000001056D0
+      !>      PLXDEG = 0.000001056D0
       !>
-      !>              RADEG0 = 19.290789927D0
-      !>              RAPM   = -0.000000720D0
-      !>              RAEPC  = 41.2000D0
+      !>      RADEG0 = 19.290789927D0
+      !>      RAPM   = -0.000000720D0
+      !>      RAEPC  = 41.2000D0
       !>
-      !>              DECDG0 =  2.015271007D0
-      !>              DECPM  =  0.000001814D0
-      !>              DECEPC = 41.1300D0
+      !>      DECDG0 =  2.015271007D0
+      !>      DECPM  =  0.000001814D0
+      !>      DECEPC = 41.1300D0
       !>
-      !>              RFRAME = 'J2000'
+      !>      RFRAME = 'J2000'
       !>
-      !>        C
-      !>        C     Correct the star's direction for proper motion.
-      !>        C
-      !>        C     The argument t represents et0 as Julian years
-      !>        C     past J1950.
-      !>        C
-      !>              T      =      ET0/JYEAR()
-      !>             .         +  ( J2000()- J1950() ) / 365.25D0
+      !>C
+      !>C     Correct the star's direction for proper motion.
+      !>C
+      !>C     The argument t represents et0 as Julian years
+      !>C     past J1950.
+      !>C
+      !>      T      =      ET0/JYEAR()
+      !>     .         +  ( J2000()- J1950() ) / 365.25D0
       !>
-      !>              DTRA   = T - RAEPC
-      !>              DTDEC  = T - DECEPC
+      !>      DTRA   = T - RAEPC
+      !>      DTDEC  = T - DECEPC
       !>
-      !>              RADEG  = RADEG0  +  DTRA  * RAPM
-      !>              DECDEG = DECDG0  +  DTDEC * DECPM
+      !>      RADEG  = RADEG0  +  DTRA  * RAPM
+      !>      DECDEG = DECDG0  +  DTDEC * DECPM
       !>
-      !>              RA     = RADEG  * RPD()
-      !>              DEC    = DECDEG * RPD()
+      !>      RA     = RADEG  * RPD()
+      !>      DEC    = DECDEG * RPD()
       !>
-      !>              CALL RADREC ( 1.D0, RA, DEC, PSTAR )
+      !>      CALL RADREC ( 1.D0, RA, DEC, PSTAR )
       !>
-      !>        C
-      !>        C     Correct star position for parallax applicable at
-      !>        C     the Cassini orbiter's position. (The parallax effect
-      !>        C     is negligible in this case; we're simply demonstrating
-      !>        C     the computation.)
-      !>        C
-      !>              PARLAX = PLXDEG * RPD()
-      !>              RSTAR  = AU / TAN(PARLAX)
+      !>C
+      !>C     Correct star position for parallax applicable at
+      !>C     the Cassini orbiter's position. (The parallax effect
+      !>C     is negligible in this case; we're simply demonstrating
+      !>C     the computation.)
+      !>C
+      !>      PARLAX = PLXDEG * RPD()
+      !>      RSTAR  = AU / TAN(PARLAX)
       !>
-      !>        C
-      !>        C     Scale the star's direction vector by its distance from
-      !>        C     the solar system barycenter. Subtract off the position
-      !>        C     of the spacecraft relative to the solar system
-      !>        C     barycenter; the result is the ray's direction vector.
-      !>        C
-      !>              CALL VSCLIP ( RSTAR, PSTAR )
+      !>C
+      !>C     Scale the star's direction vector by its distance from
+      !>C     the solar system barycenter. Subtract off the position
+      !>C     of the spacecraft relative to the solar system
+      !>C     barycenter; the result is the ray's direction vector.
+      !>C
+      !>      CALL VSCLIP ( RSTAR, PSTAR )
       !>
-      !>              CALL SPKPOS ( 'CASSINI', ET0, 'J2000',  'NONE',
-      !>             .              'SOLAR SYSTEM BARYCENTER', POS,  LT )
+      !>      CALL SPKPOS ( 'CASSINI', ET0, 'J2000',  'NONE',
+      !>     .              'SOLAR SYSTEM BARYCENTER', POS,  LT )
       !>
-      !>              CALL VSUB   ( PSTAR, POS, RAYDIR )
+      !>      CALL VSUB   ( PSTAR, POS, RAYDIR )
       !>
-      !>        C
-      !>        C     Correct the star direction for stellar aberration when
-      !>        C     we conduct the search.
-      !>        C
-      !>              ABCORR = 'S'
-      !>              OBSRVR = 'CASSINI'
+      !>C
+      !>C     Correct the star direction for stellar aberration when
+      !>C     we conduct the search.
+      !>C
+      !>      ABCORR = 'S'
+      !>      OBSRVR = 'CASSINI'
       !>
-      !>        C
-      !>        C     Use a particularly short step size to make the progress
-      !>        C     report's updates visible.
-      !>        C
-      !>        C     Pass the step size (1 second) to the GF default step size
-      !>        C     put/get system.
-      !>        C
-      !>              CALL GFSSTP ( 1.D0 )
+      !>C
+      !>C     Use a particularly short step size to make the progress
+      !>C     report's updates visible.
+      !>C
+      !>C     Pass the step size (1 second) to the GF default step size
+      !>C     put/get system.
+      !>C
+      !>      CALL GFSSTP ( 1.D0 )
       !>
-      !>        C
-      !>        C     Set the convergence tolerance to 1 microsecond.
-      !>        C
-      !>              TOL = 1.D-6
+      !>C
+      !>C     Set the convergence tolerance to 1 microsecond.
+      !>C
+      !>      TOL = 1.D-6
       !>
-      !>        C
-      !>        C     Use progress reporting; turn off interrupt handling.
-      !>        C
-      !>              RPT  = .TRUE.
-      !>              BAIL = .FALSE.
+      !>C
+      !>C     Use progress reporting; turn off interrupt handling.
+      !>C
+      !>      RPT  = .TRUE.
+      !>      BAIL = .FALSE.
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Instrument:              '//INST
-      !>              WRITE (*,*) 'Star''s catalog number:  ', CATNO
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Instrument:              '//INST
+      !>      WRITE (*,*) 'Star''s catalog number:  ', CATNO
       !>
-      !>        C
-      !>        C     Perform the search.
-      !>        C
-      !>              CALL GFFOVE ( INST,    TSHAPE,  RAYDIR,
-      !>             .              TARGET,  RFRAME,  ABCORR,  OBSRVR,
-      !>             .              TOL,     GFSTEP,  GFREFN,  RPT,
-      !>             .              GFREPI,  GFREPU,  GFREPF,  BAIL,
-      !>             .              GFBAIL,  CNFINE,  RESULT          )
+      !>C
+      !>C     Perform the search.
+      !>C
+      !>      CALL GFFOVE ( INST,    TSHAPE,  RAYDIR,
+      !>     .              TARGET,  RFRAME,  ABCORR,  OBSRVR,
+      !>     .              TOL,     GFSTEP,  GFREFN,  RPT,
+      !>     .              GFREPI,  GFREPU,  GFREPF,  BAIL,
+      !>     .              GFBAIL,  CNFINE,  RESULT          )
       !>
-      !>              N = WNCARD( RESULT )
+      !>      N = WNCARD( RESULT )
       !>
-      !>              IF ( N .EQ. 0 ) THEN
+      !>      IF ( N .EQ. 0 ) THEN
       !>
-      !>                 WRITE (*,*) 'No FOV intersection found.'
+      !>         WRITE (*,*) 'No FOV intersection found.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE (*, '(A)' ) '  Visibility start time (TDB)'
-      !>             .    //               '           Stop time (TDB)'
-      !>                 WRITE (*, '(A)' ) '  ---------------------------'
-      !>             .    //               '     ---------------------------'
+      !>         WRITE (*, '(A)' ) '  Visibility start time (TDB)'
+      !>     .    //               '           Stop time (TDB)'
+      !>         WRITE (*, '(A)' ) '  ---------------------------'
+      !>     .    //               '     ---------------------------'
       !>
-      !>                 DO I = 1, N
+      !>         DO I = 1, N
       !>
-      !>                    CALL WNFETD ( RESULT, I, ENDPT(1), ENDPT(2) )
+      !>            CALL WNFETD ( RESULT, I, ENDPT(1), ENDPT(2) )
       !>
-      !>                    DO J = 1, 2
-      !>                       CALL TIMOUT ( ENDPT(J), TIMFMT, TIMSTR(J) )
-      !>                    END DO
+      !>            DO J = 1, 2
+      !>               CALL TIMOUT ( ENDPT(J), TIMFMT, TIMSTR(J) )
+      !>            END DO
       !>
-      !>                    LINE( :3) = ' '
-      !>                    LINE(2: ) = TIMSTR(1)
-      !>                    LINE(34:) = TIMSTR(2)
+      !>            LINE( :3) = ' '
+      !>            LINE(2: ) = TIMSTR(1)
+      !>            LINE(34:) = TIMSTR(2)
       !>
-      !>                    WRITE (*,*) LINE
+      !>            WRITE (*,*) LINE
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              WRITE (*,*) ' '
-      !>              END
+      !>      WRITE (*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -15196,11 +15339,6 @@ contains
       use pepper_inc_gf
       implicit none
 
-
-!
-!     External routines
-!
-
 !     STEP is a step size initializer for the unused, dummy step size
 !     argument to ZZGFSOLV. The routine UDSTEP, which is passed to
 !     ZZGFSOLV, will be used by that routine to obtain the step size.
@@ -15218,9 +15356,6 @@ contains
 
       integer(ip) :: count
       integer(ip) :: i
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: inst  !! Name of the instrument.
       character(*), intent(in) :: tshape  !! Type of shape model used for target body.
@@ -15347,6 +15482,10 @@ contains
       return
       end subroutine gffove
 
+      !> Determine time intervals when an observer sees one target
+      !> occulted by another. Report progress and handle interrupts
+      !> if so commanded.
+      !>
       !>## Detailed Input
       !>
       !>     OCCTYP   indicates the type of occultation that is to be found.
@@ -16215,144 +16354,146 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFOCCE_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFOCCE_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              EXTERNAL              GFSTEP
-      !>              EXTERNAL              GFREFN
-      !>              EXTERNAL              GFREPI
-      !>              EXTERNAL              GFREPU
-      !>              EXTERNAL              GFREPF
+      !>      EXTERNAL              GFSTEP
+      !>      EXTERNAL              GFREFN
+      !>      EXTERNAL              GFREPI
+      !>      EXTERNAL              GFREPU
+      !>      EXTERNAL              GFREPF
       !>
-      !>              INTEGER               WNCARD
-      !>              LOGICAL               GFBAIL
-      !>              EXTERNAL              GFBAIL
+      !>      INTEGER               WNCARD
+      !>      LOGICAL               GFBAIL
+      !>      EXTERNAL              GFBAIL
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .   'YYYY MON DD HR:MN:SC.###### ::TDB (TDB)' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .   'YYYY MON DD HR:MN:SC.###### ::TDB (TDB)' )
       !>
-      !>              DOUBLE PRECISION      CNVTOL
-      !>              PARAMETER           ( CNVTOL = 1.D-6 )
+      !>      DOUBLE PRECISION      CNVTOL
+      !>      PARAMETER           ( CNVTOL = 1.D-6 )
       !>
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 2 * 100 )
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 2 * 100 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(TIMLEN)    WIN0
-      !>              CHARACTER*(TIMLEN)    WIN1
-      !>              CHARACTER*(TIMLEN)    BEGSTR
-      !>              CHARACTER*(TIMLEN)    ENDSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(TIMLEN)    WIN0
+      !>      CHARACTER*(TIMLEN)    WIN1
+      !>      CHARACTER*(TIMLEN)    BEGSTR
+      !>      CHARACTER*(TIMLEN)    ENDSTR
       !>
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      RIGHT
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      RIGHT
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>              LOGICAL               BAIL
-      !>              LOGICAL               RPT
+      !>      LOGICAL               BAIL
+      !>      LOGICAL               RPT
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement and result windows CNFINE and RESULT are
-      !>        C     saved because this practice helps to prevent stack
-      !>        C     overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement and result windows CNFINE and RESULT are
+      !>C     saved because this practice helps to prevent stack
+      !>C     overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfocce_ex1.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfocce_ex1.tm' )
       !>
-      !>        C
-      !>        C     Initialize the confinement and result windows.
-      !>        C
-      !>              CALL SSIZED ( 2,      CNFINE )
-      !>              CALL SSIZED ( MAXWIN, RESULT )
+      !>C
+      !>C     Initialize the confinement and result windows.
+      !>C
+      !>      CALL SSIZED ( 2,      CNFINE )
+      !>      CALL SSIZED ( MAXWIN, RESULT )
       !>
-      !>        C
-      !>        C     Obtain the TDB time bounds of the confinement
-      !>        C     window, which is a single interval in this case.
-      !>        C
-      !>              WIN0 = '2001 DEC 01 00:00:00 TDB'
-      !>              WIN1 = '2002 JAN 01 00:00:00 TDB'
+      !>C
+      !>C     Obtain the TDB time bounds of the confinement
+      !>C     window, which is a single interval in this case.
+      !>C
+      !>      WIN0 = '2001 DEC 01 00:00:00 TDB'
+      !>      WIN1 = '2002 JAN 01 00:00:00 TDB'
       !>
-      !>              CALL STR2ET ( WIN0, ET0 )
-      !>              CALL STR2ET ( WIN1, ET1 )
+      !>      CALL STR2ET ( WIN0, ET0 )
+      !>      CALL STR2ET ( WIN1, ET1 )
       !>
-      !>        C
-      !>        C     Insert the time bounds into the confinement
-      !>        C     window.
-      !>        C
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>C
+      !>C     Insert the time bounds into the confinement
+      !>C     window.
+      !>C
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Select a 20 second step. We'll ignore any occultations
-      !>        C     lasting less than 20 seconds.
-      !>        C
-      !>              CALL GFSSTP ( 20.D0 )
+      !>C
+      !>C     Select a 20 second step. We'll ignore any occultations
+      !>C     lasting less than 20 seconds.
+      !>C
+      !>      CALL GFSSTP ( 20.D0 )
       !>
-      !>        C
-      !>        C     Turn on progress reporting; turn off interrupt
-      !>        C     handling.
-      !>        C
-      !>              RPT  = .TRUE.
-      !>              BAIL = .FALSE.
+      !>C
+      !>C     Turn on progress reporting; turn off interrupt
+      !>C     handling.
+      !>C
+      !>      RPT  = .TRUE.
+      !>      BAIL = .FALSE.
       !>
-      !>        C
-      !>        C     Perform the search.
-      !>        C
-      !>              CALL GFOCCE ( 'ANY',
-      !>             .              'MOON',   'ellipsoid',  'IAU_MOON',
-      !>             .              'SUN',    'ellipsoid',  'IAU_SUN',
-      !>             .              'LT',     'EARTH',      CNVTOL,
-      !>             .              GFSTEP,   GFREFN,       RPT,
-      !>             .              GFREPI,   GFREPU,       GFREPF,
-      !>             .              BAIL,     GFBAIL,       CNFINE,  RESULT )
+      !>C
+      !>C     Perform the search.
+      !>C
+      !>      CALL GFOCCE ( 'ANY',
+      !>     .              'MOON',   'ellipsoid',  'IAU_MOON',
+      !>     .              'SUN',    'ellipsoid',  'IAU_SUN',
+      !>     .              'LT',     'EARTH',      CNVTOL,
+      !>     .              GFSTEP,   GFREFN,       RPT,
+      !>     .              GFREPI,   GFREPU,       GFREPF,
+      !>     .              BAIL,     GFBAIL,       CNFINE,  RESULT )
       !>
-      !>              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>      IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                 WRITE (*,*) 'No occultation was found.'
+      !>         WRITE (*,*) 'No occultation was found.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO I = 1, WNCARD(RESULT)
+      !>         DO I = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C           Fetch and display each occultation interval.
-      !>        C
-      !>                    CALL WNFETD ( RESULT, I, LEFT, RIGHT )
+      !>C
+      !>C           Fetch and display each occultation interval.
+      !>C
+      !>            CALL WNFETD ( RESULT, I, LEFT, RIGHT )
       !>
-      !>                    CALL TIMOUT ( LEFT,  TIMFMT, BEGSTR )
-      !>                    CALL TIMOUT ( RIGHT, TIMFMT, ENDSTR )
+      !>            CALL TIMOUT ( LEFT,  TIMFMT, BEGSTR )
+      !>            CALL TIMOUT ( RIGHT, TIMFMT, ENDSTR )
       !>
-      !>                    WRITE (*,*) 'Interval ', I
-      !>                    WRITE (*,*) '   Start time: '//BEGSTR
-      !>                    WRITE (*,*) '   Stop time:  '//ENDSTR
+      !>            WRITE (*,*) 'Interval ', I
+      !>            WRITE (*,*) '   Start time: '//BEGSTR
+      !>            WRITE (*,*) '   Stop time:  '//ENDSTR
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -16434,11 +16575,6 @@ contains
       use pepper_inc_zzdsk
       implicit none
 
-
-!
-!     External routines
-!
-
 !
 !     STEP is a step size initializer for the unused, dummy step size
 !     argument to ZZGFSOLV. The routine UDSTEP, which is passed to
@@ -16460,9 +16596,6 @@ contains
 
       integer(ip) :: count
       integer(ip) :: i
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: occtyp  !! Type of occultation.
       character(*), intent(in) :: front  !! Name of body occulting the other.
@@ -16611,14 +16744,12 @@ contains
       return
       end subroutine gfocce
 
-      !>## Abstract
+      !> Determine the occultation condition (not occulted, partially
+      !> occulted, etc.) of one target relative to another target as seen
+      !> by an observer at a given time.
       !>
-      !>     Determine the occultation condition (not occulted, partially
-      !>     occulted, etc.) of one target relative to another target as seen
-      !>     by an observer at a given time.
-      !>
-      !>     The surfaces of the target bodies may be represented by triaxial
-      !>     ellipsoids, points, or by topographic data provided by DSK files.
+      !> The surfaces of the target bodies may be represented by triaxial
+      !> ellipsoids, points, or by topographic data provided by DSK files.
       !>
       !>## Detailed Input
       !>
@@ -17114,160 +17245,162 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM OCCULT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM OCCULT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE              'occult.inc'
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META  = 'occult_ex1.tm' )
+      !>      INCLUDE              'occult.inc'
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META  = 'occult_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         FRMT
-      !>              PARAMETER           ( FRMT  = '(A18,A5,A21,A5,A4,A6)' )
+      !>      CHARACTER*(*)         FRMT
+      !>      PARAMETER           ( FRMT  = '(A18,A5,A21,A5,A4,A6)' )
       !>
-      !>              INTEGER               CHSIZ
-      !>              PARAMETER           ( CHSIZ = 30 )
+      !>      INTEGER               CHSIZ
+      !>      PARAMETER           ( CHSIZ = 30 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CHSIZ)     ABCORR
-      !>              CHARACTER*(CHSIZ)     FORM
-      !>              CHARACTER*(CHSIZ)     OBSRVR
-      !>              CHARACTER*(CHSIZ)     SHAPE1
-      !>              CHARACTER*(CHSIZ)     SHAPE2
-      !>              CHARACTER*(CHSIZ)     SHAPES ( 2 )
-      !>              CHARACTER*(CHSIZ)     TARG1
-      !>              CHARACTER*(CHSIZ)     TARG2
-      !>              CHARACTER*(CHSIZ)     TIME
-      !>              CHARACTER*(CHSIZ)     TSTART
-      !>              CHARACTER*(CHSIZ)     TEND
-      !>              CHARACTER*(CHSIZ)     OUTCH ( 4 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CHSIZ)     ABCORR
+      !>      CHARACTER*(CHSIZ)     FORM
+      !>      CHARACTER*(CHSIZ)     OBSRVR
+      !>      CHARACTER*(CHSIZ)     SHAPE1
+      !>      CHARACTER*(CHSIZ)     SHAPE2
+      !>      CHARACTER*(CHSIZ)     SHAPES ( 2 )
+      !>      CHARACTER*(CHSIZ)     TARG1
+      !>      CHARACTER*(CHSIZ)     TARG2
+      !>      CHARACTER*(CHSIZ)     TIME
+      !>      CHARACTER*(CHSIZ)     TSTART
+      !>      CHARACTER*(CHSIZ)     TEND
+      !>      CHARACTER*(CHSIZ)     OUTCH ( 4 )
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      ETEND
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      ETEND
       !>
-      !>              INTEGER               DT
-      !>              INTEGER               I
-      !>              INTEGER               OCLTID
+      !>      INTEGER               DT
+      !>      INTEGER               I
+      !>      INTEGER               OCLTID
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>              SAVE                  OUTCH
-      !>              SAVE                  SHAPES
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA OUTCH ( 1 ) / 'totally occulted by'   /
-      !>              DATA OUTCH ( 2 ) / 'transited by'          /
-      !>              DATA OUTCH ( 3 ) / 'partially occulted by' /
-      !>              DATA OUTCH ( 4 ) / 'not occulted by'       /
+      !>C
+      !>C     Saved variables
+      !>C
+      !>      SAVE                  OUTCH
+      !>      SAVE                  SHAPES
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA OUTCH ( 1 ) / 'totally occulted by'   /
+      !>      DATA OUTCH ( 2 ) / 'transited by'          /
+      !>      DATA OUTCH ( 3 ) / 'partially occulted by' /
+      !>      DATA OUTCH ( 4 ) / 'not occulted by'       /
       !>
-      !>              DATA SHAPES      / 'ELLIPSOID',
-      !>             .                   'DSK/UNPRIORITIZED' /
+      !>      DATA SHAPES      / 'ELLIPSOID',
+      !>     .                   'DSK/UNPRIORITIZED' /
       !>
-      !>        C
-      !>        C     Initialize the time range. Set the output time
-      !>        C     format to PST. Set DT to an hour interval in
-      !>        C     units of seconds.
-      !>        C
+      !>C
+      !>C     Initialize the time range. Set the output time
+      !>C     format to PST. Set DT to an hour interval in
+      !>C     units of seconds.
+      !>C
       !>
-      !>              TSTART = '2015-FEB-28 1:15:00 UTC'
-      !>              TEND   = '2015-FEB-28 2:50:00 UTC'
-      !>              FORM   = 'YYYY-MON-DD HR:MN ::UTC-8'
-      !>              DT     = 1000
+      !>      TSTART = '2015-FEB-28 1:15:00 UTC'
+      !>      TEND   = '2015-FEB-28 2:50:00 UTC'
+      !>      FORM   = 'YYYY-MON-DD HR:MN ::UTC-8'
+      !>      DT     = 1000
       !>
-      !>        C
-      !>        C     Initialize the targets, observer, and aberration
-      !>        C     correction.
-      !>        C
-      !>              TARG1  = 'MRO'
-      !>              SHAPE1 = 'POINT'
-      !>              TARG2  = 'MARS'
-      !>              OBSRVR = 'DSS-13'
-      !>              ABCORR = 'CN'
+      !>C
+      !>C     Initialize the targets, observer, and aberration
+      !>C     correction.
+      !>C
+      !>      TARG1  = 'MRO'
+      !>      SHAPE1 = 'POINT'
+      !>      TARG2  = 'MARS'
+      !>      OBSRVR = 'DSS-13'
+      !>      ABCORR = 'CN'
       !>
-      !>        C
-      !>        C     Load kernel files via the meta-kernel.
-      !>        C
-      !>              CALL FURNSH ( META )
-      !>        C
-      !>        C     Calculate the start and stop times in ET.
-      !>        C
-      !>              CALL STR2ET ( TSTART, ET1   )
-      !>              CALL STR2ET ( TEND,   ETEND )
+      !>C
+      !>C     Load kernel files via the meta-kernel.
+      !>C
+      !>      CALL FURNSH ( META )
+      !>C
+      !>C     Calculate the start and stop times in ET.
+      !>C
+      !>      CALL STR2ET ( TSTART, ET1   )
+      !>      CALL STR2ET ( TEND,   ETEND )
       !>
-      !>              DO I = 1, 2
-      !>        C
-      !>        C        Set the planet shape model for this pass.
-      !>        C
-      !>                 SHAPE2 = SHAPES(I)
+      !>      DO I = 1, 2
+      !>C
+      !>C        Set the planet shape model for this pass.
+      !>C
+      !>         SHAPE2 = SHAPES(I)
       !>
-      !>                 WRITE (*,*) ' '
-      !>                 CALL TOSTDO ( 'Mars shape: '//SHAPE2 )
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
+      !>         CALL TOSTDO ( 'Mars shape: '//SHAPE2 )
+      !>         WRITE (*,*) ' '
       !>
-      !>                 ET = ET1
-      !>                 DO WHILE ( ET .LT. ETEND )
-      !>        C
-      !>        C           Calculate the type of occultation that
-      !>        C           corresponds to time ET.
-      !>        C
-      !>                    CALL OCCULT ( TARG1,  SHAPE1, ' ',
-      !>             .                    TARG2,  SHAPE2, 'IAU_MARS',
-      !>             .                    ABCORR, OBSRVR,  ET, OCLTID )
-      !>        C
-      !>        C           Output the results.
-      !>        C
-      !>                    CALL TIMOUT ( ET, FORM, TIME )
+      !>         ET = ET1
+      !>         DO WHILE ( ET .LT. ETEND )
+      !>C
+      !>C           Calculate the type of occultation that
+      !>C           corresponds to time ET.
+      !>C
+      !>            CALL OCCULT ( TARG1,  SHAPE1, ' ',
+      !>     .                    TARG2,  SHAPE2, 'IAU_MARS',
+      !>     .                    ABCORR, OBSRVR,  ET, OCLTID )
+      !>C
+      !>C           Output the results.
+      !>C
+      !>            CALL TIMOUT ( ET, FORM, TIME )
       !>
-      !>                    IF ( OCLTID .EQ. TOTAL1 ) THEN
-      !>                       WRITE (*,FRMT) TIME, TARG1, OUTCH(1), TARG2,
-      !>             .                        'wrt ', OBSRVR
+      !>            IF ( OCLTID .EQ. TOTAL1 ) THEN
+      !>               WRITE (*,FRMT) TIME, TARG1, OUTCH(1), TARG2,
+      !>     .                        'wrt ', OBSRVR
       !>
-      !>                    ELSEIF ( OCLTID .EQ. ANNLR1 ) THEN
-      !>                       WRITE (*,FRMT) TIME, TARG1, OUTCH(2), TARG2,
-      !>             .                        'wrt ', OBSRVR
+      !>            ELSEIF ( OCLTID .EQ. ANNLR1 ) THEN
+      !>               WRITE (*,FRMT) TIME, TARG1, OUTCH(2), TARG2,
+      !>     .                        'wrt ', OBSRVR
       !>
-      !>                    ELSEIF ( OCLTID .EQ. PARTL1 ) THEN
-      !>                       WRITE (*,FRMT) TIME, TARG1, OUTCH(3), TARG2,
-      !>             .                        'wrt ', OBSRVR,
-      !>             .                        'NOT POSSIBLE FOR POINT'
+      !>            ELSEIF ( OCLTID .EQ. PARTL1 ) THEN
+      !>               WRITE (*,FRMT) TIME, TARG1, OUTCH(3), TARG2,
+      !>     .                        'wrt ', OBSRVR,
+      !>     .                        'NOT POSSIBLE FOR POINT'
       !>
-      !>                    ELSEIF ( OCLTID .EQ. NOOCC ) THEN
-      !>                       WRITE (*,FRMT) TIME, TARG1, OUTCH(4), TARG2,
-      !>             .                        'wrt ', OBSRVR
+      !>            ELSEIF ( OCLTID .EQ. NOOCC ) THEN
+      !>               WRITE (*,FRMT) TIME, TARG1, OUTCH(4), TARG2,
+      !>     .                        'wrt ', OBSRVR
       !>
-      !>                    ELSEIF ( OCLTID .EQ. PARTL2 ) THEN
-      !>                       WRITE (*,FRMT) TIME, TARG2, OUTCH(3), TARG1,
-      !>             .                        'wrt ', OBSRVR,
-      !>             .                        'NOT POSSIBLE FOR POINT'
+      !>            ELSEIF ( OCLTID .EQ. PARTL2 ) THEN
+      !>               WRITE (*,FRMT) TIME, TARG2, OUTCH(3), TARG1,
+      !>     .                        'wrt ', OBSRVR,
+      !>     .                        'NOT POSSIBLE FOR POINT'
       !>
-      !>                    ELSEIF ( OCLTID .EQ. ANNLR2 ) THEN
-      !>                       WRITE (*,FRMT) TIME, TARG2, OUTCH(2), TARG1,
-      !>             .                        'wrt ', OBSRVR
+      !>            ELSEIF ( OCLTID .EQ. ANNLR2 ) THEN
+      !>               WRITE (*,FRMT) TIME, TARG2, OUTCH(2), TARG1,
+      !>     .                        'wrt ', OBSRVR
       !>
-      !>                    ELSEIF ( OCLTID .EQ. TOTAL2 ) THEN
-      !>                       WRITE (*,FRMT) TIME, TARG2, OUTCH(1), TARG1,
-      !>             .                        'wrt ', OBSRVR
+      !>            ELSEIF ( OCLTID .EQ. TOTAL2 ) THEN
+      !>               WRITE (*,FRMT) TIME, TARG2, OUTCH(1), TARG1,
+      !>     .                        'wrt ', OBSRVR
       !>
-      !>                    ELSE
-      !>                       WRITE (*,*) 'Bad occultation ID:  ', OCLTID
+      !>            ELSE
+      !>               WRITE (*,*) 'Bad occultation ID:  ', OCLTID
       !>
-      !>                    END IF
-      !>        C
-      !>        C           Increment the time.
-      !>        C
-      !>                    ET = ET + DT
+      !>            END IF
+      !>C
+      !>C           Increment the time.
+      !>C
+      !>            ET = ET + DT
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
-      !>              END
+      !>      END DO
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -17325,17 +17458,24 @@ contains
       !>        meta-kernel. Corrected various comment typos.
       !>
       !>-    SPICELIB Version 1.0.0, 14-NOV-2013 (SCK) (NJB)
-      module procedure occult
+      module subroutine occult ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, et, ocltid )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase_inplace
       use pepper_inc_gf
       use pepper_inc_occult
       use pepper_inc_zzdsk
       implicit none
-
-!
-!     External routines
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: targ1  !! Name or ID of first target.
+      character(*), intent(in) :: shape1  !! Type of shape model used for first target.
+      character(*), intent(in) :: frame1  !! Body-fixed, body-centered frame for first body.
+      character(*), intent(in) :: targ2  !! Name or ID of second target.
+      character(*), intent(in) :: shape2  !! Type of shape model used for second target.
+      character(*), intent(in) :: frame2  !! Body-fixed, body-centered frame for second body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name or ID of the observer.
+      real(wp), intent(in) :: et  !! Time of the observation (seconds past J2000).
+      integer(ip), intent(out) :: ocltid  !! Occultation identification code.
 
       character(:), allocatable :: back
       character(:), allocatable :: bname
@@ -17639,8 +17779,13 @@ contains
       end if
 
       return
-      end procedure occult
+      end subroutine occult
 
+      !> Compute the apparent phase angle for a target, observer,
+      !> illuminator set of ephemeris objects.
+      !>
+      !> The function returns the value of phase angle.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the time in ephemeris seconds past J2000 TDB at which
@@ -17830,174 +17975,176 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PHASEQ_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PHASEQ_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include GF parameter declarations:
-      !>        C
-      !>              INCLUDE 'gf.inc'
+      !>C
+      !>C     Include GF parameter declarations:
+      !>C
+      !>      INCLUDE 'gf.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      SPD
-      !>              DOUBLE PRECISION      PHASEQ
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      SPD
+      !>      DOUBLE PRECISION      PHASEQ
       !>
-      !>              INTEGER               WNCARD
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Use the parameter MAXWIN for both the result window size
-      !>        C     and the workspace size.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 1000 )
+      !>C
+      !>C     Use the parameter MAXWIN for both the result window size
+      !>C     and the workspace size.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 1000 )
       !>
-      !>        C
-      !>        C     Length of strings:
-      !>        C
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 26 )
+      !>C
+      !>C     Length of strings:
+      !>C
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 26 )
       !>
-      !>              INTEGER               NLOOPS
-      !>              PARAMETER           ( NLOOPS = 7 )
+      !>      INTEGER               NLOOPS
+      !>      PARAMETER           ( NLOOPS = 7 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(TIMLEN)    RELATE (NLOOPS)
-      !>              CHARACTER*(6)         ABCORR
-      !>              CHARACTER*(6)         ILLMN
-      !>              CHARACTER*(6)         OBSRVR
-      !>              CHARACTER*(6)         TARGET
-      !>              CHARACTER*(TIMLEN)    TIMSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(TIMLEN)    RELATE (NLOOPS)
+      !>      CHARACTER*(6)         ABCORR
+      !>      CHARACTER*(6)         ILLMN
+      !>      CHARACTER*(6)         OBSRVR
+      !>      CHARACTER*(6)         TARGET
+      !>      CHARACTER*(TIMLEN)    TIMSTR
       !>
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWPA )
-      !>              DOUBLE PRECISION      ADJUST
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      FINISH
-      !>              DOUBLE PRECISION      PHASE
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      START
-      !>              DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWPA )
+      !>      DOUBLE PRECISION      ADJUST
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      FINISH
+      !>      DOUBLE PRECISION      PHASE
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      START
+      !>      DOUBLE PRECISION      STEP
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     The relation values for the search.
-      !>        C
-      !>              DATA                  RELATE / '=',
-      !>             .                               '<',
-      !>             .                               '>',
-      !>             .                               'LOCMIN',
-      !>             .                               'ABSMIN',
-      !>             .                               'LOCMAX',
-      !>             .                               'ABSMAX'  /
+      !>C
+      !>C     The relation values for the search.
+      !>C
+      !>      DATA                  RELATE / '=',
+      !>     .                               '<',
+      !>     .                               '>',
+      !>     .                               'LOCMIN',
+      !>     .                               'ABSMIN',
+      !>     .                               'LOCMAX',
+      !>     .                               'ABSMAX'  /
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'phaseq_ex1.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'phaseq_ex1.tm' )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( MAXWIN, RESULT )
-      !>              CALL SSIZED ( 2,      CNFINE )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( MAXWIN, RESULT )
+      !>      CALL SSIZED ( 2,      CNFINE )
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the confinement window.
-      !>        C
-      !>              CALL STR2ET ( '2006 DEC 01', ET0 )
-      !>              CALL STR2ET ( '2007 JAN 31', ET1 )
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the confinement window.
+      !>C
+      !>      CALL STR2ET ( '2006 DEC 01', ET0 )
+      !>      CALL STR2ET ( '2007 JAN 31', ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Search using a step size of 1 day (in units of seconds).
-      !>        C     The reference value is 0.57598845. We're not using the
-      !>        C     adjustment feature, so we set ADJUST to zero.
-      !>        C
-      !>              STEP   = SPD()
-      !>              REFVAL = 0.57598845D0
-      !>              ADJUST = 0.D0
+      !>C
+      !>C     Search using a step size of 1 day (in units of seconds).
+      !>C     The reference value is 0.57598845. We're not using the
+      !>C     adjustment feature, so we set ADJUST to zero.
+      !>C
+      !>      STEP   = SPD()
+      !>      REFVAL = 0.57598845D0
+      !>      ADJUST = 0.D0
       !>
-      !>        C
-      !>        C     Define the values for target, observer, illuminator, and
-      !>        C     aberration correction.
-      !>        C
-      !>              TARGET = 'MOON'
-      !>              ILLMN  = 'SUN'
-      !>              ABCORR = 'LT+S'
-      !>              OBSRVR = 'EARTH'
+      !>C
+      !>C     Define the values for target, observer, illuminator, and
+      !>C     aberration correction.
+      !>C
+      !>      TARGET = 'MOON'
+      !>      ILLMN  = 'SUN'
+      !>      ABCORR = 'LT+S'
+      !>      OBSRVR = 'EARTH'
       !>
-      !>              DO J=1, NLOOPS
+      !>      DO J=1, NLOOPS
       !>
-      !>                 WRITE(*,*) 'Relation condition: ', RELATE(J)
+      !>         WRITE(*,*) 'Relation condition: ', RELATE(J)
       !>
-      !>        C
-      !>        C        Perform the search. The SPICE window RESULT contains
-      !>        C        the set of times when the condition is met.
-      !>        C
-      !>                 CALL GFPA (  TARGET,    ILLMN,  ABCORR, OBSRVR,
-      !>             .                RELATE(J), REFVAL, ADJUST, STEP,
-      !>             .                CNFINE,    MAXWIN, NWPA,   WORK,
-      !>             .                RESULT )
+      !>C
+      !>C        Perform the search. The SPICE window RESULT contains
+      !>C        the set of times when the condition is met.
+      !>C
+      !>         CALL GFPA (  TARGET,    ILLMN,  ABCORR, OBSRVR,
+      !>     .                RELATE(J), REFVAL, ADJUST, STEP,
+      !>     .                CNFINE,    MAXWIN, NWPA,   WORK,
+      !>     .                RESULT )
       !>
-      !>        C
-      !>        C        Display the results.
-      !>        C
-      !>                 IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>C
+      !>C        Display the results.
+      !>C
+      !>         IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                    WRITE (*, '(A)') 'Result window is empty.'
+      !>            WRITE (*, '(A)') 'Result window is empty.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    DO I = 1, WNCARD(RESULT)
-      !>        C
-      !>        C              Fetch the endpoints of the Ith interval
-      !>        C              of the result window.
-      !>        C
-      !>                       CALL WNFETD ( RESULT, I, START, FINISH )
+      !>            DO I = 1, WNCARD(RESULT)
+      !>C
+      !>C              Fetch the endpoints of the Ith interval
+      !>C              of the result window.
+      !>C
+      !>               CALL WNFETD ( RESULT, I, START, FINISH )
       !>
-      !>                       PHASE = PHASEQ( START, TARGET, ILLMN, OBSRVR,
-      !>             .                         ABCORR )
-      !>                       CALL TIMOUT ( START,
-      !>             .                       'YYYY-MON-DD HR:MN:SC.###',
-      !>             .                       TIMSTR                          )
+      !>               PHASE = PHASEQ( START, TARGET, ILLMN, OBSRVR,
+      !>     .                         ABCORR )
+      !>               CALL TIMOUT ( START,
+      !>     .                       'YYYY-MON-DD HR:MN:SC.###',
+      !>     .                       TIMSTR                          )
       !>
-      !>                       WRITE (*, '(2X,A,F16.9)') 'Start time = '
-      !>             .                               //   TIMSTR, PHASE
+      !>               WRITE (*, '(2X,A,F16.9)') 'Start time = '
+      !>     .                               //   TIMSTR, PHASE
       !>
-      !>                       PHASE = PHASEQ( FINISH, TARGET, ILLMN, OBSRVR,
-      !>             .                         ABCORR )
-      !>                       CALL TIMOUT ( FINISH,
-      !>             .                       'YYYY-MON-DD HR:MN:SC.###',
-      !>             .                       TIMSTR                          )
+      !>               PHASE = PHASEQ( FINISH, TARGET, ILLMN, OBSRVR,
+      !>     .                         ABCORR )
+      !>               CALL TIMOUT ( FINISH,
+      !>     .                       'YYYY-MON-DD HR:MN:SC.###',
+      !>     .                       TIMSTR                          )
       !>
-      !>                       WRITE (*, '(2X,A,F16.9)') 'Stop time  = '
-      !>             .                                //  TIMSTR, PHASE
+      !>               WRITE (*, '(2X,A,F16.9)') 'Stop time  = '
+      !>     .                                //  TIMSTR, PHASE
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -18075,12 +18222,18 @@ contains
       !>        section.
       !>
       !>-    SPICELIB Version 1.0.0, 27-MAR-2014 (EDW) (BVS)
-      module procedure phaseq
+      module real(wp) function phaseq ( ctx, et, target, illmn, obsrvr, abcorr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ljucrs
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+      character(*), intent(in) :: target  !! Target body name.
+      character(*), intent(in) :: illmn  !! Illuminating body name.
+      character(*), intent(in) :: obsrvr  !! Observer body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
       integer(ip) :: targ
       integer(ip) :: illum
       integer(ip) :: obs
@@ -18233,16 +18386,14 @@ contains
 !
       return
       end associate
-      end procedure phaseq
+      end function phaseq
 
-      !>## Abstract
+      !> Return a state vector used to define coordinates referenced in a
+      !> GF search.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
-      !>
-      !>     Return a state vector used to define coordinates referenced in a
-      !>     GF search.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -18516,11 +18667,25 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB)
-      module procedure zzgfcost
+      module subroutine zzgfcost ( ctx, vecdef, method, trgid, et, ref, abcorr, obsid, dref, dctr, dvec, radii, state, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: vecdef  !! Vector definition.
+      character(*), intent(in) :: method  !! Computation method.
+      integer(ip), intent(in) :: trgid  !! Target ID code.
+      real(wp), intent(in) :: et  !! Computation epoch.
+      character(*), intent(in) :: ref  !! Reference frame name.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      integer(ip), intent(in) :: obsid  !! Observer ID code.
+      character(*), intent(in) :: dref  !! Reference frame of ray's direction vector.
+      integer(ip), intent(in) :: dctr  !! ID code of ray frame's center.
+      real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+      real(wp), intent(in) :: radii  ( 3 )  !! Radii of reference ellipsoid.
+      real(wp), intent(out) :: state  ( 6 )  !! State used to define coordinates.
+      logical, intent(out) :: found  !! Flag indicating if state was computed.
 
       real(wp) :: lt
 
@@ -18580,8 +18745,10 @@ contains
 !
 
       return
-      end procedure zzgfcost
+      end subroutine zzgfcost
 
+      !> Initialize the GF distance constraint search utilities.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET     is the name of a target body. Optionally, you may
@@ -18673,11 +18840,15 @@ contains
       !>        of ZZGFRELX to calculate the events.
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
-      module procedure zzgfdiin
+      module subroutine zzgfdiin ( ctx, target, abcorr, obsrvr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Target body name.
+      character(*), intent(in) :: abcorr  !! Aberration correction specifier.
+      character(*), intent(in) :: obsrvr  !! Observer name.
       real(wp) :: lt
       real(wp) :: state  ( 6 )
       logical :: attblk ( nabcor )
@@ -18753,8 +18924,11 @@ contains
 
       return
       end associate
-      end procedure zzgfdiin
+      end subroutine zzgfdiin
 
+      !> Indicate whether the observer-target distance is decreasing at a
+      !> specified time.
+      !>
       !>## Detailed Input
       !>
       !>     ET         is the time, expressed as seconds past J2000 TDB, at
@@ -18844,9 +19018,6 @@ contains
       real(wp) :: state  ( 6 )
       logical :: attblk ( nabcor )
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! Flag indicating whether distance is decreasing.
@@ -18872,6 +19043,9 @@ contains
       end associate
       end subroutine zzgfdidc
 
+      !> Return the distance between the target and observer
+      !> at a specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET         is the time, expressed as seconds past J2000 TDB, at
@@ -18934,10 +19108,13 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
-      module procedure zzgfdigq
+      module subroutine zzgfdigq ( ctx, et, dist )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+      real(wp), intent(out) :: dist  !! Distance at time ET.
       real(wp) :: lt
       real(wp) :: state  ( 6 )
       logical :: attblk ( nabcor )
@@ -18952,8 +19129,11 @@ contains
 
       return
       end associate
-      end procedure zzgfdigq
+      end subroutine zzgfdigq
 
+      !> This is the initialization entry point used for describing
+      !> the event that is to be solved for by [[zzgfsolv]].
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   the string name of a target body.  Optionally, you may
@@ -19068,11 +19248,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB version 1.0.0 19-OCT-2010 (EDW)(NJB)
-      module procedure zzgfpain
+      module subroutine zzgfpain ( ctx, target, illmn, abcorr, obsrvr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: illmn  !! Name of the illuminating body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
       real(wp) :: dsep
       real(wp) :: lt
       real(wp) :: dlt
@@ -19188,8 +19373,11 @@ contains
 
       return
       end associate
-      end procedure zzgfpain
+      end subroutine zzgfpain
 
+      !> Computes whether or not the phase angle between the observer
+      !> and the target is decreasing at time ET.
+      !>
       !>## Detailed Input
       !>
       !>     ET         the time in ephemeris seconds past J2000 TDB at which
@@ -19267,9 +19455,6 @@ contains
       real(wp) :: uvec (3)
       integer(ip) :: i
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! .TRUE. if phase angle is decreasing, .FALSE. otherwise.
@@ -19368,6 +19553,9 @@ contains
       end associate
       end subroutine zzgfpadc
 
+      !> Determine the phase angle between the centers of the two
+      !> bodies.
+      !>
       !>## Detailed Input
       !>
       !>     ET         the time in ephemeris seconds past J2000 TDB at which
@@ -19414,10 +19602,13 @@ contains
       !>## Version
       !>
       !>-    SPICELIB version 1.0.0 19-OCT-2010 (EDW)
-      module procedure zzgfpagq
+      module subroutine zzgfpagq ( ctx, et, rvl )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+      real(wp), intent(out) :: rvl  !! Phase angle at time ET.
       logical :: return
       real(wp) :: dsep
       real(wp) :: lt
@@ -19436,8 +19627,10 @@ contains
 
       return
       end associate
-      end procedure zzgfpagq
+      end subroutine zzgfpagq
 
+      !> Retrieve values set in [[zzgfpain]].
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -19495,10 +19688,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB version 1.0.0 16-SEP-2012 (EDW)
-      module procedure zzgfpax
+      module subroutine zzgfpax ( ctx, xtarg, xillmn, xabcor, xobs, xablk )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: xtarg  !! Saved value for the target body.
+      integer(ip), intent(out) :: xillmn  !! Saved value for the illuminator body.
+      character(*), intent(out) :: xabcor  !! Saved value for the aberration correction.
+      integer(ip), intent(out) :: xobs  !! Saved value for the observing body.
+      logical, intent(out) :: xablk  ( nabcor )  !! Saved value for the aberration correction attribute block.
       logical :: return
       real(wp) :: dsep
       real(wp) :: lt
@@ -19525,21 +19724,19 @@ contains
 
       return
       end associate
-      end procedure zzgfpax
+      end subroutine zzgfpax
 
-      !>## Abstract
+      !> This routine determines time intervals when the value of some
+      !> geometric quantity related to one or more objects and an observer
+      !> satisfies a user specified constraint within time intervals
+      !> specified by the window CNFINE.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
+      !> Sister routine to ZZGFRELX. Copy any edits to ZZGFREL or ZZGFRELX
+      !> to the sister routine.
       !>
-      !>     This routine determines time intervals when the value of some
-      !>     geometric quantity related to one or more objects and an observer
-      !>     satisfies a user specified constraint within time intervals
-      !>     specified by the window CNFINE.
-      !>
-      !>     Sister routine to ZZGFRELX. Copy any edits to ZZGFREL or ZZGFRELX
-      !>     to the sister routine.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -19950,9 +20147,6 @@ contains
       integer(ip) :: want
       integer(ip) :: winsiz
       logical :: need
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
       real(wp), intent(in) :: refval  !! Value used as reference for geometric quantity condition.
@@ -20556,19 +20750,17 @@ contains
       end associate
       end subroutine zzgfrel
 
-      !>## Abstract
+      !> This routine determines time intervals when the value of some
+      !> geometric quantity related to one or more objects and an observer
+      !> satisfies a user specified constraint within time intervals
+      !> specified by the window CNFINE.
       !>
-      !>     SPICE private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due to the
-      !>     volatile nature of this routine.
+      !> Sister routine to ZZGFREL. Copy any edits to ZZGFREL or ZZGFRELX
+      !> to the sister routine.
       !>
-      !>     This routine determines time intervals when the value of some
-      !>     geometric quantity related to one or more objects and an observer
-      !>     satisfies a user specified constraint within time intervals
-      !>     specified by the window CNFINE.
-      !>
-      !>     Sister routine to ZZGFREL. Copy any edits to ZZGFREL or ZZGFRELX
-      !>     to the sister routine.
+      !> SPICE private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due to the
+      !> volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -20985,9 +21177,6 @@ contains
       integer(ip) :: want
       integer(ip) :: winsiz
       logical :: need
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the scalar quantity value and a number.
       real(wp), intent(in) :: refval  !! Value used as reference for scalar quantity condition.
@@ -21598,6 +21787,9 @@ contains
       end associate
       end subroutine zzgfrelx
 
+      !> Initialize the work progress utility. This is required prior to
+      !> use of the routine that performs the actual reporting.
+      !>
       !>## Detailed Input
       !>
       !>     TOTAL      is a measure of the total amount of work to be done
@@ -21665,8 +21857,6 @@ contains
       !>
       !>## Exceptions
       !>
-      !>     Standard SPICE error handling.
-      !>
       !>## Files
       !>
       !>     None.
@@ -21704,12 +21894,18 @@ contains
       !>        UNIT from $Detailed_Input header section.
       !>
       !>-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-      module procedure zzgftswk
+      module subroutine zzgftswk ( ctx, total, wait, tcheck, begin, end )
       use, intrinsic :: iso_fortran_env, only: output_unit
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rtrim
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: total  !! A measure of the total amount of work to be done.
+      real(wp), intent(in) :: wait  !! Minimum wait time between reports.
+      integer(ip), intent(in) :: tcheck  !! How often to sample the system clock.
+      character(*), intent(in) :: begin  !! First part of the output message.
+      character(*), intent(in) :: end  !! Last part of the output message.
       character(10) :: prcent
       character(mxmsg) :: messge
       real(wp) :: cursec
@@ -21787,8 +21983,11 @@ contains
 
       return
       end associate
-      end procedure zzgftswk
+      end subroutine zzgftswk
 
+      !> Let the work reporter know that an increment of work has just
+      !> been completed.
+      !>
       !>## Detailed Input
       !>
       !>     INCR       is some amount of work that has been completed since
@@ -21803,8 +22002,6 @@ contains
       !>      None.
       !>
       !>## Exceptions
-      !>
-      !>     Standard SPICE error handling.
       !>
       !>## Files
       !>
@@ -21840,12 +22037,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-      module procedure zzgfwkin
+      module subroutine zzgfwkin ( ctx, incr )
       use, intrinsic :: iso_fortran_env, only: output_unit
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rtrim
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: incr  !! An amount of work just completed.
       character(10) :: prcent
       character(mxmsg) :: messge
       real(wp) :: cursec
@@ -21915,8 +22114,10 @@ contains
 
       return
       end associate
-      end procedure zzgfwkin
+      end subroutine zzgfwkin
 
+      !> Adjust the frequency with which work progress is reported.
+      !>
       !>## Detailed Input
       !>
       !>     WAIT       is the minimum duration between reports in seconds. If
@@ -22030,10 +22231,15 @@ contains
       !>        zero.
       !>
       !>-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-      module procedure zzgfwkad
+      module subroutine zzgfwkad ( ctx, wait, tcheck, begin, end )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: wait  !! Minimum wait time between reports.
+      integer(ip), intent(in) :: tcheck  !! Number of calls between system time checks.
+      character(*), intent(in) :: begin  !! First part of the output message.
+      character(*), intent(in) :: end  !! Last part of the output message.
       logical :: return
       character(10) :: prcent
       character(mxmsg) :: messge
@@ -22052,8 +22258,10 @@ contains
 
       return
       end associate
-      end procedure zzgfwkad
+      end subroutine zzgfwkad
 
+      !> Set the output unit for the progress report.
+      !>
       !>## Detailed Input
       !>
       !>     UNIT           Logical unit of a text file open for write access.
@@ -22109,10 +22317,12 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB)
-      module procedure zzgfwkun
+      module subroutine zzgfwkun ( ctx, unit )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Output logical unit.
       logical :: return
       character(10) :: prcent
       character(mxmsg) :: messge
@@ -22125,8 +22335,10 @@ contains
 
       return
       end associate
-      end procedure zzgfwkun
+      end subroutine zzgfwkun
 
+      !> Return saved progress report parameters.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -22191,10 +22403,18 @@ contains
       !>        description of this argument.
       !>
       !>-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB)
-      module procedure zzgfwkmo
+      module subroutine zzgfwkmo ( ctx, unit, total, wait, tcheck, begin, end, incr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: unit  !! Output logical unit.
+      real(wp), intent(out) :: total  !! A measure of the total amount of work to be done.
+      real(wp), intent(out) :: wait  !! Minimum wait time between reports.
+      integer(ip), intent(out) :: tcheck  !! Number of calls between system time check.
+      character(*), intent(out) :: begin  !! First part of the output message.
+      character(*), intent(out) :: end  !! Last part of the output message.
+      real(wp), intent(out) :: incr  !! Last progress increment.
       logical :: return
       character(10) :: prcent
       character(mxmsg) :: messge
@@ -22219,8 +22439,11 @@ contains
 
       return
       end associate
-      end procedure zzgfwkmo
+      end subroutine zzgfwkmo
 
+      !> This is the initialization entry point used for describing
+      !> the event that is to be solved for by [[zzgfsolv]].
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   the string name of a target body.  Optionally, you may
@@ -22353,11 +22576,16 @@ contains
       !>        Minor typo correction to header.
       !>
       !>-    SPICELIB version 1.0.0 09-OCT-2009 (LSE)(EDW)
-      module procedure zzgfrrin
+      module subroutine zzgfrrin ( ctx, target, abcorr, obsrvr, dt )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body
+      character(*), intent(in) :: abcorr  !! Aberration correction flag
+      character(*), intent(in) :: obsrvr  !! Name of the observing body
+      real(wp), intent(in) :: dt  !! Interval from ET for derivative calculation.
       real(wp) :: lt
       real(wp) :: drvel
       real(wp) :: srhat  ( 6 )
@@ -22458,8 +22686,11 @@ contains
 
       return
       end associate
-      end procedure zzgfrrin
+      end subroutine zzgfrrin
 
+      !> Computes whether or not the range rate between the observer
+      !> and the target is decreasing at time ET.
+      !>
       !>## Detailed Input
       !>
       !>     ET         time in seconds past J2000 at which to calculate
@@ -22544,9 +22775,6 @@ contains
       integer(ip) :: n
       logical :: attblk ( nabcor )
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
       logical, intent(out) :: decres  !! true if range rate is decreasing, false otherwise.
@@ -22609,6 +22837,9 @@ contains
       end associate
       end subroutine zzgfrrdc
 
+      !> Determine the range rate between the centers of the two
+      !> bodies.
+      !>
       !>## Detailed Input
       !>
       !>     ET         time in ephemeris seconds past J2000 when the range
@@ -22656,10 +22887,13 @@ contains
       !>## Version
       !>
       !>-    SPICELIB version 1.0.0 09-JUN-2009 (LSE)(EDW)
-      module procedure zzgfrrgq
+      module subroutine zzgfrrgq ( ctx, et, rvl )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+      real(wp), intent(out) :: rvl  !! Range rate at time ET.
       logical :: return
       real(wp) :: lt
       real(wp) :: drvel
@@ -22678,8 +22912,10 @@ contains
 
       return
       end associate
-      end procedure zzgfrrgq
+      end subroutine zzgfrrgq
 
+      !> Retrieve values set in [[zzgfrrin]].
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -22733,10 +22969,15 @@ contains
       !>## Version
       !>
       !>-    SPICELIB version 1.0.0 16-SEP-2012 (EDW)
-      module procedure zzgfrrx
+      module subroutine zzgfrrx ( ctx, xtarg, xabcor, xobs, xdt )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: xtarg  !! Saved value for the target body.
+      character(*), intent(out) :: xabcor  !! Saved value for the aberration correction.
+      integer(ip), intent(out) :: xobs  !! Saved value for the observing body.
+      real(wp), intent(out) :: xdt  !! Saved value for DT.
       logical :: return
       real(wp) :: lt
       real(wp) :: drvel
@@ -22759,17 +23000,15 @@ contains
 
       return
       end associate
-      end procedure zzgfrrx
+      end subroutine zzgfrrx
 
-      !>## Abstract
+      !> Routine to determine time intervals when a user defined boolean
+      !> function returns true. Report progress and handle interrupts
+      !> if so commanded.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Routine to determine time intervals when a user defined boolean
-      !>     function returns true. Report progress and handle interrupts
-      !>     if so commanded.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -23213,9 +23452,6 @@ contains
 
       integer(ip) :: count
       integer(ip) :: i
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: tol  !! Convergence tolerance in seconds.
       logical, intent(in) :: rpt  !! Progress report flag.
@@ -23313,13 +23549,11 @@ contains
       return
       end subroutine zzgfudb
 
-      !>## Abstract
+      !> Determine time intervals when an observer sees one target body
+      !> occulted by, or in transit across, another.
       !>
-      !>     Determine time intervals when an observer sees one target body
-      !>     occulted by, or in transit across, another.
-      !>
-      !>     The surfaces of the target bodies may be represented by triaxial
-      !>     ellipsoids or by topographic data provided by DSK files.
+      !> The surfaces of the target bodies may be represented by triaxial
+      !> ellipsoids or by topographic data provided by DSK files.
       !>
       !>## Detailed Input
       !>
@@ -24036,125 +24270,127 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFOCLT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFOCLT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .   'YYYY MON DD HR:MN:SC.###### (TDB)::TDB' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .   'YYYY MON DD HR:MN:SC.###### (TDB)::TDB' )
       !>
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 2 * 100 )
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 2 * 100 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(TIMLEN)    WIN0
-      !>              CHARACTER*(TIMLEN)    WIN1
-      !>              CHARACTER*(TIMLEN)    BEGSTR
-      !>              CHARACTER*(TIMLEN)    ENDSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(TIMLEN)    WIN0
+      !>      CHARACTER*(TIMLEN)    WIN1
+      !>      CHARACTER*(TIMLEN)    BEGSTR
+      !>      CHARACTER*(TIMLEN)    ENDSTR
       !>
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      RIGHT
-      !>              DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      RIGHT
+      !>      DOUBLE PRECISION      STEP
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement and result windows CNFINE and RESULT are
-      !>        C     saved because this practice helps to prevent stack
-      !>        C     overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement and result windows CNFINE and RESULT are
+      !>C     saved because this practice helps to prevent stack
+      !>C     overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfoclt_ex1.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfoclt_ex1.tm' )
       !>
-      !>        C
-      !>        C     Initialize the confinement and result windows.
-      !>        C
-      !>              CALL SSIZED ( 2,      CNFINE )
-      !>              CALL SSIZED ( MAXWIN, RESULT )
+      !>C
+      !>C     Initialize the confinement and result windows.
+      !>C
+      !>      CALL SSIZED ( 2,      CNFINE )
+      !>      CALL SSIZED ( MAXWIN, RESULT )
       !>
-      !>        C
-      !>        C     Obtain the TDB time bounds of the confinement
-      !>        C     window, which is a single interval in this case.
-      !>        C
-      !>              WIN0 = '2001 DEC 01 00:00:00 TDB'
-      !>              WIN1 = '2002 JAN 01 00:00:00 TDB'
+      !>C
+      !>C     Obtain the TDB time bounds of the confinement
+      !>C     window, which is a single interval in this case.
+      !>C
+      !>      WIN0 = '2001 DEC 01 00:00:00 TDB'
+      !>      WIN1 = '2002 JAN 01 00:00:00 TDB'
       !>
-      !>              CALL STR2ET ( WIN0, ET0 )
-      !>              CALL STR2ET ( WIN1, ET1 )
+      !>      CALL STR2ET ( WIN0, ET0 )
+      !>      CALL STR2ET ( WIN1, ET1 )
       !>
-      !>        C
-      !>        C     Insert the time bounds into the confinement
-      !>        C     window.
-      !>        C
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>C
+      !>C     Insert the time bounds into the confinement
+      !>C     window.
+      !>C
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Select a 3-minute step. We'll ignore any occultations
-      !>        C     lasting less than 3 minutes. Units are TDB seconds.
-      !>        C
-      !>              STEP = 180.D0
+      !>C
+      !>C     Select a 3-minute step. We'll ignore any occultations
+      !>C     lasting less than 3 minutes. Units are TDB seconds.
+      !>C
+      !>      STEP = 180.D0
       !>
-      !>        C
-      !>        C     Perform the search.
-      !>        C
-      !>              CALL GFOCLT ( 'ANY',
-      !>             .              'MOON',  'ellipsoid', 'IAU_MOON',
-      !>             .              'SUN',   'ellipsoid', 'IAU_SUN',
-      !>             .              'LT',    'EARTH',     STEP,
-      !>             .              CNFINE,  RESULT                  )
+      !>C
+      !>C     Perform the search.
+      !>C
+      !>      CALL GFOCLT ( 'ANY',
+      !>     .              'MOON',  'ellipsoid', 'IAU_MOON',
+      !>     .              'SUN',   'ellipsoid', 'IAU_SUN',
+      !>     .              'LT',    'EARTH',     STEP,
+      !>     .              CNFINE,  RESULT                  )
       !>
-      !>              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>      IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                 WRITE (*,*) 'No occultation was found.'
+      !>         WRITE (*,*) 'No occultation was found.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO I = 1, WNCARD(RESULT)
+      !>         DO I = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C           Fetch and display each occultation interval.
-      !>        C
-      !>                    CALL WNFETD ( RESULT, I, LEFT, RIGHT )
+      !>C
+      !>C           Fetch and display each occultation interval.
+      !>C
+      !>            CALL WNFETD ( RESULT, I, LEFT, RIGHT )
       !>
-      !>                    CALL TIMOUT ( LEFT,  TIMFMT, BEGSTR )
-      !>                    CALL TIMOUT ( RIGHT, TIMFMT, ENDSTR )
+      !>            CALL TIMOUT ( LEFT,  TIMFMT, BEGSTR )
+      !>            CALL TIMOUT ( RIGHT, TIMFMT, ENDSTR )
       !>
-      !>                    WRITE (*,*) 'Interval ', I
-      !>                    WRITE (*,*) '   Start time: '//BEGSTR
-      !>                    WRITE (*,*) '   Stop time:  '//ENDSTR
+      !>            WRITE (*,*) 'Interval ', I
+      !>            WRITE (*,*) '   Start time: '//BEGSTR
+      !>            WRITE (*,*) '   Stop time:  '//ENDSTR
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -24217,253 +24453,255 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFOCLT_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFOCLT_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .   'YYYY MON DD HR:MN:SC.######::TDB' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .   'YYYY MON DD HR:MN:SC.######::TDB' )
       !>
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 2 * 100 )
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 2 * 100 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>        C
-      !>        C     Number of occultation types
-      !>        C
-      !>              INTEGER               NTYPES
-      !>              PARAMETER           ( NTYPES = 4 )
+      !>C
+      !>C     Number of occultation types
+      !>C
+      !>      INTEGER               NTYPES
+      !>      PARAMETER           ( NTYPES = 4 )
       !>
-      !>        C
-      !>        C     Occultation type name length
-      !>        C
-      !>              INTEGER               OCNMLN
-      !>              PARAMETER           ( OCNMLN = 10 )
+      !>C
+      !>C     Occultation type name length
+      !>C
+      !>      INTEGER               OCNMLN
+      !>      PARAMETER           ( OCNMLN = 10 )
       !>
-      !>        C
-      !>        C     Output line length
-      !>        C
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>C
+      !>C     Output line length
+      !>C
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(BDNMLN)    BACK
-      !>              CHARACTER*(FRNMLN)    BFRAME
-      !>              CHARACTER*(FRNMLN)    FFRAME
-      !>              CHARACTER*(BDNMLN)    FRONT
-      !>              CHARACTER*(LNSIZE)    LINE
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(OCNMLN)    OCCTYP ( NTYPES )
-      !>              CHARACTER*(LNSIZE)    TEMPLT ( NTYPES )
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(LNSIZE)    TITLE
-      !>              CHARACTER*(TIMLEN)    WIN0
-      !>              CHARACTER*(TIMLEN)    WIN1
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(BDNMLN)    BACK
+      !>      CHARACTER*(FRNMLN)    BFRAME
+      !>      CHARACTER*(FRNMLN)    FFRAME
+      !>      CHARACTER*(BDNMLN)    FRONT
+      !>      CHARACTER*(LNSIZE)    LINE
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(OCNMLN)    OCCTYP ( NTYPES )
+      !>      CHARACTER*(LNSIZE)    TEMPLT ( NTYPES )
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(LNSIZE)    TITLE
+      !>      CHARACTER*(TIMLEN)    WIN0
+      !>      CHARACTER*(TIMLEN)    WIN1
       !>
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      FINISH
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      START
-      !>              DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      FINISH
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      START
+      !>      DOUBLE PRECISION      STEP
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               K
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               K
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement and result windows CNFINE
-      !>        C     and RESULT are saved because this practice
-      !>        C     helps to prevent stack overflow.
-      !>        C
-      !>        C     The variables OCCTYP and TEMPLT are
-      !>        C     saved to facilitate turning this main program into
-      !>        C     a subroutine. In a main program, it's not
-      !>        C     necessary to save these variables.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  OCCTYP
-      !>              SAVE                  RESULT
-      !>              SAVE                  TEMPLT
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement and result windows CNFINE
+      !>C     and RESULT are saved because this practice
+      !>C     helps to prevent stack overflow.
+      !>C
+      !>C     The variables OCCTYP and TEMPLT are
+      !>C     saved to facilitate turning this main program into
+      !>C     a subroutine. In a main program, it's not
+      !>C     necessary to save these variables.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  OCCTYP
+      !>      SAVE                  RESULT
+      !>      SAVE                  TEMPLT
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  OCCTYP / 'FULL',
-      !>             .                               'ANNULAR',
-      !>             .                               'PARTIAL',
-      !>             .                               'ANY'     /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  OCCTYP / 'FULL',
+      !>     .                               'ANNULAR',
+      !>     .                               'PARTIAL',
+      !>     .                               'ANY'     /
       !>
-      !>              DATA                  TEMPLT /
-      !>             .      'Condition: # occultation of # by #',
-      !>             .      'Condition: # occultation of # by #',
-      !>             .      'Condition: # occultation of # by #',
-      !>             .      'Condition: # occultation of # by #'      /
+      !>      DATA                  TEMPLT /
+      !>     .      'Condition: # occultation of # by #',
+      !>     .      'Condition: # occultation of # by #',
+      !>     .      'Condition: # occultation of # by #',
+      !>     .      'Condition: # occultation of # by #'      /
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfoclt_ex2.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfoclt_ex2.tm' )
       !>
-      !>        C
-      !>        C     Initialize the confinement and result windows.
-      !>        C
-      !>              CALL SSIZED ( 2,      CNFINE )
-      !>              CALL SSIZED ( MAXWIN, RESULT )
+      !>C
+      !>C     Initialize the confinement and result windows.
+      !>C
+      !>      CALL SSIZED ( 2,      CNFINE )
+      !>      CALL SSIZED ( MAXWIN, RESULT )
       !>
-      !>        C
-      !>        C     Obtain the TDB time bounds of the confinement
-      !>        C     window, which is a single interval in this case.
-      !>        C
-      !>              WIN0 = '2008 SEP 01 00:00:00 TDB'
-      !>              WIN1 = '2009 JAN 01 00:00:00 TDB'
+      !>C
+      !>C     Obtain the TDB time bounds of the confinement
+      !>C     window, which is a single interval in this case.
+      !>C
+      !>      WIN0 = '2008 SEP 01 00:00:00 TDB'
+      !>      WIN1 = '2009 JAN 01 00:00:00 TDB'
       !>
-      !>              CALL STR2ET ( WIN0, ET0 )
-      !>              CALL STR2ET ( WIN1, ET1 )
+      !>      CALL STR2ET ( WIN0, ET0 )
+      !>      CALL STR2ET ( WIN1, ET1 )
       !>
-      !>        C
-      !>        C     Insert the time bounds into the confinement
-      !>        C     window.
-      !>        C
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>C
+      !>C     Insert the time bounds into the confinement
+      !>C     window.
+      !>C
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Select a 15-minute step. We'll ignore any occultations
-      !>        C     lasting less than 15 minutes. Units are TDB seconds.
-      !>        C
-      !>              STEP = 900.D0
+      !>C
+      !>C     Select a 15-minute step. We'll ignore any occultations
+      !>C     lasting less than 15 minutes. Units are TDB seconds.
+      !>C
+      !>      STEP = 900.D0
       !>
-      !>        C
-      !>        C     The observation location is the Earth.
-      !>        C
-      !>              OBSRVR = 'EARTH'
+      !>C
+      !>C     The observation location is the Earth.
+      !>C
+      !>      OBSRVR = 'EARTH'
       !>
-      !>        C
-      !>        C     Loop over the occultation types.
-      !>        C
-      !>              DO I = 1, NTYPES
+      !>C
+      !>C     Loop over the occultation types.
+      !>C
+      !>      DO I = 1, NTYPES
       !>
-      !>        C
-      !>        C        For each type, do a search for both transits of
-      !>        C        Titan across Saturn and occultations of Titan by
-      !>        C        Saturn.
-      !>        C
-      !>                 DO J = 1, 2
+      !>C
+      !>C        For each type, do a search for both transits of
+      !>C        Titan across Saturn and occultations of Titan by
+      !>C        Saturn.
+      !>C
+      !>         DO J = 1, 2
       !>
-      !>                    IF ( J .EQ. 1 ) THEN
+      !>            IF ( J .EQ. 1 ) THEN
       !>
-      !>                       FRONT  = 'TITAN'
-      !>                       FFRAME = 'IAU_TITAN'
-      !>                       BACK   = 'SATURN'
-      !>                       BFRAME = 'IAU_SATURN'
+      !>               FRONT  = 'TITAN'
+      !>               FFRAME = 'IAU_TITAN'
+      !>               BACK   = 'SATURN'
+      !>               BFRAME = 'IAU_SATURN'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       FRONT  = 'SATURN'
-      !>                       FFRAME = 'IAU_SATURN'
-      !>                       BACK   = 'TITAN'
-      !>                       BFRAME = 'IAU_TITAN'
+      !>               FRONT  = 'SATURN'
+      !>               FFRAME = 'IAU_SATURN'
+      !>               BACK   = 'TITAN'
+      !>               BFRAME = 'IAU_TITAN'
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>        C
-      !>        C           Perform the search. The target body shapes
-      !>        C           are modeled as ellipsoids.
-      !>        C
-      !>                    CALL GFOCLT ( OCCTYP(I),
-      !>             .                    FRONT,  'ELLIPSOID', FFRAME,
-      !>             .                    BACK,   'ELLIPSOID', BFRAME,
-      !>             .                    'LT',   OBSRVR,      STEP,
-      !>             .                    CNFINE, RESULT              )
+      !>C
+      !>C           Perform the search. The target body shapes
+      !>C           are modeled as ellipsoids.
+      !>C
+      !>            CALL GFOCLT ( OCCTYP(I),
+      !>     .                    FRONT,  'ELLIPSOID', FFRAME,
+      !>     .                    BACK,   'ELLIPSOID', BFRAME,
+      !>     .                    'LT',   OBSRVR,      STEP,
+      !>     .                    CNFINE, RESULT              )
       !>
-      !>        C
-      !>        C           Display the results.
-      !>        C
-      !>                    WRITE (*,*) ' '
+      !>C
+      !>C           Display the results.
+      !>C
+      !>            WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C           Substitute the occultation type and target
-      !>        C           body names into the title string:
-      !>        C
-      !>                    CALL REPMC ( TEMPLT(I), '#', OCCTYP(I), TITLE )
-      !>                    CALL REPMC ( TITLE,     '#', BACK,      TITLE )
-      !>                    CALL REPMC ( TITLE,     '#', FRONT,     TITLE )
+      !>C
+      !>C           Substitute the occultation type and target
+      !>C           body names into the title string:
+      !>C
+      !>            CALL REPMC ( TEMPLT(I), '#', OCCTYP(I), TITLE )
+      !>            CALL REPMC ( TITLE,     '#', BACK,      TITLE )
+      !>            CALL REPMC ( TITLE,     '#', FRONT,     TITLE )
       !>
-      !>                    WRITE (*, '(A)' ) TITLE
+      !>            WRITE (*, '(A)' ) TITLE
       !>
-      !>                    IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>            IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                       WRITE (*, '(A)' ) ' Result window is empty: '
-      !>             .         //                'no occultation was found.'
+      !>               WRITE (*, '(A)' ) ' Result window is empty: '
+      !>     .         //                'no occultation was found.'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       WRITE (*, '(A)' ) ' Result window start, '
-      !>             .         //                'stop times (TDB):'
+      !>               WRITE (*, '(A)' ) ' Result window start, '
+      !>     .         //                'stop times (TDB):'
       !>
-      !>                       DO K = 1, WNCARD(RESULT)
+      !>               DO K = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C                 Fetch the endpoints of the Kth interval
-      !>        C                 of the result window.
-      !>        C
-      !>                          CALL WNFETD ( RESULT, K, START, FINISH )
+      !>C
+      !>C                 Fetch the endpoints of the Kth interval
+      !>C                 of the result window.
+      !>C
+      !>                  CALL WNFETD ( RESULT, K, START, FINISH )
       !>
-      !>                          LINE = '  #    #'
+      !>                  LINE = '  #    #'
       !>
-      !>                          CALL TIMOUT ( START, TIMFMT, TIMSTR )
+      !>                  CALL TIMOUT ( START, TIMFMT, TIMSTR )
       !>
-      !>                          CALL REPMC  ( LINE, '#', TIMSTR, LINE )
+      !>                  CALL REPMC  ( LINE, '#', TIMSTR, LINE )
       !>
-      !>                          CALL TIMOUT ( FINISH, TIMFMT, TIMSTR )
+      !>                  CALL TIMOUT ( FINISH, TIMFMT, TIMSTR )
       !>
-      !>                          CALL REPMC  ( LINE, '#', TIMSTR, LINE )
+      !>                  CALL REPMC  ( LINE, '#', TIMSTR, LINE )
       !>
-      !>                          WRITE ( *, '(A)' ) LINE
+      !>                  WRITE ( *, '(A)' ) LINE
       !>
-      !>                       END DO
+      !>               END DO
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>        C
-      !>        C           We've finished displaying the results of the
-      !>        C           current search.
-      !>        C
-      !>                 END DO
+      !>C
+      !>C           We've finished displaying the results of the
+      !>C           current search.
+      !>C
+      !>         END DO
       !>
-      !>        C
-      !>        C        We've finished displaying the results of the
-      !>        C        searches using the current occultation type.
-      !>        C
-      !>              END DO
+      !>C
+      !>C        We've finished displaying the results of the
+      !>C        searches using the current occultation type.
+      !>C
+      !>      END DO
       !>
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -24597,240 +24835,242 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFOCLT_EX3
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFOCLT_EX3
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'gfoclt_ex3.tm' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'gfoclt_ex3.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .   'YYYY MON DD HR:MN:SC.###### (TDB)::TDB' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .   'YYYY MON DD HR:MN:SC.###### (TDB)::TDB' )
       !>
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 2 * 100 )
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 2 * 100 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               SHPLEN
-      !>              PARAMETER           ( SHPLEN = 100 )
+      !>      INTEGER               SHPLEN
+      !>      PARAMETER           ( SHPLEN = 100 )
       !>
-      !>              INTEGER               OTYPLN
-      !>              PARAMETER           ( OTYPLN = 20 )
+      !>      INTEGER               OTYPLN
+      !>      PARAMETER           ( OTYPLN = 20 )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(BDNMLN)    BACK
-      !>              CHARACTER*(FRNMLN)    BFRAME
-      !>              CHARACTER*(SHPLEN)    BSHAPE
-      !>              CHARACTER*(BDNMLN)    FRONT
-      !>              CHARACTER*(SHPLEN)    FSHAPE
-      !>              CHARACTER*(FRNMLN)    FFRAME
-      !>              CHARACTER*(OTYPLN)    OCCTYP
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(TIMLEN)    WIN0
-      !>              CHARACTER*(TIMLEN)    WIN1
-      !>              CHARACTER*(TIMLEN)    BEGSTR
-      !>              CHARACTER*(TIMLEN)    ENDSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(BDNMLN)    BACK
+      !>      CHARACTER*(FRNMLN)    BFRAME
+      !>      CHARACTER*(SHPLEN)    BSHAPE
+      !>      CHARACTER*(BDNMLN)    FRONT
+      !>      CHARACTER*(SHPLEN)    FSHAPE
+      !>      CHARACTER*(FRNMLN)    FFRAME
+      !>      CHARACTER*(OTYPLN)    OCCTYP
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(TIMLEN)    WIN0
+      !>      CHARACTER*(TIMLEN)    WIN1
+      !>      CHARACTER*(TIMLEN)    BEGSTR
+      !>      CHARACTER*(TIMLEN)    ENDSTR
       !>
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      RIGHT
-      !>              DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      RIGHT
+      !>      DOUBLE PRECISION      STEP
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               K
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               K
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement and result windows CNFINE and RESULT are
-      !>        C     saved because this practice helps to prevent stack
-      !>        C     overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement and result windows CNFINE and RESULT are
+      !>C     saved because this practice helps to prevent stack
+      !>C     overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Initialize the confinement and result windows.
-      !>        C
-      !>              CALL SSIZED ( MAXWIN, CNFINE )
-      !>              CALL SSIZED ( MAXWIN, RESULT )
+      !>C
+      !>C     Initialize the confinement and result windows.
+      !>C
+      !>      CALL SSIZED ( MAXWIN, CNFINE )
+      !>      CALL SSIZED ( MAXWIN, RESULT )
       !>
-      !>        C
-      !>        C     Set the observer and aberration correction.
-      !>        C
-      !>              OBSRVR = 'DSS-14'
-      !>              ABCORR = 'CN'
+      !>C
+      !>C     Set the observer and aberration correction.
+      !>C
+      !>      OBSRVR = 'DSS-14'
+      !>      ABCORR = 'CN'
       !>
-      !>        C
-      !>        C     Set the occultation type.
-      !>        C
-      !>              OCCTYP = 'ANY'
+      !>C
+      !>C     Set the occultation type.
+      !>C
+      !>      OCCTYP = 'ANY'
       !>
-      !>        C
-      !>        C     Set the TDB time bounds of the confinement
-      !>        C     window, which is a single interval in this case.
-      !>        C
-      !>              WIN0 = '2015 FEB 28 07:00:00 TDB'
-      !>              WIN1 = '2015 FEB 28 12:00:00 TDB'
+      !>C
+      !>C     Set the TDB time bounds of the confinement
+      !>C     window, which is a single interval in this case.
+      !>C
+      !>      WIN0 = '2015 FEB 28 07:00:00 TDB'
+      !>      WIN1 = '2015 FEB 28 12:00:00 TDB'
       !>
-      !>              CALL STR2ET ( WIN0, ET0 )
-      !>              CALL STR2ET ( WIN1, ET1 )
+      !>      CALL STR2ET ( WIN0, ET0 )
+      !>      CALL STR2ET ( WIN1, ET1 )
       !>
-      !>        C
-      !>        C     Insert the time bounds into the confinement
-      !>        C     window.
-      !>        C
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>C
+      !>C     Insert the time bounds into the confinement
+      !>C     window.
+      !>C
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Select a 3-minute step. We'll ignore any occultations
-      !>        C     lasting less than 3 minutes. Units are TDB seconds.
-      !>        C
-      !>              STEP = 180.D0
+      !>C
+      !>C     Select a 3-minute step. We'll ignore any occultations
+      !>C     lasting less than 3 minutes. Units are TDB seconds.
+      !>C
+      !>      STEP = 180.D0
       !>
-      !>        C
-      !>        C     Perform both spacecraft occultation and spacecraft
-      !>        C     transit searches.
-      !>        C
-      !>              WRITE (*,*) ' '
+      !>C
+      !>C     Perform both spacecraft occultation and spacecraft
+      !>C     transit searches.
+      !>C
+      !>      WRITE (*,*) ' '
       !>
-      !>              DO I = 1, 2
+      !>      DO I = 1, 2
       !>
-      !>                 IF ( I .EQ. 1 ) THEN
+      !>         IF ( I .EQ. 1 ) THEN
       !>
-      !>        C
-      !>        C           Perform a spacecraft occultation search.
-      !>        C
-      !>                    FRONT  = 'MARS'
-      !>                    FFRAME = 'IAU_MARS'
+      !>C
+      !>C           Perform a spacecraft occultation search.
+      !>C
+      !>            FRONT  = 'MARS'
+      !>            FFRAME = 'IAU_MARS'
       !>
-      !>                    BACK   = 'MRO'
-      !>                    BSHAPE = 'POINT'
-      !>                    BFRAME = ' '
+      !>            BACK   = 'MRO'
+      !>            BSHAPE = 'POINT'
+      !>            BFRAME = ' '
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>        C
-      !>        C           Perform a spacecraft transit search.
-      !>        C
-      !>                    FRONT  = 'MRO'
-      !>                    FSHAPE = 'POINT'
-      !>                    FFRAME = ' '
+      !>C
+      !>C           Perform a spacecraft transit search.
+      !>C
+      !>            FRONT  = 'MRO'
+      !>            FSHAPE = 'POINT'
+      !>            FFRAME = ' '
       !>
-      !>                    BACK   = 'MARS'
-      !>                    BFRAME = 'IAU_MARS'
+      !>            BACK   = 'MARS'
+      !>            BFRAME = 'IAU_MARS'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 DO J = 1, 2
+      !>         DO J = 1, 2
       !>
-      !>                    IF ( J .EQ. 1 ) THEN
+      !>            IF ( J .EQ. 1 ) THEN
       !>
-      !>        C
-      !>        C              Model the planet shape as an ellipsoid.
-      !>        C
-      !>                       IF ( I .EQ. 1 ) THEN
-      !>                          FSHAPE = 'ELLIPSOID'
-      !>                       ELSE
-      !>                          BSHAPE = 'ELLIPSOID'
-      !>                       END IF
+      !>C
+      !>C              Model the planet shape as an ellipsoid.
+      !>C
+      !>               IF ( I .EQ. 1 ) THEN
+      !>                  FSHAPE = 'ELLIPSOID'
+      !>               ELSE
+      !>                  BSHAPE = 'ELLIPSOID'
+      !>               END IF
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>        C
-      !>        C              Model the planet shape using DSK data.
-      !>        C
-      !>                       IF ( I .EQ. 1 ) THEN
-      !>                          FSHAPE = 'DSK/UNPRIORITIZED'
-      !>                       ELSE
-      !>                          BSHAPE = 'DSK/UNPRIORITIZED'
-      !>                       END IF
+      !>C
+      !>C              Model the planet shape using DSK data.
+      !>C
+      !>               IF ( I .EQ. 1 ) THEN
+      !>                  FSHAPE = 'DSK/UNPRIORITIZED'
+      !>               ELSE
+      !>                  BSHAPE = 'DSK/UNPRIORITIZED'
+      !>               END IF
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>        C
-      !>        C           Perform the spacecraft occultation or
-      !>        C           transit search.
+      !>C
+      !>C           Perform the spacecraft occultation or
+      !>C           transit search.
       !>
-      !>                    IF ( I .EQ. 1 ) THEN
-      !>                       CALL TOSTDO ( 'Using shape model '//FSHAPE     )
-      !>                       CALL TOSTDO ( 'Starting occultation search...' )
-      !>                    ELSE
-      !>                       CALL TOSTDO ( 'Using shape model '//BSHAPE )
-      !>                       CALL TOSTDO ( 'Starting transit search...' )
-      !>                    END IF
+      !>            IF ( I .EQ. 1 ) THEN
+      !>               CALL TOSTDO ( 'Using shape model '//FSHAPE     )
+      !>               CALL TOSTDO ( 'Starting occultation search...' )
+      !>            ELSE
+      !>               CALL TOSTDO ( 'Using shape model '//BSHAPE )
+      !>               CALL TOSTDO ( 'Starting transit search...' )
+      !>            END IF
       !>
-      !>                    CALL GFOCLT ( OCCTYP,
-      !>             .                    FRONT,  FSHAPE, FFRAME,
-      !>             .                    BACK,   BSHAPE, BFRAME,
-      !>             .                    ABCORR, OBSRVR, STEP,
-      !>             .                    CNFINE, RESULT         )
+      !>            CALL GFOCLT ( OCCTYP,
+      !>     .                    FRONT,  FSHAPE, FFRAME,
+      !>     .                    BACK,   BSHAPE, BFRAME,
+      !>     .                    ABCORR, OBSRVR, STEP,
+      !>     .                    CNFINE, RESULT         )
       !>
-      !>                    IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>            IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                       WRITE (*,*) 'No event was found.'
+      !>               WRITE (*,*) 'No event was found.'
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       DO K = 1, WNCARD(RESULT)
+      !>               DO K = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C                 Fetch and display each event interval.
-      !>        C
-      !>                          CALL WNFETD ( RESULT, K, LEFT, RIGHT )
+      !>C
+      !>C                 Fetch and display each event interval.
+      !>C
+      !>                  CALL WNFETD ( RESULT, K, LEFT, RIGHT )
       !>
-      !>                          CALL TIMOUT ( LEFT,  TIMFMT, BEGSTR )
-      !>                          CALL TIMOUT ( RIGHT, TIMFMT, ENDSTR )
+      !>                  CALL TIMOUT ( LEFT,  TIMFMT, BEGSTR )
+      !>                  CALL TIMOUT ( RIGHT, TIMFMT, ENDSTR )
       !>
-      !>                          WRITE (*,*) '   Interval ', K
-      !>                          WRITE (*,*) '      Start time: '//BEGSTR
-      !>                          WRITE (*,*) '      Stop time:  '//ENDSTR
+      !>                  WRITE (*,*) '   Interval ', K
+      !>                  WRITE (*,*) '      Start time: '//BEGSTR
+      !>                  WRITE (*,*) '      Stop time:  '//ENDSTR
       !>
-      !>                       END DO
+      !>               END DO
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                    WRITE (*,*) ' '
+      !>            WRITE (*,*) ' '
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -24933,11 +25173,25 @@ contains
       !>        the check.
       !>
       !>-    SPICELIB Version 1.0.0, 07-APR-2009 (NJB) (LSE) (EDW)
-      module procedure gfoclt
+      module subroutine gfoclt ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: occtyp  !! Type of occultation.
+      character(*), intent(in) :: front  !! Name of body occulting the other.
+      character(*), intent(in) :: fshape  !! Type of shape model used for front body.
+      character(*), intent(in) :: fframe  !! Body-fixed, body-centered frame for front body.
+      character(*), intent(in) :: back  !! Name of body occulted by the other.
+      character(*), intent(in) :: bshape  !! Type of shape model used for back body.
+      character(*), intent(in) :: bframe  !! Body-fixed, body-centered frame for back body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding occultation events.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
 !
@@ -24945,24 +25199,6 @@ contains
 !
       real(wp) :: tol
       logical :: ok
-
-!
-!     External routines
-!
-!     Interrupt handler:
-!
-
-!
-!     Routines to set step size, refine transition times
-!     and report work:
-!
-
-!     Geometric quantity  bail switch:
-!
-
-!
-!     Progress report switch:
-!
 
 !
 !     Standard SPICE error handling.
@@ -25018,8 +25254,12 @@ contains
                     bail,    gfbail,  cnfine,  result )
 
       return
-      end procedure gfoclt
+      end subroutine gfoclt
 
+      !> Determine time intervals when a specified ray intersects the
+      !> space bounded by the field-of-view (FOV) of a specified
+      !> instrument.
+      !>
       !>## Detailed Input
       !>
       !>     INST     indicates the name of an instrument, such as a
@@ -25494,251 +25734,253 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFRFOV_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFRFOV_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      J1950
-      !>              DOUBLE PRECISION      J2000
-      !>              DOUBLE PRECISION      JYEAR
-      !>              DOUBLE PRECISION      RPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      J1950
+      !>      DOUBLE PRECISION      J2000
+      !>      DOUBLE PRECISION      JYEAR
+      !>      DOUBLE PRECISION      RPD
       !>
-      !>              INTEGER               WNCARD
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'gfrfov_ex1.tm' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'gfrfov_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .      'YYYY-MON-DD HR:MN:SC.######::TDB' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .      'YYYY-MON-DD HR:MN:SC.######::TDB' )
       !>
-      !>              DOUBLE PRECISION      AU
-      !>              PARAMETER           ( AU     = 149597870.693D0 )
+      !>      DOUBLE PRECISION      AU
+      !>      PARAMETER           ( AU     = 149597870.693D0 )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 10000 )
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 10000 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 35 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 35 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(BDNMLN)    INST
-      !>              CHARACTER*(LNSIZE)    LINE
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(FRNMLN)    RFRAME
-      !>              CHARACTER*(TIMLEN)    TIMSTR ( 2 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(BDNMLN)    INST
+      !>      CHARACTER*(LNSIZE)    LINE
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(FRNMLN)    RFRAME
+      !>      CHARACTER*(TIMLEN)    TIMSTR ( 2 )
       !>
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      DEC
-      !>              DOUBLE PRECISION      DECEPC
-      !>              DOUBLE PRECISION      DECPM
-      !>              DOUBLE PRECISION      DECDEG
-      !>              DOUBLE PRECISION      DECDG0
-      !>              DOUBLE PRECISION      DTDEC
-      !>              DOUBLE PRECISION      DTRA
-      !>              DOUBLE PRECISION      ENDPT  ( 2 )
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      PARLAX
-      !>              DOUBLE PRECISION      PLXDEG
-      !>              DOUBLE PRECISION      POS    ( 3 )
-      !>              DOUBLE PRECISION      PSTAR  ( 3 )
-      !>              DOUBLE PRECISION      RA
-      !>              DOUBLE PRECISION      RADEG
-      !>              DOUBLE PRECISION      RADEG0
-      !>              DOUBLE PRECISION      RAEPC
-      !>              DOUBLE PRECISION      RAPM
-      !>              DOUBLE PRECISION      RAYDIR ( 3 )
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      RSTAR
-      !>              DOUBLE PRECISION      STEPSZ
-      !>              DOUBLE PRECISION      T
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      DEC
+      !>      DOUBLE PRECISION      DECEPC
+      !>      DOUBLE PRECISION      DECPM
+      !>      DOUBLE PRECISION      DECDEG
+      !>      DOUBLE PRECISION      DECDG0
+      !>      DOUBLE PRECISION      DTDEC
+      !>      DOUBLE PRECISION      DTRA
+      !>      DOUBLE PRECISION      ENDPT  ( 2 )
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      PARLAX
+      !>      DOUBLE PRECISION      PLXDEG
+      !>      DOUBLE PRECISION      POS    ( 3 )
+      !>      DOUBLE PRECISION      PSTAR  ( 3 )
+      !>      DOUBLE PRECISION      RA
+      !>      DOUBLE PRECISION      RADEG
+      !>      DOUBLE PRECISION      RADEG0
+      !>      DOUBLE PRECISION      RAEPC
+      !>      DOUBLE PRECISION      RAPM
+      !>      DOUBLE PRECISION      RAYDIR ( 3 )
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      RSTAR
+      !>      DOUBLE PRECISION      STEPSZ
+      !>      DOUBLE PRECISION      T
       !>
-      !>              INTEGER               CATNO
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               N
+      !>      INTEGER               CATNO
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement and result windows CNFINE and RESULT are
-      !>        C     saved because this practice helps to prevent stack
-      !>        C     overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement and result windows CNFINE and RESULT are
+      !>C     saved because this practice helps to prevent stack
+      !>C     overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( 2,      CNFINE )
-      !>              CALL SSIZED ( MAXWIN, RESULT )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( 2,      CNFINE )
+      !>      CALL SSIZED ( MAXWIN, RESULT )
       !>
-      !>        C
-      !>        C     Insert search time interval bounds into the
-      !>        C     confinement window.
-      !>        C
-      !>              CALL STR2ET ( '2004 JUN 11 06:30:00 TDB', ET0 )
-      !>              CALL STR2ET ( '2004 JUN 11 12:00:00 TDB', ET1 )
+      !>C
+      !>C     Insert search time interval bounds into the
+      !>C     confinement window.
+      !>C
+      !>      CALL STR2ET ( '2004 JUN 11 06:30:00 TDB', ET0 )
+      !>      CALL STR2ET ( '2004 JUN 11 12:00:00 TDB', ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Initialize inputs for the search.
-      !>        C
-      !>              INST   = 'CASSINI_ISS_WAC'
+      !>C
+      !>C     Initialize inputs for the search.
+      !>C
+      !>      INST   = 'CASSINI_ISS_WAC'
       !>
-      !>        C
-      !>        C     Create a unit direction vector pointing from
-      !>        c     observer to star. We'll assume the direction
-      !>        C     is constant during the confinement window, and
-      !>        C     we'll use et0 as the epoch at which to compute the
-      !>        C     direction from the spacecraft to the star.
-      !>        C
-      !>        C     The data below are for the star with catalog
-      !>        C     number 6000 in the Hipparcos catalog. Angular
-      !>        C     units are degrees; epochs have units of Julian
-      !>        C     years and have a reference epoch of J1950.
-      !>        C     The reference frame is J2000.
-      !>        C
-      !>              CATNO  = 6000
+      !>C
+      !>C     Create a unit direction vector pointing from
+      !>c     observer to star. We'll assume the direction
+      !>C     is constant during the confinement window, and
+      !>C     we'll use et0 as the epoch at which to compute the
+      !>C     direction from the spacecraft to the star.
+      !>C
+      !>C     The data below are for the star with catalog
+      !>C     number 6000 in the Hipparcos catalog. Angular
+      !>C     units are degrees; epochs have units of Julian
+      !>C     years and have a reference epoch of J1950.
+      !>C     The reference frame is J2000.
+      !>C
+      !>      CATNO  = 6000
       !>
-      !>              PLXDEG = 0.000001056D0
+      !>      PLXDEG = 0.000001056D0
       !>
-      !>              RADEG0 = 19.290789927D0
-      !>              RAPM   = -0.000000720D0
-      !>              RAEPC  = 41.2000D0
+      !>      RADEG0 = 19.290789927D0
+      !>      RAPM   = -0.000000720D0
+      !>      RAEPC  = 41.2000D0
       !>
-      !>              DECDG0 =  2.015271007D0
-      !>              DECPM  =  0.000001814D0
-      !>              DECEPC = 41.1300D0
+      !>      DECDG0 =  2.015271007D0
+      !>      DECPM  =  0.000001814D0
+      !>      DECEPC = 41.1300D0
       !>
-      !>              RFRAME = 'J2000'
+      !>      RFRAME = 'J2000'
       !>
-      !>        C
-      !>        C     Correct the star's direction for proper motion.
-      !>        C
-      !>        C     The argument t represents et0 as Julian years
-      !>        C     past J1950.
-      !>        C
-      !>              T      =      ET0/JYEAR()
-      !>             .         +  ( J2000()- J1950() ) / 365.25D0
+      !>C
+      !>C     Correct the star's direction for proper motion.
+      !>C
+      !>C     The argument t represents et0 as Julian years
+      !>C     past J1950.
+      !>C
+      !>      T      =      ET0/JYEAR()
+      !>     .         +  ( J2000()- J1950() ) / 365.25D0
       !>
-      !>              DTRA   = T - RAEPC
-      !>              DTDEC  = T - DECEPC
+      !>      DTRA   = T - RAEPC
+      !>      DTDEC  = T - DECEPC
       !>
-      !>              RADEG  = RADEG0  +  DTRA  * RAPM
-      !>              DECDEG = DECDG0  +  DTDEC * DECPM
+      !>      RADEG  = RADEG0  +  DTRA  * RAPM
+      !>      DECDEG = DECDG0  +  DTDEC * DECPM
       !>
-      !>              RA     = RADEG  * RPD()
-      !>              DEC    = DECDEG * RPD()
+      !>      RA     = RADEG  * RPD()
+      !>      DEC    = DECDEG * RPD()
       !>
-      !>              CALL RADREC ( 1.D0, RA, DEC, PSTAR )
+      !>      CALL RADREC ( 1.D0, RA, DEC, PSTAR )
       !>
-      !>        C
-      !>        C     Correct star position for parallax applicable at
-      !>        C     the Cassini orbiter's position. (The parallax effect
-      !>        C     is negligible in this case; we're simply demonstrating
-      !>        C     the computation.)
-      !>        C
-      !>              PARLAX = PLXDEG * RPD()
-      !>              RSTAR  = AU / TAN(PARLAX)
+      !>C
+      !>C     Correct star position for parallax applicable at
+      !>C     the Cassini orbiter's position. (The parallax effect
+      !>C     is negligible in this case; we're simply demonstrating
+      !>C     the computation.)
+      !>C
+      !>      PARLAX = PLXDEG * RPD()
+      !>      RSTAR  = AU / TAN(PARLAX)
       !>
-      !>        C
-      !>        C     Scale the star's direction vector by its distance from
-      !>        C     the solar system barycenter. Subtract off the position
-      !>        C     of the spacecraft relative to the solar system
-      !>        C     barycenter; the result is the ray's direction vector.
-      !>        C
-      !>              CALL VSCLIP ( RSTAR, PSTAR )
+      !>C
+      !>C     Scale the star's direction vector by its distance from
+      !>C     the solar system barycenter. Subtract off the position
+      !>C     of the spacecraft relative to the solar system
+      !>C     barycenter; the result is the ray's direction vector.
+      !>C
+      !>      CALL VSCLIP ( RSTAR, PSTAR )
       !>
-      !>              CALL SPKPOS ( 'CASSINI', ET0, 'J2000',  'NONE',
-      !>             .              'SOLAR SYSTEM BARYCENTER', POS,  LT )
+      !>      CALL SPKPOS ( 'CASSINI', ET0, 'J2000',  'NONE',
+      !>     .              'SOLAR SYSTEM BARYCENTER', POS,  LT )
       !>
-      !>              CALL VSUB   ( PSTAR, POS, RAYDIR )
+      !>      CALL VSUB   ( PSTAR, POS, RAYDIR )
       !>
-      !>        C
-      !>        C     Correct the star direction for stellar aberration when
-      !>        C     we conduct the search.
-      !>        C
-      !>              ABCORR = 'S'
-      !>              OBSRVR = 'CASSINI'
-      !>              STEPSZ = 10.D0
+      !>C
+      !>C     Correct the star direction for stellar aberration when
+      !>C     we conduct the search.
+      !>C
+      !>      ABCORR = 'S'
+      !>      OBSRVR = 'CASSINI'
+      !>      STEPSZ = 10.D0
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Instrument:              '//INST
-      !>              WRITE (*,*) 'Star''s catalog number:  ', CATNO
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Instrument:              '//INST
+      !>      WRITE (*,*) 'Star''s catalog number:  ', CATNO
+      !>      WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C     Perform the search.
-      !>        C
-      !>              CALL GFRFOV ( INST,   RAYDIR, RFRAME, ABCORR,
-      !>             .              OBSRVR, STEPSZ, CNFINE, RESULT )
+      !>C
+      !>C     Perform the search.
+      !>C
+      !>      CALL GFRFOV ( INST,   RAYDIR, RFRAME, ABCORR,
+      !>     .              OBSRVR, STEPSZ, CNFINE, RESULT )
       !>
-      !>              N = WNCARD( RESULT )
+      !>      N = WNCARD( RESULT )
       !>
-      !>              IF ( N .EQ. 0 ) THEN
+      !>      IF ( N .EQ. 0 ) THEN
       !>
-      !>                 WRITE (*,*) 'No FOV intersection found.'
+      !>         WRITE (*,*) 'No FOV intersection found.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE (*, '(A)' ) '  Visibility start time (TDB)'
-      !>             .    //               '           Stop time (TDB)'
-      !>                 WRITE (*, '(A)' ) '  ---------------------------'
-      !>             .    //               '     ---------------------------'
+      !>         WRITE (*, '(A)' ) '  Visibility start time (TDB)'
+      !>     .    //               '           Stop time (TDB)'
+      !>         WRITE (*, '(A)' ) '  ---------------------------'
+      !>     .    //               '     ---------------------------'
       !>
-      !>                 DO I = 1, N
+      !>         DO I = 1, N
       !>
-      !>                    CALL WNFETD ( RESULT, I, ENDPT(1), ENDPT(2) )
+      !>            CALL WNFETD ( RESULT, I, ENDPT(1), ENDPT(2) )
       !>
-      !>                    DO J = 1, 2
-      !>                       CALL TIMOUT ( ENDPT(J), TIMFMT, TIMSTR(J) )
-      !>                    END DO
+      !>            DO J = 1, 2
+      !>               CALL TIMOUT ( ENDPT(J), TIMFMT, TIMSTR(J) )
+      !>            END DO
       !>
-      !>                    LINE( :3) = ' '
-      !>                    LINE(2: ) = TIMSTR(1)
-      !>                    LINE(34:) = TIMSTR(2)
+      !>            LINE( :3) = ' '
+      !>            LINE(2: ) = TIMSTR(1)
+      !>            LINE(34:) = TIMSTR(2)
       !>
-      !>                    WRITE (*,*) LINE
+      !>            WRITE (*,*) LINE
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              WRITE (*,*) ' '
-      !>              END
+      !>      WRITE (*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -25792,31 +26034,22 @@ contains
       !>        the check.
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-2009 (NJB) (LSE) (EDW)
-      module procedure gfrfov
+      module subroutine gfrfov ( ctx, inst, raydir, rframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: inst  !! Name of the instrument.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      character(*), intent(in) :: rframe  !! Reference frame of ray's direction vector.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding FOV events.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
-
-!
-!     External routines
-!
-!     Interrupt handler:
-!
-
-!
-!     Routines to set step size, refine transition times
-!     and report work:
-!
-
-!
-!     Geometric quantity  bail switch:
-!
-
-!
-!     Progress report switch:
-!
 
       real(wp) :: tol
       logical :: ok
@@ -25873,8 +26106,10 @@ contains
                     gfrepu, gfrepf, bail,   gfbail, cnfine, result )
 
       return
-      end procedure gfrfov
+      end subroutine gfrfov
 
+      !> Initialize a search progress report.
+      !>
       !>## Detailed Input
       !>
       !>     WINDOW   is the name of a constraint window. This is the window
@@ -25980,10 +26215,15 @@ contains
       !>        $Brief_I/O, and $Parameters sections.
       !>
       !>-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-      module procedure gfrepi
+      module subroutine gfrepi ( ctx, window, begmss, endmss )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      real(wp), intent(in) :: window ( lbcell : * )  !! A window over which a job is to be performed.
+      character(*), intent(in) :: begmss  !! Beginning of the text portion of output message.
+      character(*), intent(in) :: endmss  !! End of the text portion of output message.
       integer(ip), parameter :: fprint = 32
       integer(ip), parameter :: lprint = 126
       character(mxbegm) :: begin
@@ -26100,8 +26340,11 @@ contains
 
       return
       end associate
-      end procedure gfrepi
+      end subroutine gfrepi
 
+      !> Tell the progress reporting system how far a search has
+      !> progressed.
+      !>
       !>## Detailed Input
       !>
       !>     IVBEG,
@@ -26207,10 +26450,14 @@ contains
       !>        section.
       !>
       !>-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-      module procedure gfrepu
+      module subroutine gfrepu ( ctx, ivbeg, ivend, time )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: ivbeg  !! Start time of work interval.
+      real(wp), intent(in) :: ivend  !! End time of work interval.
+      real(wp), intent(in) :: time  !! Current time being examined in the search process
       character(mxbegm) :: begin
       character(mxendm) :: end
       real(wp) :: ave
@@ -26298,8 +26545,10 @@ contains
 
       return
       end associate
-      end procedure gfrepu
+      end subroutine gfrepu
 
+      !> Finish a progress report.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -26355,11 +26604,12 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-      module procedure gfrepf
+      module subroutine gfrepf ( ctx )
       use, intrinsic :: iso_fortran_env, only: output_unit
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
       character(mxbegm) :: begin
       character(mxendm) :: end
       real(wp) :: ave
@@ -26422,8 +26672,12 @@ contains
 
       return
       end associate
-      end procedure gfrepf
+      end subroutine gfrepf
 
+      !> Determine time intervals when a specified ephemeris object
+      !> intersects the space bounded by the field-of-view (FOV) of a
+      !> specified instrument.
+      !>
       !>## Detailed Input
       !>
       !>     INST     indicates the name of an instrument, such as a
@@ -26981,156 +27235,158 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFTFOV_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFTFOV_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'gftfov_ex1.tm' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'gftfov_ex1.tm' )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .      'YYYY-MON-DD HR:MN:SC.######::TDB' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .      'YYYY-MON-DD HR:MN:SC.######::TDB' )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 10000 )
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 10000 )
       !>
-      !>              INTEGER               CORLEN
-      !>              PARAMETER           ( CORLEN = 10 )
+      !>      INTEGER               CORLEN
+      !>      PARAMETER           ( CORLEN = 10 )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               SHPLEN
-      !>              PARAMETER           ( SHPLEN = 25 )
+      !>      INTEGER               SHPLEN
+      !>      PARAMETER           ( SHPLEN = 25 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 35 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 35 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(BDNMLN)    INST
-      !>              CHARACTER*(LNSIZE)    LINE
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(BDNMLN)    TARGET
-      !>              CHARACTER*(FRNMLN)    TFRAME
-      !>              CHARACTER*(TIMLEN)    TIMSTR ( 2 )
-      !>              CHARACTER*(SHPLEN)    TSHAPE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(BDNMLN)    INST
+      !>      CHARACTER*(LNSIZE)    LINE
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(BDNMLN)    TARGET
+      !>      CHARACTER*(FRNMLN)    TFRAME
+      !>      CHARACTER*(TIMLEN)    TIMSTR ( 2 )
+      !>      CHARACTER*(SHPLEN)    TSHAPE
       !>
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      ENDPT  ( 2 )
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      STEPSZ
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      ENDPT  ( 2 )
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      STEPSZ
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               N
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement and result windows CNFINE and RESULT are
-      !>        C     saved because this practice helps to prevent stack
-      !>        C     overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement and result windows CNFINE and RESULT are
+      !>C     saved because this practice helps to prevent stack
+      !>C     overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( 2,      CNFINE )
-      !>              CALL SSIZED ( MAXWIN, RESULT )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( 2,      CNFINE )
+      !>      CALL SSIZED ( MAXWIN, RESULT )
       !>
-      !>        C
-      !>        C     Insert search time interval bounds into the
-      !>        C     confinement window.
-      !>        C
-      !>              CALL STR2ET ( '2004 JUN 11 06:30:00 TDB', ET0 )
-      !>              CALL STR2ET ( '2004 JUN 11 12:00:00 TDB', ET1 )
+      !>C
+      !>C     Insert search time interval bounds into the
+      !>C     confinement window.
+      !>C
+      !>      CALL STR2ET ( '2004 JUN 11 06:30:00 TDB', ET0 )
+      !>      CALL STR2ET ( '2004 JUN 11 12:00:00 TDB', ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Initialize inputs for the search.
-      !>        C
-      !>              INST   = 'CASSINI_ISS_NAC'
-      !>              TARGET = 'PHOEBE'
-      !>              TSHAPE = 'ELLIPSOID'
-      !>              TFRAME = 'IAU_PHOEBE'
-      !>              ABCORR = 'LT+S'
-      !>              OBSRVR = 'CASSINI'
-      !>              STEPSZ = 10.D0
+      !>C
+      !>C     Initialize inputs for the search.
+      !>C
+      !>      INST   = 'CASSINI_ISS_NAC'
+      !>      TARGET = 'PHOEBE'
+      !>      TSHAPE = 'ELLIPSOID'
+      !>      TFRAME = 'IAU_PHOEBE'
+      !>      ABCORR = 'LT+S'
+      !>      OBSRVR = 'CASSINI'
+      !>      STEPSZ = 10.D0
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Instrument: '//INST
-      !>              WRITE (*,*) 'Target:     '//TARGET
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Instrument: '//INST
+      !>      WRITE (*,*) 'Target:     '//TARGET
+      !>      WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C     Perform the search.
-      !>        C
-      !>              CALL GFTFOV ( INST,   TARGET, TSHAPE, TFRAME,
-      !>             .              ABCORR, OBSRVR, STEPSZ, CNFINE, RESULT )
+      !>C
+      !>C     Perform the search.
+      !>C
+      !>      CALL GFTFOV ( INST,   TARGET, TSHAPE, TFRAME,
+      !>     .              ABCORR, OBSRVR, STEPSZ, CNFINE, RESULT )
       !>
-      !>              N = WNCARD( RESULT )
+      !>      N = WNCARD( RESULT )
       !>
-      !>              IF ( N .EQ. 0 ) THEN
+      !>      IF ( N .EQ. 0 ) THEN
       !>
-      !>                 WRITE (*,*) 'No FOV intersection found.'
+      !>         WRITE (*,*) 'No FOV intersection found.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE (*, '(A)' ) '  Visibility start time (TDB)'
-      !>             .    //               '           Stop time (TDB)'
-      !>                 WRITE (*, '(A)' ) '  ---------------------------'
-      !>             .    //               '     ---------------------------'
+      !>         WRITE (*, '(A)' ) '  Visibility start time (TDB)'
+      !>     .    //               '           Stop time (TDB)'
+      !>         WRITE (*, '(A)' ) '  ---------------------------'
+      !>     .    //               '     ---------------------------'
       !>
-      !>                 DO I = 1, N
+      !>         DO I = 1, N
       !>
-      !>                    CALL WNFETD ( RESULT, I, ENDPT(1), ENDPT(2) )
+      !>            CALL WNFETD ( RESULT, I, ENDPT(1), ENDPT(2) )
       !>
-      !>                    DO J = 1, 2
-      !>                       CALL TIMOUT ( ENDPT(J), TIMFMT, TIMSTR(J) )
-      !>                    END DO
+      !>            DO J = 1, 2
+      !>               CALL TIMOUT ( ENDPT(J), TIMFMT, TIMSTR(J) )
+      !>            END DO
       !>
-      !>                    LINE( :3) = ' '
-      !>                    LINE(2: ) = TIMSTR(1)
-      !>                    LINE(34:) = TIMSTR(2)
+      !>            LINE( :3) = ' '
+      !>            LINE(2: ) = TIMSTR(1)
+      !>            LINE(34:) = TIMSTR(2)
       !>
-      !>                    WRITE (*,*) LINE
+      !>            WRITE (*,*) LINE
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              WRITE (*,*) ' '
-      !>              END
+      !>      WRITE (*,*) ' '
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -27189,12 +27445,23 @@ contains
       !>        the check.
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-2009 (NJB) (LSE) (EDW)
-      module procedure gftfov
+      module subroutine gftfov ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       use pepper_inc_gf
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: inst  !! Name of the instrument.
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: tshape  !! Type of shape model used for target body.
+      character(*), intent(in) :: tframe  !! Body-fixed, body-centered frame for target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding FOV events.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
       real(wp) :: tol
       logical :: ok
       if ( .not. allocated ( ctx%gftfov_state ) ) allocate ( ctx%gftfov_state )
@@ -27262,8 +27529,10 @@ contains
 
       return
       end associate
-      end procedure gftfov
+      end subroutine gftfov
 
+      !> Perform a GF search on a user defined boolean quantity.
+      !>
       !>## Detailed Input
       !>
       !>     UDFUNS   is the routine that returns the value of the scalar
@@ -27632,184 +27901,186 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFUDB_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFUDB_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
-      !>              DOUBLE PRECISION      SPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
+      !>      DOUBLE PRECISION      SPD
       !>
-      !>        C
-      !>        C     User defined external routines
-      !>        C
-      !>              EXTERNAL              UDF
-      !>              EXTERNAL              GFB
+      !>C
+      !>C     User defined external routines
+      !>C
+      !>      EXTERNAL              UDF
+      !>      EXTERNAL              GFB
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Use the parameter MAXWIN for both the result window size
-      !>        C     and the workspace size.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 100 )
+      !>C
+      !>C     Use the parameter MAXWIN for both the result window size
+      !>C     and the workspace size.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 100 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(32)        UTC
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(32)        UTC
       !>
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RIGHT
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      ETS
-      !>              DOUBLE PRECISION      ETE
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      STATE  (6)
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2      )
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RIGHT
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ETS
+      !>      DOUBLE PRECISION      ETE
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      STATE  (6)
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2      )
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement and result windows CNFINE and RESULT are
-      !>        C     saved because this practice helps to prevent stack
-      !>        C     overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement and result windows CNFINE and RESULT are
+      !>C     saved because this practice helps to prevent stack
+      !>C     overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
       !>
-      !>        C
-      !>        C     Load needed kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfudb_ex1.tm' )
+      !>C
+      !>C     Load needed kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfudb_ex1.tm' )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( MAXWIN, RESULT )
-      !>              CALL SSIZED ( 2,      CNFINE )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( MAXWIN, RESULT )
+      !>      CALL SSIZED ( 2,      CNFINE )
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the confinement window.
-      !>        C
-      !>              CALL STR2ET ( 'Jan 1 2011', ETS )
-      !>              CALL STR2ET ( 'Apr 1 2011', ETE )
-      !>              CALL WNINSD ( ETS, ETE, CNFINE  )
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the confinement window.
+      !>C
+      !>      CALL STR2ET ( 'Jan 1 2011', ETS )
+      !>      CALL STR2ET ( 'Apr 1 2011', ETE )
+      !>      CALL WNINSD ( ETS, ETE, CNFINE  )
       !>
-      !>        C
-      !>        C     The moon orbit about the earth-moon barycenter is
-      !>        C     twenty-eight days. The event condition occurs
-      !>        C     during (very) approximately a quarter of the orbit. Use
-      !>        C     a step of five days.
-      !>        C
-      !>              STEP = 5.D0 * SPD()
+      !>C
+      !>C     The moon orbit about the earth-moon barycenter is
+      !>C     twenty-eight days. The event condition occurs
+      !>C     during (very) approximately a quarter of the orbit. Use
+      !>C     a step of five days.
+      !>C
+      !>      STEP = 5.D0 * SPD()
       !>
-      !>              CALL GFUDB ( UDF, GFB, STEP, CNFINE, RESULT )
+      !>      CALL GFUDB ( UDF, GFB, STEP, CNFINE, RESULT )
       !>
-      !>              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>      IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                    WRITE (*, '(A)') 'Result window is empty.'
+      !>            WRITE (*, '(A)') 'Result window is empty.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO I = 1, WNCARD(RESULT)
+      !>         DO I = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C           Fetch and display each RESULT interval.
-      !>        C
-      !>                    CALL WNFETD ( RESULT, I, LEFT, RIGHT )
-      !>                    WRITE (*,*) 'Interval ', I
+      !>C
+      !>C           Fetch and display each RESULT interval.
+      !>C
+      !>            CALL WNFETD ( RESULT, I, LEFT, RIGHT )
+      !>            WRITE (*,*) 'Interval ', I
       !>
-      !>                    CALL ET2UTC ( LEFT, 'C', 4, UTC )
-      !>                    WRITE (*, *) '   Interval start: ', UTC
+      !>            CALL ET2UTC ( LEFT, 'C', 4, UTC )
+      !>            WRITE (*, *) '   Interval start: ', UTC
       !>
-      !>                    CALL SPKEZ ( 301, LEFT, 'IAU_EARTH', 'NONE', 399,
-      !>             .                   STATE, LT )
-      !>                    WRITE (*, *) '                Z= ', STATE(3)
-      !>                    WRITE (*, *) '               Vz= ', STATE(6)
+      !>            CALL SPKEZ ( 301, LEFT, 'IAU_EARTH', 'NONE', 399,
+      !>     .                   STATE, LT )
+      !>            WRITE (*, *) '                Z= ', STATE(3)
+      !>            WRITE (*, *) '               Vz= ', STATE(6)
       !>
-      !>                    CALL ET2UTC ( RIGHT, 'C', 4, UTC )
-      !>                    WRITE (*, *) '   Interval end  : ', UTC
+      !>            CALL ET2UTC ( RIGHT, 'C', 4, UTC )
+      !>            WRITE (*, *) '   Interval end  : ', UTC
       !>
-      !>                    CALL SPKEZ ( 301, RIGHT, 'IAU_EARTH', 'NONE', 399,
-      !>             .                   STATE, LT )
-      !>                    WRITE (*, *) '                Z= ', STATE(3)
-      !>                    WRITE (*, *) '               Vz= ', STATE(6)
-      !>                    WRITE (*, *) ' '
+      !>            CALL SPKEZ ( 301, RIGHT, 'IAU_EARTH', 'NONE', 399,
+      !>     .                   STATE, LT )
+      !>            WRITE (*, *) '                Z= ', STATE(3)
+      !>            WRITE (*, *) '               Vz= ', STATE(6)
+      !>            WRITE (*, *) ' '
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
       !>
-      !>        C-Procedure GFB
-      !>        C
-      !>        C     User defined boolean routine.
-      !>        C
+      !>C-Procedure GFB
+      !>C
+      !>C     User defined boolean routine.
+      !>C
       !>
-      !>              SUBROUTINE GFB ( UDFUNS, ET, BOOL )
-      !>              IMPLICIT NONE
+      !>      SUBROUTINE GFB ( UDFUNS, ET, BOOL )
+      !>      IMPLICIT NONE
       !>
-      !>        C- Abstract
-      !>        C
-      !>        C     User defined geometric boolean function:
-      !>        C
-      !>        C        Z >= 0 with dZ/dt > 0.
-      !>        C
+      !>C- Abstract
+      !>C
+      !>C     User defined geometric boolean function:
+      !>C
+      !>C        Z >= 0 with dZ/dt > 0.
+      !>C
       !>
-      !>              EXTERNAL              UDFUNS
+      !>      EXTERNAL              UDFUNS
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              LOGICAL               BOOL
+      !>      DOUBLE PRECISION      ET
+      !>      LOGICAL               BOOL
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               TARG
-      !>              INTEGER               OBS
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               TARG
+      !>      INTEGER               OBS
       !>
-      !>              CHARACTER*(12)        REF
-      !>              CHARACTER*(12)        ABCORR
+      !>      CHARACTER*(12)        REF
+      !>      CHARACTER*(12)        ABCORR
       !>
-      !>              DOUBLE PRECISION      STATE ( 6 )
-      !>              DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STATE ( 6 )
+      !>      DOUBLE PRECISION      LT
       !>
-      !>        C
-      !>        C     Initialization. Retrieve the vector from the earth to
-      !>        C     the moon in the IAU_EARTH frame, without aberration
-      !>        C     correction.
-      !>        C
-      !>              TARG   = 301
-      !>              REF    = 'IAU_EARTH'
-      !>              ABCORR = 'NONE'
-      !>              OBS    = 399
+      !>C
+      !>C     Initialization. Retrieve the vector from the earth to
+      !>C     the moon in the IAU_EARTH frame, without aberration
+      !>C     correction.
+      !>C
+      !>      TARG   = 301
+      !>      REF    = 'IAU_EARTH'
+      !>      ABCORR = 'NONE'
+      !>      OBS    = 399
       !>
-      !>        C
-      !>        C     Evaluate the state of TARG from OBS at ET with
-      !>        C     correction ABCORR.
-      !>        C
-      !>              CALL SPKEZ ( TARG, ET, REF, ABCORR, OBS, STATE, LT )
+      !>C
+      !>C     Evaluate the state of TARG from OBS at ET with
+      !>C     correction ABCORR.
+      !>C
+      !>      CALL SPKEZ ( TARG, ET, REF, ABCORR, OBS, STATE, LT )
       !>
-      !>        C
-      !>        C     Calculate the boolean value.
-      !>        C
-      !>              BOOL = (STATE(3) .GE. 0.D0) .AND. (STATE(6) .GT. 0.D0 )
+      !>C
+      !>C     Calculate the boolean value.
+      !>C
+      !>      BOOL = (STATE(3) .GE. 0.D0) .AND. (STATE(6) .GT. 0.D0 )
       !>
-      !>              RETURN
+      !>      RETURN
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -27847,209 +28118,211 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFUDB_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFUDB_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER               WNCARD
-      !>              DOUBLE PRECISION      SPD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER               WNCARD
+      !>      DOUBLE PRECISION      SPD
       !>
-      !>        C
-      !>        C     User defined external routines
-      !>        C
-      !>              EXTERNAL              GFB
-      !>              EXTERNAL              GFQ
+      !>C
+      !>C     User defined external routines
+      !>C
+      !>      EXTERNAL              GFB
+      !>      EXTERNAL              GFQ
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Use the parameter MAXWIN for both the result window size
-      !>        C     and the workspace size.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 100 )
+      !>C
+      !>C     Use the parameter MAXWIN for both the result window size
+      !>C     and the workspace size.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 100 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(32)        UTC
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(32)        UTC
       !>
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RIGHT
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      ETS
-      !>              DOUBLE PRECISION      ETE
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      POS (3)
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2      )
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RIGHT
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ETS
+      !>      DOUBLE PRECISION      ETE
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      POS (3)
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2      )
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement and result windows CNFINE and RESULT are
-      !>        C     saved because this practice helps to prevent stack
-      !>        C     overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement and result windows CNFINE and RESULT are
+      !>C     saved because this practice helps to prevent stack
+      !>C     overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
       !>
-      !>        C
-      !>        C     Load needed kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfudb_ex1.tm' )
+      !>C
+      !>C     Load needed kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfudb_ex1.tm' )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( MAXWIN, RESULT )
-      !>              CALL SSIZED ( 2,      CNFINE )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( MAXWIN, RESULT )
+      !>      CALL SSIZED ( 2,      CNFINE )
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the confinement window.
-      !>        C
-      !>              CALL STR2ET ( 'Jan 1 2011', ETS )
-      !>              CALL STR2ET ( 'Apr 1 2011', ETE )
-      !>              CALL WNINSD ( ETS, ETE, CNFINE )
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the confinement window.
+      !>C
+      !>      CALL STR2ET ( 'Jan 1 2011', ETS )
+      !>      CALL STR2ET ( 'Apr 1 2011', ETE )
+      !>      CALL WNINSD ( ETS, ETE, CNFINE )
       !>
-      !>        C
-      !>        C     The duration of the event is approximately ninety
-      !>        C     minutes. Use a step of one hour.
-      !>        C
-      !>              STEP = 60.D0*60.D0
+      !>C
+      !>C     The duration of the event is approximately ninety
+      !>C     minutes. Use a step of one hour.
+      !>C
+      !>      STEP = 60.D0*60.D0
       !>
-      !>              CALL GFUDB ( GFQ, GFB, STEP, CNFINE, RESULT )
+      !>      CALL GFUDB ( GFQ, GFB, STEP, CNFINE, RESULT )
       !>
-      !>              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>      IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                    WRITE (*, '(A)') 'Result window is empty.'
+      !>            WRITE (*, '(A)') 'Result window is empty.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO I = 1, WNCARD(RESULT)
+      !>         DO I = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C           Fetch and display each RESULT interval.
-      !>        C
-      !>                    CALL WNFETD ( RESULT, I, LEFT, RIGHT )
-      !>                    WRITE (*,*) 'Interval ', I
+      !>C
+      !>C           Fetch and display each RESULT interval.
+      !>C
+      !>            CALL WNFETD ( RESULT, I, LEFT, RIGHT )
+      !>            WRITE (*,*) 'Interval ', I
       !>
-      !>                    CALL ET2UTC ( LEFT, 'C', 4, UTC )
-      !>                    WRITE (*, *) '   Interval start: ', UTC
+      !>            CALL ET2UTC ( LEFT, 'C', 4, UTC )
+      !>            WRITE (*, *) '   Interval start: ', UTC
       !>
-      !>                    CALL SPKEZP ( 301, LEFT, 'IAU_EARTH', 'NONE', 399,
-      !>             .                   POS, LT )
-      !>                    WRITE (*, *) '                Z= ', POS(3)
+      !>            CALL SPKEZP ( 301, LEFT, 'IAU_EARTH', 'NONE', 399,
+      !>     .                   POS, LT )
+      !>            WRITE (*, *) '                Z= ', POS(3)
       !>
-      !>                    CALL ET2UTC ( RIGHT, 'C', 4, UTC )
-      !>                    WRITE (*, *) '   Interval end  : ', UTC
+      !>            CALL ET2UTC ( RIGHT, 'C', 4, UTC )
+      !>            WRITE (*, *) '   Interval end  : ', UTC
       !>
-      !>                    CALL SPKEZP ( 301, RIGHT, 'IAU_EARTH', 'NONE', 399,
-      !>             .                   POS, LT )
-      !>                    WRITE (*, *) '                Z= ', POS(3)
-      !>                    WRITE (*, *) ' '
+      !>            CALL SPKEZP ( 301, RIGHT, 'IAU_EARTH', 'NONE', 399,
+      !>     .                   POS, LT )
+      !>            WRITE (*, *) '                Z= ', POS(3)
+      !>            WRITE (*, *) ' '
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
       !>
-      !>        C-Procedure GFQ
-      !>        C
-      !>        C     User defined scalar routine.
-      !>        C
+      !>C-Procedure GFQ
+      !>C
+      !>C     User defined scalar routine.
+      !>C
       !>
-      !>              SUBROUTINE GFQ ( ET, VALUE )
-      !>              IMPLICIT NONE
+      !>      SUBROUTINE GFQ ( ET, VALUE )
+      !>      IMPLICIT NONE
       !>
-      !>        C- Abstract
-      !>        C
-      !>        C     Return the Z component of the POS vector.
-      !>        C
+      !>C- Abstract
+      !>C
+      !>C     Return the Z component of the POS vector.
+      !>C
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      VALUE
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      VALUE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               TARG
-      !>              INTEGER               OBS
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               TARG
+      !>      INTEGER               OBS
       !>
-      !>              CHARACTER*(12)        REF
-      !>              CHARACTER*(12)        ABCORR
+      !>      CHARACTER*(12)        REF
+      !>      CHARACTER*(12)        ABCORR
       !>
-      !>              DOUBLE PRECISION      POS ( 3 )
-      !>              DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      POS ( 3 )
+      !>      DOUBLE PRECISION      LT
       !>
-      !>        C
-      !>        C     Initialization. Retrieve the vector from the earth to
-      !>        C     the moon in the IAU_EARTH frame, without aberration
-      !>        C     correction.
-      !>        C
-      !>              TARG   = 301
-      !>              REF    = 'IAU_EARTH'
-      !>              ABCORR = 'NONE'
-      !>              OBS    = 399
+      !>C
+      !>C     Initialization. Retrieve the vector from the earth to
+      !>C     the moon in the IAU_EARTH frame, without aberration
+      !>C     correction.
+      !>C
+      !>      TARG   = 301
+      !>      REF    = 'IAU_EARTH'
+      !>      ABCORR = 'NONE'
+      !>      OBS    = 399
       !>
-      !>        C
-      !>        C     Evaluate the position of TARG from OBS at ET with
-      !>        C     correction ABCORR.
-      !>        C
-      !>              CALL SPKEZP ( TARG, ET, REF, ABCORR, OBS, POS, LT )
+      !>C
+      !>C     Evaluate the position of TARG from OBS at ET with
+      !>C     correction ABCORR.
+      !>C
+      !>      CALL SPKEZP ( TARG, ET, REF, ABCORR, OBS, POS, LT )
       !>
-      !>              VALUE = POS(3)
+      !>      VALUE = POS(3)
       !>
-      !>              RETURN
-      !>              END
+      !>      RETURN
+      !>      END
       !>
-      !>        C-Procedure GFB
-      !>        C
-      !>        C     User defined boolean routine.
-      !>        C
+      !>C-Procedure GFB
+      !>C
+      !>C     User defined boolean routine.
+      !>C
       !>
-      !>              SUBROUTINE GFB ( UDFUNS, ET, BOOL )
-      !>              IMPLICIT NONE
+      !>      SUBROUTINE GFB ( UDFUNS, ET, BOOL )
+      !>      IMPLICIT NONE
       !>
-      !>        C- Abstract
-      !>        C
-      !>        C     User defined boolean function:
-      !>        C
-      !>        C        VALUE >= LIM1 with VALUE <= LIM2.
-      !>        C
+      !>C- Abstract
+      !>C
+      !>C     User defined boolean function:
+      !>C
+      !>C        VALUE >= LIM1 with VALUE <= LIM2.
+      !>C
       !>
-      !>              EXTERNAL              UDFUNS
+      !>      EXTERNAL              UDFUNS
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              LOGICAL               BOOL
-      !>              DOUBLE PRECISION      VALUE
+      !>      DOUBLE PRECISION      ET
+      !>      LOGICAL               BOOL
+      !>      DOUBLE PRECISION      VALUE
       !>
-      !>              DOUBLE PRECISION      LIM1
-      !>              DOUBLE PRECISION      LIM2
+      !>      DOUBLE PRECISION      LIM1
+      !>      DOUBLE PRECISION      LIM2
       !>
-      !>              LIM1 = -1000.D0
-      !>              LIM2 =  1000.D0
+      !>      LIM1 = -1000.D0
+      !>      LIM2 =  1000.D0
       !>
-      !>              CALL UDFUNS ( ET, VALUE )
+      !>      CALL UDFUNS ( ET, VALUE )
       !>
-      !>        C
-      !>        C     Calculate the boolean value.
-      !>        C
-      !>              BOOL = (VALUE .GE. LIM1) .AND. (VALUE .LE. LIM2 )
+      !>C
+      !>C     Calculate the boolean value.
+      !>C
+      !>      BOOL = (VALUE .GE. LIM1) .AND. (VALUE .LE. LIM2 )
       !>
-      !>              RETURN
-      !>              END
+      !>      RETURN
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -28138,10 +28411,6 @@ contains
 
 
 !
-!     SPICELIB functions.
-!
-
-!
 !     Local variables.
 !
 
@@ -28149,9 +28418,6 @@ contains
       logical :: ok
 
 
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: step  !! Constant step size in seconds for finding geometric events.
       real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
@@ -28208,6 +28474,8 @@ contains
       return
       end subroutine gfudb
 
+      !> Perform a GF search on a user defined scalar quantity.
+      !>
       !>## Detailed Input
       !>
       !>     UDFUNS   is the routine that returns the value of the scalar
@@ -28764,264 +29032,266 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFUDS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFUDS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include GF parameter declarations:
-      !>        C
-      !>              INCLUDE 'gf.inc'
+      !>C
+      !>C     Include GF parameter declarations:
+      !>C
+      !>      INCLUDE 'gf.inc'
       !>
-      !>        C
-      !>        C     User defined external routines
-      !>        C
-      !>              EXTERNAL     GFQ
-      !>              EXTERNAL     GFDECR
+      !>C
+      !>C     User defined external routines
+      !>C
+      !>      EXTERNAL     GFQ
+      !>      EXTERNAL     GFDECR
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      SPD
-      !>              DOUBLE PRECISION      DVNORM
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      SPD
+      !>      DOUBLE PRECISION      DVNORM
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Use the parameter MAXWIN for both the result window size
-      !>        C     and the workspace size.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 20000 )
+      !>C
+      !>C     Use the parameter MAXWIN for both the result window size
+      !>C     and the workspace size.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 20000 )
       !>
-      !>        C
-      !>        C     Length of strings:
-      !>        C
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 26 )
+      !>C
+      !>C     Length of strings:
+      !>C
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 26 )
       !>
-      !>              INTEGER               NLOOPS
-      !>              PARAMETER           ( NLOOPS = 7 )
+      !>      INTEGER               NLOOPS
+      !>      PARAMETER           ( NLOOPS = 7 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(TIMLEN)    RELATE (NLOOPS)
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(TIMLEN)    RELATE (NLOOPS)
       !>
-      !>              DOUBLE PRECISION      ADJUST
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      DRDT
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      FINISH
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      POS    ( 6 )
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      START
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWUDS )
+      !>      DOUBLE PRECISION      ADJUST
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      DRDT
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      FINISH
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      POS    ( 6 )
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      START
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWUDS )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK and RESULT are saved because this practice helps to
-      !>        C     prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
-      !>              SAVE                  WORK
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK and RESULT are saved because this practice helps to
+      !>C     prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
+      !>      SAVE                  WORK
       !>
-      !>              DATA                  RELATE / '=',
-      !>             .                               '<',
-      !>             .                               '>',
-      !>             .                               'LOCMIN',
-      !>             .                               'ABSMIN',
-      !>             .                               'LOCMAX',
-      !>             .                               'ABSMAX'  /
+      !>      DATA                  RELATE / '=',
+      !>     .                               '<',
+      !>     .                               '>',
+      !>     .                               'LOCMIN',
+      !>     .                               'ABSMIN',
+      !>     .                               'LOCMAX',
+      !>     .                               'ABSMAX'  /
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfuds_ex1.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfuds_ex1.tm' )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( MAXWIN, RESULT )
-      !>              CALL SSIZED ( 2,      CNFINE )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( MAXWIN, RESULT )
+      !>      CALL SSIZED ( 2,      CNFINE )
       !>
-      !>              CALL SCARDD ( 0,      CNFINE )
+      !>      CALL SCARDD ( 0,      CNFINE )
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the confinement window.
-      !>        C
-      !>              CALL STR2ET ( '2007 JAN 1', ET0 )
-      !>              CALL STR2ET ( '2007 APR 1', ET1 )
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the confinement window.
+      !>C
+      !>      CALL STR2ET ( '2007 JAN 1', ET0 )
+      !>      CALL STR2ET ( '2007 APR 1', ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Search using a step size of 1 day (in units of seconds).
-      !>        C     The reference value is .3365 km/s - a range rate value
-      !>        C     known to exist during the confinement window. We're not
-      !>        C     using the adjustment feature, so we set ADJUST to zero.
-      !>        C
-      !>              STEP   = SPD()
-      !>              REFVAL = .3365D0
-      !>              ADJUST = 0.D0
+      !>C
+      !>C     Search using a step size of 1 day (in units of seconds).
+      !>C     The reference value is .3365 km/s - a range rate value
+      !>C     known to exist during the confinement window. We're not
+      !>C     using the adjustment feature, so we set ADJUST to zero.
+      !>C
+      !>      STEP   = SPD()
+      !>      REFVAL = .3365D0
+      !>      ADJUST = 0.D0
       !>
-      !>              DO J=1, NLOOPS
+      !>      DO J=1, NLOOPS
       !>
-      !>                 WRITE(*,*) 'Relation condition: ', RELATE(J)
+      !>         WRITE(*,*) 'Relation condition: ', RELATE(J)
       !>
-      !>        C
-      !>        C        Perform the search. The SPICE window RESULT contains
-      !>        C        the set of times when the condition is met.
-      !>        C
-      !>                 CALL GFUDS ( GFQ,    GFDECR, RELATE(J),
-      !>             .                REFVAL, ADJUST,      STEP, CNFINE,
-      !>             .                MAXWIN,  NWUDS,      WORK, RESULT )
+      !>C
+      !>C        Perform the search. The SPICE window RESULT contains
+      !>C        the set of times when the condition is met.
+      !>C
+      !>         CALL GFUDS ( GFQ,    GFDECR, RELATE(J),
+      !>     .                REFVAL, ADJUST,      STEP, CNFINE,
+      !>     .                MAXWIN,  NWUDS,      WORK, RESULT )
       !>
-      !>        C
-      !>        C        Display the results.
-      !>        C
-      !>                 IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>C
+      !>C        Display the results.
+      !>C
+      !>         IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                    WRITE (*, '(A)') 'Result window is empty.'
+      !>            WRITE (*, '(A)') 'Result window is empty.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    DO I = 1, WNCARD(RESULT)
+      !>            DO I = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C              Fetch the endpoints of the Ith interval
-      !>        C              of the result window.
-      !>        C
-      !>                       CALL WNFETD ( RESULT, I, START, FINISH )
+      !>C
+      !>C              Fetch the endpoints of the Ith interval
+      !>C              of the result window.
+      !>C
+      !>               CALL WNFETD ( RESULT, I, START, FINISH )
       !>
-      !>                       CALL SPKEZR ( 'MOON',  START, 'J2000', 'NONE',
-      !>             .                       'SUN', POS,   LT               )
-      !>                       DRDT = DVNORM(POS)
+      !>               CALL SPKEZR ( 'MOON',  START, 'J2000', 'NONE',
+      !>     .                       'SUN', POS,   LT               )
+      !>               DRDT = DVNORM(POS)
       !>
-      !>                       CALL TIMOUT ( START,
-      !>             .                       'YYYY-MON-DD HR:MN:SC.###',
-      !>             .                       TIMSTR                     )
+      !>               CALL TIMOUT ( START,
+      !>     .                       'YYYY-MON-DD HR:MN:SC.###',
+      !>     .                       TIMSTR                     )
       !>
-      !>                       WRITE (*, '(A,F16.9)' ) 'Start time, drdt = '//
-      !>             .                                 TIMSTR, DRDT
+      !>               WRITE (*, '(A,F16.9)' ) 'Start time, drdt = '//
+      !>     .                                 TIMSTR, DRDT
       !>
-      !>                       CALL SPKEZR ( 'MOON',  FINISH, 'J2000', 'NONE',
-      !>             .                       'SUN', POS,     LT              )
-      !>                       DRDT = DVNORM(POS)
+      !>               CALL SPKEZR ( 'MOON',  FINISH, 'J2000', 'NONE',
+      !>     .                       'SUN', POS,     LT              )
+      !>               DRDT = DVNORM(POS)
       !>
-      !>                       CALL TIMOUT ( FINISH,
-      !>             .                       'YYYY-MON-DD HR:MN:SC.###',
-      !>             .                       TIMSTR                    )
+      !>               CALL TIMOUT ( FINISH,
+      !>     .                       'YYYY-MON-DD HR:MN:SC.###',
+      !>     .                       TIMSTR                    )
       !>
-      !>                       WRITE (*, '(A,F16.9)' ) 'Stop time,  drdt = '//
-      !>             .                              TIMSTR, DRDT
-      !>                    END DO
+      !>               WRITE (*, '(A,F16.9)' ) 'Stop time,  drdt = '//
+      !>     .                              TIMSTR, DRDT
+      !>            END DO
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
       !>
-      !>        C-Procedure GFQ
+      !>C-Procedure GFQ
       !>
-      !>              SUBROUTINE GFQ ( ET, VALUE )
-      !>              IMPLICIT NONE
+      !>      SUBROUTINE GFQ ( ET, VALUE )
+      !>      IMPLICIT NONE
       !>
-      !>        C- Abstract
-      !>        C
-      !>        C     User defined geometric quantity function. In this case,
-      !>        C     the range from the sun to the Moon at TDB time ET.
-      !>        C
+      !>C- Abstract
+      !>C
+      !>C     User defined geometric quantity function. In this case,
+      !>C     the range from the sun to the Moon at TDB time ET.
+      !>C
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      VALUE
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      VALUE
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER               TARG
-      !>              INTEGER               OBS
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER               TARG
+      !>      INTEGER               OBS
       !>
-      !>              CHARACTER*(12)        REF
-      !>              CHARACTER*(12)        ABCORR
+      !>      CHARACTER*(12)        REF
+      !>      CHARACTER*(12)        ABCORR
       !>
-      !>              DOUBLE PRECISION      STATE ( 6 )
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      DVNORM
+      !>      DOUBLE PRECISION      STATE ( 6 )
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      DVNORM
       !>
-      !>        C
-      !>        C     Initialization. Retrieve the vector from the Sun to
-      !>        C     the Moon in the J2000 frame, without aberration
-      !>        C     correction.
-      !>        C
-      !>              TARG   = 301
-      !>              REF    = 'J2000'
-      !>              ABCORR = 'NONE'
-      !>              OBS    = 10
+      !>C
+      !>C     Initialization. Retrieve the vector from the Sun to
+      !>C     the Moon in the J2000 frame, without aberration
+      !>C     correction.
+      !>C
+      !>      TARG   = 301
+      !>      REF    = 'J2000'
+      !>      ABCORR = 'NONE'
+      !>      OBS    = 10
       !>
-      !>              CALL SPKEZ ( TARG, ET, REF, ABCORR, OBS, STATE, LT )
+      !>      CALL SPKEZ ( TARG, ET, REF, ABCORR, OBS, STATE, LT )
       !>
-      !>        C
-      !>        C     Calculate the scalar range rate corresponding the
-      !>        C     STATE vector.
-      !>        C
-      !>              VALUE = DVNORM( STATE )
+      !>C
+      !>C     Calculate the scalar range rate corresponding the
+      !>C     STATE vector.
+      !>C
+      !>      VALUE = DVNORM( STATE )
       !>
-      !>              END
+      !>      END
       !>
-      !>        C-Procedure GFDECR
+      !>C-Procedure GFDECR
       !>
-      !>              SUBROUTINE GFDECR ( UDFUNS, ET, ISDECR )
-      !>              IMPLICIT NONE
+      !>      SUBROUTINE GFDECR ( UDFUNS, ET, ISDECR )
+      !>      IMPLICIT NONE
       !>
-      !>        C- Abstract
-      !>        C
-      !>        C     User defined function to detect if the function
-      !>        C     derivative is negative (the function is decreasing)
-      !>        C     at TDB time ET.
-      !>        C
+      !>C- Abstract
+      !>C
+      !>C     User defined function to detect if the function
+      !>C     derivative is negative (the function is decreasing)
+      !>C     at TDB time ET.
+      !>C
       !>
-      !>              EXTERNAL              UDFUNS
-      !>              EXTERNAL              UDDF
+      !>      EXTERNAL              UDFUNS
+      !>      EXTERNAL              UDDF
       !>
-      !>              DOUBLE PRECISION      ET
-      !>              LOGICAL               ISDECR
+      !>      DOUBLE PRECISION      ET
+      !>      LOGICAL               ISDECR
       !>
-      !>              DOUBLE PRECISION      DT
+      !>      DOUBLE PRECISION      DT
       !>
-      !>              DT = 1.D0
+      !>      DT = 1.D0
       !>
-      !>        C
-      !>        C     Determine if GFQ is decreasing at ET.
-      !>        C
-      !>        C     UDDC - the default GF function to determine if
-      !>        C                the derivative of the user defined
-      !>        C                function is negative at ET.
-      !>        C
-      !>        C     UDFUNS - the user defined scalar quantity function.
-      !>        C
-      !>              CALL UDDC ( UDFUNS, ET, DT, ISDECR )
+      !>C
+      !>C     Determine if GFQ is decreasing at ET.
+      !>C
+      !>C     UDDC - the default GF function to determine if
+      !>C                the derivative of the user defined
+      !>C                function is negative at ET.
+      !>C
+      !>C     UDFUNS - the user defined scalar quantity function.
+      !>C
+      !>      CALL UDDC ( UDFUNS, ET, DT, ISDECR )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -29142,10 +29412,6 @@ contains
 
 
 !
-!     SPICELIB functions.
-!
-
-!
 !     Local variables.
 !
 
@@ -29159,9 +29425,6 @@ contains
 !
       character(1) :: rptpre ( 2 )
       character(1) :: rptsuf ( 2 )
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
       real(wp), intent(in) :: refval  !! Value used as reference for scalar quantity condition.
@@ -29256,6 +29519,8 @@ contains
 
       end subroutine gfuds
 
+      !> Initialize a coordinate search.
+      !>
       !>## Detailed Input
       !>
       !>     VECDEF   every coordinate computed by this routine is a
@@ -29575,7 +29840,7 @@ contains
       !>        no names associated with their ID codes.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-      module procedure zzgfcoin
+      module subroutine zzgfcoin ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, crdsys, crdnam )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
       use pepper_strings, only: cmprss, cmprss_inplace, ucase_inplace
@@ -29583,6 +29848,17 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: vecdef  !! Vector definition.
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Target name.
+      character(*), intent(in) :: ref  !! Reference frame name.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      character(*), intent(in) :: obsrvr  !! Observer name.
+      character(*), intent(in) :: dref  !! Ray's direction vector frame.
+      real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+      character(*), intent(in) :: crdsys  !! Coordinate system name.
+      character(*), intent(in) :: crdnam  !! Coordinate name.
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -30026,8 +30302,11 @@ contains
 
       return
       end associate
-      end procedure zzgfcoin
+      end subroutine zzgfcoin
 
+      !> Compute the coordinate defined by the last call to [[zzgfcoin]] is at
+      !> the specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
@@ -30088,12 +30367,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-      module procedure zzgfcog
+      module subroutine zzgfcog ( ctx, et, crdval )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Computation epoch.
+      real(wp), intent(out) :: crdval  !! Coordinate at epoch.
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -30147,8 +30429,11 @@ contains
 
       return
       end associate
-      end procedure zzgfcog
+      end subroutine zzgfcog
 
+      !> Indicate whether the coordinate defined by the last call to
+      !> [[zzgfcoin]] is decreasing at the specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
@@ -30267,9 +30552,6 @@ contains
       integer(ip) :: sysidx
       logical :: attblk ( abatsz )
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: decres  !! Flag indicating if coordinate is decreasing.
@@ -30334,6 +30616,9 @@ contains
       end associate
       end subroutine zzgfcodc
 
+      !> Indicate whether the state of coordinate defined by the last call
+      !> to [[zzgfcoin]] is computable at the specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
@@ -30432,9 +30717,6 @@ contains
       integer(ip) :: sysidx
       logical :: attblk ( abatsz )
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: crdfnd  !! Flag indicating if coordinate state is computable.
@@ -30465,6 +30747,9 @@ contains
       end associate
       end subroutine zzgfcoex
 
+      !> Compute the cosine of the coordinate defined by the last call to
+      !> [[zzgfcoin]] is at the specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
@@ -30523,12 +30808,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-      module procedure zzgfcocg
+      module subroutine zzgfcocg ( ctx, et, crdval )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Computation epoch.
+      real(wp), intent(out) :: crdval  !! Cosine of coordinate at epoch.
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -30584,8 +30872,11 @@ contains
 
       return
       end associate
-      end procedure zzgfcocg
+      end subroutine zzgfcocg
 
+      !> Compute the sine of the coordinate defined by the last call to
+      !> [[zzgfcoin]] is at the specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
@@ -30644,12 +30935,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-      module procedure zzgfcosg
+      module subroutine zzgfcosg ( ctx, et, crdval )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Computation epoch.
+      real(wp), intent(out) :: crdval  !! Sine of coordinate at epoch.
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -30705,8 +30999,11 @@ contains
 
       return
       end associate
-      end procedure zzgfcosg
+      end subroutine zzgfcosg
 
+      !> Indicate whether the cosine of the coordinate defined by the
+      !> last call to [[zzgfcoin]] is decreasing at the specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
@@ -30826,9 +31123,6 @@ contains
       integer(ip) :: sysidx
       logical :: attblk ( abatsz )
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: decres  !! Flag indicating if cos of coordinate is decreasing.
@@ -30951,6 +31245,9 @@ contains
       end associate
       end subroutine zzgfcocd
 
+      !> Indicate whether the sine of the coordinate defined by the
+      !> last call to [[zzgfcoin]] is decreasing at the specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the computation epoch, expressed as seconds
@@ -31067,9 +31364,6 @@ contains
       integer(ip) :: sysidx
       logical :: attblk ( abatsz )
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       real(wp), intent(in) :: et  !! Computation epoch.
       logical, intent(out) :: decres  !! Flag indicating if sine of coordinate is decreasing.
@@ -31191,15 +31485,13 @@ contains
       end associate
       end subroutine zzgfcosd
 
-      !>## Abstract
+      !> This routine determines time windows when the longitude
+      !> or right ascension of a specified vector satisfies a specified
+      !> mathematical condition.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     This routine determines time windows when the longitude
-      !>     or right ascension of a specified vector satisfies a specified
-      !>     mathematical condition.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -31916,59 +32208,6 @@ contains
       !>        no names associated with their ID codes.
       !>
       !>-    SPICELIB Version 1.0.0  23-FEB-2009 (NJB) (EDW)
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Entry points in the coordinate utility package.
-      !>     We have the usual GF entry points for the coordinate, plus
-      !>     utilities for the cosine and sine of the coordinate.
-      !>
-      !>     Names and meanings:
-      !>
-      !>        ZZGFCODC      Is coordinate decreasing?
-      !>        ZZGFCOG       Get coordinate value.
-      !>        ZZGFCOCD      Is cosine of the coordinate decreasing?
-      !>        ZZGFCOCG      Get cosine of the coordinate value.
-      !>        ZZGFCOSD      Is sine of the coordinate decreasing?
-      !>        ZZGFCOSG      Get sine of the coordinate value.
-      !>
-      !>    The routine to test UDFUNC < REFVAL.
-      !>
-      !>     Local parameters
-      !>
-      !>     Margin for branch cut avoidance. Units are radians:
-      !>
-      !>     Margin for local extrema search. Units are radians:
-      !>
-      !>     Short alias for LBCELL:
-      !>
-      !>     Number of supported comparison operators:
-      !>
-      !>     Assorted string lengths:
-      !>
-      !>     Maximum body name length:
-      !>
-      !>     NAMLEN is the maximum length of both a frame name and of
-      !>     any kernel pool variable name.
-      !>
-      !>     OPLEN is the maximum string length for comparison operators.
-      !>     OPLEN may grow if new comparisons are added.
-      !>
-      !>     FUNLEN is the length of the function name string.
-      !>
-      !>     CRDLEN is the maximum length of a coordinate name.
-      !>
-      !>     SYSLEN is the maximum length of a coordinate system name.
-      !>
-      !>     RPTLEN is the maximum length of a progress reporter message.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     Standard SPICE error handling.
       module subroutine zzgflong ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, &
             crdsys, crdnam, relate, refval, tol, adjust, udstep, udrefn, rpt, udrepi, udrepu, &
             udrepf, bail, udbail, mw, nw, work, cnfine, result )
@@ -31979,15 +32218,46 @@ contains
       use pepper_inc_gf
       use pepper_inc_zzgf
       implicit none
+!
+!     Local parameters
+!
+!     Margin for branch cut avoidance. Units are radians:
+!
       real(wp), parameter :: bcamrg = 1.0e-11_wp
+!
+!     Margin for local extrema search. Units are radians:
+!
       real(wp), parameter :: lcxmrg = 1.0e-12_wp
+!
+!     Short alias for LBCELL:
+!
       integer(ip), parameter :: lb = lbcell
       integer(ip), parameter :: lbpool = lbcell
+!
+!     NAMLEN is the maximum length of both a frame name and of
+!     any kernel pool variable name.
+!
       integer(ip), parameter :: namlen = 32
+!
+!     OPLEN is the maximum string length for comparison operators.
+!     OPLEN may grow if new comparisons are added.
+!
       integer(ip), parameter :: oplen = 6
+!
+!     FUNLEN is the length of the function name string.
+!
       integer(ip), parameter :: funlen = 50
+!
+!     SYSLEN is the maximum length of a coordinate system name.
+!
       integer(ip), parameter :: syslen = 32
+!
+!     RPTLEN is the maximum length of a progress reporter message.
+!
       integer(ip), parameter :: rptlen = 80
+!
+!     Local variables
+!
       character(crdlen) :: nrmcrd
       character(syslen) :: nrmsys
       character(crdlen) :: prxcrd
@@ -32050,9 +32320,6 @@ contains
       integer(ip) :: wwpool ( 2, lbpool : nwlong )
       logical :: flip
       logical :: found
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: vecdef  !! Vector definition.
       character(*), intent(in) :: method  !! Computation method.
@@ -32084,6 +32351,9 @@ contains
       if ( .not. allocated ( ctx%zzgflong_state ) ) allocate ( ctx%zzgflong_state )
       associate ( ops => ctx%zzgflong_state%ops, &
                   y => ctx%zzgflong_state%y )
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -33806,6 +34076,8 @@ contains
       end associate
       end subroutine zzgflong
 
+      !> Perform a coordinate search.
+      !>
       !>## Detailed Input
       !>
       !>     VECDEF     Every coordinate computed by this routine is a
@@ -34447,9 +34719,6 @@ contains
       integer(ip) :: npass
       logical :: localx
       logical :: noadjx
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: vecdef  !! Vector definition.
       character(*), intent(in) :: method  !! Computation method.
@@ -34755,6 +35024,9 @@ contains
       end associate
       end subroutine zzgfcslv
 
+      !> Determine time intervals when a specified geometric quantity
+      !> satisfies a specified mathematical condition.
+      !>
       !>## Detailed Input
       !>
       !>     UDSTEP   is the name of the user specified routine that computes a
@@ -35837,237 +36109,239 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFEVNT_EX1
-      !>              IMPLICIT              NONE
+      !>```fortran
+      !>      PROGRAM GFEVNT_EX1
+      !>      IMPLICIT              NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      SPD
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      SPD
+      !>      INTEGER               WNCARD
       !>
-      !>              INCLUDE               'gf.inc'
+      !>      INCLUDE               'gf.inc'
       !>
-      !>        C
-      !>        C     Local variables and initial parameters.
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local variables and initial parameters.
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>              INTEGER               MAXPAR
-      !>              PARAMETER           ( MAXPAR = 8 )
+      !>      INTEGER               MAXPAR
+      !>      PARAMETER           ( MAXPAR = 8 )
       !>
-      !>              INTEGER               MAXVAL
-      !>              PARAMETER           ( MAXVAL = 20000 )
+      !>      INTEGER               MAXVAL
+      !>      PARAMETER           ( MAXVAL = 20000 )
       !>
-      !>              INTEGER               STRSIZ
-      !>              PARAMETER           ( STRSIZ = 40 )
+      !>      INTEGER               STRSIZ
+      !>      PARAMETER           ( STRSIZ = 40 )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Confining window
-      !>        C
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>C
+      !>C     Confining window
+      !>C
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
       !>
-      !>        C
-      !>        C     Confining window beginning and ending time strings.
-      !>        C
-      !>              CHARACTER*(STRSIZ)    BEGSTR
-      !>              CHARACTER*(STRSIZ)    ENDSTR
+      !>C
+      !>C     Confining window beginning and ending time strings.
+      !>C
+      !>      CHARACTER*(STRSIZ)    BEGSTR
+      !>      CHARACTER*(STRSIZ)    ENDSTR
       !>
-      !>        C
-      !>        C     Confining window beginning and ending times
-      !>        C
-      !>              DOUBLE PRECISION      BEGTIM
-      !>              DOUBLE PRECISION      ENDTIM
+      !>C
+      !>C     Confining window beginning and ending times
+      !>C
+      !>      DOUBLE PRECISION      BEGTIM
+      !>      DOUBLE PRECISION      ENDTIM
       !>
-      !>        C
-      !>        C     Result window beginning and ending times for intervals.
-      !>        C
-      !>              DOUBLE PRECISION      BEG
-      !>              DOUBLE PRECISION      END
+      !>C
+      !>C     Result window beginning and ending times for intervals.
+      !>C
+      !>      DOUBLE PRECISION      BEG
+      !>      DOUBLE PRECISION      END
       !>
-      !>        C
-      !>        C     Geometric quantity results window, work window,
-      !>        C     bail switch and progress reporter switch.
-      !>        C
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXVAL )
-      !>              DOUBLE PRECISION      WORK   ( LBCELL : MAXVAL, NWDIST )
+      !>C
+      !>C     Geometric quantity results window, work window,
+      !>C     bail switch and progress reporter switch.
+      !>C
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXVAL )
+      !>      DOUBLE PRECISION      WORK   ( LBCELL : MAXVAL, NWDIST )
       !>
-      !>              LOGICAL               BAIL
-      !>              LOGICAL               GFBAIL
-      !>              EXTERNAL              GFBAIL
-      !>              LOGICAL               RPT
+      !>      LOGICAL               BAIL
+      !>      LOGICAL               GFBAIL
+      !>      EXTERNAL              GFBAIL
+      !>      LOGICAL               RPT
       !>
-      !>        C
-      !>        C     Step size.
-      !>        C
-      !>              DOUBLE PRECISION      STEP
+      !>C
+      !>C     Step size.
+      !>C
+      !>      DOUBLE PRECISION      STEP
       !>
-      !>        C
-      !>        C     Geometric quantity name.
-      !>        C
-      !>              CHARACTER*(LNSIZE)    EVENT
+      !>C
+      !>C     Geometric quantity name.
+      !>C
+      !>      CHARACTER*(LNSIZE)    EVENT
       !>
-      !>        C
-      !>        C     Relational string
-      !>        C
-      !>              CHARACTER*(STRSIZ)    RELATE
+      !>C
+      !>C     Relational string
+      !>C
+      !>      CHARACTER*(STRSIZ)    RELATE
       !>
-      !>        C
-      !>        C     Quantity definition parameter arrays:
-      !>        C
-      !>              INTEGER               QNPARS
-      !>              CHARACTER*(LNSIZE)    QPNAMS ( MAXPAR )
-      !>              CHARACTER*(LNSIZE)    QCPARS ( MAXPAR )
-      !>              DOUBLE PRECISION      QDPARS ( MAXPAR )
-      !>              INTEGER               QIPARS ( MAXPAR )
-      !>              LOGICAL               QLPARS ( MAXPAR )
+      !>C
+      !>C     Quantity definition parameter arrays:
+      !>C
+      !>      INTEGER               QNPARS
+      !>      CHARACTER*(LNSIZE)    QPNAMS ( MAXPAR )
+      !>      CHARACTER*(LNSIZE)    QCPARS ( MAXPAR )
+      !>      DOUBLE PRECISION      QDPARS ( MAXPAR )
+      !>      INTEGER               QIPARS ( MAXPAR )
+      !>      LOGICAL               QLPARS ( MAXPAR )
       !>
-      !>        C
-      !>        C     Routines to set step size, refine transition times
-      !>        C     and report work.
-      !>        C
-      !>              EXTERNAL              GFREFN
-      !>              EXTERNAL              GFREPI
-      !>              EXTERNAL              GFREPU
-      !>              EXTERNAL              GFREPF
-      !>              EXTERNAL              GFSTEP
+      !>C
+      !>C     Routines to set step size, refine transition times
+      !>C     and report work.
+      !>C
+      !>      EXTERNAL              GFREFN
+      !>      EXTERNAL              GFREPI
+      !>      EXTERNAL              GFREPU
+      !>      EXTERNAL              GFREPF
+      !>      EXTERNAL              GFSTEP
       !>
-      !>        C
-      !>        C     Reference and adjustment values.
-      !>        C
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      ADJUST
+      !>C
+      !>C     Reference and adjustment values.
+      !>C
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      ADJUST
       !>
-      !>              INTEGER               COUNT
+      !>      INTEGER               COUNT
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK and RESULT are saved because this practice helps to
-      !>        C     prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
-      !>              SAVE                  WORK
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK and RESULT are saved because this practice helps to
+      !>C     prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
+      !>      SAVE                  WORK
       !>
-      !>        C
-      !>        C     Load leapsecond and spk kernels. The name of the
-      !>        C     meta kernel file shown here is fictitious; you
-      !>        C     must supply the name of a file available
-      !>        C     on your own computer system.
+      !>C
+      !>C     Load leapsecond and spk kernels. The name of the
+      !>C     meta kernel file shown here is fictitious; you
+      !>C     must supply the name of a file available
+      !>C     on your own computer system.
       !>
-      !>              CALL FURNSH ('gfevnt_ex1.tm')
+      !>      CALL FURNSH ('gfevnt_ex1.tm')
       !>
-      !>        C
-      !>        C     Set a beginning and end time for confining window.
-      !>        C
-      !>              BEGSTR = '2001 jan 01 00:00:00.000'
-      !>              ENDSTR = '2001 jun 30 00:00:00.000'
+      !>C
+      !>C     Set a beginning and end time for confining window.
+      !>C
+      !>      BEGSTR = '2001 jan 01 00:00:00.000'
+      !>      ENDSTR = '2001 jun 30 00:00:00.000'
       !>
-      !>              CALL STR2ET ( BEGSTR, BEGTIM )
-      !>              CALL STR2ET ( ENDSTR, ENDTIM )
+      !>      CALL STR2ET ( BEGSTR, BEGTIM )
+      !>      CALL STR2ET ( ENDSTR, ENDTIM )
       !>
-      !>        C
-      !>        C     Set condition for extremum.
-      !>        C
-      !>              RELATE  =   'LOCMAX'
+      !>C
+      !>C     Set condition for extremum.
+      !>C
+      !>      RELATE  =   'LOCMAX'
       !>
-      !>        C
-      !>        C     Set reference value (if needed) and absolute extremum
-      !>        C     adjustment (if needed).
-      !>        C
-      !>              REFVAL   =    0.D0
-      !>              ADJUST   =    0.D0
+      !>C
+      !>C     Set reference value (if needed) and absolute extremum
+      !>C     adjustment (if needed).
+      !>C
+      !>      REFVAL   =    0.D0
+      !>      ADJUST   =    0.D0
       !>
-      !>        C
-      !>        C     Set quantity.
-      !>        C
-      !>              EVENT    =   'DISTANCE'
+      !>C
+      !>C     Set quantity.
+      !>C
+      !>      EVENT    =   'DISTANCE'
       !>
-      !>        C
-      !>        C     Turn on progress reporter and initialize the windows.
-      !>        C
-      !>              RPT    = .TRUE.
-      !>              BAIL   = .FALSE.
+      !>C
+      !>C     Turn on progress reporter and initialize the windows.
+      !>C
+      !>      RPT    = .TRUE.
+      !>      BAIL   = .FALSE.
       !>
-      !>              CALL SSIZED ( 2,      CNFINE )
-      !>              CALL SSIZED ( MAXVAL, RESULT )
+      !>      CALL SSIZED ( 2,      CNFINE )
+      !>      CALL SSIZED ( MAXVAL, RESULT )
       !>
-      !>        C
-      !>        C     Add 2 points to the confinement interval window.
-      !>        C
-      !>              CALL WNINSD ( BEGTIM, ENDTIM, CNFINE )
+      !>C
+      !>C     Add 2 points to the confinement interval window.
+      !>C
+      !>      CALL WNINSD ( BEGTIM, ENDTIM, CNFINE )
       !>
-      !>        C
-      !>        C     Define input quantities.
-      !>        C
-      !>              QPNAMS(1) = 'TARGET'
-      !>              QCPARS(1) = 'MOON'
+      !>C
+      !>C     Define input quantities.
+      !>C
+      !>      QPNAMS(1) = 'TARGET'
+      !>      QCPARS(1) = 'MOON'
       !>
-      !>              QPNAMS(2) = 'OBSERVER'
-      !>              QCPARS(2) = 'EARTH'
+      !>      QPNAMS(2) = 'OBSERVER'
+      !>      QCPARS(2) = 'EARTH'
       !>
-      !>              QPNAMS(3) = 'ABCORR'
-      !>              QCPARS(3) = 'LT+S'
+      !>      QPNAMS(3) = 'ABCORR'
+      !>      QCPARS(3) = 'LT+S'
       !>
-      !>              QNPARS    = 3
+      !>      QNPARS    = 3
       !>
-      !>        C
-      !>        C     Set the step size to 1 day and convert to seconds.
-      !>        C
-      !>              STEP = 1.D-3*SPD()
+      !>C
+      !>C     Set the step size to 1 day and convert to seconds.
+      !>C
+      !>      STEP = 1.D-3*SPD()
       !>
-      !>              CALL GFSSTP ( STEP )
+      !>      CALL GFSSTP ( STEP )
       !>
-      !>        C
-      !>        C    Look for solutions.
-      !>        C
-      !>              CALL GFEVNT ( GFSTEP,     GFREFN,   EVENT,
-      !>             .              QNPARS,     QPNAMS,   QCPARS,
-      !>             .              QDPARS,     QIPARS,   QLPARS,
-      !>             .              RELATE,     REFVAL,   CNVTOL,
-      !>             .              ADJUST,     CNFINE,   RPT,
-      !>             .              GFREPI,     GFREPU,   GFREPF,
-      !>             .              MAXVAL,     NWDIST,   WORK,
-      !>             .              BAIL,       GFBAIL,   RESULT )
+      !>C
+      !>C    Look for solutions.
+      !>C
+      !>      CALL GFEVNT ( GFSTEP,     GFREFN,   EVENT,
+      !>     .              QNPARS,     QPNAMS,   QCPARS,
+      !>     .              QDPARS,     QIPARS,   QLPARS,
+      !>     .              RELATE,     REFVAL,   CNVTOL,
+      !>     .              ADJUST,     CNFINE,   RPT,
+      !>     .              GFREPI,     GFREPU,   GFREPF,
+      !>     .              MAXVAL,     NWDIST,   WORK,
+      !>     .              BAIL,       GFBAIL,   RESULT )
       !>
-      !>        C
-      !>        C     Check the number of intervals in the result window.
-      !>        C
-      !>              COUNT = WNCARD(RESULT)
+      !>C
+      !>C     Check the number of intervals in the result window.
+      !>C
+      !>      COUNT = WNCARD(RESULT)
       !>
-      !>              WRITE (*,*) 'Found ', COUNT, ' intervals in RESULT'
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Found ', COUNT, ' intervals in RESULT'
+      !>      WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C     List the beginning and ending points in each interval.
-      !>        C
-      !>              DO I = 1, COUNT
+      !>C
+      !>C     List the beginning and ending points in each interval.
+      !>C
+      !>      DO I = 1, COUNT
       !>
-      !>                CALL WNFETD ( RESULT, I, BEG, END  )
+      !>        CALL WNFETD ( RESULT, I, BEG, END  )
       !>
-      !>                CALL TIMOUT ( BEG,
-      !>             .                'YYYY-MON-DD HR:MN:SC.###### '
-      !>             .  //            '(TDB) ::TDB ::RND',  BEGSTR )
-      !>                CALL TIMOUT ( END,
-      !>             .                'YYYY-MON-DD HR:MN:SC.###### '
-      !>             . //             '(TDB) ::TDB ::RND',  ENDSTR )
+      !>        CALL TIMOUT ( BEG,
+      !>     .                'YYYY-MON-DD HR:MN:SC.###### '
+      !>     .  //            '(TDB) ::TDB ::RND',  BEGSTR )
+      !>        CALL TIMOUT ( END,
+      !>     .                'YYYY-MON-DD HR:MN:SC.###### '
+      !>     . //             '(TDB) ::TDB ::RND',  ENDSTR )
       !>
-      !>                WRITE (*,*) 'Interval ',  I
-      !>                WRITE (*,*) 'Beginning TDB ', BEGSTR
-      !>                WRITE (*,*) 'Ending TDB    ', ENDSTR
-      !>                WRITE (*,*) ' '
+      !>        WRITE (*,*) 'Interval ',  I
+      !>        WRITE (*,*) 'Beginning TDB ', BEGSTR
+      !>        WRITE (*,*) 'Ending TDB    ', ENDSTR
+      !>        WRITE (*,*) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -36251,9 +36525,6 @@ contains
       logical :: noadjx
       real(wp) :: dvec   ( 3 )
       real(wp) :: spoint ( 3 )
-!     PEPPER: the full form (not MODULE PROCEDURE), with the arguments
-!     declared again: gfortran ignores the interface of a dummy procedure
-!     in a MODULE PROCEDURE body.
       class(pepper_context), intent(inout) :: ctx  !! the context
       character(*), intent(in) :: gquant  !! Type of geometric quantity.
       integer(ip), intent(in) :: qnpars  !! Number of quantity definition parameters.
@@ -36862,6 +37133,9 @@ contains
       end associate
       end subroutine gfevnt
 
+      !> Determine time intervals over which a specified constraint on
+      !> observer-target distance is met.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may supply
@@ -37452,155 +37726,157 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFDIST_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFDIST_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include GF parameter declarations:
-      !>        C
-      !>              INCLUDE 'gf.inc'
+      !>C
+      !>C     Include GF parameter declarations:
+      !>C
+      !>      INCLUDE 'gf.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      SPD
-      !>              DOUBLE PRECISION      VNORM
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      SPD
+      !>      DOUBLE PRECISION      VNORM
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Use the parameter MAXWIN for both
-      !>        C     the result window size and the workspace
-      !>        C     size.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 20000 )
+      !>C
+      !>C     Use the parameter MAXWIN for both
+      !>C     the result window size and the workspace
+      !>C     size.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 20000 )
       !>
-      !>        C
-      !>        C     Length of output time string:
-      !>        C
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 26 )
+      !>C
+      !>C     Length of output time string:
+      !>C
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 26 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(TIMLEN)    TIMSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(TIMLEN)    TIMSTR
       !>
-      !>              DOUBLE PRECISION      ADJUST
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      DIST
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      FINISH
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      POS    ( 3 )
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      START
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWDIST )
+      !>      DOUBLE PRECISION      ADJUST
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      DIST
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      FINISH
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      POS    ( 3 )
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      START
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWDIST )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK and RESULT are saved because this practice helps to
-      !>        C     prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
-      !>              SAVE                  WORK
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK and RESULT are saved because this practice helps to
+      !>C     prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
+      !>      SAVE                  WORK
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfdist_ex1.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfdist_ex1.tm' )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( MAXWIN, RESULT )
-      !>              CALL SSIZED ( 2,      CNFINE )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( MAXWIN, RESULT )
+      !>      CALL SSIZED ( 2,      CNFINE )
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the confinement window.
-      !>        C
-      !>              CALL STR2ET ( '2007 JAN 1', ET0 )
-      !>              CALL STR2ET ( '2007 APR 1', ET1 )
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the confinement window.
+      !>C
+      !>      CALL STR2ET ( '2007 JAN 1', ET0 )
+      !>      CALL STR2ET ( '2007 APR 1', ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Search using a step size of 1 day (in units of
-      !>        C     seconds). The reference value is 450000 km.
-      !>        C     We're not using the adjustment feature, so
-      !>        C     we set ADJUST to zero.
-      !>        C
-      !>              STEP   = SPD()
-      !>              REFVAL = 4.D5
-      !>              ADJUST = 0.D0
+      !>C
+      !>C     Search using a step size of 1 day (in units of
+      !>C     seconds). The reference value is 450000 km.
+      !>C     We're not using the adjustment feature, so
+      !>C     we set ADJUST to zero.
+      !>C
+      !>      STEP   = SPD()
+      !>      REFVAL = 4.D5
+      !>      ADJUST = 0.D0
       !>
-      !>        C
-      !>        C     Perform the search. The set of times when the
-      !>        C     constraint is met will be stored in the SPICE
-      !>        C     window RESULT.
-      !>        C
-      !>              CALL GFDIST ( 'MOON', 'NONE', 'EARTH', '>',
-      !>             .              REFVAL, ADJUST, STEP,    CNFINE,
-      !>             .              MAXWIN, NWDIST, WORK,    RESULT )
+      !>C
+      !>C     Perform the search. The set of times when the
+      !>C     constraint is met will be stored in the SPICE
+      !>C     window RESULT.
+      !>C
+      !>      CALL GFDIST ( 'MOON', 'NONE', 'EARTH', '>',
+      !>     .              REFVAL, ADJUST, STEP,    CNFINE,
+      !>     .              MAXWIN, NWDIST, WORK,    RESULT )
       !>
-      !>        C
-      !>        C     Display the results.
-      !>        C
-      !>              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>C
+      !>C     Display the results.
+      !>C
+      !>      IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                 WRITE (*, '(A)') 'Result window is empty.'
+      !>         WRITE (*, '(A)') 'Result window is empty.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO I = 1, WNCARD(RESULT)
+      !>         DO I = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C           Fetch the endpoints of the Ith interval
-      !>        C           of the result window.
-      !>        C
-      !>                    CALL WNFETD ( RESULT, I, START, FINISH )
+      !>C
+      !>C           Fetch the endpoints of the Ith interval
+      !>C           of the result window.
+      !>C
+      !>            CALL WNFETD ( RESULT, I, START, FINISH )
       !>
-      !>        C
-      !>        C           Check the distance at the start and stop times.
-      !>        C
-      !>                    CALL SPKPOS ( 'MOON',  START, 'J2000', 'NONE',
-      !>             .                    'EARTH', POS,   LT            )
-      !>                    DIST = VNORM(POS)
+      !>C
+      !>C           Check the distance at the start and stop times.
+      !>C
+      !>            CALL SPKPOS ( 'MOON',  START, 'J2000', 'NONE',
+      !>     .                    'EARTH', POS,   LT            )
+      !>            DIST = VNORM(POS)
       !>
-      !>                    CALL TIMOUT ( START, 'YYYY-MON-DD HR:MN:SC.###',
-      !>             .                    TIMSTR                            )
+      !>            CALL TIMOUT ( START, 'YYYY-MON-DD HR:MN:SC.###',
+      !>     .                    TIMSTR                            )
       !>
-      !>                    WRITE (*, '(A,F14.7)' ) 'Start time, distance = '//
-      !>             .                              TIMSTR, DIST
+      !>            WRITE (*, '(A,F14.7)' ) 'Start time, distance = '//
+      !>     .                              TIMSTR, DIST
       !>
-      !>                    CALL SPKPOS ( 'MOON',  FINISH, 'J2000', 'NONE',
-      !>             .                    'EARTH', POS,     LT            )
-      !>                    DIST = VNORM(POS)
+      !>            CALL SPKPOS ( 'MOON',  FINISH, 'J2000', 'NONE',
+      !>     .                    'EARTH', POS,     LT            )
+      !>            DIST = VNORM(POS)
       !>
-      !>                    CALL TIMOUT ( FINISH, 'YYYY-MON-DD HR:MN:SC.###',
-      !>             .                    TIMSTR                            )
+      !>            CALL TIMOUT ( FINISH, 'YYYY-MON-DD HR:MN:SC.###',
+      !>     .                    TIMSTR                            )
       !>
-      !>                    WRITE (*, '(A,F14.7)' ) 'Stop time,  distance = '//
-      !>             .                              TIMSTR, DIST
-      !>                 END DO
+      !>            WRITE (*, '(A,F14.7)' ) 'Stop time,  distance = '//
+      !>     .                              TIMSTR, DIST
+      !>         END DO
       !>
-      !>              END IF
-      !>              END
+      !>      END IF
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -37645,231 +37921,233 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFDIST_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFDIST_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include GF parameter declarations:
-      !>        C
-      !>              INCLUDE 'gf.inc'
+      !>C
+      !>C     Include GF parameter declarations:
+      !>C
+      !>      INCLUDE 'gf.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      SPD
-      !>              DOUBLE PRECISION      VNORM
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      SPD
+      !>      DOUBLE PRECISION      VNORM
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Use the parameter MAXWIN for both
-      !>        C     the result window size and the workspace
-      !>        C     size.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 20000 )
+      !>C
+      !>C     Use the parameter MAXWIN for both
+      !>C     the result window size and the workspace
+      !>C     size.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 20000 )
       !>
-      !>        C
-      !>        C     Length of output time string:
-      !>        C
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 26 )
+      !>C
+      !>C     Length of output time string:
+      !>C
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 26 )
       !>
-      !>        C
-      !>        C     Number of relational operators:
-      !>        C
-      !>              INTEGER               NRELOP
-      !>              PARAMETER           ( NRELOP = 9 )
+      !>C
+      !>C     Number of relational operators:
+      !>C
+      !>      INTEGER               NRELOP
+      !>      PARAMETER           ( NRELOP = 9 )
       !>
-      !>        C
-      !>        C     Operator name length:
-      !>        C
-      !>              INTEGER               OPNMLN
-      !>              PARAMETER           ( OPNMLN = 6 )
+      !>C
+      !>C     Operator name length:
+      !>C
+      !>      INTEGER               OPNMLN
+      !>      PARAMETER           ( OPNMLN = 6 )
       !>
-      !>        C
-      !>        C     Output line length:
-      !>        C
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>C
+      !>C     Output line length:
+      !>C
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>        C
-      !>        C     Output format
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1 = '(A,F12.5)' )
+      !>C
+      !>C     Output format
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1 = '(A,F12.5)' )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(OPNMLN)    RELATE ( NRELOP )
-      !>              CHARACTER*(LNSIZE)    TEMPLT ( NRELOP )
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(LNSIZE)    TITLE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(OPNMLN)    RELATE ( NRELOP )
+      !>      CHARACTER*(LNSIZE)    TEMPLT ( NRELOP )
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(LNSIZE)    TITLE
       !>
-      !>              DOUBLE PRECISION      ADJUST ( NRELOP )
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      DIST
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      FINSH
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      POS    ( 3 )
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      START
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWDIST )
+      !>      DOUBLE PRECISION      ADJUST ( NRELOP )
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      DIST
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      FINSH
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      POS    ( 3 )
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      START
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWDIST )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>              SAVE                  ADJUST
-      !>              SAVE                  RELATE
-      !>              SAVE                  TEMPLT
+      !>C
+      !>C     Saved variables
+      !>C
+      !>      SAVE                  ADJUST
+      !>      SAVE                  RELATE
+      !>      SAVE                  TEMPLT
       !>
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK and RESULT are saved because this practice helps to
-      !>        C     prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
-      !>              SAVE                  WORK
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK and RESULT are saved because this practice helps to
+      !>C     prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
+      !>      SAVE                  WORK
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  ADJUST / 0.D0,
-      !>             .                               0.D0,
-      !>             .                               0.D0,
-      !>             .                               0.D0,
-      !>             .                               0.D0,
-      !>             .                               100.D0,
-      !>             .                               0.D0,
-      !>             .                               0.D0,
-      !>             .                               100.D0 /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  ADJUST / 0.D0,
+      !>     .                               0.D0,
+      !>     .                               0.D0,
+      !>     .                               0.D0,
+      !>     .                               0.D0,
+      !>     .                               100.D0,
+      !>     .                               0.D0,
+      !>     .                               0.D0,
+      !>     .                               100.D0 /
       !>
-      !>              DATA                  RELATE / '=',
-      !>             .                               '<',
-      !>             .                               '>',
-      !>             .                               'LOCMIN',
-      !>             .                               'ABSMIN',
-      !>             .                               'ABSMIN',
-      !>             .                               'LOCMAX',
-      !>             .                               'ABSMAX',
-      !>             .                               'ABSMAX'  /
+      !>      DATA                  RELATE / '=',
+      !>     .                               '<',
+      !>     .                               '>',
+      !>     .                               'LOCMIN',
+      !>     .                               'ABSMIN',
+      !>     .                               'ABSMIN',
+      !>     .                               'LOCMAX',
+      !>     .                               'ABSMAX',
+      !>     .                               'ABSMAX'  /
       !>
-      !>              DATA                  TEMPLT /
-      !>             .   'Condition: distance = # km',
-      !>             .   'Condition: distance < # km',
-      !>             .   'Condition: distance > # km',
-      !>             .   'Condition: distance is a local minimum',
-      !>             .   'Condition: distance is the absolute minimum',
-      !>             .   'Condition: distance < the absolute minimum + * km',
-      !>             .   'Condition: distance is a local maximum',
-      !>             .   'Condition: distance is the absolute maximum',
-      !>             .   'Condition: distance > the absolute maximum - * km' /
+      !>      DATA                  TEMPLT /
+      !>     .   'Condition: distance = # km',
+      !>     .   'Condition: distance < # km',
+      !>     .   'Condition: distance > # km',
+      !>     .   'Condition: distance is a local minimum',
+      !>     .   'Condition: distance is the absolute minimum',
+      !>     .   'Condition: distance < the absolute minimum + * km',
+      !>     .   'Condition: distance is a local maximum',
+      !>     .   'Condition: distance is the absolute maximum',
+      !>     .   'Condition: distance > the absolute maximum - * km' /
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfdist_ex1.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfdist_ex1.tm' )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( MAXWIN, RESULT )
-      !>              CALL SSIZED ( 2,      CNFINE )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( MAXWIN, RESULT )
+      !>      CALL SSIZED ( 2,      CNFINE )
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the confinement window.
-      !>        C
-      !>              CALL STR2ET ( '2007 JAN 15', ET0 )
-      !>              CALL STR2ET ( '2007 MAR 15', ET1 )
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the confinement window.
+      !>C
+      !>      CALL STR2ET ( '2007 JAN 15', ET0 )
+      !>      CALL STR2ET ( '2007 MAR 15', ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Search using a step size of 1 day (in units of
-      !>        C     seconds). Use a reference value of 400000 km.
-      !>        C
-      !>              STEP   = SPD()
-      !>              REFVAL = 4.D5
+      !>C
+      !>C     Search using a step size of 1 day (in units of
+      !>C     seconds). Use a reference value of 400000 km.
+      !>C
+      !>      STEP   = SPD()
+      !>      REFVAL = 4.D5
       !>
-      !>              DO I = 1, NRELOP
+      !>      DO I = 1, NRELOP
       !>
-      !>                 CALL GFDIST ( 'MOON', 'NONE',    'EARTH', RELATE(I),
-      !>             .                 REFVAL, ADJUST(I), STEP,    CNFINE,
-      !>             .                 MAXWIN, NWDIST,    WORK,    RESULT    )
+      !>         CALL GFDIST ( 'MOON', 'NONE',    'EARTH', RELATE(I),
+      !>     .                 REFVAL, ADJUST(I), STEP,    CNFINE,
+      !>     .                 MAXWIN, NWDIST,    WORK,    RESULT    )
       !>
-      !>        C
-      !>        C        Display the results.
-      !>        C
-      !>                 WRITE (*,*) ' '
+      !>C
+      !>C        Display the results.
+      !>C
+      !>         WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C        Substitute the reference and adjustment values,
-      !>        C        where applicable, into the title string:
-      !>        C
-      !>                 CALL REPMD ( TEMPLT(I), '#', REFVAL,    6, TITLE )
-      !>                 CALL REPMD ( TITLE,     '*', ADJUST(I), 6, TITLE )
+      !>C
+      !>C        Substitute the reference and adjustment values,
+      !>C        where applicable, into the title string:
+      !>C
+      !>         CALL REPMD ( TEMPLT(I), '#', REFVAL,    6, TITLE )
+      !>         CALL REPMD ( TITLE,     '*', ADJUST(I), 6, TITLE )
       !>
-      !>                 WRITE (*, '(A)' ) TITLE
+      !>         WRITE (*, '(A)' ) TITLE
       !>
-      !>                 IF ( WNCARD(RESULT) .EQ. 0 ) THEN
-      !>                    WRITE (*, '(A)' ) ' Result window is empty.'
-      !>                 ELSE
-      !>                    WRITE (*, '(A)' ) ' Result window:'
+      !>         IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>            WRITE (*, '(A)' ) ' Result window is empty.'
+      !>         ELSE
+      !>            WRITE (*, '(A)' ) ' Result window:'
       !>
-      !>                    DO J = 1, WNCARD(RESULT)
+      !>            DO J = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C              Fetch the endpoints of the Jth interval
-      !>        C              of the result window.
-      !>        C
-      !>                       CALL WNFETD ( RESULT, J, START, FINSH )
+      !>C
+      !>C              Fetch the endpoints of the Jth interval
+      !>C              of the result window.
+      !>C
+      !>               CALL WNFETD ( RESULT, J, START, FINSH )
       !>
-      !>        C
-      !>        C              Check the distance at the start and stop times.
-      !>        C
-      !>                       CALL SPKPOS ( 'MOON',  START, 'J2000', 'NONE',
-      !>             .                       'EARTH', POS,   LT              )
-      !>                       DIST = VNORM(POS)
+      !>C
+      !>C              Check the distance at the start and stop times.
+      !>C
+      !>               CALL SPKPOS ( 'MOON',  START, 'J2000', 'NONE',
+      !>     .                       'EARTH', POS,   LT              )
+      !>               DIST = VNORM(POS)
       !>
-      !>                       CALL TIMOUT ( START, 'YYYY-MON-DD HR:MN:SC.###',
-      !>             .                       TIMSTR                           )
+      !>               CALL TIMOUT ( START, 'YYYY-MON-DD HR:MN:SC.###',
+      !>     .                       TIMSTR                           )
       !>
-      !>                       WRITE (*, FMT1 ) '  Start time, distance = '
-      !>             .         //               TIMSTR, DIST
+      !>               WRITE (*, FMT1 ) '  Start time, distance = '
+      !>     .         //               TIMSTR, DIST
       !>
-      !>                       CALL SPKPOS ( 'MOON',  FINSH, 'J2000', 'NONE',
-      !>             .                       'EARTH', POS,     LT            )
-      !>                       DIST = VNORM(POS)
+      !>               CALL SPKPOS ( 'MOON',  FINSH, 'J2000', 'NONE',
+      !>     .                       'EARTH', POS,     LT            )
+      !>               DIST = VNORM(POS)
       !>
-      !>                       CALL TIMOUT ( FINSH, 'YYYY-MON-DD HR:MN:SC.###',
-      !>             .                       TIMSTR                           )
+      !>               CALL TIMOUT ( FINSH, 'YYYY-MON-DD HR:MN:SC.###',
+      !>     .                       TIMSTR                           )
       !>
-      !>                       WRITE (*, FMT1 ) '  Stop time,  distance = '
-      !>             .         //               TIMSTR, DIST
-      !>                    END DO
+      !>               WRITE (*, FMT1 ) '  Stop time,  distance = '
+      !>     .         //               TIMSTR, DIST
+      !>            END DO
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              WRITE (*,*) ' '
+      !>      WRITE (*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -37979,26 +38257,30 @@ contains
       !>        the check.
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-2009 (NJB) (EDW)
-      module procedure gfdist
+      module subroutine gfdist ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+      integer(ip), intent(in) :: mw  !! Workspace window size.
+      integer(ip), intent(in) :: nw  !! Workspace window count.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
 !
 !     External functions
 !
-
-!
-!     Interrupt indicator function:
-!
-
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
-
 
       integer(ip), parameter :: qnpars = 3
 
@@ -38110,8 +38392,12 @@ contains
                     work,     nobail,   gfbail,      result  )
 
       return
-      end procedure gfdist
+      end subroutine gfdist
 
+      !> Determine time intervals over which a specified constraint on
+      !> the observed phase, solar incidence, or emission angle at
+      !> a specified target body surface point is met.
+      !>
       !>## Detailed Input
       !>
       !>     METHOD   is a short string providing parameters defining the
@@ -38883,282 +39169,284 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFILUM_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFILUM_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Global parameters
-      !>        C
-      !>              INCLUDE 'gf.inc'
-      !>              INCLUDE 'zzabcorr.inc'
+      !>C
+      !>C     Global parameters
+      !>C
+      !>      INCLUDE 'gf.inc'
+      !>      INCLUDE 'zzabcorr.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      RPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      RPD
       !>
-      !>              INTEGER               WNCARD
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>        C
-      !>        C     Output time format
-      !>        C
-      !>              CHARACTER*(*)         FMT
-      !>              PARAMETER           ( FMT =
-      !>             .             'YYYY MON DD HR:MN:SC.### UTC' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>C
+      !>C     Output time format
+      !>C
+      !>      CHARACTER*(*)         FMT
+      !>      PARAMETER           ( FMT =
+      !>     .             'YYYY MON DD HR:MN:SC.### UTC' )
       !>
-      !>        C
-      !>        C     Meta-kernel name
-      !>        C
-      !>              CHARACTER*(*)         META
-      !>              PARAMETER           ( META   = 'gfilum_ex1.tm' )
+      !>C
+      !>C     Meta-kernel name
+      !>C
+      !>      CHARACTER*(*)         META
+      !>      PARAMETER           ( META   = 'gfilum_ex1.tm' )
       !>
-      !>        C
-      !>        C     SPICE cell lower bound
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     SPICE cell lower bound
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Maximum number of intervals in the windows
-      !>        C     used in this program
-      !>        C
-      !>              INTEGER               MAXIVL
-      !>              PARAMETER           ( MAXIVL = 1000 )
+      !>C
+      !>C     Maximum number of intervals in the windows
+      !>C     used in this program
+      !>C
+      !>      INTEGER               MAXIVL
+      !>      PARAMETER           ( MAXIVL = 1000 )
       !>
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 2 * MAXIVL )
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 2 * MAXIVL )
       !>
-      !>        C
-      !>        C     Maximum length of reference frame name
-      !>        C
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>C
+      !>C     Maximum length of reference frame name
+      !>C
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>        C
-      !>        C     Maximum length of body name
-      !>        C
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>C
+      !>C     Maximum length of body name
+      !>C
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>        C
-      !>        C     Maximum length of time string
-      !>        C
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>C
+      !>C     Maximum length of time string
+      !>C
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>        C
-      !>        C     Length of computation method string
-      !>        C
-      !>              INTEGER               METLEN
-      !>              PARAMETER           ( METLEN = 80 )
+      !>C
+      !>C     Length of computation method string
+      !>C
+      !>      INTEGER               METLEN
+      !>      PARAMETER           ( METLEN = 80 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(CORLEN)    ABCORR
-      !>              CHARACTER*(FRNMLN)    FIXREF
-      !>              CHARACTER*(BDNMLN)    ILLMN
-      !>              CHARACTER*(METLEN)    METHOD
-      !>              CHARACTER*(BDNMLN)    OBSRVR
-      !>              CHARACTER*(BDNMLN)    TARGET
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(TIMLEN)    UTCBEG
-      !>              CHARACTER*(TIMLEN)    UTCEND
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(CORLEN)    ABCORR
+      !>      CHARACTER*(FRNMLN)    FIXREF
+      !>      CHARACTER*(BDNMLN)    ILLMN
+      !>      CHARACTER*(METLEN)    METHOD
+      !>      CHARACTER*(BDNMLN)    OBSRVR
+      !>      CHARACTER*(BDNMLN)    TARGET
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(TIMLEN)    UTCBEG
+      !>      CHARACTER*(TIMLEN)    UTCEND
       !>
-      !>              DOUBLE PRECISION      ADJUST
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      EMISSN
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      FINISH
-      !>              DOUBLE PRECISION      PHASE
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      ROVLT
-      !>              DOUBLE PRECISION      ROVPOS ( 3 )
-      !>              DOUBLE PRECISION      SOLAR
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
-      !>              DOUBLE PRECISION      START
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      TRGEPC
-      !>              DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWILUM )
-      !>              DOUBLE PRECISION      WNSOLR ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      ADJUST
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      EMISSN
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      FINISH
+      !>      DOUBLE PRECISION      PHASE
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      ROVLT
+      !>      DOUBLE PRECISION      ROVPOS ( 3 )
+      !>      DOUBLE PRECISION      SOLAR
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      START
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWILUM )
+      !>      DOUBLE PRECISION      WNSOLR ( LBCELL : MAXWIN )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK, WNSOLR and RESULT are saved because this practice
-      !>        C     helps to prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
-      !>              SAVE                  WORK
-      !>              SAVE                  WNSOLR
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK, WNSOLR and RESULT are saved because this practice
+      !>C     helps to prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
+      !>      SAVE                  WORK
+      !>      SAVE                  WNSOLR
       !>
-      !>        C
-      !>        C     Load kernels:
-      !>        C
-      !>              CALL FURNSH ( META )
+      !>C
+      !>C     Load kernels:
+      !>C
+      !>      CALL FURNSH ( META )
       !>
-      !>        C
-      !>        C     Set window sizes:
-      !>        C
-      !>              CALL SSIZED ( 2,      CNFINE )
-      !>              CALL SSIZED ( MAXWIN, RESULT )
-      !>              CALL SSIZED ( MAXWIN, WNSOLR )
+      !>C
+      !>C     Set window sizes:
+      !>C
+      !>      CALL SSIZED ( 2,      CNFINE )
+      !>      CALL SSIZED ( MAXWIN, RESULT )
+      !>      CALL SSIZED ( MAXWIN, WNSOLR )
       !>
-      !>        C
-      !>        C     Set the search interval:
-      !>        C
-      !>              UTCBEG = '2006 OCT 02 00:00:00 UTC'
-      !>              CALL STR2ET ( UTCBEG, ET0 )
+      !>C
+      !>C     Set the search interval:
+      !>C
+      !>      UTCBEG = '2006 OCT 02 00:00:00 UTC'
+      !>      CALL STR2ET ( UTCBEG, ET0 )
       !>
-      !>              UTCEND = '2006 NOV 30 12:00:00 UTC'
-      !>              CALL STR2ET ( UTCEND, ET1 )
+      !>      UTCEND = '2006 NOV 30 12:00:00 UTC'
+      !>      CALL STR2ET ( UTCEND, ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Set observer, target, aberration correction, and the
-      !>        C     Mars body-fixed, body-centered reference frame. The
-      !>        C     lighting source is the sun.
-      !>        C
-      !>        C     Aberration corrections are set for remote observations.
-      !>        C
-      !>              ILLMN  = 'SUN'
-      !>              OBSRVR = 'MRO'
-      !>              TARGET = 'MARS'
-      !>              ABCORR = 'CN+S'
-      !>              FIXREF = 'IAU_MARS'
+      !>C
+      !>C     Set observer, target, aberration correction, and the
+      !>C     Mars body-fixed, body-centered reference frame. The
+      !>C     lighting source is the sun.
+      !>C
+      !>C     Aberration corrections are set for remote observations.
+      !>C
+      !>      ILLMN  = 'SUN'
+      !>      OBSRVR = 'MRO'
+      !>      TARGET = 'MARS'
+      !>      ABCORR = 'CN+S'
+      !>      FIXREF = 'IAU_MARS'
       !>
-      !>        C
-      !>        C     Use the rover position at the start of
-      !>        C     the search interval as the surface point.
-      !>        C
-      !>              CALL SPKPOS ( 'MER-1', ET0,    FIXREF,
-      !>             .              'NONE',  TARGET, ROVPOS, ROVLT )
+      !>C
+      !>C     Use the rover position at the start of
+      !>C     the search interval as the surface point.
+      !>C
+      !>      CALL SPKPOS ( 'MER-1', ET0,    FIXREF,
+      !>     .              'NONE',  TARGET, ROVPOS, ROVLT )
       !>
-      !>        C
-      !>        C     Initialize the adjustment value for absolute
-      !>        C     extremum searches. We're not performing
-      !>        C     such searches in this example, but this input
-      !>        C     to GFILUM must still be set.
-      !>        C
-      !>              ADJUST = 0.D0
+      !>C
+      !>C     Initialize the adjustment value for absolute
+      !>C     extremum searches. We're not performing
+      !>C     such searches in this example, but this input
+      !>C     to GFILUM must still be set.
+      !>C
+      !>      ADJUST = 0.D0
       !>
-      !>        C
-      !>        C     The computation uses an ellipsoidal model for the
-      !>        C     target body shape.
-      !>        C
-      !>              METHOD = 'Ellipsoid'
+      !>C
+      !>C     The computation uses an ellipsoidal model for the
+      !>C     target body shape.
+      !>C
+      !>      METHOD = 'Ellipsoid'
       !>
-      !>        C
-      !>        C     Set the reference value to use for the solar
-      !>        C     incidence angle search.
-      !>        C
-      !>              REFVAL = 60.D0 * RPD()
+      !>C
+      !>C     Set the reference value to use for the solar
+      !>C     incidence angle search.
+      !>C
+      !>      REFVAL = 60.D0 * RPD()
       !>
-      !>        C
-      !>        C     Since the period of the solar incidence angle
-      !>        C     is about one Martian day, we can safely use 6 hours
-      !>        C     as the search step.
-      !>        C
-      !>              STEP   = 21600.D0
+      !>C
+      !>C     Since the period of the solar incidence angle
+      !>C     is about one Martian day, we can safely use 6 hours
+      !>C     as the search step.
+      !>C
+      !>      STEP   = 21600.D0
       !>
-      !>        C
-      !>        C     Search over the confinement window for times
-      !>        C     when the solar incidence angle is less than
-      !>        C     the reference value.
-      !>        C
-      !>              CALL GFILUM ( METHOD, 'INCIDENCE',    TARGET, ILLMN,
-      !>             .              FIXREF, ABCORR,         OBSRVR, ROVPOS,
-      !>             .              '<',    REFVAL, ADJUST, STEP,   CNFINE,
-      !>             .              MAXWIN, NWILUM, WORK,   WNSOLR          )
+      !>C
+      !>C     Search over the confinement window for times
+      !>C     when the solar incidence angle is less than
+      !>C     the reference value.
+      !>C
+      !>      CALL GFILUM ( METHOD, 'INCIDENCE',    TARGET, ILLMN,
+      !>     .              FIXREF, ABCORR,         OBSRVR, ROVPOS,
+      !>     .              '<',    REFVAL, ADJUST, STEP,   CNFINE,
+      !>     .              MAXWIN, NWILUM, WORK,   WNSOLR          )
       !>
-      !>        C
-      !>        C     With the search on the incidence angle complete, perform
-      !>        C     a search on the emission angle.
-      !>        C
-      !>        C     Set the reference value for the emission angle search.
-      !>        C
-      !>              REFVAL = 20D0 * RPD()
+      !>C
+      !>C     With the search on the incidence angle complete, perform
+      !>C     a search on the emission angle.
+      !>C
+      !>C     Set the reference value for the emission angle search.
+      !>C
+      !>      REFVAL = 20D0 * RPD()
       !>
-      !>        C
-      !>        C     We'll use 15 minutes as the search step. This step
-      !>        C     is small enough to be suitable for Mars orbiters.
-      !>        C     Units are seconds.
-      !>        C
-      !>              STEP   = 900.D0
+      !>C
+      !>C     We'll use 15 minutes as the search step. This step
+      !>C     is small enough to be suitable for Mars orbiters.
+      !>C     Units are seconds.
+      !>C
+      !>      STEP   = 900.D0
       !>
-      !>        C
-      !>        C     Search over the previous result window for times when
-      !>        C     the emission angle is less than the reference value.
-      !>        C
-      !>              CALL GFILUM ( METHOD, 'EMISSION', TARGET, ILLMN,
-      !>             .              FIXREF, ABCORR,     OBSRVR, ROVPOS,
-      !>             .              '<',    REFVAL,     ADJUST, STEP,
-      !>             .              WNSOLR, MAXWIN,     NWILUM, WORK,
-      !>             .              RESULT                             )
+      !>C
+      !>C     Search over the previous result window for times when
+      !>C     the emission angle is less than the reference value.
+      !>C
+      !>      CALL GFILUM ( METHOD, 'EMISSION', TARGET, ILLMN,
+      !>     .              FIXREF, ABCORR,     OBSRVR, ROVPOS,
+      !>     .              '<',    REFVAL,     ADJUST, STEP,
+      !>     .              WNSOLR, MAXWIN,     NWILUM, WORK,
+      !>     .              RESULT                             )
       !>
-      !>        C
-      !>        C     Display the result window. Show the solar incidence
-      !>        C     and emission angles at the window's interval
-      !>        C     boundaries.
-      !>        C
-      !>              WRITE (*,*) ' '
+      !>C
+      !>C     Display the result window. Show the solar incidence
+      !>C     and emission angles at the window's interval
+      !>C     boundaries.
+      !>C
+      !>      WRITE (*,*) ' '
       !>
-      !>              IF ( WNCARD( RESULT ) .EQ. 0 ) THEN
+      !>      IF ( WNCARD( RESULT ) .EQ. 0 ) THEN
       !>
-      !>                 WRITE (*,*) '     Window is empty: condition '
-      !>             .   //          'is not met.'
+      !>         WRITE (*,*) '     Window is empty: condition '
+      !>     .   //          'is not met.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE (*,*) '                                   '
-      !>             .   //          'Solar Incidence   Emission'
-      !>                 WRITE (*,*) '                                   '
-      !>             .   //          '      (deg)         (deg)'
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) '                                   '
+      !>     .   //          'Solar Incidence   Emission'
+      !>         WRITE (*,*) '                                   '
+      !>     .   //          '      (deg)         (deg)'
+      !>         WRITE (*,*) ' '
       !>
-      !>                 DO I = 1, WNCARD( RESULT )
+      !>         DO I = 1, WNCARD( RESULT )
       !>
-      !>                    CALL WNFETD ( RESULT, I, START, FINISH )
+      !>            CALL WNFETD ( RESULT, I, START, FINISH )
       !>
-      !>                    CALL TIMOUT ( START,  FMT,   TIMSTR )
-      !>        C
-      !>        C           Compute the angles of interest at the boundary
-      !>        C           epochs.
-      !>        C
-      !>                    CALL ILUMIN ( METHOD, TARGET, START,  FIXREF,
-      !>             .                    ABCORR, OBSRVR, ROVPOS, TRGEPC,
-      !>             .                    SRFVEC, PHASE,  SOLAR,  EMISSN )
+      !>            CALL TIMOUT ( START,  FMT,   TIMSTR )
+      !>C
+      !>C           Compute the angles of interest at the boundary
+      !>C           epochs.
+      !>C
+      !>            CALL ILUMIN ( METHOD, TARGET, START,  FIXREF,
+      !>     .                    ABCORR, OBSRVR, ROVPOS, TRGEPC,
+      !>     .                    SRFVEC, PHASE,  SOLAR,  EMISSN )
       !>
-      !>                    WRITE (*, '(A7, A28, 2F14.8)' )
-      !>             .            'Start: ', TIMSTR, SOLAR*DPR(), EMISSN*DPR()
+      !>            WRITE (*, '(A7, A28, 2F14.8)' )
+      !>     .            'Start: ', TIMSTR, SOLAR*DPR(), EMISSN*DPR()
       !>
-      !>                    CALL TIMOUT ( FINISH, FMT,   TIMSTR )
+      !>            CALL TIMOUT ( FINISH, FMT,   TIMSTR )
       !>
-      !>                    CALL ILUMIN ( METHOD, TARGET, FINISH, FIXREF,
-      !>             .                    ABCORR, OBSRVR, ROVPOS, TRGEPC,
-      !>             .                    SRFVEC, PHASE,  SOLAR,  EMISSN )
+      !>            CALL ILUMIN ( METHOD, TARGET, FINISH, FIXREF,
+      !>     .                    ABCORR, OBSRVR, ROVPOS, TRGEPC,
+      !>     .                    SRFVEC, PHASE,  SOLAR,  EMISSN )
       !>
-      !>                    WRITE (*, '(A7, A28, 2F14.8)' )
-      !>             .            'Stop:  ', TIMSTR, SOLAR*DPR(), EMISSN*DPR()
+      !>            WRITE (*, '(A7, A28, 2F14.8)' )
+      !>     .            'Stop:  ', TIMSTR, SOLAR*DPR(), EMISSN*DPR()
       !>
-      !>                    WRITE (*,*) ' '
+      !>            WRITE (*,*) ' '
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -39229,27 +39517,36 @@ contains
       !>        Updated header to describe use of expanded confinement window.
       !>
       !>-    SPICELIB Version 1.0.0, 20-NOV-2012 (NJB) (BVS) (EDW)
-      module procedure gfilum
+      module subroutine gfilum ( ctx, method, angtyp, target, illmn, fixref, abcorr, obsrvr, spoint, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: angtyp  !! Type of illumination angle.
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: illmn  !! Name of the illumination source.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+      integer(ip), intent(in) :: mw  !! Workspace window size.
+      integer(ip), intent(in) :: nw  !! Workspace window count.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
 !
 !     External functions
 !
-
-!
-!     Interrupt indicator function:
-!
-
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
-
 
       integer(ip), parameter :: qnpars = 8
 
@@ -39398,8 +39695,12 @@ contains
                     work,    nobail,  gfbail,                result )
 
       return
-      end procedure gfilum
+      end subroutine gfilum
 
+      !> Determine time intervals for which a specified constraint
+      !> on the phase angle between an illumination source, a target,
+      !> and observer body centers is met.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may supply
@@ -40007,185 +40308,187 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFPA_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFPA_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include GF parameter declarations:
-      !>        C
-      !>              INCLUDE 'gf.inc'
+      !>C
+      !>C     Include GF parameter declarations:
+      !>C
+      !>      INCLUDE 'gf.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      SPD
-      !>              DOUBLE PRECISION      PHASEQ
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      SPD
+      !>      DOUBLE PRECISION      PHASEQ
       !>
-      !>              INTEGER               WNCARD
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Use the parameter MAXWIN for both the result window size
-      !>        C     and the workspace size.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 1000 )
+      !>C
+      !>C     Use the parameter MAXWIN for both the result window size
+      !>C     and the workspace size.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 1000 )
       !>
-      !>        C
-      !>        C     Length of strings:
-      !>        C
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 26 )
+      !>C
+      !>C     Length of strings:
+      !>C
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 26 )
       !>
-      !>              INTEGER               NLOOPS
-      !>              PARAMETER           ( NLOOPS = 7 )
+      !>      INTEGER               NLOOPS
+      !>      PARAMETER           ( NLOOPS = 7 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(TIMLEN)    RELATE (NLOOPS)
-      !>              CHARACTER*(6)         ABCORR
-      !>              CHARACTER*(6)         ILLMN
-      !>              CHARACTER*(6)         OBSRVR
-      !>              CHARACTER*(6)         TARGET
-      !>              CHARACTER*(TIMLEN)    TIMSTR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(TIMLEN)    RELATE (NLOOPS)
+      !>      CHARACTER*(6)         ABCORR
+      !>      CHARACTER*(6)         ILLMN
+      !>      CHARACTER*(6)         OBSRVR
+      !>      CHARACTER*(6)         TARGET
+      !>      CHARACTER*(TIMLEN)    TIMSTR
       !>
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWPA )
-      !>              DOUBLE PRECISION      ADJUST
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      FINISH
-      !>              DOUBLE PRECISION      PHASE
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      START
-      !>              DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWPA )
+      !>      DOUBLE PRECISION      ADJUST
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      FINISH
+      !>      DOUBLE PRECISION      PHASE
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      START
+      !>      DOUBLE PRECISION      STEP
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK and RESULT are saved because this practice helps to
-      !>        C     prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
-      !>              SAVE                  WORK
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK and RESULT are saved because this practice helps to
+      !>C     prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
+      !>      SAVE                  WORK
       !>
-      !>        C
-      !>        C     The relation values for the search.
-      !>        C
-      !>              DATA                  RELATE / '=',
-      !>             .                               '<',
-      !>             .                               '>',
-      !>             .                               'LOCMIN',
-      !>             .                               'ABSMIN',
-      !>             .                               'LOCMAX',
-      !>             .                               'ABSMAX'  /
+      !>C
+      !>C     The relation values for the search.
+      !>C
+      !>      DATA                  RELATE / '=',
+      !>     .                               '<',
+      !>     .                               '>',
+      !>     .                               'LOCMIN',
+      !>     .                               'ABSMIN',
+      !>     .                               'LOCMAX',
+      !>     .                               'ABSMAX'  /
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfpa_ex1.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfpa_ex1.tm' )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( MAXWIN, RESULT )
-      !>              CALL SSIZED ( 2,      CNFINE )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( MAXWIN, RESULT )
+      !>      CALL SSIZED ( 2,      CNFINE )
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the confinement window.
-      !>        C
-      !>              CALL STR2ET ( '2006 DEC 01', ET0 )
-      !>              CALL STR2ET ( '2007 JAN 31', ET1 )
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the confinement window.
+      !>C
+      !>      CALL STR2ET ( '2006 DEC 01', ET0 )
+      !>      CALL STR2ET ( '2007 JAN 31', ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Search using a step size of 1 day (in units of seconds).
-      !>        C     The reference value is 0.57598845 radians. We're not
-      !>        C     using the adjustment feature, so we set ADJUST to zero.
-      !>        C
-      !>              STEP   = SPD()
-      !>              REFVAL = 0.57598845D0
-      !>              ADJUST = 0.D0
+      !>C
+      !>C     Search using a step size of 1 day (in units of seconds).
+      !>C     The reference value is 0.57598845 radians. We're not
+      !>C     using the adjustment feature, so we set ADJUST to zero.
+      !>C
+      !>      STEP   = SPD()
+      !>      REFVAL = 0.57598845D0
+      !>      ADJUST = 0.D0
       !>
-      !>        C
-      !>        C     Define the values for target, observer, illuminator, and
-      !>        C     aberration correction.
-      !>        C
-      !>              TARGET = 'MOON'
-      !>              ILLMN  = 'SUN'
-      !>              ABCORR = 'LT+S'
-      !>              OBSRVR = 'EARTH'
+      !>C
+      !>C     Define the values for target, observer, illuminator, and
+      !>C     aberration correction.
+      !>C
+      !>      TARGET = 'MOON'
+      !>      ILLMN  = 'SUN'
+      !>      ABCORR = 'LT+S'
+      !>      OBSRVR = 'EARTH'
       !>
-      !>              DO J=1, NLOOPS
+      !>      DO J=1, NLOOPS
       !>
-      !>                 WRITE(*,*) 'Relation condition: ', RELATE(J)
+      !>         WRITE(*,*) 'Relation condition: ', RELATE(J)
       !>
-      !>        C
-      !>        C        Perform the search. The SPICE window RESULT contains
-      !>        C        the set of times when the condition is met.
-      !>        C
-      !>                 CALL GFPA (  TARGET,    ILLMN,  ABCORR, OBSRVR,
-      !>             .                RELATE(J), REFVAL, ADJUST, STEP,
-      !>             .                CNFINE,    MAXWIN, NWPA,   WORK,
-      !>             .                RESULT )
+      !>C
+      !>C        Perform the search. The SPICE window RESULT contains
+      !>C        the set of times when the condition is met.
+      !>C
+      !>         CALL GFPA (  TARGET,    ILLMN,  ABCORR, OBSRVR,
+      !>     .                RELATE(J), REFVAL, ADJUST, STEP,
+      !>     .                CNFINE,    MAXWIN, NWPA,   WORK,
+      !>     .                RESULT )
       !>
-      !>        C
-      !>        C        Display the results.
-      !>        C
-      !>                 IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>C
+      !>C        Display the results.
+      !>C
+      !>         IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                    WRITE (*, '(A)') 'Result window is empty.'
+      !>            WRITE (*, '(A)') 'Result window is empty.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    DO I = 1, WNCARD(RESULT)
-      !>        C
-      !>        C              Fetch the endpoints of the Ith interval
-      !>        C              of the result window.
-      !>        C
-      !>                       CALL WNFETD ( RESULT, I, START, FINISH )
+      !>            DO I = 1, WNCARD(RESULT)
+      !>C
+      !>C              Fetch the endpoints of the Ith interval
+      !>C              of the result window.
+      !>C
+      !>               CALL WNFETD ( RESULT, I, START, FINISH )
       !>
-      !>                       PHASE = PHASEQ( START, TARGET, ILLMN, OBSRVR,
-      !>             .                         ABCORR )
-      !>                       CALL TIMOUT ( START,
-      !>             .                       'YYYY-MON-DD HR:MN:SC.###',
-      !>             .                       TIMSTR                          )
+      !>               PHASE = PHASEQ( START, TARGET, ILLMN, OBSRVR,
+      !>     .                         ABCORR )
+      !>               CALL TIMOUT ( START,
+      !>     .                       'YYYY-MON-DD HR:MN:SC.###',
+      !>     .                       TIMSTR                          )
       !>
-      !>                       WRITE (*, '(A,F16.9)') 'Start time = '//TIMSTR,
-      !>             .                                                  PHASE
+      !>               WRITE (*, '(A,F16.9)') 'Start time = '//TIMSTR,
+      !>     .                                                  PHASE
       !>
-      !>                       PHASE = PHASEQ( FINISH, TARGET, ILLMN, OBSRVR,
-      !>             .                         ABCORR )
-      !>                       CALL TIMOUT ( FINISH,
-      !>             .                       'YYYY-MON-DD HR:MN:SC.###',
-      !>             .                       TIMSTR                          )
+      !>               PHASE = PHASEQ( FINISH, TARGET, ILLMN, OBSRVR,
+      !>     .                         ABCORR )
+      !>               CALL TIMOUT ( FINISH,
+      !>     .                       'YYYY-MON-DD HR:MN:SC.###',
+      !>     .                       TIMSTR                          )
       !>
-      !>                       WRITE (*, '(A,F16.9)') 'Stop time  = '//TIMSTR,
-      !>             .                                                  PHASE
+      !>               WRITE (*, '(A,F16.9)') 'Stop time  = '//TIMSTR,
+      !>     .                                                  PHASE
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -40272,18 +40575,27 @@ contains
       !>        Updated header to describe use of expanded confinement window.
       !>
       !>-    SPICELIB Version 1.0.0, 15-JUL-2014 (EDW) (NJB)
-      module procedure gfpa
+      module subroutine gfpa ( ctx, target, illmn, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
       use pepper_inc_gf
       use pepper_inc_zzholdd
       implicit none
-
-
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: illmn  !! Name of the illuminating body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+      integer(ip), intent(in) :: mw  !! Workspace window size.
+      integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
       integer(ip), parameter :: qnpars = 4
@@ -40404,8 +40716,11 @@ contains
 
       return
 
-      end procedure gfpa
+      end subroutine gfpa
 
+      !> Determine time intervals for which a coordinate of an
+      !> observer-target position vector satisfies a numerical constraint.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may supply
@@ -41085,178 +41400,180 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFPOSC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFPOSC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include GF parameter declarations:
-      !>        C
-      !>              INCLUDE 'gf.inc'
+      !>C
+      !>C     Include GF parameter declarations:
+      !>C
+      !>      INCLUDE 'gf.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      SPD
-      !>              DOUBLE PRECISION      RPD
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      SPD
+      !>      DOUBLE PRECISION      RPD
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Use the parameter MAXWIN for both
-      !>        C     the result window size and the workspace
-      !>        C     size.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 750 )
+      !>C
+      !>C     Use the parameter MAXWIN for both
+      !>C     the result window size and the workspace
+      !>C     size.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 750 )
       !>
-      !>        C
-      !>        C     String length.
-      !>        C
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 64 )
+      !>C
+      !>C     String length.
+      !>C
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 64 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(STRLEN)    TIMSTR
-      !>              CHARACTER*(STRLEN)    TIMFIN
-      !>              CHARACTER*(STRLEN)    RELATE
-      !>              CHARACTER*(STRLEN)    CRDSYS
-      !>              CHARACTER*(STRLEN)    COORD
-      !>              CHARACTER*(STRLEN)    ABCORR
-      !>              CHARACTER*(STRLEN)    TARG
-      !>              CHARACTER*(STRLEN)    OBSRVR
-      !>              CHARACTER*(STRLEN)    FRAME
-      !>              CHARACTER*(STRLEN)   TIMFMT
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(STRLEN)    TIMSTR
+      !>      CHARACTER*(STRLEN)    TIMFIN
+      !>      CHARACTER*(STRLEN)    RELATE
+      !>      CHARACTER*(STRLEN)    CRDSYS
+      !>      CHARACTER*(STRLEN)    COORD
+      !>      CHARACTER*(STRLEN)    ABCORR
+      !>      CHARACTER*(STRLEN)    TARG
+      !>      CHARACTER*(STRLEN)    OBSRVR
+      !>      CHARACTER*(STRLEN)    FRAME
+      !>      CHARACTER*(STRLEN)   TIMFMT
       !>
-      !>              DOUBLE PRECISION      ADJUST
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      FINISH
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      START
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWMAX )
+      !>      DOUBLE PRECISION      ADJUST
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      FINISH
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      START
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWMAX )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK and RESULT are saved because this practice helps to
-      !>        C     prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
-      !>              SAVE                  WORK
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK and RESULT are saved because this practice helps to
+      !>C     prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
+      !>      SAVE                  WORK
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfposc_ex1.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfposc_ex1.tm' )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( MAXWIN, RESULT )
-      !>              CALL SSIZED ( 2,      CNFINE )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( MAXWIN, RESULT )
+      !>      CALL SSIZED ( 2,      CNFINE )
       !>
-      !>              TIMFMT = 'YYYY-MON-DD HR:MN:SC.###### (TDB) ::TDB ::RND'
+      !>      TIMFMT = 'YYYY-MON-DD HR:MN:SC.###### (TDB) ::TDB ::RND'
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the confinement window.
-      !>        C
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the confinement window.
+      !>C
       !>
-      !>              CALL STR2ET ( '2007 JAN 1', ET0 )
-      !>              CALL STR2ET ( '2008 JAN 1', ET1 )
+      !>      CALL STR2ET ( '2007 JAN 1', ET0 )
+      !>      CALL STR2ET ( '2008 JAN 1', ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     The latitude varies relatively slowly, ~46 degrees
-      !>        C     during the year. The extrema occur approximately every
-      !>        C     six months. Search using a step size less than half
-      !>        C     that value (180 days). For this example use ninety days
-      !>        C     (in units of seconds).
-      !>        C
-      !>              STEP   = SPD() * 90.D0
-      !>              ADJUST = 0.D0
-      !>              REFVAL = 0.D0
+      !>C
+      !>C     The latitude varies relatively slowly, ~46 degrees
+      !>C     during the year. The extrema occur approximately every
+      !>C     six months. Search using a step size less than half
+      !>C     that value (180 days). For this example use ninety days
+      !>C     (in units of seconds).
+      !>C
+      !>      STEP   = SPD() * 90.D0
+      !>      ADJUST = 0.D0
+      !>      REFVAL = 0.D0
       !>
-      !>        C
-      !>        C     Search for the date on which the CRDSYS system
-      !>        C     coordinate COORD satisfies the RELATE constraint.
-      !>        C
-      !>              RELATE = 'ABSMAX'
-      !>              CRDSYS = 'LATITUDINAL'
-      !>              COORD  = 'LATITUDE'
-      !>              TARG   = 'SUN'
-      !>              OBSRVR = 'EARTH'
-      !>              FRAME  = 'IAU_EARTH'
-      !>              ABCORR = 'NONE'
+      !>C
+      !>C     Search for the date on which the CRDSYS system
+      !>C     coordinate COORD satisfies the RELATE constraint.
+      !>C
+      !>      RELATE = 'ABSMAX'
+      !>      CRDSYS = 'LATITUDINAL'
+      !>      COORD  = 'LATITUDE'
+      !>      TARG   = 'SUN'
+      !>      OBSRVR = 'EARTH'
+      !>      FRAME  = 'IAU_EARTH'
+      !>      ABCORR = 'NONE'
       !>
-      !>        C
-      !>        C     Perform this search using the geometric position
-      !>        C     of the bodies; set the aberration correction to 'NONE'.
-      !>        C
-      !>              CALL GFPOSC ( TARG,   FRAME, ABCORR,
-      !>             .              OBSRVR, CRDSYS, COORD,
-      !>             .              RELATE, REFVAL, ADJUST,
-      !>             .              STEP,   CNFINE,  MAXWIN,
-      !>             .              NWMAX,  WORK,   RESULT )
+      !>C
+      !>C     Perform this search using the geometric position
+      !>C     of the bodies; set the aberration correction to 'NONE'.
+      !>C
+      !>      CALL GFPOSC ( TARG,   FRAME, ABCORR,
+      !>     .              OBSRVR, CRDSYS, COORD,
+      !>     .              RELATE, REFVAL, ADJUST,
+      !>     .              STEP,   CNFINE,  MAXWIN,
+      !>     .              NWMAX,  WORK,   RESULT )
       !>
-      !>        C
-      !>        C     Display the results.
-      !>        C
-      !>              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>C
+      !>C     Display the results.
+      !>C
+      !>      IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                 WRITE (*,*) 'Result window is empty.'
+      !>         WRITE (*,*) 'Result window is empty.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO I = 1, WNCARD(RESULT)
+      !>         DO I = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C           Fetch the endpoints of the Ith interval
-      !>        C           of the result window.
-      !>        C
-      !>                    CALL WNFETD ( RESULT, I, START, FINISH )
+      !>C
+      !>C           Fetch the endpoints of the Ith interval
+      !>C           of the result window.
+      !>C
+      !>            CALL WNFETD ( RESULT, I, START, FINISH )
       !>
-      !>                    IF( START .EQ. FINISH ) THEN
+      !>            IF( START .EQ. FINISH ) THEN
       !>
-      !>        C
-      !>        C              The result window contains singleton
-      !>        C              intervals, so we need display only the
-      !>        C              start times.
-      !>        C
-      !>                       CALL TIMOUT ( START, TIMFMT, TIMSTR )
-      !>                       WRITE (*, *) 'Event time: ', TIMSTR
+      !>C
+      !>C              The result window contains singleton
+      !>C              intervals, so we need display only the
+      !>C              start times.
+      !>C
+      !>               CALL TIMOUT ( START, TIMFMT, TIMSTR )
+      !>               WRITE (*, *) 'Event time: ', TIMSTR
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       CALL TIMOUT ( START,  TIMFMT, TIMSTR )
-      !>                       CALL TIMOUT ( FINISH, TIMFMT, TIMFIN )
+      !>               CALL TIMOUT ( START,  TIMFMT, TIMSTR )
+      !>               CALL TIMOUT ( FINISH, TIMFMT, TIMFIN )
       !>
-      !>                       WRITE(*, *) 'From : ', TIMSTR
-      !>                       WRITE(*, *) 'To   : ', TIMFIN
-      !>                       WRITE(*, *) ' '
+      !>               WRITE(*, *) 'From : ', TIMSTR
+      !>               WRITE(*, *) 'To   : ', TIMFIN
+      !>               WRITE(*, *) ' '
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -41272,178 +41589,180 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFPOSC_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFPOSC_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include GF parameter declarations:
-      !>        C
-      !>              INCLUDE 'gf.inc'
+      !>C
+      !>C     Include GF parameter declarations:
+      !>C
+      !>      INCLUDE 'gf.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      SPD
-      !>              DOUBLE PRECISION      RPD
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      SPD
+      !>      DOUBLE PRECISION      RPD
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Use the parameter MAXWIN for both
-      !>        C     the result window size and the workspace
-      !>        C     size.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 750 )
+      !>C
+      !>C     Use the parameter MAXWIN for both
+      !>C     the result window size and the workspace
+      !>C     size.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 750 )
       !>
-      !>        C
-      !>        C     String length.
-      !>        C
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 64 )
+      !>C
+      !>C     String length.
+      !>C
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 64 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(STRLEN)    TIMSTR
-      !>              CHARACTER*(STRLEN)    TIMFIN
-      !>              CHARACTER*(STRLEN)    RELATE
-      !>              CHARACTER*(STRLEN)    CRDSYS
-      !>              CHARACTER*(STRLEN)    COORD
-      !>              CHARACTER*(STRLEN)    ABCORR
-      !>              CHARACTER*(STRLEN)    TARG
-      !>              CHARACTER*(STRLEN)    OBSRVR
-      !>              CHARACTER*(STRLEN)    FRAME
-      !>              CHARACTER*(STRLEN)   TIMFMT
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(STRLEN)    TIMSTR
+      !>      CHARACTER*(STRLEN)    TIMFIN
+      !>      CHARACTER*(STRLEN)    RELATE
+      !>      CHARACTER*(STRLEN)    CRDSYS
+      !>      CHARACTER*(STRLEN)    COORD
+      !>      CHARACTER*(STRLEN)    ABCORR
+      !>      CHARACTER*(STRLEN)    TARG
+      !>      CHARACTER*(STRLEN)    OBSRVR
+      !>      CHARACTER*(STRLEN)    FRAME
+      !>      CHARACTER*(STRLEN)   TIMFMT
       !>
-      !>              DOUBLE PRECISION      ADJUST
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      FINISH
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      START
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWMAX )
+      !>      DOUBLE PRECISION      ADJUST
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      FINISH
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      START
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWMAX )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK and RESULT are saved because this practice helps to
-      !>        C     prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
-      !>              SAVE                  WORK
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK and RESULT are saved because this practice helps to
+      !>C     prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
+      !>      SAVE                  WORK
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfposc_ex1.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfposc_ex1.tm' )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( MAXWIN, RESULT )
-      !>              CALL SSIZED ( 2,      CNFINE )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( MAXWIN, RESULT )
+      !>      CALL SSIZED ( 2,      CNFINE )
       !>
-      !>              TIMFMT = 'YYYY-MON-DD HR:MN:SC.###### (TDB) ::TDB ::RND'
+      !>      TIMFMT = 'YYYY-MON-DD HR:MN:SC.###### (TDB) ::TDB ::RND'
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the confinement window.
-      !>        C
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the confinement window.
+      !>C
       !>
-      !>              CALL STR2ET ( '2007 JAN 1', ET0 )
-      !>              CALL STR2ET ( '2008 JAN 1', ET1 )
+      !>      CALL STR2ET ( '2007 JAN 1', ET0 )
+      !>      CALL STR2ET ( '2008 JAN 1', ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     The latitude varies relatively slowly, ~46 degrees
-      !>        C     during the year. The extrema occur approximately every
-      !>        C     six months. Search using a step size less than half
-      !>        C     that value (180 days). For this example use ninety days
-      !>        C     (in units of seconds).
-      !>        C
-      !>              STEP   = SPD() * 90.D0
-      !>              ADJUST = 0.D0
-      !>              REFVAL = 0.D0
+      !>C
+      !>C     The latitude varies relatively slowly, ~46 degrees
+      !>C     during the year. The extrema occur approximately every
+      !>C     six months. Search using a step size less than half
+      !>C     that value (180 days). For this example use ninety days
+      !>C     (in units of seconds).
+      !>C
+      !>      STEP   = SPD() * 90.D0
+      !>      ADJUST = 0.D0
+      !>      REFVAL = 0.D0
       !>
-      !>        C
-      !>        C     Search for the date on which the CRDSYS system
-      !>        C     coordinate COORD satisfies the RELATE constraint.
-      !>        C
-      !>              RELATE = 'ABSMIN'
-      !>              CRDSYS = 'LATITUDINAL'
-      !>              COORD  = 'LATITUDE'
-      !>              TARG   = 'SUN'
-      !>              OBSRVR = 'EARTH'
-      !>              FRAME  = 'IAU_EARTH'
-      !>              ABCORR = 'NONE'
+      !>C
+      !>C     Search for the date on which the CRDSYS system
+      !>C     coordinate COORD satisfies the RELATE constraint.
+      !>C
+      !>      RELATE = 'ABSMIN'
+      !>      CRDSYS = 'LATITUDINAL'
+      !>      COORD  = 'LATITUDE'
+      !>      TARG   = 'SUN'
+      !>      OBSRVR = 'EARTH'
+      !>      FRAME  = 'IAU_EARTH'
+      !>      ABCORR = 'NONE'
       !>
-      !>        C
-      !>        C     Perform this search using the geometric position
-      !>        C     of the bodies; set the aberration correction to 'NONE'.
-      !>        C
-      !>              CALL GFPOSC ( TARG,   FRAME, ABCORR,
-      !>             .              OBSRVR, CRDSYS, COORD,
-      !>             .              RELATE, REFVAL, ADJUST,
-      !>             .              STEP,   CNFINE,  MAXWIN,
-      !>             .              NWMAX,  WORK,   RESULT )
+      !>C
+      !>C     Perform this search using the geometric position
+      !>C     of the bodies; set the aberration correction to 'NONE'.
+      !>C
+      !>      CALL GFPOSC ( TARG,   FRAME, ABCORR,
+      !>     .              OBSRVR, CRDSYS, COORD,
+      !>     .              RELATE, REFVAL, ADJUST,
+      !>     .              STEP,   CNFINE,  MAXWIN,
+      !>     .              NWMAX,  WORK,   RESULT )
       !>
-      !>        C
-      !>        C     Display the results.
-      !>        C
-      !>              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>C
+      !>C     Display the results.
+      !>C
+      !>      IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                 WRITE (*,*) 'Result window is empty.'
+      !>         WRITE (*,*) 'Result window is empty.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO I = 1, WNCARD(RESULT)
+      !>         DO I = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C           Fetch the endpoints of the Ith interval
-      !>        C           of the result window.
-      !>        C
-      !>                    CALL WNFETD ( RESULT, I, START, FINISH )
+      !>C
+      !>C           Fetch the endpoints of the Ith interval
+      !>C           of the result window.
+      !>C
+      !>            CALL WNFETD ( RESULT, I, START, FINISH )
       !>
-      !>                    IF( START .EQ. FINISH ) THEN
+      !>            IF( START .EQ. FINISH ) THEN
       !>
-      !>        C
-      !>        C              The result window contains singleton
-      !>        C              intervals, so we need display only the
-      !>        C              start times.
-      !>        C
-      !>                       CALL TIMOUT ( START, TIMFMT, TIMSTR )
-      !>                       WRITE (*, *) 'Event time: ', TIMSTR
+      !>C
+      !>C              The result window contains singleton
+      !>C              intervals, so we need display only the
+      !>C              start times.
+      !>C
+      !>               CALL TIMOUT ( START, TIMFMT, TIMSTR )
+      !>               WRITE (*, *) 'Event time: ', TIMSTR
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       CALL TIMOUT ( START,  TIMFMT, TIMSTR )
-      !>                       CALL TIMOUT ( FINISH, TIMFMT, TIMFIN )
+      !>               CALL TIMOUT ( START,  TIMFMT, TIMSTR )
+      !>               CALL TIMOUT ( FINISH, TIMFMT, TIMFIN )
       !>
-      !>                       WRITE(*, *) 'From : ', TIMSTR
-      !>                       WRITE(*, *) 'To   : ', TIMFIN
-      !>                       WRITE(*, *) ' '
+      !>               WRITE(*, *) 'From : ', TIMSTR
+      !>               WRITE(*, *) 'To   : ', TIMFIN
+      !>               WRITE(*, *) ' '
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -41460,178 +41779,180 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFPOSC_EX3
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFPOSC_EX3
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include GF parameter declarations:
-      !>        C
-      !>              INCLUDE 'gf.inc'
+      !>C
+      !>C     Include GF parameter declarations:
+      !>C
+      !>      INCLUDE 'gf.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      SPD
-      !>              DOUBLE PRECISION      RPD
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      SPD
+      !>      DOUBLE PRECISION      RPD
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Use the parameter MAXWIN for both
-      !>        C     the result window size and the workspace
-      !>        C     size.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 750 )
+      !>C
+      !>C     Use the parameter MAXWIN for both
+      !>C     the result window size and the workspace
+      !>C     size.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 750 )
       !>
-      !>        C
-      !>        C     String length.
-      !>        C
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 64 )
+      !>C
+      !>C     String length.
+      !>C
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 64 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(STRLEN)    TIMSTR
-      !>              CHARACTER*(STRLEN)    TIMFIN
-      !>              CHARACTER*(STRLEN)    RELATE
-      !>              CHARACTER*(STRLEN)    CRDSYS
-      !>              CHARACTER*(STRLEN)    COORD
-      !>              CHARACTER*(STRLEN)    ABCORR
-      !>              CHARACTER*(STRLEN)    TARG
-      !>              CHARACTER*(STRLEN)    OBSRVR
-      !>              CHARACTER*(STRLEN)    FRAME
-      !>              CHARACTER*(STRLEN)   TIMFMT
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(STRLEN)    TIMSTR
+      !>      CHARACTER*(STRLEN)    TIMFIN
+      !>      CHARACTER*(STRLEN)    RELATE
+      !>      CHARACTER*(STRLEN)    CRDSYS
+      !>      CHARACTER*(STRLEN)    COORD
+      !>      CHARACTER*(STRLEN)    ABCORR
+      !>      CHARACTER*(STRLEN)    TARG
+      !>      CHARACTER*(STRLEN)    OBSRVR
+      !>      CHARACTER*(STRLEN)    FRAME
+      !>      CHARACTER*(STRLEN)   TIMFMT
       !>
-      !>              DOUBLE PRECISION      ADJUST
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      FINISH
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      START
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWMAX )
+      !>      DOUBLE PRECISION      ADJUST
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      FINISH
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      START
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWMAX )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK and RESULT are saved because this practice helps to
-      !>        C     prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
-      !>              SAVE                  WORK
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK and RESULT are saved because this practice helps to
+      !>C     prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
+      !>      SAVE                  WORK
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfposc_ex1.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfposc_ex1.tm' )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( MAXWIN, RESULT )
-      !>              CALL SSIZED ( 2,      CNFINE )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( MAXWIN, RESULT )
+      !>      CALL SSIZED ( 2,      CNFINE )
       !>
-      !>              TIMFMT = 'YYYY-MON-DD HR:MN:SC.###### (TDB) ::TDB ::RND'
+      !>      TIMFMT = 'YYYY-MON-DD HR:MN:SC.###### (TDB) ::TDB ::RND'
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the confinement window.
-      !>        C
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the confinement window.
+      !>C
       !>
-      !>              CALL STR2ET ( '2007 JAN 1', ET0 )
-      !>              CALL STR2ET ( '2008 JAN 1', ET1 )
+      !>      CALL STR2ET ( '2007 JAN 1', ET0 )
+      !>      CALL STR2ET ( '2008 JAN 1', ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     The latitude varies relatively slowly, ~46 degrees
-      !>        C     during the year. The extrema occur approximately every
-      !>        C     six months. Search using a step size less than half
-      !>        C     that value (180 days). For this example use ninety days
-      !>        C     (in units of seconds).
-      !>        C
-      !>              STEP   = SPD() * 90.D0
-      !>              ADJUST = 0.D0
-      !>              REFVAL = 0.D0
+      !>C
+      !>C     The latitude varies relatively slowly, ~46 degrees
+      !>C     during the year. The extrema occur approximately every
+      !>C     six months. Search using a step size less than half
+      !>C     that value (180 days). For this example use ninety days
+      !>C     (in units of seconds).
+      !>C
+      !>      STEP   = SPD() * 90.D0
+      !>      ADJUST = 0.D0
+      !>      REFVAL = 0.D0
       !>
-      !>        C
-      !>        C     Search for the date on which the CRDSYS system
-      !>        C     coordinate COORD satisfies the RELATE constraint.
-      !>        C
-      !>              RELATE = '='
-      !>              CRDSYS = 'RECTANGULAR'
-      !>              COORD  = 'Z'
-      !>              TARG   = 'SUN'
-      !>              OBSRVR = 'EARTH'
-      !>              FRAME  = 'IAU_EARTH'
-      !>              ABCORR = 'NONE'
+      !>C
+      !>C     Search for the date on which the CRDSYS system
+      !>C     coordinate COORD satisfies the RELATE constraint.
+      !>C
+      !>      RELATE = '='
+      !>      CRDSYS = 'RECTANGULAR'
+      !>      COORD  = 'Z'
+      !>      TARG   = 'SUN'
+      !>      OBSRVR = 'EARTH'
+      !>      FRAME  = 'IAU_EARTH'
+      !>      ABCORR = 'NONE'
       !>
-      !>        C
-      !>        C     Perform this search using the geometric position
-      !>        C     of the bodies; set the aberration correction to 'NONE'.
-      !>        C
-      !>              CALL GFPOSC ( TARG,   FRAME, ABCORR,
-      !>             .              OBSRVR, CRDSYS, COORD,
-      !>             .              RELATE, REFVAL, ADJUST,
-      !>             .              STEP,   CNFINE,  MAXWIN,
-      !>             .              NWMAX,  WORK,   RESULT )
+      !>C
+      !>C     Perform this search using the geometric position
+      !>C     of the bodies; set the aberration correction to 'NONE'.
+      !>C
+      !>      CALL GFPOSC ( TARG,   FRAME, ABCORR,
+      !>     .              OBSRVR, CRDSYS, COORD,
+      !>     .              RELATE, REFVAL, ADJUST,
+      !>     .              STEP,   CNFINE,  MAXWIN,
+      !>     .              NWMAX,  WORK,   RESULT )
       !>
-      !>        C
-      !>        C     Display the results.
-      !>        C
-      !>              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>C
+      !>C     Display the results.
+      !>C
+      !>      IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                 WRITE (*,*) 'Result window is empty.'
+      !>         WRITE (*,*) 'Result window is empty.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO I = 1, WNCARD(RESULT)
+      !>         DO I = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C           Fetch the endpoints of the Ith interval
-      !>        C           of the result window.
-      !>        C
-      !>                    CALL WNFETD ( RESULT, I, START, FINISH )
+      !>C
+      !>C           Fetch the endpoints of the Ith interval
+      !>C           of the result window.
+      !>C
+      !>            CALL WNFETD ( RESULT, I, START, FINISH )
       !>
-      !>                    IF( START .EQ. FINISH ) THEN
+      !>            IF( START .EQ. FINISH ) THEN
       !>
-      !>        C
-      !>        C              The result window contains singleton
-      !>        C              intervals, so we need display only the
-      !>        C              start times.
-      !>        C
-      !>                       CALL TIMOUT ( START, TIMFMT, TIMSTR )
-      !>                       WRITE (*, *) 'Event time: ', TIMSTR
+      !>C
+      !>C              The result window contains singleton
+      !>C              intervals, so we need display only the
+      !>C              start times.
+      !>C
+      !>               CALL TIMOUT ( START, TIMFMT, TIMSTR )
+      !>               WRITE (*, *) 'Event time: ', TIMSTR
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       CALL TIMOUT ( START,  TIMFMT, TIMSTR )
-      !>                       CALL TIMOUT ( FINISH, TIMFMT, TIMFIN )
+      !>               CALL TIMOUT ( START,  TIMFMT, TIMSTR )
+      !>               CALL TIMOUT ( FINISH, TIMFMT, TIMFIN )
       !>
-      !>                       WRITE(*, *) 'From : ', TIMSTR
-      !>                       WRITE(*, *) 'To   : ', TIMFIN
-      !>                       WRITE(*, *) ' '
+      !>               WRITE(*, *) 'From : ', TIMSTR
+      !>               WRITE(*, *) 'To   : ', TIMFIN
+      !>               WRITE(*, *) ' '
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -41647,178 +41968,180 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFPOSC_EX4
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFPOSC_EX4
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include GF parameter declarations:
-      !>        C
-      !>              INCLUDE 'gf.inc'
+      !>C
+      !>C     Include GF parameter declarations:
+      !>C
+      !>      INCLUDE 'gf.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      SPD
-      !>              DOUBLE PRECISION      RPD
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      SPD
+      !>      DOUBLE PRECISION      RPD
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Use the parameter MAXWIN for both
-      !>        C     the result window size and the workspace
-      !>        C     size.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 750 )
+      !>C
+      !>C     Use the parameter MAXWIN for both
+      !>C     the result window size and the workspace
+      !>C     size.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 750 )
       !>
-      !>        C
-      !>        C     String length.
-      !>        C
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 64 )
+      !>C
+      !>C     String length.
+      !>C
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 64 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(STRLEN)    TIMSTR
-      !>              CHARACTER*(STRLEN)    TIMFIN
-      !>              CHARACTER*(STRLEN)    RELATE
-      !>              CHARACTER*(STRLEN)    CRDSYS
-      !>              CHARACTER*(STRLEN)    COORD
-      !>              CHARACTER*(STRLEN)    ABCORR
-      !>              CHARACTER*(STRLEN)    TARG
-      !>              CHARACTER*(STRLEN)    OBSRVR
-      !>              CHARACTER*(STRLEN)    FRAME
-      !>              CHARACTER*(STRLEN)   TIMFMT
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(STRLEN)    TIMSTR
+      !>      CHARACTER*(STRLEN)    TIMFIN
+      !>      CHARACTER*(STRLEN)    RELATE
+      !>      CHARACTER*(STRLEN)    CRDSYS
+      !>      CHARACTER*(STRLEN)    COORD
+      !>      CHARACTER*(STRLEN)    ABCORR
+      !>      CHARACTER*(STRLEN)    TARG
+      !>      CHARACTER*(STRLEN)    OBSRVR
+      !>      CHARACTER*(STRLEN)    FRAME
+      !>      CHARACTER*(STRLEN)   TIMFMT
       !>
-      !>              DOUBLE PRECISION      ADJUST
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      FINISH
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      START
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWMAX )
+      !>      DOUBLE PRECISION      ADJUST
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      FINISH
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      START
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWMAX )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK and RESULT are saved because this practice helps to
-      !>        C     prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
-      !>              SAVE                  WORK
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK and RESULT are saved because this practice helps to
+      !>C     prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
+      !>      SAVE                  WORK
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfposc_ex1.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfposc_ex1.tm' )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( MAXWIN, RESULT )
-      !>              CALL SSIZED ( 2,      CNFINE )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( MAXWIN, RESULT )
+      !>      CALL SSIZED ( 2,      CNFINE )
       !>
-      !>              TIMFMT = 'YYYY-MON-DD HR:MN:SC.###### (TDB) ::TDB ::RND'
+      !>      TIMFMT = 'YYYY-MON-DD HR:MN:SC.###### (TDB) ::TDB ::RND'
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the confinement window.
-      !>        C
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the confinement window.
+      !>C
       !>
-      !>              CALL STR2ET ( '2007 JAN 1', ET0 )
-      !>              CALL STR2ET ( '2008 JAN 1', ET1 )
+      !>      CALL STR2ET ( '2007 JAN 1', ET0 )
+      !>      CALL STR2ET ( '2008 JAN 1', ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     This search requires a change in the step size since the
-      !>        C     Moon's orbit about the earth (earth-moon barycenter) has
-      !>        C     a twenty-eight day period. Use a step size something
-      !>        C     less than half that value. In this case, we use twelve
-      !>        C     days.
-      !>        C
-      !>              STEP   = SPD() * 12.D0
-      !>              ADJUST = 0.D0
-      !>              REFVAL = 0.D0
+      !>C
+      !>C     This search requires a change in the step size since the
+      !>C     Moon's orbit about the earth (earth-moon barycenter) has
+      !>C     a twenty-eight day period. Use a step size something
+      !>C     less than half that value. In this case, we use twelve
+      !>C     days.
+      !>C
+      !>      STEP   = SPD() * 12.D0
+      !>      ADJUST = 0.D0
+      !>      REFVAL = 0.D0
       !>
-      !>        C
-      !>        C     Search for the date on which the CRDSYS system
-      !>        C     coordinate COORD satisfies the RELATE constraint.
-      !>        C
-      !>              RELATE = 'LOCMAX'
-      !>              CRDSYS = 'SPHERICAL'
-      !>              COORD  = 'RADIUS'
-      !>              TARG   = 'MOON'
-      !>              OBSRVR = 'EARTH'
-      !>              FRAME  = 'J2000'
-      !>              ABCORR = 'NONE'
+      !>C
+      !>C     Search for the date on which the CRDSYS system
+      !>C     coordinate COORD satisfies the RELATE constraint.
+      !>C
+      !>      RELATE = 'LOCMAX'
+      !>      CRDSYS = 'SPHERICAL'
+      !>      COORD  = 'RADIUS'
+      !>      TARG   = 'MOON'
+      !>      OBSRVR = 'EARTH'
+      !>      FRAME  = 'J2000'
+      !>      ABCORR = 'NONE'
       !>
-      !>        C
-      !>        C     Perform this search using the geometric position
-      !>        C     of the bodies; set the aberration correction to 'NONE'.
-      !>        C
-      !>              CALL GFPOSC ( TARG,   FRAME, ABCORR,
-      !>             .              OBSRVR, CRDSYS, COORD,
-      !>             .              RELATE, REFVAL, ADJUST,
-      !>             .              STEP,   CNFINE,  MAXWIN,
-      !>             .              NWMAX,  WORK,   RESULT )
+      !>C
+      !>C     Perform this search using the geometric position
+      !>C     of the bodies; set the aberration correction to 'NONE'.
+      !>C
+      !>      CALL GFPOSC ( TARG,   FRAME, ABCORR,
+      !>     .              OBSRVR, CRDSYS, COORD,
+      !>     .              RELATE, REFVAL, ADJUST,
+      !>     .              STEP,   CNFINE,  MAXWIN,
+      !>     .              NWMAX,  WORK,   RESULT )
       !>
-      !>        C
-      !>        C     Display the results.
-      !>        C
-      !>              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>C
+      !>C     Display the results.
+      !>C
+      !>      IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                 WRITE (*,*) 'Result window is empty.'
+      !>         WRITE (*,*) 'Result window is empty.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO I = 1, WNCARD(RESULT)
+      !>         DO I = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C           Fetch the endpoints of the Ith interval
-      !>        C           of the result window.
-      !>        C
-      !>                    CALL WNFETD ( RESULT, I, START, FINISH )
+      !>C
+      !>C           Fetch the endpoints of the Ith interval
+      !>C           of the result window.
+      !>C
+      !>            CALL WNFETD ( RESULT, I, START, FINISH )
       !>
-      !>                    IF( START .EQ. FINISH ) THEN
+      !>            IF( START .EQ. FINISH ) THEN
       !>
-      !>        C
-      !>        C              The result window contains singleton
-      !>        C              intervals, so we need display only the
-      !>        C              start times.
-      !>        C
-      !>                       CALL TIMOUT ( START, TIMFMT, TIMSTR )
-      !>                       WRITE (*, *) 'Event time: ', TIMSTR
+      !>C
+      !>C              The result window contains singleton
+      !>C              intervals, so we need display only the
+      !>C              start times.
+      !>C
+      !>               CALL TIMOUT ( START, TIMFMT, TIMSTR )
+      !>               WRITE (*, *) 'Event time: ', TIMSTR
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       CALL TIMOUT ( START,  TIMFMT, TIMSTR )
-      !>                       CALL TIMOUT ( FINISH, TIMFMT, TIMFIN )
+      !>               CALL TIMOUT ( START,  TIMFMT, TIMSTR )
+      !>               CALL TIMOUT ( FINISH, TIMFMT, TIMFIN )
       !>
-      !>                       WRITE(*, *) 'From : ', TIMSTR
-      !>                       WRITE(*, *) 'To   : ', TIMFIN
-      !>                       WRITE(*, *) ' '
+      !>               WRITE(*, *) 'From : ', TIMSTR
+      !>               WRITE(*, *) 'To   : ', TIMFIN
+      !>               WRITE(*, *) ' '
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -41888,179 +42211,181 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFPOSC_EX5
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFPOSC_EX5
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include GF parameter declarations:
-      !>        C
-      !>              INCLUDE 'gf.inc'
+      !>C
+      !>C     Include GF parameter declarations:
+      !>C
+      !>      INCLUDE 'gf.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      SPD
-      !>              DOUBLE PRECISION      RPD
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      SPD
+      !>      DOUBLE PRECISION      RPD
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Use the parameter MAXWIN for both
-      !>        C     the result window size and the workspace
-      !>        C     size.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 750 )
+      !>C
+      !>C     Use the parameter MAXWIN for both
+      !>C     the result window size and the workspace
+      !>C     size.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 750 )
       !>
-      !>        C
-      !>        C     String length.
-      !>        C
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 64 )
+      !>C
+      !>C     String length.
+      !>C
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 64 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(STRLEN)    TIMSTR
-      !>              CHARACTER*(STRLEN)    TIMFIN
-      !>              CHARACTER*(STRLEN)    RELATE
-      !>              CHARACTER*(STRLEN)    CRDSYS
-      !>              CHARACTER*(STRLEN)    COORD
-      !>              CHARACTER*(STRLEN)    ABCORR
-      !>              CHARACTER*(STRLEN)    TARG
-      !>              CHARACTER*(STRLEN)    OBSRVR
-      !>              CHARACTER*(STRLEN)    FRAME
-      !>              CHARACTER*(STRLEN)   TIMFMT
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(STRLEN)    TIMSTR
+      !>      CHARACTER*(STRLEN)    TIMFIN
+      !>      CHARACTER*(STRLEN)    RELATE
+      !>      CHARACTER*(STRLEN)    CRDSYS
+      !>      CHARACTER*(STRLEN)    COORD
+      !>      CHARACTER*(STRLEN)    ABCORR
+      !>      CHARACTER*(STRLEN)    TARG
+      !>      CHARACTER*(STRLEN)    OBSRVR
+      !>      CHARACTER*(STRLEN)    FRAME
+      !>      CHARACTER*(STRLEN)   TIMFMT
       !>
-      !>              DOUBLE PRECISION      ADJUST
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      FINISH
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      START
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWMAX )
+      !>      DOUBLE PRECISION      ADJUST
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      FINISH
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      START
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWMAX )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK and RESULT are saved because this practice helps to
-      !>        C     prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
-      !>              SAVE                  WORK
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK and RESULT are saved because this practice helps to
+      !>C     prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
+      !>      SAVE                  WORK
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfposc_ex5.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfposc_ex5.tm' )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( MAXWIN, RESULT )
-      !>              CALL SSIZED ( 2,      CNFINE )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( MAXWIN, RESULT )
+      !>      CALL SSIZED ( 2,      CNFINE )
       !>
-      !>              TIMFMT = 'YYYY-MON-DD HR:MN:SC.###### (TDB) ::TDB ::RND'
+      !>      TIMFMT = 'YYYY-MON-DD HR:MN:SC.###### (TDB) ::TDB ::RND'
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the confinement window.
-      !>        C
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the confinement window.
+      !>C
       !>
-      !>              CALL STR2ET ( '2007 JAN 1', ET0 )
-      !>              CALL STR2ET ( '2008 JAN 1', ET1 )
+      !>      CALL STR2ET ( '2007 JAN 1', ET0 )
+      !>      CALL STR2ET ( '2008 JAN 1', ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     This search uses a step size of four hours since the
-      !>        C     time for all declination zero-to-max-to-zero passes
-      !>        C     within the search window exceeds eight hours.
-      !>        C
-      !>        C     The example uses an 83 degree elevation because of its
-      !>        C     rare occurrence and short duration.
-      !>        C
-      !>              STEP   = SPD() * (4.D0/24.D0)
-      !>              ADJUST = 0.D0
-      !>              REFVAL = 83.D0 * RPD()
+      !>C
+      !>C     This search uses a step size of four hours since the
+      !>C     time for all declination zero-to-max-to-zero passes
+      !>C     within the search window exceeds eight hours.
+      !>C
+      !>C     The example uses an 83 degree elevation because of its
+      !>C     rare occurrence and short duration.
+      !>C
+      !>      STEP   = SPD() * (4.D0/24.D0)
+      !>      ADJUST = 0.D0
+      !>      REFVAL = 83.D0 * RPD()
       !>
-      !>        C
-      !>        C     Search for the date on which the CRDSYS system
-      !>        C     coordinate COORD satisfies the RELATE constraint.
-      !>        C
-      !>              RELATE = '>'
-      !>              CRDSYS = 'LATITUDINAL'
-      !>              COORD  = 'LATITUDE'
-      !>              TARG   = 'MOON'
-      !>              OBSRVR = 'DSS-17'
-      !>              FRAME  = 'DSS-17_TOPO'
-      !>              ABCORR = 'NONE'
+      !>C
+      !>C     Search for the date on which the CRDSYS system
+      !>C     coordinate COORD satisfies the RELATE constraint.
+      !>C
+      !>      RELATE = '>'
+      !>      CRDSYS = 'LATITUDINAL'
+      !>      COORD  = 'LATITUDE'
+      !>      TARG   = 'MOON'
+      !>      OBSRVR = 'DSS-17'
+      !>      FRAME  = 'DSS-17_TOPO'
+      !>      ABCORR = 'NONE'
       !>
-      !>        C
-      !>        C     Perform this search using the geometric position
-      !>        C     of the bodies; set the aberration correction to 'NONE'.
-      !>        C
-      !>              CALL GFPOSC ( TARG,   FRAME, ABCORR,
-      !>             .              OBSRVR, CRDSYS, COORD,
-      !>             .              RELATE, REFVAL, ADJUST,
-      !>             .              STEP,   CNFINE,  MAXWIN,
-      !>             .              NWMAX,  WORK,   RESULT )
+      !>C
+      !>C     Perform this search using the geometric position
+      !>C     of the bodies; set the aberration correction to 'NONE'.
+      !>C
+      !>      CALL GFPOSC ( TARG,   FRAME, ABCORR,
+      !>     .              OBSRVR, CRDSYS, COORD,
+      !>     .              RELATE, REFVAL, ADJUST,
+      !>     .              STEP,   CNFINE,  MAXWIN,
+      !>     .              NWMAX,  WORK,   RESULT )
       !>
-      !>        C
-      !>        C     Display the results.
-      !>        C
-      !>              IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>C
+      !>C     Display the results.
+      !>C
+      !>      IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                 WRITE (*,*) 'Result window is empty.'
+      !>         WRITE (*,*) 'Result window is empty.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO I = 1, WNCARD(RESULT)
+      !>         DO I = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C           Fetch the endpoints of the Ith interval
-      !>        C           of the result window.
-      !>        C
-      !>                    CALL WNFETD ( RESULT, I, START, FINISH )
+      !>C
+      !>C           Fetch the endpoints of the Ith interval
+      !>C           of the result window.
+      !>C
+      !>            CALL WNFETD ( RESULT, I, START, FINISH )
       !>
-      !>                    IF( START .EQ. FINISH ) THEN
+      !>            IF( START .EQ. FINISH ) THEN
       !>
-      !>        C
-      !>        C              The result window contains singleton
-      !>        C              intervals, so we need display only the
-      !>        C              start times.
-      !>        C
-      !>                       CALL TIMOUT ( START, TIMFMT, TIMSTR )
-      !>                       WRITE (*, *) 'Event time: ', TIMSTR
+      !>C
+      !>C              The result window contains singleton
+      !>C              intervals, so we need display only the
+      !>C              start times.
+      !>C
+      !>               CALL TIMOUT ( START, TIMFMT, TIMSTR )
+      !>               WRITE (*, *) 'Event time: ', TIMSTR
       !>
-      !>                    ELSE
+      !>            ELSE
       !>
-      !>                       CALL TIMOUT ( START,  TIMFMT, TIMSTR )
-      !>                       CALL TIMOUT ( FINISH, TIMFMT, TIMFIN )
+      !>               CALL TIMOUT ( START,  TIMFMT, TIMSTR )
+      !>               CALL TIMOUT ( FINISH, TIMFMT, TIMFIN )
       !>
-      !>                       WRITE(*, *) 'From : ', TIMSTR
-      !>                       WRITE(*, *) 'To   : ', TIMFIN
-      !>                       WRITE(*, *) ' '
+      !>               WRITE(*, *) 'From : ', TIMSTR
+      !>               WRITE(*, *) 'To   : ', TIMFIN
+      !>               WRITE(*, *) ' '
       !>
-      !>                    END IF
+      !>            END IF
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -42131,22 +42456,30 @@ contains
       !>        Edited argument descriptions.
       !>
       !>-    SPICELIB Version 1.0.0, 17-FEB-2009 (NJB) (EDW)
-      module procedure gfposc
+      module subroutine gfposc ( ctx, target, frame, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       use pepper_inc_zzholdd
       implicit none
-
-
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
-
-
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: frame  !! Name of the reference frame for coordinate calculations.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+      character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+      integer(ip), intent(in) :: mw  !! Workspace window size.
+      integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
       real(wp) :: tol
@@ -42285,8 +42618,11 @@ contains
 
       return
 
-      end procedure gfposc
+      end subroutine gfposc
 
+      !> Determine time intervals for which a specified constraint
+      !> on the observer-target range rate is met.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   is the name of a target body. Optionally, you may supply
@@ -42884,174 +43220,176 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFRR_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFRR_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include GF parameter declarations:
-      !>        C
-      !>              INCLUDE 'gf.inc'
+      !>C
+      !>C     Include GF parameter declarations:
+      !>C
+      !>      INCLUDE 'gf.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DVNORM
-      !>              DOUBLE PRECISION      SPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DVNORM
+      !>      DOUBLE PRECISION      SPD
       !>
-      !>              INTEGER               WNCARD
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              CHARACTER*(*)         TIMFMT
-      !>              PARAMETER           ( TIMFMT =
-      !>             .   'YYYY-MON-DD HR:MN:SC.###' )
+      !>      CHARACTER*(*)         TIMFMT
+      !>      PARAMETER           ( TIMFMT =
+      !>     .   'YYYY-MON-DD HR:MN:SC.###' )
       !>
-      !>        C
-      !>        C     Use the parameter MAXWIN for both the result window size
-      !>        C     and the workspace size.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 20000 )
+      !>C
+      !>C     Use the parameter MAXWIN for both the result window size
+      !>C     and the workspace size.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 20000 )
       !>
-      !>        C
-      !>        C     Length of strings:
-      !>        C
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 26 )
+      !>C
+      !>C     Length of strings:
+      !>C
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 26 )
       !>
-      !>              INTEGER               NLOOPS
-      !>              PARAMETER           ( NLOOPS = 7 )
+      !>      INTEGER               NLOOPS
+      !>      PARAMETER           ( NLOOPS = 7 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(TIMLEN)    TIMSTR
-      !>              CHARACTER*(TIMLEN)    RELATE (NLOOPS)
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(TIMLEN)    TIMSTR
+      !>      CHARACTER*(TIMLEN)    RELATE (NLOOPS)
       !>
-      !>              DOUBLE PRECISION      ADJUST
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
-      !>              DOUBLE PRECISION      DRDT
-      !>              DOUBLE PRECISION      ET0
-      !>              DOUBLE PRECISION      ET1
-      !>              DOUBLE PRECISION      FINISH
-      !>              DOUBLE PRECISION      LT
-      !>              DOUBLE PRECISION      POS    ( 6 )
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
-      !>              DOUBLE PRECISION      START
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWRR )
+      !>      DOUBLE PRECISION      ADJUST
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2 )
+      !>      DOUBLE PRECISION      DRDT
+      !>      DOUBLE PRECISION      ET0
+      !>      DOUBLE PRECISION      ET1
+      !>      DOUBLE PRECISION      FINISH
+      !>      DOUBLE PRECISION      LT
+      !>      DOUBLE PRECISION      POS    ( 6 )
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : MAXWIN )
+      !>      DOUBLE PRECISION      START
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      WORK   ( LBCELL : MAXWIN, NWRR )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK and RESULT are saved because this practice helps to
-      !>        C     prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
-      !>              SAVE                  WORK
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK and RESULT are saved because this practice helps to
+      !>C     prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
+      !>      SAVE                  WORK
       !>
-      !>              DATA                  RELATE / '=',
-      !>             .                               '<',
-      !>             .                               '>',
-      !>             .                               'LOCMIN',
-      !>             .                               'ABSMIN',
-      !>             .                               'LOCMAX',
-      !>             .                               'ABSMAX'  /
+      !>      DATA                  RELATE / '=',
+      !>     .                               '<',
+      !>     .                               '>',
+      !>     .                               'LOCMIN',
+      !>     .                               'ABSMIN',
+      !>     .                               'LOCMAX',
+      !>     .                               'ABSMAX'  /
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ( 'gfrr_ex1.tm' )
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ( 'gfrr_ex1.tm' )
       !>
-      !>        C
-      !>        C     Initialize windows.
-      !>        C
-      !>              CALL SSIZED ( MAXWIN, RESULT )
-      !>              CALL SSIZED ( 2,      CNFINE )
+      !>C
+      !>C     Initialize windows.
+      !>C
+      !>      CALL SSIZED ( MAXWIN, RESULT )
+      !>      CALL SSIZED ( 2,      CNFINE )
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the confinement window.
-      !>        C
-      !>              CALL STR2ET ( '2007 JAN 1', ET0 )
-      !>              CALL STR2ET ( '2007 APR 1', ET1 )
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the confinement window.
+      !>C
+      !>      CALL STR2ET ( '2007 JAN 1', ET0 )
+      !>      CALL STR2ET ( '2007 APR 1', ET1 )
       !>
-      !>              CALL WNINSD ( ET0, ET1, CNFINE )
+      !>      CALL WNINSD ( ET0, ET1, CNFINE )
       !>
-      !>        C
-      !>        C     Search using a step size of 1 day (in units of seconds).
-      !>        C     The reference value is .3365 km/s. We're not using the
-      !>        C     adjustment feature, so we set ADJUST to zero.
-      !>        C
-      !>              STEP   = SPD()
-      !>              REFVAL = .3365D0
-      !>              ADJUST = 0.D0
+      !>C
+      !>C     Search using a step size of 1 day (in units of seconds).
+      !>C     The reference value is .3365 km/s. We're not using the
+      !>C     adjustment feature, so we set ADJUST to zero.
+      !>C
+      !>      STEP   = SPD()
+      !>      REFVAL = .3365D0
+      !>      ADJUST = 0.D0
       !>
-      !>              DO J=1, NLOOPS
+      !>      DO J=1, NLOOPS
       !>
-      !>                 WRITE(*,*) 'Relation condition: ', RELATE(J)
+      !>         WRITE(*,*) 'Relation condition: ', RELATE(J)
       !>
-      !>        C
-      !>        C        Perform the search. The SPICE window RESULT contains
-      !>        C        the set of times when the condition is met.
-      !>        C
-      !>                 CALL GFRR (  'MOON', 'NONE', 'SUN', RELATE(J),
-      !>             .                 REFVAL, ADJUST, STEP,    CNFINE,
-      !>             .                 MAXWIN, NWRR,   WORK,    RESULT )
+      !>C
+      !>C        Perform the search. The SPICE window RESULT contains
+      !>C        the set of times when the condition is met.
+      !>C
+      !>         CALL GFRR (  'MOON', 'NONE', 'SUN', RELATE(J),
+      !>     .                 REFVAL, ADJUST, STEP,    CNFINE,
+      !>     .                 MAXWIN, NWRR,   WORK,    RESULT )
       !>
-      !>        C
-      !>        C        Display the results.
-      !>        C
-      !>                 IF ( WNCARD(RESULT) .EQ. 0 ) THEN
+      !>C
+      !>C        Display the results.
+      !>C
+      !>         IF ( WNCARD(RESULT) .EQ. 0 ) THEN
       !>
-      !>                    WRITE (*, '(A)') 'Result window is empty.'
+      !>            WRITE (*, '(A)') 'Result window is empty.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    DO I = 1, WNCARD(RESULT)
+      !>            DO I = 1, WNCARD(RESULT)
       !>
-      !>        C
-      !>        C              Fetch the endpoints of the Ith interval
-      !>        C              of the result window.
-      !>        C
-      !>                       CALL WNFETD ( RESULT, I, START, FINISH )
+      !>C
+      !>C              Fetch the endpoints of the Ith interval
+      !>C              of the result window.
+      !>C
+      !>               CALL WNFETD ( RESULT, I, START, FINISH )
       !>
-      !>                       CALL SPKEZR ( 'MOON',  START, 'J2000', 'NONE',
-      !>             .                       'SUN', POS,   LT              )
-      !>                       DRDT = DVNORM(POS)
+      !>               CALL SPKEZR ( 'MOON',  START, 'J2000', 'NONE',
+      !>     .                       'SUN', POS,   LT              )
+      !>               DRDT = DVNORM(POS)
       !>
-      !>                       CALL TIMOUT ( START, TIMFMT, TIMSTR )
+      !>               CALL TIMOUT ( START, TIMFMT, TIMSTR )
       !>
-      !>                       WRITE (*, '(A,F16.9)' ) 'Start time, drdt = '//
-      !>             .                                 TIMSTR, DRDT
+      !>               WRITE (*, '(A,F16.9)' ) 'Start time, drdt = '//
+      !>     .                                 TIMSTR, DRDT
       !>
-      !>                       CALL SPKEZR ( 'MOON',  FINISH, 'J2000', 'NONE',
-      !>             .                       'SUN', POS,     LT              )
-      !>                       DRDT = DVNORM(POS)
+      !>               CALL SPKEZR ( 'MOON',  FINISH, 'J2000', 'NONE',
+      !>     .                       'SUN', POS,     LT              )
+      !>               DRDT = DVNORM(POS)
       !>
-      !>                       CALL TIMOUT ( FINISH, TIMFMT, TIMSTR )
+      !>               CALL TIMOUT ( FINISH, TIMFMT, TIMSTR )
       !>
-      !>                       WRITE (*, '(A,F16.9)' ) 'Stop time,  drdt = '//
-      !>             .                              TIMSTR, DRDT
-      !>                    END DO
+      !>               WRITE (*, '(A,F16.9)' ) 'Stop time,  drdt = '//
+      !>     .                              TIMSTR, DRDT
+      !>            END DO
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -43164,19 +43502,27 @@ contains
       !>        meta kernel.
       !>
       !>-    SPICELIB Version 1.0.0, 24-JUN-2009 (EDW)
-      module procedure gfrr
+      module subroutine gfrr ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzholdd
       implicit none
-
-
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+      integer(ip), intent(in) :: mw  !! Workspace window size.
+      integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
       integer(ip), parameter :: qnpars = 3
@@ -43294,8 +43640,12 @@ contains
 
       return
 
-      end procedure gfrr
+      end subroutine gfrr
 
+      !> Determine time intervals when the angular separation between
+      !> the position vectors of two target bodies relative to an observer
+      !> satisfies a numerical relationship.
+      !>
       !>## Detailed Input
       !>
       !>     TARG1    is the string naming the first body of interest. You can
@@ -43956,166 +44306,168 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFSEP_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFSEP_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include GF parameter declarations:
-      !>        C
-      !>              INCLUDE               'gf.inc'
+      !>C
+      !>C     Include GF parameter declarations:
+      !>C
+      !>      INCLUDE               'gf.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      SPD
-      !>              DOUBLE PRECISION      RPD
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      SPD
+      !>      DOUBLE PRECISION      RPD
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Create 50 windows.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 50 )
+      !>C
+      !>C     Create 50 windows.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 50 )
       !>
-      !>        C
-      !>        C     One window consists of two intervals.
-      !>        C
-      !>              INTEGER               NINTRVL
-      !>              PARAMETER           ( NINTRVL = MAXWIN *2 )
+      !>C
+      !>C     One window consists of two intervals.
+      !>C
+      !>      INTEGER               NINTRVL
+      !>      PARAMETER           ( NINTRVL = MAXWIN *2 )
       !>
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 64 )
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 64 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(STRLEN)    BEGSTR
-      !>              CHARACTER*(STRLEN)    ENDSTR
-      !>              CHARACTER*(STRLEN)    TARG1
-      !>              CHARACTER*(STRLEN)    TARG2
-      !>              CHARACTER*(STRLEN)    OBSRVR
-      !>              CHARACTER*(STRLEN)    SHAPE1
-      !>              CHARACTER*(STRLEN)    SHAPE2
-      !>              CHARACTER*(STRLEN)    FRAME1
-      !>              CHARACTER*(STRLEN)    FRAME2
-      !>              CHARACTER*(STRLEN)    ABCORR
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(STRLEN)    BEGSTR
+      !>      CHARACTER*(STRLEN)    ENDSTR
+      !>      CHARACTER*(STRLEN)    TARG1
+      !>      CHARACTER*(STRLEN)    TARG2
+      !>      CHARACTER*(STRLEN)    OBSRVR
+      !>      CHARACTER*(STRLEN)    SHAPE1
+      !>      CHARACTER*(STRLEN)    SHAPE2
+      !>      CHARACTER*(STRLEN)    FRAME1
+      !>      CHARACTER*(STRLEN)    FRAME2
+      !>      CHARACTER*(STRLEN)    ABCORR
       !>
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2       )
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : NINTRVL )
-      !>              DOUBLE PRECISION      WORK   ( LBCELL : NINTRVL, NWSEP )
-      !>              DOUBLE PRECISION      BEGTIM
-      !>              DOUBLE PRECISION      ENDTIM
-      !>              DOUBLE PRECISION      BEG
-      !>              DOUBLE PRECISION      END
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      ADJUST
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2       )
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : NINTRVL )
+      !>      DOUBLE PRECISION      WORK   ( LBCELL : NINTRVL, NWSEP )
+      !>      DOUBLE PRECISION      BEGTIM
+      !>      DOUBLE PRECISION      ENDTIM
+      !>      DOUBLE PRECISION      BEG
+      !>      DOUBLE PRECISION      END
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      ADJUST
       !>
-      !>              INTEGER               COUNT
-      !>              INTEGER               I
+      !>      INTEGER               COUNT
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK and RESULT are saved because this practice helps to
-      !>        C     prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
-      !>              SAVE                  WORK
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK and RESULT are saved because this practice helps to
+      !>C     prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
+      !>      SAVE                  WORK
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ('gfsep_ex1.tm')
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ('gfsep_ex1.tm')
       !>
-      !>        C
-      !>        C     Initialize windows RESULT and CNFINE.
-      !>        C
-      !>              CALL SSIZED ( NINTRVL, RESULT )
-      !>              CALL SSIZED ( 2,      CNFINE )
+      !>C
+      !>C     Initialize windows RESULT and CNFINE.
+      !>C
+      !>      CALL SSIZED ( NINTRVL, RESULT )
+      !>      CALL SSIZED ( 2,      CNFINE )
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the CNFINE confinement window.
-      !>        C
-      !>              CALL STR2ET ( '2007 JAN 01', BEGTIM )
-      !>              CALL STR2ET ( '2007 JUL 01', ENDTIM )
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the CNFINE confinement window.
+      !>C
+      !>      CALL STR2ET ( '2007 JAN 01', BEGTIM )
+      !>      CALL STR2ET ( '2007 JUL 01', ENDTIM )
       !>
-      !>              CALL WNINSD ( BEGTIM, ENDTIM, CNFINE )
+      !>      CALL WNINSD ( BEGTIM, ENDTIM, CNFINE )
       !>
-      !>        C
-      !>        C     Prompt for the inputs.
-      !>        C
-      !>              CALL PROMPT ( 'First body     > ', TARG1  )
-      !>              CALL PROMPT ( 'Second body    > ', TARG2  )
-      !>              CALL PROMPT ( 'Observing body > ', OBSRVR )
+      !>C
+      !>C     Prompt for the inputs.
+      !>C
+      !>      CALL PROMPT ( 'First body     > ', TARG1  )
+      !>      CALL PROMPT ( 'Second body    > ', TARG2  )
+      !>      CALL PROMPT ( 'Observing body > ', OBSRVR )
       !>
-      !>        C
-      !>        C     Search using a step size of 6 days (in units of seconds).
-      !>        C
-      !>              STEP   = 6.D0 * SPD()
-      !>              ADJUST = 0.D0
-      !>              REFVAL = 0.D0
+      !>C
+      !>C     Search using a step size of 6 days (in units of seconds).
+      !>C
+      !>      STEP   = 6.D0 * SPD()
+      !>      ADJUST = 0.D0
+      !>      REFVAL = 0.D0
       !>
-      !>              SHAPE1 = 'SPHERE'
-      !>              FRAME1 = 'NULL'
+      !>      SHAPE1 = 'SPHERE'
+      !>      FRAME1 = 'NULL'
       !>
-      !>              SHAPE2 = 'SPHERE'
-      !>              FRAME2 = 'NULL'
-      !>              ABCORR = 'NONE'
+      !>      SHAPE2 = 'SPHERE'
+      !>      FRAME2 = 'NULL'
+      !>      ABCORR = 'NONE'
       !>
-      !>              CALL GFSEP ( TARG1,  SHAPE1,  FRAME1,
-      !>             .             TARG2,  SHAPE2,  FRAME2,
-      !>             .             ABCORR, OBSRVR, 'LOCMAX',
-      !>             .             REFVAL, ADJUST,  STEP,
-      !>             .             CNFINE, NINTRVL, NWSEP, WORK,
-      !>             .             RESULT )
+      !>      CALL GFSEP ( TARG1,  SHAPE1,  FRAME1,
+      !>     .             TARG2,  SHAPE2,  FRAME2,
+      !>     .             ABCORR, OBSRVR, 'LOCMAX',
+      !>     .             REFVAL, ADJUST,  STEP,
+      !>     .             CNFINE, NINTRVL, NWSEP, WORK,
+      !>     .             RESULT )
       !>
-      !>        C
-      !>        C     Check the number of intervals in the result window.
-      !>        C
-      !>              COUNT = WNCARD(RESULT)
+      !>C
+      !>C     Check the number of intervals in the result window.
+      !>C
+      !>      COUNT = WNCARD(RESULT)
       !>
-      !>        C
-      !>        C     List the beginning and ending points in each interval
-      !>        C     if RESULT contains data.
-      !>        C
-      !>              IF ( COUNT .EQ. 0 ) THEN
-      !>                 WRITE (*, '(A)') 'Result window is empty.'
-      !>              ELSE
+      !>C
+      !>C     List the beginning and ending points in each interval
+      !>C     if RESULT contains data.
+      !>C
+      !>      IF ( COUNT .EQ. 0 ) THEN
+      !>         WRITE (*, '(A)') 'Result window is empty.'
+      !>      ELSE
       !>
-      !>                 DO I = 1, COUNT
+      !>         DO I = 1, COUNT
       !>
-      !>        C
-      !>        C           Fetch the endpoints of the Ith interval
-      !>        C           of the result window.
-      !>        C
-      !>                    CALL WNFETD ( RESULT, I, BEG, END  )
+      !>C
+      !>C           Fetch the endpoints of the Ith interval
+      !>C           of the result window.
+      !>C
+      !>            CALL WNFETD ( RESULT, I, BEG, END  )
       !>
-      !>                    CALL TIMOUT ( BEG,
-      !>             .                'YYYY-MON-DD HR:MN:SC.###### '
-      !>             .  //            '(TDB) ::TDB ::RND',  BEGSTR )
-      !>                    CALL TIMOUT ( END,
-      !>             .                'YYYY-MON-DD HR:MN:SC.###### '
-      !>             . //             '(TDB) ::TDB ::RND',  ENDSTR )
+      !>            CALL TIMOUT ( BEG,
+      !>     .                'YYYY-MON-DD HR:MN:SC.###### '
+      !>     .  //            '(TDB) ::TDB ::RND',  BEGSTR )
+      !>            CALL TIMOUT ( END,
+      !>     .                'YYYY-MON-DD HR:MN:SC.###### '
+      !>     . //             '(TDB) ::TDB ::RND',  ENDSTR )
       !>
-      !>                    WRITE (*,*) 'Interval ',  I
-      !>                    WRITE (*,*) 'Beginning TDB ', BEGSTR
-      !>                    WRITE (*,*) 'Ending TDB    ', ENDSTR
+      !>            WRITE (*,*) 'Interval ',  I
+      !>            WRITE (*,*) 'Beginning TDB ', BEGSTR
+      !>            WRITE (*,*) 'Ending TDB    ', ENDSTR
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using 'MOON' as first body, 'EARTH' as second body
@@ -44270,18 +44622,31 @@ contains
       !>        implemented.
       !>
       !>-    SPICELIB Version 1.0.0, 19-FEB-2009 (NJB) (EDW)
-      module procedure gfsep
+      module subroutine gfsep ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzholdd
       implicit none
-
-
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: targ1  !! Name of first body.
+      character(*), intent(in) :: shape1  !! Name of shape model describing the first body.
+      character(*), intent(in) :: frame1  !! The body-fixed reference frame of the first body.
+      character(*), intent(in) :: targ2  !! Name of second body.
+      character(*), intent(in) :: shape2  !! Name of the shape model describing the second body.
+      character(*), intent(in) :: frame2  !! The body-fixed reference frame of the second body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the angular separation value and REFVAL.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Absolute extremum adjustment value.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding angular separation events.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+      integer(ip), intent(in) :: mw  !! Size of workspace windows.
+      integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array containing workspace windows.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
       integer(ip), parameter :: qnpars = 8
@@ -44409,8 +44774,12 @@ contains
                     .false.,  gfbail,   result )
 
       return
-      end procedure gfsep
+      end subroutine gfsep
 
+      !> Determine time intervals for which a coordinate of a
+      !> surface intercept position vector satisfies a numerical
+      !> constraint.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   is the string name of a target body. Optionally, you may
@@ -45174,188 +45543,190 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFSNTC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFSNTC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include GF parameter declarations:
-      !>        C
-      !>              INCLUDE               'gf.inc'
+      !>C
+      !>C     Include GF parameter declarations:
+      !>C
+      !>      INCLUDE               'gf.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      SPD
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      SPD
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Create 50 windows.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 1000 )
+      !>C
+      !>C     Create 50 windows.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 1000 )
       !>
-      !>        C
-      !>        C     One window consists of two intervals.
-      !>        C
-      !>              INTEGER               NINTRVL
-      !>              PARAMETER           ( NINTRVL = MAXWIN *2 )
+      !>C
+      !>C     One window consists of two intervals.
+      !>C
+      !>      INTEGER               NINTRVL
+      !>      PARAMETER           ( NINTRVL = MAXWIN *2 )
       !>
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 64 )
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 64 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(STRLEN)    BEGSTR
-      !>              CHARACTER*(STRLEN)    ENDSTR
-      !>              CHARACTER*(STRLEN)    TARGET
-      !>              CHARACTER*(STRLEN)    OBSRVR
-      !>              CHARACTER*(STRLEN)    DREF
-      !>              CHARACTER*(STRLEN)    ABCORR
-      !>              CHARACTER*(STRLEN)    METHOD
-      !>              CHARACTER*(STRLEN)    FIXREF
-      !>              CHARACTER*(STRLEN)    CRDSYS
-      !>              CHARACTER*(STRLEN)    COORD
-      !>              CHARACTER*(STRLEN)    RELATE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(STRLEN)    BEGSTR
+      !>      CHARACTER*(STRLEN)    ENDSTR
+      !>      CHARACTER*(STRLEN)    TARGET
+      !>      CHARACTER*(STRLEN)    OBSRVR
+      !>      CHARACTER*(STRLEN)    DREF
+      !>      CHARACTER*(STRLEN)    ABCORR
+      !>      CHARACTER*(STRLEN)    METHOD
+      !>      CHARACTER*(STRLEN)    FIXREF
+      !>      CHARACTER*(STRLEN)    CRDSYS
+      !>      CHARACTER*(STRLEN)    COORD
+      !>      CHARACTER*(STRLEN)    RELATE
       !>
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      DVEC   ( 3 )
-      !>              DOUBLE PRECISION      CNFINE ( LBCELL : 2       )
-      !>              DOUBLE PRECISION      RESULT ( LBCELL : NINTRVL )
-      !>              DOUBLE PRECISION      WORK   ( LBCELL : NINTRVL, NWMAX )
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      DVEC   ( 3 )
+      !>      DOUBLE PRECISION      CNFINE ( LBCELL : 2       )
+      !>      DOUBLE PRECISION      RESULT ( LBCELL : NINTRVL )
+      !>      DOUBLE PRECISION      WORK   ( LBCELL : NINTRVL, NWMAX )
       !>
-      !>              DOUBLE PRECISION      BEGTIM
-      !>              DOUBLE PRECISION      ENDTIM
-      !>              DOUBLE PRECISION      BEG
-      !>              DOUBLE PRECISION      END
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      ADJUST
+      !>      DOUBLE PRECISION      BEGTIM
+      !>      DOUBLE PRECISION      ENDTIM
+      !>      DOUBLE PRECISION      BEG
+      !>      DOUBLE PRECISION      END
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      ADJUST
       !>
-      !>              INTEGER               COUNT
-      !>              INTEGER               I
+      !>      INTEGER               COUNT
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK and RESULT are saved because this practice helps to
-      !>        C     prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT
-      !>              SAVE                  WORK
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK and RESULT are saved because this practice helps to
+      !>C     prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT
+      !>      SAVE                  WORK
       !>
-      !>        C
-      !>        C     The SEM frame defines the X axis as always earth
-      !>        C     pointing.
-      !>        C
-      !>        C     Define the earth pointing vector in the SEM frame.
-      !>        C
-      !>              DATA                  DVEC   / 1.D0, 0.D0, 0.D0 /
+      !>C
+      !>C     The SEM frame defines the X axis as always earth
+      !>C     pointing.
+      !>C
+      !>C     Define the earth pointing vector in the SEM frame.
+      !>C
+      !>      DATA                  DVEC   / 1.D0, 0.D0, 0.D0 /
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ('gfsntc_ex1.tm')
-      !>              CALL FURNSH ('gfsntc_sem.tf')
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ('gfsntc_ex1.tm')
+      !>      CALL FURNSH ('gfsntc_sem.tf')
       !>
-      !>        C
-      !>        C     Initialize windows RESULT and CNFINE.
-      !>        C
-      !>              CALL SSIZED ( NINTRVL, RESULT )
-      !>              CALL SSIZED ( 2,       CNFINE )
+      !>C
+      !>C     Initialize windows RESULT and CNFINE.
+      !>C
+      !>      CALL SSIZED ( NINTRVL, RESULT )
+      !>      CALL SSIZED ( 2,       CNFINE )
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the CNFINE confinement window.
-      !>        C
-      !>              CALL STR2ET ( '2007 JAN 01', BEGTIM )
-      !>              CALL STR2ET ( '2008 JAN 01', ENDTIM )
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the CNFINE confinement window.
+      !>C
+      !>      CALL STR2ET ( '2007 JAN 01', BEGTIM )
+      !>      CALL STR2ET ( '2008 JAN 01', ENDTIM )
       !>
-      !>              CALL WNINSD ( BEGTIM, ENDTIM, CNFINE )
+      !>      CALL WNINSD ( BEGTIM, ENDTIM, CNFINE )
       !>
-      !>        C
-      !>        C     Search using a step size of 1 day (in units of seconds).
-      !>        C
-      !>              STEP   = SPD()
+      !>C
+      !>C     Search using a step size of 1 day (in units of seconds).
+      !>C
+      !>      STEP   = SPD()
       !>
-      !>        C
-      !>        C     Search for a condition where the latitudinal system
-      !>        C     coordinate latitude in the IAU_EARTH frame has value
-      !>        C     zero.  In this case, the pointing vector, 'DVEC',
-      !>        C     defines the vector direction pointing at the earth
-      !>        C     from the sun.
-      !>        C
-      !>              ADJUST = 0.D0
-      !>              REFVAL = 0.D0
-      !>              TARGET = 'EARTH'
-      !>              OBSRVR = 'SUN'
-      !>              DREF   = 'SEM'
-      !>              METHOD = 'Ellipsoid'
-      !>              FIXREF = 'IAU_EARTH'
-      !>              CRDSYS = 'LATITUDINAL'
-      !>              COORD  = 'LATITUDE'
-      !>              RELATE = '='
+      !>C
+      !>C     Search for a condition where the latitudinal system
+      !>C     coordinate latitude in the IAU_EARTH frame has value
+      !>C     zero.  In this case, the pointing vector, 'DVEC',
+      !>C     defines the vector direction pointing at the earth
+      !>C     from the sun.
+      !>C
+      !>      ADJUST = 0.D0
+      !>      REFVAL = 0.D0
+      !>      TARGET = 'EARTH'
+      !>      OBSRVR = 'SUN'
+      !>      DREF   = 'SEM'
+      !>      METHOD = 'Ellipsoid'
+      !>      FIXREF = 'IAU_EARTH'
+      !>      CRDSYS = 'LATITUDINAL'
+      !>      COORD  = 'LATITUDE'
+      !>      RELATE = '='
       !>
-      !>        C
-      !>        C     Use the same aberration correction flag as that in the
-      !>        C     SEM frame definition.
-      !>        C
-      !>              ABCORR = 'NONE'
+      !>C
+      !>C     Use the same aberration correction flag as that in the
+      !>C     SEM frame definition.
+      !>C
+      !>      ABCORR = 'NONE'
       !>
-      !>              CALL GFSNTC (  TARGET,  FIXREF,
-      !>             .               METHOD,  ABCORR, OBSRVR,
-      !>             .               DREF,    DVEC,
-      !>             .               CRDSYS,  COORD,
-      !>             .               RELATE,  REFVAL,
-      !>             .               ADJUST,  STEP,   CNFINE,
-      !>             .               NINTRVL, NWMAX,  WORK,   RESULT )
+      !>      CALL GFSNTC (  TARGET,  FIXREF,
+      !>     .               METHOD,  ABCORR, OBSRVR,
+      !>     .               DREF,    DVEC,
+      !>     .               CRDSYS,  COORD,
+      !>     .               RELATE,  REFVAL,
+      !>     .               ADJUST,  STEP,   CNFINE,
+      !>     .               NINTRVL, NWMAX,  WORK,   RESULT )
       !>
-      !>        C
-      !>        C     Check the number of intervals in the result window.
-      !>        C
-      !>              COUNT = WNCARD(RESULT)
+      !>C
+      !>C     Check the number of intervals in the result window.
+      !>C
+      !>      COUNT = WNCARD(RESULT)
       !>
-      !>        C
-      !>        C     List the beginning and ending points in each interval
-      !>        C     if RESULT contains data.
-      !>        C
-      !>              IF ( COUNT .EQ. 0 ) THEN
+      !>C
+      !>C     List the beginning and ending points in each interval
+      !>C     if RESULT contains data.
+      !>C
+      !>      IF ( COUNT .EQ. 0 ) THEN
       !>
-      !>                 WRITE (*, '(A)') 'Result window is empty.'
+      !>         WRITE (*, '(A)') 'Result window is empty.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO I = 1, COUNT
+      !>         DO I = 1, COUNT
       !>
-      !>        C
-      !>        C           Fetch the endpoints of the Ith interval
-      !>        C           of the result window.
-      !>        C
-      !>                    CALL WNFETD ( RESULT, I, BEG, END  )
+      !>C
+      !>C           Fetch the endpoints of the Ith interval
+      !>C           of the result window.
+      !>C
+      !>            CALL WNFETD ( RESULT, I, BEG, END  )
       !>
-      !>                    CALL TIMOUT ( BEG,
-      !>             .                'YYYY-MON-DD HR:MN:SC.###### '
-      !>             .      //        '(TDB) ::TDB ::RND',  BEGSTR )
-      !>                    CALL TIMOUT ( END,
-      !>             .                'YYYY-MON-DD HR:MN:SC.###### '
-      !>             .      //        '(TDB) ::TDB ::RND',  ENDSTR )
+      !>            CALL TIMOUT ( BEG,
+      !>     .                'YYYY-MON-DD HR:MN:SC.###### '
+      !>     .      //        '(TDB) ::TDB ::RND',  BEGSTR )
+      !>            CALL TIMOUT ( END,
+      !>     .                'YYYY-MON-DD HR:MN:SC.###### '
+      !>     .      //        '(TDB) ::TDB ::RND',  ENDSTR )
       !>
-      !>                    WRITE (*,*) 'Interval ',  I
-      !>                    WRITE (*,*) 'Beginning TDB ', BEGSTR
-      !>                    WRITE (*,*) 'Ending TDB    ', ENDSTR
+      !>            WRITE (*,*) 'Interval ',  I
+      !>            WRITE (*,*) 'Beginning TDB ', BEGSTR
+      !>            WRITE (*,*) 'Ending TDB    ', ENDSTR
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -45388,273 +45759,275 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFSNTC_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFSNTC_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include GF parameter declarations:
-      !>        C
-      !>              INCLUDE               'gf.inc'
+      !>C
+      !>C     Include GF parameter declarations:
+      !>C
+      !>      INCLUDE               'gf.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      SPD
-      !>              DOUBLE PRECISION      RPD
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      SPD
+      !>      DOUBLE PRECISION      RPD
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Create 50 windows.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 1000 )
+      !>C
+      !>C     Create 50 windows.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 1000 )
       !>
-      !>        C
-      !>        C     One window consists of two intervals.
-      !>        C
-      !>              INTEGER               NINTRVL
-      !>              PARAMETER           ( NINTRVL = MAXWIN *2 )
+      !>C
+      !>C     One window consists of two intervals.
+      !>C
+      !>      INTEGER               NINTRVL
+      !>      PARAMETER           ( NINTRVL = MAXWIN *2 )
       !>
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 64 )
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 64 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(STRLEN)    BEGSTR
-      !>              CHARACTER*(STRLEN)    ENDSTR
-      !>              CHARACTER*(STRLEN)    TARGET
-      !>              CHARACTER*(STRLEN)    OBSRVR
-      !>              CHARACTER*(STRLEN)    DREF
-      !>              CHARACTER*(STRLEN)    ABCORR
-      !>              CHARACTER*(STRLEN)    METHOD
-      !>              CHARACTER*(STRLEN)    FIXREF
-      !>              CHARACTER*(STRLEN)    CRDSYS
-      !>              CHARACTER*(STRLEN)    COORD
-      !>              CHARACTER*(STRLEN)    RELATE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(STRLEN)    BEGSTR
+      !>      CHARACTER*(STRLEN)    ENDSTR
+      !>      CHARACTER*(STRLEN)    TARGET
+      !>      CHARACTER*(STRLEN)    OBSRVR
+      !>      CHARACTER*(STRLEN)    DREF
+      !>      CHARACTER*(STRLEN)    ABCORR
+      !>      CHARACTER*(STRLEN)    METHOD
+      !>      CHARACTER*(STRLEN)    FIXREF
+      !>      CHARACTER*(STRLEN)    CRDSYS
+      !>      CHARACTER*(STRLEN)    COORD
+      !>      CHARACTER*(STRLEN)    RELATE
       !>
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      DVEC    ( 3 )
-      !>              DOUBLE PRECISION      CNFINE  ( LBCELL : 2       )
-      !>              DOUBLE PRECISION      RESULT1 ( LBCELL : NINTRVL )
-      !>              DOUBLE PRECISION      RESULT2 ( LBCELL : NINTRVL )
-      !>              DOUBLE PRECISION      RESULT3 ( LBCELL : NINTRVL )
-      !>              DOUBLE PRECISION      RESULT4 ( LBCELL : NINTRVL )
-      !>              DOUBLE PRECISION      WORK    ( LBCELL : NINTRVL, NWMAX )
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      DVEC    ( 3 )
+      !>      DOUBLE PRECISION      CNFINE  ( LBCELL : 2       )
+      !>      DOUBLE PRECISION      RESULT1 ( LBCELL : NINTRVL )
+      !>      DOUBLE PRECISION      RESULT2 ( LBCELL : NINTRVL )
+      !>      DOUBLE PRECISION      RESULT3 ( LBCELL : NINTRVL )
+      !>      DOUBLE PRECISION      RESULT4 ( LBCELL : NINTRVL )
+      !>      DOUBLE PRECISION      WORK    ( LBCELL : NINTRVL, NWMAX )
       !>
-      !>              DOUBLE PRECISION      BEGTIM
-      !>              DOUBLE PRECISION      ENDTIM
-      !>              DOUBLE PRECISION      BEG
-      !>              DOUBLE PRECISION      END
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      ADJUST
+      !>      DOUBLE PRECISION      BEGTIM
+      !>      DOUBLE PRECISION      ENDTIM
+      !>      DOUBLE PRECISION      BEG
+      !>      DOUBLE PRECISION      END
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      ADJUST
       !>
-      !>              INTEGER               COUNT
-      !>              INTEGER               I
+      !>      INTEGER               COUNT
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK, RESULT1, RESULT2, RESULT3 and RESULT4 are saved
-      !>        C     because this practice helps to prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT1
-      !>              SAVE                  RESULT2
-      !>              SAVE                  RESULT3
-      !>              SAVE                  RESULT4
-      !>              SAVE                  WORK
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK, RESULT1, RESULT2, RESULT3 and RESULT4 are saved
+      !>C     because this practice helps to prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT1
+      !>      SAVE                  RESULT2
+      !>      SAVE                  RESULT3
+      !>      SAVE                  RESULT4
+      !>      SAVE                  WORK
       !>
-      !>        C
-      !>        C     The SEM frame defines the X axis as always earth
-      !>        C     pointing.
-      !>        C
-      !>        C     Define the earth pointing vector in the SEM frame.
-      !>        C
-      !>              DATA                  DVEC   / 1.D0, 0.D0, 0.D0 /
+      !>C
+      !>C     The SEM frame defines the X axis as always earth
+      !>C     pointing.
+      !>C
+      !>C     Define the earth pointing vector in the SEM frame.
+      !>C
+      !>      DATA                  DVEC   / 1.D0, 0.D0, 0.D0 /
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ('gfsntc_ex1.tm')
-      !>              CALL FURNSH ('gfsntc_sem.tf')
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ('gfsntc_ex1.tm')
+      !>      CALL FURNSH ('gfsntc_sem.tf')
       !>
-      !>        C
-      !>        C     Initialize windows RESULT and CNFINE.
-      !>        C
-      !>              CALL SSIZED ( NINTRVL, RESULT1 )
-      !>              CALL SSIZED ( NINTRVL, RESULT2 )
-      !>              CALL SSIZED ( NINTRVL, RESULT3 )
-      !>              CALL SSIZED ( NINTRVL, RESULT4 )
-      !>              CALL SSIZED ( 2,       CNFINE  )
+      !>C
+      !>C     Initialize windows RESULT and CNFINE.
+      !>C
+      !>      CALL SSIZED ( NINTRVL, RESULT1 )
+      !>      CALL SSIZED ( NINTRVL, RESULT2 )
+      !>      CALL SSIZED ( NINTRVL, RESULT3 )
+      !>      CALL SSIZED ( NINTRVL, RESULT4 )
+      !>      CALL SSIZED ( 2,       CNFINE  )
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the CNFINE confinement window.
-      !>        C
-      !>              CALL STR2ET ( '2007 JAN 01', BEGTIM )
-      !>              CALL STR2ET ( '2008 JAN 01', ENDTIM )
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the CNFINE confinement window.
+      !>C
+      !>      CALL STR2ET ( '2007 JAN 01', BEGTIM )
+      !>      CALL STR2ET ( '2008 JAN 01', ENDTIM )
       !>
-      !>              CALL WNINSD ( BEGTIM, ENDTIM, CNFINE )
+      !>      CALL WNINSD ( BEGTIM, ENDTIM, CNFINE )
       !>
-      !>        C
-      !>        C     The latitude varies relatively slowly, ~46 degrees during
-      !>        C     the year. The extrema occur approximately every six
-      !>        C     months.  Search using a step size less than half that
-      !>        C     value (180 days). For this example use ninety days (in
-      !>        C     units of seconds).
-      !>        C
-      !>              STEP   = SPD() * 90.D0
+      !>C
+      !>C     The latitude varies relatively slowly, ~46 degrees during
+      !>C     the year. The extrema occur approximately every six
+      !>C     months.  Search using a step size less than half that
+      !>C     value (180 days). For this example use ninety days (in
+      !>C     units of seconds).
+      !>C
+      !>      STEP   = SPD() * 90.D0
       !>
-      !>        C
-      !>        C     Perform four searches to determine the times when the
-      !>        C     latitude-longitude box restriction conditions apply. In
-      !>        C     this case, the pointing vector, 'DVEC', defines the
-      !>        C     vector direction pointing at the earth from the sun.
-      !>        C
-      !>        C     Use geodetic coordinates.
-      !>        C
-      !>              ADJUST = 0.D0
-      !>              TARGET = 'EARTH'
-      !>              OBSRVR = 'SUN'
-      !>              DREF   = 'SEM'
-      !>              METHOD = 'Ellipsoid'
-      !>              FIXREF = 'IAU_EARTH'
-      !>              CRDSYS = 'GEODETIC'
+      !>C
+      !>C     Perform four searches to determine the times when the
+      !>C     latitude-longitude box restriction conditions apply. In
+      !>C     this case, the pointing vector, 'DVEC', defines the
+      !>C     vector direction pointing at the earth from the sun.
+      !>C
+      !>C     Use geodetic coordinates.
+      !>C
+      !>      ADJUST = 0.D0
+      !>      TARGET = 'EARTH'
+      !>      OBSRVR = 'SUN'
+      !>      DREF   = 'SEM'
+      !>      METHOD = 'Ellipsoid'
+      !>      FIXREF = 'IAU_EARTH'
+      !>      CRDSYS = 'GEODETIC'
       !>
-      !>        C
-      !>        C     Use the same aberration correction flag as that in the
-      !>        C     SEM frame definition.
-      !>        C
-      !>              ABCORR = 'NONE'
+      !>C
+      !>C     Use the same aberration correction flag as that in the
+      !>C     SEM frame definition.
+      !>C
+      !>      ABCORR = 'NONE'
       !>
-      !>        C
-      !>        C     Perform the searches such that the result window of a
-      !>        C     search serves as the confinement window of the subsequent
-      !>        C     search.
-      !>        C
-      !>        C     Since the latitude coordinate varies slowly and is well
-      !>        C     behaved over the time of the confinement window, search
-      !>        C     first for the windows satisfying the latitude
-      !>        C     requirements, then use that result as confinement for
-      !>        C     the longitude search.
-      !>        C
-      !>              COORD  = 'LATITUDE'
-      !>              REFVAL = 16.D0 * RPD()
-      !>              RELATE = '>'
+      !>C
+      !>C     Perform the searches such that the result window of a
+      !>C     search serves as the confinement window of the subsequent
+      !>C     search.
+      !>C
+      !>C     Since the latitude coordinate varies slowly and is well
+      !>C     behaved over the time of the confinement window, search
+      !>C     first for the windows satisfying the latitude
+      !>C     requirements, then use that result as confinement for
+      !>C     the longitude search.
+      !>C
+      !>      COORD  = 'LATITUDE'
+      !>      REFVAL = 16.D0 * RPD()
+      !>      RELATE = '>'
       !>
-      !>              CALL GFSNTC (  TARGET,  FIXREF,
-      !>             .               METHOD,  ABCORR, OBSRVR,
-      !>             .               DREF,    DVEC,
-      !>             .               CRDSYS,  COORD,
-      !>             .               RELATE,  REFVAL,
-      !>             .               ADJUST,  STEP,   CNFINE,
-      !>             .               NINTRVL, NWMAX,  WORK,   RESULT1 )
+      !>      CALL GFSNTC (  TARGET,  FIXREF,
+      !>     .               METHOD,  ABCORR, OBSRVR,
+      !>     .               DREF,    DVEC,
+      !>     .               CRDSYS,  COORD,
+      !>     .               RELATE,  REFVAL,
+      !>     .               ADJUST,  STEP,   CNFINE,
+      !>     .               NINTRVL, NWMAX,  WORK,   RESULT1 )
       !>
-      !>              REFVAL = 17.D0 * RPD()
-      !>              RELATE = '<'
+      !>      REFVAL = 17.D0 * RPD()
+      !>      RELATE = '<'
       !>
-      !>              CALL GFSNTC (  TARGET,  FIXREF,
-      !>             .               METHOD,  ABCORR, OBSRVR,
-      !>             .               DREF,    DVEC,
-      !>             .               CRDSYS,  COORD,
-      !>             .               RELATE,  REFVAL,
-      !>             .               ADJUST,  STEP,   RESULT1,
-      !>             .               NINTRVL, NWMAX,  WORK,    RESULT2 )
+      !>      CALL GFSNTC (  TARGET,  FIXREF,
+      !>     .               METHOD,  ABCORR, OBSRVR,
+      !>     .               DREF,    DVEC,
+      !>     .               CRDSYS,  COORD,
+      !>     .               RELATE,  REFVAL,
+      !>     .               ADJUST,  STEP,   RESULT1,
+      !>     .               NINTRVL, NWMAX,  WORK,    RESULT2 )
       !>
-      !>        C
-      !>        C     Now the longitude search.
-      !>        C
-      !>              COORD  = 'LONGITUDE'
+      !>C
+      !>C     Now the longitude search.
+      !>C
+      !>      COORD  = 'LONGITUDE'
       !>
-      !>        C
-      !>        C     Reset the step size to something appropriate for the 360
-      !>        C     degrees in 24 hours domain. The longitude shows near
-      !>        C     linear behavior so use a step size less than half the
-      !>        C     period of twelve hours. Ten hours will suffice in this
-      !>        C     case.
-      !>        C
-      !>              STEP   = SPD() * (10.D0/24.D0)
+      !>C
+      !>C     Reset the step size to something appropriate for the 360
+      !>C     degrees in 24 hours domain. The longitude shows near
+      !>C     linear behavior so use a step size less than half the
+      !>C     period of twelve hours. Ten hours will suffice in this
+      !>C     case.
+      !>C
+      !>      STEP   = SPD() * (10.D0/24.D0)
       !>
-      !>              REFVAL = 85.D0 * RPD()
-      !>              RELATE = '>'
+      !>      REFVAL = 85.D0 * RPD()
+      !>      RELATE = '>'
       !>
-      !>              CALL GFSNTC (  TARGET,  FIXREF,
-      !>             .               METHOD,  ABCORR, OBSRVR,
-      !>             .               DREF,    DVEC,
-      !>             .               CRDSYS,  COORD,
-      !>             .               RELATE,  REFVAL,
-      !>             .               ADJUST,  STEP,   RESULT2,
-      !>             .               NINTRVL, NWMAX,  WORK,    RESULT3 )
+      !>      CALL GFSNTC (  TARGET,  FIXREF,
+      !>     .               METHOD,  ABCORR, OBSRVR,
+      !>     .               DREF,    DVEC,
+      !>     .               CRDSYS,  COORD,
+      !>     .               RELATE,  REFVAL,
+      !>     .               ADJUST,  STEP,   RESULT2,
+      !>     .               NINTRVL, NWMAX,  WORK,    RESULT3 )
       !>
-      !>        C
-      !>        C     Contract the endpoints of each window to account
-      !>        C     for possible round-off error at the -180/180 degree
-      !>        C     branch.
-      !>        C
-      !>        C     A contraction value of a millisecond should eliminate
-      !>        C     any round-off caused branch crossing.
-      !>        C
-      !>              CALL WNCOND ( 1D-3, 1D-3, RESULT3 )
+      !>C
+      !>C     Contract the endpoints of each window to account
+      !>C     for possible round-off error at the -180/180 degree
+      !>C     branch.
+      !>C
+      !>C     A contraction value of a millisecond should eliminate
+      !>C     any round-off caused branch crossing.
+      !>C
+      !>      CALL WNCOND ( 1D-3, 1D-3, RESULT3 )
       !>
-      !>              REFVAL = 86.D0 * RPD()
-      !>              RELATE = '<'
+      !>      REFVAL = 86.D0 * RPD()
+      !>      RELATE = '<'
       !>
-      !>              CALL GFSNTC (  TARGET,  FIXREF,
-      !>             .               METHOD,  ABCORR, OBSRVR,
-      !>             .               DREF,    DVEC,
-      !>             .               CRDSYS,  COORD,
-      !>             .               RELATE,  REFVAL,
-      !>             .               ADJUST,  STEP,   RESULT3,
-      !>             .               NINTRVL, NWMAX,  WORK,    RESULT4 )
+      !>      CALL GFSNTC (  TARGET,  FIXREF,
+      !>     .               METHOD,  ABCORR, OBSRVR,
+      !>     .               DREF,    DVEC,
+      !>     .               CRDSYS,  COORD,
+      !>     .               RELATE,  REFVAL,
+      !>     .               ADJUST,  STEP,   RESULT3,
+      !>     .               NINTRVL, NWMAX,  WORK,    RESULT4 )
       !>
-      !>        C
-      !>        C     Check the number of intervals in the result window.
-      !>        C
-      !>              COUNT = WNCARD(RESULT4)
+      !>C
+      !>C     Check the number of intervals in the result window.
+      !>C
+      !>      COUNT = WNCARD(RESULT4)
       !>
-      !>        C
-      !>        C     List the beginning and ending points in each interval
-      !>        C     if RESULT contains data.
-      !>        C
-      !>              IF ( COUNT .EQ. 0 ) THEN
+      !>C
+      !>C     List the beginning and ending points in each interval
+      !>C     if RESULT contains data.
+      !>C
+      !>      IF ( COUNT .EQ. 0 ) THEN
       !>
-      !>                 WRITE(*, '(A)') 'Result window is empty.'
+      !>         WRITE(*, '(A)') 'Result window is empty.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 DO I = 1, COUNT
+      !>         DO I = 1, COUNT
       !>
-      !>        C
-      !>        C           Fetch the endpoints of the Ith interval
-      !>        C           of the result window.
-      !>        C
-      !>                    CALL WNFETD ( RESULT4, I, BEG, END  )
+      !>C
+      !>C           Fetch the endpoints of the Ith interval
+      !>C           of the result window.
+      !>C
+      !>            CALL WNFETD ( RESULT4, I, BEG, END  )
       !>
-      !>                    CALL TIMOUT ( BEG,
-      !>             .                'YYYY-MON-DD HR:MN:SC.###### '
-      !>             .      //        '(TDB) ::TDB ::RND',  BEGSTR )
-      !>                    CALL TIMOUT ( END,
-      !>             .                'YYYY-MON-DD HR:MN:SC.###### '
-      !>             .      //        '(TDB) ::TDB ::RND',  ENDSTR )
+      !>            CALL TIMOUT ( BEG,
+      !>     .                'YYYY-MON-DD HR:MN:SC.###### '
+      !>     .      //        '(TDB) ::TDB ::RND',  BEGSTR )
+      !>            CALL TIMOUT ( END,
+      !>     .                'YYYY-MON-DD HR:MN:SC.###### '
+      !>     .      //        '(TDB) ::TDB ::RND',  ENDSTR )
       !>
-      !>                    WRITE(*,*) 'Interval ',  I
-      !>                    WRITE(*,*) 'Beginning TDB ', BEGSTR
-      !>                    WRITE(*,*) 'Ending TDB    ', ENDSTR
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,*) 'Interval ',  I
+      !>            WRITE(*,*) 'Beginning TDB ', BEGSTR
+      !>            WRITE(*,*) 'Ending TDB    ', ENDSTR
+      !>            WRITE(*,*) ' '
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -45744,21 +46117,32 @@ contains
       !>        header.
       !>
       !>-    SPICELIB Version 1.0.0, 17-FEB-2009 (NJB) (EDW)
-      module procedure gfsntc
+      module subroutine gfsntc ( ctx, target, fixref, method, abcorr, obsrvr, dref, dvec, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzholdd
       implicit none
-
-
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
-
-
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
+      character(*), intent(in) :: method  !! Name of method type for surface intercept calculation.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: dref  !! Reference frame of direction vector DVEC.
+      real(wp), intent(in) :: dvec   (3)  !! Pointing direction vector from OBSRVR.
+      character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+      character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      integer(ip), intent(in) :: mw  !! Workspace window size.
+      integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
       real(wp) :: tol
@@ -45890,8 +46274,11 @@ contains
 
       return
 
-      end procedure gfsntc
+      end subroutine gfsntc
 
+      !> Determine time intervals for which a coordinate of an
+      !> subpoint position vector satisfies a numerical constraint.
+      !>
       !>## Detailed Input
       !>
       !>     TARGET   is the string name of a target body. Optionally, you may
@@ -46616,278 +47003,280 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GFSUBC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GFSUBC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include GF parameter declarations:
-      !>        C
-      !>              INCLUDE               'gf.inc'
+      !>C
+      !>C     Include GF parameter declarations:
+      !>C
+      !>      INCLUDE               'gf.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      SPD
-      !>              DOUBLE PRECISION      DPR
-      !>              DOUBLE PRECISION      RPD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      SPD
+      !>      DOUBLE PRECISION      DPR
+      !>      DOUBLE PRECISION      RPD
       !>
-      !>              INTEGER               WNCARD
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>        C
-      !>        C     Create 50 windows.
-      !>        C
-      !>              INTEGER               MAXWIN
-      !>              PARAMETER           ( MAXWIN = 1000 )
+      !>C
+      !>C     Create 50 windows.
+      !>C
+      !>      INTEGER               MAXWIN
+      !>      PARAMETER           ( MAXWIN = 1000 )
       !>
-      !>        C
-      !>        C     One window consists of two intervals.
-      !>        C
-      !>              INTEGER               NINTRVL
-      !>              PARAMETER           ( NINTRVL = MAXWIN *2 )
+      !>C
+      !>C     One window consists of two intervals.
+      !>C
+      !>      INTEGER               NINTRVL
+      !>      PARAMETER           ( NINTRVL = MAXWIN *2 )
       !>
-      !>              INTEGER               STRLEN
-      !>              PARAMETER           ( STRLEN = 28 )
+      !>      INTEGER               STRLEN
+      !>      PARAMETER           ( STRLEN = 28 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(STRLEN)    TIMFMT
-      !>              CHARACTER*(STRLEN)    BEGSTR
-      !>              CHARACTER*(STRLEN)    ENDSTR
-      !>              CHARACTER*(STRLEN)    TARGET
-      !>              CHARACTER*(STRLEN)    OBSRVR
-      !>              CHARACTER*(STRLEN)    ABCORR
-      !>              CHARACTER*(STRLEN)    METHOD
-      !>              CHARACTER*(STRLEN)    FIXREF
-      !>              CHARACTER*(STRLEN)    CRDSYS
-      !>              CHARACTER*(STRLEN)    COORD
-      !>              CHARACTER*(STRLEN)    RELATE
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(STRLEN)    TIMFMT
+      !>      CHARACTER*(STRLEN)    BEGSTR
+      !>      CHARACTER*(STRLEN)    ENDSTR
+      !>      CHARACTER*(STRLEN)    TARGET
+      !>      CHARACTER*(STRLEN)    OBSRVR
+      !>      CHARACTER*(STRLEN)    ABCORR
+      !>      CHARACTER*(STRLEN)    METHOD
+      !>      CHARACTER*(STRLEN)    FIXREF
+      !>      CHARACTER*(STRLEN)    CRDSYS
+      !>      CHARACTER*(STRLEN)    COORD
+      !>      CHARACTER*(STRLEN)    RELATE
       !>
-      !>              DOUBLE PRECISION      STEP
-      !>              DOUBLE PRECISION      CNFINE  ( LBCELL : 2       )
-      !>              DOUBLE PRECISION      RESULT1 ( LBCELL : NINTRVL )
-      !>              DOUBLE PRECISION      RESULT2 ( LBCELL : NINTRVL )
-      !>              DOUBLE PRECISION      RESULT3 ( LBCELL : NINTRVL )
-      !>              DOUBLE PRECISION      RESULT4 ( LBCELL : NINTRVL )
-      !>              DOUBLE PRECISION      WORK    ( LBCELL : NINTRVL, NWMAX )
-      !>              DOUBLE PRECISION      BEGTIM
-      !>              DOUBLE PRECISION      ENDTIM
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RIGHT
-      !>              DOUBLE PRECISION      REFVAL
-      !>              DOUBLE PRECISION      ADJUST
-      !>              DOUBLE PRECISION      RAD    ( 2 )
-      !>              DOUBLE PRECISION      LON    ( 2 )
-      !>              DOUBLE PRECISION      LAT    ( 2 )
-      !>              DOUBLE PRECISION      TRGEPC
-      !>              DOUBLE PRECISION      LPOS   ( 3 )
-      !>              DOUBLE PRECISION      RPOS   ( 3 )
-      !>              DOUBLE PRECISION      SRFVEC ( 3 )
+      !>      DOUBLE PRECISION      STEP
+      !>      DOUBLE PRECISION      CNFINE  ( LBCELL : 2       )
+      !>      DOUBLE PRECISION      RESULT1 ( LBCELL : NINTRVL )
+      !>      DOUBLE PRECISION      RESULT2 ( LBCELL : NINTRVL )
+      !>      DOUBLE PRECISION      RESULT3 ( LBCELL : NINTRVL )
+      !>      DOUBLE PRECISION      RESULT4 ( LBCELL : NINTRVL )
+      !>      DOUBLE PRECISION      WORK    ( LBCELL : NINTRVL, NWMAX )
+      !>      DOUBLE PRECISION      BEGTIM
+      !>      DOUBLE PRECISION      ENDTIM
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RIGHT
+      !>      DOUBLE PRECISION      REFVAL
+      !>      DOUBLE PRECISION      ADJUST
+      !>      DOUBLE PRECISION      RAD    ( 2 )
+      !>      DOUBLE PRECISION      LON    ( 2 )
+      !>      DOUBLE PRECISION      LAT    ( 2 )
+      !>      DOUBLE PRECISION      TRGEPC
+      !>      DOUBLE PRECISION      LPOS   ( 3 )
+      !>      DOUBLE PRECISION      RPOS   ( 3 )
+      !>      DOUBLE PRECISION      SRFVEC ( 3 )
       !>
-      !>              INTEGER               COUNT
-      !>              INTEGER               I
+      !>      INTEGER               COUNT
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     The confinement, workspace and result windows CNFINE,
-      !>        C     WORK, RESULT1, RESULT2, RESULT3 and RESULT4 are saved
-      !>        C     because this practice helps to prevent stack overflow.
-      !>        C
-      !>              SAVE                  CNFINE
-      !>              SAVE                  RESULT1
-      !>              SAVE                  RESULT2
-      !>              SAVE                  RESULT3
-      !>              SAVE                  RESULT4
-      !>              SAVE                  WORK
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     The confinement, workspace and result windows CNFINE,
+      !>C     WORK, RESULT1, RESULT2, RESULT3 and RESULT4 are saved
+      !>C     because this practice helps to prevent stack overflow.
+      !>C
+      !>      SAVE                  CNFINE
+      !>      SAVE                  RESULT1
+      !>      SAVE                  RESULT2
+      !>      SAVE                  RESULT3
+      !>      SAVE                  RESULT4
+      !>      SAVE                  WORK
       !>
-      !>        C
-      !>        C     Load kernels.
-      !>        C
-      !>              CALL FURNSH ('gfsubc_ex1.tm')
+      !>C
+      !>C     Load kernels.
+      !>C
+      !>      CALL FURNSH ('gfsubc_ex1.tm')
       !>
-      !>              TIMFMT = 'YYYY-MON-DD HR:MN:SC.###### ::TDB ::RND'
+      !>      TIMFMT = 'YYYY-MON-DD HR:MN:SC.###### ::TDB ::RND'
       !>
-      !>        C
-      !>        C     Initialize windows RESULT and CNFINE.
-      !>        C
-      !>              CALL SSIZED ( NINTRVL, RESULT1 )
-      !>              CALL SSIZED ( NINTRVL, RESULT2 )
-      !>              CALL SSIZED ( NINTRVL, RESULT3 )
-      !>              CALL SSIZED ( NINTRVL, RESULT4 )
-      !>              CALL SSIZED ( 2,       CNFINE  )
+      !>C
+      !>C     Initialize windows RESULT and CNFINE.
+      !>C
+      !>      CALL SSIZED ( NINTRVL, RESULT1 )
+      !>      CALL SSIZED ( NINTRVL, RESULT2 )
+      !>      CALL SSIZED ( NINTRVL, RESULT3 )
+      !>      CALL SSIZED ( NINTRVL, RESULT4 )
+      !>      CALL SSIZED ( 2,       CNFINE  )
       !>
-      !>        C
-      !>        C     Store the time bounds of our search interval in
-      !>        C     the CNFINE confinement window.
-      !>        C
-      !>              CALL STR2ET ( '2007 JAN 01', BEGTIM )
-      !>              CALL STR2ET ( '2008 JAN 01', ENDTIM )
+      !>C
+      !>C     Store the time bounds of our search interval in
+      !>C     the CNFINE confinement window.
+      !>C
+      !>      CALL STR2ET ( '2007 JAN 01', BEGTIM )
+      !>      CALL STR2ET ( '2008 JAN 01', ENDTIM )
       !>
-      !>              CALL WNINSD ( BEGTIM, ENDTIM, CNFINE )
+      !>      CALL WNINSD ( BEGTIM, ENDTIM, CNFINE )
       !>
-      !>        C
-      !>        C     The latitude varies relatively slowly (46 degrees) during
-      !>        C     the year. The extrema occur approximately every six
-      !>        C     months. Search using a step size less than half that
-      !>        C     value (180 days). For this example use ninety days (in
-      !>        C     units of seconds).
-      !>        C
-      !>              STEP   = SPD()*90.D0
+      !>C
+      !>C     The latitude varies relatively slowly (46 degrees) during
+      !>C     the year. The extrema occur approximately every six
+      !>C     months. Search using a step size less than half that
+      !>C     value (180 days). For this example use ninety days (in
+      !>C     units of seconds).
+      !>C
+      !>      STEP   = SPD()*90.D0
       !>
-      !>        C
-      !>        C     Perform four searches to determine the times when the
-      !>        C     latitude- longitude box restriction conditions apply to
-      !>        C     the subpoint vector.
-      !>        C
-      !>        C     Use geodetic coordinates.
-      !>        C
-      !>              ADJUST = 0.D0
-      !>              TARGET = 'EARTH'
-      !>              OBSRVR = 'SUN'
-      !>              METHOD = 'Near point: ellipsoid'
-      !>              FIXREF = 'IAU_EARTH'
-      !>              CRDSYS = 'GEODETIC'
-      !>              ABCORR = 'NONE'
+      !>C
+      !>C     Perform four searches to determine the times when the
+      !>C     latitude- longitude box restriction conditions apply to
+      !>C     the subpoint vector.
+      !>C
+      !>C     Use geodetic coordinates.
+      !>C
+      !>      ADJUST = 0.D0
+      !>      TARGET = 'EARTH'
+      !>      OBSRVR = 'SUN'
+      !>      METHOD = 'Near point: ellipsoid'
+      !>      FIXREF = 'IAU_EARTH'
+      !>      CRDSYS = 'GEODETIC'
+      !>      ABCORR = 'NONE'
       !>
-      !>        C
-      !>        C     Perform the searches such that the result window of a
-      !>        C     search serves as the confinement window of the
-      !>        C     subsequent search.
-      !>        C
-      !>        C     Since the latitude coordinate varies slowly and is well
-      !>        C     behaved over the time of the confinement window, search
-      !>        C     first for the windows satisfying the latitude
-      !>        C     requirements, then use that result as confinement for
-      !>        C     the longitude search.
-      !>        C
-      !>              COORD  = 'LATITUDE'
-      !>              REFVAL = 16.D0 * RPD()
-      !>              RELATE = '>'
+      !>C
+      !>C     Perform the searches such that the result window of a
+      !>C     search serves as the confinement window of the
+      !>C     subsequent search.
+      !>C
+      !>C     Since the latitude coordinate varies slowly and is well
+      !>C     behaved over the time of the confinement window, search
+      !>C     first for the windows satisfying the latitude
+      !>C     requirements, then use that result as confinement for
+      !>C     the longitude search.
+      !>C
+      !>      COORD  = 'LATITUDE'
+      !>      REFVAL = 16.D0 * RPD()
+      !>      RELATE = '>'
       !>
-      !>              CALL GFSUBC (  TARGET,  FIXREF,
-      !>             .               METHOD,  ABCORR, OBSRVR,
-      !>             .               CRDSYS,  COORD,
-      !>             .               RELATE,  REFVAL,
-      !>             .               ADJUST,  STEP,  CNFINE,
-      !>             .               NINTRVL, NWMAX, WORK, RESULT1 )
+      !>      CALL GFSUBC (  TARGET,  FIXREF,
+      !>     .               METHOD,  ABCORR, OBSRVR,
+      !>     .               CRDSYS,  COORD,
+      !>     .               RELATE,  REFVAL,
+      !>     .               ADJUST,  STEP,  CNFINE,
+      !>     .               NINTRVL, NWMAX, WORK, RESULT1 )
       !>
-      !>              REFVAL = 17.D0 * RPD()
-      !>              RELATE = '<'
+      !>      REFVAL = 17.D0 * RPD()
+      !>      RELATE = '<'
       !>
-      !>              CALL GFSUBC (  TARGET,  FIXREF,
-      !>             .               METHOD,  ABCORR, OBSRVR,
-      !>             .               CRDSYS,  COORD,
-      !>             .               RELATE,  REFVAL,
-      !>             .               ADJUST,  STEP,  RESULT1,
-      !>             .               NINTRVL, NWMAX, WORK, RESULT2 )
+      !>      CALL GFSUBC (  TARGET,  FIXREF,
+      !>     .               METHOD,  ABCORR, OBSRVR,
+      !>     .               CRDSYS,  COORD,
+      !>     .               RELATE,  REFVAL,
+      !>     .               ADJUST,  STEP,  RESULT1,
+      !>     .               NINTRVL, NWMAX, WORK, RESULT2 )
       !>
-      !>        C
-      !>        C     Now the longitude search.
-      !>        C
-      !>              COORD  = 'LONGITUDE'
+      !>C
+      !>C     Now the longitude search.
+      !>C
+      !>      COORD  = 'LONGITUDE'
       !>
-      !>        C
-      !>        C     Reset the step size to something appropriate for the 360
-      !>        C     degrees in 24 hours domain. The longitude shows near
-      !>        C     linear behavior so use a step size less than half the
-      !>        C     period of twelve hours. Ten hours will suffice in this
-      !>        C     case.
-      !>        C
-      !>              STEP   = SPD() * (10.D0/24.D0)
+      !>C
+      !>C     Reset the step size to something appropriate for the 360
+      !>C     degrees in 24 hours domain. The longitude shows near
+      !>C     linear behavior so use a step size less than half the
+      !>C     period of twelve hours. Ten hours will suffice in this
+      !>C     case.
+      !>C
+      !>      STEP   = SPD() * (10.D0/24.D0)
       !>
-      !>              REFVAL = 85.D0 * RPD()
-      !>              RELATE = '>'
+      !>      REFVAL = 85.D0 * RPD()
+      !>      RELATE = '>'
       !>
-      !>              CALL GFSUBC (  TARGET,  FIXREF,
-      !>             .               METHOD,  ABCORR, OBSRVR,
-      !>             .               CRDSYS,  COORD,
-      !>             .               RELATE,  REFVAL,
-      !>             .               ADJUST,  STEP,   RESULT2,
-      !>             .               NINTRVL, NWMAX, WORK, RESULT3 )
+      !>      CALL GFSUBC (  TARGET,  FIXREF,
+      !>     .               METHOD,  ABCORR, OBSRVR,
+      !>     .               CRDSYS,  COORD,
+      !>     .               RELATE,  REFVAL,
+      !>     .               ADJUST,  STEP,   RESULT2,
+      !>     .               NINTRVL, NWMAX, WORK, RESULT3 )
       !>
-      !>        C
-      !>        C     Contract the endpoints of each window to account
-      !>        C     for possible round-off error at the -180/180 degree
-      !>        C     branch.
-      !>        C
-      !>        C     A contraction value of a millisecond should eliminate
-      !>        C     any round-off caused branch crossing.
-      !>        C
-      !>              CALL WNCOND ( 1D-3, 1D-3, RESULT3 )
+      !>C
+      !>C     Contract the endpoints of each window to account
+      !>C     for possible round-off error at the -180/180 degree
+      !>C     branch.
+      !>C
+      !>C     A contraction value of a millisecond should eliminate
+      !>C     any round-off caused branch crossing.
+      !>C
+      !>      CALL WNCOND ( 1D-3, 1D-3, RESULT3 )
       !>
-      !>              REFVAL = 86.D0 * RPD()
-      !>              RELATE = '<'
+      !>      REFVAL = 86.D0 * RPD()
+      !>      RELATE = '<'
       !>
-      !>              CALL GFSUBC (  TARGET,  FIXREF,
-      !>             .               METHOD,  ABCORR, OBSRVR,
-      !>             .               CRDSYS,  COORD,
-      !>             .               RELATE,  REFVAL,
-      !>             .               ADJUST,  STEP,   RESULT3,
-      !>             .               NINTRVL, NWMAX, WORK, RESULT4 )
+      !>      CALL GFSUBC (  TARGET,  FIXREF,
+      !>     .               METHOD,  ABCORR, OBSRVR,
+      !>     .               CRDSYS,  COORD,
+      !>     .               RELATE,  REFVAL,
+      !>     .               ADJUST,  STEP,   RESULT3,
+      !>     .               NINTRVL, NWMAX, WORK, RESULT4 )
       !>
-      !>        C
-      !>        C     Check the number of intervals in the result window.
-      !>        C
-      !>              COUNT = WNCARD(RESULT4)
+      !>C
+      !>C     Check the number of intervals in the result window.
+      !>C
+      !>      COUNT = WNCARD(RESULT4)
       !>
-      !>        C
-      !>        C     List the beginning and ending points in each interval
-      !>        C     if RESULT contains data.
-      !>        C
-      !>              IF ( COUNT .EQ. 0 ) THEN
+      !>C
+      !>C     List the beginning and ending points in each interval
+      !>C     if RESULT contains data.
+      !>C
+      !>      IF ( COUNT .EQ. 0 ) THEN
       !>
-      !>                 WRITE(*, '(A)') 'Result window is empty.'
+      !>         WRITE(*, '(A)') 'Result window is empty.'
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*, '(A)') '       Time (TDB)                 '
-      !>             .   //              '     LAT (deg)      LON (deg)'
-      !>                 WRITE(*, '(A)') '       ---------------------------'
-      !>             .   //              '    -----------   -----------'
+      !>         WRITE(*, '(A)') '       Time (TDB)                 '
+      !>     .   //              '     LAT (deg)      LON (deg)'
+      !>         WRITE(*, '(A)') '       ---------------------------'
+      !>     .   //              '    -----------   -----------'
       !>
-      !>                 DO I = 1, COUNT
+      !>         DO I = 1, COUNT
       !>
-      !>        C
-      !>        C           Fetch the endpoints of the Ith interval
-      !>        C           of the result window.
-      !>        C
-      !>                    CALL WNFETD ( RESULT4, I, LEFT, RIGHT  )
+      !>C
+      !>C           Fetch the endpoints of the Ith interval
+      !>C           of the result window.
+      !>C
+      !>            CALL WNFETD ( RESULT4, I, LEFT, RIGHT  )
       !>
-      !>                    CALL TIMOUT ( LEFT, TIMFMT, BEGSTR )
-      !>                    CALL TIMOUT ( RIGHT, TIMFMT, ENDSTR )
+      !>            CALL TIMOUT ( LEFT, TIMFMT, BEGSTR )
+      !>            CALL TIMOUT ( RIGHT, TIMFMT, ENDSTR )
       !>
-      !>        C
-      !>        C           Determine the latitude and longitude of the
-      !>        C           subpoint at the event interval boundaries.
-      !>        C
-      !>                    CALL SUBPNT ( METHOD, TARGET, LEFT,
-      !>             .                    FIXREF, ABCORR, OBSRVR,
-      !>             .                    LPOS, TRGEPC, SRFVEC   )
-      !>                    CALL RECLAT ( LPOS, RAD(1), LON(1), LAT(1) )
+      !>C
+      !>C           Determine the latitude and longitude of the
+      !>C           subpoint at the event interval boundaries.
+      !>C
+      !>            CALL SUBPNT ( METHOD, TARGET, LEFT,
+      !>     .                    FIXREF, ABCORR, OBSRVR,
+      !>     .                    LPOS, TRGEPC, SRFVEC   )
+      !>            CALL RECLAT ( LPOS, RAD(1), LON(1), LAT(1) )
       !>
-      !>                    CALL SUBPNT ( METHOD, TARGET, RIGHT,
-      !>             .                    FIXREF, ABCORR, OBSRVR,
-      !>             .                    RPOS, TRGEPC, SRFVEC   )
-      !>                    CALL RECLAT ( RPOS, RAD(2), LON(2), LAT(2) )
+      !>            CALL SUBPNT ( METHOD, TARGET, RIGHT,
+      !>     .                    FIXREF, ABCORR, OBSRVR,
+      !>     .                    RPOS, TRGEPC, SRFVEC   )
+      !>            CALL RECLAT ( RPOS, RAD(2), LON(2), LAT(2) )
       !>
-      !>                    WRITE(*,'(2A,2F14.8)') 'From : ',    BEGSTR,
-      !>             .                              LAT(1)*DPR(), LON(1)*DPR()
-      !>                    WRITE(*,'(2A,2F14.8)') 'To   : ',    ENDSTR,
-      !>             .                              LAT(2)*DPR(), LON(2)*DPR()
-      !>                    WRITE(*,*) ' '
+      !>            WRITE(*,'(2A,2F14.8)') 'From : ',    BEGSTR,
+      !>     .                              LAT(1)*DPR(), LON(1)*DPR()
+      !>            WRITE(*,'(2A,2F14.8)') 'To   : ',    ENDSTR,
+      !>     .                              LAT(2)*DPR(), LON(2)*DPR()
+      !>            WRITE(*,*) ' '
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -46974,22 +47363,31 @@ contains
       !>        "sub-observer point."
       !>
       !>-    SPICELIB Version 1.0.0, 17-FEB-2009 (NJB) (EDW)
-      module procedure gfsubc
+      module subroutine gfsubc ( ctx, target, fixref, method, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       use pepper_inc_zzholdd
       implicit none
-
-
-!
-!     Routines to set step size, refine transition times
-!     and report work.
-!
-
-
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
+      character(*), intent(in) :: method  !! Name of method type for subpoint calculation.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+      character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+      integer(ip), intent(in) :: mw  !! Workspace window size.
+      integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
       real(wp) :: tol
@@ -47128,15 +47526,28 @@ contains
 
       return
 
-      end procedure gfsubc
+      end subroutine gfsubc
 
-      !> The cells of a GF search with windows as arrays (PEPPER).
-      module procedure gf_cells
+      !> The cells of a GF search with windows as arrays (PEPPER): the
+      !> confinement window as a cell, and a result cell and work windows
+      !> of a size that the search cannot exceed. The GF solver finds at
+      !> most one transition per STEP in each confinement interval, so no
+      !> window holds more than B = sum (ceiling(length/STEP) + 2) intervals;
+      !> the cells have room for 2B. Signals SPICE(INSUFFICIENTMEMORY) if
+      !> they cannot be allocated.
+      module subroutine gf_cells ( ctx, cnfine, step, cnf, res, mw, work )
       use, intrinsic :: iso_fortran_env, only: int64
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: window_to_cell
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n)
+      real(wp), intent(in) :: step  !! the search step
+      real(wp), allocatable, intent(out) :: cnf(:)  !! the confinement window as a cell
+      real(wp), allocatable, intent(out) :: res(:)  !! an empty result cell of size MW
+      integer(ip), intent(out) :: mw  !! the size of the result cell and of the work windows
+      real(wp), allocatable, intent(out), optional :: work(:,:)  !! NWMAX empty work windows of size MW
       integer(int64) :: b
       integer(int64) :: words
       integer(ip) :: i
@@ -47182,14 +47593,31 @@ contains
             call ssized ( ctx, mw, work(:,i) )
          end do
       end if
-      end procedure gf_cells
+      end subroutine gf_cells
 
-      !> A GF search on the observer-target distance, with windows as arrays (PEPPER).
-      module procedure gf_distance
+      !> A GF search on the observer-target distance (PEPPER; [[gfdist]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfdist]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_distance ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47202,14 +47630,34 @@ contains
                     work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_distance
+      end subroutine gf_distance
 
-      !> A GF search on a coordinate of a position vector, with windows as arrays (PEPPER).
-      module procedure gf_position
+      !> A GF search on a coordinate of a position vector (PEPPER; [[gfposc]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfposc]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_position ( ctx, target, frame, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: frame  !! Name of the reference frame for coordinate calculations.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+      character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47222,14 +47670,35 @@ contains
                     step, cnf, mw, nwmax, work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_position
+      end subroutine gf_position
 
-      !> A GF search on a coordinate of a sub-observer point, with windows as arrays (PEPPER).
-      module procedure gf_subpoint
+      !> A GF search on a coordinate of a sub-observer point (PEPPER; [[gfsubc]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfsubc]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_subpoint ( ctx, target, fixref, method, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
+      character(*), intent(in) :: method  !! Name of method type for subpoint calculation.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+      character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47242,14 +47711,37 @@ contains
                     adjust, step, cnf, mw, nwmax, work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_subpoint
+      end subroutine gf_subpoint
 
-      !> A GF search on a coordinate of a surface intercept vector, with windows as arrays (PEPPER).
-      module procedure gf_intercept
+      !> A GF search on a coordinate of a surface intercept vector (PEPPER; [[gfsntc]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfsntc]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_intercept ( ctx, target, fixref, method, abcorr, obsrvr, dref, dvec, crdsys, coord, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
+      character(*), intent(in) :: method  !! Name of method type for surface intercept calculation.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: dref  !! Reference frame of direction vector DVEC.
+      real(wp), intent(in) :: dvec   (3)  !! Pointing direction vector from OBSRVR.
+      character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+      character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47262,14 +47754,36 @@ contains
                     relate, refval, adjust, step, cnf, mw, nwmax, work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_intercept
+      end subroutine gf_intercept
 
-      !> A GF search on the angular separation of two bodies, with windows as arrays (PEPPER).
-      module procedure gf_separation
+      !> A GF search on the angular separation of two bodies (PEPPER; [[gfsep]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfsep]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_separation ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: targ1  !! Name of first body.
+      character(*), intent(in) :: shape1  !! Name of shape model describing the first body.
+      character(*), intent(in) :: frame1  !! The body-fixed reference frame of the first body.
+      character(*), intent(in) :: targ2  !! Name of second body.
+      character(*), intent(in) :: shape2  !! Name of the shape model describing the second body.
+      character(*), intent(in) :: frame2  !! The body-fixed reference frame of the second body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the angular separation value and REFVAL.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Absolute extremum adjustment value.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding angular separation events.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47282,14 +47796,34 @@ contains
                     refval, adjust, step, cnf, mw, nwmax, work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_separation
+      end subroutine gf_separation
 
-      !> A GF search on occultations or transits, with windows as arrays (PEPPER).
-      module procedure gf_occultation
+      !> A GF search on occultations or transits (PEPPER; [[gfoclt]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfoclt]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_occultation ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: occtyp  !! Type of occultation.
+      character(*), intent(in) :: front  !! Name of body occulting the other.
+      character(*), intent(in) :: fshape  !! Type of shape model used for front body.
+      character(*), intent(in) :: fframe  !! Body-fixed, body-centered frame for front body.
+      character(*), intent(in) :: back  !! Name of body occulted by the other.
+      character(*), intent(in) :: bshape  !! Type of shape model used for back body.
+      character(*), intent(in) :: bframe  !! Body-fixed, body-centered frame for back body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding occultation events.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       integer(ip) :: mw
@@ -47301,14 +47835,36 @@ contains
                     step, cnf, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_occultation
+      end subroutine gf_occultation
 
-      !> A GF search on an illumination angle, with windows as arrays (PEPPER).
-      module procedure gf_illumination
+      !> A GF search on an illumination angle (PEPPER; [[gfilum]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfilum]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_illumination ( ctx, method, angtyp, target, illmn, fixref, abcorr, obsrvr, spoint, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: angtyp  !! Type of illumination angle.
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: illmn  !! Name of the illumination source.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47321,14 +47877,32 @@ contains
                     refval, adjust, step, cnf, mw, nwmax, work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_illumination
+      end subroutine gf_illumination
 
-      !> A GF search on the phase angle, with windows as arrays (PEPPER).
-      module procedure gf_phase
+      !> A GF search on the phase angle (PEPPER; [[gfpa]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfpa]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_phase ( ctx, target, illmn, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: illmn  !! Name of the illuminating body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47341,14 +47915,31 @@ contains
                     nwmax, work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_phase
+      end subroutine gf_phase
 
-      !> A GF search on the range rate, with windows as arrays (PEPPER).
-      module procedure gf_range_rate
+      !> A GF search on the range rate (PEPPER; [[gfrr]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfrr]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_range_rate ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47361,14 +47952,31 @@ contains
                     work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_range_rate
+      end subroutine gf_range_rate
 
-      !> A GF search on a target in an instrument field of view, with windows as arrays (PEPPER).
-      module procedure gf_target_in_fov
+      !> A GF search on a target in an instrument field of view (PEPPER; [[gftfov]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gftfov]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_target_in_fov ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: inst  !! Name of the instrument.
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: tshape  !! Type of shape model used for target body.
+      character(*), intent(in) :: tframe  !! Body-fixed, body-centered frame for target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding FOV events.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       integer(ip) :: mw
@@ -47379,14 +47987,30 @@ contains
       call gftfov ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, step, cnf, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_target_in_fov
+      end subroutine gf_target_in_fov
 
-      !> A GF search on a ray in an instrument field of view, with windows as arrays (PEPPER).
-      module procedure gf_ray_in_fov
+      !> A GF search on a ray in an instrument field of view (PEPPER; [[gfrfov]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfrfov]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_ray_in_fov ( ctx, inst, raydir, rframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: inst  !! Name of the instrument.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      character(*), intent(in) :: rframe  !! Reference frame of ray's direction vector.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding FOV events.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       integer(ip) :: mw
@@ -47397,14 +48021,30 @@ contains
       call gfrfov ( ctx, inst, raydir, rframe, abcorr, obsrvr, step, cnf, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_ray_in_fov
+      end subroutine gf_ray_in_fov
 
-      !> A GF search on a user-defined scalar quantity, with windows as arrays (PEPPER).
-      module procedure gf_user_scalar
+      !> A GF search on a user-defined scalar quantity (PEPPER; [[gfuds]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfuds]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_user_scalar ( ctx, udfuns, udqdec, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
+      real(wp), intent(in) :: refval  !! Value used as reference for scalar quantity condition.
+      real(wp), intent(in) :: adjust  !! Allowed variation for absolute extremal geometric conditions.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      procedure(gf_scalar) :: udfuns  !! Name of the routine that computes a scalar quantity corresponding to an ET.
+      procedure(gf_decr_x) :: udqdec  !! Name of the routine that computes whether the scalar quantity is decreasing.
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47417,14 +48057,27 @@ contains
                     res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_user_scalar
+      end subroutine gf_user_scalar
 
-      !> A GF search on a user-defined boolean quantity, with windows as arrays (PEPPER).
-      module procedure gf_user_boolean
+      !> A GF search on a user-defined boolean quantity (PEPPER; [[gfudb]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfudb]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      module subroutine gf_user_boolean ( ctx, udfuns, udfunb, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: step  !! Constant step size in seconds for finding geometric events.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      procedure(gf_scalar) :: udfuns  !! Name of the routine that computes a scalar quantity corresponding to an ET.
+      procedure(gf_boolean) :: udfunb  !! Name of the routine returning the boolean value corresponding to an ET.
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       integer(ip) :: mw
@@ -47435,14 +48088,46 @@ contains
       call gfudb ( ctx, udfuns, udfunb, step, cnf, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_user_boolean
+      end subroutine gf_user_boolean
 
-      !> A GF search on a geometric quantity, with the caller's step and refinement routines, with windows as arrays (PEPPER).
-      module procedure gf_event
+      !> A GF search on a geometric quantity, with the caller's step and refinement routines (PEPPER; [[gfevnt]] with the confinement
+      !> and result windows as arrays, and without workspace).
+      !>
+      !> The windows that the search needs are sized from the confinement
+      !> window and the step: the solver finds at most one transition per
+      !> step. The errors are those of [[gfevnt]], without
+      !> SPICE(WINDOWEXCESS) and the checks of MW and NW; a size too large to
+      !> allocate signals SPICE(INSUFFICIENTMEMORY).
+      !> STEP is not used by the search: give the smallest step that UDSTEP
+      !> returns (a smaller one may give SPICE(WINDOWEXCESS)).
+      module subroutine gf_event ( ctx, udstep, udrefn, gquant, qnpars, qpnams, qcpars, qdpars, qipars, qlpars, op, refval, tol, adjust, step, cnfine, rpt, udrepi, udrepu, udrepf, bail, udbail, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: gquant  !! Type of geometric quantity.
+      integer(ip), intent(in) :: qnpars  !! Number of quantity definition parameters.
+      character(*), intent(in) :: qpnams ( * )  !! Names of quantity definition parameters.
+      character(*), intent(in) :: qcpars ( * )  !! Array of character quantity definition parameters.
+      real(wp), intent(in) :: qdpars ( * )  !! Array of double precision quantity definition parameters.
+      integer(ip), intent(in) :: qipars ( * )  !! Array of integer quantity definition parameters.
+      logical, intent(in) :: qlpars ( * )  !! Array of logical quantity definition parameters.
+      character(*), intent(in) :: op  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: tol  !! Convergence tolerance in seconds
+      real(wp), intent(in) :: adjust  !! Absolute extremum adjustment value.
+      real(wp), intent(in) :: step  !! the smallest step UDSTEP returns: it sizes the work windows (PEPPER)
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      logical, intent(in) :: rpt  !! Progress reporter on (.TRUE.) or off (.FALSE.).
+      logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
+      procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      procedure(gf_step) :: udstep  !! Name of the routine that computes and returns a time step.
+      procedure(gf_refine) :: udrefn  !! Name of the routine that computes a refined time.
+      procedure(gf_rep_init) :: udrepi  !! Function that initializes progress reporting.
+      procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
+      procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47456,6 +48141,6 @@ contains
                     nwmax, work, bail, udbail, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_event
+      end subroutine gf_event
 
 end submodule pepper_gf

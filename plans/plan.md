@@ -147,6 +147,7 @@ Each umbrella routine becomes a module (or part of one):
 - Queries are bound to the context: `call ctx%spkezr(targ, et, ref, abcorr, obs, state, lt)`, `call ctx%str2et(utc, et)`, `call ctx%pxform(from, to, et, rot)`.
 - Loading and setup are bound to the instance: `call spice%furnsh(file)`, `call spice%unload(file)`, `call spice%kclear()`, pool writes.
 - The bindings are declared in the type's module (`pepper_instance_module`) as separate module procedure interfaces; the implementations live in submodules per subsystem (`pepper_spk`, `pepper_time`, ...). So the type definition grows, but changing an implementation recompiles only its submodule.
+- Each implementation is a full `module subroutine`/`module function` statement with its argument list and the dummy declarations repeated from the interface (since 2026-11-15; before, most used the `module procedure` shorthand). The arguments are then declared next to the code, and gfortran sees the interface of a dummy procedure: in a `module procedure` body it ignores it, so a callback argument (`procedure(zzspk_state) :: trgsub`) needed the full form anyway.
 - Bindings are `non_overridable` (dispatch can then be resolved statically).
 - Internal routines (`zz*` and helpers) are not bound: they are private module procedures taking `class(pepper_context)` as their first argument.
 - Pure numerical routines (vectors, matrices, quaternions, ...) are not bound either: they are plain `pure`/`elemental` module procedures (`vcrss`, `mxv`, ...) since they need no state.

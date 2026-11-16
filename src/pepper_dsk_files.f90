@@ -3,9 +3,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_dsk_files.f90.
+!> [[pepper_instance_module]]).
 !>
 !>## DSKTOL (DSK, tolerance umbrella)
 !>
@@ -123,21 +121,19 @@ submodule (pepper_instance_module) pepper_dsk_files
 
 contains
 
-      !>## Abstract
+      !> This routine exists to determine whether or not the type of
+      !> a DAF segment is compatible with the sizes allowed for SPK
+      !> type 01 segments or CK type 02 segments.  However, more generally
+      !> it determines whether or not the integer equation:
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> SIZE = PSIZE*N + (N-OFFSET)/DSIZE
       !>
-      !>     This routine exists to determine whether or not the type of
-      !>     a DAF segment is compatible with the sizes allowed for SPK
-      !>     type 01 segments or CK type 02 segments.  However, more generally
-      !>     it determines whether or not the integer equation:
+      !> can be satisfied for some value of N.  Moreover, if such
+      !> an N exists (there can be only one) it returns that value.
       !>
-      !>         SIZE = PSIZE*N + (N-OFFSET)/DSIZE
-      !>
-      !>     can be satisfied for some value of N.  Moreover, if such
-      !>     an N exists (there can be only one) it returns that value.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -214,9 +210,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 02-DEC-1999 (WLT)
-      module procedure zzsizeok
+      module subroutine zzsizeok ( ctx, size, psize, dsize, offset, ok, n )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: size  !! Left hand side of the equation in the abstract
+      integer(ip), intent(in) :: psize  !! Coefficient of N (packet size).
+      integer(ip), intent(in) :: dsize  !! Divisor of N-OFFSET (directory size).
+      integer(ip), intent(in) :: offset  !! Offset used in computation of number of directories
+      logical, intent(out) :: ok  !! TRUE if a solution for N exists.
+      integer(ip), intent(out) :: n  !! Value of N if there is a solution, 0 otherwise.
 
 !
 !     Here's the scoop.
@@ -293,16 +296,14 @@ contains
       end if
 
       return
-      end procedure zzsizeok
+      end subroutine zzsizeok
 
-      !>## Abstract
+      !> This routine determines whether or not a DAF file attached to
+      !> the supplied handle is an SPK, CK or unknown file.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     This routine determines whether or not a DAF file attached to
-      !>     the supplied handle is an SPK, CK or unknown file.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -355,9 +356,12 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 03-DEC-1999 (WLT)
-      module procedure zzckspk
+      module subroutine zzckspk ( ctx, handle, ckspk )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of a DAF file open for read access.
+      character(*), intent(out) :: ckspk  !! the type of the DAF file (SPK,CK or ?)
       real(wp) :: chcktm_1(1)  !! one-element copy of chcktm (array argument)
       real(wp) :: frsttm_1(1)  !! one-element copy of frsttm (array argument)
       real(wp) :: lastdp_1(1)  !! one-element copy of lastdp (array argument)
@@ -636,8 +640,10 @@ contains
 
       return
 
-      end procedure zzckspk
+      end subroutine zzckspk
 
+      !> Determine the architecture and type of SPICE kernels.
+      !>
       !>## Detailed Input
       !>
       !>     FILE     is the name of a SPICE kernel file whose architecture
@@ -799,76 +805,78 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM GETFAT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM GETFAT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               ARCHLN
-      !>              PARAMETER           ( ARCHLN = 4 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               ARCHLN
+      !>      PARAMETER           ( ARCHLN = 4 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 256 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 256 )
       !>
-      !>              INTEGER               KTYPLN
-      !>              PARAMETER           ( KTYPLN = 5 )
+      !>      INTEGER               KTYPLN
+      !>      PARAMETER           ( KTYPLN = 5 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(ARCHLN)    ARCH
-      !>              CHARACTER*(FILSIZ)    FNAME
-      !>              CHARACTER*(28)        FNAME1
-      !>              CHARACTER*(KTYPLN)    KTYPE
-      !>              CHARACTER*(FILSIZ)    SOURCE
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(ARCHLN)    ARCH
+      !>      CHARACTER*(FILSIZ)    FNAME
+      !>      CHARACTER*(28)        FNAME1
+      !>      CHARACTER*(KTYPLN)    KTYPE
+      !>      CHARACTER*(FILSIZ)    SOURCE
       !>
-      !>              INTEGER               COUNT
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
+      !>      INTEGER               COUNT
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Check the file architecture and type of an SPK
-      !>        C     in transfer format.
-      !>        C
-      !>              FNAME1 = 'earthstns_itrf93_050714.xsp'
+      !>C
+      !>C     Check the file architecture and type of an SPK
+      !>C     in transfer format.
+      !>C
+      !>      FNAME1 = 'earthstns_itrf93_050714.xsp'
       !>
-      !>              CALL GETFAT ( FNAME1, ARCH, KTYPE )
+      !>      CALL GETFAT ( FNAME1, ARCH, KTYPE )
       !>
-      !>              WRITE(*,*) 'File name     : ', FNAME1
-      !>              WRITE(*,*) '  Architecture: ', ARCH
-      !>              WRITE(*,*) '  Kernel type : ', KTYPE
-      !>              WRITE(*,*) ' '
+      !>      WRITE(*,*) 'File name     : ', FNAME1
+      !>      WRITE(*,*) '  Architecture: ', ARCH
+      !>      WRITE(*,*) '  Kernel type : ', KTYPE
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     Load the kernels.
-      !>        C
-      !>              CALL FURNSH ( 'getfat_ex1.tm' )
+      !>C
+      !>C     Load the kernels.
+      !>C
+      !>      CALL FURNSH ( 'getfat_ex1.tm' )
       !>
-      !>        C
-      !>        C     Get the file architecture and kernel type for each of
-      !>        C     the kernels in the kernel pool.
-      !>        C
-      !>              CALL KTOTAL ( 'ALL', COUNT )
+      !>C
+      !>C     Get the file architecture and kernel type for each of
+      !>C     the kernels in the kernel pool.
+      !>C
+      !>      CALL KTOTAL ( 'ALL', COUNT )
       !>
-      !>              DO I= 1, COUNT
+      !>      DO I= 1, COUNT
       !>
-      !>                 CALL KDATA ( I,     'ALL', FNAME, KTYPE, SOURCE,
-      !>             .                HANDLE, FOUND                      )
+      !>         CALL KDATA ( I,     'ALL', FNAME, KTYPE, SOURCE,
+      !>     .                HANDLE, FOUND                      )
       !>
-      !>                 CALL GETFAT ( FNAME, ARCH, KTYPE )
+      !>         CALL GETFAT ( FNAME, ARCH, KTYPE )
       !>
-      !>                 WRITE(*,*) 'File name     : ', FNAME
-      !>                 WRITE(*,*) '  Source      : ', SOURCE
-      !>                 WRITE(*,*) '  Architecture: ', ARCH
-      !>                 WRITE(*,*) '  Kernel type : ', KTYPE
-      !>                 WRITE(*,*) ' '
+      !>         WRITE(*,*) 'File name     : ', FNAME
+      !>         WRITE(*,*) '  Source      : ', SOURCE
+      !>         WRITE(*,*) '  Architecture: ', ARCH
+      !>         WRITE(*,*) '  Kernel type : ', KTYPE
+      !>         WRITE(*,*) ' '
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1210,11 +1218,15 @@ contains
       !>        word when it is read. This deals with the case where a
       !>        platform allows a text file to be opened as an unformatted
       !>        file and the ID word does not completely fill 8 characters.
-      module procedure getfat
+      module subroutine getfat ( ctx, file, arch, kertyp )
       use pepper_kinds, only: ip
       use pepper_strings, only: nextwd_inplace, ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! The name of a file to be examined.
+      character(*), intent(out) :: arch  !! The architecture of the kernel file.
+      character(*), intent(out) :: kertyp  !! The type of the kernel file.
 
 
 !
@@ -1275,6 +1287,19 @@ contains
       end if
 
 !
+!     PEPPER: a kernel built in memory (it has no file) is a DAF, of the
+!     type its ID word names.
+!
+      i = synthetic_named ( ctx, file )
+      if ( i > 0 ) then
+         associate ( rec => daf_image_chars ( ctx%spice%zzddhman%files(i)%image, 1_ip ) )
+            arch   = 'DAF'
+            kertyp = rec(5:8)
+         end associate
+         return
+      end if
+
+!
 !     See if this is a binary file that is currently open
 !     within the SPICE binary file management subsystem.  At
 !     the moment, as far as we know, the file is not opened.
@@ -1309,23 +1334,25 @@ contains
 
       else
 
-         do i = 1, ctx%spice%keeper%loaded
-            if ( allocated ( ctx%spice%keeper%kernels(i)%memory_text ) ) then
-               if ( ctx%spice%keeper%kernels(i)%name == trim ( adjustl ( file ) ) ) then
-                  kept   = .true.
-                  tmpwrd = ' '
-                  associate ( mtxt => ctx%spice%keeper%kernels(i)%memory_text )
-                     number = min ( idlen, len ( mtxt ) )
-                     do intamn = 1, number
-                        if ( mtxt(intamn:intamn) == achar(10) .or. &
-                             mtxt(intamn:intamn) == achar(13) ) exit
-                        tmpwrd(intamn:intamn) = mtxt(intamn:intamn)
-                     end do
-                  end associate
-                  exit
+         if ( .not. ctx%spice%zzddhman%files_only ) then
+            do i = 1, ctx%spice%keeper%loaded
+               if ( allocated ( ctx%spice%keeper%kernels(i)%memory_text ) ) then
+                  if ( ctx%spice%keeper%kernels(i)%name == trim ( adjustl ( file ) ) ) then
+                     kept   = .true.
+                     tmpwrd = ' '
+                     associate ( mtxt => ctx%spice%keeper%kernels(i)%memory_text )
+                        number = min ( idlen, len ( mtxt ) )
+                        do intamn = 1, number
+                           if ( mtxt(intamn:intamn) == achar(10) .or. &
+                                mtxt(intamn:intamn) == achar(13) ) exit
+                           tmpwrd(intamn:intamn) = mtxt(intamn:intamn)
+                        end do
+                     end associate
+                     exit
+                  end if
                end if
-            end if
-         end do
+            end do
+         end if
 
          if ( .not. kept ) then
 !
@@ -1667,8 +1694,11 @@ contains
 
       return
 
-      end procedure getfat
+      end subroutine getfat
 
+      !> Compute the outward-pointing, unit normal vector at a point on
+      !> the surface of an ellipsoid.
+      !>
       !>## Detailed Input
       !>
       !>     A        is the length of the semi-axis of the ellipsoid that is
@@ -1782,10 +1812,18 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
-      module procedure surfnm
+      module subroutine surfnm ( ctx, a, b, c, point, normal )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vhatip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: a  !! Length of the ellipsoid semi-axis along the X-axis.
+      real(wp), intent(in) :: b  !! Length of the ellipsoid semi-axis along the Y-axis.
+      real(wp), intent(in) :: c  !! Length of the ellipsoid semi-axis along the Z-axis.
+      real(wp), intent(in) :: point  ( 3 )  !! Body-fixed coordinates of a point on the
+                                            !! ellipsoid.
+      real(wp), intent(out) :: normal ( 3 )  !! Outward pointing unit normal to ellipsoid at
+                                             !! POINT.
 
       real(wp) :: m
       real(wp) :: a1
@@ -1863,8 +1901,12 @@ contains
       call vhatip ( normal )
 
       return
-      end procedure surfnm
+      end subroutine surfnm
 
+      !> Locate the point on the surface of an ellipsoid that is nearest
+      !> to a specified position. Also return the altitude of the position
+      !> above the ellipsoid.
+      !>
       !>## Detailed Input
       !>
       !>     POSITN   is a 3-vector giving the position of a point with respect
@@ -2198,12 +2240,19 @@ contains
       !>        by use of SPICELIB routines and by normalizing the inputs.
       !>
       !>        Add an example to the header section.
-      module procedure nearpt
+      module subroutine nearpt ( ctx, positn, a, b, c, npoint, alt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_arrays, only: orderd, reordd
       use pepper_math, only: approx, vdist, vnorm, vperp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: positn ( 3 )  !! Position of a point in body-fixed frame.
+      real(wp), intent(in) :: a  !! Length of semi-axis parallel to x-axis.
+      real(wp), intent(in) :: b  !! Length of semi-axis parallel to y-axis.
+      real(wp), intent(in) :: c  !! Length on semi-axis parallel to z-axis.
+      real(wp), intent(out) :: npoint ( 3 )  !! Point on the ellipsoid closest to POSITN.
+      real(wp), intent(out) :: alt  !! Altitude of POSITN above the ellipsoid.
 
 !
 !     Parameters
@@ -3837,8 +3886,10 @@ contains
       alt = bestht/scale
 
       return
-      end procedure nearpt
+      end subroutine nearpt
 
+      !> Convert from rectangular coordinates to geodetic coordinates.
+      !>
       !>## Detailed Input
       !>
       !>     RECTAN   are the rectangular coordinates of a point. RECTAN
@@ -3930,66 +3981,68 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM RECGEO_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM RECGEO_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      RADII  ( 3 )
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RECTAN ( 3 )
-      !>              DOUBLE PRECISION      RP
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      RADII  ( 3 )
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RECTAN ( 3 )
+      !>      DOUBLE PRECISION      RP
       !>
-      !>              INTEGER               N
+      !>      INTEGER               N
       !>
-      !>        C
-      !>        C     Load a PCK file containing a triaxial
-      !>        C     ellipsoidal shape model and orientation
-      !>        C     data for the Earth.
-      !>        C
-      !>              CALL FURNSH ( 'pck00010.tpc' )
+      !>C
+      !>C     Load a PCK file containing a triaxial
+      !>C     ellipsoidal shape model and orientation
+      !>C     data for the Earth.
+      !>C
+      !>      CALL FURNSH ( 'pck00010.tpc' )
       !>
-      !>        C
-      !>        C     Retrieve the triaxial radii of the Earth
-      !>        C
-      !>              CALL BODVRD ( 'EARTH', 'RADII', 3, N, RADII )
+      !>C
+      !>C     Retrieve the triaxial radii of the Earth
+      !>C
+      !>      CALL BODVRD ( 'EARTH', 'RADII', 3, N, RADII )
       !>
-      !>        C
-      !>        C     Compute flattening coefficient.
-      !>        C
-      !>              RE  =  RADII(1)
-      !>              RP  =  RADII(3)
-      !>              F   =  ( RE - RP ) / RE
+      !>C
+      !>C     Compute flattening coefficient.
+      !>C
+      !>      RE  =  RADII(1)
+      !>      RP  =  RADII(3)
+      !>      F   =  ( RE - RP ) / RE
       !>
-      !>        C
-      !>        C     Set a body-fixed position.
-      !>        C
-      !>              RECTAN(1) =  -2541.748162D0
-      !>              RECTAN(2) =   4780.333036D0
-      !>              RECTAN(3) =   3360.428190D0
+      !>C
+      !>C     Set a body-fixed position.
+      !>C
+      !>      RECTAN(1) =  -2541.748162D0
+      !>      RECTAN(2) =   4780.333036D0
+      !>      RECTAN(3) =   3360.428190D0
       !>
-      !>        C
-      !>        C     Do the conversion. Output angles in degrees.
-      !>        C
-      !>              CALL RECGEO( RECTAN, RADII(1), F, LON, LAT, ALT )
+      !>C
+      !>C     Do the conversion. Output angles in degrees.
+      !>C
+      !>      CALL RECGEO( RECTAN, RADII(1), F, LON, LAT, ALT )
       !>
-      !>              WRITE (*,*) 'Rectangular coordinates in km (x, y, z)'
-      !>              WRITE (*,'(A,3F14.6)') ' ', RECTAN
-      !>              WRITE (*,*) 'Geodetic coordinates in deg and '
-      !>             . //         'km (lon, lat, alt)'
-      !>              WRITE (*,'(A,3F14.6)') ' ', LON * DPR(), LAT * DPR(), ALT
+      !>      WRITE (*,*) 'Rectangular coordinates in km (x, y, z)'
+      !>      WRITE (*,'(A,3F14.6)') ' ', RECTAN
+      !>      WRITE (*,*) 'Geodetic coordinates in deg and '
+      !>     . //         'km (lon, lat, alt)'
+      !>      WRITE (*,'(A,3F14.6)') ' ', LON * DPR(), LAT * DPR(), ALT
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4015,81 +4068,83 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM RECGEO_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM RECGEO_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               NREC
-      !>              PARAMETER           ( NREC = 11 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               NREC
+      !>      PARAMETER           ( NREC = 11 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      ALT
-      !>              DOUBLE PRECISION      CLARKR
-      !>              DOUBLE PRECISION      CLARKF
-      !>              DOUBLE PRECISION      LAT
-      !>              DOUBLE PRECISION      LON
-      !>              DOUBLE PRECISION      RECTAN ( 3, NREC )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      ALT
+      !>      DOUBLE PRECISION      CLARKR
+      !>      DOUBLE PRECISION      CLARKF
+      !>      DOUBLE PRECISION      LAT
+      !>      DOUBLE PRECISION      LON
+      !>      DOUBLE PRECISION      RECTAN ( 3, NREC )
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
+      !>      INTEGER               I
+      !>      INTEGER               J
       !>
-      !>        C
-      !>        C     Define the input rectangular coordinates.
-      !>        C
-      !>              DATA                 RECTAN /
-      !>             .                  0.D0,         0.D0,         0.D0,
-      !>             .               6378.2064D0,     0.D0,         0.D0,
-      !>             .                  0.D0,      6378.2064D0,     0.D0,
-      !>             .                  0.D0,         0.D0,      6378.2064D0,
-      !>             .              -6378.2064D0,     0.D0,         0.D0,
-      !>             .                  0.D0,     -6378.2064D0,     0.D0,
-      !>             .                  0.D0,         0.D0,     -6378.2064D0,
-      !>             .               6378.2064D0,  6378.2064D0,     0.D0,
-      !>             .               6378.2064D0,     0.D0,      6378.2064D0,
-      !>             .                  0.D0,      6378.2064D0,  6378.2064D0,
-      !>             .               6378.2064D0,  6378.2064D0,  6378.2064D0 /
+      !>C
+      !>C     Define the input rectangular coordinates.
+      !>C
+      !>      DATA                 RECTAN /
+      !>     .                  0.D0,         0.D0,         0.D0,
+      !>     .               6378.2064D0,     0.D0,         0.D0,
+      !>     .                  0.D0,      6378.2064D0,     0.D0,
+      !>     .                  0.D0,         0.D0,      6378.2064D0,
+      !>     .              -6378.2064D0,     0.D0,         0.D0,
+      !>     .                  0.D0,     -6378.2064D0,     0.D0,
+      !>     .                  0.D0,         0.D0,     -6378.2064D0,
+      !>     .               6378.2064D0,  6378.2064D0,     0.D0,
+      !>     .               6378.2064D0,     0.D0,      6378.2064D0,
+      !>     .                  0.D0,      6378.2064D0,  6378.2064D0,
+      !>     .               6378.2064D0,  6378.2064D0,  6378.2064D0 /
       !>
-      !>        C
-      !>        C     Using the equatorial radius of the Clark66 spheroid
-      !>        C     (CLARKR = 6378.2064 km) and the Clark 66 flattening
-      !>        C     factor (CLARKF = 1.0 / 294.9787 ) convert from
-      !>        C     body fixed rectangular coordinates.
-      !>        C
-      !>              CLARKR = 6378.2064D0
-      !>              CLARKF = 1.0D0 / 294.9787D0
+      !>C
+      !>C     Using the equatorial radius of the Clark66 spheroid
+      !>C     (CLARKR = 6378.2064 km) and the Clark 66 flattening
+      !>C     factor (CLARKF = 1.0 / 294.9787 ) convert from
+      !>C     body fixed rectangular coordinates.
+      !>C
+      !>      CLARKR = 6378.2064D0
+      !>      CLARKF = 1.0D0 / 294.9787D0
       !>
-      !>        C
-      !>        C     Print the banner.
-      !>        C
-      !>              WRITE(*,*) ' RECTAN(1)  RECTAN(2)  RECTAN(3) '
-      !>             . //        '   LON      LAT       ALT'
-      !>              WRITE(*,*) ' ---------  ---------  --------- '
-      !>             . //        ' -------  -------  ---------'
+      !>C
+      !>C     Print the banner.
+      !>C
+      !>      WRITE(*,*) ' RECTAN(1)  RECTAN(2)  RECTAN(3) '
+      !>     . //        '   LON      LAT       ALT'
+      !>      WRITE(*,*) ' ---------  ---------  --------- '
+      !>     . //        ' -------  -------  ---------'
       !>
-      !>        C
-      !>        C     Do the conversion. Output angles in degrees.
-      !>        C
-      !>              DO I = 1, NREC
+      !>C
+      !>C     Do the conversion. Output angles in degrees.
+      !>C
+      !>      DO I = 1, NREC
       !>
-      !>                 CALL RECGEO( RECTAN(1,I), CLARKR, CLARKF,
-      !>             .                LON,         LAT,    ALT    )
+      !>         CALL RECGEO( RECTAN(1,I), CLARKR, CLARKF,
+      !>     .                LON,         LAT,    ALT    )
       !>
-      !>                 WRITE (*,'(3F11.3,2F9.3,F11.3)')
-      !>             .             ( RECTAN(J,I), J=1,3 ), LON * DPR(),
-      !>             .             LAT * DPR(), ALT
+      !>         WRITE (*,'(3F11.3,2F9.3,F11.3)')
+      !>     .             ( RECTAN(J,I), J=1,3 ), LON * DPR(),
+      !>     .             LAT * DPR(), ALT
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4175,10 +4230,17 @@ contains
       !>        was added. Because the flattening coefficient is used to
       !>        compute the length of an axis, it must be checked so that
       !>        the length is greater than zero.
-      module procedure recgeo
+      module subroutine recgeo ( ctx, rectan, re, f, lon, lat, alt )
       use pepper_kinds, only: wp
       use pepper_math, only: reclat
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: rectan ( 3 )  !! Rectangular coordinates of a point.
+      real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+      real(wp), intent(in) :: f  !! Flattening coefficient.
+      real(wp), intent(out) :: lon  !! Geodetic longitude of the point (radians).
+      real(wp), intent(out) :: lat  !! Geodetic latitude  of the point (radians).
+      real(wp), intent(out) :: alt  !! Altitude of the point above reference spheroid.
 
       real(wp) :: a
       real(wp) :: b
@@ -4246,16 +4308,14 @@ contains
       end if
 
       return
-      end procedure recgeo
+      end subroutine recgeo
 
-      !>## Abstract
+      !> Generate a data structure that represents the mapping from
+      !> vertices to the plates containing them.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Generate a data structure that represents the mapping from
-      !>     vertices to the plates containing them.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4407,10 +4467,23 @@ contains
       !>           Re-ordered header sections.
       !>
       !>        04-FEB-1999 (JAB)
-      module procedure zzvrtplt
+      module subroutine zzvrtplt ( ctx, nv, np, plates, cellsz, maxlst, cells, vrtptr, nlist, pltlst )
       use pepper_kinds, only: ip
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nv  !! Number of vertices.
+      integer(ip), intent(in) :: np  !! Number of plates.
+      integer(ip), intent(in) :: plates ( 3, * )  !! Plate array.
+      integer(ip), intent(in) :: cellsz  !! Cell array size.
+      integer(ip), intent(in) :: maxlst  !! Maximum size of output plate list.
+      integer(ip), intent(inout) :: cells  ( 2, cellsz )  !! Workspace array for vertex list
+                                                          !! construction.
+      integer(ip), intent(out) :: vrtptr ( * )  !! Array of pointers, by vertex, into plate data
+                                                !! list.
+      integer(ip), intent(out) :: nlist  !! Length of the plate data list.
+      integer(ip), intent(out) :: pltlst ( * )  !! Plate data list; first element is the number
+                                                !! of plate IDs to follow.
       integer(ip) :: i
       integer(ip) :: j
       integer(ip) :: ncell
@@ -4519,16 +4592,14 @@ contains
 !     Standard SPICE error handling.
 !
       return
-      end procedure zzvrtplt
+      end subroutine zzvrtplt
 
-      !>## Abstract
+      !> Map voxel coordinates to coarse voxel coordinates and offset
+      !> relative to coarse voxel. Offset coordinates are 1-based.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Map voxel coordinates to coarse voxel coordinates and offset
-      !>     relative to coarse voxel. Offset coordinates are 1-based.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4602,9 +4673,16 @@ contains
       !>        $Exceptions section was updated.
       !>
       !>     Based on DSKLIB Version 1.0.0, 20-MAR-2015 (NJB)
-      module procedure zzvoxcvo
+      module subroutine zzvoxcvo ( ctx, vixyz, nvox, cgrscl, cgxyz, cgoff, cgof1d )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: vixyz  ( 3 )  !! Fine voxel integer coordinates.
+      integer(ip), intent(in) :: nvox   ( 3 )  !! Fine voxel grid dimensions.
+      integer(ip), intent(in) :: cgrscl  !! Coarse voxel scale.
+      integer(ip), intent(out) :: cgxyz  ( 3 )  !! Coarse voxel coordinates.
+      integer(ip), intent(out) :: cgoff  ( 3 )  !! 3-D voxel offset relative to coarse voxel.
+      integer(ip), intent(out) :: cgof1d  !! 1-D voxel offset relative to coarse voxel.
 
       integer(ip) :: i
 
@@ -4682,16 +4760,16 @@ contains
                 + (cgoff(2)-1) * cgrscl &
                 +  cgoff(1)
 
-      end procedure zzvoxcvo
+      end subroutine zzvoxcvo
 
-      !>## Abstract
+      !> The function returns the voxel index.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Given a voxel's grid coordinates and the voxel grid
+      !> dimensions, return the voxel's 1-dimensional index.
       !>
-      !>     Given a voxel's grid coordinates and the voxel grid
-      !>     dimensions, return the voxel's 1-dimensional index.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4765,9 +4843,13 @@ contains
       !>           Removed SAVED variables.
       !>
       !>        04-FEB-1999 (JAB)
-      module procedure zzvox2id
+      module integer(ip) function zzvox2id ( ctx, vixyz, nvox )
       use pepper_kinds, only: ip
       implicit              none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nvox   ( 3 )  !! Number of voxels in each coordinate direction.
+      integer(ip), intent(in) :: vixyz  ( 3 )  !! Voxel's grid coordinates stored in a three-
+                                               !! dimensional vector.
 
 !
 !     Convert from voxel coordinates to voxel index. A more
@@ -4786,17 +4868,15 @@ contains
                  nvox(1)*(  vixyz(2) - 1 + (vixyz(3)-1)*nvox(2)  )
 
       return
-      end procedure zzvox2id
+      end function zzvox2id
 
-      !>## Abstract
+      !> Traverse an AB pool linked list, searching for all cells that are
+      !> associated with a specified A-value. Store the B-values of these
+      !> cells in an array.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Traverse an AB pool linked list, searching for all cells that are
-      !>     associated with a specified A-value. Store the B-values of these
-      !>     cells in an array.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -4958,9 +5038,18 @@ contains
       !>        Replaced WRITE with normal error reporting calls.
       !>
       !>      03-FEB-1999 (JAB)
-      module procedure zztrvlnk
+      module subroutine zztrvlnk ( ctx, aval, maxa, pntrs, cellsz, cells, maxb, nb, blist )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: aval  !! A-value index associated with pool entry.
+      integer(ip), intent(in) :: maxa  !! Size of PNTRS array.
+      integer(ip), intent(in) :: pntrs  ( * )  !! A-value pointer array.
+      integer(ip), intent(in) :: cellsz  !! Number of cells in cell array.
+      integer(ip), intent(in) :: cells  ( 2, * )  !! Cell array.
+      integer(ip), intent(in) :: maxb  !! Size of BLIST array.
+      integer(ip), intent(out) :: nb  !! Number of B values found.
+      integer(ip), intent(out) :: blist  ( * )  !! List of B values.
       integer(ip) :: i
       integer(ip) :: ptr
 
@@ -5042,8 +5131,11 @@ contains
 !     Standard SPICE error handling.
 !
       return
-      end procedure zztrvlnk
+      end subroutine zztrvlnk
 
+      !> Untangle an unsorted AB linked-cell list into an A-index and
+      !> associated B-list.
+      !>
       !>## Detailed Input
       !>
       !>     NPTR       is the size of the input pointer array INPTR.
@@ -5186,9 +5278,17 @@ contains
       !>        writes to OUTLST array.
       !>
       !>      03-FEB-1999 (JAB)
-      module procedure zzuntngl
+      module subroutine zzuntngl ( ctx, nptr, maxcel, cells, maxb, pntrs, nout, outlst )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nptr  !! Length of A-list.
+      integer(ip), intent(in) :: maxcel  !! Size of cell list.
+      integer(ip), intent(in) :: cells  ( 2, * )  !! AB cell linked list.
+      integer(ip), intent(in) :: maxb  !! Maximum allowed dimension of B list.
+      integer(ip), intent(inout) :: pntrs  ( * )  !! Pointer array.
+      integer(ip), intent(out) :: nout  !! Length of B-list.
+      integer(ip), intent(out) :: outlst ( * )  !! B-list.
       integer(ip) :: aval
       integer(ip) :: ptrdex
       integer(ip) :: nfound
@@ -5312,15 +5412,13 @@ contains
 !     Standard SPICE error handling.
 !
       return
-      end procedure zzuntngl
+      end subroutine zzuntngl
 
-      !>## Abstract
+      !> Initialize an AB cell linked-list structure.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Initialize an AB cell linked-list structure.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5415,9 +5513,15 @@ contains
       !>           Re-ordered header sections.
       !>
       !>        03-FEB-1999 (JAB)
-      module procedure zzinilnk
+      module subroutine zzinilnk ( ctx, maxp, maxc, ncell, pntrs, cells )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: maxp  !! Length of A-value array.
+      integer(ip), intent(in) :: maxc  !! Number of cells.
+      integer(ip), intent(out) :: ncell  !! Number of cells in use; initialized to zero.
+      integer(ip), intent(out) :: pntrs  ( * )  !! Initialized pointer array.
+      integer(ip), intent(out) :: cells  ( 2, * )  !! Initialized cell array.
 
       integer(ip) :: i
 
@@ -5464,16 +5568,14 @@ contains
       ncell = 0
 
       return
-      end procedure zzinilnk
+      end subroutine zzinilnk
 
-      !>## Abstract
+      !> This subroutine returns the 1-based voxel coordinates of the
+      !> voxel that contains a given point.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     This subroutine returns the 1-based voxel coordinates of the
-      !>     voxel that contains a given point.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5595,9 +5697,19 @@ contains
       !>        28-JAN-1999 (JAB)
       !>
       !>           Original version.
-      module procedure zzgetvox
+      module subroutine zzgetvox ( ctx, voxsiz, voxori, nvox, xyz, inbox, voxcor )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: voxsiz  !! Voxel size in model units.
+      real(wp), intent(in) :: voxori    ( 3 )  !! 3-Vector location of the voxel grid origin in
+                                               !! model units.
+      integer(ip), intent(in) :: nvox      ( 3 )  !! Number of voxel in each dimension.
+      real(wp), intent(in) :: xyz       ( 3 )  !! Model grid coordinates of point.
+      logical, intent(out) :: inbox  !! Logical value is true if point is inside voxel grid,
+                                     !! false if not.
+      integer(ip), intent(out) :: voxcor     ( 3 )  !! 3-Index of voxel location with the voxel
+                                                    !! grid.
 
 !
 !     Local variables.
@@ -5677,16 +5789,14 @@ contains
       inbox = .true.
 
       return
-      end procedure zzgetvox
+      end subroutine zzgetvox
 
-      !>## Abstract
+      !> Add a new AB cell to an AB cell pool and update the A-value
+      !> pointer array.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Add a new AB cell to an AB cell pool and update the A-value
-      !>     pointer array.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -5836,9 +5946,17 @@ contains
       !>        than the size of CELLSZ.
       !>
       !>-    MKDSK Version 1.0.0, 03-FEB-1999 (JAB)
-      module procedure zzaddlnk
+      module subroutine zzaddlnk ( ctx, aval, bval, maxa, cellsz, pntrs, ncell, cells )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: aval  !! A-value index associated with new pool entry.
+      integer(ip), intent(in) :: bval  !! B-value associated with input A value.
+      integer(ip), intent(in) :: maxa  !! Size of pointer array.
+      integer(ip), intent(in) :: cellsz  !! Number of cells in cell array.
+      integer(ip), intent(inout) :: pntrs  ( * )  !! A-value pointer array to update.
+      integer(ip), intent(inout) :: ncell  !! Number of cells in AB cell linked-list.
+      integer(ip), intent(inout) :: cells  ( 2, * )  !! Cell array.
       if ( ctx%failed() ) return
 
 !
@@ -5881,15 +5999,13 @@ contains
       pntrs(aval)    = ncell
 
       return
-      end procedure zzaddlnk
+      end subroutine zzaddlnk
 
-      !>## Abstract
+      !> Create voxel grid data structure and voxel-plate mapping.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
-      !>
-      !>     Create voxel grid data structure and voxel-plate mapping.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -6103,20 +6219,36 @@ contains
       !>        "A list" elements with which plate lists were associated.
       !>        Now, indices in the voxel-plate pointer array are used as
       !>        "A" values.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Other functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Fraction of voxel edge length used a tolerance for plate
-      !>     inclusion in voxels:
-      module procedure zzmkspin
+      module subroutine zzmkspin ( ctx, np, plates, vrtces, voxscl, cgscal, maxptr, mxcell, maxvxl, cells, nvox, voxsiz, voxori, nvxtot, nvxptr, vxptr, nvxlst, vxlist, extent, cgrptr )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: np  !! Number of plates.
+      integer(ip), intent(in) :: plates ( 3, * )  !! Array of plates.
+      real(wp), intent(in) :: vrtces ( 3, * )  !! Array of vertices.
+      real(wp), intent(in) :: voxscl  !! Voxel scaling factor.
+      integer(ip), intent(in) :: cgscal  !! Coarse voxel grid scaling factor.
+      integer(ip), intent(in) :: maxptr  !! Maximum voxel pointer list size.
+      integer(ip), intent(in) :: mxcell  !! Cell array column dimension.
+      integer(ip), intent(in) :: maxvxl  !! Maximum voxel-plate list size.
+      integer(ip), intent(inout) :: cells   ( 2, mxcell )  !! Workspace array for vertex list
+                                                           !! construction.
+      integer(ip), intent(out) :: nvox   ( 3 )  !! Dimensions of voxel grid.
+      real(wp), intent(out) :: voxsiz  !! Size of a voxel in model units.
+      real(wp), intent(out) :: voxori ( 3 )  !! Origin of voxel grid in model units.
+      integer(ip), intent(out) :: nvxtot  !! Total number of voxels in grid.
+      integer(ip), intent(out) :: nvxptr  !! Number of pointers in VXPTR array.
+      integer(ip), intent(out) :: vxptr  ( * )  !! Pointer index to the voxel to plates list.
+      integer(ip), intent(out) :: nvxlst  !! Length of voxel to plates list.
+      integer(ip), intent(out) :: vxlist ( * )  !! Voxel to plates list.
+      real(wp), intent(out) :: extent ( 6 )  !! Vertex coordinate extents in km.
+      integer(ip), intent(out) :: cgrptr ( * )  !! Coarse voxel grid pointer array.
+!
+!     Fraction of voxel edge length used a tolerance for plate
+!     inclusion in voxels:
+!
       real(wp), parameter :: tol = 1.0e-3_wp
 
       real(wp) :: avext
@@ -6176,10 +6308,6 @@ contains
       integer(ip) :: vcoord ( 3 )
 
       logical :: inbox
-
-!     Required for f2c use on Linux, all local variables
-!     to static.
-!
 
 !
 !     Standard SPICE error handling.
@@ -6640,8 +6768,10 @@ contains
                       maxvxl, vxptr,  nvxlst, vxlist )
 
       return
-      end procedure zzmkspin
+      end subroutine zzmkspin
 
+      !> Open a new DLA file and set the file type.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a new DLA file to be created. The file
@@ -6762,181 +6892,183 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DLAOPN_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DLAOPN_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
+      !>      INCLUDE 'dla.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         DLA
-      !>              PARAMETER           ( DLA    = 'dlaopn_ex1.dla' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         DLA
+      !>      PARAMETER           ( DLA    = 'dlaopn_ex1.dla' )
       !>
-      !>              INTEGER               IFNLEN
-      !>              PARAMETER           ( IFNLEN =  60 )
+      !>      INTEGER               IFNLEN
+      !>      PARAMETER           ( IFNLEN =  60 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE =  61 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE =  61 )
       !>
-      !>              INTEGER               MAXC
-      !>              PARAMETER           ( MAXC   =  5 )
+      !>      INTEGER               MAXC
+      !>      PARAMETER           ( MAXC   =  5 )
       !>
-      !>              INTEGER               MAXD
-      !>              PARAMETER           ( MAXD   =  50 )
+      !>      INTEGER               MAXD
+      !>      PARAMETER           ( MAXD   =  50 )
       !>
-      !>              INTEGER               MAXI
-      !>              PARAMETER           ( MAXI   =  100 )
+      !>      INTEGER               MAXI
+      !>      PARAMETER           ( MAXI   =  100 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(LNSIZE)    CVALS   ( MAXC )
-      !>              CHARACTER*(LNSIZE)    CVALS2  ( MAXC )
-      !>              CHARACTER*(IFNLEN)    IFNAME
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(LNSIZE)    CVALS   ( MAXC )
+      !>      CHARACTER*(LNSIZE)    CVALS2  ( MAXC )
+      !>      CHARACTER*(IFNLEN)    IFNAME
       !>
-      !>              DOUBLE PRECISION      DVALS   ( MAXD )
-      !>              DOUBLE PRECISION      DVALS2  ( MAXD )
+      !>      DOUBLE PRECISION      DVALS   ( MAXD )
+      !>      DOUBLE PRECISION      DVALS2  ( MAXD )
       !>
-      !>              INTEGER               BASE
-      !>              INTEGER               DESCR   ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               IVALS   ( MAXI )
-      !>              INTEGER               IVALS2  ( MAXI )
-      !>              INTEGER               J
-      !>              INTEGER               K
-      !>              INTEGER               N
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               BASE
+      !>      INTEGER               DESCR   ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               IVALS   ( MAXI )
+      !>      INTEGER               IVALS2  ( MAXI )
+      !>      INTEGER               J
+      !>      INTEGER               K
+      !>      INTEGER               N
+      !>      INTEGER               NCOMCH
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Set the internal file name.  Don't reserve characters in
-      !>        C     the DAS comment area.
-      !>        C
-      !>              IFNAME = 'Example DLA file for testing'
-      !>              NCOMCH = 0
+      !>C
+      !>C     Set the internal file name.  Don't reserve characters in
+      !>C     the DAS comment area.
+      !>C
+      !>      IFNAME = 'Example DLA file for testing'
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Open a new DLA file.
-      !>        C
-      !>              CALL DLAOPN ( DLA, 'DLA', IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new DLA file.
+      !>C
+      !>      CALL DLAOPN ( DLA, 'DLA', IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a new segment.
-      !>        C
-      !>              CALL DLABNS ( HANDLE )
+      !>C
+      !>C     Begin a new segment.
+      !>C
+      !>      CALL DLABNS ( HANDLE )
       !>
-      !>        C
-      !>        C     Add character data to the segment.
-      !>        C
-      !>              DO I = 1, MAXC
+      !>C
+      !>C     Add character data to the segment.
+      !>C
+      !>      DO I = 1, MAXC
       !>
-      !>                 DO J = 1, LNSIZE
+      !>         DO J = 1, LNSIZE
       !>
-      !>                    K = MOD( J+I-1, 10 )
+      !>            K = MOD( J+I-1, 10 )
       !>
-      !>                    CALL INTSTR ( K,  CVALS(I)(J:J) )
+      !>            CALL INTSTR ( K,  CVALS(I)(J:J) )
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              CALL DASADC ( HANDLE, MAXC*LNSIZE, 1, LNSIZE, CVALS )
+      !>      CALL DASADC ( HANDLE, MAXC*LNSIZE, 1, LNSIZE, CVALS )
       !>
-      !>        C
-      !>        C     Add integer and double precision data to the segment.
-      !>        C
-      !>              DO I = 1, MAXI
-      !>                 IVALS(I) = I
-      !>              END DO
+      !>C
+      !>C     Add integer and double precision data to the segment.
+      !>C
+      !>      DO I = 1, MAXI
+      !>         IVALS(I) = I
+      !>      END DO
       !>
-      !>              CALL DASADI ( HANDLE, MAXI, IVALS )
+      !>      CALL DASADI ( HANDLE, MAXI, IVALS )
       !>
-      !>              DO I = 1, MAXD
-      !>                 DVALS(I) = I
-      !>              END DO
+      !>      DO I = 1, MAXD
+      !>         DVALS(I) = I
+      !>      END DO
       !>
-      !>              CALL DASADD ( HANDLE, MAXD, DVALS )
+      !>      CALL DASADD ( HANDLE, MAXD, DVALS )
       !>
-      !>        C
-      !>        C     End the segment.
-      !>        C
-      !>              CALL DLAENS ( HANDLE )
+      !>C
+      !>C     End the segment.
+      !>C
+      !>      CALL DLAENS ( HANDLE )
       !>
-      !>        C
-      !>        C     Close the file.  The routine DASCLS flushes the DAS
-      !>        C     buffers and segregates the file before closing it.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.  The routine DASCLS flushes the DAS
+      !>C     buffers and segregates the file before closing it.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now read the file and check the data.
-      !>        C
-      !>              CALL DASOPR ( DLA, HANDLE )
+      !>C
+      !>C     Now read the file and check the data.
+      !>C
+      !>      CALL DASOPR ( DLA, HANDLE )
       !>
-      !>        C
-      !>        C     Obtain the segment descriptor for the sole segment
-      !>        C     in the file. We need not check the found flag
-      !>        C     in this case because we know there is one segment
-      !>        C     in the file.
-      !>        C
-      !>              CALL DLABFS ( HANDLE, DESCR, FOUND )
+      !>C
+      !>C     Obtain the segment descriptor for the sole segment
+      !>C     in the file. We need not check the found flag
+      !>C     in this case because we know there is one segment
+      !>C     in the file.
+      !>C
+      !>      CALL DLABFS ( HANDLE, DESCR, FOUND )
       !>
-      !>        C
-      !>        C     Fetch character data from the segment.  Obtain the
-      !>        C     base address of the character data and the
-      !>        C     character count from the descriptor.
-      !>        C
-      !>              BASE = DESCR(CBSIDX)
-      !>              N    = DESCR(CSZIDX)
+      !>C
+      !>C     Fetch character data from the segment.  Obtain the
+      !>C     base address of the character data and the
+      !>C     character count from the descriptor.
+      !>C
+      !>      BASE = DESCR(CBSIDX)
+      !>      N    = DESCR(CSZIDX)
       !>
-      !>              CALL DASRDC ( HANDLE, BASE+1, BASE+N, 1, LNSIZE, CVALS2 )
+      !>      CALL DASRDC ( HANDLE, BASE+1, BASE+N, 1, LNSIZE, CVALS2 )
       !>
-      !>        C
-      !>        C     Display the character data.
-      !>        C
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Character array:'
+      !>C
+      !>C     Display the character data.
+      !>C
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Character array:'
       !>
-      !>              DO I = 1, N/LNSIZE
-      !>                 WRITE (*,*) CVALS2(I)
-      !>              END DO
+      !>      DO I = 1, N/LNSIZE
+      !>         WRITE (*,*) CVALS2(I)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Fetch and display the integer and double precision data.
-      !>        C
-      !>              BASE = DESCR(IBSIDX)
-      !>              N    = DESCR(ISZIDX)
+      !>C
+      !>C     Fetch and display the integer and double precision data.
+      !>C
+      !>      BASE = DESCR(IBSIDX)
+      !>      N    = DESCR(ISZIDX)
       !>
-      !>              CALL DASRDI( HANDLE, BASE+1, BASE+N, IVALS2 )
+      !>      CALL DASRDI( HANDLE, BASE+1, BASE+N, IVALS2 )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Integer array:'
-      !>              DO I = 1, N/10
-      !>                 WRITE (*,'(10I6)') (IVALS2((I-1)*10 + J), J=1, 10)
-      !>              END DO
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Integer array:'
+      !>      DO I = 1, N/10
+      !>         WRITE (*,'(10I6)') (IVALS2((I-1)*10 + J), J=1, 10)
+      !>      END DO
       !>
-      !>              BASE = DESCR(DBSIDX)
-      !>              N    = DESCR(DSZIDX)
+      !>      BASE = DESCR(DBSIDX)
+      !>      N    = DESCR(DSZIDX)
       !>
-      !>              CALL DASRDD( HANDLE, BASE+1, BASE+N, DVALS2 )
+      !>      CALL DASRDD( HANDLE, BASE+1, BASE+N, DVALS2 )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Double precision array:'
-      !>              DO I = 1, N/10
-      !>                 WRITE (*,'(10F6.1)') (DVALS2((I-1)*10 + J), J=1, 10)
-      !>              END DO
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Double precision array:'
+      !>      DO I = 1, N/10
+      !>         WRITE (*,'(10F6.1)') (DVALS2((I-1)*10 + J), J=1, 10)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.  This step is unnecessary in this
-      !>        C     program, but is a good practice in general
-      !>        C     because closing the file frees resources.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.  This step is unnecessary in this
+      !>C     program, but is a good practice in general
+      !>C     because closing the file frees resources.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -7012,10 +7144,16 @@ contains
       !>           Updated header.
       !>
       !>        09-FEB-2005 (NJB) (KRG)
-      module procedure dlaopn
+      module subroutine dlaopn ( ctx, fname, ftype, ifname, ncomch, handle )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DLA file to be opened.
+      character(*), intent(in) :: ftype  !! Mnemonic code for type of data in the DLA file.
+      character(*), intent(in) :: ifname  !! Internal file name.
+      integer(ip), intent(in) :: ncomch  !! Number of comment characters to allocate.
+      integer(ip), intent(out) :: handle  !! Handle assigned to the opened DLA file.
 
       integer(ip) :: ncomr
 
@@ -7064,8 +7202,10 @@ contains
 !     by a call to DASCLS or DASLLC, if all goes well.
 !
       return
-      end procedure dlaopn
+      end subroutine dlaopn
 
+      !> Begin a new segment in a DLA file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the DLA file to
@@ -7159,181 +7299,183 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DLABNS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DLABNS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
+      !>      INCLUDE 'dla.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         DLA
-      !>              PARAMETER           ( DLA    = 'dlabns_ex1.dla' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         DLA
+      !>      PARAMETER           ( DLA    = 'dlabns_ex1.dla' )
       !>
-      !>              INTEGER               IFNLEN
-      !>              PARAMETER           ( IFNLEN =  60 )
+      !>      INTEGER               IFNLEN
+      !>      PARAMETER           ( IFNLEN =  60 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE =  61 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE =  61 )
       !>
-      !>              INTEGER               MAXC
-      !>              PARAMETER           ( MAXC   =  5 )
+      !>      INTEGER               MAXC
+      !>      PARAMETER           ( MAXC   =  5 )
       !>
-      !>              INTEGER               MAXD
-      !>              PARAMETER           ( MAXD   =  50 )
+      !>      INTEGER               MAXD
+      !>      PARAMETER           ( MAXD   =  50 )
       !>
-      !>              INTEGER               MAXI
-      !>              PARAMETER           ( MAXI   =  100 )
+      !>      INTEGER               MAXI
+      !>      PARAMETER           ( MAXI   =  100 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(LNSIZE)    CVALS   ( MAXC )
-      !>              CHARACTER*(LNSIZE)    CVALS2  ( MAXC )
-      !>              CHARACTER*(IFNLEN)    IFNAME
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(LNSIZE)    CVALS   ( MAXC )
+      !>      CHARACTER*(LNSIZE)    CVALS2  ( MAXC )
+      !>      CHARACTER*(IFNLEN)    IFNAME
       !>
-      !>              DOUBLE PRECISION      DVALS   ( MAXD )
-      !>              DOUBLE PRECISION      DVALS2  ( MAXD )
+      !>      DOUBLE PRECISION      DVALS   ( MAXD )
+      !>      DOUBLE PRECISION      DVALS2  ( MAXD )
       !>
-      !>              INTEGER               BASE
-      !>              INTEGER               DESCR   ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               IVALS   ( MAXI )
-      !>              INTEGER               IVALS2  ( MAXI )
-      !>              INTEGER               J
-      !>              INTEGER               K
-      !>              INTEGER               N
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               BASE
+      !>      INTEGER               DESCR   ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               IVALS   ( MAXI )
+      !>      INTEGER               IVALS2  ( MAXI )
+      !>      INTEGER               J
+      !>      INTEGER               K
+      !>      INTEGER               N
+      !>      INTEGER               NCOMCH
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Set the internal file name.  Don't reserve characters in
-      !>        C     the DAS comment area.
-      !>        C
-      !>              IFNAME = 'Example DLA file for testing'
-      !>              NCOMCH = 0
+      !>C
+      !>C     Set the internal file name.  Don't reserve characters in
+      !>C     the DAS comment area.
+      !>C
+      !>      IFNAME = 'Example DLA file for testing'
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Open a new DLA file.
-      !>        C
-      !>              CALL DLAOPN ( DLA, 'DLA', IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new DLA file.
+      !>C
+      !>      CALL DLAOPN ( DLA, 'DLA', IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a new segment.
-      !>        C
-      !>              CALL DLABNS ( HANDLE )
+      !>C
+      !>C     Begin a new segment.
+      !>C
+      !>      CALL DLABNS ( HANDLE )
       !>
-      !>        C
-      !>        C     Add character data to the segment.
-      !>        C
-      !>              DO I = 1, MAXC
+      !>C
+      !>C     Add character data to the segment.
+      !>C
+      !>      DO I = 1, MAXC
       !>
-      !>                 DO J = 1, LNSIZE
+      !>         DO J = 1, LNSIZE
       !>
-      !>                    K = MOD( J+I-1, 10 )
+      !>            K = MOD( J+I-1, 10 )
       !>
-      !>                    CALL INTSTR ( K,  CVALS(I)(J:J) )
+      !>            CALL INTSTR ( K,  CVALS(I)(J:J) )
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              CALL DASADC ( HANDLE, MAXC*LNSIZE, 1, LNSIZE, CVALS )
+      !>      CALL DASADC ( HANDLE, MAXC*LNSIZE, 1, LNSIZE, CVALS )
       !>
-      !>        C
-      !>        C     Add integer and double precision data to the segment.
-      !>        C
-      !>              DO I = 1, MAXI
-      !>                 IVALS(I) = I
-      !>              END DO
+      !>C
+      !>C     Add integer and double precision data to the segment.
+      !>C
+      !>      DO I = 1, MAXI
+      !>         IVALS(I) = I
+      !>      END DO
       !>
-      !>              CALL DASADI ( HANDLE, MAXI, IVALS )
+      !>      CALL DASADI ( HANDLE, MAXI, IVALS )
       !>
-      !>              DO I = 1, MAXD
-      !>                 DVALS(I) = I
-      !>              END DO
+      !>      DO I = 1, MAXD
+      !>         DVALS(I) = I
+      !>      END DO
       !>
-      !>              CALL DASADD ( HANDLE, MAXD, DVALS )
+      !>      CALL DASADD ( HANDLE, MAXD, DVALS )
       !>
-      !>        C
-      !>        C     End the segment.
-      !>        C
-      !>              CALL DLAENS ( HANDLE )
+      !>C
+      !>C     End the segment.
+      !>C
+      !>      CALL DLAENS ( HANDLE )
       !>
-      !>        C
-      !>        C     Close the file.  The routine DASCLS flushes the DAS
-      !>        C     buffers and segregates the file before closing it.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.  The routine DASCLS flushes the DAS
+      !>C     buffers and segregates the file before closing it.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now read the file and check the data.
-      !>        C
-      !>              CALL DASOPR ( DLA, HANDLE )
+      !>C
+      !>C     Now read the file and check the data.
+      !>C
+      !>      CALL DASOPR ( DLA, HANDLE )
       !>
-      !>        C
-      !>        C     Obtain the segment descriptor for the sole segment
-      !>        C     in the file. We need not check the found flag
-      !>        C     in this case because we know there is one segment
-      !>        C     in the file.
-      !>        C
-      !>              CALL DLABFS ( HANDLE, DESCR, FOUND )
+      !>C
+      !>C     Obtain the segment descriptor for the sole segment
+      !>C     in the file. We need not check the found flag
+      !>C     in this case because we know there is one segment
+      !>C     in the file.
+      !>C
+      !>      CALL DLABFS ( HANDLE, DESCR, FOUND )
       !>
-      !>        C
-      !>        C     Fetch character data from the segment.  Obtain the
-      !>        C     base address of the character data and the
-      !>        C     character count from the descriptor.
-      !>        C
-      !>              BASE = DESCR(CBSIDX)
-      !>              N    = DESCR(CSZIDX)
+      !>C
+      !>C     Fetch character data from the segment.  Obtain the
+      !>C     base address of the character data and the
+      !>C     character count from the descriptor.
+      !>C
+      !>      BASE = DESCR(CBSIDX)
+      !>      N    = DESCR(CSZIDX)
       !>
-      !>              CALL DASRDC ( HANDLE, BASE+1, BASE+N, 1, LNSIZE, CVALS2 )
+      !>      CALL DASRDC ( HANDLE, BASE+1, BASE+N, 1, LNSIZE, CVALS2 )
       !>
-      !>        C
-      !>        C     Display the character data.
-      !>        C
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Character array:'
+      !>C
+      !>C     Display the character data.
+      !>C
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Character array:'
       !>
-      !>              DO I = 1, N/LNSIZE
-      !>                 WRITE (*,*) CVALS2(I)
-      !>              END DO
+      !>      DO I = 1, N/LNSIZE
+      !>         WRITE (*,*) CVALS2(I)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Fetch and display the integer and double precision data.
-      !>        C
-      !>              BASE = DESCR(IBSIDX)
-      !>              N    = DESCR(ISZIDX)
+      !>C
+      !>C     Fetch and display the integer and double precision data.
+      !>C
+      !>      BASE = DESCR(IBSIDX)
+      !>      N    = DESCR(ISZIDX)
       !>
-      !>              CALL DASRDI( HANDLE, BASE+1, BASE+N, IVALS2 )
+      !>      CALL DASRDI( HANDLE, BASE+1, BASE+N, IVALS2 )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Integer array:'
-      !>              DO I = 1, N/10
-      !>                 WRITE (*,'(10I6)') (IVALS2((I-1)*10 + J), J=1, 10)
-      !>              END DO
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Integer array:'
+      !>      DO I = 1, N/10
+      !>         WRITE (*,'(10I6)') (IVALS2((I-1)*10 + J), J=1, 10)
+      !>      END DO
       !>
-      !>              BASE = DESCR(DBSIDX)
-      !>              N    = DESCR(DSZIDX)
+      !>      BASE = DESCR(DBSIDX)
+      !>      N    = DESCR(DSZIDX)
       !>
-      !>              CALL DASRDD( HANDLE, BASE+1, BASE+N, DVALS2 )
+      !>      CALL DASRDD( HANDLE, BASE+1, BASE+N, DVALS2 )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Double precision array:'
-      !>              DO I = 1, N/10
-      !>                 WRITE (*,'(10F6.1)') (DVALS2((I-1)*10 + J), J=1, 10)
-      !>              END DO
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Double precision array:'
+      !>      DO I = 1, N/10
+      !>         WRITE (*,'(10F6.1)') (DVALS2((I-1)*10 + J), J=1, 10)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.  This step is unnecessary in this
-      !>        C     program, but is a good practice in general
-      !>        C     because closing the file frees resources.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.  This step is unnecessary in this
+      !>C     program, but is a good practice in general
+      !>C     because closing the file frees resources.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -7402,10 +7544,12 @@ contains
       !>           Updated header.
       !>
       !>        11-FEB-2005 (NJB)
-      module procedure dlabns
+      module subroutine dlabns ( ctx, handle )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of open DLA file.
 
       integer(ip), parameter :: fstidx = 1
 
@@ -7514,8 +7658,10 @@ contains
 !
 
       return
-      end procedure dlabns
+      end subroutine dlabns
 
+      !> End a new segment in a DLA file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the DLA file to
@@ -7609,181 +7755,183 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DLAENS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DLAENS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
+      !>      INCLUDE 'dla.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         DLA
-      !>              PARAMETER           ( DLA    = 'dlaens_ex1.dla' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         DLA
+      !>      PARAMETER           ( DLA    = 'dlaens_ex1.dla' )
       !>
-      !>              INTEGER               IFNLEN
-      !>              PARAMETER           ( IFNLEN =  60 )
+      !>      INTEGER               IFNLEN
+      !>      PARAMETER           ( IFNLEN =  60 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE =  61 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE =  61 )
       !>
-      !>              INTEGER               MAXC
-      !>              PARAMETER           ( MAXC   =  5 )
+      !>      INTEGER               MAXC
+      !>      PARAMETER           ( MAXC   =  5 )
       !>
-      !>              INTEGER               MAXD
-      !>              PARAMETER           ( MAXD   =  50 )
+      !>      INTEGER               MAXD
+      !>      PARAMETER           ( MAXD   =  50 )
       !>
-      !>              INTEGER               MAXI
-      !>              PARAMETER           ( MAXI   =  100 )
+      !>      INTEGER               MAXI
+      !>      PARAMETER           ( MAXI   =  100 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(LNSIZE)    CVALS   ( MAXC )
-      !>              CHARACTER*(LNSIZE)    CVALS2  ( MAXC )
-      !>              CHARACTER*(IFNLEN)    IFNAME
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(LNSIZE)    CVALS   ( MAXC )
+      !>      CHARACTER*(LNSIZE)    CVALS2  ( MAXC )
+      !>      CHARACTER*(IFNLEN)    IFNAME
       !>
-      !>              DOUBLE PRECISION      DVALS   ( MAXD )
-      !>              DOUBLE PRECISION      DVALS2  ( MAXD )
+      !>      DOUBLE PRECISION      DVALS   ( MAXD )
+      !>      DOUBLE PRECISION      DVALS2  ( MAXD )
       !>
-      !>              INTEGER               BASE
-      !>              INTEGER               DESCR   ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               IVALS   ( MAXI )
-      !>              INTEGER               IVALS2  ( MAXI )
-      !>              INTEGER               J
-      !>              INTEGER               K
-      !>              INTEGER               N
-      !>              INTEGER               NCOMCH
+      !>      INTEGER               BASE
+      !>      INTEGER               DESCR   ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               IVALS   ( MAXI )
+      !>      INTEGER               IVALS2  ( MAXI )
+      !>      INTEGER               J
+      !>      INTEGER               K
+      !>      INTEGER               N
+      !>      INTEGER               NCOMCH
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Set the internal file name.  Don't reserve characters in
-      !>        C     the DAS comment area.
-      !>        C
-      !>              IFNAME = 'Example DLA file for testing'
-      !>              NCOMCH = 0
+      !>C
+      !>C     Set the internal file name.  Don't reserve characters in
+      !>C     the DAS comment area.
+      !>C
+      !>      IFNAME = 'Example DLA file for testing'
+      !>      NCOMCH = 0
       !>
-      !>        C
-      !>        C     Open a new DLA file.
-      !>        C
-      !>              CALL DLAOPN ( DLA, 'DLA', IFNAME, NCOMCH, HANDLE )
+      !>C
+      !>C     Open a new DLA file.
+      !>C
+      !>      CALL DLAOPN ( DLA, 'DLA', IFNAME, NCOMCH, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a new segment.
-      !>        C
-      !>              CALL DLABNS ( HANDLE )
+      !>C
+      !>C     Begin a new segment.
+      !>C
+      !>      CALL DLABNS ( HANDLE )
       !>
-      !>        C
-      !>        C     Add character data to the segment.
-      !>        C
-      !>              DO I = 1, MAXC
+      !>C
+      !>C     Add character data to the segment.
+      !>C
+      !>      DO I = 1, MAXC
       !>
-      !>                 DO J = 1, LNSIZE
+      !>         DO J = 1, LNSIZE
       !>
-      !>                    K = MOD( J+I-1, 10 )
+      !>            K = MOD( J+I-1, 10 )
       !>
-      !>                    CALL INTSTR ( K,  CVALS(I)(J:J) )
+      !>            CALL INTSTR ( K,  CVALS(I)(J:J) )
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              CALL DASADC ( HANDLE, MAXC*LNSIZE, 1, LNSIZE, CVALS )
+      !>      CALL DASADC ( HANDLE, MAXC*LNSIZE, 1, LNSIZE, CVALS )
       !>
-      !>        C
-      !>        C     Add integer and double precision data to the segment.
-      !>        C
-      !>              DO I = 1, MAXI
-      !>                 IVALS(I) = I
-      !>              END DO
+      !>C
+      !>C     Add integer and double precision data to the segment.
+      !>C
+      !>      DO I = 1, MAXI
+      !>         IVALS(I) = I
+      !>      END DO
       !>
-      !>              CALL DASADI ( HANDLE, MAXI, IVALS )
+      !>      CALL DASADI ( HANDLE, MAXI, IVALS )
       !>
-      !>              DO I = 1, MAXD
-      !>                 DVALS(I) = I
-      !>              END DO
+      !>      DO I = 1, MAXD
+      !>         DVALS(I) = I
+      !>      END DO
       !>
-      !>              CALL DASADD ( HANDLE, MAXD, DVALS )
+      !>      CALL DASADD ( HANDLE, MAXD, DVALS )
       !>
-      !>        C
-      !>        C     End the segment.
-      !>        C
-      !>              CALL DLAENS ( HANDLE )
+      !>C
+      !>C     End the segment.
+      !>C
+      !>      CALL DLAENS ( HANDLE )
       !>
-      !>        C
-      !>        C     Close the file.  The routine DASCLS flushes the DAS
-      !>        C     buffers and segregates the file before closing it.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.  The routine DASCLS flushes the DAS
+      !>C     buffers and segregates the file before closing it.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>        C
-      !>        C     Now read the file and check the data.
-      !>        C
-      !>              CALL DASOPR ( DLA, HANDLE )
+      !>C
+      !>C     Now read the file and check the data.
+      !>C
+      !>      CALL DASOPR ( DLA, HANDLE )
       !>
-      !>        C
-      !>        C     Obtain the segment descriptor for the sole segment
-      !>        C     in the file. We need not check the found flag
-      !>        C     in this case because we know there is one segment
-      !>        C     in the file.
-      !>        C
-      !>              CALL DLABFS ( HANDLE, DESCR, FOUND )
+      !>C
+      !>C     Obtain the segment descriptor for the sole segment
+      !>C     in the file. We need not check the found flag
+      !>C     in this case because we know there is one segment
+      !>C     in the file.
+      !>C
+      !>      CALL DLABFS ( HANDLE, DESCR, FOUND )
       !>
-      !>        C
-      !>        C     Fetch character data from the segment.  Obtain the
-      !>        C     base address of the character data and the
-      !>        C     character count from the descriptor.
-      !>        C
-      !>              BASE = DESCR(CBSIDX)
-      !>              N    = DESCR(CSZIDX)
+      !>C
+      !>C     Fetch character data from the segment.  Obtain the
+      !>C     base address of the character data and the
+      !>C     character count from the descriptor.
+      !>C
+      !>      BASE = DESCR(CBSIDX)
+      !>      N    = DESCR(CSZIDX)
       !>
-      !>              CALL DASRDC ( HANDLE, BASE+1, BASE+N, 1, LNSIZE, CVALS2 )
+      !>      CALL DASRDC ( HANDLE, BASE+1, BASE+N, 1, LNSIZE, CVALS2 )
       !>
-      !>        C
-      !>        C     Display the character data.
-      !>        C
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Character array:'
+      !>C
+      !>C     Display the character data.
+      !>C
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Character array:'
       !>
-      !>              DO I = 1, N/LNSIZE
-      !>                 WRITE (*,*) CVALS2(I)
-      !>              END DO
+      !>      DO I = 1, N/LNSIZE
+      !>         WRITE (*,*) CVALS2(I)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Fetch and display the integer and double precision data.
-      !>        C
-      !>              BASE = DESCR(IBSIDX)
-      !>              N    = DESCR(ISZIDX)
+      !>C
+      !>C     Fetch and display the integer and double precision data.
+      !>C
+      !>      BASE = DESCR(IBSIDX)
+      !>      N    = DESCR(ISZIDX)
       !>
-      !>              CALL DASRDI( HANDLE, BASE+1, BASE+N, IVALS2 )
+      !>      CALL DASRDI( HANDLE, BASE+1, BASE+N, IVALS2 )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Integer array:'
-      !>              DO I = 1, N/10
-      !>                 WRITE (*,'(10I6)') (IVALS2((I-1)*10 + J), J=1, 10)
-      !>              END DO
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Integer array:'
+      !>      DO I = 1, N/10
+      !>         WRITE (*,'(10I6)') (IVALS2((I-1)*10 + J), J=1, 10)
+      !>      END DO
       !>
-      !>              BASE = DESCR(DBSIDX)
-      !>              N    = DESCR(DSZIDX)
+      !>      BASE = DESCR(DBSIDX)
+      !>      N    = DESCR(DSZIDX)
       !>
-      !>              CALL DASRDD( HANDLE, BASE+1, BASE+N, DVALS2 )
+      !>      CALL DASRDD( HANDLE, BASE+1, BASE+N, DVALS2 )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Double precision array:'
-      !>              DO I = 1, N/10
-      !>                 WRITE (*,'(10F6.1)') (DVALS2((I-1)*10 + J), J=1, 10)
-      !>              END DO
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Double precision array:'
+      !>      DO I = 1, N/10
+      !>         WRITE (*,'(10F6.1)') (DVALS2((I-1)*10 + J), J=1, 10)
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file.  This step is unnecessary in this
-      !>        C     program, but is a good practice in general
-      !>        C     because closing the file frees resources.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file.  This step is unnecessary in this
+      !>C     program, but is a good practice in general
+      !>C     because closing the file frees resources.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -7847,10 +7995,12 @@ contains
       !>           Updated header.
       !>
       !>        11-FEB-2005 (NJB)
-      module procedure dlaens
+      module subroutine dlaens ( ctx, handle )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of open DLA file.
       integer(ip) :: this_1(1)  !! one-element copy of this (array argument)
 
       integer(ip) :: descr  ( dladsz )
@@ -7900,8 +8050,10 @@ contains
 !     addition of a new segment.
 !
       return
-      end procedure dlaens
+      end subroutine dlaens
 
+      !> Begin a forward segment search in a DLA file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the file to be
@@ -7985,98 +8137,100 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DLABFS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DLABFS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
+      !>      INCLUDE 'dla.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    FNAME
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    FNAME
       !>
-      !>              INTEGER               CURRNT ( DLADSZ )
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               SEGNO
+      !>      INTEGER               CURRNT ( DLADSZ )
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               SEGNO
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the name of the file to search.
-      !>        C
-      !>              CALL PROMPT ( 'Name of DLA file > ', FNAME )
+      !>C
+      !>C     Prompt for the name of the file to search.
+      !>C
+      !>      CALL PROMPT ( 'Name of DLA file > ', FNAME )
       !>
-      !>        C
-      !>        C     Open the DLA file for read access.  Since DLA
-      !>        C     files use the DAS architecture, we can use DAS
-      !>        C     routines to open and close the file.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
+      !>C
+      !>C     Open the DLA file for read access.  Since DLA
+      !>C     files use the DAS architecture, we can use DAS
+      !>C     routines to open and close the file.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a forward search.  Let DLADSC contain
-      !>        C     the descriptor of the first segment.
-      !>        C
-      !>              SEGNO = 0
+      !>C
+      !>C     Begin a forward search.  Let DLADSC contain
+      !>C     the descriptor of the first segment.
+      !>C
+      !>      SEGNO = 0
       !>
-      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>      CALL DLABFS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              DO WHILE ( FOUND )
-      !>        C
-      !>        C        Display the contents of the current segment
-      !>        C        descriptor.
-      !>        C
-      !>                 SEGNO = SEGNO + 1
+      !>      DO WHILE ( FOUND )
+      !>C
+      !>C        Display the contents of the current segment
+      !>C        descriptor.
+      !>C
+      !>         SEGNO = SEGNO + 1
       !>
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Segment number = ', SEGNO
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Backward segment pointer         = ',
-      !>             .               DLADSC(BWDIDX)
-      !>                 WRITE (*,*) 'Forward segment pointer          = ',
-      !>             .               DLADSC(FWDIDX)
-      !>                 WRITE (*,*) 'Character component base address = ',
-      !>             .               DLADSC(CBSIDX)
-      !>                 WRITE (*,*) 'Character component size         = ',
-      !>             .               DLADSC(CSZIDX)
-      !>                 WRITE (*,*) 'D.p. base address                = ',
-      !>             .               DLADSC(DBSIDX)
-      !>                 WRITE (*,*) 'D.p. component size              = ',
-      !>             .               DLADSC(DSZIDX)
-      !>                 WRITE (*,*) 'Integer base address             = ',
-      !>             .               DLADSC(IBSIDX)
-      !>                 WRITE (*,*) 'Integer component size           = ',
-      !>             .               DLADSC(ISZIDX)
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Segment number = ', SEGNO
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Backward segment pointer         = ',
+      !>     .               DLADSC(BWDIDX)
+      !>         WRITE (*,*) 'Forward segment pointer          = ',
+      !>     .               DLADSC(FWDIDX)
+      !>         WRITE (*,*) 'Character component base address = ',
+      !>     .               DLADSC(CBSIDX)
+      !>         WRITE (*,*) 'Character component size         = ',
+      !>     .               DLADSC(CSZIDX)
+      !>         WRITE (*,*) 'D.p. base address                = ',
+      !>     .               DLADSC(DBSIDX)
+      !>         WRITE (*,*) 'D.p. component size              = ',
+      !>     .               DLADSC(DSZIDX)
+      !>         WRITE (*,*) 'Integer base address             = ',
+      !>     .               DLADSC(IBSIDX)
+      !>         WRITE (*,*) 'Integer component size           = ',
+      !>     .               DLADSC(ISZIDX)
+      !>         WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C        Find the next segment.
-      !>        C
-      !>        C        To avoid using DLADSC as both input and output
-      !>        C        in the following call (this use is not allowed
-      !>        C        by the ANSI Fortran 77 standard), we copy DLADSC
-      !>        C        into the variable CURRNT.  We then find the
-      !>        C        segment following CURRNT.
-      !>        C
-      !>                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
-      !>                 CALL DLAFNS ( HANDLE, CURRNT, DLADSC, FOUND )
+      !>C
+      !>C        Find the next segment.
+      !>C
+      !>C        To avoid using DLADSC as both input and output
+      !>C        in the following call (this use is not allowed
+      !>C        by the ANSI Fortran 77 standard), we copy DLADSC
+      !>C        into the variable CURRNT.  We then find the
+      !>C        segment following CURRNT.
+      !>C
+      !>         CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
+      !>         CALL DLAFNS ( HANDLE, CURRNT, DLADSC, FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file using the DAS close routine.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file using the DAS close routine.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -8131,10 +8285,14 @@ contains
       !>           Updated header.
       !>
       !>        10-FEB-2005 (NJB)
-      module procedure dlabfs
+      module subroutine dlabfs ( ctx, handle, dladsc, found )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of open DLA file.
+      integer(ip), intent(out) :: dladsc  ( * )  !! Descriptor of first segment in DLA file.
+      logical, intent(out) :: found  !! Flag indicating whether a segment was found.
       integer(ip) :: this_1(1)  !! one-element copy of this (array argument)
 
       integer(ip) :: this
@@ -8173,8 +8331,10 @@ contains
       found = .true.
 
       return
-      end procedure dlabfs
+      end subroutine dlabfs
 
+      !> Begin a backward segment search in a DLA file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the file to be
@@ -8260,114 +8420,116 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DLABBS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DLABBS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
+      !>      INCLUDE 'dla.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    FNAME
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    FNAME
       !>
-      !>              INTEGER               CURRNT ( DLADSZ )
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NSEGS
-      !>              INTEGER               SEGNO
+      !>      INTEGER               CURRNT ( DLADSZ )
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NSEGS
+      !>      INTEGER               SEGNO
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the name of the file to search.
-      !>        C
-      !>              CALL PROMPT ( 'Name of DLA file > ', FNAME )
+      !>C
+      !>C     Prompt for the name of the file to search.
+      !>C
+      !>      CALL PROMPT ( 'Name of DLA file > ', FNAME )
       !>
-      !>        C
-      !>        C     Open the DLA file for read access.  Since DLA
-      !>        C     files use the DAS architecture, we can use DAS
-      !>        C     routines to open and close the file.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
+      !>C
+      !>C     Open the DLA file for read access.  Since DLA
+      !>C     files use the DAS architecture, we can use DAS
+      !>C     routines to open and close the file.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Count the segments in the file; this allows us
-      !>        C     to label the segments in our display.
-      !>        C
-      !>              NSEGS = 0
-      !>              CALL DLABBS ( HANDLE, DLADSC, FOUND )
+      !>C
+      !>C     Count the segments in the file; this allows us
+      !>C     to label the segments in our display.
+      !>C
+      !>      NSEGS = 0
+      !>      CALL DLABBS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              DO WHILE ( FOUND )
+      !>      DO WHILE ( FOUND )
       !>
-      !>                 NSEGS = NSEGS + 1
-      !>                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
-      !>                 CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
+      !>         NSEGS = NSEGS + 1
+      !>         CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
+      !>         CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Begin a backward search.  Let DLADSC contain
-      !>        C     the descriptor of the last segment.
-      !>        C
-      !>              SEGNO = NSEGS + 1
+      !>C
+      !>C     Begin a backward search.  Let DLADSC contain
+      !>C     the descriptor of the last segment.
+      !>C
+      !>      SEGNO = NSEGS + 1
       !>
-      !>              CALL DLABBS ( HANDLE, DLADSC, FOUND )
+      !>      CALL DLABBS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              DO WHILE ( FOUND )
-      !>        C
-      !>        C        Display the contents of the current segment
-      !>        C        descriptor.
-      !>        C
-      !>                 SEGNO = SEGNO - 1
+      !>      DO WHILE ( FOUND )
+      !>C
+      !>C        Display the contents of the current segment
+      !>C        descriptor.
+      !>C
+      !>         SEGNO = SEGNO - 1
       !>
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Segment number = ', SEGNO
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Backward segment pointer         = ',
-      !>             .               DLADSC(BWDIDX)
-      !>                 WRITE (*,*) 'Forward segment pointer          = ',
-      !>             .               DLADSC(FWDIDX)
-      !>                 WRITE (*,*) 'Character component base address = ',
-      !>             .               DLADSC(CBSIDX)
-      !>                 WRITE (*,*) 'Character component size         = ',
-      !>             .               DLADSC(CSZIDX)
-      !>                 WRITE (*,*) 'D.p. base address                = ',
-      !>             .               DLADSC(DBSIDX)
-      !>                 WRITE (*,*) 'D.p. component size              = ',
-      !>             .               DLADSC(DSZIDX)
-      !>                 WRITE (*,*) 'Integer base address             = ',
-      !>             .               DLADSC(IBSIDX)
-      !>                 WRITE (*,*) 'Integer component size           = ',
-      !>             .               DLADSC(ISZIDX)
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Segment number = ', SEGNO
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Backward segment pointer         = ',
+      !>     .               DLADSC(BWDIDX)
+      !>         WRITE (*,*) 'Forward segment pointer          = ',
+      !>     .               DLADSC(FWDIDX)
+      !>         WRITE (*,*) 'Character component base address = ',
+      !>     .               DLADSC(CBSIDX)
+      !>         WRITE (*,*) 'Character component size         = ',
+      !>     .               DLADSC(CSZIDX)
+      !>         WRITE (*,*) 'D.p. base address                = ',
+      !>     .               DLADSC(DBSIDX)
+      !>         WRITE (*,*) 'D.p. component size              = ',
+      !>     .               DLADSC(DSZIDX)
+      !>         WRITE (*,*) 'Integer base address             = ',
+      !>     .               DLADSC(IBSIDX)
+      !>         WRITE (*,*) 'Integer component size           = ',
+      !>     .               DLADSC(ISZIDX)
+      !>         WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C        Find the previous segment.
-      !>        C
-      !>        C        To avoid using DLADSC as both input and output
-      !>        C        in the following call (this use is not allowed
-      !>        C        by the ANSI Fortran 77 standard), we copy DLADSC
-      !>        C        into the variable CURRNT.  We then find the
-      !>        C        segment preceding CURRNT.
-      !>        C
-      !>                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
-      !>                 CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
+      !>C
+      !>C        Find the previous segment.
+      !>C
+      !>C        To avoid using DLADSC as both input and output
+      !>C        in the following call (this use is not allowed
+      !>C        by the ANSI Fortran 77 standard), we copy DLADSC
+      !>C        into the variable CURRNT.  We then find the
+      !>C        segment preceding CURRNT.
+      !>C
+      !>         CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
+      !>         CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file using the DAS close routine.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file using the DAS close routine.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -8409,10 +8571,14 @@ contains
       !>        Edits the header comments to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 21-APR-2010 (NJB)
-      module procedure dlabbs
+      module subroutine dlabbs ( ctx, handle, dladsc, found )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of open DLA file.
+      integer(ip), intent(out) :: dladsc  ( * )  !! Descriptor of last segment in DLA file.
+      logical, intent(out) :: found  !! Flag indicating whether a segment was found.
       integer(ip) :: this_1(1)  !! one-element copy of this (array argument)
 
       integer(ip) :: this
@@ -8451,8 +8617,10 @@ contains
       found = .true.
 
       return
-      end procedure dlabbs
+      end subroutine dlabbs
 
+      !> Find the segment following a specified segment in a DLA file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the file to be
@@ -8537,98 +8705,100 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DLAFNS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DLAFNS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
+      !>      INCLUDE 'dla.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    FNAME
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    FNAME
       !>
-      !>              INTEGER               CURRNT ( DLADSZ )
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               SEGNO
+      !>      INTEGER               CURRNT ( DLADSZ )
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               SEGNO
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the name of the file to search.
-      !>        C
-      !>              CALL PROMPT ( 'Name of DLA file > ', FNAME )
+      !>C
+      !>C     Prompt for the name of the file to search.
+      !>C
+      !>      CALL PROMPT ( 'Name of DLA file > ', FNAME )
       !>
-      !>        C
-      !>        C     Open the DLA file for read access.  Since DLA
-      !>        C     files use the DAS architecture, we can use DAS
-      !>        C     routines to open and close the file.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
+      !>C
+      !>C     Open the DLA file for read access.  Since DLA
+      !>C     files use the DAS architecture, we can use DAS
+      !>C     routines to open and close the file.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a forward search.  Let DLADSC contain
-      !>        C     the descriptor of the first segment.
-      !>        C
-      !>              SEGNO = 0
+      !>C
+      !>C     Begin a forward search.  Let DLADSC contain
+      !>C     the descriptor of the first segment.
+      !>C
+      !>      SEGNO = 0
       !>
-      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>      CALL DLABFS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              DO WHILE ( FOUND )
-      !>        C
-      !>        C        Display the contents of the current segment
-      !>        C        descriptor.
-      !>        C
-      !>                 SEGNO = SEGNO + 1
+      !>      DO WHILE ( FOUND )
+      !>C
+      !>C        Display the contents of the current segment
+      !>C        descriptor.
+      !>C
+      !>         SEGNO = SEGNO + 1
       !>
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Segment number = ', SEGNO
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Backward segment pointer         = ',
-      !>             .               DLADSC(BWDIDX)
-      !>                 WRITE (*,*) 'Forward segment pointer          = ',
-      !>             .               DLADSC(FWDIDX)
-      !>                 WRITE (*,*) 'Character component base address = ',
-      !>             .               DLADSC(CBSIDX)
-      !>                 WRITE (*,*) 'Character component size         = ',
-      !>             .               DLADSC(CSZIDX)
-      !>                 WRITE (*,*) 'D.p. base address                = ',
-      !>             .               DLADSC(DBSIDX)
-      !>                 WRITE (*,*) 'D.p. component size              = ',
-      !>             .               DLADSC(DSZIDX)
-      !>                 WRITE (*,*) 'Integer base address             = ',
-      !>             .               DLADSC(IBSIDX)
-      !>                 WRITE (*,*) 'Integer component size           = ',
-      !>             .               DLADSC(ISZIDX)
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Segment number = ', SEGNO
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Backward segment pointer         = ',
+      !>     .               DLADSC(BWDIDX)
+      !>         WRITE (*,*) 'Forward segment pointer          = ',
+      !>     .               DLADSC(FWDIDX)
+      !>         WRITE (*,*) 'Character component base address = ',
+      !>     .               DLADSC(CBSIDX)
+      !>         WRITE (*,*) 'Character component size         = ',
+      !>     .               DLADSC(CSZIDX)
+      !>         WRITE (*,*) 'D.p. base address                = ',
+      !>     .               DLADSC(DBSIDX)
+      !>         WRITE (*,*) 'D.p. component size              = ',
+      !>     .               DLADSC(DSZIDX)
+      !>         WRITE (*,*) 'Integer base address             = ',
+      !>     .               DLADSC(IBSIDX)
+      !>         WRITE (*,*) 'Integer component size           = ',
+      !>     .               DLADSC(ISZIDX)
+      !>         WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C        Find the next segment.
-      !>        C
-      !>        C        To avoid using DLADSC as both input and output
-      !>        C        in the following call (this use is not allowed
-      !>        C        by the ANSI Fortran 77 standard), we copy DLADSC
-      !>        C        into the variable CURRNT.  We then find the
-      !>        C        segment following CURRNT.
-      !>        C
-      !>                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
-      !>                 CALL DLAFNS ( HANDLE, CURRNT, DLADSC, FOUND )
+      !>C
+      !>C        Find the next segment.
+      !>C
+      !>C        To avoid using DLADSC as both input and output
+      !>C        in the following call (this use is not allowed
+      !>C        by the ANSI Fortran 77 standard), we copy DLADSC
+      !>C        into the variable CURRNT.  We then find the
+      !>C        segment following CURRNT.
+      !>C
+      !>         CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
+      !>         CALL DLAFNS ( HANDLE, CURRNT, DLADSC, FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file using the DAS close routine.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file using the DAS close routine.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -8683,10 +8853,15 @@ contains
       !>           Updated header.
       !>
       !>        10-FEB-2005 (NJB)
-      module procedure dlafns
+      module subroutine dlafns ( ctx, handle, dladsc, nxtdsc, found )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of open DLA file.
+      integer(ip), intent(in) :: dladsc ( * )  !! Descriptor of a segment in DLA file.
+      integer(ip), intent(out) :: nxtdsc ( * )  !! Descriptor of next segment in DLA file.
+      logical, intent(out) :: found  !! Flag indicating whether a segment was found.
 
       integer(ip) :: fwd
 
@@ -8721,8 +8896,10 @@ contains
       found = .true.
 
       return
-      end procedure dlafns
+      end subroutine dlafns
 
+      !> Find the segment preceding a specified segment in a DLA file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle associated with the file to be
@@ -8808,114 +8985,116 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DLAFPS_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DLAFPS_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
+      !>      INCLUDE 'dla.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    FNAME
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    FNAME
       !>
-      !>              INTEGER               CURRNT ( DLADSZ )
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NSEGS
-      !>              INTEGER               SEGNO
+      !>      INTEGER               CURRNT ( DLADSZ )
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NSEGS
+      !>      INTEGER               SEGNO
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the name of the file to search.
-      !>        C
-      !>              CALL PROMPT ( 'Name of DLA file > ', FNAME )
+      !>C
+      !>C     Prompt for the name of the file to search.
+      !>C
+      !>      CALL PROMPT ( 'Name of DLA file > ', FNAME )
       !>
-      !>        C
-      !>        C     Open the DLA file for read access.  Since DLA
-      !>        C     files use the DAS architecture, we can use DAS
-      !>        C     routines to open and close the file.
-      !>        C
-      !>              CALL DASOPR ( FNAME, HANDLE )
+      !>C
+      !>C     Open the DLA file for read access.  Since DLA
+      !>C     files use the DAS architecture, we can use DAS
+      !>C     routines to open and close the file.
+      !>C
+      !>      CALL DASOPR ( FNAME, HANDLE )
       !>
-      !>        C
-      !>        C     Count the segments in the file; this allows us
-      !>        C     to label the segments in our display.
-      !>        C
-      !>              NSEGS = 0
-      !>              CALL DLABBS ( HANDLE, DLADSC, FOUND )
+      !>C
+      !>C     Count the segments in the file; this allows us
+      !>C     to label the segments in our display.
+      !>C
+      !>      NSEGS = 0
+      !>      CALL DLABBS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              DO WHILE ( FOUND )
+      !>      DO WHILE ( FOUND )
       !>
-      !>                 NSEGS = NSEGS + 1
-      !>                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
-      !>                 CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
+      !>         NSEGS = NSEGS + 1
+      !>         CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
+      !>         CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Begin a backward search.  Let DLADSC contain
-      !>        C     the descriptor of the last segment.
-      !>        C
-      !>              SEGNO = NSEGS + 1
+      !>C
+      !>C     Begin a backward search.  Let DLADSC contain
+      !>C     the descriptor of the last segment.
+      !>C
+      !>      SEGNO = NSEGS + 1
       !>
-      !>              CALL DLABBS ( HANDLE, DLADSC, FOUND )
+      !>      CALL DLABBS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              DO WHILE ( FOUND )
-      !>        C
-      !>        C        Display the contents of the current segment
-      !>        C        descriptor.
-      !>        C
-      !>                 SEGNO = SEGNO - 1
+      !>      DO WHILE ( FOUND )
+      !>C
+      !>C        Display the contents of the current segment
+      !>C        descriptor.
+      !>C
+      !>         SEGNO = SEGNO - 1
       !>
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Segment number = ', SEGNO
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Backward segment pointer         = ',
-      !>             .               DLADSC(BWDIDX)
-      !>                 WRITE (*,*) 'Forward segment pointer          = ',
-      !>             .               DLADSC(FWDIDX)
-      !>                 WRITE (*,*) 'Character component base address = ',
-      !>             .               DLADSC(CBSIDX)
-      !>                 WRITE (*,*) 'Character component size         = ',
-      !>             .               DLADSC(CSZIDX)
-      !>                 WRITE (*,*) 'D.p. base address                = ',
-      !>             .               DLADSC(DBSIDX)
-      !>                 WRITE (*,*) 'D.p. component size              = ',
-      !>             .               DLADSC(DSZIDX)
-      !>                 WRITE (*,*) 'Integer base address             = ',
-      !>             .               DLADSC(IBSIDX)
-      !>                 WRITE (*,*) 'Integer component size           = ',
-      !>             .               DLADSC(ISZIDX)
-      !>                 WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Segment number = ', SEGNO
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Backward segment pointer         = ',
+      !>     .               DLADSC(BWDIDX)
+      !>         WRITE (*,*) 'Forward segment pointer          = ',
+      !>     .               DLADSC(FWDIDX)
+      !>         WRITE (*,*) 'Character component base address = ',
+      !>     .               DLADSC(CBSIDX)
+      !>         WRITE (*,*) 'Character component size         = ',
+      !>     .               DLADSC(CSZIDX)
+      !>         WRITE (*,*) 'D.p. base address                = ',
+      !>     .               DLADSC(DBSIDX)
+      !>         WRITE (*,*) 'D.p. component size              = ',
+      !>     .               DLADSC(DSZIDX)
+      !>         WRITE (*,*) 'Integer base address             = ',
+      !>     .               DLADSC(IBSIDX)
+      !>         WRITE (*,*) 'Integer component size           = ',
+      !>     .               DLADSC(ISZIDX)
+      !>         WRITE (*,*) ' '
       !>
-      !>        C
-      !>        C        Find the previous segment.
-      !>        C
-      !>        C        To avoid using DLADSC as both input and output
-      !>        C        in the following call (this use is not allowed
-      !>        C        by the ANSI Fortran 77 standard), we copy DLADSC
-      !>        C        into the variable CURRNT.  We then find the
-      !>        C        segment preceding CURRNT.
-      !>        C
-      !>                 CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
-      !>                 CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
+      !>C
+      !>C        Find the previous segment.
+      !>C
+      !>C        To avoid using DLADSC as both input and output
+      !>C        in the following call (this use is not allowed
+      !>C        by the ANSI Fortran 77 standard), we copy DLADSC
+      !>C        into the variable CURRNT.  We then find the
+      !>C        segment preceding CURRNT.
+      !>C
+      !>         CALL MOVEI  ( DLADSC, DLADSZ, CURRNT        )
+      !>         CALL DLAFPS ( HANDLE, CURRNT, DLADSC, FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the file using the DAS close routine.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the file using the DAS close routine.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -8960,10 +9139,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 06-JAN-2017 (NJB)
       !>
       !>     Original version 21-APR-2010 (NJB)
-      module procedure dlafps
+      module subroutine dlafps ( ctx, handle, dladsc, prvdsc, found )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of open DLA file.
+      integer(ip), intent(in) :: dladsc ( * )  !! Descriptor of a segment in DLA file.
+      integer(ip), intent(out) :: prvdsc ( * )  !! Descriptor of previous segment in DLA file.
+      logical, intent(out) :: found  !! Flag indicating whether a segment was found.
 
       integer(ip) :: bwd
 
@@ -8998,8 +9182,15 @@ contains
       found = .true.
 
       return
-      end procedure dlafps
+      end subroutine dlafps
 
+      !> Return a logical value indicating whether a two DLA
+      !> segments, each identified by DAS handle and DLA descriptor,
+      !> are in fact the same segment.
+      !>
+      !> The function returns .TRUE. if and only if the DLA segments
+      !> match.
+      !>
       !>## Detailed Input
       !>
       !>     HAN1     is the integer handle associated with a DLA file.
@@ -9128,10 +9319,17 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-MAY-2016 (NJB)
-      module procedure dlassg
+      module logical function dlassg ( ctx, han1, han2, dsc1, dsc2 )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: han1  !! Handle of an open DLA file.
+      integer(ip), intent(in) :: han2  !! Handle of a second open DLA file.
+      integer(ip), intent(in) :: dsc1 ( dladsz )  !! DLA descriptor of a segment in the first
+                                                  !! file.
+      integer(ip), intent(in) :: dsc2 ( dladsz )  !! DLA descriptor of a segment in the second
+                                                  !! file.
 
       integer(ip) :: i
 
@@ -9159,8 +9357,10 @@ contains
       dlassg = .true.
 
       return
-      end procedure dlassg
+      end function dlassg
 
+      !> Open a new DSK file for subsequent write operations.
+      !>
       !>## Detailed Input
       !>
       !>     FNAME    is the name of a new DSK file to be created. The
@@ -9286,18 +9486,25 @@ contains
       !>           Updated header.
       !>
       !>        20-OCT-2006 (NJB)
-      module procedure dskopn
+      module subroutine dskopn ( ctx, fname, ifname, ncomch, handle )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DSK file to be opened.
+      character(*), intent(in) :: ifname  !! Internal file name.
+      integer(ip), intent(in) :: ncomch  !! Number of comment characters to allocate.
+      integer(ip), intent(out) :: handle  !! Handle assigned to the opened DSK file.
 
       if ( ctx%failed() ) return
 
       call dlaopn ( ctx, fname, 'DSK', ifname, ncomch, handle )
 
       return
-      end procedure dskopn
+      end subroutine dskopn
 
+      !> Close a DSK file.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the DAS file handle associated with the file.
@@ -9393,10 +9600,13 @@ contains
       !>        20-OCT-2006 (NJB)
       !>
       !>           Original DSKLIB version.
-      module procedure dskcls
+      module subroutine dskcls ( ctx, handle, optmiz )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle assigned to the opened DSK file.
+      logical, intent(in) :: optmiz  !! Flag indicating whether to segregate the DSK.
 
       integer(ip), parameter :: methln = 10
 
@@ -9442,8 +9652,11 @@ contains
       end if
 
       return
-      end procedure dskcls
+      end subroutine dskcls
 
+      !> Retrieve the value of a specified DSK tolerance or margin
+      !> parameter.
+      !>
       !>## Detailed Input
       !>
       !>     KEYWRD   is an integer code specifying the parameter to
@@ -9505,24 +9718,26 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DSKGTL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DSKGTL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include files
-      !>        C
-      !>              INCLUDE 'dsktol.inc'
+      !>C
+      !>C     Include files
+      !>C
+      !>      INCLUDE 'dsktol.inc'
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      DPVAL
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      DPVAL
       !>
-      !>              CALL DSKGTL ( KEYXFR, DPVAL )
+      !>      CALL DSKGTL ( KEYXFR, DPVAL )
       !>
-      !>              WRITE(*,*) 'Plate expansion fraction = ', DPVAL
+      !>      WRITE(*,*) 'Plate expansion fraction = ', DPVAL
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -9550,10 +9765,13 @@ contains
       !>        complete example code.
       !>
       !>-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
-      module procedure dskgtl
+      module subroutine dskgtl ( ctx, keywrd, dpval )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dsktol
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: keywrd  !! Code specifying parameter to retrieve.
+      real(wp), intent(out) :: dpval  !! Value of parameter.
       logical :: return
       character(namlen), parameter :: names  ( ndspar ) = &
          [ character(namlen) :: 'XFRACT', 'SGREED', 'SGPADM', 'PTMEMM', 'ANGMRG', 'LONALI' ]
@@ -9574,8 +9792,10 @@ contains
 
       return
       end associate
-      end procedure dskgtl
+      end subroutine dskgtl
 
+      !> Set the value of a specified DSK tolerance or margin parameter.
+      !>
       !>## Detailed Input
       !>
       !>     KEYWRD   is an integer code specifying the parameter to
@@ -9650,36 +9870,38 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DSKSTL_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DSKSTL_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include files
-      !>        C
-      !>              INCLUDE 'dsktol.inc'
+      !>C
+      !>C     Include files
+      !>C
+      !>      INCLUDE 'dsktol.inc'
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      DPVAL
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      DPVAL
       !>
-      !>              CALL DSKGTL ( KEYXFR, DPVAL )
+      !>      CALL DSKGTL ( KEYXFR, DPVAL )
       !>
-      !>              WRITE(*,*) 'Default plate expansion fraction = ', DPVAL
+      !>      WRITE(*,*) 'Default plate expansion fraction = ', DPVAL
       !>
-      !>        C
-      !>        C     Update the parameter.
-      !>        C
-      !>              CALL DSKSTL ( KEYXFR, 1.D-8 )
+      !>C
+      !>C     Update the parameter.
+      !>C
+      !>      CALL DSKSTL ( KEYXFR, 1.D-8 )
       !>
-      !>        C
-      !>        C     Verify the update.
-      !>        C
-      !>              CALL DSKGTL ( KEYXFR, DPVAL )
+      !>C
+      !>C     Verify the update.
+      !>C
+      !>      CALL DSKGTL ( KEYXFR, DPVAL )
       !>
-      !>              WRITE(*,*) 'New plate expansion fraction     = ', DPVAL
+      !>      WRITE(*,*) 'New plate expansion fraction     = ', DPVAL
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -9712,10 +9934,13 @@ contains
       !>        complete example code.
       !>
       !>-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
-      module procedure dskstl
+      module subroutine dskstl ( ctx, keywrd, dpval )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dsktol
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: keywrd  !! Code specifying parameter to modify.
+      real(wp), intent(in) :: dpval  !! New value of parameter.
       character(namlen), parameter :: names  ( ndspar ) = &
          [ character(namlen) :: 'XFRACT', 'SGREED', 'SGPADM', 'PTMEMM', 'ANGMRG', 'LONALI' ]
       logical, parameter :: isfixd ( ndspar ) = &
@@ -9751,8 +9976,11 @@ contains
 
       return
       end associate
-      end procedure dskstl
+      end subroutine dskstl
 
+      !> Return the DSK descriptor from a DSK segment identified
+      !> by a DAS handle and DLA descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file that is open for
@@ -9821,58 +10049,60 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DSKGD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DSKGD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dskdsc.inc'
-      !>              INCLUDE 'dsk02.inc'
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dskdsc.inc'
+      !>      INCLUDE 'dsk02.inc'
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              CHARACTER*(FILSIZ)    DSK
+      !>      CHARACTER*(FILSIZ)    DSK
       !>
-      !>              DOUBLE PRECISION      DSKDSC ( DSKDSZ )
+      !>      DOUBLE PRECISION      DSKDSC ( DSKDSZ )
       !>
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               NXTDSC ( DLADSZ )
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               NXTDSC ( DLADSZ )
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
-      !>        C
-      !>        C     Open the DSK file and begin a forward search
-      !>        C     for segments.
-      !>        C
-      !>              CALL DASOPR ( DSK, HANDLE )
+      !>      CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>C
+      !>C     Open the DSK file and begin a forward search
+      !>C     for segments.
+      !>C
+      !>      CALL DASOPR ( DSK, HANDLE )
       !>
-      !>              CALL DLABFS ( HANDLE, NXTDSC, FOUND )
+      !>      CALL DLABFS ( HANDLE, NXTDSC, FOUND )
       !>
-      !>              DO WHILE ( FOUND )
-      !>        C
-      !>        C        Make the DLA descriptor we just fetched
-      !>        C        the current one.
-      !>        C
-      !>                 CALL MOVEI ( NXTDSC, DLADSZ, DLADSC )
+      !>      DO WHILE ( FOUND )
+      !>C
+      !>C        Make the DLA descriptor we just fetched
+      !>C        the current one.
+      !>C
+      !>         CALL MOVEI ( NXTDSC, DLADSZ, DLADSC )
       !>
-      !>                 CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
+      !>         CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
       !>
-      !>                 WRITE (*,*) 'DSK descriptor contents: '
+      !>         WRITE (*,*) 'DSK descriptor contents: '
       !>
-      !>                 DO I = 1, DSKDSZ
-      !>                    WRITE (*,*) DSKDSC(I)
-      !>                 END DO
-      !>        C
-      !>        C        Find the next segment, if it exists.
-      !>        C
-      !>                 CALL DLAFNS ( HANDLE, DLADSC, NXTDSC, FOUND )
+      !>         DO I = 1, DSKDSZ
+      !>            WRITE (*,*) DSKDSC(I)
+      !>         END DO
+      !>C
+      !>C        Find the next segment, if it exists.
+      !>C
+      !>         CALL DLAFNS ( HANDLE, DLADSC, NXTDSC, FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -9917,221 +10147,223 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DSKGD_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DSKGD_EX2
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dskdsc.inc'
-      !>              INCLUDE 'dsk02.inc'
-      !>              INCLUDE 'srftrn.inc'
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dskdsc.inc'
+      !>      INCLUDE 'dsk02.inc'
+      !>      INCLUDE 'srftrn.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      DPR
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      DPR
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1 = '(A,2(F19.12))' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1 = '(A,2(F19.12))' )
       !>
-      !>              CHARACTER*(*)         FMT2
-      !>              PARAMETER           ( FMT2 = '(A,I3)' )
+      !>      CHARACTER*(*)         FMT2
+      !>      PARAMETER           ( FMT2 = '(A,I3)' )
       !>
-      !>              INTEGER               BDNMLN
-      !>              PARAMETER           ( BDNMLN = 36 )
+      !>      INTEGER               BDNMLN
+      !>      PARAMETER           ( BDNMLN = 36 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 30 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 30 )
       !>
-      !>              INTEGER               TIMLEN
-      !>              PARAMETER           ( TIMLEN = 40 )
+      !>      INTEGER               TIMLEN
+      !>      PARAMETER           ( TIMLEN = 40 )
       !>
-      !>              INTEGER               NSYS
-      !>              PARAMETER           ( NSYS   = 4 )
+      !>      INTEGER               NSYS
+      !>      PARAMETER           ( NSYS   = 4 )
       !>
-      !>              INTEGER               NCLASS
-      !>              PARAMETER           ( NCLASS = 2 )
+      !>      INTEGER               NCLASS
+      !>      PARAMETER           ( NCLASS = 2 )
       !>
-      !>              INTEGER               CLNMLN
-      !>              PARAMETER           ( CLNMLN = 25 )
+      !>      INTEGER               CLNMLN
+      !>      PARAMETER           ( CLNMLN = 25 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(BDNMLN)    BODNAM
-      !>              CHARACTER*(TIMLEN)    BTIME
-      !>              CHARACTER*(CLNMLN)    CLSNMS ( NCLASS )
-      !>              CHARACTER*(FILSIZ)    DSK
-      !>              CHARACTER*(TIMLEN)    ETIME
-      !>              CHARACTER*(FRNMLN)    FRAME
-      !>              CHARACTER*(FILSIZ)    META
-      !>              CHARACTER*(SFNMLN)    SRFNAM
-      !>              CHARACTER*(NAMLEN)    SYSNAM
-      !>              CHARACTER*(NAMLEN)    SYSNMS ( NSYS )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(BDNMLN)    BODNAM
+      !>      CHARACTER*(TIMLEN)    BTIME
+      !>      CHARACTER*(CLNMLN)    CLSNMS ( NCLASS )
+      !>      CHARACTER*(FILSIZ)    DSK
+      !>      CHARACTER*(TIMLEN)    ETIME
+      !>      CHARACTER*(FRNMLN)    FRAME
+      !>      CHARACTER*(FILSIZ)    META
+      !>      CHARACTER*(SFNMLN)    SRFNAM
+      !>      CHARACTER*(NAMLEN)    SYSNAM
+      !>      CHARACTER*(NAMLEN)    SYSNMS ( NSYS )
       !>
-      !>              DOUBLE PRECISION      DSKDSC ( DSKDSZ )
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RP
+      !>      DOUBLE PRECISION      DSKDSC ( DSKDSZ )
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RP
       !>
-      !>              INTEGER               BODYID
-      !>              INTEGER               CORSYS
-      !>              INTEGER               DCLASS
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               DTYPE
-      !>              INTEGER               FRAMID
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NXTDSC ( DLADSZ )
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SURFID
+      !>      INTEGER               BODYID
+      !>      INTEGER               CORSYS
+      !>      INTEGER               DCLASS
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               DTYPE
+      !>      INTEGER               FRAMID
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NXTDSC ( DLADSZ )
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SURFID
       !>
-      !>              LOGICAL               FOUND
-      !>              LOGICAL               ISNAME
+      !>      LOGICAL               FOUND
+      !>      LOGICAL               ISNAME
       !>
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  CLSNMS / 'Single-valued surface',
-      !>             .                               'General surface'       /
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  CLSNMS / 'Single-valued surface',
+      !>     .                               'General surface'       /
       !>
-      !>              DATA                  SYSNMS / 'Latitudinal',
-      !>             .                               'Cylindrical',
-      !>             .                               'Rectangular',
-      !>             .                               'Planetodetic' /
+      !>      DATA                  SYSNMS / 'Latitudinal',
+      !>     .                               'Cylindrical',
+      !>     .                               'Rectangular',
+      !>     .                               'Planetodetic' /
       !>
-      !>              CALL PROMPT ( 'Enter DSK name         > ', DSK  )
-      !>              CALL PROMPT ( 'Enter meta-kernel name > ', META )
+      !>      CALL PROMPT ( 'Enter DSK name         > ', DSK  )
+      !>      CALL PROMPT ( 'Enter meta-kernel name > ', META )
       !>
-      !>              IF ( META .NE. ' ' ) THEN
-      !>                 CALL FURNSH ( META )
-      !>              END IF
+      !>      IF ( META .NE. ' ' ) THEN
+      !>         CALL FURNSH ( META )
+      !>      END IF
       !>
-      !>        C
-      !>        C     Open the DLA file and begin a forward search
-      !>        C     for segments.
-      !>        C
-      !>              CALL DASOPR ( DSK, HANDLE )
+      !>C
+      !>C     Open the DLA file and begin a forward search
+      !>C     for segments.
+      !>C
+      !>      CALL DASOPR ( DSK, HANDLE )
       !>
-      !>              SEGNO = 0
+      !>      SEGNO = 0
       !>
-      !>              CALL DLABFS ( HANDLE, NXTDSC, FOUND )
+      !>      CALL DLABFS ( HANDLE, NXTDSC, FOUND )
       !>
-      !>              DO WHILE ( FOUND )
+      !>      DO WHILE ( FOUND )
       !>
-      !>                 SEGNO = SEGNO + 1
-      !>        C
-      !>        C        Make the DLA descriptor we just fetched
-      !>        C        the current one.
-      !>        C
-      !>                 CALL MOVEI ( NXTDSC, DLADSZ, DLADSC )
+      !>         SEGNO = SEGNO + 1
+      !>C
+      !>C        Make the DLA descriptor we just fetched
+      !>C        the current one.
+      !>C
+      !>         CALL MOVEI ( NXTDSC, DLADSZ, DLADSC )
       !>
-      !>                 CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
+      !>         CALL DSKGD ( HANDLE, DLADSC, DSKDSC )
       !>
-      !>                 BODYID = NINT( DSKDSC(CTRIDX) )
-      !>                 SURFID = NINT( DSKDSC(SRFIDX) )
-      !>                 FRAMID = NINT( DSKDSC(FRMIDX) )
-      !>                 DTYPE  = NINT( DSKDSC(TYPIDX) )
-      !>                 DCLASS = NINT( DSKDSC(CLSIDX) )
+      !>         BODYID = NINT( DSKDSC(CTRIDX) )
+      !>         SURFID = NINT( DSKDSC(SRFIDX) )
+      !>         FRAMID = NINT( DSKDSC(FRMIDX) )
+      !>         DTYPE  = NINT( DSKDSC(TYPIDX) )
+      !>         DCLASS = NINT( DSKDSC(CLSIDX) )
       !>
-      !>                 CALL BODC2S ( BODYID, BODNAM )
-      !>                 CALL SRFC2S ( SURFID, BODYID, SRFNAM, ISNAME )
-      !>                 CALL FRMNAM ( FRAMID, FRAME  )
+      !>         CALL BODC2S ( BODYID, BODNAM )
+      !>         CALL SRFC2S ( SURFID, BODYID, SRFNAM, ISNAME )
+      !>         CALL FRMNAM ( FRAMID, FRAME  )
       !>
-      !>                 IF ( FRAME .EQ. ' ' ) THEN
-      !>                    CALL INTSTR ( FRAMID, FRAME )
-      !>                 END IF
+      !>         IF ( FRAME .EQ. ' ' ) THEN
+      !>            CALL INTSTR ( FRAMID, FRAME )
+      !>         END IF
       !>
-      !>                 CALL ETCAL ( DSKDSC(BTMIDX), BTIME )
-      !>                 CALL ETCAL ( DSKDSC(ETMIDX), ETIME )
+      !>         CALL ETCAL ( DSKDSC(BTMIDX), BTIME )
+      !>         CALL ETCAL ( DSKDSC(ETMIDX), ETIME )
       !>
-      !>                 CORSYS = NINT( DSKDSC(SYSIDX) )
+      !>         CORSYS = NINT( DSKDSC(SYSIDX) )
       !>
-      !>                 SYSNAM = SYSNMS( CORSYS )
+      !>         SYSNAM = SYSNMS( CORSYS )
       !>
-      !>                 WRITE (*,*)    '===================================='
-      !>                 WRITE (*,FMT2) ' DSK descriptor for segment ',
-      !>             .                  SEGNO
-      !>                 WRITE (*,*)    '  Body:              ', BODNAM
-      !>                 WRITE (*,*)    '  Surface:           ', SRFNAM
-      !>                 WRITE (*,*)    '  Frame:             ', FRAME
-      !>                 WRITE (*,*)    '  Start time (TDB):  ', BTIME
-      !>                 WRITE (*,*)    '  Stop time  (TDB):  ', ETIME
-      !>                 WRITE (*,*)    '  Data type:         ', DTYPE
-      !>                 WRITE (*,*)    '  Data class:        ', DCLASS, ' ',
-      !>             .                                        CLSNMS(DCLASS)
-      !>                 WRITE (*,*)    '  Coordinate system: ', SYSNAM
+      !>         WRITE (*,*)    '===================================='
+      !>         WRITE (*,FMT2) ' DSK descriptor for segment ',
+      !>     .                  SEGNO
+      !>         WRITE (*,*)    '  Body:              ', BODNAM
+      !>         WRITE (*,*)    '  Surface:           ', SRFNAM
+      !>         WRITE (*,*)    '  Frame:             ', FRAME
+      !>         WRITE (*,*)    '  Start time (TDB):  ', BTIME
+      !>         WRITE (*,*)    '  Stop time  (TDB):  ', ETIME
+      !>         WRITE (*,*)    '  Data type:         ', DTYPE
+      !>         WRITE (*,*)    '  Data class:        ', DCLASS, ' ',
+      !>     .                                        CLSNMS(DCLASS)
+      !>         WRITE (*,*)    '  Coordinate system: ', SYSNAM
       !>
-      !>                 IF ( CORSYS .EQ. PDTSYS ) THEN
+      !>         IF ( CORSYS .EQ. PDTSYS ) THEN
       !>
-      !>                    RE = DSKDSC(PARIDX  )
-      !>                    F  = DSKDSC(PARIDX+1)
-      !>                    RP = RE * ( 1.D0 - F )
+      !>            RE = DSKDSC(PARIDX  )
+      !>            F  = DSKDSC(PARIDX+1)
+      !>            RP = RE * ( 1.D0 - F )
       !>
-      !>                    WRITE (*,*) '     Equatorial radius (km): ', RE
-      !>                    WRITE (*,*) '     Polar radius      (km): ', RP
+      !>            WRITE (*,*) '     Equatorial radius (km): ', RE
+      !>            WRITE (*,*) '     Polar radius      (km): ', RP
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>                 WRITE (*,*) '  Segment boundaries:'
+      !>         WRITE (*,*) '  Segment boundaries:'
       !>
-      !>                 IF ( CORSYS .EQ. LATSYS ) THEN
+      !>         IF ( CORSYS .EQ. LATSYS ) THEN
       !>
-      !>                    WRITE (*,FMT1) '    Longitude (deg):   ',
-      !>             .                  DPR() * DSKDSC(MN1IDX),
-      !>             .                  DPR() * DSKDSC(MX1IDX)
-      !>                    WRITE (*,FMT1) '    Latitude  (deg):   ',
-      !>             .                  DPR() * DSKDSC(MN2IDX),
-      !>             .                  DPR() * DSKDSC(MX2IDX)
-      !>                    WRITE (*,FMT1) '    Radius     (km):   ',
-      !>             .                          DSKDSC(MN3IDX),
-      !>             .                          DSKDSC(MX3IDX)
+      !>            WRITE (*,FMT1) '    Longitude (deg):   ',
+      !>     .                  DPR() * DSKDSC(MN1IDX),
+      !>     .                  DPR() * DSKDSC(MX1IDX)
+      !>            WRITE (*,FMT1) '    Latitude  (deg):   ',
+      !>     .                  DPR() * DSKDSC(MN2IDX),
+      !>     .                  DPR() * DSKDSC(MX2IDX)
+      !>            WRITE (*,FMT1) '    Radius     (km):   ',
+      !>     .                          DSKDSC(MN3IDX),
+      !>     .                          DSKDSC(MX3IDX)
       !>
-      !>                 ELSE IF ( CORSYS .EQ. CYLSYS ) THEN
+      !>         ELSE IF ( CORSYS .EQ. CYLSYS ) THEN
       !>
-      !>                    CALL SETMSG ( 'Coordinate system was '
-      !>             .      //            'Cylindrical'           )
-      !>                    CALL SIGERR ( 'SPICE(NOTSUPPORTED)'   )
+      !>            CALL SETMSG ( 'Coordinate system was '
+      !>     .      //            'Cylindrical'           )
+      !>            CALL SIGERR ( 'SPICE(NOTSUPPORTED)'   )
       !>
-      !>                 ELSE IF ( CORSYS .EQ. RECSYS ) THEN
+      !>         ELSE IF ( CORSYS .EQ. RECSYS ) THEN
       !>
-      !>                    WRITE (*,FMT1) '    X-coordinate (km): ',
-      !>             .                          DSKDSC(MN1IDX),
-      !>             .                          DSKDSC(MX1IDX)
-      !>                    WRITE (*,FMT1) '    Y-coordinate (km): ',
-      !>             .                          DSKDSC(MN2IDX),
-      !>             .                          DSKDSC(MX2IDX)
-      !>                    WRITE (*,FMT1) '    Z-coordinate (km): ',
-      !>             .                          DSKDSC(MN3IDX),
-      !>             .                          DSKDSC(MX3IDX)
+      !>            WRITE (*,FMT1) '    X-coordinate (km): ',
+      !>     .                          DSKDSC(MN1IDX),
+      !>     .                          DSKDSC(MX1IDX)
+      !>            WRITE (*,FMT1) '    Y-coordinate (km): ',
+      !>     .                          DSKDSC(MN2IDX),
+      !>     .                          DSKDSC(MX2IDX)
+      !>            WRITE (*,FMT1) '    Z-coordinate (km): ',
+      !>     .                          DSKDSC(MN3IDX),
+      !>     .                          DSKDSC(MX3IDX)
       !>
-      !>                 ELSE IF ( CORSYS .EQ. PDTSYS ) THEN
+      !>         ELSE IF ( CORSYS .EQ. PDTSYS ) THEN
       !>
-      !>                    WRITE (*,FMT1) '    Longitude (deg):   ',
-      !>             .                  DPR() * DSKDSC(MN1IDX),
-      !>             .                  DPR() * DSKDSC(MX1IDX)
-      !>                    WRITE (*,FMT1) '    Latitude  (deg):   ',
-      !>             .                  DPR() * DSKDSC(MN2IDX),
-      !>             .                  DPR() * DSKDSC(MX2IDX)
-      !>                    WRITE (*,FMT1) '    Altitude   (km):   ',
-      !>             .                          DSKDSC(MN3IDX),
-      !>             .                          DSKDSC(MX3IDX)
-      !>                 END IF
-      !>        C
-      !>        C        Find the next segment, if it exists.
-      !>        C
-      !>                 CALL DLAFNS ( HANDLE, DLADSC, NXTDSC, FOUND )
+      !>            WRITE (*,FMT1) '    Longitude (deg):   ',
+      !>     .                  DPR() * DSKDSC(MN1IDX),
+      !>     .                  DPR() * DSKDSC(MX1IDX)
+      !>            WRITE (*,FMT1) '    Latitude  (deg):   ',
+      !>     .                  DPR() * DSKDSC(MN2IDX),
+      !>     .                  DPR() * DSKDSC(MX2IDX)
+      !>            WRITE (*,FMT1) '    Altitude   (km):   ',
+      !>     .                          DSKDSC(MN3IDX),
+      !>     .                          DSKDSC(MX3IDX)
+      !>         END IF
+      !>C
+      !>C        Find the next segment, if it exists.
+      !>C
+      !>         CALL DLAFNS ( HANDLE, DLADSC, NXTDSC, FOUND )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds and an empty
@@ -10267,11 +10499,15 @@ contains
       !>           readability. Corrected header typo.
       !>
       !>        09-OCT-2009 (NJB)
-      module procedure dskgd
+      module subroutine dskgd ( ctx, handle, dladsc, dskdsc )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DSK file.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA segment descriptor.
+      real(wp), intent(out) :: dskdsc ( * )  !! DSK segment descriptor.
 
       integer(ip) :: dpbase
       integer(ip) :: dpsize
@@ -10307,8 +10543,10 @@ contains
       call dasrdd ( ctx, handle, dpbase+1, dpbase+dskdsz, dskdsc )
 
       return
-      end procedure dskgd
+      end subroutine dskgd
 
+      !> Return bookkeeping data from a DSK type 2 segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
@@ -10415,107 +10653,109 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DSKB02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DSKB02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dskdsc.inc'
-      !>              INCLUDE 'dsk02.inc'
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dskdsc.inc'
+      !>      INCLUDE 'dsk02.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    DSK
-      !>              CHARACTER*(LNSIZE)    OUTLIN
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    DSK
+      !>      CHARACTER*(LNSIZE)    OUTLIN
       !>
-      !>              DOUBLE PRECISION      VOXORI ( 3 )
-      !>              DOUBLE PRECISION      VOXSIZ
-      !>              DOUBLE PRECISION      VTXBDS ( 2, 3 )
+      !>      DOUBLE PRECISION      VOXORI ( 3 )
+      !>      DOUBLE PRECISION      VOXSIZ
+      !>      DOUBLE PRECISION      VTXBDS ( 2, 3 )
       !>
-      !>              INTEGER               CGSCAL
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               NP
-      !>              INTEGER               NV
-      !>              INTEGER               NVXTOT
-      !>              INTEGER               VGREXT ( 3 )
-      !>              INTEGER               VOXNPL
-      !>              INTEGER               VOXNPT
-      !>              INTEGER               VTXNPL
+      !>      INTEGER               CGSCAL
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               NP
+      !>      INTEGER               NV
+      !>      INTEGER               NVXTOT
+      !>      INTEGER               VGREXT ( 3 )
+      !>      INTEGER               VOXNPL
+      !>      INTEGER               VOXNPT
+      !>      INTEGER               VTXNPL
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the name of the DSK to read.
-      !>        C
-      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
-      !>        C
-      !>        C     Open the DSK file for read access.
-      !>        C     We use the DAS-level interface for
-      !>        C     this function.
-      !>        C
-      !>              CALL DASOPR ( DSK, HANDLE )
+      !>C
+      !>C     Prompt for the name of the DSK to read.
+      !>C
+      !>      CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>C
+      !>C     Open the DSK file for read access.
+      !>C     We use the DAS-level interface for
+      !>C     this function.
+      !>C
+      !>      CALL DASOPR ( DSK, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a forward search through the
-      !>        C     kernel, treating the file as a DLA.
-      !>        C     In this example, it's a very short
-      !>        C     search.
-      !>        C
-      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>C
+      !>C     Begin a forward search through the
+      !>C     kernel, treating the file as a DLA.
+      !>C     In this example, it's a very short
+      !>C     search.
+      !>C
+      !>      CALL DLABFS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
-      !>        C
-      !>        C        We arrive here only if the kernel
-      !>        C        contains no segments.  This is
-      !>        C        unexpected, but we're prepared for it.
-      !>        C
-      !>                 CALL SETMSG ( 'No segments found '
-      !>             .   //            'in DSK file #.'    )
-      !>                 CALL ERRCH  ( '#',  DSK           )
-      !>                 CALL SIGERR ( 'SPICE(NODATA)'     )
+      !>      IF ( .NOT. FOUND ) THEN
+      !>C
+      !>C        We arrive here only if the kernel
+      !>C        contains no segments.  This is
+      !>C        unexpected, but we're prepared for it.
+      !>C
+      !>         CALL SETMSG ( 'No segments found '
+      !>     .   //            'in DSK file #.'    )
+      !>         CALL ERRCH  ( '#',  DSK           )
+      !>         CALL SIGERR ( 'SPICE(NODATA)'     )
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     If we made it this far, DLADSC is the
-      !>        C     DLA descriptor of the first segment.
-      !>        C
-      !>        C     Read and display type 2 bookkeeping data.
-      !>        C
-      !>              CALL DSKB02 ( HANDLE, DLADSC, NV,     NP,     NVXTOT,
-      !>             .              VTXBDS, VOXSIZ, VOXORI, VGREXT, CGSCAL,
-      !>             .              VTXNPL, VOXNPT, VOXNPL                 )
+      !>C
+      !>C     If we made it this far, DLADSC is the
+      !>C     DLA descriptor of the first segment.
+      !>C
+      !>C     Read and display type 2 bookkeeping data.
+      !>C
+      !>      CALL DSKB02 ( HANDLE, DLADSC, NV,     NP,     NVXTOT,
+      !>     .              VTXBDS, VOXSIZ, VOXORI, VGREXT, CGSCAL,
+      !>     .              VTXNPL, VOXNPT, VOXNPL                 )
       !>
-      !>        C
-      !>        C     Show vertex and plate counts.
-      !>        C
-      !>              OUTLIN = 'Number of vertices:                 #'
-      !>              CALL REPMI  ( OUTLIN, '#', NV, OUTLIN )
-      !>              CALL TOSTDO ( OUTLIN )
+      !>C
+      !>C     Show vertex and plate counts.
+      !>C
+      !>      OUTLIN = 'Number of vertices:                 #'
+      !>      CALL REPMI  ( OUTLIN, '#', NV, OUTLIN )
+      !>      CALL TOSTDO ( OUTLIN )
       !>
-      !>              OUTLIN = 'Number of plates:                   #'
-      !>              CALL REPMI  ( OUTLIN, '#', NP, OUTLIN )
-      !>              CALL TOSTDO ( OUTLIN )
+      !>      OUTLIN = 'Number of plates:                   #'
+      !>      CALL REPMI  ( OUTLIN, '#', NP, OUTLIN )
+      !>      CALL TOSTDO ( OUTLIN )
       !>
-      !>              OUTLIN = 'Voxel edge length (km):             #'
-      !>              CALL REPMF  ( OUTLIN, '#', VOXSIZ, 6, 'E', OUTLIN )
-      !>              CALL TOSTDO ( OUTLIN )
+      !>      OUTLIN = 'Voxel edge length (km):             #'
+      !>      CALL REPMF  ( OUTLIN, '#', VOXSIZ, 6, 'E', OUTLIN )
+      !>      CALL TOSTDO ( OUTLIN )
       !>
-      !>              OUTLIN = 'Number of voxels:                   #'
-      !>              CALL REPMI  ( OUTLIN, '#', NVXTOT, OUTLIN )
-      !>              CALL TOSTDO ( OUTLIN )
+      !>      OUTLIN = 'Number of voxels:                   #'
+      !>      CALL REPMI  ( OUTLIN, '#', NVXTOT, OUTLIN )
+      !>      CALL TOSTDO ( OUTLIN )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -10567,12 +10807,26 @@ contains
       !>           Updated header.
       !>
       !>        Beta Version 1.0.0, 30-OCT-2006 (NJB)
-      module procedure dskb02
+      module subroutine dskb02 ( ctx, handle, dladsc, nv, np, nvxtot, vtxbds, voxsiz, voxori, vgrext, cgscal, vtxnpl, voxnpt, voxnpl )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+      integer(ip), intent(out) :: nv  !! Number of vertices in model.
+      integer(ip), intent(out) :: np  !! Number of plates in model.
+      integer(ip), intent(out) :: nvxtot  !! Number of voxels in fine grid.
+      real(wp), intent(out) :: vtxbds ( 2, 3 )  !! Vertex bounds.
+      real(wp), intent(out) :: voxsiz  !! Fine voxel edge length.
+      real(wp), intent(out) :: voxori ( 3 )  !! Fine voxel grid origin.
+      integer(ip), intent(out) :: vgrext ( 3 )  !! Fine voxel grid extent.
+      integer(ip), intent(out) :: cgscal  !! Coarse voxel grid scale.
+      integer(ip), intent(out) :: vtxnpl  !! Size of vertex-plate correspondence list.
+      integer(ip), intent(out) :: voxnpt  !! Size of voxel-plate pointer list.
+      integer(ip), intent(out) :: voxnpl  !! Size of voxel-plate correspondence list.
 
       integer(ip), parameter :: dbfsiz = 10
 
@@ -10622,8 +10876,10 @@ contains
       voxsiz = dbuff ( ixvxsz - dskdsz )
 
       return
-      end procedure dskb02
+      end subroutine dskb02
 
+      !> Fetch double precision data from a type 2 DSK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
@@ -10778,133 +11034,135 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DSKD02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DSKD02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dskdsc.inc'
-      !>              INCLUDE 'dsk02.inc'
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dskdsc.inc'
+      !>      INCLUDE 'dsk02.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT
-      !>              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT
+      !>      PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    DSK
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    DSK
       !>
-      !>              DOUBLE PRECISION      VRTCES ( 3, 3 )
+      !>      DOUBLE PRECISION      VRTCES ( 3, 3 )
       !>
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               K
-      !>              INTEGER               N
-      !>              INTEGER               NP
-      !>              INTEGER               START
-      !>              INTEGER               VRTIDS ( 3 )
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               K
+      !>      INTEGER               N
+      !>      INTEGER               NP
+      !>      INTEGER               START
+      !>      INTEGER               VRTIDS ( 3 )
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the name of the DSK to read.
-      !>        C
-      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
-      !>        C
-      !>        C     Open the DSK file for read access.
-      !>        C     We use the DAS-level interface for
-      !>        C     this function.
-      !>        C
-      !>              CALL DASOPR ( DSK, HANDLE )
+      !>C
+      !>C     Prompt for the name of the DSK to read.
+      !>C
+      !>      CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>C
+      !>C     Open the DSK file for read access.
+      !>C     We use the DAS-level interface for
+      !>C     this function.
+      !>C
+      !>      CALL DASOPR ( DSK, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a forward search through the
-      !>        C     kernel, treating the file as a DLA.
-      !>        C     In this example, it's a very short
-      !>        C     search.
-      !>        C
-      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>C
+      !>C     Begin a forward search through the
+      !>C     kernel, treating the file as a DLA.
+      !>C     In this example, it's a very short
+      !>C     search.
+      !>C
+      !>      CALL DLABFS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
-      !>        C
-      !>        C        We arrive here only if the kernel
-      !>        C        contains no segments.  This is
-      !>        C        unexpected, but we're prepared for it.
-      !>        C
-      !>                 CALL SETMSG ( 'No segments found '
-      !>             .   //            'in DSK file #.'    )
-      !>                 CALL ERRCH  ( '#',  DSK           )
-      !>                 CALL SIGERR ( 'SPICE(NODATA)'     )
+      !>      IF ( .NOT. FOUND ) THEN
+      !>C
+      !>C        We arrive here only if the kernel
+      !>C        contains no segments.  This is
+      !>C        unexpected, but we're prepared for it.
+      !>C
+      !>         CALL SETMSG ( 'No segments found '
+      !>     .   //            'in DSK file #.'    )
+      !>         CALL ERRCH  ( '#',  DSK           )
+      !>         CALL SIGERR ( 'SPICE(NODATA)'     )
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     If we made it this far, DLADSC is the
-      !>        C     DLA descriptor of the first segment.
-      !>        C
-      !>        C     Find the number of plates in the model.
-      !>        C
-      !>              CALL DSKI02 ( HANDLE, DLADSC, KWNP, 1, 1, N, NP )
-      !>              WRITE (*,*) 'Number of plates: ', NP
+      !>C
+      !>C     If we made it this far, DLADSC is the
+      !>C     DLA descriptor of the first segment.
+      !>C
+      !>C     Find the number of plates in the model.
+      !>C
+      !>      CALL DSKI02 ( HANDLE, DLADSC, KWNP, 1, 1, N, NP )
+      !>      WRITE (*,*) 'Number of plates: ', NP
       !>
-      !>        C
-      !>        C     For the first 5 plates, look up the desired data.
-      !>        C
-      !>              K = MIN(5, NP)
-      !>              DO I = 1, K
-      !>        C
-      !>        C        For the Ith plate, find the associated
-      !>        C        vertex IDs.  We must take into account
-      !>        C        the fact that each plate has three
-      !>        C        vertices when we compute the start
-      !>        C        index.
-      !>        C
-      !>                 START = 3*(I-1)+1
+      !>C
+      !>C     For the first 5 plates, look up the desired data.
+      !>C
+      !>      K = MIN(5, NP)
+      !>      DO I = 1, K
+      !>C
+      !>C        For the Ith plate, find the associated
+      !>C        vertex IDs.  We must take into account
+      !>C        the fact that each plate has three
+      !>C        vertices when we compute the start
+      !>C        index.
+      !>C
+      !>         START = 3*(I-1)+1
       !>
-      !>                 CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, START,
-      !>             .                 3,      N,      VRTIDS        )
+      !>         CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, START,
+      !>     .                 3,      N,      VRTIDS        )
       !>
-      !>                 DO J = 1, 3
-      !>        C
-      !>        C            Fetch the vertex associated with
-      !>        C            the Jth vertex ID.  Again, each
-      !>        C            vertex is a 3-vector.  Note that
-      !>        C            the vertices are double-precision
-      !>        C            data, so we fetch them using
-      !>        C            DSKD02.
-      !>        C
-      !>                     START = 3*( VRTIDS(J) - 1 ) + 1
+      !>         DO J = 1, 3
+      !>C
+      !>C            Fetch the vertex associated with
+      !>C            the Jth vertex ID.  Again, each
+      !>C            vertex is a 3-vector.  Note that
+      !>C            the vertices are double-precision
+      !>C            data, so we fetch them using
+      !>C            DSKD02.
+      !>C
+      !>             START = 3*( VRTIDS(J) - 1 ) + 1
       !>
-      !>                     CALL DSKD02 ( HANDLE, DLADSC, KWVERT,  START,
-      !>             .                     3,      N,      VRTCES(1,J)    )
-      !>                 END DO
+      !>             CALL DSKD02 ( HANDLE, DLADSC, KWVERT,  START,
+      !>     .                     3,      N,      VRTCES(1,J)    )
+      !>         END DO
       !>
-      !>        C
-      !>        C        Display the vertices of the Ith plate:
-      !>        C
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Plate number: ', I
-      !>                 WRITE (*,FMT) '   Vertex 1: ', (VRTCES(J,1), J=1,3)
-      !>                 WRITE (*,FMT) '   Vertex 2: ', (VRTCES(J,2), J=1,3)
-      !>                 WRITE (*,FMT) '   Vertex 3: ', (VRTCES(J,3), J=1,3)
+      !>C
+      !>C        Display the vertices of the Ith plate:
+      !>C
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Plate number: ', I
+      !>         WRITE (*,FMT) '   Vertex 1: ', (VRTCES(J,1), J=1,3)
+      !>         WRITE (*,FMT) '   Vertex 2: ', (VRTCES(J,2), J=1,3)
+      !>         WRITE (*,FMT) '   Vertex 3: ', (VRTCES(J,3), J=1,3)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the kernel.  This isn't necessary in a stand-
-      !>        C     alone program, but it's good practice in subroutines
-      !>        C     because it frees program and system resources.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the kernel.  This isn't necessary in a stand-
+      !>C     alone program, but it's good practice in subroutines
+      !>C     because it frees program and system resources.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -10999,12 +11257,20 @@ contains
       !>           descriptors.
       !>
       !>        DSKLIB Version 1.0.0, 27-OCT-2006 (NJB)
-      module procedure dskd02
+      module subroutine dskd02 ( ctx, handle, dladsc, item, start, room, n, values )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+      integer(ip), intent(in) :: item  !! Keyword identifying item to fetch.
+      integer(ip), intent(in) :: start  !! Start index.
+      integer(ip), intent(in) :: room  !! Amount of room in output array.
+      integer(ip), intent(out) :: n  !! Number of values returned.
+      real(wp), intent(out) :: values ( * )  !! Array containing requested item.
       integer(ip) :: nv_1(1)  !! one-element copy of nv (array argument)
       integer(ip) :: b
       integer(ip) :: dbase
@@ -11160,8 +11426,10 @@ contains
 
       return
       end associate
-      end procedure dskd02
+      end subroutine dskd02
 
+      !> Fetch integer data from a type 2 DSK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
@@ -11376,133 +11644,135 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DSKI02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DSKI02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dskdsc.inc'
-      !>              INCLUDE 'dsk02.inc'
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dskdsc.inc'
+      !>      INCLUDE 'dsk02.inc'
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              CHARACTER*(*)         FMT
-      !>              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      CHARACTER*(*)         FMT
+      !>      PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    DSK
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    DSK
       !>
-      !>              DOUBLE PRECISION      VRTCES ( 3, 3 )
+      !>      DOUBLE PRECISION      VRTCES ( 3, 3 )
       !>
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               K
-      !>              INTEGER               N
-      !>              INTEGER               NP
-      !>              INTEGER               START
-      !>              INTEGER               VRTIDS ( 3 )
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               K
+      !>      INTEGER               N
+      !>      INTEGER               NP
+      !>      INTEGER               START
+      !>      INTEGER               VRTIDS ( 3 )
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for the name of the DSK to read.
-      !>        C
-      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
-      !>        C
-      !>        C     Open the DSK file for read access.
-      !>        C     We use the DAS-level interface for
-      !>        C     this function.
-      !>        C
-      !>              CALL DASOPR ( DSK, HANDLE )
+      !>C
+      !>C     Prompt for the name of the DSK to read.
+      !>C
+      !>      CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>C
+      !>C     Open the DSK file for read access.
+      !>C     We use the DAS-level interface for
+      !>C     this function.
+      !>C
+      !>      CALL DASOPR ( DSK, HANDLE )
       !>
-      !>        C
-      !>        C     Begin a forward search through the
-      !>        C     kernel, treating the file as a DLA.
-      !>        C     In this example, it's a very short
-      !>        C     search.
-      !>        C
-      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>C
+      !>C     Begin a forward search through the
+      !>C     kernel, treating the file as a DLA.
+      !>C     In this example, it's a very short
+      !>C     search.
+      !>C
+      !>      CALL DLABFS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
-      !>        C
-      !>        C        We arrive here only if the kernel
-      !>        C        contains no segments.  This is
-      !>        C        unexpected, but we're prepared for it.
-      !>        C
-      !>                 CALL SETMSG ( 'No segments found '
-      !>             .   //            'in DSK file #.'    )
-      !>                 CALL ERRCH  ( '#',  DSK           )
-      !>                 CALL SIGERR ( 'SPICE(NODATA)'     )
+      !>      IF ( .NOT. FOUND ) THEN
+      !>C
+      !>C        We arrive here only if the kernel
+      !>C        contains no segments.  This is
+      !>C        unexpected, but we're prepared for it.
+      !>C
+      !>         CALL SETMSG ( 'No segments found '
+      !>     .   //            'in DSK file #.'    )
+      !>         CALL ERRCH  ( '#',  DSK           )
+      !>         CALL SIGERR ( 'SPICE(NODATA)'     )
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     If we made it this far, DLADSC is the
-      !>        C     DLA descriptor of the first segment.
-      !>        C
-      !>        C     Find the number of plates in the model.
-      !>        C
-      !>              CALL DSKI02 ( HANDLE, DLADSC, KWNP, 1, 1, N, NP )
-      !>              WRITE (*,*) 'Number of plates: ', NP
+      !>C
+      !>C     If we made it this far, DLADSC is the
+      !>C     DLA descriptor of the first segment.
+      !>C
+      !>C     Find the number of plates in the model.
+      !>C
+      !>      CALL DSKI02 ( HANDLE, DLADSC, KWNP, 1, 1, N, NP )
+      !>      WRITE (*,*) 'Number of plates: ', NP
       !>
-      !>        C
-      !>        C     For the first 5 plates, look up the desired data.
-      !>        C
-      !>              K = MIN(5, NP)
-      !>              DO I = 1, K
-      !>        C
-      !>        C        For the Ith plate, find the associated
-      !>        C        vertex IDs.  We must take into account
-      !>        C        the fact that each plate has three
-      !>        C        vertices when we compute the start
-      !>        C        index.
-      !>        C
-      !>                 START = 3*(I-1)+1
+      !>C
+      !>C     For the first 5 plates, look up the desired data.
+      !>C
+      !>      K = MIN(5, NP)
+      !>      DO I = 1, K
+      !>C
+      !>C        For the Ith plate, find the associated
+      !>C        vertex IDs.  We must take into account
+      !>C        the fact that each plate has three
+      !>C        vertices when we compute the start
+      !>C        index.
+      !>C
+      !>         START = 3*(I-1)+1
       !>
-      !>                 CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, START,
-      !>             .                 3,      N,      VRTIDS        )
+      !>         CALL DSKI02 ( HANDLE, DLADSC, KWPLAT, START,
+      !>     .                 3,      N,      VRTIDS        )
       !>
-      !>                 DO J = 1, 3
-      !>        C
-      !>        C            Fetch the vertex associated with
-      !>        C            the Jth vertex ID.  Again, each
-      !>        C            vertex is a 3-vector.  Note that
-      !>        C            the vertices are double-precision
-      !>        C            data, so we fetch them using
-      !>        C            DSKD02.
-      !>        C
-      !>                     START = 3*( VRTIDS(J) - 1 ) + 1
+      !>         DO J = 1, 3
+      !>C
+      !>C            Fetch the vertex associated with
+      !>C            the Jth vertex ID.  Again, each
+      !>C            vertex is a 3-vector.  Note that
+      !>C            the vertices are double-precision
+      !>C            data, so we fetch them using
+      !>C            DSKD02.
+      !>C
+      !>             START = 3*( VRTIDS(J) - 1 ) + 1
       !>
-      !>                     CALL DSKD02 ( HANDLE, DLADSC, KWVERT,  START,
-      !>             .                     3,      N,      VRTCES(1,J)    )
-      !>                 END DO
+      !>             CALL DSKD02 ( HANDLE, DLADSC, KWVERT,  START,
+      !>     .                     3,      N,      VRTCES(1,J)    )
+      !>         END DO
       !>
-      !>        C
-      !>        C        Display the vertices of the Ith plate:
-      !>        C
-      !>                 WRITE (*,*)   ' '
-      !>                 WRITE (*,*)   'Plate number: ', I
-      !>                 WRITE (*,FMT) '   Vertex 1: ', (VRTCES(J,1), J=1,3)
-      !>                 WRITE (*,FMT) '   Vertex 2: ', (VRTCES(J,2), J=1,3)
-      !>                 WRITE (*,FMT) '   Vertex 3: ', (VRTCES(J,3), J=1,3)
+      !>C
+      !>C        Display the vertices of the Ith plate:
+      !>C
+      !>         WRITE (*,*)   ' '
+      !>         WRITE (*,*)   'Plate number: ', I
+      !>         WRITE (*,FMT) '   Vertex 1: ', (VRTCES(J,1), J=1,3)
+      !>         WRITE (*,FMT) '   Vertex 2: ', (VRTCES(J,2), J=1,3)
+      !>         WRITE (*,FMT) '   Vertex 3: ', (VRTCES(J,3), J=1,3)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the kernel.  This isn't necessary in a stand-
-      !>        C     alone program, but it's good practice in subroutines
-      !>        C     because it frees program and system resources.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the kernel.  This isn't necessary in a stand-
+      !>C     alone program, but it's good practice in subroutines
+      !>C     because it frees program and system resources.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -11586,12 +11856,20 @@ contains
       !>           Updated header.
       !>
       !>        DSKLIB Version 1.0.0, 27-OCT-2006 (NJB)
-      module procedure dski02
+      module subroutine dski02 ( ctx, handle, dladsc, item, start, room, n, values )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+      integer(ip), intent(in) :: item  !! Keyword identifying item to fetch.
+      integer(ip), intent(in) :: start  !! Start index.
+      integer(ip), intent(in) :: room  !! Amount of room in output array.
+      integer(ip), intent(out) :: n  !! Number of values returned.
+      integer(ip), intent(out) :: values ( * )  !! Array containing requested item.
       integer(ip) :: b
       integer(ip) :: e
       integer(ip) :: ibase
@@ -11879,8 +12157,11 @@ contains
 
       return
       end associate
-      end procedure dski02
+      end subroutine dski02
 
+      !> Compute the unit normal vector for a specified plate from a type
+      !> 2 DSK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
@@ -11985,125 +12266,127 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DSKN02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DSKN02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dsk02.inc'
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dsk02.inc'
       !>
-      !>              CHARACTER*(*)         FMT
-      !>              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
+      !>      CHARACTER*(*)         FMT
+      !>      PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
       !>
-      !>              INTEGER               BUFSIZ
-      !>              PARAMETER           ( BUFSIZ = 10000 )
+      !>      INTEGER               BUFSIZ
+      !>      PARAMETER           ( BUFSIZ = 10000 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              CHARACTER*(FILSIZ)    DSK
+      !>      CHARACTER*(FILSIZ)    DSK
       !>
-      !>              DOUBLE PRECISION      NORMAL ( 3 )
-      !>              DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
+      !>      DOUBLE PRECISION      NORMAL ( 3 )
+      !>      DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
       !>
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               N
-      !>              INTEGER               NNORM
-      !>              INTEGER               NP
-      !>              INTEGER               NREAD
-      !>              INTEGER               NV
-      !>              INTEGER               NVTX
-      !>              INTEGER               PLATES  ( 3, BUFSIZ )
-      !>              INTEGER               PLIX
-      !>              INTEGER               REMAIN
-      !>              INTEGER               START
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               N
+      !>      INTEGER               NNORM
+      !>      INTEGER               NP
+      !>      INTEGER               NREAD
+      !>      INTEGER               NV
+      !>      INTEGER               NVTX
+      !>      INTEGER               PLATES  ( 3, BUFSIZ )
+      !>      INTEGER               PLIX
+      !>      INTEGER               REMAIN
+      !>      INTEGER               START
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for name of DSK and open file for reading.
-      !>        C
-      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>C
+      !>C     Prompt for name of DSK and open file for reading.
+      !>C
+      !>      CALL PROMPT ( 'Enter DSK name > ', DSK )
       !>
-      !>              CALL DASOPR ( DSK, HANDLE )
+      !>      CALL DASOPR ( DSK, HANDLE )
       !>
-      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>      CALL DLABFS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
+      !>      IF ( .NOT. FOUND ) THEN
       !>
-      !>                 CALL SETMSG ( 'No segment found in file #.' )
-      !>                 CALL ERRCH  ( '#',  DSK                     )
-      !>                 CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
+      !>         CALL SETMSG ( 'No segment found in file #.' )
+      !>         CALL ERRCH  ( '#',  DSK                     )
+      !>         CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Get segment vertex and plate counts.
-      !>        C
-      !>              CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
+      !>C
+      !>C     Get segment vertex and plate counts.
+      !>C
+      !>      CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Number of vertices: ', NV
-      !>              WRITE (*,*) 'Number of plates:   ', NP
-      !>        C
-      !>        C     Display the vertices of the first 5 plates.
-      !>        C
-      !>              REMAIN = MIN(5, NP)
-      !>              START  = 1
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Number of vertices: ', NV
+      !>      WRITE (*,*) 'Number of plates:   ', NP
+      !>C
+      !>C     Display the vertices of the first 5 plates.
+      !>C
+      !>      REMAIN = MIN(5, NP)
+      !>      START  = 1
       !>
-      !>              DO WHILE ( REMAIN .GT. 0 )
-      !>        C
-      !>        C        NREAD is the number of plates we'll read on this
-      !>        C        loop pass.
-      !>        C
-      !>                 NREAD  = MIN ( BUFSIZ, REMAIN )
+      !>      DO WHILE ( REMAIN .GT. 0 )
+      !>C
+      !>C        NREAD is the number of plates we'll read on this
+      !>C        loop pass.
+      !>C
+      !>         NREAD  = MIN ( BUFSIZ, REMAIN )
       !>
-      !>                 CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
-      !>             .                 PLATES                          )
+      !>         CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
+      !>     .                 PLATES                          )
       !>
-      !>                 DO I = 1, N
+      !>         DO I = 1, N
       !>
-      !>                    PLIX = START + I - 1
-      !>        C
-      !>        C           Read the vertices of the current plate.
-      !>        C
-      !>                    DO J = 1, 3
-      !>                       CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
-      !>             .                       1,      NVTX,   VERTS (1,J)  )
-      !>                    END DO
-      !>        C
-      !>        C           Display the vertices of the current plate:
-      !>        C
-      !>                    WRITE (*,*  ) ' '
-      !>                    WRITE (*,*  ) 'Plate number: ', PLIX
-      !>                    WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
-      !>                    WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
-      !>                    WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
+      !>            PLIX = START + I - 1
+      !>C
+      !>C           Read the vertices of the current plate.
+      !>C
+      !>            DO J = 1, 3
+      !>               CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
+      !>     .                       1,      NVTX,   VERTS (1,J)  )
+      !>            END DO
+      !>C
+      !>C           Display the vertices of the current plate:
+      !>C
+      !>            WRITE (*,*  ) ' '
+      !>            WRITE (*,*  ) 'Plate number: ', PLIX
+      !>            WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
+      !>            WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
+      !>            WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
       !>
-      !>        C
-      !>        C           Display the normal vector of the current plate:
-      !>        C
-      !>                    CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
+      !>C
+      !>C           Display the normal vector of the current plate:
+      !>C
+      !>            CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
       !>
-      !>                    WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
+      !>            WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 START  = START  + NREAD
-      !>                 REMAIN = REMAIN - NREAD
+      !>         START  = START  + NREAD
+      !>         REMAIN = REMAIN - NREAD
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the kernel.  This isn't necessary in a stand-
-      !>        C     alone program, but it's good practice in subroutines
-      !>        C     because it frees program and system resources.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the kernel.  This isn't necessary in a stand-
+      !>C     alone program, but it's good practice in subroutines
+      !>C     because it frees program and system resources.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -12179,13 +12462,18 @@ contains
       !>        $Examples section.
       !>
       !>        DSKLIB Version 1.0.0, 02-JUN-2010 (NJB)
-      module procedure dskn02
+      module subroutine dskn02 ( ctx, handle, dladsc, plid, normal )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ucrss
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+      integer(ip), intent(in) :: plid  !! Plate ID.
+      real(wp), intent(out) :: normal ( 3 )  !! Plate's unit normal vector.
 
 !     Local variables
 !
@@ -12267,8 +12555,10 @@ contains
       call ucrss ( edge1, edge2, normal )
 
       return
-      end procedure dskn02
+      end subroutine dskn02
 
+      !> Fetch triangular plates from a type 2 DSK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
@@ -12390,125 +12680,127 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DSKP02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DSKP02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dsk02.inc'
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dsk02.inc'
       !>
-      !>              CHARACTER*(*)         FMT
-      !>              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
+      !>      CHARACTER*(*)         FMT
+      !>      PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
       !>
-      !>              INTEGER               BUFSIZ
-      !>              PARAMETER           ( BUFSIZ = 10000 )
+      !>      INTEGER               BUFSIZ
+      !>      PARAMETER           ( BUFSIZ = 10000 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              CHARACTER*(FILSIZ)    DSK
+      !>      CHARACTER*(FILSIZ)    DSK
       !>
-      !>              DOUBLE PRECISION      NORMAL ( 3 )
-      !>              DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
+      !>      DOUBLE PRECISION      NORMAL ( 3 )
+      !>      DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
       !>
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               N
-      !>              INTEGER               NNORM
-      !>              INTEGER               NP
-      !>              INTEGER               NREAD
-      !>              INTEGER               NV
-      !>              INTEGER               NVTX
-      !>              INTEGER               PLATES  ( 3, BUFSIZ )
-      !>              INTEGER               PLIX
-      !>              INTEGER               REMAIN
-      !>              INTEGER               START
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               N
+      !>      INTEGER               NNORM
+      !>      INTEGER               NP
+      !>      INTEGER               NREAD
+      !>      INTEGER               NV
+      !>      INTEGER               NVTX
+      !>      INTEGER               PLATES  ( 3, BUFSIZ )
+      !>      INTEGER               PLIX
+      !>      INTEGER               REMAIN
+      !>      INTEGER               START
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for name of DSK and open file for reading.
-      !>        C
-      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>C
+      !>C     Prompt for name of DSK and open file for reading.
+      !>C
+      !>      CALL PROMPT ( 'Enter DSK name > ', DSK )
       !>
-      !>              CALL DASOPR ( DSK, HANDLE )
+      !>      CALL DASOPR ( DSK, HANDLE )
       !>
-      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>      CALL DLABFS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
+      !>      IF ( .NOT. FOUND ) THEN
       !>
-      !>                 CALL SETMSG ( 'No segment found in file #.' )
-      !>                 CALL ERRCH  ( '#',  DSK                     )
-      !>                 CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
+      !>         CALL SETMSG ( 'No segment found in file #.' )
+      !>         CALL ERRCH  ( '#',  DSK                     )
+      !>         CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Get segment vertex and plate counts.
-      !>        C
-      !>              CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
+      !>C
+      !>C     Get segment vertex and plate counts.
+      !>C
+      !>      CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Number of vertices: ', NV
-      !>              WRITE (*,*) 'Number of plates:   ', NP
-      !>        C
-      !>        C     Display the vertices of the first 5 plates.
-      !>        C
-      !>              REMAIN = MIN(5, NP)
-      !>              START  = 1
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Number of vertices: ', NV
+      !>      WRITE (*,*) 'Number of plates:   ', NP
+      !>C
+      !>C     Display the vertices of the first 5 plates.
+      !>C
+      !>      REMAIN = MIN(5, NP)
+      !>      START  = 1
       !>
-      !>              DO WHILE ( REMAIN .GT. 0 )
-      !>        C
-      !>        C        NREAD is the number of plates we'll read on this
-      !>        C        loop pass.
-      !>        C
-      !>                 NREAD  = MIN ( BUFSIZ, REMAIN )
+      !>      DO WHILE ( REMAIN .GT. 0 )
+      !>C
+      !>C        NREAD is the number of plates we'll read on this
+      !>C        loop pass.
+      !>C
+      !>         NREAD  = MIN ( BUFSIZ, REMAIN )
       !>
-      !>                 CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
-      !>             .                 PLATES                          )
+      !>         CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
+      !>     .                 PLATES                          )
       !>
-      !>                 DO I = 1, N
+      !>         DO I = 1, N
       !>
-      !>                    PLIX = START + I - 1
-      !>        C
-      !>        C           Read the vertices of the current plate.
-      !>        C
-      !>                    DO J = 1, 3
-      !>                       CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
-      !>             .                       1,      NVTX,   VERTS (1,J)  )
-      !>                    END DO
-      !>        C
-      !>        C           Display the vertices of the current plate:
-      !>        C
-      !>                    WRITE (*,*  ) ' '
-      !>                    WRITE (*,*  ) 'Plate number: ', PLIX
-      !>                    WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
-      !>                    WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
-      !>                    WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
+      !>            PLIX = START + I - 1
+      !>C
+      !>C           Read the vertices of the current plate.
+      !>C
+      !>            DO J = 1, 3
+      !>               CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
+      !>     .                       1,      NVTX,   VERTS (1,J)  )
+      !>            END DO
+      !>C
+      !>C           Display the vertices of the current plate:
+      !>C
+      !>            WRITE (*,*  ) ' '
+      !>            WRITE (*,*  ) 'Plate number: ', PLIX
+      !>            WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
+      !>            WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
+      !>            WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
       !>
-      !>        C
-      !>        C           Display the normal vector of the current plate:
-      !>        C
-      !>                    CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
+      !>C
+      !>C           Display the normal vector of the current plate:
+      !>C
+      !>            CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
       !>
-      !>                    WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
+      !>            WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 START  = START  + NREAD
-      !>                 REMAIN = REMAIN - NREAD
+      !>         START  = START  + NREAD
+      !>         REMAIN = REMAIN - NREAD
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the kernel.  This isn't necessary in a stand-
-      !>        C     alone program, but it's good practice in subroutines
-      !>        C     because it frees program and system resources.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the kernel.  This isn't necessary in a stand-
+      !>C     alone program, but it's good practice in subroutines
+      !>C     because it frees program and system resources.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -12585,12 +12877,19 @@ contains
       !>           the contents of the output PLATES array has been corrected.
       !>
       !>        DSKLIB Version 1.0.0, 02-JUN-2010 (NJB)
-      module procedure dskp02
+      module subroutine dskp02 ( ctx, handle, dladsc, start, room, n, plates )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+      integer(ip), intent(in) :: start  !! Start index.
+      integer(ip), intent(in) :: room  !! Amount of room in output array.
+      integer(ip), intent(out) :: n  !! Number of plates returned.
+      integer(ip), intent(out) :: plates ( 3, * )  !! Array containing plates.
 
       real(wp) :: dskdsc ( dskdsz )
 
@@ -12656,8 +12955,10 @@ contains
       n = n / 3
 
       return
-      end procedure dskp02
+      end subroutine dskp02
 
+      !> Fetch vertices from a type 2 DSK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
@@ -12788,125 +13089,127 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DSKV02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DSKV02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dsk02.inc'
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dsk02.inc'
       !>
-      !>              CHARACTER*(*)         FMT
-      !>              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
+      !>      CHARACTER*(*)         FMT
+      !>      PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
       !>
-      !>              INTEGER               BUFSIZ
-      !>              PARAMETER           ( BUFSIZ = 10000 )
+      !>      INTEGER               BUFSIZ
+      !>      PARAMETER           ( BUFSIZ = 10000 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              CHARACTER*(FILSIZ)    DSK
+      !>      CHARACTER*(FILSIZ)    DSK
       !>
-      !>              DOUBLE PRECISION      NORMAL ( 3 )
-      !>              DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
+      !>      DOUBLE PRECISION      NORMAL ( 3 )
+      !>      DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
       !>
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               N
-      !>              INTEGER               NNORM
-      !>              INTEGER               NP
-      !>              INTEGER               NREAD
-      !>              INTEGER               NV
-      !>              INTEGER               NVTX
-      !>              INTEGER               PLATES  ( 3, BUFSIZ )
-      !>              INTEGER               PLIX
-      !>              INTEGER               REMAIN
-      !>              INTEGER               START
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               N
+      !>      INTEGER               NNORM
+      !>      INTEGER               NP
+      !>      INTEGER               NREAD
+      !>      INTEGER               NV
+      !>      INTEGER               NVTX
+      !>      INTEGER               PLATES  ( 3, BUFSIZ )
+      !>      INTEGER               PLIX
+      !>      INTEGER               REMAIN
+      !>      INTEGER               START
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for name of DSK and open file for reading.
-      !>        C
-      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>C
+      !>C     Prompt for name of DSK and open file for reading.
+      !>C
+      !>      CALL PROMPT ( 'Enter DSK name > ', DSK )
       !>
-      !>              CALL DASOPR ( DSK, HANDLE )
+      !>      CALL DASOPR ( DSK, HANDLE )
       !>
-      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>      CALL DLABFS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
+      !>      IF ( .NOT. FOUND ) THEN
       !>
-      !>                 CALL SETMSG ( 'No segment found in file #.' )
-      !>                 CALL ERRCH  ( '#',  DSK                     )
-      !>                 CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
+      !>         CALL SETMSG ( 'No segment found in file #.' )
+      !>         CALL ERRCH  ( '#',  DSK                     )
+      !>         CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Get segment vertex and plate counts.
-      !>        C
-      !>              CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
+      !>C
+      !>C     Get segment vertex and plate counts.
+      !>C
+      !>      CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Number of vertices: ', NV
-      !>              WRITE (*,*) 'Number of plates:   ', NP
-      !>        C
-      !>        C     Display the vertices of the first 5 plates.
-      !>        C
-      !>              REMAIN = MIN(5, NP)
-      !>              START  = 1
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Number of vertices: ', NV
+      !>      WRITE (*,*) 'Number of plates:   ', NP
+      !>C
+      !>C     Display the vertices of the first 5 plates.
+      !>C
+      !>      REMAIN = MIN(5, NP)
+      !>      START  = 1
       !>
-      !>              DO WHILE ( REMAIN .GT. 0 )
-      !>        C
-      !>        C        NREAD is the number of plates we'll read on this
-      !>        C        loop pass.
-      !>        C
-      !>                 NREAD  = MIN ( BUFSIZ, REMAIN )
+      !>      DO WHILE ( REMAIN .GT. 0 )
+      !>C
+      !>C        NREAD is the number of plates we'll read on this
+      !>C        loop pass.
+      !>C
+      !>         NREAD  = MIN ( BUFSIZ, REMAIN )
       !>
-      !>                 CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
-      !>             .                 PLATES                          )
+      !>         CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
+      !>     .                 PLATES                          )
       !>
-      !>                 DO I = 1, N
+      !>         DO I = 1, N
       !>
-      !>                    PLIX = START + I - 1
-      !>        C
-      !>        C           Read the vertices of the current plate.
-      !>        C
-      !>                    DO J = 1, 3
-      !>                       CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
-      !>             .                       1,      NVTX,   VERTS (1,J)  )
-      !>                    END DO
-      !>        C
-      !>        C           Display the vertices of the current plate:
-      !>        C
-      !>                    WRITE (*,*  ) ' '
-      !>                    WRITE (*,*  ) 'Plate number: ', PLIX
-      !>                    WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
-      !>                    WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
-      !>                    WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
+      !>            PLIX = START + I - 1
+      !>C
+      !>C           Read the vertices of the current plate.
+      !>C
+      !>            DO J = 1, 3
+      !>               CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
+      !>     .                       1,      NVTX,   VERTS (1,J)  )
+      !>            END DO
+      !>C
+      !>C           Display the vertices of the current plate:
+      !>C
+      !>            WRITE (*,*  ) ' '
+      !>            WRITE (*,*  ) 'Plate number: ', PLIX
+      !>            WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
+      !>            WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
+      !>            WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
       !>
-      !>        C
-      !>        C           Display the normal vector of the current plate:
-      !>        C
-      !>                    CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
+      !>C
+      !>C           Display the normal vector of the current plate:
+      !>C
+      !>            CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
       !>
-      !>                    WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
+      !>            WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 START  = START  + NREAD
-      !>                 REMAIN = REMAIN - NREAD
+      !>         START  = START  + NREAD
+      !>         REMAIN = REMAIN - NREAD
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the kernel.  This isn't necessary in a stand-
-      !>        C     alone program, but it's good practice in subroutines
-      !>        C     because it frees program and system resources.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the kernel.  This isn't necessary in a stand-
+      !>C     alone program, but it's good practice in subroutines
+      !>C     because it frees program and system resources.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -12984,12 +13287,19 @@ contains
       !>           the contents of the output VRTCES array has been corrected.
       !>
       !>        DSKLIB Version 1.0.0, 02-JUN-2010 (NJB)
-      module procedure dskv02
+      module subroutine dskv02 ( ctx, handle, dladsc, start, room, n, vrtces )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+      integer(ip), intent(in) :: start  !! Start index.
+      integer(ip), intent(in) :: room  !! Amount of room in output array.
+      integer(ip), intent(out) :: n  !! Number of vertices returned.
+      real(wp), intent(out) :: vrtces ( 3, * )  !! Array containing vertices.
 
       real(wp) :: dskdsc ( dskdsz )
 
@@ -13056,12 +13366,17 @@ contains
       n = n / 3
 
       return
-      end procedure dskv02
+      end subroutine dskv02
 
-      !> All the plates of a type 2 DSK segment (PEPPER).
-      module procedure dsk_plates
+      !> All the plates of a type 2 DSK segment (PEPPER; [[dskp02]] with the
+      !> size from [[dskz02]]).
+      module subroutine dsk_plates ( ctx, handle, dladsc, plates )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of the DSK file
+      integer(ip), intent(in) :: dladsc(*)  !! the DLA descriptor of the segment
+      integer(ip), allocatable, intent(out) :: plates(:,:)  !! the plates, shape (3, n): vertex indices (n = 0 after an error)
       integer(ip) :: n
       integer(ip) :: np
       integer(ip) :: nv
@@ -13076,12 +13391,17 @@ contains
          deallocate ( plates )
          allocate ( plates(3,0) )
       end if
-      end procedure dsk_plates
+      end subroutine dsk_plates
 
-      !> All the vertices of a type 2 DSK segment (PEPPER).
-      module procedure dsk_vertices
+      !> All the vertices of a type 2 DSK segment (PEPPER; [[dskv02]] with
+      !> the size from [[dskz02]]).
+      module subroutine dsk_vertices ( ctx, handle, dladsc, vertices )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of the DSK file
+      integer(ip), intent(in) :: dladsc(*)  !! the DLA descriptor of the segment
+      real(wp), allocatable, intent(out) :: vertices(:,:)  !! the vertices, shape (3, n) (n = 0 after an error)
       integer(ip) :: n
       integer(ip) :: np
       integer(ip) :: nv
@@ -13096,8 +13416,11 @@ contains
          deallocate ( vertices )
          allocate ( vertices(3,0) )
       end if
-      end procedure dsk_vertices
+      end subroutine dsk_vertices
 
+      !> Return plate model size parameters---plate count and
+      !> vertex count---for a type 2 DSK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DSK file containing a type 2
@@ -13180,125 +13503,127 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM DSKZ02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM DSKZ02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dsk02.inc'
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dsk02.inc'
       !>
-      !>              CHARACTER*(*)         FMT
-      !>              PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
+      !>      CHARACTER*(*)         FMT
+      !>      PARAMETER           ( FMT    = '(1X,A,3(1XE15.8))' )
       !>
-      !>              INTEGER               BUFSIZ
-      !>              PARAMETER           ( BUFSIZ = 10000 )
+      !>      INTEGER               BUFSIZ
+      !>      PARAMETER           ( BUFSIZ = 10000 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              CHARACTER*(FILSIZ)    DSK
+      !>      CHARACTER*(FILSIZ)    DSK
       !>
-      !>              DOUBLE PRECISION      NORMAL ( 3 )
-      !>              DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
+      !>      DOUBLE PRECISION      NORMAL ( 3 )
+      !>      DOUBLE PRECISION      VERTS  ( 3, BUFSIZ )
       !>
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               N
-      !>              INTEGER               NNORM
-      !>              INTEGER               NP
-      !>              INTEGER               NREAD
-      !>              INTEGER               NV
-      !>              INTEGER               NVTX
-      !>              INTEGER               PLATES  ( 3, BUFSIZ )
-      !>              INTEGER               PLIX
-      !>              INTEGER               REMAIN
-      !>              INTEGER               START
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               N
+      !>      INTEGER               NNORM
+      !>      INTEGER               NP
+      !>      INTEGER               NREAD
+      !>      INTEGER               NV
+      !>      INTEGER               NVTX
+      !>      INTEGER               PLATES  ( 3, BUFSIZ )
+      !>      INTEGER               PLIX
+      !>      INTEGER               REMAIN
+      !>      INTEGER               START
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Prompt for name of DSK and open file for reading.
-      !>        C
-      !>              CALL PROMPT ( 'Enter DSK name > ', DSK )
+      !>C
+      !>C     Prompt for name of DSK and open file for reading.
+      !>C
+      !>      CALL PROMPT ( 'Enter DSK name > ', DSK )
       !>
-      !>              CALL DASOPR ( DSK, HANDLE )
+      !>      CALL DASOPR ( DSK, HANDLE )
       !>
-      !>              CALL DLABFS ( HANDLE, DLADSC, FOUND )
+      !>      CALL DLABFS ( HANDLE, DLADSC, FOUND )
       !>
-      !>              IF ( .NOT. FOUND ) THEN
+      !>      IF ( .NOT. FOUND ) THEN
       !>
-      !>                 CALL SETMSG ( 'No segment found in file #.' )
-      !>                 CALL ERRCH  ( '#',  DSK                     )
-      !>                 CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
+      !>         CALL SETMSG ( 'No segment found in file #.' )
+      !>         CALL ERRCH  ( '#',  DSK                     )
+      !>         CALL SIGERR ( 'SPICE(NOSEGMENT)'            )
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Get segment vertex and plate counts.
-      !>        C
-      !>              CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
+      !>C
+      !>C     Get segment vertex and plate counts.
+      !>C
+      !>      CALL DSKZ02 ( HANDLE, DLADSC, NV, NP )
       !>
-      !>              WRITE (*,*) ' '
-      !>              WRITE (*,*) 'Number of vertices: ', NV
-      !>              WRITE (*,*) 'Number of plates:   ', NP
-      !>        C
-      !>        C     Display the vertices of the first 5 plates.
-      !>        C
-      !>              REMAIN = MIN(5, NP)
-      !>              START  = 1
+      !>      WRITE (*,*) ' '
+      !>      WRITE (*,*) 'Number of vertices: ', NV
+      !>      WRITE (*,*) 'Number of plates:   ', NP
+      !>C
+      !>C     Display the vertices of the first 5 plates.
+      !>C
+      !>      REMAIN = MIN(5, NP)
+      !>      START  = 1
       !>
-      !>              DO WHILE ( REMAIN .GT. 0 )
-      !>        C
-      !>        C        NREAD is the number of plates we'll read on this
-      !>        C        loop pass.
-      !>        C
-      !>                 NREAD  = MIN ( BUFSIZ, REMAIN )
+      !>      DO WHILE ( REMAIN .GT. 0 )
+      !>C
+      !>C        NREAD is the number of plates we'll read on this
+      !>C        loop pass.
+      !>C
+      !>         NREAD  = MIN ( BUFSIZ, REMAIN )
       !>
-      !>                 CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
-      !>             .                 PLATES                          )
+      !>         CALL DSKP02 ( HANDLE, DLADSC, START, NREAD, N,
+      !>     .                 PLATES                          )
       !>
-      !>                 DO I = 1, N
+      !>         DO I = 1, N
       !>
-      !>                    PLIX = START + I - 1
-      !>        C
-      !>        C           Read the vertices of the current plate.
-      !>        C
-      !>                    DO J = 1, 3
-      !>                       CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
-      !>             .                       1,      NVTX,   VERTS (1,J)  )
-      !>                    END DO
-      !>        C
-      !>        C           Display the vertices of the current plate:
-      !>        C
-      !>                    WRITE (*,*  ) ' '
-      !>                    WRITE (*,*  ) 'Plate number: ', PLIX
-      !>                    WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
-      !>                    WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
-      !>                    WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
+      !>            PLIX = START + I - 1
+      !>C
+      !>C           Read the vertices of the current plate.
+      !>C
+      !>            DO J = 1, 3
+      !>               CALL DSKV02 ( HANDLE, DLADSC, PLATES(J,I),
+      !>     .                       1,      NVTX,   VERTS (1,J)  )
+      !>            END DO
+      !>C
+      !>C           Display the vertices of the current plate:
+      !>C
+      !>            WRITE (*,*  ) ' '
+      !>            WRITE (*,*  ) 'Plate number: ', PLIX
+      !>            WRITE (*,FMT) '   Vertex 1: ', (VERTS(J,1), J=1,3)
+      !>            WRITE (*,FMT) '   Vertex 2: ', (VERTS(J,2), J=1,3)
+      !>            WRITE (*,FMT) '   Vertex 3: ', (VERTS(J,3), J=1,3)
       !>
-      !>        C
-      !>        C           Display the normal vector of the current plate:
-      !>        C
-      !>                    CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
+      !>C
+      !>C           Display the normal vector of the current plate:
+      !>C
+      !>            CALL DSKN02 ( HANDLE, DLADSC, PLIX, NORMAL )
       !>
-      !>                    WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
+      !>            WRITE (*,FMT) '   Normal:   ', (NORMAL(J), J=1,3)
       !>
-      !>                 END DO
+      !>         END DO
       !>
-      !>                 START  = START  + NREAD
-      !>                 REMAIN = REMAIN - NREAD
+      !>         START  = START  + NREAD
+      !>         REMAIN = REMAIN - NREAD
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Close the kernel.  This isn't necessary in a stand-
-      !>        C     alone program, but it's good practice in subroutines
-      !>        C     because it frees program and system resources.
-      !>        C
-      !>              CALL DASCLS ( HANDLE )
+      !>C
+      !>C     Close the kernel.  This isn't necessary in a stand-
+      !>C     alone program, but it's good practice in subroutines
+      !>C     because it frees program and system resources.
+      !>C
+      !>      CALL DASCLS ( HANDLE )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -13361,12 +13686,17 @@ contains
       !>        example to reduce the output.
       !>
       !>-    SPICELIB Version 1.0.0, 02-JUN-2010 (NJB)
-      module procedure dskz02
+      module subroutine dskz02 ( ctx, handle, dladsc, nv, np )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+      integer(ip), intent(out) :: nv  !! Number of vertices.
+      integer(ip), intent(out) :: np  !! Number of plates.
       integer(ip) :: np_1(1)  !! one-element copy of np (array argument)
       integer(ip) :: nv_1(1)  !! one-element copy of nv (array argument)
 
@@ -13380,8 +13710,13 @@ contains
       np = np_1(1)
 
       return
-      end procedure dskz02
+      end subroutine dskz02
 
+      !> Make spatial index for a DSK type 2 segment. The index is
+      !> returned as a pair of arrays, one of type INTEGER and one of type
+      !> DOUBLE PRECISION. These arrays are suitable for use with the DSK
+      !> type 2 writer [[dskw02]].
+      !>
       !>## Detailed Input
       !>
       !>     NV       is the number of vertices belonging to the input
@@ -13700,278 +14035,280 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     Example program for DSKW02, DSKMI2, and DSKRB2
-      !>        C
-      !>        C        Create a three-segment DSK file using plate model
-      !>        C        data for Phobos. Use latitudinal, rectangular, and
-      !>        C        planetodetic coordinates in the respective segments.
-      !>        C
-      !>        C        For simplicity, use an existing DSK file to provide
-      !>        C        the input plate and vertex data. The selected input
-      !>        C        file has one segment.
-      !>        C
-      !>        C           Version 1.0.0 22-JAN-2016 (NJB)
-      !>        C
-      !>              PROGRAM DSKMI2_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>C
+      !>C     Example program for DSKW02, DSKMI2, and DSKRB2
+      !>C
+      !>C        Create a three-segment DSK file using plate model
+      !>C        data for Phobos. Use latitudinal, rectangular, and
+      !>C        planetodetic coordinates in the respective segments.
+      !>C
+      !>C        For simplicity, use an existing DSK file to provide
+      !>C        the input plate and vertex data. The selected input
+      !>C        file has one segment.
+      !>C
+      !>C           Version 1.0.0 22-JAN-2016 (NJB)
+      !>C
+      !>      PROGRAM DSKMI2_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dskdsc.inc'
-      !>              INCLUDE 'dsk02.inc'
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dskdsc.inc'
+      !>      INCLUDE 'dsk02.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      JYEAR
-      !>              DOUBLE PRECISION      PI
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      JYEAR
+      !>      DOUBLE PRECISION      PI
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               NSEG
-      !>              PARAMETER           ( NSEG   = 3 )
+      !>      INTEGER               NSEG
+      !>      PARAMETER           ( NSEG   = 3 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 20 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 20 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>              INTEGER               NCOR
-      !>              PARAMETER           ( NCOR   = 4 )
+      !>      INTEGER               NCOR
+      !>      PARAMETER           ( NCOR   = 4 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(NAMLEN)    CORNAM ( NCOR )
-      !>              CHARACTER*(FILSIZ)    DSK
-      !>              CHARACTER*(FRNMLN)    FRAME
-      !>              CHARACTER*(FILSIZ)    INDSK
-      !>              CHARACTER*(LNSIZE)    LINE
-      !>        C
-      !>        C     Note: the values of MAXVRT and MAXPLT declared
-      !>        C     in dsk02.inc, and the integer spatial index
-      !>        C     dimension SPAISZ are very large. Smaller buffers
-      !>        C     can be used for most applications.
-      !>        C
-      !>              DOUBLE PRECISION      CORPAR ( NSYPAR )
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      FINSCL
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
-      !>              DOUBLE PRECISION      MNCOR1
-      !>              DOUBLE PRECISION      MNCOR2
-      !>              DOUBLE PRECISION      MNCOR3
-      !>              DOUBLE PRECISION      MXCOR1
-      !>              DOUBLE PRECISION      MXCOR2
-      !>              DOUBLE PRECISION      MXCOR3
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RP
-      !>              DOUBLE PRECISION      SPAIXD ( IXDFIX )
-      !>              DOUBLE PRECISION      VRTCES ( 3, MAXVRT )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(NAMLEN)    CORNAM ( NCOR )
+      !>      CHARACTER*(FILSIZ)    DSK
+      !>      CHARACTER*(FRNMLN)    FRAME
+      !>      CHARACTER*(FILSIZ)    INDSK
+      !>      CHARACTER*(LNSIZE)    LINE
+      !>C
+      !>C     Note: the values of MAXVRT and MAXPLT declared
+      !>C     in dsk02.inc, and the integer spatial index
+      !>C     dimension SPAISZ are very large. Smaller buffers
+      !>C     can be used for most applications.
+      !>C
+      !>      DOUBLE PRECISION      CORPAR ( NSYPAR )
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      FINSCL
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      MNCOR1
+      !>      DOUBLE PRECISION      MNCOR2
+      !>      DOUBLE PRECISION      MNCOR3
+      !>      DOUBLE PRECISION      MXCOR1
+      !>      DOUBLE PRECISION      MXCOR2
+      !>      DOUBLE PRECISION      MXCOR3
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RP
+      !>      DOUBLE PRECISION      SPAIXD ( IXDFIX )
+      !>      DOUBLE PRECISION      VRTCES ( 3, MAXVRT )
       !>
-      !>              INTEGER               CENTER
-      !>              INTEGER               CORSCL
-      !>              INTEGER               CORSYS
-      !>              INTEGER               DCLASS
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               INHAN
-      !>              INTEGER               NP
-      !>              INTEGER               NV
-      !>              INTEGER               PLATES ( 3, MAXPLT )
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SPAIXI ( SPAISZ )
-      !>              INTEGER               SURFID
-      !>              INTEGER               VOXPSZ
-      !>              INTEGER               VOXLSZ
-      !>              INTEGER               WORK   ( 2, MAXCEL )
-      !>              INTEGER               WORKSZ
+      !>      INTEGER               CENTER
+      !>      INTEGER               CORSCL
+      !>      INTEGER               CORSYS
+      !>      INTEGER               DCLASS
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               INHAN
+      !>      INTEGER               NP
+      !>      INTEGER               NV
+      !>      INTEGER               PLATES ( 3, MAXPLT )
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SPAIXI ( SPAISZ )
+      !>      INTEGER               SURFID
+      !>      INTEGER               VOXPSZ
+      !>      INTEGER               VOXLSZ
+      !>      INTEGER               WORK   ( 2, MAXCEL )
+      !>      INTEGER               WORKSZ
       !>
-      !>              LOGICAL               FOUND
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     Save all large arrays to avoid stack problems.
-      !>        C
-      !>              SAVE
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  CORNAM / 'radius',
-      !>             .                               'Z-coordinate',
-      !>             .                               'Z-coordinate',
-      !>             .                               'altitude'     /
+      !>      LOGICAL               FOUND
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     Save all large arrays to avoid stack problems.
+      !>C
+      !>      SAVE
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  CORNAM / 'radius',
+      !>     .                               'Z-coordinate',
+      !>     .                               'Z-coordinate',
+      !>     .                               'altitude'     /
       !>
-      !>        C
-      !>        C     Assign names of input and output DSK files.
-      !>        C
-      !>              INDSK = 'phobos_3_3.bds'
-      !>              DSK   = 'phobos_3_3_3seg.bds'
-      !>        C
-      !>        C     Open input DSK for read access; find first segment.
-      !>        C
-      !>              CALL DASOPR ( INDSK, INHAN )
-      !>              CALL DLABFS ( INHAN, DLADSC, FOUND )
-      !>        C
-      !>        C     Fetch vertices and plates from input DSK file.
-      !>        C
-      !>              WRITE (*,*) 'Reading input data...'
+      !>C
+      !>C     Assign names of input and output DSK files.
+      !>C
+      !>      INDSK = 'phobos_3_3.bds'
+      !>      DSK   = 'phobos_3_3_3seg.bds'
+      !>C
+      !>C     Open input DSK for read access; find first segment.
+      !>C
+      !>      CALL DASOPR ( INDSK, INHAN )
+      !>      CALL DLABFS ( INHAN, DLADSC, FOUND )
+      !>C
+      !>C     Fetch vertices and plates from input DSK file.
+      !>C
+      !>      WRITE (*,*) 'Reading input data...'
       !>
-      !>              CALL DSKV02 ( INHAN, DLADSC, 1, MAXVRT, NV, VRTCES )
-      !>              CALL DSKP02 ( INHAN, DLADSC, 1, MAXPLT, NP, PLATES )
+      !>      CALL DSKV02 ( INHAN, DLADSC, 1, MAXVRT, NV, VRTCES )
+      !>      CALL DSKP02 ( INHAN, DLADSC, 1, MAXPLT, NP, PLATES )
       !>
-      !>              WRITE (*,*) 'Done.'
-      !>        C
-      !>        C     Set input array sizes required by DSKMI2.
-      !>        C
-      !>              VOXPSZ = MAXVXP
-      !>              VOXLSZ = MXNVLS
-      !>              WORKSZ = MAXCEL
-      !>        C
-      !>        C     Set fine and coarse voxel scales. (These usually
-      !>        C     need to determined by experimentation.)
-      !>        C
-      !>              FINSCL = 5.D0
-      !>              CORSCL = 4
-      !>        C
-      !>        C     Open a new DSK file.
-      !>        C
-      !>              CALL DSKOPN ( DSK, DSK, 0, HANDLE )
-      !>        C
-      !>        C     Create three segments and add them to the file.
-      !>        C
-      !>              DO SEGNO = 1, NSEG
-      !>        C
-      !>        C        Create spatial index.
-      !>        C
-      !>                 WRITE (*,*) 'Creating segment ', SEGNO
-      !>                 WRITE (*,*) 'Creating spatial index...'
+      !>      WRITE (*,*) 'Done.'
+      !>C
+      !>C     Set input array sizes required by DSKMI2.
+      !>C
+      !>      VOXPSZ = MAXVXP
+      !>      VOXLSZ = MXNVLS
+      !>      WORKSZ = MAXCEL
+      !>C
+      !>C     Set fine and coarse voxel scales. (These usually
+      !>C     need to determined by experimentation.)
+      !>C
+      !>      FINSCL = 5.D0
+      !>      CORSCL = 4
+      !>C
+      !>C     Open a new DSK file.
+      !>C
+      !>      CALL DSKOPN ( DSK, DSK, 0, HANDLE )
+      !>C
+      !>C     Create three segments and add them to the file.
+      !>C
+      !>      DO SEGNO = 1, NSEG
+      !>C
+      !>C        Create spatial index.
+      !>C
+      !>         WRITE (*,*) 'Creating segment ', SEGNO
+      !>         WRITE (*,*) 'Creating spatial index...'
       !>
-      !>                 CALL DSKMI2 ( NV,     VRTCES, NP,     PLATES, FINSCL,
-      !>             .                 CORSCL, WORKSZ, VOXPSZ, VOXLSZ, .TRUE.,
-      !>             .                 SPAISZ, WORK,   SPAIXD, SPAIXI        )
+      !>         CALL DSKMI2 ( NV,     VRTCES, NP,     PLATES, FINSCL,
+      !>     .                 CORSCL, WORKSZ, VOXPSZ, VOXLSZ, .TRUE.,
+      !>     .                 SPAISZ, WORK,   SPAIXD, SPAIXI        )
       !>
-      !>                 WRITE (*,*) 'Done.'
-      !>        C
-      !>        C        Set up inputs describing segment attributes:
-      !>        C
-      !>        C        - Central body: Phobos
-      !>        C        - Surface ID code: user's choice.
-      !>        C          We use the segment number here.
-      !>        C        - Data class: general (arbitrary) shape
-      !>        C        - Body-fixed reference frame
-      !>        C        - Time coverage bounds (TBD)
-      !>        C
-      !>                 CENTER = 401
-      !>                 SURFID = SEGNO
-      !>                 DCLASS = GENCLS
-      !>                 FRAME  = 'IAU_PHOBOS'
+      !>         WRITE (*,*) 'Done.'
+      !>C
+      !>C        Set up inputs describing segment attributes:
+      !>C
+      !>C        - Central body: Phobos
+      !>C        - Surface ID code: user's choice.
+      !>C          We use the segment number here.
+      !>C        - Data class: general (arbitrary) shape
+      !>C        - Body-fixed reference frame
+      !>C        - Time coverage bounds (TBD)
+      !>C
+      !>         CENTER = 401
+      !>         SURFID = SEGNO
+      !>         DCLASS = GENCLS
+      !>         FRAME  = 'IAU_PHOBOS'
       !>
-      !>                 FIRST = -50 * JYEAR()
-      !>                 LAST  =  50 * JYEAR()
-      !>        C
-      !>        C        Set the coordinate system and coordinate system
-      !>        C        bounds based on the segment index.
-      !>        C
-      !>        C        Zero out the coordinate parameters to start.
-      !>        C
-      !>                 CALL CLEARD ( NSYPAR, CORPAR )
+      !>         FIRST = -50 * JYEAR()
+      !>         LAST  =  50 * JYEAR()
+      !>C
+      !>C        Set the coordinate system and coordinate system
+      !>C        bounds based on the segment index.
+      !>C
+      !>C        Zero out the coordinate parameters to start.
+      !>C
+      !>         CALL CLEARD ( NSYPAR, CORPAR )
       !>
-      !>                 IF ( SEGNO .EQ. 1 ) THEN
-      !>        C
-      !>        C           Use planetocentric latitudinal coordinates. Set
-      !>        C           the longitude and latitude bounds.
-      !>        C
-      !>                    CORSYS = LATSYS
+      !>         IF ( SEGNO .EQ. 1 ) THEN
+      !>C
+      !>C           Use planetocentric latitudinal coordinates. Set
+      !>C           the longitude and latitude bounds.
+      !>C
+      !>            CORSYS = LATSYS
       !>
-      !>                    MNCOR1 = -PI()
-      !>                    MXCOR1 =  PI()
-      !>                    MNCOR2 = -PI()/2
-      !>                    MXCOR2 =  PI()/2
+      !>            MNCOR1 = -PI()
+      !>            MXCOR1 =  PI()
+      !>            MNCOR2 = -PI()/2
+      !>            MXCOR2 =  PI()/2
       !>
-      !>                 ELSE IF ( SEGNO .EQ. 2 ) THEN
-      !>        C
-      !>        C           Use rectangular coordinates. Set the
-      !>        C           X and Y bounds.
-      !>        C
-      !>        C           The bounds shown here were derived from
-      !>        C           the plate data. They lie slightly outside
-      !>        C           of the range spanned by the plates.
-      !>        C
-      !>                    CORSYS = RECSYS
+      !>         ELSE IF ( SEGNO .EQ. 2 ) THEN
+      !>C
+      !>C           Use rectangular coordinates. Set the
+      !>C           X and Y bounds.
+      !>C
+      !>C           The bounds shown here were derived from
+      !>C           the plate data. They lie slightly outside
+      !>C           of the range spanned by the plates.
+      !>C
+      !>            CORSYS = RECSYS
       !>
-      !>                    MNCOR1 = -1.3D0
-      !>                    MXCOR1 =  1.31D0
-      !>                    MNCOR2 = -1.21D0
-      !>                    MXCOR2 =  1.2D0
+      !>            MNCOR1 = -1.3D0
+      !>            MXCOR1 =  1.31D0
+      !>            MNCOR2 = -1.21D0
+      !>            MXCOR2 =  1.2D0
       !>
-      !>                 ELSE
-      !>        C
-      !>        C           Set the coordinate system to planetodetic.
-      !>        C
-      !>                    CORSYS    = PDTSYS
+      !>         ELSE
+      !>C
+      !>C           Set the coordinate system to planetodetic.
+      !>C
+      !>            CORSYS    = PDTSYS
       !>
-      !>                    MNCOR1    = -PI()
-      !>                    MXCOR1    =  PI()
-      !>                    MNCOR2    = -PI()/2
-      !>                    MXCOR2    =  PI()/2
-      !>        C
-      !>        C           We'll use equatorial and polar radii from
-      !>        C           pck00010.tpc. These normally would be fetched
-      !>        C           at run time, but for simplicity, we'll use
-      !>        C           hard-coded values.
+      !>            MNCOR1    = -PI()
+      !>            MXCOR1    =  PI()
+      !>            MNCOR2    = -PI()/2
+      !>            MXCOR2    =  PI()/2
+      !>C
+      !>C           We'll use equatorial and polar radii from
+      !>C           pck00010.tpc. These normally would be fetched
+      !>C           at run time, but for simplicity, we'll use
+      !>C           hard-coded values.
       !>
-      !>                    RE        = 13.0D0
-      !>                    RP        =  9.1D0
-      !>                    F         = ( RE - RP ) / RE
+      !>            RE        = 13.0D0
+      !>            RP        =  9.1D0
+      !>            F         = ( RE - RP ) / RE
       !>
-      !>                    CORPAR(1) = RE
-      !>                    CORPAR(2) = F
+      !>            CORPAR(1) = RE
+      !>            CORPAR(2) = F
       !>
-      !>                 END IF
-      !>        C
-      !>        C        Compute plate model radius bounds.
-      !>        C
-      !>                 LINE = 'Computing # bounds of plate set...'
+      !>         END IF
+      !>C
+      !>C        Compute plate model radius bounds.
+      !>C
+      !>         LINE = 'Computing # bounds of plate set...'
       !>
-      !>                 CALL REPMC ( LINE, '#', CORNAM(CORSYS), LINE )
-      !>                 WRITE (*,*) LINE
+      !>         CALL REPMC ( LINE, '#', CORNAM(CORSYS), LINE )
+      !>         WRITE (*,*) LINE
       !>
-      !>                 CALL DSKRB2 ( NV,     VRTCES, NP,     PLATES,
-      !>             .                 CORSYS, CORPAR, MNCOR3, MXCOR3 )
+      !>         CALL DSKRB2 ( NV,     VRTCES, NP,     PLATES,
+      !>     .                 CORSYS, CORPAR, MNCOR3, MXCOR3 )
       !>
-      !>                 WRITE (*,*) 'Done.'
-      !>        C
-      !>        C        Write the segment to the file.
-      !>        C
-      !>                 WRITE (*,*) 'Writing segment...'
+      !>         WRITE (*,*) 'Done.'
+      !>C
+      !>C        Write the segment to the file.
+      !>C
+      !>         WRITE (*,*) 'Writing segment...'
       !>
-      !>                 CALL DSKW02 ( HANDLE,
-      !>             .                 CENTER, SURFID, DCLASS, FRAME,  CORSYS,
-      !>             .                 CORPAR, MNCOR1, MXCOR1, MNCOR2, MXCOR2,
-      !>             .                 MNCOR3, MXCOR3, FIRST,  LAST,   NV,
-      !>             .                 VRTCES, NP,     PLATES, SPAIXD, SPAIXI )
+      !>         CALL DSKW02 ( HANDLE,
+      !>     .                 CENTER, SURFID, DCLASS, FRAME,  CORSYS,
+      !>     .                 CORPAR, MNCOR1, MXCOR1, MNCOR2, MXCOR2,
+      !>     .                 MNCOR3, MXCOR3, FIRST,  LAST,   NV,
+      !>     .                 VRTCES, NP,     PLATES, SPAIXD, SPAIXI )
       !>
-      !>                 WRITE (*,*) 'Done.'
+      !>         WRITE (*,*) 'Done.'
       !>
-      !>              END DO
-      !>        C
-      !>        C     Segregate the data records in the DSK file and
-      !>        C     close the file.
-      !>        C
-      !>              WRITE (*,*) 'Segregating and closing DSK file...'
+      !>      END DO
+      !>C
+      !>C     Segregate the data records in the DSK file and
+      !>C     close the file.
+      !>C
+      !>      WRITE (*,*) 'Segregating and closing DSK file...'
       !>
-      !>              CALL DSKCLS ( HANDLE, .TRUE. )
+      !>      CALL DSKCLS ( HANDLE, .TRUE. )
       !>
-      !>              WRITE (*,*) 'Done.'
-      !>              END
+      !>      WRITE (*,*) 'Done.'
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -14040,11 +14377,26 @@ contains
       !>        23-JAN-2016 (NJB)
       !>
       !>           Original version.
-      module procedure dskmi2
+      module subroutine dskmi2 ( ctx, nv, vrtces, np, plates, finscl, corscl, worksz, voxpsz, voxlsz, makvtl, spxisz, work, spaixd, spaixi )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nv  !! Number of vertices.
+      real(wp), intent(in) :: vrtces ( 3, * )  !! Vertices.
+      integer(ip), intent(in) :: np  !! Number of plates.
+      integer(ip), intent(in) :: plates ( 3, * )  !! Plates.
+      real(wp), intent(in) :: finscl  !! Fine voxel scale.
+      integer(ip), intent(in) :: corscl  !! Coarse voxel scale.
+      integer(ip), intent(in) :: worksz  !! Workspace size.
+      integer(ip), intent(in) :: voxpsz  !! Voxel-plate pointer array size.
+      integer(ip), intent(in) :: voxlsz  !! Voxel-plate list array size.
+      logical, intent(in) :: makvtl  !! Vertex-plate list flag.
+      integer(ip), intent(in) :: spxisz  !! Spatial index integer component size.
+      integer(ip), intent(inout) :: work   ( 2, worksz )  !! Workspace.
+      real(wp), intent(out) :: spaixd ( ixdfix )  !! Double precision component of spatial index.
+      integer(ip), intent(out) :: spaixi ( spxisz )  !! Integer component of spatial index.
 
       integer(ip) :: i
       integer(ip) :: j
@@ -14280,8 +14632,11 @@ contains
       end if
 
       return
-      end procedure dskmi2
+      end subroutine dskmi2
 
+      !> Determine range bounds for a set of triangular plates to
+      !> be stored in a type 2 DSK segment.
+      !>
       !>## Detailed Input
       !>
       !>     NV       is the number of vertices belonging to the input
@@ -14385,278 +14740,280 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     Example program for DSKW02, DSKMI2, and DSKRB2
-      !>        C
-      !>        C        Create a three-segment DSK file using plate model
-      !>        C        data for Phobos. Use latitudinal, rectangular, and
-      !>        C        planetodetic coordinates in the respective segments.
-      !>        C
-      !>        C        For simplicity, use an existing DSK file to provide
-      !>        C        the input plate and vertex data. The selected input
-      !>        C        file has one segment.
-      !>        C
-      !>        C           Version 1.0.0 22-JAN-2016 (NJB)
-      !>        C
-      !>              PROGRAM DSKRB2_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>C
+      !>C     Example program for DSKW02, DSKMI2, and DSKRB2
+      !>C
+      !>C        Create a three-segment DSK file using plate model
+      !>C        data for Phobos. Use latitudinal, rectangular, and
+      !>C        planetodetic coordinates in the respective segments.
+      !>C
+      !>C        For simplicity, use an existing DSK file to provide
+      !>C        the input plate and vertex data. The selected input
+      !>C        file has one segment.
+      !>C
+      !>C           Version 1.0.0 22-JAN-2016 (NJB)
+      !>C
+      !>      PROGRAM DSKRB2_EX1
+      !>      IMPLICIT NONE
       !>
-      !>              INCLUDE 'dla.inc'
-      !>              INCLUDE 'dskdsc.inc'
-      !>              INCLUDE 'dsk02.inc'
+      !>      INCLUDE 'dla.inc'
+      !>      INCLUDE 'dskdsc.inc'
+      !>      INCLUDE 'dsk02.inc'
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      JYEAR
-      !>              DOUBLE PRECISION      PI
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               FRNMLN
-      !>              PARAMETER           ( FRNMLN = 32 )
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      JYEAR
+      !>      DOUBLE PRECISION      PI
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               FRNMLN
+      !>      PARAMETER           ( FRNMLN = 32 )
       !>
-      !>              INTEGER               NSEG
-      !>              PARAMETER           ( NSEG   = 3 )
+      !>      INTEGER               NSEG
+      !>      PARAMETER           ( NSEG   = 3 )
       !>
-      !>              INTEGER               NAMLEN
-      !>              PARAMETER           ( NAMLEN = 20 )
+      !>      INTEGER               NAMLEN
+      !>      PARAMETER           ( NAMLEN = 20 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               LNSIZE
-      !>              PARAMETER           ( LNSIZE = 80 )
+      !>      INTEGER               LNSIZE
+      !>      PARAMETER           ( LNSIZE = 80 )
       !>
-      !>              INTEGER               NCOR
-      !>              PARAMETER           ( NCOR   = 4 )
+      !>      INTEGER               NCOR
+      !>      PARAMETER           ( NCOR   = 4 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(NAMLEN)    CORNAM ( NCOR )
-      !>              CHARACTER*(FILSIZ)    DSK
-      !>              CHARACTER*(FRNMLN)    FRAME
-      !>              CHARACTER*(FILSIZ)    INDSK
-      !>              CHARACTER*(LNSIZE)    LINE
-      !>        C
-      !>        C     Note: the values of MAXVRT and MAXPLT declared
-      !>        C     in dsk02.inc, and the integer spatial index
-      !>        C     dimension SPAISZ are very large. Smaller buffers
-      !>        C     can be used for most applications.
-      !>        C
-      !>              DOUBLE PRECISION      CORPAR ( NSYPAR )
-      !>              DOUBLE PRECISION      F
-      !>              DOUBLE PRECISION      FINSCL
-      !>              DOUBLE PRECISION      FIRST
-      !>              DOUBLE PRECISION      LAST
-      !>              DOUBLE PRECISION      MNCOR1
-      !>              DOUBLE PRECISION      MNCOR2
-      !>              DOUBLE PRECISION      MNCOR3
-      !>              DOUBLE PRECISION      MXCOR1
-      !>              DOUBLE PRECISION      MXCOR2
-      !>              DOUBLE PRECISION      MXCOR3
-      !>              DOUBLE PRECISION      RE
-      !>              DOUBLE PRECISION      RP
-      !>              DOUBLE PRECISION      SPAIXD ( IXDFIX )
-      !>              DOUBLE PRECISION      VRTCES ( 3, MAXVRT )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(NAMLEN)    CORNAM ( NCOR )
+      !>      CHARACTER*(FILSIZ)    DSK
+      !>      CHARACTER*(FRNMLN)    FRAME
+      !>      CHARACTER*(FILSIZ)    INDSK
+      !>      CHARACTER*(LNSIZE)    LINE
+      !>C
+      !>C     Note: the values of MAXVRT and MAXPLT declared
+      !>C     in dsk02.inc, and the integer spatial index
+      !>C     dimension SPAISZ are very large. Smaller buffers
+      !>C     can be used for most applications.
+      !>C
+      !>      DOUBLE PRECISION      CORPAR ( NSYPAR )
+      !>      DOUBLE PRECISION      F
+      !>      DOUBLE PRECISION      FINSCL
+      !>      DOUBLE PRECISION      FIRST
+      !>      DOUBLE PRECISION      LAST
+      !>      DOUBLE PRECISION      MNCOR1
+      !>      DOUBLE PRECISION      MNCOR2
+      !>      DOUBLE PRECISION      MNCOR3
+      !>      DOUBLE PRECISION      MXCOR1
+      !>      DOUBLE PRECISION      MXCOR2
+      !>      DOUBLE PRECISION      MXCOR3
+      !>      DOUBLE PRECISION      RE
+      !>      DOUBLE PRECISION      RP
+      !>      DOUBLE PRECISION      SPAIXD ( IXDFIX )
+      !>      DOUBLE PRECISION      VRTCES ( 3, MAXVRT )
       !>
-      !>              INTEGER               CENTER
-      !>              INTEGER               CORSCL
-      !>              INTEGER               CORSYS
-      !>              INTEGER               DCLASS
-      !>              INTEGER               DLADSC ( DLADSZ )
-      !>              INTEGER               HANDLE
-      !>              INTEGER               INHAN
-      !>              INTEGER               NP
-      !>              INTEGER               NV
-      !>              INTEGER               PLATES ( 3, MAXPLT )
-      !>              INTEGER               SEGNO
-      !>              INTEGER               SPAIXI ( SPAISZ )
-      !>              INTEGER               SURFID
-      !>              INTEGER               VOXPSZ
-      !>              INTEGER               VOXLSZ
-      !>              INTEGER               WORK   ( 2, MAXCEL )
-      !>              INTEGER               WORKSZ
+      !>      INTEGER               CENTER
+      !>      INTEGER               CORSCL
+      !>      INTEGER               CORSYS
+      !>      INTEGER               DCLASS
+      !>      INTEGER               DLADSC ( DLADSZ )
+      !>      INTEGER               HANDLE
+      !>      INTEGER               INHAN
+      !>      INTEGER               NP
+      !>      INTEGER               NV
+      !>      INTEGER               PLATES ( 3, MAXPLT )
+      !>      INTEGER               SEGNO
+      !>      INTEGER               SPAIXI ( SPAISZ )
+      !>      INTEGER               SURFID
+      !>      INTEGER               VOXPSZ
+      !>      INTEGER               VOXLSZ
+      !>      INTEGER               WORK   ( 2, MAXCEL )
+      !>      INTEGER               WORKSZ
       !>
-      !>              LOGICAL               FOUND
-      !>        C
-      !>        C     Saved variables
-      !>        C
-      !>        C     Save all large arrays to avoid stack problems.
-      !>        C
-      !>              SAVE
-      !>        C
-      !>        C     Initial values
-      !>        C
-      !>              DATA                  CORNAM / 'radius',
-      !>             .                               'Z-coordinate',
-      !>             .                               'Z-coordinate',
-      !>             .                               'altitude'     /
+      !>      LOGICAL               FOUND
+      !>C
+      !>C     Saved variables
+      !>C
+      !>C     Save all large arrays to avoid stack problems.
+      !>C
+      !>      SAVE
+      !>C
+      !>C     Initial values
+      !>C
+      !>      DATA                  CORNAM / 'radius',
+      !>     .                               'Z-coordinate',
+      !>     .                               'Z-coordinate',
+      !>     .                               'altitude'     /
       !>
-      !>        C
-      !>        C     Assign names of input and output DSK files.
-      !>        C
-      !>              INDSK = 'phobos_3_3.bds'
-      !>              DSK   = 'phobos_3_3_3seg.bds'
-      !>        C
-      !>        C     Open input DSK for read access; find first segment.
-      !>        C
-      !>              CALL DASOPR ( INDSK, INHAN )
-      !>              CALL DLABFS ( INHAN, DLADSC, FOUND )
-      !>        C
-      !>        C     Fetch vertices and plates from input DSK file.
-      !>        C
-      !>              WRITE (*,*) 'Reading input data...'
+      !>C
+      !>C     Assign names of input and output DSK files.
+      !>C
+      !>      INDSK = 'phobos_3_3.bds'
+      !>      DSK   = 'phobos_3_3_3seg.bds'
+      !>C
+      !>C     Open input DSK for read access; find first segment.
+      !>C
+      !>      CALL DASOPR ( INDSK, INHAN )
+      !>      CALL DLABFS ( INHAN, DLADSC, FOUND )
+      !>C
+      !>C     Fetch vertices and plates from input DSK file.
+      !>C
+      !>      WRITE (*,*) 'Reading input data...'
       !>
-      !>              CALL DSKV02 ( INHAN, DLADSC, 1, MAXVRT, NV, VRTCES )
-      !>              CALL DSKP02 ( INHAN, DLADSC, 1, MAXPLT, NP, PLATES )
+      !>      CALL DSKV02 ( INHAN, DLADSC, 1, MAXVRT, NV, VRTCES )
+      !>      CALL DSKP02 ( INHAN, DLADSC, 1, MAXPLT, NP, PLATES )
       !>
-      !>              WRITE (*,*) 'Done.'
-      !>        C
-      !>        C     Set input array sizes required by DSKMI2.
-      !>        C
-      !>              VOXPSZ = MAXVXP
-      !>              VOXLSZ = MXNVLS
-      !>              WORKSZ = MAXCEL
-      !>        C
-      !>        C     Set fine and coarse voxel scales. (These usually
-      !>        C     need to determined by experimentation.)
-      !>        C
-      !>              FINSCL = 5.D0
-      !>              CORSCL = 4
-      !>        C
-      !>        C     Open a new DSK file.
-      !>        C
-      !>              CALL DSKOPN ( DSK, DSK, 0, HANDLE )
-      !>        C
-      !>        C     Create three segments and add them to the file.
-      !>        C
-      !>              DO SEGNO = 1, NSEG
-      !>        C
-      !>        C        Create spatial index.
-      !>        C
-      !>                 WRITE (*,*) 'Creating segment ', SEGNO
-      !>                 WRITE (*,*) 'Creating spatial index...'
+      !>      WRITE (*,*) 'Done.'
+      !>C
+      !>C     Set input array sizes required by DSKMI2.
+      !>C
+      !>      VOXPSZ = MAXVXP
+      !>      VOXLSZ = MXNVLS
+      !>      WORKSZ = MAXCEL
+      !>C
+      !>C     Set fine and coarse voxel scales. (These usually
+      !>C     need to determined by experimentation.)
+      !>C
+      !>      FINSCL = 5.D0
+      !>      CORSCL = 4
+      !>C
+      !>C     Open a new DSK file.
+      !>C
+      !>      CALL DSKOPN ( DSK, DSK, 0, HANDLE )
+      !>C
+      !>C     Create three segments and add them to the file.
+      !>C
+      !>      DO SEGNO = 1, NSEG
+      !>C
+      !>C        Create spatial index.
+      !>C
+      !>         WRITE (*,*) 'Creating segment ', SEGNO
+      !>         WRITE (*,*) 'Creating spatial index...'
       !>
-      !>                 CALL DSKMI2 ( NV,     VRTCES, NP,     PLATES, FINSCL,
-      !>             .                 CORSCL, WORKSZ, VOXPSZ, VOXLSZ, .TRUE.,
-      !>             .                 SPAISZ, WORK,   SPAIXD, SPAIXI        )
+      !>         CALL DSKMI2 ( NV,     VRTCES, NP,     PLATES, FINSCL,
+      !>     .                 CORSCL, WORKSZ, VOXPSZ, VOXLSZ, .TRUE.,
+      !>     .                 SPAISZ, WORK,   SPAIXD, SPAIXI        )
       !>
-      !>                 WRITE (*,*) 'Done.'
-      !>        C
-      !>        C        Set up inputs describing segment attributes:
-      !>        C
-      !>        C        - Central body: Phobos
-      !>        C        - Surface ID code: user's choice.
-      !>        C          We use the segment number here.
-      !>        C        - Data class: general (arbitrary) shape
-      !>        C        - Body-fixed reference frame
-      !>        C        - Time coverage bounds (TBD)
-      !>        C
-      !>                 CENTER = 401
-      !>                 SURFID = SEGNO
-      !>                 DCLASS = GENCLS
-      !>                 FRAME  = 'IAU_PHOBOS'
+      !>         WRITE (*,*) 'Done.'
+      !>C
+      !>C        Set up inputs describing segment attributes:
+      !>C
+      !>C        - Central body: Phobos
+      !>C        - Surface ID code: user's choice.
+      !>C          We use the segment number here.
+      !>C        - Data class: general (arbitrary) shape
+      !>C        - Body-fixed reference frame
+      !>C        - Time coverage bounds (TBD)
+      !>C
+      !>         CENTER = 401
+      !>         SURFID = SEGNO
+      !>         DCLASS = GENCLS
+      !>         FRAME  = 'IAU_PHOBOS'
       !>
-      !>                 FIRST = -50 * JYEAR()
-      !>                 LAST  =  50 * JYEAR()
-      !>        C
-      !>        C        Set the coordinate system and coordinate system
-      !>        C        bounds based on the segment index.
-      !>        C
-      !>        C        Zero out the coordinate parameters to start.
-      !>        C
-      !>                 CALL CLEARD ( NSYPAR, CORPAR )
+      !>         FIRST = -50 * JYEAR()
+      !>         LAST  =  50 * JYEAR()
+      !>C
+      !>C        Set the coordinate system and coordinate system
+      !>C        bounds based on the segment index.
+      !>C
+      !>C        Zero out the coordinate parameters to start.
+      !>C
+      !>         CALL CLEARD ( NSYPAR, CORPAR )
       !>
-      !>                 IF ( SEGNO .EQ. 1 ) THEN
-      !>        C
-      !>        C           Use planetocentric latitudinal coordinates. Set
-      !>        C           the longitude and latitude bounds.
-      !>        C
-      !>                    CORSYS = LATSYS
+      !>         IF ( SEGNO .EQ. 1 ) THEN
+      !>C
+      !>C           Use planetocentric latitudinal coordinates. Set
+      !>C           the longitude and latitude bounds.
+      !>C
+      !>            CORSYS = LATSYS
       !>
-      !>                    MNCOR1 = -PI()
-      !>                    MXCOR1 =  PI()
-      !>                    MNCOR2 = -PI()/2
-      !>                    MXCOR2 =  PI()/2
+      !>            MNCOR1 = -PI()
+      !>            MXCOR1 =  PI()
+      !>            MNCOR2 = -PI()/2
+      !>            MXCOR2 =  PI()/2
       !>
-      !>                 ELSE IF ( SEGNO .EQ. 2 ) THEN
-      !>        C
-      !>        C           Use rectangular coordinates. Set the
-      !>        C           X and Y bounds.
-      !>        C
-      !>        C           The bounds shown here were derived from
-      !>        C           the plate data. They lie slightly outside
-      !>        C           of the range spanned by the plates.
-      !>        C
-      !>                    CORSYS = RECSYS
+      !>         ELSE IF ( SEGNO .EQ. 2 ) THEN
+      !>C
+      !>C           Use rectangular coordinates. Set the
+      !>C           X and Y bounds.
+      !>C
+      !>C           The bounds shown here were derived from
+      !>C           the plate data. They lie slightly outside
+      !>C           of the range spanned by the plates.
+      !>C
+      !>            CORSYS = RECSYS
       !>
-      !>                    MNCOR1 = -1.3D0
-      !>                    MXCOR1 =  1.31D0
-      !>                    MNCOR2 = -1.21D0
-      !>                    MXCOR2 =  1.2D0
+      !>            MNCOR1 = -1.3D0
+      !>            MXCOR1 =  1.31D0
+      !>            MNCOR2 = -1.21D0
+      !>            MXCOR2 =  1.2D0
       !>
-      !>                 ELSE
-      !>        C
-      !>        C           Set the coordinate system to planetodetic.
-      !>        C
-      !>                    CORSYS    = PDTSYS
+      !>         ELSE
+      !>C
+      !>C           Set the coordinate system to planetodetic.
+      !>C
+      !>            CORSYS    = PDTSYS
       !>
-      !>                    MNCOR1    = -PI()
-      !>                    MXCOR1    =  PI()
-      !>                    MNCOR2    = -PI()/2
-      !>                    MXCOR2    =  PI()/2
-      !>        C
-      !>        C           We'll use equatorial and polar radii from
-      !>        C           pck00010.tpc. These normally would be fetched
-      !>        C           at run time, but for simplicity, we'll use
-      !>        C           hard-coded values.
+      !>            MNCOR1    = -PI()
+      !>            MXCOR1    =  PI()
+      !>            MNCOR2    = -PI()/2
+      !>            MXCOR2    =  PI()/2
+      !>C
+      !>C           We'll use equatorial and polar radii from
+      !>C           pck00010.tpc. These normally would be fetched
+      !>C           at run time, but for simplicity, we'll use
+      !>C           hard-coded values.
       !>
-      !>                    RE        = 13.0D0
-      !>                    RP        =  9.1D0
-      !>                    F         = ( RE - RP ) / RE
+      !>            RE        = 13.0D0
+      !>            RP        =  9.1D0
+      !>            F         = ( RE - RP ) / RE
       !>
-      !>                    CORPAR(1) = RE
-      !>                    CORPAR(2) = F
+      !>            CORPAR(1) = RE
+      !>            CORPAR(2) = F
       !>
-      !>                 END IF
-      !>        C
-      !>        C        Compute plate model radius bounds.
-      !>        C
-      !>                 LINE = 'Computing # bounds of plate set...'
+      !>         END IF
+      !>C
+      !>C        Compute plate model radius bounds.
+      !>C
+      !>         LINE = 'Computing # bounds of plate set...'
       !>
-      !>                 CALL REPMC ( LINE, '#', CORNAM(CORSYS), LINE )
-      !>                 WRITE (*,*) LINE
+      !>         CALL REPMC ( LINE, '#', CORNAM(CORSYS), LINE )
+      !>         WRITE (*,*) LINE
       !>
-      !>                 CALL DSKRB2 ( NV,     VRTCES, NP,     PLATES,
-      !>             .                 CORSYS, CORPAR, MNCOR3, MXCOR3 )
+      !>         CALL DSKRB2 ( NV,     VRTCES, NP,     PLATES,
+      !>     .                 CORSYS, CORPAR, MNCOR3, MXCOR3 )
       !>
-      !>                 WRITE (*,*) 'Done.'
-      !>        C
-      !>        C        Write the segment to the file.
-      !>        C
-      !>                 WRITE (*,*) 'Writing segment...'
+      !>         WRITE (*,*) 'Done.'
+      !>C
+      !>C        Write the segment to the file.
+      !>C
+      !>         WRITE (*,*) 'Writing segment...'
       !>
-      !>                 CALL DSKW02 ( HANDLE,
-      !>             .                 CENTER, SURFID, DCLASS, FRAME,  CORSYS,
-      !>             .                 CORPAR, MNCOR1, MXCOR1, MNCOR2, MXCOR2,
-      !>             .                 MNCOR3, MXCOR3, FIRST,  LAST,   NV,
-      !>             .                 VRTCES, NP,     PLATES, SPAIXD, SPAIXI )
+      !>         CALL DSKW02 ( HANDLE,
+      !>     .                 CENTER, SURFID, DCLASS, FRAME,  CORSYS,
+      !>     .                 CORPAR, MNCOR1, MXCOR1, MNCOR2, MXCOR2,
+      !>     .                 MNCOR3, MXCOR3, FIRST,  LAST,   NV,
+      !>     .                 VRTCES, NP,     PLATES, SPAIXD, SPAIXI )
       !>
-      !>                 WRITE (*,*) 'Done.'
+      !>         WRITE (*,*) 'Done.'
       !>
-      !>              END DO
-      !>        C
-      !>        C     Segregate the data records in the DSK file and
-      !>        C     close the file.
-      !>        C
-      !>              WRITE (*,*) 'Segregating and closing DSK file...'
+      !>      END DO
+      !>C
+      !>C     Segregate the data records in the DSK file and
+      !>C     close the file.
+      !>C
+      !>      WRITE (*,*) 'Segregating and closing DSK file...'
       !>
-      !>              CALL DSKCLS ( HANDLE, .TRUE. )
+      !>      CALL DSKCLS ( HANDLE, .TRUE. )
       !>
-      !>              WRITE (*,*) 'Done.'
-      !>              END
+      !>      WRITE (*,*) 'Done.'
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -14719,12 +15076,21 @@ contains
       !>        22-JAN-2016 (NJB)
       !>
       !>         Original version.
-      module procedure dskrb2
+      module subroutine dskrb2 ( ctx, nv, vrtces, np, plates, corsys, corpar, mncor3, mxcor3 )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin
       use pepper_math, only: vdist, vnorm
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nv  !! Number of vertices.
+      real(wp), intent(in) :: vrtces ( 3, * )  !! Vertices.
+      integer(ip), intent(in) :: np  !! Number of plates.
+      integer(ip), intent(in) :: plates ( 3, * )  !! Plates.
+      integer(ip), intent(in) :: corsys  !! DSK coordinate system code.
+      real(wp), intent(in) :: corpar ( * )  !! DSK coordinate system parameters.
+      real(wp), intent(out) :: mncor3  !! Lower bound on range of third coordinate.
+      real(wp), intent(out) :: mxcor3  !! Upper bound on range of third coordinate.
 
       real(wp), parameter :: third = 1.0_wp/3.0_wp
       real(wp) :: alt
@@ -14850,8 +15216,11 @@ contains
       end if
 
       return
-      end procedure dskrb2
+      end subroutine dskrb2
 
+      !> Find the set of body ID codes of all objects for which
+      !> topographic data are provided in a specified DSK file.
+      !>
       !>## Detailed Input
       !>
       !>     DSKFNM   is the name of a DSK file. This file will be opened for
@@ -14927,71 +15296,73 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     Examine a DSK file and identify the set of
-      !>        C     central bodies associated with the segments
-      !>        C     in the file. For each body, find the
-      !>        C     set of surfaces associated with that body.
-      !>        C
-      !>              PROGRAM DSKOBJ_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               CARDI
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>```fortran
+      !>C
+      !>C     Examine a DSK file and identify the set of
+      !>C     central bodies associated with the segments
+      !>C     in the file. For each body, find the
+      !>C     set of surfaces associated with that body.
+      !>C
+      !>      PROGRAM DSKOBJ_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               CARDI
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               MAXID
-      !>              PARAMETER           ( MAXID  = 10000 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    DSKFNM
+      !>      INTEGER               MAXID
+      !>      PARAMETER           ( MAXID  = 10000 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    DSKFNM
       !>
-      !>              INTEGER               BODIDS ( LBCELL : MAXID )
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               SRFIDS ( LBCELL : MAXID )
+      !>      INTEGER               BODIDS ( LBCELL : MAXID )
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               SRFIDS ( LBCELL : MAXID )
       !>
-      !>        C
-      !>        C     Initialize body ID and surface ID cells.
-      !>        C
-      !>              CALL SSIZEI ( MAXID, BODIDS )
-      !>              CALL SSIZEI ( MAXID, SRFIDS )
+      !>C
+      !>C     Initialize body ID and surface ID cells.
+      !>C
+      !>      CALL SSIZEI ( MAXID, BODIDS )
+      !>      CALL SSIZEI ( MAXID, SRFIDS )
       !>
-      !>        C
-      !>        C     Prompt for the name of a DSK file.
-      !>        C
-      !>              CALL PROMPT ( 'Enter name of DSK file > ', DSKFNM )
+      !>C
+      !>C     Prompt for the name of a DSK file.
+      !>C
+      !>      CALL PROMPT ( 'Enter name of DSK file > ', DSKFNM )
       !>
-      !>        C
-      !>        C     Obtain body ID set for the DSK.
-      !>        C
-      !>              CALL DSKOBJ ( DSKFNM, BODIDS )
+      !>C
+      !>C     Obtain body ID set for the DSK.
+      !>C
+      !>      CALL DSKOBJ ( DSKFNM, BODIDS )
       !>
-      !>              DO I = 1, CARDI( BODIDS )
+      !>      DO I = 1, CARDI( BODIDS )
       !>
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Body ID:     ', BODIDS(I)
-      !>        C
-      !>        C        Get the surface IDs for the Ith body.
-      !>        C
-      !>                 CALL DSKSRF ( DSKFNM, BODIDS(I), SRFIDS )
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Body ID:     ', BODIDS(I)
+      !>C
+      !>C        Get the surface IDs for the Ith body.
+      !>C
+      !>         CALL DSKSRF ( DSKFNM, BODIDS(I), SRFIDS )
       !>
-      !>                 DO J = 1, CARDI( SRFIDS )
-      !>                    WRITE (*,*) '   Surface ID: ', SRFIDS(J)
-      !>                 END DO
+      !>         DO J = 1, CARDI( SRFIDS )
+      !>            WRITE (*,*) '   Surface ID: ', SRFIDS(J)
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -15033,9 +15404,14 @@ contains
       !>        $Exceptions section.
       !>
       !>-    SPICELIB Version 1.0.0, 22-AUG-2016 (NJB)
-      module procedure dskobj
+      module subroutine dskobj ( ctx, dskfnm, bodids )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: dskfnm  !! Name of DSK file.
+      integer(ip), intent(inout) :: bodids ( lbcell : * )  !! Set of ID codes of objects in DSK
+                                                           !! file.
       integer(ip), allocatable :: list(:)
       integer(ip) :: k
 !
@@ -15059,14 +15435,19 @@ contains
          end if
          call insrti ( ctx, list(k), bodids )
       end do
-      end procedure dskobj
+      end subroutine dskobj
 
-      module procedure dsk_objects
+      !> The bodies of a DSK file (PEPPER; [[dskobj]] without a set cell):
+      !> their ID codes, sorted, without duplicates.
+      module subroutine dsk_objects ( ctx, file, ids )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: append_id, sort_unique
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the DSK file
+      integer(ip), allocatable, intent(out) :: ids(:)  !! the body ID codes (size 0 after an error)
       integer(ip), allocatable :: list(:)  ! the IDs found (unsorted, with duplicates)
       integer(ip) :: nlist  ! the number of IDs in LIST
 
@@ -15180,8 +15561,11 @@ contains
          call sort_unique ( ids )
       end if
       return
-      end procedure dsk_objects
+      end subroutine dsk_objects
 
+      !> Find the set of surface ID codes for all surfaces associated with
+      !> a given body in a specified DSK file.
+      !>
       !>## Detailed Input
       !>
       !>     DSKFNM   is the name of a DSK file. This file will be opened for
@@ -15262,71 +15646,73 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>        C
-      !>        C     Examine a DSK file and identify the set of
-      !>        C     central bodies associated with the segments
-      !>        C     in the file. For each body, find the
-      !>        C     set of surfaces associated with that body.
-      !>        C
-      !>              PROGRAM DSKSRF_EX1
-      !>              IMPLICIT NONE
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               CARDI
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>```fortran
+      !>C
+      !>C     Examine a DSK file and identify the set of
+      !>C     central bodies associated with the segments
+      !>C     in the file. For each body, find the
+      !>C     set of surfaces associated with that body.
+      !>C
+      !>      PROGRAM DSKSRF_EX1
+      !>      IMPLICIT NONE
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               CARDI
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               FILSIZ
-      !>              PARAMETER           ( FILSIZ = 255 )
+      !>      INTEGER               FILSIZ
+      !>      PARAMETER           ( FILSIZ = 255 )
       !>
-      !>              INTEGER               MAXID
-      !>              PARAMETER           ( MAXID  = 10000 )
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(FILSIZ)    DSKFNM
+      !>      INTEGER               MAXID
+      !>      PARAMETER           ( MAXID  = 10000 )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(FILSIZ)    DSKFNM
       !>
-      !>              INTEGER               BODIDS ( LBCELL : MAXID )
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               SRFIDS ( LBCELL : MAXID )
+      !>      INTEGER               BODIDS ( LBCELL : MAXID )
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               SRFIDS ( LBCELL : MAXID )
       !>
-      !>        C
-      !>        C     Initialize body ID and surface ID cells.
-      !>        C
-      !>              CALL SSIZEI ( MAXID, BODIDS )
-      !>              CALL SSIZEI ( MAXID, SRFIDS )
+      !>C
+      !>C     Initialize body ID and surface ID cells.
+      !>C
+      !>      CALL SSIZEI ( MAXID, BODIDS )
+      !>      CALL SSIZEI ( MAXID, SRFIDS )
       !>
-      !>        C
-      !>        C     Prompt for the name of a DSK file.
-      !>        C
-      !>              CALL PROMPT ( 'Enter name of DSK file > ', DSKFNM )
+      !>C
+      !>C     Prompt for the name of a DSK file.
+      !>C
+      !>      CALL PROMPT ( 'Enter name of DSK file > ', DSKFNM )
       !>
-      !>        C
-      !>        C     Obtain body ID set for the DSK.
-      !>        C
-      !>              CALL DSKOBJ ( DSKFNM, BODIDS )
+      !>C
+      !>C     Obtain body ID set for the DSK.
+      !>C
+      !>      CALL DSKOBJ ( DSKFNM, BODIDS )
       !>
-      !>              DO I = 1, CARDI( BODIDS )
+      !>      DO I = 1, CARDI( BODIDS )
       !>
-      !>                 WRITE (*,*) ' '
-      !>                 WRITE (*,*) 'Body ID:     ', BODIDS(I)
-      !>        C
-      !>        C        Get the surface IDs for the Ith body.
-      !>        C
-      !>                 CALL DSKSRF ( DSKFNM, BODIDS(I), SRFIDS )
+      !>         WRITE (*,*) ' '
+      !>         WRITE (*,*) 'Body ID:     ', BODIDS(I)
+      !>C
+      !>C        Get the surface IDs for the Ith body.
+      !>C
+      !>         CALL DSKSRF ( DSKFNM, BODIDS(I), SRFIDS )
       !>
-      !>                 DO J = 1, CARDI( SRFIDS )
-      !>                    WRITE (*,*) '   Surface ID: ', SRFIDS(J)
-      !>                 END DO
+      !>         DO J = 1, CARDI( SRFIDS )
+      !>            WRITE (*,*) '   Surface ID: ', SRFIDS(J)
+      !>         END DO
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, using the DSK file named phobos512.bds, the output
@@ -15365,9 +15751,15 @@ contains
       !>        in entries #2, #3 and #5 in $Exceptions section.
       !>
       !>-    SPICELIB Version 1.0.0, 22-AUG-2016 (NJB)
-      module procedure dsksrf
+      module subroutine dsksrf ( ctx, dskfnm, bodyid, srfids )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: dskfnm  !! Name of DSK file.
+      integer(ip), intent(in) :: bodyid  !! Integer body ID code.
+      integer(ip), intent(inout) :: srfids ( lbcell : * )  !! Set of ID codes of surfaces in DSK
+                                                           !! file.
       integer(ip), allocatable :: list(:)
       integer(ip) :: k
 !
@@ -15391,14 +15783,20 @@ contains
          end if
          call insrti ( ctx, list(k), srfids )
       end do
-      end procedure dsksrf
+      end subroutine dsksrf
 
-      module procedure dsk_surfaces
+      !> The surfaces of a body in a DSK file (PEPPER; [[dsksrf]] without a
+      !> set cell): their ID codes, sorted, without duplicates.
+      module subroutine dsk_surfaces ( ctx, file, body, ids )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: append_id, sort_unique
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the DSK file
+      integer(ip), intent(in) :: body  !! the body ID code
+      integer(ip), allocatable, intent(out) :: ids(:)  !! the surface ID codes (size 0 after an error)
       integer(ip), allocatable :: list(:)  ! the IDs found (unsorted, with duplicates)
       integer(ip) :: nlist  ! the number of IDs in LIST
 
@@ -15520,6 +15918,6 @@ contains
          call sort_unique ( ids )
       end if
       return
-      end procedure dsk_surfaces
+      end subroutine dsk_surfaces
 
 end submodule pepper_dsk_files

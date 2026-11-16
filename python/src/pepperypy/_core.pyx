@@ -306,6 +306,8 @@ cdef class _SpiceBase:
     cdef object _contexts
     cdef dict _bodies
     cdef dict _frames
+    cdef dict _loaders          # name: (loader, ...): kept alive while registered
+    cdef dict _kernel_refs      # kernel name: per load, the providers of its builder (a stack)
     cdef object __weakref__
 
     cdef int _check(self) except -1:
@@ -346,6 +348,210 @@ cdef class _ContextBase:
             self._ptr = NULL
 
 
+# ----------------------------------------------------------------------
+# Kernels built in memory
+
+
+cdef class KernelBuilder:
+    """SPK segments made from arrays, loaded as a kernel with no file
+    (`Spice.load_kernel`). The interpolation is SPICE's: Lagrange (SPK type
+    9) or Hermite (type 13, odd degree). A builder belongs to no instance:
+    each thread can fill its own while others query. Frames are resolved
+    when it is loaded.
+
+        kb = KernelBuilder()
+        kb.spk_hermite(-10001, 399, 'J2000', ets, states, 7)
+        spice.load_kernel('my_trajectory', kb)
+        spice.write_kernel('my_trajectory', 'my_trajectory.bsp')
+    """
+
+    cdef void *_ptr
+    cdef bint _owned
+    cdef object _spice          # the instance whose loader fills it (a borrowed builder)
+    cdef public list _refs      # its Python providers (kept alive)
+
+    def __cinit__(self):
+        self._ptr = pepper_builder_new()
+        self._owned = True
+        self._spice = None
+        self._refs = []
+
+    def __dealloc__(self):
+        if self._ptr != NULL and self._owned:
+            pepper_builder_free(self._ptr)
+        self._ptr = NULL
+
+    cdef int _valid(self) except -1:
+        if self._ptr == NULL:
+            raise ValueError('this builder belonged to a loader call that has returned')
+        return 0
+
+    cdef _ContextBase _ctx(self, ctx):
+        if ctx is not None:
+            return ctx
+        if self._spice is not None:
+            return self._spice.context()
+        return current_context()
+
+    def add_ephemeris(self, int body, int center, frame, double tbeg, double tend, provider, ident='',
+                      ctx=None):
+        """Add a programmatic ephemeris to the kernel: `provider(ctx, body,
+        et)` returns the state (6 values) relative to `center` in `frame`,
+        or None (as for Spice.add_ephemeris). Owned by the kernel once loaded:
+        UNLOAD removes it; kernels of the same body coexist."""
+        self._valid()
+        cdef _ContextBase c = self._ctx(ctx)
+        cdef bytes bf = _b(frame), bi = _b(ident)
+        self._refs.append(provider)
+        c._enter()
+        try:
+            if pepper_builder_add_ephemeris(c._ptr, self._ptr, body, center, bf, tbeg, tend, _state_cb,
+                                            <void*>provider, bi):
+                c._raise()
+        finally:
+            c._leave()
+
+    def add_frame(self, name, int code, int center, provider, ctx=None):
+        """Add a programmatic frame to the kernel: `provider(ctx, frame, et)`
+        returns `(xform, relative)` or None (as for Spice.add_frame). Owned by
+        the kernel once loaded."""
+        self._valid()
+        cdef _ContextBase c = self._ctx(ctx)
+        cdef bytes bn = _b(name)
+        self._refs.append(provider)
+        c._enter()
+        try:
+            if pepper_builder_add_frame(c._ptr, self._ptr, bn, code, center, _xform_cb, <void*>provider):
+                c._raise()
+        finally:
+            c._leave()
+
+    def frame_rotations(self, name, int code, int center, base, epochs, rotations, int degree, av=None,
+                        method='LAGRANGE', inverse=False, tbeg=None, tend=None, ident='', ctx=None):
+        """Add a table of rotations to the kernel: a frame `name` (`code`,
+        `center`) whose rotation from `base` (e.g. 'J2000') at each of the n
+        `epochs` (ET) is `rotations`: an (n, 4) array of SPICE quaternions
+        (scalar first) or an (n, 3, 3) array of matrices, from `base` to the
+        frame (v_frame = R v_base; `inverse`: from the frame to `base`).
+        `av`: an (n, 3) array of angular velocities (rad/s, in `base`), or
+        None. `method`: 'LAGRANGE' or 'HERMITE' (needs `av`); the degree is
+        odd. `tbeg`, `tend`: the coverage. PEPPER interpolates it (CK type
+        5's interpolation, ET time tags: no clock)."""
+        self._valid()
+        cdef cnp.ndarray e = np.ascontiguousarray(np.atleast_1d(epochs), dtype=np.float64).reshape(-1)
+        cdef int n = <int>e.shape[0]
+        cdef cnp.ndarray r = np.asarray(rotations, dtype=np.float64)
+        cdef cnp.ndarray q = None, m = None, w = None
+        cdef const double *pq = NULL
+        cdef const double *pm = NULL
+        cdef const double *pw = NULL
+        if r.ndim == 2 and r.shape[0] == n and r.shape[1] == 4:
+            q = np.ascontiguousarray(r)
+            pq = <const double*>cnp.PyArray_DATA(q)
+        elif r.ndim == 3 and r.shape[0] == n and r.shape[1] == 3 and r.shape[2] == 3:
+            m = np.ascontiguousarray(np.transpose(r, (0, 2, 1)))     # each matrix column-major
+            pm = <const double*>cnp.PyArray_DATA(m)
+        else:
+            raise ValueError(f'rotations must be an (n, 4) array of quaternions or an (n, 3, 3) array of '
+                             f'matrices for n = {n} epochs, not {np.shape(rotations)}')
+        if av is not None:
+            w = np.ascontiguousarray(av, dtype=np.float64)
+            if w.ndim != 2 or w.shape[0] != n or w.shape[1] != 3:
+                raise ValueError(f'av must be an (n, 3) array for n = {n} epochs, not {np.shape(av)}')
+            pw = <const double*>cnp.PyArray_DATA(w)
+        cdef int bounds = 0 if (tbeg is None and tend is None) else 1
+        cdef double tb = 0.0, te = 0.0
+        if bounds:
+            tb = float(tbeg) if tbeg is not None else float(e[0])
+            te = float(tend) if tend is not None else float(e[n - 1])
+        cdef _ContextBase c = self._ctx(ctx)
+        cdef bytes bn = _b(name), bb = _b(base), bm = _b(method), bi = _b(ident)
+        c._enter()
+        try:
+            if pepper_builder_frame_rotations(c._ptr, self._ptr, bn, code, center, bb, n,
+                                              <const double*>cnp.PyArray_DATA(e), pq, pm, degree, pw, bm,
+                                              1 if inverse else 0, bounds, tb, te, bi):
+                c._raise()
+        finally:
+            c._leave()
+
+    def _add(self, int type, int body, int center, frame, epochs, states, int degree,
+             tbeg, tend, ident, adapt, ctx):
+        self._valid()
+        cdef cnp.ndarray e = np.ascontiguousarray(np.atleast_1d(epochs), dtype=np.float64).reshape(-1)
+        cdef cnp.ndarray s = np.ascontiguousarray(states, dtype=np.float64)
+        if s.ndim == 1 and s.shape[0] == 6:
+            s = s.reshape(1, 6)
+        if s.ndim != 2 or s.shape[1] != 6 or s.shape[0] != e.shape[0]:
+            raise ValueError(f'states must be an (n, 6) array for n = {e.shape[0]} epochs, '
+                             f'not {np.shape(states)}')
+        cdef int bounds = 0 if (tbeg is None and tend is None) else 1
+        cdef double tb = 0.0, te = 0.0
+        if bounds:
+            tb = float(tbeg) if tbeg is not None else float(e[0])
+            te = float(tend) if tend is not None else float(e[e.shape[0] - 1])
+        cdef _ContextBase c = self._ctx(ctx)
+        cdef bytes bf = _b(frame), bi = _b(ident)
+        c._enter()
+        try:
+            if pepper_builder_spk(c._ptr, self._ptr, type, body, center, bf, <int>e.shape[0],
+                                  <const double*>cnp.PyArray_DATA(e), <const double*>cnp.PyArray_DATA(s),
+                                  degree, bounds, tb, te, bi, 1 if adapt else 0):
+                c._raise()
+        finally:
+            c._leave()
+
+    def spk_lagrange(self, int body, int center, frame, epochs, states, int degree,
+                     tbeg=None, tend=None, ident='', adapt=False, ctx=None):
+        """Add an SPK segment of type 9 (Lagrange interpolation): `states`
+        is an (n, 6) array (km, km/s) at the n `epochs` (TDB seconds past
+        J2000, increasing). `tbeg`, `tend`: the coverage, inside the epochs
+        (default: their span). `adapt`: a segment too short for its degree
+        has its degree lowered (two states make a Hermite cubic, one state is
+        dropped). Errors are raised through `ctx` (default: the calling
+        thread's context of the current instance)."""
+        self._add(9, body, center, frame, epochs, states, degree, tbeg, tend, ident, adapt, ctx)
+
+    def spk_hermite(self, int body, int center, frame, epochs, states, int degree,
+                    tbeg=None, tend=None, ident='', adapt=False, ctx=None):
+        """Add an SPK segment of type 13 (Hermite interpolation, odd
+        degree); the arguments are those of `spk_lagrange`."""
+        self._add(13, body, center, frame, epochs, states, degree, tbeg, tend, ident, adapt, ctx)
+
+    def define_body(self, name, int code, ctx=None):
+        """Define a body name of the kernel: while it is loaded, `name`
+        translates to `code` (bodn2c, spkezr, ...); when it is unloaded the
+        definition is removed, and an earlier one of the name (boddef's,
+        another kernel's) is in effect again. Names from the kernel pool take
+        precedence, as over boddef's."""
+        self._valid()
+        cdef _ContextBase c = self._ctx(ctx)
+        cdef bytes b = _b(name)
+        c._enter()
+        try:
+            if pepper_builder_define_body(c._ptr, self._ptr, b, code):
+                c._raise()
+        finally:
+            c._leave()
+
+    def set_format(self, text):
+        """The kernel's description (`kernel_format`)."""
+        cdef bytes b = _b(text)
+        pepper_builder_set_format(self._ptr, b)
+
+    def clear(self):
+        """Remove the segments."""
+        pepper_builder_clear(self._ptr)
+
+    def nsegments(self):
+        """The number of segments."""
+        return pepper_builder_nsegments(self._ptr)
+
+    def __len__(self):
+        return pepper_builder_nsegments(self._ptr)
+
+
+
 include "_spice_methods.pxi"
 
 
@@ -365,6 +571,8 @@ cdef class Spice(_SpiceRoutines):
         self._contexts = weakref.WeakSet()
         self._bodies = {}
         self._frames = {}
+        self._loaders = {}
+        self._kernel_refs = {}
 
     def __dealloc__(self):
         if self._ptr != NULL:
@@ -380,6 +588,8 @@ cdef class Spice(_SpiceRoutines):
             self._ptr = NULL
         self._bodies.clear()
         self._frames.clear()
+        self._loaders.clear()
+        self._kernel_refs.clear()
 
     def __enter__(self):
         return self
@@ -414,26 +624,109 @@ cdef class Spice(_SpiceRoutines):
 
     # ---- kernels
 
-    def furnsh(self, path, in_memory=None):
+    def furnsh(self, path, in_memory=None, loader=None):
         """Load kernels (a file, a meta-kernel, or a list of them).
         `in_memory`: read binary kernels whole into memory (default: the
-        instance's choice, `set_in_memory`).
+        instance's choice, `set_in_memory`). `loader`: the name of a
+        registered kernel loader (`add_loader`) that reads the file(s),
+        overriding every other choice; 'PEPPER': PEPPER's own loading (SPICE
+        and JSON kernels, registered loaders not asked), e.g. for a
+        meta-kernel whose extension a loader also has.
 
         https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/spicelib/furnsh.html"""
         self._check()
         paths = [path] if not _iterable(path) else list(path)
         cdef int mem = -1 if in_memory is None else (1 if in_memory else 0)
         cdef bytes b
+        cdef bytes bl = _b(loader) if loader is not None else b''
         cdef const char *p
+        cdef const char *pl = bl
         cdef int st
         with self._lock:
             for one in paths:
                 b = _b(str(one) if not isinstance(one, (str, bytes)) else one)
                 p = b
                 with nogil:
-                    st = pepper_spice_furnsh(self._ptr, p, mem)
+                    st = pepper_spice_furnsh_loader(self._ptr, p, mem, pl)
                 if st:
-                    self._raise()
+                    # a loader's load that succeeded, then failed in PEPPER
+                    # (no kernel, no unload callback): drop its references
+                    try:
+                        self._raise()
+                    finally:
+                        self._prune_refs()
+
+    def unload(self, filename):
+        """Unload a SPICE kernel (a file, or a kernel built in memory, by
+        its name); the Python providers of a kernel built in memory are
+        released with it.
+
+        https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/FORTRAN/spicelib/unload.html
+
+        :param filename: The name of a kernel to unload."""
+        try:
+            return _SpiceRoutines.unload(self, filename)
+        finally:
+            self._prune_refs()
+
+    def _prune_refs(self):
+        """Keep, for each kernel name, one list of Python providers per
+        KEEPER entry still loaded under it (the latest ones)."""
+        if not self._kernel_refs or self._ptr == NULL:
+            return
+        c = Context(self)
+        counts = {}
+        try:
+            for i in range(c.ktotal('ALL')):
+                f = c.kdata(i, 'ALL')[0]
+                counts[f] = counts.get(f, 0) + 1
+        finally:
+            c.close()
+        for name in list(self._kernel_refs):
+            n = counts.get(name, 0)
+            stack = self._kernel_refs[name]
+            if n == 0:
+                del self._kernel_refs[name]
+            elif len(stack) > n:
+                del stack[n:]
+
+    def add_loader(self, name, loader, extensions=None, replace=False):
+        """Register a kernel loader: an object with `load(ctx, kb, file)`
+        (fill the KernelBuilder `kb` from `file`; `ctx` is a Context of this
+        instance, for lookups), and optionally `detect(file, head)` (True to
+        read a file by its first bytes) and `unload(file)` (its kernel is
+        unloaded); see KernelLoader. `furnsh` uses it by name (`loader=`, or
+        the meta-kernel's KERNEL_LOADERS), by the file's extension (one of
+        `extensions`), or by `detect`. An exception in `load` loads nothing
+        of the file (CallbackError, with the exception as its cause)."""
+        self._check()
+        exts = [] if extensions is None else ([extensions] if isinstance(extensions, str) else list(extensions))
+        block, n, width = _strblock(exts) if exts else (b'', 0, 1)
+        reg = (loader, self)
+        cdef bytes bn = _b(name)
+        cdef pepper_detect_fn det = NULL
+        # always: the unload callback releases the providers of the file's load
+        cdef pepper_unload_fn unl = _unload_cb
+        if hasattr(loader, 'detect'):
+            det = _detect_cb
+        with self._lock:
+            if pepper_spice_add_loader(self._ptr, bn, n, width, block, _load_cb, det, unl, <void*>reg,
+                                       1 if replace else 0):
+                self._raise()
+            self._loaders[str(name).upper()] = reg
+
+    def remove_loader(self, name):
+        """Remove a kernel loader (the kernels it loaded stay loaded)."""
+        self._check()
+        cdef bytes bn = _b(name)
+        with self._lock:
+            if pepper_spice_remove_loader(self._ptr, bn):
+                self._raise()
+            self._loaders.pop(str(name).upper(), None)
+
+    def loaders(self):
+        """The names of the registered kernel loaders."""
+        return list(self.context().loader_names())
 
     def kclear(self):
         """Unload all kernels, clear the kernel pool, remove the programmatic
@@ -447,6 +740,7 @@ cdef class Spice(_SpiceRoutines):
                 st = pepper_spice_kclear(self._ptr)
             self._bodies.clear()
             self._frames.clear()
+            self._kernel_refs.clear()
             if st:
                 self._raise()
 
@@ -492,6 +786,38 @@ cdef class Spice(_SpiceRoutines):
         with self._lock:
             if pepper_spice_lmpool(self._ptr, n, width, block):
                 self._raise()
+
+    def write_kernel(self, name, file, ck_file=None, text_file=None):
+        """Write a kernel built in memory to SPICE files: an SPK (`file`;
+        '' for none) and, for its rotation tables, a CK (`ck_file`) and a text
+        kernel (`text_file`) with their clocks, frame definitions and the
+        kernel's body names. The files must not exist."""
+        self._check()
+        cdef bytes bn = _b(name), bf = _b(file)
+        cdef bytes bc = _b(ck_file) if ck_file is not None else b''
+        cdef bytes bt = _b(text_file) if text_file is not None else b''
+        with self._lock:
+            if pepper_spice_write_kernel(self._ptr, bn, bf, bc, bt):
+                self._raise()
+
+    def load_kernel(self, name, KernelBuilder builder, keep=False):
+        """Load a KernelBuilder as a kernel named `name`, with no file: an
+        SPK in memory, used like an SPK file (queries, spkcov and spkobj by
+        its name, kdata, unload). A kernel loaded under the same name is
+        replaced (kept if the load fails). The builder is emptied, unless
+        `keep`; its Python providers are kept alive until the kernel is
+        unloaded. `write_kernel` writes it to an SPK file."""
+        self._check()
+        builder._valid()
+        cdef bytes b = _b(name)
+        with self._lock:
+            if pepper_spice_load_kernel(self._ptr, b, builder._ptr, 1 if keep else 0):
+                self._raise()
+            # the builder's Python providers live while the kernel is loaded
+            # (it replaced any kernel of the name)
+            self._kernel_refs[str(name).strip()] = [list(builder._refs)]
+            if not keep:
+                builder._refs = []
 
     def set_in_memory(self, flag):
         """Read binary kernels (SPK, CK, binary PCK) whole into memory when
@@ -749,6 +1075,80 @@ cdef void _bool_cb(void *ctx, void *user, double et, int *value) noexcept with g
         _callback_failed(ctx, e)
 
 
+class KernelLoader:
+    """The base of a kernel loader written in Python (Spice.add_loader):
+    override `load`; `detect` and `unload` are optional.
+
+        class CsvLoader(KernelLoader):
+            def load(self, ctx, kb, file):
+                data = np.loadtxt(file, delimiter=',')
+                kb.spk_lagrange(-10001, 399, 'J2000', data[:, 0], data[:, 1:7], 9, ctx=ctx)
+
+        spice.add_loader('CSV', CsvLoader(), extensions=['.csv'])
+        spice.furnsh('track.csv')
+    """
+
+    def load(self, ctx, kb, file):
+        """Fill the KernelBuilder `kb` from `file` (raise an exception on
+        an error: nothing of the file is loaded). `ctx` is a Context of the
+        instance, for lookups (bodn2c, str2et, ...)."""
+        raise NotImplementedError
+
+    def detect(self, file, head):
+        """True to read `file`, by its first bytes `head`: called for files
+        no loader's extension matches."""
+        return False
+
+    def unload(self, file):
+        """The kernel of `file` is unloaded (free what `load` kept)."""
+        pass
+
+
+cdef int _load_cb(void *ctx, void *user, void *builder, const char *file) noexcept with gil:
+    cdef KernelBuilder kb = None
+    try:
+        loader, spice = <object>user
+        kb = KernelBuilder.__new__(KernelBuilder)
+        pepper_builder_free(kb._ptr)          # a borrowed builder: FURNSH's
+        kb._ptr = builder
+        kb._owned = False
+        kb._spice = spice
+        name = file.decode('latin-1')
+        loader.load(spice.context(), kb, name)
+        # one list per load of the file (popped by _unload_cb)
+        (<_SpiceBase>spice)._kernel_refs.setdefault(name, []).append(list(kb._refs))
+        return 0
+    except BaseException as e:
+        _callback_failed(ctx, e)
+        return 1
+    finally:
+        if kb is not None:
+            kb._ptr = NULL
+
+
+cdef int _detect_cb(void *user, const char *file, const char *head, int nhead) noexcept with gil:
+    try:
+        loader, spice = <object>user
+        return 1 if loader.detect(file.decode('latin-1'), head[:nhead]) else 0
+    except BaseException:
+        return 0
+
+
+cdef void _unload_cb(void *user, const char *file) noexcept with gil:
+    try:
+        loader, spice = <object>user
+        name = file.decode('latin-1')
+        stack = (<_SpiceBase>spice)._kernel_refs.get(name)
+        if stack:
+            stack.pop()                       # the providers of this load
+            if not stack:
+                del (<_SpiceBase>spice)._kernel_refs[name]
+        if hasattr(loader, 'unload'):
+            loader.unload(name)
+    except BaseException:
+        pass
+
+
 cdef inline object _context_object(void *ctx):
     if ctx == NULL:
         return None
@@ -957,9 +1357,27 @@ cdef inline Context _context():
     return <Context>_instance().context()
 
 
-def furnsh(path, in_memory=None):
-    """Load kernels into the current instance (see Spice.furnsh)."""
-    _instance().furnsh(path, in_memory)
+def furnsh(path, in_memory=None, loader=None):
+    """Load kernels into the current instance (see Spice.furnsh): `loader`,
+    a registered kernel loader's name, or 'PEPPER'."""
+    _instance().furnsh(path, in_memory, loader)
+
+
+def write_kernel(name, file, ck_file=None, text_file=None):
+    """Write a kernel built in memory of the current instance to SPICE files
+    (see Spice.write_kernel)."""
+    _instance().write_kernel(name, file, ck_file, text_file)
+
+
+def add_loader(name, loader, extensions=None, replace=False):
+    """Register a kernel loader on the current instance (see Spice.add_loader)."""
+    _instance().add_loader(name, loader, extensions, replace)
+
+
+def load_kernel(name, builder, keep=False):
+    """Load a KernelBuilder as a kernel into the current instance (see
+    Spice.load_kernel)."""
+    _instance().load_kernel(name, builder, keep)
 
 
 def kclear():

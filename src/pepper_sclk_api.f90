@@ -2,15 +2,18 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_sclk_api.f90.
+!> [[pepper_instance_module]]).
 submodule (pepper_instance_module) pepper_sclk_api
 
    implicit none
 
 contains
 
+      !> Convert ephemeris seconds past J2000 (ET) to integral
+      !> encoded spacecraft clock (`ticks'). For conversion to
+      !> fractional ticks, (required for C-kernel production), see
+      !> the routine [[sce2c]].
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF integer code for a spacecraft whose
@@ -223,9 +226,13 @@ contains
       !>        they no longer use calls to CLPOOL.
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1990 (NJB)
-      module procedure sce2t
+      module subroutine sce2t ( ctx, sc, et, sclkdp )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+      real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
+      real(wp), intent(out) :: sclkdp  !! SCLK, encoded as ticks since spacecraft clock start.
 
 !
 !     Standard SPICE error handling.
@@ -249,8 +256,10 @@ contains
       end if
 
       return
-      end procedure sce2t
+      end subroutine sce2t
 
+      !> Convert encoded spacecraft clock ticks to character clock format.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is the NAIF ID number for the spacecraft whose clock's
@@ -380,66 +389,68 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SCFMT_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SCFMT_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the parameters that define the sizes and limits
-      !>        C     of the SCLK system.
-      !>        C
-      !>              INCLUDE 'sclk.inc'
+      !>C
+      !>C     Include the parameters that define the sizes and limits
+      !>C     of the SCLK system.
+      !>C
+      !>      INCLUDE 'sclk.inc'
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               CLKLEN
-      !>              PARAMETER           ( CLKLEN = 30 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               CLKLEN
+      !>      PARAMETER           ( CLKLEN = 30 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(CLKLEN)    START
-      !>              CHARACTER*(CLKLEN)    STOP
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(CLKLEN)    START
+      !>      CHARACTER*(CLKLEN)    STOP
       !>
-      !>              DOUBLE PRECISION      PSTART (MXPART)
-      !>              DOUBLE PRECISION      PSTOP  (MXPART)
+      !>      DOUBLE PRECISION      PSTART (MXPART)
+      !>      DOUBLE PRECISION      PSTOP  (MXPART)
       !>
-      !>              INTEGER               I
-      !>              INTEGER               NPARTS
-      !>              INTEGER               SC
+      !>      INTEGER               I
+      !>      INTEGER               NPARTS
+      !>      INTEGER               SC
       !>
-      !>        C
-      !>        C     Assign the value for the Stardust spacecraft ID.
-      !>        C
-      !>              SC = -29
+      !>C
+      !>C     Assign the value for the Stardust spacecraft ID.
+      !>C
+      !>      SC = -29
       !>
-      !>        C
-      !>        C     Load the SCLK file.
-      !>        C
-      !>              CALL FURNSH ( 'sdu_sclkscet_00074.tsc' )
+      !>C
+      !>C     Load the SCLK file.
+      !>C
+      !>      CALL FURNSH ( 'sdu_sclkscet_00074.tsc' )
       !>
-      !>        C
-      !>        C     Retrieve the arrays for PSTART and PSTOP and the
-      !>        C     number of partitions within the SCLK.
-      !>        C
-      !>              CALL SCPART ( SC, NPARTS, PSTART, PSTOP )
+      !>C
+      !>C     Retrieve the arrays for PSTART and PSTOP and the
+      !>C     number of partitions within the SCLK.
+      !>C
+      !>      CALL SCPART ( SC, NPARTS, PSTART, PSTOP )
       !>
-      !>        C
-      !>        C     Loop over each array value.
-      !>        C
-      !>              DO I= 1, NPARTS
+      !>C
+      !>C     Loop over each array value.
+      !>C
+      !>      DO I= 1, NPARTS
       !>
-      !>                 CALL SCFMT ( SC, PSTART( I ), START )
-      !>                 CALL SCFMT ( SC, PSTOP ( I ), STOP )
+      !>         CALL SCFMT ( SC, PSTART( I ), START )
+      !>         CALL SCFMT ( SC, PSTOP ( I ), STOP )
       !>
-      !>                 WRITE(*,*)
-      !>                 WRITE(*,*) 'Partition: ', I
-      !>                 WRITE(*,*) '   Start : ', START
-      !>                 WRITE(*,*) '   Stop  : ', STOP
+      !>         WRITE(*,*)
+      !>         WRITE(*,*) 'Partition: ', I
+      !>         WRITE(*,*) '   Start : ', START
+      !>         WRITE(*,*) '   Stop  : ', STOP
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -569,9 +580,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 06-SEP-1990 (JML) (RET)
-      module procedure scfmt
+      module subroutine scfmt ( ctx, sc, ticks, clkstr )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+      real(wp), intent(in) :: ticks  !! Spacecraft clock count encoded representation.
+      character(*), intent(out) :: clkstr  !! Character representation of a clock count.
 
       integer(ip) :: type
 
@@ -597,8 +612,11 @@ contains
       end if
 
       return
-      end procedure scfmt
+      end subroutine scfmt
 
+      !> Get spacecraft clock partition information from a spacecraft
+      !> clock kernel file.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is the NAIF ID for the spacecraft whose clock partition
@@ -679,66 +697,68 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SCPART_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SCPART_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Include the parameters that define the sizes and limits
-      !>        C     of the SCLK system.
-      !>        C
-      !>              INCLUDE 'sclk.inc'
+      !>C
+      !>C     Include the parameters that define the sizes and limits
+      !>C     of the SCLK system.
+      !>C
+      !>      INCLUDE 'sclk.inc'
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               CLKLEN
-      !>              PARAMETER           ( CLKLEN = 30 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               CLKLEN
+      !>      PARAMETER           ( CLKLEN = 30 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(CLKLEN)    START
-      !>              CHARACTER*(CLKLEN)    STOP
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(CLKLEN)    START
+      !>      CHARACTER*(CLKLEN)    STOP
       !>
-      !>              DOUBLE PRECISION      PSTART (MXPART)
-      !>              DOUBLE PRECISION      PSTOP  (MXPART)
+      !>      DOUBLE PRECISION      PSTART (MXPART)
+      !>      DOUBLE PRECISION      PSTOP  (MXPART)
       !>
-      !>              INTEGER               I
-      !>              INTEGER               NPARTS
-      !>              INTEGER               SC
+      !>      INTEGER               I
+      !>      INTEGER               NPARTS
+      !>      INTEGER               SC
       !>
-      !>        C
-      !>        C     Assign the value for the Stardust spacecraft ID.
-      !>        C
-      !>              SC = -29
+      !>C
+      !>C     Assign the value for the Stardust spacecraft ID.
+      !>C
+      !>      SC = -29
       !>
-      !>        C
-      !>        C     Load the SCLK file.
-      !>        C
-      !>              CALL FURNSH ( 'sdu_sclkscet_00074.tsc' )
+      !>C
+      !>C     Load the SCLK file.
+      !>C
+      !>      CALL FURNSH ( 'sdu_sclkscet_00074.tsc' )
       !>
-      !>        C
-      !>        C     Retrieve the arrays for PSTART and PSTOP and the
-      !>        C     number of partitions within the SCLK.
-      !>        C
-      !>              CALL SCPART ( SC, NPARTS, PSTART, PSTOP )
+      !>C
+      !>C     Retrieve the arrays for PSTART and PSTOP and the
+      !>C     number of partitions within the SCLK.
+      !>C
+      !>      CALL SCPART ( SC, NPARTS, PSTART, PSTOP )
       !>
-      !>        C
-      !>        C     Loop over each array value.
-      !>        C
-      !>              DO I= 1, NPARTS
+      !>C
+      !>C     Loop over each array value.
+      !>C
+      !>      DO I= 1, NPARTS
       !>
-      !>                 CALL SCFMT ( SC, PSTART( I ), START )
-      !>                 CALL SCFMT ( SC, PSTOP ( I ), STOP )
+      !>         CALL SCFMT ( SC, PSTART( I ), START )
+      !>         CALL SCFMT ( SC, PSTOP ( I ), STOP )
       !>
-      !>                 WRITE(*,*)
-      !>                 WRITE(*,*) 'Partition: ', I
-      !>                 WRITE(*,*) '   Start : ', START
-      !>                 WRITE(*,*) '   Stop  : ', STOP
+      !>         WRITE(*,*)
+      !>         WRITE(*,*) 'Partition: ', I
+      !>         WRITE(*,*) '   Start : ', START
+      !>         WRITE(*,*) '   Stop  : ', STOP
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -859,11 +879,16 @@ contains
       !>        subsystem. This routine no longer sets watches on kernel
       !>        variables. Setting watches "touches" the kernel pool, which
       !>        thwarts optimizations of many SPICE subsystems.
-      module procedure scpart
+      module subroutine scpart ( ctx, sc, nparts, pstart, pstop )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sclk
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+      integer(ip), intent(out) :: nparts  !! The number of spacecraft clock partitions.
+      real(wp), intent(out) :: pstart  ( * )  !! Array of partition start times.
+      real(wp), intent(out) :: pstop   ( * )  !! Array of partition stop times.
 
 !
 !     Standard SPICE error handling.
@@ -877,8 +902,11 @@ contains
       call scpr01 ( ctx, sc, nparts, pstart, pstop )
 
       return
-      end procedure scpart
+      end subroutine scpart
 
+      !> Convert encoded spacecraft clock (`ticks') to ephemeris
+      !> seconds past J2000 (ET).
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF integer code for a spacecraft, one of
@@ -1102,9 +1130,13 @@ contains
       !>        they no longer use calls to CLPOOL.
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1990 (NJB)
-      module procedure sct2e
+      module subroutine sct2e ( ctx, sc, sclkdp, et )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+      real(wp), intent(in) :: sclkdp  !! SCLK, encoded as ticks since spacecraft clock start.
+      real(wp), intent(out) :: et  !! Ephemeris time, seconds past J2000.
 
 !
 !     Standard SPICE error handling.
@@ -1128,8 +1160,10 @@ contains
       end if
 
       return
-      end procedure sct2e
+      end subroutine sct2e
 
+      !> Convert a spacecraft clock format string to number of "ticks".
+      !>
       !>## Detailed Input
       !>
       !>     SC       is the NAIF ID number for the spacecraft whose clock
@@ -1374,9 +1408,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 06-SEP-1990 (JML) (RET)
-      module procedure sctiks
+      module subroutine sctiks ( ctx, sc, clkstr, ticks )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+      character(*), intent(in) :: clkstr  !! Character representation of a spacecraft clock.
+      real(wp), intent(out) :: ticks  !! Number of ticks represented by the clock string.
 
       integer(ip) :: type
 
@@ -1403,8 +1441,11 @@ contains
       end if
 
       return
-      end procedure sctiks
+      end subroutine sctiks
 
+      !> Convert a double precision encoding of spacecraft clock time into
+      !> a character representation.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is the NAIF integer code of the spacecraft whose
@@ -1618,112 +1659,114 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SCDECD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SCDECD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>        C     The instrument we want pointing for is the CASSINI
-      !>        C     spacecraft. The reference frame we want is
-      !>        C     J2000. The spacecraft is CASSINI.
-      !>        C
-      !>              INTEGER               SC
-      !>              PARAMETER           ( SC     = -82 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>C     The instrument we want pointing for is the CASSINI
+      !>C     spacecraft. The reference frame we want is
+      !>C     J2000. The spacecraft is CASSINI.
+      !>C
+      !>      INTEGER               SC
+      !>      PARAMETER           ( SC     = -82 )
       !>
-      !>              INTEGER               INST
-      !>              PARAMETER           ( INST   = -82000 )
+      !>      INTEGER               INST
+      !>      PARAMETER           ( INST   = -82000 )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000' )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000' )
       !>
-      !>              CHARACTER*(*)         CK
-      !>              PARAMETER           ( CK     = '04153_04182ca_ISS.bc' )
+      !>      CHARACTER*(*)         CK
+      !>      PARAMETER           ( CK     = '04153_04182ca_ISS.bc' )
       !>
-      !>              CHARACTER*(*)         SCLK
-      !>              PARAMETER           ( SCLK   = 'cas00071.tsc' )
+      !>      CHARACTER*(*)         SCLK
+      !>      PARAMETER           ( SCLK   = 'cas00071.tsc' )
       !>
-      !>              INTEGER               NPICS
-      !>              PARAMETER           ( NPICS  = 4 )
+      !>      INTEGER               NPICS
+      !>      PARAMETER           ( NPICS  = 4 )
       !>
-      !>              CHARACTER*(*)         CLKTOL
-      !>              PARAMETER           ( CLKTOL = '1.0' )
+      !>      CHARACTER*(*)         CLKTOL
+      !>      PARAMETER           ( CLKTOL = '1.0' )
       !>
-      !>              INTEGER               MAXLEN
-      !>              PARAMETER           ( MAXLEN = 30 )
+      !>      INTEGER               MAXLEN
+      !>      PARAMETER           ( MAXLEN = 30 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(25)        SCLKIN (4)
-      !>              CHARACTER*(25)        SCLKOUT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(25)        SCLKIN (4)
+      !>      CHARACTER*(25)        SCLKOUT
       !>
-      !>              DOUBLE PRECISION      CMAT   (3,3)
-      !>              DOUBLE PRECISION      TIMEIN
-      !>              DOUBLE PRECISION      TIMEOUT
-      !>              DOUBLE PRECISION      TOL
+      !>      DOUBLE PRECISION      CMAT   (3,3)
+      !>      DOUBLE PRECISION      TIMEIN
+      !>      DOUBLE PRECISION      TIMEOUT
+      !>      DOUBLE PRECISION      TOL
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               K
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               K
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Set the input SCLK strings.
-      !>        C
-      !>              DATA                  SCLKIN /  '1/1465644279.0',
-      !>             .                                '1/1465644281.0',
-      !>             .                                '1/1465644351.0',
-      !>             .                                '1/1465644361.0'  /
+      !>C
+      !>C     Set the input SCLK strings.
+      !>C
+      !>      DATA                  SCLKIN /  '1/1465644279.0',
+      !>     .                                '1/1465644281.0',
+      !>     .                                '1/1465644351.0',
+      !>     .                                '1/1465644361.0'  /
       !>
-      !>        C
-      !>        C     Load the appropriate files. We need
-      !>        C
-      !>        C        1. CK file containing pointing data.
-      !>        C        2. Spacecraft clock kernel file.
-      !>        C
-      !>              CALL FURNSH ( CK   )
-      !>              CALL FURNSH ( SCLK )
+      !>C
+      !>C     Load the appropriate files. We need
+      !>C
+      !>C        1. CK file containing pointing data.
+      !>C        2. Spacecraft clock kernel file.
+      !>C
+      !>      CALL FURNSH ( CK   )
+      !>      CALL FURNSH ( SCLK )
       !>
-      !>        C
-      !>        C     Convert the tolerance string to ticks.
-      !>        C
-      !>              CALL SCTIKS ( SC, CLKTOL, TOL )
+      !>C
+      !>C     Convert the tolerance string to ticks.
+      !>C
+      !>      CALL SCTIKS ( SC, CLKTOL, TOL )
       !>
-      !>              DO I= 1, NPICS
+      !>      DO I= 1, NPICS
       !>
-      !>                 CALL SCENCD ( SC, SCLKIN(I), TIMEIN )
+      !>         CALL SCENCD ( SC, SCLKIN(I), TIMEIN )
       !>
-      !>                 CALL CKGP ( INST, TIMEIN,  TOL,  REF,
-      !>             .               CMAT, TIMEOUT, FOUND     )
+      !>         CALL CKGP ( INST, TIMEIN,  TOL,  REF,
+      !>     .               CMAT, TIMEOUT, FOUND     )
       !>
-      !>                 WRITE(*,*)
-      !>                 WRITE(*,'(2A)') 'Input s/c clock count : ', SCLKIN(I)
+      !>         WRITE(*,*)
+      !>         WRITE(*,'(2A)') 'Input s/c clock count : ', SCLKIN(I)
       !>
-      !>                 IF ( FOUND ) THEN
+      !>         IF ( FOUND ) THEN
       !>
-      !>                    CALL SCDECD ( SC, TIMEOUT, SCLKOUT )
+      !>            CALL SCDECD ( SC, TIMEOUT, SCLKOUT )
       !>
-      !>                    WRITE(*,'(2A)') 'Output s/c clock count: ',
-      !>             .                                          SCLKOUT
-      !>                    WRITE(*,'(A)') 'Output C-Matrix:'
+      !>            WRITE(*,'(2A)') 'Output s/c clock count: ',
+      !>     .                                          SCLKOUT
+      !>            WRITE(*,'(A)') 'Output C-Matrix:'
       !>
-      !>                    DO J = 1, 3
+      !>            DO J = 1, 3
       !>
-      !>                       WRITE(*,'(3F21.15)') ( CMAT(J,K), K = 1, 3 )
+      !>               WRITE(*,'(3F21.15)') ( CMAT(J,K), K = 1, 3 )
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,'(A)') 'No pointing found.'
+      !>            WRITE(*,'(A)') 'No pointing found.'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -1833,20 +1876,19 @@ contains
       !>
       !>        Comment section for permuted index source lines was added
       !>        following the header.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Standard SPICE error handling.
-      module procedure scdecd
+      module subroutine scdecd ( ctx, sc, sclkdp, sclkch )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled
       use pepper_strings, only: intstr, prefix, suffix
       use pepper_inc_sclk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+      real(wp), intent(in) :: sclkdp  !! Encoded representation of a spacecraft clock count.
+      character(*), intent(out) :: sclkch  !! Character representation of a clock count.
+!
+!     Local variables
+!
       real(wp), allocatable :: pstart(:), pstop(:), ptotls(:)
       integer(ip) :: npmax
       character(12) :: prtstr  ! PEPPER: any partition number and the slash (SPICELIB: PARTLN, 5)
@@ -1856,6 +1898,9 @@ contains
       integer(ip) :: suflen
       integer(ip) :: i
       real(wp) :: ticks
+!
+!     Standard SPICE error handling.
+!
       if ( ctx%failed() ) return
 
 !
@@ -1965,8 +2010,11 @@ contains
       call prefix ( prtstr, 0, sclkch )
 
       return
-      end procedure scdecd
+      end subroutine scdecd
 
+      !> Encode a character representation of spacecraft clock time into a
+      !> double precision number.
+      !>
       !>## Detailed Input
       !>
       !>     SC       is the standard NAIF ID of the spacecraft whose clock's
@@ -2211,112 +2259,114 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM SCENCD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM SCENCD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>        C     The instrument we want pointing for is the CASSINI
-      !>        C     spacecraft. The reference frame we want is
-      !>        C     J2000. The spacecraft is CASSINI.
-      !>        C
-      !>              INTEGER               SC
-      !>              PARAMETER           ( SC     = -82 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>C     The instrument we want pointing for is the CASSINI
+      !>C     spacecraft. The reference frame we want is
+      !>C     J2000. The spacecraft is CASSINI.
+      !>C
+      !>      INTEGER               SC
+      !>      PARAMETER           ( SC     = -82 )
       !>
-      !>              INTEGER               INST
-      !>              PARAMETER           ( INST   = -82000 )
+      !>      INTEGER               INST
+      !>      PARAMETER           ( INST   = -82000 )
       !>
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF    = 'J2000' )
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF    = 'J2000' )
       !>
-      !>              CHARACTER*(*)         CK
-      !>              PARAMETER           ( CK     = '04153_04182ca_ISS.bc' )
+      !>      CHARACTER*(*)         CK
+      !>      PARAMETER           ( CK     = '04153_04182ca_ISS.bc' )
       !>
-      !>              CHARACTER*(*)         SCLK
-      !>              PARAMETER           ( SCLK   = 'cas00071.tsc' )
+      !>      CHARACTER*(*)         SCLK
+      !>      PARAMETER           ( SCLK   = 'cas00071.tsc' )
       !>
-      !>              INTEGER               NPICS
-      !>              PARAMETER           ( NPICS  = 4 )
+      !>      INTEGER               NPICS
+      !>      PARAMETER           ( NPICS  = 4 )
       !>
-      !>              CHARACTER*(*)         CLKTOL
-      !>              PARAMETER           ( CLKTOL = '1.0' )
+      !>      CHARACTER*(*)         CLKTOL
+      !>      PARAMETER           ( CLKTOL = '1.0' )
       !>
-      !>              INTEGER               MAXLEN
-      !>              PARAMETER           ( MAXLEN = 30 )
+      !>      INTEGER               MAXLEN
+      !>      PARAMETER           ( MAXLEN = 30 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(25)        SCLKIN (4)
-      !>              CHARACTER*(25)        SCLKOUT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(25)        SCLKIN (4)
+      !>      CHARACTER*(25)        SCLKOUT
       !>
-      !>              DOUBLE PRECISION      CMAT   (3,3)
-      !>              DOUBLE PRECISION      TIMEIN
-      !>              DOUBLE PRECISION      TIMEOUT
-      !>              DOUBLE PRECISION      TOL
+      !>      DOUBLE PRECISION      CMAT   (3,3)
+      !>      DOUBLE PRECISION      TIMEIN
+      !>      DOUBLE PRECISION      TIMEOUT
+      !>      DOUBLE PRECISION      TOL
       !>
-      !>              INTEGER               I
-      !>              INTEGER               J
-      !>              INTEGER               K
+      !>      INTEGER               I
+      !>      INTEGER               J
+      !>      INTEGER               K
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Set the input SCLK strings.
-      !>        C
-      !>              DATA                  SCLKIN /  '1/1465644279.0',
-      !>             .                                '1/1465644281.0',
-      !>             .                                '1/1465644351.0',
-      !>             .                                '1/1465644361.0'  /
+      !>C
+      !>C     Set the input SCLK strings.
+      !>C
+      !>      DATA                  SCLKIN /  '1/1465644279.0',
+      !>     .                                '1/1465644281.0',
+      !>     .                                '1/1465644351.0',
+      !>     .                                '1/1465644361.0'  /
       !>
-      !>        C
-      !>        C     Load the appropriate files. We need
-      !>        C
-      !>        C        1. CK file containing pointing data.
-      !>        C        2. Spacecraft clock kernel file.
-      !>        C
-      !>              CALL FURNSH ( CK   )
-      !>              CALL FURNSH ( SCLK )
+      !>C
+      !>C     Load the appropriate files. We need
+      !>C
+      !>C        1. CK file containing pointing data.
+      !>C        2. Spacecraft clock kernel file.
+      !>C
+      !>      CALL FURNSH ( CK   )
+      !>      CALL FURNSH ( SCLK )
       !>
-      !>        C
-      !>        C     Convert the tolerance string to ticks.
-      !>        C
-      !>              CALL SCTIKS ( SC, CLKTOL, TOL )
+      !>C
+      !>C     Convert the tolerance string to ticks.
+      !>C
+      !>      CALL SCTIKS ( SC, CLKTOL, TOL )
       !>
-      !>              DO I= 1, NPICS
+      !>      DO I= 1, NPICS
       !>
-      !>                 CALL SCENCD ( SC, SCLKIN(I), TIMEIN )
+      !>         CALL SCENCD ( SC, SCLKIN(I), TIMEIN )
       !>
-      !>                 CALL CKGP ( INST, TIMEIN,  TOL,  REF,
-      !>             .               CMAT, TIMEOUT, FOUND     )
+      !>         CALL CKGP ( INST, TIMEIN,  TOL,  REF,
+      !>     .               CMAT, TIMEOUT, FOUND     )
       !>
-      !>                 WRITE(*,*)
-      !>                 WRITE(*,'(2A)') 'Input s/c clock count : ', SCLKIN(I)
+      !>         WRITE(*,*)
+      !>         WRITE(*,'(2A)') 'Input s/c clock count : ', SCLKIN(I)
       !>
-      !>                 IF ( FOUND ) THEN
+      !>         IF ( FOUND ) THEN
       !>
-      !>                    CALL SCDECD ( SC, TIMEOUT, SCLKOUT )
+      !>            CALL SCDECD ( SC, TIMEOUT, SCLKOUT )
       !>
-      !>                    WRITE(*,'(2A)') 'Output s/c clock count: ',
-      !>             .                                          SCLKOUT
-      !>                    WRITE(*,'(A)') 'Output C-Matrix:'
+      !>            WRITE(*,'(2A)') 'Output s/c clock count: ',
+      !>     .                                          SCLKOUT
+      !>            WRITE(*,'(A)') 'Output C-Matrix:'
       !>
-      !>                    DO J = 1, 3
+      !>            DO J = 1, 3
       !>
-      !>                       WRITE(*,'(3F21.15)') ( CMAT(J,K), K = 1, 3 )
+      !>               WRITE(*,'(3F21.15)') ( CMAT(J,K), K = 1, 3 )
       !>
-      !>                    END DO
+      !>            END DO
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,'(A)') 'No pointing found.'
+      !>            WRITE(*,'(A)') 'No pointing found.'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -2401,11 +2451,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1990 (JML) (RET)
-      module procedure scencd
+      module subroutine scencd ( ctx, sc, sclkch, sclkdp )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cpos, nparsi
       use pepper_inc_sclk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+      character(*), intent(in) :: sclkch  !! Character representation of a spacecraft clock.
+      real(wp), intent(out) :: sclkdp  !! Encoded representation of the clock count.
       real(wp), allocatable :: pstart(:), pstop(:), ptotls(:)
       integer(ip) :: npmax
       integer(ip) :: pos
@@ -2579,8 +2633,12 @@ contains
       end if
 
       return
-      end procedure scencd
+      end subroutine scencd
 
+      !> Convert an epoch specified as ephemeris seconds past J2000 (ET) to
+      !> a character string representation of a spacecraft clock value
+      !> (SCLK).
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF ID code for a spacecraft clock whose
@@ -2823,9 +2881,13 @@ contains
       !>        Truncation of the output string is now treated as an error.
       !>        The code changes made to implement the error checking were
       !>        in SCDECD and other lower-level routines.
-      module procedure sce2s
+      module subroutine sce2s ( ctx, sc, et, sclkch )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft clock ID code.
+      real(wp), intent(in) :: et  !! Ephemeris time, specified as seconds past J2000.
+      character(*), intent(out) :: sclkch  !! An SCLK string.
 
       real(wp) :: sclkdp
 
@@ -2841,8 +2903,11 @@ contains
       call scdecd ( ctx, sc, sclkdp, sclkch )
 
       return
-      end procedure sce2s
+      end subroutine sce2s
 
+      !> Convert a spacecraft clock string to ephemeris seconds past
+      !> J2000 (ET).
+      !>
       !>## Detailed Input
       !>
       !>     SC       is a NAIF ID code for a spacecraft, one of whose
@@ -3039,9 +3104,13 @@ contains
       !>        they no longer use calls to CLPOOL.
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1990 (NJB)
-      module procedure scs2e
+      module subroutine scs2e ( ctx, sc, sclkch, et )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF integer code for a spacecraft.
+      character(*), intent(in) :: sclkch  !! An SCLK string.
+      real(wp), intent(out) :: et  !! Ephemeris time, seconds past J2000.
 
       real(wp) :: sclkdp
 
@@ -3057,6 +3126,6 @@ contains
       call sct2e  ( ctx, sc, sclkdp, et     )
 
       return
-      end procedure scs2e
+      end subroutine scs2e
 
 end submodule pepper_sclk_api

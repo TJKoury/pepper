@@ -3,9 +3,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_cells.f90.
+!> [[pepper_instance_module]]).
 submodule (pepper_instance_module) pepper_cells
 
    implicit none
@@ -18,6 +16,12 @@ submodule (pepper_instance_module) pepper_cells
 
 contains
 
+      !> Return the base value used to encode unsigned integer values
+      !> in character strings.
+      !>
+      !> The function returns the base value used to encode unsigned
+      !> integer values in character strings.
+      !>
       !>## Detailed Input
       !>
       !>     None.
@@ -361,9 +365,10 @@ contains
       !>        module will never participate in error handling.
       !>
       !>        Missing parentheses added to CHBASE declaration.
-      module procedure chbase
+      module integer(ip) function chbase ( ctx )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
 
 !
 !     PEPPER: one value for every platform. CHBASE is used by ENCHAR and
@@ -374,8 +379,12 @@ contains
       chbase = 128
 
       return
-      end procedure chbase
+      end function chbase
 
+      !> Encode a nonnegative integer number into a character string
+      !> as the expansion of the number in base [[chbase]] (a function of
+      !> the size of the available character set).
+      !>
       !>## Detailed Input
       !>
       !>     NUMBER   is an arbitrary nonnegative integer.
@@ -485,9 +494,12 @@ contains
       !>        Only the first MINLEN characters of the string are now
       !>        used to encode the value. Also, negative values are now
       !>        treated as errors.
-      module procedure enchar
+      module subroutine enchar ( ctx, number, string )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: number  !! Number to be encoded.
+      character(*), intent(out) :: string  !! Encoded string.
 
 
       integer(ip) :: base
@@ -532,8 +544,10 @@ contains
       end if
 
       return
-      end procedure enchar
+      end subroutine enchar
 
+      !> Decode a character string encoded by [[enchar]].
+      !>
       !>## Detailed Input
       !>
       !>     STRING   is a character string previously encoded by ENCHAR.
@@ -621,11 +635,12 @@ contains
       !>        have the same value of MINLEN. (Also, if CHBASE is
       !>        changed, ENCHAR and DECHAR will always be recompiled
       !>        simultaneously.)
-      !>
-      !>     Standard SPICE error handling.
-      module procedure dechar
+      module subroutine dechar ( ctx, string, number )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: number  !! Decoded number.
+      character(*), intent(in) :: string  !! Encoded character string.
       integer(ip) :: base
       integer(ip) :: num
       integer(ip) :: remain
@@ -634,6 +649,9 @@ contains
       if ( ctx%failed() ) then
          return
 
+!
+!     Standard SPICE error handling.
+!
       else if ( len ( string ) < minlen ) then
          call ctx%sigerr ( 'SPICE(INSUFFLEN)' )
          return
@@ -651,8 +669,12 @@ contains
       end do
 
       return
-      end procedure dechar
+      end subroutine dechar
 
+      !> Set the long error message so as to indicate the number of excess
+      !> elements encountered by a routine operating on cells or on data
+      !> structures based on cells.
+      !>
       !>## Detailed Input
       !>
       !>     NUMBER   is the number of excess elements encountered.
@@ -760,10 +782,13 @@ contains
       !>        Sets the long error message directly. No longer returns
       !>        an error message. Message no longer contains name of
       !>        routine which detected the error.
-      module procedure excess
+      module subroutine excess ( ctx, number, struct )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, prefix, suffix
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: number  !! Number of excess elements.
+      character(*), intent(in) :: struct  !! Name of the data structure.
 
       integer(ip), parameter :: longln = 320
       character(longln) :: error
@@ -825,8 +850,12 @@ contains
       end if
 
       return
-      end procedure excess
+      end subroutine excess
 
+      !> Return the cardinality (number of elements) of a character cell.
+      !>
+      !> The function returns the cardinality of the input cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -936,9 +965,12 @@ contains
       !>
       !>        Check for valid input cell added. The input cell must
       !>        have valid size and cardinality values.
-      module procedure cardc
+      module integer(ip) function cardc ( ctx, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: cell  ( lbcell:* )  !! Input cell.
 
 
       integer(ip) :: card
@@ -988,8 +1020,13 @@ contains
       end if
 
       return
-      end procedure cardc
+      end function cardc
 
+      !> Return the cardinality (number of elements) of a double
+      !> precision cell.
+      !>
+      !> The function returns the cardinality of the input cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -1099,9 +1136,12 @@ contains
       !>
       !>        Check for valid input cell added. The input cell must
       !>        have valid size and cardinality values.
-      module procedure cardd
+      module integer(ip) function cardd ( ctx, cell )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: cell  ( lbcell:* )  !! Input cell.
 
 
       if ( ctx%failed() ) then
@@ -1146,8 +1186,12 @@ contains
       end if
 
       return
-      end procedure cardd
+      end function cardd
 
+      !> Return the cardinality (number of elements) of an integer cell.
+      !>
+      !> The function returns the cardinality of the input cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -1257,9 +1301,12 @@ contains
       !>
       !>        Check for valid input cell added. The input cell must
       !>        have valid size and cardinality values.
-      module procedure cardi
+      module integer(ip) function cardi ( ctx, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: cell  ( lbcell:* )  !! Input cell.
 
 
       if ( ctx%failed() ) then
@@ -1304,8 +1351,12 @@ contains
       end if
 
       return
-      end procedure cardi
+      end function cardi
 
+      !> Return the size (maximum cardinality) of a character cell.
+      !>
+      !> The function returns the size of the input cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -1401,9 +1452,12 @@ contains
       !>
       !>        Check for valid input cell added. The input cell must
       !>        have valid size and cardinality values.
-      module procedure sizec
+      module integer(ip) function sizec ( ctx, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: cell   ( lbcell:* )  !! Input cell.
 
 
       integer(ip) :: size
@@ -1453,8 +1507,13 @@ contains
       end if
 
       return
-      end procedure sizec
+      end function sizec
 
+      !> Return the size (maximum cardinality) of a double precision
+      !> cell.
+      !>
+      !> The function returns the size of the input cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -1550,9 +1609,12 @@ contains
       !>
       !>        Check for valid input cell added. The input cell must
       !>        have valid size and cardinality values.
-      module procedure sized
+      module integer(ip) function sized ( ctx, cell )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: cell   ( lbcell:* )  !! Input cell.
 
 
       if ( ctx%failed() ) then
@@ -1597,8 +1659,12 @@ contains
       end if
 
       return
-      end procedure sized
+      end function sized
 
+      !> Return the size (maximum cardinality) of an integer cell.
+      !>
+      !> The function returns the size of the input cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -1694,9 +1760,12 @@ contains
       !>
       !>        Check for valid input cell added. The input cell must
       !>        have valid size and cardinality values.
-      module procedure sizei
+      module integer(ip) function sizei ( ctx, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: cell  ( lbcell: * )  !! Input cell.
 
 
       if ( ctx%failed() ) then
@@ -1741,8 +1810,10 @@ contains
       end if
 
       return
-      end procedure sizei
+      end function sizei
 
+      !> Set the cardinality of a character cell.
+      !>
       !>## Detailed Input
       !>
       !>     CARD     is the cardinality of (number of elements in) the
@@ -1861,9 +1932,13 @@ contains
       !>        is signaled if the value is out of range. Examples
       !>        updated so as not to refer to the EMPTYx routines, and
       !>        to show the correct calling protocol for EXCESS.
-      module procedure scardc
+      module subroutine scardc ( ctx, card, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: card  !! Cardinality of (number of elements in) the cell.
+      character(*), intent(inout) :: cell   ( lbcell:* )  !! The cell.
 
 
       integer(ip) :: size
@@ -1891,8 +1966,10 @@ contains
       call enchar ( ctx, card, cell(0) )
 
       return
-      end procedure scardc
+      end subroutine scardc
 
+      !> Set the cardinality of a double precision cell.
+      !>
       !>## Detailed Input
       !>
       !>     CARD     is the cardinality of (number of elements in) the
@@ -2011,9 +2088,13 @@ contains
       !>        is signaled if the value is out of range. Examples
       !>        updated so as not to refer to the EMPTYx routines, and
       !>        to show the correct calling protocol for EXCESS.
-      module procedure scardd
+      module subroutine scardd ( ctx, card, cell )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: card  !! Cardinality of (number of elements in) the cell.
+      real(wp), intent(inout) :: cell   ( lbcell:* )  !! The cell.
 
 
       if ( ctx%failed() ) return
@@ -2036,8 +2117,10 @@ contains
       cell(0) = real( card, wp )
 
       return
-      end procedure scardd
+      end subroutine scardd
 
+      !> Set the cardinality of an integer cell.
+      !>
       !>## Detailed Input
       !>
       !>     CARD     is the cardinality of (number of elements in) the
@@ -2156,9 +2239,13 @@ contains
       !>        is signaled if the value is out of range. Examples
       !>        updated so as not to refer to the EMPTYx routines, and
       !>        to show the correct calling protocol for EXCESS.
-      module procedure scardi
+      module subroutine scardi ( ctx, card, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: card  !! Cardinality of (number of elements in) the cell.
+      integer(ip), intent(inout) :: cell   ( lbcell:* )  !! The cell.
 
 
       if ( ctx%failed() ) return
@@ -2181,8 +2268,10 @@ contains
       cell(0) = card
 
       return
-      end procedure scardi
+      end subroutine scardi
 
+      !> Set the size (maximum cardinality) of a character cell.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the size (maximum number of elements) of the cell.
@@ -2301,9 +2390,13 @@ contains
       !>        without the use of the EMPTYx routines, which have been
       !>        removed from the library. Errors in the examples have been
       !>        removed, also.
-      module procedure ssizec
+      module subroutine ssizec ( ctx, size, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the cell.
+      character(*), intent(inout) :: cell   ( lbcell:* )  !! The cell.
 
 
       integer(ip) :: i
@@ -2332,8 +2425,10 @@ contains
       end do
 
       return
-      end procedure ssizec
+      end subroutine ssizec
 
+      !> Set the size (maximum cardinality) of a double precision cell.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the size (maximum number of elements) of the cell.
@@ -2452,9 +2547,13 @@ contains
       !>        without the use of the EMPTYx routines, which have been
       !>        removed from the library. Errors in the examples have been
       !>        removed, also.
-      module procedure ssized
+      module subroutine ssized ( ctx, size, cell )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the cell.
+      real(wp), intent(inout) :: cell   ( lbcell:* )  !! The cell.
 
 
       integer(ip) :: i
@@ -2483,8 +2582,10 @@ contains
       end do
 
       return
-      end procedure ssized
+      end subroutine ssized
 
+      !> Set the size (maximum cardinality) of an integer cell.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the size (maximum number of elements) of the cell.
@@ -2603,9 +2704,13 @@ contains
       !>        without the use of the EMPTYx routines, which have been
       !>        removed from the library. Errors in the examples have been
       !>        removed, also.
-      module procedure ssizei
+      module subroutine ssizei ( ctx, size, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the cell.
+      integer(ip), intent(inout) :: cell   ( lbcell:* )  !! The cell.
 
 
       integer(ip) :: i
@@ -2634,8 +2739,10 @@ contains
       end do
 
       return
-      end procedure ssizei
+      end subroutine ssizei
 
+      !> Create a valid set from a character set array.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the maximum cardinality (number of elements)
@@ -2757,10 +2864,15 @@ contains
       !>        without the use of the EMPTYx routines, which have been
       !>        removed from the library. Errors in the examples have been
       !>        removed, also.
-      module procedure validc
+      module subroutine validc ( ctx, size, n, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: rmdupc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the set.
+      integer(ip), intent(in) :: n  !! Initial no. of (possibly non-distinct) elements.
+      character(*), intent(inout) :: a      ( lbcell:* )  !! Set to be validated.
 
 
       integer(ip) :: card
@@ -2794,8 +2906,10 @@ contains
       call scardc ( ctx, card, a )
 
       return
-      end procedure validc
+      end subroutine validc
 
+      !> Create a valid set from a double precision set array.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the maximum cardinality (number of elements)
@@ -2917,10 +3031,15 @@ contains
       !>        without the use of the EMPTYx routines, which have been
       !>        removed from the library. Errors in the examples have been
       !>        removed, also.
-      module procedure validd
+      module subroutine validd ( ctx, size, n, a )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: rmdupd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the set.
+      integer(ip), intent(in) :: n  !! Initial no. of (possibly non-distinct) elements.
+      real(wp), intent(inout) :: a       ( lbcell:* )  !! Set to be validated.
 
 
       integer(ip) :: card
@@ -2957,8 +3076,10 @@ contains
       call scardd ( ctx, card, a )
 
       return
-      end procedure validd
+      end subroutine validd
 
+      !> Create a valid set from an integer set array.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the maximum cardinality (number of elements)
@@ -3080,10 +3201,15 @@ contains
       !>        without the use of the EMPTYx routines, which have been
       !>        removed from the library. Errors in the examples have been
       !>        removed, also.
-      module procedure validi
+      module subroutine validi ( ctx, size, n, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: rmdupi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the set.
+      integer(ip), intent(in) :: n  !! Initial no. of (possibly non-distinct) elements.
+      integer(ip), intent(inout) :: a       ( lbcell:* )  !! Set to be validated.
 
 
       integer(ip) :: card
@@ -3117,8 +3243,10 @@ contains
       call scardi ( ctx, card, a )
 
       return
-      end procedure validi
+      end subroutine validi
 
+      !> Append an item to a character cell.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is a character string which is to be appended to CELL.
@@ -3215,9 +3343,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (HAN)
-      module procedure appndc
+      module subroutine appndc ( ctx, item, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: item  !! The item to append.
+      character(*), intent(inout) :: cell ( lbcell:* )  !! The cell to which ITEM will be
+                                                        !! appended.
 
 
       integer(ip) :: nwcard
@@ -3252,8 +3385,10 @@ contains
       end if
 
       return
-      end procedure appndc
+      end subroutine appndc
 
+      !> Append an item to a double precision cell.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is a double precision value which is to be appended to
@@ -3303,80 +3438,82 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM APPNDD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM APPNDD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDD
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 LISTSZ
-      !>              PARAMETER             ( LISTSZ = 9  )
+      !>      INTEGER                 LISTSZ
+      !>      PARAMETER             ( LISTSZ = 9  )
       !>
-      !>              INTEGER                 SIZE
-      !>              PARAMETER             ( SIZE   = 15 )
+      !>      INTEGER                 SIZE
+      !>      PARAMETER             ( SIZE   = 15 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        A      ( LBCELL:SIZE )
-      !>              DOUBLE PRECISION        ITEMS  ( LISTSZ      )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        A      ( LBCELL:SIZE )
+      !>      DOUBLE PRECISION        ITEMS  ( LISTSZ      )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Set the list of double precision numbers to be appended
-      !>        C     to the cell.
-      !>        C
-      !>              DATA                    ITEMS /  3.D0,  1.D0,  1.D0,
-      !>             .                                 2.D0,  5.D0,  8.D0,
-      !>             .                                21.D0, 13.D0, 34.D0  /
+      !>C
+      !>C     Set the list of double precision numbers to be appended
+      !>C     to the cell.
+      !>C
+      !>      DATA                    ITEMS /  3.D0,  1.D0,  1.D0,
+      !>     .                                 2.D0,  5.D0,  8.D0,
+      !>     .                                21.D0, 13.D0, 34.D0  /
       !>
-      !>        C
-      !>        C     Initialize the cell.
-      !>        C
-      !>              CALL SSIZED ( SIZE, A )
+      !>C
+      !>C     Initialize the cell.
+      !>C
+      !>      CALL SSIZED ( SIZE, A )
       !>
-      !>        C
-      !>        C     Add a single item to the new cell.
-      !>        C
-      !>              CALL APPNDD ( 0.D0, A )
+      !>C
+      !>C     Add a single item to the new cell.
+      !>C
+      !>      CALL APPNDD ( 0.D0, A )
       !>
-      !>        C
-      !>        C     Now insert a list of items.
-      !>        C
-      !>              DO I= 1, LISTSZ
+      !>C
+      !>C     Now insert a list of items.
+      !>C
+      !>      DO I= 1, LISTSZ
       !>
-      !>                 CALL APPNDD ( ITEMS(I), A )
+      !>         CALL APPNDD ( ITEMS(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the original contents of cell A.
-      !>        C
-      !>              WRITE(*,*) 'Items in original cell A:'
-      !>              WRITE(*,'(15F6.1)') ( A(I), I = 1, CARDD ( A ) )
+      !>C
+      !>C     Output the original contents of cell A.
+      !>C
+      !>      WRITE(*,*) 'Items in original cell A:'
+      !>      WRITE(*,'(15F6.1)') ( A(I), I = 1, CARDD ( A ) )
       !>
-      !>        C
-      !>        C     Validate the set: remove duplicates and sort the
-      !>        C     elements.
-      !>        C
-      !>              CALL VALIDD ( SIZE, CARDD( A ), A )
+      !>C
+      !>C     Validate the set: remove duplicates and sort the
+      !>C     elements.
+      !>C
+      !>      CALL VALIDD ( SIZE, CARDD( A ), A )
       !>
-      !>        C
-      !>        C     Output the contents of the set A.
-      !>        C
-      !>              WRITE(*,*) 'Items in cell A after VALIDD (now a set):'
-      !>              WRITE(*,'(15F6.1)') ( A(I), I = 1, CARDD ( A ) )
+      !>C
+      !>C     Output the contents of the set A.
+      !>C
+      !>      WRITE(*,*) 'Items in cell A after VALIDD (now a set):'
+      !>      WRITE(*,'(15F6.1)') ( A(I), I = 1, CARDD ( A ) )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -3427,9 +3564,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (HAN)
-      module procedure appndd
+      module subroutine appndd ( ctx, item, cell )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: item  !! The item to append.
+      real(wp), intent(inout) :: cell ( lbcell:* )  !! The cell to which ITEM will be appended.
 
 
       integer(ip) :: nwcard
@@ -3464,8 +3605,10 @@ contains
       end if
 
       return
-      end procedure appndd
+      end subroutine appndd
 
+      !> Append an item to an integer cell.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an integer value which is to be appended to CELL.
@@ -3514,78 +3657,80 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM APPNDI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM APPNDI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDI
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDI
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 LISTSZ
-      !>              PARAMETER             ( LISTSZ = 9  )
+      !>      INTEGER                 LISTSZ
+      !>      PARAMETER             ( LISTSZ = 9  )
       !>
-      !>              INTEGER                 SIZE
-      !>              PARAMETER             ( SIZE   = 15 )
+      !>      INTEGER                 SIZE
+      !>      PARAMETER             ( SIZE   = 15 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER                 A      ( LBCELL:SIZE )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER                 A      ( LBCELL:SIZE )
       !>
-      !>              INTEGER                 I
-      !>              INTEGER                 ITEMS  ( LISTSZ      )
+      !>      INTEGER                 I
+      !>      INTEGER                 ITEMS  ( LISTSZ      )
       !>
-      !>        C
-      !>        C     Set the list of integers to be appended to the cell.
-      !>        C
-      !>              DATA                    ITEMS /  3,  1,  1 , 2, 5,
-      !>             .                                 8, 21, 13, 34    /
+      !>C
+      !>C     Set the list of integers to be appended to the cell.
+      !>C
+      !>      DATA                    ITEMS /  3,  1,  1 , 2, 5,
+      !>     .                                 8, 21, 13, 34    /
       !>
-      !>        C
-      !>        C     Initialize the cell.
-      !>        C
-      !>              CALL SSIZEI ( SIZE, A )
+      !>C
+      !>C     Initialize the cell.
+      !>C
+      !>      CALL SSIZEI ( SIZE, A )
       !>
-      !>        C
-      !>        C     Add a single item to the new cell.
-      !>        C
-      !>              CALL APPNDI ( 0, A )
+      !>C
+      !>C     Add a single item to the new cell.
+      !>C
+      !>      CALL APPNDI ( 0, A )
       !>
-      !>        C
-      !>        C     Now insert a list of items.
-      !>        C
-      !>              DO I= 1, LISTSZ
+      !>C
+      !>C     Now insert a list of items.
+      !>C
+      !>      DO I= 1, LISTSZ
       !>
-      !>                 CALL APPNDI ( ITEMS(I), A )
+      !>         CALL APPNDI ( ITEMS(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the original contents of cell A.
-      !>        C
-      !>              WRITE(*,*) 'Items in original cell A:'
-      !>              WRITE(*,'(15I6)') ( A(I), I = 1, CARDI ( A ) )
+      !>C
+      !>C     Output the original contents of cell A.
+      !>C
+      !>      WRITE(*,*) 'Items in original cell A:'
+      !>      WRITE(*,'(15I6)') ( A(I), I = 1, CARDI ( A ) )
       !>
-      !>        C
-      !>        C     Validate the set: remove duplicates and sort the
-      !>        C     elements.
-      !>        C
-      !>              CALL VALIDI ( SIZE, CARDI( A ), A )
+      !>C
+      !>C     Validate the set: remove duplicates and sort the
+      !>C     elements.
+      !>C
+      !>      CALL VALIDI ( SIZE, CARDI( A ), A )
       !>
-      !>        C
-      !>        C     Output the contents of the set A.
-      !>        C
-      !>              WRITE(*,*) 'Items in cell A after VALIDI (now a set):'
-      !>              WRITE(*,'(15I6)') ( A(I), I = 1, CARDI ( A ) )
+      !>C
+      !>C     Output the contents of the set A.
+      !>C
+      !>      WRITE(*,*) 'Items in cell A after VALIDI (now a set):'
+      !>      WRITE(*,'(15I6)') ( A(I), I = 1, CARDI ( A ) )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -3637,9 +3782,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (HAN)
-      module procedure appndi
+      module subroutine appndi ( ctx, item, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: item  !! The item to append.
+      integer(ip), intent(inout) :: cell ( lbcell:* )  !! The cell to which ITEM will be
+                                                       !! appended.
 
 
       integer(ip) :: nwcard
@@ -3674,8 +3824,10 @@ contains
       end if
 
       return
-      end procedure appndi
+      end subroutine appndi
 
+      !> Copy the contents of a character cell to another cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -3766,10 +3918,14 @@ contains
       !>        Also, calling protocol for EXCESS has been changed. And,
       !>        elements LBCELL through -2 of control area are now copied to
       !>        the output cell.
-      module procedure copyc
+      module subroutine copyc ( ctx, cell, copy )
       use pepper_kinds, only: ip
       use pepper_strings, only: lastpc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: cell     ( lbcell:* )  !! Cell to be copied.
+      character(*), intent(inout) :: copy     ( lbcell:* )  !! New cell.
 
 
 !     Local variables
@@ -3859,8 +4015,10 @@ contains
 
       end if
       return
-      end procedure copyc
+      end subroutine copyc
 
+      !> Copy the contents of a double precision cell to another cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -3944,9 +4102,13 @@ contains
       !>
       !>        Calling protocol for EXCESS has been changed. Call to SETMSG
       !>        has been removed.
-      module procedure copyd
+      module subroutine copyd ( ctx, cell, copy )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: cell     ( lbcell:* )  !! Cell to be copied.
+      real(wp), intent(inout) :: copy     ( lbcell:* )  !! New cell.
 
 
       integer(ip) :: size
@@ -3990,8 +4152,10 @@ contains
       end if
 
       return
-      end procedure copyd
+      end subroutine copyd
 
+      !> Copy the contents of an integer cell to another cell.
+      !>
       !>## Detailed Input
       !>
       !>     CELL     is a cell.
@@ -4075,9 +4239,13 @@ contains
       !>
       !>        Calling protocol for EXCESS has been changed. Call to SETMSG
       !>        has been removed.
-      module procedure copyi
+      module subroutine copyi ( ctx, cell, copy )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: cell     ( lbcell:* )  !! Cell to be copied.
+      integer(ip), intent(inout) :: copy     ( lbcell:* )  !! New cell.
 
 
       integer(ip) :: size
@@ -4121,8 +4289,10 @@ contains
       end if
 
       return
-      end procedure copyi
+      end subroutine copyi
 
+      !> Insert an item into a character set.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be inserted into the specified
@@ -4184,75 +4354,77 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM INSRTC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM INSRTC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDC
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDC
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5  )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5  )
       !>
-      !>              INTEGER                 PNAMSZ
-      !>              PARAMETER             ( PNAMSZ   = 7 )
+      !>      INTEGER                 PNAMSZ
+      !>      PARAMETER             ( PNAMSZ   = 7 )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 9 )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 9 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(PNAMSZ)      LIST   ( SETDIM        )
-      !>              CHARACTER*(PNAMSZ)      PLNETS ( LBCELL:SETDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(PNAMSZ)      LIST   ( SETDIM        )
+      !>      CHARACTER*(PNAMSZ)      PLNETS ( LBCELL:SETDIM )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Create the original planets list.
-      !>        C
-      !>              DATA                    LIST  /
-      !>             .                'MERCURY', 'VENUS',   'EARTH',
-      !>             .                'MARS',    'JUPITER', 'SATURN',
-      !>             .                'URANUS',  'NEPTUNE', 'PLUTO'   /
+      !>C
+      !>C     Create the original planets list.
+      !>C
+      !>      DATA                    LIST  /
+      !>     .                'MERCURY', 'VENUS',   'EARTH',
+      !>     .                'MARS',    'JUPITER', 'SATURN',
+      !>     .                'URANUS',  'NEPTUNE', 'PLUTO'   /
       !>
-      !>        C
-      !>        C     Initialize the empty set.
-      !>        C
-      !>              CALL VALIDC ( SETDIM, 0, PLNETS )
+      !>C
+      !>C     Initialize the empty set.
+      !>C
+      !>      CALL VALIDC ( SETDIM, 0, PLNETS )
       !>
-      !>        C
-      !>        C     Insert the list of planets into the set. If the item is
-      !>        C     an element of the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Insert the list of planets into the set. If the item is
+      !>C     an element of the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL INSRTC ( LIST(I), PLNETS )
+      !>         CALL INSRTC ( LIST(I), PLNETS )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Remove the Pluto from the set. If the Pluto is not an
-      !>        C     element of the set, the set is not changed.
-      !>        C
-      !>              CALL REMOVC ( 'PLUTO', PLNETS )
+      !>C
+      !>C     Remove the Pluto from the set. If the Pluto is not an
+      !>C     element of the set, the set is not changed.
+      !>C
+      !>      CALL REMOVC ( 'PLUTO', PLNETS )
       !>
-      !>        C
-      !>        C     Output the contents of PLNETS.
-      !>        C
-      !>              WRITE(*,*) 'Planets of the Solar System:'
+      !>C
+      !>C     Output the contents of PLNETS.
+      !>C
+      !>      WRITE(*,*) 'Planets of the Solar System:'
       !>
-      !>              DO I = 1, CARDC ( PLNETS )
+      !>      DO I = 1, CARDC ( PLNETS )
       !>
-      !>                 WRITE(*,*) '   ', PLNETS(I)
+      !>         WRITE(*,*) '   ', PLNETS(I)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4316,10 +4488,14 @@ contains
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
       !>        Calling protocol of EXCESS changed. Call to SETMSG removed.
-      module procedure insrtc
+      module subroutine insrtc ( ctx, item, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: item  !! Item to be inserted.
+      character(*), intent(inout) :: a        ( lbcell:* )  !! Insertion set.
 
 
       integer(ip) :: card
@@ -4398,8 +4574,10 @@ contains
       end if
 
       return
-      end procedure insrtc
+      end subroutine insrtc
 
+      !> Insert an item into a double precision set.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be inserted into the specified
@@ -4448,84 +4626,86 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM INSRTD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM INSRTD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDD
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 10  )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 10  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        A      ( LBCELL:SETDIM )
-      !>              DOUBLE PRECISION        EVEN   ( SETDIM        )
-      !>              DOUBLE PRECISION        ITEMS  ( SETDIM        )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        A      ( LBCELL:SETDIM )
+      !>      DOUBLE PRECISION        EVEN   ( SETDIM        )
+      !>      DOUBLE PRECISION        ITEMS  ( SETDIM        )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Create a list of items and even numbers.
-      !>        C
-      !>              DATA                    EVEN  /
-      !>             .                      0.D0,  2.D0,  4.D0,  6.D0,  8.D0,
-      !>             .                     10.D0, 12.D0, 14.D0, 16.D0, 18.D0  /
+      !>C
+      !>C     Create a list of items and even numbers.
+      !>C
+      !>      DATA                    EVEN  /
+      !>     .                      0.D0,  2.D0,  4.D0,  6.D0,  8.D0,
+      !>     .                     10.D0, 12.D0, 14.D0, 16.D0, 18.D0  /
       !>
-      !>              DATA                    ITEMS /
-      !>             .                      0.D0,  1.D0,  1.D0,  2.D0,  3.D0,
-      !>             .                      5.D0,  8.D0, 10.D0, 13.D0, 21.D0  /
+      !>      DATA                    ITEMS /
+      !>     .                      0.D0,  1.D0,  1.D0,  2.D0,  3.D0,
+      !>     .                      5.D0,  8.D0, 10.D0, 13.D0, 21.D0  /
       !>
-      !>        C
-      !>        C     Initialize the empty set.
-      !>        C
-      !>              CALL VALIDD ( SETDIM, 0, A )
+      !>C
+      !>C     Initialize the empty set.
+      !>C
+      !>      CALL VALIDD ( SETDIM, 0, A )
       !>
-      !>        C
-      !>        C     Insert the list of double precision numbers into the
-      !>        C     set. If the item is an element of the set, the set is
-      !>        C     not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Insert the list of double precision numbers into the
+      !>C     set. If the item is an element of the set, the set is
+      !>C     not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL INSRTD ( ITEMS(I), A )
+      !>         CALL INSRTD ( ITEMS(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the original contents of set A.
-      !>        C
-      !>              WRITE(*,*) 'Items in original set A:'
-      !>              WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output the original contents of set A.
+      !>C
+      !>      WRITE(*,*) 'Items in original set A:'
+      !>      WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     Remove the even values. If the item is not an element of
-      !>        C     the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Remove the even values. If the item is not an element of
+      !>C     the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL REMOVD ( EVEN(I), A )
+      !>         CALL REMOVD ( EVEN(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the contents of A.
-      !>        C
-      !>              WRITE(*,*) 'Odd numbers in set A:'
-      !>              WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output the contents of A.
+      !>C
+      !>      WRITE(*,*) 'Odd numbers in set A:'
+      !>      WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
+      !>      WRITE(*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4577,10 +4757,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure insrtd
+      module subroutine insrtd ( ctx, item, a )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: item  !! Item to be inserted.
+      real(wp), intent(inout) :: a     ( lbcell:* )  !! Insertion set.
 
 
       integer(ip) :: card
@@ -4646,8 +4830,10 @@ contains
       end if
 
       return
-      end procedure insrtd
+      end subroutine insrtd
 
+      !> Insert an item into an integer set.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be inserted into the specified
@@ -4696,80 +4882,82 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM INSRTI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM INSRTI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDI
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDI
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 10  )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 10  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER                 A      ( LBCELL:SETDIM )
-      !>              INTEGER                 EVEN   ( SETDIM        )
-      !>              INTEGER                 I
-      !>              INTEGER                 ITEMS  ( SETDIM        )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER                 A      ( LBCELL:SETDIM )
+      !>      INTEGER                 EVEN   ( SETDIM        )
+      !>      INTEGER                 I
+      !>      INTEGER                 ITEMS  ( SETDIM        )
       !>
-      !>        C
-      !>        C     Create a list of items and even numbers.
-      !>        C
-      !>              DATA                    EVEN  /  0,  2,  4,  6,  8,
-      !>             .                                10, 12, 14, 16, 18  /
+      !>C
+      !>C     Create a list of items and even numbers.
+      !>C
+      !>      DATA                    EVEN  /  0,  2,  4,  6,  8,
+      !>     .                                10, 12, 14, 16, 18  /
       !>
-      !>              DATA                    ITEMS /  0,  1,  1,  2,  3,
-      !>             .                                 5,  8, 10, 13, 21  /
+      !>      DATA                    ITEMS /  0,  1,  1,  2,  3,
+      !>     .                                 5,  8, 10, 13, 21  /
       !>
-      !>        C
-      !>        C     Initialize the empty set.
-      !>        C
-      !>              CALL VALIDI ( SETDIM, 0, A )
+      !>C
+      !>C     Initialize the empty set.
+      !>C
+      !>      CALL VALIDI ( SETDIM, 0, A )
       !>
-      !>        C
-      !>        C     Insert the list of integers into the set. If the item is
-      !>        C     an element of the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Insert the list of integers into the set. If the item is
+      !>C     an element of the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL INSRTI ( ITEMS(I), A )
+      !>         CALL INSRTI ( ITEMS(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the original contents of set A.
-      !>        C
-      !>              WRITE(*,*) 'Items in original set A:'
-      !>              WRITE(*,'(10I6)') ( A(I), I = 1, CARDI ( A ) )
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output the original contents of set A.
+      !>C
+      !>      WRITE(*,*) 'Items in original set A:'
+      !>      WRITE(*,'(10I6)') ( A(I), I = 1, CARDI ( A ) )
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     Remove the even values. If the item is not an element of
-      !>        C     the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Remove the even values. If the item is not an element of
+      !>C     the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL REMOVI ( EVEN(I), A )
+      !>         CALL REMOVI ( EVEN(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the contents of A.
-      !>        C
-      !>              WRITE(*,*) 'Odd numbers in set A:'
-      !>              WRITE(*,'(10I6)') ( A(I), I = 1, CARDI ( A ) )
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output the contents of A.
+      !>C
+      !>      WRITE(*,*) 'Odd numbers in set A:'
+      !>      WRITE(*,'(10I6)') ( A(I), I = 1, CARDI ( A ) )
+      !>      WRITE(*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -4825,10 +5013,14 @@ contains
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
       !>        Calling protocol of EXCESS changed. Call to SETMSG removed.
-      module procedure insrti
+      module subroutine insrti ( ctx, item, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlei
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: item  !! Item to be inserted.
+      integer(ip), intent(inout) :: a        ( lbcell:* )  !! Insertion set.
 
 
       integer(ip) :: size
@@ -4893,8 +5085,10 @@ contains
       end if
 
       return
-      end procedure insrti
+      end subroutine insrti
 
+      !> Remove an item from a character set.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be removed from the specified set.
@@ -4948,75 +5142,77 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REMOVC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REMOVC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDC
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDC
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5  )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5  )
       !>
-      !>              INTEGER                 PNAMSZ
-      !>              PARAMETER             ( PNAMSZ   = 7 )
+      !>      INTEGER                 PNAMSZ
+      !>      PARAMETER             ( PNAMSZ   = 7 )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 9 )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 9 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(PNAMSZ)      LIST   ( SETDIM        )
-      !>              CHARACTER*(PNAMSZ)      PLNETS ( LBCELL:SETDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(PNAMSZ)      LIST   ( SETDIM        )
+      !>      CHARACTER*(PNAMSZ)      PLNETS ( LBCELL:SETDIM )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Create the original planets list.
-      !>        C
-      !>              DATA                    LIST  /
-      !>             .                'MERCURY', 'VENUS',   'EARTH',
-      !>             .                'MARS',    'JUPITER', 'SATURN',
-      !>             .                'URANUS',  'NEPTUNE', 'PLUTO'   /
+      !>C
+      !>C     Create the original planets list.
+      !>C
+      !>      DATA                    LIST  /
+      !>     .                'MERCURY', 'VENUS',   'EARTH',
+      !>     .                'MARS',    'JUPITER', 'SATURN',
+      !>     .                'URANUS',  'NEPTUNE', 'PLUTO'   /
       !>
-      !>        C
-      !>        C     Initialize the empty set.
-      !>        C
-      !>              CALL VALIDC ( SETDIM, 0, PLNETS )
+      !>C
+      !>C     Initialize the empty set.
+      !>C
+      !>      CALL VALIDC ( SETDIM, 0, PLNETS )
       !>
-      !>        C
-      !>        C     Insert the list of planets into the set. If the item is
-      !>        C     an element of the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Insert the list of planets into the set. If the item is
+      !>C     an element of the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL INSRTC ( LIST(I), PLNETS )
+      !>         CALL INSRTC ( LIST(I), PLNETS )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Remove the Pluto from the set. If the Pluto is not an
-      !>        C     element of the set, the set is not changed.
-      !>        C
-      !>              CALL REMOVC ( 'PLUTO', PLNETS )
+      !>C
+      !>C     Remove the Pluto from the set. If the Pluto is not an
+      !>C     element of the set, the set is not changed.
+      !>C
+      !>      CALL REMOVC ( 'PLUTO', PLNETS )
       !>
-      !>        C
-      !>        C     Output the contents of PLNETS.
-      !>        C
-      !>              WRITE(*,*) 'Planets of the Solar System:'
+      !>C
+      !>C     Output the contents of PLNETS.
+      !>C
+      !>      WRITE(*,*) 'Planets of the Solar System:'
       !>
-      !>              DO I = 1, CARDC ( PLNETS )
+      !>      DO I = 1, CARDC ( PLNETS )
       !>
-      !>                 WRITE(*,*) '   ', PLNETS(I)
+      !>         WRITE(*,*) '   ', PLNETS(I)
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5066,10 +5262,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU)
-      module procedure removc
+      module subroutine removc ( ctx, item, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: item  !! Item to be removed.
+      character(*), intent(inout) :: a       ( lbcell:* )  !! Removal set.
 
 
 !     Local variables
@@ -5114,8 +5314,10 @@ contains
       end if
 
       return
-      end procedure removc
+      end subroutine removc
 
+      !> Remove an item from a double precision set.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be removed from the specified set.
@@ -5168,84 +5370,86 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REMOVD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REMOVD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDD
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 10  )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 10  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        A      ( LBCELL:SETDIM )
-      !>              DOUBLE PRECISION        EVEN   ( SETDIM        )
-      !>              DOUBLE PRECISION        ITEMS  ( SETDIM        )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        A      ( LBCELL:SETDIM )
+      !>      DOUBLE PRECISION        EVEN   ( SETDIM        )
+      !>      DOUBLE PRECISION        ITEMS  ( SETDIM        )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Create a list of items and even numbers.
-      !>        C
-      !>              DATA                    EVEN  /
-      !>             .                      0.D0,  2.D0,  4.D0,  6.D0,  8.D0,
-      !>             .                     10.D0, 12.D0, 14.D0, 16.D0, 18.D0  /
+      !>C
+      !>C     Create a list of items and even numbers.
+      !>C
+      !>      DATA                    EVEN  /
+      !>     .                      0.D0,  2.D0,  4.D0,  6.D0,  8.D0,
+      !>     .                     10.D0, 12.D0, 14.D0, 16.D0, 18.D0  /
       !>
-      !>              DATA                    ITEMS /
-      !>             .                      0.D0,  1.D0,  1.D0,  2.D0,  3.D0,
-      !>             .                      5.D0,  8.D0, 10.D0, 13.D0, 21.D0  /
+      !>      DATA                    ITEMS /
+      !>     .                      0.D0,  1.D0,  1.D0,  2.D0,  3.D0,
+      !>     .                      5.D0,  8.D0, 10.D0, 13.D0, 21.D0  /
       !>
-      !>        C
-      !>        C     Initialize the empty set.
-      !>        C
-      !>              CALL VALIDD ( SETDIM, 0, A )
+      !>C
+      !>C     Initialize the empty set.
+      !>C
+      !>      CALL VALIDD ( SETDIM, 0, A )
       !>
-      !>        C
-      !>        C     Insert the list of double precision numbers into the
-      !>        C     set. If the item is an element of the set, the set is
-      !>        C     not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Insert the list of double precision numbers into the
+      !>C     set. If the item is an element of the set, the set is
+      !>C     not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL INSRTD ( ITEMS(I), A )
+      !>         CALL INSRTD ( ITEMS(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the original contents of set A.
-      !>        C
-      !>              WRITE(*,*) 'Items in original set A:'
-      !>              WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output the original contents of set A.
+      !>C
+      !>      WRITE(*,*) 'Items in original set A:'
+      !>      WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     Remove the even values. If the item is not an element of
-      !>        C     the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Remove the even values. If the item is not an element of
+      !>C     the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL REMOVD ( EVEN(I), A )
+      !>         CALL REMOVD ( EVEN(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the contents of A.
-      !>        C
-      !>              WRITE(*,*) 'Odd numbers in set A:'
-      !>              WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
-      !>              WRITE(*,*)
+      !>C
+      !>C     Output the contents of A.
+      !>C
+      !>      WRITE(*,*) 'Odd numbers in set A:'
+      !>      WRITE(*,'(10F6.1)') ( A(I), I = 1, CARDD ( A ) )
+      !>      WRITE(*,*)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5289,10 +5493,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure removd
+      module subroutine removd ( ctx, item, a )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: item  !! Item to be removed.
+      real(wp), intent(inout) :: a        ( lbcell:* )  !! Removal set.
 
 
 !     Local variables
@@ -5337,8 +5545,10 @@ contains
       end if
 
       return
-      end procedure removd
+      end subroutine removd
 
+      !> Remove an item from an integer set.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which is to be removed from the specified set.
@@ -5391,80 +5601,82 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM REMOVI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM REMOVI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER                 CARDI
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER                 CARDI
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 10  )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 10  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER                 A      ( LBCELL:SETDIM )
-      !>              INTEGER                 EVEN   ( SETDIM        )
-      !>              INTEGER                 I
-      !>              INTEGER                 ITEMS  ( SETDIM        )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER                 A      ( LBCELL:SETDIM )
+      !>      INTEGER                 EVEN   ( SETDIM        )
+      !>      INTEGER                 I
+      !>      INTEGER                 ITEMS  ( SETDIM        )
       !>
-      !>        C
-      !>        C     Create a list of items and even numbers.
-      !>        C
-      !>              DATA                    EVEN  /  0,  2,  4,  6,  8,
-      !>             .                                10, 12, 14, 16, 18  /
+      !>C
+      !>C     Create a list of items and even numbers.
+      !>C
+      !>      DATA                    EVEN  /  0,  2,  4,  6,  8,
+      !>     .                                10, 12, 14, 16, 18  /
       !>
-      !>              DATA                    ITEMS /  0,  1,  1,  2,  3,
-      !>             .                                 5,  8, 10, 13, 21  /
+      !>      DATA                    ITEMS /  0,  1,  1,  2,  3,
+      !>     .                                 5,  8, 10, 13, 21  /
       !>
-      !>        C
-      !>        C     Initialize the empty set.
-      !>        C
-      !>              CALL VALIDI ( SETDIM, 0, A )
+      !>C
+      !>C     Initialize the empty set.
+      !>C
+      !>      CALL VALIDI ( SETDIM, 0, A )
       !>
-      !>        C
-      !>        C     Insert the list of integers into the set. If the item is
-      !>        C     an element of the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Insert the list of integers into the set. If the item is
+      !>C     an element of the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL INSRTI ( ITEMS(I), A )
+      !>         CALL INSRTI ( ITEMS(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the original contents of set A.
-      !>        C
-      !>              WRITE(*,*) 'Items in original set A:'
-      !>              WRITE(*,'(10I6)') ( A(I), I=1, CARDI ( A ) )
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output the original contents of set A.
+      !>C
+      !>      WRITE(*,*) 'Items in original set A:'
+      !>      WRITE(*,'(10I6)') ( A(I), I=1, CARDI ( A ) )
+      !>      WRITE(*,*) ' '
       !>
-      !>        C
-      !>        C     Remove the even values. If the item is not an element of
-      !>        C     the set, the set is not changed.
-      !>        C
-      !>              DO I = 1, SETDIM
+      !>C
+      !>C     Remove the even values. If the item is not an element of
+      !>C     the set, the set is not changed.
+      !>C
+      !>      DO I = 1, SETDIM
       !>
-      !>                 CALL REMOVI ( EVEN(I), A )
+      !>         CALL REMOVI ( EVEN(I), A )
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Output the contents of A.
-      !>        C
-      !>              WRITE(*,*) 'Odd numbers in set A:'
-      !>              WRITE(*,'(10I6)') ( A(I), I=1, CARDI ( A ) )
-      !>              WRITE(*,*) ' '
+      !>C
+      !>C     Output the contents of A.
+      !>C
+      !>      WRITE(*,*) 'Odd numbers in set A:'
+      !>      WRITE(*,'(10I6)') ( A(I), I=1, CARDI ( A ) )
+      !>      WRITE(*,*) ' '
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5508,10 +5720,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure removi
+      module subroutine removi ( ctx, item, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: item  !! Item to be removed.
+      integer(ip), intent(inout) :: a        ( lbcell:* )  !! Removal set.
 
 
       integer(ip) :: card
@@ -5554,8 +5770,12 @@ contains
       end if
 
       return
-      end procedure removi
+      end subroutine removi
 
+      !> Determine whether an item is an element of a character set.
+      !>
+      !> The function returns .TRUE. if ITEM is an element of set A.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which may or may not be an element of the
@@ -5601,75 +5821,77 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM ELEMC_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM ELEMC_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              LOGICAL                 ELEMC
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      LOGICAL                 ELEMC
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 LISTSZ
-      !>              PARAMETER             ( LISTSZ   = 6   )
+      !>      INTEGER                 LISTSZ
+      !>      PARAMETER             ( LISTSZ   = 6   )
       !>
-      !>              INTEGER                 PNAMSZ
-      !>              PARAMETER             ( PNAMSZ   = 7 )
+      !>      INTEGER                 PNAMSZ
+      !>      PARAMETER             ( PNAMSZ   = 7 )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 9   )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 9   )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              CHARACTER*(PNAMSZ)      ITEMS  ( LISTSZ        )
-      !>              CHARACTER*(PNAMSZ)      PLNETS ( LBCELL:SETDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      CHARACTER*(PNAMSZ)      ITEMS  ( LISTSZ        )
+      !>      CHARACTER*(PNAMSZ)      PLNETS ( LBCELL:SETDIM )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Create the original planets set and a list of body
-      !>        C     names.
-      !>        C
-      !>              DATA                  ( PLNETS(I), I=1,SETDIM)  /
-      !>             .                       'MERCURY', 'VENUS',   'EARTH',
-      !>             .                       'MARS',    'JUPITER', 'SATURN',
-      !>             .                       'URANUS',  'NEPTUNE', 'PLUTO'  /
+      !>C
+      !>C     Create the original planets set and a list of body
+      !>C     names.
+      !>C
+      !>      DATA                  ( PLNETS(I), I=1,SETDIM)  /
+      !>     .                       'MERCURY', 'VENUS',   'EARTH',
+      !>     .                       'MARS',    'JUPITER', 'SATURN',
+      !>     .                       'URANUS',  'NEPTUNE', 'PLUTO'  /
       !>
-      !>              DATA                    ITEMS /
-      !>             .                            'EARTH', 'APOLLO', 'MARS',
-      !>             .                            'PLUTO', 'VENUS', 'CERES' /
+      !>      DATA                    ITEMS /
+      !>     .                            'EARTH', 'APOLLO', 'MARS',
+      !>     .                            'PLUTO', 'VENUS', 'CERES' /
       !>
-      !>        C
-      !>        C     Validate the set: Initialize the non-empty set, remove
-      !>        C     duplicates and sort the elements.
-      !>        C
-      !>              CALL VALIDC ( SETDIM, SETDIM, PLNETS )
+      !>C
+      !>C     Validate the set: Initialize the non-empty set, remove
+      !>C     duplicates and sort the elements.
+      !>C
+      !>      CALL VALIDC ( SETDIM, SETDIM, PLNETS )
       !>
-      !>        C
-      !>        C     Check if the items in the list belong to the set.
-      !>        C
-      !>              DO I = 1, LISTSZ
+      !>C
+      !>C     Check if the items in the list belong to the set.
+      !>C
+      !>      DO I = 1, LISTSZ
       !>
-      !>                 IF ( ELEMC ( ITEMS(I), PLNETS ) ) THEN
+      !>         IF ( ELEMC ( ITEMS(I), PLNETS ) ) THEN
       !>
-      !>                    WRITE(*,*) 'Item ', ITEMS(I), ' is in the set.'
+      !>            WRITE(*,*) 'Item ', ITEMS(I), ' is in the set.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'Item ', ITEMS(I),
-      !>             .                 ' is NOT in the set.'
+      !>            WRITE(*,*) 'Item ', ITEMS(I),
+      !>     .                 ' is NOT in the set.'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5726,10 +5948,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure elemc
+      module logical function elemc ( ctx, item, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: item  !! Item to be tested.
+      character(*), intent(in) :: a      ( lbcell:* )  !! Set to be tested.
 
 
 !
@@ -5745,8 +5971,13 @@ contains
       elemc = ( bsrchc ( item, cardc ( ctx, a ), a(1) ) /= 0 )
 
       return
-      end procedure elemc
+      end function elemc
 
+      !> Determine whether an item is an element of a double
+      !> precision set.
+      !>
+      !> The function returns .TRUE. if ITEM is an element of set A.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which may or may not be an element of the
@@ -5791,71 +6022,73 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM ELEMD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM ELEMD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              LOGICAL                 ELEMD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      LOGICAL                 ELEMD
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 LISTSZ
-      !>              PARAMETER             ( LISTSZ   = 6   )
+      !>      INTEGER                 LISTSZ
+      !>      PARAMETER             ( LISTSZ   = 6   )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 8   )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 8   )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION        A      ( LBCELL:SETDIM )
-      !>              DOUBLE PRECISION        ITEMS  ( LISTSZ        )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION        A      ( LBCELL:SETDIM )
+      !>      DOUBLE PRECISION        ITEMS  ( LISTSZ        )
       !>
-      !>              INTEGER                 I
+      !>      INTEGER                 I
       !>
-      !>        C
-      !>        C     Set the values of the set and the list of double
-      !>        C     precision numbers.
-      !>        C
-      !>              DATA                  ( A(I), I=1,SETDIM)  /
-      !>             .                            -1.D0, 0.D0, 1.D0,  1.D0,
-      !>             .                             3.D0, 5.D0, 0.D0, -3.D0 /
+      !>C
+      !>C     Set the values of the set and the list of double
+      !>C     precision numbers.
+      !>C
+      !>      DATA                  ( A(I), I=1,SETDIM)  /
+      !>     .                            -1.D0, 0.D0, 1.D0,  1.D0,
+      !>     .                             3.D0, 5.D0, 0.D0, -3.D0 /
       !>
-      !>              DATA                    ITEMS /    6.D0, -1.D0, 0.D0,
-      !>             .                                   2.D0, 3.D0, -2.D0 /
+      !>      DATA                    ITEMS /    6.D0, -1.D0, 0.D0,
+      !>     .                                   2.D0, 3.D0, -2.D0 /
       !>
-      !>        C
-      !>        C     Validate the set: Initialize the non-empty set, remove
-      !>        C     duplicates and sort the elements.
-      !>        C
-      !>              CALL VALIDD ( SETDIM, SETDIM, A )
+      !>C
+      !>C     Validate the set: Initialize the non-empty set, remove
+      !>C     duplicates and sort the elements.
+      !>C
+      !>      CALL VALIDD ( SETDIM, SETDIM, A )
       !>
-      !>        C
-      !>        C     Check if the items in the list belong to the set.
-      !>        C
-      !>              DO I = 1, LISTSZ
+      !>C
+      !>C     Check if the items in the list belong to the set.
+      !>C
+      !>      DO I = 1, LISTSZ
       !>
-      !>                 IF ( ELEMD ( ITEMS(I), A ) ) THEN
+      !>         IF ( ELEMD ( ITEMS(I), A ) ) THEN
       !>
-      !>                    WRITE(*,'(A,F5.1,A)') 'Item ', ITEMS(I),
-      !>             .                          ' is in the set.'
+      !>            WRITE(*,'(A,F5.1,A)') 'Item ', ITEMS(I),
+      !>     .                          ' is in the set.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,'(A,F5.1,A)') 'Item ', ITEMS(I),
-      !>             .                            ' is NOT in the set.'
+      !>            WRITE(*,'(A,F5.1,A)') 'Item ', ITEMS(I),
+      !>     .                            ' is NOT in the set.'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -5908,10 +6141,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure elemd
+      module logical function elemd ( ctx, item, a )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: item  !! Item to be tested.
+      real(wp), intent(in) :: a      ( lbcell:* )  !! Set to be tested.
 
 
 !
@@ -5928,8 +6165,12 @@ contains
       elemd = ( bsrchd ( item, cardd ( ctx, a ), a(1) ) /= 0 )
 
       return
-      end procedure elemd
+      end function elemd
 
+      !> Determine whether an item is an element of an integer set.
+      !>
+      !> The function returns .TRUE. if ITEM is an element of set A.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an item which may or may not be an element of
@@ -5974,68 +6215,70 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM ELEMI_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM ELEMI_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              LOGICAL                 ELEMI
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      LOGICAL                 ELEMI
       !>
-      !>        C
-      !>        C     Local constants.
-      !>        C
-      !>              INTEGER                 LBCELL
-      !>              PARAMETER             ( LBCELL = -5 )
+      !>C
+      !>C     Local constants.
+      !>C
+      !>      INTEGER                 LBCELL
+      !>      PARAMETER             ( LBCELL = -5 )
       !>
-      !>              INTEGER                 LISTSZ
-      !>              PARAMETER             ( LISTSZ   = 6   )
+      !>      INTEGER                 LISTSZ
+      !>      PARAMETER             ( LISTSZ   = 6   )
       !>
-      !>              INTEGER                 SETDIM
-      !>              PARAMETER             ( SETDIM   = 8   )
+      !>      INTEGER                 SETDIM
+      !>      PARAMETER             ( SETDIM   = 8   )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              INTEGER                 A      ( LBCELL:SETDIM )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      INTEGER                 A      ( LBCELL:SETDIM )
       !>
-      !>              INTEGER                 I
-      !>              INTEGER                 ITEMS  ( LISTSZ        )
+      !>      INTEGER                 I
+      !>      INTEGER                 ITEMS  ( LISTSZ        )
       !>
-      !>        C
-      !>        C     Set the values of the set and the list of integers.
-      !>        C
-      !>              DATA                  ( A(I), I=1,SETDIM)  /
-      !>             .                           -1, 0, 1, 1, 3, 5, 0, -3 /
+      !>C
+      !>C     Set the values of the set and the list of integers.
+      !>C
+      !>      DATA                  ( A(I), I=1,SETDIM)  /
+      !>     .                           -1, 0, 1, 1, 3, 5, 0, -3 /
       !>
-      !>              DATA                    ITEMS /  6, -1, 0, 2, 3, -2 /
+      !>      DATA                    ITEMS /  6, -1, 0, 2, 3, -2 /
       !>
-      !>        C
-      !>        C     Validate the set: Initialize the non-empty set, remove
-      !>        C     duplicates and sort the elements.
-      !>        C
-      !>              CALL VALIDI ( SETDIM, SETDIM, A )
+      !>C
+      !>C     Validate the set: Initialize the non-empty set, remove
+      !>C     duplicates and sort the elements.
+      !>C
+      !>      CALL VALIDI ( SETDIM, SETDIM, A )
       !>
-      !>        C
-      !>        C     Check if the items in the list belong to the set.
-      !>        C
-      !>              DO I = 1, LISTSZ
+      !>C
+      !>C     Check if the items in the list belong to the set.
+      !>C
+      !>      DO I = 1, LISTSZ
       !>
-      !>                 IF ( ELEMI ( ITEMS(I), A ) ) THEN
+      !>         IF ( ELEMI ( ITEMS(I), A ) ) THEN
       !>
-      !>                    WRITE(*,'(A,I4,A)') 'Item ', ITEMS(I),
-      !>             .                          ' is in the set.'
+      !>            WRITE(*,'(A,I4,A)') 'Item ', ITEMS(I),
+      !>     .                          ' is in the set.'
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,'(A,I4,A)') 'Item ', ITEMS(I),
-      !>             .                          ' is NOT in the set.'
+      !>            WRITE(*,'(A,I4,A)') 'Item ', ITEMS(I),
+      !>     .                          ' is NOT in the set.'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -6088,10 +6331,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure elemi
+      module logical function elemi ( ctx, item, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: item  !! Item to be tested.
+      integer(ip), intent(in) :: a      ( lbcell:* )  !! Set to be tested.
 
 
 !
@@ -6107,8 +6354,13 @@ contains
       elemi = ( bsrchi ( item, cardi ( ctx, a ), a(1) ) /= 0 )
 
       return
-      end procedure elemi
+      end function elemi
 
+      !> Return the ordinal position of a given item in a set. If the
+      !> item does not appear in the set, return zero.
+      !>
+      !> The function returns the ordinal position of ITEM within the SET.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is a string to be located within a character set.
@@ -6244,10 +6496,14 @@ contains
       !>         following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure ordc
+      module integer(ip) function ordc ( ctx, item, set )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: item  !! An item to locate within a set.
+      character(*), intent(in) :: set ( lbcell:* )  !! A set to search for a given item.
 
 
 !
@@ -6264,8 +6520,13 @@ contains
       ordc = bsrchc ( item, cardc( ctx,set), set(1) )
 
       return
-      end procedure ordc
+      end function ordc
 
+      !> Return the ordinal position of a given item in a set. If the
+      !> item does not appear in the set, return zero.
+      !>
+      !> The function returns the ordinal position of ITEM within the SET.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is a double precision value to be located within a set.
@@ -6399,10 +6660,14 @@ contains
       !>         following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure ordd
+      module integer(ip) function ordd ( ctx, item, set )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: item  !! An item to locate within a set.
+      real(wp), intent(in) :: set ( lbcell:* )  !! A set to search for a given item.
 
 
 !
@@ -6419,8 +6684,13 @@ contains
       ordd = bsrchd ( item, cardd( ctx,set), set(1) )
 
       return
-      end procedure ordd
+      end function ordd
 
+      !> Return the ordinal position of a given item in a set. If the
+      !> item does not appear in the set, return zero.
+      !>
+      !> The function returns the ordinal position of ITEM within the SET.
+      !>
       !>## Detailed Input
       !>
       !>     ITEM     is an integer value to be located within a set.
@@ -6554,10 +6824,14 @@ contains
       !>         following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure ordi
+      module integer(ip) function ordi ( ctx, item, set )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: item  !! An item to locate within a set.
+      integer(ip), intent(in) :: set ( lbcell:* )  !! A set to search for a given item.
 
 
 !     Standard error handling:
@@ -6572,8 +6846,12 @@ contains
       ordi = bsrchi ( item, cardi( ctx,set), set(1) )
 
       return
-      end procedure ordi
+      end function ordi
 
+      !> Compare two character sets, as indicated by a relational operator.
+      !>
+      !> The function returns the result of the comparison: A (OP) B.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -6726,9 +7004,14 @@ contains
       !>
       !>       The new routine recognizes two new operators, '~' and '&'.
       !>       If the operator is not recognized, an error is now signaled.
-      module procedure setc
+      module logical function setc ( ctx, a, op, b )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: a      ( lbcell:* )  !! First set.
+      character(*), intent(in) :: op  !! Comparison operator.
+      character(*), intent(in) :: b      ( lbcell:* )  !! Second set.
 
 
       integer(ip) :: carda
@@ -7127,8 +7410,13 @@ contains
       setc = ( cond == 1 )
 
       return
-      end procedure setc
+      end function setc
 
+      !> Compare two double precision sets, as indicated by a relational
+      !> operator.
+      !>
+      !> The function returns the result of the comparison: A (OP) B.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -7281,9 +7569,14 @@ contains
       !>
       !>       The new routine recognizes two new operators, '~' and '&'.
       !>       If the operator is not recognized, an error is now signaled.
-      module procedure setd
+      module logical function setd ( ctx, a, op, b )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a      ( lbcell:* )  !! First set.
+      character(*), intent(in) :: op  !! Comparison operator.
+      real(wp), intent(in) :: b      ( lbcell:* )  !! Second set.
 
 
       integer(ip) :: carda
@@ -7682,8 +7975,12 @@ contains
       setd = ( cond == 1 )
 
       return
-      end procedure setd
+      end function setd
 
+      !> Compare two integer sets, as indicated by a relational operator.
+      !>
+      !> The function returns the result of the comparison: A (OP) B.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -7836,9 +8133,14 @@ contains
       !>
       !>       The new routine recognizes two new operators, '~' and '&'.
       !>       If the operator is not recognized, an error is now signaled.
-      module procedure seti
+      module logical function seti ( ctx, a, op, b )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: a      ( lbcell:* )  !! First set.
+      character(*), intent(in) :: op  !! Comparison operator.
+      integer(ip), intent(in) :: b      ( lbcell:* )  !! Second set.
 
 
       integer(ip) :: carda
@@ -8237,8 +8539,10 @@ contains
       seti = ( cond == 1 )
 
       return
-      end procedure seti
+      end function seti
 
+      !> Compute the union of two character sets to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -8352,9 +8656,14 @@ contains
       !>        Error signaled if output set elements are not long enough.
       !>        Length must be at least max of lengths of input elements.
       !>        Also, calling protocol for EXCESS has been changed.
-      module procedure unionc
+      module subroutine unionc ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
+      character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      character(*), intent(inout) :: c      ( lbcell:* )  !! Union of A and B.
 
 
       integer(ip) :: apoint
@@ -8505,8 +8814,11 @@ contains
       end if
 
       return
-      end procedure unionc
+      end subroutine unionc
 
+      !> Compute the union of two double precision sets to form a third
+      !> set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -8611,9 +8923,14 @@ contains
       !>
       !>        Calling protocol for EXCESS updated. Call to SETMSG
       !>        deleted.
-      module procedure uniond
+      module subroutine uniond ( ctx, a, b, c )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
+      real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      real(wp), intent(inout) :: c      ( lbcell:* )  !! Union of A and B.
 
 
       integer(ip) :: apoint
@@ -8747,8 +9064,10 @@ contains
       end if
 
       return
-      end procedure uniond
+      end subroutine uniond
 
+      !> Compute the union of two integer sets to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -8853,9 +9172,14 @@ contains
       !>
       !>        Calling protocol for EXCESS updated. Call to SETMSG
       !>        deleted.
-      module procedure unioni
+      module subroutine unioni ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
+      integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      integer(ip), intent(inout) :: c      ( lbcell:* )  !! Union of A and B.
 
 
       integer(ip) :: apoint
@@ -8988,8 +9312,10 @@ contains
       end if
 
       return
-      end procedure unioni
+      end subroutine unioni
 
+      !> Intersect two character sets to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -9103,9 +9429,14 @@ contains
       !>        Error signaled if output set elements are not long enough.
       !>        Length must be at least max of lengths of input elements.
       !>        Also, calling protocol for EXCESS has been changed.
-      module procedure interc
+      module subroutine interc ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
+      character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      character(*), intent(inout) :: c      ( lbcell:* )  !! Intersection of A and B.
 
 
       integer(ip) :: apoint
@@ -9228,8 +9559,10 @@ contains
       end if
 
       return
-      end procedure interc
+      end subroutine interc
 
+      !> Intersect two double precision sets to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -9333,9 +9666,14 @@ contains
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
       !>        Calling protocol of EXCESS changed. Call to SETMSG removed.
-      module procedure interd
+      module subroutine interd ( ctx, a, b, c )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
+      real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      real(wp), intent(inout) :: c      ( lbcell:* )  !! Intersection of A and B.
 
 
       integer(ip) :: apoint
@@ -9441,8 +9779,10 @@ contains
       end if
 
       return
-      end procedure interd
+      end subroutine interd
 
+      !> Intersect two integer sets to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -9546,9 +9886,14 @@ contains
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
       !>        Calling protocol of EXCESS changed. Call to SETMSG removed.
-      module procedure interi
+      module subroutine interi ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
+      integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      integer(ip), intent(inout) :: c      ( lbcell:* )  !! Intersection of A and B.
 
 
       integer(ip) :: apoint
@@ -9654,8 +9999,10 @@ contains
       end if
 
       return
-      end procedure interi
+      end subroutine interi
 
+      !> Take the difference of two character sets to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -9774,9 +10121,14 @@ contains
       !>        block, rather than only in the cases where the cardinality of
       !>        the output cell would have been incremented if there were
       !>        enough room.
-      module procedure diffc
+      module subroutine diffc ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
+      character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      character(*), intent(inout) :: c      ( lbcell:* )  !! Difference of A and B.
 
 
       integer(ip) :: apoint
@@ -9911,8 +10263,11 @@ contains
       end if
 
       return
-      end procedure diffc
+      end subroutine diffc
 
+      !> Take the difference of two double precision sets to form
+      !> a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -10024,9 +10379,14 @@ contains
       !>        block, rather than only in the cases where the cardinality of
       !>        the output cell would have been incremented if there were
       !>        enough room.
-      module procedure diffd
+      module subroutine diffd ( ctx, a, b, c )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
+      real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      real(wp), intent(inout) :: c      ( lbcell:* )  !! Difference of A and B.
 
 
       integer(ip) :: apoint
@@ -10142,8 +10502,10 @@ contains
       end if
 
       return
-      end procedure diffd
+      end subroutine diffd
 
+      !> Take the difference of two integer sets to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -10255,9 +10617,14 @@ contains
       !>        block, rather than only in the cases where the cardinality of
       !>        the output cell would have been incremented if there were
       !>        enough room.
-      module procedure diffi
+      module subroutine diffi ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
+      integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      integer(ip), intent(inout) :: c      ( lbcell:* )  !! Difference of A and B.
 
 
       integer(ip) :: apoint
@@ -10374,8 +10741,11 @@ contains
       end if
 
       return
-      end procedure diffi
+      end subroutine diffi
 
+      !> Take the symmetric difference of two character sets to form
+      !> a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -10491,9 +10861,14 @@ contains
       !>        Error signaled if output set elements are not long enough.
       !>        Length must be at least max of lengths of input elements.
       !>        Also, calling protocol for EXCESS has been changed.
-      module procedure sdiffc
+      module subroutine sdiffc ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
+      character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      character(*), intent(inout) :: c      ( lbcell:* )  !! Symmetric difference of A and B.
 
 
 !     Local variables
@@ -10643,8 +11018,11 @@ contains
       end if
 
       return
-      end procedure sdiffc
+      end subroutine sdiffc
 
+      !> Take the symmetric difference of two double precision sets
+      !> to form a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -10750,9 +11128,14 @@ contains
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
       !>        Calling protocol of EXCESS changed. Call to SETMSG removed.
-      module procedure sdiffd
+      module subroutine sdiffd ( ctx, a, b, c )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
+      real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      real(wp), intent(inout) :: c      ( lbcell:* )  !! Symmetric difference of A and B.
 
 
       integer(ip) :: apoint
@@ -10883,8 +11266,11 @@ contains
       end if
 
       return
-      end procedure sdiffd
+      end subroutine sdiffd
 
+      !> Take the symmetric difference of two integer sets to form
+      !> a third set.
+      !>
       !>## Detailed Input
       !>
       !>     A        is a set.
@@ -10990,9 +11376,14 @@ contains
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
       !>        Calling protocol of EXCESS changed. Call to SETMSG removed.
-      module procedure sdiffi
+      module subroutine sdiffi ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
+      integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      integer(ip), intent(inout) :: c      ( lbcell:* )  !! Symmetric difference of A and B.
 
 
       integer(ip) :: apoint
@@ -11123,8 +11514,10 @@ contains
       end if
 
       return
-      end procedure sdiffi
+      end subroutine sdiffi
 
+      !> Insert an interval into a double precision window.
+      !>
       !>## Detailed Input
       !>
       !>      LEFT,
@@ -11222,10 +11615,16 @@ contains
       !>
       !>         This routine is a copy of the SPICELIB WNINSD routine
       !>         changed only by the addition of the CONTEXT string.
-      module procedure zzwninsd
+      module subroutine zzwninsd ( ctx, left, right, context, window )
       use pepper_kinds, only: ip, wp
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: left  !! Left, right endpoints of new interval.
+      real(wp), intent(in) :: right  !! Left, right endpoints of new interval.
+      character(*), intent(in) :: context  !! A call explanation string.
+      real(wp), intent(inout) :: window    ( lbcell:* )  !! Input, output window.
 
 
       integer(ip) :: size
@@ -11406,8 +11805,13 @@ contains
       end if
 
       return
-      end procedure zzwninsd
+      end subroutine zzwninsd
 
+      !> Return the cardinality (number of intervals) of a double
+      !> precision window.
+      !>
+      !> The function returns the cardinality of the input window.
+      !>
       !>## Detailed Input
       !>
       !>     WINDOW   is a window containing zero or more intervals.
@@ -11451,62 +11855,64 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM WNCARD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM WNCARD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               WNSIZE
-      !>              PARAMETER           ( WNSIZE = 10 )
+      !>      INTEGER               WNSIZE
+      !>      PARAMETER           ( WNSIZE = 10 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      WINDOW      ( LBCELL:WNSIZE )
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RIGHT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      WINDOW      ( LBCELL:WNSIZE )
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RIGHT
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Validate the window with size WNSIZE and zero elements.
-      !>        C
-      !>              CALL WNVALD( WNSIZE, 0, WINDOW )
+      !>C
+      !>C     Validate the window with size WNSIZE and zero elements.
+      !>C
+      !>      CALL WNVALD( WNSIZE, 0, WINDOW )
       !>
-      !>        C
-      !>        C     Insert the intervals
-      !>        C
-      !>        C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]
-      !>        C
-      !>        C     into WINDOW.
-      !>        C
-      !>              CALL WNINSD(  1.D0,  3.D0, WINDOW )
-      !>              CALL WNINSD(  7.D0, 11.D0, WINDOW )
-      !>              CALL WNINSD( 23.D0, 27.D0, WINDOW )
+      !>C
+      !>C     Insert the intervals
+      !>C
+      !>C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]
+      !>C
+      !>C     into WINDOW.
+      !>C
+      !>      CALL WNINSD(  1.D0,  3.D0, WINDOW )
+      !>      CALL WNINSD(  7.D0, 11.D0, WINDOW )
+      !>      CALL WNINSD( 23.D0, 27.D0, WINDOW )
       !>
-      !>        C
-      !>        C     Loop over the number of intervals in WINDOW, output
-      !>        C     the LEFT and RIGHT endpoints for each interval.
-      !>        C
-      !>              DO I=1, WNCARD(WINDOW)
+      !>C
+      !>C     Loop over the number of intervals in WINDOW, output
+      !>C     the LEFT and RIGHT endpoints for each interval.
+      !>C
+      !>      DO I=1, WNCARD(WINDOW)
       !>
-      !>                 CALL WNFETD( WINDOW, I, LEFT, RIGHT )
+      !>         CALL WNFETD( WINDOW, I, LEFT, RIGHT )
       !>
-      !>                 WRITE(*,'(A,I2,2(A,F8.3),A)') 'Interval', I,
-      !>             .                  ' [', LEFT,',',  RIGHT, ']'
+      !>         WRITE(*,'(A,I2,2(A,F8.3),A)') 'Interval', I,
+      !>     .                  ' [', LEFT,',',  RIGHT, ']'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -11546,9 +11952,12 @@ contains
       !>        Minor edit to code comments eliminating typo.
       !>
       !>-    SPICELIB Version 1.0.0, 10-AUG-2007 (EDW)
-      module procedure wncard
+      module integer(ip) function wncard ( ctx, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: window  ( lbcell:* )  !! Input window.
 
 
 !
@@ -11583,8 +11992,11 @@ contains
       wncard = wncard/2
 
       return
-      end procedure wncard
+      end function wncard
 
+      !> Determine the complement of a double precision window with
+      !> respect to the interval [LEFT,RIGHT].
+      !>
       !>## Detailed Input
       !>
       !>     LEFT,
@@ -11710,9 +12122,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN) (NJB)
-      module procedure wncomd
+      module subroutine wncomd ( ctx, left, right, window, result )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: left  !! Left, right endpoints of complement interval.
+      real(wp), intent(in) :: right  !! Left, right endpoints of complement interval.
+      real(wp), intent(in) :: window   ( lbcell:* )  !! Input window.
+      real(wp), intent(inout) :: result   ( lbcell:* )  !! Complement of WINDOW with respect to
+                                                      !! [LEFT,RIGHT].
 
 
       integer(ip) :: card
@@ -11816,8 +12235,10 @@ contains
       end if
 
       return
-      end procedure wncomd
+      end subroutine wncomd
 
+      !> Contract each of the intervals of a double precision window.
+      !>
       !>## Detailed Input
       !>
       !>     LEFT     is the amount to be added to the left endpoint of each
@@ -11925,9 +12346,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
-      module procedure wncond
+      module subroutine wncond ( ctx, left, right, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: left  !! Amount added to each left endpoint.
+      real(wp), intent(in) :: right  !! Amount subtracted from each right endpoint.
+      real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be contracted.
 
 
 !
@@ -11941,8 +12367,11 @@ contains
       call wnexpd ( ctx, -left, -right, window )
 
       return
-      end procedure wncond
+      end subroutine wncond
 
+      !> Place the difference of two double precision windows into
+      !> a third window.
+      !>
       !>## Detailed Input
       !>
       !>     A,
@@ -12049,9 +12478,14 @@ contains
       !>        Due to the calling sequence and functionality changes
       !>        in the routine EXCESS, the method of signaling an
       !>        excess of elements needed to be changed.
-      module procedure wndifd
+      module subroutine wndifd ( ctx, a, b, c )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a        ( lbcell:* )  !! Input windows.
+      real(wp), intent(in) :: b        ( lbcell:* )  !! Input windows.
+      real(wp), intent(inout) :: c        ( lbcell:* )  !! Difference of A and B.
 
 
       integer(ip) :: acard
@@ -12317,8 +12751,13 @@ contains
       end if
 
       return
-      end procedure wndifd
+      end subroutine wndifd
 
+      !> Determine whether a point is an element of a double precision
+      !> window.
+      !>
+      !> The function returns .TRUE. if POINT is an element of WINDOW.
+      !>
       !>## Detailed Input
       !>
       !>     POINT    is a point, which may or may not be contained in one of
@@ -12414,9 +12853,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
-      module procedure wnelmd
+      module logical function wnelmd ( ctx, point, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: point  !! Input point.
+      real(wp), intent(in) :: window      ( lbcell:* )  !! Input window.
 
 
       integer(ip) :: card
@@ -12451,8 +12894,10 @@ contains
       wnelmd = .false.
 
       return
-      end procedure wnelmd
+      end function wnelmd
 
+      !> Expand each of the intervals of a double precision window.
+      !>
       !>## Detailed Input
       !>
       !>     LEFT     is the amount to be subtracted from the left endpoint of
@@ -12560,9 +13005,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
-      module procedure wnexpd
+      module subroutine wnexpd ( ctx, left, right, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: left  !! Amount subtracted from each left endpoint.
+      real(wp), intent(in) :: right  !! Amount added to each right endpoint.
+      real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be expanded.
 
 
       integer(ip) :: card
@@ -12640,8 +13090,11 @@ contains
       call scardd ( ctx, i, window )
 
       return
-      end procedure wnexpd
+      end subroutine wnexpd
 
+      !> Extract the left or right endpoints from a double precision
+      !> window.
+      !>
       !>## Detailed Input
       !>
       !>     SIDE     indicates whether the left or right endpoints of the
@@ -12748,9 +13201,13 @@ contains
       !>        Added calls to CHKIN and CHKOUT. Error handling was added to
       !>        detect invalid endpoint specification. The previous version
       !>        did not signal an error if SIDE was not 'R', 'r', 'L', or 'l'.
-      module procedure wnextd
+      module subroutine wnextd ( ctx, side, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(1), intent(in) :: side  !! Extract left ('L') or right ('R') endpoints.
+      real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be extracted.
 
 
       integer(ip) :: card
@@ -12793,8 +13250,10 @@ contains
       end if
 
       return
-      end procedure wnextd
+      end subroutine wnextd
 
+      !> Fetch a particular interval from a double precision window.
+      !>
       !>## Detailed Input
       !>
       !>     WINDOW   is a window containing zero or more intervals.
@@ -12851,62 +13310,64 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM WNFETD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM WNFETD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               WNSIZE
-      !>              PARAMETER           ( WNSIZE = 10 )
+      !>      INTEGER               WNSIZE
+      !>      PARAMETER           ( WNSIZE = 10 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      WINDOW      ( LBCELL:WNSIZE )
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RIGHT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      WINDOW      ( LBCELL:WNSIZE )
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RIGHT
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Validate the window with size WNSIZE and zero elements.
-      !>        C
-      !>              CALL WNVALD( WNSIZE, 0, WINDOW )
+      !>C
+      !>C     Validate the window with size WNSIZE and zero elements.
+      !>C
+      !>      CALL WNVALD( WNSIZE, 0, WINDOW )
       !>
-      !>        C
-      !>        C     Insert the intervals
-      !>        C
-      !>        C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]
-      !>        C
-      !>        C     into WINDOW.
-      !>        C
-      !>              CALL WNINSD(  1.D0,  3.D0, WINDOW )
-      !>              CALL WNINSD(  7.D0, 11.D0, WINDOW )
-      !>              CALL WNINSD( 23.D0, 27.D0, WINDOW )
+      !>C
+      !>C     Insert the intervals
+      !>C
+      !>C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]
+      !>C
+      !>C     into WINDOW.
+      !>C
+      !>      CALL WNINSD(  1.D0,  3.D0, WINDOW )
+      !>      CALL WNINSD(  7.D0, 11.D0, WINDOW )
+      !>      CALL WNINSD( 23.D0, 27.D0, WINDOW )
       !>
-      !>        C
-      !>        C     Loop over the number of intervals in WINDOW, output
-      !>        C     the LEFT and RIGHT endpoints for each interval.
-      !>        C
-      !>              DO I=1, WNCARD(WINDOW)
+      !>C
+      !>C     Loop over the number of intervals in WINDOW, output
+      !>C     the LEFT and RIGHT endpoints for each interval.
+      !>C
+      !>      DO I=1, WNCARD(WINDOW)
       !>
-      !>                 CALL WNFETD( WINDOW, I, LEFT, RIGHT )
+      !>         CALL WNFETD( WINDOW, I, LEFT, RIGHT )
       !>
-      !>                 WRITE(*,'(A,I2,2(A,F8.3),A)') 'Interval', I,
-      !>             .                  ' [', LEFT,',',  RIGHT, ']'
+      !>         WRITE(*,'(A,I2,2(A,F8.3),A)') 'Interval', I,
+      !>     .                  ' [', LEFT,',',  RIGHT, ']'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -12955,9 +13416,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-      module procedure wnfetd
+      module subroutine wnfetd ( ctx, window, n, left, right )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: window      ( lbcell:* )  !! Input window.
+      integer(ip), intent(in) :: n  !! Index of interval to be fetched.
+      real(wp), intent(out) :: left  !! Left, right endpoints of the Nth interval.
+      real(wp), intent(out) :: right  !! Left, right endpoints of the Nth interval.
 
 
       integer(ip) :: card
@@ -12984,8 +13451,11 @@ contains
       end if
 
       return
-      end procedure wnfetd
+      end subroutine wnfetd
 
+      !> Fill small gaps between adjacent intervals of a double precision
+      !> window.
+      !>
       !>## Detailed Input
       !>
       !>     SMLGAP   is the limiting measure of the small gaps to be filled.
@@ -13045,88 +13515,90 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM WNFILD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM WNFILD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FMT
-      !>              PARAMETER           ( FMT    = '(A,I2,A,2(F7.3,A))' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FMT
+      !>      PARAMETER           ( FMT    = '(A,I2,A,2(F7.3,A))' )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               WNSIZE
-      !>              PARAMETER           ( WNSIZE = 10 )
+      !>      INTEGER               WNSIZE
+      !>      PARAMETER           ( WNSIZE = 10 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RIGHT
-      !>              DOUBLE PRECISION      WINDOW ( LBCELL:WNSIZE )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RIGHT
+      !>      DOUBLE PRECISION      WINDOW ( LBCELL:WNSIZE )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Validate the WINDOW with size WNSIZE and zero elements.
-      !>        C
-      !>              CALL WNVALD ( WNSIZE, 0, WINDOW )
+      !>C
+      !>C     Validate the WINDOW with size WNSIZE and zero elements.
+      !>C
+      !>      CALL WNVALD ( WNSIZE, 0, WINDOW )
       !>
-      !>        C
-      !>        C     Insert the intervals
-      !>        C
-      !>        C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]  [ 29, 29 ]
-      !>        C
-      !>        C     into WINDOW.
-      !>        C
-      !>              CALL WNINSD ( 1.0D0,  3.0D0,  WINDOW )
-      !>              CALL WNINSD ( 7.0D0,  11.0D0, WINDOW )
-      !>              CALL WNINSD ( 23.0D0, 27.0D0, WINDOW )
-      !>              CALL WNINSD ( 29.0D0, 29.0D0, WINDOW )
+      !>C
+      !>C     Insert the intervals
+      !>C
+      !>C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]  [ 29, 29 ]
+      !>C
+      !>C     into WINDOW.
+      !>C
+      !>      CALL WNINSD ( 1.0D0,  3.0D0,  WINDOW )
+      !>      CALL WNINSD ( 7.0D0,  11.0D0, WINDOW )
+      !>      CALL WNINSD ( 23.0D0, 27.0D0, WINDOW )
+      !>      CALL WNINSD ( 29.0D0, 29.0D0, WINDOW )
       !>
-      !>        C
-      !>        C     Loop over the number of intervals in WINDOW, output
-      !>        C     the LEFT and RIGHT endpoints for each interval.
-      !>        C
-      !>              WRITE(*,*) 'Initial WINDOW:'
+      !>C
+      !>C     Loop over the number of intervals in WINDOW, output
+      !>C     the LEFT and RIGHT endpoints for each interval.
+      !>C
+      !>      WRITE(*,*) 'Initial WINDOW:'
       !>
-      !>              DO I= 1, WNCARD( WINDOW )
+      !>      DO I= 1, WNCARD( WINDOW )
       !>
-      !>                 CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
+      !>         CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
       !>
-      !>                 WRITE(*,FMT) '   Interval ', I, ': [',
-      !>             .                LEFT, ',', RIGHT, ' ]'
+      !>         WRITE(*,FMT) '   Interval ', I, ': [',
+      !>     .                LEFT, ',', RIGHT, ' ]'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Fill the gaps smaller than or equal to 3.0
-      !>        C
-      !>              CALL WNFILD ( 3.0D0, WINDOW )
+      !>C
+      !>C     Fill the gaps smaller than or equal to 3.0
+      !>C
+      !>      CALL WNFILD ( 3.0D0, WINDOW )
       !>
-      !>        C
-      !>        C     Output the intervals.
-      !>        C
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Window after filling gaps <= 3.0:'
+      !>C
+      !>C     Output the intervals.
+      !>C
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Window after filling gaps <= 3.0:'
       !>
-      !>              DO I= 1, WNCARD( WINDOW )
+      !>      DO I= 1, WNCARD( WINDOW )
       !>
-      !>                 CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
+      !>         CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
       !>
-      !>                 WRITE(*,FMT) '   Interval ', I, ': [',
-      !>             .                LEFT, ',', RIGHT, ' ]'
+      !>         WRITE(*,FMT) '   Interval ', I, ': [',
+      !>     .                LEFT, ',', RIGHT, ' ]'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -13210,9 +13682,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
-      module procedure wnfild
+      module subroutine wnfild ( ctx, smlgap, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: smlgap  !! Limiting measure of small gaps.
+      real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be filled.
 
 
       integer(ip) :: card
@@ -13260,8 +13736,10 @@ contains
       end if
 
       return
-      end procedure wnfild
+      end subroutine wnfild
 
+      !> Filter (remove) small intervals from a double precision window.
+      !>
       !>## Detailed Input
       !>
       !>     SMLINT   is the limiting measure of the small intervals to be
@@ -13319,88 +13797,90 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM WNFLTD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM WNFLTD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FMT
-      !>              PARAMETER           ( FMT    = '(A,I2,A,2(F7.3,A))' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FMT
+      !>      PARAMETER           ( FMT    = '(A,I2,A,2(F7.3,A))' )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               WNSIZE
-      !>              PARAMETER           ( WNSIZE = 10 )
+      !>      INTEGER               WNSIZE
+      !>      PARAMETER           ( WNSIZE = 10 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RIGHT
-      !>              DOUBLE PRECISION      WINDOW ( LBCELL:WNSIZE )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RIGHT
+      !>      DOUBLE PRECISION      WINDOW ( LBCELL:WNSIZE )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Validate the WINDOW with size WNSIZE and zero elements.
-      !>        C
-      !>              CALL WNVALD ( WNSIZE, 0, WINDOW )
+      !>C
+      !>C     Validate the WINDOW with size WNSIZE and zero elements.
+      !>C
+      !>      CALL WNVALD ( WNSIZE, 0, WINDOW )
       !>
-      !>        C
-      !>        C     Insert the intervals
-      !>        C
-      !>        C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]  [ 29, 29 ]
-      !>        C
-      !>        C     into WINDOW.
-      !>        C
-      !>              CALL WNINSD (  1.0D0,  3.0D0, WINDOW )
-      !>              CALL WNINSD (  7.0D0, 11.0D0, WINDOW )
-      !>              CALL WNINSD ( 23.0D0, 27.0D0, WINDOW )
-      !>              CALL WNINSD ( 29.0D0, 29.0D0, WINDOW )
+      !>C
+      !>C     Insert the intervals
+      !>C
+      !>C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]  [ 29, 29 ]
+      !>C
+      !>C     into WINDOW.
+      !>C
+      !>      CALL WNINSD (  1.0D0,  3.0D0, WINDOW )
+      !>      CALL WNINSD (  7.0D0, 11.0D0, WINDOW )
+      !>      CALL WNINSD ( 23.0D0, 27.0D0, WINDOW )
+      !>      CALL WNINSD ( 29.0D0, 29.0D0, WINDOW )
       !>
-      !>        C
-      !>        C     Loop over the number of intervals in WINDOW, output
-      !>        C     the LEFT and RIGHT endpoints for each interval.
-      !>        C
-      !>              WRITE(*,*) 'Initial WINDOW:'
+      !>C
+      !>C     Loop over the number of intervals in WINDOW, output
+      !>C     the LEFT and RIGHT endpoints for each interval.
+      !>C
+      !>      WRITE(*,*) 'Initial WINDOW:'
       !>
-      !>              DO I= 1, WNCARD( WINDOW )
+      !>      DO I= 1, WNCARD( WINDOW )
       !>
-      !>                 CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
+      !>         CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
       !>
-      !>                 WRITE(*,FMT) '   Interval ', I, ': [',
-      !>             .                LEFT, ',', RIGHT, ' ]'
+      !>         WRITE(*,FMT) '   Interval ', I, ': [',
+      !>     .                LEFT, ',', RIGHT, ' ]'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>        C
-      !>        C     Filter the intervals smaller than or equal to 3.0
-      !>        C
-      !>              CALL WNFLTD ( 3.0D0, WINDOW )
+      !>C
+      !>C     Filter the intervals smaller than or equal to 3.0
+      !>C
+      !>      CALL WNFLTD ( 3.0D0, WINDOW )
       !>
-      !>        C
-      !>        C     Output the intervals.
-      !>        C
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'Window after filtering intervals <= 3.0:'
+      !>C
+      !>C     Output the intervals.
+      !>C
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'Window after filtering intervals <= 3.0:'
       !>
-      !>              DO I= 1, WNCARD( WINDOW )
+      !>      DO I= 1, WNCARD( WINDOW )
       !>
-      !>                 CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
+      !>         CALL WNFETD ( WINDOW, I, LEFT, RIGHT )
       !>
-      !>                 WRITE(*,FMT) '   Interval ', I, ': [',
-      !>             .                LEFT, ',', RIGHT, ' ]'
+      !>         WRITE(*,FMT) '   Interval ', I, ': [',
+      !>     .                LEFT, ',', RIGHT, ' ]'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -13472,9 +13952,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
-      module procedure wnfltd
+      module subroutine wnfltd ( ctx, smlint, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: smlint  !! Limiting measure of small intervals.
+      real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be filtered.
 
 
       integer(ip) :: card
@@ -13517,8 +14001,13 @@ contains
       call scardd ( ctx, i, window )
 
       return
-      end procedure wnfltd
+      end subroutine wnfltd
 
+      !> Determine whether an interval is included in a double precision
+      !> window.
+      !>
+      !> The function returns .TRUE. if POINT is an element of WINDOW.
+      !>
       !>## Detailed Input
       !>
       !>     LEFT,
@@ -13619,9 +14108,14 @@ contains
       !>         following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
-      module procedure wnincd
+      module logical function wnincd ( ctx, left, right, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: left  !! Input interval.
+      real(wp), intent(in) :: right  !! Input interval.
+      real(wp), intent(in) :: window      ( lbcell:* )  !! Input window.
 
 
       integer(ip) :: card
@@ -13656,8 +14150,10 @@ contains
       wnincd = .false.
 
       return
-      end procedure wnincd
+      end function wnincd
 
+      !> Insert an interval into a double precision window.
+      !>
       !>## Detailed Input
       !>
       !>     LEFT,
@@ -13719,62 +14215,64 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM WNINSD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM WNINSD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               WNSIZE
-      !>              PARAMETER           ( WNSIZE = 10 )
+      !>      INTEGER               WNSIZE
+      !>      PARAMETER           ( WNSIZE = 10 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      WINDOW      ( LBCELL:WNSIZE )
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      RIGHT
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      WINDOW      ( LBCELL:WNSIZE )
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      RIGHT
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>        C
-      !>        C     Validate the window with size WNSIZE and zero elements.
-      !>        C
-      !>              CALL WNVALD( WNSIZE, 0, WINDOW )
+      !>C
+      !>C     Validate the window with size WNSIZE and zero elements.
+      !>C
+      !>      CALL WNVALD( WNSIZE, 0, WINDOW )
       !>
-      !>        C
-      !>        C     Insert the intervals
-      !>        C
-      !>        C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]
-      !>        C
-      !>        C     into WINDOW.
-      !>        C
-      !>              CALL WNINSD(  1.D0,  3.D0, WINDOW )
-      !>              CALL WNINSD(  7.D0, 11.D0, WINDOW )
-      !>              CALL WNINSD( 23.D0, 27.D0, WINDOW )
+      !>C
+      !>C     Insert the intervals
+      !>C
+      !>C        [ 1, 3 ]  [ 7, 11 ]  [ 23, 27 ]
+      !>C
+      !>C     into WINDOW.
+      !>C
+      !>      CALL WNINSD(  1.D0,  3.D0, WINDOW )
+      !>      CALL WNINSD(  7.D0, 11.D0, WINDOW )
+      !>      CALL WNINSD( 23.D0, 27.D0, WINDOW )
       !>
-      !>        C
-      !>        C     Loop over the number of intervals in WINDOW, output
-      !>        C     the LEFT and RIGHT endpoints for each interval.
-      !>        C
-      !>              DO I=1, WNCARD(WINDOW)
+      !>C
+      !>C     Loop over the number of intervals in WINDOW, output
+      !>C     the LEFT and RIGHT endpoints for each interval.
+      !>C
+      !>      DO I=1, WNCARD(WINDOW)
       !>
-      !>                 CALL WNFETD( WINDOW, I, LEFT, RIGHT )
+      !>         CALL WNFETD( WINDOW, I, LEFT, RIGHT )
       !>
-      !>                 WRITE(*,'(A,I2,2(A,F8.3),A)') 'Interval', I,
-      !>             .                  ' [', LEFT,',',  RIGHT, ']'
+      !>         WRITE(*,'(A,I2,2(A,F8.3),A)') 'Interval', I,
+      !>     .                  ' [', LEFT,',',  RIGHT, ']'
       !>
-      !>              END DO
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -13885,9 +14383,14 @@ contains
       !>        Contents of the $Required_Reading section was
       !>        changed from "None." to "WINDOWS".  Also, the
       !>        declaration of the unused variable K was removed.
-      module procedure wninsd
+      module subroutine wninsd ( ctx, left, right, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: left  !! Left, right endpoints of new interval.
+      real(wp), intent(in) :: right  !! Left, right endpoints of new interval.
+      real(wp), intent(inout) :: window    ( lbcell:* )  !! Input, output window.
 
 
       integer(ip) :: size
@@ -14040,12 +14543,18 @@ contains
       end if
 
       return
-      end procedure wninsd
+      end subroutine wninsd
 
-      !> Insert an interval into a window being built (PEPPER).
-      module procedure insert_interval
+      !> Insert an interval into a window being built (PEPPER): [[wninsd]]
+      !> for an [[interval_list]], which grows as needed. Signals
+      !> SPICE(BADENDPOINTS), as [[wninsd]], if LEFT > RIGHT.
+      module subroutine insert_interval ( ctx, left, right, window )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: left  !! the start of the interval
+      real(wp), intent(in) :: right  !! the end of the interval
+      type(interval_list), intent(inout) :: window  !! the window
       if ( ctx%failed() ) return
       if ( left > right ) then
          call ctx%setmsg ( 'Left endpoint was *. Right endpoint was *.' )
@@ -14055,8 +14564,11 @@ contains
          return
       end if
       call window%insert ( left, right )
-      end procedure insert_interval
+      end subroutine insert_interval
 
+      !> Place the intersection of two double precision windows into
+      !> a third window.
+      !>
       !>## Detailed Input
       !>
       !>     A,
@@ -14151,9 +14663,14 @@ contains
       !>        Due to the calling sequence and functionality changes
       !>        in the routine EXCESS, the method of signaling an
       !>        excess of elements needed to be changed.
-      module procedure wnintd
+      module subroutine wnintd ( ctx, a, b, c )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a        ( lbcell:* )  !! Input windows.
+      real(wp), intent(in) :: b        ( lbcell:* )  !! Input windows.
+      real(wp), intent(inout) :: c        ( lbcell:* )  !! Intersection of A and B.
 
 
       integer(ip) :: acard
@@ -14273,8 +14790,12 @@ contains
       end if
 
       return
-      end procedure wnintd
+      end subroutine wnintd
 
+      !> Compare two double precision windows.
+      !>
+      !> The function returns the result of comparison: A (OP) B.
+      !>
       !>## Detailed Input
       !>
       !>     A,
@@ -14481,9 +15002,14 @@ contains
       !>
       !>        Also, the $Required_Reading section has been changed to
       !>        include WINDOWS as the required reading for the module.
-      module procedure wnreld
+      module logical function wnreld ( ctx, a, op, b )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a        ( lbcell:* )  !! First window.
+      character(*), intent(in) :: op  !! Comparison operator.
+      real(wp), intent(in) :: b        ( lbcell:* )  !! Second window.
 
 
       integer(ip) :: acard
@@ -14587,8 +15113,10 @@ contains
       end if
 
       return
-      end procedure wnreld
+      end function wnreld
 
+      !> Summarize the contents of a double precision window.
+      !>
       !>## Detailed Input
       !>
       !>     WINDOW   is a window containing zero or more intervals.
@@ -14672,99 +15200,101 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM WNSUMD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM WNSUMD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              INTEGER               WNCARD
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      INTEGER               WNCARD
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              CHARACTER*(*)         FMT1
-      !>              PARAMETER           ( FMT1   = '(A,F11.6)' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      CHARACTER*(*)         FMT1
+      !>      PARAMETER           ( FMT1   = '(A,F11.6)' )
       !>
-      !>              CHARACTER*(*)         FMT2
-      !>              PARAMETER           ( FMT2   = '(A,I4)' )
+      !>      CHARACTER*(*)         FMT2
+      !>      PARAMETER           ( FMT2   = '(A,I4)' )
       !>
-      !>              CHARACTER*(*)         FMT3
-      !>              PARAMETER           ( FMT3   = '(A,2(F6.3,A))' )
+      !>      CHARACTER*(*)         FMT3
+      !>      PARAMETER           ( FMT3   = '(A,2(F6.3,A))' )
       !>
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               WNSIZE
-      !>              PARAMETER           ( WNSIZE = 12 )
+      !>      INTEGER               WNSIZE
+      !>      PARAMETER           ( WNSIZE = 12 )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      AVG
-      !>              DOUBLE PRECISION      LEFT
-      !>              DOUBLE PRECISION      MEAS
-      !>              DOUBLE PRECISION      RIGHT
-      !>              DOUBLE PRECISION      STDDEV
-      !>              DOUBLE PRECISION      WINDOW ( LBCELL:WNSIZE )
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      AVG
+      !>      DOUBLE PRECISION      LEFT
+      !>      DOUBLE PRECISION      MEAS
+      !>      DOUBLE PRECISION      RIGHT
+      !>      DOUBLE PRECISION      STDDEV
+      !>      DOUBLE PRECISION      WINDOW ( LBCELL:WNSIZE )
       !>
-      !>              INTEGER               IDXLON
-      !>              INTEGER               IDXSML
-      !>              INTEGER               INTLON
-      !>              INTEGER               INTSML
+      !>      INTEGER               IDXLON
+      !>      INTEGER               IDXSML
+      !>      INTEGER               INTLON
+      !>      INTEGER               INTSML
       !>
-      !>        C
-      !>        C     Validate the WINDOW with size WNSIZE and zero elements.
-      !>        C
-      !>              CALL WNVALD ( WNSIZE, 0, WINDOW )
+      !>C
+      !>C     Validate the WINDOW with size WNSIZE and zero elements.
+      !>C
+      !>      CALL WNVALD ( WNSIZE, 0, WINDOW )
       !>
-      !>        C
-      !>        C     Insert the intervals
-      !>        C
-      !>        C        [  1,  3 ] [  7, 11 ] [ 18, 18 ]
-      !>        C        [ 23, 27 ] [ 30, 69 ] [ 72, 80 ]
-      !>        C
-      !>        C     into WINDOW.
-      !>        C
-      !>              CALL WNINSD (  1.0D0,  3.0D0, WINDOW )
-      !>              CALL WNINSD (  7.0D0, 11.0D0, WINDOW )
-      !>              CALL WNINSD ( 18.0D0, 18.0D0, WINDOW )
-      !>              CALL WNINSD ( 23.0D0, 27.0D0, WINDOW )
-      !>              CALL WNINSD ( 30.0D0, 69.0D0, WINDOW )
-      !>              CALL WNINSD ( 72.0D0, 80.0D0, WINDOW )
+      !>C
+      !>C     Insert the intervals
+      !>C
+      !>C        [  1,  3 ] [  7, 11 ] [ 18, 18 ]
+      !>C        [ 23, 27 ] [ 30, 69 ] [ 72, 80 ]
+      !>C
+      !>C     into WINDOW.
+      !>C
+      !>      CALL WNINSD (  1.0D0,  3.0D0, WINDOW )
+      !>      CALL WNINSD (  7.0D0, 11.0D0, WINDOW )
+      !>      CALL WNINSD ( 18.0D0, 18.0D0, WINDOW )
+      !>      CALL WNINSD ( 23.0D0, 27.0D0, WINDOW )
+      !>      CALL WNINSD ( 30.0D0, 69.0D0, WINDOW )
+      !>      CALL WNINSD ( 72.0D0, 80.0D0, WINDOW )
       !>
-      !>        C
-      !>        C     Calculate the summary for WINDOW.
-      !>        C
-      !>              CALL WNSUMD ( WINDOW, MEAS,   AVG,
-      !>             .              STDDEV, IDXSML, IDXLON )
+      !>C
+      !>C     Calculate the summary for WINDOW.
+      !>C
+      !>      CALL WNSUMD ( WINDOW, MEAS,   AVG,
+      !>     .              STDDEV, IDXSML, IDXLON )
       !>
-      !>        C
-      !>        C     IDXSML and IDXLON refer to the indices of
-      !>        C     the SPICE Cell data array.
-      !>        C
-      !>              INTSML = (IDXSML+1)/2
-      !>              INTLON = (IDXLON+1)/2
+      !>C
+      !>C     IDXSML and IDXLON refer to the indices of
+      !>C     the SPICE Cell data array.
+      !>C
+      !>      INTSML = (IDXSML+1)/2
+      !>      INTLON = (IDXLON+1)/2
       !>
-      !>              WRITE(*,FMT1) 'Measure           : ', MEAS
-      !>              WRITE(*,FMT1) 'Average           : ', AVG
-      !>              WRITE(*,FMT1) 'Standard Dev      : ', STDDEV
-      !>              WRITE(*,FMT2) 'Index shortest    : ', IDXSML
-      !>              WRITE(*,FMT2) 'Index longest     : ', IDXLON
-      !>              WRITE(*,FMT2) 'Interval shortest : ', INTSML
-      !>              WRITE(*,FMT2) 'Interval longest  : ', INTLON
+      !>      WRITE(*,FMT1) 'Measure           : ', MEAS
+      !>      WRITE(*,FMT1) 'Average           : ', AVG
+      !>      WRITE(*,FMT1) 'Standard Dev      : ', STDDEV
+      !>      WRITE(*,FMT2) 'Index shortest    : ', IDXSML
+      !>      WRITE(*,FMT2) 'Index longest     : ', IDXLON
+      !>      WRITE(*,FMT2) 'Interval shortest : ', INTSML
+      !>      WRITE(*,FMT2) 'Interval longest  : ', INTLON
       !>
-      !>        C
-      !>        C     Output the shortest and longest intervals.
-      !>        C
-      !>              CALL WNFETD ( WINDOW, INTSML, LEFT, RIGHT )
-      !>              WRITE(*,FMT3) 'Shortest interval : [ ', LEFT, ', ',
-      !>             .                                        RIGHT, ' ]'
-      !>              CALL WNFETD ( WINDOW, INTLON, LEFT, RIGHT )
-      !>              WRITE(*,FMT3) 'Longest interval  : [ ', LEFT, ', ',
-      !>             .                                        RIGHT, ' ]'
+      !>C
+      !>C     Output the shortest and longest intervals.
+      !>C
+      !>      CALL WNFETD ( WINDOW, INTSML, LEFT, RIGHT )
+      !>      WRITE(*,FMT3) 'Shortest interval : [ ', LEFT, ', ',
+      !>     .                                        RIGHT, ' ]'
+      !>      CALL WNFETD ( WINDOW, INTLON, LEFT, RIGHT )
+      !>      WRITE(*,FMT3) 'Longest interval  : [ ', LEFT, ', ',
+      !>     .                                        RIGHT, ' ]'
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -14860,9 +15390,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-      module procedure wnsumd
+      module subroutine wnsumd ( ctx, window, meas, avg, stddev, idxsml, idxlon )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: window    ( lbcell:* )  !! Window to be summarized.
+      real(wp), intent(out) :: meas  !! Total measure of intervals in WINDOW.
+      real(wp), intent(out) :: avg  !! Average measure.
+      real(wp), intent(out) :: stddev  !! Standard deviation.
+      integer(ip), intent(out) :: idxsml  !! Locations of shortest, longest intervals.
+      integer(ip), intent(out) :: idxlon  !! Locations of shortest, longest intervals.
 
 
       real(wp) :: m
@@ -14952,8 +15490,11 @@ contains
       end if
 
       return
-      end procedure wnsumd
+      end subroutine wnsumd
 
+      !> Place the union of two double precision windows into a third
+      !> window.
+      !>
       !>## Detailed Input
       !>
       !>     A,
@@ -15055,9 +15596,14 @@ contains
       !>        Due to the calling sequence and functionality changes
       !>        in the routine EXCESS, the method of signaling an
       !>        excess of elements needed to be changed.
-      module procedure wnunid
+      module subroutine wnunid ( ctx, a, b, c )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a        ( lbcell:* )  !! Input windows.
+      real(wp), intent(in) :: b        ( lbcell:* )  !! Input windows.
+      real(wp), intent(inout) :: c        ( lbcell:* )  !! Union of A and B.
 
 
       integer(ip) :: acard
@@ -15211,8 +15757,11 @@ contains
       end if
 
       return
-      end procedure wnunid
+      end subroutine wnunid
 
+      !> Form a valid double precision window from the contents
+      !> of a window array.
+      !>
       !>## Detailed Input
       !>
       !>     SIZE     is the size of the window to be validated. This is the
@@ -15284,63 +15833,65 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM WNVALD_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM WNVALD_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions.
-      !>        C
-      !>              INTEGER               CARDD
-      !>              INTEGER               SIZED
+      !>C
+      !>C     SPICELIB functions.
+      !>C
+      !>      INTEGER               CARDD
+      !>      INTEGER               SIZED
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>              INTEGER               LBCELL
-      !>              PARAMETER           ( LBCELL = -5 )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>      INTEGER               LBCELL
+      !>      PARAMETER           ( LBCELL = -5 )
       !>
-      !>              INTEGER               WINSIZ
-      !>              PARAMETER           ( WINSIZ = 20 )
+      !>      INTEGER               WINSIZ
+      !>      PARAMETER           ( WINSIZ = 20 )
       !>
-      !>              INTEGER               DATSIZ
-      !>              PARAMETER           ( DATSIZ = 16 )
+      !>      INTEGER               DATSIZ
+      !>      PARAMETER           ( DATSIZ = 16 )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              DOUBLE PRECISION      WINDOW  ( LBCELL : WINSIZ )
-      !>              DOUBLE PRECISION      WINDAT  ( DATSIZ )
+      !>C
+      !>C     Local variables
+      !>C
+      !>      DOUBLE PRECISION      WINDOW  ( LBCELL : WINSIZ )
+      !>      DOUBLE PRECISION      WINDAT  ( DATSIZ )
       !>
-      !>              INTEGER               I
+      !>      INTEGER               I
       !>
-      !>              DATA                  WINDAT  /  0,  0,
-      !>             .                                10, 12,
-      !>             .                                 2,  7,
-      !>             .                                13, 15,
-      !>             .                                 1,  5,
-      !>             .                                23, 29,  4*0 /
+      !>      DATA                  WINDAT  /  0,  0,
+      !>     .                                10, 12,
+      !>     .                                 2,  7,
+      !>     .                                13, 15,
+      !>     .                                 1,  5,
+      !>     .                                23, 29,  4*0 /
       !>
-      !>        C
-      !>        C     Insert the data into the SPICE cell array.
-      !>        C
-      !>              CALL MOVED ( WINDAT, WINSIZ, WINDOW(1) )
+      !>C
+      !>C     Insert the data into the SPICE cell array.
+      !>C
+      !>      CALL MOVED ( WINDAT, WINSIZ, WINDOW(1) )
       !>
-      !>        C
-      !>        C     Validate the input WINDOW array as a SPICE window.
-      !>        C
-      !>              CALL WNVALD ( WINSIZ, DATSIZ, WINDOW )
+      !>C
+      !>C     Validate the input WINDOW array as a SPICE window.
+      !>C
+      !>      CALL WNVALD ( WINSIZ, DATSIZ, WINDOW )
       !>
-      !>              WRITE (*,*) 'Current intervals: ', CARDD ( WINDOW ) / 2
-      !>              WRITE (*,*) 'Maximum intervals: ', SIZED ( WINDOW ) / 2
-      !>              WRITE (*,*)
-      !>              WRITE (*,*) 'Intervals:'
-      !>              WRITE (*,*)
+      !>      WRITE (*,*) 'Current intervals: ', CARDD ( WINDOW ) / 2
+      !>      WRITE (*,*) 'Maximum intervals: ', SIZED ( WINDOW ) / 2
+      !>      WRITE (*,*)
+      !>      WRITE (*,*) 'Intervals:'
+      !>      WRITE (*,*)
       !>
-      !>              DO I = 1, CARDD ( WINDOW ), 2
-      !>                 WRITE (*,*) WINDOW(I), WINDOW(I+1)
-      !>              END DO
+      !>      DO I = 1, CARDD ( WINDOW ), 2
+      !>         WRITE (*,*) WINDOW(I), WINDOW(I+1)
+      !>      END DO
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -15405,10 +15956,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-      module procedure wnvald
+      module subroutine wnvald ( ctx, size, n, window )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: size  !! Size of window.
+      integer(ip), intent(in) :: n  !! Original number of endpoints.
+      real(wp), intent(inout) :: window ( lbcell:* )  !! Input, output window.
 
 
       real(wp) :: left
@@ -15470,6 +16026,6 @@ contains
       end do
 
       return
-      end procedure wnvald
+      end subroutine wnvald
 
 end submodule pepper_cells

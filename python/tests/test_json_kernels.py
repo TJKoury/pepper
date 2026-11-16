@@ -123,3 +123,21 @@ def test_converter(kernels, tmp_path, which):
     # off: spicelib_bugs.md)
     assert pools[1] == pools[0]
     assert pools[2] == pools[0]
+
+
+def test_pool_sources(spice, tmp_path):
+    """pool_sources, pool_defined_by and pool_string (PEPPER's): the kernels
+    and lines that assigned a variable, and the reverse (1-based, as in
+    Fortran)."""
+    c = spice.context()
+    a = write(tmp_path / 'a.json', '{\n"SRC_A": [1, 2],\n"SRC_S": ["x", "yy"]\n}')
+    b = write(tmp_path / 'b.json', '{\n\n"+SRC_A": 3\n}')
+    spice.furnsh(a)
+    spice.furnsh(b)
+    sources, lines, first = c.pool_sources('SRC_A')
+    assert list(sources) == [a, b]
+    assert list(lines) == [2, 3]
+    assert list(first) == [1, 3]
+    assert set(c.pool_defined_by(b)) == {'SRC_A'}
+    value, n = c.pool_string('SRC_S', 2)
+    assert value == 'yy' and n == 2

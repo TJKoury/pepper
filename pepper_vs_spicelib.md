@@ -641,6 +641,20 @@ fastest time of each operation).
   in effect: `pool_sources` and `pool_defined_by` query it, and
   `pool_write_json` writes the pool as a JSON kernel with the sources in
   comments. SPICELIB keeps no such record. (Not in the legacy interface.)
+- **Kernels built in memory and kernel loaders.** A program can load an SPK
+  made from its own arrays, with no file (`load_kernel`), and register
+  loaders that read other file formats in FURNSH (`add_loader`; FURNSH's
+  `loader` argument and the meta-kernel variable `KERNEL_LOADERS`): the
+  README's "Kernels built in memory and kernel loaders". Such a kernel is a
+  whole SPK file in memory; SPKCOV, SPKOBJ and GETFAT find it by its name,
+  and `write_kernel` writes it to an SPK file that SPICELIB reads. SPKW09 and
+  SPKW13 now write their data through the same packing routines
+  (`pepper_spk_packing`), unchanged. (Loaders registered by a program also
+  apply to the legacy FURNSH; the new routines are not in the legacy
+  interface.) A kernel built in memory can define body names
+  (`define_body`): they are BODDEF definitions owned by the kernel, removed
+  when it is unloaded, where SPICELIB's BODDEF definitions are permanent
+  (KCLEAR keeps them, in PEPPER too).
 - **A kernel open on several units.** Each context reads the kernels
   through units of its own, and each instance loads its own: one process
   opens a file on several units. SPICELIB refuses to load a file that is

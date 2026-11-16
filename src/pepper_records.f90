@@ -2,9 +2,7 @@
 !>
 !> The procedures keep SPICELIB's names and documentation; the context is
 !> their first argument (interfaces and type-bound procedures in
-!> [[pepper_instance_module]]). Moved here from src/spicelib by
-!> tools/modularize_ctx.py; the external procedures with the original
-!> interface are in tspice/src/legacy/pepper_legacy_records.f90.
+!> [[pepper_instance_module]]).
 !>
 !>## ZZSGP4 (SGP4 wrapper)
 !>
@@ -428,6 +426,10 @@ submodule (pepper_instance_module) pepper_records
 
 contains
 
+      !> Evaluate a pointing record returned by [[ckr01]] from a CK data type 1
+      !> segment. Return the C-matrix and optionally the angular velocity
+      !> vector associated with the time CLKOUT.
+      !>
       !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. when angular velocity data is requested.
@@ -721,10 +723,16 @@ contains
       !>           the routine Q2M.
       !>
       !>-    Beta Version 1.0.0, 18-MAY-1990 (RET) (IMU)
-      module procedure cke01
+      module subroutine cke01 ( ctx, needav, record, cmat, av, clkout )
       use pepper_kinds, only: wp
       use pepper_math, only: q2m
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(in) :: needav  !! .TRUE. if angular velocity vector is required.
+      real(wp), intent(in) :: record ( *    )  !! Data type 1 pointing record.
+      real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix.
+      real(wp), intent(out) :: av     ( 3    )  !! Angular velocity vector.
+      real(wp), intent(out) :: clkout  !! Output spacecraft clock time.
 
 !
 !     Standard SPICE error handling.
@@ -747,8 +755,12 @@ contains
       end if
 
       return
-      end procedure cke01
+      end subroutine cke01
 
+      !> Evaluate a pointing record returned by [[ckr02]] from a CK data type 2
+      !> segment. Return the C-matrix and angular velocity vector
+      !> associated with the time CLKOUT.
+      !>
       !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
@@ -974,10 +986,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1991 (JML)
-      module procedure cke02
+      module subroutine cke02 ( ctx, needav, record, cmat, av, clkout )
       use pepper_kinds, only: wp
       use pepper_math, only: axisar, mxmt, q2m, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(in) :: needav  !! .TRUE. if angular velocity is requested.
+      real(wp), intent(in) :: record ( *    )  !! Data type 2 pointing record.
+      real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix.
+      real(wp), intent(out) :: av     ( 3    )  !! Angular velocity vector.
+      real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
 
       real(wp) :: quat   ( 4    )
       real(wp) :: cbase  ( 3, 3 )
@@ -1063,8 +1081,12 @@ contains
       end if
 
       return
-      end procedure cke02
+      end subroutine cke02
 
+      !> Evaluate a pointing record returned by [[ckr03]] from a CK type 3
+      !> segment. Return the C-matrix and angular velocity vector
+      !> associated with the time CLKOUT.
+      !>
       !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
@@ -1410,10 +1432,16 @@ contains
       !>        Additionally, FAILED is now checked after the call to
       !>        RAXISA. This prevents garbage from being placed into
       !>        the output arguments.
-      module procedure cke03
+      module subroutine cke03 ( ctx, needav, record, cmat, av, clkout )
       use pepper_kinds, only: wp
       use pepper_math, only: axisar, mtxm, mxmt, q2m
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(in) :: needav  !! .TRUE. if angular velocity is requested.
+      real(wp), intent(in) :: record ( *     )  !! Data type 3 pointing record.
+      real(wp), intent(out) :: cmat   ( 3, 3  )  !! C-matrix.
+      real(wp), intent(out) :: av     ( 3     )  !! Angular velocity vector.
+      real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
 
       real(wp) :: t
       real(wp) :: t1
@@ -1538,8 +1566,12 @@ contains
       end if
 
       return
-      end procedure cke03
+      end subroutine cke03
 
+      !> Evaluate a pointing record returned by [[ckr04]] from a CK type 4
+      !> segment. Return the C-matrix and angular velocity vector
+      !> associated with the time CLKOUT.
+      !>
       !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
@@ -1818,11 +1850,17 @@ contains
       !>        to FURNSH.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
-      module procedure cke04
+      module subroutine cke04 ( ctx, needav, record, cmat, av, clkout )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: chbval, q2m, vhatg
       use pepper_inc_ckparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(in) :: needav  !! .TRUE. if angular velocity is requested.
+      real(wp), intent(in) :: record ( * )  !! Data type 4 pointing record.
+      real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix.
+      real(wp), intent(out) :: av     ( 3 )  !! Angular velocity vector.
+      real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
 
       real(wp) :: q      ( 4 )
       real(wp) :: qout   ( 4 )
@@ -1893,8 +1931,10 @@ contains
 !
       return
 
-      end procedure cke04
+      end subroutine cke04
 
+      !> Evaluate a single data record from a type 5 CK segment.
+      !>
       !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
@@ -2218,12 +2258,18 @@ contains
       !>        Letting Q(t) be the quaternion derived by polynomial
       !>        interpolation, and letting UQ(t) be Q(t)/||Q(t)||,
       !>        the quaternion derivative d(UQ)/dt is now used.
-      module procedure cke05
+      module subroutine cke05 ( ctx, needav, record, cmat, av, clkout )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: q2m, qdq2av, vdistg, vdotg, vhatg, vnormg, xpsgip
       use pepper_inc_ck05
       use pepper_inc_ckparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(in) :: needav  !! .TRUE. if angular velocity is requested.
+      real(wp), intent(inout) :: record   ( * )  !! Data type 5 record.
+      real(wp), intent(out) :: cmat     ( 3, 3 )  !! C-matrix.
+      real(wp), intent(out) :: av       ( 3 )  !! Angular velocity vector.
+      real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
 
 !
 !     Index of evaluation epoch in record:
@@ -2734,8 +2780,10 @@ contains
       clkout = record(epcidx)
 
       return
-      end procedure cke05
+      end subroutine cke05
 
+      !> Read a pointing record from a CK segment, data type 1.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle of the CK file containing the
@@ -3023,10 +3071,18 @@ contains
       !>        6) The in-code comments were improved.
       !>
       !>-    Beta Version 1.0.0, 17-MAY-1990 (RET) (IMU)
-      module procedure ckr01
+      module subroutine ckr01 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstcld, lstled
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr  ( * )  !! Segment descriptor.
+      real(wp), intent(in) :: sclkdp  !! Spacecraft clock time.
+      real(wp), intent(in) :: tol  !! Time tolerance.
+      logical, intent(in) :: needav  !! .TRUE. when angular velocity data is requested.
+      real(wp), intent(out) :: record ( * )  !! Pointing data record.
+      logical, intent(out) :: found  !! .TRUE. when data is found.
 
 !        DIRSIZ     is the directory size.
 !
@@ -3288,8 +3344,10 @@ contains
 !     That is all.
 !
       return
-      end procedure ckr01
+      end subroutine ckr01
 
+      !> Read a pointing record from a CK segment, data type 2.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle of the CK file containing the
@@ -3507,10 +3565,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1991 (JML)
-      module procedure ckr02
+      module subroutine ckr02 ( ctx, handle, descr, sclkdp, tol, record, found )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr  ( * )  !! Segment descriptor.
+      real(wp), intent(in) :: sclkdp  !! Spacecraft clock time.
+      real(wp), intent(in) :: tol  !! Time tolerance
+      real(wp), intent(out) :: record ( * )  !! Pointing data record.
+      logical, intent(out) :: found  !! .TRUE. when data is found.
       real(wp) :: stopi_1(1)  !! one-element copy of stopi (array argument)
 
 !        DIRSIZ     is the directory size.
@@ -3918,8 +3983,10 @@ contains
 !     That is all.
 !
       return
-      end procedure ckr02
+      end subroutine ckr02
 
+      !> Read a pointing record from a CK segment, data type 3.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle of the CK file containing the
@@ -4213,11 +4280,19 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
-      module procedure ckr03
+      module subroutine ckr03 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_arrays, only: lstled, lstltd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr  ( * )  !! Segment descriptor.
+      real(wp), intent(in) :: sclkdp  !! Pointing request time.
+      real(wp), intent(in) :: tol  !! Time tolerance.
+      logical, intent(in) :: needav  !! Angular velocity request flag.
+      real(wp), intent(out) :: record ( * )  !! Pointing data record.
+      logical, intent(out) :: found  !! .TRUE. when data is found.
       real(wp) :: nstart_1(1)  !! one-element copy of nstart (array argument)
       real(wp) :: start_1(1)  !! one-element copy of start (array argument)
       real(wp) :: lsclk_1(1)  !! one-element copy of lsclk (array argument)
@@ -4903,8 +4978,11 @@ contains
 
       return
       end associate
-      end procedure ckr03
+      end subroutine ckr03
 
+      !> Read a single CK data record from a segment of type 05
+      !> (MEX/Rosetta Attitude file interpolation).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -5083,7 +5161,7 @@ contains
       !>        Increased MAXDEG to 23 for compatibility with CK type 6.
       !>
       !>-    SPICELIB Version 1.1.0, 06-SEP-2002 (NJB)
-      module procedure ckr05
+      module subroutine ckr05 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_arrays, only: lstled, lstltd
@@ -5091,6 +5169,14 @@ contains
       use pepper_inc_ck05
       use pepper_inc_ckparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: sclkdp  !! Pointing request time.
+      real(wp), intent(in) :: tol  !! Lookup tolerance.
+      logical, intent(in) :: needav  !! Angular velocity flag.
+      real(wp), intent(out) :: record   ( * )  !! Data record.
+      logical, intent(out) :: found  !! Flag indicating whether record was found.
       integer(ip), parameter :: pbufsz = dirsiz + 1
       integer(ip), parameter :: ctrlsz = 5
       integer(ip), parameter :: parsiz = 4
@@ -5915,8 +6001,11 @@ contains
 
       return
       end associate
-      end procedure ckr05
+      end subroutine ckr05
 
+      !> Read a single CK data record from a segment of type 6
+      !> (ESOC/DDID Piecewise Interpolation).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -6130,13 +6219,21 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (BVS)
-      module procedure ckr06
+      module subroutine ckr06 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled, lstltd
       use pepper_math, only: odd
       use pepper_inc_ckparam
       use pepper_inc_ck06
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: sclkdp  !! Pointing request time.
+      real(wp), intent(in) :: tol  !! Lookup tolerance.
+      logical, intent(in) :: needav  !! Angular velocity flag.
+      real(wp), intent(out) :: record   ( * )  !! Data record.
+      logical, intent(out) :: found  !! Flag indicating whether record was found.
       real(wp) :: lstepc_1(1)  !! one-element copy of lstepc (array argument)
       integer(ip), parameter :: nsgpar = 2
       integer(ip), parameter :: c06mw0 = ( maxdeg + 1 )/2
@@ -7443,8 +7540,11 @@ contains
 
       return
       end associate
-      end procedure ckr06
+      end subroutine ckr06
 
+      !> Read a single PCK data record from a segment of type 2
+      !> (Chebyshev, 3-vector only).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -7503,134 +7603,136 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PCKR02_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PCKR02_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters
-      !>        C
-      !>              INTEGER               BODY
-      !>              PARAMETER           ( BODY   = 31004 )
+      !>C
+      !>C     Local parameters
+      !>C
+      !>      INTEGER               BODY
+      !>      PARAMETER           ( BODY   = 31004 )
       !>
-      !>              INTEGER               DESCSZ
-      !>              PARAMETER           ( DESCSZ = 5     )
+      !>      INTEGER               DESCSZ
+      !>      PARAMETER           ( DESCSZ = 5     )
       !>
-      !>              INTEGER               IDSIZE
-      !>              PARAMETER           ( IDSIZE = 40    )
+      !>      INTEGER               IDSIZE
+      !>      PARAMETER           ( IDSIZE = 40    )
       !>
-      !>        C
-      !>        C     Set the maximum record size:
-      !>        C
-      !>        C        RSIZE = 2 + 3 * (PDEG +1)
-      !>        C
-      !>        C     Assume a maximum polynomial degree of 25, and
-      !>        C     knowing that PCKR02 returns RSIZE as first element
-      !>        C     of the output record...
-      !>        C
-      !>              INTEGER               RECRSZ
-      !>              PARAMETER           ( RECRSZ = 81    )
+      !>C
+      !>C     Set the maximum record size:
+      !>C
+      !>C        RSIZE = 2 + 3 * (PDEG +1)
+      !>C
+      !>C     Assume a maximum polynomial degree of 25, and
+      !>C     knowing that PCKR02 returns RSIZE as first element
+      !>C     of the output record...
+      !>C
+      !>      INTEGER               RECRSZ
+      !>      PARAMETER           ( RECRSZ = 81    )
       !>
-      !>        C
-      !>        C     Local variables
-      !>        C
-      !>              CHARACTER*(IDSIZE)    SEGID
+      !>C
+      !>C     Local variables
+      !>C
+      !>      CHARACTER*(IDSIZE)    SEGID
       !>
-      !>              DOUBLE PRECISION      BEGET
-      !>              DOUBLE PRECISION      DESCR  ( DESCSZ )
-      !>              DOUBLE PRECISION      ENDET
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      RECORD ( RECRSZ )
+      !>      DOUBLE PRECISION      BEGET
+      !>      DOUBLE PRECISION      DESCR  ( DESCSZ )
+      !>      DOUBLE PRECISION      ENDET
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      RECORD ( RECRSZ )
       !>
-      !>              INTEGER               BADDR
-      !>              INTEGER               BODYID
-      !>              INTEGER               EADDR
-      !>              INTEGER               FRAMID
-      !>              INTEGER               HANDLE
-      !>              INTEGER               I
-      !>              INTEGER               INDEX
-      !>              INTEGER               PCKHDL
-      !>              INTEGER               PCKTYP
-      !>              INTEGER               PDEG
-      !>              INTEGER               RSIZE
+      !>      INTEGER               BADDR
+      !>      INTEGER               BODYID
+      !>      INTEGER               EADDR
+      !>      INTEGER               FRAMID
+      !>      INTEGER               HANDLE
+      !>      INTEGER               I
+      !>      INTEGER               INDEX
+      !>      INTEGER               PCKHDL
+      !>      INTEGER               PCKTYP
+      !>      INTEGER               PDEG
+      !>      INTEGER               RSIZE
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Load the PCK file.
-      !>        C
-      !>              CALL PCKLOF ( 'moon_pa_de418_1950-2050.bpc', PCKHDL )
+      !>C
+      !>C     Load the PCK file.
+      !>C
+      !>      CALL PCKLOF ( 'moon_pa_de418_1950-2050.bpc', PCKHDL )
       !>
-      !>        C
-      !>        C     Set the epoch. Use ephemeris time of J2000 epoch.
-      !>        C
-      !>              ET = 0.D0
+      !>C
+      !>C     Set the epoch. Use ephemeris time of J2000 epoch.
+      !>C
+      !>      ET = 0.D0
       !>
-      !>        C
-      !>        C     Get a segment applicable to a specified body and epoch.
-      !>        C
-      !>              CALL PCKSFS ( BODY, ET, HANDLE, DESCR, SEGID, FOUND )
+      !>C
+      !>C     Get a segment applicable to a specified body and epoch.
+      !>C
+      !>      CALL PCKSFS ( BODY, ET, HANDLE, DESCR, SEGID, FOUND )
       !>
-      !>              IF ( FOUND ) THEN
+      !>      IF ( FOUND ) THEN
       !>
-      !>        C
-      !>        C        Unpack the segment.
-      !>        C
-      !>                 CALL PCKUDS ( DESCR, BODYID, FRAMID, PCKTYP,
-      !>             .                 BEGET, ENDET,  BADDR,  EADDR  )
+      !>C
+      !>C        Unpack the segment.
+      !>C
+      !>         CALL PCKUDS ( DESCR, BODYID, FRAMID, PCKTYP,
+      !>     .                 BEGET, ENDET,  BADDR,  EADDR  )
       !>
-      !>                 IF ( PCKTYP .EQ. 2 ) THEN
+      !>         IF ( PCKTYP .EQ. 2 ) THEN
       !>
-      !>                    CALL PCKR02 ( HANDLE, DESCR, ET, RECORD )
+      !>            CALL PCKR02 ( HANDLE, DESCR, ET, RECORD )
       !>
-      !>                    RSIZE = RECORD(1)
-      !>                    PDEG  = ( RSIZE - 2 ) / 3 - 1
+      !>            RSIZE = RECORD(1)
+      !>            PDEG  = ( RSIZE - 2 ) / 3 - 1
       !>
-      !>        C
-      !>        C           Output the data.
-      !>        C
-      !>                    WRITE(*,*) 'Record size      : ', RSIZE
-      !>                    WRITE(*,*) 'Polynomial degree: ', PDEG
+      !>C
+      !>C           Output the data.
+      !>C
+      !>            WRITE(*,*) 'Record size      : ', RSIZE
+      !>            WRITE(*,*) 'Polynomial degree: ', PDEG
       !>
-      !>                    WRITE(*,*) 'Record data      :'
-      !>                    WRITE(*,*) '   Interval midpoint: ', RECORD(2)
-      !>                    WRITE(*,*) '   Interval radius  : ', RECORD(3)
+      !>            WRITE(*,*) 'Record data      :'
+      !>            WRITE(*,*) '   Interval midpoint: ', RECORD(2)
+      !>            WRITE(*,*) '   Interval radius  : ', RECORD(3)
       !>
-      !>                    INDEX = 4
-      !>                    WRITE(*,*) '   RA coefficients  : '
-      !>                    DO I = 0, PDEG
-      !>                       WRITE(*,*) '      ', RECORD(INDEX+I)
-      !>                    END DO
+      !>            INDEX = 4
+      !>            WRITE(*,*) '   RA coefficients  : '
+      !>            DO I = 0, PDEG
+      !>               WRITE(*,*) '      ', RECORD(INDEX+I)
+      !>            END DO
       !>
-      !>                    INDEX = 4 + ( PDEG + 1 )
-      !>                    WRITE(*,*) '   DEC coefficients : '
-      !>                    DO I = 0, PDEG
-      !>                       WRITE(*,*) '      ', RECORD(INDEX+I)
-      !>                    END DO
+      !>            INDEX = 4 + ( PDEG + 1 )
+      !>            WRITE(*,*) '   DEC coefficients : '
+      !>            DO I = 0, PDEG
+      !>               WRITE(*,*) '      ', RECORD(INDEX+I)
+      !>            END DO
       !>
-      !>                    INDEX = 4 + 2 * ( PDEG + 1 )
-      !>                    WRITE(*,*) '   W coefficients   : '
-      !>                    DO I = 0, PDEG
-      !>                       WRITE(*,*) '      ', RECORD(INDEX+I)
-      !>                    END DO
+      !>            INDEX = 4 + 2 * ( PDEG + 1 )
+      !>            WRITE(*,*) '   W coefficients   : '
+      !>            DO I = 0, PDEG
+      !>               WRITE(*,*) '      ', RECORD(INDEX+I)
+      !>            END DO
       !>
-      !>                 ELSE
+      !>         ELSE
       !>
-      !>                    WRITE(*,*) 'PCK is not type 2'
+      !>            WRITE(*,*) 'PCK is not type 2'
       !>
-      !>                 END IF
+      !>         END IF
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,*) '   ***** SEGMENT NOT FOUND *****'
+      !>         WRITE(*,*) '   ***** SEGMENT NOT FOUND *****'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>        C
-      !>        C     Unload the PCK file.
-      !>        C
-      !>              CALL PCKUOF ( PCKHDL )
+      !>C
+      !>C     Unload the PCK file.
+      !>C
+      !>      CALL PCKUOF ( PCKHDL )
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -7712,9 +7814,14 @@ contains
       !>
       !>        Replaced DAFRDA call with DAFGDA.
       !>        Added IMPLICIT NONE.
-      module procedure pckr02
+      module subroutine pckr02 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(out) :: record   ( * )  !! Data record.
 
 !
 !     Parameters
@@ -7779,8 +7886,11 @@ contains
       call dafgda ( ctx, handle, recadr, recadr + recsiz - 1, record( 2 ) )
 
       return
-      end procedure pckr02
+      end subroutine pckr02
 
+      !> Read a single PCK data record from a segment of type 20
+      !> (Chebyshev, derivative coefficients only).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -7900,10 +8010,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 17-JAN-2014 (NJB) (IMU)
-      module procedure pckr20
+      module subroutine pckr20 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Evaluation epoch.
+      real(wp), intent(out) :: record   ( * )  !! Data record.
 
       real(wp) :: dc       ( 2 )
       real(wp) :: dscale
@@ -8068,8 +8183,10 @@ contains
       end do
 
       return
-      end procedure pckr20
+      end subroutine pckr20
 
+      !> Obtain the value of a specified generic segment meta data item.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF opened for reading that
@@ -8257,11 +8374,16 @@ contains
       !>        assignment.
       !>
       !>-    SPICELIB Version 1.0.0, 11-APR-1995 (KRG) (WLT)
-      module procedure sgmeta
+      module subroutine sgmeta ( ctx, handle, descr, mnemon, value )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: unpack_integers
       use pepper_inc_sgparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF open for reading.
+      real(wp), intent(in) :: descr  ( * )  !! Descriptor for a generic segment in the DAF.
+      integer(ip), intent(in) :: mnemon  !! An integer mnemonic for the desired meta data.
+      integer(ip), intent(out) :: value  !! The value of the meta data item requested.
       real(wp) :: dmtasz_1(1)  !! one-element copy of dmtasz (array argument)
       integer(ip) :: ametas
       integer(ip) :: begin
@@ -8520,8 +8642,11 @@ contains
 
       return
       end associate
-      end procedure sgmeta
+      end subroutine sgmeta
 
+      !> Evaluate a single SPK data record from a segment of type 1
+      !> (Difference Lines).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, at which a state vector is to
@@ -8623,9 +8748,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (FTK)
-      module procedure spke01
+      module subroutine spke01 ( ctx, et, record, state )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(in) :: record   ( * )  !! Data record.
+      real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
       real(wp) :: tl_1(1)  !! one-element copy of tl (array argument)
       integer(ip) :: j
       real(wp) :: delta
@@ -8795,8 +8924,11 @@ contains
 !
 
       return
-      end procedure spke01
+      end subroutine spke01
 
+      !> Evaluate a single data record from an PCK or SPK segment of type
+      !> 2 (Chebyshev Polynomials, 3 components).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch at which a state vector or Euler angle
@@ -8955,9 +9087,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (RET)
-      module procedure spke02
+      module subroutine spke02 ( ctx, et, record, xyzdot )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: chbint
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Evaluation epoch.
+      real(wp), intent(in) :: record   ( * )  !! Data record.
+      real(wp), intent(out) :: xyzdot   ( 6 )  !! Three function components and their derivatives.
       integer(ip) :: cofloc
       integer(ip) :: degp
       integer(ip) :: i
@@ -9026,8 +9162,11 @@ contains
       end do
 
       return
-      end procedure spke02
+      end subroutine spke02
 
+      !> Evaluate a single SPK data record from a segment of type 3
+      !> (Chebyshev Polynomials, position and velocity).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch at which a state vector or Euler angle
@@ -9190,10 +9329,14 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (RET)
-      module procedure spke03
+      module subroutine spke03 ( ctx, et, record, state )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: chbval
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Evaluation epoch.
+      real(wp), intent(in) :: record   ( * )  !! Data record.
+      real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
 
       integer(ip) :: ncof
       integer(ip) :: degp
@@ -9262,8 +9405,12 @@ contains
       end do
 
       return
-      end procedure spke03
+      end subroutine spke03
 
+      !> Evaluate a single SPK data record from a segment of type 8
+      !> (equally spaced discrete states, interpolated by Lagrange
+      !> polynomials).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, at which a state vector is to
@@ -9398,40 +9545,38 @@ contains
       !>
       !>        Updated to remove non-standard use of duplicate arguments
       !>        in XPOSEG and LGRESP calls.
-      !>
-      !>     SPICELIB functions
-      !>
-      !>     Local parameters
-      !>
-      !>     Size of a state vector:
-      !>
-      !>     Indices of input record elements:
-      !>
-      !>        -- size
-      !>        -- start epoch
-      !>        -- step size
-      !>        -- start of state information
-      !>
-      !>     Local variables
-      !>
-      !>     Saved values
-      !>
-      !>     Save arrays to prevent stack overflow problems on some
-      !>     platforms.
-      !>
-      !>     Initial values
-      !>
-      !>     Initialize the workspace array to suppress compiler warnings.
-      module procedure spke08
+      module subroutine spke08 ( ctx, et, record, state )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spkrec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(in) :: record ( * )  !! Data record.
+      real(wp), intent(out) :: state  ( 6 )  !! State (position and velocity).
+!
+!     Indices of input record elements:
+!
+!        -- size
+!        -- start epoch
+!        -- step size
+!        -- start of state information
+!
       integer(ip), parameter :: begidx = 2
       integer(ip), parameter :: stpidx = 3
+!
+!     Local variables
+!
       integer(ip) :: i
       integer(ip) :: n
       integer(ip) :: ystart
+!
+!     Save arrays to prevent stack overflow problems on some
+!     platforms.
+!
       real(wp) :: locrec ( maxrec )
+!
+!     Initialize the workspace array to suppress compiler warnings.
+!
       real(wp) :: work   ( maxrec )
       if ( ctx%failed() ) return
 
@@ -9460,8 +9605,11 @@ contains
       end do
 
       return
-      end procedure spke08
+      end subroutine spke08
 
+      !> Evaluate a single SPK data record from a segment of type 9
+      !> (discrete states, evaluated by Lagrange interpolation).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, at which a state vector is to
@@ -9596,10 +9744,14 @@ contains
       !>
       !>        Updated to remove non-standard use of duplicate arguments
       !>        in XPOSEG and LGRINT calls.
-      module procedure spke09
+      module subroutine spke09 ( ctx, et, record, state )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spkrec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(inout) :: record ( * )  !! Data record.
+      real(wp), intent(out) :: state  ( 6 )  !! State (position and velocity).
 
 
 !
@@ -9651,8 +9803,10 @@ contains
       end do
 
       return
-      end procedure spke09
+      end subroutine spke09
 
+      !> Evaluate a single data record from a type 12 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch for which a state vector is desired.
@@ -9775,9 +9929,13 @@ contains
       !>        $Literature_References to $Required_Reading section.
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-1999 (NJB)
-      module procedure spke12
+      module subroutine spke12 ( ctx, et, record, state )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch for which a state is desired.
+      real(wp), intent(in) :: record   ( * )  !! Record from a type 12 SPK segment valid for ET.
+      real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
 
 
 
@@ -9840,8 +9998,10 @@ contains
       end do
 
       return
-      end procedure spke12
+      end subroutine spke12
 
+      !> Evaluate a single data record from a type 13 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch for which a state vector is desired.
@@ -9960,9 +10120,13 @@ contains
       !>        $Literature_References to $Required_Reading section.
       !>
       !>-    SPICELIB Version 1.0.0, 25-FEB-2000 (NJB)
-      module procedure spke13
+      module subroutine spke13 ( ctx, et, record, state )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch for which a state is desired.
+      real(wp), intent(in) :: record   ( * )  !! Record from a type 13 SPK segment valid for ET.
+      real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
 
 
 
@@ -10018,8 +10182,10 @@ contains
       end do
 
       return
-      end procedure spke13
+      end subroutine spke13
 
+      !> Evaluate a single data record from a type 14 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch for which a state vector is desired.
@@ -10119,10 +10285,14 @@ contains
       !>        $Required_Reading section.
       !>
       !>-    SPICELIB Version 1.0.0, 10-MAR-1995 (KRG)
-      module procedure spke14
+      module subroutine spke14 ( ctx, et, record, state )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: chbval
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch for which a state is desired.
+      real(wp), intent(in) :: record   ( * )  !! Record from a type 14 SPK segment valid for ET.
+      real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
 
       integer(ip) :: cofloc
       integer(ip) :: degree
@@ -10172,8 +10342,11 @@ contains
 
       return
 
-      end procedure spke14
+      end subroutine spke14
 
+      !> Evaluate a single SPK data record from a segment of type 17
+      !> (Equinoctial Elements).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, specified as ephemeris seconds past
@@ -10320,9 +10493,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 08-JAN-1997 (WLT)
-      module procedure spke17
+      module subroutine spke17 ( ctx, et, recin, state )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(in) :: recin  ( * )  !! Data record.
+      real(wp), intent(out) :: state  ( 6 )  !! State (position and velocity).
 
       real(wp) :: a
       real(wp) :: rapole
@@ -10388,8 +10565,10 @@ contains
 !     That's all folks.  return.
 !
       return
-      end procedure spke17
+      end subroutine spke17
 
+      !> Evaluate a single data record from a type 18 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch for which a state vector is desired.
@@ -10511,28 +10690,16 @@ contains
       !>        in XPOSEG and LGRINT calls.
       !>
       !>-    SPICELIB Version 1.0.0, 17-AUG-2002 (NJB)
-      module procedure spke18
+      module subroutine spke18 ( ctx, et, record, state )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: xpsgip
       use pepper_inc_spk18
       use pepper_inc_spkrec
       implicit none
-
-!
-!     Index of subtype code in record:
-!
-
-!
-!     Index of packet count in record:
-!
-
-!
-!     Index at which packets start:
-!
-
-!
-!     Maximum polynomial degree:
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch for which a state is desired.
+      real(wp), intent(inout) :: record   ( * )  !! Record from a type 18 SPK segment valid for ET. (PEPPER: its packets are transposed in place.)
+      real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
 
       real(wp) :: locrec ( maxrec )
       real(wp) :: work   ( maxrec * 2,  2 )
@@ -10690,8 +10857,10 @@ contains
       end if
 
       return
-      end procedure spke18
+      end subroutine spke18
 
+      !> Evaluate a single data record from a type 19 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch for which a state vector is desired,
@@ -10828,24 +10997,16 @@ contains
       !>        SPKE18.
       !>
       !>-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (BVS)
-      module procedure spke19
+      module subroutine spke19 ( ctx, et, record, state )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: xpsgip
       use pepper_inc_spk19
       use pepper_inc_spkrec
       implicit none
-
-!
-!     Index of subtype code in record:
-!
-
-!
-!     Index of packet count in record:
-!
-
-!
-!     Index at which packets start:
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch for which a state is desired.
+      real(wp), intent(inout) :: record   ( * )  !! Record from a type 19 SPK segment valid for ET. (PEPPER: its packets are transposed in place.)
+      real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity) at epoch ET.
 
       real(wp) :: locrec ( maxrec )
       real(wp) :: work   ( maxrec * 2,  2 )
@@ -11048,8 +11209,11 @@ contains
       end if
 
       return
-      end procedure spke19
+      end subroutine spke19
 
+      !> Evaluate a single data record from an SPK or PCK segment of type
+      !> 20 (Chebyshev polynomials, velocity only).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is the epoch at which a state vector or Euler angle
@@ -11194,9 +11358,13 @@ contains
       !>        $Required_Reading section.
       !>
       !>-    SPICELIB Version 1.0.0, 17-JAN-2014 (NJB) (RET) (KSZ)
-      module procedure spke20
+      module subroutine spke20 ( ctx, et, record, xyzdot )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Evaluation epoch.
+      real(wp), intent(in) :: record   ( * )  !! Data record.
+      real(wp), intent(out) :: xyzdot   ( 6 )  !! Three function components and their derivatives.
 
       real(wp) :: intgrl ( 3 )
 
@@ -11265,8 +11433,11 @@ contains
       xyzdot(1:3) = record(posloc:posloc+3-1) + intgrl
 
       return
-      end procedure spke20
+      end subroutine spke20
 
+      !> Evaluate a single SPK data record from a segment of type 21
+      !> (Extended Difference Lines).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is an epoch at which a state vector is to be
@@ -11368,10 +11539,14 @@ contains
       !>        $Required_Reading section.
       !>
       !>-    SPICELIB Version 1.0.0, 03-FEB-2014 (NJB) (FTK) (WLT) (IMU)
-      module procedure spke21
+      module subroutine spke21 ( ctx, et, record, state )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spk21
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Evaluation epoch.
+      real(wp), intent(in) :: record   ( * )  !! Data record.
+      real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
       real(wp) :: tl_1(1)  !! one-element copy of tl (array argument)
       integer(ip) :: maxdim
       integer(ip) :: j
@@ -11580,8 +11755,11 @@ contains
       end do
 
       return
-      end procedure spke21
+      end subroutine spke21
 
+      !> Read a single SPK data record from a segment of type 1
+      !> (Difference Lines).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -11689,10 +11867,15 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure spkr01
+      module subroutine spkr01 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstltd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(out) :: record   ( * )  !! Data record.
 
       real(wp) :: dc       (   2 )
       integer(ip) :: ic       (   6 )
@@ -11798,8 +11981,11 @@ contains
       call dafgda ( ctx, handle, offr+1, offr+71, record )
 
       return
-      end procedure spkr01
+      end subroutine spkr01
 
+      !> Read a single SPK data record from a segment of type 2
+      !> (Chebyshev, position only).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -11943,9 +12129,14 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure spkr02
+      module subroutine spkr02 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Evaluation epoch.
+      real(wp), intent(out) :: record   ( * )  !! Data record.
 
       real(wp) :: dc       (   2 )
       real(wp) :: init
@@ -12004,8 +12195,11 @@ contains
       call dafgda ( ctx, handle, recadr, recadr + recsiz - 1, record( 2 ) )
 
       return
-      end procedure spkr02
+      end subroutine spkr02
 
+      !> Read a single SPK data record from a segment of type 3
+      !> (Chebyshev coefficients, position and velocity).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -12160,9 +12354,14 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (RET)
-      module procedure spkr03
+      module subroutine spkr03 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Evaluation epoch.
+      real(wp), intent(out) :: record   ( * )  !! Data record.
 
       real(wp) :: dc       (   2 )
       real(wp) :: init
@@ -12221,8 +12420,11 @@ contains
       call dafgda ( ctx, handle, recadr, recadr + recsiz - 1, record( 2 ) )
 
       return
-      end procedure spkr03
+      end subroutine spkr03
 
+      !> Read a single SPK data record from a segment of type 5
+      !> ( two body propagation between discrete state vectors ).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -12354,10 +12556,15 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 01-APR-1992 (JML) (WLT) (IMU)
-      module procedure spkr05
+      module subroutine spkr05 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstltd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(out) :: record   ( * )  !! Data record.
 
       integer(ip), parameter :: size = 100
 
@@ -12662,8 +12869,12 @@ contains
       record(1:12) = data(1:12)
 
       return
-      end procedure spkr05
+      end subroutine spkr05
 
+      !> Read a single SPK data record from a segment of type 8
+      !> (equally spaced discrete states, interpolated by Lagrange
+      !> polynomials).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -12796,10 +13007,15 @@ contains
       !>        removed.
       !>
       !>-    SPICELIB Version 1.0.0, 14-AUG-1993 (NJB)
-      module procedure spkr08
+      module subroutine spkr08 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(out) :: record   ( * )  !! Data record.
 
 
 
@@ -12945,8 +13161,12 @@ contains
                     record(staidx)                  )
 
       return
-      end procedure spkr08
+      end subroutine spkr08
 
+      !> Read a single SPK data record from a segment of type 9
+      !> (Unequally spaced discrete states, interpolated by Lagrange
+      !> polynomials).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -13077,11 +13297,16 @@ contains
       !>        removed.
       !>
       !>-    SPICELIB Version 1.0.0, 14-AUG-1993 (NJB)
-      module procedure spkr09
+      module subroutine spkr09 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstltd
       use pepper_math, only: odd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(out) :: record   ( * )  !! Data record.
 
 
 
@@ -13372,8 +13597,11 @@ contains
                      record( 2 + wndsiz*statsz )   )
 
       return
-      end procedure spkr09
+      end subroutine spkr09
 
+      !> Read a single SPK data record from a segment of type 15
+      !> (Precessing Conic Propagation).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -13499,9 +13727,14 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 15-NOV-1994 (WLT) (SS)
-      module procedure spkr15
+      module subroutine spkr15 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr (5)  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(out) :: record(*)  !! Data record.
 
 
 
@@ -13566,8 +13799,11 @@ contains
 !
       call dafgda ( ctx, handle, begin, end, record )
       return
-      end procedure spkr15
+      end subroutine spkr15
 
+      !> Read a single SPK data record from a segment of type 17
+      !> (Equinoctial Elements).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -13706,9 +13942,14 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 03-JAN-1997 (WLT) (SS)
-      module procedure spkr17
+      module subroutine spkr17 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr (5)  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(out) :: record(*)  !! Data record.
 
 
 
@@ -13774,8 +14015,11 @@ contains
 !
       call dafgda ( ctx, handle, begin, end, record )
       return
-      end procedure spkr17
+      end subroutine spkr17
 
+      !> Read a single SPK data record from a segment of type 18
+      !> (MEX/Rosetta Orbit file interpolation).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -13921,12 +14165,17 @@ contains
       !>
       !>        An error check was added for segment packet counts
       !>        less than 2.
-      module procedure spkr18
+      module subroutine spkr18 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstltd
       use pepper_math, only: odd
       use pepper_inc_spk18
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(out) :: record   ( * )  !! Data record.
 
 
 
@@ -14325,8 +14574,11 @@ contains
                      record( 3 + wndsiz*packsz )   )
 
       return
-      end procedure spkr18
+      end subroutine spkr18
 
+      !> Read a single SPK data record from a segment of type 19
+      !> (ESOC/DDID Piecewise Interpolation).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -14471,13 +14723,18 @@ contains
       !>        Updated to support subtype 2.
       !>
       !>-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (BVS)
-      module procedure spkr19
+      module subroutine spkr19 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled, lstltd
       use pepper_math, only: odd
       use pepper_inc_spk19
       use pepper_inc_spkrec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(out) :: record   ( * )  !! Data record.
       integer(ip), parameter :: ctrlsz = 3
       integer(ip), parameter :: s19mw0 = ( maxdeg + 1 )/2
       integer(ip), parameter :: s19mw1 = ( maxdeg + 1 )
@@ -15474,8 +15731,11 @@ contains
 
       return
       end associate
-      end procedure spkr19
+      end subroutine spkr19
 
+      !> Read a single SPK data record from a segment of type 20
+      !> (Chebyshev, velocity coefficients only).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -15599,10 +15859,15 @@ contains
       !>        $Required_Reading section.
       !>
       !>-    SPICELIB Version 1.0.0, 17-JAN-2014 (NJB) (IMU)
-      module procedure spkr20
+      module subroutine spkr20 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Evaluation epoch.
+      real(wp), intent(out) :: record   ( * )  !! Data record.
 
       real(wp) :: dc       ( 2 )
       real(wp) :: dscale
@@ -15766,8 +16031,11 @@ contains
       end do
 
       return
-      end procedure spkr20
+      end subroutine spkr20
 
+      !> Read a single SPK data record from a segment of type 21
+      !> (Extended Difference Lines).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -15889,11 +16157,16 @@ contains
       !>        $Required_Reading section.
       !>
       !>-    SPICELIB Version 1.0.0, 16-JAN-2014 (NJB) (FTK) (WLT) (IMU)
-      module procedure spkr21
+      module subroutine spkr21 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstltd
       use pepper_inc_spk21
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Evaluation epoch.
+      real(wp), intent(out) :: record   ( * )  !! Data record.
 
       integer(ip), parameter :: bufsiz = 100
 
@@ -16039,8 +16312,11 @@ contains
       call dafgda ( ctx, handle, offr+1, offr+dflsiz, record(2) )
 
       return
-      end procedure spkr21
+      end subroutine spkr21
 
+      !> Compute the values of the Stumpff functions C_0 through C_3 at
+      !> a specified point.
+      !>
       !>## Detailed Input
       !>
       !>     X        is the argument to use in each of the Stumpff functions
@@ -16409,111 +16685,74 @@ contains
       !>        The file was modified to include values for other platforms.
       !>        Also, the file was formatted for use by the program that
       !>        creates the environment specific source files.
-      !>
-      !>     SPICELIB Functions
-      !>
-      !>     Local Parameters
-      !>
-      !>     The integers NPAIRS, LPAIR2, and LPAIR3 are used to declare
-      !>     space for Maclaurin series coefficients and for determining how
-      !>     many terms of these series to use in the computation of
-      !>     C_2 and C_3.
-      !>
-      !>     Here's what is supposed to be true.
-      !>
-      !>        1/(TRUNC*2)!  + 1.0D0 = 1.0D0
-      !>
-      !>     using this machine's double precision arithmetic.
-      !>
-      !>     We will map the input X to a value y between -1 and 1 and then
-      !>     construct the values of the functions at X from their values at y.
-      !>     Since we will only evaluate the series expansion for C_2 and C_3
-      !>     for values of y between -1 and 1, its easy to show that we don't
-      !>     need to consider terms in the series whose coefficients have
-      !>     magnitudes less than or equal 1/(2*TRUNC)! .
-      !>
-      !>     If the value of TRUNC is 10, then the series expansions for
-      !>     C_2(y) and C_3(y) are can be truncated as shown here:
-      !>
-      !>                                   2             7       8
-      !>              .    1      y       y             y       y
-      !>       C_3(y) =   --- -  ---  +  ---  +  ... - ---  +  ---
-      !>                   3!     5!      7!           17!     19!
-      !>
-      !>                 1        y         y            y           y
-      !>              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
-      !>                2*3      4*5       6*7          16*17       18*19
-      !>
-      !>              .    1      y       y             y       y
-      !>       C_2(y) =   --- -  ---  +  ---  +  ... + ---  -  ---
-      !>                   2!     4!      6!           16!     18!
-      !>
-      !>                 1        y         y            y           y
-      !>              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
-      !>                1*2      3*4       5*6          15*16       17*18
-      !>
-      !>     As is evident from the above, we are going to need the
-      !>     "reciprocal pairs"
-      !>
-      !>       1/(1*2),  1/(2*3),  1/(3*4), 1/(4*5), ...
-      !>
-      !>     The number of such fractions be computed directly from
-      !>     TRUNC. LPAIR3 and LPAIR2 indicate which of these pairs
-      !>     (counting 1/(1*2) as the first) will be the last one needed in
-      !>     the evaluation of C_2 and C_3.
-      !>
-      !>     Local variables
-      !>
-      !>     Saved variables
-      !>
-      !>     Initial values
-      !>
-      !>     We are going to need the numbers
-      !>
-      !>        1/(2*3), 1/(3*4), 1/(4*5), ...
-      !>
-      !>     but we don't want to compute them every time this routine is
-      !>     called.  So the first time this routine is called we compute
-      !>     them and put them in the array PAIRS for use on subsequent
-      !>     calls. (This could be done via parameters, but computing them
-      !>     at run time seems to have a better chance of being
-      !>     easily maintained.)
-      !>
-      !>     In addition we will need to compute the lower bound for which
-      !>     C_0,...,C_3 can be computed.  This lower bound is computed by
-      !>     noting that C_0 has the largest magnitude of all the Stumpff
-      !>     functions over the domain from -infinity to -1.  Moreover, in this
-      !>     range
-      !>
-      !>        C_0(X) = Cosh( SQRT(-X) )
-      !>
-      !>     Thus the range of X for which the Stumpff functions can be
-      !>     computed is bounded below by the value of X for which
-      !>
-      !>        Cosh ( SQRT(-X) ) = DPMAX
-      !>
-      !>     Which implies the lower bound for valid inputs is at
-      !>
-      !>        X = - ( DLOG ( 2.0 ) + DLOG( DPMAX ) ) ** 2
-      !>
-      !>          = - ( DLOG ( 2*N ) + DLOG ( DPMAX/N  ) ) ** 2
-      !>
-      !>     We point out the second formulation of the bound just in case
-      !>     your compiler can't handle the computation of DLOG ( DPMAX ).
-      !>     If this unfortunate situation should arise, complain to the
-      !>     company that produces your compiler and in the code below
-      !>     compute LBOUND using the second form above with N equal to
-      !>     some large power of 2 (say 2**20).
-      module procedure stmp03
+      module subroutine stmp03 ( ctx, x, c0, c1, c2, c3 )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! Argument to each Stumpff function C_0 to C_3.
+      real(wp), intent(out) :: c0  !! Value of C_0(X)
+      real(wp), intent(out) :: c1  !! Value of C_1(X)
+      real(wp), intent(out) :: c2  !! Value of C_2(X)
+      real(wp), intent(out) :: c3  !! Value of C_3(X)
 !     PEPPER: SPICELIB truncated the series at 10 terms for Intel Fortran
 !     on Windows (#if) and at 11 everywhere else; 11 is used everywhere.
       integer(ip), parameter :: trunc = 11
+!
+!     The integers NPAIRS, LPAIR2, and LPAIR3 are used to declare
+!     space for Maclaurin series coefficients and for determining how
+!     many terms of these series to use in the computation of
+!     C_2 and C_3.
+!
+!     Here's what is supposed to be true.
+!
+!        1/(TRUNC*2)!  + 1.0D0 = 1.0D0
+!
+!     using this machine's double precision arithmetic.
+!
+!     We will map the input X to a value y between -1 and 1 and then
+!     construct the values of the functions at X from their values at y.
+!     Since we will only evaluate the series expansion for C_2 and C_3
+!     for values of y between -1 and 1, its easy to show that we don't
+!     need to consider terms in the series whose coefficients have
+!     magnitudes less than or equal 1/(2*TRUNC)! .
+!
+!     If the value of TRUNC is 10, then the series expansions for
+!     C_2(y) and C_3(y) are can be truncated as shown here:
+!
+!                                   2             7       8
+!              .    1      y       y             y       y
+!       C_3(y) =   --- -  ---  +  ---  +  ... - ---  +  ---
+!                   3!     5!      7!           17!     19!
+!
+!                 1        y         y            y           y
+!              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
+!                2*3      4*5       6*7          16*17       18*19
+!
+!              .    1      y       y             y       y
+!       C_2(y) =   --- -  ---  +  ---  +  ... + ---  -  ---
+!                   2!     4!      6!           16!     18!
+!
+!                 1        y         y            y           y
+!              = ---( 1 - --- ( 1 - --- (...( 1- ----- ( 1 - ----- )...)
+!                1*2      3*4       5*6          15*16       17*18
+!
+!     As is evident from the above, we are going to need the
+!     "reciprocal pairs"
+!
+!       1/(1*2),  1/(2*3),  1/(3*4), 1/(4*5), ...
+!
+!     The number of such fractions be computed directly from
+!     TRUNC. LPAIR3 and LPAIR2 indicate which of these pairs
+!     (counting 1/(1*2) as the first) will be the last one needed in
+!     the evaluation of C_2 and C_3.
+!
       integer(ip), parameter :: npairs = 2*trunc - 2
       integer(ip), parameter :: lpair3 = npairs
       integer(ip), parameter :: lpair2 = npairs - 1
+!
+!     Local variables
+!
       real(wp) :: y
       real(wp) :: z
       integer(ip) :: i
@@ -16521,6 +16760,44 @@ contains
       associate ( first => ctx%stmp03_state%first, &
                   lbound => ctx%stmp03_state%lbound, &
                   pairs => ctx%stmp03_state%pairs )
+!
+!     We are going to need the numbers
+!
+!        1/(2*3), 1/(3*4), 1/(4*5), ...
+!
+!     but we don't want to compute them every time this routine is
+!     called.  So the first time this routine is called we compute
+!     them and put them in the array PAIRS for use on subsequent
+!     calls. (This could be done via parameters, but computing them
+!     at run time seems to have a better chance of being
+!     easily maintained.)
+!
+!     In addition we will need to compute the lower bound for which
+!     C_0,...,C_3 can be computed.  This lower bound is computed by
+!     noting that C_0 has the largest magnitude of all the Stumpff
+!     functions over the domain from -infinity to -1.  Moreover, in this
+!     range
+!
+!        C_0(X) = Cosh( SQRT(-X) )
+!
+!     Thus the range of X for which the Stumpff functions can be
+!     computed is bounded below by the value of X for which
+!
+!        Cosh ( SQRT(-X) ) = DPMAX
+!
+!     Which implies the lower bound for valid inputs is at
+!
+!        X = - ( DLOG ( 2.0 ) + DLOG( DPMAX ) ) ** 2
+!
+!          = - ( DLOG ( 2*N ) + DLOG ( DPMAX/N  ) ) ** 2
+!
+!     We point out the second formulation of the bound just in case
+!     your compiler can't handle the computation of DLOG ( DPMAX ).
+!     If this unfortunate situation should arise, complain to the
+!     company that produces your compiler and in the code below
+!     compute LBOUND using the second form above with N equal to
+!     some large power of 2 (say 2**20).
+!
       if ( first ) then
 
          first  = .false.
@@ -16697,17 +16974,18 @@ contains
 
       return
       end associate
-      end procedure stmp03
+      end subroutine stmp03
 
-      !>## Abstract
+      !> The function returns the NAIF integer ID code of the barycenter,
+      !> if any, associated with BODY.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines.  Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Return the barycenter code associated with a body belonging to
+      !> a planetary system.  For other bodies, simply return the
+      !> input ID code.
       !>
-      !>     Return the barycenter code associated with a body belonging to
-      !>     a planetary system.  For other bodies, simply return the
-      !>     input ID code.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines.  Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -16844,8 +17122,10 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 01-FEB-2004 (NJB)
-      module procedure zzbodbry
+      module integer(ip) function zzbodbry ( ctx, body )
       use pepper_kinds, only: ip
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! ID code of body.
       if (  ( body >= 100 ) .and. ( body <= 999 )  ) then
 !
 !        BODY is a "traditional" NAIF planet or natural satellite
@@ -16870,21 +17150,19 @@ contains
       end if
 
       return
-      end procedure zzbodbry
+      end function zzbodbry
 
-      !>## Abstract
+      !> This is the routine that unpacks a set integer numbers stored in
+      !> a single double precision number.
       !>
-      !>     SPICE Private routine intended solely for the support of SPICE
-      !>     routines. Users should not call this routine directly due
-      !>     to the volatile nature of this routine.
+      !> Its current specific use is to "uncompress" seven integer numbers
+      !> representing numbers of polynomial coefficients in a logical
+      !> type 4 CK record from a single DP number stored in a physical
+      !> type 4 CK record in a file.
       !>
-      !>     This is the routine that unpacks a set integer numbers stored in
-      !>     a single double precision number.
-      !>
-      !>     Its current specific use is to "uncompress" seven integer numbers
-      !>     representing numbers of polynomial coefficients in a logical
-      !>     type 4 CK record from a single DP number stored in a physical
-      !>     type 4 CK record in a file.
+      !> SPICE Private routine intended solely for the support of SPICE
+      !> routines. Users should not call this routine directly due
+      !> to the volatile nature of this routine.
       !>
       !>## Detailed Input
       !>
@@ -16949,9 +17227,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
-      module procedure zzck4d2i
+      module subroutine zzck4d2i ( ctx, dpcoef, nsets, parcod, i )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(inout) :: dpcoef  !! DP number containing packed integer numbers. (PEPPER: it is overwritten while unpacking)
+      integer(ip), intent(in) :: nsets  !! Number of integer components packed in DPCOEF.
+      real(wp), intent(in) :: parcod  !! Packing base.
+      integer(ip), intent(out) :: i      ( * )  !! Array of NSETS integer components.
 
 !
 !     Local variables.
@@ -16977,15 +17260,15 @@ contains
 !
       return
 
-      end procedure zzck4d2i
+      end subroutine zzck4d2i
 
-      !>## Abstract
+      !> This subroutine provides deep space common items used by both the
+      !> secular and periodics subroutines.
       !>
-      !>     This subroutine provides deep space common items used by both the
-      !>     secular and periodics subroutines.
+      !> See Detailed_input and Detailed_Output.
       !>
-      !>     This routine previously had the name DPPER, but the functions
-      !>     inside weren't well organized.
+      !> This routine previously had the name DPPER, but the functions
+      !> inside weren't well organized.
       !>
       !>## Detailed Input
       !>
@@ -17235,10 +17518,99 @@ contains
       !>-    SPICELIB Version 1.0.0, 11-NOV-2014 (EDW)
       !>
       !>        Based on routine DSCOM, 28-JUN-2005, Vallado 2006 [4].
-      module procedure zzdscm
+      module subroutine zzdscm ( ctx, epoch, eccp, argpp, tc, inclp, nodep, np, snodm, cnodm, sinim, cosim, sinomm, cosomm, day, e3, ee2, eccm, emsq, gam, peo, pgho, pho, pinco, plo, rtemsq, se2, se3, sgh2, sgh3, sgh4, sh2, sh3, si2, si3, sl2, sl3, sl4, s1, s2, s3, s4, s5, s6, s7, ss1, ss2, ss3, ss4, ss5, ss6, ss7, sz1, sz2, sz3, sz11, sz12, sz13, sz21, sz22, sz23, sz31, sz32, sz33, xgh2, xgh3, xgh4, xh2, xh3, xi2, xi3, xl2, xl3, xl4, xn, z1, z2, z3, z11, z12, z13, z21, z22, z23, z31, z32, z33, zmol, zmos )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: epoch  !! Epoch of TLE set as Julian day value.
+      real(wp), intent(inout) :: eccp
+      real(wp), intent(in) :: argpp  !! Argument of perigee
+      real(wp), intent(in) :: tc  !! Minutes past EPOCH, nominally zero.
+      real(wp), intent(in) :: inclp  !! Inclination
+      real(wp), intent(in) :: nodep  !! Right ascension of ascending node
+      real(wp), intent(in) :: np  !! Mean motion
+      real(wp), intent(out) :: snodm  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: cnodm  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: sinim  !! SIN of mean inclination.
+      real(wp), intent(out) :: cosim  !! COS of mean inclination.
+      real(wp), intent(out) :: sinomm  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: cosomm  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: day  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: e3  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: ee2  !! Internal SGD4 parameter.
+      real(wp), intent(inout) :: eccm
+      real(wp), intent(out) :: emsq  !! Eccentricity squared.
+      real(wp), intent(out) :: gam  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: rtemsq  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: se2  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: peo  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: pgho  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: pho  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: pinco  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: plo  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: se3  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: sgh2  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: sgh3  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: sgh4  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: sh2  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: sh3  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: si2  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: si3  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: sl2  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: sl3  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: sl4  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: s1  !! S coefficients
+      real(wp), intent(out) :: s2  !! ...
+      real(wp), intent(out) :: s3  !! ...
+      real(wp), intent(out) :: s4  !! ...
+      real(wp), intent(out) :: s5  !! ...
+      real(wp), intent(out) :: s6  !! ...
+      real(wp), intent(out) :: s7  !! ...
+      real(wp), intent(out) :: ss1  !! ...
+      real(wp), intent(out) :: ss2  !! ...
+      real(wp), intent(out) :: ss3  !! ...
+      real(wp), intent(out) :: ss4  !! ...
+      real(wp), intent(out) :: ss5  !! ...
+      real(wp), intent(out) :: ss6  !! ...
+      real(wp), intent(out) :: ss7  !! ...
+      real(wp), intent(out) :: sz1  !! ...
+      real(wp), intent(out) :: sz2  !! ...
+      real(wp), intent(out) :: sz3  !! ...
+      real(wp), intent(out) :: sz11  !! ...
+      real(wp), intent(out) :: sz12  !! ...
+      real(wp), intent(out) :: sz13  !! ...
+      real(wp), intent(out) :: sz21  !! ...
+      real(wp), intent(out) :: sz22  !! ...
+      real(wp), intent(out) :: sz23  !! ...
+      real(wp), intent(out) :: sz31  !! ...
+      real(wp), intent(out) :: sz32  !! ...
+      real(wp), intent(out) :: sz33  !! ...
+      real(wp), intent(out) :: xgh2  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: xgh3  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: xgh4  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: xh2  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: xh3  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: xi2  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: xi3  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: xl2  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: xl3  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: xl4  !! Internal SGD4 parameter.
+      real(wp), intent(inout) :: xn
+      real(wp), intent(out) :: z1  !! Z coefficients
+      real(wp), intent(out) :: z2  !! ...
+      real(wp), intent(out) :: z3  !! ...
+      real(wp), intent(out) :: z11  !! ...
+      real(wp), intent(out) :: z12  !! ...
+      real(wp), intent(out) :: z13  !! ...
+      real(wp), intent(out) :: z21  !! ...
+      real(wp), intent(out) :: z22  !! ...
+      real(wp), intent(out) :: z23  !! ...
+      real(wp), intent(out) :: z31  !! ...
+      real(wp), intent(out) :: z32  !! ...
+      real(wp), intent(out) :: z33  !! ...
+      real(wp), intent(out) :: zmol  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: zmos  !! Internal SGD4 parameter.
 
       real(wp) :: zes
       real(wp) :: a1
@@ -17288,10 +17660,6 @@ contains
       real(wp) :: zy
 
       integer(ip) :: lsflg
-
-!
-!     SPICELIB routines.
-!
 
 !
 !     Standard SPICE error handling.
@@ -17484,8 +17852,14 @@ contains
       xh3 =  -2.0_wp*s2*(z23-z21)
 
       return
-      end procedure zzdscm
+      end subroutine zzdscm
 
+      !> This Subroutine provides Deep Space contributions to Mean
+      !> Motion Dot due to geopotential resonance with half day and one
+      !> day orbits.
+      !>
+      !> See Detailed_input and Detailed_Output.
+      !>
       !>## Detailed Input
       !>
       !>    COSIM       COS of mean inclination.
@@ -17726,11 +18100,85 @@ contains
       !>-    SPICELIB Version 1.0.0, 03-NOV-2014 (EDW)
       !>
       !>        Based on routine DSINIT, 28-JUN-2005, Vallado 2006 [4].
-      module procedure zzdsin
+      module subroutine zzdsin ( ctx, geophs, cosim, emsq, argpo, s1, s2, s3, s4, s5, sinim, ss1, ss2, ss3, ss4, ss5, sz1, sz3, sz11, sz13, sz21, sz23, sz31, sz33, t, tc, gsto, mo, mdot, no, nodeo, nodedot, xpidot, z1, z3, z11, z13, z21, z23, z31, z33, ecco, eccsq, eccm, argpm, inclm, mm, xn, nodem, irez, atime, d2201, d2211, d3210, d3222, d4410, d4422, d5220, d5232, d5421, d5433, dedt, didt, dmdt, dndt, dnodt, domdt, del1, del2, del3, xfact, xlamo, xli, xni )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi, twopi
       use pepper_inc_zzsgp4
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(inout) :: argpm  !! Mean argument of perigee
+      real(wp), intent(in) :: argpo  !! Argument of Perigee
+      real(wp), intent(out) :: atime  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: cosim  !! COS of mean inclination.
+      real(wp), intent(out) :: d2201  !! D COEFFCIENTS
+      real(wp), intent(out) :: d2211  !! ...
+      real(wp), intent(out) :: d3210  !! ...
+      real(wp), intent(out) :: d3222  !! ...
+      real(wp), intent(out) :: d4410  !! ...
+      real(wp), intent(out) :: d4422  !! ...
+      real(wp), intent(out) :: d5220  !! ...
+      real(wp), intent(out) :: d5232  !! ...
+      real(wp), intent(out) :: d5421  !! ...
+      real(wp), intent(out) :: d5433  !! ...
+      real(wp), intent(out) :: dedt  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: del1  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: del2  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: del3  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: didt  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: dmdt  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: dndt  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: dnodt  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: domdt  !! Internal SGD4 parameter.
+      real(wp), intent(inout) :: eccm  !! Mean eccentricity
+      real(wp), intent(inout) :: ecco
+      real(wp), intent(inout) :: eccsq
+      real(wp), intent(inout) :: emsq  !! Eccentricity squared
+      real(wp), intent(in) :: geophs    ( 8 )
+      real(wp), intent(in) :: gsto  !! Greenwich sidereal time in radians
+      real(wp), intent(inout) :: inclm  !! Mean inclination
+      real(wp), intent(in) :: mdot  !! Mean anomaly rate
+      real(wp), intent(inout) :: mm  !! Mean anomaly
+      real(wp), intent(in) :: mo  !! Mean anomaly
+      real(wp), intent(in) :: no  !! Mean motion
+      real(wp), intent(in) :: nodedot  !! Right ascension of ascending node rate
+      real(wp), intent(inout) :: nodem  !! Mean right ascension of ascending node
+      real(wp), intent(in) :: nodeo  !! Right ascension of ascending node
+      real(wp), intent(in) :: s1  !! S coefficients
+      real(wp), intent(in) :: s2  !! ...
+      real(wp), intent(in) :: s3  !! ...
+      real(wp), intent(in) :: s4  !! ...
+      real(wp), intent(in) :: s5  !! ...
+      real(wp), intent(in) :: sinim  !! SIN of mean inclination.
+      real(wp), intent(in) :: ss1  !! ...
+      real(wp), intent(in) :: ss2  !! ...
+      real(wp), intent(in) :: ss3  !! ...
+      real(wp), intent(in) :: ss4  !! ...
+      real(wp), intent(in) :: ss5  !! ...
+      real(wp), intent(in) :: sz1  !! ...
+      real(wp), intent(in) :: sz11  !! ...
+      real(wp), intent(in) :: sz13  !! ...
+      real(wp), intent(in) :: sz21  !! ...
+      real(wp), intent(in) :: sz23  !! ...
+      real(wp), intent(in) :: sz3  !! ...
+      real(wp), intent(in) :: sz31  !! ...
+      real(wp), intent(in) :: sz33  !! ...
+      real(wp), intent(in) :: t  !! Time
+      real(wp), intent(in) :: tc
+      real(wp), intent(out) :: xfact  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: xlamo  !! Internal SGD4 parameter.
+      real(wp), intent(out) :: xli  !! Internal SGD4 parameter.
+      real(wp), intent(inout) :: xn  !! Mean motion
+      real(wp), intent(out) :: xni  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: xpidot
+      real(wp), intent(in) :: z1  !! Z coefficients
+      real(wp), intent(in) :: z11  !! ...
+      real(wp), intent(in) :: z13  !! ...
+      real(wp), intent(in) :: z21  !! ...
+      real(wp), intent(in) :: z23  !! ...
+      real(wp), intent(in) :: z3  !! ...
+      real(wp), intent(in) :: z31  !! ...
+      real(wp), intent(in) :: z33  !! ...
+      integer(ip), intent(out) :: irez  !! Resonance flags: 0-none, 1-one day, 2-half day
 
       real(wp) :: ainv2
       real(wp) :: aonv
@@ -17788,10 +18236,6 @@ contains
       real(wp) :: xno2
       real(wp) :: znl
       real(wp) :: zns
-
-!
-!     SPICELIB routines.
-!
 
 !
 !     Standard SPICE error handling.
@@ -18075,8 +18519,16 @@ contains
       end if
 
       return
-      end procedure zzdsin
+      end subroutine zzdsin
 
+      !> This subroutine provides deep space contributions to mean
+      !> elements for perturbing third body. These effects have been
+      !> averaged over one revolution of the sun and moon. For earth
+      !> resonance effects, the effects have been averaged over NO
+      !> revolutions of the satellite.
+      !>
+      !> See Detailed_input and Detailed_Output.
+      !>
       !>## Detailed Input
       !>
       !>     D2201      D coefficients
@@ -18242,10 +18694,48 @@ contains
       !>-    SPICELIB Version 1.0.0, OCT-14-2014 (EDW)
       !>
       !>        Based on routine DPSPACE, 28-JUN-2005, Vallado 2006 [4].
-      module procedure zzdspc
+      module subroutine zzdspc ( ctx, irez, d2201, d2211, d3210, d3222, d4410, d4422, d5220, d5232, d5421, d5433, dedt, del1, del2, del3, didt, dmdt, dnodt, domdt, argpo, argpdot, t, tc, gsto, xfact, xlamo, no, atime, eccm, argpm, inclm, xli, mm, xni, nodem, dndt, xn )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: irez  !! Flag for resonance: 0-none, 1-one day, 2-half day .
+      real(wp), intent(in) :: d2201  !! D coefficients
+      real(wp), intent(in) :: d2211  !! ...
+      real(wp), intent(in) :: d3210  !! ...
+      real(wp), intent(in) :: d3222  !! ...
+      real(wp), intent(in) :: d4410  !! ...
+      real(wp), intent(in) :: d4422  !! ...
+      real(wp), intent(in) :: d5220  !! ...
+      real(wp), intent(in) :: d5232  !! ...
+      real(wp), intent(in) :: d5421  !! ...
+      real(wp), intent(in) :: d5433  !! ...
+      real(wp), intent(in) :: dedt  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: del1  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: del2  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: del3  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: didt  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: dmdt  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: dnodt  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: domdt  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: argpo  !! Argument of perigee
+      real(wp), intent(in) :: argpdot  !! Argument of perigee dot (rate)
+      real(wp), intent(in) :: t  !! Time of evaluation.
+      real(wp), intent(in) :: tc  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: gsto  !! Greenwich Sidereal Time
+      real(wp), intent(in) :: xfact  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: xlamo  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: no  !! Mean motion.
+      real(wp), intent(inout) :: atime  !! Internal SGD4 parameter.
+      real(wp), intent(inout) :: eccm
+      real(wp), intent(inout) :: argpm  !! Argument of perigee
+      real(wp), intent(inout) :: inclm  !! Inclination.
+      real(wp), intent(inout) :: xli  !! Internal SGD4 parameter.
+      real(wp), intent(inout) :: mm  !! Mean anomaly.
+      real(wp), intent(inout) :: xni  !! Mean motion.
+      real(wp), intent(inout) :: nodem  !! Right ascension of ascending node ascending node.
+      real(wp), intent(out) :: dndt  !! Value XN-NO.
+      real(wp), intent(inout) :: xn
 
       real(wp) :: delt
       real(wp) :: fasx2
@@ -18272,10 +18762,6 @@ contains
 
       integer(ip) :: iret
       integer(ip) :: iretn
-
-!
-!     SPICELIB routines.
-!
 
 !
 !     Standard SPICE error handling.
@@ -18464,8 +18950,15 @@ contains
       end if
 
       return
-      end procedure zzdspc
+      end subroutine zzdspc
 
+      !> Provide deep space long period periodic contributions to the mean
+      !> elements. By design, these periodics are zero at epoch. This used
+      !> to be dscom which included initialization, but it's really a
+      !> recurring function.
+      !>
+      !> See Detailed_input and Detailed_Output.
+      !>
       !>## Detailed Input
       !>
       !>     OPMODE     Flag indicating which technique
@@ -18631,11 +19124,52 @@ contains
       !>-    SPICELIB Version 1.0.0, SEP-15-2014 (EDW)
       !>
       !>        Based on routine DDPER, 28-JUN-2005, Vallado 2006 [4].
-      module procedure zzdspr
+      module subroutine zzdspr ( ctx, opmode, e3, ee2, peo, pgho, pho, pinco, plo, se2, se3, sgh2, sgh3, sgh4, sh2, sh3, si2, si3, sl2, sl3, sl4, t, xgh2, xgh3, xgh4, xh2, xh3, xi2, xi3, xl2, xl3, xl4, zmol, zmos, inclo, doinit, eccp, inclp, nodep, argpp, mp )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi, twopi
       use pepper_inc_zzsgp4
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: opmode  !! Flag indicating which technique to use to calculate sidereal time.
+      real(wp), intent(in) :: e3  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: ee2  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: peo  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: pgho  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: pho  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: pinco  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: plo  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: se2  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: se3  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: sgh2  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: sgh3  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: sgh4  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: sh2  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: sh3  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: si2  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: si3  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: sl2  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: sl3  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: sl4  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: t  !! Time for state evaluation.
+      real(wp), intent(in) :: xgh2  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: xgh3  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: xgh4  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: xh2  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: xh3  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: xi2  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: xi3  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: xl2  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: xl3  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: xl4  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: zmol  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: zmos  !! Internal SGD4 parameter.
+      real(wp), intent(in) :: inclo  !! Unused argument. Maintained in call for historical reference.
+      logical, intent(in) :: doinit  !! Flag indicating initialization state. True to initialize, false otherwise.
+      real(wp), intent(inout) :: eccp  !! Eccentricity.
+      real(wp), intent(inout) :: inclp  !! Inclination.
+      real(wp), intent(inout) :: nodep  !! Right ascension of  ascending node. ascending node.
+      real(wp), intent(inout) :: argpp  !! Argument of periapsis.
+      real(wp), intent(inout) :: mp  !! Mean anomaly.
 
       real(wp) :: alfdp
       real(wp) :: betdp
@@ -18672,10 +19206,6 @@ contains
       real(wp) :: zm
       real(wp) :: znl
       real(wp) :: zns
-
-!
-!     SPICELIB routines.
-!
 
 !
 !     Standard SPICE error handling.
@@ -18825,8 +19355,14 @@ contains
       end if
 
       return
-      end procedure zzdspr
+      end subroutine zzdspr
 
+      !> This subroutine initializes the SGP4 propagator. All the
+      !> initialization is consolidated here instead of having multiple
+      !> loops inside other routines.
+      !>
+      !> See Detailed_input and Detailed_Output.
+      !>
       !>## Detailed Input
       !>
       !>     GEOPYS         Gephysical constants array.
@@ -18946,11 +19482,31 @@ contains
       !>-    SPICELIB Version 1.0.0, OCT-09-2014 (EDW)
       !>
       !>        Based on routine INITL, 28-JUN-2005, Vallado 2006 [4].
-      module procedure zzinil
+      module subroutine zzinil ( ctx, geophs, opmode, ecco, epoch, inclo, no, ainv, ao, con41, con42, cosio, cosio2, eccsq, omeosq, posq, rp, rteosq, sinio, gsto )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_inc_zzsgp4
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: geophs    ( 8 )
+      integer(ip), intent(in) :: opmode  !! Flag indicating which technique to use to calculate sidereal time.
+      real(wp), intent(in) :: ecco  !! Eccentricity.
+      real(wp), intent(in) :: epoch  !! TLE epoch time in days from 1950-00-00 00:00:00.000000 TDB, i.e. 1949-12-31 00:00:00.000000 TDB.
+      real(wp), intent(in) :: inclo  !! Inclination
+      real(wp), intent(inout) :: no  !! Mean motion.
+      real(wp), intent(out) :: ainv  !! 1.0/A0
+      real(wp), intent(out) :: ao  !! Semi major axis.
+      real(wp), intent(out) :: con41  !! Value -CON42-COSIO2-COSIO2.
+      real(wp), intent(out) :: con42  !! 1.0 - 5.0*cos(inclination).
+      real(wp), intent(out) :: cosio  !! Cosine of inclination.
+      real(wp), intent(out) :: cosio2  !! COSIO squared.
+      real(wp), intent(out) :: eccsq  !! Eccentricity squared.
+      real(wp), intent(out) :: omeosq  !! 1.0 - ECCO * ECCO.
+      real(wp), intent(out) :: posq  !! Semi-parameter squared.
+      real(wp), intent(out) :: rp  !! Radius of perigee.
+      real(wp), intent(out) :: rteosq  !! Square root of (1.0 - ECCO*ECCO).
+      real(wp), intent(out) :: sinio  !! Sine of inclination.
+      real(wp), intent(out) :: gsto  !! GST at time of observation.
 
       real(wp) :: adel
       real(wp) :: ak
@@ -18971,10 +19527,6 @@ contains
       real(wp) :: xke
 
       integer(ip) :: ids70
-
-!
-!     SPICELIB routines.
-!
 
 !
 !     Standard SPICE error handling.
@@ -19084,8 +19636,10 @@ contains
       end if
 
       return
-      end procedure zzinil
+      end subroutine zzinil
 
+      !> Evaluate a single data record from a type 6 CK segment.
+      !>
       !>## Detailed Input
       !>
       !>     NEEDAV   is .TRUE. if angular velocity is requested.
@@ -19350,11 +19904,17 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (BVS)
-      module procedure cke06
+      module subroutine cke06 ( ctx, needav, record, cmat, av, clkout )
       use pepper_kinds, only: wp
       use pepper_inc_ck06
       use pepper_inc_ckparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(in) :: needav  !! .TRUE. if angular velocity is requested.
+      real(wp), intent(inout) :: record   ( * )  !! Data type 6 record.
+      real(wp), intent(out) :: cmat     ( 3, 3 )  !! C-matrix.
+      real(wp), intent(out) :: av       ( 3 )  !! Angular velocity vector.
+      real(wp), intent(out) :: clkout  !! SCLK associated with C-matrix.
 
 !
 !     Standard SPICE error handling.
@@ -19369,8 +19929,12 @@ contains
       call cke05 ( ctx, needav, record, cmat, av, clkout )
 
       return
-      end procedure cke06
+      end subroutine cke06
 
+      !> Return (depending upon the user's request) the ID code of either
+      !> the spacecraft or spacecraft clock associated with a C-Kernel ID
+      !> code.
+      !>
       !>## Detailed Input
       !>
       !>     CKID     is the ID code for some object whose attitude
@@ -19478,88 +20042,90 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM CKMETA_EX1
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM CKMETA_EX1
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     Local parameters.
-      !>        C
-      !>        C     -- The code for CASSINI spacecraft reference frame is
-      !>        C        -82000.
-      !>        C
-      !>        C     -- The reference frame we want is J2000.
-      !>        C
-      !>              CHARACTER*(*)         REF
-      !>              PARAMETER           ( REF = 'J2000' )
+      !>C
+      !>C     Local parameters.
+      !>C
+      !>C     -- The code for CASSINI spacecraft reference frame is
+      !>C        -82000.
+      !>C
+      !>C     -- The reference frame we want is J2000.
+      !>C
+      !>      CHARACTER*(*)         REF
+      !>      PARAMETER           ( REF = 'J2000' )
       !>
-      !>              INTEGER               CKID
-      !>              PARAMETER           ( CKID = -82000  )
+      !>      INTEGER               CKID
+      !>      PARAMETER           ( CKID = -82000  )
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      AV     ( 3 )
-      !>              DOUBLE PRECISION      CLKOUT
-      !>              DOUBLE PRECISION      CMAT   ( 3, 3 )
-      !>              DOUBLE PRECISION      ET
-      !>              DOUBLE PRECISION      ETOUT
-      !>              DOUBLE PRECISION      SECTOL
-      !>              DOUBLE PRECISION      TICKS
-      !>              DOUBLE PRECISION      TICK2
-      !>              DOUBLE PRECISION      TOL
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      AV     ( 3 )
+      !>      DOUBLE PRECISION      CLKOUT
+      !>      DOUBLE PRECISION      CMAT   ( 3, 3 )
+      !>      DOUBLE PRECISION      ET
+      !>      DOUBLE PRECISION      ETOUT
+      !>      DOUBLE PRECISION      SECTOL
+      !>      DOUBLE PRECISION      TICKS
+      !>      DOUBLE PRECISION      TICK2
+      !>      DOUBLE PRECISION      TOL
       !>
-      !>              INTEGER               IDCODE
+      !>      INTEGER               IDCODE
       !>
-      !>              LOGICAL               FOUND
+      !>      LOGICAL               FOUND
       !>
-      !>        C
-      !>        C     Initial values.
-      !>        C
-      !>              DATA                  ET      / 141162208.034340D0 /
-      !>              DATA                  SECTOL  / 0.5D0 /
+      !>C
+      !>C     Initial values.
+      !>C
+      !>      DATA                  ET      / 141162208.034340D0 /
+      !>      DATA                  SECTOL  / 0.5D0 /
       !>
-      !>        C
-      !>        C     First load the CK, LSK and SCLK files.
-      !>        C
-      !>              CALL FURNSH ( 'ckmeta_ex1.tm' )
+      !>C
+      !>C     First load the CK, LSK and SCLK files.
+      !>C
+      !>      CALL FURNSH ( 'ckmeta_ex1.tm' )
       !>
-      !>        C
-      !>        C     Get the SCLK identifier of the spacecraft clock required
-      !>        C     to convert from ET to TICKS.
-      !>        C
-      !>              CALL CKMETA ( CKID, 'SCLK', IDCODE )
+      !>C
+      !>C     Get the SCLK identifier of the spacecraft clock required
+      !>C     to convert from ET to TICKS.
+      !>C
+      !>      CALL CKMETA ( CKID, 'SCLK', IDCODE )
       !>
-      !>        C
-      !>        C     Convert ET and ET+SECTOL to spacecraft clock ticks.
-      !>        C
-      !>              CALL SCE2C  ( IDCODE, ET,        TICKS  )
-      !>              CALL SCE2C  ( IDCODE, ET+SECTOL, TICK2  )
+      !>C
+      !>C     Convert ET and ET+SECTOL to spacecraft clock ticks.
+      !>C
+      !>      CALL SCE2C  ( IDCODE, ET,        TICKS  )
+      !>      CALL SCE2C  ( IDCODE, ET+SECTOL, TICK2  )
       !>
-      !>        C
-      !>        C     Compute the tolerance in spacecraft clock ticks.
-      !>        C
-      !>              TOL = TICK2 - TICKS
+      !>C
+      !>C     Compute the tolerance in spacecraft clock ticks.
+      !>C
+      !>      TOL = TICK2 - TICKS
       !>
-      !>        C
-      !>        C     Look the attitude up.
-      !>        C
-      !>              CALL CKGPAV ( CKID, TICKS, TOL,    REF,
-      !>             .              CMAT, AV,    CLKOUT, FOUND )
+      !>C
+      !>C     Look the attitude up.
+      !>C
+      !>      CALL CKGPAV ( CKID, TICKS, TOL,    REF,
+      !>     .              CMAT, AV,    CLKOUT, FOUND )
       !>
-      !>              WRITE(*,'(A,F20.6)')    'Input ET:            ', ET
+      !>      WRITE(*,'(A,F20.6)')    'Input ET:            ', ET
       !>
-      !>              IF ( FOUND ) THEN
+      !>      IF ( FOUND ) THEN
       !>
-      !>                 CALL SCT2E ( IDCODE, CLKOUT, ETOUT )
-      !>                 WRITE(*,'(A,F20.6)') 'Attitude found at ET:', ETOUT
+      !>         CALL SCT2E ( IDCODE, CLKOUT, ETOUT )
+      !>         WRITE(*,'(A,F20.6)') 'Attitude found at ET:', ETOUT
       !>
-      !>              ELSE
+      !>      ELSE
       !>
-      !>                 WRITE(*,'(A)') 'No attitude found at ET.'
+      !>         WRITE(*,'(A)') 'No attitude found at ET.'
       !>
-      !>              END IF
+      !>      END IF
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -19622,12 +20188,16 @@ contains
       !>        SCE2C. Occurrences of "id" replaced by "ID."
       !>
       !>-    SPICELIB Version 1.0.0, 04-OCT-1994 (WLT)
-      module procedure ckmeta
+      module subroutine ckmeta ( ctx, ckid, meta, idcode )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bschoi, orderi
       use pepper_strings, only: intstr, ljucrs, prefix, suffix
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ckid  !! The ID code for some C kernel object.
+      character(*), intent(in) :: meta  !! The kind of meta data requested 'SPK' or 'SCLK'
+      integer(ip), intent(out) :: idcode  !! The requested SCLK or spacecraft ID code.
       integer(ip), parameter :: nck = 30
       integer(ip), parameter :: sclk = 1
       integer(ip), parameter :: spk = sclk   + 1
@@ -19867,8 +20437,12 @@ contains
 
       return
       end associate
-      end procedure ckmeta
+      end subroutine ckmeta
 
+      !> Return the number of pointing records in a CK type 04 segment.
+      !> The segment is identified by a CK file handle and segment
+      !> descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -20036,10 +20610,14 @@ contains
       !>        Minor header edits.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
-      module procedure cknr04
+      module subroutine cknr04 ( ctx, handle, descr, nrec )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ckparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 4 segment.
+      integer(ip), intent(out) :: nrec  !! The number of pointing records in the segment.
 
 
 
@@ -20079,8 +20657,11 @@ contains
 
       return
 
-      end procedure cknr04
+      end subroutine cknr04
 
+      !> Evaluate a single PCK data record from a segment of type 2
+      !> (Chebyshev Polynomials, position only).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is an epoch, at which the Euler angles are to
@@ -20196,10 +20777,14 @@ contains
       !>         Added error handling.
       !>
       !>-    SPICELIB Version 1.0.0, 30-SEP-1994 (KSZ)
-      module procedure pcke02
+      module subroutine pcke02 ( ctx, et, record, eulang )
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch.
+      real(wp), intent(in) :: record   ( * )  !! Data record.
+      real(wp), intent(out) :: eulang   ( 6 )  !! Euler angles and their derivatives.
 
 !
 !     Standard SPICE error handling.
@@ -20219,8 +20804,11 @@ contains
       eulang(3) = mod ( eulang(3), twopi )
 
       return
-      end procedure pcke02
+      end subroutine pcke02
 
+      !> Evaluate a single PCK data record from a segment of type 20
+      !> (Chebyshev Polynomials, rotation derivative only).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is an epoch at which the Euler angles state is to be
@@ -20415,10 +21003,14 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 17-JAN-2014 (NJB) (KSZ)
-      module procedure pcke20
+      module subroutine pcke20 ( ctx, et, record, eulang )
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Evaluation epoch.
+      real(wp), intent(in) :: record   ( * )  !! Data record.
+      real(wp), intent(out) :: eulang   ( 6 )  !! Euler angles and their derivatives.
 
 !
 !     Standard SPICE error handling.
@@ -20437,8 +21029,12 @@ contains
       eulang(3) = mod ( eulang(3), twopi )
 
       return
-      end procedure pcke20
+      end subroutine pcke20
 
+      !> Compute the state of a massless body at time t_0 + DT by applying
+      !> the two-body force model to a given central mass and a given body
+      !> state at time t_0.
+      !>
       !>## Detailed Input
       !>
       !>     GM       is the gravitational constant G times the mass M of the
@@ -20552,62 +21148,64 @@ contains
       !>
       !>        Example code begins here.
       !>
-      !>              PROGRAM PROP2B_EX2
-      !>              IMPLICIT NONE
+      !>```fortran
+      !>      PROGRAM PROP2B_EX2
+      !>      IMPLICIT NONE
       !>
-      !>        C
-      !>        C     SPICELIB functions
-      !>        C
-      !>              DOUBLE PRECISION      PI
+      !>C
+      !>C     SPICELIB functions
+      !>C
+      !>      DOUBLE PRECISION      PI
       !>
-      !>        C
-      !>        C     Local variables.
-      !>        C
-      !>              DOUBLE PRECISION      MU
-      !>              DOUBLE PRECISION      PVINIT ( 6 )
-      !>              DOUBLE PRECISION      R
-      !>              DOUBLE PRECISION      SPEED
-      !>              DOUBLE PRECISION      STATE  ( 6 )
-      !>              DOUBLE PRECISION      T
+      !>C
+      !>C     Local variables.
+      !>C
+      !>      DOUBLE PRECISION      MU
+      !>      DOUBLE PRECISION      PVINIT ( 6 )
+      !>      DOUBLE PRECISION      R
+      !>      DOUBLE PRECISION      SPEED
+      !>      DOUBLE PRECISION      STATE  ( 6 )
+      !>      DOUBLE PRECISION      T
       !>
-      !>        C
-      !>        C     Initial values.
-      !>        C
-      !>              MU    =  3.9860043543609598D+05
-      !>              R     =  1.0D+08
-      !>              SPEED =  SQRT( MU / R )
-      !>              T     =  PI( )*R/SPEED
+      !>C
+      !>C     Initial values.
+      !>C
+      !>      MU    =  3.9860043543609598D+05
+      !>      R     =  1.0D+08
+      !>      SPEED =  SQRT( MU / R )
+      !>      T     =  PI( )*R/SPEED
       !>
-      !>              PVINIT(1) =  0.0D0
-      !>              PVINIT(2) =  R/SQRT(2.0D0)
-      !>              PVINIT(3) =  R/SQRT(2.0D0)
-      !>              PVINIT(4) =  0.0D0
-      !>              PVINIT(5) = -SPEED/SQRT(2.0D0)
-      !>              PVINIT(6) =  SPEED/SQRT(2.0D0)
+      !>      PVINIT(1) =  0.0D0
+      !>      PVINIT(2) =  R/SQRT(2.0D0)
+      !>      PVINIT(3) =  R/SQRT(2.0D0)
+      !>      PVINIT(4) =  0.0D0
+      !>      PVINIT(5) = -SPEED/SQRT(2.0D0)
+      !>      PVINIT(6) =  SPEED/SQRT(2.0D0)
       !>
-      !>        C
-      !>        C     Calculate the state of the body at 0.5 period
-      !>        C     after the epoch.
-      !>        C
-      !>              CALL PROP2B ( MU, PVINIT, T, STATE )
+      !>C
+      !>C     Calculate the state of the body at 0.5 period
+      !>C     after the epoch.
+      !>C
+      !>      CALL PROP2B ( MU, PVINIT, T, STATE )
       !>
-      !>        C
-      !>        C     The `state' vector should equal -pvinit
-      !>        C
-      !>              WRITE(*,*) 'State at t0:'
-      !>              WRITE(*,'(A,3F17.5)') '   R   (km):',
-      !>             .                 PVINIT(1), PVINIT(2), PVINIT(3)
-      !>              WRITE(*,'(A,3F17.5)') '   V (km/s):',
-      !>             .                 PVINIT(4), PVINIT(5), PVINIT(6)
+      !>C
+      !>C     The `state' vector should equal -pvinit
+      !>C
+      !>      WRITE(*,*) 'State at t0:'
+      !>      WRITE(*,'(A,3F17.5)') '   R   (km):',
+      !>     .                 PVINIT(1), PVINIT(2), PVINIT(3)
+      !>      WRITE(*,'(A,3F17.5)') '   V (km/s):',
+      !>     .                 PVINIT(4), PVINIT(5), PVINIT(6)
       !>
-      !>              WRITE(*,*) ' '
-      !>              WRITE(*,*) 'State at tau/2:'
-      !>              WRITE(*,'(A,3F17.5)') '   R   (km):',
-      !>             .                    STATE(1), STATE(2), STATE(3)
-      !>              WRITE(*,'(A,3F17.5)') '   V (km/s):',
-      !>             .                    STATE(4), STATE(5), STATE(6)
+      !>      WRITE(*,*) ' '
+      !>      WRITE(*,*) 'State at tau/2:'
+      !>      WRITE(*,'(A,3F17.5)') '   R   (km):',
+      !>     .                    STATE(1), STATE(2), STATE(3)
+      !>      WRITE(*,'(A,3F17.5)') '   V (km/s):',
+      !>     .                    STATE(4), STATE(5), STATE(6)
       !>
-      !>              END
+      !>      END
+      !>```
       !>
       !>        When this program was executed on a Mac/Intel/gfortran/64-bit
       !>        platform, the output was:
@@ -20665,11 +21263,16 @@ contains
       !>        of the bisection loop.
       !>
       !>-    SPICELIB Version 1.0.0, 10-MAR-1992 (WLT)
-      module procedure prop2b
+      module subroutine prop2b ( ctx, gm, pvinit, dt, pvprop )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_math, only: vcrss, vdot, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: gm  !! Gravity of the central mass.
+      real(wp), intent(in) :: pvinit ( 6 )  !! Initial state from which to propagate a state.
+      real(wp), intent(in) :: dt  !! Time offset from initial state to propagate to.
+      real(wp), intent(out) :: pvprop ( 6 )  !! The propagated state.
       integer(ip), parameter :: bufsiz = 3
       integer(ip), parameter :: maxbit = 64
       real(wp) :: pos    ( 3 )
@@ -21499,8 +22102,12 @@ contains
 
       return
       end associate
-      end procedure prop2b
+      end subroutine prop2b
 
+      !> Fetch from the constants partition of a generic segment the
+      !> double precision numbers from FIRST to LAST. The segment is
+      !> identified by a DAF file handle and segment descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF opened for reading that
@@ -21595,13 +22202,16 @@ contains
       !>        Replaced DAFRDA call with DAFGDA.
       !>
       !>-    SPICELIB Version 1.0.0, 11-APR-1995 (KRG) (WLT)
-      module procedure sgfcon
+      module subroutine sgfcon ( ctx, handle, descr, first, last, values )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
-
-!     Include the mnemonic values for the generic segment declarations.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF open for reading.
+      real(wp), intent(in) :: descr  ( * )  !! Descriptor for a generic segment in the DAF.
+      integer(ip), intent(in) :: first  !! The index of the first constant value to fetch.
+      integer(ip), intent(in) :: last  !! The index of the last constant value to fetch.
+      real(wp), intent(out) :: values ( * )  !! The constant values that were requested.
 
       integer(ip) :: b
       integer(ip) :: base
@@ -21662,8 +22272,12 @@ contains
 
       return
 
-      end procedure sgfcon
+      end subroutine sgfcon
 
+      !> Fetch the data packets indexed from FIRST to LAST from the
+      !> packet partition of a generic segment. The segment is
+      !> identified by a DAF file handle and segment descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF opened for reading that
@@ -21803,13 +22417,17 @@ contains
       !>        array. The bug in SGSEQW has also been fixed.
       !>
       !>-    SPICELIB Version 1.0.0, 06-JAN-1994 (KRG) (WLT)
-      module procedure sgfpkt
+      module subroutine sgfpkt ( ctx, handle, descr, first, last, values, ends )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
-
-!     Include the mnemonic values.
-!
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The file handle attached to an open DAF.
+      real(wp), intent(in) :: descr   ( * )  !! The descriptor associated with a generic segment.
+      integer(ip), intent(in) :: first  !! The index of the first data packet to fetch.
+      integer(ip), intent(in) :: last  !! The index of the last data packet to fetch.
+      real(wp), intent(out) :: values  ( * )  !! The data packets that have been fetched.
+      integer(ip), intent(out) :: ends    ( * )  !! An array of pointers to the ends of the packets.
 
       real(wp) :: dtemp(2)
 
@@ -22002,8 +22620,12 @@ contains
 
       return
 
-      end procedure sgfpkt
+      end subroutine sgfpkt
 
+      !> Find the reference value associated with the value X and its
+      !> index in a generic segment. The segment is identified by a DAF
+      !> file handle and segment descriptor.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of a DAF open for reading
@@ -22126,17 +22748,20 @@ contains
       !>                 MYVALU = BUFFER(BFINDX)
       !>
       !>-    SPICELIB Version 1.0.0, 28-MAR-1994 (KRG) (WLT)
-      module procedure sgfrvi
+      module subroutine sgfrvi ( ctx, handle, descr, x, value, indx, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       use pepper_arrays, only: lstled
       use pepper_inc_sgparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of a DAF open for reading.
+      real(wp), intent(in) :: descr ( * )  !! The descriptor for a DAF generic segment.
+      real(wp), intent(in) :: x  !! The key value used to find a reference and index.
+      real(wp), intent(out) :: value  !! The reference value associated with X.
+      integer(ip), intent(out) :: indx  !! The index of VALUE within the reference values.
+      logical, intent(out) :: found  !! A flag indicating whether values for X were found.
       real(wp) :: myvalu_1(1)  !! one-element copy of myvalu (array argument)
-
-!     Include the mnemonic values for the generic segment declarations.
-!
-
 
       real(wp) :: buffer ( bufsiz )
       real(wp) :: dptemp
@@ -22162,7 +22787,6 @@ contains
       logical :: done
       logical :: isdirv
       logical :: myfnd
-!     Initial Values
 !
 !     Constants (SPICELIB computed them on the first call).
 !
@@ -22845,8 +23469,10 @@ contains
 
       return
 
-      end procedure sgfrvi
+      end subroutine sgfrvi
 
+      !> Read a single data record from a type 12 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the open SPK file which contains
@@ -22963,9 +23589,14 @@ contains
       !>        $Literature_References to $Required_Reading section.
       !>
       !>-    SPICELIB Version 1.0.0, 25-FEB-2000 (NJB)
-      module procedure spkr12
+      module subroutine spkr12 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of the open SPK file.
+      real(wp), intent(in) :: descr    ( * )  !! Descriptor of the segment with the desired record.
+      real(wp), intent(in) :: et  !! Epoch used to identify the desired record.
+      real(wp), intent(out) :: record   ( * )  !! The desired type 12 SPK record.
 
 
 !
@@ -22979,8 +23610,10 @@ contains
       call spkr08 ( ctx, handle, descr, et, record )
 
       return
-      end procedure spkr12
+      end subroutine spkr12
 
+      !> Read a single data record from a type 13 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the open SPK file which contains
@@ -23103,9 +23736,14 @@ contains
       !>        $Literature_References to $Required_Reading section.
       !>
       !>-    SPICELIB Version 1.0.0, 25-FEB-2000 (NJB)
-      module procedure spkr13
+      module subroutine spkr13 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of the open SPK file.
+      real(wp), intent(in) :: descr    ( * )  !! Descriptor of the segment with the desired record.
+      real(wp), intent(in) :: et  !! Epoch used to identify the desired record.
+      real(wp), intent(out) :: record   ( * )  !! The desired type 13 SPK record.
 
 
 !
@@ -23119,8 +23757,10 @@ contains
       call spkr09 ( ctx, handle, descr, et, record )
 
       return
-      end procedure spkr13
+      end subroutine spkr13
 
+      !> Read a single data record from a type 4 CK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the integer handle of the CK file containing the
@@ -23428,10 +24068,18 @@ contains
       !>        to FURNSH.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
-      module procedure ckr04
+      module subroutine ckr04 ( ctx, handle, descr, sclkdp, tol, needav, record, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ckparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr  ( * )  !! Segment descriptor.
+      real(wp), intent(in) :: sclkdp  !! Pointing request time.
+      real(wp), intent(in) :: tol  !! Time tolerance.
+      logical, intent(in) :: needav  !! Angular velocity request flag.
+      real(wp), intent(out) :: record ( * )  !! Pointing data record.
+      logical, intent(out) :: found  !! .TRUE. when a record covering SCLKDP is found.
       integer(ip) :: ends_1(1)  !! one-element copy of ends (array argument)
 
       real(wp) :: value
@@ -23746,8 +24394,12 @@ contains
 
       return
 
-      end procedure ckr04
+      end subroutine ckr04
 
+      !> Evaluate a single PCK data record from a segment of type 03
+      !> (Variable width Chebyshev Polynomials for RA, DEC, and W) to
+      !> obtain a state transformation matrix.
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, at which a state transformation
@@ -23873,11 +24525,15 @@ contains
       !>        previous misinterpretation.
       !>
       !>-    SPICELIB Version 1.0.0, 14-MAR-1995 (KRG)
-      module procedure pcke03
+      module subroutine pcke03 ( ctx, et, record, rotmat )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, rpd
       use pepper_math, only: chbval, vcrss
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Target epoch state transformation.
+      real(wp), intent(in) :: record   ( *    )  !! Data record valid for epoch ET.
+      real(wp), intent(out) :: rotmat   ( 6, 6 )  !! State transformation matrix at epoch ET.
 
       real(wp) :: eulang ( 6    )
       real(wp) :: mav    ( 3    )
@@ -24044,8 +24700,10 @@ contains
       end do
 
       return
-      end procedure pcke03
+      end subroutine pcke03
 
+      !> Read a single PCK data record from a segment of type 03.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the file handle for a type 03 PCK segment.
@@ -24150,18 +24808,15 @@ contains
       !>        Minor edits to $Procedure; clean trailing whitespace.
       !>
       !>-    SPICELIB Version 1.0.0, 20-SEP-1995 (KRG)
-      module procedure pckr03
+      module subroutine pckr03 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle for a PCK file.
+      real(wp), intent(in) :: descr    ( 5 )  !! Descriptor for a type 03 PCK segment.
+      real(wp), intent(in) :: et  !! Target epoch for orientation information.
+      real(wp), intent(out) :: record   ( * )  !! Data record associated with epoch ET.
       integer(ip) :: ends_1(1)  !! one-element copy of ends (array argument)
-
-!     The number of constant values stored with a type 03 segment
-!     segment.
-!
-!
-!     The beginning location in the output record for the non-constant
-!     segment data.
-!
 
       real(wp) :: value
 
@@ -24211,8 +24866,11 @@ contains
 
       return
 
-      end procedure pckr03
+      end subroutine pckr03
 
+      !> Evaluate a single SPK data record from a segment of type 5
+      !> (two body propagation between discrete state vectors).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, specified as ephemeris seconds past
@@ -24372,10 +25030,14 @@ contains
       !>        compilers that have a PI intrinsic function.
       !>
       !>-    SPICELIB Version 1.0.0, 01-APR-1992 (JML) (WLT) (IMU)
-      module procedure spke05
+      module subroutine spke05 ( ctx, et, record, state )
       use pepper_kinds, only: wp
       use pepper_constants, only: pi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(in) :: record   ( * )  !! Data record.
+      real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
 
       real(wp) :: arg
       real(wp) :: dargdt
@@ -24458,8 +25120,11 @@ contains
       end if
 
       return
-      end procedure spke05
+      end subroutine spke05
 
+      !> Evaluate a single SPK data record from a segment of type 15
+      !> (Precessing Conic Propagation).
+      !>
       !>## Detailed Input
       !>
       !>     ET       is a target epoch, specified as ephemeris seconds past
@@ -24677,11 +25342,15 @@ contains
       !>        compilers that have a PI intrinsic function.
       !>
       !>-    SPICELIB Version 1.0.0, 15-NOV-1994 (WLT) (SS)
-      module procedure spke15
+      module subroutine spke15 ( ctx, et, recin, state )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr, pi, twopi
       use pepper_math, only: vcrss, vdot, vhatip, vrotv, vsep
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(in) :: recin  ( * )  !! Data record.
+      real(wp), intent(out) :: state  ( 6 )  !! State (position and velocity).
 
       real(wp) :: angle
       real(wp) :: cosinc
@@ -24991,8 +25660,11 @@ contains
 !     That's all folks.  return.
 !
       return
-      end procedure spke15
+      end subroutine spke15
 
+      !> Read a single SPK data record from a segment of type 10
+      !> (NORAD two line element sets).
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE,
@@ -25087,10 +25759,15 @@ contains
       !>        Removed declaration of unused variable DOINT.
       !>
       !>-    SPICELIB Version 1.0.0, 05-JAN-1994 (WLT)
-      module procedure spkr10
+      module subroutine spkr10 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(out) :: record   ( * )  !! Data record.
       integer(ip), parameter :: nconst = 8
       integer(ip), parameter :: nelems = 10
       integer(ip), parameter :: nangs = 4
@@ -25188,8 +25865,10 @@ contains
       end if
 
       return
-      end procedure spkr10
+      end subroutine spkr10
 
+      !> Read a single data record from a type 14 SPK segment.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the open SPK file which contains the
@@ -25295,14 +25974,16 @@ contains
       !>        $Literature_References to $Required_Reading section.
       !>
       !>-    SPICELIB Version 1.0.0, 10-MAR-1995 (KRG)
-      module procedure spkr14
+      module subroutine spkr14 ( ctx, handle, descr, et, record )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of the open SPK file.
+      real(wp), intent(in) :: descr    ( * )  !! Descriptor of the segment with the desired record.
+      real(wp), intent(in) :: et  !! Epoch used to identify the desired record.
+      real(wp), intent(out) :: record   ( * )  !! The desired type 14 SPK record.
       integer(ip) :: ends_1(1)  !! one-element copy of ends (array argument)
 
-!     The number of constant values stored with a type 14 segment
-!     segment.
-!
 !
 !     The beginning location in the output record for the non constant
 !     segment data.
@@ -25358,8 +26039,10 @@ contains
 
       return
 
-      end procedure spkr14
+      end subroutine spkr14
 
+      !> Evaluate pointing data from a segment for a given time.
+      !>
       !>## Detailed Input
       !>
       !>     HANDLE   is the handle of the binary CK file containing the
@@ -25664,18 +26347,20 @@ contains
       !>        4) The comments in the code were improved.
       !>
       !>-    Beta Version 1.0.0, 07-MAY-1990 (RET) (IMU)
-      module procedure ckpfs
+      module subroutine ckpfs ( ctx, handle, descr, sclkdp, tol, needav, cmat, av, clkout, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ckparam
       implicit none
-
-!        NDC        is the number of double precision components in an
-!                   unpacked C-kernel segment descriptor.
-!
-!        NIC        is the number of integer components in an unpacked
-!                   C-kernel segment descriptor.
-!
-
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! CK file handle.
+      real(wp), intent(in) :: descr  ( *    )  !! Segment descriptor.
+      real(wp), intent(in) :: sclkdp  !! Spacecraft clock time.
+      real(wp), intent(in) :: tol  !! Time tolerance.
+      logical, intent(in) :: needav  !! .TRUE. when angular velocity data is requested.
+      real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix.
+      real(wp), intent(out) :: av     ( 3    )  !! Angular velocity vector.
+      real(wp), intent(out) :: clkout  !! Output spacecraft clock time.
+      logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
 
       integer(ip) :: icd    ( nic    )
       integer(ip) :: type
@@ -25784,8 +26469,12 @@ contains
       end if
 
       return
-      end procedure ckpfs
+      end subroutine ckpfs
 
+      !> Return the name of an inertial reference frame and the 6 x 6
+      !> state transformation matrix from that frame to the body fixed
+      !> frame of a given body at a specified epoch.
+      !>
       !>## Detailed Input
       !>
       !>     BODY     is the integer ID code of the body for which the
@@ -25952,9 +26641,15 @@ contains
       !>
       !>        Replaces PCKEUL and returns the transformation
       !>        matrix rather than the Euler angles.
-      module procedure pckmat
+      module subroutine pckmat ( ctx, body, et, ref, tsipm, found )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! ID code of some body.
+      real(wp), intent(in) :: et  !! Epoch of transformation.
+      integer(ip), intent(out) :: ref  !! Integer code for inertial reference frame.
+      real(wp), intent(out) :: tsipm ( 6, 6 )  !! Transformation from Inertial to PM for BODY at ET.
+      logical, intent(out) :: found  !! .TRUE. if data for BODY and ET are found.
 
 !     ND and NI values for a PCK file.
 !
@@ -26150,8 +26845,10 @@ contains
       end if
 
       return
-      end procedure pckmat
+      end subroutine pckmat
 
+      !> This subroutine initializes variables for SGP4.
+      !>
       !>## Detailed Input
       !>
       !>     GEOPHS   is a collection of 8 geophysical constants needed
@@ -26330,11 +27027,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 11-DEC-2014 (EDW)
       !>
       !>        Based on routine SGP4INIT, 28-JUN-2005, Vallado 2006 [4].
-      module procedure xxsgp4i
+      module subroutine xxsgp4i ( ctx, geophs, elems, opmode )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_inc_zzsgp4
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: geophs    ( 8 )  !! Geophysical constants.
+      real(wp), intent(in) :: elems     ( 10 )  !! Two-line element data.
+      integer(ip), intent(in) :: opmode  !! Flag to indicate operation mode for GMST.
       real(wp) :: ainv
       real(wp) :: am
       real(wp) :: ao
@@ -26898,8 +27599,15 @@ contains
 
       return
       end associate
-      end procedure xxsgp4i
+      end subroutine xxsgp4i
 
+      !> This procedure is the SGP4 prediction model from Space Command.
+      !> This is an updated and combined version of SGP4 and SDP4
+      !> originally published separately in Spacetrack report #3 [1].
+      !> This version follows the methodology from the 2006 AIAA
+      !> Vallado paper [4] describing the history and development of
+      !> the code.
+      !>
       !>## Detailed Input
       !>
       !>     T        is the time in minutes from the elements epoch
@@ -27015,11 +27723,14 @@ contains
       !>-    SPICELIB Version 1.0.0, 15-SEP-2014 (EDW)
       !>
       !>        Based on routine SGP4, 28-JUN-2005 [4].
-      module procedure xxsgp4e
+      module subroutine xxsgp4e ( ctx, t, state )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi, twopi
       use pepper_inc_zzsgp4
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: t  !! Time to evaluate state in minutes from epoch.
+      real(wp), intent(out) :: state     ( 6 )  !! Evaluated state.
       real(wp) :: ainv
       real(wp) :: am
       real(wp) :: ao
@@ -27620,6 +28331,6 @@ contains
 
       return
       end associate
-      end procedure xxsgp4e
+      end subroutine xxsgp4e
 
 end submodule pepper_records
