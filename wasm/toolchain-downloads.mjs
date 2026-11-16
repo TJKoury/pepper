@@ -11,6 +11,11 @@ export const downloads = {
     url: "https://cdn.playwright.dev/builds/cft/159.0.8154.6/linux64/chrome-linux64.zip",
     sha256: "370601106c1b5619aae5f06f7a3fdc60836486135934779461e2a208d777f596",
   },
+  flangLinux: {
+    version: "21.1.8",
+    url: "https://github.com/miinso/flang-releases/releases/download/v21.1.8/flang+llvm-21.1.8-x86_64-unknown-linux-gnu.tar.gz",
+    sha256: "673f4dc1e95d09b1253ca32078ae058540d68b533bdcbcbf72b7242fbed82dc6",
+  },
   llvm: {
     version: "21.1.8",
     url: "https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.8/llvm-project-21.1.8.src.tar.xz",

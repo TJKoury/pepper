@@ -13,6 +13,14 @@ on:
         default: true
   push:
     tags: [wasm-v*]
+  # A pull request that changes the build or this workflow runs it as a dry
+  # run: everything except the release, with the assets kept as an artifact.
+  pull_request:
+    paths:
+      - .github/workflows/release-wasm.yml
+      - wasm/**
+      - package.json
+      - package-lock.json
 
 permissions:
   contents: write
@@ -24,7 +32,7 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 90
     env:
       SDM_MODULE_UNSIGNED_BUILD: '1'
       PEPPER_WASM_OPT: '1'
@@ -44,6 +52,8 @@ jobs:
           set -euo pipefail
           if [[ "$GITHUB_EVENT_NAME" == push ]]; then
             version="${GITHUB_REF_NAME#wasm-v}"
+          elif [[ "$GITHUB_EVENT_NAME" == pull_request ]]; then
+            version="$(node -p "require('./package.json').version")"
           else
             version="$REQUESTED_VERSION"
           fi
@@ -85,7 +95,7 @@ jobs:
         run: node wasm/release-package.mjs pack "$RELEASE_VERSION"
 
       - name: Upload dry-run assets
-        if: github.event_name == 'workflow_dispatch' && inputs.dry_run
+        if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.dry_run)
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: pepper-wasm-${{ steps.version.outputs.version }}
@@ -93,7 +103,7 @@ jobs:
           if-no-files-found: error
 
       - name: Create GitHub Release
-        if: github.event_name == 'push' || !inputs.dry_run
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && !inputs.dry_run)
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}

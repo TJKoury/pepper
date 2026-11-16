@@ -1,7 +1,7 @@
 import { execFileSync } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { downloads, fetchPinned, ensureLlvmSource, root, unpackPinned } from "./toolchain-downloads.mjs";
+import { downloads, fetchPinned, root, unpackPinned } from "./toolchain-downloads.mjs";
 
 if (process.platform !== "linux" || process.arch !== "x64") {
   throw new Error("Release toolchain setup requires Linux x64.");
@@ -11,25 +11,19 @@ const wasi = await unpackPinned("wasi", path.join(cache, "wasi-sdk"));
 const binaryen = await unpackPinned("binaryen", path.join(cache, "binaryen"));
 const flang = path.join(cache, "flang-wasm");
 const marker = path.join(flang, ".pepper-native-flang-sha256");
-if (await fs.readFile(marker, "utf8").catch(() => "") !== downloads.llvm.sha256) {
-  const source = await ensureLlvmSource();
-  const build = path.join(cache, "llvm-native-build");
-  execFileSync("cmake", ["-S", path.join(source, "llvm"), "-B", build, "-G", "Ninja",
-    "-DCMAKE_BUILD_TYPE=Release", "-DLLVM_ENABLE_PROJECTS=clang;mlir;flang",
-    "-DLLVM_TARGETS_TO_BUILD=X86;WebAssembly", "-DLLVM_INCLUDE_TESTS=OFF",
-    "-DFLANG_INCLUDE_TESTS=OFF", "-DLLVM_INCLUDE_BENCHMARKS=OFF",
-    "-DLLVM_ENABLE_ZLIB=OFF", "-DLLVM_ENABLE_ZSTD=OFF",
-    "-DLLVM_ENABLE_LIBXML2=OFF", "-DLLVM_ENABLE_TERMINFO=OFF",
-  ], { stdio: "inherit" });
-  execFileSync("cmake", ["--build", build, "--target", "flang", "--parallel", "4"], { stdio: "inherit" });
-  await fs.mkdir(path.join(flang, "bin"), { recursive: true });
-  await fs.mkdir(path.join(flang, "include", "flang"), { recursive: true });
-  await fs.copyFile(path.join(build, "bin", "flang"), path.join(flang, "bin", "flang"));
-  await fs.chmod(path.join(flang, "bin", "flang"), 0o755);
-  await fs.copyFile(path.join(wasi, "bin", "llvm-ar"), path.join(flang, "bin", "llvm-ar"));
-  await fs.chmod(path.join(flang, "bin", "llvm-ar"), 0o755);
-  await fs.writeFile(marker, downloads.llvm.sha256);
-  await fs.rm(build, { recursive: true, force: true });
+// The compiler is the prebuilt LLVM Flang release the macOS build already pins
+// (the same release, its Linux x86-64 archive), unpacked as it is there.
+if (await fs.readFile(marker, "utf8").catch(() => "") !== downloads.flangLinux.sha256) {
+  const archive = await fetchPinned("flangLinux");
+  await fs.rm(flang, { recursive: true, force: true });
+  await fs.mkdir(flang, { recursive: true });
+  execFileSync("tar", ["-xf", archive, "--strip-components=1", "-C", flang], { stdio: "inherit" });
+  if (!await fs.stat(path.join(flang, "bin", "llvm-ar")).catch(() => null)) {
+    await fs.copyFile(path.join(wasi, "bin", "llvm-ar"), path.join(flang, "bin", "llvm-ar"));
+    await fs.chmod(path.join(flang, "bin", "llvm-ar"), 0o755);
+  }
+  execFileSync(path.join(flang, "bin", "flang"), ["--version"], { stdio: "inherit" });
+  await fs.writeFile(marker, downloads.flangLinux.sha256);
 }
 const browserArchive = await fetchPinned("chromium");
 const browserDir = path.join(cache, "chromium");
