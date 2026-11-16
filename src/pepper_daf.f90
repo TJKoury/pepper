@@ -2968,9 +2968,13 @@ contains
       !>        of argument DATA in $Brief_I/O table.
       !>
       !>-    SPICELIB Version 1.0.0, 19-OCT-1992 (KRG)
-      module procedure rdenci
+      module subroutine rdenci ( ctx, unit, n, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Fortran unit number of input text file.
+      integer(ip), intent(in) :: n  !! Number of integers to read and decode.
+      integer(ip), intent(out) :: data(*)  !! List of decoded integers.
 
 !     Local parameters
 !
@@ -3080,7 +3084,7 @@ contains
       end do
 
       return
-      end procedure rdenci
+      end subroutine rdenci
 
       !>## Detailed Input
       !>
@@ -3419,11 +3423,16 @@ contains
       !>        example correct.
       !>
       !>-    SPICELIB Version 1.0.0, 26-OCT-1992 (KRG)
-      module procedure hx2dp
+      module subroutine hx2dp ( ctx, string, number, error, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin
       use pepper_strings, only: repmc_inplace, repmi_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! Hex form string to convert to double precision.
+      real(wp), intent(out) :: number  !! Double precision value to be returned.
+      logical, intent(out) :: error  !! A logical flag which is .TRUE. on error.
+      character(*), intent(out) :: errmsg  !! A descriptive error message.
       integer(ip), parameter :: maxman = 31
       real(wp), parameter :: dpval(0:maxdig-1) = &
          [ 0.0_wp, 1.0_wp, 2.0_wp, 3.0_wp, 4.0_wp, 5.0_wp, 6.0_wp, &
@@ -3815,7 +3824,7 @@ contains
 
       return
       end associate
-      end procedure hx2dp
+      end subroutine hx2dp
 
       !>## Detailed Input
       !>
@@ -3936,9 +3945,13 @@ contains
       !>        file as the cause.
       !>
       !>-    SPICELIB Version 1.0.0, 20-OCT-1992 (KRG)
-      module procedure rdencd
+      module subroutine rdencd ( ctx, unit, n, data )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Fortran unit number of input text file.
+      integer(ip), intent(in) :: n  !! Number of d.p. numbers to read and decode.
+      real(wp), intent(out) :: data(*)  !! List of decoded d.p. numbers.
 
 !     Local parameters
 !
@@ -4050,7 +4063,7 @@ contains
       end do
 
       return
-      end procedure rdencd
+      end subroutine rdencd
 
       !>## Detailed Input
       !>
@@ -4314,9 +4327,12 @@ contains
       !>        The code was reformatted so that a utility program can
       !>        create the source file for a specific environment given a
       !>        master source file.
-      module procedure txtopn
+      module subroutine txtopn ( ctx, fname, unit )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of file.
+      integer(ip), intent(out) :: unit  !! Logical unit.
 
       integer(ip) :: iostat
 
@@ -4349,7 +4365,7 @@ contains
       end if
 
       return
-      end procedure txtopn
+      end subroutine txtopn
 
       !>## Detailed Input
       !>
@@ -4638,9 +4654,12 @@ contains
       !>
       !>        Module updated to allow portability to the Lahey F77L EM/32
       !>        FORTRAN V 4.0 environment.
-      module procedure txtopr
+      module subroutine txtopr ( ctx, fname, unit )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of file.
+      integer(ip), intent(out) :: unit  !! Logical unit.
 
       integer(ip) :: iostat
 
@@ -4676,7 +4695,7 @@ contains
       end if
 
       return
-      end procedure txtopr
+      end subroutine txtopr
 
       !>## Detailed Input
       !>
@@ -4861,9 +4880,13 @@ contains
       !>        output format actually used by the routine.
       !>
       !>-    SPICELIB Version 1.0.0, 19-OCT-1992 (KRG)
-      module procedure wrenci
+      module subroutine wrenci ( ctx, unit, n, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Fortran unit number of output text file.
+      integer(ip), intent(in) :: n  !! Number of integers to encode and write.
+      integer(ip), intent(in) :: data(*)  !! List of integers to be encoded and written.
 
 
 
@@ -4953,7 +4976,7 @@ contains
       end do
 
       return
-      end procedure wrenci
+      end subroutine wrenci
 
       !>## Detailed Input
       !>
@@ -5112,9 +5135,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 22-OCT-1992 (KRG)
-      module procedure int2hx
+      module subroutine int2hx ( ctx, number, string, length )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: number  !! Integer to be converted.
+      character(*), intent(out) :: string  !! Equivalent hexadecimal string, left justified.
+      integer(ip), intent(out) :: length  !! The length of the hexadecimal string produced.
 
       integer(ip), parameter :: base = 16
 
@@ -5225,7 +5252,7 @@ contains
       length = strlen - begin + 1
 
       return
-      end procedure int2hx
+      end subroutine int2hx
 
       !>## Detailed Input
       !>
@@ -5482,9 +5509,13 @@ contains
       !>        example correct.
       !>
       !>-    SPICELIB Version 1.0.0, 26-OCT-1992 (KRG)
-      module procedure dp2hx
+      module subroutine dp2hx ( ctx, number, hxstr, hxssiz )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: number  !! D.p. number to be converted.
+      character(*), intent(out) :: hxstr  !! Equivalent character string, left justified.
+      integer(ip), intent(out) :: hxssiz  !! Length of the character string produced.
 
 
 
@@ -5804,7 +5835,7 @@ contains
       hxstr = tmpstr(:hxssiz)
 
       return
-      end procedure dp2hx
+      end subroutine dp2hx
 
       !>## Detailed Input
       !>
@@ -5994,9 +6025,13 @@ contains
       !>        output format actually used by the routine.
       !>
       !>-    SPICELIB Version 1.0.0, 20-OCT-1992 (KRG)
-      module procedure wrencd
+      module subroutine wrencd ( ctx, unit, n, data )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Fortran unit number of output text file.
+      integer(ip), intent(in) :: n  !! Number of d.p. numbers to encode and write.
+      real(wp), intent(in) :: data(*)  !! List of d.p. numbers to encode and write.
 
 !     Local parameters
 !
@@ -6088,7 +6123,7 @@ contains
       end do
 
       return
-      end procedure wrencd
+      end subroutine wrencd
 
       !>## Abstract
       !>
@@ -6226,11 +6261,21 @@ contains
       !>     Data Statements
       !>
       !>     Standard SPICE error handling.
-      module procedure zzdafgfr
+      module subroutine zzdafgfr ( ctx, handle, idword, nd, ni, ifname, fward, bward, free, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of the DAF.
+      character(*), intent(out) :: idword  !! DAF ID Word that indicates file type.
+      integer(ip), intent(out) :: nd  !! Number of double precision components in summaries.
+      integer(ip), intent(out) :: ni  !! Number of integer components in summaries.
+      character(*), intent(out) :: ifname  !! Internal file name.
+      integer(ip), intent(out) :: fward  !! Forward list pointer.
+      integer(ip), intent(out) :: bward  !! Backward list pointer.
+      integer(ip), intent(out) :: free  !! Free address pointer.
+      logical, intent(out) :: found  !! Logical indicating whether the record was found.
       integer(ip), parameter :: frlocr = 1
       integer(ip), parameter :: ifnstr = 17
       integer(ip), parameter :: inlen = 4
@@ -6438,7 +6483,7 @@ contains
 
       return
       end associate
-      end procedure zzdafgfr
+      end subroutine zzdafgfr
 
       !>## Detailed Input
       !>
@@ -6556,11 +6601,21 @@ contains
       !>     Data Statements
       !>
       !>     Standard SPICE error handling.
-      module procedure zzdafnfr
+      module subroutine zzdafnfr ( ctx, lun, idword, nd, ni, ifname, fward, bward, free, format )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       use pepper_inc_zzftprms
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: lun  !! Logical unit number of an open DAF file.
+      character(*), intent(in) :: idword  !! DAF ID word.
+      integer(ip), intent(in) :: nd  !! Number of double precision components in a summary.
+      integer(ip), intent(in) :: ni  !! Number of integer components in a summary.
+      character(*), intent(in) :: ifname  !! Internal filename.
+      integer(ip), intent(in) :: fward  !! First descriptor record.
+      integer(ip), intent(in) :: bward  !! Last descriptor record.
+      integer(ip), intent(in) :: free  !! First free address.
+      character(*), intent(in) :: format  !! File binary format identifier string.
       integer(ip), parameter :: preftp = 603
       integer(ip), parameter :: pstftp = 297
       character(1) :: nullch
@@ -6688,7 +6743,7 @@ contains
 
       return
       end associate
-      end procedure zzdafnfr
+      end subroutine zzdafnfr
 
       !>## Abstract
       !>
@@ -6783,11 +6838,16 @@ contains
       !>     Data Statements
       !>
       !>     Standard SPICE error handling.
-      module procedure zzdafgdr
+      module subroutine zzdafgdr ( ctx, handle, recno, dprec, found )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of the DAF.
+      integer(ip), intent(in) :: recno  !! Record number.
+      real(wp), intent(out) :: dprec  ( * )  !! Contents of the record.
+      logical, intent(out) :: found  !! Logical indicating whether the record was found.
       character(cbfsiz) :: chrbuf
       character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       character(strsiz) :: tmpstr
@@ -6955,7 +7015,7 @@ contains
 
       return
       end associate
-      end procedure zzdafgdr
+      end subroutine zzdafgdr
 
       !>## Abstract
       !>
@@ -7065,12 +7125,19 @@ contains
       !>     Data Statements
       !>
       !>     Standard SPICE error handling.
-      module procedure zzdafgsr
+      module subroutine zzdafgsr ( ctx, handle, recno, nd, ni, dprec, found )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: pack_integers
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of the DAF.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: nd  !! Number of double precision components in a summary.
+      integer(ip), intent(in) :: ni  !! Number of integer components in a summary.
+      real(wp), intent(out) :: dprec  ( * )  !! Contents of the record.
+      logical, intent(out) :: found  !! Logical indicating whether the record was found.
       integer(ip), parameter :: dplen = 8
       integer(ip), parameter :: inlen = dplen/2
       character(cbfsiz) :: chrbuf
@@ -7375,7 +7442,7 @@ contains
 
       return
       end associate
-      end procedure zzdafgsr
+      end subroutine zzdafgsr
 
       !>## Detailed Input
       !>
@@ -7746,10 +7813,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafopr
+      module subroutine dafopr ( ctx, fname, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of DAF to be opened.
+      integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -7835,7 +7905,7 @@ contains
 
       return
       end associate
-      end procedure dafopr
+      end subroutine dafopr
 
       !>## Detailed Input
       !>
@@ -8208,10 +8278,13 @@ contains
       !>        names of relevant DAFs.
       !>
       !>     Standard SPICE error handling.
-      module procedure dafopw
+      module subroutine dafopw ( ctx, fname, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of DAF to be opened.
+      integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -8294,7 +8367,7 @@ contains
 
       return
       end associate
-      end procedure dafopw
+      end subroutine dafopw
 
       !>## Detailed Input
       !>
@@ -8581,11 +8654,19 @@ contains
       !>        of the impact of the changes made for this version.
       !>
       !>     Standard SPICE error handling.
-      module procedure dafonw
+      module subroutine dafonw ( ctx, fname, ftype, nd, ni, ifname, resv, handle )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ltrim, rtrim
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of DAF to be opened.
+      character(*), intent(in) :: ftype  !! Mnemonic code for type of data in the DAF file.
+      integer(ip), intent(in) :: nd  !! Number of double precision components in summaries.
+      integer(ip), intent(in) :: ni  !! Number of integer components in summaries.
+      character(*), intent(in) :: ifname  !! Internal file name.
+      integer(ip), intent(in) :: resv  !! Number of records to reserve.
+      integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip) :: findex
@@ -8845,7 +8926,7 @@ contains
 
       return
       end associate
-      end procedure dafonw
+      end subroutine dafonw
 
       !>## Abstract
       !>
@@ -9106,10 +9187,17 @@ contains
       !>        names of relevant DAFs.
       !>
       !>     Standard SPICE error handling.
-      module procedure dafopn
+      module subroutine dafopn ( ctx, fname, nd, ni, ifname, resv, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of DAF to be opened.
+      integer(ip), intent(in) :: nd  !! Number of double precision components in summaries.
+      integer(ip), intent(in) :: ni  !! Number of integer components in summaries.
+      character(*), intent(in) :: ifname  !! Internal file name.
+      integer(ip), intent(in) :: resv  !! Number of records to reserve.
+      integer(ip), intent(out) :: handle  !! Handle assigned to DAF.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -9320,7 +9408,7 @@ contains
 
       return
       end associate
-      end procedure dafopn
+      end subroutine dafopn
 
       !>## Detailed Input
       !>
@@ -9626,10 +9714,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafcls
+      module subroutine dafcls ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF to be closed.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -9683,7 +9773,7 @@ contains
 
       return
       end associate
-      end procedure dafcls
+      end subroutine dafcls
 
       !>## Detailed Input
       !>
@@ -9898,10 +9988,14 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafhsf
+      module subroutine dafhsf ( ctx, handle, nd, ni )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: nd  !! Number of double precision components in summaries.
+      integer(ip), intent(out) :: ni  !! Number of integer components in summaries.
+      integer(ip), intent(in) :: handle  !! Handle of a DAF file.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -9944,7 +10038,7 @@ contains
 
       return
       end associate
-      end procedure dafhsf
+      end subroutine dafhsf
 
       !>## Detailed Input
       !>
@@ -10105,10 +10199,13 @@ contains
       !>        routines.
       !>
       !>     Standard SPICE error handling.
-      module procedure dafhlu
+      module subroutine dafhlu ( ctx, handle, unit )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF file.
+      integer(ip), intent(out) :: unit  !! Corresponding logical unit.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -10135,7 +10232,7 @@ contains
       call zzddhhlu ( ctx, handle, 'DAF', .true., unit )
 
       return
-      end procedure dafhlu
+      end subroutine dafhlu
 
       !>## Detailed Input
       !>
@@ -10260,10 +10357,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafluh
+      module subroutine dafluh ( ctx, unit, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: handle  !! Corresponding DAF file handle.
+      integer(ip), intent(in) :: unit  !! Logical unit connected to a DAF.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -10314,7 +10414,7 @@ contains
       end if
 
       return
-      end procedure dafluh
+      end subroutine dafluh
 
       !>## Detailed Input
       !>
@@ -10458,10 +10558,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafhfn
+      module subroutine dafhfn ( ctx, handle, fname )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: fname  !! Corresponding file name.
+      integer(ip), intent(in) :: handle  !! Handle of a DAF file.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -10496,7 +10599,7 @@ contains
       end if
       fname = file_name ( ctx%spice, handle )
       return
-      end procedure dafhfn
+      end subroutine dafhfn
 
       !>## Detailed Input
       !>
@@ -10672,10 +10775,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure daffnh
+      module subroutine daffnh ( ctx, fname, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DAF file.
+      integer(ip), intent(out) :: handle  !! Corresponding DAF file handle.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -10725,7 +10831,7 @@ contains
       end if
 
       return
-      end procedure daffnh
+      end subroutine daffnh
 
       !>## Detailed Input
       !>
@@ -10845,12 +10951,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1991 (NJB) (WLT)
-      module procedure dafhof
+      module subroutine dafhof ( ctx, fhset )
       use pepper_arrays, only: shelli
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
       integer(ip), parameter :: lbcell = -5
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: fhset ( lbcell : * )  !! A set containing handles of
+                                                          !! currently
+                                                        !! open DAFS.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -10895,7 +11005,7 @@ contains
 
       return
       end associate
-      end procedure dafhof
+      end subroutine dafhof
 
       !>## Detailed Input
       !>
@@ -11096,11 +11206,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1991 (NJB) (WLT)
-      module procedure dafsih
+      module subroutine dafsih ( ctx, handle, access )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! HANDLE to be validated.
+      character(*), intent(in) :: access  !! String indicating access type.
       integer(ip) :: findex
       character(acclen) :: acc
       character(crlen) :: crec
@@ -11186,7 +11299,7 @@ contains
 !
       return
       end associate
-      end procedure dafsih
+      end subroutine dafsih
 
       !>## Detailed Input
       !>
@@ -11260,9 +11373,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafrwa
+      module subroutine dafrwa ( ctx, recno, wordno, addr )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: recno  !! Record, word numbers of a location within DAF.
+      integer(ip), intent(in) :: wordno  !! Record, word numbers of a location within DAF.
+      integer(ip), intent(out) :: addr  !! Corresponding address.
       if ( ctx%failed() ) then
          return
 
@@ -11281,7 +11398,7 @@ contains
       addr = wordno + ( recno - 1 ) * 128
 
       return
-      end procedure dafrwa
+      end subroutine dafrwa
 
       !>## Detailed Input
       !>
@@ -11355,9 +11472,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafarw
+      module subroutine dafarw ( ctx, addr, recno, wordno )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: recno  !! Corresponding record, word numbers.
+      integer(ip), intent(out) :: wordno  !! Corresponding record, word numbers.
+      integer(ip), intent(in) :: addr  !! Address within DAF.
       if ( ctx%failed() ) then
          return
 
@@ -11375,7 +11496,7 @@ contains
       wordno = addr - ( recno - 1 ) * 128
 
       return
-      end procedure dafarw
+      end subroutine dafarw
 
       !>## Detailed Input
       !>
@@ -11616,10 +11737,16 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafps
+      module subroutine dafps ( ctx, nd, ni, dc, ic, sum )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: pack_integers
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nd  !! Number of double precision components.
+      integer(ip), intent(in) :: ni  !! Number of integer components.
+      real(wp), intent(in) :: dc       ( * )  !! Double precision components.
+      integer(ip), intent(in) :: ic       ( * )  !! Integer components.
+      real(wp), intent(out) :: sum      ( * )  !! Array summary.
       integer(ip) :: n
       integer(ip) :: m
       n = min ( 125, max ( 0, nd ) )
@@ -11636,7 +11763,7 @@ contains
       sum(n+1:n+(m+1)/2) = pack_integers ( ic(1:m) )
 
       return
-      end procedure dafps
+      end subroutine dafps
 
       !>## Detailed Input
       !>
@@ -11870,10 +11997,16 @@ contains
       !>        Added IMPLICIT NONE statement.
       !>
       !>     Just undo whatever DAFPS did.
-      module procedure dafus
+      module subroutine dafus ( ctx, sum, nd, ni, dc, ic )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: unpack_integers
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nd  !! Number of double precision components.
+      integer(ip), intent(in) :: ni  !! Number of integer components.
+      real(wp), intent(out) :: dc       ( * )  !! Double precision components.
+      integer(ip), intent(out) :: ic       ( * )  !! Integer components.
+      real(wp), intent(in) :: sum      ( * )  !! Array summary.
       integer(ip) :: n
       integer(ip) :: m
       n = min ( 125, max ( 0, nd ) )
@@ -11889,7 +12022,7 @@ contains
       ic(1:m) = unpack_integers ( sum(n+1:n+(m+1)/2), m )
 
       return
-      end procedure dafus
+      end subroutine dafus
 
       !>## Detailed Input
       !>
@@ -12004,10 +12137,17 @@ contains
       !>        Removed DAF required reading from $Literature_References.
       !>
       !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-      module procedure dafgdr
+      module subroutine dafgdr ( ctx, handle, recno, begin, end, data, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: begin  !! First word to read from record.
+      integer(ip), intent(in) :: end  !! Last word to read from record.
+      real(wp), intent(out) :: data     (  *  )  !! Contents of record.
+      logical, intent(out) :: found  !! .TRUE. if record is found.
       integer(ip) :: unit
       integer(ip) :: iostat
       integer(ip) :: bufloc
@@ -12132,7 +12272,7 @@ contains
 
       return
       end associate
-      end procedure dafgdr
+      end subroutine dafgdr
 
       !>## Detailed Input
       !>
@@ -12259,10 +12399,17 @@ contains
       !>        Removed DAF required reading from $Literature_References.
       !>
       !>-    SPICELIB Version 2.0.0, 16-NOV-2001 (FST)
-      module procedure dafgsr
+      module subroutine dafgsr ( ctx, handle, recno, begin, end, data, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: begin  !! First word to read from record.
+      integer(ip), intent(in) :: end  !! Last word to read from record.
+      real(wp), intent(out) :: data     (  *  )  !! Contents of record.
+      logical, intent(out) :: found  !! .TRUE. if record is found.
       integer(ip) :: unit
       integer(ip) :: iostat
       integer(ip) :: bufloc
@@ -12390,7 +12537,7 @@ contains
 
       return
       end associate
-      end procedure dafgsr
+      end subroutine dafgsr
 
       !>## Abstract
       !>
@@ -12622,10 +12769,17 @@ contains
       !>        DAF routines.
       !>
       !>     Standard SPICE error handling.
-      module procedure dafrdr
+      module subroutine dafrdr ( ctx, handle, recno, begin, end, data, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: begin  !! First word to read from record.
+      integer(ip), intent(in) :: end  !! Last word to read from record.
+      real(wp), intent(out) :: data     (  *  )  !! Contents of record.
+      logical, intent(out) :: found  !! .TRUE. if record is found.
       integer(ip) :: unit
       integer(ip) :: iostat
       integer(ip) :: bufloc
@@ -12768,7 +12922,7 @@ contains
 
       return
       end associate
-      end procedure dafrdr
+      end subroutine dafrdr
 
       !>## Detailed Input
       !>
@@ -12879,9 +13033,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafwdr
+      module subroutine dafwdr ( ctx, handle, recno, drec )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      integer(ip), intent(in) :: recno  !! Record number.
+      real(wp), intent(in) :: drec     ( 128 )  !! Contents of record.
       integer(ip) :: unit
       integer(ip) :: iostat
       integer(ip) :: bufloc
@@ -12973,7 +13131,7 @@ contains
 
       return
       end associate
-      end procedure dafwdr
+      end subroutine dafwdr
 
       !>## Detailed Input
       !>
@@ -13071,9 +13229,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafnrr
+      module subroutine dafnrr ( ctx, reads, reqs )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: reads  !! Reads, requests in this execution.
+      integer(ip), intent(out) :: reqs  !! Reads, requests in this execution.
       logical :: return
       integer(ip) :: unit
       integer(ip) :: iostat
@@ -13100,7 +13261,7 @@ contains
 
       return
       end associate
-      end procedure dafnrr
+      end subroutine dafnrr
 
       !>## Detailed Input
       !>
@@ -13298,9 +13459,14 @@ contains
       !>        complete code example. Removed unnecessary $Revisions section.
       !>
       !>-    SPICELIB Version 1.0.0, 16-NOV-2001 (FST)
-      module procedure dafgda
+      module subroutine dafgda ( ctx, handle, baddr, eaddr, data )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF.
+      integer(ip), intent(in) :: baddr  !! Initial, final address within file.
+      integer(ip), intent(in) :: eaddr  !! Initial, final address within file.
+      real(wp), intent(out) :: data     ( * )  !! Data contained between BADDR and EADDR.
 
 
       integer(ip) :: begr
@@ -13398,7 +13564,7 @@ contains
       end do
 
       return
-      end procedure dafgda
+      end subroutine dafgda
 
       !>## Abstract
       !>
@@ -13647,13 +13813,18 @@ contains
       !>     on any version of g77 for x86 Linux.
       !>
       !>     Standard SPICE error handling.
-      module procedure zzxlated
+      module subroutine zzxlated ( ctx, inbff, input, space, output )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: pack_integers
       use pepper_constants, only: intmin
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: inbff  !! Binary file format of d.p. values in INPUT.
+      character(*), intent(in) :: input  !! String containing d.p. values read as characters.
+      integer(ip), intent(in) :: space  !! Number of d.p. values that can be placed in OUTPUT.
+      real(wp), intent(out) :: output ( * )  !! Translated d.p. values.
       integer(ip), parameter :: dpblen = 128
       integer(ip), parameter :: inblen = 2 * dpblen
       integer(ip), parameter :: shft8 = 2**8
@@ -14351,7 +14522,7 @@ contains
 
       return
       end associate
-      end procedure zzxlated
+      end subroutine zzxlated
 
       !>## Abstract
       !>
@@ -14509,9 +14680,14 @@ contains
       !>        possible exceptions occurs. The purpose of this change was to
       !>        help speed up a routine that gets called constantly by higher
       !>        level DAF routines.
-      module procedure dafrda
+      module subroutine dafrda ( ctx, handle, begin, end, data )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF.
+      integer(ip), intent(in) :: begin  !! Initial, final address within file.
+      integer(ip), intent(in) :: end  !! Initial, final address within file.
+      real(wp), intent(out) :: data     ( * )  !! Data contained between BEGIN and END.
 
 
       integer(ip) :: begr
@@ -14615,7 +14791,7 @@ contains
       end do
 
       return
-      end procedure dafrda
+      end subroutine dafrda
 
       !>## Detailed Input
       !>
@@ -14771,9 +14947,17 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafrfr
+      module subroutine dafrfr ( ctx, handle, nd, ni, ifname, fward, bward, free )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an open DAF file.
+      integer(ip), intent(out) :: nd  !! Number of double precision components in summaries.
+      integer(ip), intent(out) :: ni  !! Number of integer components in summaries.
+      character(*), intent(out) :: ifname  !! Internal file name.
+      integer(ip), intent(out) :: fward  !! Forward list pointer.
+      integer(ip), intent(out) :: bward  !! Backward list pointer.
+      integer(ip), intent(out) :: free  !! Free address pointer.
 
 
 
@@ -14827,7 +15011,7 @@ contains
       end if
 
       return
-      end procedure dafrfr
+      end subroutine dafrfr
 
       !>## Detailed Input
       !>
@@ -15016,9 +15200,17 @@ contains
       !>        was open for write access, HANDLE < 0. This test was no longer
       !>        necessary, as the call to DASSIH performs this test as well. No
       !>        sense doing it twice.
-      module procedure dafwfr
+      module subroutine dafwfr ( ctx, handle, nd, ni, ifname, fward, bward, free )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an open DAF file.
+      integer(ip), intent(in) :: nd  !! Number of double precision components in summaries.
+      integer(ip), intent(in) :: ni  !! Number of integer components in summaries.
+      character(*), intent(in) :: ifname  !! Internal filename.
+      integer(ip), intent(in) :: fward  !! Forward list pointer.
+      integer(ip), intent(in) :: bward  !! Backward list pointer.
+      integer(ip), intent(in) :: free  !! Free address pointer.
 
 
 
@@ -15156,7 +15348,7 @@ contains
       end if
 
       return
-      end procedure dafwfr
+      end subroutine dafwfr
 
       !>## Detailed Input
       !>
@@ -15266,9 +15458,14 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafwda
+      module subroutine dafwda ( ctx, handle, begin, end, data )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF.
+      integer(ip), intent(in) :: begin  !! Initial, final address within file.
+      integer(ip), intent(in) :: end  !! Initial, final address within file.
+      real(wp), intent(in) :: data     ( * )  !! Data to be stored between BEGIN and END.
       integer(ip) :: begr
       integer(ip) :: begw
       integer(ip) :: endr
@@ -15348,7 +15545,7 @@ contains
 
       return
       end associate
-      end procedure dafwda
+      end subroutine dafwda
 
       !>## Detailed Input
       !>
@@ -15538,9 +15735,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 17-JUL-1990 (IMU)
-      module procedure dafarr
+      module subroutine dafarr ( ctx, handle, resv )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF file opened for writing.
+      integer(ip), intent(in) :: resv  !! Number of records to reserve.
 
 !     IFNLEN      is the length of a DAF internal file name.
 !
@@ -15750,7 +15950,7 @@ contains
       end do
 
       return
-      end procedure dafarr
+      end subroutine dafarr
 
       !>## Detailed Input
       !>
@@ -15861,9 +16061,13 @@ contains
       !>        The call to DAFHLU has been replaced with ZZDDHHLU,
       !>        since calls to DAFHLU locks handles to their logical
       !>        units.
-      module procedure dafrcr
+      module subroutine dafrcr ( ctx, handle, recno, crec )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      integer(ip), intent(in) :: recno  !! Record number of character record.
+      character(*), intent(out) :: crec  !! Character record.
 
       integer(ip) :: unit
       integer(ip) :: iostat
@@ -15935,7 +16139,7 @@ contains
       end if
 
       return
-      end procedure dafrcr
+      end subroutine dafrcr
 
       !>## Detailed Input
       !>
@@ -16041,9 +16245,13 @@ contains
       !>        in the handle manager. A call to DAFSIH was inserted to
       !>        make certain that HANDLE is present in DAFAH's file table,
       !>        rather than simply checking the sign of HANDLE.
-      module procedure dafwcr
+      module subroutine dafwcr ( ctx, handle, recno, crec )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      integer(ip), intent(in) :: recno  !! Record number of character record.
+      character(*), intent(in) :: crec  !! Character record.
 
       integer(ip) :: unit
       integer(ip) :: iostat
@@ -16090,7 +16298,7 @@ contains
       end if
 
       return
-      end procedure dafwcr
+      end subroutine dafwcr
 
       !>## Detailed Input
       !>
@@ -16220,10 +16428,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 28-MAR-1991 (IMU)
-      module procedure dafra
+      module subroutine dafra ( ctx, handle, iorder, n )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: isordv
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      integer(ip), intent(inout) :: iorder ( * )  !! Order vector.
+      integer(ip), intent(in) :: n  !! Dimension of IORDER.
 
       integer(ip), parameter :: namlen = 1000
 
@@ -16403,7 +16615,7 @@ contains
       end do
 
       return
-      end procedure dafra
+      end subroutine dafra
 
       !>## Detailed Input
       !>
@@ -16528,9 +16740,12 @@ contains
       !>
       !>        Added calls to the intrinsic function DBLE to convert an
       !>        integer, REMOVE, into a DP number when doing some arithmetic.
-      module procedure dafrrr
+      module subroutine dafrrr ( ctx, handle, resv )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAF, opened for writing.
+      integer(ip), intent(in) :: resv  !! Number of records to remove.
 
 !     IFNLEN      is the length of a DAF internal file name.
 !
@@ -16717,7 +16932,7 @@ contains
       end do
 
       return
-      end procedure dafrrr
+      end subroutine dafrrr
 
       !>## Detailed Input
       !>
@@ -17013,10 +17228,14 @@ contains
       !>        the handle manager interface for retrieving a logical unit.
       !>        DAFHLU is no longer used, since it locks the unit returned to
       !>        its HANDLE, tying up resources in the handle manager.
-      module procedure dafac
+      module subroutine dafac ( ctx, handle, n, buffer )
       use pepper_kinds, only: ip
       use pepper_strings, only: cpos, ncpos
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF opened with write access.
+      integer(ip), intent(in) :: n  !! Number of comments to put into the comment area.
+      character(*), intent(in) :: buffer(*)  !! Buffer of comments to put into the comment area.
 
 !     Length of a DAF file internal filename.
 !
@@ -17497,7 +17716,7 @@ contains
 !     Check out and leave DAFAC.
 !
       return
-      end procedure dafac
+      end subroutine dafac
 
       !>## Detailed Input
       !>
@@ -17704,9 +17923,11 @@ contains
       !>        Added complete code example.
       !>
       !>-    SPICELIB Version 1.0.0, 23-SEP-1994 (KRG)
-      module procedure dafdc
+      module subroutine dafdc ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of a binary DAF opened for writing.
 
 !     Local parameters
 !
@@ -17759,7 +17980,7 @@ contains
 !     We're done now, so goodbye.
 !
       return
-      end procedure dafdc
+      end subroutine dafdc
 
       !>## Detailed Input
       !>
@@ -18283,11 +18504,17 @@ contains
       !>-    SPICELIB Version 1.0.0, 08-NOV-2006 (NJB) (KRG) (FST)
       !>
       !>        Based on Support Version 2.0.0, 16-NOV-2001 (FST)
-      module procedure dafec
+      module subroutine dafec ( ctx, handle, bufsiz, n, buffer, done )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip
       use pepper_strings, only: cpos, ncpos
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of binary DAF opened with read access.
+      integer(ip), intent(in) :: bufsiz  !! Maximum size, in lines, of BUFFER.
+      integer(ip), intent(out) :: n  !! Number of extracted comment lines.
+      character(*), intent(out) :: buffer(*)  !! Buffer where extracted comment lines are placed.
+      logical, intent(out) :: done  !! Indicates whether all comments have been extracted.
       character(1) :: ch
       character(ifnlen) :: ifname
       integer(ip) :: curpos
@@ -18759,12 +18986,15 @@ contains
 
       return
       end associate
-      end procedure dafec
+      end subroutine dafec
 
       !> All the comment lines of a DAF, each of any length (PEPPER).
-      module procedure daf_comments
+      module subroutine daf_comments ( ctx, handle, lines )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of a DAF open for reading
+      type(string), allocatable, intent(out) :: lines(:)  !! the comment lines (size 0 after an error)
       integer(ip), parameter :: inteoc = 4  ! end of the comments
       integer(ip), parameter :: mxcrec = 1000  ! comment characters in a record
       character(60) :: ifname
@@ -18820,12 +19050,14 @@ contains
          return
       end if
       call split_comment_lines ( text(1:eoc-1), lines )
-      end procedure daf_comments
+      end subroutine daf_comments
 
       !> Split a comment area's text into lines (PEPPER).
-      module procedure split_comment_lines
+      pure module subroutine split_comment_lines ( text, lines )
       use pepper_kinds, only: ip
       implicit none
+      character(*), intent(in) :: text  !! the comment text
+      type(string), allocatable, intent(out) :: lines(:)  !! the lines
       integer(ip) :: b
       integer(ip) :: e
       integer(ip) :: k
@@ -18848,7 +19080,7 @@ contains
             b = b + e
          end if
       end do
-      end procedure split_comment_lines
+      end subroutine split_comment_lines
 
       !>## Detailed Input
       !>
@@ -18956,10 +19188,14 @@ contains
       !>        and initializes the state pool.
       !>
       !>     Standard SPICE error handling.
-      module procedure dafbna
+      module subroutine dafbna ( ctx, handle, sum, name )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF.
+      real(wp), intent(in) :: sum      ( * )  !! Summary of new array.
+      character(*), intent(in) :: name  !! Name of new array.
       integer(ip) :: sumsiz
       integer(ip) :: p
       integer(ip) :: i
@@ -19302,7 +19538,7 @@ contains
 
       return
       end associate
-      end procedure dafbna
+      end subroutine dafbna
 
       !>## Detailed Input
       !>
@@ -19403,10 +19639,13 @@ contains
       !>        applications that write to one DAF at a time is unchanged.
       !>
       !>     Standard SPICE error handling.
-      module procedure dafada
+      module subroutine dafada ( ctx, data, n )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: data     ( * )  !! Elements of the new array.
+      integer(ip), intent(in) :: n  !! Number of elements in DATA.
       integer(ip) :: p
       if ( .not. allocated ( ctx%dafana ) ) then
          allocate ( ctx%dafana )
@@ -19465,7 +19704,7 @@ contains
 
       return
       end associate
-      end procedure dafada
+      end subroutine dafada
 
       !>## Detailed Input
       !>
@@ -19583,10 +19822,11 @@ contains
       !>        equivalent, but more aesthetically pleasing 1.0D0.
       !>
       !>     Standard SPICE error handling.
-      module procedure dafena
+      module subroutine dafena ( ctx )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip), parameter :: arycnt = 3
       integer(ip), parameter :: bwdptr = 2
       integer(ip), parameter :: fwdptr = 1
@@ -19767,7 +20007,7 @@ contains
 
       return
       end associate
-      end procedure dafena
+      end subroutine dafena
 
       !>## Detailed Input
       !>
@@ -19892,10 +20132,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 04-SEP-1991 (NJB) (WLT)
-      module procedure dafcad
+      module subroutine dafcad ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF to continue adding data to.
       integer(ip) :: p
       integer(ip) :: prev
       logical :: found
@@ -19986,7 +20228,7 @@ contains
 
       return
       end associate
-      end procedure dafcad
+      end subroutine dafcad
 
       !>## Detailed Input
       !>
@@ -20220,10 +20462,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafbfs
+      module subroutine dafbfs ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of file to be searched.
       integer(ip) :: i
       integer(ip) :: prev
       integer(ip) :: nextp
@@ -20398,7 +20642,7 @@ contains
 
       return
       end associate
-      end procedure dafbfs
+      end subroutine dafbfs
 
       !>## Detailed Input
       !>
@@ -20640,10 +20884,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure daffna
+      module subroutine daffna ( ctx, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(out) :: found  !! .TRUE. if an array was found.
       integer(ip) :: p
       logical :: fnd
       if ( .not. allocated ( ctx%daffa ) ) then
@@ -20772,7 +21018,7 @@ contains
 
       return
       end associate
-      end procedure daffna
+      end subroutine daffna
 
       !>## Detailed Input
       !>
@@ -21006,10 +21252,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafbbs
+      module subroutine dafbbs ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF to be searched.
       integer(ip) :: i
       integer(ip) :: prev
       integer(ip) :: nextp
@@ -21178,7 +21426,7 @@ contains
 
       return
       end associate
-      end procedure dafbbs
+      end subroutine dafbbs
 
       !>## Detailed Input
       !>
@@ -21435,10 +21683,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure daffpa
+      module subroutine daffpa ( ctx, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(out) :: found  !! .TRUE. if an array was found.
       integer(ip) :: p
       logical :: fnd
       if ( .not. allocated ( ctx%daffa ) ) then
@@ -21566,7 +21816,7 @@ contains
 
       return
       end associate
-      end procedure daffpa
+      end subroutine daffpa
 
       !>## Detailed Input
       !>
@@ -21809,10 +22059,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafgs
+      module subroutine dafgs ( ctx, sum )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(out) :: sum    ( * )  !! Summary for current array.
       integer(ip) :: offset
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -21893,7 +22145,7 @@ contains
 
       return
       end associate
-      end procedure dafgs
+      end subroutine dafgs
 
       !>## Detailed Input
       !>
@@ -22011,10 +22263,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafgn
+      module subroutine dafgn ( ctx, name )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: name  !! Name of current array.
       integer(ip) :: offset
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -22112,7 +22366,7 @@ contains
 
       return
       end associate
-      end procedure dafgn
+      end subroutine dafgn
 
       !>## Detailed Input
       !>
@@ -22270,10 +22524,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafgh
+      module subroutine dafgh ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: handle  !! Handle for current DAF.
       integer(ip) :: p
       if ( .not. allocated ( ctx%daffa ) ) then
          allocate ( ctx%daffa )
@@ -22312,7 +22568,7 @@ contains
 
       return
       end associate
-      end procedure dafgh
+      end subroutine dafgh
 
       !>## Detailed Input
       !>
@@ -22438,10 +22694,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafrs
+      module subroutine dafrs ( ctx, sum )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: sum    ( * )  !! New summary for current array.
       integer(ip) :: offset
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -22548,7 +22806,7 @@ contains
 
       return
       end associate
-      end procedure dafrs
+      end subroutine dafrs
 
       !>## Detailed Input
       !>
@@ -22667,10 +22925,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafrn
+      module subroutine dafrn ( ctx, name )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! New name for current array.
       integer(ip) :: offset
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -22774,7 +23034,7 @@ contains
 
       return
       end associate
-      end procedure dafrn
+      end subroutine dafrn
 
       !>## Detailed Input
       !>
@@ -22895,10 +23155,12 @@ contains
       !>        previously crashed under these conditions.
       !>
       !>-    SPICELIB Version 1.0.0, 28-MAR-1991 (IMU)
-      module procedure dafws
+      module subroutine dafws ( ctx, sum )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: sum    ( * )  !! New summary for current array in the current DAF.
       integer(ip) :: offset
       integer(ip) :: sumsiz
       integer(ip) :: p
@@ -22986,7 +23248,7 @@ contains
 
       return
       end associate
-      end procedure dafws
+      end subroutine dafws
 
       !>## Detailed Input
       !>
@@ -23077,10 +23339,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 04-SEP-1991 (NJB) (WLT)
-      module procedure dafcs
+      module subroutine dafcs ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAF to continue searching.
       integer(ip) :: prev
       integer(ip) :: p
       logical :: fnd
@@ -23161,7 +23425,7 @@ contains
 
       return
       end associate
-      end procedure dafcs
+      end subroutine dafcs
 
       !>## Detailed Input
       !>
@@ -23353,10 +23617,13 @@ contains
       !>        low level routines which encode and write the data were
       !>        modified to fix a problem. See the routines WRENCD and WRENCI
       !>        for details of the modification.
-      module procedure dafbt
+      module subroutine dafbt ( ctx, binfil, xfrlun )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rtrim, repmi_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: binfil  !! The name of a binary DAF file to be converted.
+      integer(ip), intent(in) :: xfrlun  !! Logical unit of a previously opened file.
 
       character(*), parameter :: quote = ''''
 
@@ -23869,7 +24136,7 @@ contains
       call dafcls ( ctx, binhdl )
 
       return
-      end procedure dafbt
+      end subroutine dafbt
 
       !>## Abstract
       !>
@@ -24014,9 +24281,13 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafa2b
+      module subroutine dafa2b ( ctx, ascii, binary, resv )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: ascii  !! Name of an existing ASCII (text) DAF.
+      character(*), intent(in) :: binary  !! Name of a binary DAF to be created.
+      integer(ip), intent(in) :: resv  !! Number of records to reserve.
 
       integer(ip) :: unit
 
@@ -24054,7 +24325,7 @@ contains
       close ( unit )
 
       return
-      end procedure dafa2b
+      end subroutine dafa2b
 
       !>## Abstract
       !>
@@ -24196,9 +24467,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafb2a
+      module subroutine dafb2a ( ctx, binary, ascii )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: binary  !! Name of an existing binary DAF.
+      character(*), intent(in) :: ascii  !! Name of an ASCII (text) DAF to be created.
 
       integer(ip) :: unit
 
@@ -24233,7 +24507,7 @@ contains
       close ( unit )
 
       return
-      end procedure dafb2a
+      end subroutine dafb2a
 
       !>## Abstract
       !>
@@ -24471,9 +24745,12 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure dafb2t
+      module subroutine dafb2t ( ctx, binary, text )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: binary  !! Name of an existing binary DAF.
+      integer(ip), intent(in) :: text  !! Logical unit connected to text file.
 
       integer(ip), parameter :: bsize = 100
 
@@ -24810,7 +25087,7 @@ contains
       call dafcls ( ctx, handle )
 
       return
-      end procedure dafb2t
+      end subroutine dafb2t
 
       !>## Abstract
       !>
@@ -25067,10 +25344,14 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure daft2b
+      module subroutine daft2b ( ctx, text, binary, resv )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: decimal_value
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: text  !! Logical unit connected to text file.
+      character(*), intent(in) :: binary  !! Name of a binary DAF to be created.
+      integer(ip), intent(in) :: resv  !! Number of records to reserve.
 
       integer(ip), parameter :: bsize = 1024
 
@@ -25442,7 +25723,7 @@ contains
             end do
          end do
       end subroutine read_doubles
-      end procedure daft2b
+      end subroutine daft2b
 
       !>## Detailed Input
       !>
@@ -25632,10 +25913,13 @@ contains
       !>        low level routines which encode and write the data were
       !>        modified to fix a problem. See the routines WRENCD and WRENCI
       !>        for details of the modification.
-      module procedure daftb
+      module subroutine daftb ( ctx, xfrlun, binfil )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: nextwd, nparsi, nextwd_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: xfrlun  !! Logical unit of an open DAF transfer file.
+      character(*), intent(in) :: binfil  !! Name of a binary DAF file to be created.
 
 !     Local Parameters
 !
@@ -26228,7 +26512,7 @@ contains
       call dafcls ( ctx, binhdl )
 
       return
-      end procedure daftb
+      end subroutine daftb
 
    !> PEPPER: make room in the DAFFA state table for one more search (as
    !> [[dafbfs]] and [[dafbbs]] need when they start a search of a DAF not in the

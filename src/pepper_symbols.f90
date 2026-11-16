@@ -107,10 +107,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sydelc
+      module subroutine sydelc ( ctx, name, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol to be deleted.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -159,7 +165,7 @@ contains
       end if
 
       return
-      end procedure sydelc
+      end subroutine sydelc
 
       !>## Detailed Input
       !>
@@ -256,10 +262,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sydeld
+      module subroutine sydeld ( ctx, name, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol to be deleted.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -308,7 +320,7 @@ contains
       end if
 
       return
-      end procedure sydeld
+      end subroutine sydeld
 
       !>## Detailed Input
       !>
@@ -406,10 +418,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sydeli
+      module subroutine sydeli ( ctx, name, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol to be deleted.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -458,7 +476,7 @@ contains
       end if
 
       return
-      end procedure sydeli
+      end subroutine sydeli
 
       !>## Detailed Input
       !>
@@ -559,10 +577,16 @@ contains
       !>         following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sydimc
+      module integer(ip) function sydimc ( ctx, name, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose dimension is desired.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -598,7 +622,7 @@ contains
       end if
 
       return
-      end procedure sydimc
+      end function sydimc
 
       !>## Detailed Input
       !>
@@ -701,10 +725,16 @@ contains
       !>         following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sydimd
+      module integer(ip) function sydimd ( ctx, name, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose dimension is desired.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -740,7 +770,7 @@ contains
       end if
 
       return
-      end procedure sydimd
+      end function sydimd
 
       !>## Detailed Input
       !>
@@ -848,10 +878,16 @@ contains
       !>         following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sydimi
+      module integer(ip) function sydimi ( ctx, name, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose dimension is desired.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -887,7 +923,7 @@ contains
       end if
 
       return
-      end procedure sydimi
+      end function sydimi
 
       !>## Detailed Input
       !>
@@ -1003,10 +1039,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sydupc
+      module subroutine sydupc ( ctx, name, copy, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol to be duplicated.
+      character(*), intent(in) :: copy  !! Name of the new symbol.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -1155,7 +1198,7 @@ contains
       end if
 
       return
-      end procedure sydupc
+      end subroutine sydupc
 
       !>## Detailed Input
       !>
@@ -1272,10 +1315,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sydupd
+      module subroutine sydupd ( ctx, name, copy, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol to be duplicated.
+      character(*), intent(in) :: copy  !! Name of the new symbol.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -1424,7 +1474,7 @@ contains
       end if
 
       return
-      end procedure sydupd
+      end subroutine sydupd
 
       !>## Detailed Input
       !>
@@ -1542,10 +1592,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sydupi
+      module subroutine sydupi ( ctx, name, copy, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol to be duplicated.
+      character(*), intent(in) :: copy  !! Name of the new symbol.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -1694,7 +1751,7 @@ contains
       end if
 
       return
-      end procedure sydupi
+      end subroutine sydupi
 
       !>## Detailed Input
       !>
@@ -1797,9 +1854,17 @@ contains
       !>-     Beta Version 1.1.0, 17-FEB-1989 (NJB)
       !>
       !>         Declaration of the unused variable SUMAI removed.
-      module procedure syfetc
+      module subroutine syfetc ( ctx, nth, tabsym, tabptr, tabval, name, found )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: nth  !! Index of symbol to be fetched.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(out) :: name  !! Name of the NTH symbol in the symbol table.
+      logical, intent(out) :: found  !! .TRUE. if the NTH symbol is in the symbol table.
 
 
       integer(ip) :: nsym
@@ -1833,7 +1898,7 @@ contains
       end if
 
       return
-      end procedure syfetc
+      end subroutine syfetc
 
       !>## Detailed Input
       !>
@@ -1935,9 +2000,17 @@ contains
       !>-     Beta Version 1.1.0, 17-FEB-1989 (NJB)
       !>
       !>         Declaration of the unused variable SUMAI removed.
-      module procedure syfetd
+      module subroutine syfetd ( ctx, nth, tabsym, tabptr, tabval, name, found )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: nth  !! Index of symbol to be fetched.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(out) :: name  !! Name of the NTH symbol in the symbol table.
+      logical, intent(out) :: found  !! .TRUE. if the NTH symbol is in the symbol table.
 
 
       integer(ip) :: nsym
@@ -1971,7 +2044,7 @@ contains
       end if
 
       return
-      end procedure syfetd
+      end subroutine syfetd
 
       !>## Detailed Input
       !>
@@ -2075,9 +2148,17 @@ contains
       !>-     Beta Version 1.1.0, 17-FEB-1989 (NJB)
       !>
       !>         Declaration of the unused variable SUMAI removed.
-      module procedure syfeti
+      module subroutine syfeti ( ctx, nth, tabsym, tabptr, tabval, name, found )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: nth  !! Index of symbol to be fetched.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(out) :: name  !! Name of the NTH symbol in the symbol table.
+      logical, intent(out) :: found  !! .TRUE. if the NTH symbol is in the symbol table.
 
 
       integer(ip) :: nsym
@@ -2111,7 +2192,7 @@ contains
       end if
 
       return
-      end procedure syfeti
+      end subroutine syfeti
 
       !>## Detailed Input
       !>
@@ -2236,10 +2317,19 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sygetc
+      module subroutine sygetc ( ctx, name, tabsym, tabptr, tabval, n, values, found )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose components are to be returned.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(out) :: n  !! Dimension of the symbol.
+      character(*), intent(out) :: values     (        * )  !! Values associated with the symbol.
+      logical, intent(out) :: found  !! .TRUE. if the symbol NAME is in the symbol table.
 
 
       integer(ip) :: nsym
@@ -2286,7 +2376,7 @@ contains
       end if
 
       return
-      end procedure sygetc
+      end subroutine sygetc
 
       !>## Detailed Input
       !>
@@ -2414,10 +2504,19 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sygetd
+      module subroutine sygetd ( ctx, name, tabsym, tabptr, tabval, n, values, found )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose components are to be returned.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(out) :: n  !! Dimension of the symbol.
+      real(wp), intent(out) :: values     (        * )  !! Values associated with the symbol.
+      logical, intent(out) :: found  !! .TRUE. if the symbol NAME is in the symbol table.
 
 
       integer(ip) :: nsym
@@ -2464,7 +2563,7 @@ contains
       end if
 
       return
-      end procedure sygetd
+      end subroutine sygetd
 
       !>## Detailed Input
       !>
@@ -2592,10 +2691,19 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sygeti
+      module subroutine sygeti ( ctx, name, tabsym, tabptr, tabval, n, values, found )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose components are to be returned.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(out) :: n  !! Dimension of the symbol.
+      integer(ip), intent(out) :: values     (        * )  !! Values associated with the symbol.
+      logical, intent(out) :: found  !! .TRUE. if the symbol NAME is in the symbol table.
 
 
       integer(ip) :: nsym
@@ -2642,7 +2750,7 @@ contains
       end if
 
       return
-      end procedure sygeti
+      end subroutine sygeti
 
       !>## Detailed Input
       !>
@@ -2752,10 +2860,19 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure synthc
+      module subroutine synthc ( ctx, name, nth, tabsym, tabptr, tabval, value, found )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose Nth associated value is to be returned.
+      integer(ip), intent(in) :: nth  !! Index of the value to be returned.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(out) :: value  !! Nth value associated with the symbol.
+      logical, intent(out) :: found  !! .TRUE. if the Nth value of the symbol exists.
 
 
       integer(ip) :: nsym
@@ -2806,7 +2923,7 @@ contains
       end if
 
       return
-      end procedure synthc
+      end subroutine synthc
 
       !>## Detailed Input
       !>
@@ -2918,10 +3035,19 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure synthd
+      module subroutine synthd ( ctx, name, nth, tabsym, tabptr, tabval, value, found )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose Nth component is to be returned.
+      integer(ip), intent(in) :: nth  !! Index of the value to be returned.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(out) :: value  !! Nth value associated with the symbol.
+      logical, intent(out) :: found  !! .TRUE. if the Nth value of the symbol exists.
 
 
       integer(ip) :: nsym
@@ -2972,7 +3098,7 @@ contains
       end if
 
       return
-      end procedure synthd
+      end subroutine synthd
 
       !>## Detailed Input
       !>
@@ -3083,10 +3209,19 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure synthi
+      module subroutine synthi ( ctx, name, nth, tabsym, tabptr, tabval, value, found )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose Nth component is to be returned.
+      integer(ip), intent(in) :: nth  !! Index of the value to be returned.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(out) :: value  !! Nth value associated with the symbol.
+      logical, intent(out) :: found  !! .TRUE. if the Nth value of the symbol exists, false if it does not.
 
 
       integer(ip) :: nsym
@@ -3137,7 +3272,7 @@ contains
       end if
 
       return
-      end procedure synthi
+      end subroutine synthi
 
       !>## Detailed Input
       !>
@@ -3233,10 +3368,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure syordc
+      module subroutine syordc ( ctx, name, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, shellc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose components are to be ordered.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -3273,7 +3414,7 @@ contains
       end if
 
       return
-      end procedure syordc
+      end subroutine syordc
 
       !>## Detailed Input
       !>
@@ -3375,10 +3516,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure syordd
+      module subroutine syordd ( ctx, name, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc, shelld
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose components are to be ordered.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -3415,7 +3562,7 @@ contains
       end if
 
       return
-      end procedure syordd
+      end subroutine syordd
 
       !>## Detailed Input
       !>
@@ -3519,10 +3666,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure syordi
+      module subroutine syordi ( ctx, name, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, shelli
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose components are to be ordered.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -3559,7 +3712,7 @@ contains
       end if
 
       return
-      end procedure syordi
+      end subroutine syordi
 
       !>## Detailed Input
       !>
@@ -3675,10 +3828,18 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sypopc
+      module subroutine sypopc ( ctx, name, tabsym, tabptr, tabval, value, found )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose associated value is to be popped.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(out) :: value  !! Value that was popped.
+      logical, intent(out) :: found  !! .TRUE. if the symbol exists, .FALSE. otherwise.
 
 
       integer(ip) :: nsym
@@ -3749,7 +3910,7 @@ contains
       end if
 
       return
-      end procedure sypopc
+      end subroutine sypopc
 
       !>## Detailed Input
       !>
@@ -3873,10 +4034,18 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sypopd
+      module subroutine sypopd ( ctx, name, tabsym, tabptr, tabval, value, found )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose associated value is to be popped.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(out) :: value  !! Value that was popped.
+      logical, intent(out) :: found  !! .TRUE. if the symbol exists, .FALSE. otherwise.
 
 
       integer(ip) :: nsym
@@ -3947,7 +4116,7 @@ contains
       end if
 
       return
-      end procedure sypopd
+      end subroutine sypopd
 
       !>## Detailed Input
       !>
@@ -4070,10 +4239,18 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sypopi
+      module subroutine sypopi ( ctx, name, tabsym, tabptr, tabval, value, found )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose associated value is to be popped.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(out) :: value  !! Value that was popped.
+      logical, intent(out) :: found  !! .TRUE. if the symbol exists, .FALSE. otherwise.
 
 
       integer(ip) :: nsym
@@ -4144,7 +4321,7 @@ contains
       end if
 
       return
-      end procedure sypopi
+      end subroutine sypopi
 
       !>## Detailed Input
       !>
@@ -4283,10 +4460,18 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure syputc
+      module subroutine syputc ( ctx, name, values, n, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be put into the symbol table.
+      character(*), intent(in) :: values     (        * )  !! Values to be associated with the symbol NAME.
+      integer(ip), intent(in) :: n  !! Number of values in VALUES.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -4402,7 +4587,7 @@ contains
       end if
 
       return
-      end procedure syputc
+      end subroutine syputc
 
       !>## Detailed Input
       !>
@@ -4558,10 +4743,18 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN) (NJB)
-      module procedure syputd
+      module subroutine syputd ( ctx, name, values, n, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be put into the symbol table.
+      real(wp), intent(in) :: values     (        * )  !! Values to be associated with the symbol NAME.
+      integer(ip), intent(in) :: n  !! Number of values in VALUES.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -4678,7 +4871,7 @@ contains
       end if
 
       return
-      end procedure syputd
+      end subroutine syputd
 
       !>## Detailed Input
       !>
@@ -4827,10 +5020,18 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN) (NJB)
-      module procedure syputi
+      module subroutine syputi ( ctx, name, values, n, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be put into the symbol table.
+      integer(ip), intent(in) :: values     (        * )  !! Values to be associated with the symbol NAME.
+      integer(ip), intent(in) :: n  !! Number of values in VALUES.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -4947,7 +5148,7 @@ contains
       end if
 
       return
-      end procedure syputi
+      end subroutine syputi
 
       !>## Detailed Input
       !>
@@ -5094,10 +5295,20 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure syselc
+      module subroutine syselc ( ctx, name, begin, end, tabsym, tabptr, tabval, values, found )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be returned.
+      integer(ip), intent(in) :: begin  !! Index of the first associated value to be returned.
+      integer(ip), intent(in) :: end  !! Index of the last associated value to be returned.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(out) :: values     (        * )  !! Subset of the values associated with the symbol NAME.
+      logical, intent(out) :: found  !! .TRUE. if the subset of values exists.
 
 
       integer(ip) :: nsym
@@ -5154,7 +5365,7 @@ contains
       end if
 
       return
-      end procedure syselc
+      end subroutine syselc
 
       !>## Detailed Input
       !>
@@ -5300,10 +5511,20 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure syseld
+      module subroutine syseld ( ctx, name, begin, end, tabsym, tabptr, tabval, values, found )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be returned.
+      integer(ip), intent(in) :: begin  !! Index of the first associated value to be returned.
+      integer(ip), intent(in) :: end  !! Index of the last associated value to be returned.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(out) :: values     (        * )  !! Subset of the values associated with the symbol NAME.
+      logical, intent(out) :: found  !! .TRUE. if the subset of values exists.
 
 
       integer(ip) :: nsym
@@ -5360,7 +5581,7 @@ contains
       end if
 
       return
-      end procedure syseld
+      end subroutine syseld
 
       !>## Detailed Input
       !>
@@ -5509,10 +5730,20 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure syseli
+      module subroutine syseli ( ctx, name, begin, end, tabsym, tabptr, tabval, values, found )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be returned.
+      integer(ip), intent(in) :: begin  !! Index of the first associated value to be returned.
+      integer(ip), intent(in) :: end  !! Index of the last associated value to be returned.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(in) :: tabval     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(out) :: values     (        * )  !! Subset of the values associated with the symbol NAME.
+      logical, intent(out) :: found  !! .TRUE. if the subset of values exists.
 
 
       integer(ip) :: nsym
@@ -5569,7 +5800,7 @@ contains
       end if
 
       return
-      end procedure syseli
+      end subroutine syseli
 
       !>## Detailed Input
       !>
@@ -5700,10 +5931,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sysetc
+      module subroutine sysetc ( ctx, name, value, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose associated value is to be set.
+      character(*), intent(in) :: value  !! Associated value of the symbol NAME.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -5797,7 +6035,7 @@ contains
       end if
 
       return
-      end procedure sysetc
+      end subroutine sysetc
 
       !>## Detailed Input
       !>
@@ -5924,10 +6162,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sysetd
+      module subroutine sysetd ( ctx, name, value, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose associated value is to be set.
+      real(wp), intent(in) :: value  !! Associated value of the symbol NAME.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -6021,7 +6266,7 @@ contains
       end if
 
       return
-      end procedure sysetd
+      end subroutine sysetd
 
       !>## Detailed Input
       !>
@@ -6150,10 +6395,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure syseti
+      module subroutine syseti ( ctx, name, value, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose associated value is to be set.
+      integer(ip), intent(in) :: value  !! Associated value of the symbol NAME.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -6247,7 +6499,7 @@ contains
       end if
 
       return
-      end procedure syseti
+      end subroutine syseti
 
       !>## Detailed Input
       !>
@@ -6376,10 +6628,18 @@ contains
       !>         If one of the indices of the values to be transposed is
       !>         invalid, an error is signaled and the symbol table is
       !>         not modified.
-      module procedure sytrnc
+      module subroutine sytrnc ( ctx, name, idx1, idx2, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, swapc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be transposed.
+      integer(ip), intent(in) :: idx1  !! Index of first associated value to be transposed.
+      integer(ip), intent(in) :: idx2  !! Index of second associated value to be transposed.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -6443,7 +6703,7 @@ contains
       end if
 
       return
-      end procedure sytrnc
+      end subroutine sytrnc
 
       !>## Detailed Input
       !>
@@ -6578,10 +6838,18 @@ contains
       !>         If one of the indices of the values to be transposed is
       !>         invalid, an error is signaled and the symbol table is
       !>         not modified.
-      module procedure sytrnd
+      module subroutine sytrnd ( ctx, name, idx1, idx2, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc, swapd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be transposed.
+      integer(ip), intent(in) :: idx1  !! Index of first associated value to be transposed.
+      integer(ip), intent(in) :: idx2  !! Index of second associated value to be transposed.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -6646,7 +6914,7 @@ contains
       end if
 
       return
-      end procedure sytrnd
+      end subroutine sytrnd
 
       !>## Detailed Input
       !>
@@ -6779,10 +7047,18 @@ contains
       !>         If one of the indices of the values to be transposed is
       !>         invalid, an error is signaled and the symbol table is
       !>         not modified.
-      module procedure sytrni
+      module subroutine sytrni ( ctx, name, idx1, idx2, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, swapi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol whose associated values are to be transposed.
+      integer(ip), intent(in) :: idx1  !! Index of first associated value to be transposed.
+      integer(ip), intent(in) :: idx2  !! Index of second associated value to be transposed.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -6846,7 +7122,7 @@ contains
       end if
 
       return
-      end procedure sytrni
+      end subroutine sytrni
 
       !>## Detailed Input
       !>
@@ -6964,10 +7240,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure syenqc
+      module subroutine syenqc ( ctx, name, value, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol onto which the value is enqueued.
+      character(*), intent(in) :: value  !! Value to be enqueued.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -7031,7 +7314,7 @@ contains
       end if
 
       return
-      end procedure syenqc
+      end subroutine syenqc
 
       !>## Detailed Input
       !>
@@ -7154,10 +7437,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure syenqd
+      module subroutine syenqd ( ctx, name, value, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol onto which the value is enqueued.
+      real(wp), intent(in) :: value  !! Value to be enqueued.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -7221,7 +7511,7 @@ contains
       end if
 
       return
-      end procedure syenqd
+      end subroutine syenqd
 
       !>## Detailed Input
       !>
@@ -7340,10 +7630,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure syenqi
+      module subroutine syenqi ( ctx, name, value, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol onto which the value is enqueued.
+      integer(ip), intent(in) :: value  !! Value to be enqueued.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -7407,7 +7704,7 @@ contains
       end if
 
       return
-      end procedure syenqi
+      end subroutine syenqi
 
       !>## Detailed Input
       !>
@@ -7523,10 +7820,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sypshc
+      module subroutine sypshc ( ctx, name, value, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol onto which the value is to be pushed.
+      character(*), intent(in) :: value  !! Value that is to be pushed onto the symbol NAME.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -7590,7 +7894,7 @@ contains
       end if
 
       return
-      end procedure sypshc
+      end subroutine sypshc
 
       !>## Detailed Input
       !>
@@ -7710,10 +8014,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sypshd
+      module subroutine sypshd ( ctx, name, value, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol onto which the value is to be pushed.
+      real(wp), intent(in) :: value  !! Value that is to be pushed onto the symbol NAME.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -7777,7 +8088,7 @@ contains
       end if
 
       return
-      end procedure sypshd
+      end subroutine sypshd
 
       !>## Detailed Input
       !>
@@ -7894,10 +8205,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (HAN)
-      module procedure sypshi
+      module subroutine sypshi ( ctx, name, value, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: name  !! Name of the symbol onto which the value is to be pushed.
+      integer(ip), intent(in) :: value  !! Value that is to be pushed onto the symbol NAME.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -7961,7 +8279,7 @@ contains
       end if
 
       return
-      end procedure sypshi
+      end subroutine sypshi
 
       !>## Detailed Input
       !>
@@ -8099,10 +8417,17 @@ contains
       !>-    Beta Version 1.1.0, 17-FEB-1989 (NJB)
       !>
       !>        Declaration of the unused function SIZEC removed.
-      module procedure syrenc
+      module subroutine syrenc ( ctx, old, new, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: old  !! Name of the symbol to be renamed.
+      character(*), intent(in) :: new  !! New name of the symbol.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      character(*), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -8176,7 +8501,7 @@ contains
       end if
 
       return
-      end procedure syrenc
+      end subroutine syrenc
 
       !>## Detailed Input
       !>
@@ -8312,10 +8637,17 @@ contains
       !>-     Beta Version 1.1.0, 17-FEB-1989 (NJB)
       !>
       !>         Declaration of the unused function SIZEC removed.
-      module procedure syrend
+      module subroutine syrend ( ctx, old, new, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc, lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: old  !! Name of the symbol to be renamed.
+      character(*), intent(in) :: new  !! New name of the symbol.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -8389,7 +8721,7 @@ contains
       end if
 
       return
-      end procedure syrend
+      end subroutine syrend
 
       !>## Detailed Input
       !>
@@ -8525,10 +8857,17 @@ contains
       !>-     Beta Version 1.1.0, 17-FEB-1989 (NJB)
       !>
       !>         Declaration of the unused function SIZEC removed.
-      module procedure syreni
+      module subroutine syreni ( ctx, old, new, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc, lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: old  !! Name of the symbol to be renamed.
+      character(*), intent(in) :: new  !! New name of the symbol.
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Components of the symbol table.
+      integer(ip), intent(inout) :: tabval     ( lbcell:* )  !! Components of the symbol table.
 
 
       integer(ip) :: nsym
@@ -8602,6 +8941,6 @@ contains
       end if
 
       return
-      end procedure syreni
+      end subroutine syreni
 
 end submodule pepper_symbols

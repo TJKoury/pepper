@@ -1274,9 +1274,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 20-OCT-1992 (KRG)
-      module procedure rdencc
+      module subroutine rdencc ( ctx, unit, n, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Fortran unit number of input text file.
+      integer(ip), intent(in) :: n  !! Number of characters to be read and decoded.
+      character(*), intent(out) :: data(*)  !! List of decoded characters to be returned.
 
 !     Local parameters
 !
@@ -1506,7 +1510,7 @@ contains
       end do
 
       return
-      end procedure rdencc
+      end subroutine rdencc
 
       !>## Detailed Input
       !>
@@ -1930,9 +1934,13 @@ contains
       !>     all compilers; it equals ICHAR where ICHAR is not negative.)
       !>
       !>     Standard SPICE error handling.
-      module procedure wrencc
+      module subroutine wrencc ( ctx, unit, n, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Fortran unit number of output text file.
+      integer(ip), intent(in) :: n  !! Number of characters to encode and write.
+      character(*), intent(in) :: data ( * )  !! List of characters to encode and write.
       character(1), parameter :: quote = ''''
       character(1), parameter :: chrfpc = ' '
       character(1), parameter :: chrlpc = '~'
@@ -2200,7 +2208,7 @@ contains
 
       return
       end associate
-      end procedure wrencc
+      end subroutine wrencc
 
       !>## Detailed Input
       !>
@@ -2460,10 +2468,13 @@ contains
       !>        DEC Alpha-OSF/1, and NeXT/Absoft Fortran.
       !>
       !>     Beta Version 1.0.0, 17-DEC-1992 (KRG)
-      module procedure writln
+      module subroutine writln ( ctx, line, unit )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: line  !! The line which is to be written to UNIT.
+      integer(ip), intent(in) :: unit  !! The Fortran unit number to use for output.
 
 !     Local variables
 !
@@ -2492,7 +2503,7 @@ contains
       end if
 
       return
-      end procedure writln
+      end subroutine writln
 
       !>## Detailed Input
       !>
@@ -2609,9 +2620,13 @@ contains
       !>        significant relative to the operation of this routine.
       !>
       !>     Beta Version 1.0.0, 18-DEC-1992 (KRG)
-      module procedure writla
+      module subroutine writla ( ctx, numlin, array, unit )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: numlin  !! Number of lines to be written to the file.
+      character(*), intent(in) :: array(*)  !! Array containing the lines to be written.
+      integer(ip), intent(in) :: unit  !! Fortran unit number to use for output.
 
 !     Local variables
 !
@@ -2657,7 +2672,7 @@ contains
 
       return
 
-      end procedure writla
+      end subroutine writla
 
       !>## Detailed Input
       !>
@@ -2740,8 +2755,12 @@ contains
       !>        unnecessary $Version history entries for Beta versions.
       !>
       !>-    SPICELIB Version 1.0.0, 20-DEC-1995 (KRG)
-      module procedure readln
+      module subroutine readln ( ctx, unit, line, eof )
       use pepper_kinds, only: ip
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! The Fortran unit number to use for input.
+      character(*), intent(out) :: line  !! The line read from the file.
+      logical, intent(out) :: eof  !! A logical flag indicating the end of file.
       integer(ip) :: iostat
 !
 !     Standard SPICE error handling.
@@ -2776,7 +2795,7 @@ contains
       end if
 
       return
-      end procedure readln
+      end subroutine readln
 
       !>## Detailed Input
       !>
@@ -2973,9 +2992,15 @@ contains
       !>
       !>        Added a local variable MYEOF so that a value of the variable
       !>        EOF does not affect the termination of the read loop.
-      module procedure readla
+      module subroutine readla ( ctx, unit, maxlin, numlin, array, eof )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Fortran unit number to use for input.
+      integer(ip), intent(in) :: maxlin  !! Maximum number of lines ARRAY can hold.
+      integer(ip), intent(out) :: numlin  !! Number of lines read from the file.
+      character(*), intent(out) :: array(*)  !! Array containing the lines read from the file.
+      logical, intent(out) :: eof  !! Logical flag indicating the end of file.
 
 !     Local variables
 !
@@ -3041,7 +3066,7 @@ contains
 
       return
 
-      end procedure readla
+      end subroutine readla
 
       !>## Abstract
       !>
@@ -3115,10 +3140,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 10-FEB-2017 (NJB)
-      module procedure zzdasgrd
+      module subroutine zzdasgrd ( ctx, handle, recno, record )
       use pepper_kinds, only: ip, wp
       use pepper_inc_das
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      real(wp), intent(out) :: record ( nwd )  !! Double precision data read from record.
       character(nwc) :: chrrec
       character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       integer(ip) :: intamh
@@ -3223,7 +3252,7 @@ contains
 
       return
       end associate
-      end procedure zzdasgrd
+      end subroutine zzdasgrd
 
       !>## Abstract
       !>
@@ -3297,10 +3326,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 10-FEB-2017 (NJB)
-      module procedure zzdasgri
+      module subroutine zzdasgri ( ctx, handle, recno, record )
       use pepper_kinds, only: ip
       use pepper_inc_das
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(out) :: record ( nwi )  !! Integer data read from record.
       character(nwc) :: chrrec
       character(1) :: fname  ! PEPPER: the name is not used (ZZDDHNFO cuts it)
       integer(ip) :: intamh
@@ -3404,7 +3437,7 @@ contains
 
       return
       end associate
-      end procedure zzdasgri
+      end subroutine zzdasgri
 
       !>## Detailed Input
       !>
@@ -3514,11 +3547,20 @@ contains
       !>     Data Statements
       !>
       !>     Standard SPICE error handling.
-      module procedure zzdasnfr
+      module subroutine zzdasnfr ( ctx, lun, idword, ifname, nresvr, nresvc, ncomr, ncomc, format )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       use pepper_inc_zzftprms
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: lun  !! Logical unit number of an open DAS file.
+      character(*), intent(in) :: idword  !! DAS File ID word.
+      character(*), intent(in) :: ifname  !! DAS internal file name.
+      integer(ip), intent(in) :: nresvr  !! Number of reserved records in file.
+      integer(ip), intent(in) :: nresvc  !! Number of characters in use in reserved rec. area.
+      integer(ip), intent(in) :: ncomr  !! Number of comment records in file.
+      integer(ip), intent(in) :: ncomc  !! Number of characters in use in comment area.
+      character(*), intent(in) :: format  !! File binary format identifier string.
       integer(ip), parameter :: preftp = 607
       integer(ip), parameter :: pstftp = 297
       character(1) :: nullch
@@ -3645,7 +3687,7 @@ contains
 
       return
       end associate
-      end procedure zzdasnfr
+      end subroutine zzdasnfr
 
       !>## Detailed Input
       !>
@@ -3778,10 +3820,18 @@ contains
       !>     Initial values
       !>
       !>     Standard SPICE error handling.
-      module procedure zzdasrfr
+      module subroutine zzdasrfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
       use pepper_kinds, only: ip
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      character(*), intent(out) :: idword  !! ID word.
+      character(*), intent(out) :: ifname  !! DAS internal file name.
+      integer(ip), intent(out) :: nresvr  !! Number of reserved records in file.
+      integer(ip), intent(out) :: nresvc  !! Number of characters in use in reserved rec. area.
+      integer(ip), intent(out) :: ncomr  !! Number of comment records in file.
+      integer(ip), intent(out) :: ncomc  !! Number of characters in use in comment area.
       integer(ip) :: ncomc_1(1)  !! one-element copy of ncomc (array argument)
       integer(ip) :: ncomr_1(1)  !! one-element copy of ncomr (array argument)
       integer(ip) :: nresvc_1(1)  !! one-element copy of nresvc (array argument)
@@ -3911,7 +3961,7 @@ contains
 
       return
       end associate
-      end procedure zzdasrfr
+      end subroutine zzdasrfr
 
       !>## Detailed Input
       !>
@@ -4253,11 +4303,14 @@ contains
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
       !>     Standard SPICE error handling.
-      module procedure dasopr
+      module subroutine dasopr ( ctx, fname, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
+      integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
@@ -4534,7 +4587,7 @@ contains
 
       return
       end associate
-      end procedure dasopr
+      end subroutine dasopr
 
       !>## Detailed Input
       !>
@@ -4873,11 +4926,14 @@ contains
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
       !>     Standard SPICE error handling.
-      module procedure dasopw
+      module subroutine dasopw ( ctx, fname, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
+      integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
       integer(ip), parameter :: next   ( 3 ) = &
@@ -5137,7 +5193,7 @@ contains
 
       return
       end associate
-      end procedure dasopw
+      end subroutine dasopw
 
       !>## Detailed Input
       !>
@@ -5413,12 +5469,18 @@ contains
       !>        the various changes made for this version.
       !>
       !>     Standard SPICE error handling.
-      module procedure dasonw
+      module subroutine dasonw ( ctx, fname, ftype, ifname, ncomr, handle )
       use pepper_kinds, only: ip
       use pepper_strings, only: ltrim, rtrim
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
+      character(*), intent(in) :: ftype  !! Mnemonic code for type of data in the DAS file.
+      character(*), intent(in) :: ifname  !! Internal file name.
+      integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
+      integer(ip), intent(in) :: ncomr  !! Number of comment records to allocate.
       integer(ip), parameter :: maxpc = 126
       integer(ip), parameter :: minpc = 32
       integer(ip), parameter :: read = 1
@@ -5638,7 +5700,7 @@ contains
 
       return
       end associate
-      end procedure dasonw
+      end subroutine dasonw
 
       !>## Abstract
       !>
@@ -5908,11 +5970,15 @@ contains
       !>        of the changes made for this version.
       !>
       !>     Standard SPICE error handling.
-      module procedure dasopn
+      module subroutine dasopn ( ctx, fname, ifname, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DAS file to be opened.
+      character(*), intent(in) :: ifname  !! Internal file name.
+      integer(ip), intent(out) :: handle  !! Handle assigned to the opened DAS file.
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
       integer(ip), parameter :: next   ( 3 ) = &
@@ -6074,7 +6140,7 @@ contains
 
       return
       end associate
-      end procedure dasopn
+      end subroutine dasopn
 
       !>## Detailed Input
       !>
@@ -6335,11 +6401,13 @@ contains
       !>        error message.
       !>
       !>     Standard SPICE error handling.
-      module procedure dasops
+      module subroutine dasops ( ctx, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: handle  !! Handle assigned to a scratch DAS file.
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
       integer(ip), parameter :: next   ( 3 ) = &
@@ -6473,7 +6541,7 @@ contains
 
       return
       end associate
-      end procedure dasops
+      end subroutine dasops
 
       !>## Detailed Input
       !>
@@ -6892,11 +6960,13 @@ contains
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
       !>     Standard SPICE error handling.
-      module procedure dasllc
+      module subroutine dasllc ( ctx, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAS file to be closed.
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -6975,7 +7045,7 @@ contains
 
       return
       end associate
-      end procedure dasllc
+      end subroutine dasllc
 
       !>## Detailed Input
       !>
@@ -7398,11 +7468,24 @@ contains
       !>-    SPICELIB Version 1.0.0, 30-JUL-1992 (NJB) (WLT)
       !>
       !>     Standard SPICE error handling.
-      module procedure dashfs
+      module subroutine dashfs ( ctx, handle, nresvr, nresvc, ncomr, ncomc, free, lastla, lastrc, lastwd )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAS file.
+      integer(ip), intent(out) :: free  !! Number of first free record.
+      integer(ip), intent(out) :: lastla ( 3 )  !! Array of last logical addresses for each data
+                                                !! type.
+      integer(ip), intent(out) :: lastrc ( 3 )  !! Record number of last descriptor of each data
+                                                !! type.
+      integer(ip), intent(out) :: lastwd ( 3 )  !! Word number of last descriptor of each data
+                                                !! type.
+      integer(ip), intent(out) :: nresvr  !! Number of reserved records in file.
+      integer(ip), intent(out) :: nresvc  !! Number of characters in use in reserved rec. area.
+      integer(ip), intent(out) :: ncomr  !! Number of comment records in file.
+      integer(ip), intent(out) :: ncomc  !! Number of characters in use in comment area.
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -7473,7 +7556,7 @@ contains
 
       return
       end associate
-      end procedure dashfs
+      end subroutine dashfs
 
       !>## Detailed Input
       !>
@@ -7697,11 +7780,24 @@ contains
       !>-    SPICELIB Version 1.0.0, 30-JUL-1992 (NJB) (WLT)
       !>
       !>     Standard SPICE error handling.
-      module procedure dasufs
+      module subroutine dasufs ( ctx, handle, nresvr, nresvc, ncomr, ncomc, free, lastla, lastrc, lastwd )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an open DAS file.
+      integer(ip), intent(in) :: free  !! Number of first free record.
+      integer(ip), intent(in) :: lastla ( 3 )  !! Array of last logical addresses for each data
+                                               !! type.
+      integer(ip), intent(in) :: lastrc ( 3 )  !! Record number of last descriptor of each data
+                                               !! type.
+      integer(ip), intent(in) :: lastwd ( 3 )  !! Word number of last descriptor of each data
+                                               !! type.
+      integer(ip), intent(in) :: nresvr  !! Number of reserved records in file.
+      integer(ip), intent(in) :: nresvc  !! Number of characters in use in reserved rec. area.
+      integer(ip), intent(in) :: ncomr  !! Number of comment records in file.
+      integer(ip), intent(in) :: ncomc  !! Number of characters in use in comment area.
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
       integer(ip), parameter :: next   ( 3 ) = &
@@ -7874,7 +7970,7 @@ contains
 
       return
       end associate
-      end procedure dasufs
+      end subroutine dasufs
 
       !>## Detailed Input
       !>
@@ -8003,11 +8099,14 @@ contains
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
       !>     We use discovery check-ins in this routine.
-      module procedure dashlu
+      module subroutine dashlu ( ctx, handle, unit )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAS file.
+      integer(ip), intent(out) :: unit  !! Corresponding logical unit.
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -8073,7 +8172,7 @@ contains
 
       return
       end associate
-      end procedure dashlu
+      end subroutine dashlu
 
       !>## Detailed Input
       !>
@@ -8191,11 +8290,14 @@ contains
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
       !>     Standard SPICE error handling.
-      module procedure dasluh
+      module subroutine dasluh ( ctx, unit, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: handle  !! Corresponding handle.
+      integer(ip), intent(in) :: unit  !! Logical unit connected to a DAS file.
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -8253,7 +8355,7 @@ contains
 
       return
       end associate
-      end procedure dasluh
+      end subroutine dasluh
 
       !>## Detailed Input
       !>
@@ -8428,11 +8530,14 @@ contains
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
       !>     Standard SPICE error handling.
-      module procedure dashfn
+      module subroutine dashfn ( ctx, handle, fname )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: fname  !! Corresponding file name.
+      integer(ip), intent(in) :: handle  !! Handle of a DAS file.
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -8498,7 +8603,7 @@ contains
 
       return
       end associate
-      end procedure dashfn
+      end subroutine dashfn
 
       !>## Detailed Input
       !>
@@ -8617,11 +8722,14 @@ contains
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
       !>     Standard SPICE error handling.
-      module procedure dasfnh
+      module subroutine dasfnh ( ctx, fname, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DAS file.
+      integer(ip), intent(out) :: handle  !! Corresponding handle.
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -8677,7 +8785,7 @@ contains
 
       return
       end associate
-      end procedure dasfnh
+      end subroutine dasfnh
 
       !>## Detailed Input
       !>
@@ -8786,13 +8894,17 @@ contains
       !>        by the environment label SUN.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
-      module procedure dashof
+      module subroutine dashof ( ctx, fhset )
       use pepper_arrays, only: shelli
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
       integer(ip), parameter :: lbcell = -5
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: fhset  ( lbcell : * )  !! A set containing handles of
+                                                           !! currently
+                                                         !! open DAS files.
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
       integer(ip), parameter :: prev   ( 3 ) = &
@@ -8858,7 +8970,7 @@ contains
 
       return
       end associate
-      end procedure dashof
+      end subroutine dashof
 
       !>## Detailed Input
       !>
@@ -9020,12 +9132,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT) (IMU)
       !>
       !>     Standard SPICE error handling.
-      module procedure dassih
+      module subroutine dassih ( ctx, handle, access )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! HANDLE to be validated.
+      character(*), intent(in) :: access  !! String indicating access type.
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: write = read  + 1
       integer(ip), parameter :: next   ( 3 ) = &
@@ -9135,7 +9250,7 @@ contains
 !
       return
       end associate
-      end procedure dassih
+      end subroutine dassih
 
       !>## Detailed Input
       !>
@@ -9260,11 +9375,14 @@ contains
       !>-    SPICELIB Version 1.0.0, 01-FEB-1993 (NJB) (WLT) (IMU)
       !>
       !>     Standard SPICE error handling.
-      module procedure dasham
+      module subroutine dasham ( ctx, handle, access )
       use pepper_kinds, only: ip
       use pepper_inc_das
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! HANDLE of a DAS file.
+      character(*), intent(out) :: access  !! String indicating allowed access method.
       integer(ip), parameter :: read = 1
       integer(ip), parameter :: next   ( 3 ) = &
          [ 2, 3, 1 ]
@@ -9337,7 +9455,7 @@ contains
 
       return
       end associate
-      end procedure dasham
+      end subroutine dasham
 
       !>## Detailed Input
       !>
@@ -9488,9 +9606,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
       !>     If it hasn't been done yet, initialize the pointer list pools.
-      module procedure dasrrd
+      module subroutine dasrrd ( ctx, handle, recno, first, last, datad )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: first  !! First and last indices of range within record.
+      integer(ip), intent(in) :: last  !! First and last indices of range within record.
+      real(wp), intent(out) :: datad   ( * )  !! Double precision data read from record.
       logical :: return
       integer(ip) :: node
       integer(ip) :: wrunit
@@ -9673,7 +9797,7 @@ contains
 
       return
       end associate
-      end procedure dasrrd
+      end subroutine dasrrd
 
       !>## Detailed Input
       !>
@@ -9821,9 +9945,15 @@ contains
       !>     Non-standard SPICE error handling.
       !>
       !>     If it hasn't been done yet, initialize the pointer list pools.
-      module procedure dasrri
+      module subroutine dasrri ( ctx, handle, recno, first, last, datai )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: first  !! First and last indices of range within record.
+      integer(ip), intent(in) :: last  !! First and last indices of range within record.
+      integer(ip), intent(out) :: datai   ( * )  !! Integer data read from record.
       logical :: return
       integer(ip) :: node
       integer(ip) :: wrunit
@@ -10002,7 +10132,7 @@ contains
 
       return
       end associate
-      end procedure dasrri
+      end subroutine dasrri
 
       !>## Detailed Input
       !>
@@ -10145,9 +10275,15 @@ contains
       !>        to the function RETURN.
       !>
       !>     If it hasn't been done yet, initialize the pointer list pools.
-      module procedure dasrrc
+      module subroutine dasrrc ( ctx, handle, recno, first, last, datac )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: first  !! First and last indices of range within record.
+      integer(ip), intent(in) :: last  !! First and last indices of range within record.
+      character(*), intent(out) :: datac  !! Character data read from record.
       logical :: return
       integer(ip) :: node
       integer(ip) :: unit
@@ -10321,7 +10457,7 @@ contains
 
       return
       end associate
-      end procedure dasrrc
+      end subroutine dasrrc
 
       !>## Detailed Input
       !>
@@ -10453,9 +10589,14 @@ contains
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
       !>     Standard SPICE error handling.
-      module procedure daswrd
+      module subroutine daswrd ( ctx, handle, recno, recd )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: nwd = 128
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      real(wp), intent(in) :: recd    ( nwd )  !! Double precision data to be written to record.
       integer(ip) :: node
       integer(ip) :: wrunit
       call files_check ( ctx )
@@ -10604,7 +10745,7 @@ contains
 
       return
       end associate
-      end procedure daswrd
+      end subroutine daswrd
 
       !>## Detailed Input
       !>
@@ -10735,9 +10876,14 @@ contains
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
       !>     Standard SPICE error handling.
-      module procedure daswri
+      module subroutine daswri ( ctx, handle, recno, reci )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: nwi = 256
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: reci    ( nwi )  !! Integer data to be written to record.
       integer(ip) :: node
       integer(ip) :: unit
       integer(ip) :: wrunit
@@ -10888,7 +11034,7 @@ contains
 
       return
       end associate
-      end procedure daswri
+      end subroutine daswri
 
       !>## Detailed Input
       !>
@@ -11020,9 +11166,13 @@ contains
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
       !>     Standard SPICE error handling.
-      module procedure daswrc
+      module subroutine daswrc ( ctx, handle, recno, recc )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      character(*), intent(in) :: recc  !! Character data to be written to record.
       integer(ip) :: node
       integer(ip) :: wrunit
       call files_check ( ctx )
@@ -11170,7 +11320,7 @@ contains
 
       return
       end associate
-      end procedure daswrc
+      end subroutine daswrc
 
       !>## Detailed Input
       !>
@@ -11331,9 +11481,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
       !>     Standard SPICE error handling.
-      module procedure dasurd
+      module subroutine dasurd ( ctx, handle, recno, first, last, datad )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: first  !! First and last indices of range within record.
+      integer(ip), intent(in) :: last  !! First and last indices of range within record.
+      real(wp), intent(in) :: datad   ( * )  !! Double precision data to write to record.
       integer(ip) :: node
       integer(ip) :: wrunit
       call files_check ( ctx )
@@ -11518,7 +11674,7 @@ contains
 
       return
       end associate
-      end procedure dasurd
+      end subroutine dasurd
 
       !>## Detailed Input
       !>
@@ -11679,9 +11835,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
       !>     Standard SPICE error handling.
-      module procedure dasuri
+      module subroutine dasuri ( ctx, handle, recno, first, last, datai )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: first  !! First and last indices of range within record.
+      integer(ip), intent(in) :: last  !! First and last indices of range within record.
+      integer(ip), intent(in) :: datai   ( * )  !! Integer data to write to record.
       integer(ip) :: node
       integer(ip) :: wrunit
       call files_check ( ctx )
@@ -11864,7 +12026,7 @@ contains
 
       return
       end associate
-      end procedure dasuri
+      end subroutine dasuri
 
       !>## Detailed Input
       !>
@@ -12030,9 +12192,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
       !>     Standard SPICE error handling.
-      module procedure dasurc
+      module subroutine dasurc ( ctx, handle, recno, first, last, datac )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
+      integer(ip), intent(in) :: recno  !! Record number.
+      integer(ip), intent(in) :: first  !! First and last indices of range within record.
+      integer(ip), intent(in) :: last  !! First and last indices of range within record.
+      character(*), intent(in) :: datac  !! Character data to write to record.
       integer(ip) :: node
       integer(ip) :: unit
       integer(ip) :: wrunit
@@ -12218,7 +12386,7 @@ contains
 
       return
       end associate
-      end procedure dasurc
+      end subroutine dasurc
 
       !>## Detailed Input
       !>
@@ -12615,9 +12783,11 @@ contains
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
       !>
       !>     Standard SPICE error handling.
-      module procedure daswbr
+      module subroutine daswbr ( ctx, handle )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DAS file.
       integer(ip) :: node
       integer(ip) :: wrunit
       integer(ip) :: next
@@ -12820,7 +12990,7 @@ contains
 
       return
       end associate
-      end procedure daswbr
+      end subroutine daswbr
 
       !>## Detailed Input
       !>
@@ -12956,10 +13126,16 @@ contains
       !>        Header was updated to refer to ZZDDHHLU.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      module procedure dasioc
+      module subroutine dasioc ( ctx, action, unit, recno, record )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: nwc = 1024
+      character(*), intent(in) :: action  !! Action to take (read or write).
+      integer(ip), intent(in) :: unit  !! Fortran unit connected to DAS file.
+      integer(ip), intent(in) :: recno  !! Number of record to read or write.
+      character(nwc), intent(inout) :: record  !! DAS character record.
 
 
       integer(ip) :: iostat
@@ -13021,7 +13197,7 @@ contains
       end if
 
       return
-      end procedure dasioc
+      end subroutine dasioc
 
       !>## Detailed Input
       !>
@@ -13161,10 +13337,16 @@ contains
       !>        was updated.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      module procedure dasiod
+      module subroutine dasiod ( ctx, action, unit, recno, record )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: nwd = 128
+      character(*), intent(in) :: action  !! Action to take (read or write).
+      integer(ip), intent(in) :: unit  !! Fortran unit connected to DAS file.
+      integer(ip), intent(in) :: recno  !! Number of record to read or write.
+      real(wp), intent(inout) :: record ( nwd )  !! DAS double precision record.
 
 
       integer(ip) :: iostat
@@ -13228,7 +13410,7 @@ contains
       end if
 
       return
-      end procedure dasiod
+      end subroutine dasiod
 
       !>## Detailed Input
       !>
@@ -13367,10 +13549,16 @@ contains
       !>        was updated.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      module procedure dasioi
+      module subroutine dasioi ( ctx, action, unit, recno, record )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: nwi = 256
+      character(*), intent(in) :: action  !! Action to take (read or write).
+      integer(ip), intent(in) :: unit  !! Fortran unit connected to DAS file.
+      integer(ip), intent(in) :: recno  !! Number of record to read or write.
+      integer(ip), intent(inout) :: record ( nwi )  !! DAS integer record.
 
 
       integer(ip) :: iostat
@@ -13432,7 +13620,7 @@ contains
       end if
 
       return
-      end procedure dasioi
+      end subroutine dasioi
 
       !>## Detailed Input
       !>
@@ -13935,9 +14123,17 @@ contains
       !>     ========================
       !>
       !>     Make sure the data type is valid.
-      module procedure dasa2l
+      module subroutine dasa2l ( ctx, handle, type, addrss, clbase, clsize, recno, wordno )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: type  !! Data type specifier.
+      integer(ip), intent(in) :: addrss  !! DAS address of a word of data type TYPE.
+      integer(ip), intent(out) :: clbase  !! Cluster base record number and size.
+      integer(ip), intent(out) :: clsize  !! Cluster base record number and size.
+      integer(ip), intent(out) :: recno  !! Record/word pair corresponding to ADDRSS.
+      integer(ip), intent(out) :: wordno  !! Record/word pair corresponding to ADDRSS.
       integer(ip) :: nxtrec_1(1)  !! one-element copy of nxtrec (array argument)
       integer(ip), parameter :: char = 1
       integer(ip), parameter :: int = 3
@@ -14510,7 +14706,7 @@ contains
 
       return
       end associate
-      end procedure dasa2l
+      end subroutine dasa2l
 
       !>## Detailed Input
       !>
@@ -14702,9 +14898,13 @@ contains
       !>        Removed an unused variable, PREV.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1992 (NJB) (WLT)
-      module procedure dascud
+      module subroutine dascud ( ctx, handle, type, nwords )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: type  !! Data type specifier.
+      integer(ip), intent(in) :: nwords  !! Number of words of data being added.
       integer(ip) :: recno_1(1)  !! one-element copy of recno (array argument)
       integer(ip) :: descr_1(1)  !! one-element copy of descr (array argument)
 
@@ -15340,7 +15540,7 @@ contains
       end if
 
       return
-      end procedure dascud
+      end subroutine dascud
 
       !>## Detailed Input
       !>
@@ -15465,9 +15665,13 @@ contains
       !>        once a DAS file is segregated, this bug had no effect on
       !>        DAS files that were created and closed via DASCLS, then
       !>        commented via the commnt utility.
-      module procedure dasacr
+      module subroutine dasacr ( ctx, handle, n )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! A DAS file handle.
+      integer(ip), intent(in) :: n  !! Number of comment records to append to the comment area of
+                                    !! the specified file.
 
 !
 !     Words per data record, for each data type:
@@ -15811,7 +16015,7 @@ contains
                     lastwd )
 
       return
-      end procedure dasacr
+      end subroutine dasacr
 
       !>## Detailed Input
       !>
@@ -15927,9 +16131,12 @@ contains
       !>        declarations.
       !>
       !>-    SPICELIB Version 1.0.0, 15-NOV-1992 (NJB) (WLT)
-      module procedure dasrcr
+      module subroutine dasrcr ( ctx, handle, n )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! A DAS file handle.
+      integer(ip), intent(in) :: n  !! Number of comment records to remove.
 
 !
 !     Words per data record, for each data type:
@@ -16223,7 +16430,7 @@ contains
                     lastwd )
 
       return
-      end procedure dasrcr
+      end subroutine dasrcr
 
       !>## Detailed Input
       !>
@@ -16383,9 +16590,11 @@ contains
       !>        in calls to DASADI. This bug had no visible effect on
       !>        VAX and Sun systems, but generated a compile error under
       !>        Lahey Fortran.
-      module procedure dassdr
+      module subroutine dassdr ( ctx, handle )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
       integer(ip) :: offset_1(1)  !! one-element copy of offset (array argument)
       integer(ip) :: savtyp_1(1)  !! one-element copy of savtyp (array argument)
       integer(ip) :: dest_1(1)  !! one-element copy of dest (array argument)
@@ -17114,7 +17323,7 @@ contains
       call dasllc ( ctx, scrhan )
 
       return
-      end procedure dassdr
+      end subroutine dassdr
 
       !>## Detailed Input
       !>
@@ -17486,9 +17695,16 @@ contains
       !>     Initial values
       !>
       !>     Standard SPICE error handling.
-      module procedure dasadc
+      module subroutine dasadc ( ctx, handle, n, bpos, epos, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: n  !! Number of characters to add to file.
+      integer(ip), intent(in) :: bpos  !! Begin and end positions of substrings.
+      integer(ip), intent(in) :: epos  !! Begin and end positions of substrings.
+      character(*), intent(in) :: data   ( * )  !! Array providing the set of substrings to be
+                                                !! added to the character data in the DAS file.
       integer(ip), parameter :: char = 1
       integer(ip) :: chr
       integer(ip) :: clbase
@@ -17708,7 +17924,7 @@ contains
 
       return
       end associate
-      end procedure dasadc
+      end subroutine dasadc
 
       !>## Detailed Input
       !>
@@ -17995,9 +18211,13 @@ contains
       !>     Initial values
       !>
       !>     Standard SPICE error handling.
-      module procedure dasadd
+      module subroutine dasadd ( ctx, handle, n, data )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: n  !! Number of d.p. numbers to add to DAS file.
+      real(wp), intent(in) :: data   ( * )  !! Array of d.p. numbers to add.
       integer(ip) :: clbase
       integer(ip) :: clsize
       integer(ip) :: free
@@ -18142,7 +18362,7 @@ contains
 
       return
       end associate
-      end procedure dasadd
+      end subroutine dasadd
 
       !>## Detailed Input
       !>
@@ -18418,9 +18638,13 @@ contains
       !>     Initial values
       !>
       !>     Standard SPICE error handling.
-      module procedure dasadi
+      module subroutine dasadi ( ctx, handle, n, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: n  !! Number of integers to add to DAS file.
+      integer(ip), intent(in) :: data   ( * )  !! Array of integers to add.
       integer(ip), parameter :: int = 3
       integer(ip) :: clbase
       integer(ip) :: clsize
@@ -18562,7 +18786,7 @@ contains
 
       return
       end associate
-      end procedure dasadi
+      end subroutine dasadi
 
       !>## Detailed Input
       !>
@@ -18905,9 +19129,16 @@ contains
       !>        Test of FAILED() added to loop termination conditions. Without
       !>        this test, an infinite loop could result if DASA2L or DASRRC
       !>        signaled an error inside the loops.
-      module procedure dasrdc
+      module subroutine dasrdc ( ctx, handle, first, last, bpos, epos, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: first  !! Range of DAS character logical addresses.
+      integer(ip), intent(in) :: last  !! Range of DAS character logical addresses.
+      integer(ip), intent(in) :: bpos  !! Begin and end positions of substrings.
+      integer(ip), intent(in) :: epos  !! Begin and end positions of substrings.
+      character(*), intent(out) :: data   ( * )  !! Data having addresses FIRST through LAST.
 
 
       integer(ip), parameter :: char = 1
@@ -19079,7 +19310,7 @@ contains
       end do
 
       return
-      end procedure dasrdc
+      end subroutine dasrdc
 
       !>## Detailed Input
       !>
@@ -19314,9 +19545,16 @@ contains
       !>        Test of FAILED() added to loop termination condition. Without
       !>        this test, an infinite loop could result if DASA2L or DASRRD
       !>        signaled an error inside the loop.
-      module procedure dasrdd
+      module subroutine dasrdd ( ctx, handle, first, last, data )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: first  !! Bounds of range of DAS double precision logical
+                                        !! addresses.
+      integer(ip), intent(in) :: last  !! Bounds of range of DAS double precision logical
+                                       !! addresses.
+      real(wp), intent(out) :: data   ( * )  !! Data having addresses FIRST through LAST.
 
 
 
@@ -19396,7 +19634,7 @@ contains
       end do
 
       return
-      end procedure dasrdd
+      end subroutine dasrdd
 
       !>## Detailed Input
       !>
@@ -19622,9 +19860,14 @@ contains
       !>        Test of FAILED() added to loop termination condition. Without
       !>        this test, an infinite loop could result if DASA2L or DASRRI
       !>        signaled an error inside the loop.
-      module procedure dasrdi
+      module subroutine dasrdi ( ctx, handle, first, last, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: first  !! Bounds of range of DAS integer logical addresses.
+      integer(ip), intent(in) :: last  !! Bounds of range of DAS integer logical addresses.
+      integer(ip), intent(out) :: data   ( * )  !! Data having addresses FIRST through LAST.
 
 
       integer(ip), parameter :: int = 3
@@ -19705,7 +19948,7 @@ contains
       end do
 
       return
-      end procedure dasrdi
+      end subroutine dasrdi
 
       !>## Detailed Input
       !>
@@ -20048,9 +20291,16 @@ contains
       !>        Tests of FAILED() added to loop termination conditions.
       !>        Without these tests, infinite loops could result if DASA2L or
       !>        DASURC signaled an error inside the loops.
-      module procedure dasudc
+      module subroutine dasudc ( ctx, handle, first, last, bpos, epos, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: first  !! Range of DAS character logical addresses.
+      integer(ip), intent(in) :: last  !! Range of DAS character logical addresses.
+      integer(ip), intent(in) :: bpos  !! Begin and end positions of substrings.
+      integer(ip), intent(in) :: epos  !! Begin and end positions of substrings.
+      character(*), intent(in) :: data   ( * )  !! Data having addresses FIRST through LAST.
 
 
       integer(ip), parameter :: char = 1
@@ -20272,7 +20522,7 @@ contains
       end do
 
       return
-      end procedure dasudc
+      end subroutine dasudc
 
       !>## Detailed Input
       !>
@@ -20535,9 +20785,14 @@ contains
       !>        Test of FAILED() added to loop termination condition. Without
       !>        this test, an infinite loop could result if DASA2L or DASURD
       !>        signaled an error inside the loop.
-      module procedure dasudd
+      module subroutine dasudd ( ctx, handle, first, last, data )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: first  !! Range of d.p. addresses to write to.
+      integer(ip), intent(in) :: last  !! Range of d.p. addresses to write to.
+      real(wp), intent(in) :: data   ( * )  !! An array of d.p. numbers.
 
 
 
@@ -20659,7 +20914,7 @@ contains
       end do
 
       return
-      end procedure dasudd
+      end subroutine dasudd
 
       !>## Detailed Input
       !>
@@ -20913,9 +21168,14 @@ contains
       !>        Test of FAILED() added to loop termination condition. Without
       !>        this test, an infinite loop could result if DASA2L or DASURI
       !>        signaled an error inside the loop.
-      module procedure dasudi
+      module subroutine dasudi ( ctx, handle, first, last, data )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(in) :: first  !! Range of integer addresses to write to.
+      integer(ip), intent(in) :: last  !! Range of integer addresses to write to.
+      integer(ip), intent(in) :: data   ( * )  !! An array of integers.
 
       integer(ip), parameter :: int = 3
 
@@ -21038,7 +21298,7 @@ contains
       end do
 
       return
-      end procedure dasudi
+      end subroutine dasudi
 
       !>## Detailed Input
       !>
@@ -21380,10 +21640,12 @@ contains
       !>     Initial values
       !>
       !>     Standard SPICE error handling.
-      module procedure dascls
+      module subroutine dascls ( ctx, handle )
       use pepper_kinds, only: ip
       use pepper_inc_das
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an open DAS file.
       character(10) :: method
       integer(ip) :: iostat
       integer(ip) :: unit
@@ -21475,7 +21737,7 @@ contains
       call dasllc ( ctx, handle )
 
       return
-      end procedure dascls
+      end subroutine dascls
 
       !>## Detailed Input
       !>
@@ -21691,9 +21953,17 @@ contains
       !>        check out and return if DASHLU fails. This is so that when in
       !>        return mode of the error handling the READ following the call
       !>        to DASHLU will not be executed.
-      module procedure dasrfr
+      module subroutine dasrfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      character(*), intent(out) :: idword  !! ID word.
+      character(*), intent(out) :: ifname  !! DAS internal file name.
+      integer(ip), intent(out) :: nresvr  !! Number of reserved records in file.
+      integer(ip), intent(out) :: nresvc  !! Number of characters in use in reserved rec. area.
+      integer(ip), intent(out) :: ncomr  !! Number of comment records in file.
+      integer(ip), intent(out) :: ncomc  !! Number of characters in use in comment area.
 
 !
 !     Standard SPICE error handling.
@@ -21706,7 +21976,7 @@ contains
       if ( ctx%failed() ) return
 
       return
-      end procedure dasrfr
+      end subroutine dasrfr
 
       !>## Detailed Input
       !>
@@ -21895,9 +22165,17 @@ contains
       !>        clear.
       !>
       !>-    SPICELIB Version 1.0.0, 24-NOV-1992 (NJB) (WLT)
-      module procedure daswfr
+      module subroutine daswfr ( ctx, handle, idword, ifname, nresvr, nresvc, ncomr, ncomc )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      character(*), intent(in) :: idword  !! ID word.
+      character(*), intent(in) :: ifname  !! DAS internal file name.
+      integer(ip), intent(in) :: nresvr  !! Number of reserved records in file.
+      integer(ip), intent(in) :: nresvc  !! Number of characters in use in reserved rec. area.
+      integer(ip), intent(in) :: ncomr  !! Number of comment records in file.
+      integer(ip), intent(in) :: ncomc  !! Number of characters in use in comment area.
 
 
 
@@ -22056,7 +22334,7 @@ contains
                     lastwd )
 
       return
-      end procedure daswfr
+      end subroutine daswfr
 
       !>## Detailed Input
       !>
@@ -22180,9 +22458,13 @@ contains
       !>        Fixed a typo in the $Particulars section.
       !>
       !>-    SPICELIB Version 1.0.0, 23-NOV-1992 (KRG)
-      module procedure dasac
+      module subroutine dasac ( ctx, handle, n, buffer )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS handle of a file opened with write access.
+      integer(ip), intent(in) :: n  !! Number of comments to put into the comment area.
+      character(*), intent(in) :: buffer(*)  !! Buffer of lines to be put into the comment area.
 
 !     Length of a DAS character record, in characters.
 !
@@ -22515,7 +22797,7 @@ contains
 !     the call to DASWFR.
 !
       return
-      end procedure dasac
+      end subroutine dasac
 
       !>## Detailed Input
       !>
@@ -22841,9 +23123,15 @@ contains
       !>        Added a check of FAILED after the call to GETLUN to trap
       !>        an error, if one is signaled by GETLUN, before attempting to
       !>        open the SCRATCH file.
-      module procedure dasacu
+      module subroutine dasacu ( ctx, comlun, begmrk, endmrk, insbln, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: comlun  !! Logical unit of the open comment text file.
+      character(*), intent(in) :: begmrk  !! The begin comments marker in the comment text file.
+      character(*), intent(in) :: endmrk  !! The end comments marker in the comment text file.
+      logical, intent(in) :: insbln  !! A flag indicating whether to insert a blank line.
+      integer(ip), intent(in) :: handle  !! Handle of a DAS file opened with write access.
 
 !     Set the value for the maximum length of a text line.
 !
@@ -23214,7 +23502,7 @@ contains
       close ( scrlun )
 
       return
-      end procedure dasacu
+      end subroutine dasacu
 
       !>## Detailed Input
       !>
@@ -23307,9 +23595,11 @@ contains
       !>        should have been opened with write access.
       !>
       !>-    SPICELIB Version 1.0.0, 24-NOV-1992 (KRG)
-      module procedure dasdc
+      module subroutine dasdc ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of a binary DAS file opened for writing.
 
 !     Local parameters
 !
@@ -23387,7 +23677,7 @@ contains
 !     We're done now, so goodbye.
 !
       return
-      end procedure dasdc
+      end subroutine dasdc
 
       !>## Detailed Input
       !>
@@ -23709,11 +23999,17 @@ contains
       !>     Initial values
       !>
       !>     Standard SPICE error handling.
-      module procedure dasec
+      module subroutine dasec ( ctx, handle, bufsiz, n, buffer, done )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip
       use pepper_inc_das
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of binary DAS file open with read access.
+      integer(ip), intent(in) :: bufsiz  !! Maximum size, in lines, of BUFFER.
+      integer(ip), intent(out) :: n  !! Number of comments extracted from the DAS file.
+      character(*), intent(out) :: buffer(*)  !! Buffer in which extracted comments are placed.
+      logical, intent(out) :: done  !! Indicates whether all comments have been extracted.
       character(1) :: ch
       character(idwlen) :: idword
       character(ifnlen) :: ifname
@@ -24054,12 +24350,15 @@ contains
 
       return
       end associate
-      end procedure dasec
+      end subroutine dasec
 
       !> All the comment lines of a DAS file, each of any length (PEPPER).
-      module procedure das_comments
+      module subroutine das_comments ( ctx, handle, lines )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of a DAS file open for reading
+      type(string), allocatable, intent(out) :: lines(:)  !! the comment lines (size 0 after an error)
       integer(ip), parameter :: nchrec = 1024  ! characters in a record
       character(8) :: idword
       character(60) :: ifname
@@ -24088,7 +24387,7 @@ contains
          text((k-1)*nchrec+1:k*nchrec) = crecrd
       end do
       call split_comment_lines ( text(1:min(ncomc, len(text))), lines )
-      end procedure das_comments
+      end subroutine das_comments
 
       !>## Detailed Input
       !>
@@ -24181,9 +24480,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 05-JAN-1993 (KRG)
-      module procedure dasecu
+      module subroutine dasecu ( ctx, handle, comlun, comnts )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAS file opened with read access.
+      integer(ip), intent(in) :: comlun  !! Logical unit of an opened text file.
+      logical, intent(out) :: comnts  !! Logical flag, indicating comments were found.
 
 !     Set the value for the maximum length of a text line.
 !
@@ -24248,7 +24551,7 @@ contains
       comnts = gotsom
 
       return
-      end procedure dasecu
+      end subroutine dasecu
 
       !>## Detailed Input
       !>
@@ -24387,10 +24690,13 @@ contains
       !>        into a character string and then write the character string.
       !>
       !>-    SPICELIB Version 1.0.0, 29-OCT-1992 (KRG)
-      module procedure dasbt
+      module subroutine dasbt ( ctx, binfil, xfrlun )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rtrim, repmi_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: binfil  !! Name of the binary DAS file to be converted.
+      integer(ip), intent(in) :: xfrlun  !! Logical unit of a previously opened file.
 
       character(*), parameter :: quote = ''''
 !
@@ -25323,7 +25629,7 @@ contains
       call dascls ( ctx, handle )
 
       return
-      end procedure dasbt
+      end subroutine dasbt
 
       !>## Detailed Input
       !>
@@ -25517,10 +25823,13 @@ contains
       !>        ncomc appeared where nresvc should have been.
       !>
       !>-    SPICELIB Version 1.0.0, 02-NOV-1992 (KRG)
-      module procedure dastb
+      module subroutine dastb ( ctx, xfrlun, binfil )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: nextwd, nparsi, nextwd_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: xfrlun  !! Logical unit of an open DAS transfer file.
+      character(*), intent(in) :: binfil  !! Name of the binary DAS file to be created.
       integer(ip) :: nidata_1(1)  !! one-element copy of nidata (array argument)
       integer(ip) :: nddata_1(1)  !! one-element copy of nddata (array argument)
       integer(ip) :: ncdata_1(1)  !! one-element copy of ncdata (array argument)
@@ -27524,7 +27833,7 @@ contains
       call dascls ( ctx, handle )
 
       return
-      end procedure dastb
+      end subroutine dastb
 
       !>## Detailed Input
       !>
@@ -27672,9 +27981,14 @@ contains
       !>        code example from existing fragment.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1992 (NJB) (WLT)
-      module procedure daslla
+      module subroutine daslla ( ctx, handle, lastc, lastd, lasti )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DAS file handle.
+      integer(ip), intent(out) :: lastc  !! Last character address in use.
+      integer(ip), intent(out) :: lastd  !! Last double precision address in use.
+      integer(ip), intent(out) :: lasti  !! Last integer address in use.
 
 !
 !     Local parameters.
@@ -27717,6 +28031,6 @@ contains
       lasti = lastla(int)
 
       return
-      end procedure daslla
+      end subroutine daslla
 
 end submodule pepper_das

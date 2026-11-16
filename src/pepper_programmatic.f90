@@ -33,19 +33,35 @@ contains
 
    !> Add a programmatic ephemeris (PEPPER): it replaces the program's
    !> earlier one of the body (not a kernel's: [[kb_add_ephemeris]]).
-   module procedure spice_add_ephemeris
+   module subroutine spice_add_ephemeris ( this, body, center, frame, tbeg, tend, provider )
       implicit none
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
+      integer(ip), intent(in) :: body  !! the body's ID code
+      integer(ip), intent(in) :: center  !! the ID code of its center of motion
+      character(*), intent(in) :: frame  !! the frame of the states
+      real(wp), intent(in) :: tbeg  !! start of the coverage (TDB seconds past J2000)
+      real(wp), intent(in) :: tend  !! end of the coverage
+      class(ephemeris_provider), intent(in) :: provider  !! the source of the states
       type(pepper_context), pointer :: ctx
       ctx => this%context()
       if ( ctx%failed() ) return
       call register_ephemeris ( ctx, body, center, frame, tbeg, tend, provider, 0_ip, virtual_ident, .true. )
-   end procedure spice_add_ephemeris
+   end subroutine spice_add_ephemeris
 
    !> Register a programmatic ephemeris owned by a kernel (PEPPER).
-   module procedure register_owned_ephemeris
+   module subroutine register_owned_ephemeris ( ctx, body, center, frame, tbeg, tend, provider, owner, ident )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      integer(ip), intent(in) :: body  !! the body
+      integer(ip), intent(in) :: center  !! its center
+      character(*), intent(in) :: frame  !! the frame
+      real(wp), intent(in) :: tbeg  !! start of the coverage
+      real(wp), intent(in) :: tend  !! end of the coverage
+      class(ephemeris_provider), intent(in) :: provider  !! the source of the states
+      integer(ip), intent(in) :: owner  !! the kernel's handle
+      character(*), intent(in) :: ident  !! the segment identifier
       call register_ephemeris ( ctx, body, center, frame, tbeg, tend, provider, owner, ident, .false. )
-   end procedure register_owned_ephemeris
+   end subroutine register_owned_ephemeris
 
    !> Register a programmatic ephemeris: check it, add its virtual file (one
    !> segment, of type 100) to the SPK segment index (as SPKLEF indexes a
@@ -141,13 +157,15 @@ contains
 
    !> Remove a programmatic ephemeris (PEPPER): the program's of the body
    !> (not a kernel's, which goes with its kernel).
-   module procedure spice_remove_ephemeris
+   module subroutine spice_remove_ephemeris ( this, body )
       implicit none
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
+      integer(ip), intent(in) :: body  !! the body's ID code
       type(pepper_context), pointer :: ctx
       ctx => this%context()
       if ( ctx%failed() ) return
       call remove_ephemeris_entry ( ctx, body )
-   end procedure spice_remove_ephemeris
+   end subroutine spice_remove_ephemeris
 
    !> Remove the program's programmatic ephemeris of a body, if it has one.
    subroutine remove_ephemeris_entry ( ctx, body )
@@ -163,14 +181,16 @@ contains
    end subroutine remove_ephemeris_entry
 
    !> Remove the programmatic ephemerides a kernel owns (PEPPER).
-   module procedure remove_owned_ephemerides
+   module subroutine remove_owned_ephemerides ( ctx, owner )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      integer(ip), intent(in) :: owner  !! the kernel's handle
       integer(ip) :: i
       if ( owner == 0 ) return
       do i = ctx%spice%nprovided_spk, 1, -1
          if ( ctx%spice%provided_spk(i)%owner == owner ) call remove_entry_at ( ctx, i )
       end do
-   end procedure remove_owned_ephemerides
+   end subroutine remove_owned_ephemerides
 
    !> Remove registration I: its virtual file leaves the segment index.
    subroutine remove_entry_at ( ctx, i )
@@ -197,8 +217,9 @@ contains
    end subroutine remove_entry_at
 
    !> Remove every programmatic ephemeris (KCLEAR) (PEPPER).
-   module procedure clear_provided_ephemerides
+   module subroutine clear_provided_ephemerides ( ctx )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip) :: i
       associate ( sp => ctx%spice )
       if ( sp%nprovided_spk == 0 ) return
@@ -209,12 +230,16 @@ contains
       deallocate ( sp%provided_spk )
       sp%nprovided_spk = 0
       end associate
-   end procedure clear_provided_ephemerides
+   end subroutine clear_provided_ephemerides
 
    !> The state of a programmatic ephemeris's virtual segment (SPKPVN's
    !> type 100) (PEPPER).
-   module procedure provided_state
+   recursive module subroutine provided_state ( ctx, handle, et, state )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the virtual file's handle
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp), intent(out) :: state(6)  !! the state relative to the registered center
       integer(ip) :: i
       logical :: found
       state = 0.0_wp
@@ -241,18 +266,24 @@ contains
       //            'handle #.' )
       call ctx%errint ( '#', handle )
       call ctx%sigerr ( 'SPICE(INVALIDHANDLE)' )
-   end procedure provided_state
+   end subroutine provided_state
 
    !> The state of [[ephemeris_procedure]]: its procedure's (PEPPER).
-   module procedure ephemeris_procedure_state
+   recursive module subroutine ephemeris_procedure_state ( self, ctx, body, et, state, found )
       implicit none
+      class(ephemeris_procedure), intent(in) :: self  !! the provider
+      class(pepper_context), intent(inout) :: ctx  !! the context of the query
+      integer(ip), intent(in) :: body  !! the body's ID code
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp), intent(out) :: state(6)  !! the state
+      logical, intent(out) :: found  !! a state is available at ET
       if ( associated ( self%f ) ) then
          call self%f ( ctx, body, et, state, found )
       else
          state = 0.0_wp
          found = .false.
       end if
-   end procedure ephemeris_procedure_state
+   end subroutine ephemeris_procedure_state
 
    ! ----------------------------------------------------------------------
    ! Frames
@@ -260,8 +291,13 @@ contains
 
    !> Add a programmatic frame (PEPPER): it replaces the program's earlier
    !> one of the code (not a kernel's: [[kb_add_frame]]).
-   module procedure spice_add_frame
+   module subroutine spice_add_frame ( this, name, code, center, provider )
       implicit none
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: name  !! the frame's name
+      integer(ip), intent(in) :: code  !! its ID code
+      integer(ip), intent(in) :: center  !! the ID code of its center
+      class(frame_provider), intent(in) :: provider  !! the source of its orientation
       type(pepper_context), pointer :: ctx
       integer(ip) :: i
       ctx => this%context()
@@ -276,23 +312,32 @@ contains
          end if
       end do
       call register_frame ( ctx, name, code, center, provider, 0_ip )
-   end procedure spice_add_frame
+   end subroutine spice_add_frame
 
    !> Register a programmatic frame owned by a kernel (PEPPER).
-   module procedure register_owned_frame
+   module subroutine register_owned_frame ( ctx, name, code, center, provider, owner )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      character(*), intent(in) :: name  !! the frame's name
+      integer(ip), intent(in) :: code  !! its ID code
+      integer(ip), intent(in) :: center  !! its center
+      class(frame_provider), intent(in) :: provider  !! the source of its orientation
+      integer(ip), intent(in) :: owner  !! the kernel's handle
       call check_frame_definition ( ctx, name, code )
       if ( ctx%failed() ) return
       call register_frame ( ctx, name, code, center, provider, owner )
-   end procedure register_owned_frame
+   end subroutine register_owned_frame
 
    !> Check a programmatic frame's name and code (PEPPER): the name and the
    !> code must not be those of another frame (a built-in frame, or a frame
    !> of a kernel under another name or code); a programmatic frame of the
    !> same name and code may be registered again.
-   module procedure check_frame_definition
+   module subroutine check_frame_definition ( ctx, name, code )
       use pepper_strings, only: ucase
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      character(*), intent(in) :: name  !! the frame's name
+      integer(ip), intent(in) :: code  !! its ID code
       character(len=len(name)) :: uname
       character(:), allocatable :: existing
       integer(ip) :: other
@@ -329,7 +374,7 @@ contains
             return
          end if
       end if
-   end procedure check_frame_definition
+   end subroutine check_frame_definition
 
    !> Append a programmatic frame's registration (the most recent), and
    !> write its definition into the kernel pool.
@@ -418,20 +463,24 @@ contains
    end subroutine remove_frame_at
 
    !> Remove the programmatic frames a kernel owns (PEPPER).
-   module procedure remove_owned_frames
+   module subroutine remove_owned_frames ( ctx, owner )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      integer(ip), intent(in) :: owner  !! the kernel's handle
       integer(ip) :: i
       if ( owner == 0 ) return
       do i = ctx%spice%nprovided_frames, 1, -1
          if ( ctx%spice%provided_frames(i)%owner == owner ) call remove_frame_at ( ctx, i )
       end do
-   end procedure remove_owned_frames
+   end subroutine remove_owned_frames
 
    !> Remove a programmatic frame (PEPPER): the program's of the name (not
    !> a kernel's, which goes with its kernel).
-   module procedure spice_remove_frame
+   module subroutine spice_remove_frame ( this, name )
       use pepper_strings, only: ucase
       implicit none
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: name  !! the frame's name
       type(pepper_context), pointer :: ctx
       character(len=len(name)) :: uname
       integer(ip) :: i
@@ -444,7 +493,7 @@ contains
             return
          end if
       end do
-   end procedure spice_remove_frame
+   end subroutine spice_remove_frame
 
    !> Whether a frame code is that of a built-in frame (one whose definition
    !> is not in the kernel pool).
@@ -481,27 +530,35 @@ contains
    end subroutine write_frame_definition
 
    !> Forget every programmatic frame (KCLEAR) (PEPPER).
-   module procedure clear_provided_frames
+   module subroutine clear_provided_frames ( ctx )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
       associate ( sp => ctx%spice )
       if ( allocated ( sp%provided_frames ) ) deallocate ( sp%provided_frames )
       sp%nprovided_frames = 0
       end associate
-   end procedure clear_provided_frames
+   end subroutine clear_provided_frames
 
    !> Write the definitions of the programmatic frames into the kernel pool
    !> (CLPOOL) (PEPPER).
-   module procedure write_provided_frames
+   module subroutine write_provided_frames ( ctx )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
       integer(ip) :: i
       do i = 1, ctx%spice%nprovided_frames
          call write_frame_definition ( ctx, ctx%spice%provided_frames(i) )
       end do
-   end procedure write_provided_frames
+   end subroutine write_provided_frames
 
    !> The rotation of a programmatic frame (ROTGET's class 7) (PEPPER).
-   module procedure provided_rotation
+   recursive module subroutine provided_rotation ( ctx, frame, et, rotate, outfrm, found )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: frame  !! the frame's ID code
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp), intent(out) :: rotate(3, 3)  !! the rotation from FRAME to OUTFRM
+      integer(ip), intent(out) :: outfrm  !! the frame rotated to
+      logical, intent(out) :: found  !! a rotation is available
       integer(ip) :: i
       logical :: known
       rotate = 0.0_wp
@@ -529,12 +586,18 @@ contains
       //            'but no provider has been added for it (ADD_FRAME).' )
       call ctx%errint ( '#', frame )
       call ctx%sigerr ( 'SPICE(UNKNOWNFRAMETYPE)' )
-   end procedure provided_rotation
+   end subroutine provided_rotation
 
    !> The state transformation of a programmatic frame (FRMGET's class 7)
    !> (PEPPER).
-   module procedure provided_transform
+   recursive module subroutine provided_transform ( ctx, frame, et, xform, outfrm, found )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: frame  !! the frame's ID code
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp), intent(out) :: xform(6, 6)  !! the transformation from FRAME to OUTFRM
+      integer(ip), intent(out) :: outfrm  !! the frame transformed to
+      logical, intent(out) :: found  !! a transformation is available
       integer(ip) :: i
       logical :: known
       xform  = 0.0_wp
@@ -562,20 +625,34 @@ contains
       //            'but no provider has been added for it (ADD_FRAME).' )
       call ctx%errint ( '#', frame )
       call ctx%sigerr ( 'SPICE(UNKNOWNFRAMETYPE)' )
-   end procedure provided_transform
+   end subroutine provided_transform
 
    !> A frame provider's rotation: the rotation block of its transformation
    !> (PEPPER).
-   module procedure frame_provider_rotation
+   recursive module subroutine frame_provider_rotation ( self, ctx, frame, et, rotate, relative, found )
       implicit none
+      class(frame_provider), intent(in) :: self  !! the provider
+      class(pepper_context), intent(inout) :: ctx  !! the context of the query
+      integer(ip), intent(in) :: frame  !! the frame's ID code
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp), intent(out) :: rotate(3, 3)  !! the rotation from this frame to RELATIVE
+      integer(ip), intent(out) :: relative  !! the frame rotated to
+      logical, intent(out) :: found  !! the rotation is available at ET
       real(wp) :: xform(6, 6)
       call self%transform ( ctx, frame, et, xform, relative, found )
       rotate = xform(1:3, 1:3)
-   end procedure frame_provider_rotation
+   end subroutine frame_provider_rotation
 
    !> The transformation of [[frame_procedure]]: its procedure's (PEPPER).
-   module procedure frame_procedure_transform
+   recursive module subroutine frame_procedure_transform ( self, ctx, frame, et, xform, relative, found )
       implicit none
+      class(frame_procedure), intent(in) :: self  !! the provider
+      class(pepper_context), intent(inout) :: ctx  !! the context of the query
+      integer(ip), intent(in) :: frame  !! the frame's ID code
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp), intent(out) :: xform(6, 6)  !! the transformation from this frame to RELATIVE
+      integer(ip), intent(out) :: relative  !! the frame transformed to
+      logical, intent(out) :: found  !! the transformation is available at ET
       if ( associated ( self%f ) ) then
          call self%f ( ctx, frame, et, xform, relative, found )
       else
@@ -583,7 +660,7 @@ contains
          relative = 0
          found    = .false.
       end if
-   end procedure frame_procedure_transform
+   end subroutine frame_procedure_transform
 
    ! ----------------------------------------------------------------------
    ! Nesting

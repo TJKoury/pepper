@@ -63,24 +63,59 @@ contains
    ! ----------------------------------------------------------------------
 
    !> Add an SPK segment of type 9 (PEPPER).
-   module procedure kb_spk_lagrange
+   module subroutine kb_spk_lagrange ( this, ctx, body, center, frame, epochs, states, degree, &
+                                       tbeg, tend, ident, adapt )
       implicit none
+      class(kernel_builder), intent(inout) :: this  !! the builder
+      class(pepper_context), intent(inout) :: ctx  !! a context, for the errors (any; its instance is not used)
+      integer(ip), intent(in) :: body  !! the body
+      integer(ip), intent(in) :: center  !! its center of motion
+      character(*), intent(in) :: frame  !! the frame of the states
+      real(wp), intent(in) :: epochs(:)  !! the epochs (TDB seconds past J2000), increasing
+      real(wp), intent(in) :: states(:, :)  !! the states (6, size(epochs)), km and km/s
+      integer(ip), intent(in) :: degree  !! the degree of the Lagrange polynomials (1 to 27)
+      real(wp), intent(in), optional :: tbeg  !! start of the coverage (default: the first epoch)
+      real(wp), intent(in), optional :: tend  !! end of the coverage (default: the last epoch)
+      character(*), intent(in), optional :: ident  !! the segment identifier (default: blank)
+      logical, intent(in), optional :: adapt  !! adapt the degree of a short segment (default: false)
       call add_segment ( this, ctx, 9_ip, body, center, frame, epochs, states, degree, &
                          tbeg, tend, ident, adapt )
-   end procedure kb_spk_lagrange
+   end subroutine kb_spk_lagrange
 
    !> Add an SPK segment of type 13 (PEPPER).
-   module procedure kb_spk_hermite
+   module subroutine kb_spk_hermite ( this, ctx, body, center, frame, epochs, states, degree, &
+                                      tbeg, tend, ident, adapt )
       implicit none
+      class(kernel_builder), intent(inout) :: this  !! the builder
+      class(pepper_context), intent(inout) :: ctx  !! a context, for the errors (any; its instance is not used)
+      integer(ip), intent(in) :: body  !! the body
+      integer(ip), intent(in) :: center  !! its center of motion
+      character(*), intent(in) :: frame  !! the frame of the states
+      real(wp), intent(in) :: epochs(:)  !! the epochs (TDB seconds past J2000), increasing
+      real(wp), intent(in) :: states(:, :)  !! the states (6, size(epochs)), km and km/s
+      integer(ip), intent(in) :: degree  !! the degree of the Hermite polynomials (odd, 1 to 27)
+      real(wp), intent(in), optional :: tbeg  !! start of the coverage (default: the first epoch)
+      real(wp), intent(in), optional :: tend  !! end of the coverage (default: the last epoch)
+      character(*), intent(in), optional :: ident  !! the segment identifier (default: blank)
+      logical, intent(in), optional :: adapt  !! adapt the degree of a short segment (default: false)
       call add_segment ( this, ctx, 13_ip, body, center, frame, epochs, states, degree, &
                          tbeg, tend, ident, adapt )
-   end procedure kb_spk_hermite
+   end subroutine kb_spk_hermite
 
    !> Add a programmatic ephemeris to the kernel (PEPPER): kept until the
    !> builder is loaded, then registered (owned by the kernel) until it is
    !> unloaded.
-   module procedure kb_add_ephemeris
+   module subroutine kb_add_ephemeris ( this, ctx, body, center, frame, tbeg, tend, provider, ident )
       implicit none
+      class(kernel_builder), intent(inout) :: this  !! the builder
+      class(pepper_context), intent(inout) :: ctx  !! a context, for the errors (any; its instance is not used)
+      integer(ip), intent(in) :: body  !! the body
+      integer(ip), intent(in) :: center  !! its center of motion
+      character(*), intent(in) :: frame  !! the frame of the states
+      real(wp), intent(in) :: tbeg  !! start of the coverage (TDB seconds past J2000)
+      real(wp), intent(in) :: tend  !! end of the coverage
+      class(ephemeris_provider), intent(in) :: provider  !! the source of the states (copied)
+      character(*), intent(in), optional :: ident  !! the segment identifier (default: PROGRAMMATIC EPHEMERIS)
       type(builder_provider), allocatable :: tmp(:)
       integer(ip) :: k
       if ( ctx%failed() ) return
@@ -124,7 +159,7 @@ contains
          if ( allocated ( p%provider ) ) deallocate ( p%provider )
          allocate ( p%provider, source = provider )
       end associate
-   end procedure kb_add_ephemeris
+   end subroutine kb_add_ephemeris
 
    !> Move a builder's programmatic ephemeris (its allocatable parts
    !> without copying).
@@ -141,16 +176,48 @@ contains
    end subroutine move_provider
 
    !> Add a table of rotations to the kernel, as quaternions (PEPPER).
-   module procedure kb_frame_quaternions
+   module subroutine kb_frame_quaternions ( this, ctx, name, code, center, base, epochs, quats, degree, &
+                                            av, method, inverse, tbeg, tend, ident )
       implicit none
+      class(kernel_builder), intent(inout) :: this  !! the builder
+      class(pepper_context), intent(inout) :: ctx  !! a context, for the errors (any; its instance is not used)
+      character(*), intent(in) :: name  !! the frame's name
+      integer(ip), intent(in) :: code  !! its ID code
+      integer(ip), intent(in) :: center  !! its center (a body's ID code)
+      character(*), intent(in) :: base  !! the frame the rotations are relative to
+      real(wp), intent(in) :: epochs(:)  !! the epochs (TDB seconds past J2000), increasing
+      real(wp), intent(in) :: quats(:, :)  !! the quaternions (4, size(epochs)): from BASE to the frame
+      integer(ip), intent(in) :: degree  !! the degree of the interpolation (odd)
+      real(wp), intent(in), optional :: av(:, :)  !! the angular velocities (3, size(epochs)), rad/s, in BASE
+      character(*), intent(in), optional :: method  !! 'LAGRANGE' (default) or 'HERMITE'
+      logical, intent(in), optional :: inverse  !! the rotations are from the frame to BASE
+      real(wp), intent(in), optional :: tbeg  !! start of the coverage (default: the first epoch)
+      real(wp), intent(in), optional :: tend  !! end of the coverage (default: the last epoch)
+      character(*), intent(in), optional :: ident  !! the segment identifier
       call add_rotation_table ( this, ctx, name, code, center, base, epochs, quats, degree, &
                                 av, method, inverse, tbeg, tend, ident )
-   end procedure kb_frame_quaternions
+   end subroutine kb_frame_quaternions
 
    !> Add a table of rotations to the kernel, as rotation matrices
    !> (PEPPER): converted to quaternions (M2Q).
-   module procedure kb_frame_matrices
+   module subroutine kb_frame_matrices ( this, ctx, name, code, center, base, epochs, rots, degree, &
+                                         av, method, inverse, tbeg, tend, ident )
       implicit none
+      class(kernel_builder), intent(inout) :: this  !! the builder
+      class(pepper_context), intent(inout) :: ctx  !! a context, for the errors
+      character(*), intent(in) :: name  !! the frame's name
+      integer(ip), intent(in) :: code  !! its ID code
+      integer(ip), intent(in) :: center  !! its center
+      character(*), intent(in) :: base  !! the frame the rotations are relative to
+      real(wp), intent(in) :: epochs(:)  !! the epochs, increasing
+      real(wp), intent(in) :: rots(:, :, :)  !! the rotation matrices (3, 3, size(epochs)): from BASE to the frame
+      integer(ip), intent(in) :: degree  !! the degree of the interpolation (odd)
+      real(wp), intent(in), optional :: av(:, :)  !! the angular velocities (3, size(epochs))
+      character(*), intent(in), optional :: method  !! 'LAGRANGE' (default) or 'HERMITE'
+      logical, intent(in), optional :: inverse  !! the rotations are from the frame to BASE
+      real(wp), intent(in), optional :: tbeg  !! start of the coverage
+      real(wp), intent(in), optional :: tend  !! end of the coverage
+      character(*), intent(in), optional :: ident  !! the segment identifier
       real(wp), allocatable :: q(:, :)
       integer(ip) :: k
       if ( ctx%failed() ) return
@@ -169,7 +236,7 @@ contains
       end do
       call add_rotation_table ( this, ctx, name, code, center, base, epochs, q, degree, &
                                 av, method, inverse, tbeg, tend, ident )
-   end procedure kb_frame_matrices
+   end subroutine kb_frame_matrices
 
    !> Check a table of rotations as CKW05 does, make its quaternions'
    !> signs continuous, pack it as a CK type 5 segment (ET tags, a rate of
@@ -372,8 +439,14 @@ contains
    end subroutine add_rotation_table
 
    !> Add a programmatic frame to the kernel (PEPPER).
-   module procedure kb_add_frame
+   module subroutine kb_add_frame ( this, ctx, name, code, center, provider )
       implicit none
+      class(kernel_builder), intent(inout) :: this  !! the builder
+      class(pepper_context), intent(inout) :: ctx  !! a context, for the errors
+      character(*), intent(in) :: name  !! the frame's name
+      integer(ip), intent(in) :: code  !! its ID code
+      integer(ip), intent(in) :: center  !! its center
+      class(frame_provider), intent(in) :: provider  !! the source of its orientation (copied)
       type(builder_frame), allocatable :: tmp(:)
       integer(ip) :: k
       if ( ctx%failed() ) return
@@ -402,11 +475,17 @@ contains
          if ( allocated ( f%provider ) ) deallocate ( f%provider )
          allocate ( f%provider, source = provider )
       end associate
-   end procedure kb_add_frame
+   end subroutine kb_add_frame
 
    !> The rotation tables of a kernel built in memory, for a frame (PEPPER).
-   module procedure kernel_frame_tables
+   module subroutine kernel_frame_tables ( ctx, name, code, is_kernel, tbeg, tend )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! the kernel's name
+      integer(ip), intent(in) :: code  !! the frame's code
+      logical, intent(out) :: is_kernel  !! a kernel built in memory has the name
+      real(wp), allocatable, intent(out) :: tbeg(:)  !! the tables' coverage: starts
+      real(wp), allocatable, intent(out) :: tend(:)  !! ends
       integer(ip) :: k, i, n, pass, owner
       call kernel_owner ( ctx, name, is_kernel, owner )
       if ( .not. is_kernel ) then
@@ -433,11 +512,15 @@ contains
          end do
          if ( pass == 1 ) allocate ( tbeg(n), tend(n) )
       end do
-   end procedure kernel_frame_tables
+   end subroutine kernel_frame_tables
 
    !> The frames of the rotation tables of a kernel built in memory (PEPPER).
-   module procedure kernel_frame_codes
+   module subroutine kernel_frame_codes ( ctx, name, is_kernel, codes )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! the kernel's name
+      logical, intent(out) :: is_kernel  !! a kernel built in memory has the name
+      integer(ip), allocatable, intent(out) :: codes(:)  !! the frames' codes (with repeats)
       integer(ip) :: k, n, pass, owner
       call kernel_owner ( ctx, name, is_kernel, owner )
       if ( .not. is_kernel ) then
@@ -459,7 +542,7 @@ contains
          end do
          if ( pass == 1 ) allocate ( codes(n) )
       end do
-   end procedure kernel_frame_codes
+   end subroutine kernel_frame_codes
 
    !> Whether NAME is a kernel built in memory, and its handle (the owner of
    !> what it defines).
@@ -477,9 +560,16 @@ contains
 
    !> The rotation of a frame of rotation tables (PEPPER): the last table
    !> that covers ET, evaluated by CKR05 and CKE05 (ET as the time tag).
-   module procedure rotation_table_rotation
+   recursive module subroutine rotation_table_rotation ( self, ctx, frame, et, rotate, relative, found )
       use pepper_inc_ckparam, only: ckmrsz
       implicit none
+      class(rotation_table), intent(in) :: self  !! the frame's tables
+      class(pepper_context), intent(inout) :: ctx  !! the context of the query
+      integer(ip), intent(in) :: frame  !! the frame's ID code
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp), intent(out) :: rotate(3, 3)  !! the rotation from the frame to RELATIVE
+      integer(ip), intent(out) :: relative  !! the base frame
+      logical, intent(out) :: found  !! a table covers ET
       real(wp) :: record(ckmrsz), cmat(3, 3), av(3), clkout
       integer(ip) :: s
       rotate = 0.0_wp
@@ -497,14 +587,21 @@ contains
          relative = self%bases(s)
          return
       end do
-   end procedure rotation_table_rotation
+   end subroutine rotation_table_rotation
 
    !> The state transformation of a frame of rotation tables (PEPPER), as
    !> CKFXFM makes it from the C-matrix and the angular velocity.
-   module procedure rotation_table_transform
+   recursive module subroutine rotation_table_transform ( self, ctx, frame, et, xform, relative, found )
       use pepper_inc_ckparam, only: ckmrsz
       use pepper_math, only: rav2xf
       implicit none
+      class(rotation_table), intent(in) :: self  !! the frame's tables
+      class(pepper_context), intent(inout) :: ctx  !! the context of the query
+      integer(ip), intent(in) :: frame  !! the frame's ID code
+      real(wp), intent(in) :: et  !! the epoch
+      real(wp), intent(out) :: xform(6, 6)  !! the transformation from the frame to RELATIVE
+      integer(ip), intent(out) :: relative  !! the base frame
+      logical, intent(out) :: found  !! a table covers ET
       real(wp) :: record(ckmrsz), cmat(3, 3), av(3), clkout, ref2in(6, 6)
       integer(ip) :: s
       xform = 0.0_wp
@@ -523,13 +620,17 @@ contains
          relative = self%bases(s)
          return
       end do
-   end procedure rotation_table_transform
+   end subroutine rotation_table_transform
 
    !> Define a body name of the kernel (PEPPER): kept until the builder is
    !> loaded, then defined (owned by the kernel) until it is unloaded.
-   module procedure kb_define_body
+   module subroutine kb_define_body ( this, ctx, name, code )
       use pepper_containers, only: grow
       implicit none
+      class(kernel_builder), intent(inout) :: this  !! the builder
+      class(pepper_context), intent(inout) :: ctx  !! a context, for the errors (any; its instance is not used)
+      character(*), intent(in) :: name  !! the body's name
+      integer(ip), intent(in) :: code  !! its NAIF ID code
       if ( ctx%failed() ) return
       if ( name == ' ' ) then
          call ctx%setmsg ( 'An attempt to assign the code, #, to a blank ' &
@@ -543,17 +644,20 @@ contains
       call grow ( this%body_codes, this%nbodies )
       this%body_names(this%nbodies)%s = trim ( adjustl ( name ) )
       this%body_codes(this%nbodies) = code
-   end procedure kb_define_body
+   end subroutine kb_define_body
 
    !> Set the description of the kernel (PEPPER).
-   module procedure kb_set_format
+   module subroutine kb_set_format ( this, text )
       implicit none
+      class(kernel_builder), intent(inout) :: this  !! the builder
+      character(*), intent(in) :: text  !! the description
       this%format = trim ( text )
-   end procedure kb_set_format
+   end subroutine kb_set_format
 
    !> Empty the builder (PEPPER).
-   module procedure kb_clear
+   module subroutine kb_clear ( this )
       implicit none
+      class(kernel_builder), intent(inout) :: this  !! the builder
       if ( allocated ( this%segments ) ) deallocate ( this%segments )
       this%nseg = 0
       if ( allocated ( this%format ) ) deallocate ( this%format )
@@ -566,13 +670,14 @@ contains
       this%ntab = 0
       if ( allocated ( this%frames ) ) deallocate ( this%frames )
       this%nframes = 0
-   end procedure kb_clear
+   end subroutine kb_clear
 
    !> The number of segments (PEPPER).
-   module procedure kb_nsegments
+   module integer(ip) function kb_nsegments ( this )
       implicit none
+      class(kernel_builder), intent(in) :: this  !! the builder
       kb_nsegments = this%nseg + this%nprov + this%ntab + this%nframes
-   end procedure kb_nsegments
+   end function kb_nsegments
 
    !> Check a segment identifier as the SPK and CK writers do: at most 40
    !> characters (SPICE(SEGIDTOOLONG)), all printable
@@ -790,8 +895,12 @@ contains
    ! ----------------------------------------------------------------------
 
    !> Load a builder as a kernel named NAME (PEPPER).
-   module procedure spice_load_kernel
+   module subroutine spice_load_kernel ( this, name, kb, keep )
       implicit none
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: name  !! the kernel's name (non-blank)
+      type(kernel_builder), intent(inout) :: kb  !! the builder (emptied unless keep)
+      logical, intent(in), optional :: keep  !! copy the builder's data instead of moving it
       type(pepper_context), pointer :: ctx
       type(kernel_builder) :: copy
       character(:), allocatable :: kname, fmt
@@ -829,7 +938,7 @@ contains
       if ( ctx%failed() ) return
       call this%keeper%add ( keeper_kernel ( name = kname, type = 'SPK', handle = handle, source = 0, &
                                              loader = '', format = fmt ) )
-   end procedure spice_load_kernel
+   end subroutine spice_load_kernel
 
    !> Unload every kernel loaded under NAME (UNLOAD removes the last one
    !> each time).
@@ -1258,8 +1367,13 @@ contains
    end subroutine file_record
 
    !> Write a kernel built in memory to SPICE kernel files (PEPPER).
-   module procedure spice_write_kernel
+   module subroutine spice_write_kernel ( this, name, file, ck_file, text_file )
       implicit none
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: name  !! the kernel's name (as loaded)
+      character(*), intent(in) :: file  !! the SPK file to write (blank: none)
+      character(*), intent(in), optional :: ck_file  !! the CK file of the rotation tables
+      character(*), intent(in), optional :: text_file  !! the text kernel: SCLKs, frame definitions, body names
       type(pepper_context), pointer :: ctx
       character(:), allocatable :: kname
       integer(ip) :: i, k, owner, ck
@@ -1359,7 +1473,7 @@ contains
          end if
       end subroutine not_there
 
-   end procedure spice_write_kernel
+   end subroutine spice_write_kernel
 
    !> Write a DAF image to a file (a new direct-access file of 1024-byte
    !> records).
@@ -1581,19 +1695,29 @@ contains
    ! ----------------------------------------------------------------------
 
    !> The default detect: no file (PEPPER).
-   module procedure kernel_loader_detect
+   module logical function kernel_loader_detect ( self, file, head )
       implicit none
+      class(kernel_loader), intent(in) :: self  !! the loader
+      character(*), intent(in) :: file  !! the file
+      character(*), intent(in) :: head  !! the start of the file: its first `len(head)` bytes (at most 4096; fewer for a short file)
       kernel_loader_detect = .false.
-   end procedure kernel_loader_detect
+   end function kernel_loader_detect
 
    !> The default unload: nothing (PEPPER).
-   module procedure kernel_loader_unload
+   module subroutine kernel_loader_unload ( self, file )
       implicit none
-   end procedure kernel_loader_unload
+      class(kernel_loader), intent(inout) :: self  !! the loader
+      character(*), intent(in) :: file  !! the file unloaded
+   end subroutine kernel_loader_unload
 
    !> Register a kernel loader (PEPPER).
-   module procedure spice_add_loader
+   module subroutine spice_add_loader ( this, name, loader, extensions, replace )
       implicit none
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: name  !! the loader's name (case-insensitive)
+      class(kernel_loader), intent(in) :: loader  !! the loader (copied)
+      character(*), intent(in), optional :: extensions(:)  !! file-name endings, e.g. '.myeph' (case-insensitive)
+      logical, intent(in), optional :: replace  !! replace a loader with this name or these extensions
       type(pepper_context), pointer :: ctx
       type(registered_loader), allocatable :: tmp(:)
       type(string), allocatable :: exts(:)
@@ -1686,7 +1810,7 @@ contains
       call move_alloc ( exts, this%loaders(k)%extensions )
       if ( allocated ( this%loaders(k)%loader ) ) deallocate ( this%loaders(k)%loader )
       allocate ( this%loaders(k)%loader, source = loader )
-   end procedure spice_add_loader
+   end subroutine spice_add_loader
 
    !> Remove from a registered loader the extensions in EXTS.
    subroutine drop_extensions ( entry, exts )
@@ -1719,8 +1843,10 @@ contains
    end function any_is
 
    !> Remove a kernel loader (PEPPER).
-   module procedure spice_remove_loader
+   module subroutine spice_remove_loader ( this, name )
       implicit none
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: name  !! the loader's name
       integer(ip) :: i, k
       k = find_loader ( this, upper ( trim ( adjustl ( name ) ) ) )
       if ( k == 0 ) return
@@ -1731,16 +1857,19 @@ contains
       end do
       this%loaders(this%nloaders) = registered_loader()
       this%nloaders = this%nloaders - 1
-   end procedure spice_remove_loader
+   end subroutine spice_remove_loader
 
    !> A pointer to a registered loader (PEPPER).
-   module procedure spice_loader
+   module subroutine spice_loader ( this, name, ptr )
       implicit none
+      class(pepper_instance), target, intent(inout) :: this  !! the instance
+      character(*), intent(in) :: name  !! the loader's name
+      class(kernel_loader), pointer, intent(out) :: ptr  !! the loader
       integer(ip) :: k
       ptr => null()
       k = find_loader ( this, upper ( trim ( adjustl ( name ) ) ) )
       if ( k > 0 ) ptr => this%loaders(k)%loader
-   end procedure spice_loader
+   end subroutine spice_loader
 
    !> The index of the loader named UNAME (upper case), or 0.
    integer(ip) function find_loader ( spice, uname ) result(k)
@@ -1753,8 +1882,13 @@ contains
    end function find_loader
 
    !> The loader and description of a loaded kernel (PEPPER).
-   module procedure kernel_format
+   module subroutine kernel_format ( ctx, file, loader, format, found )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the kernel (as loaded)
+      character(:), allocatable, intent(out) :: loader  !! the loader's name (blank if none)
+      character(:), allocatable, intent(out) :: format  !! the description (blank if none)
+      logical, intent(out) :: found  !! a kernel has this name
       integer(ip) :: i
       loader = ' '
       format = ' '
@@ -1767,21 +1901,26 @@ contains
          if ( allocated ( kk%loader ) ) loader = kk%loader
          if ( allocated ( kk%format ) ) format = kk%format
       end associate
-   end procedure kernel_format
+   end subroutine kernel_format
 
    !> The names of the registered loaders (PEPPER).
-   module procedure loader_names
+   module subroutine loader_names ( ctx, names )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      type(string), allocatable, intent(out) :: names(:)  !! the loaders' names (upper case)
       integer(ip) :: k
       allocate ( names(ctx%spice%nloaders) )
       do k = 1, ctx%spice%nloaders
          names(k)%s = ctx%spice%loaders(k)%name
       end do
-   end procedure loader_names
+   end subroutine loader_names
 
    !> The loader FURNSH uses for a file no loader is named for (PEPPER).
-   module procedure match_kernel_loader
+   module subroutine match_kernel_loader ( ctx, file, k )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      character(*), intent(in) :: file  !! the file
+      integer(ip), intent(out) :: k  !! the loader's index (0: none)
       character(:), allocatable :: ufile
       character(head_size) :: head
       integer(ip) :: i, j, best, n
@@ -1817,7 +1956,7 @@ contains
             return
          end if
       end do
-   end procedure match_kernel_loader
+   end subroutine match_kernel_loader
 
    !> The first bytes of a file (up to `len(head)`): `head(1:n)`, the rest
    !> blank; `n` is 0 if the file is empty or cannot be read.
@@ -1842,8 +1981,12 @@ contains
    end subroutine read_head
 
    !> The loader named NAME, for FURNSH (PEPPER).
-   module procedure find_kernel_loader
+   module subroutine find_kernel_loader ( ctx, file, name, k )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      character(*), intent(in) :: file  !! the file (for the message)
+      character(*), intent(in) :: name  !! the loader's name
+      integer(ip), intent(out) :: k  !! the loader's index (-1: PEPPER, PEPPER's own loading)
       character(:), allocatable :: uname
       uname = upper ( trim ( adjustl ( name ) ) )
       k = 0
@@ -1861,11 +2004,16 @@ contains
          call ctx%errch  ( '#', file )
          call ctx%sigerr ( 'SPICE(UNKNOWNLOADER)' )
       end if
-   end procedure find_kernel_loader
+   end subroutine find_kernel_loader
 
    !> Load a file with a registered loader (PEPPER).
-   module procedure run_kernel_loader
+   module subroutine run_kernel_loader ( ctx, k, file, handle, format )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      integer(ip), intent(in) :: k  !! the loader's index
+      character(*), intent(in) :: file  !! the file
+      integer(ip), intent(out) :: handle  !! the handle of the SPK made
+      character(:), allocatable, intent(out) :: format  !! the kernel's description
       type(kernel_builder) :: kb
       character(:), allocatable :: kname
       handle = 0
@@ -1879,11 +2027,14 @@ contains
          if ( kb%format /= ' ' ) format = kb%format
       end if
       call load_builder ( ctx, kname, kb, handle )
-   end procedure run_kernel_loader
+   end subroutine run_kernel_loader
 
    !> The meta-kernel's KERNEL_LOADERS (PEPPER).
-   module procedure meta_kernel_loaders
+   module subroutine meta_kernel_loaders ( ctx, file, pairs )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      character(*), intent(in) :: file  !! the meta-kernel (for the message)
+      type(string), allocatable, intent(out) :: pairs(:)  !! the values of KERNEL_LOADERS
       logical :: found
       call pool_strings ( ctx, 'KERNEL_LOADERS', pairs, found )
       if ( ctx%failed() ) return
@@ -1896,22 +2047,29 @@ contains
          call ctx%errint ( '#', int ( size ( pairs ), ip ) )
          call ctx%sigerr ( 'SPICE(BADKERNELLOADERS)' )
       end if
-   end procedure meta_kernel_loaders
+   end subroutine meta_kernel_loaders
 
    !> The loader KERNEL_LOADERS names for a file (PEPPER).
-   module procedure meta_kernel_loader
+   module subroutine meta_kernel_loader ( pairs, raw, expanded, name )
       implicit none
+      type(string), intent(in) :: pairs(:)  !! the values of KERNEL_LOADERS
+      character(*), intent(in) :: raw  !! the file as written in KERNELS_TO_LOAD
+      character(*), intent(in) :: expanded  !! the file with its path symbols replaced
+      character(:), allocatable, intent(out) :: name  !! the loader's name (blank: none)
       integer(ip) :: i
       name = ' '
       do i = 1, size ( pairs ) / 2
          if ( pairs(2*i-1)%s == raw .or. pairs(2*i-1)%s == expanded ) name = pairs(2*i)%s
       end do
-   end procedure meta_kernel_loader
+   end subroutine meta_kernel_loader
 
    !> A kernel removed from the KEEPER table: the body names it defined are
    !> removed, and its loader's unload callback is called (PEPPER).
-   module procedure notify_kernel_unloaded
+   module subroutine notify_kernel_unloaded ( ctx, i, clearing )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      integer(ip), intent(in) :: i  !! the kernel's index in the KEEPER table
+      logical, intent(in), optional :: clearing  !! KCLEAR: every entry goes, so only the later entries share the handle
       integer(ip) :: k, first
       logical :: shared
       associate ( kk => ctx%spice%keeper%kernels(i) )
@@ -1943,6 +2101,6 @@ contains
          if ( k == 0 ) return
          call ctx%spice%loaders(k)%loader%unload ( kk%name )
       end associate
-   end procedure notify_kernel_unloaded
+   end subroutine notify_kernel_unloaded
 
 end submodule pepper_loaders

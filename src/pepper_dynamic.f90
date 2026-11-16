@@ -321,7 +321,7 @@ contains
       !>     Saved variables
       !>
       !>     Initial values
-      module procedure zzdynfrm
+      recursive module subroutine zzdynfrm ( ctx, infram, center, et, xform, basfrm )
 !
 !     PEPPER: the evaluation (dynamic_frame_xform) may need other dynamic frames,
 !     evaluated by nested calls of this routine through FRMCHG, REFCHG,
@@ -332,11 +332,17 @@ contains
 !
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: infram  !! Frame ID code for a SPICE dynamic reference frame.
+      integer(ip), intent(in) :: center  !! ID code for the center of the input frame.
+      real(wp), intent(in) :: et  !! An epoch in seconds past J2000 TDB.
+      real(wp), intent(out) :: xform ( 6, 6 )  !! The requested state transformation matrix.
+      integer(ip), intent(out) :: basfrm  !! Frame ID of base frame associated with INFRAM.
       call enter_dynamic_frame ( ctx, infram )
       if ( ctx%failed() ) return
       call dynamic_frame_xform ( ctx, infram, center, et, xform, basfrm )
       ctx%ndynamic = ctx%ndynamic - 1
-      end procedure zzdynfrm
+      end subroutine zzdynfrm
 
       !>## Abstract
       !>
@@ -616,7 +622,7 @@ contains
       !>     Saved variables
       !>
       !>     Initial values
-      module procedure zzdynrot
+      recursive module subroutine zzdynrot ( ctx, infram, center, et, rotate, basfrm )
 !
 !     PEPPER: the evaluation (dynamic_frame_rotation) may need other dynamic frames,
 !     evaluated by nested calls of this routine through FRMCHG, REFCHG,
@@ -627,11 +633,17 @@ contains
 !
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: infram  !! Class ID code for a SPICE dynamic reference frame.
+      integer(ip), intent(in) :: center  !! ID code for the center of the input frame.
+      real(wp), intent(in) :: et  !! An epoch in seconds past J2000 TDB.
+      real(wp), intent(out) :: rotate ( 3, 3 )  !! The requested rotation matrix.
+      integer(ip), intent(out) :: basfrm  !! Frame ID of base frame associated with INFRAM.
       call enter_dynamic_frame ( ctx, infram )
       if ( ctx%failed() ) return
       call dynamic_frame_rotation ( ctx, infram, center, et, rotate, basfrm )
       ctx%ndynamic = ctx%ndynamic - 1
-      end procedure zzdynrot
+      end subroutine zzdynrot
 
       !> PEPPER: the evaluation of [[zzdynfrm]] (SPICELIB's body of the
       !> routine; see zzdynfrm).

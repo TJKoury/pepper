@@ -489,12 +489,17 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local parameters
-      module procedure zzdynbid
+      module subroutine zzdynbid ( ctx, frname, frcode, item, idcode )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, repmc, rtrim
       use pepper_inc_zzbodtrn
       use pepper_inc_zzdyn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: frname  !! Frame name.
+      integer(ip), intent(in) :: frcode  !! Frame ID code.
+      character(*), intent(in) :: item  !! Item associated with frame definition.
+      integer(ip), intent(out) :: idcode  !! Body ID code.
       integer(ip) :: idcode_1(1)  !! one-element copy of idcode (array argument)
 
 !
@@ -622,7 +627,7 @@ contains
       end if
 
       return
-      end procedure zzdynbid
+      end subroutine zzdynbid
 
       !>## Abstract
       !>
@@ -780,11 +785,18 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local Parameters
-      module procedure zzdynvai
+      module subroutine zzdynvai ( ctx, frname, frcode, item, maxn, n, values )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, repmc, rtrim
       use pepper_inc_zzdyn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: frname  !! Frame name.
+      integer(ip), intent(in) :: frcode  !! Frame ID code.
+      character(*), intent(in) :: item  !! Item associated with frame definition.
+      integer(ip), intent(in) :: maxn  !! Maximum number of values to return.
+      integer(ip), intent(out) :: n  !! Number of returned values.
+      integer(ip), intent(out) :: values  ( * )  !! Output kernel variable.
 
 !
 !     TEMPLN is the length of the keyword template, minus
@@ -872,7 +884,7 @@ contains
       end if
 
       return
-      end procedure zzdynvai
+      end subroutine zzdynvai
 
       !>## Abstract
       !>
@@ -1029,11 +1041,19 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local Parameters
-      module procedure zzdynoac
+      module subroutine zzdynoac ( ctx, frname, frcode, item, maxn, n, values, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, repmc, rtrim
       use pepper_inc_zzdyn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: frname  !! Frame name.
+      integer(ip), intent(in) :: frcode  !! Frame ID code.
+      character(*), intent(in) :: item  !! Item associated with frame definition.
+      integer(ip), intent(in) :: maxn  !! Maximum number of values to return.
+      integer(ip), intent(out) :: n  !! Number of returned values.
+      character(*), intent(out) :: values  ( * )  !! Output kernel variable.
+      logical, intent(out) :: found  !! "Found" flag.
 
 !
 !     TEMPLN is the length of the keyword template, minus
@@ -1125,7 +1145,7 @@ contains
       end if
 
       return
-      end procedure zzdynoac
+      end subroutine zzdynoac
 
       !>## Abstract
       !>
@@ -1282,12 +1302,20 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local Parameters
-      module procedure zzdynoad
+      module subroutine zzdynoad ( ctx, frname, frcode, item, maxn, n, values, found )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, repmc, rtrim
       use pepper_inc_zzbodtrn
       use pepper_inc_zzdyn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: frname  !! Frame name.
+      integer(ip), intent(in) :: frcode  !! Frame ID code.
+      character(*), intent(in) :: item  !! Item associated with frame definition.
+      integer(ip), intent(in) :: maxn  !! Maximum number of values to return.
+      integer(ip), intent(out) :: n  !! Number of returned values.
+      real(wp), intent(out) :: values  ( * )  !! Output kernel variable.
+      logical, intent(out) :: found  !! "Found" flag.
 
 !
 !     TEMPLN is the length of the keyword template, minus
@@ -1379,7 +1407,7 @@ contains
       end if
 
       return
-      end procedure zzdynoad
+      end subroutine zzdynoad
 
       !>## Abstract
       !>
@@ -1532,12 +1560,19 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local Parameters
-      module procedure zzdynvac
+      module subroutine zzdynvac ( ctx, frname, frcode, item, maxn, n, values )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, repmc, rtrim
       use pepper_inc_zzdyn
 
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: frname  !! Frame name.
+      integer(ip), intent(in) :: frcode  !! Frame ID code.
+      character(*), intent(in) :: item  !! Item associated with frame definition.
+      integer(ip), intent(in) :: maxn  !! Maximum number of values to return.
+      integer(ip), intent(out) :: n  !! Number of returned values.
+      character(*), intent(out) :: values  ( * )  !! Output kernel variable.
       type(string), allocatable :: strs(:)
       integer(ip) :: i
 !
@@ -1550,7 +1585,7 @@ contains
          values(i) = strs(i)%s
       end do
       return
-      end procedure zzdynvac
+      end subroutine zzdynvac
 
       !>## Abstract
       !>
@@ -1704,11 +1739,18 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local Parameters
-      module procedure zzdynvad
+      module subroutine zzdynvad ( ctx, frname, frcode, item, maxn, n, values )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, repmc, rtrim
       use pepper_inc_zzdyn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: frname  !! Frame name.
+      integer(ip), intent(in) :: frcode  !! Frame ID code.
+      character(*), intent(in) :: item  !! Item associated with frame definition.
+      integer(ip), intent(in) :: maxn  !! Maximum number of values to return.
+      integer(ip), intent(out) :: n  !! Number of returned values.
+      real(wp), intent(out) :: values  ( * )  !! Output kernel variable.
 
 !
 !     TEMPLN is the length of the keyword template, minus
@@ -1796,7 +1838,7 @@ contains
       end if
 
       return
-      end procedure zzdynvad
+      end subroutine zzdynvad
 
       !>## Abstract
       !>
@@ -1867,10 +1909,15 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 15-DEC-2021 (NJB)
-      module procedure zzswfcln
+      module subroutine zzswfcln ( ctx, hdfram, frpool, basbeg, framat )
       use pepper_kinds, only: ip
       use pepper_inc_zzswtchf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: hdfram ( * )  !! Array of hash collision list head nodes.
+      integer(ip), intent(out) :: frpool ( lbsngl : * )  !! Hash collision list pool.
+      integer(ip), intent(out) :: basbeg ( * )  !! Start indices of base lists of switch frames.
+      integer(ip), intent(out) :: framat  !! Switch frame index in switch frame ID array.
 
 !
 !     This routine must perform its function after an error has been
@@ -1888,7 +1935,7 @@ contains
       call zzhsiini ( ctx, maxfrm, hdfram, frpool )
 
       return
-      end procedure zzswfcln
+      end subroutine zzswfcln
 
       !>## Abstract
       !>
@@ -1969,10 +2016,19 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 15-DEC-2021 (NJB)
-      module procedure zzswfini
+      module subroutine zzswfini ( ctx, hdfram, frpool, fidlst, basbeg, free, prvat, prvfrm, samfrm )
       use pepper_kinds, only: ip
       use pepper_inc_zzswtchf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: hdfram ( * )  !! Array of hash collision list head nodes.
+      integer(ip), intent(out) :: frpool ( lbsngl : * )  !! Hash collision list pool.
+      integer(ip), intent(out) :: fidlst ( * )  !! Frame IDs corresponding to list nodes.
+      integer(ip), intent(out) :: basbeg ( * )  !! Start indices of base lists of switch frames.
+      integer(ip), intent(out) :: free  !! First free index in base and time lists.
+      integer(ip), intent(out) :: prvat  !! Index of previous input frame in frame list.
+      integer(ip), intent(out) :: prvfrm  !! Previous input frame ID.
+      logical, intent(out) :: samfrm  !! Flag indicating input frame matches previous one.
 
       if ( ctx%failed() ) return
 
@@ -2005,7 +2061,7 @@ contains
       samfrm = .false.
 
       return
-      end procedure zzswfini
+      end subroutine zzswfini
 
       !>## Detailed Input
       !>
@@ -2099,9 +2155,12 @@ contains
       !>        $Required_Reading section.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2003 (EDW)
-      module procedure zzgftreb
+      module subroutine zzgftreb ( ctx, body, axes )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! NAIF ID code of body.
+      real(wp), intent(out) :: axes ( 3 )  !! Length of axes of body (1,2,3, as defined below).
 
       integer(ip) :: i
       integer(ip) :: n
@@ -2153,7 +2212,7 @@ contains
       end if
 
       return
-      end procedure zzgftreb
+      end subroutine zzgftreb
 
       !>## Abstract
       !>
@@ -2423,13 +2482,31 @@ contains
       !>        NNINRT are included instead of being declared locally.
       !>
       !>-    SPICELIB Version 1.0.0, 19-SEP-1995 (WLT)
-      module procedure zzfdat
+      module subroutine zzfdat ( ctx, ncount, maxbfr, name, idcode, center, type, typid, centrd, bnmlst, bnmpol, bnmnms, bnmidx, bidlst, bidpol, bidids, bididx )
       use pepper_kinds, only: ip
       use pepper_arrays, only: orderi
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_ninert
       use pepper_inc_nninrt
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: ncount  !! Input checking variable.
+      integer(ip), intent(in) :: maxbfr  !! build-in frame hash size.
+      character(*), intent(out) :: name   (          * )  !! array containing the names of all built-in frames
+      integer(ip), intent(out) :: idcode (          * )  !! array containing the IDs of all built-in frames
+      integer(ip), intent(out) :: center (          * )  !! array containing the centers of the built-in frames
+      integer(ip), intent(out) :: type   (          * )  !! array containing the types of the built-in frames
+      integer(ip), intent(out) :: typid  (          * )  !! array containing the subtype id
+      integer(ip), intent(out) :: centrd (          * )  !! an order vector for CENTER
+      integer(ip), intent(out) :: bnmlst (          * )  !! frame name-based hash head node pointer list
+      integer(ip), intent(out) :: bnmpol ( lbpool : * )  !! frame name-based hash node collision list
+      character(*), intent(out) :: bnmnms (          * )  !! frame name-based hash item list
+      integer(ip), intent(out) :: bnmidx (          * )  !! frame name-based hash index storage array
+      integer(ip), intent(out) :: bidlst (          * )  !! frame ID-based hash head node pointer list
+      integer(ip), intent(out) :: bidpol ( lbpool : * )  !! frame ID-based hash node collision list
+      integer(ip), intent(out) :: bidids (          * )  !! frame ID-based hash item list
+      integer(ip), intent(out) :: bididx (          * )  !! frame ID-based hash index storage array
 
 
       integer(ip), parameter :: non = nninrt
@@ -3351,7 +3428,7 @@ contains
       end do
 
       return
-      end procedure zzfdat
+      end subroutine zzfdat
 
       !>## Detailed Input
       !>
@@ -3485,7 +3562,7 @@ contains
       !>        being declared locally.
       !>
       !>-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
-      module procedure namfrm
+      module subroutine namfrm ( ctx, frname, frcode )
       use pepper_kinds, only: ip
       use pepper_strings, only: prefix, ucase_inplace
       use pepper_inc_ninert
@@ -3493,6 +3570,9 @@ contains
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: frname  !! The name of some reference frame
+      integer(ip), intent(out) :: frcode  !! The SPICE ID code of the frame.
       character(:), allocatable :: pname
       logical :: found
       frcode = 0
@@ -3515,7 +3595,7 @@ contains
       call ucase_inplace ( pname )
       call framex_code ( ctx, pname, frcode, found )
       return
-      end procedure namfrm
+      end subroutine namfrm
 
       !>## Detailed Input
       !>
@@ -3655,19 +3735,22 @@ contains
       !>        being declared locally.
       !>
       !>-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
-      module procedure frmnam
+      module subroutine frmnam ( ctx, frcode, frname )
       use pepper_kinds, only: ip
       use pepper_inc_ninert
       use pepper_inc_nninrt
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: frname  !! the name associated with the reference frame.
+      integer(ip), intent(in) :: frcode  !! an integer code for a reference frame
       character(:), allocatable :: name
       logical :: found
       call frame_name_of ( ctx, frcode, name, found )
       frname = name
       return
-      end procedure frmnam
+      end subroutine frmnam
 
       !>## Detailed Input
       !>
@@ -3874,13 +3957,19 @@ contains
       !>        being declared locally.
       !>
       !>-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
-      module procedure frinfo
+      module subroutine frinfo ( ctx, frcode, cent, frclss, clssid, found )
       use pepper_kinds, only: ip
       use pepper_inc_ninert
       use pepper_inc_nninrt
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: frcode  !! the ID code for some frame
+      integer(ip), intent(out) :: cent  !! the center of the frame
+      integer(ip), intent(out) :: frclss  !! the class (type) of the frame
+      integer(ip), intent(out) :: clssid  !! the ID code for the frame within its class.
+      logical, intent(out) :: found  !! .TRUE. if the requested information is available.
       integer(ip), parameter :: non = nninrt
       integer(ip), parameter :: ncount = ninert + non
       integer(ip), parameter :: room = 8
@@ -4113,7 +4202,7 @@ contains
 
       return
       end associate
-      end procedure frinfo
+      end subroutine frinfo
 
       !>## Detailed Input
       !>
@@ -4251,7 +4340,7 @@ contains
       !>        being declared locally.
       !>
       !>-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
-      module procedure cidfrm
+      module subroutine cidfrm ( ctx, cent, frcode, frname, found )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bschoi
       use pepper_strings, only: prefix, repmc, ucase
@@ -4260,11 +4349,16 @@ contains
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: frname  !! the name of the frame with ID FRCODE
+      integer(ip), intent(out) :: frcode  !! the ID code of the frame associated with CENT
+      integer(ip), intent(in) :: cent  !! an object to associate a frame with.
+      logical, intent(out) :: found  !! .TRUE. if the requested information is available.
       character(:), allocatable :: name
       call frame_of_center ( ctx, cent, frcode, name, found )
       frname = name
       return
-      end procedure cidfrm
+      end subroutine cidfrm
 
       !>## Detailed Input
       !>
@@ -4404,7 +4498,7 @@ contains
       !>        being declared locally.
       !>
       !>-    SPICELIB Version 1.0.0, 18-SEP-1995 (WLT)
-      module procedure cnmfrm
+      module subroutine cnmfrm ( ctx, cname, frcode, frname, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: prefix, repmc, ucase
       use pepper_inc_ninert
@@ -4412,6 +4506,11 @@ contains
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: cname  !! name of the object to find a frame for
+      character(*), intent(out) :: frname  !! the name of the frame with ID FRCODE
+      integer(ip), intent(out) :: frcode  !! the ID code of the frame associated with CNAME
+      logical, intent(out) :: found  !! .TRUE. if the requested information is available.
       character(:), allocatable :: lookup
       character(:), allocatable :: name
       character(1) :: dattyp
@@ -4466,7 +4565,7 @@ contains
       end if
       end associate
       return
-      end procedure cnmfrm
+      end subroutine cnmfrm
 
       !>## Detailed Input
       !>
@@ -4687,7 +4786,7 @@ contains
       !>        frames before looking at the kernel POOL frames.
       !>
       !>-    SPICELIB Version 1.0.0, 05-NOV-2007 (NJB)
-      module procedure ccifrm
+      module subroutine ccifrm ( ctx, frclss, clssid, frcode, frname, cent, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: prefix, repmc, suffix
       use pepper_inc_ninert
@@ -4695,19 +4794,36 @@ contains
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: frname  !! Name of the frame identified by FRCLSS, CLSSID.
+      integer(ip), intent(out) :: frcode  !! ID code of the frame identified by FRCLSS, CLSSID.
+      integer(ip), intent(out) :: cent  !! Center of the frame identified by FRCLSS, CLSSID.
+      integer(ip), intent(in) :: frclss  !! Class of frame.
+      integer(ip), intent(in) :: clssid  !! Class ID of frame.
+      logical, intent(out) :: found  !! .TRUE. if the requested information is available.
       character(:), allocatable :: name
       call frame_of_class ( ctx, frclss, clssid, frcode, name, cent, found )
       frname = name
       return
-      end procedure ccifrm
+      end subroutine ccifrm
 
 !> PEPPER: find the kernel variable that defines an item of a frame:
 !> FRAME_<ID code>_<item>, or else FRAME_<name>_<item>. The lookup shared
 !> by the ZZDYNxxx routines; the names have any length (SPICELIB limited
 !> both forms to 32 characters, SPICE(VARNAMETOOLONG)).
-      module procedure dynamic_frame_variable
+      module subroutine dynamic_frame_variable ( ctx, frname, frcode, item, required, kvname, found, n, dtype, what )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: frname  !! the frame name
+      integer(ip), intent(in) :: frcode  !! the frame ID code
+      character(*), intent(in) :: item  !! the item, e.g. RELATIVE
+      logical, intent(in) :: required  !! signal SPICE(KERNELVARNOTFOUND) if neither variable exists
+      character(:), allocatable, intent(out) :: kvname  !! the variable found (the name form if neither)
+      logical, intent(out) :: found  !! a variable was found
+      integer(ip), intent(out) :: n  !! its number of values
+      character(*), intent(out) :: dtype  !! its type, 'C' or 'N'
+      character(*), intent(in), optional :: what  !! what the frame is, for the message (default: parameterized dynamic frame)
       found = .false.
       n     = 0
       dtype = ' '
@@ -4741,14 +4857,21 @@ contains
       end if
       call ctx%errch  ( '#',  frname )
       call ctx%sigerr ( 'SPICE(KERNELVARNOTFOUND)' )
-      end procedure dynamic_frame_variable
+      end subroutine dynamic_frame_variable
 
 !> PEPPER: the character values of the kernel variable that defines an
 !> item of a dynamic frame (FRAME_<ID code>_<item>, or else
 !> FRAME_<name>_<item>), at full length: the body of [[zzdynvac]].
-      module procedure dynamic_frame_strings
+      module subroutine dynamic_frame_strings ( ctx, frname, frcode, item, maxn, n, values )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: frname  !! the frame name
+      integer(ip), intent(in) :: frcode  !! the frame ID code
+      character(*), intent(in) :: item  !! the item, e.g. FROM_FRAMES
+      integer(ip), intent(in) :: maxn  !! the maximum number of values
+      integer(ip), intent(out) :: n  !! the number of values
+      type(string), allocatable, intent(out) :: values(:)  !! the values
       character(:), allocatable :: kvname
       character(1) :: dtype
       logical :: found
@@ -4796,13 +4919,17 @@ contains
             return
          end if
       end do
-      end procedure dynamic_frame_strings
+      end subroutine dynamic_frame_strings
 
 !> PEPPER: the name of a frame from its ID code, of any length (the body
 !> of [[frmnam]], which copies it into its fixed-length argument).
-      module procedure frame_name_of
+      module subroutine frame_name_of ( ctx, frcode, frname, found )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: frcode  !! the frame ID code
+      character(:), allocatable, intent(out) :: frname  !! the frame name (empty if not found)
+      logical, intent(out) :: found  !! the frame is known
       integer(ip) :: item
       integer(ip) :: n
       logical :: lupdte
@@ -4847,17 +4974,22 @@ contains
       end if
       return
       end associate
-      end procedure frame_name_of
+      end subroutine frame_name_of
 
 !> PEPPER: the frame associated with an object, its name of any length
 !> (the body of [[cidfrm]]).
-      module procedure frame_of_center
+      module subroutine frame_of_center ( ctx, cent, frcode, frname, found )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bschoi
       use pepper_strings, only: ucase
       use pepper_inc_ninert
       use pepper_inc_nninrt
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: cent  !! the object's ID code
+      integer(ip), intent(out) :: frcode  !! the frame ID code
+      character(:), allocatable, intent(out) :: frname  !! the frame name (empty if not found)
+      logical, intent(out) :: found  !! a frame was found
       integer(ip), parameter :: ncount = ninert + nninrt
       character(:), allocatable :: lookup
       character(:), allocatable :: bodnam
@@ -4911,15 +5043,22 @@ contains
       end if
       end associate
       return
-      end procedure frame_of_center
+      end subroutine frame_of_center
 
 !> PEPPER: the frame of a class and class ID, its name of any length
 !> (the body of [[ccifrm]]).
-      module procedure frame_of_class
+      module subroutine frame_of_class ( ctx, frclss, clssid, frcode, frname, cent, found )
       use pepper_kinds, only: ip
       use pepper_inc_ninert
       use pepper_inc_nninrt
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: frclss  !! the frame class
+      integer(ip), intent(in) :: clssid  !! the class ID
+      integer(ip), intent(out) :: frcode  !! the frame ID code
+      character(:), allocatable, intent(out) :: frname  !! the frame name (empty if not found)
+      integer(ip), intent(out) :: cent  !! the frame's center
+      logical, intent(out) :: found  !! a frame was found
       integer(ip), parameter :: ncount = ninert + nninrt
       type(string), allocatable :: kvars(:)
       character(:), allocatable :: look2
@@ -5020,7 +5159,7 @@ contains
          return
       end do
       return
-      end procedure frame_of_class
+      end subroutine frame_of_class
 
    !> PEPPER: allocate and initialize the FRAMEX state of a context, and
    !> load the built-in frames on first use (the start of every FRAMEX

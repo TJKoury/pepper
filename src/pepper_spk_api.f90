@@ -1391,10 +1391,16 @@ contains
       !>        Replaced DAFRDA call with DAFGDA.
       !>
       !>-    SPICELIB Version 1.0.0, 12-APR-1995 (KRG) (WLT)
-      module procedure sgfref
+      module subroutine sgfref ( ctx, handle, descr, first, last, values )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF open for reading.
+      real(wp), intent(in) :: descr  ( * )  !! Descriptor for a generic segment in the DAF.
+      integer(ip), intent(in) :: first  !! The index of the first reference value to fetch.
+      integer(ip), intent(in) :: last  !! The index of the last reference value to fetch.
+      real(wp), intent(out) :: values ( * )  !! The reference values that were requested.
 
 !     Include the mnemonic values for the generic segment declarations.
 !
@@ -1533,7 +1539,7 @@ contains
 
       return
 
-      end procedure sgfref
+      end subroutine sgfref
 
       !>## Detailed Input
       !>
@@ -1657,10 +1663,18 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1995 (KRG) (WLT)
-      module procedure sgbwfs
+      module subroutine sgbwfs ( ctx, handle, descr, segid, nconst, const, pktsiz, idxtyp )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
+      real(wp), intent(in) :: descr  ( * )  !! Descriptor for a generic segment.
+      character(*), intent(in) :: segid  !! Identifier for a generic segment.
+      integer(ip), intent(in) :: nconst  !! Number of constant values in a generic segment.
+      real(wp), intent(in) :: const  ( * )  !! Array of constant values for a generic segment.
+      integer(ip), intent(in) :: pktsiz ( * )  !! Size of the data packets.
+      integer(ip), intent(in) :: idxtyp  !! Index type for the reference values.
       character(ifnlen) :: dummy1
       real(wp) :: xmeta  ( mxmeta )
       real(wp) :: myref
@@ -1921,7 +1935,7 @@ contains
 
       return
       end associate
-      end procedure sgbwfs
+      end subroutine sgbwfs
 
       !>## Detailed Input
       !>
@@ -2038,10 +2052,17 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1995 (KRG) (WLT)
-      module procedure sgbwvs
+      module subroutine sgbwvs ( ctx, handle, descr, segid, nconst, const, idxtyp )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
+      real(wp), intent(in) :: descr  ( * )  !! Descriptor for a segment.
+      character(*), intent(in) :: segid  !! Identifier for a segment.
+      integer(ip), intent(in) :: nconst  !! Number of constant values in a segment.
+      real(wp), intent(in) :: const  ( * )  !! Array of constant values for a segment.
+      integer(ip), intent(in) :: idxtyp  !! Index type for the reference values.
       character(ifnlen) :: dummy1
       real(wp) :: xmeta  ( mxmeta )
       real(wp) :: myref
@@ -2291,7 +2312,7 @@ contains
 
       return
       end associate
-      end procedure sgbwvs
+      end subroutine sgbwvs
 
       !>## Detailed Input
       !>
@@ -2468,10 +2489,16 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1995 (KRG) (WLT)
-      module procedure sgwfpk
+      module subroutine sgwfpk ( ctx, handle, npkts, pktdat, nrefs, refdat )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
+      integer(ip), intent(in) :: npkts  !! Number of data packets to write to a segment.
+      real(wp), intent(in) :: pktdat ( * )  !! Array of packet data.
+      integer(ip), intent(in) :: nrefs  !! Number of reference values.
+      real(wp), intent(in) :: refdat ( * )  !! Reference data.
       character(ifnlen) :: dummy1
       real(wp) :: xmeta  ( mxmeta )
       real(wp) :: myref
@@ -2753,7 +2780,7 @@ contains
 
       return
       end associate
-      end procedure sgwfpk
+      end subroutine sgwfpk
 
       !>## Detailed Input
       !>
@@ -2949,10 +2976,17 @@ contains
       !>        typos in comments.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1995 (KRG) (WLT)
-      module procedure sgwvpk
+      module subroutine sgwvpk ( ctx, handle, npkts, pktsiz, pktdat, nrefs, refdat )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
+      integer(ip), intent(in) :: npkts  !! Number of data packets to write to a segment.
+      integer(ip), intent(in) :: pktsiz ( * )  !! Array of sizes of variable size packets.
+      real(wp), intent(in) :: pktdat ( * )  !! Array of packet data.
+      integer(ip), intent(in) :: nrefs  !! Number of reference values.
+      real(wp), intent(in) :: refdat ( * )  !! Reference data.
       character(ifnlen) :: dummy1
       real(wp) :: xmeta  ( mxmeta )
       real(wp) :: myref
@@ -3283,7 +3317,7 @@ contains
 
       return
       end associate
-      end procedure sgwvpk
+      end subroutine sgwvpk
 
       !>## Detailed Input
       !>
@@ -3367,10 +3401,12 @@ contains
       !>        case and for the implicitly indexed case.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1995 (KRG) (WLT)
-      module procedure sgwes
+      module subroutine sgwes ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DAF file opened with write access.
       real(wp) :: mysize_1(1)  !! one-element copy of mysize (array argument)
       real(wp) :: myref_1(1)  !! one-element copy of myref (array argument)
       character(ifnlen) :: dummy1
@@ -3815,7 +3851,7 @@ contains
 
       return
       end associate
-      end procedure sgwes
+      end subroutine sgwes
 
       !>## Detailed Input
       !>
@@ -4326,9 +4362,14 @@ contains
       !>        rather than CARDD.
       !>
       !>-    SPICELIB Version 1.0.0, 30-DEC-2004 (NJB)
-      module procedure spkcov
+      module subroutine spkcov ( ctx, spkfnm, idcode, cover )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: spkfnm  !! Name of SPK file.
+      integer(ip), intent(in) :: idcode  !! ID code of ephemeris object.
+      real(wp), intent(inout) :: cover ( lbcell : * )  !! Window giving coverage in SPKFNM for IDCODE.
       real(wp), allocatable :: intervals(:,:)
       integer(ip) :: k
 !
@@ -4341,11 +4382,15 @@ contains
          if ( ctx%failed() ) return
          call wninsd ( ctx, intervals(1,k), intervals(2,k), cover )
       end do
-      end procedure spkcov
+      end subroutine spkcov
 
-      module procedure spk_coverage
+      module subroutine spk_coverage ( ctx, file, body, intervals )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the SPK file
+      integer(ip), intent(in) :: body  !! the NAIF ID code of the object
+      real(wp), allocatable, intent(out) :: intervals(:,:)  !! the coverage, shape (2, n) (n = 0 after an error)
       type(interval_list) :: window  ! the coverage being built
 
 
@@ -4483,7 +4528,7 @@ contains
 
       if ( .not. ctx%failed() ) call window%window ( intervals )
       return
-      end procedure spk_coverage
+      end subroutine spk_coverage
 
       !>## Detailed Input
       !>
@@ -4801,7 +4846,7 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 18-JUL-1991 (JEM)
-      module procedure spkgeo
+      recursive module subroutine spkgeo ( ctx, targ, et, ref, obs, state, lt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: mxv, mxvg, vnorm
@@ -4809,6 +4854,13 @@ contains
       use pepper_inc_ninert
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: targ  !! Target body.
+      real(wp), intent(in) :: et  !! Target epoch.
+      character(*), intent(in) :: ref  !! Target reference frame.
+      integer(ip), intent(in) :: obs  !! Observing body.
+      real(wp), intent(out) :: state    ( 6 )  !! State of target.
+      real(wp), intent(out) :: lt  !! Light time.
       character(40) :: ident
       character(40) :: tname
       character(40) :: oname
@@ -5457,7 +5509,7 @@ contains
 
       return
       end associate
-      end procedure spkgeo
+      end subroutine spkgeo
 
       !>## Detailed Input
       !>
@@ -5654,7 +5706,7 @@ contains
       !>        Tests of routine FAILED() were added.
       !>
       !>-    SPICELIB Version 1.0.0, 09-JUL-1998 (WLT)
-      module procedure spkgps
+      recursive module subroutine spkgps ( ctx, targ, et, ref, obs, pos, lt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: mxv, vnorm
@@ -5662,6 +5714,13 @@ contains
       use pepper_inc_ninert
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: targ  !! Target body.
+      real(wp), intent(in) :: et  !! Target epoch.
+      character(*), intent(in) :: ref  !! Target reference frame.
+      integer(ip), intent(in) :: obs  !! Observing body.
+      real(wp), intent(out) :: pos ( 3 )  !! Position of target.
+      real(wp), intent(out) :: lt  !! Light time.
       character(40) :: ident
       character(40) :: tname
       character(40) :: oname
@@ -6309,7 +6368,7 @@ contains
 
       return
       end associate
-      end procedure spkgps
+      end subroutine spkgps
 
       !>## Detailed Input
       !>
@@ -6630,9 +6689,13 @@ contains
       !>        use WNCARD rather than CARDD.
       !>
       !>-    SPICELIB Version 1.0.0, 30-DEC-2004 (NJB)
-      module procedure spkobj
+      module subroutine spkobj ( ctx, spkfnm, ids )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: spkfnm  !! Name of SPK file.
+      integer(ip), intent(inout) :: ids    ( lbcell : * )  !! Set of ID codes of objects in SPK file.
       integer(ip), allocatable :: list(:)
       integer(ip) :: k
 !
@@ -6645,12 +6708,15 @@ contains
          if ( ctx%failed() ) return
          call insrti ( ctx, list(k), ids )
       end do
-      end procedure spkobj
+      end subroutine spkobj
 
-      module procedure spk_objects
+      module subroutine spk_objects ( ctx, file, ids )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: append_id, sort_unique
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the SPK file
+      integer(ip), allocatable, intent(out) :: ids(:)  !! the ID codes (size 0 after an error)
       integer(ip), allocatable :: list(:)  ! the IDs found (unsorted, with duplicates)
       integer(ip) :: nlist  ! the number of IDs in LIST
 
@@ -6787,7 +6853,7 @@ contains
          call sort_unique ( ids )
       end if
       return
-      end procedure spk_objects
+      end subroutine spk_objects
 
       !>## Detailed Input
       !>
@@ -6886,9 +6952,17 @@ contains
       !>        Upgraded the routine to support non-inertial frames.
       !>
       !>-    SPICELIB Version 1.0.0, 04-JAN-1994 (WLT) (KRG)
-      module procedure spkpds
+      module subroutine spkpds ( ctx, body, center, frame, type, first, last, descr )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
+      integer(ip), intent(in) :: center  !! The center of motion for BODY.
+      character(*), intent(in) :: frame  !! The frame for this segment.
+      integer(ip), intent(in) :: type  !! The type of SPK segment to create.
+      real(wp), intent(in) :: first  !! The first epoch for which the segment is valid.
+      real(wp), intent(in) :: last  !! The last  epoch for which the segment is valid.
+      real(wp), intent(out) :: descr ( * )  !! An SPK segment descriptor.
 
 !     ND and NI values for an SPK file.
 !
@@ -7003,7 +7077,7 @@ contains
 
       return
 
-      end procedure spkpds
+      end subroutine spkpds
 
       !>## Detailed Input
       !>
@@ -7095,9 +7169,15 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure spks01
+      module subroutine spks01 ( ctx, handle, baddr, eaddr, begin, end )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of source segment.
+      integer(ip), intent(in) :: baddr  !! Beginning address of source segment.
+      integer(ip), intent(in) :: eaddr  !! Ending address of source segment.
+      real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+      real(wp), intent(in) :: end  !! End (final epoch) of subset.
       real(wp) :: data     ( 71 )
       integer(ip) :: nrec
       integer(ip) :: ndir
@@ -7196,7 +7276,7 @@ contains
       call dafada ( ctx, data, 1 )
 
       return
-      end procedure spks01
+      end subroutine spks01
 
       !>## Detailed Input
       !>
@@ -7294,9 +7374,15 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (RET)
-      module procedure spks02
+      module subroutine spks02 ( ctx, handle, baddr, eaddr, begin, end )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of source segment.
+      integer(ip), intent(in) :: baddr  !! Beginning address of source segment.
+      integer(ip), intent(in) :: eaddr  !! Ending address of source segment.
+      real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+      real(wp), intent(in) :: end  !! End (final epoch) of subset.
       real(wp) :: data    ( 50 )
       real(wp) :: init
       real(wp) :: intlen
@@ -7377,7 +7463,7 @@ contains
       call dafada ( ctx, data, 4 )
 
       return
-      end procedure spks02
+      end subroutine spks02
 
       !>## Detailed Input
       !>
@@ -7478,9 +7564,15 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (RET)
-      module procedure spks03
+      module subroutine spks03 ( ctx, handle, baddr, eaddr, begin, end )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of source segment.
+      integer(ip), intent(in) :: baddr  !! Beginning address of source segment.
+      integer(ip), intent(in) :: eaddr  !! Ending address of source segment.
+      real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+      real(wp), intent(in) :: end  !! End (final epoch) of subset.
       real(wp) :: data    ( 50 )
       real(wp) :: init
       real(wp) :: intlen
@@ -7561,7 +7653,7 @@ contains
       call dafada ( ctx, data, 4 )
 
       return
-      end procedure spks03
+      end subroutine spks03
 
       !>## Detailed Input
       !>
@@ -7668,9 +7760,15 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 01-APR-1992 (JML) (WLT) (IMU)
-      module procedure spks05
+      module subroutine spks05 ( ctx, handle, baddr, eaddr, begin, end )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+      integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+      integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+      real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+      real(wp), intent(in) :: end  !! End (final epoch) of subset.
 
       real(wp) :: data     ( 6 )
       real(wp) :: gm
@@ -7769,7 +7867,7 @@ contains
       call dafada ( ctx, [ real( rec(2) - rec(1) + 1, wp ) ], 1 )
 
       return
-      end procedure spks05
+      end subroutine spks05
 
       !>## Detailed Input
       !>
@@ -7888,9 +7986,15 @@ contains
       !>        segment.
       !>
       !>-    SPICELIB Version 1.0.0, 08-AUG-1993 (NJB) (JML) (WLT) (IMU)
-      module procedure spks08
+      module subroutine spks08 ( ctx, handle, baddr, eaddr, begin, end )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+      integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+      integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+      real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+      real(wp), intent(in) :: end  !! End (final epoch) of subset.
 
       real(wp) :: data     ( 6 )
       real(wp) :: ratio
@@ -7998,7 +8102,7 @@ contains
       call dafada ( ctx, [ real( rec(2) - rec(1) + 1, wp ) ], 1 )
 
       return
-      end procedure spks08
+      end subroutine spks08
 
       !>## Detailed Input
       !>
@@ -8118,9 +8222,15 @@ contains
       !>        Test for null subset simplified.
       !>
       !>-    SPICELIB Version 1.0.0, 08-AUG-1993 (NJB) (JML) (WLT) (IMU)
-      module procedure spks09
+      module subroutine spks09 ( ctx, handle, baddr, eaddr, begin, end )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+      integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+      integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+      real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+      real(wp), intent(in) :: end  !! End (final epoch) of subset.
 
       real(wp) :: data     ( 6 )
 
@@ -8250,7 +8360,7 @@ contains
       call dafada ( ctx, [ real( rec(2) - rec(1) + 1, wp ) ], 1 )
 
       return
-      end procedure spks09
+      end subroutine spks09
 
       !>## Detailed Input
       !>
@@ -8347,9 +8457,15 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 07-NOV-1994 (WLT)
-      module procedure spks15
+      module subroutine spks15 ( ctx, handle, baddr, eaddr, begin, end )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+      integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+      integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+      real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+      real(wp), intent(in) :: end  !! End (final epoch) of subset.
 
       integer(ip), parameter :: nitems = 16
 
@@ -8377,7 +8493,7 @@ contains
       call dafada ( ctx, data, nitems )
 
       return
-      end procedure spks15
+      end subroutine spks15
 
       !>## Detailed Input
       !>
@@ -8474,9 +8590,15 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 03-JAN-1997 (WLT)
-      module procedure spks17
+      module subroutine spks17 ( ctx, handle, baddr, eaddr, begin, end )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+      integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+      integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+      real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+      real(wp), intent(in) :: end  !! End (final epoch) of subset.
 
       integer(ip), parameter :: nitems = 12
 
@@ -8504,7 +8626,7 @@ contains
       call dafada ( ctx, data, nitems )
 
       return
-      end procedure spks17
+      end subroutine spks17
 
       !>## Detailed Input
       !>
@@ -8645,10 +8767,16 @@ contains
       !>        comments indicating that the stored size
       !>        parameter in the segment control area is the
       !>        window size minus one were corrected.
-      module procedure spks18
+      module subroutine spks18 ( ctx, handle, baddr, eaddr, begin, end )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spk18
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+      integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+      integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+      real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+      real(wp), intent(in) :: end  !! End (final epoch) of subset.
 
       integer(ip), parameter :: msize = 3
 
@@ -8800,7 +8928,7 @@ contains
       call dafada ( ctx, [ real( rec(2) - rec(1) + 1, wp ) ], 1 )
 
       return
-      end procedure spks18
+      end subroutine spks18
 
       !>## Detailed Input
       !>
@@ -8928,11 +9056,17 @@ contains
       !>        Updated to support subtype 2.
       !>
       !>-    SPICELIB Version 1.0.0, 17-OCT-2011 (NJB) (BVS) (WLT) (IMU) (EDW)
-      module procedure spks19
+      module subroutine spks19 ( ctx, handle, baddr, eaddr, begin, end )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled, lstltd
       use pepper_inc_spk19
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+      integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+      integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+      real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+      real(wp), intent(in) :: end  !! End (final epoch) of subset.
       real(wp) :: ivlbeg_1(1)  !! one-element copy of ivlbeg (array argument)
       real(wp) :: ivlend_1(1)  !! one-element copy of ivlend (array argument)
       integer(ip), parameter :: ctrlsz = 3
@@ -10401,7 +10535,7 @@ contains
 
       return
       end associate
-      end procedure spks19
+      end subroutine spks19
 
       !>## Detailed Input
       !>
@@ -10472,10 +10606,16 @@ contains
       !>        $Required_Reading section.
       !>
       !>-    SPICELIB Version 1.0.0, 23-DEC-2013 (NJB) (RET)
-      module procedure spks20
+      module subroutine spks20 ( ctx, handle, baddr, eaddr, begin, end )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of source segment.
+      integer(ip), intent(in) :: baddr  !! Beginning address of source segment.
+      integer(ip), intent(in) :: eaddr  !! Ending address of source segment.
+      real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+      real(wp), intent(in) :: end  !! End (final epoch) of subset.
       real(wp) :: btime
       real(wp) :: data   ( bufsiz )
       real(wp) :: dscale
@@ -10588,7 +10728,7 @@ contains
       call dafada ( ctx, data, 7 )
 
       return
-      end procedure spks20
+      end subroutine spks20
 
       !>## Detailed Input
       !>
@@ -10664,10 +10804,16 @@ contains
       !>        $Required_Reading section.
       !>
       !>-    SPICELIB Version 1.0.0, 16-JAN-2014 (NJB) (FTK) (WLT) (IMU)
-      module procedure spks21
+      module subroutine spks21 ( ctx, handle, baddr, eaddr, begin, end )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spk21
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of source segment.
+      integer(ip), intent(in) :: baddr  !! Beginning address of source segment.
+      integer(ip), intent(in) :: eaddr  !! Ending address of source segment.
+      real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+      real(wp), intent(in) :: end  !! End (final epoch) of subset.
       integer(ip), parameter :: maxdsz = (4 * maxtrm) + 11
       real(wp) :: data     ( maxdsz )
       integer(ip) :: dlsize
@@ -10790,7 +10936,7 @@ contains
       call dafada ( ctx, data, 1 )
 
       return
-      end procedure spks21
+      end subroutine spks21
 
       !>## Detailed Input
       !>
@@ -10892,9 +11038,19 @@ contains
       !>        #1 to $Exceptions section and declared the routine error free.
       !>
       !>-    SPICELIB Version 1.0.0, 04-JAN-1994 (WLT) (KRG)
-      module procedure spkuds
+      module subroutine spkuds ( ctx, descr, body, center, frame, type, first, last, baddrs, eaddrs )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: descr ( * )  !! An SPK segment descriptor.
+      integer(ip), intent(out) :: body  !! The NAIF ID code for the body of the segment.
+      integer(ip), intent(out) :: center  !! The center of motion for BODY.
+      integer(ip), intent(out) :: frame  !! The code for the frame of this segment.
+      integer(ip), intent(out) :: type  !! The type of SPK segment.
+      real(wp), intent(out) :: first  !! The first epoch for which the segment is valid.
+      real(wp), intent(out) :: last  !! The last  epoch for which the segment is valid.
+      integer(ip), intent(out) :: baddrs  !! Beginning DAF address of the segment.
+      integer(ip), intent(out) :: eaddrs  !! Ending DAF address of the segment.
 
 !     Values of ND and NI for SPK files.
 !
@@ -10930,7 +11086,7 @@ contains
 
       return
 
-      end procedure spkuds
+      end subroutine spkuds
 
       !>## Detailed Input
       !>
@@ -11256,9 +11412,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-MAY-2008 (NJB)
-      module procedure zzcorsxf
+      module subroutine zzcorsxf ( ctx, xmit, dlt, xform, corxfm )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(in) :: xmit  !! Radiation direction flag.
+      real(wp), intent(in) :: dlt  !! Light time derivative with respect to TDB.
+      real(wp), intent(in) :: xform  ( 6, 6 )  !! State transformation matrix.
+      real(wp), intent(out) :: corxfm ( 6, 6 )  !! Corrected state transformation matrix.
 
       real(wp) :: ltsign
       real(wp) :: scale
@@ -11300,7 +11461,7 @@ contains
 
       end do
 
-      end procedure zzcorsxf
+      end subroutine zzcorsxf
 
       !>## Abstract
       !>
@@ -11421,10 +11582,15 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 11-JAN-2012 (NJB)
-      module procedure zzcvxsta
+      module subroutine zzcvxsta ( ctx, et, ref, center, state )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxvg
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Observer epoch.
+      character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+      integer(ip), intent(out) :: center  !! ID code of center of motion.
+      real(wp), intent(out) :: state ( 6 )  !! State vector.
       real(wp) :: delta
       real(wp) :: xstate ( 6 )
       real(wp) :: xf     ( 6, 6 )
@@ -11463,7 +11629,7 @@ contains
 
       return
       end associate
-      end procedure zzcvxsta
+      end subroutine zzcvxsta
 
       !>## Abstract
       !>
@@ -11536,9 +11702,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 11-JAN-2012 (NJB)
-      module procedure zzcvssta
+      module subroutine zzcvssta ( ctx, state, center, et, ref )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Observer epoch.
+      character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+      integer(ip), intent(in) :: center  !! ID code of center of motion.
+      real(wp), intent(in) :: state ( 6 )  !! State vector.
       real(wp) :: delta
       real(wp) :: xstate ( 6 )
       real(wp) :: xf     ( 6, 6 )
@@ -11564,7 +11735,7 @@ contains
 
       return
       end associate
-      end procedure zzcvssta
+      end subroutine zzcvssta
 
       !>## Detailed Input
       !>
@@ -12000,9 +12171,14 @@ contains
       !>        Removed DAFHLU call; replaced ERRFN call with ERRHAN.
       !>
       !>-    SPICELIB Version 1.0.0, 06-MAR-1995 (KRG)
-      module procedure spk14a
+      module subroutine spk14a ( ctx, handle, ncsets, coeffs, epochs )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of an SPK file open for writing.
+      integer(ip), intent(in) :: ncsets  !! The number of coefficient sets and epochs.
+      real(wp), intent(in) :: coeffs ( * )  !! The collection of coefficient sets.
+      real(wp), intent(in) :: epochs ( * )  !! The epochs associated with the coefficient sets.
 
 !
 !     Standard SPICELIB error handling.
@@ -12037,7 +12213,7 @@ contains
 
       return
 
-      end procedure spk14a
+      end subroutine spk14a
 
       !>## Detailed Input
       !>
@@ -12338,10 +12514,19 @@ contains
       !>        section of the header.
       !>
       !>-    SPICELIB Version 1.0.0, 06-MAR-1995 (KRG)
-      module procedure spk14b
+      module subroutine spk14b ( ctx, handle, segid, body, center, frame, first, last, chbdeg )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of an SPK file open for writing.
+      character(*), intent(in) :: segid  !! The string to use for segment identifier.
+      integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
+      integer(ip), intent(in) :: center  !! The center of motion for BODY.
+      character(*), intent(in) :: frame  !! The reference frame for this segment.
+      real(wp), intent(in) :: first  !! The first epoch for which the segment is valid.
+      real(wp), intent(in) :: last  !! The last epoch for which the segment is valid.
+      integer(ip), intent(in) :: chbdeg  !! The degree of the Chebyshev Polynomial used.
 
 !     DAF ND and NI values for SPK files.
 !
@@ -12415,7 +12600,7 @@ contains
 
       return
 
-      end procedure spk14b
+      end subroutine spk14b
 
       !>## Detailed Input
       !>
@@ -12681,9 +12866,11 @@ contains
       !>        routines from $Abstract section (present in $Particulars).
       !>
       !>-    SPICELIB Version 1.0.0, 06-MAR-1995 (KRG)
-      module procedure spk14e
+      module subroutine spk14e ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of an SPK file open for writing.
 
 !
 !     Standard SPICELIB error handling.
@@ -12702,7 +12889,7 @@ contains
 
       return
 
-      end procedure spk14e
+      end subroutine spk14e
 
       !>## Detailed Input
       !>
@@ -13255,12 +13442,20 @@ contains
       !>        the functionality of this routine in more detail.
       !>
       !>-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
-      module procedure spkapo
+      recursive module subroutine spkapo ( ctx, targ, et, ref, sobs, abcorr, ptarg, lt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: odd, vnorm
       use pepper_strings, only: ljucrs
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: targ  !! Target body.
+      real(wp), intent(in) :: et  !! Observer epoch.
+      character(*), intent(in) :: ref  !! Inertial reference frame of observer's state.
+      real(wp), intent(in) :: sobs     ( 6 )  !! State of observer wrt. solar system barycenter.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      real(wp), intent(out) :: ptarg    ( 3 )  !! Position of target.
+      real(wp), intent(out) :: lt  !! One way light time between observer and target.
       logical :: xmit  !! (PEPPER) copy of the saved flag for this call
       logical :: uselt  !! (PEPPER) copy of the saved flag for this call
       logical :: usecn  !! (PEPPER) copy of the saved flag for this call
@@ -13435,7 +13630,7 @@ contains
 
       return
       end associate
-      end procedure spkapo
+      end subroutine spkapo
 
       !>## Detailed Input
       !>
@@ -13874,12 +14069,21 @@ contains
       !>        Call to ZZPRSCOR was replaced by a call to ZZVALCOR.
       !>
       !>-    SPICELIB Version 1.0.0, 11-JAN-2008 (NJB)
-      module procedure spkltc
+      recursive module subroutine spkltc ( ctx, targ, et, ref, abcorr, stobs, starg, lt, dlt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: vdot, vnorm
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: targ  !! Target body.
+      real(wp), intent(in) :: et  !! Observer epoch.
+      character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      real(wp), intent(in) :: stobs  ( 6 )  !! State of the observer relative to the SSB.
+      real(wp), intent(out) :: starg  ( 6 )  !! State of target.
+      real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
       logical :: xmit  !! (PEPPER) copy of the saved flag for this call
       logical :: uselt  !! (PEPPER) copy of the saved flag for this call
       logical :: usecn  !! (PEPPER) copy of the saved flag for this call
@@ -14176,7 +14380,7 @@ contains
 
       return
       end associate
-      end procedure spkltc
+      end subroutine spkltc
 
       !>## Detailed Input
       !>
@@ -14243,10 +14447,16 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JUN-1997 (KRG)
-      module procedure spks10
+      module subroutine spks10 ( ctx, srchan, srcdsc, dsthan, dstdsc, dstsid )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: srchan  !! Handle of the SPK file with the source segment.
+      real(wp), intent(in) :: srcdsc(*)  !! Descriptor for the source segment.
+      integer(ip), intent(in) :: dsthan  !! Handle of the SPK file for the destination segment.
+      real(wp), intent(in) :: dstdsc(*)  !! Descriptor for the destination segment.
+      character(*), intent(in) :: dstsid  !! Segment identifier for the new segment.
       real(wp) :: myref_1(1)  !! one-element copy of myref (array argument)
       integer(ip) :: dummy_1(1)  !! one-element copy of dummy (array argument)
 
@@ -14380,7 +14590,7 @@ contains
 
       return
 
-      end procedure spks10
+      end subroutine spks10
 
       !>## Detailed Input
       !>
@@ -14478,9 +14688,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 25-FEB-2000 (NJB)
-      module procedure spks12
+      module subroutine spks12 ( ctx, handle, baddr, eaddr, begin, end )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+      integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+      integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+      real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+      real(wp), intent(in) :: end  !! End (final epoch) of subset.
 
 !
 !     Standard SPICE error handling.
@@ -14493,7 +14709,7 @@ contains
       call spks08 ( ctx, handle, baddr, eaddr, begin, end )
 
       return
-      end procedure spks12
+      end subroutine spks12
 
       !>## Detailed Input
       !>
@@ -14591,9 +14807,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 25-FEB-2000 (NJB)
-      module procedure spks13
+      module subroutine spks13 ( ctx, handle, baddr, eaddr, begin, end )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of file containing source segment.
+      integer(ip), intent(in) :: baddr  !! Beginning address in file of source segment.
+      integer(ip), intent(in) :: eaddr  !! Ending address in file of source segment.
+      real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+      real(wp), intent(in) :: end  !! End (final epoch) of subset.
 
 !
 !     Standard SPICE error handling.
@@ -14606,7 +14828,7 @@ contains
       call spks09 ( ctx, handle, baddr, eaddr, begin, end )
 
       return
-      end procedure spks13
+      end subroutine spks13
 
       !>## Detailed Input
       !>
@@ -14740,9 +14962,14 @@ contains
       !>        The routine was simplified by replacing all of the
       !>        main body of code with a call to SPKGEO. By making
       !>        this change the routine now supports non-inertial frames.
-      module procedure spkssb
+      recursive module subroutine spkssb ( ctx, targ, et, ref, starg )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: targ  !! Target body.
+      real(wp), intent(in) :: et  !! Target epoch.
+      character(*), intent(in) :: ref  !! Target reference frame.
+      real(wp), intent(out) :: starg    ( 6 )  !! State of target.
 
       real(wp) :: lt
       integer(ip) :: bary
@@ -14757,7 +14984,7 @@ contains
       call spkgeo ( ctx, targ, et, ref, bary, starg, lt )
 
       return
-      end procedure spkssb
+      end subroutine spkssb
 
       !>## Abstract
       !>
@@ -15424,12 +15651,20 @@ contains
       !>     Initial values
       !>
       !>     Standard SPICE error handling.
-      module procedure spkapp
+      module subroutine spkapp ( ctx, targ, et, ref, sobs, abcorr, starg, lt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: odd, vnorm
       use pepper_strings, only: ljucrs
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: targ  !! Target body.
+      real(wp), intent(in) :: et  !! Observer epoch.
+      character(*), intent(in) :: ref  !! Inertial reference frame of observer's state.
+      real(wp), intent(in) :: sobs     ( 6 )  !! State of observer wrt. solar system barycenter.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+      real(wp), intent(out) :: lt  !! One way light time between observer and target.
       logical :: xmit  !! (PEPPER) copy of the saved flag for this call
       logical :: uselt  !! (PEPPER) copy of the saved flag for this call
       logical :: usecn  !! (PEPPER) copy of the saved flag for this call
@@ -15609,7 +15844,7 @@ contains
 
       return
       end associate
-      end procedure spkapp
+      end subroutine spkapp
 
       !>## Abstract
       !>
@@ -16135,10 +16370,20 @@ contains
       !>        resulting from uninitialized values.
       !>
       !>-    SPICELIB Version 1.0.0, 11-JAN-2008 (NJB)
-      module procedure spkaps
+      recursive module subroutine spkaps ( ctx, targ, et, ref, abcorr, stobs, accobs, starg, lt, dlt )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: targ  !! Target body.
+      real(wp), intent(in) :: et  !! Observer epoch.
+      character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      real(wp), intent(in) :: stobs  ( 6 )  !! State of the observer relative to the SSB.
+      real(wp), intent(in) :: accobs ( 3 )  !! Acceleration of the observer relative to the SSB.
+      real(wp), intent(out) :: starg  ( 6 )  !! State of target.
+      real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
       logical :: xmit  !! (PEPPER) copy of the saved flag for this call
       logical :: usestl  !! (PEPPER) copy of the saved flag for this call
       real(wp) :: corpos ( 3 )
@@ -16245,7 +16490,7 @@ contains
 
       return
       end associate
-      end procedure spkaps
+      end subroutine spkaps
 
       !>## Detailed Input
       !>
@@ -16992,13 +17237,21 @@ contains
       !>     Initial values
       !>
       !>     Standard SPICE error handling.
-      module procedure spkezp
+      recursive module subroutine spkezp ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxv
       use pepper_strings, only: eqchr, eqstr, ltrim
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: targ  !! Target body NAIF ID code.
+      real(wp), intent(in) :: et  !! Observer epoch.
+      character(*), intent(in) :: ref  !! Reference frame of output position vector.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      integer(ip), intent(in) :: obs  !! Observing body NAIF ID code.
+      real(wp), intent(out) :: ptarg    ( 3 )  !! Position of target.
+      real(wp), intent(out) :: lt  !! One way light time between observer and target.
       real(wp) :: temp     ( 3    )
       real(wp) :: xform    ( 3, 3 )
       logical :: found
@@ -17159,7 +17412,7 @@ contains
 
       return
       end associate
-      end procedure spkezp
+      end subroutine spkezp
 
       !>## Detailed Input
       !>
@@ -17227,9 +17480,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 08-MAR-1995 (KRG)
-      module procedure spks14
+      module subroutine spks14 ( ctx, srchan, srcdsc, dsthan, dstdsc, dstsid )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: srchan  !! Handle of the SPK file with the source segment.
+      real(wp), intent(in) :: srcdsc(*)  !! Descriptor for the source segment.
+      integer(ip), intent(in) :: dsthan  !! Handle of the SPK file for the destination segment.
+      real(wp), intent(in) :: dstdsc(*)  !! Descriptor for the destination segment.
+      character(*), intent(in) :: dstsid  !! Segment identifier for the new segment.
       real(wp) :: myref_1(1)  !! one-element copy of myref (array argument)
       integer(ip) :: dummy_1(1)  !! one-element copy of dummy (array argument)
 
@@ -17357,7 +17616,7 @@ contains
 
       return
 
-      end procedure spks14
+      end subroutine spks14
 
       !>## Abstract
       !>
@@ -18401,10 +18660,19 @@ contains
       !>        useful were removed.
       !>
       !>-    SPICELIB Version 1.0.0, 11-JAN-2008 (NJB)
-      module procedure spkacs
+      recursive module subroutine spkacs ( ctx, targ, et, ref, abcorr, obs, starg, lt, dlt )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: targ  !! Target body.
+      real(wp), intent(in) :: et  !! Observer epoch.
+      character(*), intent(in) :: ref  !! Inertial reference frame of output state.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      integer(ip), intent(in) :: obs  !! Observer.
+      real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+      real(wp), intent(out) :: lt  !! One way light time between observer and target.
+      real(wp), intent(out) :: dlt  !! Derivative of light time with respect to time.
       logical :: usestl  !! (PEPPER) copy of the saved flag for this call
       real(wp) :: acc    ( 3 )
       real(wp) :: ltssb
@@ -18517,7 +18785,7 @@ contains
 
       return
       end associate
-      end procedure spkacs
+      end subroutine spkacs
 
       !>## Detailed Input
       !>
@@ -18917,10 +19185,18 @@ contains
       !>        the functionality of this routine in more detail.
       !>
       !>-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
-      module procedure spkpos
+      recursive module subroutine spkpos ( ctx, targ, et, ref, abcorr, obs, ptarg, lt )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: targ  !! Target body name.
+      real(wp), intent(in) :: et  !! Observer epoch.
+      character(*), intent(in) :: ref  !! Reference frame of output position vector.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obs  !! Observing body name.
+      real(wp), intent(out) :: ptarg    ( 3 )  !! Position of target.
+      real(wp), intent(out) :: lt  !! One way light time between observer and target.
       integer(ip) :: targid
       integer(ip) :: obsid
       logical :: found
@@ -19006,7 +19282,7 @@ contains
 
       return
       end associate
-      end procedure spkpos
+      end subroutine spkpos
 
       !>## Detailed Input
       !>
@@ -19174,9 +19450,16 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (RET)
-      module procedure spksub
+      module subroutine spksub ( ctx, handle, descr, ident, begin, end, newh )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of source segment.
+      real(wp), intent(in) :: descr    ( 5 )  !! Descriptor of source segment.
+      character(*), intent(in) :: ident  !! Identifier of source segment.
+      real(wp), intent(in) :: begin  !! Beginning (initial epoch) of subset.
+      real(wp), intent(in) :: end  !! End (final epoch) of subset.
+      integer(ip), intent(in) :: newh  !! Handle of new segment.
 
       real(wp) :: alpha
       real(wp) :: dc       ( 2 )
@@ -19329,7 +19612,7 @@ contains
       end if
 
       return
-      end procedure spksub
+      end subroutine spksub
 
       !>## Abstract
       !>
@@ -21156,13 +21439,21 @@ contains
       !>     Initial values
       !>
       !>     Standard SPICE error handling.
-      module procedure spkez
+      recursive module subroutine spkez ( ctx, targ, et, ref, abcorr, obs, starg, lt )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxvg
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: targ  !! Target body.
+      real(wp), intent(in) :: et  !! Observer epoch.
+      character(*), intent(in) :: ref  !! Reference frame of output state vector.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      integer(ip), intent(in) :: obs  !! Observing body.
+      real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+      real(wp), intent(out) :: lt  !! One way light time between observer and target.
       logical :: xmit  !! (PEPPER) copy of the saved flag for this call
       logical :: usegeo  !! (PEPPER) copy of the saved flag for this call
       real(wp) :: state    ( 6    )
@@ -21414,7 +21705,7 @@ contains
 
       return
       end associate
-      end procedure spkez
+      end subroutine spkez
 
       !>## Abstract
       !>
@@ -24045,13 +24336,25 @@ contains
       !>        within the $Examples section without modifications.
       !>
       !>-    SPICELIB Version 1.0.0, 31-MAR-2014 (NJB) (SCK) (BVS)
-      module procedure spkcvo
+      recursive module subroutine spkcvo ( ctx, target, et, outref, refloc, abcorr, obssta, obsepc, obsctr, obsref, state, lt )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxvg
       use pepper_strings, only: esrchc
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of target ephemeris object.
+      real(wp), intent(in) :: et  !! Observation epoch.
+      character(*), intent(in) :: outref  !! Reference frame of output state.
+      character(*), intent(in) :: refloc  !! Output reference frame evaluation locus.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      real(wp), intent(in) :: obssta ( 6 )  !! Observer state relative to center of motion.
+      real(wp), intent(in) :: obsepc  !! Epoch of observer state.
+      character(*), intent(in) :: obsctr  !! Center of motion of observer.
+      character(*), intent(in) :: obsref  !! Frame of observer state.
+      real(wp), intent(out) :: state  ( 6 )  !! State of target with respect to observer.
+      real(wp), intent(out) :: lt  !! One way light time between target and observer.
       real(wp) :: dlt
       real(wp) :: j2stat ( 6 )
       real(wp) :: s
@@ -24340,7 +24643,7 @@ contains
 
       return
       end associate
-      end procedure spkcvo
+      end subroutine spkcvo
 
       !>## Detailed Input
       !>
@@ -24796,10 +25099,18 @@ contains
       !>        section of the header.
       !>
       !>-    SPICELIB Version 1.0.0, 25-SEP-1995 (BVS)
-      module procedure spkezr
+      recursive module subroutine spkezr ( ctx, targ, et, ref, abcorr, obs, starg, lt )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: targ  !! Target body name.
+      real(wp), intent(in) :: et  !! Observer epoch.
+      character(*), intent(in) :: ref  !! Reference frame of output state vector.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obs  !! Observing body name.
+      real(wp), intent(out) :: starg    ( 6 )  !! State of target.
+      real(wp), intent(out) :: lt  !! One way light time between observer and target.
       integer(ip) :: targid
       integer(ip) :: obsid
       logical :: found
@@ -24885,7 +25196,7 @@ contains
 
       return
       end associate
-      end procedure spkezr
+      end subroutine spkezr
 
       !>## Abstract
       !>
@@ -27042,10 +27353,21 @@ contains
       !>        $Examples section without modifications.
       !>
       !>-    SPICELIB Version 1.0.0, 27-MAR-2012 (NJB) (SCK) (BVS)
-      module procedure spkcpo
+      recursive module subroutine spkcpo ( ctx, target, et, outref, refloc, abcorr, obspos, obsctr, obsref, state, lt )
       use pepper_kinds, only: wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of target ephemeris object.
+      real(wp), intent(in) :: et  !! Observation epoch.
+      character(*), intent(in) :: outref  !! Reference frame of output state.
+      character(*), intent(in) :: refloc  !! Output reference frame evaluation locus.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      real(wp), intent(in) :: obspos ( 3 )  !! Observer position relative to center of motion.
+      character(*), intent(in) :: obsctr  !! Center of motion of observer.
+      character(*), intent(in) :: obsref  !! Frame of observer position.
+      real(wp), intent(out) :: state  ( 6 )  !! State of target with respect to observer.
+      real(wp), intent(out) :: lt  !! One way light time between target and observer.
 
       real(wp) :: obsepc
       real(wp) :: obssta ( 6 )
@@ -27075,7 +27397,7 @@ contains
                     obssta, obsepc, obsctr, obsref, state,  lt )
 
       return
-      end procedure spkcpo
+      end subroutine spkcpo
 
       !>## Detailed Input
       !>
@@ -28051,13 +28373,25 @@ contains
       !>        within the $Examples section without modifications.
       !>
       !>-    SPICELIB Version 1.0.0, 31-MAR-2014 (NJB) (SCK) (BVS)
-      module procedure spkcvt
+      recursive module subroutine spkcvt ( ctx, trgsta, trgepc, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxvg
       use pepper_strings, only: esrchc
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: trgsta ( 6 )  !! Target state relative to center of motion.
+      real(wp), intent(in) :: trgepc  !! Epoch of target state.
+      character(*), intent(in) :: trgctr  !! Center of motion of target.
+      character(*), intent(in) :: trgref  !! Frame of target state.
+      real(wp), intent(in) :: et  !! Observation epoch.
+      character(*), intent(in) :: outref  !! Reference frame of output state.
+      character(*), intent(in) :: refloc  !! Output reference frame evaluation locus.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      character(*), intent(in) :: obsrvr  !! Name of observing ephemeris object.
+      real(wp), intent(out) :: state  ( 6 )  !! State of target with respect to observer.
+      real(wp), intent(out) :: lt  !! One way light time between target and observer.
       real(wp) :: dlt
       real(wp) :: j2stat ( 6 )
       real(wp) :: s
@@ -28343,7 +28677,7 @@ contains
 
       return
       end associate
-      end procedure spkcvt
+      end subroutine spkcvt
 
       !>## Detailed Input
       !>
@@ -29270,10 +29604,21 @@ contains
       !>        within the $Examples section without modifications.
       !>
       !>-    SPICELIB Version 1.0.0, 27-MAR-2012 (NJB) (SCK) (BVS)
-      module procedure spkcpt
+      recursive module subroutine spkcpt ( ctx, trgpos, trgctr, trgref, et, outref, refloc, abcorr, obsrvr, state, lt )
       use pepper_kinds, only: wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: trgpos ( 3 )  !! Target position relative to center of motion.
+      character(*), intent(in) :: trgctr  !! Center of motion of target.
+      character(*), intent(in) :: trgref  !! Frame of target position.
+      real(wp), intent(in) :: et  !! Observation epoch.
+      character(*), intent(in) :: outref  !! Reference frame of output state.
+      character(*), intent(in) :: refloc  !! Output reference frame evaluation locus.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      character(*), intent(in) :: obsrvr  !! Name of observing ephemeris object.
+      real(wp), intent(out) :: state  ( 6 )  !! State of target with respect to observer.
+      real(wp), intent(out) :: lt  !! One way light time between target and observer.
 
       real(wp) :: trgepc
       real(wp) :: trgsta ( 6 )
@@ -29300,6 +29645,6 @@ contains
                     outref, refloc, abcorr, obsrvr, state, lt )
 
       return
-      end procedure spkcpt
+      end subroutine spkcpt
 
 end submodule pepper_spk_api

@@ -504,11 +504,15 @@ contains
       !>        Multiple FOUND flags and a bevy of new error messages
       !>        were implemented to cope with this unfortunate oversight.
 
-      module procedure deltet
+      module subroutine deltet ( ctx, epoch, eptype, delta )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase
       use pepper_containers, only: grow
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: epoch  !! Input epoch (seconds past J2000).
+      character(*), intent(in) :: eptype  !! Type of input epoch ('UTC' or 'ET').
+      real(wp), intent(out) :: delta  !! Delta ET (ET-UTC) at input epoch.
       character(4) :: type
       real(wp) :: aet
       real(wp) :: ea
@@ -707,7 +711,7 @@ contains
             st%valid = .true.
             end associate
          end subroutine read_constants
-      end procedure deltet
+      end subroutine deltet
 
       !>## Detailed Input
       !>
@@ -1054,10 +1058,15 @@ contains
       !>               `anchors' the first significant digit of the input
       !>               value in the units place.
 
-      module procedure et2utc
+      module subroutine et2utc ( ctx, et, format, prec, utcstr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, prefix, suffix, ucase
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch, given in ephemeris seconds past J2000.
+      character(*), intent(in) :: format  !! Format of output epoch.
+      integer(ip), intent(in) :: prec  !! Digits of precision in fractional seconds or days.
+      character(*), intent(out) :: utcstr  !! Output time string, UTC.
       integer(ip) :: ndigit !! The function NDIGIT gives the number of digits required to
                             !! display a non-negative integer that is less than 10000
       integer(ip) :: day
@@ -1405,7 +1414,7 @@ contains
 
       return
       end associate
-      end procedure et2utc
+      end subroutine et2utc
 
       !>## Detailed Input
       !>
@@ -1734,11 +1743,16 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT)
-      module procedure scanpr
+      module subroutine scanpr ( ctx, nmarks, marks, mrklen, pnters )
       use pepper_kinds, only: ip
       use pepper_arrays, only: rmdupc
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: nmarks  !! Number of recognizable substrings.
+      character(*), intent(inout) :: marks   ( * )  !! Recognizable substrings.
+      integer(ip), intent(out) :: mrklen  ( * )  !! auxiliary array describing MARKS.
+      integer(ip), intent(out) :: pnters  ( * )  !! auxiliary array describing MARKS.
       logical :: return
       character(1) :: letter
       integer(ip) :: backup
@@ -1896,7 +1910,7 @@ contains
       nmarks         = n
 
       return
-      end procedure scanpr
+      end subroutine scanpr
 
       !>## Detailed Input
       !>
@@ -2230,10 +2244,21 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 26-JUL-1996 (WLT)
-      module procedure scan
+      module subroutine scan ( ctx, string, marks, mrklen, pnters, room, start, ntokns, ident, beg, end )
       use pepper_kinds, only: ip
       use pepper_strings, only: ncpos
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! string to be scanned.
+      integer(ip), intent(in) :: room  !! space available for storing substring descriptions.
+      character(*), intent(in) :: marks   ( * )  !! recognizable substrings.
+      integer(ip), intent(in) :: mrklen  ( * )  !! an auxiliary array describing MARKS.
+      integer(ip), intent(in) :: pnters  ( * )  !! an auxiliary array describing MARKS.
+      integer(ip), intent(inout) :: start  !! position from which to begin/resume scanning.
+      integer(ip), intent(out) :: ntokns  !! number of scanned substrings.
+      integer(ip), intent(out) :: beg     ( * )  !! beginnings of scanned substrings.
+      integer(ip), intent(out) :: end     ( * )  !! endings of scanned substrings.
+      integer(ip), intent(out) :: ident   ( * )  !! position of scanned substring within array MARKS.
       logical :: return
       character(1) :: letter
       integer(ip) :: backup
@@ -2418,7 +2443,7 @@ contains
       end do
 
       return
-      end procedure scan
+      end subroutine scan
 
       !>## Detailed Input
       !>
@@ -2610,9 +2635,14 @@ contains
       !>        Corrected a minor spelling error in the header comments.
       !>
       !>-    SPICELIB Version 1.0.0, 10-AUG-1996 (WLT)
-      module procedure tpictr
+      module subroutine tpictr ( ctx, sample, pictur, ok, errmsg )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: sample  !! is a sample date time string
+      character(*), intent(out) :: pictur  !! is a format picture that describes SAMPLE
+      logical, intent(out) :: ok  !! indicates success or failure to parse SAMPLE
+      character(*), intent(out) :: errmsg  !! a diagnostic returned if SAMPLE cannot be parsed
 
       character(5) :: type
       character(8) :: modify   ( 5 )
@@ -2644,7 +2674,7 @@ contains
       end if
 
       return
-      end procedure tpictr
+      end subroutine tpictr
 
       !>## Detailed Input
       !>
@@ -2927,10 +2957,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO) (IMU)
-      module procedure utc2et
+      module subroutine utc2et ( ctx, utcstr, et )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: utcstr  !! Input time string, UTC.
+      real(wp), intent(out) :: et  !! Output epoch, ephemeris seconds past J2000.
 
 !
 !     Parameters
@@ -3093,7 +3126,7 @@ contains
 
       return
 
-      end procedure utc2et
+      end subroutine utc2et
 
       !>## Detailed Input
       !>
@@ -3839,12 +3872,16 @@ contains
       !>     Save everything.
       !>
       !>     Initial values
-      module procedure timout
+      module subroutine timout ( ctx, et, pictur, output )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j1950, j2000, spd
       use pepper_arrays, only: bsrchc
       use pepper_strings, only: prefix, rtrim, scanrj, lcase_inplace, ucase_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch in seconds past the ephemeris epoch J2000.
+      character(*), intent(in) :: pictur  !! A format specification for the output string.
+      character(*), intent(out) :: output  !! A string representation of the input epoch.
       integer(ip), parameter :: currnt = 1
       integer(ip), parameter :: begin = currnt
       integer(ip), parameter :: noname = currnt  + 1
@@ -5342,6 +5379,6 @@ contains
 
       return
       end associate
-      end procedure timout
+      end subroutine timout
 
 end submodule pepper_time_api

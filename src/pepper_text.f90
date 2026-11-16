@@ -114,10 +114,15 @@ contains
       !>-     Beta Version 1.1.0, 6-FEB-1989 (WLT)
       !>
       !>      Error handling for bad direction flag added.
-      module procedure cyclec
+      module subroutine cyclec ( ctx, instr, dir, ncycle, outstr )
       use pepper_kinds, only: ip
       use pepper_math, only: gcd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: instr  !! String to be cycled.
+      character(1), intent(in) :: dir  !! Direction to cycle.
+      integer(ip), intent(in) :: ncycle  !! Number of times to cycle.
+      character(*), intent(out) :: outstr  !! Cycled string.
 
       character(1) :: last
       character(1) :: temp
@@ -286,7 +291,7 @@ contains
       end do
 
       return
-      end procedure cyclec
+      end subroutine cyclec
 
       !>## Detailed Input
       !>
@@ -516,10 +521,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
-      module procedure repmd
+      module subroutine repmd ( ctx, in, marker, value, sigdig, out )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: dpstr, zzrepsub
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: in  !! Input string.
+      character(*), intent(in) :: marker  !! Marker to be replaced.
+      real(wp), intent(in) :: value  !! Replacement value.
+      integer(ip), intent(in) :: sigdig  !! Significant digits in replacement text.
+      character(*), intent(out) :: out  !! Output string.
 
       integer(ip), parameter :: maxldp = 23
 
@@ -583,7 +594,7 @@ contains
       end if
 
       return
-      end procedure repmd
+      end subroutine repmd
 
       !>## Detailed Input
       !>
@@ -774,10 +785,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
-      module procedure repmi
+      module subroutine repmi ( ctx, in, marker, value, out )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, zzrepsub
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: in  !! Input string.
+      character(*), intent(in) :: marker  !! Marker to be replaced.
+      integer(ip), intent(in) :: value  !! Replacement value.
+      character(*), intent(out) :: out  !! Output string.
 
       integer(ip), parameter :: maxli = 11
 
@@ -827,7 +843,7 @@ contains
       call zzrepsub ( in,  mrkpsb,  mrkpse,  substr( :len_trim(substr) ),  out  )
 
       return
-      end procedure repmi
+      end subroutine repmi
 
       !>## Detailed Input
       !>
@@ -956,9 +972,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 24-AUG-1990 (WLT) (IMU)
-      module procedure repsub
+      module subroutine repsub ( ctx, in, left, right, string, out )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: in  !! Input string.
+      integer(ip), intent(in) :: left  !! Ends of substring to be replaced.
+      integer(ip), intent(in) :: right  !! Ends of substring to be replaced.
+      character(*), intent(in) :: string  !! Replacement string.
+      character(*), intent(out) :: out  !! Resulting string.
 
       integer(ip) :: inlen
       integer(ip) :: strlen
@@ -1086,7 +1108,7 @@ contains
       end if
 
       return
-      end procedure repsub
+      end subroutine repsub
 
       !>## Detailed Input
       !>
@@ -1184,9 +1206,14 @@ contains
       !>         Error handling was added to detect invalid character
       !>         positions. If LEFT > RIGHT, RIGHT < 1, LEFT < 1,
       !>         RIGHT > LEN(IN), or LEFT > LEN(IN), an error is signaled.
-      module procedure remsub
+      module subroutine remsub ( ctx, in, left, right, out )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: in  !! Input string.
+      integer(ip), intent(in) :: left  !! Position of first character to be removed.
+      integer(ip), intent(in) :: right  !! Position of last character to be removed.
+      character(*), intent(out) :: out  !! Output string.
 
 !
 !     Other functions
@@ -1270,7 +1297,7 @@ contains
       end if
 
       return
-      end procedure remsub
+      end subroutine remsub
 
       !>## Detailed Input
       !>
@@ -1448,9 +1475,14 @@ contains
       !>        Locations not within that interval refer to non-existent
       !>        characters positions. (To append to the string, set the
       !>        location equal to LEN(IN)+1.)
-      module procedure inssub
+      module subroutine inssub ( ctx, in, sub, loc, out )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: in  !! Input string.
+      character(*), intent(in) :: sub  !! Substring to be inserted.
+      integer(ip), intent(in) :: loc  !! Position at which substring is to be inserted.
+      character(*), intent(out) :: out  !! Output string.
 
       character(1) :: chr
 
@@ -1579,7 +1611,7 @@ contains
       end if
 
       return
-      end procedure inssub
+      end subroutine inssub
 
       !>## Detailed Input
       !>
@@ -1680,10 +1712,16 @@ contains
       !>        General, presumably because it requires temporary buffering
       !>        of characters. The new version seems to work for all cases.
       !>        It has been tested on the VAX and on the Sun (f77 compiler).
-      module procedure shiftc
+      module subroutine shiftc ( ctx, in, dir, nshift, fillc, out )
       use pepper_kinds, only: ip
       use pepper_strings, only: shiftl, shiftr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: in  !! Input string.
+      character(1), intent(in) :: dir  !! Direction to shift.
+      integer(ip), intent(in) :: nshift  !! Number of times to shift.
+      character(1), intent(in) :: fillc  !! Character to fill spaces left vacant.
+      character(*), intent(out) :: out  !! Shifted string.
 
 !
 !     Standard SPICE error handling.
@@ -1719,7 +1757,7 @@ contains
       end if
 
       return
-      end procedure shiftc
+      end subroutine shiftc
 
       !>## Detailed Input
       !>
@@ -1838,10 +1876,14 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 16-JUN-1995 (NJB)
-      module procedure chckid
+      module subroutine chckid ( ctx, class, maxlen, id )
       use pepper_kinds, only: ip
       use pepper_strings, only: frstnp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: class  !! A description of the class to which ID belongs.
+      integer(ip), intent(in) :: maxlen  !! Maximum allowed non-blank length of ID.
+      character(*), intent(in) :: id  !! The ID string to be validated.
 
       integer(ip) :: chrcod
       integer(ip) :: i
@@ -1938,7 +1980,7 @@ contains
       end if
 
       return
-      end procedure chckid
+      end subroutine chckid
 
       !>## Detailed Input
       !>
@@ -2052,10 +2094,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-      module procedure countc
+      module integer(ip) function countc ( ctx, unit, bline, eline, line )
       use pepper_kinds, only: ip
       use pepper_strings, only: astrip_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Logical unit connected to text file.
+      integer(ip), intent(in) :: bline  !! Beginning line number.
+      integer(ip), intent(in) :: eline  !! Ending line number.
+      character(*), intent(inout) :: line  !! Workspace.
 
       integer(ip) :: chars
       integer(ip) :: iostat
@@ -2176,7 +2223,7 @@ contains
       countc = chars
 
       return
-      end procedure countc
+      end function countc
 
       !>## Detailed Input
       !>
@@ -2425,10 +2472,15 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local Parameters
-      module procedure hx2int
+      module subroutine hx2int ( ctx, string, number, error, errmsg )
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax, intmin
       use pepper_strings, only: repmc_inplace
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! Hexadecimal string to be converted to an integer.
+      integer(ip), intent(out) :: number  !! Integer value to be returned.
+      logical, intent(out) :: error  !! A logical flag which is .TRUE. on error.
+      character(*), intent(out) :: errmsg  !! A descriptive error message.
       integer(ip), parameter :: base = 16
 !
 !     Character codes and limits (SPICELIB computed them on the first
@@ -2690,7 +2742,7 @@ contains
       number = tmpnum
 
       return
-      end procedure hx2int
+      end subroutine hx2int
 
       !>## Detailed Input
       !>
@@ -2925,9 +2977,19 @@ contains
       !>        to BODVCD.
       !>
       !>-    SPICELIB Version 1.0.0, 09-APR-1997 (WLT)
-      module procedure locati
+      module subroutine locati ( ctx, id, idsz, list, pool, at, presnt )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: id   (            * )  !! An array of integers that comprise an
+                                                        !! identifier.
+      integer(ip), intent(in) :: idsz  !! The number of integer components per identifier.
+      integer(ip), intent(inout) :: list ( idsz,      * )  !! A list of known identifiers.
+      integer(ip), intent(inout) :: pool ( 2, lbpool: * )  !! A doubly linked list used for
+                                                           !! search LIST.
+      integer(ip), intent(inout) :: at  !! Location of the ID in the LIST.
+      logical, intent(out) :: presnt  !! Flag indicating if ID was already in LIST.
 
 
 !
@@ -3146,7 +3208,7 @@ contains
 
       return
 
-      end procedure locati
+      end subroutine locati
 
       !>## Detailed Input
       !>
@@ -3506,10 +3568,18 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-      module procedure locln
+      module subroutine locln ( ctx, unit, bmark, emark, line, bline, eline, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: ltrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Logical unit connected to text file.
+      character(*), intent(in) :: bmark  !! Begin marker.
+      character(*), intent(in) :: emark  !! End marker.
+      character(*), intent(inout) :: line  !! Workspace.
+      integer(ip), intent(out) :: bline  !! Beginning line.
+      integer(ip), intent(out) :: eline  !! Ending line.
+      logical, intent(out) :: found  !! Markers found?
 
       integer(ip) :: bltemp
       integer(ip) :: eltemp
@@ -3663,6 +3733,6 @@ contains
       end if
 
       return
-      end procedure locln
+      end subroutine locln
 
 end submodule pepper_text

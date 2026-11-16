@@ -99,9 +99,11 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO)
-      module procedure dacosh
+      module real(wp) function dacosh ( ctx, x )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! Number whose inverse hyperbolic cosine is desired.
 
 !
 !   Set up the error processing.
@@ -133,7 +135,7 @@ contains
       dacosh = dlog (x + x * dsqrt (1.0_wp - (1.0_wp/x)/x) )
 
       return
-      end procedure dacosh
+      end function dacosh
 
       !>## Abstract
       !>
@@ -217,9 +219,12 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 28-FEB-2006 (LSE)
-      module procedure dacosn
+      module real(wp) function dacosn ( ctx, arg, tol )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: arg  !! Argument to be evaluated.
+      real(wp), intent(in) :: tol  !! Tolerance.
 
 !
 !     Bracket ARG.
@@ -258,7 +263,7 @@ contains
       end if
 
       return
-      end procedure dacosn
+      end function dacosn
 
       !>## Abstract
       !>
@@ -342,9 +347,12 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 28-FEB-2006 (LSE)
-      module procedure dasine
+      module real(wp) function dasine ( ctx, arg, tol )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: arg  !! Argument to be evaluated.
+      real(wp), intent(in) :: tol  !! Tolerance.
 
 !
 !     Bracket ARG.
@@ -383,7 +391,7 @@ contains
       end if
 
       return
-      end procedure dasine
+      end function dasine
 
       !>## Detailed Input
       !>
@@ -469,9 +477,11 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO)
-      module procedure datanh
+      module real(wp) function datanh ( ctx, x )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! Number whose inverse hyperbolic tangent is desired.
 
 !
 !     Set up the error processing.
@@ -497,7 +507,7 @@ contains
       datanh = 0.5_wp * dlog ( (1.0_wp+x) / (1.0_wp-x) )
 
       return
-      end procedure datanh
+      end function datanh
 
       !>## Detailed Input
       !>
@@ -862,9 +872,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-2021 (JDR) (NJB)
-      module procedure dazldr
+      module subroutine dazldr ( ctx, x, y, z, azccw, elplsz, jacobi )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! X-coordinate of point.
+      real(wp), intent(in) :: y  !! Y-coordinate of point.
+      real(wp), intent(in) :: z  !! Z-coordinate of point.
+      logical, intent(in) :: azccw  !! Flag indicating how azimuth is measured.
+      logical, intent(in) :: elplsz  !! Flag indicating how elevation is measured.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
       integer(ip) :: i
 
@@ -930,7 +947,7 @@ contains
       end if
 
       return
-      end procedure dazldr
+      end subroutine dazldr
 
       !>## Detailed Input
       !>
@@ -1214,10 +1231,15 @@ contains
       !>        Added complete code example.
       !>
       !>-    SPICELIB Version 1.0.0, 19-JUL-2001 (WLT)
-      module procedure dcyldr
+      module subroutine dcyldr ( ctx, x, y, z, jacobi )
       use pepper_kinds, only: wp
       use pepper_math, only: drdcyl, reccyl
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! X-coordinate of point.
+      real(wp), intent(in) :: y  !! Y-coordinate of point.
+      real(wp), intent(in) :: z  !! Z-coordinate of point.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
       real(wp) :: rectan  ( 3 )
       real(wp) :: r
@@ -1269,7 +1291,7 @@ contains
       call invort ( ctx, injacb, jacobi )
 
       return
-      end procedure dcyldr
+      end subroutine dcyldr
 
       !>## Detailed Input
       !>
@@ -1554,10 +1576,15 @@ contains
       !>        Added complete code example.
       !>
       !>-    SPICELIB Version 1.0.0, 16-JUL-2001 (WLT)
-      module procedure dlatdr
+      module subroutine dlatdr ( ctx, x, y, z, jacobi )
       use pepper_kinds, only: wp
       use pepper_math, only: drdlat, reclat
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! X-coordinate of point.
+      real(wp), intent(in) :: y  !! Y-coordinate of point.
+      real(wp), intent(in) :: z  !! Z-coordinate of point.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
       real(wp) :: rectan  ( 3 )
       real(wp) :: r
@@ -1609,7 +1636,7 @@ contains
       call invort ( ctx, injacb, jacobi )
 
       return
-      end procedure dlatdr
+      end subroutine dlatdr
 
       !>## Detailed Input
       !>
@@ -2024,10 +2051,17 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 08-SEP-2021 (JDR) (NJB)
-      module procedure drdazl
+      module subroutine drdazl ( ctx, range, az, el, azccw, elplsz, jacobi )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: drdlat
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: range  !! Distance of a point from the origin.
+      real(wp), intent(in) :: az  !! Azimuth of input point in radians.
+      real(wp), intent(in) :: el  !! Elevation of input point in radians.
+      logical, intent(in) :: azccw  !! Flag indicating how azimuth is measured.
+      logical, intent(in) :: elplsz  !! Flag indicating how elevation is measured.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
       real(wp) :: lat
       real(wp) :: lon
@@ -2132,7 +2166,7 @@ contains
       end do
 
       return
-      end procedure drdazl
+      end subroutine drdazl
 
       !>## Detailed Input
       !>
@@ -2481,9 +2515,16 @@ contains
       !>        Added complete code example.
       !>
       !>-    SPICELIB Version 1.0.0, 20-JUL-2001 (WLT)
-      module procedure drdgeo
+      module subroutine drdgeo ( ctx, lon, lat, alt, re, f, jacobi )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: lon  !! Geodetic longitude of point (radians).
+      real(wp), intent(in) :: lat  !! Geodetic latitude of point (radians).
+      real(wp), intent(in) :: alt  !! Altitude of point above the reference spheroid.
+      real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+      real(wp), intent(in) :: f  !! Flattening coefficient.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
       integer(ip), parameter :: dx = 1  !! row of the partial derivatives of X
 
@@ -2704,7 +2745,7 @@ contains
       jacobi (dz,dalt)  =         slat
 
       return
-      end procedure drdgeo
+      end subroutine drdgeo
 
       !>## Detailed Input
       !>
@@ -2990,10 +3031,15 @@ contains
       !>        Added complete code example.
       !>
       !>-    SPICELIB Version 1.0.0, 19-JUL-2001 (WLT)
-      module procedure dsphdr
+      module subroutine dsphdr ( ctx, x, y, z, jacobi )
       use pepper_kinds, only: wp
       use pepper_math, only: drdsph, recsph
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! X-coordinate of point.
+      real(wp), intent(in) :: y  !! Y-coordinate of point.
+      real(wp), intent(in) :: z  !! Z-coordinate of point.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
       real(wp) :: rectan  ( 3 )
       real(wp) :: r
@@ -3045,7 +3091,7 @@ contains
       call invort ( ctx, injacb, jacobi )
 
       return
-      end procedure dsphdr
+      end subroutine dsphdr
 
       !>## Detailed Input
       !>
@@ -3268,11 +3314,18 @@ contains
       !>        'Declarations_of_external_functions'.
       !>
       !>-    SPICELIB Version 1.0.0, 08-JAN-1997 (WLT) (RAJ)
-      module procedure eqncpv
+      module subroutine eqncpv ( ctx, et, epoch, eqel, rapol, decpol, state )
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
       use pepper_math, only: mxv
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch in seconds past J2000 to find state
+      real(wp), intent(in) :: epoch  !! Epoch of elements in seconds past J2000
+      real(wp), intent(in) :: eqel ( 9 )  !! Array of equinoctial elements
+      real(wp), intent(in) :: rapol  !! Right Ascension of the pole of the reference plane
+      real(wp), intent(in) :: decpol  !! Declination of the pole of the reference plane
+      real(wp), intent(out) :: state ( 6 )  !! State of the object described by EQEL.
 
 !
 !     SPICELIB Functions.
@@ -3573,7 +3626,7 @@ contains
       call mxv ( trans, xhold(4), state(4) )
 
       return
-      end procedure eqncpv
+      end subroutine eqncpv
 
       !>## Detailed Input
       !>
@@ -3698,9 +3751,15 @@ contains
       !>        Minor edits to the header and code example.
       !>
       !>-    SPICELIB Version 2.0.0, 19-APR-2016 (NJB) (EDW)
-      module procedure edpnt
+      module subroutine edpnt ( ctx, p, a, b, c, ep )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: p  ( 3 )  !! A point in three-dimensional space.
+      real(wp), intent(in) :: a  !! Semi-axis length in the X direction.
+      real(wp), intent(in) :: b  !! Semi-axis length in the Y direction.
+      real(wp), intent(in) :: c  !! Semi-axis length in the Z direction.
+      real(wp), intent(out) :: ep ( 3 )  !! Point on ellipsoid.
 
       real(wp) :: level
       real(wp) :: sq
@@ -3767,7 +3826,7 @@ contains
       ep(3) = p(3) / sq
 
       return
-      end procedure edpnt
+      end subroutine edpnt
 
       !>## Detailed Input
       !>
@@ -4017,9 +4076,15 @@ contains
       !>        output to fit in the $Examples section without modifications.
       !>
       !>-    SPICELIB Version 1.0.0, 17-MAY-2016 (NJB) (WLT)
-      module procedure ednmpt
+      module subroutine ednmpt ( ctx, a, b, c, normal, point )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: a  !! Length of the ellipsoid semi-axis along the X-axis.
+      real(wp), intent(in) :: b  !! Length of the ellipsoid semi-axis along the Y-axis.
+      real(wp), intent(in) :: c  !! Length of the ellipsoid semi-axis along the Z-axis.
+      real(wp), intent(in) :: normal ( 3 )  !! Outward normal direction.
+      real(wp), intent(out) :: point  ( 3 )  !! Point where outward normal is parallel to NORMAL.
 
       real(wp) :: arg
       real(wp) :: lambda
@@ -4151,7 +4216,7 @@ contains
       point(2) = lambda * nb2
       point(3) = lambda * nc2
 
-      end procedure ednmpt
+      end subroutine ednmpt
 
       !>## Detailed Input
       !>
@@ -4245,11 +4310,15 @@ contains
       !>
       !>        The routine now verifies that the eccentricity is in the
       !>        proper range---[0,1)---before proceeding.
-      module procedure elltof
+      module subroutine elltof ( ctx, ma, ecc, e )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, pi, twopi
       use pepper_math, only: dcbrt
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: ma  !! Mean anomaly at epoch.
+      real(wp), intent(in) :: ecc  !! Eccentricity.
+      real(wp), intent(out) :: e  !! Elliptic eccentric anomaly.
 
       real(wp), parameter :: tol = 1.0e-15_wp
 
@@ -4439,7 +4508,7 @@ contains
       end if
 
       return
-      end procedure elltof
+      end subroutine elltof
 
       !>## Detailed Input
       !>
@@ -4630,9 +4699,18 @@ contains
       !>        suppress compilation warnings on the SGI-N32 platform.
       !>
       !>-    SPICELIB Version 1.0.0, 01-MAR-2000 (NJB)
-      module procedure hrmesp
+      module subroutine hrmesp ( ctx, n, first, step, yvals, x, work, f, df )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of points defining the polynomial.
+      real(wp), intent(in) :: first  !! First abscissa value.
+      real(wp), intent(in) :: step  !! Step size.
+      real(wp), intent(in) :: yvals ( 2*n )  !! Ordinate and derivative values.
+      real(wp), intent(in) :: x  !! Point at which to interpolate the polynomial.
+      real(wp), intent(inout) :: work  ( 2*n, 2 )  !! Work space array.
+      real(wp), intent(out) :: f  !! Interpolated function value at X.
+      real(wp), intent(out) :: df  !! Interpolated function's derivative at X.
 
       real(wp) :: c1
       real(wp) :: c2
@@ -4815,7 +4893,7 @@ contains
       df  =  work( 1, 2 )  /  step
 
       return
-      end procedure hrmesp
+      end subroutine hrmesp
 
       !>## Detailed Input
       !>
@@ -5002,9 +5080,17 @@ contains
       !>        suppress compilation warnings on the SGI-N32 platform.
       !>
       !>-    SPICELIB Version 1.0.0, 01-MAR-2000 (NJB)
-      module procedure hrmint
+      module subroutine hrmint ( ctx, n, xvals, yvals, x, work, f, df )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of points defining the polynomial.
+      real(wp), intent(in) :: xvals (   n )  !! Abscissa values.
+      real(wp), intent(in) :: yvals ( 2*n )  !! Ordinate and derivative values.
+      real(wp), intent(in) :: x  !! Point at which to interpolate the polynomial.
+      real(wp), intent(inout) :: work  ( 2*n, 2 )  !! Work space array.
+      real(wp), intent(out) :: f  !! Interpolated function value at X.
+      real(wp), intent(out) :: df  !! Interpolated function's derivative at X.
 
       real(wp) :: c1
       real(wp) :: c2
@@ -5182,7 +5268,7 @@ contains
       df  =  work( 1, 2 )
 
       return
-      end procedure hrmint
+      end subroutine hrmint
 
       !>## Detailed Input
       !>
@@ -5405,9 +5491,16 @@ contains
       !>        documentation.
       !>
       !>-    SPICELIB Version 1.0.0, 14-AUG-1993 (NJB)
-      module procedure lgresp
+      module real(wp) function lgresp ( ctx, n, first, step, yvals, work, x )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of points defining the polynomial.
+      real(wp), intent(in) :: first  !! First abscissa value.
+      real(wp), intent(in) :: step  !! Step size.
+      real(wp), intent(in) :: yvals ( * )  !! Ordinate values.
+      real(wp), intent(inout) :: work  ( * )  !! Work space array.
+      real(wp), intent(in) :: x  !! Point at which to interpolate the polynomial.
 
       real(wp) :: c1
       real(wp) :: c2
@@ -5564,7 +5657,7 @@ contains
       lgresp = work(1)
 
       return
-      end procedure lgresp
+      end function lgresp
 
       !>## Detailed Input
       !>
@@ -5743,9 +5836,17 @@ contains
       !>        documentation.
       !>
       !>-    SPICELIB Version 1.0.0, 20-AUG-2002 (NJB)
-      module procedure lgrind
+      module subroutine lgrind ( ctx, n, xvals, yvals, work, x, p, dp )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of points defining the polynomial.
+      real(wp), intent(in) :: xvals ( n )  !! Abscissa values.
+      real(wp), intent(in) :: yvals ( n )  !! Ordinate values.
+      real(wp), intent(inout) :: work  ( n, 2 )  !! Work space array.
+      real(wp), intent(in) :: x  !! Point at which to interpolate the polynomial.
+      real(wp), intent(out) :: p  !! Polynomial value at X.
+      real(wp), intent(out) :: dp  !! Polynomial derivative at X.
 
       real(wp) :: c1
       real(wp) :: c2
@@ -5907,7 +6008,7 @@ contains
       dp =  work(1,2)
 
       return
-      end procedure lgrind
+      end subroutine lgrind
 
       !>## Detailed Input
       !>
@@ -6076,9 +6177,15 @@ contains
       !>        documentation.
       !>
       !>-    SPICELIB Version 1.0.0, 16-AUG-1993 (NJB)
-      module procedure lgrint
+      module real(wp) function lgrint ( ctx, n, xvals, yvals, work, x )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of points defining the polynomial.
+      real(wp), intent(in) :: xvals ( * )  !! Abscissa values.
+      real(wp), intent(in) :: yvals ( * )  !! Ordinate values.
+      real(wp), intent(inout) :: work  ( * )  !! Work space array.
+      real(wp), intent(in) :: x  !! Point at which to interpolate the polynomial.
 
       real(wp) :: c1
       real(wp) :: c2
@@ -6225,7 +6332,7 @@ contains
       lgrint = work(1)
 
       return
-      end procedure lgrint
+      end function lgrint
 
       !>## Detailed Input
       !>
@@ -6505,9 +6612,16 @@ contains
       !>        the description of argument CP in $Detailed_Input.
       !>
       !>-    SPICELIB Version 1.0.0, 03-DEC-2013 (NJB)
-      module procedure chbigr
+      module subroutine chbigr ( ctx, degp, cp, x2s, x, p, itgrlp )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: degp  !! Degree of input Chebyshev expansion.
+      real(wp), intent(in) :: cp     ( * )  !! Chebyshev coefficients of input expansion.
+      real(wp), intent(in) :: x2s    ( 2 )  !! Transformation parameters.
+      real(wp), intent(in) :: x  !! Abscissa value of evaluation.
+      real(wp), intent(out) :: p  !! Input expansion evaluated at X.
+      real(wp), intent(out) :: itgrlp  !! Integral evaluated at X.
 
 !     Local variables
 !
@@ -6883,7 +6997,7 @@ contains
       itgrlp = x2s(2) * itgrlp
 
       return
-      end procedure chbigr
+      end subroutine chbigr
 
       !>## Detailed Input
       !>
@@ -7092,14 +7206,20 @@ contains
       !>        Error handling code has been added to trap errors that had
       !>        been erroneously passed off to lower level routines for
       !>        diagnosis.
-      module procedure inelpl
+      module subroutine inelpl ( ctx, ellips, plane, nxpts, xpt1, xpt2 )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
       use pepper_math, only: el2cgv, pl2nvc, pl2nvp, vdot, vnormg, vsep
       implicit none
-
-
       integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubel = 9  !! number of elements of an ellipse
+      real(wp), intent(in) :: ellips ( ubel )  !! A SPICE ellipse.
+      real(wp), intent(in) :: plane  ( ubpl )  !! A SPICE plane.
+      integer(ip), intent(out) :: nxpts  !! Number of intersection points of plane and ellipse.
+      real(wp), intent(out) :: xpt1   ( 3 )  !! Intersection points.
+      real(wp), intent(out) :: xpt2   ( 3 )  !! Intersection points.
+
 
       real(wp), parameter :: seplim = 1.0e-9_wp
 
@@ -7380,7 +7500,7 @@ contains
       xpt2 = 1.0_wp*center + dcos(angle2)*smajor + dsin(angle2)*sminor
 
       return
-      end procedure inelpl
+      end subroutine inelpl
 
       !>## Detailed Input
       !>
@@ -7857,11 +7977,18 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 01-APR-1991 (NJB) (WLT)
-      module procedure inrypl
+      module subroutine inrypl ( ctx, vertex, dir, plane, nxpts, xpt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_math, only: pl2nvc, smsgnd, vdot, vhat, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
+      real(wp), intent(in) :: vertex (    3 )  !! Vertex and direction vector of ray.
+      real(wp), intent(in) :: dir    (    3 )  !! Vertex and direction vector of ray.
+      real(wp), intent(in) :: plane  ( ubpl )  !! A SPICE plane.
+      integer(ip), intent(out) :: nxpts  !! Number of intersection points of ray and plane.
+      real(wp), intent(out) :: xpt    (    3 )  !! Intersection point, if NXPTS = 1.
 
 
       real(wp), parameter :: margin = 3.0_wp
@@ -8100,7 +8227,7 @@ contains
       xpt = mscale*xpt
 
       return
-      end procedure inrypl
+      end subroutine inrypl
 
       !>## Detailed Input
       !>
@@ -8283,11 +8410,14 @@ contains
       !>        in VSCL call.
       !>
       !>-    SPICELIB Version 1.0.0, 02-JAN-2002 (WLT)
-      module procedure invort
+      module subroutine invort ( ctx, m, mit )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_math, only: unorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: m   ( 3, 3 )  !! A 3x3 matrix.
+      real(wp), intent(out) :: mit ( 3, 3 )  !! M after transposition and scaling of rows.
 
       real(wp), parameter :: bound = dpmax
       real(wp) :: length
@@ -8345,7 +8475,7 @@ contains
 !
       mit = transpose(temp)
       return
-      end procedure invort
+      end subroutine invort
 
       !>## Detailed Input
       !>
@@ -8565,9 +8695,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 29-OCT-1990 (WLT)
-      module procedure invstm
+      module subroutine invstm ( ctx, mat, invmat )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: mat    ( 6, 6 )  !! A state transformation matrix.
+      real(wp), intent(out) :: invmat ( 6, 6 )  !! The inverse of MAT.
 
       integer(ip), parameter :: nrows = 6
 
@@ -8581,7 +8714,7 @@ contains
       call xposbl ( ctx, mat, nrows, ncols, block, invmat )
 
       return
-      end procedure invstm
+      end subroutine invstm
 
       !>## Detailed Input
       !>
@@ -8734,10 +8867,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 06-SEP-1990 (NJB)
-      module procedure isrot
+      module logical function isrot ( ctx, m, ntol, dtol )
       use pepper_kinds, only: wp
       use pepper_math, only: det, unorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: m    ( 3, 3 )  !! A matrix to be tested.
+      real(wp), intent(in) :: ntol  !! Tolerance for the norms of the columns of M.
+      real(wp), intent(in) :: dtol  !! Tolerance for the determinant of a matrix whose columns
+                                    !! are the unitized columns of M.
 
       real(wp) :: d
       real(wp) :: n1
@@ -8807,7 +8945,7 @@ contains
       end if
 
       return
-      end procedure isrot
+      end function isrot
 
       !>## Detailed Input
       !>
@@ -8890,9 +9028,13 @@ contains
       !>        $Procedure section for consistency with KPSOLV routine.
       !>
       !>-    SPICELIB Version 1.0.0, 11-DEC-1996 (WLT)
-      module procedure kepleq
+      module real(wp) function kepleq ( ctx, ml, h, k )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: ml  !! Mean longitude.
+      real(wp), intent(in) :: h  !! h component of equinoctial elements.
+      real(wp), intent(in) :: k  !! k component of equinoctial elements.
 
       real(wp) :: evec ( 2 )
       real(wp) :: e2
@@ -8979,7 +9121,7 @@ contains
       kepleq  =  ml         + kpsolv( ctx, evec )
 
       return
-      end procedure kepleq
+      end function kepleq
 
       !>## Detailed Input
       !>
@@ -9065,9 +9207,11 @@ contains
       !>        a return value.
       !>
       !>-    SPICELIB Version 1.0.0, 03-JAN-1997 (WLT)
-      module procedure kpsolv
+      module real(wp) function kpsolv ( ctx, evec )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: evec ( 2 )  !! A 2-vector whose magnitude is less than 1.
 
 !
 !     MXNEWT is the number of iterations we will perform
@@ -9225,7 +9369,7 @@ contains
       kpsolv = x
 
       return
-      end procedure kpsolv
+      end function kpsolv
 
       !>## Detailed Input
       !>
@@ -9612,9 +9756,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB)
-      module procedure m2q
+      module subroutine m2q ( ctx, r, q )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: r ( 3,  3 )  !! A rotation matrix.
+      real(wp), intent(out) :: q ( 0 : 3 )  !! A unit quaternion representing R.
 
 !
 !     NTOL and DETOL are used to determine whether R is a rotation
@@ -9795,7 +9942,7 @@ contains
       end if
 
       return
-      end procedure m2q
+      end subroutine m2q
 
       !>## Detailed Input
       !>
@@ -9902,10 +10049,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 02-NOV-1990 (NJB)
-      module procedure nplnpt
+      module subroutine nplnpt ( ctx, linpt, lindir, point, pnear, dist )
       use pepper_kinds, only: wp
       use pepper_math, only: vdist, vproj
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: linpt  ( 3 )  !! Point on a line and the line's direction vector.
+      real(wp), intent(in) :: lindir ( 3 )  !! Point on a line and the line's direction vector.
+      real(wp), intent(in) :: point  ( 3 )  !! A second point.
+      real(wp), intent(out) :: pnear  ( 3 )  !! Nearest point on the line to POINT.
+      real(wp), intent(out) :: dist  !! Distance between POINT and PNEAR.
 
       real(wp) :: proj  ( 3 )
       real(wp) :: trans ( 3 )
@@ -9935,7 +10088,7 @@ contains
       dist = vdist ( pnear,  point )
 
       return
-      end procedure nplnpt
+      end subroutine nplnpt
 
       !>## Detailed Input
       !>
@@ -10054,10 +10207,16 @@ contains
       !>-    SPICELIB Version 1.0.0, 02-FEB-2016 (NJB)
       !>
       !>        Updated from DSKLIB Version 1.0.0, 20-MAR-2015 (NJB)
-      module procedure npsgpt
+      module subroutine npsgpt ( ctx, ep1, ep2, point, pnear, dist )
       use pepper_kinds, only: wp
       use pepper_math, only: vdist, vdot
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: ep1   ( 3 )  !! Endpoints of a line segment.
+      real(wp), intent(in) :: ep2   ( 3 )  !! Endpoints of a line segment.
+      real(wp), intent(in) :: point ( 3 )  !! A point in 3-dimensional space.
+      real(wp), intent(out) :: pnear ( 3 )  !! Nearest point on the line segment to POINT.
+      real(wp), intent(out) :: dist  !! Distance between PNEAR and POINT.
 
       real(wp) :: seg    ( 3 )
       real(wp) :: segdot
@@ -10142,7 +10301,7 @@ contains
       end if
 
       return
-      end procedure npsgpt
+      end subroutine npsgpt
 
       !>## Detailed Input
       !>
@@ -10415,10 +10574,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 01-NOV-1990 (NJB)
-      module procedure nvc2pl
+      module subroutine nvc2pl ( ctx, normal, konst, plane )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: unorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
+      real(wp), intent(in) :: normal (    3 )  !! A normal vector and constant defining a plane.
+      real(wp), intent(in) :: konst  !! A normal vector and constant defining a plane.
+      real(wp), intent(out) :: plane  ( ubpl )  !! An array representing the plane.
 
 
 !
@@ -10485,7 +10649,7 @@ contains
       end if
 
       return
-      end procedure nvc2pl
+      end subroutine nvc2pl
 
       !>## Detailed Input
       !>
@@ -10594,10 +10758,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 01-NOV-1990 (NJB)
-      module procedure nvp2pl
+      module subroutine nvp2pl ( ctx, normal, point, plane )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vdot, vhat
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
+      real(wp), intent(in) :: normal (    3 )  !! A normal vector and a point defining a plane.
+      real(wp), intent(in) :: point  (    3 )  !! A normal vector and a point defining a plane.
+      real(wp), intent(out) :: plane  ( ubpl )  !! An array representing the plane.
 
 
 !
@@ -10654,7 +10823,7 @@ contains
       end if
 
       return
-      end procedure nvp2pl
+      end subroutine nvp2pl
 
       !>## Detailed Input
       !>
@@ -10770,10 +10939,19 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 01-NOV-1990 (NJB)
-      module procedure psv2pl
+      module subroutine psv2pl ( ctx, point, span1, span2, plane )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ucrss, vdot
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
+      real(wp), intent(in) :: point (    3 )  !! A point and two spanning vectors defining a
+                                              !! plane.
+      real(wp), intent(in) :: span1 (    3 )  !! A point and two spanning vectors defining a
+                                              !! plane.
+      real(wp), intent(in) :: span2 (    3 )  !! A point and two spanning vectors defining a
+                                              !! plane.
+      real(wp), intent(out) :: plane ( ubpl )  !! An array representing the plane.
 
 
 !
@@ -10832,7 +11010,7 @@ contains
       end if
 
       return
-      end procedure psv2pl
+      end subroutine psv2pl
 
       !>## Detailed Input
       !>
@@ -11033,10 +11211,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 21-OCT-2016 (NJB)
       !>
       !>        Original version 25-MAR-2016 (NJB)
-      module procedure pltar
+      module real(wp) function pltar ( ctx, nv, vrtces, np, plates )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vcrss, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nv  !! Number of vertices.
+      real(wp), intent(in) :: vrtces ( 3, nv )  !! Array of vertices.
+      integer(ip), intent(in) :: np  !! Number of triangular plates.
+      integer(ip), intent(in) :: plates ( 3, np )  !! Array of plates.
 
       real(wp) :: cp    ( 3 )
       real(wp) :: edge1 ( 3 )
@@ -11133,7 +11316,7 @@ contains
 !     at this point.
 !
       return
-      end procedure pltar
+      end function pltar
 
       !>## Detailed Input
       !>
@@ -11277,10 +11460,17 @@ contains
       !>        point on 3rd edge were corrected.
       !>
       !>     DSKLIB Version 1.0.0, 29-SEP-2014 (NJB)
-      module procedure pltnp
+      module subroutine pltnp ( ctx, point, v1, v2, v3, pnear, dist )
       use pepper_kinds, only: wp
       use pepper_math, only: vcrss, vdist, vdot, vnorm, vperp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: point ( 3 )  !! A point in 3-dimensional space.
+      real(wp), intent(in) :: v1    ( 3 )  !! Vertices of a triangular plate.
+      real(wp), intent(in) :: v2    ( 3 )  !! Vertices of a triangular plate.
+      real(wp), intent(in) :: v3    ( 3 )  !! Vertices of a triangular plate.
+      real(wp), intent(out) :: pnear ( 3 )  !! Nearest point on the plate to POINT.
+      real(wp), intent(out) :: dist  !! Distance between PNEAR and POINT.
 
       real(wp) :: d1
       real(wp) :: d2
@@ -11474,7 +11664,7 @@ contains
       end if
 
       return
-      end procedure pltnp
+      end subroutine pltnp
 
       !>## Detailed Input
       !>
@@ -11690,10 +11880,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 24-OCT-2016 (NJB)
       !>
       !>        Based on original 11-FEB-2011
-      module procedure pltvol
+      module real(wp) function pltvol ( ctx, nv, vrtces, np, plates )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: det
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nv  !! Number of vertices.
+      real(wp), intent(in) :: vrtces ( 3, nv )  !! Array of vertices.
+      integer(ip), intent(in) :: np  !! Number of triangular plates.
+      integer(ip), intent(in) :: plates ( 3, np )  !! Array of plates.
 
       real(wp) :: m ( 3, 3 )
 
@@ -11976,7 +12171,7 @@ contains
 !     at this point.
 !
       return
-      end procedure pltvol
+      end function pltvol
 
       !>## Detailed Input
       !>
@@ -12114,9 +12309,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB)
-      module procedure qderiv
+      module subroutine qderiv ( ctx, ndim, f0, f2, delta, dfdt )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ndim  !! Dimension of function to be differentiated.
+      real(wp), intent(in) :: f0    ( ndim )  !! Function values at left endpoint.
+      real(wp), intent(in) :: f2    ( ndim )  !! Function values at right endpoint.
+      real(wp), intent(in) :: delta  !! Separation of abscissa points.
+      real(wp), intent(out) :: dfdt  ( ndim )  !! Derivative vector.
 
 !
 !     Use discovery check-in.
@@ -12144,7 +12345,7 @@ contains
       dfdt = (0.5_wp/delta)*f2 + (-0.5_wp/delta)*f0
 
       return
-      end procedure qderiv
+      end subroutine qderiv
 
       !>## Detailed Input
       !>
@@ -12497,11 +12698,15 @@ contains
       !>        so that Fortran intrinsics always get reasonable input values.
       !>
       !>        Add and example to the header.
-      module procedure raxisa
+      module subroutine raxisa ( ctx, matrix, axis, angle )
       use pepper_kinds, only: wp
       use pepper_constants, only: pi
       use pepper_math, only: vhat, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: matrix ( 3, 3 )  !! 3x3 rotation matrix in double precision.
+      real(wp), intent(out) :: axis   (    3 )  !! Axis of the rotation.
+      real(wp), intent(out) :: angle  !! Angle through which the rotation is performed.
 
       real(wp) :: q ( 0: 3 )
 
@@ -12552,7 +12757,7 @@ contains
 
       return
 
-      end procedure raxisa
+      end subroutine raxisa
 
       !>## Detailed Input
       !>
@@ -12696,9 +12901,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 10-JUL-1990 (NJB)
-      module procedure rquad
+      module subroutine rquad ( ctx, a, b, c, root1, root2 )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: a  !! Coefficient of quadratic term.
+      real(wp), intent(in) :: b  !! Coefficient of linear term.
+      real(wp), intent(in) :: c  !! Constant.
+      real(wp), intent(out) :: root1 ( 2 )  !! Root built from positive discriminant term.
+      real(wp), intent(out) :: root2 ( 2 )  !! Root built from negative discriminant term.
 
       real(wp) :: con
       real(wp) :: discrm
@@ -12836,7 +13047,7 @@ contains
       end if
 
       return
-      end procedure rquad
+      end subroutine rquad
 
       !>## Detailed Input
       !>
@@ -12912,9 +13123,14 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 01-DEC-1995 (WLT)
-      module procedure rmaind
+      module subroutine rmaind ( ctx, num, denom, q, rem )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: num  !! Numerator used to compute quotient and remainder.
+      real(wp), intent(in) :: denom  !! Denominator used to compute quotient and remainder.
+      real(wp), intent(out) :: q  !! Integer portion of the quotient NUM/DENOM.
+      real(wp), intent(out) :: rem  !! Remainder of the quotient NUM/DENOM.
 
       real(wp) :: mynum
       real(wp) :: mydnom
@@ -12941,7 +13157,7 @@ contains
       end if
 
       return
-      end procedure rmaind
+      end subroutine rmaind
 
       !>## Detailed Input
       !>
@@ -13014,9 +13230,14 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 01-DEC-1995 (WLT)
-      module procedure rmaini
+      module subroutine rmaini ( ctx, num, denom, q, rem )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: num  !! Numerator used to compute quotient and remainder.
+      integer(ip), intent(in) :: denom  !! Denominator used to compute quotient and remainder.
+      integer(ip), intent(out) :: q  !! Integer portion of the quotient NUM/DENOM.
+      integer(ip), intent(out) :: rem  !! Remainder of the quotient NUM/DENOM.
 
 !
 !     Take care of the zero-denominator case first
@@ -13037,7 +13258,7 @@ contains
       end if
 
       return
-      end procedure rmaini
+      end subroutine rmaini
 
       !>## Detailed Input
       !>
@@ -13190,10 +13411,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 01-NOV-1990 (NJB)
-      module procedure vprjp
+      module subroutine vprjp ( ctx, vin, plane, vout )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: approx, pl2nvc, vdot, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
+      real(wp), intent(in) :: vin   (    3 )  !! Vector to be projected.
+      real(wp), intent(in) :: plane ( ubpl )  !! A SPICE plane onto which VIN is projected.
+      real(wp), intent(out) :: vout  (    3 )  !! Vector resulting from projection.
 
 
 !     Tolerance for deviation from unit length of the normal
@@ -13247,7 +13473,7 @@ contains
       vout = 1.0_wp*vin + (const - vdot ( vin, normal ))*normal
 
       return
-      end procedure vprjp
+      end subroutine vprjp
 
       !>## Detailed Input
       !>
@@ -13415,11 +13641,18 @@ contains
       !>        run-time underflow warnings on some platforms.
       !>        In the revised code, BOUND/DPMAX() is never
       !>        scaled by a number having absolute value < 1.
-      module procedure vprjpi
+      module subroutine vprjpi ( ctx, vin, projpl, invpl, vout, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_math, only: approx, pl2nvc, vdot, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubpl = 4  !! number of elements of a plane
+      real(wp), intent(in) :: vin    (    3 )  !! The projected vector.
+      real(wp), intent(in) :: projpl ( ubpl )  !! Plane containing VIN.
+      real(wp), intent(in) :: invpl  ( ubpl )  !! Plane containing inverse image of VIN.
+      real(wp), intent(out) :: vout   (    3 )  !! Inverse projection of VIN.
+      logical, intent(out) :: found  !! Flag indicating whether VOUT could be calculated.
 
 
 !
@@ -13577,7 +13810,7 @@ contains
       end if
 
       return
-      end procedure vprjpi
+      end subroutine vprjpi
 
       !>## Detailed Input
       !>
@@ -13845,11 +14078,18 @@ contains
       !>        observer. If the velocity of the observer is greater
       !>        than or equal to the speed of light, the error
       !>        SPICE(VALUEOUTOFRANGE) is signaled.
-      module procedure stelab
+      module subroutine stelab ( ctx, pobj, vobs, appobj )
       use pepper_kinds, only: wp
       use pepper_constants, only: clight
       use pepper_math, only: vcrss, vdot, vhat, vnorm, vrotv
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: pobj   ( 3 )  !! Position of an object with respect to the
+                                            !! observer.
+      real(wp), intent(in) :: vobs   ( 3 )  !! Velocity of the observer with respect to the Solar
+                                            !! System barycenter.
+      real(wp), intent(out) :: appobj ( 3 )  !! Apparent position of the object with respect to
+                                             !! the observer, corrected for stellar aberration.
 
       real(wp) :: onebyc
       real(wp) :: u      ( 3 )
@@ -13928,7 +14168,7 @@ contains
       end if
 
       return
-      end procedure stelab
+      end subroutine stelab
 
       !>## Detailed Input
       !>
@@ -14188,9 +14428,15 @@ contains
       !>        to SPKAPP.
       !>
       !>-    SPICELIB Version 1.0.0, 02-JAN-2002 (IMU) (WLT) (NJB)
-      module procedure stlabx
+      module subroutine stlabx ( ctx, pobj, vobs, corpos )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: pobj   ( 3 )  !! Position of an object with respect to the
+                                            !! observer.
+      real(wp), intent(in) :: vobs   ( 3 )  !! Velocity of the observer with respect to the Solar
+                                            !! System barycenter.
+      real(wp), intent(out) :: corpos ( 3 )  !! Corrected position of the object.
 
       real(wp) :: negvel ( 3 )
 
@@ -14210,7 +14456,7 @@ contains
       call stelab ( ctx, pobj, negvel, corpos )
 
       return
-      end procedure stlabx
+      end subroutine stlabx
 
       !>## Detailed Input
       !>
@@ -14367,9 +14613,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-NOV-1990 (WLT)
-      module procedure xposbl
+      module subroutine xposbl ( ctx, bmat, nrow, ncol, bsize, btmat )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nrow  !! the number of rows in the matrix BMAT
+      integer(ip), intent(in) :: ncol  !! the number of columns in the matrix BMAT
+      integer(ip), intent(in) :: bsize  !! the size of the square blocks in BMAT
+      real(wp), intent(in) :: bmat  ( nrow, ncol )  !! a matrix composed of square block
+                                                    !! submatrices
+      real(wp), intent(out) :: btmat ( nrow, ncol )  !! the result of transposing the blocks of
+                                                     !! BMAT
 
       real(wp) :: temp
 
@@ -14511,6 +14765,6 @@ contains
       end do
 
       return
-      end procedure xposbl
+      end subroutine xposbl
 
 end submodule pepper_numerics

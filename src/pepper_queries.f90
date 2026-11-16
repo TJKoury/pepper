@@ -33,10 +33,16 @@ contains
 
    !> Prepare a state query: the state of a target relative to an observer
    !> in a frame, with an aberration correction (PEPPER).
-   module procedure prepare_state
+   module subroutine prepare_state ( ctx, q, target, observer, frame, abcorr )
       use pepper_inc_frmtyp, only: inertl
       use pepper_inc_zzabcorr, only: nabcor, geoidx, ltidx, stlidx, cnvidx, xmtidx, relidx
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      type(state_query), intent(out) :: q  !! the query
+      character(*), intent(in) :: target  !! the target's name or ID code
+      character(*), intent(in) :: observer  !! the observer's name or ID code
+      character(*), intent(in) :: frame  !! the frame of the state
+      character(*), intent(in) :: abcorr  !! the aberration correction, as for [[spkezr]]
       logical :: attblk(nabcor)
       logical :: found
       integer(ip) :: cent
@@ -117,11 +123,16 @@ contains
       q%frame_name   = frame
       q%abcorr       = abcorr
       q%prepared     = .true.
-   end procedure prepare_state
+   end subroutine prepare_state
 
    !> The state of a prepared query at one epoch: SPKEZR's result (PEPPER).
-   module procedure query_state_one
+   recursive module subroutine query_state_one ( ctx, q, et, state, lt )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      type(state_query), intent(inout) :: q  !! the query (its segment cache is updated)
+      real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+      real(wp), intent(out) :: state(6)  !! the state of the target relative to the observer
+      real(wp), intent(out) :: lt  !! the one-way light time between them
       real(wp) :: dlt
       if ( ctx%failed() ) return
       if ( .not. q%prepared ) then
@@ -140,11 +151,16 @@ contains
       else
          call fast_noninertial ( ctx, q, et, state, lt )
       end if
-   end procedure query_state_one
+   end subroutine query_state_one
 
    !> The states of a prepared query at many epochs (PEPPER).
-   module procedure query_state_batch
+   recursive module subroutine query_state_batch ( ctx, q, ets, states, lts )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      type(state_query), intent(inout) :: q  !! the query (its segment cache is updated)
+      real(wp), intent(in) :: ets(:)  !! the epochs (TDB seconds past J2000)
+      real(wp), intent(out) :: states(:,:)  !! the states, shape (6, size(ets)) at least
+      real(wp), intent(out), optional :: lts(:)  !! the light times
       real(wp) :: lt
       integer(ip) :: k
       if ( ctx%failed() ) return
@@ -172,11 +188,15 @@ contains
          if ( ctx%failed() ) return
          if ( present(lts) ) lts(k) = lt
       end do
-   end procedure query_state_batch
+   end subroutine query_state_batch
 
    !> Prepare a frame transformation query (PEPPER).
-   module procedure prepare_rotation
+   module subroutine prepare_rotation ( ctx, q, from, to )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      type(rotation_query), intent(out) :: q  !! the query
+      character(*), intent(in) :: from  !! the frame transformed from
+      character(*), intent(in) :: to  !! the frame transformed to
       q = rotation_query()
       if ( ctx%failed() ) return
       call namfrm ( ctx, from, q%from )
@@ -208,12 +228,16 @@ contains
 !
       call zzctruin ( ctx, q%poolctr )
       q%prepared = .true.
-   end procedure prepare_rotation
+   end subroutine prepare_rotation
 
    !> The rotation of a prepared frame query at one epoch: PXFORM's result
    !> (PEPPER).
-   module procedure query_rotation_one
+   recursive module subroutine query_rotation_one ( ctx, q, et, rotate )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      type(rotation_query), intent(inout) :: q  !! the query
+      real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+      real(wp), intent(out) :: rotate(3, 3)  !! the rotation
       logical :: update
       if ( ctx%failed() ) return
       if ( .not. q%prepared ) then
@@ -242,11 +266,15 @@ contains
          q%rotation      = rotate
          q%have_rotation = .true.
       end if
-   end procedure query_rotation_one
+   end subroutine query_rotation_one
 
    !> The rotations of a prepared frame query at many epochs (PEPPER).
-   module procedure query_rotation_batch
+   recursive module subroutine query_rotation_batch ( ctx, q, ets, rotations )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      type(rotation_query), intent(inout) :: q  !! the query
+      real(wp), intent(in) :: ets(:)  !! the epochs (TDB seconds past J2000)
+      real(wp), intent(out) :: rotations(:,:,:)  !! the rotations, shape (3, 3, size(ets)) at least
       integer(ip) :: k
       if ( ctx%failed() ) return
       if ( size(rotations, 1) /= 3 .or. size(rotations, 2) /= 3 .or. size(rotations, 3) < size(ets) ) then
@@ -263,12 +291,16 @@ contains
          call query_rotation_one ( ctx, q, ets(k), rotations(:, :, k) )
          if ( ctx%failed() ) return
       end do
-   end procedure query_rotation_batch
+   end subroutine query_rotation_batch
 
    !> The state transformation of a prepared frame query at one epoch:
    !> SXFORM's result (PEPPER).
-   module procedure query_transform_one
+   recursive module subroutine query_transform_one ( ctx, q, et, xform )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      type(rotation_query), intent(inout) :: q  !! the query
+      real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+      real(wp), intent(out) :: xform(6, 6)  !! the state transformation
       if ( ctx%failed() ) return
       if ( .not. q%prepared ) then
          call ctx%setmsg ( 'The frame query has not been prepared ' &
@@ -277,12 +309,16 @@ contains
          return
       end if
       call frmchg ( ctx, q%from, q%to, et, xform )
-   end procedure query_transform_one
+   end subroutine query_transform_one
 
    !> The state transformations of a prepared frame query at many epochs
    !> (PEPPER).
-   module procedure query_transform_batch
+   recursive module subroutine query_transform_batch ( ctx, q, ets, xforms )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      type(rotation_query), intent(inout) :: q  !! the query
+      real(wp), intent(in) :: ets(:)  !! the epochs (TDB seconds past J2000)
+      real(wp), intent(out) :: xforms(:,:,:)  !! the transformations, shape (6, 6, size(ets)) at least
       integer(ip) :: k
       if ( ctx%failed() ) return
       if ( size(xforms, 1) /= 6 .or. size(xforms, 2) /= 6 .or. size(xforms, 3) < size(ets) ) then
@@ -299,7 +335,7 @@ contains
          call query_transform_one ( ctx, q, ets(k), xforms(:, :, k) )
          if ( ctx%failed() ) return
       end do
-   end procedure query_transform_batch
+   end subroutine query_transform_batch
 
    ! ----------------------------------------------------------------------
    ! The fast path of state queries. Each routine is its SPICELIB

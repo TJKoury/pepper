@@ -223,9 +223,13 @@ contains
       !>        they no longer use calls to CLPOOL.
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1990 (NJB)
-      module procedure sce2t
+      module subroutine sce2t ( ctx, sc, et, sclkdp )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+      real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
+      real(wp), intent(out) :: sclkdp  !! SCLK, encoded as ticks since spacecraft clock start.
 
 !
 !     Standard SPICE error handling.
@@ -249,7 +253,7 @@ contains
       end if
 
       return
-      end procedure sce2t
+      end subroutine sce2t
 
       !>## Detailed Input
       !>
@@ -569,9 +573,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 06-SEP-1990 (JML) (RET)
-      module procedure scfmt
+      module subroutine scfmt ( ctx, sc, ticks, clkstr )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+      real(wp), intent(in) :: ticks  !! Spacecraft clock count encoded representation.
+      character(*), intent(out) :: clkstr  !! Character representation of a clock count.
 
       integer(ip) :: type
 
@@ -597,7 +605,7 @@ contains
       end if
 
       return
-      end procedure scfmt
+      end subroutine scfmt
 
       !>## Detailed Input
       !>
@@ -859,11 +867,16 @@ contains
       !>        subsystem. This routine no longer sets watches on kernel
       !>        variables. Setting watches "touches" the kernel pool, which
       !>        thwarts optimizations of many SPICE subsystems.
-      module procedure scpart
+      module subroutine scpart ( ctx, sc, nparts, pstart, pstop )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sclk
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+      integer(ip), intent(out) :: nparts  !! The number of spacecraft clock partitions.
+      real(wp), intent(out) :: pstart  ( * )  !! Array of partition start times.
+      real(wp), intent(out) :: pstop   ( * )  !! Array of partition stop times.
 
 !
 !     Standard SPICE error handling.
@@ -877,7 +890,7 @@ contains
       call scpr01 ( ctx, sc, nparts, pstart, pstop )
 
       return
-      end procedure scpart
+      end subroutine scpart
 
       !>## Detailed Input
       !>
@@ -1102,9 +1115,13 @@ contains
       !>        they no longer use calls to CLPOOL.
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1990 (NJB)
-      module procedure sct2e
+      module subroutine sct2e ( ctx, sc, sclkdp, et )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+      real(wp), intent(in) :: sclkdp  !! SCLK, encoded as ticks since spacecraft clock start.
+      real(wp), intent(out) :: et  !! Ephemeris time, seconds past J2000.
 
 !
 !     Standard SPICE error handling.
@@ -1128,7 +1145,7 @@ contains
       end if
 
       return
-      end procedure sct2e
+      end subroutine sct2e
 
       !>## Detailed Input
       !>
@@ -1374,9 +1391,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 06-SEP-1990 (JML) (RET)
-      module procedure sctiks
+      module subroutine sctiks ( ctx, sc, clkstr, ticks )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+      character(*), intent(in) :: clkstr  !! Character representation of a spacecraft clock.
+      real(wp), intent(out) :: ticks  !! Number of ticks represented by the clock string.
 
       integer(ip) :: type
 
@@ -1403,7 +1424,7 @@ contains
       end if
 
       return
-      end procedure sctiks
+      end subroutine sctiks
 
       !>## Detailed Input
       !>
@@ -1841,12 +1862,16 @@ contains
       !>     Saved variables
       !>
       !>     Standard SPICE error handling.
-      module procedure scdecd
+      module subroutine scdecd ( ctx, sc, sclkdp, sclkch )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled
       use pepper_strings, only: intstr, prefix, suffix
       use pepper_inc_sclk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+      real(wp), intent(in) :: sclkdp  !! Encoded representation of a spacecraft clock count.
+      character(*), intent(out) :: sclkch  !! Character representation of a clock count.
       real(wp), allocatable :: pstart(:), pstop(:), ptotls(:)
       integer(ip) :: npmax
       character(12) :: prtstr  ! PEPPER: any partition number and the slash (SPICELIB: PARTLN, 5)
@@ -1965,7 +1990,7 @@ contains
       call prefix ( prtstr, 0, sclkch )
 
       return
-      end procedure scdecd
+      end subroutine scdecd
 
       !>## Detailed Input
       !>
@@ -2401,11 +2426,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1990 (JML) (RET)
-      module procedure scencd
+      module subroutine scencd ( ctx, sc, sclkch, sclkdp )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cpos, nparsi
       use pepper_inc_sclk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+      character(*), intent(in) :: sclkch  !! Character representation of a spacecraft clock.
+      real(wp), intent(out) :: sclkdp  !! Encoded representation of the clock count.
       real(wp), allocatable :: pstart(:), pstop(:), ptotls(:)
       integer(ip) :: npmax
       integer(ip) :: pos
@@ -2579,7 +2608,7 @@ contains
       end if
 
       return
-      end procedure scencd
+      end subroutine scencd
 
       !>## Detailed Input
       !>
@@ -2823,9 +2852,13 @@ contains
       !>        Truncation of the output string is now treated as an error.
       !>        The code changes made to implement the error checking were
       !>        in SCDECD and other lower-level routines.
-      module procedure sce2s
+      module subroutine sce2s ( ctx, sc, et, sclkch )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft clock ID code.
+      real(wp), intent(in) :: et  !! Ephemeris time, specified as seconds past J2000.
+      character(*), intent(out) :: sclkch  !! An SCLK string.
 
       real(wp) :: sclkdp
 
@@ -2841,7 +2874,7 @@ contains
       call scdecd ( ctx, sc, sclkdp, sclkch )
 
       return
-      end procedure sce2s
+      end subroutine sce2s
 
       !>## Detailed Input
       !>
@@ -3039,9 +3072,13 @@ contains
       !>        they no longer use calls to CLPOOL.
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1990 (NJB)
-      module procedure scs2e
+      module subroutine scs2e ( ctx, sc, sclkch, et )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF integer code for a spacecraft.
+      character(*), intent(in) :: sclkch  !! An SCLK string.
+      real(wp), intent(out) :: et  !! Ephemeris time, seconds past J2000.
 
       real(wp) :: sclkdp
 
@@ -3057,6 +3094,6 @@ contains
       call sct2e  ( ctx, sc, sclkdp, et     )
 
       return
-      end procedure scs2e
+      end subroutine scs2e
 
 end submodule pepper_sclk_api

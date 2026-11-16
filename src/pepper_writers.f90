@@ -311,9 +311,11 @@ contains
       !>        unambiguous ID word 'DAF/CK  '.
       !>
       !>-    SPICELIB Version 1.0.0, 27-JAN-1995 (KRG)
-      module procedure ckcls
+      module subroutine ckcls ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of the CK file to be closed.
 
       character(acclen) :: access
 
@@ -375,7 +377,7 @@ contains
 !
       return
 
-      end procedure ckcls
+      end subroutine ckcls
 
       !>## Detailed Input
       !>
@@ -598,9 +600,14 @@ contains
       !>        4) The in-code comments were improved.
       !>
       !>-    Beta Version 1.0.0, 23-MAY-1990 (RET) (IMU)
-      module procedure ckgr01
+      module subroutine ckgr01 ( ctx, handle, descr, recno, record )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
+      integer(ip), intent(in) :: recno  !! The number of the pointing record to be returned.
+      real(wp), intent(out) :: record  ( * )  !! The pointing record.
       real(wp) :: n_1(1)  !! one-element copy of n (array argument)
 
 !        NDC        is the number of double precision components in an
@@ -707,7 +714,7 @@ contains
       call dafgda ( ctx, handle, addr, addr, record( 1 ) )
 
       return
-      end procedure ckgr01
+      end subroutine ckgr01
 
       !>## Detailed Input
       !>
@@ -1017,9 +1024,14 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
-      module procedure ckgr03
+      module subroutine ckgr03 ( ctx, handle, descr, recno, record )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the CK file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
+      integer(ip), intent(in) :: recno  !! The number of the pointing instance to be returned.
+      real(wp), intent(out) :: record  ( * )  !! The pointing record.
       real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
 
 !        NDC        is the number of double precision components in an
@@ -1136,7 +1148,7 @@ contains
       call dafgda ( ctx, handle, addr, addr, record( 1 ) )
 
       return
-      end procedure ckgr03
+      end subroutine ckgr03
 
       !>## Detailed Input
       !>
@@ -1348,10 +1360,15 @@ contains
       !>        Minor header edits.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
-      module procedure ckgr04
+      module subroutine ckgr04 ( ctx, handle, descr, recno, record )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ckparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
+      integer(ip), intent(in) :: recno  !! The number of the pointing record to be returned.
+      real(wp), intent(out) :: record  ( * )  !! The pointing record.
 
 
 
@@ -1445,7 +1462,7 @@ contains
 
       return
 
-      end procedure ckgr04
+      end subroutine ckgr04
 
       !>## Detailed Input
       !>
@@ -1676,10 +1693,15 @@ contains
       !>        Added explicit conversion to INTEGER for SUBTYP.
       !>
       !>-    SPICELIB Version 1.0.0, 27-AUG-2002 (NJB) (JML)
-      module procedure ckgr05
+      module subroutine ckgr05 ( ctx, handle, descr, recno, record )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ck05
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
+      integer(ip), intent(in) :: recno  !! The number of the pointing instance to be returned.
+      real(wp), intent(out) :: record  ( * )  !! The pointing record.
       real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
 
 !        NDC        is the number of double precision components in an
@@ -1826,7 +1848,7 @@ contains
       call dafgda ( ctx, handle, addr, addr, record( 1 ) )
 
       return
-      end procedure ckgr05
+      end subroutine ckgr05
 
       !>## Detailed Input
       !>
@@ -2302,10 +2324,16 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (JML) (BVS)
-      module procedure ckgr06
+      module subroutine ckgr06 ( ctx, handle, descr, msno, recno, record )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ck06
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr  ( * )  !! The segment descriptor.
+      integer(ip), intent(in) :: msno  !! Index of the mini-segment containing the record.
+      integer(ip), intent(in) :: recno  !! Index of the pointing record to be returned.
+      real(wp), intent(out) :: record ( * )  !! The pointing record.
 
 !        ND         is the number of double precision components in an
 !                   unpacked C-kernel descriptor.
@@ -2516,7 +2544,7 @@ contains
 !     check FAILED here since we're about to return.
 !
       return
-      end procedure ckgr06
+      end subroutine ckgr06
 
       !>## Detailed Input
       !>
@@ -2939,9 +2967,19 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (JML) (BVS)
-      module procedure ckmp06
+      module subroutine ckmp06 ( ctx, handle, descr, msno, rate, subtyp, winsiz, nrec, ivlbds, lstepc )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr  ( * )  !! The descriptor of the type 6 segment.
+      integer(ip), intent(in) :: msno  !! Mini-segment index.
+      real(wp), intent(out) :: rate  !! SCLK rate in seconds/tick.
+      integer(ip), intent(out) :: subtyp  !! Subtype code.
+      integer(ip), intent(out) :: winsiz  !! Interpolation window size.
+      integer(ip), intent(out) :: nrec  !! Number of records in mini-segment.
+      real(wp), intent(out) :: ivlbds ( 2 )  !! Mini-segment interval bounds of mini-segment.
+      real(wp), intent(out) :: lstepc  !! Last epoch of mini-segment.
       real(wp) :: lstepc_1(1)  !! one-element copy of lstepc (array argument)
 
 !        ND         is the number of double precision components in an
@@ -3104,7 +3142,7 @@ contains
       lstepc = lstepc_1(1)
 
       return
-      end procedure ckmp06
+      end subroutine ckmp06
 
       !>## Detailed Input
       !>
@@ -3494,9 +3532,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (JML) (BVS)
-      module procedure cknm06
+      module subroutine cknm06 ( ctx, handle, descr, nmini )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 6 segment.
+      integer(ip), intent(out) :: nmini  !! The number of pointing instances in the segment.
 
 !        ND         is the number of double precision components in an
 !                   unpacked C-kernel descriptor.
@@ -3565,7 +3607,7 @@ contains
       nmini = nint ( dpdata(1) )
 
       return
-      end procedure cknm06
+      end subroutine cknm06
 
       !>## Detailed Input
       !>
@@ -3751,9 +3793,13 @@ contains
       !>        5) The in-code comments were improved.
       !>
       !>-    Beta Version 1.0.0, 22-MAY-1990 (RET) (IMU)
-      module procedure cknr01
+      module subroutine cknr01 ( ctx, handle, descr, nrec )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 1 segment.
+      integer(ip), intent(out) :: nrec  !! The number of records in the segment.
       real(wp) :: n_1(1)  !! one-element copy of n (array argument)
 
 !        NDC        is the number of double precision components in an
@@ -3816,7 +3862,7 @@ contains
       nrec = int( n )
 
       return
-      end procedure cknr01
+      end subroutine cknr01
 
       !>## Detailed Input
       !>
@@ -4123,9 +4169,13 @@ contains
       !>        Improved text in the $Abstract section.
       !>
       !>-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
-      module procedure cknr02
+      module subroutine cknr02 ( ctx, handle, descr, nrec )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the CK file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 2 segment.
+      integer(ip), intent(out) :: nrec  !! The number of records in the segment.
 
 !        NDC        is the number of double precision components in an
 !                   unpacked C-kernel descriptor.
@@ -4226,7 +4276,7 @@ contains
       nrec   = nint (  ( 100.0_wp * (real(arrsiz, wp)) + 1.0_wp ) / 1001.0_wp  )
 
       return
-      end procedure cknr02
+      end subroutine cknr02
 
       !>## Detailed Input
       !>
@@ -4503,9 +4553,13 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
-      module procedure cknr03
+      module subroutine cknr03 ( ctx, handle, descr, nrec )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the CK file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 3 segment.
+      integer(ip), intent(out) :: nrec  !! The number of pointing instances in the segment.
       real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
 
 !        NDC        is the number of double precision components in an
@@ -4574,7 +4628,7 @@ contains
       nrec = nint ( npoint )
 
       return
-      end procedure cknr03
+      end subroutine cknr03
 
       !>## Detailed Input
       !>
@@ -4732,9 +4786,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 18-AUG-2002 (NJB) (JML)
-      module procedure cknr05
+      module subroutine cknr05 ( ctx, handle, descr, nrec )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The descriptor of the type 5 segment.
+      integer(ip), intent(out) :: nrec  !! The number of pointing instances in the segment.
       real(wp) :: npoint_1(1)  !! one-element copy of npoint (array argument)
 
 !        NDC        is the number of double precision components in an
@@ -4803,7 +4861,7 @@ contains
       nrec = nint ( npoint )
 
       return
-      end procedure cknr05
+      end subroutine cknr05
 
       !>## Detailed Input
       !>
@@ -5093,9 +5151,14 @@ contains
       !>        area allocation using NCOMCH.
       !>
       !>-    SPICELIB Version 1.0.0, 26-JAN-1995 (KRG)
-      module procedure ckopn
+      module subroutine ckopn ( ctx, fname, ifname, ncomch, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! The name of the CK file to be opened.
+      character(*), intent(in) :: ifname  !! The internal filename for the CK.
+      integer(ip), intent(in) :: ncomch  !! The number of characters to reserve for comments.
+      integer(ip), intent(out) :: handle  !! The handle of the opened CK file.
 
       character(*), parameter :: type = 'CK'
 !
@@ -5141,7 +5204,7 @@ contains
       end if
 
       return
-      end procedure ckopn
+      end subroutine ckopn
 
       !>## Detailed Input
       !>
@@ -5691,9 +5754,21 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1991 (JML) (NJB)
-      module procedure ckw01
+      module subroutine ckw01 ( ctx, handle, begtim, endtim, inst, ref, avflag, segid, nrec, sclkdp, quats, avvs )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an open CK file.
+      real(wp), intent(in) :: begtim  !! The beginning encoded SCLK of the segment.
+      real(wp), intent(in) :: endtim  !! The ending encoded SCLK of the segment.
+      integer(ip), intent(in) :: inst  !! The NAIF instrument ID code.
+      character(*), intent(in) :: ref  !! The reference frame of the segment.
+      logical, intent(in) :: avflag  !! .TRUE. if the segment will contain angular velocity.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: nrec  !! Number of pointing records.
+      real(wp), intent(in) :: sclkdp (      * )  !! Encoded SCLK times.
+      real(wp), intent(in) :: quats  ( 0:3, * )  !! SPICE quaternions representing instrument pointing.
+      real(wp), intent(in) :: avvs   (   3, * )  !! Angular velocity vectors.
 
 !     SIDLEN    is the maximum number of characters allowed in a CK
 !               segment identifier.
@@ -5968,7 +6043,7 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure ckw01
+      end subroutine ckw01
 
       !>## Detailed Input
       !>
@@ -6579,9 +6654,22 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1991 (JML)
-      module procedure ckw02
+      module subroutine ckw02 ( ctx, handle, begtim, endtim, inst, ref, segid, nrec, start, stop, quats, avvs, rates )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an open CK file.
+      real(wp), intent(in) :: begtim  !! The beginning encoded SCLK of the segment.
+      real(wp), intent(in) :: endtim  !! The ending encoded SCLK of the segment.
+      integer(ip), intent(in) :: inst  !! The NAIF instrument ID code.
+      character(*), intent(in) :: ref  !! The reference frame of the segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: nrec  !! Number of pointing records.
+      real(wp), intent(in) :: start  (      * )  !! Encoded SCLK interval start times.
+      real(wp), intent(in) :: stop   (      * )  !! Encoded SCLK interval stop times.
+      real(wp), intent(in) :: quats  ( 0:3, * )  !! SPICE quaternions representing instrument pointing.
+      real(wp), intent(in) :: avvs   (   3, * )  !! Angular velocity vectors.
+      real(wp), intent(in) :: rates  (      * )  !! Number of seconds per tick for each interval.
 
 !     SIDLEN   is the maximum number of characters allowed in a CK
 !              segment identifier.
@@ -6886,7 +6974,7 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure ckw02
+      end subroutine ckw02
 
       !>## Detailed Input
       !>
@@ -7542,9 +7630,23 @@ contains
       !>        system and the methods for obtaining file handles.
       !>
       !>-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
-      module procedure ckw03
+      module subroutine ckw03 ( ctx, handle, begtim, endtim, inst, ref, avflag, segid, nrec, sclkdp, quats, avvs, nints, starts )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an open CK file.
+      real(wp), intent(in) :: begtim  !! Beginning encoded SCLK of the segment.
+      real(wp), intent(in) :: endtim  !! Ending encoded SCLK of the segment.
+      integer(ip), intent(in) :: inst  !! NAIF instrument ID code.
+      character(*), intent(in) :: ref  !! Reference frame of the segment.
+      logical, intent(in) :: avflag  !! .TRUE. if the segment will contain angular velocity.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: nrec  !! Number of pointing records.
+      real(wp), intent(in) :: sclkdp (      * )  !! Encoded SCLK times.
+      real(wp), intent(in) :: quats  ( 0:3, * )  !! SPICE quaternions representing instrument pointing.
+      real(wp), intent(in) :: avvs   (   3, * )  !! Angular velocity vectors.
+      integer(ip), intent(in) :: nints  !! Number of intervals.
+      real(wp), intent(in) :: starts (      * )  !! Encoded SCLK interval start times.
 
 !     SIDLEN   is the maximum number of characters allowed in a CK
 !              segment identifier.
@@ -7933,7 +8035,7 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure ckw03
+      end subroutine ckw03
 
       !>## Detailed Input
       !>
@@ -8148,11 +8250,18 @@ contains
       !>        Minor header edits.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
-      module procedure ckw04b
+      module subroutine ckw04b ( ctx, handle, begtim, inst, ref, avflag, segid )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       use pepper_inc_ckparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of an DAF file open for writing.
+      character(*), intent(in) :: segid  !! The string to use for segment identifier.
+      integer(ip), intent(in) :: inst  !! The NAIF ID code for the SC or instrument.
+      logical, intent(in) :: avflag  !! The angular rates flag.
+      character(*), intent(in) :: ref  !! The reference frame for this segment.
+      real(wp), intent(in) :: begtim  !! The segment coverage start encoded SCLK time
 
 !
 !     DAF ND and NI values for CK files and length of a DAF descriptor.
@@ -8280,7 +8389,7 @@ contains
 
       return
 
-      end procedure ckw04b
+      end subroutine ckw04b
 
       !>## Detailed Input
       !>
@@ -8473,9 +8582,12 @@ contains
       !>        Minor header edits.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
-      module procedure ckw04e
+      module subroutine ckw04e ( ctx, handle, endtim )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of an CK file open for writing.
+      real(wp), intent(in) :: endtim  !! The segment coverage end encoded SCLK time.
 
 !
 !     SPICELIB functions.
@@ -8554,7 +8666,7 @@ contains
 
       return
 
-      end procedure ckw04e
+      end subroutine ckw04e
 
       !>## Detailed Input
       !>
@@ -9059,13 +9171,29 @@ contains
       !>
       !>        This change was made to accommodate CK generation,
       !>        via the non-SPICE utility MEX2KER, for European missions.
-      module procedure ckw05
+      module subroutine ckw05 ( ctx, handle, subtyp, degree, begtim, endtim, inst, ref, avflag, segid, n, sclkdp, packts, rate, nints, starts )
       use pepper_kinds, only: ip, wp
       use pepper_spk_packing, only: ck05_data
       use pepper_arrays, only: bsrchd, lstltd
       use pepper_math, only: odd
       use pepper_inc_ck05
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an CK file open for writing.
+      integer(ip), intent(in) :: subtyp  !! CK type 5 subtype code.
+      integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+      real(wp), intent(in) :: begtim  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: endtim  !! End time of interval covered by segment.
+      integer(ip), intent(in) :: inst  !! NAIF code for a s/c instrument or structure.
+      character(*), intent(in) :: ref  !! Reference frame name.
+      logical, intent(in) :: avflag  !! Flag indicating if the segment will contain angular velocity.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: n  !! Number of packets.
+      real(wp), intent(in) :: sclkdp ( * )  !! Encoded SCLK times.
+      real(wp), intent(in) :: packts ( * )  !! Array of packets.
+      real(wp), intent(in) :: rate  !! Nominal SCLK rate in seconds per tick.
+      integer(ip), intent(in) :: nints  !! Number of intervals.
+      real(wp), intent(in) :: starts ( * )  !! Encoded SCLK interval start times.
 
       integer(ip), parameter :: maxdeg = 23
 
@@ -9502,7 +9630,7 @@ contains
       end if
 
       return
-      end procedure ckw05
+      end subroutine ckw05
 
       !>## Detailed Input
       !>
@@ -10099,12 +10227,29 @@ contains
       !>        units.
       !>
       !>-    SPICELIB Version 1.0.0, 14-MAR-2014 (NJB) (BVS)
-      module procedure ckw06
+      module subroutine ckw06 ( ctx, handle, inst, ref, avflag, first, last, segid, nmini, npkts, subtps, degres, packts, rates, sclkdp, ivlbds, sellst )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd, vdistg
       use pepper_inc_ck06
       use pepper_inc_ckparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a CK file open for writing.
+      integer(ip), intent(in) :: inst  !! NAIF instrument ID code.
+      character(*), intent(in) :: ref  !! Reference frame name.
+      logical, intent(in) :: avflag  !! Flag indicating if the segment will contain angular velocity.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: nmini  !! Number of mini-segments.
+      integer(ip), intent(in) :: npkts  ( * )  !! Array of packet counts of mini-segments.
+      integer(ip), intent(in) :: subtps ( * )  !! Array of segment subtypes of mini-segments.
+      integer(ip), intent(in) :: degres ( * )  !! Array of polynomial degrees of mini-segments.
+      real(wp), intent(in) :: packts ( * )  !! Array of data packets of mini-segments.
+      real(wp), intent(in) :: rates  ( * )  !! Nominal SCLK rates in seconds per tick.
+      real(wp), intent(in) :: sclkdp ( * )  !! Array of epochs of mini-segments.
+      real(wp), intent(in) :: ivlbds ( * )  !! Mini-segment interval bounds.
+      logical, intent(in) :: sellst  !! Interval selection flag.
 
 
 
@@ -10848,7 +10993,7 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure ckw06
+      end subroutine ckw06
 
       !>## Detailed Input
       !>
@@ -11128,9 +11273,14 @@ contains
       !>        Removed DAFHLU call; replaced ERRFN call with ERRHAN.
       !>
       !>-    SPICELIB Version 1.0.0, 06-MAR-1995 (KRG)
-      module procedure pck03a
+      module subroutine pck03a ( ctx, handle, ncsets, coeffs, epochs )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of a DAF file open for writing.
+      integer(ip), intent(in) :: ncsets  !! The number of Cheby coefficient sets and epochs.
+      real(wp), intent(in) :: coeffs ( * )  !! The collection of Cheby coefficient sets.
+      real(wp), intent(in) :: epochs ( * )  !! The epochs associated with the element sets.
 
 !
 !     Standard SPICELIB error handling.
@@ -11165,7 +11315,7 @@ contains
 
       return
 
-      end procedure pck03a
+      end subroutine pck03a
 
       !>## Detailed Input
       !>
@@ -11428,9 +11578,11 @@ contains
       !>        standard.
       !>
       !>-    SPICELIB Version 1.0.0, 06-MAR-1995 (KRG)
-      module procedure pck03e
+      module subroutine pck03e ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of a binary PCK file open for writing.
 
 !
 !     Standard SPICELIB error handling.
@@ -11449,7 +11601,7 @@ contains
 !
       return
 
-      end procedure pck03e
+      end subroutine pck03e
 
       !>## Detailed Input
       !>
@@ -11653,9 +11805,11 @@ contains
       !>-    SPICELIB Version 1.1.0, 27-NOV-2001 (FST)
       !>
       !>        Removed DAFHLU call; replaced ERRFN call with ERRHAN.
-      module procedure pckcls
+      module subroutine pckcls ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of the PCK file to be closed.
 
 
       character(acclen) :: access
@@ -11718,7 +11872,7 @@ contains
 !
       return
 
-      end procedure pckcls
+      end subroutine pckcls
 
       !>## Detailed Input
       !>
@@ -11942,9 +12096,14 @@ contains
       !>        area allocation using NCOMCH.
       !>
       !>-    SPICELIB Version 1.0.0, 26-JAN-1995 (KRG)
-      module procedure pckopn
+      module subroutine pckopn ( ctx, name, ifname, ncomch, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! The name of the PCK file to be opened.
+      character(*), intent(in) :: ifname  !! The internal filename for the PCK.
+      integer(ip), intent(in) :: ncomch  !! The number of characters to reserve for comments.
+      integer(ip), intent(out) :: handle  !! The handle of the opened PCK file.
 
       character(*), parameter :: type = 'PCK'
 
@@ -11991,7 +12150,7 @@ contains
       end if
 
       return
-      end procedure pckopn
+      end subroutine pckopn
 
       !>## Detailed Input
       !>
@@ -12087,9 +12246,16 @@ contains
       !>        standard.
       !>
       !>-    SPICELIB Version 1.0.0, 04-JAN-1995 (WLT)
-      module procedure pckpds
+      module subroutine pckpds ( ctx, body, frame, type, first, last, descr )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
+      character(*), intent(in) :: frame  !! The inertial frame for this segment.
+      integer(ip), intent(in) :: type  !! The type of PCK segment to create.
+      real(wp), intent(in) :: first  !! The first epoch for which the segment is valid.
+      real(wp), intent(in) :: last  !! The last  epoch for which the segment is valid.
+      real(wp), intent(out) :: descr ( * )  !! A PCK segment descriptor.
 
 !     ND and NI values for a PCK file.
 !
@@ -12189,7 +12355,7 @@ contains
 
       return
 
-      end procedure pckpds
+      end subroutine pckpds
 
       !>## Detailed Input
       !>
@@ -12283,9 +12449,18 @@ contains
       !>        standard.
       !>
       !>-    SPICELIB Version 1.0.0, 1994-JAN-4 (WLT)
-      module procedure pckuds
+      module subroutine pckuds ( ctx, descr, body, frame, type, first, last, begin, end )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: descr ( * )  !! A PCK segment descriptor.
+      integer(ip), intent(out) :: body  !! The NAIF ID code for the body of the segment.
+      integer(ip), intent(out) :: frame  !! The code for the inertial frame of this segment.
+      integer(ip), intent(out) :: type  !! The type of PCK segment.
+      real(wp), intent(out) :: first  !! The first epoch for which the segment is valid.
+      real(wp), intent(out) :: last  !! The last  epoch for which the segment is valid.
+      integer(ip), intent(out) :: begin  !! Beginning DAF address of the segment.
+      integer(ip), intent(out) :: end  !! Ending DAF address of the segment.
 
 
       integer(ip), parameter :: ni = 5
@@ -12318,7 +12493,7 @@ contains
 
       return
 
-      end procedure pckuds
+      end subroutine pckuds
 
       !>## Detailed Input
       !>
@@ -12603,9 +12778,21 @@ contains
       !>        routine CHCKID is called to check segment identifier.
       !>
       !>-    SPICELIB Version 1.0.0, 11-MAR-1994 (KSZ)
-      module procedure pckw02
+      module subroutine pckw02 ( ctx, handle, clssid, frame, first, last, segid, intlen, n, polydg, cdata, btime )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of binary PCK file open for writing.
+      integer(ip), intent(in) :: clssid  !! Frame class ID of body-fixed frame.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: intlen  !! Length of time covered by logical record.
+      integer(ip), intent(in) :: n  !! Number of logical records in segment.
+      integer(ip), intent(in) :: polydg  !! Chebyshev polynomial degree.
+      real(wp), intent(in) :: cdata (*)  !! Array of Chebyshev coefficients.
+      real(wp), intent(in) :: btime  !! Begin time of first logical record.
 
 !     DTYPE is the PCK data type.
 !
@@ -12839,7 +13026,7 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure pckw02
+      end subroutine pckw02
 
       !>## Detailed Input
       !>
@@ -13178,11 +13365,26 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 17-JAN-2014 (NJB) (KSZ)
-      module procedure pckw20
+      module subroutine pckw20 ( ctx, handle, clssid, frame, first, last, segid, intlen, n, polydg, cdata, ascale, tscale, initjd, initfr )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       use pepper_inc_spk20
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of PCK file open for writing.
+      integer(ip), intent(in) :: clssid  !! NAIF PCK frame class ID.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: intlen  !! Length of time covered by logical record (days).
+      integer(ip), intent(in) :: n  !! Number of logical records in segment.
+      integer(ip), intent(in) :: polydg  !! Chebyshev polynomial degree.
+      real(wp), intent(in) :: cdata  ( * )  !! Array of Chebyshev coefficients and angles.
+      real(wp), intent(in) :: ascale  !! Angular scale of data.
+      real(wp), intent(in) :: tscale  !! Time scale of data.
+      real(wp), intent(in) :: initjd  !! Integer part of begin time (TDB Julian date) of first record.
+      real(wp), intent(in) :: initfr  !! Fractional part of begin time (TDB Julian date) of first record.
 
 !
 !     DTYPE is the PCK data type.
@@ -13484,7 +13686,7 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure pckw20
+      end subroutine pckw20
 
       !>## Detailed Input
       !>
@@ -13753,9 +13955,14 @@ contains
       !>     Local variables
       !>
       !>     Standard SPICE error handling.
-      module procedure spcac
+      module subroutine spcac ( ctx, handle, unit, bmark, emark )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
+      integer(ip), intent(in) :: unit  !! Logical unit connected to comment file.
+      character(*), intent(in) :: bmark  !! Beginning marker.
+      character(*), intent(in) :: emark  !! Ending marker.
       character(maxcpr+2) :: data
       character(1) :: eot
       character(ifnlen) :: ifname
@@ -14110,7 +14317,7 @@ contains
       end if
 
       return
-      end procedure spcac
+      end subroutine spcac
 
       !>## Detailed Input
       !>
@@ -14234,9 +14441,11 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-      module procedure spcdc
+      module subroutine spcdc ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
 
 !     IFNLEN      is the length of a DAF internal file name.
 !
@@ -14275,7 +14484,7 @@ contains
       call dafrrr ( ctx, handle, nrr )
 
       return
-      end procedure spcdc
+      end subroutine spcdc
 
       !>## Detailed Input
       !>
@@ -14420,9 +14629,12 @@ contains
       !>        locks the unit returned to its HANDLE, tying up resources
       !>        in the handle manager. A call to DAFSIH was inserted to
       !>        make certain that HANDLE is present in DAFAH's file table.
-      module procedure spcec
+      module subroutine spcec ( ctx, handle, unit )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
+      integer(ip), intent(in) :: unit  !! Logical unit connected to text file.
 
 !     IFNLEN      is the length of a DAF internal file name.
 !
@@ -14560,7 +14772,7 @@ contains
       end do
 
       return
-      end procedure spcec
+      end subroutine spcec
 
       !>## Detailed Input
       !>
@@ -14679,9 +14891,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-      module procedure spcopn
+      module subroutine spcopn ( ctx, fname, ifname, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of SPK or CK file to be created.
+      character(*), intent(in) :: ifname  !! Internal file name.
+      integer(ip), intent(out) :: handle  !! Handle of new SPK or CK file.
 
 !     ND, NI      are the Number of Double precision and the Number of
 !                 Integer components in an SPK or CK segment descriptor.
@@ -14706,7 +14922,7 @@ contains
       call dafopn ( ctx, fname, nd, ni, ifname, resv, handle )
 
       return
-      end procedure spcopn
+      end subroutine spcopn
 
       !>## Detailed Input
       !>
@@ -14889,10 +15105,14 @@ contains
       !>     Saved variables
       !>
       !>     Standard SPICE error handling.
-      module procedure spcrfl
+      module subroutine spcrfl ( ctx, handle, line, eoc )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle assigned to binary SPK or CK file.
+      character(*), intent(out) :: line  !! First line of text from the comment area.
+      logical, intent(out) :: eoc  !! End of comments?
       integer(ip) :: nd
       integer(ip) :: posnul
       integer(ip) :: nrr
@@ -15015,7 +15235,7 @@ contains
 
       return
       end associate
-      end procedure spcrfl
+      end subroutine spcrfl
 
       !>## Detailed Input
       !>
@@ -15171,10 +15391,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-1991 (JEM)
-      module procedure spcrnl
+      module subroutine spcrnl ( ctx, line, eoc )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: line  !! Next line of text from the comment area.
+      logical, intent(out) :: eoc  !! End of comments?
       integer(ip) :: posnul
       integer(ip) :: tmplen
       integer(ip) :: dafu
@@ -15400,7 +15623,7 @@ contains
 
       return
       end associate
-      end procedure spcrnl
+      end subroutine spcrnl
 
       !>## Detailed Input
       !>
@@ -15588,9 +15811,11 @@ contains
       !>        unambiguous ID word 'DAF/SPK '.
       !>
       !>-    SPICELIB Version 1.0.0, 27-JAN-1995 (KRG)
-      module procedure spkcls
+      module subroutine spkcls ( ctx, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of the SPK file to be closed.
 
       character(acclen) :: access
 
@@ -15652,7 +15877,7 @@ contains
 !
       return
 
-      end procedure spkcls
+      end subroutine spkcls
 
       !>## Detailed Input
       !>
@@ -15897,9 +16122,12 @@ contains
       !>        Updated the contents of $Detailed_Output and $Exceptions.
       !>
       !>-    SPICELIB Version 1.0.0, 10-MAR-1999 (WLT)
-      module procedure spkopa
+      module subroutine spkopa ( ctx, file, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! The name of an existing SPK file.
+      integer(ip), intent(out) :: handle  !! Handle attached to the SPK file opened to append.
 
       integer(ip), parameter :: smwdsz = 8
 
@@ -15961,7 +16189,7 @@ contains
 
       return
 
-      end procedure spkopa
+      end subroutine spkopa
 
       !>## Detailed Input
       !>
@@ -16172,9 +16400,14 @@ contains
       !>        area allocation using NCOMCH.
       !>
       !>-    SPICELIB Version 1.0.0, 26-JAN-1995 (KRG)
-      module procedure spkopn
+      module subroutine spkopn ( ctx, fname, ifname, ncomch, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! The name of the new SPK file to be created.
+      character(*), intent(in) :: ifname  !! The internal filename for the SPK file.
+      integer(ip), intent(in) :: ncomch  !! The number of characters to reserve for comments.
+      integer(ip), intent(out) :: handle  !! The handle of the opened SPK file.
 
       character(*), parameter :: type = 'SPK'
 
@@ -16221,7 +16454,7 @@ contains
       end if
 
       return
-      end procedure spkopn
+      end subroutine spkopn
 
       !>## Detailed Input
       !>
@@ -16393,11 +16626,21 @@ contains
       !>        section already described this error condition.
       !>
       !>-    SPICELIB Version 1.0.0, 30-JAN-2003 (NJB)
-      module procedure spkw01
+      module subroutine spkw01 ( ctx, handle, body, center, frame, first, last, segid, n, dlines, epochs )
       use pepper_kinds, only: ip, wp
       implicit none
-
       integer(ip), parameter :: dlsize = 71
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: n  !! Number of difference lines in segment.
+      real(wp), intent(in) :: dlines ( dlsize, * )  !! Array of difference lines.
+      real(wp), intent(in) :: epochs (         * )  !! Coverage end times of difference lines.
 
 
 
@@ -16595,7 +16838,7 @@ contains
       end if
 
       return
-      end procedure spkw01
+      end subroutine spkw01
 
       !>## Detailed Input
       !>
@@ -16935,10 +17178,23 @@ contains
       !>        some comments to the header. Corrected spelling mistakes.
       !>
       !>-    SPICELIB Version 1.0.0, 01-AUG-1995 (KSZ)
-      module procedure spkw02
+      module subroutine spkw02 ( ctx, handle, body, center, frame, first, last, segid, intlen, n, polydg, cdata, btime )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for the center of motion of the body.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: intlen  !! Length of time covered by logical record.
+      integer(ip), intent(in) :: n  !! Number of logical records in segment.
+      integer(ip), intent(in) :: polydg  !! Chebyshev polynomial degree.
+      real(wp), intent(in) :: cdata (*)  !! Array of Chebyshev coefficients.
+      real(wp), intent(in) :: btime  !! Begin time of first logical record.
 
 !     DTYPE is the SPK data type.
 !
@@ -17207,7 +17463,7 @@ contains
 !     We're done.  Checkout of error trace.
 !
       return
-      end procedure spkw02
+      end subroutine spkw02
 
       !>## Detailed Input
       !>
@@ -17572,10 +17828,23 @@ contains
       !>        Corrected typo in the section name ("Example" to "Examples").
       !>
       !>-    SPICELIB Version 1.0.0, 01-AUG-1995 (KSZ)
-      module procedure spkw03
+      module subroutine spkw03 ( ctx, handle, body, center, frame, first, last, segid, intlen, n, polydg, cdata, btime )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spk03
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for the center of motion of the body.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: intlen  !! Length of time covered by record.
+      integer(ip), intent(in) :: n  !! Number of records in segment.
+      integer(ip), intent(in) :: polydg  !! Chebyshev polynomial degree.
+      real(wp), intent(in) :: cdata (*)  !! Array of Chebyshev coefficients.
+      real(wp), intent(in) :: btime  !! Begin time of first record.
 
 !     DTYPE is the SPK data type.
 !
@@ -17843,7 +18112,7 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure spkw03
+      end subroutine spkw03
 
       !>## Detailed Input
       !>
@@ -18093,9 +18362,21 @@ contains
       !>        methods for obtaining file handles.
       !>
       !>-    SPICELIB Version 1.0.0, 01-APR-1992 (JML) (WLT) (IMU)
-      module procedure spkw05
+      module subroutine spkw05 ( ctx, handle, body, center, frame, first, last, segid, gm, n, states, epochs )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! Body code for ephemeris object.
+      integer(ip), intent(in) :: center  !! Body code for the center of motion of the body.
+      character(*), intent(in) :: frame  !! The reference frame of the states.
+      real(wp), intent(in) :: first  !! First valid time for which states can be computed.
+      real(wp), intent(in) :: last  !! Last valid time for which states can be computed.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: gm  !! Gravitational parameter of central body.
+      integer(ip), intent(in) :: n  !! Number of states and epochs.
+      real(wp), intent(in) :: states   ( 6, * )  !! States.
+      real(wp), intent(in) :: epochs   (    * )  !! Epochs.
 
 !     SIDLEN is the maximum number of characters allowed in an
 !     SPK segment identifier.
@@ -18291,7 +18572,7 @@ contains
       end if
 
       return
-      end procedure spkw05
+      end subroutine spkw05
 
       !>## Detailed Input
       !>
@@ -18594,10 +18875,23 @@ contains
       !>        methods for obtaining file handles.
       !>
       !>-    SPICELIB Version 1.0.0, 08-AUG-1993 (NJB) (JML) (WLT)
-      module procedure spkw08
+      module subroutine spkw08 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, begtim, step )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spk08
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+      integer(ip), intent(in) :: n  !! Number of states.
+      real(wp), intent(in) :: states ( 6, * )  !! Array of states.
+      real(wp), intent(in) :: begtim  !! Epoch of first state in STATES array.
+      real(wp), intent(in) :: step  !! Time step separating epochs of states.
 
 !
 !     SIDLEN is the maximum number of characters allowed in an
@@ -18868,7 +19162,7 @@ contains
       end if
 
       return
-      end procedure spkw08
+      end subroutine spkw08
 
       !>## Detailed Input
       !>
@@ -19215,10 +19509,22 @@ contains
       !>        methods for obtaining file handles.
       !>
       !>-    SPICELIB Version 1.0.0, 05-AUG-1993 (NJB) (JML) (WLT)
-      module procedure spkw09
+      module subroutine spkw09 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, epochs )
       use pepper_kinds, only: ip, wp
       use pepper_spk_packing, only: spk09_data, spk_data_size
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+      integer(ip), intent(in) :: n  !! Number of states.
+      real(wp), intent(in) :: states ( 6, * )  !! Array of states.
+      real(wp), intent(in) :: epochs (    * )  !! Array of epochs corresponding to states.
 
 
 !
@@ -19480,7 +19786,7 @@ contains
       end if
 
       return
-      end procedure spkw09
+      end subroutine spkw09
 
       !>## Detailed Input
       !>
@@ -19935,10 +20241,22 @@ contains
       !>        Cleaned up the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-JAN-1994 (WLT)
-      module procedure spkw10
+      module subroutine spkw10 ( ctx, handle, body, center, frame, first, last, segid, consts, n, elems, epochs )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of a DAF file open for writing.
+      integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
+      integer(ip), intent(in) :: center  !! The center of motion for BODY.
+      character(*), intent(in) :: frame  !! The reference frame for this segment.
+      real(wp), intent(in) :: first  !! The first epoch for which the segment is valid.
+      real(wp), intent(in) :: last  !! The last  epoch for which the segment is valid.
+      character(*), intent(in) :: segid  !! The string to use for segment identifier.
+      real(wp), intent(in) :: consts ( * )  !! Array of geophysical constants for the segment.
+      integer(ip), intent(in) :: n  !! The number of element/epoch pairs to be stored
+      real(wp), intent(in) :: elems  ( * )  !! The collection of "two-line" element sets.
+      real(wp), intent(in) :: epochs ( * )  !! The epochs associated with the element sets.
 
 !
 !     The type of this segment
@@ -20024,7 +20342,7 @@ contains
 
       return
 
-      end procedure spkw10
+      end subroutine spkw10
 
       !>## Detailed Input
       !>
@@ -20309,10 +20627,23 @@ contains
       !>        Corrected long error message for even degree case.
       !>
       !>-    SPICELIB Version 1.0.0, 25-FEB-2000 (NJB)
-      module procedure spkw12
+      module subroutine spkw12 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, begtim, step )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spk12
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+      integer(ip), intent(in) :: n  !! Number of states.
+      real(wp), intent(in) :: states ( 6, * )  !! Array of states.
+      real(wp), intent(in) :: begtim  !! Epoch of first state in STATES array.
+      real(wp), intent(in) :: step  !! Time step separating epochs of states.
 
 !
 !     SIDLEN is the maximum number of characters allowed in an
@@ -20580,7 +20911,7 @@ contains
       end if
 
       return
-      end procedure spkw12
+      end subroutine spkw12
 
       !>## Detailed Input
       !>
@@ -20914,10 +21245,22 @@ contains
       !>        unused parameter TYPIDX.
       !>
       !>-    SPICELIB Version 1.0.0, 20-MAR-2000 (NJB)
-      module procedure spkw13
+      module subroutine spkw13 ( ctx, handle, body, center, frame, first, last, segid, degree, n, states, epochs )
       use pepper_kinds, only: ip, wp
       use pepper_spk_packing, only: spk13_data, spk_data_size
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+      integer(ip), intent(in) :: n  !! Number of states.
+      real(wp), intent(in) :: states ( 6, * )  !! Array of states.
+      real(wp), intent(in) :: epochs (    * )  !! Array of epochs corresponding to states.
 
 
 
@@ -21162,7 +21505,7 @@ contains
       end if
 
       return
-      end procedure spkw13
+      end subroutine spkw13
 
       !>## Detailed Input
       !>
@@ -21379,11 +21722,29 @@ contains
       !>        Some typos in error messages were corrected.
       !>
       !>-    SPICELIB Version 1.0.0, 28-NOV-1994 (WLT)
-      module procedure spkw15
+      module subroutine spkw15 ( ctx, handle, body, center, frame, first, last, segid, epoch, tp, pa, p, ecc, j2flg, pv, gm, j2, radius )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr
       use pepper_math, only: vdot, vhat, vsep
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! Body code for ephemeris object.
+      integer(ip), intent(in) :: center  !! Body code for the center of motion of the body.
+      character(*), intent(in) :: frame  !! The reference frame of the states.
+      real(wp), intent(in) :: first  !! First valid time for which states can be computed.
+      real(wp), intent(in) :: last  !! Last valid time for which states can be computed.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: epoch  !! Epoch of the periapse.
+      real(wp), intent(in) :: tp     ( 3 )  !! Trajectory pole vector.
+      real(wp), intent(in) :: pa     ( 3 )  !! Periapsis vector.
+      real(wp), intent(in) :: p  !! Semi-latus rectum.
+      real(wp), intent(in) :: ecc  !! Eccentricity.
+      real(wp), intent(in) :: j2flg  !! J2 processing flag.
+      real(wp), intent(in) :: pv     ( 3 )  !! Central body pole vector.
+      real(wp), intent(in) :: gm  !! Central body GM.
+      real(wp), intent(in) :: j2  !! Central body J2.
+      real(wp), intent(in) :: radius  !! Equatorial radius of central body.
 
 !     Segment descriptor size
 !
@@ -21615,7 +21976,7 @@ contains
       end if
 
       return
-      end procedure spkw15
+      end subroutine spkw15
 
       !>## Detailed Input
       !>
@@ -21961,9 +22322,21 @@ contains
       !>        Corrected typographical errors in the header.
       !>
       !>-    SPICELIB Version 1.0.0, 08-JAN-1997 (WLT)
-      module procedure spkw17
+      module subroutine spkw17 ( ctx, handle, body, center, frame, first, last, segid, epoch, eqel, rapol, decpol )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! Body code for ephemeris object.
+      integer(ip), intent(in) :: center  !! Body code for the center of motion of the body.
+      character(*), intent(in) :: frame  !! The reference frame of the states.
+      real(wp), intent(in) :: first  !! First valid time for which states can be computed.
+      real(wp), intent(in) :: last  !! Last valid time for which states can be computed.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: epoch  !! Epoch of elements in seconds past J2000.
+      real(wp), intent(in) :: eqel  ( 9 )  !! Array of equinoctial elements.
+      real(wp), intent(in) :: rapol  !! Right Ascension of the reference plane's pole.
+      real(wp), intent(in) :: decpol  !! Declination of the reference plane's pole.
 
 !     Segment descriptor size
 !
@@ -22104,7 +22477,7 @@ contains
       end if
 
       return
-      end procedure spkw17
+      end subroutine spkw17
 
       !>## Detailed Input
       !>
@@ -22294,11 +22667,24 @@ contains
       !>        size was corrected.
       !>
       !>-    SPICELIB Version 1.0.0, 13-MAY-2002 (NJB)
-      module procedure spkw18
+      module subroutine spkw18 ( ctx, handle, subtyp, body, center, frame, first, last, segid, degree, n, packts, epochs )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
       use pepper_inc_spk18
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: subtyp  !! SPK type 18 subtype code.
+      integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: degree  !! Degree of interpolating polynomials.
+      integer(ip), intent(in) :: n  !! Number of packets.
+      real(wp), intent(in) :: packts ( * )  !! Array of packets.
+      real(wp), intent(in) :: epochs ( * )  !! Array of epochs corresponding to packets.
 
       integer(ip), parameter :: maxdeg = 15
 
@@ -22607,7 +22993,7 @@ contains
       end if
 
       return
-      end procedure spkw18
+      end subroutine spkw18
 
       !>## Detailed Input
       !>
@@ -22904,12 +23290,28 @@ contains
       !>        Updated to support subtype 2.
       !>
       !>-    SPICELIB Version 1.0.0, 05-FEB-2014 (NJB) (BVS)
-      module procedure spkw19
+      module subroutine spkw19 ( ctx, handle, body, center, frame, first, last, segid, nintvl, npkts, subtps, degres, packts, epochs, ivlbds, sellst )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
       use pepper_inc_spk19
       use pepper_inc_spkrec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF ID code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF ID code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: nintvl  !! Number of mini-segments and interpolation intervals.
+      integer(ip), intent(in) :: npkts  ( * )  !! Array of packet counts of mini-segments.
+      integer(ip), intent(in) :: subtps ( * )  !! Array of segment subtypes of mini-segments.
+      integer(ip), intent(in) :: degres ( * )  !! Array of polynomial degrees of mini-segments.
+      real(wp), intent(in) :: packts ( * )  !! Array of data packets of mini-segments.
+      real(wp), intent(in) :: epochs ( * )  !! Array of epochs of mini-segments.
+      real(wp), intent(in) :: ivlbds ( * )  !! Interpolation interval bounds.
+      logical, intent(in) :: sellst  !! Interval selection flag.
 
 
 
@@ -23562,7 +23964,7 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure spkw19
+      end subroutine spkw19
 
       !>## Detailed Input
       !>
@@ -23852,11 +24254,27 @@ contains
       !>        Added missing description of INITFR to $Brief_I/O section.
       !>
       !>-    SPICELIB Version 1.0.0, 17-JAN-2017 (NJB) (KSZ)
-      module procedure spkw20
+      module subroutine spkw20 ( ctx, handle, body, center, frame, first, last, segid, intlen, n, polydg, cdata, dscale, tscale, initjd, initfr )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j2000, spd
       use pepper_inc_spk20
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for the center of motion of the body.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      real(wp), intent(in) :: intlen  !! Length of time covered by logical record (days).
+      integer(ip), intent(in) :: n  !! Number of logical records in segment.
+      integer(ip), intent(in) :: polydg  !! Chebyshev polynomial degree.
+      real(wp), intent(in) :: cdata  ( * )  !! Array of Chebyshev coefficients and positions.
+      real(wp), intent(in) :: dscale  !! Distance scale of data.
+      real(wp), intent(in) :: tscale  !! Time scale of data.
+      real(wp), intent(in) :: initjd  !! Integer part of begin time (TDB Julian date) of first record.
+      real(wp), intent(in) :: initfr  !! Fractional part of begin time of first record.
 
 !
 !     DTYPE is the SPK data type.
@@ -24159,7 +24577,7 @@ contains
       call dafena ( ctx )
 
       return
-      end procedure spkw20
+      end subroutine spkw20
 
       !>## Detailed Input
       !>
@@ -24359,10 +24777,22 @@ contains
       !>        values in elements indexed greater than KQMAX1-2.
       !>
       !>-    SPICELIB Version 1.0.0, 03-FEB-2014 (NJB)
-      module procedure spkw21
+      module subroutine spkw21 ( ctx, handle, body, center, frame, first, last, segid, n, dlsize, dlines, epochs )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spk21
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of an SPK file open for writing.
+      integer(ip), intent(in) :: body  !! NAIF code for an ephemeris object.
+      integer(ip), intent(in) :: center  !! NAIF code for center of motion of BODY.
+      character(*), intent(in) :: frame  !! Reference frame name.
+      real(wp), intent(in) :: first  !! Start time of interval covered by segment.
+      real(wp), intent(in) :: last  !! End time of interval covered by segment.
+      character(*), intent(in) :: segid  !! Segment identifier.
+      integer(ip), intent(in) :: n  !! Number of difference lines in segment.
+      integer(ip), intent(in) :: dlsize  !! Difference line size.
+      real(wp), intent(in) :: dlines ( dlsize, * )  !! Array of difference lines.
+      real(wp), intent(in) :: epochs (         * )  !! Coverage end times of difference lines.
 
 
 
@@ -24633,7 +25063,7 @@ contains
       end if
 
       return
-      end procedure spkw21
+      end subroutine spkw21
 
       !>## Abstract
       !>
@@ -24720,9 +25150,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
-      module procedure zzck4i2d
+      module subroutine zzck4i2d ( ctx, i, nsets, parcod, dpcoef )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: i      ( * )  !! Array of NSETS integer components.
+      integer(ip), intent(in) :: nsets  !! Number of integer components in input array I.
+      real(wp), intent(in) :: parcod  !! Packing base.
+      real(wp), intent(out) :: dpcoef  !! DP number containing NSETS packed integer numbers.
 
       real(wp) :: x
       integer(ip) :: k
@@ -24745,7 +25180,7 @@ contains
 !     All done.
 !
       return
-      end procedure zzck4i2d
+      end subroutine zzck4i2d
 
       !>## Detailed Input
       !>
@@ -25090,9 +25525,14 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 25-NOV-1992 (JML)
-      module procedure ckgr02
+      module subroutine ckgr02 ( ctx, handle, descr, recno, record )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of the CK file containing the segment.
+      real(wp), intent(in) :: descr   ( * )  !! The segment descriptor.
+      integer(ip), intent(in) :: recno  !! The number of the pointing record to be returned.
+      real(wp), intent(out) :: record  ( * )  !! The pointing record.
 
 !        NDC        is the number of double precision components in an
 !                   unpacked C-kernel segment descriptor.
@@ -25203,7 +25643,7 @@ contains
       call dafgda ( ctx, handle, addr, addr, record( 2 ) )
 
       return
-      end procedure ckgr02
+      end subroutine ckgr02
 
       !>## Detailed Input
       !>
@@ -25614,10 +26054,16 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAY-1999 (YKZ) (BVS)
-      module procedure ckw04a
+      module subroutine ckw04a ( ctx, handle, npkts, pktsiz, pktdat, sclkdp )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ckparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of an DAF file opened for writing.
+      integer(ip), intent(in) :: npkts  !! Number of data packets to write to a segment.
+      integer(ip), intent(inout) :: pktsiz( * )  !! The numbers of values in the data packets (PEPPER: changed in place)
+      real(wp), intent(inout) :: pktdat( * )  !! The data packets. (PEPPER: packed in place)
+      real(wp), intent(in) :: sclkdp( * )  !! The SCLK times associated with the data packets.
 
 !
 !     Spicelib functions.
@@ -25752,7 +26198,7 @@ contains
 
       return
 
-      end procedure ckw04a
+      end subroutine ckw04a
 
       !>## Detailed Input
       !>
@@ -26048,10 +26494,18 @@ contains
       !>        Removed comments from the $Declarations section.
       !>
       !>-    SPICELIB Version 1.0.0, 06-MAR-1995 (KRG)
-      module procedure pck03b
+      module subroutine pck03b ( ctx, handle, segid, body, frame, first, last, chbdeg )
       use pepper_kinds, only: ip, wp
       use pepper_inc_sgparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! The handle of a DAF file open for writing.
+      character(*), intent(in) :: segid  !! The string to use for segment identifier.
+      integer(ip), intent(in) :: body  !! The NAIF ID code for the body of the segment.
+      character(*), intent(in) :: frame  !! The inertial frame for this segment.
+      real(wp), intent(in) :: first  !! The first epoch for which the segment is valid.
+      real(wp), intent(in) :: last  !! The last epoch for which the segment is valid.
+      integer(ip), intent(in) :: chbdeg  !! The degree of the Chebyshev Polynomial used.
 
 !     DAF ND and NI values for PCK files.
 !
@@ -26123,7 +26577,7 @@ contains
 
       return
 
-      end procedure pck03b
+      end subroutine pck03b
 
       !>## Detailed Input
       !>
@@ -26257,9 +26711,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-      module procedure spcb2t
+      module subroutine spcb2t ( ctx, binary, unit )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: binary  !! Name of an existing binary SPK or CK file.
+      integer(ip), intent(in) :: unit  !! Logical unit connected to a text file.
 
 !     IFNLEN is the length of a DAF internal file name.
 !
@@ -26319,7 +26776,7 @@ contains
       end if
 
       return
-      end procedure spcb2t
+      end subroutine spcb2t
 
       !>## Detailed Input
       !>
@@ -26499,10 +26956,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-      module procedure spct2b
+      module subroutine spct2b ( ctx, unit, binary )
       use pepper_kinds, only: ip
       use pepper_strings, only: ltrim, rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Logical unit connected to the text format file.
+      character(*), intent(in) :: binary  !! Name of a binary SPK or CK file to be created.
 
 
 
@@ -26631,7 +27091,7 @@ contains
       close ( scrtch )
 
       return
-      end procedure spct2b
+      end subroutine spct2b
 
       !>## Detailed Input
       !>
@@ -26757,9 +27217,12 @@ contains
       !>        Removed declarations of unused variables.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-      module procedure spca2b
+      module subroutine spca2b ( ctx, text, binary )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: text  !! Name of an existing text format SPK or CK file.
+      character(*), intent(in) :: binary  !! Name of a binary SPK or CK file to be created.
 
 
 
@@ -26784,7 +27247,7 @@ contains
       close       (         unit )
 
       return
-      end procedure spca2b
+      end subroutine spca2b
 
       !>## Detailed Input
       !>
@@ -26901,9 +27364,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-APR-1991 (JEM)
-      module procedure spcb2a
+      module subroutine spcb2a ( ctx, binary, text )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: binary  !! Name of an existing binary SPK or CK file.
+      character(*), intent(in) :: text  !! Name of a text file to be created.
 
 
 
@@ -26925,6 +27391,6 @@ contains
       close       (         unit )
 
       return
-      end procedure spcb2a
+      end subroutine spcb2a
 
 end submodule pepper_writers

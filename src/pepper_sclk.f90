@@ -710,11 +710,17 @@ contains
       !>        header.
       !>
       !>     Standard SPICE error handling.
-      module procedure scli01
+      module subroutine scli01 ( ctx, name, sc, maxnv, n, ival )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc, suffix, repmc_inplace, repmi_inplace
       use pepper_inc_sclk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Name of kernel data item, NAIF spacecraft ID code.
+      integer(ip), intent(in) :: sc  !! Name of kernel data item, NAIF spacecraft ID code.
+      integer(ip), intent(in) :: maxnv  !! Maximum number of integer values to return.
+      integer(ip), intent(out) :: n  !! Number of values actually returned.
+      integer(ip), intent(out) :: ival ( * )  !! Returned integer values.
       integer(ip), parameter :: mxcofa = 3 * mxcoef
       integer(ip), parameter :: delidx = 7
       integer(ip), parameter :: sysidx = 9
@@ -907,7 +913,7 @@ contains
       end if
 
       return
-      end procedure scli01
+      end subroutine scli01
 
       !>## Detailed Input
       !>
@@ -1149,11 +1155,17 @@ contains
       !>        added following the header.
       !>
       !>     Standard SPICE error handling.
-      module procedure scld01
+      module subroutine scld01 ( ctx, name, sc, maxnv, n, dval )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc, suffix, repmc_inplace, repmd_inplace, repmi_inplace
       use pepper_inc_sclk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Name of kernel data item, NAIF spacecraft ID code.
+      integer(ip), intent(in) :: sc  !! Name of kernel data item, NAIF spacecraft ID code.
+      integer(ip), intent(in) :: maxnv  !! Maximum number of d.p. values to return.
+      integer(ip), intent(out) :: n  !! Number of values actually returned.
+      real(wp), intent(out) :: dval ( * )  !! Requested kernel data item.
       integer(ip) :: nfield_1(1)  !! one-element copy of nfield (array argument)
       integer(ip), parameter :: offidx = 5
       integer(ip), parameter :: modidx = 6
@@ -1376,7 +1388,7 @@ contains
       end if
 
       return
-      end procedure scld01
+      end subroutine scld01
 
       !>## Abstract
       !>
@@ -1385,10 +1397,11 @@ contains
       !>     to the volatile nature of this routine.
       !>
       !>     Initialize the SCLK type 1 database.
-      module procedure zzscin01
+      module subroutine zzscin01 ( ctx )
       use pepper_kinds, only: ip
       use pepper_inc_zzsc01
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context (PEPPER: its type 1 SCLK database is emptied)
 !
 !     PEPPER: the database is the context's sc01_state (growable arrays
 !     and a map of the clocks); emptying it keeps the arrays allocated.
@@ -1403,7 +1416,7 @@ contains
       ctx%sc01_state%ifree  = 1
       ctx%sc01_state%prvsc  = 0
       return
-      end procedure zzscin01
+      end subroutine zzscin01
 
       !>## Abstract
       !>
@@ -1588,13 +1601,16 @@ contains
       !>     Saved values
       !>
       !>     Initial values
-      module procedure zzscad01
+      module subroutine zzscad01 ( ctx, sc, sclkat )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: suffix, repmi_inplace
       use pepper_containers, only: grow
       use pepper_inc_errhnd
       use pepper_inc_zzsc01
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context (PEPPER: its type 1 SCLK database grows)
+      integer(ip), intent(in) :: sc  !! SCLK ID code.
+      integer(ip), intent(out) :: sclkat  !! Index of the clock in the database.
       integer(ip), parameter :: namlen = 60
       integer(ip), parameter :: prsidx = cofidx + 1
       integer(ip), parameter :: preidx = prsidx + 1
@@ -1729,7 +1745,7 @@ contains
       s%ifree  = s%ifree  + nivals
       end associate
       return
-      end procedure zzscad01
+      end subroutine zzscad01
 
       !>## Abstract
       !>
@@ -1739,11 +1755,13 @@ contains
       !>
       !>     If necessary, update the SCLK type 01 database and associated
       !>     SCLK parameters.
-      module procedure zzscup01
+      module subroutine zzscup01 ( ctx, sc )
       use pepper_kinds, only: ip
       use pepper_inc_zzsc01
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context (PEPPER: the clock's data are made current in its database)
+      integer(ip), intent(in) :: sc  !! SCLK ID code.
       integer(ip) :: ibase
       integer(ip) :: sclkat
       logical :: found
@@ -1790,7 +1808,7 @@ contains
       end if
       end associate
       return
-      end procedure zzscup01
+      end subroutine zzscup01
 
       !>## Abstract
       !>
@@ -1859,10 +1877,13 @@ contains
       !>        formally required for an SCLK specification to be complete.
       !>
       !>-    SPICELIB Version 1.0.0, 17-FEB-2000 (WLT)
-      module procedure zzsclk
+      module logical function zzsclk ( ctx, ckid, sclkid )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ckid  !! CK ID-code for the object of interest.
+      integer(ip), intent(in) :: sclkid  !! Idcode to pass to the SCLOCK routines for CKID
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: maxids = 10
       character(wdsize) :: sclk
@@ -2004,7 +2025,7 @@ contains
       zzsclk = .true.
       return
       end associate
-      end procedure zzsclk
+      end function zzsclk
 
       !>## Detailed Input
       !>
@@ -2304,12 +2325,16 @@ contains
       !>        following the header.
       !>
       !>     Standard SPICE error handling.
-      module procedure sctk01
+      module subroutine sctk01 ( ctx, sc, clkstr, ticks )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lparsm, nparsd
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+      character(*), intent(in) :: clkstr  !! Character representation of a clock count.
+      real(wp), intent(out) :: ticks  !! Number of ticks represented by the clock count.
       character(1), parameter :: del    ( ndelim ) = &
          [ character(1) :: '.', ':', '-', ',', ' ' ]
       integer(ip) :: n
@@ -2483,7 +2508,7 @@ contains
 
       return
       end associate
-      end procedure sctk01
+      end subroutine sctk01
 
       !>## Detailed Input
       !>
@@ -2734,12 +2759,16 @@ contains
       !>        following the header.
       !>
       !>     Standard SPICE error handling.
-      module procedure scfm01
+      module subroutine scfm01 ( ctx, sc, ticks, clkstr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: prefix, suffix
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+      character(*), intent(out) :: clkstr  !! Character string representation of the clock count.
+      real(wp), intent(in) :: ticks  !! Number of ticks represented by a clock count.
       character(1), parameter :: del    ( ndelim ) = &
          [ character(1) :: '.', ':', '-', ',', ' ' ]
       integer(ip) :: j
@@ -2933,7 +2962,7 @@ contains
 
       return
       end associate
-      end procedure scfm01
+      end subroutine scfm01
 
       !>## Detailed Input
       !>
@@ -3180,11 +3209,15 @@ contains
       !>        following the header.
       !>
       !>     Standard SPICE error handling.
-      module procedure scte01
+      module subroutine scte01 ( ctx, sc, sclkdp, et )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+      real(wp), intent(in) :: sclkdp  !! Type 1 SCLK, encoded as ticks since clock start.
+      real(wp), intent(out) :: et  !! Ephemeris time, seconds past J2000. (PEPPER: an output; SPICELIB's table said I)
       character(1), parameter :: del    ( ndelim ) = &
          [ character(1) :: '.', ':', '-', ',', ' ' ]
       real(wp) :: const
@@ -3420,7 +3453,7 @@ contains
 
       return
       end associate
-      end procedure scte01
+      end subroutine scte01
 
       !>## Detailed Input
       !>
@@ -3678,11 +3711,15 @@ contains
       !>        following the header.
       !>
       !>     Standard SPICE error handling.
-      module procedure scet01
+      module subroutine scet01 ( ctx, sc, et, sclkdp )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+      real(wp), intent(out) :: sclkdp  !! Type 1 SCLK, encoded as ticks since clock start.
+      real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
       character(1), parameter :: del    ( ndelim ) = &
          [ character(1) :: '.', ':', '-', ',', ' ' ]
       real(wp) :: timdif
@@ -3953,7 +3990,7 @@ contains
 
       return
       end associate
-      end procedure scet01
+      end subroutine scet01
 
       !>## Detailed Input
       !>
@@ -4153,11 +4190,15 @@ contains
       !>        calls to SCLI01 to fetch NFIELD and DELCDE values.
       !>
       !>     Standard SPICE error handling.
-      module procedure scec01
+      module subroutine scec01 ( ctx, sc, et, sclkdp )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+      real(wp), intent(out) :: sclkdp  !! Type 1 SCLK, encoded as continuous ticks since clock start.
+      real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
       character(1), parameter :: del    ( ndelim ) = &
          [ character(1) :: '.', ':', '-', ',', ' ' ]
       real(wp) :: timdif
@@ -4417,7 +4458,7 @@ contains
 
       return
       end associate
-      end procedure scec01
+      end subroutine scec01
 
       !>## Detailed Input
       !>
@@ -4497,12 +4538,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 01-DEC-2021 (NJB) (JDR)
       !>
       !>        New entry point.
-      module procedure scty01
+      module subroutine scty01 ( ctx, sc, clktyp )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
       use pepper_strings, only: repmi_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft clock ID code.
+      integer(ip), intent(out) :: clktyp  !! NAIF spacecraft clock type.
       integer(ip) :: clktyp_1(1)  !! one-element copy of clktyp (array argument)
       character(1), parameter :: del    ( ndelim ) = &
          [ character(1) :: '.', ':', '-', ',', ' ' ]
@@ -4656,7 +4700,7 @@ contains
 
       return
       end associate
-      end procedure scty01
+      end subroutine scty01
 
       !>## Detailed Input
       !>
@@ -4722,11 +4766,16 @@ contains
       !>-    SPICELIB Version 1.0.0, 01-DEC-2021 (NJB) (JDR)
       !>
       !>        New entry point.
-      module procedure scpr01
+      module subroutine scpr01 ( ctx, sc, npartn, parbeg, parend )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       use pepper_inc_zzsc01
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft clock ID code.
+      integer(ip), intent(out) :: npartn  !! Number of partitions.
+      real(wp), intent(out) :: parbeg ( * )  !! Partition begin times.
+      real(wp), intent(out) :: parend ( * )  !! Partition end times.
       character(1), parameter :: del    ( ndelim ) = &
          [ character(1) :: '.', ':', '-', ',', ' ' ]
       if ( .not. allocated ( ctx%sc01_state ) ) then
@@ -4786,6 +4835,6 @@ contains
 
       return
       end associate
-      end procedure scpr01
+      end subroutine scpr01
 
 end submodule pepper_sclk

@@ -149,10 +149,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 04-SEP-1990 (NJB)
-      module procedure sctype
+      module integer(ip) function sctype ( ctx, sc )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
 
 !
 !     Standard SPICE error handling.
@@ -171,7 +173,7 @@ contains
       call scty01 ( ctx, sc, sctype )
 
       return
-      end procedure sctype
+      end function sctype
 
       !>## Detailed Input
       !>
@@ -939,7 +941,7 @@ contains
       !>     provide the index in the body PCK data arrays at which the data
       !>     of the body with a given ID are stored.
 
-      module procedure tisbod
+      module subroutine tisbod ( ctx, ref, body, et, tsipm )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, j2000, rpd, spd, twopi
       use pepper_math, only: mxm, vdotg
@@ -948,6 +950,11 @@ contains
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: ref  !! ID of inertial reference frame to transform from
+      integer(ip), intent(in) :: body  !! ID code of body
+      real(wp), intent(in) :: et  !! Epoch of transformation
+      real(wp), intent(out) :: tsipm   ( 6,6 )  !! Transformation (state), inertial to prime meridian
       real(wp), allocatable :: sinth(:), costh(:), dsinth(:), dcosth(:)
       real(wp) :: dpval_1(1)  !! one-element copy of dpval (array argument)
       integer(ip) :: pcref_1(1)  !! one-element copy of pcref (array argument)
@@ -1704,7 +1711,7 @@ contains
 !
       return
       end associate
-      end procedure tisbod
+      end subroutine tisbod
 
       !>## Detailed Input
       !>
@@ -2008,11 +2015,16 @@ contains
       !>        properly.
       !>
       !>-    SPICELIB Version 1.0.0, 18-NOV-1996 (WLT)
-      module procedure tkfram
+      module subroutine tkfram ( ctx, frcode, rot, frame, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ident, q2m, sharpr, vdot, vhatg
       use pepper_strings, only: intstr, rtrim, repmi_inplace, ucase_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: frcode  !! Frame class ID of a TK frame.
+      real(wp), intent(out) :: rot   ( 3, 3 )  !! Rotation matrix from TK frame to frame FRAME.
+      integer(ip), intent(out) :: frame  !! Frame ID of the base reference.
+      logical, intent(out) :: found  !! .TRUE. if the rotation could be determined.
       integer(ip), parameter :: bufsiz = 200
       integer(ip), parameter :: wdsize = 32
       integer(ip), parameter :: nitems = 14
@@ -2657,7 +2669,7 @@ contains
 !
       return
       end associate
-      end procedure tkfram
+      end subroutine tkfram
 
       !>## Abstract
       !>
@@ -2845,11 +2857,16 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local parameters
-      module procedure zzdynfid
+      module subroutine zzdynfid ( ctx, frname, frcode, item, idcode )
       use pepper_kinds, only: ip
       use pepper_strings, only: beint, intstr, repmc, rtrim
       use pepper_inc_zzdyn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: frname  !! Frame name.
+      integer(ip), intent(in) :: frcode  !! Frame ID code.
+      character(*), intent(in) :: item  !! Item associated with frame definition.
+      integer(ip), intent(out) :: idcode  !! Output kernel variable.
       integer(ip) :: idcode_1(1)  !! one-element copy of idcode (array argument)
 
 !
@@ -3003,7 +3020,7 @@ contains
       end if
 
       return
-      end procedure zzdynfid
+      end subroutine zzdynfid
 
       !>## Abstract
       !>
@@ -3181,10 +3198,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 23-SEP-2013 (BVS)
-      module procedure zznamfrm
+      module subroutine zznamfrm ( ctx, usrctr, savnam, savcde, frname, frcode )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! POOL state counter saved by the caller.
+      character(*), intent(inout) :: savnam  !! Frame name saved by the caller.
+      integer(ip), intent(inout) :: savcde  !! Frame ID code saved by the caller.
+      character(*), intent(in) :: frname  !! Frame name.
+      integer(ip), intent(out) :: frcode  !! Frame ID code.
 
 !
 !     SPICE functions.
@@ -3254,7 +3277,7 @@ contains
 
       return
 
-      end procedure zznamfrm
+      end subroutine zznamfrm
 
       !>## Abstract
       !>
@@ -3472,12 +3495,19 @@ contains
       !>        velocity data.
       !>
       !>-    SPICELIB Version 1.0.0, 14-DEC-2008 (NJB)
-      module procedure zznofcon
+      module subroutine zznofcon ( ctx, et, frame1, endp1, frame2, endp2, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: suffix, repmc_inplace, repmi_inplace
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
 
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch.
+      integer(ip), intent(in) :: frame1  !! "From" frame ID code.
+      integer(ip), intent(in) :: endp1  !! "From" path endpoint frame ID code.
+      integer(ip), intent(in) :: frame2  !! "To" frame ID code.
+      integer(ip), intent(in) :: endp2  !! "To" path endpoint frame ID code.
+      character(*), intent(out) :: errmsg  !! Long error message.
 
 
       integer(ip), parameter :: phrsln = 600
@@ -3788,7 +3818,7 @@ contains
       end if
 
       return
-      end procedure zznofcon
+      end subroutine zznofcon
 
       !>## Abstract
       !>
@@ -4062,11 +4092,28 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 15-DEC-2021 (NJB) (BVS)
-      module procedure zzswffet
+      module subroutine zzswffet ( ctx, framid, hdfram, frpool, fidlst, basbeg, free, bascnt, usetim, binary, clsses, clsids, baslst, starts, stops, framat, nroom )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmc
       use pepper_inc_zzswtchf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: framid  !! The frame ID of a switch frame.
+      integer(ip), intent(inout) :: hdfram ( * )  !! Array of hash collision list head nodes.
+      integer(ip), intent(inout) :: frpool ( lbsngl : * )  !! Hash collision list pool.
+      integer(ip), intent(inout) :: fidlst ( * )  !! Frame IDs corresponding to list nodes.
+      integer(ip), intent(inout) :: basbeg ( * )  !! Start indices of base lists of switch frames.
+      integer(ip), intent(inout) :: free  !! First free index in base frame arrays.
+      integer(ip), intent(inout) :: bascnt ( * )  !! Counts of base frames for each switch frame.
+      logical, intent(inout) :: usetim ( * )  !! Logical flags indicating presence of time bounds.
+      logical, intent(inout) :: binary ( * )  !! Logical flags indicating binary search usage.
+      integer(ip), intent(inout) :: clsses ( * )  !! Classes of base frames.
+      integer(ip), intent(inout) :: clsids ( * )  !! Frame class IDs of base frames.
+      integer(ip), intent(inout) :: baslst ( * )  !! Array containing lists of base frame IDs.
+      real(wp), intent(inout) :: starts ( * )  !! Lists of interval start times.
+      real(wp), intent(inout) :: stops ( * )  !! Lists of interval stop times.
+      integer(ip), intent(out) :: framat  !! Index in FIDLST of input switch frame ID.
+      integer(ip), intent(in), optional :: nroom  !! PEPPER: size of the base frame arrays (default MAXBAS).
       integer(ip) :: cap
       integer(ip) :: fid_1(1)  !! one-element copy of fid (array argument)
       integer(ip) :: frclid_1(1)  !! one-element copy of frclid (array argument)
@@ -4829,7 +4876,7 @@ contains
       free = free + nbases
 
       return
-      end procedure zzswffet
+      end subroutine zzswffet
 
       !>## Detailed Input
       !>
@@ -4888,10 +4935,14 @@ contains
       !>        Routine now returns TEME to J2000 mapping operator.
       !>
       !>-    SPICELIB Version 1.0.0, 06-MAR-2012 (NJB) (SCK) (EDW)
-      module procedure zzteme
+      module subroutine zzteme ( ctx, et, j2tm, tm2j )
       use pepper_kinds, only: wp
       use pepper_math, only: mxvg
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch of the state transformation operator.
+      real(wp), intent(out) :: j2tm    ( 6, 6 )  !! The state transformation operator J2000 to TEME.
+      real(wp), intent(out) :: tm2j    ( 6, 6 )  !! The state transformation operator TEME to J2000.
 
       real(wp) :: m1     ( 6, 6 )
       real(wp) :: m1inv  ( 6, 6 )
@@ -4934,7 +4985,7 @@ contains
       call invstm   ( ctx, tm2j,  j2tm )
 
       return
-      end procedure zzteme
+      end subroutine zzteme
 
       !>## Detailed Input
       !>
@@ -5128,9 +5179,13 @@ contains
       !>        to FURNSH.
       !>
       !>-    SPICELIB Version 1.0.0, 09-MAR-1999 (NJB)
-      module procedure sce2c
+      module subroutine sce2c ( ctx, sc, et, sclkdp )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+      real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
+      real(wp), intent(out) :: sclkdp  !! SCLK, encoded as ticks since spacecraft clock start. SCLKDP need not be integral.
 
 !
 !     Standard SPICE error handling.
@@ -5154,7 +5209,7 @@ contains
       end if
 
       return
-      end procedure sce2c
+      end subroutine sce2c
 
       !>## Detailed Input
       !>
@@ -5332,12 +5387,16 @@ contains
       !>        in MTXV and VADD calls.
       !>
       !>-    SPICELIB Version 1.0.0, 18-JUL-1997 (WLT)
-      module procedure spke10
+      module subroutine spke10 ( ctx, et, record, state )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
       use pepper_math, only: mxvg
       use pepper_inc_zzsgp4
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Target epoch.
+      real(wp), intent(in) :: record   ( * )  !! Data record.
+      real(wp), intent(out) :: state    ( 6 )  !! State (position and velocity).
       integer(ip), parameter :: nangs = 4
       integer(ip), parameter :: time1 = ngeo + kepoch
       integer(ip), parameter :: time2 = nelems + nangs + time1
@@ -5486,7 +5545,7 @@ contains
       state = tmpsta
 
       return
-      end procedure spke10
+      end subroutine spke10
 
       !>## Detailed Input
       !>
@@ -5843,9 +5902,14 @@ contains
       !>        Tests of routine FAILED() were added. The new checks
       !>        are intended to prevent arithmetic operations from
       !>        being performed with uninitialized or invalid data.
-      module procedure tipbod
+      module subroutine tipbod ( ctx, ref, body, et, tipm )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: ref  !! ID of inertial reference frame to transform from.
+      integer(ip), intent(in) :: body  !! ID code of body.
+      real(wp), intent(in) :: et  !! Epoch of transformation.
+      real(wp), intent(out) :: tipm   ( 3, 3 )  !! Position transformation matrix, inertial to prime meridian.
 
       real(wp) :: tsipm   ( 6, 6 )
 
@@ -5872,7 +5936,7 @@ contains
       end do
 
       return
-      end procedure tipbod
+      end subroutine tipbod
 
       !>## Detailed Input
       !>
@@ -6154,9 +6218,15 @@ contains
       !>        SCE2C instead of SCE2T.
       !>
       !>-    SPICELIB Version 1.0.0, 03-MAR-1999 (WLT)
-      module procedure ckfrot
+      module subroutine ckfrot ( ctx, inst, et, rotate, ref, found )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: inst  !! Frame class ID (CK ID) of a CK frame.
+      real(wp), intent(in) :: et  !! Epoch measured in seconds past J2000 TDB.
+      real(wp), intent(out) :: rotate  ( 3, 3 )  !! Rotation matrix from CK frame to frame REF.
+      integer(ip), intent(out) :: ref  !! Frame ID of the base reference.
+      logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
 
 !        NDC        is the number of double precision components in an
 !                   unpacked C-kernel segment descriptor.
@@ -6279,7 +6349,7 @@ contains
       end do
 
       return
-      end procedure ckfrot
+      end subroutine ckfrot
 
       !>## Detailed Input
       !>
@@ -6543,10 +6613,16 @@ contains
       !>        routine performs conversion of ET to continuous ticks,
       !>        reducing truncation error in the representation of the input
       !>        time value.
-      module procedure ckfxfm
+      module subroutine ckfxfm ( ctx, inst, et, xform, ref, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: rav2xf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: inst  !! Frame class ID (CK ID) of a CK frame.
+      real(wp), intent(in) :: et  !! Epoch measured in seconds past J2000 TDB.
+      real(wp), intent(out) :: xform  ( 6, 6 )  !! Transformation from CK frame to frame REF.
+      integer(ip), intent(out) :: ref  !! Frame ID of the base reference.
+      logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
 
 !        NDC        is the number of double precision components in an
 !                   unpacked C-kernel segment descriptor.
@@ -6676,7 +6752,7 @@ contains
       end do
 
       return
-      end procedure ckfxfm
+      end subroutine ckfxfm
 
       !>## Detailed Input
       !>
@@ -6866,10 +6942,17 @@ contains
       !>        Added support for type 17.
       !>
       !>-    SPICELIB Version 1.0.0, 19-SEP-1995 (WLT)
-      module procedure spkpvn
+      recursive module subroutine spkpvn ( ctx, handle, descr, et, ref, state, center )
       use pepper_kinds, only: ip, wp
       use pepper_inc_spkrec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Target epoch.
+      integer(ip), intent(out) :: ref  !! Target reference frame.
+      real(wp), intent(out) :: state    ( 6 )  !! Position, velocity.
+      integer(ip), intent(out) :: center  !! Center of state.
 
 !
 !     Some local space is needed in which to return records, and
@@ -7025,7 +7108,7 @@ contains
       end if
 
       return
-      end procedure spkpvn
+      end subroutine spkpvn
 
       !>## Abstract
       !>
@@ -7241,7 +7324,7 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 15-DEC-2021 (NJB) (BVS)
-      module procedure zzswfxfm
+      module subroutine zzswfxfm ( ctx, infrm, et, ndim, xform, outfrm, found )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled
@@ -7250,6 +7333,13 @@ contains
       use pepper_inc_zzswtchf
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: infrm  !! Frame ID code of switch frame.
+      real(wp), intent(in) :: et  !! Time, expressed as seconds past J2000 TDB.
+      integer(ip), intent(in) :: ndim  !! Dimension: 3 or 6.
+      real(wp), intent(out) :: xform ( ndim, ndim )  !! Transformation from switch to selected base frame.
+      integer(ip), intent(out) :: outfrm  !! ID code of selected base frame.
+      logical, intent(out) :: found  !! Flag indicating whether transformation was found.
       integer(ip), parameter :: j2code = 1
       integer(ip), parameter :: d3 = 3
       integer(ip), parameter :: d6 = 6
@@ -7718,6 +7808,6 @@ contains
 
       return
       end associate
-      end procedure zzswfxfm
+      end subroutine zzswfxfm
 
 end submodule pepper_orientation

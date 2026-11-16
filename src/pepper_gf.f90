@@ -2095,13 +2095,14 @@ contains
       !>        Minor edit to $Declarations for correct header format.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB) (LSE) (EDW)
-      module procedure gfbail
+      module logical function gfbail ( ctx )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
 
       gfbail  =  .false.
 
       return
-      end procedure gfbail
+      end function gfbail
 
       !>## Detailed Input
       !>
@@ -2352,10 +2353,12 @@ contains
       !>        example.
       !>
       !>-    SPICELIB Version 1.0.0, 18-APR-2014 (EDW)
-      module procedure gfstol
+      module subroutine gfstol ( ctx, value )
       use pepper_kinds, only: wp
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: value  !! Double precision value returned or to store.
       real(wp) :: putval  !! copy of the value to store
 
 !
@@ -2394,7 +2397,7 @@ contains
 
       end if
 
-      end procedure gfstol
+      end subroutine gfstol
 
       !>## Abstract
       !>
@@ -2711,12 +2714,29 @@ contains
       !>        no names associated with their ID codes.
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB)
-      module procedure zzgfcoq
+      module subroutine zzgfcoq ( ctx, vecdef, method, trgid, et, ref, abcorr, obsid, dref, dvec, crdsys, ctrid, re, f, crdnam, value, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: reccyl, reclat, recrad, recsph
       use pepper_inc_gf
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: vecdef  !! Vector definition.
+      character(*), intent(in) :: method  !! Computation method.
+      integer(ip), intent(in) :: trgid  !! Target ID code.
+      real(wp), intent(in) :: et  !! Computation epoch.
+      character(*), intent(in) :: ref  !! Reference frame name.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      integer(ip), intent(in) :: obsid  !! Observer ID code.
+      character(*), intent(in) :: dref  !! Reference frame of ray's direction vector.
+      real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+      character(*), intent(in) :: crdsys  !! Coordinate system name.
+      integer(ip), intent(in) :: ctrid  !! Frame center ID code.
+      real(wp), intent(in) :: re  !! Equatorial radius of central body.
+      real(wp), intent(in) :: f  !! Flattening coefficient of central body.
+      character(*), intent(in) :: crdnam  !! Coordinate name.
+      real(wp), intent(out) :: value  !! Coordinate value.
+      logical, intent(out) :: found  !! Flag indicating if coordinate was computed.
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -2926,7 +2946,7 @@ contains
 
       return
       end associate
-      end procedure zzgfcoq
+      end subroutine zzgfcoq
 
       !>## Abstract
       !>
@@ -3154,11 +3174,18 @@ contains
       !>        Added FAILED() check to avoid numeric problems.
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-2009 (NJB)
-      module procedure zzgfcprx
+      module subroutine zzgfcprx ( ctx, state, corsys, re, f, sense, cdsign )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: latrec, mxv, vdot, vhat, vhatip
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: state  ( 6 )  !! A 6-dimensional Cartesian state vector.
+      character(*), intent(in) :: corsys  !! A coordinate system name parameter.
+      real(wp), intent(in) :: re  !! Ellipsoid equatorial radius.
+      real(wp), intent(in) :: f  !! Ellipsoid flattening coefficient.
+      integer(ip), intent(in) :: sense  !! Reference body longitude sense.
+      integer(ip), intent(out) :: cdsign ( 3 )  !! Velocity sign vector.
 
       integer(ip), parameter :: upidx = 1
 
@@ -3564,7 +3591,7 @@ contains
       end if
 
       return
-      end procedure zzgfcprx
+      end subroutine zzgfcprx
 
       !>## Abstract
       !>
@@ -3663,10 +3690,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
-      module procedure zzgfdiq
+      module subroutine zzgfdiq ( ctx, targid, et, abcorr, obsid, dist )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: targid  !! Target body.
+      real(wp), intent(in) :: et  !! Observer epoch.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      integer(ip), intent(in) :: obsid  !! Observing body.
+      real(wp), intent(out) :: dist  !! Distance between target and observer.
 
       real(wp) :: lt
       real(wp) :: pos   ( 3 )
@@ -3686,7 +3719,7 @@ contains
       dist = vnorm ( pos )
 
       return
-      end procedure zzgfdiq
+      end subroutine zzgfdiq
 
       !>## Abstract
       !>
@@ -3845,10 +3878,15 @@ contains
       !>        Updated for MAC-OSX-64BIT-GFORTRAN.
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-2009 (NJB)
-      module procedure zzgfdsps
+      module subroutine zzgfdsps ( ctx, nlead, string, fmt, ntrail )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nlead  !! Number of leading blank lines to write.
+      character(*), intent(in) :: string  !! The string to display.
+      character(*), intent(in) :: fmt  !! Format in which the string is to be written.
+      integer(ip), intent(in) :: ntrail  !! Number of trailing blank lines to write.
 
 
       character(lnsize) :: tmpstr
@@ -3879,7 +3917,7 @@ contains
       end do
 
       return
-      end procedure zzgfdsps
+      end subroutine zzgfdsps
 
       !>## Detailed Input
       !>
@@ -4240,7 +4278,7 @@ contains
       !>        supported.
       !>
       !>     Standard SPICE error handling.
-      module procedure zzgffvin
+      module subroutine zzgffvin ( ctx, inst, tshape, raydir, target, tframe, abcorr, obsrvr )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr, halfpi
       use pepper_containers, only: grow
@@ -4250,6 +4288,14 @@ contains
       use pepper_inc_zzocced
       use pepper_inc_gf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: inst  !! Name of the instrument.
+      character(*), intent(in) :: tshape  !! Type of shape model used for target body.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: tframe  !! Body-fixed, body-centered frame for target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
       real(wp), parameter :: atol = 1.0e-6_wp
       real(wp), parameter :: fvemax = 1.0e-5_wp
       real(wp) :: bsite  ( 3 )
@@ -5026,7 +5072,7 @@ contains
       return
       end associate
       end associate
-      end procedure zzgffvin
+      end subroutine zzgffvin
 
       !>## Detailed Input
       !>
@@ -5111,13 +5157,16 @@ contains
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB) (LSE) (WLT) (EDW)
       !>
       !>     Standard SPICE error handling.
-      module procedure zzgffvst
+      module subroutine zzgffvst ( ctx, time, vistat )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: el2cgv, mtxv, mxm, mxv, vdot, vsep
       use pepper_inc_zzabcorr
       use pepper_inc_zzocced
       use pepper_inc_gf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: time  !! TDB epoch (in seconds past J2000)
+      logical, intent(out) :: vistat  !! .TRUE. if the object is visible, .FALSE. otherwise.
       real(wp) :: bsite  ( 3 )
       real(wp) :: coord  ( 2 )
       real(wp) :: ctrext
@@ -5587,7 +5636,7 @@ contains
 
       return
       end associate
-      end procedure zzgffvst
+      end subroutine zzgffvst
 
       !>## Detailed Input
       !>
@@ -5765,11 +5814,20 @@ contains
       !>        and after the BODVRD call.
       !>
       !>-    SPICELIB Version 1.0.0, 23-MAY-2012 (NJB) (EDW)
-      module procedure zzgfilin
+      module subroutine zzgfilin ( ctx, method, angtyp, target, illum, fixref, abcorr, obsrvr, spoint )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss, esrchc, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: angtyp  !! Type of illumination angle.
+      character(*), intent(in) :: target  !! Target body name.
+      character(*), intent(in) :: illum  !! Illumination source name.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      character(*), intent(in) :: abcorr  !! Aberration correction specifier.
+      character(*), intent(in) :: obsrvr  !! Observer name.
+      real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
       real(wp) :: angles ( 3 )
       real(wp) :: emista ( 2 )
       real(wp) :: ettarg
@@ -6027,7 +6085,7 @@ contains
 
       return
       end associate
-      end procedure zzgfilin
+      end subroutine zzgfilin
 
       !>## Detailed Input
       !>
@@ -6250,10 +6308,13 @@ contains
       !>        Bug fix: now checks FAILED after ILLUMG call.
       !>
       !>-    SPICELIB Version 1.0.0, 23-MAY-2012 (NJB) (EDW)
-      module procedure zzgfilgq
+      module subroutine zzgfilgq ( ctx, et, angle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+      real(wp), intent(out) :: angle  !! Illumination angle at time ET.
       real(wp) :: angles ( 3 )
       real(wp) :: emista ( 2 )
       real(wp) :: ettarg
@@ -6291,7 +6352,7 @@ contains
 
       return
       end associate
-      end procedure zzgfilgq
+      end subroutine zzgfilgq
 
       !>## Detailed Input
       !>
@@ -6610,7 +6671,7 @@ contains
       !>        body.
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-2009 (LSE) (WLT) (NJB) (EDW)
-      module procedure zzgfocin
+      module subroutine zzgfocin ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, obsrvr, abcorr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr, suffix, ucase_inplace
       use pepper_inc_gf
@@ -6618,6 +6679,16 @@ contains
       use pepper_inc_zzdsk
       use pepper_inc_zzocced
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: occtyp  !! Type of occultation.
+      character(*), intent(in) :: front  !! Name of body occulting the other.
+      character(*), intent(in) :: fshape  !! Type of shape model used for front body.
+      character(*), intent(in) :: fframe  !! Body-fixed, body-centered frame for front body.
+      character(*), intent(in) :: back  !! Name of body occulted by the other.
+      character(*), intent(in) :: bshape  !! Type of shape model used for back body.
+      character(*), intent(in) :: bframe  !! Body-fixed, body-centered frame for back body.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
       character(:), allocatable :: fixfrm
       character(cvtlen) :: pntdef
       character(poslen) :: posnam
@@ -7183,7 +7254,7 @@ contains
 !
       return
       end associate
-      end procedure zzgfocin
+      end subroutine zzgfocin
 
       !>## Detailed Input
       !>
@@ -7275,7 +7346,7 @@ contains
       !>        Initial updates to support surfaces represented by DSKs.
       !>
       !>-    SPICELIB Version 1.0.0, 30-DEC-2008 (NJB) (LSE) (WLT) (EDW)
-      module procedure zzgfocst
+      module subroutine zzgfocst ( ctx, time, ocstat )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
       use pepper_math, only: vnorm, vsep
@@ -7284,6 +7355,9 @@ contains
       use pepper_inc_zzdsk
       use pepper_inc_zzocced
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: time  !! TDB epoch (in seconds past J2000)
+      logical, intent(out) :: ocstat  !! .TRUE. if the object is occulted, .FALSE. otherwise.
       real(wp), parameter :: alpha = 1.0e-2_wp
       character(cvtlen) :: pntdef
       character(poslen) :: posnam
@@ -7785,7 +7859,7 @@ contains
 
       return
       end associate
-      end procedure zzgfocst
+      end subroutine zzgfocst
 
       !>## Abstract
       !>
@@ -7881,12 +7955,19 @@ contains
       !>## Version
       !>
       !>-    SPICELIB version 1.0.0 23-JUN-2010 (EDW)
-      module procedure zzgfpaq
+      module subroutine zzgfpaq ( ctx, et, targ, illmn, obs, abcorr, value )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
       use pepper_math, only: vsep
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+      integer(ip), intent(in) :: targ  !! Target body ID.
+      integer(ip), intent(in) :: illmn  !! Illuminating body ID.
+      integer(ip), intent(in) :: obs  !! Observer body ID.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      real(wp), intent(out) :: value  !! Value of phase angle.
 
 !
 !     SPICELIB functions.
@@ -7972,7 +8053,7 @@ contains
 !
       return
 
-      end procedure zzgfpaq
+      end subroutine zzgfpaq
 
       !>## Abstract
       !>
@@ -8032,10 +8113,12 @@ contains
       !>       call and inclusion of "zzholdd.inc" parameters file.
       !>
       !>-   SPICELIB Version 1.0.0  28-NOV-2009 (EDW)
-      module procedure zzgfref
+      module subroutine zzgfref ( ctx, refval )
       use pepper_kinds, only: wp
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: refval  !! The value to set as the reference value.
       real(wp) :: putval  !! copy of the value to store
 
       logical :: ok
@@ -8047,7 +8130,7 @@ contains
       putval = refval
       call zzholdd ( ctx, zzput, gf_ref, ok, putval )
 
-      end procedure zzgfref
+      end subroutine zzgfref
 
       !>## Abstract
       !>
@@ -8160,10 +8243,16 @@ contains
       !>        Minor typo correction to comments.
       !>
       !>-    SPICELIB version 1.0.0 09-JUN-2009 (NJB)(EDW)
-      module procedure zzgfrrq
+      module subroutine zzgfrrq ( ctx, et, targ, obs, abcorr, value )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: dvnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB
+      integer(ip), intent(in) :: targ  !! Target body ID
+      integer(ip), intent(in) :: obs  !! Observer body ID
+      character(*), intent(in) :: abcorr  !! Aberration correction flag
+      real(wp), intent(out) :: value  !! Value of range rate between objects
 
 !
 !     SPICELIB functions.
@@ -8202,7 +8291,7 @@ contains
 !
       return
 
-      end procedure zzgfrrq
+      end subroutine zzgfrrq
 
       !>## Abstract
       !>
@@ -9928,11 +10017,21 @@ contains
       !>        the error message output.
       !>
       !>-    SPICELIB Version 1.0.0, 03-MAR-2009 (EDW)
-      module procedure zzgfspq
+      module subroutine zzgfspq ( ctx, et, targ1, targ2, r1, r2, obs, abcorr, ref, value )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
       use pepper_math, only: vnorm, vsep
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB
+      integer(ip), intent(in) :: targ1  !! NAIF ID for first target
+      integer(ip), intent(in) :: targ2  !! NAIF ID for second target
+      real(wp), intent(in) :: r1  !! Radius of a spherical model for TARG1
+      real(wp), intent(in) :: r2  !! Radius of a spherical model for TARG2
+      integer(ip), intent(in) :: obs  !! NAIF ID of observer
+      character(*), intent(in) :: abcorr  !! Aberration correction flag
+      character(*), intent(in) :: ref  !! Reference frame of the angular separation
+      real(wp), intent(out) :: value  !! Value of angular separation between objects
 
 !
 !     SPICELIB functions.
@@ -10028,7 +10127,7 @@ contains
       value = theta - ang1 - ang2
 
       return
-      end procedure zzgfspq
+      end subroutine zzgfspq
 
       !>## Detailed Input
       !>
@@ -10206,11 +10305,17 @@ contains
       !>        execute for this version of the routine.
       !>
       !>-    SPICELIB Version 1.0.0, 14-APR-2008 (NJB) (EDW)
-      module procedure zzgfspin
+      module subroutine zzgfspin ( ctx, of, from, shape, frame, abcorr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: of    (2)  !! Body id's of the angular separation objects
+      character(*), intent(in) :: from  !! Observer name
+      character(*), intent(inout) :: shape (2)  !! Array of shape IDs corresponding to OF (PEPPER: normalized in place, as by SPICELIB)
+      character(*), intent(in) :: frame (2)  !! Array of frame names corresponding to OF
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
       real(wp) :: axes1 (3)
       real(wp) :: axes2 (3)
       real(wp) :: pv1   (6)
@@ -10493,7 +10598,7 @@ contains
 
       return
       end associate
-      end procedure zzgfspin
+      end subroutine zzgfspin
 
       !>## Detailed Input
       !>
@@ -10726,10 +10831,13 @@ contains
       !>        finder naming convention.
       !>
       !>-    SPICELIB Version 1.0.0, 26-AUG-2003 (LSE)
-      module procedure zzgfspgq
+      module subroutine zzgfspgq ( ctx, et, sep )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+      real(wp), intent(out) :: sep  !! Separation at time ET.
       logical :: return
       real(wp) :: axes1 (3)
       real(wp) :: axes2 (3)
@@ -10766,7 +10874,7 @@ contains
 
       return
       end associate
-      end procedure zzgfspgq
+      end subroutine zzgfspgq
 
       !>## Detailed Input
       !>
@@ -10838,10 +10946,18 @@ contains
       !>        Completed descriptions for $Brief_I/O.
       !>
       !>-    SPICELIB Version 1.0.0, 24-SEP-2012 (EDW)
-      module procedure zzgfspx
+      module subroutine zzgfspx ( ctx, xabcr, xbod, yref, xref, xobs, xrad, xshp )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: xabcr  !! Saved value SVABCR.
+      integer(ip), intent(out) :: xbod  (2)  !! Saved values SVBOD1 and SVBOD2.
+      character(*), intent(out) :: yref  !! Saved value SVREF.
+      character(*), intent(out) :: xref  (2)  !! Saved values SVREF1 and SVREF2.
+      integer(ip), intent(out) :: xobs  !! Saved value SVOBS.
+      real(wp), intent(out) :: xrad  (2)  !! Saved values SVRAD1 and SVRAD2.
+      integer(ip), intent(out) :: xshp  (2)  !! Saved values SVSHP1 and SVSHP2.
       logical :: return
       real(wp) :: axes1 (3)
       real(wp) :: axes2 (3)
@@ -10887,7 +11003,7 @@ contains
 
       return
       end associate
-      end procedure zzgfspx
+      end subroutine zzgfspx
 
       !>## Abstract
       !>
@@ -11156,7 +11272,7 @@ contains
       !>        no names associated with their ID codes.
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB)
-      module procedure zzgfssin
+      module subroutine zzgfssin ( ctx, method, trgid, et, fixref, abcorr, obsid, dref, dctr, dvec, radii, state, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: mxvg, vdot, vhat
@@ -11165,6 +11281,19 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      integer(ip), intent(in) :: trgid  !! Target ID code.
+      real(wp), intent(in) :: et  !! Computation epoch.
+      character(*), intent(in) :: fixref  !! Reference frame name.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      integer(ip), intent(in) :: obsid  !! Observer ID code.
+      character(*), intent(in) :: dref  !! Reference frame of ray's direction vector.
+      integer(ip), intent(in) :: dctr  !! DREF's center ID code.
+      real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+      real(wp), intent(in) :: radii  ( 3 )  !! Target radii.
+      real(wp), intent(out) :: state  ( 6 )  !! State used to define coordinates.
+      logical, intent(out) :: found  !! Flag indicating whether state was found.
       real(wp) :: acc    ( 3 )
       real(wp) :: corxfi ( 6, 6 )
       real(wp) :: corxfm ( 6, 6 )
@@ -11710,7 +11839,7 @@ contains
 
       return
       end associate
-      end procedure zzgfssin
+      end subroutine zzgfssin
 
       !>## Abstract
       !>
@@ -11912,7 +12041,7 @@ contains
       !>        no names associated with their ID codes.
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB)
-      module procedure zzgfssob
+      module subroutine zzgfssob ( ctx, method, trgid, et, fixref, abcorr, obsid, radii, state )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: mxvg, vdot, vhat
@@ -11921,6 +12050,15 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      integer(ip), intent(in) :: trgid  !! Target ID code.
+      real(wp), intent(in) :: et  !! Computation epoch.
+      character(*), intent(in) :: fixref  !! Reference frame name.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      integer(ip), intent(in) :: obsid  !! Observer ID code.
+      real(wp), intent(in) :: radii  ( 3 )  !! Target radii.
+      real(wp), intent(out) :: state  ( 6 )  !! State used to define coordinates.
       real(wp) :: acc    ( 3 )
       real(wp) :: corxfi ( 6, 6 )
       real(wp) :: corxfm ( 6, 6 )
@@ -12445,7 +12583,7 @@ contains
 
       return
       end associate
-      end procedure zzgfssob
+      end subroutine zzgfssob
 
       !>## Abstract
       !>
@@ -12689,10 +12827,16 @@ contains
       !>        Edit to replaced term "schedule" with "window."
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB) (LSE) (WLT)
-      module procedure zzgfwsts
+      module subroutine zzgfwsts ( ctx, wndw1, wndw2, inclsn, wndw3 )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      real(wp), intent(in) :: wndw1 ( lbcell : * )  !! Input window 1.
+      real(wp), intent(in) :: wndw2 ( lbcell : * )  !! Input window 2.
+      character(*), intent(in) :: inclsn  !! Flag indicating inclusion desired.
+      real(wp), intent(inout) :: wndw3 ( lbcell : * )  !! Result of sifting WNDW1 through WNDW2.
 
 
       integer(ip), parameter :: inclen = 2
@@ -12894,7 +13038,7 @@ contains
       end if
 
       return
-      end procedure zzgfwsts
+      end subroutine zzgfwsts
 
       !>## Detailed Input
       !>
@@ -13271,10 +13415,18 @@ contains
       !>        value of MARGIN in the $Parameters section.
       !>
       !>-    SPICELIB Version 1.0.0, 15-FEB-2012 (SCK) (NJB)
-      module procedure fovray
+      module subroutine fovray ( ctx, inst, raydir, rframe, abcorr, obsrvr, et, visibl )
       use pepper_kinds, only: wp
       use pepper_inc_gf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: inst  !! Name or ID code string of the instrument.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      character(*), intent(in) :: rframe  !! Reference frame of ray's direction vector.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name or ID code string of the observer.
+      real(wp), intent(in) :: et  !! Time of the observation (seconds past J2000).
+      logical, intent(out) :: visibl  !! Visibility flag (.TRUE./.FALSE.).
 
 !
 !     Standard SPICE error handling.
@@ -13301,7 +13453,7 @@ contains
       call zzgffvst ( ctx, et, visibl )
 
       return
-      end procedure fovray
+      end subroutine fovray
 
       !>## Detailed Input
       !>
@@ -13807,11 +13959,20 @@ contains
       !>        value of MARGIN in the $Parameters section.
       !>
       !>-    SPICELIB Version 1.0.0, 15-FEB-2012 (SCK) (NJB)
-      module procedure fovtrg
+      module subroutine fovtrg ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, et, visibl )
       use pepper_kinds, only: wp
       use pepper_strings, only: eqstr
       use pepper_inc_gf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: inst  !! Name or ID code string of the instrument.
+      character(*), intent(in) :: target  !! Name or ID code string of the target.
+      character(*), intent(in) :: tshape  !! Type of shape model used for the target.
+      character(*), intent(in) :: tframe  !! Body-fixed, body-centered frame for target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name or ID code string of the observer.
+      real(wp), intent(in) :: et  !! Time of the observation (seconds past J2000).
+      logical, intent(out) :: visibl  !! Visibility flag (.TRUE./.FALSE.).
       if ( .not. allocated ( ctx%fovtrg_state ) ) allocate ( ctx%fovtrg_state )
       associate ( raydir => ctx%fovtrg_state%raydir )
       if ( ctx%failed() ) return
@@ -13850,7 +14011,7 @@ contains
 
       return
       end associate
-      end procedure fovtrg
+      end subroutine fovtrg
 
       !>## Detailed Input
       !>
@@ -17325,13 +17486,24 @@ contains
       !>        meta-kernel. Corrected various comment typos.
       !>
       !>-    SPICELIB Version 1.0.0, 14-NOV-2013 (SCK) (NJB)
-      module procedure occult
+      module subroutine occult ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, et, ocltid )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase_inplace
       use pepper_inc_gf
       use pepper_inc_occult
       use pepper_inc_zzdsk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: targ1  !! Name or ID of first target.
+      character(*), intent(in) :: shape1  !! Type of shape model used for first target.
+      character(*), intent(in) :: frame1  !! Body-fixed, body-centered frame for first body.
+      character(*), intent(in) :: targ2  !! Name or ID of second target.
+      character(*), intent(in) :: shape2  !! Type of shape model used for second target.
+      character(*), intent(in) :: frame2  !! Body-fixed, body-centered frame for second body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name or ID of the observer.
+      real(wp), intent(in) :: et  !! Time of the observation (seconds past J2000).
+      integer(ip), intent(out) :: ocltid  !! Occultation identification code.
 
 !
 !     External routines
@@ -17639,7 +17811,7 @@ contains
       end if
 
       return
-      end procedure occult
+      end subroutine occult
 
       !>## Detailed Input
       !>
@@ -18075,12 +18247,18 @@ contains
       !>        section.
       !>
       !>-    SPICELIB Version 1.0.0, 27-MAR-2014 (EDW) (BVS)
-      module procedure phaseq
+      module real(wp) function phaseq ( ctx, et, target, illmn, obsrvr, abcorr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ljucrs
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+      character(*), intent(in) :: target  !! Target body name.
+      character(*), intent(in) :: illmn  !! Illuminating body name.
+      character(*), intent(in) :: obsrvr  !! Observer body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
       integer(ip) :: targ
       integer(ip) :: illum
       integer(ip) :: obs
@@ -18233,7 +18411,7 @@ contains
 !
       return
       end associate
-      end procedure phaseq
+      end function phaseq
 
       !>## Abstract
       !>
@@ -18516,11 +18694,25 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB)
-      module procedure zzgfcost
+      module subroutine zzgfcost ( ctx, vecdef, method, trgid, et, ref, abcorr, obsid, dref, dctr, dvec, radii, state, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: vecdef  !! Vector definition.
+      character(*), intent(in) :: method  !! Computation method.
+      integer(ip), intent(in) :: trgid  !! Target ID code.
+      real(wp), intent(in) :: et  !! Computation epoch.
+      character(*), intent(in) :: ref  !! Reference frame name.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      integer(ip), intent(in) :: obsid  !! Observer ID code.
+      character(*), intent(in) :: dref  !! Reference frame of ray's direction vector.
+      integer(ip), intent(in) :: dctr  !! ID code of ray frame's center.
+      real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+      real(wp), intent(in) :: radii  ( 3 )  !! Radii of reference ellipsoid.
+      real(wp), intent(out) :: state  ( 6 )  !! State used to define coordinates.
+      logical, intent(out) :: found  !! Flag indicating if state was computed.
 
       real(wp) :: lt
 
@@ -18580,7 +18772,7 @@ contains
 !
 
       return
-      end procedure zzgfcost
+      end subroutine zzgfcost
 
       !>## Detailed Input
       !>
@@ -18673,11 +18865,15 @@ contains
       !>        of ZZGFRELX to calculate the events.
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
-      module procedure zzgfdiin
+      module subroutine zzgfdiin ( ctx, target, abcorr, obsrvr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Target body name.
+      character(*), intent(in) :: abcorr  !! Aberration correction specifier.
+      character(*), intent(in) :: obsrvr  !! Observer name.
       real(wp) :: lt
       real(wp) :: state  ( 6 )
       logical :: attblk ( nabcor )
@@ -18753,7 +18949,7 @@ contains
 
       return
       end associate
-      end procedure zzgfdiin
+      end subroutine zzgfdiin
 
       !>## Detailed Input
       !>
@@ -18934,10 +19130,13 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 05-MAR-2009 (NJB) (LSE) (WLT) (IMU) (EDW)
-      module procedure zzgfdigq
+      module subroutine zzgfdigq ( ctx, et, dist )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+      real(wp), intent(out) :: dist  !! Distance at time ET.
       real(wp) :: lt
       real(wp) :: state  ( 6 )
       logical :: attblk ( nabcor )
@@ -18952,7 +19151,7 @@ contains
 
       return
       end associate
-      end procedure zzgfdigq
+      end subroutine zzgfdigq
 
       !>## Detailed Input
       !>
@@ -19068,11 +19267,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB version 1.0.0 19-OCT-2010 (EDW)(NJB)
-      module procedure zzgfpain
+      module subroutine zzgfpain ( ctx, target, illmn, abcorr, obsrvr )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: illmn  !! Name of the illuminating body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
       real(wp) :: dsep
       real(wp) :: lt
       real(wp) :: dlt
@@ -19188,7 +19392,7 @@ contains
 
       return
       end associate
-      end procedure zzgfpain
+      end subroutine zzgfpain
 
       !>## Detailed Input
       !>
@@ -19414,10 +19618,13 @@ contains
       !>## Version
       !>
       !>-    SPICELIB version 1.0.0 19-OCT-2010 (EDW)
-      module procedure zzgfpagq
+      module subroutine zzgfpagq ( ctx, et, rvl )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+      real(wp), intent(out) :: rvl  !! Phase angle at time ET.
       logical :: return
       real(wp) :: dsep
       real(wp) :: lt
@@ -19436,7 +19643,7 @@ contains
 
       return
       end associate
-      end procedure zzgfpagq
+      end subroutine zzgfpagq
 
       !>## Detailed Input
       !>
@@ -19495,10 +19702,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB version 1.0.0 16-SEP-2012 (EDW)
-      module procedure zzgfpax
+      module subroutine zzgfpax ( ctx, xtarg, xillmn, xabcor, xobs, xablk )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: xtarg  !! Saved value for the target body.
+      integer(ip), intent(out) :: xillmn  !! Saved value for the illuminator body.
+      character(*), intent(out) :: xabcor  !! Saved value for the aberration correction.
+      integer(ip), intent(out) :: xobs  !! Saved value for the observing body.
+      logical, intent(out) :: xablk  ( nabcor )  !! Saved value for the aberration correction attribute block.
       logical :: return
       real(wp) :: dsep
       real(wp) :: lt
@@ -19525,7 +19738,7 @@ contains
 
       return
       end associate
-      end procedure zzgfpax
+      end subroutine zzgfpax
 
       !>## Abstract
       !>
@@ -21704,12 +21917,18 @@ contains
       !>        UNIT from $Detailed_Input header section.
       !>
       !>-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-      module procedure zzgftswk
+      module subroutine zzgftswk ( ctx, total, wait, tcheck, begin, end )
       use, intrinsic :: iso_fortran_env, only: output_unit
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rtrim
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: total  !! A measure of the total amount of work to be done.
+      real(wp), intent(in) :: wait  !! Minimum wait time between reports.
+      integer(ip), intent(in) :: tcheck  !! How often to sample the system clock.
+      character(*), intent(in) :: begin  !! First part of the output message.
+      character(*), intent(in) :: end  !! Last part of the output message.
       character(10) :: prcent
       character(mxmsg) :: messge
       real(wp) :: cursec
@@ -21787,7 +22006,7 @@ contains
 
       return
       end associate
-      end procedure zzgftswk
+      end subroutine zzgftswk
 
       !>## Detailed Input
       !>
@@ -21840,12 +22059,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-      module procedure zzgfwkin
+      module subroutine zzgfwkin ( ctx, incr )
       use, intrinsic :: iso_fortran_env, only: output_unit
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rtrim
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: incr  !! An amount of work just completed.
       character(10) :: prcent
       character(mxmsg) :: messge
       real(wp) :: cursec
@@ -21915,7 +22136,7 @@ contains
 
       return
       end associate
-      end procedure zzgfwkin
+      end subroutine zzgfwkin
 
       !>## Detailed Input
       !>
@@ -22030,10 +22251,15 @@ contains
       !>        zero.
       !>
       !>-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-      module procedure zzgfwkad
+      module subroutine zzgfwkad ( ctx, wait, tcheck, begin, end )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: wait  !! Minimum wait time between reports.
+      integer(ip), intent(in) :: tcheck  !! Number of calls between system time checks.
+      character(*), intent(in) :: begin  !! First part of the output message.
+      character(*), intent(in) :: end  !! Last part of the output message.
       logical :: return
       character(10) :: prcent
       character(mxmsg) :: messge
@@ -22052,7 +22278,7 @@ contains
 
       return
       end associate
-      end procedure zzgfwkad
+      end subroutine zzgfwkad
 
       !>## Detailed Input
       !>
@@ -22109,10 +22335,12 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB)
-      module procedure zzgfwkun
+      module subroutine zzgfwkun ( ctx, unit )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Output logical unit.
       logical :: return
       character(10) :: prcent
       character(mxmsg) :: messge
@@ -22125,7 +22353,7 @@ contains
 
       return
       end associate
-      end procedure zzgfwkun
+      end subroutine zzgfwkun
 
       !>## Detailed Input
       !>
@@ -22191,10 +22419,18 @@ contains
       !>        description of this argument.
       !>
       !>-    SPICELIB Version 1.0.0 17-FEB-2009 (NJB)
-      module procedure zzgfwkmo
+      module subroutine zzgfwkmo ( ctx, unit, total, wait, tcheck, begin, end, incr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: unit  !! Output logical unit.
+      real(wp), intent(out) :: total  !! A measure of the total amount of work to be done.
+      real(wp), intent(out) :: wait  !! Minimum wait time between reports.
+      integer(ip), intent(out) :: tcheck  !! Number of calls between system time check.
+      character(*), intent(out) :: begin  !! First part of the output message.
+      character(*), intent(out) :: end  !! Last part of the output message.
+      real(wp), intent(out) :: incr  !! Last progress increment.
       logical :: return
       character(10) :: prcent
       character(mxmsg) :: messge
@@ -22219,7 +22455,7 @@ contains
 
       return
       end associate
-      end procedure zzgfwkmo
+      end subroutine zzgfwkmo
 
       !>## Detailed Input
       !>
@@ -22353,11 +22589,16 @@ contains
       !>        Minor typo correction to header.
       !>
       !>-    SPICELIB version 1.0.0 09-OCT-2009 (LSE)(EDW)
-      module procedure zzgfrrin
+      module subroutine zzgfrrin ( ctx, target, abcorr, obsrvr, dt )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cmprss, ucase_inplace
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body
+      character(*), intent(in) :: abcorr  !! Aberration correction flag
+      character(*), intent(in) :: obsrvr  !! Name of the observing body
+      real(wp), intent(in) :: dt  !! Interval from ET for derivative calculation.
       real(wp) :: lt
       real(wp) :: drvel
       real(wp) :: srhat  ( 6 )
@@ -22458,7 +22699,7 @@ contains
 
       return
       end associate
-      end procedure zzgfrrin
+      end subroutine zzgfrrin
 
       !>## Detailed Input
       !>
@@ -22656,10 +22897,13 @@ contains
       !>## Version
       !>
       !>-    SPICELIB version 1.0.0 09-JUN-2009 (LSE)(EDW)
-      module procedure zzgfrrgq
+      module subroutine zzgfrrgq ( ctx, et, rvl )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+      real(wp), intent(out) :: rvl  !! Range rate at time ET.
       logical :: return
       real(wp) :: lt
       real(wp) :: drvel
@@ -22678,7 +22922,7 @@ contains
 
       return
       end associate
-      end procedure zzgfrrgq
+      end subroutine zzgfrrgq
 
       !>## Detailed Input
       !>
@@ -22733,10 +22977,15 @@ contains
       !>## Version
       !>
       !>-    SPICELIB version 1.0.0 16-SEP-2012 (EDW)
-      module procedure zzgfrrx
+      module subroutine zzgfrrx ( ctx, xtarg, xabcor, xobs, xdt )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: xtarg  !! Saved value for the target body.
+      character(*), intent(out) :: xabcor  !! Saved value for the aberration correction.
+      integer(ip), intent(out) :: xobs  !! Saved value for the observing body.
+      real(wp), intent(out) :: xdt  !! Saved value for DT.
       logical :: return
       real(wp) :: lt
       real(wp) :: drvel
@@ -22759,7 +23008,7 @@ contains
 
       return
       end associate
-      end procedure zzgfrrx
+      end subroutine zzgfrrx
 
       !>## Abstract
       !>
@@ -24933,11 +25182,25 @@ contains
       !>        the check.
       !>
       !>-    SPICELIB Version 1.0.0, 07-APR-2009 (NJB) (LSE) (EDW)
-      module procedure gfoclt
+      module subroutine gfoclt ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: occtyp  !! Type of occultation.
+      character(*), intent(in) :: front  !! Name of body occulting the other.
+      character(*), intent(in) :: fshape  !! Type of shape model used for front body.
+      character(*), intent(in) :: fframe  !! Body-fixed, body-centered frame for front body.
+      character(*), intent(in) :: back  !! Name of body occulted by the other.
+      character(*), intent(in) :: bshape  !! Type of shape model used for back body.
+      character(*), intent(in) :: bframe  !! Body-fixed, body-centered frame for back body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding occultation events.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
 !
@@ -25018,7 +25281,7 @@ contains
                     bail,    gfbail,  cnfine,  result )
 
       return
-      end procedure gfoclt
+      end subroutine gfoclt
 
       !>## Detailed Input
       !>
@@ -25792,11 +26055,21 @@ contains
       !>        the check.
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-2009 (NJB) (LSE) (EDW)
-      module procedure gfrfov
+      module subroutine gfrfov ( ctx, inst, raydir, rframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: inst  !! Name of the instrument.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      character(*), intent(in) :: rframe  !! Reference frame of ray's direction vector.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding FOV events.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
 !
@@ -25873,7 +26146,7 @@ contains
                     gfrepu, gfrepf, bail,   gfbail, cnfine, result )
 
       return
-      end procedure gfrfov
+      end subroutine gfrfov
 
       !>## Detailed Input
       !>
@@ -25980,10 +26253,15 @@ contains
       !>        $Brief_I/O, and $Parameters sections.
       !>
       !>-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-      module procedure gfrepi
+      module subroutine gfrepi ( ctx, window, begmss, endmss )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      real(wp), intent(in) :: window ( lbcell : * )  !! A window over which a job is to be performed.
+      character(*), intent(in) :: begmss  !! Beginning of the text portion of output message.
+      character(*), intent(in) :: endmss  !! End of the text portion of output message.
       integer(ip), parameter :: fprint = 32
       integer(ip), parameter :: lprint = 126
       character(mxbegm) :: begin
@@ -26100,7 +26378,7 @@ contains
 
       return
       end associate
-      end procedure gfrepi
+      end subroutine gfrepi
 
       !>## Detailed Input
       !>
@@ -26207,10 +26485,14 @@ contains
       !>        section.
       !>
       !>-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-      module procedure gfrepu
+      module subroutine gfrepu ( ctx, ivbeg, ivend, time )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: ivbeg  !! Start time of work interval.
+      real(wp), intent(in) :: ivend  !! End time of work interval.
+      real(wp), intent(in) :: time  !! Current time being examined in the search process
       character(mxbegm) :: begin
       character(mxendm) :: end
       real(wp) :: ave
@@ -26298,7 +26580,7 @@ contains
 
       return
       end associate
-      end procedure gfrepu
+      end subroutine gfrepu
 
       !>## Detailed Input
       !>
@@ -26355,11 +26637,12 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 21-FEB-2009 (NJB) (LSE) (WLT) (IMU)
-      module procedure gfrepf
+      module subroutine gfrepf ( ctx )
       use, intrinsic :: iso_fortran_env, only: output_unit
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzgf
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
       character(mxbegm) :: begin
       character(mxendm) :: end
       real(wp) :: ave
@@ -26422,7 +26705,7 @@ contains
 
       return
       end associate
-      end procedure gfrepf
+      end subroutine gfrepf
 
       !>## Detailed Input
       !>
@@ -27189,12 +27472,23 @@ contains
       !>        the check.
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-2009 (NJB) (LSE) (EDW)
-      module procedure gftfov
+      module subroutine gftfov ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       use pepper_inc_gf
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: inst  !! Name of the instrument.
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: tshape  !! Type of shape model used for target body.
+      character(*), intent(in) :: tframe  !! Body-fixed, body-centered frame for target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding FOV events.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
       real(wp) :: tol
       logical :: ok
       if ( .not. allocated ( ctx%gftfov_state ) ) allocate ( ctx%gftfov_state )
@@ -27262,7 +27556,7 @@ contains
 
       return
       end associate
-      end procedure gftfov
+      end subroutine gftfov
 
       !>## Detailed Input
       !>
@@ -29575,7 +29869,7 @@ contains
       !>        no names associated with their ID codes.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-      module procedure zzgfcoin
+      module subroutine zzgfcoin ( ctx, vecdef, method, target, ref, abcorr, obsrvr, dref, dvec, crdsys, crdnam )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
       use pepper_strings, only: cmprss, cmprss_inplace, ucase_inplace
@@ -29583,6 +29877,17 @@ contains
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: vecdef  !! Vector definition.
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Target name.
+      character(*), intent(in) :: ref  !! Reference frame name.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      character(*), intent(in) :: obsrvr  !! Observer name.
+      character(*), intent(in) :: dref  !! Ray's direction vector frame.
+      real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+      character(*), intent(in) :: crdsys  !! Coordinate system name.
+      character(*), intent(in) :: crdnam  !! Coordinate name.
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -30026,7 +30331,7 @@ contains
 
       return
       end associate
-      end procedure zzgfcoin
+      end subroutine zzgfcoin
 
       !>## Detailed Input
       !>
@@ -30088,12 +30393,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-      module procedure zzgfcog
+      module subroutine zzgfcog ( ctx, et, crdval )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Computation epoch.
+      real(wp), intent(out) :: crdval  !! Coordinate at epoch.
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -30147,7 +30455,7 @@ contains
 
       return
       end associate
-      end procedure zzgfcog
+      end subroutine zzgfcog
 
       !>## Detailed Input
       !>
@@ -30523,12 +30831,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-      module procedure zzgfcocg
+      module subroutine zzgfcocg ( ctx, et, crdval )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Computation epoch.
+      real(wp), intent(out) :: crdval  !! Cosine of coordinate at epoch.
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -30584,7 +30895,7 @@ contains
 
       return
       end associate
-      end procedure zzgfcocg
+      end subroutine zzgfcocg
 
       !>## Detailed Input
       !>
@@ -30644,12 +30955,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-      module procedure zzgfcosg
+      module subroutine zzgfcosg ( ctx, et, crdval )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Computation epoch.
+      real(wp), intent(out) :: crdval  !! Sine of coordinate at epoch.
       character(crdlen), parameter :: crdnms ( 3, nsys ) = reshape ( &
          [ character(crdlen) :: xcrd, ycrd, zcrd, radcrd, loncrd, latcrd, rngcrd, racrd, &
            deccrd, radcrd, cltcrd, loncrd, radcrd, loncrd, zcrd, loncrd, &
@@ -30705,7 +31019,7 @@ contains
 
       return
       end associate
-      end procedure zzgfcosg
+      end subroutine zzgfcosg
 
       !>## Detailed Input
       !>
@@ -37979,11 +38293,25 @@ contains
       !>        the check.
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-2009 (NJB) (EDW)
-      module procedure gfdist
+      module subroutine gfdist ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+      integer(ip), intent(in) :: mw  !! Workspace window size.
+      integer(ip), intent(in) :: nw  !! Workspace window count.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
 !
@@ -38110,7 +38438,7 @@ contains
                     work,     nobail,   gfbail,      result  )
 
       return
-      end procedure gfdist
+      end subroutine gfdist
 
       !>## Detailed Input
       !>
@@ -39229,12 +39557,31 @@ contains
       !>        Updated header to describe use of expanded confinement window.
       !>
       !>-    SPICELIB Version 1.0.0, 20-NOV-2012 (NJB) (BVS) (EDW)
-      module procedure gfilum
+      module subroutine gfilum ( ctx, method, angtyp, target, illmn, fixref, abcorr, obsrvr, spoint, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: angtyp  !! Type of illumination angle.
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: illmn  !! Name of the illumination source.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+      integer(ip), intent(in) :: mw  !! Workspace window size.
+      integer(ip), intent(in) :: nw  !! Workspace window count.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
 !
@@ -39398,7 +39745,7 @@ contains
                     work,    nobail,  gfbail,                result )
 
       return
-      end procedure gfilum
+      end subroutine gfilum
 
       !>## Detailed Input
       !>
@@ -40272,12 +40619,27 @@ contains
       !>        Updated header to describe use of expanded confinement window.
       !>
       !>-    SPICELIB Version 1.0.0, 15-JUL-2014 (EDW) (NJB)
-      module procedure gfpa
+      module subroutine gfpa ( ctx, target, illmn, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
       use pepper_inc_gf
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: illmn  !! Name of the illuminating body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+      integer(ip), intent(in) :: mw  !! Workspace window size.
+      integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
 !
@@ -40404,7 +40766,7 @@ contains
 
       return
 
-      end procedure gfpa
+      end subroutine gfpa
 
       !>## Detailed Input
       !>
@@ -42131,13 +42493,30 @@ contains
       !>        Edited argument descriptions.
       !>
       !>-    SPICELIB Version 1.0.0, 17-FEB-2009 (NJB) (EDW)
-      module procedure gfposc
+      module subroutine gfposc ( ctx, target, frame, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: frame  !! Name of the reference frame for coordinate calculations.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+      character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+      integer(ip), intent(in) :: mw  !! Workspace window size.
+      integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
 !
@@ -42285,7 +42664,7 @@ contains
 
       return
 
-      end procedure gfposc
+      end subroutine gfposc
 
       !>## Detailed Input
       !>
@@ -43164,13 +43543,27 @@ contains
       !>        meta kernel.
       !>
       !>-    SPICELIB Version 1.0.0, 24-JUN-2009 (EDW)
-      module procedure gfrr
+      module subroutine gfrr ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+      integer(ip), intent(in) :: mw  !! Workspace window size.
+      integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
 !
@@ -43294,7 +43687,7 @@ contains
 
       return
 
-      end procedure gfrr
+      end subroutine gfrr
 
       !>## Detailed Input
       !>
@@ -44270,12 +44663,31 @@ contains
       !>        implemented.
       !>
       !>-    SPICELIB Version 1.0.0, 19-FEB-2009 (NJB) (EDW)
-      module procedure gfsep
+      module subroutine gfsep ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzabcorr
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: targ1  !! Name of first body.
+      character(*), intent(in) :: shape1  !! Name of shape model describing the first body.
+      character(*), intent(in) :: frame1  !! The body-fixed reference frame of the first body.
+      character(*), intent(in) :: targ2  !! Name of second body.
+      character(*), intent(in) :: shape2  !! Name of the shape model describing the second body.
+      character(*), intent(in) :: frame2  !! The body-fixed reference frame of the second body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the angular separation value and REFVAL.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Absolute extremum adjustment value.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding angular separation events.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is restricted.
+      integer(ip), intent(in) :: mw  !! Size of workspace windows.
+      integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array containing workspace windows.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
 !
@@ -44409,7 +44821,7 @@ contains
                     .false.,  gfbail,   result )
 
       return
-      end procedure gfsep
+      end subroutine gfsep
 
       !>## Detailed Input
       !>
@@ -45744,12 +46156,32 @@ contains
       !>        header.
       !>
       !>-    SPICELIB Version 1.0.0, 17-FEB-2009 (NJB) (EDW)
-      module procedure gfsntc
+      module subroutine gfsntc ( ctx, target, fixref, method, abcorr, obsrvr, dref, dvec, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
+      character(*), intent(in) :: method  !! Name of method type for surface intercept calculation.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: dref  !! Reference frame of direction vector DVEC.
+      real(wp), intent(in) :: dvec   (3)  !! Pointing direction vector from OBSRVR.
+      character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+      character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      integer(ip), intent(in) :: mw  !! Workspace window size.
+      integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
 !
@@ -45890,7 +46322,7 @@ contains
 
       return
 
-      end procedure gfsntc
+      end subroutine gfsntc
 
       !>## Detailed Input
       !>
@@ -46974,13 +47406,31 @@ contains
       !>        "sub-observer point."
       !>
       !>-    SPICELIB Version 1.0.0, 17-FEB-2009 (NJB) (EDW)
-      module procedure gfsubc
+      module subroutine gfsubc ( ctx, target, fixref, method, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, mw, nw, work, result )
       use pepper_kinds, only: ip, wp
       use pepper_inc_gf
       use pepper_inc_zzgf
       use pepper_inc_zzabcorr
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
+      character(*), intent(in) :: method  !! Name of method type for subpoint calculation.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+      character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine ( lbcell : * )  !! SPICE window to which the search is confined.
+      integer(ip), intent(in) :: mw  !! Workspace window size.
+      integer(ip), intent(in) :: nw  !! The number of workspace windows needed for the search.
+      real(wp), intent(inout) :: work   ( lbcell : mw, nw )  !! Array of workspace windows.
+      real(wp), intent(inout) :: result ( lbcell : * )  !! SPICE window containing results.
 
 
 !
@@ -47128,15 +47578,22 @@ contains
 
       return
 
-      end procedure gfsubc
+      end subroutine gfsubc
 
       !> The cells of a GF search with windows as arrays (PEPPER).
-      module procedure gf_cells
+      module subroutine gf_cells ( ctx, cnfine, step, cnf, res, mw, work )
       use, intrinsic :: iso_fortran_env, only: int64
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: window_to_cell
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n)
+      real(wp), intent(in) :: step  !! the search step
+      real(wp), allocatable, intent(out) :: cnf(:)  !! the confinement window as a cell
+      real(wp), allocatable, intent(out) :: res(:)  !! an empty result cell of size MW
+      integer(ip), intent(out) :: mw  !! the size of the result cell and of the work windows
+      real(wp), allocatable, intent(out), optional :: work(:,:)  !! NWMAX empty work windows of size MW
       integer(int64) :: b
       integer(int64) :: words
       integer(ip) :: i
@@ -47182,14 +47639,24 @@ contains
             call ssized ( ctx, mw, work(:,i) )
          end do
       end if
-      end procedure gf_cells
+      end subroutine gf_cells
 
       !> A GF search on the observer-target distance, with windows as arrays (PEPPER).
-      module procedure gf_distance
+      module subroutine gf_distance ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47202,14 +47669,27 @@ contains
                     work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_distance
+      end subroutine gf_distance
 
       !> A GF search on a coordinate of a position vector, with windows as arrays (PEPPER).
-      module procedure gf_position
+      module subroutine gf_position ( ctx, target, frame, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: frame  !! Name of the reference frame for coordinate calculations.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+      character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47222,14 +47702,28 @@ contains
                     step, cnf, mw, nwmax, work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_position
+      end subroutine gf_position
 
       !> A GF search on a coordinate of a sub-observer point, with windows as arrays (PEPPER).
-      module procedure gf_subpoint
+      module subroutine gf_subpoint ( ctx, target, fixref, method, abcorr, obsrvr, crdsys, coord, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
+      character(*), intent(in) :: method  !! Name of method type for subpoint calculation.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+      character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47242,14 +47736,30 @@ contains
                     adjust, step, cnf, mw, nwmax, work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_subpoint
+      end subroutine gf_subpoint
 
       !> A GF search on a coordinate of a surface intercept vector, with windows as arrays (PEPPER).
-      module procedure gf_intercept
+      module subroutine gf_intercept ( ctx, target, fixref, method, abcorr, obsrvr, dref, dvec, crdsys, coord, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: fixref  !! Body fixed frame associated with TARGET.
+      character(*), intent(in) :: method  !! Name of method type for surface intercept calculation.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: dref  !! Reference frame of direction vector DVEC.
+      real(wp), intent(in) :: dvec   (3)  !! Pointing direction vector from OBSRVR.
+      character(*), intent(in) :: crdsys  !! Name of the coordinate system containing COORD.
+      character(*), intent(in) :: coord  !! Name of the coordinate of interest.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47262,14 +47772,29 @@ contains
                     relate, refval, adjust, step, cnf, mw, nwmax, work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_intercept
+      end subroutine gf_intercept
 
       !> A GF search on the angular separation of two bodies, with windows as arrays (PEPPER).
-      module procedure gf_separation
+      module subroutine gf_separation ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: targ1  !! Name of first body.
+      character(*), intent(in) :: shape1  !! Name of shape model describing the first body.
+      character(*), intent(in) :: frame1  !! The body-fixed reference frame of the first body.
+      character(*), intent(in) :: targ2  !! Name of second body.
+      character(*), intent(in) :: shape2  !! Name of the shape model describing the second body.
+      character(*), intent(in) :: frame2  !! The body-fixed reference frame of the second body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the angular separation value and REFVAL.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Absolute extremum adjustment value.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding angular separation events.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47282,14 +47807,27 @@ contains
                     refval, adjust, step, cnf, mw, nwmax, work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_separation
+      end subroutine gf_separation
 
       !> A GF search on occultations or transits, with windows as arrays (PEPPER).
-      module procedure gf_occultation
+      module subroutine gf_occultation ( ctx, occtyp, front, fshape, fframe, back, bshape, bframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: occtyp  !! Type of occultation.
+      character(*), intent(in) :: front  !! Name of body occulting the other.
+      character(*), intent(in) :: fshape  !! Type of shape model used for front body.
+      character(*), intent(in) :: fframe  !! Body-fixed, body-centered frame for front body.
+      character(*), intent(in) :: back  !! Name of body occulted by the other.
+      character(*), intent(in) :: bshape  !! Type of shape model used for back body.
+      character(*), intent(in) :: bframe  !! Body-fixed, body-centered frame for back body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding occultation events.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       integer(ip) :: mw
@@ -47301,14 +47839,29 @@ contains
                     step, cnf, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_occultation
+      end subroutine gf_occultation
 
       !> A GF search on an illumination angle, with windows as arrays (PEPPER).
-      module procedure gf_illumination
+      module subroutine gf_illumination ( ctx, method, angtyp, target, illmn, fixref, abcorr, obsrvr, spoint, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: angtyp  !! Type of illumination angle.
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: illmn  !! Name of the illumination source.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47321,14 +47874,25 @@ contains
                     refval, adjust, step, cnf, mw, nwmax, work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_illumination
+      end subroutine gf_illumination
 
       !> A GF search on the phase angle, with windows as arrays (PEPPER).
-      module procedure gf_phase
+      module subroutine gf_phase ( ctx, target, illmn, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: illmn  !! Name of the illuminating body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47341,14 +47905,24 @@ contains
                     nwmax, work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_phase
+      end subroutine gf_phase
 
       !> A GF search on the range rate, with windows as arrays (PEPPER).
-      module procedure gf_range_rate
+      module subroutine gf_range_rate ( ctx, target, abcorr, obsrvr, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      character(*), intent(in) :: relate  !! Relational operator.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: adjust  !! Adjustment value for absolute extrema searches.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47361,14 +47935,24 @@ contains
                     work, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_range_rate
+      end subroutine gf_range_rate
 
       !> A GF search on a target in an instrument field of view, with windows as arrays (PEPPER).
-      module procedure gf_target_in_fov
+      module subroutine gf_target_in_fov ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: inst  !! Name of the instrument.
+      character(*), intent(in) :: target  !! Name of the target body.
+      character(*), intent(in) :: tshape  !! Type of shape model used for target body.
+      character(*), intent(in) :: tframe  !! Body-fixed, body-centered frame for target body.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding FOV events.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       integer(ip) :: mw
@@ -47379,14 +47963,23 @@ contains
       call gftfov ( ctx, inst, target, tshape, tframe, abcorr, obsrvr, step, cnf, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_target_in_fov
+      end subroutine gf_target_in_fov
 
       !> A GF search on a ray in an instrument field of view, with windows as arrays (PEPPER).
-      module procedure gf_ray_in_fov
+      module subroutine gf_ray_in_fov ( ctx, inst, raydir, rframe, abcorr, obsrvr, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: inst  !! Name of the instrument.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      character(*), intent(in) :: rframe  !! Reference frame of ray's direction vector.
+      character(*), intent(in) :: abcorr  !! Aberration correction flag.
+      character(*), intent(in) :: obsrvr  !! Name of the observing body.
+      real(wp), intent(in) :: step  !! Step size in seconds for finding FOV events.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       integer(ip) :: mw
@@ -47397,14 +47990,23 @@ contains
       call gfrfov ( ctx, inst, raydir, rframe, abcorr, obsrvr, step, cnf, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_ray_in_fov
+      end subroutine gf_ray_in_fov
 
       !> A GF search on a user-defined scalar quantity, with windows as arrays (PEPPER).
-      module procedure gf_user_scalar
+      module subroutine gf_user_scalar ( ctx, udfuns, udqdec, relate, refval, adjust, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: relate  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
+      real(wp), intent(in) :: refval  !! Value used as reference for scalar quantity condition.
+      real(wp), intent(in) :: adjust  !! Allowed variation for absolute extremal geometric conditions.
+      real(wp), intent(in) :: step  !! Step size used for locating extrema and roots.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      procedure(gf_scalar) :: udfuns  !! Name of the routine that computes a scalar quantity corresponding to an ET.
+      procedure(gf_decr_x) :: udqdec  !! Name of the routine that computes whether the scalar quantity is decreasing.
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47417,14 +48019,20 @@ contains
                     res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_user_scalar
+      end subroutine gf_user_scalar
 
       !> A GF search on a user-defined boolean quantity, with windows as arrays (PEPPER).
-      module procedure gf_user_boolean
+      module subroutine gf_user_boolean ( ctx, udfuns, udfunb, step, cnfine, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: step  !! Constant step size in seconds for finding geometric events.
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      procedure(gf_scalar) :: udfuns  !! Name of the routine that computes a scalar quantity corresponding to an ET.
+      procedure(gf_boolean) :: udfunb  !! Name of the routine returning the boolean value corresponding to an ET.
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       integer(ip) :: mw
@@ -47435,14 +48043,37 @@ contains
       call gfudb ( ctx, udfuns, udfunb, step, cnf, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_user_boolean
+      end subroutine gf_user_boolean
 
       !> A GF search on a geometric quantity, with the caller's step and refinement routines, with windows as arrays (PEPPER).
-      module procedure gf_event
+      module subroutine gf_event ( ctx, udstep, udrefn, gquant, qnpars, qpnams, qcpars, qdpars, qipars, qlpars, op, refval, tol, adjust, step, cnfine, rpt, udrepi, udrepu, udrepf, bail, udbail, result )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: cell_to_window
       use pepper_inc_gf, only: nwmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: gquant  !! Type of geometric quantity.
+      integer(ip), intent(in) :: qnpars  !! Number of quantity definition parameters.
+      character(*), intent(in) :: qpnams ( * )  !! Names of quantity definition parameters.
+      character(*), intent(in) :: qcpars ( * )  !! Array of character quantity definition parameters.
+      real(wp), intent(in) :: qdpars ( * )  !! Array of double precision quantity definition parameters.
+      integer(ip), intent(in) :: qipars ( * )  !! Array of integer quantity definition parameters.
+      logical, intent(in) :: qlpars ( * )  !! Array of logical quantity definition parameters.
+      character(*), intent(in) :: op  !! Operator that either looks for an extreme value (max, min, local, absolute) or compares the geometric quantity value and a number.
+      real(wp), intent(in) :: refval  !! Reference value.
+      real(wp), intent(in) :: tol  !! Convergence tolerance in seconds
+      real(wp), intent(in) :: adjust  !! Absolute extremum adjustment value.
+      real(wp), intent(in) :: step  !! the smallest step UDSTEP returns: it sizes the work windows (PEPPER)
+      real(wp), intent(in) :: cnfine(:,:)  !! the confinement window, shape (2, n): intervals [start, stop], sorted and disjoint
+      logical, intent(in) :: rpt  !! Progress reporter on (.TRUE.) or off (.FALSE.).
+      logical, intent(in) :: bail  !! Logical indicating program interrupt monitoring.
+      procedure(gf_bail) :: udbail  !! Name of a routine that signals a program interrupt.
+      real(wp), allocatable, intent(out) :: result(:,:)  !! the result window, shape (2, n) (n = 0 after an error)
+      procedure(gf_step) :: udstep  !! Name of the routine that computes and returns a time step.
+      procedure(gf_refine) :: udrefn  !! Name of the routine that computes a refined time.
+      procedure(gf_rep_init) :: udrepi  !! Function that initializes progress reporting.
+      procedure(gf_rep_update) :: udrepu  !! Function that updates the progress report.
+      procedure(gf_rep_final) :: udrepf  !! Function that finalizes progress reporting.
       real(wp), allocatable :: cnf(:)
       real(wp), allocatable :: res(:)
       real(wp), allocatable :: work(:,:)
@@ -47456,6 +48087,6 @@ contains
                     nwmax, work, bail, udbail, res )
       if ( ctx%failed() ) return
       call cell_to_window ( res, result )
-      end procedure gf_event
+      end subroutine gf_event
 
 end submodule pepper_gf

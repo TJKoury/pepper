@@ -641,10 +641,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 15-AUG-1990 (WLT)
-      module procedure inttxt
+      module subroutine inttxt ( ctx, n, string )
       use pepper_kinds, only: ip
       use pepper_strings, only: suffix
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! An integer (less than 10**12 in absolute value).
+      character(*), intent(out) :: string  !! An English string representing the cardinal of N.
 
       integer(ip), parameter :: lngest = 9
 
@@ -786,7 +789,7 @@ contains
       end do
 
       return
-      end procedure inttxt
+      end subroutine inttxt
 
       !>## Detailed Input
       !>
@@ -882,10 +885,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 15-AUG-1990 (WLT)
-      module procedure intord
+      module subroutine intord ( ctx, n, string )
       use pepper_kinds, only: ip
       use pepper_strings, only: suffix
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! An integer (less than 10**12 in absolute value).
+      character(*), intent(out) :: string  !! An English string representing the ordinal of N.
 
       integer(ip), parameter :: maxord = 148
 
@@ -968,7 +974,7 @@ contains
       string = mystr
 
       return
-      end procedure intord
+      end subroutine intord
 
       !>## Detailed Input
       !>
@@ -1199,10 +1205,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
-      module procedure repmot
+      module subroutine repmot ( ctx, in, marker, value, rtcase, out )
       use pepper_kinds, only: ip
       use pepper_strings, only: lcase_inplace, ucase_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: in  !! Input string.
+      character(*), intent(in) :: marker  !! Marker to be replaced.
+      integer(ip), intent(in) :: value  !! Replacement value.
+      character(1), intent(in) :: rtcase  !! Case of replacement text.
+      character(*), intent(out) :: out  !! Output string.
 
       integer(ip), parameter :: maxlon = 147
 
@@ -1294,7 +1306,7 @@ contains
       call repsub ( ctx, in,  mrkpsb,  mrkpse,  ord ( : len_trim(ord) ),  out )
 
       return
-      end procedure repmot
+      end subroutine repmot
 
       !>## Detailed Input
       !>
@@ -1561,10 +1573,18 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 12-APR-2012 (WLT) (BVS)
-      module procedure sepool
+      module subroutine sepool ( ctx, item, fidx, contin, string, size, lidx, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: item  !! name of the kernel pool variable
+      integer(ip), intent(in) :: fidx  !! index of the first component of the string
+      character(*), intent(in) :: contin  !! character sequence used to indicate continuation
+      character(*), intent(out) :: string  !! a full string concatenated across continuations
+      integer(ip), intent(out) :: size  !! the number of character in the full string value
+      integer(ip), intent(out) :: lidx  !! index of the last component of the string
+      logical, intent(out) :: found  !! flag indicating success or failure of request
 
 !     SPICELIB Variables
 !
@@ -1688,7 +1708,7 @@ contains
          call pool_string ( ctx, item, k, part, got )
          if ( got .and. len ( part ) == 0 ) part = ' '
       end subroutine get_part
-      end procedure sepool
+      end subroutine sepool
 
       !>## Detailed Input
       !>
@@ -1954,10 +1974,17 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-1997 (WLT)
-      module procedure stpool
+      module subroutine stpool ( ctx, item, nth, contin, nthstr, size, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: item  !! Name of the kernel pool variable.
+      integer(ip), intent(in) :: nth  !! Index of the full string to retrieve.
+      character(*), intent(in) :: contin  !! Character sequence used to indicate continuation.
+      character(*), intent(out) :: nthstr  !! A full string concatenated across continuations.
+      integer(ip), intent(out) :: size  !! The number of characters in the full string value.
+      logical, intent(out) :: found  !! Flag indicating success or failure of request.
 
 !     SPICELIB Variables
 !
@@ -2093,7 +2120,7 @@ contains
          call pool_string ( ctx, item, k, part, got )
          if ( got .and. len ( part ) == 0 ) part = ' '
       end subroutine get_part
-      end procedure stpool
+      end subroutine stpool
 
       !>## Detailed Input
       !>
@@ -2312,9 +2339,12 @@ contains
       !>        Version update, N0036.
       !>
       !>-    SPICELIB Version 1.0.0, 23-AUG-1994 (HAN)
-      module procedure tkvrsn
+      module subroutine tkvrsn ( ctx, item, verstr )
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: item  !! Item for which a version string is desired.
+      character(*), intent(out) :: verstr  !! Version string.
 
 !
 !     At the current time only the TOOLKIT version number is
@@ -2327,7 +2357,7 @@ contains
       end if
 
       return
-      end procedure tkvrsn
+      end subroutine tkvrsn
 
       !>## Detailed Input
       !>
@@ -2543,11 +2573,16 @@ contains
       !>        Updated for PC-CYGWIN.
       !>
       !>-    SPICELIB Version 1.0.0, 17-FEB-2004 (EDW) (BVS)
-      module procedure zzascii
+      module subroutine zzascii ( ctx, file, line, check, termin )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, rtrim
 
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! Name of the text file to scan.
+      character(*), intent(inout) :: line  !! The work string for file reads.
+      logical, intent(in) :: check  !! Flag directing to check for mismatched EOL.
+      character(*), intent(out) :: termin  !! The deduced terminator ID.
       integer(ip), parameter :: eoltsz = 5
 
 !
@@ -2822,7 +2857,7 @@ contains
       end if
 
       return
-      end procedure zzascii
+      end subroutine zzascii
 
       !>## Detailed Input
       !>
@@ -2999,10 +3034,12 @@ contains
       !>        occurred during the execution of the INQUIRE statement.
       !>        In this case, a SPICELIB error is signaled and the routine
       !>        checks out.
-      module procedure exists
+      module logical function exists ( ctx, fname )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of the file in question.
 
       integer(ip) :: iostat
       integer(ip) :: r
@@ -3054,7 +3091,7 @@ contains
       exists = myexst
 
       return
-      end procedure exists
+      end function exists
 
       !>## Abstract
       !>
@@ -3248,9 +3285,18 @@ contains
       !>        whenever a text kernel loads.
       !>
       !>-    SPICELIB Version 1.0.0, 04-JUN-1999 (WLT)
-      module procedure zzldker
+      module subroutine zzldker ( ctx, file, nofile, filtyp, handle, loader, used, format )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! The name of a file to be loaded.
+      character(*), intent(in) :: nofile  !! A message to issue if FILE cannot be located
+      character(*), intent(out) :: filtyp  !! The type of kernel.
+      integer(ip), intent(out) :: handle  !! The handle associated with the loaded kernel.
+      character(*), intent(in), optional :: loader  !! PEPPER: the registered loader that reads FILE, before anything else
+                                                    !! (PEPPER: PEPPER's own loading; blank: chosen by the file)
+      character(:), allocatable, intent(out), optional :: used  !! PEPPER: the kernel loader that read the file (blank: none)
+      character(:), allocatable, intent(out), optional :: format  !! PEPPER: the description of a kernel built by a loader
 
 !
 !     Local Variables.
@@ -3520,7 +3566,7 @@ contains
          call ctx%sigerr ( short )
       end subroutine unload_daf
 
-      end procedure zzldker
+      end subroutine zzldker
 
       !>## Detailed Input
       !>
@@ -4079,10 +4125,14 @@ contains
       !>        the correct name PATH_VALUES.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-      module procedure furnsh
+      module subroutine furnsh ( ctx, file, loader )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos, rtrim, samsub, repmc_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! SPICE kernel file (text or binary).
+      character(*), intent(in), optional :: loader  !! PEPPER: the registered kernel loader that reads FILE, overriding
+                                                    !! every other choice ([[spice_furnsh]]; blank or absent: FURNSH chooses)
       character(1) :: norc
       character(:), allocatable :: fil2ld
       character(:), allocatable :: pvalue
@@ -4464,7 +4514,7 @@ contains
                fil2ld = ' '
             end if
          end subroutine get_file_name
-      end procedure furnsh
+      end subroutine furnsh
 
       !>## Detailed Input
       !>
@@ -4697,10 +4747,13 @@ contains
       !>        Deleted reference to unneeded variable DOALL.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-      module procedure ktotal
+      module subroutine ktotal ( ctx, kind, count )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, fndnwd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: kind  !! A list of kinds of kernels to count.
+      integer(ip), intent(out) :: count  !! The number of kernels of type KIND.
       logical :: return
       character(1) :: norc
       character(lnsize) :: symbol
@@ -4813,7 +4866,7 @@ contains
 
       return
       end associate
-      end procedure ktotal
+      end subroutine ktotal
 
       !>## Detailed Input
       !>
@@ -5100,10 +5153,18 @@ contains
       !>        Typo in header example was corrected.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-      module procedure kdata
+      module subroutine kdata ( ctx, which, kind, file, filtyp, srcfil, handle, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, fndnwd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: which  !! Index of kernel to fetch from the list of kernels.
+      character(*), intent(in) :: kind  !! The kind of kernel to which fetches are limited.
+      character(*), intent(out) :: file  !! The name of the kernel file.
+      character(*), intent(out) :: filtyp  !! The type of the kernel.
+      integer(ip), intent(out) :: handle  !! The handle attached to FILE.
+      character(*), intent(out) :: srcfil  !! Name of the source file used to load FILE.
+      logical, intent(out) :: found  !! .TRUE. if the specified file could be located.
       logical :: return
       character(1) :: norc
       character(lnsize) :: symbol
@@ -5250,7 +5311,7 @@ contains
 
       return
       end associate
-      end procedure kdata
+      end subroutine kdata
 
       !>## Detailed Input
       !>
@@ -5496,9 +5557,15 @@ contains
       !>        Updated the $Author_and_Institution section.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-      module procedure kinfo
+      module subroutine kinfo ( ctx, file, filtyp, srcfil, handle, found )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! Name of a kernel to fetch information for
+      character(*), intent(out) :: filtyp  !! The type of the kernel
+      integer(ip), intent(out) :: handle  !! The handle attached to FILE.
+      character(*), intent(out) :: srcfil  !! Name of the source file used to load FILE.
+      logical, intent(out) :: found  !! .TRUE. if the specified file could be located.
       logical :: return
       character(1) :: norc
       character(lnsize) :: symbol
@@ -5579,7 +5646,7 @@ contains
 
       return
       end associate
-      end procedure kinfo
+      end subroutine kinfo
 
       !> The length of the longest file name among the kernels loaded
       !> through FURNSH (at least 1).
@@ -5598,9 +5665,17 @@ contains
 
       !> The data of the nth kernel of a kind loaded through FURNSH, with
       !> file names of any length (PEPPER).
-      module procedure kernel_data
+      module subroutine kernel_data ( ctx, which, kind, file, filtyp, source, handle, found )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: which  !! the index of the kernel among those of KIND
+      character(*), intent(in) :: kind  !! the kinds of kernel ('ALL', 'SPK', 'CK TEXT', ..., as [[kdata]])
+      character(:), allocatable, intent(out) :: file  !! the file name (empty if not found)
+      character(:), allocatable, intent(out) :: filtyp  !! the kernel type: SPK, CK, PCK, DSK, EK, TEXT or META
+      character(:), allocatable, intent(out) :: source  !! the meta-kernel it was loaded from (empty if loaded directly)
+      integer(ip), intent(out) :: handle  !! its handle (0 for a text or meta-kernel)
+      logical, intent(out) :: found  !! a kernel was found
       character(len=longest_kernel_name(ctx)) :: f
       character(len=longest_kernel_name(ctx)) :: s
       character(8) :: t
@@ -5608,19 +5683,25 @@ contains
       file   = trim ( f )
       filtyp = trim ( t )
       source = trim ( s )
-      end procedure kernel_data
+      end subroutine kernel_data
 
       !> The data of a kernel loaded through FURNSH, with file names of any
       !> length (PEPPER).
-      module procedure kernel_info
+      module subroutine kernel_info ( ctx, file, filtyp, source, handle, found )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the file name, as loaded
+      character(:), allocatable, intent(out) :: filtyp  !! the kernel type: SPK, CK, PCK, DSK, EK, TEXT or META
+      character(:), allocatable, intent(out) :: source  !! the meta-kernel it was loaded from (empty if loaded directly)
+      integer(ip), intent(out) :: handle  !! its handle (0 for a text or meta-kernel)
+      logical, intent(out) :: found  !! the file is loaded
       character(len=longest_kernel_name(ctx)) :: s
       character(8) :: t
       call kinfo ( ctx, file, t, s, handle, found )
       filtyp = trim ( t )
       source = trim ( s )
-      end procedure kernel_info
+      end subroutine kernel_info
 
       !>## Detailed Input
       !>
@@ -5803,9 +5884,10 @@ contains
       !>        script to create a link for the "POOL" substring.
       !>
       !>-    SPICELIB Version 1.0.0, 15-NOV-2006 (NJB)
-      module procedure kclear
+      module subroutine kclear ( ctx )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
       character(1) :: norc
       character(lnsize) :: symbol
       character(msgsiz) :: nofile
@@ -5925,7 +6007,7 @@ contains
 
       return
       end associate
-      end procedure kclear
+      end subroutine kclear
 
       !>## Detailed Input
       !>
@@ -6368,9 +6450,11 @@ contains
       !>        introduced.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUL-1999 (WLT)
-      module procedure unload
+      module subroutine unload ( ctx, file )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! The name of a kernel to unload.
       character(1) :: norc
       character(lnsize) :: symbol
       character(msgsiz) :: nofile
@@ -6829,6 +6913,6 @@ contains
 
       return
       end associate
-      end procedure unload
+      end subroutine unload
 
 end submodule pepper_keeper

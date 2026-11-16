@@ -485,9 +485,14 @@ contains
       !>        Minor edits to $Procedure; clean trailing whitespace.
       !>
       !>-    SPICELIB Version 1.0.0, 30-NOV-2007 (NJB)
-      module procedure pckcov
+      module subroutine pckcov ( ctx, pckfnm, idcode, cover )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: pckfnm  !! Name of PCK file.
+      integer(ip), intent(in) :: idcode  !! Class ID code of PCK reference frame.
+      real(wp), intent(inout) :: cover  ( lbcell : * )  !! Window giving coverage in PCKFNM for IDCODE.
       real(wp), allocatable :: intervals(:,:)
       integer(ip) :: k
 !
@@ -500,11 +505,15 @@ contains
          if ( ctx%failed() ) return
          call wninsd ( ctx, intervals(1,k), intervals(2,k), cover )
       end do
-      end procedure pckcov
+      end subroutine pckcov
 
-      module procedure pck_coverage
+      module subroutine pck_coverage ( ctx, file, frame, intervals )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the binary PCK file
+      integer(ip), intent(in) :: frame  !! the frame class ID code
+      real(wp), allocatable, intent(out) :: intervals(:,:)  !! the coverage, shape (2, n) (n = 0 after an error)
       type(interval_list) :: window  ! the coverage being built
 
 
@@ -629,7 +638,7 @@ contains
 
       if ( .not. ctx%failed() ) call window%window ( intervals )
       return
-      end procedure pck_coverage
+      end subroutine pck_coverage
 
       !>## Abstract
       !>
@@ -740,9 +749,15 @@ contains
       !>        Fixed bug which incorrectly modded DW by two pi.
       !>
       !>-    SPICELIB Version 1.0.0, 11-MAR-1994 (KSZ)
-      module procedure pckeul
+      module subroutine pckeul ( ctx, body, et, found, ref, eulang )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! ID code of body
+      real(wp), intent(in) :: et  !! Epoch of transformation
+      logical, intent(out) :: found  !! .TRUE. if ET, BODY found in a PCK file
+      character(*), intent(out) :: ref  !! Name of inertial ref. frame of state
+      real(wp), intent(out) :: eulang   ( 6 )  !! Euler angles and their derivatives.
 
 !
 !     Parameters
@@ -820,7 +835,7 @@ contains
       end if
 
       return
-      end procedure pckeul
+      end subroutine pckeul
 
       !>## Detailed Input
       !>
@@ -1082,9 +1097,13 @@ contains
       !>        Minor edits to $Procedure; clean trailing whitespace.
       !>
       !>-    SPICELIB Version 1.0.0, 01-DEC-2007 (NJB)
-      module procedure pckfrm
+      module subroutine pckfrm ( ctx, pckfnm, ids )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: pckfnm  !! Name of PCK file.
+      integer(ip), intent(inout) :: ids    ( lbcell : * )  !! Set of frame class ID codes of frames in PCK file.
       integer(ip), allocatable :: list(:)
       integer(ip) :: k
 !
@@ -1097,12 +1116,15 @@ contains
          if ( ctx%failed() ) return
          call insrti ( ctx, list(k), ids )
       end do
-      end procedure pckfrm
+      end subroutine pckfrm
 
-      module procedure pck_frames
+      module subroutine pck_frames ( ctx, file, ids )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: append_id, sort_unique
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the binary PCK file
+      integer(ip), allocatable, intent(out) :: ids(:)  !! the frame class ID codes (size 0 after an error)
       integer(ip), allocatable :: list(:)  ! the IDs found (unsorted, with duplicates)
       integer(ip) :: nlist  ! the number of IDs in LIST
 
@@ -1229,7 +1251,7 @@ contains
          call sort_unique ( ids )
       end if
       return
-      end procedure pck_frames
+      end subroutine pck_frames
 
       !>## Detailed Input
       !>
@@ -1587,12 +1609,19 @@ contains
       !>     Initial values
       !>
       !>     Standard SPICE error handling.
-      module procedure bodeul
+      module subroutine bodeul ( ctx, body, et, ra, dec, w, lambda )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, j2000, rpd, spd, twopi
       use pepper_math, only: mxm, vdotg
       use pepper_strings, only: repmi_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! ID code of body.
+      real(wp), intent(in) :: et  !! Epoch of transformation.
+      real(wp), intent(out) :: ra  !! Right ascension of the (IAU) north pole.
+      real(wp), intent(out) :: dec  !! Declination of the (IAU) north pole of the body.
+      real(wp), intent(out) :: w  !! Prime meridian rotation angle.
+      real(wp), intent(out) :: lambda  !! Angle between the prime meridian and longitude of longest axis.
       ! PEPPER: work arrays of the kernel variables' sizes (SPICELIB: saved
       ! arrays of MAXANG, 200, values)
       real(wp), allocatable :: ac(:), dc(:), wc(:), tcoef(:), sinth(:), costh(:)
@@ -2073,6 +2102,6 @@ contains
 
       return
       end associate
-      end procedure bodeul
+      end subroutine bodeul
 
 end submodule pepper_pck_api

@@ -320,9 +320,13 @@ contains
       !>        rather than CARDD.
       !>
       !>-    SPICELIB Version 1.0.0, 30-DEC-2004 (NJB)
-      module procedure ckobj
+      module subroutine ckobj ( ctx, ckfnm, ids )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: ckfnm  !! Name of CK file.
+      integer(ip), intent(inout) :: ids ( lbcell : * )  !! Set of ID codes of objects in CK file.
       integer(ip), allocatable :: list(:)
       integer(ip) :: k
 !
@@ -335,12 +339,15 @@ contains
          if ( ctx%failed() ) return
          call insrti ( ctx, list(k), ids )
       end do
-      end procedure ckobj
+      end subroutine ckobj
 
-      module procedure ck_objects
+      module subroutine ck_objects ( ctx, file, ids )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: append_id, sort_unique
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the CK file
+      integer(ip), allocatable, intent(out) :: ids(:)  !! the ID codes (size 0 after an error)
       integer(ip), allocatable :: list(:)  ! the IDs found (unsorted, with duplicates)
       integer(ip) :: nlist  ! the number of IDs in LIST
 
@@ -483,7 +490,7 @@ contains
          call sort_unique ( ids )
       end if
       return
-      end procedure ck_objects
+      end subroutine ck_objects
 
       !>## Detailed Input
       !>
@@ -1243,12 +1250,20 @@ contains
       !>     Initial values.
       !>
       !>     Standard SPICE error handling.
-      module procedure ckgp
+      module subroutine ckgp ( ctx, inst, sclkdp, tol, ref, cmat, clkout, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxm
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: inst  !! NAIF ID of instrument, spacecraft, or structure.
+      real(wp), intent(in) :: sclkdp  !! Encoded spacecraft clock time.
+      real(wp), intent(in) :: tol  !! Time tolerance.
+      character(*), intent(in) :: ref  !! Reference frame.
+      real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix pointing data.
+      real(wp), intent(out) :: clkout  !! Output encoded spacecraft clock time.
+      logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
       character(idlen) :: segid
       real(wp) :: av     ( 3 )
       real(wp) :: dcd    ( ndc  )
@@ -1394,7 +1409,7 @@ contains
 
       return
       end associate
-      end procedure ckgp
+      end subroutine ckgp
 
       !>## Detailed Input
       !>
@@ -2244,12 +2259,21 @@ contains
       !>     Initial values.
       !>
       !>     Standard SPICE error handling.
-      module procedure ckgpav
+      module subroutine ckgpav ( ctx, inst, sclkdp, tol, ref, cmat, av, clkout, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mtxv, mxm, xf2rav
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: inst  !! NAIF ID of instrument, spacecraft, or structure.
+      real(wp), intent(in) :: sclkdp  !! Encoded spacecraft clock time.
+      real(wp), intent(in) :: tol  !! Time tolerance.
+      character(*), intent(in) :: ref  !! Reference frame.
+      real(wp), intent(out) :: cmat   ( 3, 3 )  !! C-matrix pointing data.
+      real(wp), intent(out) :: av     ( 3    )  !! Angular velocity vector.
+      real(wp), intent(out) :: clkout  !! Output encoded spacecraft clock time.
+      logical, intent(out) :: found  !! .TRUE. when requested pointing is available.
       character(idlen) :: segid
       real(wp) :: dcd      ( ndc  )
       real(wp) :: descr    ( nc   )
@@ -2509,7 +2533,7 @@ contains
 
       return
       end associate
-      end procedure ckgpav
+      end subroutine ckgpav
 
       !>## Abstract
       !>
@@ -2628,10 +2652,18 @@ contains
       !>-    SUPPORT Version 1.0.0, 03-JAN-2005 (WLT)(NJB)(BVS)
       !>
       !>        Initial version.
-      module procedure zzckcv01
+      module subroutine zzckcv01 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
+      integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
+      integer(ip), intent(in) :: arrend  !! Ending DAF address
+      integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+      real(wp), intent(in) :: tol  !! Tolerance in ticks.
+      character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+      type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
 
 
       integer(ip), parameter :: bufsiz = 100
@@ -2815,7 +2847,7 @@ contains
       end do
 
       return
-      end procedure zzckcv01
+      end subroutine zzckcv01
 
       !>## Abstract
       !>
@@ -2924,10 +2956,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 03-JAN-2005 (NJB) (FST) (WLT) (BVS)
-      module procedure zzckcv02
+      module subroutine zzckcv02 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
+      integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
+      integer(ip), intent(in) :: arrend  !! Ending DAF address
+      integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+      real(wp), intent(in) :: tol  !! Tolerance in ticks.
+      character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+      type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
 
 
       integer(ip), parameter :: psize = 8
@@ -3055,7 +3095,7 @@ contains
       end do
 
       return
-      end procedure zzckcv02
+      end subroutine zzckcv02
 
       !>## Abstract
       !>
@@ -3167,10 +3207,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 03-JAN-2005 (NJB) (FST) (WLT)
-      module procedure zzckcv03
+      module subroutine zzckcv03 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
+      integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
+      integer(ip), intent(in) :: arrend  !! Ending DAF address
+      integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+      real(wp), intent(in) :: tol  !! Tolerance in ticks.
+      character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+      type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       real(wp) :: finish_1(1)  !! one-element copy of finish (array argument)
       real(wp) :: tick_1(1)  !! one-element copy of tick (array argument)
       real(wp) :: start_1(1)  !! one-element copy of start (array argument)
@@ -3443,7 +3491,7 @@ contains
       end do
 
       return
-      end procedure zzckcv03
+      end subroutine zzckcv03
 
       !>## Abstract
       !>
@@ -3551,12 +3599,20 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 30-DEC-2004 (NJB) (FST)
-      module procedure zzckcv04
+      module subroutine zzckcv04 ( ctx, handle, arrbeg, arrend, sclkid, tol, timsys, schedl )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       use pepper_strings, only: eqstr
       use pepper_inc_ckparam
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
+      integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
+      integer(ip), intent(in) :: arrend  !! Ending DAF address
+      integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+      real(wp), intent(in) :: tol  !! Tolerance in ticks.
+      character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+      type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
 
 
 
@@ -3686,7 +3742,7 @@ contains
       end do
 
       return
-      end procedure zzckcv04
+      end subroutine zzckcv04
 
       !>## Abstract
       !>
@@ -3825,11 +3881,20 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 07-JAN-2005 (NJB) (FST) (WLT)
-      module procedure zzckcv05
+      module subroutine zzckcv05 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, schedl )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       use pepper_inc_ck05
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access
+      integer(ip), intent(in) :: arrbeg  !! Beginning DAF address
+      integer(ip), intent(in) :: arrend  !! Ending DAF address
+      integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+      real(wp), intent(in) :: dc     ( 2 )  !! D.p. component of CK segment descriptor.
+      real(wp), intent(in) :: tol  !! Tolerance in ticks.
+      character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+      type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       real(wp) :: finish_1(1)  !! one-element copy of finish (array argument)
       real(wp) :: tick_1(1)  !! one-element copy of tick (array argument)
       real(wp) :: start_1(1)  !! one-element copy of start (array argument)
@@ -4104,7 +4169,7 @@ contains
       end do
 
       return
-      end procedure zzckcv05
+      end subroutine zzckcv05
 
       !>## Abstract
       !>
@@ -4245,11 +4310,20 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-FEB-2014 (NJB) (BVS) (FST) (WLT)
-      module procedure zzckcv06
+      module subroutine zzckcv06 ( ctx, handle, arrbeg, arrend, sclkid, dc, tol, timsys, schedl )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       use pepper_inc_ck06
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a C-kernel open for read access.
+      integer(ip), intent(in) :: arrbeg  !! Beginning DAF address.
+      integer(ip), intent(in) :: arrend  !! Ending DAF address.
+      integer(ip), intent(in) :: sclkid  !! ID of SCLK associated with segment.
+      real(wp), intent(in) :: dc     ( 2 )  !! D.p. component of CK segment descriptor.
+      real(wp), intent(in) :: tol  !! Tolerance in ticks.
+      character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+      type(interval_list), intent(inout) :: schedl  !! The window/schedule to which the segment's coverage is added (PEPPER: an [[interval_list]], not a cell)
       real(wp) :: lstepc_1(1)  !! one-element copy of lstepc (array argument)
 
 
@@ -4478,7 +4552,7 @@ contains
       end do
 
       return
-      end procedure zzckcv06
+      end subroutine zzckcv06
 
       !>## Detailed Input
       !>
@@ -5103,9 +5177,18 @@ contains
       !>        rather than CARDD.
       !>
       !>-    SPICELIB Version 1.0.0, 07-JAN-2005 (NJB)
-      module procedure ckcov
+      module subroutine ckcov ( ctx, ckfnm, idcode, needav, level, tol, timsys, cover )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: ckfnm  !! Name of CK file.
+      integer(ip), intent(in) :: idcode  !! ID code of object.
+      logical, intent(in) :: needav  !! Flag indicating whether angular velocity is needed.
+      character(*), intent(in) :: level  !! Coverage level: 'SEGMENT' OR 'INTERVAL'.
+      real(wp), intent(in) :: tol  !! Tolerance in ticks.
+      character(*), intent(in) :: timsys  !! Time system used to represent coverage.
+      real(wp), intent(inout) :: cover ( lbcell : * )  !! Window giving coverage for IDCODE.
       real(wp), allocatable :: intervals(:,:)
       integer(ip) :: k
 !
@@ -5118,12 +5201,20 @@ contains
          if ( ctx%failed() ) return
          call wninsd ( ctx, intervals(1,k), intervals(2,k), cover )
       end do
-      end procedure ckcov
+      end subroutine ckcov
 
-      module procedure ck_coverage
+      module subroutine ck_coverage ( ctx, file, inst, needav, level, tol, timsys, intervals )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the CK file
+      integer(ip), intent(in) :: inst  !! the ID code of the object (instrument or structure)
+      logical, intent(in) :: needav  !! only the coverage with angular velocity
+      character(*), intent(in) :: level  !! 'SEGMENT' or 'INTERVAL'
+      real(wp), intent(in) :: tol  !! the tolerance in ticks by which intervals are expanded
+      character(*), intent(in) :: timsys  !! the time system of the result: 'TDB' or 'SCLK'
+      real(wp), allocatable, intent(out) :: intervals(:,:)  !! the coverage, shape (2, n) (n = 0 after an error)
       type(interval_list) :: window  ! the coverage being built
 
 
@@ -5452,6 +5543,6 @@ contains
 
       if ( .not. ctx%failed() ) call window%window ( intervals )
       return
-      end procedure ck_coverage
+      end subroutine ck_coverage
 
 end submodule pepper_ck_api

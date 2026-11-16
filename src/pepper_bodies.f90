@@ -2212,10 +2212,13 @@ contains
       !>
       !>        Removed:
       !>             -172   SLCOMB
-      module procedure zzidmap
+      module subroutine zzidmap ( ctx, bltcod, bltnam )
       use pepper_kinds, only: ip
       use pepper_inc_zzbodtrn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: bltcod(nperm)  !! List of default integer ID codes.
+      character(maxl), intent(out) :: bltnam(nperm)  !! List of default names.
 
 !
 !     A script generates this file. Do not edit by hand.
@@ -4300,7 +4303,7 @@ contains
       bltnam(692) =  'DSS-69'
 
       return
-      end procedure zzidmap
+      end subroutine zzidmap
 
       !>## Abstract
       !>
@@ -4367,9 +4370,12 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 02-AUG-2013 (BVS)
-      module procedure zzhashi
+      module integer(ip) function zzhashi ( ctx, n, m )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! An integer number.
+      integer(ip), intent(in) :: m  !! Divisor used for the hash function
 
 !
 !     Check divisor.
@@ -4392,7 +4398,7 @@ contains
       zzhashi = mod(abs(n),m) + 1
 
       return
-      end procedure zzhashi
+      end function zzhashi
 
       !>## Abstract
       !>
@@ -4464,11 +4470,16 @@ contains
       !>        is greater than zero.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
-      module procedure zzhscini
+      module subroutine zzhscini ( ctx, hashsz, hedlst, collst )
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: hashsz  !! Hash size
+      integer(ip), intent(inout) :: hedlst  (          * )  !! Hash head node pointer list
+      integer(ip), intent(inout) :: collst  ( lbpool : * )  !! Hash node collision list
       logical :: return
       integer(ip) :: i
       integer(ip) :: lookat
@@ -4506,7 +4517,7 @@ contains
       end if
 
       return
-      end procedure zzhscini
+      end subroutine zzhscini
 
       !>## Abstract
       !>
@@ -4574,11 +4585,19 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
-      module procedure zzhscadd
+      module subroutine zzhscadd ( ctx, hedlst, collst, items, item, itemat, new )
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(inout) :: hedlst  (          * )  !! Hash head node pointer list
+      integer(ip), intent(inout) :: collst  ( lbpool : * )  !! Hash node collision list
+      character(*), intent(inout) :: items   (          * )  !! Hash item list
+      character(*), intent(in) :: item  !! Item to be checked for/added
+      integer(ip), intent(out) :: itemat  !! Item index in node collision and item lists
+      logical, intent(out) :: new  !! Flag indicting if item was added
       integer(ip) :: i
       integer(ip) :: lookat
       integer(ip) :: node
@@ -4725,7 +4744,7 @@ contains
       end if
 
       return
-      end procedure zzhscadd
+      end subroutine zzhscadd
 
       !>## Abstract
       !>
@@ -4785,11 +4804,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
-      module procedure zzhscchk
+      module subroutine zzhscchk ( ctx, hedlst, collst, items, item, itemat )
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: hedlst  (          * )  !! Hash head node pointer list
+      integer(ip), intent(in) :: collst  ( lbpool : * )  !! Hash node collision list
+      character(*), intent(in) :: items   (          * )  !! Hash item list
+      character(*), intent(in) :: item  !! Item to find
+      integer(ip), intent(out) :: itemat  !! Item index in node collision and item lists
       integer(ip) :: i
       integer(ip) :: lookat
       integer(ip) :: node
@@ -4839,7 +4865,7 @@ contains
       end if
 
       return
-      end procedure zzhscchk
+      end subroutine zzhscchk
 
       !>## Abstract
       !>
@@ -4894,11 +4920,15 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
-      module procedure zzhscavl
+      module subroutine zzhscavl ( ctx, collst, avail )
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: collst  ( lbpool : * )  !! Hash node collision list
+      integer(ip), intent(out) :: avail  !! Room available in the hash
       logical :: return
       integer(ip) :: i
       integer(ip) :: lookat
@@ -4908,7 +4938,7 @@ contains
       avail = collst ( sizidx ) - collst ( freidx ) + 1
 
       return
-      end procedure zzhscavl
+      end subroutine zzhscavl
 
       !>## Abstract
       !>
@@ -4974,11 +5004,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
-      module procedure zzhscinf
+      module subroutine zzhscinf ( ctx, hedlst, collst, items, item, avail )
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: hedlst  (          * )  !! Hash head node pointer list
+      integer(ip), intent(in) :: collst  ( lbpool : * )  !! Hash node collision list
+      character(*), intent(in) :: items   (          * )  !! Hash item list
+      character(*), intent(in) :: item  !! parameter to report
+      integer(ip), intent(out) :: avail  !! parameter Value
       logical :: return
       integer(ip) :: i
       integer(ip) :: lookat
@@ -5057,7 +5094,7 @@ contains
       end if
 
       return
-      end procedure zzhscinf
+      end subroutine zzhscinf
 
       !>## Abstract
       !>
@@ -5128,9 +5165,14 @@ contains
       !>        than zero.
       !>
       !>-    SPICELIB Version 1.0.0, 01-AUG-2013 (BVS)
-      module procedure zzhsiini
+      module subroutine zzhsiini ( ctx, hashsz, hedlst, collst )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: hashsz  !! Hash size
+      integer(ip), intent(inout) :: hedlst  (          * )  !! Hash head node pointer list
+      integer(ip), intent(inout) :: collst  ( lbpool : * )  !! Hash node collision list
       logical :: return
       integer(ip) :: i
       integer(ip) :: lookat
@@ -5161,7 +5203,7 @@ contains
       if ( ctx%failed() ) return
 
       return
-      end procedure zzhsiini
+      end subroutine zzhsiini
 
       !>## Abstract
       !>
@@ -5233,9 +5275,17 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 01-AUG-2013 (BVS)
-      module procedure zzhsiadd
+      module subroutine zzhsiadd ( ctx, hedlst, collst, items, item, itemat, new )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(inout) :: hedlst  (          * )  !! Hash head node pointer list
+      integer(ip), intent(inout) :: collst  ( lbpool : * )  !! Hash node collision list
+      integer(ip), intent(inout) :: items   (          * )  !! Hash item list
+      integer(ip), intent(in) :: item  !! Item to be checked for/added
+      integer(ip), intent(out) :: itemat  !! Item index in node collision and item lists
+      logical, intent(out) :: new  !! Flag indicting if item was added
       integer(ip) :: i
       integer(ip) :: lookat
       integer(ip) :: node
@@ -5391,7 +5441,7 @@ contains
       end if
 
       return
-      end procedure zzhsiadd
+      end subroutine zzhsiadd
 
       !>## Abstract
       !>
@@ -5458,9 +5508,16 @@ contains
       !>        (ZZHSIADD -> ZZHSICHK).
       !>
       !>-    SPICELIB Version 1.0.0, 01-AUG-2013 (BVS)
-      module procedure zzhsichk
+      module subroutine zzhsichk ( ctx, hedlst, collst, items, item, itemat )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: hedlst  (          * )  !! Hash head node pointer list
+      integer(ip), intent(in) :: collst  ( lbpool : * )  !! Hash node collision list
+      integer(ip), intent(in) :: items   (          * )  !! Hash item list
+      integer(ip), intent(in) :: item  !! Item to find
+      integer(ip), intent(out) :: itemat  !! Item index in node collision and item lists
       integer(ip) :: i
       integer(ip) :: lookat
       integer(ip) :: node
@@ -5519,7 +5576,7 @@ contains
       end if
 
       return
-      end procedure zzhsichk
+      end subroutine zzhsichk
 
       !>## Abstract
       !>
@@ -5574,9 +5631,13 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 01-AUG-2013 (BVS)
-      module procedure zzhsiavl
+      module subroutine zzhsiavl ( ctx, collst, avail )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: collst  ( lbpool : * )  !! Hash node collision list
+      integer(ip), intent(out) :: avail  !! Room available in the hash
       logical :: return
       integer(ip) :: i
       integer(ip) :: lookat
@@ -5586,7 +5647,7 @@ contains
       avail = collst ( sizidx ) - collst ( freidx ) + 1
 
       return
-      end procedure zzhsiavl
+      end subroutine zzhsiavl
 
       !>## Abstract
       !>
@@ -5652,9 +5713,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JUL-2013 (BVS)
-      module procedure zzhsiinf
+      module subroutine zzhsiinf ( ctx, hedlst, collst, items, param, avail )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: hedlst  (          * )  !! Hash head node pointer list
+      integer(ip), intent(in) :: collst  ( lbpool : * )  !! Hash node collision list
+      integer(ip), intent(in) :: items   (          * )  !! Hash item list
+      character(*), intent(in) :: param  !! parameter to report
+      integer(ip), intent(out) :: avail  !! parameter Value
       logical :: return
       integer(ip) :: i
       integer(ip) :: lookat
@@ -5733,7 +5801,7 @@ contains
       end if
 
       return
-      end procedure zzhsiinf
+      end subroutine zzhsiinf
 
       !>## Abstract
       !>
@@ -5910,10 +5978,31 @@ contains
       !>
       !>        Renamed to ZZBODINI and filled out the comments on what this
       !>        routine does and how it works.
-      module procedure zzbodini
+      module subroutine zzbodini ( ctx, names, nornam, codes, nvals, maxval, bnmlst, bnmpol, bnmnms, bnmidx, bidlst, bidpol, bidids, bididx )
       use pepper_kinds, only: ip
       use pepper_inc_zzbodtrn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      character(maxl), intent(in) :: names  (          * )  !! Array of names
+      character(maxl), intent(in) :: nornam (          * )  !! Array of normalized names
+      integer(ip), intent(in) :: codes  (          * )  !! Array of ID codes for NAMES/NORNAM
+      integer(ip), intent(in) :: nvals  !! Length of NAMES, NORNAM, and CODES arrays
+      integer(ip), intent(in) :: maxval  !! Size of the hash arrays
+      integer(ip), intent(out) :: bnmlst (          * )  !! Body name-based hash head node
+                                                         !! pointer list
+      integer(ip), intent(out) :: bnmpol ( lbpool : * )  !! Body name-based hash node collision
+                                                         !! list
+      character(maxl), intent(out) :: bnmnms (          * )  !! Body name-based hash item list
+      integer(ip), intent(out) :: bnmidx (          * )  !! Body name-based hash index storage
+                                                         !! array
+      integer(ip), intent(out) :: bidlst (          * )  !! Body ID-based hash head node pointer
+                                                         !! list
+      integer(ip), intent(out) :: bidpol ( lbpool : * )  !! Body ID-based hash node collision
+                                                         !! list
+      integer(ip), intent(out) :: bidids (          * )  !! Body ID-based hash item list
+      integer(ip), intent(out) :: bididx (          * )  !! Body ID-based hash index storage
+                                                         !! array
 
 
       integer(ip) :: i
@@ -5993,7 +6082,7 @@ contains
       end do
 
       return
-      end procedure zzbodini
+      end subroutine zzbodini
 
       !>## Abstract
       !>
@@ -6004,11 +6093,13 @@ contains
       !>     This routine processes the kernel pool vectors NAIF_BODY_NAME
       !>     and NAIF_BODY_CODE into the lists and hashes required by ZZBODTRN
       !>     to successfully compute code-name mappings.
-      module procedure zzbodker
+      module subroutine zzbodker ( ctx, ker )
       use pepper_kinds, only: ip
       use pepper_strings, only: ljucrs
       use pepper_inc_zzbodtrn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      type(body_names), intent(inout) :: ker  !! the names and codes from the kernel pool
       integer(ip), parameter :: keylen = 32
       character(keylen), parameter :: nbc = 'NAIF_BODY_CODE'
       character(keylen), parameter :: nbn = 'NAIF_BODY_NAME'
@@ -6108,7 +6199,7 @@ contains
             call ljucrs ( 1, name, buf )
             nor = trim ( buf )
          end subroutine normalize
-      end procedure zzbodker
+      end subroutine zzbodker
 
       !>## Abstract
       !>
@@ -6185,11 +6276,17 @@ contains
       !>
       !>-    SPICELIB Version 2.0.0, 23-AUG-2002 (FST)
 
-      module procedure zzbodget
+      module subroutine zzbodget ( ctx, room, names, nornam, codes, nvals )
       use pepper_kinds, only: ip
       use pepper_strings, only: cmprss_inplace, ucase_inplace
       use pepper_inc_zzbodtrn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: room  !! Space available in NAMES, NORNAM, and CODES.
+      character(*), intent(out) :: names  ( * )  !! Array of built-in body names.
+      character(*), intent(out) :: nornam ( * )  !! Array of normalized built-in body names.
+      integer(ip), intent(out) :: codes  ( * )  !! Array of built-in ID codes for NAMES/NORNAM.
+      integer(ip), intent(out) :: nvals  !! Length of NAMES, NORNAM, CODES, and ORDNOM arrays.
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzbodblt ) ) then
          allocate ( ctx%zzbodblt )
@@ -6250,7 +6347,7 @@ contains
 
       return
       end associate
-      end procedure zzbodget
+      end subroutine zzbodget
 
       !>## Detailed Input
       !>
@@ -6370,13 +6467,16 @@ contains
       !>        in the umbrella.
       !>
       !>-    SPICELIB Version 1.0.0, 26-NOV-2001 (EDW)
-      module procedure zzbodlst
+      module subroutine zzbodlst ( ctx, device, reqst )
       use pepper_kinds, only: ip
       use pepper_arrays, only: orderc, orderi
       use pepper_strings, only: eqstr, intstr, ucase
       use pepper_output, only: wrline
       use pepper_inc_zzbodtrn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: device  !! Device name to receive the output.
+      character(*), intent(in) :: reqst  !! Data list name to output.
       character(2*maxl+3) :: zzline
       character(4) :: zzrqst
       integer(ip) :: zzocod ( nperm )
@@ -6452,7 +6552,7 @@ contains
 
       return
       end associate
-      end procedure zzbodlst
+      end subroutine zzbodlst
 
       !>## Abstract
       !>
@@ -6634,12 +6734,16 @@ contains
       !>-    GLLSPICE Version 1.0.0, 28-JUN-1990 (JEM)
       !>
       !>     Standard SPICE error handling.
-      module procedure zzbodn2c
+      module subroutine zzbodn2c ( ctx, name, code, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: ljucrs
       use pepper_inc_zzbodtrn
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Body name to be translated.
+      integer(ip), intent(out) :: code  !! Integer code for that body.
+      logical, intent(out) :: found  !! True if translated, otherwise false.
       character(:), allocatable :: tmpnam
       logical :: lupdte
 !     PEPPER: apply the body names defined through other contexts.
@@ -6788,15 +6892,19 @@ contains
 
       return
       end associate
-      end procedure zzbodn2c
+      end subroutine zzbodn2c
 
-      module procedure zzbodc2n
+      module subroutine zzbodc2n ( ctx, code, name, found )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: name  !! Common name for the body identified by CODE.
+      integer(ip), intent(in) :: code  !! Integer code to be translated.
+      logical, intent(out) :: found  !! True if translated, otherwise false.
       character(:), allocatable :: full
       call body_name_of ( ctx, code, full, found )
       if ( found ) name = full
-      end procedure zzbodc2n
+      end subroutine zzbodc2n
 
 !> PEPPER: the name of a body from its ID code, of any length (the body of
 !> [[zzbodc2n]], which copies the name into its fixed-length argument).
@@ -6980,11 +7088,15 @@ contains
       !>-    GLLSPICE Version 1.0.0, 28-JUN-1990 (JEM)
       !>
       !>     Standard SPICE error handling.
-      module procedure body_name_of
+      module subroutine body_name_of ( ctx, code, name, found )
       use pepper_kinds, only: ip
       use pepper_inc_zzbodtrn
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: code  !! the body ID code
+      character(:), allocatable, intent(out) :: name  !! the body name (empty if not found)
+      logical, intent(out) :: found  !! the code has a name
       logical :: lupdte
       integer(ip) :: j
 !     PEPPER: apply the body names defined through other contexts.
@@ -7166,7 +7278,7 @@ contains
 
       return
       end associate
-      end procedure body_name_of
+      end subroutine body_name_of
 
       !> Add a name/code pair to this context's table of defined names (the
       !> code of SPICELIB's [[zzboddef]]; zzboddef also records it in the instance).
@@ -7659,11 +7771,12 @@ contains
       !>-    SPICELIB Version 1.0.0, 16-JUN-2002 (EDW)
       !>
       !>     Standard SPICE error handling.
-      module procedure zzbodkik
+      module subroutine zzbodkik ( ctx )
       use pepper_kinds, only: ip
       use pepper_inc_zzbodtrn
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
       logical :: lupdte
       if ( .not. allocated ( ctx%zzbodtrn ) ) then
          allocate ( ctx%zzbodtrn )
@@ -7760,7 +7873,7 @@ contains
 
       return
       end associate
-      end procedure zzbodkik
+      end subroutine zzbodkik
 
       !> Reset this context's table of defined names to the built-in names
       !> (the code of SPICELIB's [[zzbodrst]]).
@@ -8064,11 +8177,15 @@ contains
       !>-    SPICELIB Version 5.0.0, 16-SEP-2013 (BVS)
       !>
       !>     Standard SPICE error handling.
-      module procedure zzbctrck
+      module subroutine zzbctrck ( ctx, usrctr, update )
       use pepper_kinds, only: ip
       use pepper_inc_zzbodtrn
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! ZZBODTRN state counter tracked by
+                                                          !! the caller
+      logical, intent(out) :: update  !! Flag indicating if input counter was updated
       logical :: lupdte
 !     PEPPER: apply the body names defined through other contexts.
       call sync_boddefs ( ctx )
@@ -8124,7 +8241,7 @@ contains
 
       return
       end associate
-      end procedure zzbctrck
+      end subroutine zzbctrck
 
       !>## Detailed Input
       !>
@@ -8334,9 +8451,13 @@ contains
       !>
       !>        This subroutine simply calls the private subroutine ZZBODN2C
       !>        to perform its job.
-      module procedure bodn2c
+      module subroutine bodn2c ( ctx, name, code, found )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Body name to be translated into a SPICE ID code.
+      integer(ip), intent(out) :: code  !! SPICE integer ID code for the named body.
+      logical, intent(out) :: found  !! .TRUE. if translated, otherwise false.
 
 !     Standard SPICELIB error handling.
 !
@@ -8349,7 +8470,7 @@ contains
 !
       return
 
-      end procedure bodn2c
+      end subroutine bodn2c
 
       !>## Detailed Input
       !>
@@ -8541,9 +8662,13 @@ contains
       !>
       !>        This subroutine simply calls the private subroutine ZZBODC2N
       !>        to perform its job.
-      module procedure bodc2n
+      module subroutine bodc2n ( ctx, code, name, found )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: code  !! Integer ID code to be translated into a name.
+      character(*), intent(out) :: name  !! A common name for the body identified by CODE.
+      logical, intent(out) :: found  !! .TRUE. if translated, otherwise false.
 
 !
 !     Standard SPICELIB error handling.
@@ -8557,7 +8682,7 @@ contains
 !
       return
 
-      end procedure bodc2n
+      end subroutine bodc2n
 
       !>## Detailed Input
       !>
@@ -8758,10 +8883,14 @@ contains
       !>        Corrected the contents of the $Required_Reading section.
       !>
       !>-    SPICELIB Version 1.0.0, 23-JUL-2003 (CHA) (NJB) (KRG) (FST) (EDW)
-      module procedure bods2c
+      module subroutine bods2c ( ctx, name, code, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: beint, nparsi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! String to be translated to an ID code.
+      integer(ip), intent(out) :: code  !! Integer ID code corresponding to NAME.
+      logical, intent(out) :: found  !! Flag indicating whether translation succeeded.
 
       integer(ip), parameter :: msglen = 1
 
@@ -8811,7 +8940,7 @@ contains
 !
 
       return
-      end procedure bods2c
+      end subroutine bods2c
 
       !>## Detailed Input
       !>
@@ -8983,10 +9112,13 @@ contains
       !>        Minor header edits.
       !>
       !>-    SPICELIB Version 1.0.0, 10-APR-2010 (EDW)
-      module procedure bodc2s
+      module subroutine bodc2s ( ctx, code, name )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: code  !! Integer ID code to translate to a string.
+      character(*), intent(out) :: name  !! String corresponding to CODE.
 
       logical :: found
 
@@ -9023,7 +9155,7 @@ contains
 
       return
 
-      end procedure bodc2s
+      end subroutine bodc2s
 
       !>## Detailed Input
       !>
@@ -9249,9 +9381,12 @@ contains
       !>
       !>        This subroutine simply calls the private subroutine ZZBODDEF
       !>        to perform its job.
-      module procedure boddef
+      module subroutine boddef ( ctx, name, code )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Common name of some body.
+      integer(ip), intent(in) :: code  !! Integer code for that body.
 
 !
 !     Standard SPICELIB error handling.
@@ -9266,7 +9401,7 @@ contains
 !
       return
 
-      end procedure boddef
+      end subroutine boddef
 
       !>## Detailed Input
       !>
@@ -9366,10 +9501,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-      module procedure bodfnd
+      module logical function bodfnd ( ctx, body, item )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, suffix
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! ID code of body.
+      character(*), intent(in) :: item  !! Item to find ('RADII', 'NUT_AMP_RA', etc.).
 
       integer(ip), parameter :: vnmlen = 32
 
@@ -9412,7 +9550,7 @@ contains
       bodfnd = found
 
       return
-      end procedure bodfnd
+      end function bodfnd
 
       !>## Abstract
       !>
@@ -9614,10 +9752,19 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 21-SEP-2013 (BVS)
-      module procedure zzbods2c
+      module subroutine zzbods2c ( ctx, usrctr, savnam, savcde, savfnd, name, code, found )
       use pepper_kinds, only: ip
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: usrctr    ( ctrsiz )  !! ZZBODTRN state counter saved by the
+                                                          !! caller.
+      character(*), intent(inout) :: savnam  !! Body name saved by the caller.
+      integer(ip), intent(inout) :: savcde  !! Body ID code saved by the caller.
+      logical, intent(inout) :: savfnd  !! Translation success flag saved in the caller.
+      character(*), intent(in) :: name  !! Body name.
+      integer(ip), intent(out) :: code  !! Body ID code.
+      logical, intent(out) :: found  !! Translation success flag.
 
 !
 !     SPICE functions.
@@ -9680,7 +9827,7 @@ contains
 
       return
 
-      end procedure zzbods2c
+      end subroutine zzbods2c
 
       !>## Abstract
       !>
@@ -9922,10 +10069,17 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 20-OCT-2015 (NJB) (BVS) (WLT) (IMU)
-      module procedure zzbodvcd
+      module subroutine zzbodvcd ( ctx, bodyid, item, maxn, varctr, n, values )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! Body ID code.
+      character(*), intent(in) :: item  !! Item for which values are desired.
+      integer(ip), intent(in) :: maxn  !! Maximum number of values that may be returned.
+      integer(ip), intent(inout) :: varctr ( ctrsiz )  !! POOL state counter saved by the caller.
+      integer(ip), intent(inout) :: n  !! Number of values returned.
+      real(wp), intent(inout) :: values ( * )  !! Array of double precision values.
 
       logical :: update
 
@@ -9955,7 +10109,7 @@ contains
       end if
 
       return
-      end procedure zzbodvcd
+      end subroutine zzbodvcd
 
       !>## Abstract
       !>
@@ -10126,10 +10280,15 @@ contains
       !>        description for the variable BODY was incorrect.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-      module procedure bodvar
+      module subroutine bodvar ( ctx, body, item, dim, values )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, suffix
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! ID code of body.
+      character(*), intent(in) :: item  !! Item for which values are desired.
+      integer(ip), intent(out) :: dim  !! Number of values returned.
+      real(wp), intent(out) :: values  ( * )  !! Values.
 
       character(16) :: code
       character(32) :: varnam
@@ -10163,7 +10322,7 @@ contains
       end if
 
       return
-      end procedure bodvar
+      end subroutine bodvar
 
       !>## Detailed Input
       !>
@@ -10394,10 +10553,17 @@ contains
       !>        $Particulars section.
       !>
       !>-    SPICELIB Version 1.0.0, 24-OCT-2004 (NJB) (BVS) (WLT) (IMU)
-      module procedure bodvcd
+      module subroutine bodvcd ( ctx, bodyid, item, maxn, dim, values )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, suffix
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! Body ID code.
+      character(*), intent(in) :: item  !! Item for which values are desired. ('RADII',
+                                        !! 'NUT_PREC_ANGLES', etc. )
+      integer(ip), intent(in) :: maxn  !! Maximum number of values that may be returned.
+      integer(ip), intent(out) :: dim  !! Number of values returned.
+      real(wp), intent(out) :: values  ( * )  !! Values.
 
 
 
@@ -10474,7 +10640,7 @@ contains
       call gdpool ( ctx, varnam, 1, maxn, dim, values, found )
 
       return
-      end procedure bodvcd
+      end subroutine bodvcd
 
       !>## Detailed Input
       !>
@@ -10771,11 +10937,18 @@ contains
       !>     Initial values.
       !>
       !>     Standard SPICE error handling.
-      module procedure bodvrd
+      module subroutine bodvrd ( ctx, bodynm, item, maxn, dim, values )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr, suffix
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: bodynm  !! Body name.
+      character(*), intent(in) :: item  !! Item for which values are desired. ('RADII',
+                                        !! 'NUT_PREC_ANGLES', etc. )
+      integer(ip), intent(in) :: maxn  !! Maximum number of values that may be returned.
+      integer(ip), intent(out) :: dim  !! Number of values returned.
+      real(wp), intent(out) :: values  ( * )  !! Values.
       character(cdelen) :: code
       character(1) :: type
       character(namlen) :: varnam
@@ -10884,12 +11057,16 @@ contains
 
       return
       end associate
-      end procedure bodvrd
+      end subroutine bodvrd
 
       !> All the values of a body constant, the body given by name (PEPPER).
-      module procedure body_values_by_name
+      module subroutine body_values_by_name ( ctx, body, item, values )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: body  !! the body name (or ID code as a string)
+      character(*), intent(in) :: item  !! the item, e.g. 'RADII' (the variable BODYnnn_<item>)
+      real(wp), allocatable, intent(out) :: values(:)  !! the values (size 0 after an error)
       integer(ip) :: code
       logical :: found
       if ( ctx%failed() ) then
@@ -10909,14 +11086,18 @@ contains
          return
       end if
       call body_values_by_code ( ctx, code, item, values )
-      end procedure body_values_by_name
+      end subroutine body_values_by_name
 
       !> All the values of a body constant, the body given by its ID code
       !> (PEPPER).
-      module procedure body_values_by_code
+      module subroutine body_values_by_code ( ctx, body, item, values )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! the body ID code
+      character(*), intent(in) :: item  !! the item, e.g. 'RADII' (the variable BODYnnn_<item>)
+      real(wp), allocatable, intent(out) :: values(:)  !! the values (size 0 after an error)
       character(16) :: code
       character(:), allocatable :: varnam
       character(1) :: type
@@ -10950,12 +11131,15 @@ contains
          return
       end if
       call pool_values ( ctx, varnam, values, found )
-      end procedure body_values_by_code
+      end subroutine body_values_by_code
 
       !> Add a name/code pair to the defined names (SPICELIB's [[zzboddef]]). The
       !> pair is recorded in the instance, so that all its contexts see it.
-      module procedure zzboddef
+      module subroutine zzboddef ( ctx, name, code )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Common name of some body.
+      integer(ip), intent(in) :: code  !! Integer code for that body.
       call sync_boddefs ( ctx )
       if ( ctx%failed() ) return
       call zzboddef_apply ( ctx, name, code )
@@ -10963,12 +11147,16 @@ contains
       call record_boddef ( ctx%spice, name, code, 0_ip )
       ctx%zzbodtrn%boddef_epoch = ctx%spice%boddef_epoch
       ctx%zzbodtrn%boddef_count = ctx%spice%boddef_count
-      end procedure zzboddef
+      end subroutine zzboddef
 
       !> PEPPER: a name/code pair defined by a kernel built in memory, owned
       !> by its handle (kernel_builder's define_body).
-      module procedure owned_boddef
+      module subroutine owned_boddef ( ctx, name, code, owner )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      character(*), intent(in) :: name  !! the body's name
+      integer(ip), intent(in) :: code  !! its NAIF ID code
+      integer(ip), intent(in) :: owner  !! the handle of the kernel that defines it
       call sync_boddefs ( ctx )
       if ( ctx%failed() ) return
       call zzboddef_apply ( ctx, name, code )
@@ -10976,15 +11164,17 @@ contains
       call record_boddef ( ctx%spice, name, code, owner )
       ctx%zzbodtrn%boddef_epoch = ctx%spice%boddef_epoch
       ctx%zzbodtrn%boddef_count = ctx%spice%boddef_count
-      end procedure owned_boddef
+      end subroutine owned_boddef
 
       !> PEPPER: remove the pairs a kernel defined. The record loses them
       !> and the epoch changes while the count drops, so every context's
       !> next look (sync_boddefs) rebuilds its tables from the built-in
       !> names and the remaining definitions, in order: an earlier
       !> definition of the same name or code is in effect again.
-      module procedure remove_owned_boddefs
+      module subroutine remove_owned_boddefs ( ctx, owner )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the instance's context
+      integer(ip), intent(in) :: owner  !! the handle of the kernel unloaded
       integer(ip) :: k, n
       associate ( s => ctx%spice )
          if ( s%boddef_count == 0 .or. owner == 0 ) return
@@ -11003,19 +11193,20 @@ contains
          s%boddef_count = n
          s%boddef_epoch = s%boddef_epoch + 1
       end associate
-      end procedure remove_owned_boddefs
+      end subroutine remove_owned_boddefs
 
       !> Reset the defined names to the built-in names (SPICELIB's
       !> [[zzbodrst]]), in the instance and so for all its contexts.
-      module procedure zzbodrst
+      module subroutine zzbodrst ( ctx )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
       ctx%spice%boddef_count = 0
       ctx%spice%boddef_epoch = ctx%spice%boddef_epoch + 1
       call zzbodrst_apply ( ctx )
       if ( ctx%failed() ) return
       ctx%zzbodtrn%boddef_epoch = ctx%spice%boddef_epoch
       ctx%zzbodtrn%boddef_count = 0
-      end procedure zzbodrst
+      end subroutine zzbodrst
 
       !> Bring this context's table of defined body names up to date with the
       !> instance: if names were defined or reset (through the instance) since

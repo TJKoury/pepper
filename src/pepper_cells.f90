@@ -361,9 +361,10 @@ contains
       !>        module will never participate in error handling.
       !>
       !>        Missing parentheses added to CHBASE declaration.
-      module procedure chbase
+      module integer(ip) function chbase ( ctx )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
 
 !
 !     PEPPER: one value for every platform. CHBASE is used by ENCHAR and
@@ -374,7 +375,7 @@ contains
       chbase = 128
 
       return
-      end procedure chbase
+      end function chbase
 
       !>## Detailed Input
       !>
@@ -485,9 +486,12 @@ contains
       !>        Only the first MINLEN characters of the string are now
       !>        used to encode the value. Also, negative values are now
       !>        treated as errors.
-      module procedure enchar
+      module subroutine enchar ( ctx, number, string )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: number  !! Number to be encoded.
+      character(*), intent(out) :: string  !! Encoded string.
 
 
       integer(ip) :: base
@@ -532,7 +536,7 @@ contains
       end if
 
       return
-      end procedure enchar
+      end subroutine enchar
 
       !>## Detailed Input
       !>
@@ -623,9 +627,12 @@ contains
       !>        simultaneously.)
       !>
       !>     Standard SPICE error handling.
-      module procedure dechar
+      module subroutine dechar ( ctx, string, number )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: number  !! Decoded number.
+      character(*), intent(in) :: string  !! Encoded character string.
       integer(ip) :: base
       integer(ip) :: num
       integer(ip) :: remain
@@ -651,7 +658,7 @@ contains
       end do
 
       return
-      end procedure dechar
+      end subroutine dechar
 
       !>## Detailed Input
       !>
@@ -760,10 +767,13 @@ contains
       !>        Sets the long error message directly. No longer returns
       !>        an error message. Message no longer contains name of
       !>        routine which detected the error.
-      module procedure excess
+      module subroutine excess ( ctx, number, struct )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr, prefix, suffix
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: number  !! Number of excess elements.
+      character(*), intent(in) :: struct  !! Name of the data structure.
 
       integer(ip), parameter :: longln = 320
       character(longln) :: error
@@ -825,7 +835,7 @@ contains
       end if
 
       return
-      end procedure excess
+      end subroutine excess
 
       !>## Detailed Input
       !>
@@ -936,9 +946,12 @@ contains
       !>
       !>        Check for valid input cell added. The input cell must
       !>        have valid size and cardinality values.
-      module procedure cardc
+      module integer(ip) function cardc ( ctx, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: cell  ( lbcell:* )  !! Input cell.
 
 
       integer(ip) :: card
@@ -988,7 +1001,7 @@ contains
       end if
 
       return
-      end procedure cardc
+      end function cardc
 
       !>## Detailed Input
       !>
@@ -1099,9 +1112,12 @@ contains
       !>
       !>        Check for valid input cell added. The input cell must
       !>        have valid size and cardinality values.
-      module procedure cardd
+      module integer(ip) function cardd ( ctx, cell )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: cell  ( lbcell:* )  !! Input cell.
 
 
       if ( ctx%failed() ) then
@@ -1146,7 +1162,7 @@ contains
       end if
 
       return
-      end procedure cardd
+      end function cardd
 
       !>## Detailed Input
       !>
@@ -1257,9 +1273,12 @@ contains
       !>
       !>        Check for valid input cell added. The input cell must
       !>        have valid size and cardinality values.
-      module procedure cardi
+      module integer(ip) function cardi ( ctx, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: cell  ( lbcell:* )  !! Input cell.
 
 
       if ( ctx%failed() ) then
@@ -1304,7 +1323,7 @@ contains
       end if
 
       return
-      end procedure cardi
+      end function cardi
 
       !>## Detailed Input
       !>
@@ -1401,9 +1420,12 @@ contains
       !>
       !>        Check for valid input cell added. The input cell must
       !>        have valid size and cardinality values.
-      module procedure sizec
+      module integer(ip) function sizec ( ctx, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: cell   ( lbcell:* )  !! Input cell.
 
 
       integer(ip) :: size
@@ -1453,7 +1475,7 @@ contains
       end if
 
       return
-      end procedure sizec
+      end function sizec
 
       !>## Detailed Input
       !>
@@ -1550,9 +1572,12 @@ contains
       !>
       !>        Check for valid input cell added. The input cell must
       !>        have valid size and cardinality values.
-      module procedure sized
+      module integer(ip) function sized ( ctx, cell )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: cell   ( lbcell:* )  !! Input cell.
 
 
       if ( ctx%failed() ) then
@@ -1597,7 +1622,7 @@ contains
       end if
 
       return
-      end procedure sized
+      end function sized
 
       !>## Detailed Input
       !>
@@ -1694,9 +1719,12 @@ contains
       !>
       !>        Check for valid input cell added. The input cell must
       !>        have valid size and cardinality values.
-      module procedure sizei
+      module integer(ip) function sizei ( ctx, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: cell  ( lbcell: * )  !! Input cell.
 
 
       if ( ctx%failed() ) then
@@ -1741,7 +1769,7 @@ contains
       end if
 
       return
-      end procedure sizei
+      end function sizei
 
       !>## Detailed Input
       !>
@@ -1861,9 +1889,13 @@ contains
       !>        is signaled if the value is out of range. Examples
       !>        updated so as not to refer to the EMPTYx routines, and
       !>        to show the correct calling protocol for EXCESS.
-      module procedure scardc
+      module subroutine scardc ( ctx, card, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: card  !! Cardinality of (number of elements in) the cell.
+      character(*), intent(inout) :: cell   ( lbcell:* )  !! The cell.
 
 
       integer(ip) :: size
@@ -1891,7 +1923,7 @@ contains
       call enchar ( ctx, card, cell(0) )
 
       return
-      end procedure scardc
+      end subroutine scardc
 
       !>## Detailed Input
       !>
@@ -2011,9 +2043,13 @@ contains
       !>        is signaled if the value is out of range. Examples
       !>        updated so as not to refer to the EMPTYx routines, and
       !>        to show the correct calling protocol for EXCESS.
-      module procedure scardd
+      module subroutine scardd ( ctx, card, cell )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: card  !! Cardinality of (number of elements in) the cell.
+      real(wp), intent(inout) :: cell   ( lbcell:* )  !! The cell.
 
 
       if ( ctx%failed() ) return
@@ -2036,7 +2072,7 @@ contains
       cell(0) = real( card, wp )
 
       return
-      end procedure scardd
+      end subroutine scardd
 
       !>## Detailed Input
       !>
@@ -2156,9 +2192,13 @@ contains
       !>        is signaled if the value is out of range. Examples
       !>        updated so as not to refer to the EMPTYx routines, and
       !>        to show the correct calling protocol for EXCESS.
-      module procedure scardi
+      module subroutine scardi ( ctx, card, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: card  !! Cardinality of (number of elements in) the cell.
+      integer(ip), intent(inout) :: cell   ( lbcell:* )  !! The cell.
 
 
       if ( ctx%failed() ) return
@@ -2181,7 +2221,7 @@ contains
       cell(0) = card
 
       return
-      end procedure scardi
+      end subroutine scardi
 
       !>## Detailed Input
       !>
@@ -2301,9 +2341,13 @@ contains
       !>        without the use of the EMPTYx routines, which have been
       !>        removed from the library. Errors in the examples have been
       !>        removed, also.
-      module procedure ssizec
+      module subroutine ssizec ( ctx, size, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the cell.
+      character(*), intent(inout) :: cell   ( lbcell:* )  !! The cell.
 
 
       integer(ip) :: i
@@ -2332,7 +2376,7 @@ contains
       end do
 
       return
-      end procedure ssizec
+      end subroutine ssizec
 
       !>## Detailed Input
       !>
@@ -2452,9 +2496,13 @@ contains
       !>        without the use of the EMPTYx routines, which have been
       !>        removed from the library. Errors in the examples have been
       !>        removed, also.
-      module procedure ssized
+      module subroutine ssized ( ctx, size, cell )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the cell.
+      real(wp), intent(inout) :: cell   ( lbcell:* )  !! The cell.
 
 
       integer(ip) :: i
@@ -2483,7 +2531,7 @@ contains
       end do
 
       return
-      end procedure ssized
+      end subroutine ssized
 
       !>## Detailed Input
       !>
@@ -2603,9 +2651,13 @@ contains
       !>        without the use of the EMPTYx routines, which have been
       !>        removed from the library. Errors in the examples have been
       !>        removed, also.
-      module procedure ssizei
+      module subroutine ssizei ( ctx, size, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the cell.
+      integer(ip), intent(inout) :: cell   ( lbcell:* )  !! The cell.
 
 
       integer(ip) :: i
@@ -2634,7 +2686,7 @@ contains
       end do
 
       return
-      end procedure ssizei
+      end subroutine ssizei
 
       !>## Detailed Input
       !>
@@ -2757,10 +2809,15 @@ contains
       !>        without the use of the EMPTYx routines, which have been
       !>        removed from the library. Errors in the examples have been
       !>        removed, also.
-      module procedure validc
+      module subroutine validc ( ctx, size, n, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: rmdupc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the set.
+      integer(ip), intent(in) :: n  !! Initial no. of (possibly non-distinct) elements.
+      character(*), intent(inout) :: a      ( lbcell:* )  !! Set to be validated.
 
 
       integer(ip) :: card
@@ -2794,7 +2851,7 @@ contains
       call scardc ( ctx, card, a )
 
       return
-      end procedure validc
+      end subroutine validc
 
       !>## Detailed Input
       !>
@@ -2917,10 +2974,15 @@ contains
       !>        without the use of the EMPTYx routines, which have been
       !>        removed from the library. Errors in the examples have been
       !>        removed, also.
-      module procedure validd
+      module subroutine validd ( ctx, size, n, a )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: rmdupd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the set.
+      integer(ip), intent(in) :: n  !! Initial no. of (possibly non-distinct) elements.
+      real(wp), intent(inout) :: a       ( lbcell:* )  !! Set to be validated.
 
 
       integer(ip) :: card
@@ -2957,7 +3019,7 @@ contains
       call scardd ( ctx, card, a )
 
       return
-      end procedure validd
+      end subroutine validd
 
       !>## Detailed Input
       !>
@@ -3080,10 +3142,15 @@ contains
       !>        without the use of the EMPTYx routines, which have been
       !>        removed from the library. Errors in the examples have been
       !>        removed, also.
-      module procedure validi
+      module subroutine validi ( ctx, size, n, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: rmdupi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: size  !! Size (maximum cardinality) of the set.
+      integer(ip), intent(in) :: n  !! Initial no. of (possibly non-distinct) elements.
+      integer(ip), intent(inout) :: a       ( lbcell:* )  !! Set to be validated.
 
 
       integer(ip) :: card
@@ -3117,7 +3184,7 @@ contains
       call scardi ( ctx, card, a )
 
       return
-      end procedure validi
+      end subroutine validi
 
       !>## Detailed Input
       !>
@@ -3215,9 +3282,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (HAN)
-      module procedure appndc
+      module subroutine appndc ( ctx, item, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: item  !! The item to append.
+      character(*), intent(inout) :: cell ( lbcell:* )  !! The cell to which ITEM will be
+                                                        !! appended.
 
 
       integer(ip) :: nwcard
@@ -3252,7 +3324,7 @@ contains
       end if
 
       return
-      end procedure appndc
+      end subroutine appndc
 
       !>## Detailed Input
       !>
@@ -3427,9 +3499,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (HAN)
-      module procedure appndd
+      module subroutine appndd ( ctx, item, cell )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: item  !! The item to append.
+      real(wp), intent(inout) :: cell ( lbcell:* )  !! The cell to which ITEM will be appended.
 
 
       integer(ip) :: nwcard
@@ -3464,7 +3540,7 @@ contains
       end if
 
       return
-      end procedure appndd
+      end subroutine appndd
 
       !>## Detailed Input
       !>
@@ -3637,9 +3713,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (HAN)
-      module procedure appndi
+      module subroutine appndi ( ctx, item, cell )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: item  !! The item to append.
+      integer(ip), intent(inout) :: cell ( lbcell:* )  !! The cell to which ITEM will be
+                                                       !! appended.
 
 
       integer(ip) :: nwcard
@@ -3674,7 +3755,7 @@ contains
       end if
 
       return
-      end procedure appndi
+      end subroutine appndi
 
       !>## Detailed Input
       !>
@@ -3766,10 +3847,14 @@ contains
       !>        Also, calling protocol for EXCESS has been changed. And,
       !>        elements LBCELL through -2 of control area are now copied to
       !>        the output cell.
-      module procedure copyc
+      module subroutine copyc ( ctx, cell, copy )
       use pepper_kinds, only: ip
       use pepper_strings, only: lastpc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: cell     ( lbcell:* )  !! Cell to be copied.
+      character(*), intent(inout) :: copy     ( lbcell:* )  !! New cell.
 
 
 !     Local variables
@@ -3859,7 +3944,7 @@ contains
 
       end if
       return
-      end procedure copyc
+      end subroutine copyc
 
       !>## Detailed Input
       !>
@@ -3944,9 +4029,13 @@ contains
       !>
       !>        Calling protocol for EXCESS has been changed. Call to SETMSG
       !>        has been removed.
-      module procedure copyd
+      module subroutine copyd ( ctx, cell, copy )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: cell     ( lbcell:* )  !! Cell to be copied.
+      real(wp), intent(inout) :: copy     ( lbcell:* )  !! New cell.
 
 
       integer(ip) :: size
@@ -3990,7 +4079,7 @@ contains
       end if
 
       return
-      end procedure copyd
+      end subroutine copyd
 
       !>## Detailed Input
       !>
@@ -4075,9 +4164,13 @@ contains
       !>
       !>        Calling protocol for EXCESS has been changed. Call to SETMSG
       !>        has been removed.
-      module procedure copyi
+      module subroutine copyi ( ctx, cell, copy )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: cell     ( lbcell:* )  !! Cell to be copied.
+      integer(ip), intent(inout) :: copy     ( lbcell:* )  !! New cell.
 
 
       integer(ip) :: size
@@ -4121,7 +4214,7 @@ contains
       end if
 
       return
-      end procedure copyi
+      end subroutine copyi
 
       !>## Detailed Input
       !>
@@ -4316,10 +4409,14 @@ contains
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
       !>        Calling protocol of EXCESS changed. Call to SETMSG removed.
-      module procedure insrtc
+      module subroutine insrtc ( ctx, item, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: item  !! Item to be inserted.
+      character(*), intent(inout) :: a        ( lbcell:* )  !! Insertion set.
 
 
       integer(ip) :: card
@@ -4398,7 +4495,7 @@ contains
       end if
 
       return
-      end procedure insrtc
+      end subroutine insrtc
 
       !>## Detailed Input
       !>
@@ -4577,10 +4674,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure insrtd
+      module subroutine insrtd ( ctx, item, a )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: lstled
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: item  !! Item to be inserted.
+      real(wp), intent(inout) :: a     ( lbcell:* )  !! Insertion set.
 
 
       integer(ip) :: card
@@ -4646,7 +4747,7 @@ contains
       end if
 
       return
-      end procedure insrtd
+      end subroutine insrtd
 
       !>## Detailed Input
       !>
@@ -4825,10 +4926,14 @@ contains
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
       !>        Calling protocol of EXCESS changed. Call to SETMSG removed.
-      module procedure insrti
+      module subroutine insrti ( ctx, item, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: lstlei
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: item  !! Item to be inserted.
+      integer(ip), intent(inout) :: a        ( lbcell:* )  !! Insertion set.
 
 
       integer(ip) :: size
@@ -4893,7 +4998,7 @@ contains
       end if
 
       return
-      end procedure insrti
+      end subroutine insrti
 
       !>## Detailed Input
       !>
@@ -5066,10 +5171,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU)
-      module procedure removc
+      module subroutine removc ( ctx, item, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: item  !! Item to be removed.
+      character(*), intent(inout) :: a       ( lbcell:* )  !! Removal set.
 
 
 !     Local variables
@@ -5114,7 +5223,7 @@ contains
       end if
 
       return
-      end procedure removc
+      end subroutine removc
 
       !>## Detailed Input
       !>
@@ -5289,10 +5398,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure removd
+      module subroutine removd ( ctx, item, a )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: item  !! Item to be removed.
+      real(wp), intent(inout) :: a        ( lbcell:* )  !! Removal set.
 
 
 !     Local variables
@@ -5337,7 +5450,7 @@ contains
       end if
 
       return
-      end procedure removd
+      end subroutine removd
 
       !>## Detailed Input
       !>
@@ -5508,10 +5621,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure removi
+      module subroutine removi ( ctx, item, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: item  !! Item to be removed.
+      integer(ip), intent(inout) :: a        ( lbcell:* )  !! Removal set.
 
 
       integer(ip) :: card
@@ -5554,7 +5671,7 @@ contains
       end if
 
       return
-      end procedure removi
+      end subroutine removi
 
       !>## Detailed Input
       !>
@@ -5726,10 +5843,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure elemc
+      module logical function elemc ( ctx, item, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: item  !! Item to be tested.
+      character(*), intent(in) :: a      ( lbcell:* )  !! Set to be tested.
 
 
 !
@@ -5745,7 +5866,7 @@ contains
       elemc = ( bsrchc ( item, cardc ( ctx, a ), a(1) ) /= 0 )
 
       return
-      end procedure elemc
+      end function elemc
 
       !>## Detailed Input
       !>
@@ -5908,10 +6029,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure elemd
+      module logical function elemd ( ctx, item, a )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: item  !! Item to be tested.
+      real(wp), intent(in) :: a      ( lbcell:* )  !! Set to be tested.
 
 
 !
@@ -5928,7 +6053,7 @@ contains
       elemd = ( bsrchd ( item, cardd ( ctx, a ), a(1) ) /= 0 )
 
       return
-      end procedure elemd
+      end function elemd
 
       !>## Detailed Input
       !>
@@ -6088,10 +6213,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure elemi
+      module logical function elemi ( ctx, item, a )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: item  !! Item to be tested.
+      integer(ip), intent(in) :: a      ( lbcell:* )  !! Set to be tested.
 
 
 !
@@ -6107,7 +6236,7 @@ contains
       elemi = ( bsrchi ( item, cardi ( ctx, a ), a(1) ) /= 0 )
 
       return
-      end procedure elemi
+      end function elemi
 
       !>## Detailed Input
       !>
@@ -6244,10 +6373,14 @@ contains
       !>         following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure ordc
+      module integer(ip) function ordc ( ctx, item, set )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: item  !! An item to locate within a set.
+      character(*), intent(in) :: set ( lbcell:* )  !! A set to search for a given item.
 
 
 !
@@ -6264,7 +6397,7 @@ contains
       ordc = bsrchc ( item, cardc( ctx,set), set(1) )
 
       return
-      end procedure ordc
+      end function ordc
 
       !>## Detailed Input
       !>
@@ -6399,10 +6532,14 @@ contains
       !>         following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure ordd
+      module integer(ip) function ordd ( ctx, item, set )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: item  !! An item to locate within a set.
+      real(wp), intent(in) :: set ( lbcell:* )  !! A set to search for a given item.
 
 
 !
@@ -6419,7 +6556,7 @@ contains
       ordd = bsrchd ( item, cardd( ctx,set), set(1) )
 
       return
-      end procedure ordd
+      end function ordd
 
       !>## Detailed Input
       !>
@@ -6554,10 +6691,14 @@ contains
       !>         following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (CAC) (WLT) (IMU) (NJB)
-      module procedure ordi
+      module integer(ip) function ordi ( ctx, item, set )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: item  !! An item to locate within a set.
+      integer(ip), intent(in) :: set ( lbcell:* )  !! A set to search for a given item.
 
 
 !     Standard error handling:
@@ -6572,7 +6713,7 @@ contains
       ordi = bsrchi ( item, cardi( ctx,set), set(1) )
 
       return
-      end procedure ordi
+      end function ordi
 
       !>## Detailed Input
       !>
@@ -6726,9 +6867,14 @@ contains
       !>
       !>       The new routine recognizes two new operators, '~' and '&'.
       !>       If the operator is not recognized, an error is now signaled.
-      module procedure setc
+      module logical function setc ( ctx, a, op, b )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: a      ( lbcell:* )  !! First set.
+      character(*), intent(in) :: op  !! Comparison operator.
+      character(*), intent(in) :: b      ( lbcell:* )  !! Second set.
 
 
       integer(ip) :: carda
@@ -7127,7 +7273,7 @@ contains
       setc = ( cond == 1 )
 
       return
-      end procedure setc
+      end function setc
 
       !>## Detailed Input
       !>
@@ -7281,9 +7427,14 @@ contains
       !>
       !>       The new routine recognizes two new operators, '~' and '&'.
       !>       If the operator is not recognized, an error is now signaled.
-      module procedure setd
+      module logical function setd ( ctx, a, op, b )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a      ( lbcell:* )  !! First set.
+      character(*), intent(in) :: op  !! Comparison operator.
+      real(wp), intent(in) :: b      ( lbcell:* )  !! Second set.
 
 
       integer(ip) :: carda
@@ -7682,7 +7833,7 @@ contains
       setd = ( cond == 1 )
 
       return
-      end procedure setd
+      end function setd
 
       !>## Detailed Input
       !>
@@ -7836,9 +7987,14 @@ contains
       !>
       !>       The new routine recognizes two new operators, '~' and '&'.
       !>       If the operator is not recognized, an error is now signaled.
-      module procedure seti
+      module logical function seti ( ctx, a, op, b )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: a      ( lbcell:* )  !! First set.
+      character(*), intent(in) :: op  !! Comparison operator.
+      integer(ip), intent(in) :: b      ( lbcell:* )  !! Second set.
 
 
       integer(ip) :: carda
@@ -8237,7 +8393,7 @@ contains
       seti = ( cond == 1 )
 
       return
-      end procedure seti
+      end function seti
 
       !>## Detailed Input
       !>
@@ -8352,9 +8508,14 @@ contains
       !>        Error signaled if output set elements are not long enough.
       !>        Length must be at least max of lengths of input elements.
       !>        Also, calling protocol for EXCESS has been changed.
-      module procedure unionc
+      module subroutine unionc ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
+      character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      character(*), intent(inout) :: c      ( lbcell:* )  !! Union of A and B.
 
 
       integer(ip) :: apoint
@@ -8505,7 +8666,7 @@ contains
       end if
 
       return
-      end procedure unionc
+      end subroutine unionc
 
       !>## Detailed Input
       !>
@@ -8611,9 +8772,14 @@ contains
       !>
       !>        Calling protocol for EXCESS updated. Call to SETMSG
       !>        deleted.
-      module procedure uniond
+      module subroutine uniond ( ctx, a, b, c )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
+      real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      real(wp), intent(inout) :: c      ( lbcell:* )  !! Union of A and B.
 
 
       integer(ip) :: apoint
@@ -8747,7 +8913,7 @@ contains
       end if
 
       return
-      end procedure uniond
+      end subroutine uniond
 
       !>## Detailed Input
       !>
@@ -8853,9 +9019,14 @@ contains
       !>
       !>        Calling protocol for EXCESS updated. Call to SETMSG
       !>        deleted.
-      module procedure unioni
+      module subroutine unioni ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
+      integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      integer(ip), intent(inout) :: c      ( lbcell:* )  !! Union of A and B.
 
 
       integer(ip) :: apoint
@@ -8988,7 +9159,7 @@ contains
       end if
 
       return
-      end procedure unioni
+      end subroutine unioni
 
       !>## Detailed Input
       !>
@@ -9103,9 +9274,14 @@ contains
       !>        Error signaled if output set elements are not long enough.
       !>        Length must be at least max of lengths of input elements.
       !>        Also, calling protocol for EXCESS has been changed.
-      module procedure interc
+      module subroutine interc ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
+      character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      character(*), intent(inout) :: c      ( lbcell:* )  !! Intersection of A and B.
 
 
       integer(ip) :: apoint
@@ -9228,7 +9404,7 @@ contains
       end if
 
       return
-      end procedure interc
+      end subroutine interc
 
       !>## Detailed Input
       !>
@@ -9333,9 +9509,14 @@ contains
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
       !>        Calling protocol of EXCESS changed. Call to SETMSG removed.
-      module procedure interd
+      module subroutine interd ( ctx, a, b, c )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
+      real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      real(wp), intent(inout) :: c      ( lbcell:* )  !! Intersection of A and B.
 
 
       integer(ip) :: apoint
@@ -9441,7 +9622,7 @@ contains
       end if
 
       return
-      end procedure interd
+      end subroutine interd
 
       !>## Detailed Input
       !>
@@ -9546,9 +9727,14 @@ contains
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
       !>        Calling protocol of EXCESS changed. Call to SETMSG removed.
-      module procedure interi
+      module subroutine interi ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
+      integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      integer(ip), intent(inout) :: c      ( lbcell:* )  !! Intersection of A and B.
 
 
       integer(ip) :: apoint
@@ -9654,7 +9840,7 @@ contains
       end if
 
       return
-      end procedure interi
+      end subroutine interi
 
       !>## Detailed Input
       !>
@@ -9774,9 +9960,14 @@ contains
       !>        block, rather than only in the cases where the cardinality of
       !>        the output cell would have been incremented if there were
       !>        enough room.
-      module procedure diffc
+      module subroutine diffc ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
+      character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      character(*), intent(inout) :: c      ( lbcell:* )  !! Difference of A and B.
 
 
       integer(ip) :: apoint
@@ -9911,7 +10102,7 @@ contains
       end if
 
       return
-      end procedure diffc
+      end subroutine diffc
 
       !>## Detailed Input
       !>
@@ -10024,9 +10215,14 @@ contains
       !>        block, rather than only in the cases where the cardinality of
       !>        the output cell would have been incremented if there were
       !>        enough room.
-      module procedure diffd
+      module subroutine diffd ( ctx, a, b, c )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
+      real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      real(wp), intent(inout) :: c      ( lbcell:* )  !! Difference of A and B.
 
 
       integer(ip) :: apoint
@@ -10142,7 +10338,7 @@ contains
       end if
 
       return
-      end procedure diffd
+      end subroutine diffd
 
       !>## Detailed Input
       !>
@@ -10255,9 +10451,14 @@ contains
       !>        block, rather than only in the cases where the cardinality of
       !>        the output cell would have been incremented if there were
       !>        enough room.
-      module procedure diffi
+      module subroutine diffi ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
+      integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      integer(ip), intent(inout) :: c      ( lbcell:* )  !! Difference of A and B.
 
 
       integer(ip) :: apoint
@@ -10374,7 +10575,7 @@ contains
       end if
 
       return
-      end procedure diffi
+      end subroutine diffi
 
       !>## Detailed Input
       !>
@@ -10491,9 +10692,14 @@ contains
       !>        Error signaled if output set elements are not long enough.
       !>        Length must be at least max of lengths of input elements.
       !>        Also, calling protocol for EXCESS has been changed.
-      module procedure sdiffc
+      module subroutine sdiffc ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(*), intent(in) :: a      ( lbcell:* )  !! First input set.
+      character(*), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      character(*), intent(inout) :: c      ( lbcell:* )  !! Symmetric difference of A and B.
 
 
 !     Local variables
@@ -10643,7 +10849,7 @@ contains
       end if
 
       return
-      end procedure sdiffc
+      end subroutine sdiffc
 
       !>## Detailed Input
       !>
@@ -10750,9 +10956,14 @@ contains
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
       !>        Calling protocol of EXCESS changed. Call to SETMSG removed.
-      module procedure sdiffd
+      module subroutine sdiffd ( ctx, a, b, c )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a      ( lbcell:* )  !! First input set.
+      real(wp), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      real(wp), intent(inout) :: c      ( lbcell:* )  !! Symmetric difference of A and B.
 
 
       integer(ip) :: apoint
@@ -10883,7 +11094,7 @@ contains
       end if
 
       return
-      end procedure sdiffd
+      end subroutine sdiffd
 
       !>## Detailed Input
       !>
@@ -10990,9 +11201,14 @@ contains
       !>-    Beta Version 1.1.0, 06-JAN-1989 (NJB)
       !>
       !>        Calling protocol of EXCESS changed. Call to SETMSG removed.
-      module procedure sdiffi
+      module subroutine sdiffi ( ctx, a, b, c )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: a      ( lbcell:* )  !! First input set.
+      integer(ip), intent(in) :: b      ( lbcell:* )  !! Second input set.
+      integer(ip), intent(inout) :: c      ( lbcell:* )  !! Symmetric difference of A and B.
 
 
       integer(ip) :: apoint
@@ -11123,7 +11339,7 @@ contains
       end if
 
       return
-      end procedure sdiffi
+      end subroutine sdiffi
 
       !>## Detailed Input
       !>
@@ -11222,10 +11438,16 @@ contains
       !>
       !>         This routine is a copy of the SPICELIB WNINSD routine
       !>         changed only by the addition of the CONTEXT string.
-      module procedure zzwninsd
+      module subroutine zzwninsd ( ctx, left, right, context, window )
       use pepper_kinds, only: ip, wp
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: left  !! Left, right endpoints of new interval.
+      real(wp), intent(in) :: right  !! Left, right endpoints of new interval.
+      character(*), intent(in) :: context  !! A call explanation string.
+      real(wp), intent(inout) :: window    ( lbcell:* )  !! Input, output window.
 
 
       integer(ip) :: size
@@ -11406,7 +11628,7 @@ contains
       end if
 
       return
-      end procedure zzwninsd
+      end subroutine zzwninsd
 
       !>## Detailed Input
       !>
@@ -11546,9 +11768,12 @@ contains
       !>        Minor edit to code comments eliminating typo.
       !>
       !>-    SPICELIB Version 1.0.0, 10-AUG-2007 (EDW)
-      module procedure wncard
+      module integer(ip) function wncard ( ctx, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: window  ( lbcell:* )  !! Input window.
 
 
 !
@@ -11583,7 +11808,7 @@ contains
       wncard = wncard/2
 
       return
-      end procedure wncard
+      end function wncard
 
       !>## Detailed Input
       !>
@@ -11710,9 +11935,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN) (NJB)
-      module procedure wncomd
+      module subroutine wncomd ( ctx, left, right, window, result )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: left  !! Left, right endpoints of complement interval.
+      real(wp), intent(in) :: right  !! Left, right endpoints of complement interval.
+      real(wp), intent(in) :: window   ( lbcell:* )  !! Input window.
+      real(wp), intent(inout) :: result   ( lbcell:* )  !! Complement of WINDOW with respect to
+                                                      !! [LEFT,RIGHT].
 
 
       integer(ip) :: card
@@ -11816,7 +12048,7 @@ contains
       end if
 
       return
-      end procedure wncomd
+      end subroutine wncomd
 
       !>## Detailed Input
       !>
@@ -11925,9 +12157,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
-      module procedure wncond
+      module subroutine wncond ( ctx, left, right, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: left  !! Amount added to each left endpoint.
+      real(wp), intent(in) :: right  !! Amount subtracted from each right endpoint.
+      real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be contracted.
 
 
 !
@@ -11941,7 +12178,7 @@ contains
       call wnexpd ( ctx, -left, -right, window )
 
       return
-      end procedure wncond
+      end subroutine wncond
 
       !>## Detailed Input
       !>
@@ -12049,9 +12286,14 @@ contains
       !>        Due to the calling sequence and functionality changes
       !>        in the routine EXCESS, the method of signaling an
       !>        excess of elements needed to be changed.
-      module procedure wndifd
+      module subroutine wndifd ( ctx, a, b, c )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a        ( lbcell:* )  !! Input windows.
+      real(wp), intent(in) :: b        ( lbcell:* )  !! Input windows.
+      real(wp), intent(inout) :: c        ( lbcell:* )  !! Difference of A and B.
 
 
       integer(ip) :: acard
@@ -12317,7 +12559,7 @@ contains
       end if
 
       return
-      end procedure wndifd
+      end subroutine wndifd
 
       !>## Detailed Input
       !>
@@ -12414,9 +12656,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
-      module procedure wnelmd
+      module logical function wnelmd ( ctx, point, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: point  !! Input point.
+      real(wp), intent(in) :: window      ( lbcell:* )  !! Input window.
 
 
       integer(ip) :: card
@@ -12451,7 +12697,7 @@ contains
       wnelmd = .false.
 
       return
-      end procedure wnelmd
+      end function wnelmd
 
       !>## Detailed Input
       !>
@@ -12560,9 +12806,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
-      module procedure wnexpd
+      module subroutine wnexpd ( ctx, left, right, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: left  !! Amount subtracted from each left endpoint.
+      real(wp), intent(in) :: right  !! Amount added to each right endpoint.
+      real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be expanded.
 
 
       integer(ip) :: card
@@ -12640,7 +12891,7 @@ contains
       call scardd ( ctx, i, window )
 
       return
-      end procedure wnexpd
+      end subroutine wnexpd
 
       !>## Detailed Input
       !>
@@ -12748,9 +12999,13 @@ contains
       !>        Added calls to CHKIN and CHKOUT. Error handling was added to
       !>        detect invalid endpoint specification. The previous version
       !>        did not signal an error if SIDE was not 'R', 'r', 'L', or 'l'.
-      module procedure wnextd
+      module subroutine wnextd ( ctx, side, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      character(1), intent(in) :: side  !! Extract left ('L') or right ('R') endpoints.
+      real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be extracted.
 
 
       integer(ip) :: card
@@ -12793,7 +13048,7 @@ contains
       end if
 
       return
-      end procedure wnextd
+      end subroutine wnextd
 
       !>## Detailed Input
       !>
@@ -12955,9 +13210,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-      module procedure wnfetd
+      module subroutine wnfetd ( ctx, window, n, left, right )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: window      ( lbcell:* )  !! Input window.
+      integer(ip), intent(in) :: n  !! Index of interval to be fetched.
+      real(wp), intent(out) :: left  !! Left, right endpoints of the Nth interval.
+      real(wp), intent(out) :: right  !! Left, right endpoints of the Nth interval.
 
 
       integer(ip) :: card
@@ -12984,7 +13245,7 @@ contains
       end if
 
       return
-      end procedure wnfetd
+      end subroutine wnfetd
 
       !>## Detailed Input
       !>
@@ -13210,9 +13471,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
-      module procedure wnfild
+      module subroutine wnfild ( ctx, smlgap, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: smlgap  !! Limiting measure of small gaps.
+      real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be filled.
 
 
       integer(ip) :: card
@@ -13260,7 +13525,7 @@ contains
       end if
 
       return
-      end procedure wnfild
+      end subroutine wnfild
 
       !>## Detailed Input
       !>
@@ -13472,9 +13737,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
-      module procedure wnfltd
+      module subroutine wnfltd ( ctx, smlint, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: smlint  !! Limiting measure of small intervals.
+      real(wp), intent(inout) :: window  ( lbcell:* )  !! Window to be filtered.
 
 
       integer(ip) :: card
@@ -13517,7 +13786,7 @@ contains
       call scardd ( ctx, i, window )
 
       return
-      end procedure wnfltd
+      end subroutine wnfltd
 
       !>## Detailed Input
       !>
@@ -13619,9 +13888,14 @@ contains
       !>         following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU) (HAN)
-      module procedure wnincd
+      module logical function wnincd ( ctx, left, right, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: left  !! Input interval.
+      real(wp), intent(in) :: right  !! Input interval.
+      real(wp), intent(in) :: window      ( lbcell:* )  !! Input window.
 
 
       integer(ip) :: card
@@ -13656,7 +13930,7 @@ contains
       wnincd = .false.
 
       return
-      end procedure wnincd
+      end function wnincd
 
       !>## Detailed Input
       !>
@@ -13885,9 +14159,14 @@ contains
       !>        Contents of the $Required_Reading section was
       !>        changed from "None." to "WINDOWS".  Also, the
       !>        declaration of the unused variable K was removed.
-      module procedure wninsd
+      module subroutine wninsd ( ctx, left, right, window )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: left  !! Left, right endpoints of new interval.
+      real(wp), intent(in) :: right  !! Left, right endpoints of new interval.
+      real(wp), intent(inout) :: window    ( lbcell:* )  !! Input, output window.
 
 
       integer(ip) :: size
@@ -14040,12 +14319,16 @@ contains
       end if
 
       return
-      end procedure wninsd
+      end subroutine wninsd
 
       !> Insert an interval into a window being built (PEPPER).
-      module procedure insert_interval
+      module subroutine insert_interval ( ctx, left, right, window )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: left  !! the start of the interval
+      real(wp), intent(in) :: right  !! the end of the interval
+      type(interval_list), intent(inout) :: window  !! the window
       if ( ctx%failed() ) return
       if ( left > right ) then
          call ctx%setmsg ( 'Left endpoint was *. Right endpoint was *.' )
@@ -14055,7 +14338,7 @@ contains
          return
       end if
       call window%insert ( left, right )
-      end procedure insert_interval
+      end subroutine insert_interval
 
       !>## Detailed Input
       !>
@@ -14151,9 +14434,14 @@ contains
       !>        Due to the calling sequence and functionality changes
       !>        in the routine EXCESS, the method of signaling an
       !>        excess of elements needed to be changed.
-      module procedure wnintd
+      module subroutine wnintd ( ctx, a, b, c )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a        ( lbcell:* )  !! Input windows.
+      real(wp), intent(in) :: b        ( lbcell:* )  !! Input windows.
+      real(wp), intent(inout) :: c        ( lbcell:* )  !! Intersection of A and B.
 
 
       integer(ip) :: acard
@@ -14273,7 +14561,7 @@ contains
       end if
 
       return
-      end procedure wnintd
+      end subroutine wnintd
 
       !>## Detailed Input
       !>
@@ -14481,9 +14769,14 @@ contains
       !>
       !>        Also, the $Required_Reading section has been changed to
       !>        include WINDOWS as the required reading for the module.
-      module procedure wnreld
+      module logical function wnreld ( ctx, a, op, b )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a        ( lbcell:* )  !! First window.
+      character(*), intent(in) :: op  !! Comparison operator.
+      real(wp), intent(in) :: b        ( lbcell:* )  !! Second window.
 
 
       integer(ip) :: acard
@@ -14587,7 +14880,7 @@ contains
       end if
 
       return
-      end procedure wnreld
+      end function wnreld
 
       !>## Detailed Input
       !>
@@ -14860,9 +15153,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-      module procedure wnsumd
+      module subroutine wnsumd ( ctx, window, meas, avg, stddev, idxsml, idxlon )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: window    ( lbcell:* )  !! Window to be summarized.
+      real(wp), intent(out) :: meas  !! Total measure of intervals in WINDOW.
+      real(wp), intent(out) :: avg  !! Average measure.
+      real(wp), intent(out) :: stddev  !! Standard deviation.
+      integer(ip), intent(out) :: idxsml  !! Locations of shortest, longest intervals.
+      integer(ip), intent(out) :: idxlon  !! Locations of shortest, longest intervals.
 
 
       real(wp) :: m
@@ -14952,7 +15253,7 @@ contains
       end if
 
       return
-      end procedure wnsumd
+      end subroutine wnsumd
 
       !>## Detailed Input
       !>
@@ -15055,9 +15356,14 @@ contains
       !>        Due to the calling sequence and functionality changes
       !>        in the routine EXCESS, the method of signaling an
       !>        excess of elements needed to be changed.
-      module procedure wnunid
+      module subroutine wnunid ( ctx, a, b, c )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      real(wp), intent(in) :: a        ( lbcell:* )  !! Input windows.
+      real(wp), intent(in) :: b        ( lbcell:* )  !! Input windows.
+      real(wp), intent(inout) :: c        ( lbcell:* )  !! Union of A and B.
 
 
       integer(ip) :: acard
@@ -15211,7 +15517,7 @@ contains
       end if
 
       return
-      end procedure wnunid
+      end subroutine wnunid
 
       !>## Detailed Input
       !>
@@ -15405,10 +15711,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-      module procedure wnvald
+      module subroutine wnvald ( ctx, size, n, window )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: odd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5  !! lower bound of a cell (its control area)
+      integer(ip), intent(in) :: size  !! Size of window.
+      integer(ip), intent(in) :: n  !! Original number of endpoints.
+      real(wp), intent(inout) :: window ( lbcell:* )  !! Input, output window.
 
 
       real(wp) :: left
@@ -15470,6 +15781,6 @@ contains
       end do
 
       return
-      end procedure wnvald
+      end subroutine wnvald
 
 end submodule pepper_cells

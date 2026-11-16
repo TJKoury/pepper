@@ -214,9 +214,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 02-DEC-1999 (WLT)
-      module procedure zzsizeok
+      module subroutine zzsizeok ( ctx, size, psize, dsize, offset, ok, n )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: size  !! Left hand side of the equation in the abstract
+      integer(ip), intent(in) :: psize  !! Coefficient of N (packet size).
+      integer(ip), intent(in) :: dsize  !! Divisor of N-OFFSET (directory size).
+      integer(ip), intent(in) :: offset  !! Offset used in computation of number of directories
+      logical, intent(out) :: ok  !! TRUE if a solution for N exists.
+      integer(ip), intent(out) :: n  !! Value of N if there is a solution, 0 otherwise.
 
 !
 !     Here's the scoop.
@@ -293,7 +300,7 @@ contains
       end if
 
       return
-      end procedure zzsizeok
+      end subroutine zzsizeok
 
       !>## Abstract
       !>
@@ -355,9 +362,12 @@ contains
       !>        Added IMPLICIT NONE.
       !>
       !>-    SPICELIB Version 1.0.0, 03-DEC-1999 (WLT)
-      module procedure zzckspk
+      module subroutine zzckspk ( ctx, handle, ckspk )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of a DAF file open for read access.
+      character(*), intent(out) :: ckspk  !! the type of the DAF file (SPK,CK or ?)
       real(wp) :: chcktm_1(1)  !! one-element copy of chcktm (array argument)
       real(wp) :: frsttm_1(1)  !! one-element copy of frsttm (array argument)
       real(wp) :: lastdp_1(1)  !! one-element copy of lastdp (array argument)
@@ -636,7 +646,7 @@ contains
 
       return
 
-      end procedure zzckspk
+      end subroutine zzckspk
 
       !>## Detailed Input
       !>
@@ -1210,11 +1220,15 @@ contains
       !>        word when it is read. This deals with the case where a
       !>        platform allows a text file to be opened as an unformatted
       !>        file and the ID word does not completely fill 8 characters.
-      module procedure getfat
+      module subroutine getfat ( ctx, file, arch, kertyp )
       use pepper_kinds, only: ip
       use pepper_strings, only: nextwd_inplace, ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! The name of a file to be examined.
+      character(*), intent(out) :: arch  !! The architecture of the kernel file.
+      character(*), intent(out) :: kertyp  !! The type of the kernel file.
 
 
 !
@@ -1651,7 +1665,7 @@ contains
 
       return
 
-      end procedure getfat
+      end subroutine getfat
 
       !>## Detailed Input
       !>
@@ -1766,10 +1780,18 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT)
-      module procedure surfnm
+      module subroutine surfnm ( ctx, a, b, c, point, normal )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vhatip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: a  !! Length of the ellipsoid semi-axis along the X-axis.
+      real(wp), intent(in) :: b  !! Length of the ellipsoid semi-axis along the Y-axis.
+      real(wp), intent(in) :: c  !! Length of the ellipsoid semi-axis along the Z-axis.
+      real(wp), intent(in) :: point  ( 3 )  !! Body-fixed coordinates of a point on the
+                                            !! ellipsoid.
+      real(wp), intent(out) :: normal ( 3 )  !! Outward pointing unit normal to ellipsoid at
+                                             !! POINT.
 
       real(wp) :: m
       real(wp) :: a1
@@ -1847,7 +1869,7 @@ contains
       call vhatip ( normal )
 
       return
-      end procedure surfnm
+      end subroutine surfnm
 
       !>## Detailed Input
       !>
@@ -2182,12 +2204,19 @@ contains
       !>        by use of SPICELIB routines and by normalizing the inputs.
       !>
       !>        Add an example to the header section.
-      module procedure nearpt
+      module subroutine nearpt ( ctx, positn, a, b, c, npoint, alt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_arrays, only: orderd, reordd
       use pepper_math, only: approx, vdist, vnorm, vperp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: positn ( 3 )  !! Position of a point in body-fixed frame.
+      real(wp), intent(in) :: a  !! Length of semi-axis parallel to x-axis.
+      real(wp), intent(in) :: b  !! Length of semi-axis parallel to y-axis.
+      real(wp), intent(in) :: c  !! Length on semi-axis parallel to z-axis.
+      real(wp), intent(out) :: npoint ( 3 )  !! Point on the ellipsoid closest to POSITN.
+      real(wp), intent(out) :: alt  !! Altitude of POSITN above the ellipsoid.
 
 !
 !     Parameters
@@ -3821,7 +3850,7 @@ contains
       alt = bestht/scale
 
       return
-      end procedure nearpt
+      end subroutine nearpt
 
       !>## Detailed Input
       !>
@@ -4159,10 +4188,17 @@ contains
       !>        was added. Because the flattening coefficient is used to
       !>        compute the length of an axis, it must be checked so that
       !>        the length is greater than zero.
-      module procedure recgeo
+      module subroutine recgeo ( ctx, rectan, re, f, lon, lat, alt )
       use pepper_kinds, only: wp
       use pepper_math, only: reclat
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: rectan ( 3 )  !! Rectangular coordinates of a point.
+      real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+      real(wp), intent(in) :: f  !! Flattening coefficient.
+      real(wp), intent(out) :: lon  !! Geodetic longitude of the point (radians).
+      real(wp), intent(out) :: lat  !! Geodetic latitude  of the point (radians).
+      real(wp), intent(out) :: alt  !! Altitude of the point above reference spheroid.
 
       real(wp) :: a
       real(wp) :: b
@@ -4230,7 +4266,7 @@ contains
       end if
 
       return
-      end procedure recgeo
+      end subroutine recgeo
 
       !>## Abstract
       !>
@@ -4391,10 +4427,23 @@ contains
       !>           Re-ordered header sections.
       !>
       !>        04-FEB-1999 (JAB)
-      module procedure zzvrtplt
+      module subroutine zzvrtplt ( ctx, nv, np, plates, cellsz, maxlst, cells, vrtptr, nlist, pltlst )
       use pepper_kinds, only: ip
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nv  !! Number of vertices.
+      integer(ip), intent(in) :: np  !! Number of plates.
+      integer(ip), intent(in) :: plates ( 3, * )  !! Plate array.
+      integer(ip), intent(in) :: cellsz  !! Cell array size.
+      integer(ip), intent(in) :: maxlst  !! Maximum size of output plate list.
+      integer(ip), intent(inout) :: cells  ( 2, cellsz )  !! Workspace array for vertex list
+                                                          !! construction.
+      integer(ip), intent(out) :: vrtptr ( * )  !! Array of pointers, by vertex, into plate data
+                                                !! list.
+      integer(ip), intent(out) :: nlist  !! Length of the plate data list.
+      integer(ip), intent(out) :: pltlst ( * )  !! Plate data list; first element is the number
+                                                !! of plate IDs to follow.
       integer(ip) :: i
       integer(ip) :: j
       integer(ip) :: ncell
@@ -4503,7 +4552,7 @@ contains
 !     Standard SPICE error handling.
 !
       return
-      end procedure zzvrtplt
+      end subroutine zzvrtplt
 
       !>## Abstract
       !>
@@ -4586,9 +4635,16 @@ contains
       !>        $Exceptions section was updated.
       !>
       !>     Based on DSKLIB Version 1.0.0, 20-MAR-2015 (NJB)
-      module procedure zzvoxcvo
+      module subroutine zzvoxcvo ( ctx, vixyz, nvox, cgrscl, cgxyz, cgoff, cgof1d )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: vixyz  ( 3 )  !! Fine voxel integer coordinates.
+      integer(ip), intent(in) :: nvox   ( 3 )  !! Fine voxel grid dimensions.
+      integer(ip), intent(in) :: cgrscl  !! Coarse voxel scale.
+      integer(ip), intent(out) :: cgxyz  ( 3 )  !! Coarse voxel coordinates.
+      integer(ip), intent(out) :: cgoff  ( 3 )  !! 3-D voxel offset relative to coarse voxel.
+      integer(ip), intent(out) :: cgof1d  !! 1-D voxel offset relative to coarse voxel.
 
       integer(ip) :: i
 
@@ -4666,7 +4722,7 @@ contains
                 + (cgoff(2)-1) * cgrscl &
                 +  cgoff(1)
 
-      end procedure zzvoxcvo
+      end subroutine zzvoxcvo
 
       !>## Abstract
       !>
@@ -4749,9 +4805,13 @@ contains
       !>           Removed SAVED variables.
       !>
       !>        04-FEB-1999 (JAB)
-      module procedure zzvox2id
+      module integer(ip) function zzvox2id ( ctx, vixyz, nvox )
       use pepper_kinds, only: ip
       implicit              none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nvox   ( 3 )  !! Number of voxels in each coordinate direction.
+      integer(ip), intent(in) :: vixyz  ( 3 )  !! Voxel's grid coordinates stored in a three-
+                                               !! dimensional vector.
 
 !
 !     Convert from voxel coordinates to voxel index. A more
@@ -4770,7 +4830,7 @@ contains
                  nvox(1)*(  vixyz(2) - 1 + (vixyz(3)-1)*nvox(2)  )
 
       return
-      end procedure zzvox2id
+      end function zzvox2id
 
       !>## Abstract
       !>
@@ -4942,9 +5002,18 @@ contains
       !>        Replaced WRITE with normal error reporting calls.
       !>
       !>      03-FEB-1999 (JAB)
-      module procedure zztrvlnk
+      module subroutine zztrvlnk ( ctx, aval, maxa, pntrs, cellsz, cells, maxb, nb, blist )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: aval  !! A-value index associated with pool entry.
+      integer(ip), intent(in) :: maxa  !! Size of PNTRS array.
+      integer(ip), intent(in) :: pntrs  ( * )  !! A-value pointer array.
+      integer(ip), intent(in) :: cellsz  !! Number of cells in cell array.
+      integer(ip), intent(in) :: cells  ( 2, * )  !! Cell array.
+      integer(ip), intent(in) :: maxb  !! Size of BLIST array.
+      integer(ip), intent(out) :: nb  !! Number of B values found.
+      integer(ip), intent(out) :: blist  ( * )  !! List of B values.
       integer(ip) :: i
       integer(ip) :: ptr
 
@@ -5026,7 +5095,7 @@ contains
 !     Standard SPICE error handling.
 !
       return
-      end procedure zztrvlnk
+      end subroutine zztrvlnk
 
       !>## Detailed Input
       !>
@@ -5170,9 +5239,17 @@ contains
       !>        writes to OUTLST array.
       !>
       !>      03-FEB-1999 (JAB)
-      module procedure zzuntngl
+      module subroutine zzuntngl ( ctx, nptr, maxcel, cells, maxb, pntrs, nout, outlst )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nptr  !! Length of A-list.
+      integer(ip), intent(in) :: maxcel  !! Size of cell list.
+      integer(ip), intent(in) :: cells  ( 2, * )  !! AB cell linked list.
+      integer(ip), intent(in) :: maxb  !! Maximum allowed dimension of B list.
+      integer(ip), intent(inout) :: pntrs  ( * )  !! Pointer array.
+      integer(ip), intent(out) :: nout  !! Length of B-list.
+      integer(ip), intent(out) :: outlst ( * )  !! B-list.
       integer(ip) :: aval
       integer(ip) :: ptrdex
       integer(ip) :: nfound
@@ -5296,7 +5373,7 @@ contains
 !     Standard SPICE error handling.
 !
       return
-      end procedure zzuntngl
+      end subroutine zzuntngl
 
       !>## Abstract
       !>
@@ -5399,9 +5476,15 @@ contains
       !>           Re-ordered header sections.
       !>
       !>        03-FEB-1999 (JAB)
-      module procedure zzinilnk
+      module subroutine zzinilnk ( ctx, maxp, maxc, ncell, pntrs, cells )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: maxp  !! Length of A-value array.
+      integer(ip), intent(in) :: maxc  !! Number of cells.
+      integer(ip), intent(out) :: ncell  !! Number of cells in use; initialized to zero.
+      integer(ip), intent(out) :: pntrs  ( * )  !! Initialized pointer array.
+      integer(ip), intent(out) :: cells  ( 2, * )  !! Initialized cell array.
 
       integer(ip) :: i
 
@@ -5448,7 +5531,7 @@ contains
       ncell = 0
 
       return
-      end procedure zzinilnk
+      end subroutine zzinilnk
 
       !>## Abstract
       !>
@@ -5579,9 +5662,19 @@ contains
       !>        28-JAN-1999 (JAB)
       !>
       !>           Original version.
-      module procedure zzgetvox
+      module subroutine zzgetvox ( ctx, voxsiz, voxori, nvox, xyz, inbox, voxcor )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: voxsiz  !! Voxel size in model units.
+      real(wp), intent(in) :: voxori    ( 3 )  !! 3-Vector location of the voxel grid origin in
+                                               !! model units.
+      integer(ip), intent(in) :: nvox      ( 3 )  !! Number of voxel in each dimension.
+      real(wp), intent(in) :: xyz       ( 3 )  !! Model grid coordinates of point.
+      logical, intent(out) :: inbox  !! Logical value is true if point is inside voxel grid,
+                                     !! false if not.
+      integer(ip), intent(out) :: voxcor     ( 3 )  !! 3-Index of voxel location with the voxel
+                                                    !! grid.
 
 !
 !     Local variables.
@@ -5661,7 +5754,7 @@ contains
       inbox = .true.
 
       return
-      end procedure zzgetvox
+      end subroutine zzgetvox
 
       !>## Abstract
       !>
@@ -5820,9 +5913,17 @@ contains
       !>        than the size of CELLSZ.
       !>
       !>-    MKDSK Version 1.0.0, 03-FEB-1999 (JAB)
-      module procedure zzaddlnk
+      module subroutine zzaddlnk ( ctx, aval, bval, maxa, cellsz, pntrs, ncell, cells )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: aval  !! A-value index associated with new pool entry.
+      integer(ip), intent(in) :: bval  !! B-value associated with input A value.
+      integer(ip), intent(in) :: maxa  !! Size of pointer array.
+      integer(ip), intent(in) :: cellsz  !! Number of cells in cell array.
+      integer(ip), intent(inout) :: pntrs  ( * )  !! A-value pointer array to update.
+      integer(ip), intent(inout) :: ncell  !! Number of cells in AB cell linked-list.
+      integer(ip), intent(inout) :: cells  ( 2, * )  !! Cell array.
       if ( ctx%failed() ) return
 
 !
@@ -5865,7 +5966,7 @@ contains
       pntrs(aval)    = ncell
 
       return
-      end procedure zzaddlnk
+      end subroutine zzaddlnk
 
       !>## Abstract
       !>
@@ -6096,11 +6197,32 @@ contains
       !>
       !>     Fraction of voxel edge length used a tolerance for plate
       !>     inclusion in voxels:
-      module procedure zzmkspin
+      module subroutine zzmkspin ( ctx, np, plates, vrtces, voxscl, cgscal, maxptr, mxcell, maxvxl, cells, nvox, voxsiz, voxori, nvxtot, nvxptr, vxptr, nvxlst, vxlist, extent, cgrptr )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: np  !! Number of plates.
+      integer(ip), intent(in) :: plates ( 3, * )  !! Array of plates.
+      real(wp), intent(in) :: vrtces ( 3, * )  !! Array of vertices.
+      real(wp), intent(in) :: voxscl  !! Voxel scaling factor.
+      integer(ip), intent(in) :: cgscal  !! Coarse voxel grid scaling factor.
+      integer(ip), intent(in) :: maxptr  !! Maximum voxel pointer list size.
+      integer(ip), intent(in) :: mxcell  !! Cell array column dimension.
+      integer(ip), intent(in) :: maxvxl  !! Maximum voxel-plate list size.
+      integer(ip), intent(inout) :: cells   ( 2, mxcell )  !! Workspace array for vertex list
+                                                           !! construction.
+      integer(ip), intent(out) :: nvox   ( 3 )  !! Dimensions of voxel grid.
+      real(wp), intent(out) :: voxsiz  !! Size of a voxel in model units.
+      real(wp), intent(out) :: voxori ( 3 )  !! Origin of voxel grid in model units.
+      integer(ip), intent(out) :: nvxtot  !! Total number of voxels in grid.
+      integer(ip), intent(out) :: nvxptr  !! Number of pointers in VXPTR array.
+      integer(ip), intent(out) :: vxptr  ( * )  !! Pointer index to the voxel to plates list.
+      integer(ip), intent(out) :: nvxlst  !! Length of voxel to plates list.
+      integer(ip), intent(out) :: vxlist ( * )  !! Voxel to plates list.
+      real(wp), intent(out) :: extent ( 6 )  !! Vertex coordinate extents in km.
+      integer(ip), intent(out) :: cgrptr ( * )  !! Coarse voxel grid pointer array.
       real(wp), parameter :: tol = 1.0e-3_wp
 
       real(wp) :: avext
@@ -6624,7 +6746,7 @@ contains
                       maxvxl, vxptr,  nvxlst, vxlist )
 
       return
-      end procedure zzmkspin
+      end subroutine zzmkspin
 
       !>## Detailed Input
       !>
@@ -6996,10 +7118,16 @@ contains
       !>           Updated header.
       !>
       !>        09-FEB-2005 (NJB) (KRG)
-      module procedure dlaopn
+      module subroutine dlaopn ( ctx, fname, ftype, ifname, ncomch, handle )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DLA file to be opened.
+      character(*), intent(in) :: ftype  !! Mnemonic code for type of data in the DLA file.
+      character(*), intent(in) :: ifname  !! Internal file name.
+      integer(ip), intent(in) :: ncomch  !! Number of comment characters to allocate.
+      integer(ip), intent(out) :: handle  !! Handle assigned to the opened DLA file.
 
       integer(ip) :: ncomr
 
@@ -7048,7 +7176,7 @@ contains
 !     by a call to DASCLS or DASLLC, if all goes well.
 !
       return
-      end procedure dlaopn
+      end subroutine dlaopn
 
       !>## Detailed Input
       !>
@@ -7386,10 +7514,12 @@ contains
       !>           Updated header.
       !>
       !>        11-FEB-2005 (NJB)
-      module procedure dlabns
+      module subroutine dlabns ( ctx, handle )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of open DLA file.
 
       integer(ip), parameter :: fstidx = 1
 
@@ -7498,7 +7628,7 @@ contains
 !
 
       return
-      end procedure dlabns
+      end subroutine dlabns
 
       !>## Detailed Input
       !>
@@ -7831,10 +7961,12 @@ contains
       !>           Updated header.
       !>
       !>        11-FEB-2005 (NJB)
-      module procedure dlaens
+      module subroutine dlaens ( ctx, handle )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of open DLA file.
       integer(ip) :: this_1(1)  !! one-element copy of this (array argument)
 
       integer(ip) :: descr  ( dladsz )
@@ -7884,7 +8016,7 @@ contains
 !     addition of a new segment.
 !
       return
-      end procedure dlaens
+      end subroutine dlaens
 
       !>## Detailed Input
       !>
@@ -8115,10 +8247,14 @@ contains
       !>           Updated header.
       !>
       !>        10-FEB-2005 (NJB)
-      module procedure dlabfs
+      module subroutine dlabfs ( ctx, handle, dladsc, found )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of open DLA file.
+      integer(ip), intent(out) :: dladsc  ( * )  !! Descriptor of first segment in DLA file.
+      logical, intent(out) :: found  !! Flag indicating whether a segment was found.
       integer(ip) :: this_1(1)  !! one-element copy of this (array argument)
 
       integer(ip) :: this
@@ -8157,7 +8293,7 @@ contains
       found = .true.
 
       return
-      end procedure dlabfs
+      end subroutine dlabfs
 
       !>## Detailed Input
       !>
@@ -8393,10 +8529,14 @@ contains
       !>        Edits the header comments to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 21-APR-2010 (NJB)
-      module procedure dlabbs
+      module subroutine dlabbs ( ctx, handle, dladsc, found )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of open DLA file.
+      integer(ip), intent(out) :: dladsc  ( * )  !! Descriptor of last segment in DLA file.
+      logical, intent(out) :: found  !! Flag indicating whether a segment was found.
       integer(ip) :: this_1(1)  !! one-element copy of this (array argument)
 
       integer(ip) :: this
@@ -8435,7 +8575,7 @@ contains
       found = .true.
 
       return
-      end procedure dlabbs
+      end subroutine dlabbs
 
       !>## Detailed Input
       !>
@@ -8667,10 +8807,15 @@ contains
       !>           Updated header.
       !>
       !>        10-FEB-2005 (NJB)
-      module procedure dlafns
+      module subroutine dlafns ( ctx, handle, dladsc, nxtdsc, found )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of open DLA file.
+      integer(ip), intent(in) :: dladsc ( * )  !! Descriptor of a segment in DLA file.
+      integer(ip), intent(out) :: nxtdsc ( * )  !! Descriptor of next segment in DLA file.
+      logical, intent(out) :: found  !! Flag indicating whether a segment was found.
 
       integer(ip) :: fwd
 
@@ -8705,7 +8850,7 @@ contains
       found = .true.
 
       return
-      end procedure dlafns
+      end subroutine dlafns
 
       !>## Detailed Input
       !>
@@ -8944,10 +9089,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 06-JAN-2017 (NJB)
       !>
       !>     Original version 21-APR-2010 (NJB)
-      module procedure dlafps
+      module subroutine dlafps ( ctx, handle, dladsc, prvdsc, found )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of open DLA file.
+      integer(ip), intent(in) :: dladsc ( * )  !! Descriptor of a segment in DLA file.
+      integer(ip), intent(out) :: prvdsc ( * )  !! Descriptor of previous segment in DLA file.
+      logical, intent(out) :: found  !! Flag indicating whether a segment was found.
 
       integer(ip) :: bwd
 
@@ -8982,7 +9132,7 @@ contains
       found = .true.
 
       return
-      end procedure dlafps
+      end subroutine dlafps
 
       !>## Detailed Input
       !>
@@ -9112,10 +9262,17 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-MAY-2016 (NJB)
-      module procedure dlassg
+      module logical function dlassg ( ctx, han1, han2, dsc1, dsc2 )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: han1  !! Handle of an open DLA file.
+      integer(ip), intent(in) :: han2  !! Handle of a second open DLA file.
+      integer(ip), intent(in) :: dsc1 ( dladsz )  !! DLA descriptor of a segment in the first
+                                                  !! file.
+      integer(ip), intent(in) :: dsc2 ( dladsz )  !! DLA descriptor of a segment in the second
+                                                  !! file.
 
       integer(ip) :: i
 
@@ -9143,7 +9300,7 @@ contains
       dlassg = .true.
 
       return
-      end procedure dlassg
+      end function dlassg
 
       !>## Detailed Input
       !>
@@ -9270,17 +9427,22 @@ contains
       !>           Updated header.
       !>
       !>        20-OCT-2006 (NJB)
-      module procedure dskopn
+      module subroutine dskopn ( ctx, fname, ifname, ncomch, handle )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a DSK file to be opened.
+      character(*), intent(in) :: ifname  !! Internal file name.
+      integer(ip), intent(in) :: ncomch  !! Number of comment characters to allocate.
+      integer(ip), intent(out) :: handle  !! Handle assigned to the opened DSK file.
 
       if ( ctx%failed() ) return
 
       call dlaopn ( ctx, fname, 'DSK', ifname, ncomch, handle )
 
       return
-      end procedure dskopn
+      end subroutine dskopn
 
       !>## Detailed Input
       !>
@@ -9377,10 +9539,13 @@ contains
       !>        20-OCT-2006 (NJB)
       !>
       !>           Original DSKLIB version.
-      module procedure dskcls
+      module subroutine dskcls ( ctx, handle, optmiz )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle assigned to the opened DSK file.
+      logical, intent(in) :: optmiz  !! Flag indicating whether to segregate the DSK.
 
       integer(ip), parameter :: methln = 10
 
@@ -9426,7 +9591,7 @@ contains
       end if
 
       return
-      end procedure dskcls
+      end subroutine dskcls
 
       !>## Detailed Input
       !>
@@ -9534,10 +9699,13 @@ contains
       !>        complete example code.
       !>
       !>-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
-      module procedure dskgtl
+      module subroutine dskgtl ( ctx, keywrd, dpval )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dsktol
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: keywrd  !! Code specifying parameter to retrieve.
+      real(wp), intent(out) :: dpval  !! Value of parameter.
       logical :: return
       character(namlen), parameter :: names  ( ndspar ) = &
          [ character(namlen) :: 'XFRACT', 'SGREED', 'SGPADM', 'PTMEMM', 'ANGMRG', 'LONALI' ]
@@ -9558,7 +9726,7 @@ contains
 
       return
       end associate
-      end procedure dskgtl
+      end subroutine dskgtl
 
       !>## Detailed Input
       !>
@@ -9696,10 +9864,13 @@ contains
       !>        complete example code.
       !>
       !>-    SPICELIB Version 1.0.0, 01-AUG-2016 (NJB)
-      module procedure dskstl
+      module subroutine dskstl ( ctx, keywrd, dpval )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dsktol
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: keywrd  !! Code specifying parameter to modify.
+      real(wp), intent(in) :: dpval  !! New value of parameter.
       character(namlen), parameter :: names  ( ndspar ) = &
          [ character(namlen) :: 'XFRACT', 'SGREED', 'SGPADM', 'PTMEMM', 'ANGMRG', 'LONALI' ]
       logical, parameter :: isfixd ( ndspar ) = &
@@ -9735,7 +9906,7 @@ contains
 
       return
       end associate
-      end procedure dskstl
+      end subroutine dskstl
 
       !>## Detailed Input
       !>
@@ -10251,11 +10422,15 @@ contains
       !>           readability. Corrected header typo.
       !>
       !>        09-OCT-2009 (NJB)
-      module procedure dskgd
+      module subroutine dskgd ( ctx, handle, dladsc, dskdsc )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of a DSK file.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA segment descriptor.
+      real(wp), intent(out) :: dskdsc ( * )  !! DSK segment descriptor.
 
       integer(ip) :: dpbase
       integer(ip) :: dpsize
@@ -10291,7 +10466,7 @@ contains
       call dasrdd ( ctx, handle, dpbase+1, dpbase+dskdsz, dskdsc )
 
       return
-      end procedure dskgd
+      end subroutine dskgd
 
       !>## Detailed Input
       !>
@@ -10551,12 +10726,26 @@ contains
       !>           Updated header.
       !>
       !>        Beta Version 1.0.0, 30-OCT-2006 (NJB)
-      module procedure dskb02
+      module subroutine dskb02 ( ctx, handle, dladsc, nv, np, nvxtot, vtxbds, voxsiz, voxori, vgrext, cgscal, vtxnpl, voxnpt, voxnpl )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+      integer(ip), intent(out) :: nv  !! Number of vertices in model.
+      integer(ip), intent(out) :: np  !! Number of plates in model.
+      integer(ip), intent(out) :: nvxtot  !! Number of voxels in fine grid.
+      real(wp), intent(out) :: vtxbds ( 2, 3 )  !! Vertex bounds.
+      real(wp), intent(out) :: voxsiz  !! Fine voxel edge length.
+      real(wp), intent(out) :: voxori ( 3 )  !! Fine voxel grid origin.
+      integer(ip), intent(out) :: vgrext ( 3 )  !! Fine voxel grid extent.
+      integer(ip), intent(out) :: cgscal  !! Coarse voxel grid scale.
+      integer(ip), intent(out) :: vtxnpl  !! Size of vertex-plate correspondence list.
+      integer(ip), intent(out) :: voxnpt  !! Size of voxel-plate pointer list.
+      integer(ip), intent(out) :: voxnpl  !! Size of voxel-plate correspondence list.
 
       integer(ip), parameter :: dbfsiz = 10
 
@@ -10606,7 +10795,7 @@ contains
       voxsiz = dbuff ( ixvxsz - dskdsz )
 
       return
-      end procedure dskb02
+      end subroutine dskb02
 
       !>## Detailed Input
       !>
@@ -10983,12 +11172,20 @@ contains
       !>           descriptors.
       !>
       !>        DSKLIB Version 1.0.0, 27-OCT-2006 (NJB)
-      module procedure dskd02
+      module subroutine dskd02 ( ctx, handle, dladsc, item, start, room, n, values )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+      integer(ip), intent(in) :: item  !! Keyword identifying item to fetch.
+      integer(ip), intent(in) :: start  !! Start index.
+      integer(ip), intent(in) :: room  !! Amount of room in output array.
+      integer(ip), intent(out) :: n  !! Number of values returned.
+      real(wp), intent(out) :: values ( * )  !! Array containing requested item.
       integer(ip) :: nv_1(1)  !! one-element copy of nv (array argument)
       integer(ip) :: b
       integer(ip) :: dbase
@@ -11144,7 +11341,7 @@ contains
 
       return
       end associate
-      end procedure dskd02
+      end subroutine dskd02
 
       !>## Detailed Input
       !>
@@ -11570,12 +11767,20 @@ contains
       !>           Updated header.
       !>
       !>        DSKLIB Version 1.0.0, 27-OCT-2006 (NJB)
-      module procedure dski02
+      module subroutine dski02 ( ctx, handle, dladsc, item, start, room, n, values )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+      integer(ip), intent(in) :: item  !! Keyword identifying item to fetch.
+      integer(ip), intent(in) :: start  !! Start index.
+      integer(ip), intent(in) :: room  !! Amount of room in output array.
+      integer(ip), intent(out) :: n  !! Number of values returned.
+      integer(ip), intent(out) :: values ( * )  !! Array containing requested item.
       integer(ip) :: b
       integer(ip) :: e
       integer(ip) :: ibase
@@ -11863,7 +12068,7 @@ contains
 
       return
       end associate
-      end procedure dski02
+      end subroutine dski02
 
       !>## Detailed Input
       !>
@@ -12163,13 +12368,18 @@ contains
       !>        $Examples section.
       !>
       !>        DSKLIB Version 1.0.0, 02-JUN-2010 (NJB)
-      module procedure dskn02
+      module subroutine dskn02 ( ctx, handle, dladsc, plid, normal )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ucrss
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+      integer(ip), intent(in) :: plid  !! Plate ID.
+      real(wp), intent(out) :: normal ( 3 )  !! Plate's unit normal vector.
 
 !     Local variables
 !
@@ -12251,7 +12461,7 @@ contains
       call ucrss ( edge1, edge2, normal )
 
       return
-      end procedure dskn02
+      end subroutine dskn02
 
       !>## Detailed Input
       !>
@@ -12569,12 +12779,19 @@ contains
       !>           the contents of the output PLATES array has been corrected.
       !>
       !>        DSKLIB Version 1.0.0, 02-JUN-2010 (NJB)
-      module procedure dskp02
+      module subroutine dskp02 ( ctx, handle, dladsc, start, room, n, plates )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+      integer(ip), intent(in) :: start  !! Start index.
+      integer(ip), intent(in) :: room  !! Amount of room in output array.
+      integer(ip), intent(out) :: n  !! Number of plates returned.
+      integer(ip), intent(out) :: plates ( 3, * )  !! Array containing plates.
 
       real(wp) :: dskdsc ( dskdsz )
 
@@ -12640,7 +12857,7 @@ contains
       n = n / 3
 
       return
-      end procedure dskp02
+      end subroutine dskp02
 
       !>## Detailed Input
       !>
@@ -12968,12 +13185,19 @@ contains
       !>           the contents of the output VRTCES array has been corrected.
       !>
       !>        DSKLIB Version 1.0.0, 02-JUN-2010 (NJB)
-      module procedure dskv02
+      module subroutine dskv02 ( ctx, handle, dladsc, start, room, n, vrtces )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+      integer(ip), intent(in) :: start  !! Start index.
+      integer(ip), intent(in) :: room  !! Amount of room in output array.
+      integer(ip), intent(out) :: n  !! Number of vertices returned.
+      real(wp), intent(out) :: vrtces ( 3, * )  !! Array containing vertices.
 
       real(wp) :: dskdsc ( dskdsz )
 
@@ -13040,12 +13264,16 @@ contains
       n = n / 3
 
       return
-      end procedure dskv02
+      end subroutine dskv02
 
       !> All the plates of a type 2 DSK segment (PEPPER).
-      module procedure dsk_plates
+      module subroutine dsk_plates ( ctx, handle, dladsc, plates )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of the DSK file
+      integer(ip), intent(in) :: dladsc(*)  !! the DLA descriptor of the segment
+      integer(ip), allocatable, intent(out) :: plates(:,:)  !! the plates, shape (3, n): vertex indices (n = 0 after an error)
       integer(ip) :: n
       integer(ip) :: np
       integer(ip) :: nv
@@ -13060,12 +13288,16 @@ contains
          deallocate ( plates )
          allocate ( plates(3,0) )
       end if
-      end procedure dsk_plates
+      end subroutine dsk_plates
 
       !> All the vertices of a type 2 DSK segment (PEPPER).
-      module procedure dsk_vertices
+      module subroutine dsk_vertices ( ctx, handle, dladsc, vertices )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of the DSK file
+      integer(ip), intent(in) :: dladsc(*)  !! the DLA descriptor of the segment
+      real(wp), allocatable, intent(out) :: vertices(:,:)  !! the vertices, shape (3, n) (n = 0 after an error)
       integer(ip) :: n
       integer(ip) :: np
       integer(ip) :: nv
@@ -13080,7 +13312,7 @@ contains
          deallocate ( vertices )
          allocate ( vertices(3,0) )
       end if
-      end procedure dsk_vertices
+      end subroutine dsk_vertices
 
       !>## Detailed Input
       !>
@@ -13345,12 +13577,17 @@ contains
       !>        example to reduce the output.
       !>
       !>-    SPICELIB Version 1.0.0, 02-JUN-2010 (NJB)
-      module procedure dskz02
+      module subroutine dskz02 ( ctx, handle, dladsc, nv, np )
       use pepper_kinds, only: ip
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor.
+      integer(ip), intent(out) :: nv  !! Number of vertices.
+      integer(ip), intent(out) :: np  !! Number of plates.
       integer(ip) :: np_1(1)  !! one-element copy of np (array argument)
       integer(ip) :: nv_1(1)  !! one-element copy of nv (array argument)
 
@@ -13364,7 +13601,7 @@ contains
       np = np_1(1)
 
       return
-      end procedure dskz02
+      end subroutine dskz02
 
       !>## Detailed Input
       !>
@@ -14024,11 +14261,26 @@ contains
       !>        23-JAN-2016 (NJB)
       !>
       !>           Original version.
-      module procedure dskmi2
+      module subroutine dskmi2 ( ctx, nv, vrtces, np, plates, finscl, corscl, worksz, voxpsz, voxlsz, makvtl, spxisz, work, spaixd, spaixi )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nv  !! Number of vertices.
+      real(wp), intent(in) :: vrtces ( 3, * )  !! Vertices.
+      integer(ip), intent(in) :: np  !! Number of plates.
+      integer(ip), intent(in) :: plates ( 3, * )  !! Plates.
+      real(wp), intent(in) :: finscl  !! Fine voxel scale.
+      integer(ip), intent(in) :: corscl  !! Coarse voxel scale.
+      integer(ip), intent(in) :: worksz  !! Workspace size.
+      integer(ip), intent(in) :: voxpsz  !! Voxel-plate pointer array size.
+      integer(ip), intent(in) :: voxlsz  !! Voxel-plate list array size.
+      logical, intent(in) :: makvtl  !! Vertex-plate list flag.
+      integer(ip), intent(in) :: spxisz  !! Spatial index integer component size.
+      integer(ip), intent(inout) :: work   ( 2, worksz )  !! Workspace.
+      real(wp), intent(out) :: spaixd ( ixdfix )  !! Double precision component of spatial index.
+      integer(ip), intent(out) :: spaixi ( spxisz )  !! Integer component of spatial index.
 
       integer(ip) :: i
       integer(ip) :: j
@@ -14264,7 +14516,7 @@ contains
       end if
 
       return
-      end procedure dskmi2
+      end subroutine dskmi2
 
       !>## Detailed Input
       !>
@@ -14703,12 +14955,21 @@ contains
       !>        22-JAN-2016 (NJB)
       !>
       !>         Original version.
-      module procedure dskrb2
+      module subroutine dskrb2 ( ctx, nv, vrtces, np, plates, corsys, corpar, mncor3, mxcor3 )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin
       use pepper_math, only: vdist, vnorm
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nv  !! Number of vertices.
+      real(wp), intent(in) :: vrtces ( 3, * )  !! Vertices.
+      integer(ip), intent(in) :: np  !! Number of plates.
+      integer(ip), intent(in) :: plates ( 3, * )  !! Plates.
+      integer(ip), intent(in) :: corsys  !! DSK coordinate system code.
+      real(wp), intent(in) :: corpar ( * )  !! DSK coordinate system parameters.
+      real(wp), intent(out) :: mncor3  !! Lower bound on range of third coordinate.
+      real(wp), intent(out) :: mxcor3  !! Upper bound on range of third coordinate.
 
       real(wp), parameter :: third = 1.0_wp/3.0_wp
       real(wp) :: alt
@@ -14834,7 +15095,7 @@ contains
       end if
 
       return
-      end procedure dskrb2
+      end subroutine dskrb2
 
       !>## Detailed Input
       !>
@@ -15017,9 +15278,14 @@ contains
       !>        $Exceptions section.
       !>
       !>-    SPICELIB Version 1.0.0, 22-AUG-2016 (NJB)
-      module procedure dskobj
+      module subroutine dskobj ( ctx, dskfnm, bodids )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: dskfnm  !! Name of DSK file.
+      integer(ip), intent(inout) :: bodids ( lbcell : * )  !! Set of ID codes of objects in DSK
+                                                           !! file.
       integer(ip), allocatable :: list(:)
       integer(ip) :: k
 !
@@ -15043,14 +15309,17 @@ contains
          end if
          call insrti ( ctx, list(k), bodids )
       end do
-      end procedure dskobj
+      end subroutine dskobj
 
-      module procedure dsk_objects
+      module subroutine dsk_objects ( ctx, file, ids )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: append_id, sort_unique
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the DSK file
+      integer(ip), allocatable, intent(out) :: ids(:)  !! the body ID codes (size 0 after an error)
       integer(ip), allocatable :: list(:)  ! the IDs found (unsorted, with duplicates)
       integer(ip) :: nlist  ! the number of IDs in LIST
 
@@ -15164,7 +15433,7 @@ contains
          call sort_unique ( ids )
       end if
       return
-      end procedure dsk_objects
+      end subroutine dsk_objects
 
       !>## Detailed Input
       !>
@@ -15349,9 +15618,15 @@ contains
       !>        in entries #2, #3 and #5 in $Exceptions section.
       !>
       !>-    SPICELIB Version 1.0.0, 22-AUG-2016 (NJB)
-      module procedure dsksrf
+      module subroutine dsksrf ( ctx, dskfnm, bodyid, srfids )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: dskfnm  !! Name of DSK file.
+      integer(ip), intent(in) :: bodyid  !! Integer body ID code.
+      integer(ip), intent(inout) :: srfids ( lbcell : * )  !! Set of ID codes of surfaces in DSK
+                                                           !! file.
       integer(ip), allocatable :: list(:)
       integer(ip) :: k
 !
@@ -15375,14 +15650,18 @@ contains
          end if
          call insrti ( ctx, list(k), srfids )
       end do
-      end procedure dsksrf
+      end subroutine dsksrf
 
-      module procedure dsk_surfaces
+      module subroutine dsk_surfaces ( ctx, file, body, ids )
       use pepper_kinds, only: ip, wp
       use pepper_windows, only: append_id, sort_unique
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! the DSK file
+      integer(ip), intent(in) :: body  !! the body ID code
+      integer(ip), allocatable, intent(out) :: ids(:)  !! the surface ID codes (size 0 after an error)
       integer(ip), allocatable :: list(:)  ! the IDs found (unsorted, with duplicates)
       integer(ip) :: nlist  ! the number of IDs in LIST
 
@@ -15504,6 +15783,6 @@ contains
          call sort_unique ( ids )
       end if
       return
-      end procedure dsk_surfaces
+      end subroutine dsk_surfaces
 
 end submodule pepper_dsk_files

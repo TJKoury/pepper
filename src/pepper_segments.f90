@@ -2631,11 +2631,14 @@ contains
       !>        file cannot occur more than once in the file table.
       !>
       !>     Standard SPICE error handling.
-      module procedure spklef
+      module subroutine spklef ( ctx, fname, handle )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of the file to be loaded.
+      integer(ip), intent(out) :: handle  !! Loaded file's handle.
 !
 !     PEPPER: the segments of the file are indexed now (SPICELIB found
 !     them when a body was first searched for). A file loaded again is
@@ -2646,7 +2649,7 @@ contains
          call ctx%spice%spkbsr%index%init ( 5_ip, 6_ip )
       call load_daf_file ( ctx, ctx%spice%spkbsr%index, fname, 2_ip, 6_ip, handle )
       return
-      end procedure spklef
+      end subroutine spklef
 
       !>## Detailed Input
       !>
@@ -2824,14 +2827,16 @@ contains
       !>-    Beta Version 1.1.0, 25-JAN-1990 (IMU)
       !>
       !>        When unloading a file, close it.
-      module procedure spkuef
+      module subroutine spkuef ( ctx, handle )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of file to be unloaded
       if ( ctx%failed() ) return
       if ( ctx%spice%spkbsr%index%ndescr == 0 ) return
       call unload_daf_file ( ctx, ctx%spice%spkbsr%index, handle )
       return
-      end procedure spkuef
+      end subroutine spkuef
 
       !>## Detailed Input
       !>
@@ -3075,10 +3080,17 @@ contains
       !>        loaded, an error is now signaled.
       !>
       !>     Assume the segment is not found, until it actually is.
-      module procedure spksfs
+      module subroutine spksfs ( ctx, body, et, handle, descr, ident, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin, intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: handle  !! Handle of file containing the applicable segment.
+      integer(ip), intent(in) :: body  !! Body ID.
+      real(wp), intent(in) :: et  !! Ephemeris time.
+      real(wp), intent(out) :: descr    ( * )  !! Descriptor of the applicable segment.
+      character(*), intent(out) :: ident  !! Identifier of the applicable segment.
+      logical, intent(out) :: found  !! Indicates whether or not a segment was found.
       found = .false.
       if ( ctx%failed() ) return
       if ( ctx%spice%spkbsr%index%nfiles > 0 ) then
@@ -3091,7 +3103,7 @@ contains
                         'by SPKLEF before beginning a search.'        )
       call ctx%sigerr ( 'SPICE(NOLOADEDFILES)'                       )
       return
-      end procedure spksfs
+      end subroutine spksfs
 
       !>## Detailed Input
       !>
@@ -3200,11 +3212,14 @@ contains
       !>        are set to .FALSE. here.
       !>
       !>-    SPICELIB Version 1.0.0, 16-MAR-1994 (KSZ)
-      module procedure pcklof
+      module subroutine pcklof ( ctx, fname, handle )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of the file to be loaded.
+      integer(ip), intent(out) :: handle  !! Loaded file's handle.
 !
 !     PEPPER: the segments of the file are indexed now (SPICELIB found
 !     them when a body was first searched for). A file loaded again is
@@ -3215,7 +3230,7 @@ contains
          call ctx%spice%pckbsr%index%init ( 5_ip, 5_ip )
       call load_daf_file ( ctx, ctx%spice%pckbsr%index, fname, 2_ip, 5_ip, handle )
       return
-      end procedure pcklof
+      end subroutine pcklof
 
       !>## Detailed Input
       !>
@@ -3304,14 +3319,16 @@ contains
       !>        whose data comes from the unloaded file are set to .FALSE.
       !>
       !>-    SPICELIB Version 1.0.0, 16-MAR-1994 (KSZ)
-      module procedure pckuof
+      module subroutine pckuof ( ctx, handle )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of file to be unloaded
       if ( ctx%failed() ) return
       if ( ctx%spice%pckbsr%index%ndescr == 0 ) return
       call unload_daf_file ( ctx, ctx%spice%pckbsr%index, handle )
       return
-      end procedure pckuof
+      end subroutine pckuof
 
       !>## Detailed Input
       !>
@@ -3463,10 +3480,17 @@ contains
       !>        The main difference is that the SFS subroutine returns
       !>        FOUND = .FALSE. if no files are found, rather than returning
       !>        an error.
-      module procedure pcksfs
+      module subroutine pcksfs ( ctx, body, et, handle, descr, ident, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin, intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: handle  !! Handle of file containing the applicable segment.
+      integer(ip), intent(in) :: body  !! Body ID.
+      real(wp), intent(in) :: et  !! Ephemeris time.
+      real(wp), intent(out) :: descr    ( * )  !! Descriptor of the applicable segment.
+      character(*), intent(out) :: ident  !! Identifier of the applicable segment.
+      logical, intent(out) :: found  !! Indicates whether or not a segment was found.
       found = .false.
       if ( ctx%failed() ) return
       if ( ctx%spice%pckbsr%index%ndescr == 0 ) return
@@ -3475,7 +3499,7 @@ contains
       call find_segment ( ctx, ctx%spice%pckbsr%index, ctx%pckbsr_cache%reuse, &
                           body, et, handle, descr, ident, found )
       return
-      end procedure pcksfs
+      end subroutine pcksfs
 
       !>## Detailed Input
       !>
@@ -3702,11 +3726,14 @@ contains
       !>-    Beta Version 1.0.0, 14-MAR-1990 (RET) (IMU)
       !>
       !>     Standard SPICE error handling.
-      module procedure cklpf
+      module subroutine cklpf ( ctx, fname, handle )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of the CK file to be loaded.
+      integer(ip), intent(out) :: handle  !! Loaded file's handle.
 !
 !     PEPPER: the segments of the file are indexed now (SPICELIB found
 !     them when an instrument was first searched for). A file loaded
@@ -3717,7 +3744,7 @@ contains
          call ctx%spice%ckbsr%index%init ( 5_ip, 6_ip )
       call load_daf_file ( ctx, ctx%spice%ckbsr%index, fname, 2_ip, 6_ip, handle )
       return
-      end procedure cklpf
+      end subroutine cklpf
 
       !>## Detailed Input
       !>
@@ -3886,14 +3913,16 @@ contains
       !>         Comments were updated.
       !>
       !>-    Beta Version 1.0.0, 07-SEP-1990 (RET) (IMU)
-      module procedure ckupf
+      module subroutine ckupf ( ctx, handle )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of CK file to be unloaded
       if ( ctx%failed() ) return
       if ( ctx%spice%ckbsr%index%ndescr == 0 ) return
       call unload_daf_file ( ctx, ctx%spice%ckbsr%index, handle )
       return
-      end procedure ckupf
+      end subroutine ckupf
 
       !>## Detailed Input
       !>
@@ -4031,9 +4060,14 @@ contains
       !>-    Beta Version 1.0.0, 20-APR-1990 (RET) (IMU)
       !>
       !>     Standard SPICE error handling.
-      module procedure ckbss
+      module subroutine ckbss ( ctx, inst, sclkdp, tol, needav )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: inst  !! Spacecraft and instrument ID.
+      real(wp), intent(in) :: sclkdp  !! Encoded spacecraft clock time.
+      real(wp), intent(in) :: tol  !! Time tolerance.
+      logical, intent(in) :: needav  !! Is there a need for angular velocity?
       if ( .not. allocated ( ctx%ckbsr_cache ) ) allocate ( ctx%ckbsr_cache )
       associate ( cs => ctx%ckbsr_cache )
       if ( ctx%failed() ) return
@@ -4068,7 +4102,7 @@ contains
                               'by CKLPF before beginning a search.'       )
             call ctx%sigerr ( 'SPICE(NOLOADEDFILES)'                      )
          end subroutine no_ck_files
-      end procedure ckbss
+      end subroutine ckbss
 
       !>## Detailed Input
       !>
@@ -4331,10 +4365,15 @@ contains
       !>-    Beta Version 1.0.0, 20-APR-1990 (RET) (IMU)
       !>
       !>     Nothing's been found yet.
-      module procedure cksns
+      module subroutine cksns ( ctx, handle, descr, segid, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, dpmin, intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: handle  !! Handle of file containing the applicable segment.
+      real(wp), intent(out) :: descr    ( * )  !! Descriptor of the applicable segment.
+      character(*), intent(out) :: segid  !! Identifier of the applicable segment.
+      logical, intent(out) :: found  !! .TRUE. if a segment was found.
       integer(ip) :: e
       integer(ip) :: s
       found = .false.
@@ -4418,7 +4457,7 @@ contains
       end do
       return
       end associate
-      end procedure cksns
+      end subroutine cksns
 
       !>## Detailed Input
       !>
@@ -4542,14 +4581,16 @@ contains
       !>        Added the Entry point CKHAVE.
       !>
       !>-    SPICELIB Version 3.0.0, 03-MAR-1999 (WLT)
-      module procedure ckhave
+      module subroutine ckhave ( ctx, found )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(out) :: found  !! .TRUE. if at least one C-kernel is loaded.
       found = .false.
       if ( ctx%failed() ) return
       found = ctx%spice%ckbsr%index%nfiles > 0
       return
-      end procedure ckhave
+      end subroutine ckhave
 
       !>## Detailed Input
       !>
@@ -4648,7 +4689,7 @@ contains
       !>     None.
       !>
       !>     Standard SPICE error handling.
-      module procedure zzdsklsf
+      module subroutine zzdsklsf ( ctx, fname, handle )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: intmax
@@ -4656,6 +4697,9 @@ contains
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of the DSK file to be loaded.
+      integer(ip), intent(out) :: handle  !! Loaded file's handle.
       if ( ctx%failed() ) return
       if ( ctx%spice%zzdskbsr%index%ndescr == 0 ) &
          call ctx%spice%zzdskbsr%index%init ( int ( dskdsz, ip ), int ( dladsz, ip ) )
@@ -4686,7 +4730,7 @@ contains
       call ix%add_file ( handle )
       end associate
       return
-      end procedure zzdsklsf
+      end subroutine zzdsklsf
 
       !>## Detailed Input
       !>
@@ -4759,12 +4803,14 @@ contains
       !>## Revisions
       !>
       !>     None.
-      module procedure zzdskusf
+      module subroutine zzdskusf ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DSK file to be unloaded
       if ( ctx%failed() ) return
       if ( ctx%spice%zzdskbsr%index%ndescr == 0 ) return
       if ( ctx%spice%zzdskbsr%pass1 ) then
@@ -4777,7 +4823,7 @@ contains
       call dascls ( ctx, handle )
       call ctx%spice%zzdskbsr%index%remove_file ( handle )
       return
-      end procedure zzdskusf
+      end subroutine zzdskusf
 
       !>## Detailed Input
       !>
@@ -4860,12 +4906,14 @@ contains
       !>     None.
       !>
       !>     Standard SPICE error handling.
-      module procedure zzdskbss
+      module subroutine zzdskbss ( ctx, bodyid )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! ID code of body.
       if ( .not. allocated ( ctx%zzdskbsr_cache ) ) allocate ( ctx%zzdskbsr_cache )
       if ( ctx%failed() ) return
       ctx%zzdskbsr_cache%active = .false.
@@ -4882,7 +4930,7 @@ contains
       //            'by ZZDSKLSF before a search can be started.' )
       call ctx%sigerr ( 'SPICE(NOLOADEDDSKFILES)'                     )
       return
-      end procedure zzdskbss
+      end subroutine zzdskbss
 
       !>## Detailed Input
       !>
@@ -5157,16 +5205,19 @@ contains
       !>## Revisions
       !>
       !>     None.
-      module procedure zzdskchk
+      module subroutine zzdskchk ( ctx, usrctr, update )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: usrctr ( * )  !! User counter.
+      logical, intent(out) :: update  !! Update flag.
       if ( ctx%failed() ) return
       call zzctrchk ( ctx, ctx%spice%zzdskbsr%dskctr, usrctr, update )
       return
-      end procedure zzdskchk
+      end subroutine zzdskchk
 
    !> PEPPER: open a DAF (SPK, PCK or CK) for reading, index its segments
    !> and record it as the file searched first (the body of SPKLEF, PCKLOF

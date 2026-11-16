@@ -812,13 +812,35 @@ contains
       !>        27-JUN-2006 (NJB)
       !>
       !>           Initial version.
-      module procedure dskw02
+      module subroutine dskw02 ( ctx, handle, center, surfid, dclass, frame, corsys, corpar, mncor1, mxcor1, mncor2, mxcor2, mncor3, mxcor3, first, last, nv, vrtces, np, plates, spaixd, spaixi )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr, halfpi, twopi
       use pepper_inc_dskdsc
       use pepper_inc_dsktol
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle assigned to the opened DSK file.
+      integer(ip), intent(in) :: center  !! Central body ID code.
+      integer(ip), intent(in) :: surfid  !! Surface ID code.
+      integer(ip), intent(in) :: dclass  !! Data class.
+      character(*), intent(in) :: frame  !! Reference frame.
+      integer(ip), intent(in) :: corsys  !! Coordinate system code.
+      real(wp), intent(in) :: corpar ( * )  !! Coordinate system parameters.
+      real(wp), intent(in) :: mncor1  !! Minimum value of first coordinate.
+      real(wp), intent(in) :: mxcor1  !! Maximum value of first coordinate.
+      real(wp), intent(in) :: mncor2  !! Minimum value of second coordinate.
+      real(wp), intent(in) :: mxcor2  !! Maximum value of second coordinate.
+      real(wp), intent(in) :: mncor3  !! Minimum value of third coordinate.
+      real(wp), intent(in) :: mxcor3  !! Maximum value of third coordinate.
+      real(wp), intent(in) :: first  !! Coverage start time.
+      real(wp), intent(in) :: last  !! Coverage stop time.
+      integer(ip), intent(in) :: nv  !! Number of vertices.
+      real(wp), intent(in) :: vrtces ( 3, nv )  !! Vertices.
+      integer(ip), intent(in) :: np  !! Number of plates.
+      integer(ip), intent(in) :: plates ( 3, np )  !! Plates.
+      real(wp), intent(in) :: spaixd ( * )  !! Double precision component of spatial index.
+      integer(ip), intent(in) :: spaixi ( * )  !! Integer component of spatial index.
 
       real(wp) :: a
       real(wp) :: altlim
@@ -1576,6 +1598,6 @@ contains
       call dlaens ( ctx, handle )
 
       return
-      end procedure dskw02
+      end subroutine dskw02
 
 end submodule pepper_dsk_write

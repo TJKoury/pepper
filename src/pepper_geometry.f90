@@ -1517,9 +1517,12 @@ contains
       !>        variable warning during compilation.
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB) (LSE) (IMU) (WLT) (EDW)
-      module procedure gfstep
+      module subroutine gfstep ( ctx, time, step )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: time  !! Ignored ET value.
+      real(wp), intent(out) :: step  !! Time step to take.
       if ( .not. allocated ( ctx%gfstep_state ) ) allocate ( ctx%gfstep_state )
       associate ( svstep => ctx%gfstep_state%svstep, &
                   svinit => ctx%gfstep_state%svinit )
@@ -1539,7 +1542,7 @@ contains
 
       return
       end associate
-      end procedure gfstep
+      end subroutine gfstep
 
       !>## Detailed Input
       !>
@@ -1604,9 +1607,11 @@ contains
       !>        Expanded error message on STEP for clarity.
       !>
       !>-    SPICELIB Version 1.0.0, 15-APR-2009 (LSE) (NJB)
-      module procedure gfsstp
+      module subroutine gfsstp ( ctx, step )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: step  !! Time step to take.
       if ( .not. allocated ( ctx%gfstep_state ) ) allocate ( ctx%gfstep_state )
       associate ( svstep => ctx%gfstep_state%svstep, &
                   svinit => ctx%gfstep_state%svinit )
@@ -1624,7 +1629,7 @@ contains
 
       return
       end associate
-      end procedure gfsstp
+      end subroutine gfsstp
 
       !>## Detailed Input
       !>
@@ -1717,9 +1722,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 03-MAR-2009 (NJB) (EDW)
-      module procedure gfrefn
+      module subroutine gfrefn ( ctx, t1, t2, s1, s2, t )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: t1  !! One of two values bracketing a state change.
+      real(wp), intent(in) :: t2  !! The other value that brackets a state change.
+      logical, intent(in) :: s1  !! State at T1.
+      logical, intent(in) :: s2  !! State at T2.
+      real(wp), intent(out) :: t  !! New value at which to check for transition.
 
 !
 !     Local variables.
@@ -1731,7 +1742,7 @@ contains
       t = max(min(t1, t2), min(max(t1, t2), x))
 
       return
-      end procedure gfrefn
+      end subroutine gfrefn
 
       !>## Detailed Input
       !>
@@ -1840,10 +1851,13 @@ contains
       !>        Made SCLK an "an" word.
       !>
       !>-    SPICELIB Version 1.0.0, 29-NOV-1995 (WLT)
-      module procedure ana
+      module character(2) function ana ( ctx, word, case )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase, replch_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: word  !! is a word that should be modified by "a" or "an".
+      character(*), intent(in) :: case  !! 'U', 'L', or 'C' to specify capitalization of [[ana]].
       integer(ip), parameter :: anwrds = 22
       integer(ip), parameter :: awrds = 33
       character(8), parameter :: anword ( anwrds ) = &
@@ -1948,7 +1962,7 @@ contains
 
       return
       end associate
-      end procedure ana
+      end function ana
 
       !>## Detailed Input
       !>
@@ -2657,12 +2671,24 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 01-NOV-2021 (JDR) (NJB) (EDW)
-      module procedure azlcpo
+      module subroutine azlcpo ( ctx, method, target, et, abcorr, azccw, elplsz, obspos, obsctr, obsref, azlsta, lt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
       use pepper_math, only: ident, mxv, recazl
       use pepper_strings, only: eqstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Method to obtain the surface normal vector.
+      character(*), intent(in) :: target  !! Name of target ephemeris object.
+      real(wp), intent(in) :: et  !! Observation epoch.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      logical, intent(in) :: azccw  !! Flag indicating how azimuth is measured.
+      logical, intent(in) :: elplsz  !! Flag indicating how elevation is measured.
+      real(wp), intent(in) :: obspos ( 3 )  !! Observer position relative to center of motion.
+      character(*), intent(in) :: obsctr  !! Center of motion of observer.
+      character(*), intent(in) :: obsref  !! Body-fixed, body-centered frame of observer's center.
+      real(wp), intent(out) :: azlsta ( 6 )  !! State of target with respect to observer, in azimuth/elevation coordinates.
+      real(wp), intent(out) :: lt  !! One way light time between target and observer.
       character(*), parameter :: refloc = 'OBSERVER'
       real(wp) :: alt
       real(wp) :: jacobi ( 3, 3 )
@@ -2858,7 +2884,7 @@ contains
 
       return
       end associate
-      end procedure azlcpo
+      end subroutine azlcpo
 
       !>## Detailed Input
       !>
@@ -3106,13 +3132,17 @@ contains
       !>        Updated for changed ZZFDAT calling sequence.
       !>
       !>-    SPICELIB Version 1.0.0, 21-MAY-2012 (NJB)
-      module procedure bltfrm
+      module subroutine bltfrm ( ctx, frmcls, idset )
       use pepper_kinds, only: ip
       use pepper_arrays, only: orderi
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_ninert
       use pepper_inc_nninrt
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: frmcls  !! Frame class.
+      integer(ip), intent(inout) :: idset  ( lbcell : * )  !! Set of ID codes of frames of the specified class.
       integer(ip), parameter :: nframe = ninert + nninrt
       integer(ip), parameter :: frnmln = 32
       integer(ip), parameter :: lbpool = -5
@@ -3234,7 +3264,7 @@ contains
 
       return
       end associate
-      end procedure bltfrm
+      end subroutine bltfrm
 
       !>## Detailed Input
       !>
@@ -3536,9 +3566,13 @@ contains
       !>
       !>        $Examples section completed. Declaration of unused variable
       !>        FOUND removed.
-      module procedure bodmat
+      module subroutine bodmat ( ctx, body, et, tipm )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! ID code of body.
+      real(wp), intent(in) :: et  !! Epoch of transformation.
+      real(wp), intent(out) :: tipm   ( 3,3 )  !! Transformation from Inertial to PM for BODY at ET.
 
       real(wp) :: tsipm   ( 6, 6 )
 
@@ -3565,7 +3599,7 @@ contains
       end do
 
       return
-      end procedure bodmat
+      end subroutine bodmat
 
       !>## Detailed Input
       !>
@@ -3752,10 +3786,14 @@ contains
       !>        The original version of the routine had a bug in that
       !>        it attempted to restrict the hyperbolic anomaly to
       !>        the interval 0 to 2*PI. This has been fixed.
-      module procedure conics
+      module subroutine conics ( ctx, elts, et, state )
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: elts    ( 8 )  !! Conic elements.
+      real(wp), intent(in) :: et  !! Input time.
+      real(wp), intent(out) :: state   ( 6 )  !! State of orbiting body at ET.
 
       real(wp) :: rp
       real(wp) :: ecc
@@ -3959,7 +3997,7 @@ contains
       call prop2b ( ctx, mu, pstate, dt, state )
 
       return
-      end procedure conics
+      end subroutine conics
 
       !>## Detailed Input
       !>
@@ -4035,8 +4073,10 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 20-DEC-1995 (KRG)
-      module procedure delfil
+      module subroutine delfil ( ctx, filnam )
       use pepper_kinds, only: ip
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: filnam  !! The name of a file to be deleted.
       integer(ip) :: iostat
       integer(ip) :: lunit
 
@@ -4143,7 +4183,7 @@ contains
 
       return
 
-      end procedure delfil
+      end subroutine delfil
 
       !>## Detailed Input
       !>
@@ -4476,9 +4516,16 @@ contains
       !>        Added complete code example.
       !>
       !>-    SPICELIB Version 1.0.0, 20-JUL-2001 (WLT)
-      module procedure dgeodr
+      module subroutine dgeodr ( ctx, x, y, z, re, f, jacobi )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! X-coordinate of point.
+      real(wp), intent(in) :: y  !! Y-coordinate of point.
+      real(wp), intent(in) :: z  !! Z-coordinate of point.
+      real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+      real(wp), intent(in) :: f  !! Flattening coefficient.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
 
       real(wp) :: rectan  ( 3 )
       real(wp) :: long
@@ -4554,7 +4601,7 @@ contains
       call invort ( ctx, injacb, jacobi )
 
       return
-      end procedure dgeodr
+      end subroutine dgeodr
 
       !>## Detailed Input
       !>
@@ -4808,10 +4855,13 @@ contains
       !>        Rename of the ZZDHA call to DHFA.
       !>
       !>-    SPICELIB Version 1.0.0, 10-FEB-2009 (EDW) (NJB)
-      module procedure dhfa
+      module real(wp) function dhfa ( ctx, state, bodyr )
       use pepper_kinds, only: wp
       use pepper_math, only: unorm, vdot
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: state (6)  !! SPICE state vector
+      real(wp), intent(in) :: bodyr  !! Radius of body
 
       real(wp) :: p     (3)
       real(wp) :: r
@@ -4889,7 +4939,7 @@ contains
 
       return
 
-      end procedure dhfa
+      end function dhfa
 
       !>## Detailed Input
       !>
@@ -5156,10 +5206,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 04-NOV-1990 (NJB)
-      module procedure diags2
+      module subroutine diags2 ( ctx, symmat, diag, rotate )
       use pepper_kinds, only: wp
       use pepper_math, only: vhatg
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: symmat ( 2, 2 )  !! A symmetric 2x2 matrix.
+      real(wp), intent(out) :: diag   ( 2, 2 )  !! A diagonal matrix similar to SYMMAT.
+      real(wp), intent(out) :: rotate ( 2, 2 )  !! A rotation used as the similarity transformation.
       real(wp) :: a
       real(wp) :: b
       real(wp) :: c
@@ -5383,7 +5437,7 @@ contains
 
       return
       end associate
-      end procedure diags2
+      end subroutine diags2
 
       !>## Detailed Input
       !>
@@ -5506,9 +5560,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 05-NOV-1990 (WLT)
-      module procedure drotat
+      module subroutine drotat ( ctx, angle, iaxis, dmout )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: angle  !! Angle of rotation (radians).
+      integer(ip), intent(in) :: iaxis  !! Coordinate axis number (X=1, Y=2, Z=3).
+      real(wp), intent(out) :: dmout  ( 3,3 )  !! Derivative of rotation matrix [ANGLE] w.r.t. angle IAXIS
 
       real(wp) :: s
       real(wp) :: c
@@ -5560,7 +5618,7 @@ contains
       dmout(i2,i3) =  c
       dmout(i3,i3) = -s
       return
-      end procedure drotat
+      end subroutine drotat
 
       !>## Detailed Input
       !>
@@ -5727,10 +5785,17 @@ contains
       !>         In order to conform to this convention, FOUND was changed to
       !>         NFOUND to indicate that it has an integer value, not a logical
       !>         value.
-      module procedure dxtrct
+      module subroutine dxtrct ( ctx, keywd, maxwds, string, nfound, parsed, values )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: fndnwd, nblen, nparsd, wdindx
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: keywd  !! Keyword used to mark start of a set of numbers.
+      integer(ip), intent(in) :: maxwds  !! Maximum number of numeric words that can be parsed
+      character(*), intent(inout) :: string  !! String potentially containing KEYWD and numbers.
+      integer(ip), intent(out) :: nfound  !! Number of numeric words found following the KEYWD.
+      integer(ip), intent(out) :: parsed  !! Number of numeric words translated and returned.
+      real(wp), intent(out) :: values ( * )  !! The double precision values for the numbers.
 
       integer(ip) :: length
       integer(ip) :: positn
@@ -5875,7 +5940,7 @@ contains
 
       return
 
-      end procedure dxtrct
+      end subroutine dxtrct
 
       !>## Abstract
       !>
@@ -6254,10 +6319,15 @@ contains
       !>        Corrected error in header describing the GEOPHS array.
       !>
       !>-    SPICELIB Version 1.0.0, 14-JAN-1994 (WLT)
-      module procedure ev2lin
+      module subroutine ev2lin ( ctx, et, geophs, elems, state )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch in seconds past ephemeris epoch J2000.
+      real(wp), intent(in) :: geophs ( * )  !! Geophysical constants
+      real(wp), intent(in) :: elems  ( * )  !! Two-line element data
+      real(wp), intent(out) :: state  ( * )  !! Evaluated state
       integer(ip), parameter :: nmodl = 6
       integer(ip), parameter :: kj2 = 1
       integer(ip), parameter :: kj3 = 2
@@ -7454,7 +7524,7 @@ contains
 
       return
       end associate
-      end procedure ev2lin
+      end subroutine ev2lin
 
       !>## Abstract
       !>
@@ -7771,10 +7841,15 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 02-NOV-2021 (EDW) (MCS)
-      module procedure evsgp4
+      module subroutine evsgp4 ( ctx, et, geophs, elems, state )
       use pepper_kinds, only: wp
       use pepper_inc_zzsgp4
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch in seconds past ephemeris epoch J2000.
+      real(wp), intent(in) :: geophs (  8 )  !! Geophysical constants
+      real(wp), intent(in) :: elems  ( 10 )  !! Two-line element data
+      real(wp), intent(out) :: state  (  6 )  !! Evaluated state
 
       real(wp) :: t1
 
@@ -7812,7 +7887,7 @@ contains
 !
       return
 
-      end procedure evsgp4
+      end subroutine evsgp4
 
       !>## Detailed Input
       !>
@@ -7936,9 +8011,13 @@ contains
       !>         following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-      module procedure fetchc
+      module integer(ip) function fetchc ( ctx, nth, set )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: nth  !! Index of a particular element.
+      character(*), intent(in) :: set      ( lbcell:* )  !! Input set.
 
 
 !
@@ -7967,7 +8046,7 @@ contains
       end if
 
       return
-      end procedure fetchc
+      end function fetchc
 
       !>## Detailed Input
       !>
@@ -8096,9 +8175,13 @@ contains
       !>         following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-      module procedure fetchd
+      module integer(ip) function fetchd ( ctx, nth, set )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: nth  !! Index of a particular element.
+      real(wp), intent(in) :: set      ( lbcell:* )  !! Input set.
 
 
 !
@@ -8126,7 +8209,7 @@ contains
       end if
 
       return
-      end procedure fetchd
+      end function fetchd
 
       !>## Detailed Input
       !>
@@ -8255,9 +8338,13 @@ contains
       !>         following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-      module procedure fetchi
+      module integer(ip) function fetchi ( ctx, nth, set )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: nth  !! Index of a particular element.
+      integer(ip), intent(in) :: set      ( lbcell:* )  !! Input set.
 
 
 !
@@ -8286,7 +8373,7 @@ contains
       end if
 
       return
-      end procedure fetchi
+      end function fetchi
 
       !>## Detailed Input
       !>
@@ -8361,9 +8448,12 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 16-AUG-1994 (KRG)
-      module procedure fn2lun
+      module subroutine fn2lun ( ctx, filnam, lunit )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: filnam  !! Name of the file to be mapped to its logical unit.
+      integer(ip), intent(out) :: lunit  !! The logical unit associated with the filename.
 
       integer(ip) :: iostat
 
@@ -8435,7 +8525,7 @@ contains
       end if
 
       return
-      end procedure fn2lun
+      end subroutine fn2lun
 
       !>## Detailed Input
       !>
@@ -8771,9 +8861,16 @@ contains
       !>        was added. Because the flattening coefficient is used to
       !>        compute the polar radius, it must be checked so that the
       !>        polar radius greater than zero.
-      module procedure georec
+      module subroutine georec ( ctx, lon, lat, alt, re, f, rectan )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: lon  !! Geodetic longitude of point (radians).
+      real(wp), intent(in) :: lat  !! Geodetic latitude  of point (radians).
+      real(wp), intent(in) :: alt  !! Altitude of point above the reference spheroid.
+      real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+      real(wp), intent(in) :: f  !! Flattening coefficient.
+      real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of point.
 
       real(wp) :: height
 
@@ -8864,7 +8961,7 @@ contains
       rectan = 1.0_wp*base + height*normal
 
       return
-      end procedure georec
+      end subroutine georec
 
       !>## Detailed Input
       !>
@@ -9470,12 +9567,20 @@ contains
       !>        of the same name. It was enhanced to support the 'RECTANGLE'
       !>        shape for a field of view (a special case of 'POLYGON'
       !>        added for the sake of Cassini users).
-      module procedure getfov
+      module subroutine getfov ( ctx, instid, room, shape, frame, bsight, n, bounds )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchc
       use pepper_math, only: unorm, vcrss, vhat, vnorm, vperp, vrotv
       use pepper_strings, only: eqstr, rtrim, suffix, ucase_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: instid  !! NAIF ID of an instrument.
+      integer(ip), intent(in) :: room  !! Maximum number of vectors that can be returned.
+      character(*), intent(out) :: shape  !! Instrument FOV shape.
+      character(*), intent(out) :: frame  !! Name of the frame in which FOV vectors are defined.
+      real(wp), intent(out) :: bsight ( 3    )  !! Boresight vector.
+      integer(ip), intent(out) :: n  !! Number of boundary vectors returned.
+      real(wp), intent(out) :: bounds ( 3, * )  !! FOV boundary vectors.
       real(wp) :: crsang_1(1)  !! one-element copy of crsang (array argument)
       real(wp) :: refang_1(1)  !! one-element copy of refang (array argument)
 
@@ -10326,7 +10431,7 @@ contains
 !
       return
 
-      end procedure getfov
+      end subroutine getfov
 
       !>## Detailed Input
       !>
@@ -10440,11 +10545,15 @@ contains
       !>     Initial values
       !>
       !>     Standard SPICE error handling.
-      module procedure hyptof
+      module subroutine hyptof ( ctx, ma, ecc, f )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_math, only: dcbrt
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: ma  !! Mean anomaly at epoch.
+      real(wp), intent(in) :: ecc  !! Eccentricity.
+      real(wp), intent(out) :: f  !! Hyperbolic eccentric anomaly.
       integer(ip) :: count
       integer(ip) :: mcount
       real(wp) :: m
@@ -10642,7 +10751,7 @@ contains
 
       return
       end associate
-      end procedure hyptof
+      end subroutine hyptof
 
       !>## Abstract
       !>
@@ -11198,12 +11307,21 @@ contains
       !>-    SPICELIB Version 1.0.0, 21-MAR-1999 (NJB)
       !>
       !>        Adapted from the MGSSPICE version dated 10-MAR-1992.
-      module procedure illum
+      module subroutine illum ( ctx, target, et, abcorr, obsrvr, spoint, phase, solar, emissn )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vsep
       use pepper_strings, only: eqstr
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: target  !! Name of target body.
+      real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000.
+      character(*), intent(in) :: abcorr  !! Desired aberration correction.
+      character(*), intent(in) :: obsrvr  !! Name of observing body.
+      real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
+      real(wp), intent(out) :: phase  !! Phase angle at the surface point.
+      real(wp), intent(out) :: solar  !! Solar incidence angle at the surface point.
+      real(wp), intent(out) :: emissn  !! Emission angle at the surface point.
       character(:), allocatable :: frname
       real(wp) :: lt
       real(wp) :: lts
@@ -11376,7 +11494,7 @@ contains
 
       return
       end associate
-      end procedure illum
+      end subroutine illum
 
       !>## Detailed Input
       !>
@@ -11491,9 +11609,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1991 (NJB)
-      module procedure irftrn
+      module subroutine irftrn ( ctx, refa, refb, rotab )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: refa  !! Name of reference frame to transform vectors FROM.
+      character(*), intent(in) :: refb  !! Name of reference frame to transform vectors TO.
+      real(wp), intent(out) :: rotab ( 3, 3 )  !! REFA-to-REFB transformation matrix.
 
       integer(ip) :: codea
       integer(ip) :: codeb
@@ -11512,7 +11634,7 @@ contains
       call irfrot ( ctx, codea, codeb, rotab )
 
       return
-      end procedure irftrn
+      end subroutine irftrn
 
       !>## Abstract
       !>
@@ -11655,11 +11777,15 @@ contains
       !>           pose no difficulties.
       !>
       !>        EKLIB Version 1.0.0, 25-FEB-1993 (JML)
-      module procedure iso2utc
+      module subroutine iso2utc ( ctx, tstrng, utcstr, error )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchc
       use pepper_strings, only: rtrim, repmc_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: tstrng  !! String representing a calendar or julian date epoch
+      character(*), intent(out) :: utcstr  !! SPICELIB UTC string corresponding to TSTRNG
+      character(*), intent(out) :: error  !! Error message if something went wrong.
 
       integer(ip), parameter :: nmnths = 12
 
@@ -11855,7 +11981,7 @@ contains
 
       return
 
-      end procedure iso2utc
+      end subroutine iso2utc
 
       !>## Detailed Input
       !>
@@ -11926,9 +12052,11 @@ contains
       !>        macintosh.
       !>
       !>-    SPICELIB Version 1.0.0, 05-OCT-1994 (KRG)
-      module procedure isopen
+      module logical function isopen ( ctx, file )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! Name of the file in question.
 
       integer(ip) :: iostat
 
@@ -11989,7 +12117,7 @@ contains
       isopen = myopen
 
       return
-      end procedure isopen
+      end function isopen
 
       !>## Detailed Input
       !>
@@ -12323,13 +12451,17 @@ contains
       !>        fetched names is now maintained correctly.
       !>
       !>-    SPICELIB Version 1.0.0, 22-MAY-2012 (NJB)
-      module procedure kplfrm
+      module subroutine kplfrm ( ctx, frmcls, idset )
       use pepper_kinds, only: ip
       use pepper_strings, only: repmi_inplace
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_ninert
       use pepper_inc_nninrt
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: frmcls  !! Frame class.
+      integer(ip), intent(inout) :: idset  ( lbcell : * )  !! Set of ID codes of frames of the specified class.
       integer(ip) :: fclass_1(1)  !! one-element copy of fclass (array argument)
       integer(ip) :: idcode_1(1)  !! one-element copy of idcode (array argument)
 
@@ -12560,7 +12692,7 @@ contains
       call validi ( ctx, sizei( ctx,idset), to, idset )
 
       return
-      end procedure kplfrm
+      end subroutine kplfrm
 
       !>## Detailed Input
       !>
@@ -12766,9 +12898,14 @@ contains
       !>
       !>        The header documentation was updated to reflect the error
       !>        handling changes, and more examples were added.
-      module procedure lparss
+      module subroutine lparss ( ctx, list, delims, set )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: list  !! List of items delimited by DELIMS on input.
+      character(*), intent(in) :: delims  !! Single characters which delimit items.
+      character(*), intent(inout) :: set  ( lbcell:* )  !! Items in the list, validated, left justified.
 
 
 
@@ -13013,7 +13150,7 @@ contains
       end if
 
       return
-      end procedure lparss
+      end subroutine lparss
 
       !>## Detailed Input
       !>
@@ -13267,11 +13404,15 @@ contains
       !>     Initial values.
       !>
       !>     Give the function an initial value.
-      module procedure lspcn
+      module real(wp) function lspcn ( ctx, body, et, abcorr )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxv, recrad, ucrss
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: body  !! Name of central body.
+      real(wp), intent(in) :: et  !! Epoch in seconds past J2000 TDB.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
       character(*), parameter :: ref = 'J2000'
       real(wp) :: uavel  ( 3 )
       real(wp) :: lat
@@ -13398,7 +13539,7 @@ contains
 
       return
       end associate
-      end procedure lspcn
+      end function lspcn
 
       !>## Detailed Input
       !>
@@ -13599,12 +13740,19 @@ contains
       !>        Added Copyright Notice to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 10-NOV-1995 (WLT)
-      module procedure ltime
+      module subroutine ltime ( ctx, etobs, obs, dir, targ, ettarg, elapsd )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: vdist
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: etobs  !! Epoch of a signal at some observer.
+      integer(ip), intent(in) :: obs  !! NAIF ID of some observer.
+      character(2), intent(in) :: dir  !! Direction the signal travels ( '->' or '<-' ).
+      integer(ip), intent(in) :: targ  !! NAIF ID of the target object.
+      real(wp), intent(out) :: ettarg  !! Epoch of the signal at the target.
+      real(wp), intent(out) :: elapsd  !! Time between transmit and receipt of the signal.
 
       real(wp) :: c
       real(wp) :: lt
@@ -13707,7 +13855,7 @@ contains
 
       return
 
-      end procedure ltime
+      end subroutine ltime
 
       !>## Detailed Input
       !>
@@ -13779,9 +13927,12 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 16-AUG-1994 (KRG)
-      module procedure lun2fn
+      module subroutine lun2fn ( ctx, lunit, filnam )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: lunit  !! A logical unit to be mapped to a filename.
+      character(*), intent(out) :: filnam  !! Name of the file associated with LUNIT.
 
       integer(ip) :: iostat
 
@@ -13842,7 +13993,7 @@ contains
 !     If we made it to here, we are done. Just return.
 !
       return
-      end procedure lun2fn
+      end subroutine lun2fn
 
       !>## Detailed Input
       !>
@@ -13949,10 +14100,15 @@ contains
       !>        Fixed return value for LAST in $Exceptions section entry #1.
       !>
       !>-    SPICELIB Version 1.0.0, 12-JUL-1994 (WLT)
-      module procedure lx4sgn
+      module subroutine lx4sgn ( ctx, string, first, last, nchar )
       use pepper_kinds, only: ip
       use pepper_strings, only: lx4uns
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! any character string
+      integer(ip), intent(in) :: first  !! first character to scan from in STRING
+      integer(ip), intent(out) :: last  !! last character that is part of a signed integer
+      integer(ip), intent(out) :: nchar  !! number of characters in the signed integer.
 
       integer(ip) :: f
       integer(ip) :: i
@@ -13998,7 +14154,7 @@ contains
       end if
 
       return
-      end procedure lx4sgn
+      end subroutine lx4sgn
 
       !>## Detailed Input
       !>
@@ -14095,11 +14251,18 @@ contains
       !>        sections.
       !>
       !>-    SPICELIB Version 1.0.0, 25-OCT-1995 (NJB)
-      module procedure lxidnt
+      module subroutine lxidnt ( ctx, idspec, string, first, last, nchar )
       use pepper_kinds, only: ip
       use pepper_arrays, only: bsrchi
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: string  !! String to be scanned.
+      integer(ip), intent(in) :: first  !! Character position at which to start scanning.
+      integer(ip), intent(in) :: idspec ( lbcell : * )  !! Identifier character specification.
+      integer(ip), intent(out) :: last  !! Character position of end of token.
+      integer(ip), intent(out) :: nchar  !! Number of characters in token.
       logical :: return
       integer(ip), parameter :: nhpos = 1
       integer(ip), parameter :: ntpos = 2
@@ -14170,7 +14333,7 @@ contains
       end do
 
       return
-      end procedure lxidnt
+      end subroutine lxidnt
 
       !>## Detailed Input
       !>
@@ -14248,9 +14411,12 @@ contains
       !>        sections.
       !>
       !>-    SPICELIB Version 1.0.0, 25-OCT-1995 (NJB)
-      module procedure lxdfid
+      module subroutine lxdfid ( ctx, idspec )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(inout) :: idspec ( lbcell : * )  !! Identifier character specification.
       integer(ip) :: c
       integer(ip) :: headc  ( lbcell : maxchr )
       integer(ip) :: hl
@@ -14323,7 +14489,7 @@ contains
       end do
 
       return
-      end procedure lxdfid
+      end subroutine lxdfid
 
       !>## Detailed Input
       !>
@@ -14416,10 +14582,15 @@ contains
       !>        sections.
       !>
       !>-    SPICELIB Version 1.0.0, 25-OCT-1995 (NJB)
-      module procedure lxcsid
+      module subroutine lxcsid ( ctx, hdchrs, tlchrs, idspec )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: hdchrs  !! Allowed head characters for identifiers.
+      character(*), intent(in) :: tlchrs  !! Allowed tail characters for identifiers.
+      integer(ip), intent(inout) :: idspec ( lbcell : * )  !! Identifier character specification.
       integer(ip), parameter :: blank = 32
       integer(ip), parameter :: minprt = 32
       integer(ip), parameter :: maxprt = 126
@@ -14537,7 +14708,7 @@ contains
       end do
 
       return
-      end procedure lxcsid
+      end subroutine lxcsid
 
       !>## Detailed Input
       !>
@@ -14660,10 +14831,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 02-NOV-1990 (NJB)
-      module procedure npelpt
+      module subroutine npelpt ( ctx, point, ellips, pnear, dist )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: el2cgv, mtxv, mxv, vdist, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubel = 9
+      real(wp), intent(in) :: ellips ( ubel )  !! A SPICE ellipse.
+      real(wp), intent(in) :: point  (    3 )  !! Point whose distance to an ellipse is to be found.
+      real(wp), intent(out) :: pnear  (    3 )  !! Nearest point on ellipse to input point.
+      real(wp), intent(out) :: dist  !! Distance of input point to ellipse.
 
 
       real(wp) :: center ( 3 )
@@ -14815,7 +14992,7 @@ contains
       dist = vdist ( pnear, point )
 
       return
-      end procedure npelpt
+      end subroutine npelpt
 
       !>## Detailed Input
       !>
@@ -15338,11 +15515,16 @@ contains
       !>     Initial values
       !>
       !>     Standard SPICE error handling.
-      module procedure oscelt
+      module subroutine oscelt ( ctx, state, et, mu, elts )
       use pepper_kinds, only: wp
       use pepper_constants, only: pi, twopi
       use pepper_math, only: exact, ucrss, vcrss, vdot, vhat, vnorm, vsep
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: state  ( 6 )  !! State of body at epoch of elements.
+      real(wp), intent(in) :: et  !! Epoch of elements.
+      real(wp), intent(in) :: mu  !! Gravitational parameter (GM) of primary body.
+      real(wp), intent(out) :: elts   ( 8 )  !! Equivalent conic elements.
       real(wp), parameter :: close = 1.0e-10_wp
       real(wp) :: argp
       real(wp) :: cosea
@@ -15661,7 +15843,7 @@ contains
 
       return
       end associate
-      end procedure oscelt
+      end subroutine oscelt
 
       !>## Detailed Input
       !>
@@ -15740,10 +15922,13 @@ contains
       !>        A write statement left over from debugging days was removed.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU)
-      module procedure partof
+      module subroutine partof ( ctx, ma, d )
       use pepper_kinds, only: wp
       use pepper_math, only: dcbrt
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: ma  !! Mean anomaly at epoch.
+      real(wp), intent(out) :: d  !! Parabolic eccentric anomaly.
 
       real(wp), parameter :: tol = 1.0e-13_wp
 
@@ -15813,7 +15998,7 @@ contains
       end if
 
       return
-      end procedure partof
+      end subroutine partof
 
       !>## Detailed Input
       !>
@@ -15935,10 +16120,12 @@ contains
       !>        sections.
       !>
       !>-    SPICELIB Version 1.0.0, 07-JAN-1997 (WLT)
-      module procedure plnsns
+      module integer(ip) function plnsns ( ctx, bodid )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: repmi_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodid  !! is the NAIF integer ID code of some solar system object.
       real(wp) :: rate_1(1)  !! one-element copy of rate (array argument)
 
 
@@ -16004,7 +16191,7 @@ contains
 
       plnsns = value
       return
-      end procedure plnsns
+      end function plnsns
 
       !>## Detailed Input
       !>
@@ -16377,10 +16564,13 @@ contains
       !>        prompt is the only bit that is environment specific, so the
       !>        code was rearranged to reflect this. There is now only a single
       !>        READ statement.
-      module procedure prompt
+      module subroutine prompt ( ctx, dspmsg, buffer )
       use, intrinsic :: iso_fortran_env, only: input_unit, output_unit
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: dspmsg  !! The prompt to use when asking for input.
+      character(*), intent(out) :: buffer  !! The response typed by a user.
 
       integer(ip) :: iostat
 
@@ -16434,7 +16624,7 @@ contains
       end if
 
       return
-      end procedure prompt
+      end subroutine prompt
 
       !>## Detailed Input
       !>
@@ -16593,10 +16783,13 @@ contains
       !>        to DOUBLE PRECISION.
       !>
       !>-    SPICELIB Version 1.0.0, 22-JUL-1997 (NJB)
-      module procedure prsdp
+      module subroutine prsdp ( ctx, string, dpval )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: nparsd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! String representing a numeric value.
+      real(wp), intent(out) :: dpval  !! D.p. value obtained by parsing STRING.
 
       integer(ip), parameter :: msglen = 320
 
@@ -16614,7 +16807,7 @@ contains
       end if
 
       return
-      end procedure prsdp
+      end subroutine prsdp
 
       !>## Detailed Input
       !>
@@ -16710,9 +16903,12 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure prtenc
+      module subroutine prtenc ( ctx, number, string )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: number  !! Number to be encoded.
+      character(*), intent(out) :: string  !! Encoded string.
       integer(ip), parameter :: chbase = 128
       integer(ip) :: base
       integer(ip) :: num
@@ -16749,7 +16945,7 @@ contains
       end if
 
       return
-      end procedure prtenc
+      end subroutine prtenc
 
       !>## Detailed Input
       !>
@@ -16823,9 +17019,12 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure prtdec
+      module subroutine prtdec ( ctx, string, number )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: number  !! Decoded number.
+      character(*), intent(in) :: string  !! Encoded character string.
       integer(ip), parameter :: chbase = 128
       integer(ip) :: base
       integer(ip) :: num
@@ -16848,7 +17047,7 @@ contains
       end do
 
       return
-      end procedure prtdec
+      end subroutine prtdec
 
       !>## Detailed Input
       !>
@@ -17359,11 +17558,17 @@ contains
       !>        example comments and format.
       !>
       !>-    SPICELIB Version 1.0.0, 23-SEP-2013 (SCK) (WLT) (BVS)
-      module procedure pxfrm2
+      module subroutine pxfrm2 ( ctx, from, to, etfrom, etto, rotate )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxm
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: from  !! Name of the frame to transform from.
+      character(*), intent(in) :: to  !! Name of the frame to transform to.
+      real(wp), intent(in) :: etfrom  !! Evaluation time of FROM frame.
+      real(wp), intent(in) :: etto  !! Evaluation time of TO frame.
+      real(wp), intent(out) :: rotate  ( 3, 3 )  !! A position transformation matrix from frame FROM to frame TO.
       integer(ip), parameter :: jcode = 1
       integer(ip) :: fcode
       integer(ip) :: tcode
@@ -17450,7 +17655,7 @@ contains
 
       return
       end associate
-      end procedure pxfrm2
+      end subroutine pxfrm2
 
       !>## Detailed Input
       !>
@@ -17563,8 +17768,12 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 07-AUG-1994 (IMU)
-      module procedure rdnbl
+      module subroutine rdnbl ( ctx, file, line, eof )
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: file  !! Input text file.
+      character(*), intent(out) :: line  !! Next non-blank line from the input text file.
+      logical, intent(out) :: eof  !! End-of-file indicator.
 
 !
 !     Standard SPICE error handling.
@@ -17595,7 +17804,7 @@ contains
       line = ' '
 
       return
-      end procedure rdnbl
+      end subroutine rdnbl
 
       !>## Detailed Input
       !>
@@ -17824,10 +18033,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 30-AUG-1990 (NJB) (IMU)
-      module procedure repmct
+      module subroutine repmct ( ctx, in, marker, value, rtcase, out )
       use pepper_kinds, only: ip
       use pepper_strings, only: lcase_inplace, ucase_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: in  !! Input string.
+      character(*), intent(in) :: marker  !! Marker to be replaced.
+      integer(ip), intent(in) :: value  !! Replacement value.
+      character(1), intent(in) :: rtcase  !! Case of replacement text.
+      character(*), intent(out) :: out  !! Output string.
 
       integer(ip), parameter :: maxlcn = 145
 
@@ -17919,7 +18134,7 @@ contains
       call repsub ( ctx, in,  mrkpsb,  mrkpse,  card ( : len_trim(card) ),  out                                       )
 
       return
-      end procedure repmct
+      end subroutine repmct
 
       !>## Detailed Input
       !>
@@ -18108,10 +18323,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 08-JAN-2021 (JDR) (NJB)
-      module procedure repml
+      module subroutine repml ( ctx, in, marker, value, rtcase, out )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: in  !! Input string.
+      character(*), intent(in) :: marker  !! Marker to be replaced.
+      logical, intent(in) :: value  !! Replacement logical value.
+      character(1), intent(in) :: rtcase  !! Case of replacement text.
+      character(*), intent(out) :: out  !! Output string.
       integer(ip), parameter :: maxllt = 5
       integer(ip), parameter :: ncase = 3
       character(maxllt) :: lvalue
@@ -18205,7 +18426,7 @@ contains
 
       return
       end associate
-      end procedure repml
+      end subroutine repml
 
       !>## Detailed Input
       !>
@@ -18388,9 +18609,14 @@ contains
       !>        take care of the funky way the indices (other than the input)
       !>        were obtained via the MOD function. It works but isn't as
       !>        clear (or fast) as just reading the axes from data.
-      module procedure rotvec
+      module subroutine rotvec ( ctx, v1, angle, iaxis, vout )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: v1    ( 3 )  !! Vector whose coordinate system is to be rotated.
+      real(wp), intent(in) :: angle  !! Angle of rotation in radians.
+      integer(ip), intent(in) :: iaxis  !! Axis of rotation (X=1, Y=2, Z=3).
+      real(wp), intent(out) :: vout  ( 3 )  !! Resulting vector expressed in the new frame.
 
       real(wp) :: s
       real(wp) :: c
@@ -18436,7 +18662,7 @@ contains
       vout(i3) = temp(3)
 
       return
-      end procedure rotvec
+      end subroutine rotvec
 
       !>## Detailed Input
       !>
@@ -18700,11 +18926,17 @@ contains
       !>        INCLUDE file sclk.inc.
       !>
       !>-    SPICELIB Version 1.0.0, 25-FEB-1993 (JML)
-      module procedure scps01
+      module subroutine scps01 ( ctx, sc, clkstr, error, msg, ticks )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: lparsm, nparsd, repmc_inplace, repmi_inplace
       use pepper_inc_sclk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft ID code.
+      character(*), intent(in) :: clkstr  !! Character representation of a clock count.
+      logical, intent(out) :: error  !! Parsing error flag.
+      character(*), intent(out) :: msg  !! Output message for parsing error.
+      real(wp), intent(out) :: ticks  !! Number of ticks represented by the clock count.
       integer(ip) :: nfield_1(1)  !! one-element copy of nfield (array argument)
       integer(ip), parameter :: nflidx = 1
       integer(ip), parameter :: offidx = nflidx + 1
@@ -18869,7 +19101,7 @@ contains
 
       return
       end associate
-      end procedure scps01
+      end subroutine scps01
 
       !>## Detailed Input
       !>
@@ -18973,10 +19205,14 @@ contains
       !>        the substring "SCLK" in the input string.
       !>
       !>     Convert name to upper case.
-      module procedure scn2id
+      module subroutine scn2id ( ctx, clknam, clkid, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: posr, rtrim, ucase
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: clknam  !! String giving spacecraft clock name.
+      integer(ip), intent(out) :: clkid  !! NAIF integer code of spacecraft clock.
+      logical, intent(out) :: found  !! Flag indicating whether item was found.
       logical :: return
       character(maxlen) :: tmpnam
       integer(ip) :: loc
@@ -18995,7 +19231,7 @@ contains
       call bodn2c ( ctx, tmpnam, clkid, found )
 
       return
-      end procedure scn2id
+      end subroutine scn2id
 
       !>## Detailed Input
       !>
@@ -19080,10 +19316,14 @@ contains
       !>        Updated to use BODTRN for SCLK name/code mapping.
       !>
       !>-    SPICELIB Version 1.0.0, 17-NOV-1995 (NJB)
-      module procedure scid2n
+      module subroutine scid2n ( ctx, clkid, clknam, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: suffix
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: clknam  !! String giving spacecraft clock name.
+      integer(ip), intent(in) :: clkid  !! NAIF integer code of spacecraft clock.
+      logical, intent(out) :: found  !! Flag indicating whether item was found.
       logical :: return
       character(maxlen) :: tmpnam
       integer(ip) :: loc
@@ -19094,7 +19334,7 @@ contains
       call suffix ( 'SCLK', 1, clknam )
 
       return
-      end procedure scid2n
+      end subroutine scid2n
 
       !>## Detailed Input
       !>
@@ -19236,9 +19476,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 01-NOV-1990 (NJB)
-      module procedure sphsd
+      module real(wp) function sphsd ( ctx, radius, lon1, lat1, lon2, lat2 )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: radius  !! Radius of sphere.
+      real(wp), intent(in) :: lon1  !! Longitude and latitude of first point in radians.
+      real(wp), intent(in) :: lat1  !! Longitude and latitude of first point in radians.
+      real(wp), intent(in) :: lon2  !! Longitude and latitude of second point in radians.
+      real(wp), intent(in) :: lat2  !! Longitude and latitude of second point in radians.
 
       real(wp) :: sl1sl2
       real(wp) :: cosang
@@ -19298,7 +19544,7 @@ contains
       sphsd   =      radius * acos ( max(-1.0_wp, min(1.0_wp, cosang)) )
 
       return
-      end procedure sphsd
+      end function sphsd
 
       !>## Detailed Input
       !>
@@ -19448,11 +19694,18 @@ contains
       !>        Literature references added to the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (IMU) (RET)
-      module procedure spkpv
+      module subroutine spkpv ( ctx, handle, descr, et, ref, state, center )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxvg
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      real(wp), intent(in) :: descr    ( 5 )  !! Segment descriptor.
+      real(wp), intent(in) :: et  !! Target epoch.
+      character(*), intent(in) :: ref  !! Target reference frame.
+      real(wp), intent(out) :: state    ( 6 )  !! Position, velocity.
+      integer(ip), intent(out) :: center  !! Center of state.
       integer(ip) :: irf
       integer(ip) :: irfreq
       integer(ip) :: ic         (    6 )
@@ -19511,7 +19764,7 @@ contains
 
       return
       end associate
-      end procedure spkpv
+      end subroutine spkpv
 
       !>## Detailed Input
       !>
@@ -19762,10 +20015,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1991 (NJB) (WLT)
-      module procedure srfrec
+      module subroutine srfrec ( ctx, body, lon, lat, rectan )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: latrec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: body  !! NAIF integer code of an extended body.
+      real(wp), intent(in) :: lon  !! Longitude of point in radians.
+      real(wp), intent(in) :: lat  !! Latitude of point in radians.
+      real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of the point.
 
       real(wp) :: radii  ( 3 )
       real(wp) :: uvec   ( 3 )
@@ -19795,7 +20053,7 @@ contains
       call edpnt ( ctx, uvec, radii(1), radii(2), radii(3), rectan )
 
       return
-      end procedure srfrec
+      end subroutine srfrec
 
       !>## Detailed Input
       !>
@@ -19996,10 +20254,18 @@ contains
       !>     Saved variables
       !>
       !>     Initial values
-      module procedure surfpt
+      module subroutine surfpt ( ctx, positn, u, a, b, c, point, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vdot, vhat, vnorm, vperp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: positn ( 3 )  !! Position of the observer in body-fixed frame.
+      real(wp), intent(in) :: u      ( 3 )  !! Vector from the observer in some direction.
+      real(wp), intent(in) :: a  !! Length of ellipsoid semi-axis along the x-axis.
+      real(wp), intent(in) :: b  !! Length of ellipsoid semi-axis along the y-axis.
+      real(wp), intent(in) :: c  !! Length of ellipsoid semi-axis along the z-axis.
+      real(wp), intent(out) :: point  ( 3 )  !! Point on the ellipsoid pointed to by U.
+      logical, intent(out) :: found  !! Flag indicating if U points at the ellipsoid.
       real(wp) :: p     ( 3 )
       real(wp) :: pmag
       real(wp) :: scale
@@ -20193,7 +20459,7 @@ contains
 
       return
       end associate
-      end procedure surfpt
+      end subroutine surfpt
 
       !>## Detailed Input
       !>
@@ -20595,9 +20861,15 @@ contains
       !>        code example, based on existing fragment.
       !>
       !>-    SPICELIB Version 1.0.0, 18-DEC-2004 (NJB) (WMO) (WLT)
-      module procedure twovxf
+      module subroutine twovxf ( ctx, axdef, indexa, plndef, indexp, xform )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: axdef  ( 6 )  !! State defining a principal axis.
+      integer(ip), intent(in) :: indexa  !! Principal axis number of AXDEF (X=1, Y=2, Z=3).
+      real(wp), intent(in) :: plndef ( 6 )  !! State defining (with AXDEF) a principal plane.
+      integer(ip), intent(in) :: indexp  !! Second axis number (with INDEXA) of principal plane.
+      real(wp), intent(out) :: xform  ( 6, 6 )  !! Output state transformation matrix.
 
       real(wp) :: xi     ( 6, 6 )
 
@@ -20618,7 +20890,7 @@ contains
       call invstm ( ctx, xi, xform )
 
       return
-      end procedure twovxf
+      end subroutine twovxf
 
       !>## Detailed Input
       !>
@@ -20958,16 +21230,19 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 21-OCT-2013 (EDW)
-      module procedure udf
+      module subroutine udf ( ctx, x, value )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: x  !! Double precision value, unused.
+      real(wp), intent(out) :: value  !! Double precision value, unused. (PEPPER: an output, as for any [[gf_scalar]]; not set)
 
 !     PEPPER: SPICELIB assigned X = X + 0 and VALUE = VALUE + 0 here (to use
 !     its arguments); both are inputs, so nothing is done.
 
       return
 
-      end procedure udf
+      end subroutine udf
 
       !>## Detailed Input
       !>
@@ -21294,13 +21569,21 @@ contains
       !>        complementary cases. This change was made to improve accuracy.
       !>
       !>-    SPICELIB Version 1.0.0, 07-SEP-2005 (NJB)
-      module procedure zzasryel
+      module subroutine zzasryel ( ctx, extrem, ellips, vertex, dir, angle, extpt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_arrays, only: swapd
       use pepper_math, only: el2cgv, vdist, vdot, vhat, vnorm, vsep
       use pepper_strings, only: cmprss
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubel = 9
+      character(*), intent(in) :: extrem  !! Type of extremum to find.
+      real(wp), intent(in) :: ellips ( ubel )  !! SPICE ellipse.
+      real(wp), intent(in) :: vertex ( 3 )  !! Vertex and direction vector of ray.
+      real(wp), intent(in) :: dir    ( 3 )  !! Vertex and direction vector of ray.
+      real(wp), intent(out) :: angle  !! Angular separation of ray and ellipse (radians).
+      real(wp), intent(out) :: extpt  ( 3 )  !! Point on ellipse where extremum is achieved.
 
 
 !
@@ -21773,7 +22056,7 @@ contains
       angle  =  vsep( diff,  udir ) * asign
 
       return
-      end procedure zzasryel
+      end subroutine zzasryel
 
       !>## Abstract
       !>
@@ -21894,10 +22177,19 @@ contains
       !>     Saved variables
       !>
       !>     Initial values
-      module procedure zzbquad
+      module subroutine zzbquad ( ctx, a, b, c, ub, n, nx, r1, r2 )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: a  !! Coefficients of quadratic equation.
+      real(wp), intent(in) :: b  !! Coefficients of quadratic equation.
+      real(wp), intent(in) :: c  !! Coefficients of quadratic equation.
+      real(wp), intent(in) :: ub  !! Upper bound on magnitude of roots.
+      integer(ip), intent(out) :: n  !! Number of real roots within bound.
+      integer(ip), intent(out) :: nx  !! Number of real roots exceeding bound.
+      real(wp), intent(out) :: r1  !! Root of smaller absolute value.
+      real(wp), intent(out) :: r2  !! Root of larger absolute value.
       real(wp) :: denom
       real(wp) :: dscrim
       real(wp) :: num1
@@ -22153,7 +22445,7 @@ contains
 
       return
       end associate
-      end procedure zzbquad
+      end subroutine zzbquad
 
       !>## Detailed Input
       !>
@@ -22318,11 +22610,15 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 20-APR-2016 (NJB) (EDW)
-      module procedure zzchrlat
+      module subroutine zzchrlat ( ctx, midlat, dlon, eptlat )
       use pepper_kinds, only: wp
       use pepper_constants, only: halfpi, pi
       use pepper_inc_dsktol
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: midlat  !! is the latitude of the midpoint of a chord of a latitude circle.
+      real(wp), intent(in) :: dlon  !! is the longitude extent of the chord.
+      real(wp), intent(out) :: eptlat  !! is the latitude of the endpoints of the chord.
 
       real(wp) :: mlat
 
@@ -22368,7 +22664,7 @@ contains
       eptlat = atan2 ( sin(mlat) * cos(dlon/2),  cos(mlat) )
 
       return
-      end procedure zzchrlat
+      end subroutine zzchrlat
 
       !>## Detailed Input
       !>
@@ -22727,8 +23023,10 @@ contains
       !>       HP-UX/HP Fortran environment.
       !>
       !>-    SPICELIB Version 1.0.0, 1-MAY-1991 (NJB) (HAN) (MJS) (WLT)
-      module procedure zzcputim
+      module subroutine zzcputim ( ctx, tvec )
       use pepper_kinds, only: ip, wp
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(out) :: tvec ( 6 )  !! contains year, month, day, hours, minutes, seconds
       integer(ip) :: dtime (8)
       character(12) :: rclock(3)
 
@@ -22754,7 +23052,7 @@ contains
 !
       return
 
-      end procedure zzcputim
+      end subroutine zzcputim
 
       !>## Abstract
       !>
@@ -22851,11 +23149,19 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 30-SEP-2016 (NJB)
-      module procedure zzcxbrut
+      module subroutine zzcxbrut ( ctx, apex, axis, angle, endpt1, endpt2, xpt, isbrck )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, pi
       use pepper_math, only: vdot, vhat, vhatip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: apex   ( 3 )  !! Apex of cone.
+      real(wp), intent(in) :: axis   ( 3 )  !! Axis of cone.
+      real(wp), intent(in) :: angle  !! Angle of cone.
+      real(wp), intent(in) :: endpt1 ( 3 )  !! Endpoints of line segment.
+      real(wp), intent(in) :: endpt2 ( 3 )  !! Endpoints of line segment.
+      real(wp), intent(out) :: xpt    ( 3 )  !! Intersection point, if it exists.
+      logical, intent(out) :: isbrck  !! Logical flag indicating whether root is bracketed.
 
       logical :: state1
       logical :: state2
@@ -22997,7 +23303,7 @@ contains
       xpt = apex + x
 
       return
-      end procedure zzcxbrut
+      end subroutine zzcxbrut
 
       !>## Detailed Input
       !>
@@ -23222,10 +23528,13 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-2014 (EDW)
-      module procedure zzdiv
+      module real(wp) function zzdiv ( ctx, numr, denom )
       use pepper_kinds, only: wp
       use pepper_constants, only: dpmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: numr  !! Numerator of division.
+      real(wp), intent(in) :: denom  !! Denominator of division.
       real(wp) :: logden
       real(wp) :: lognum
       if ( .not. allocated ( ctx%zzdiv_state ) ) allocate ( ctx%zzdiv_state )
@@ -23329,7 +23638,7 @@ contains
 
       return
       end associate
-      end procedure zzdiv
+      end function zzdiv
 
       !>## Abstract
       !>
@@ -23413,13 +23722,15 @@ contains
       !>        05-FEB-2016 (NJB)
       !>
       !>           Based on Version 1.0.0 25-SEP-2014 (NJB)
-      module procedure zzdskbbl
+      module subroutine zzdskbbl ( ctx, bodyid )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_dsk02
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! Body ID code.
       real(wp) :: dskdsc ( dskdsz )
       integer(ip) :: dladsc ( dladsz )
       integer(ip) :: handle
@@ -23478,7 +23789,7 @@ contains
 
       return
       end associate
-      end procedure zzdskbbl
+      end subroutine zzdskbbl
 
       !>## Abstract
       !>
@@ -23628,11 +23939,25 @@ contains
       !>        (ZZDSKBSI -> ZZDSKSBI).
       !>
       !>-    SPICELIB Version 1.0.0, 11-FEB-2016 (NJB)
-      module procedure zzdsksbi
+      module subroutine zzdsksbi ( ctx, maxbod, stsize, btbody, btnbod, btsegp, btstsz, sthan, stdscr, stdlad, stfree, stoff, stctr, strad )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: maxbod  !! Maximum size of body table.
+      integer(ip), intent(in) :: stsize  !! Maximum size of segment table.
+      integer(ip), intent(inout) :: btbody ( * )  !! Body table's body ID array.
+      integer(ip), intent(inout) :: btnbod  !! Number of entries in body table.
+      integer(ip), intent(inout) :: btsegp ( * )  !! Array of pointers from bodies to segment table.
+      integer(ip), intent(inout) :: btstsz ( * )  !! Array of sizes of body segment lists.
+      integer(ip), intent(inout) :: sthan  ( * )  !! Array of handles of segments.
+      real(wp), intent(inout) :: stdscr ( dskdsz, * )  !! Array of DSK descriptors of segments.
+      integer(ip), intent(inout) :: stdlad ( dladsz, * )  !! Array of DLA descriptors of segments.
+      integer(ip), intent(inout) :: stfree  !! Index of first free entry in segment table.
+      real(wp), intent(inout) :: stoff  ( 3, * )  !! Offsets of segment frame centers from body.
+      real(wp), intent(inout) :: stctr  ( 3, * )  !! Centers of bounding spheres for segments.
+      real(wp), intent(inout) :: strad  ( * )  !! Radii of bounding spheres for segments.
 
       integer(ip) :: i
 
@@ -23671,7 +23996,7 @@ contains
       stfree = 1
 
       return
-      end procedure zzdsksbi
+      end subroutine zzdsksbi
 
       !>## Abstract
       !>
@@ -23847,11 +24172,26 @@ contains
       !>        30-JAN-2016 (NJB)
       !>
       !>           Original version.
-      module procedure zzdsksbr
+      module subroutine zzdsksbr ( ctx, needed, maxbod, stsize, btbody, btnbod, btsegp, btstsz, sthan, stdscr, stdlad, stfree, stoff, stctr, strad )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: needed  !! Number of segment table entries needed.
+      integer(ip), intent(in) :: maxbod  !! Maximum size of body table.
+      integer(ip), intent(in) :: stsize  !! Maximum size of segment table.
+      integer(ip), intent(inout) :: btbody ( * )  !! Body table's body ID array.
+      integer(ip), intent(inout) :: btnbod  !! Number of entries in body table.
+      integer(ip), intent(inout) :: btsegp ( * )  !! Array of pointers from bodies to segment table.
+      integer(ip), intent(inout) :: btstsz ( * )  !! Array of sizes of body segment lists.
+      integer(ip), intent(inout) :: sthan  ( * )  !! Array of handles of segments.
+      real(wp), intent(inout) :: stdscr ( dskdsz, * )  !! Array of DSK descriptors of segments.
+      integer(ip), intent(inout) :: stdlad ( dladsz, * )  !! Array of DLA descriptors of segments.
+      integer(ip), intent(inout) :: stfree  !! Index of first free entry in segment table.
+      real(wp), intent(inout) :: stoff  ( 3, * )  !! Offsets of segment frame centers from body.
+      real(wp), intent(inout) :: stctr  ( 3, * )  !! Centers of bounding spheres for segments.
+      real(wp), intent(inout) :: strad  ( * )  !! Radii of bounding spheres for segments.
 
       integer(ip) :: avail
       integer(ip) :: i
@@ -23987,7 +24327,7 @@ contains
       end if
 
       return
-      end procedure zzdsksbr
+      end subroutine zzdsksbr
 
       !>## Abstract
       !>
@@ -24053,11 +24393,13 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
-      module procedure zzdsksbd
+      module logical function zzdsksbd ( ctx, bodyid )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! ID code of target body.
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -24086,7 +24428,7 @@ contains
 
       return
       end associate
-      end procedure zzdsksbd
+      end function zzdsksbd
 
       !>## Abstract
       !>
@@ -24158,11 +24500,15 @@ contains
       !>        Corrected Brief_I/O description of input DSKDSC.
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
-      module procedure zzdskbdc
+      module logical function zzdskbdc ( ctx, handle, dladsc, dskdsc )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
+      real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -24187,7 +24533,7 @@ contains
 
       return
       end associate
-      end procedure zzdskbdc
+      end function zzdskbdc
 
       !>## Abstract
       !>
@@ -24258,11 +24604,15 @@ contains
       !>        Corrected Brief_I/O description of input DSKDSC.
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
-      module procedure zzdsknot
+      module logical function zzdsknot ( ctx, handle, dladsc, dskdsc )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
+      real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -24284,7 +24634,7 @@ contains
       zzdsknot = .false.
 
       return
-      end procedure zzdsknot
+      end function zzdsknot
 
       !>## Abstract
       !>
@@ -24359,13 +24709,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
-      module procedure zzdsksit
+      module logical function zzdsksit ( ctx, bodyid, nsurf, srflst, et )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_arrays, only: shelli
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nsurf  !! Surface ID count.
+      integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+      integer(ip), intent(in) :: bodyid  !! ID code of target body.
+      real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -24416,7 +24771,7 @@ contains
 
       return
       end associate
-      end procedure zzdsksit
+      end function zzdsksit
 
       !>## Abstract
       !>
@@ -24488,13 +24843,17 @@ contains
       !>        Corrected Brief_I/O description of input DSKDSC.
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
-      module procedure zzdskcit
+      module logical function zzdskcit ( ctx, handle, dladsc, dskdsc )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_arrays, only: bsrchi
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
+      real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -24554,7 +24913,7 @@ contains
 
       return
       end associate
-      end procedure zzdskcit
+      end function zzdskcit
 
       !>## Abstract
       !>
@@ -24632,11 +24991,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
-      module procedure zzdskusc
+      module logical function zzdskusc ( ctx, bodyid, et, cor1, cor2 )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! ID code of target body.
+      real(wp), intent(in) :: cor1  !! First coordinate.
+      real(wp), intent(in) :: cor2  !! Second coordinate.
+      real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -24669,7 +25033,7 @@ contains
 
       return
       end associate
-      end procedure zzdskusc
+      end function zzdskusc
 
       !>## Abstract
       !>
@@ -24746,11 +25110,15 @@ contains
       !>        Corrected Brief_I/O description of input DSKDSC.
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
-      module procedure zzdskumc
+      module logical function zzdskumc ( ctx, handle, dladsc, dskdsc )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
+      real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -24877,7 +25245,7 @@ contains
 !
       return
       end associate
-      end procedure zzdskumc
+      end function zzdskumc
 
       !>## Abstract
       !>
@@ -24970,11 +25338,20 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
-      module procedure zzdskmsc
+      module logical function zzdskmsc ( ctx, bodyid, surfid, framid, corsys, corpar, et, cor1, cor2 )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: surfid  !! ID code of target surface.
+      integer(ip), intent(in) :: bodyid  !! ID code of target body.
+      integer(ip), intent(in) :: corsys  !! Coordinate system code.
+      real(wp), intent(in) :: corpar ( * )  !! Coordinate system parameters.
+      real(wp), intent(in) :: cor1  !! First coordinate.
+      real(wp), intent(in) :: cor2  !! Second coordinate.
+      integer(ip), intent(in) :: framid  !! ID code of body-fixed reference frame.
+      real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -25017,7 +25394,7 @@ contains
 
       return
       end associate
-      end procedure zzdskmsc
+      end function zzdskmsc
 
       !>## Abstract
       !>
@@ -25107,11 +25484,15 @@ contains
       !>        Corrected Brief_I/O description of input DSKDSC.
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
-      module procedure zzdskmmc
+      module logical function zzdskmmc ( ctx, handle, dladsc, dskdsc )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
+      real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -25259,7 +25640,7 @@ contains
 
       return
       end associate
-      end procedure zzdskmmc
+      end function zzdskmmc
 
       !>## Abstract
       !>
@@ -25350,11 +25731,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
-      module procedure zzdsksrc
+      module logical function zzdsksrc ( ctx, surfid, bodyid, dclass, et, framid, pos )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: surfid  !! ID code of target surface.
+      integer(ip), intent(in) :: bodyid  !! ID code of target body.
+      integer(ip), intent(in) :: dclass  !! Data class of segment.
+      integer(ip), intent(in) :: framid  !! ID code of body-fixed reference frame.
+      real(wp), intent(in) :: pos    ( 3 )  !! Cartesian position vector.
+      real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -25391,7 +25779,7 @@ contains
 
       return
       end associate
-      end procedure zzdsksrc
+      end function zzdsksrc
 
       !>## Abstract
       !>
@@ -25481,12 +25869,16 @@ contains
       !>        Corrected Brief_I/O description of input DSKDSC.
       !>
       !>-    SPICELIB Version 1.0.0, 11-JUL-2016 (NJB)
-      module procedure zzdskmrc
+      module logical function zzdskmrc ( ctx, handle, dladsc, dskdsc )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_math, only: mxv, reclat
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DSK containing segment to be checked.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment to be checked.
+      real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment to be checked.
       real(wp) :: alt
       real(wp) :: co1max
       real(wp) :: co1min
@@ -25659,7 +26051,7 @@ contains
 
       return
       end associate
-      end procedure zzdskmrc
+      end function zzdskmrc
 
       !>## Abstract
       !>
@@ -25797,11 +26189,13 @@ contains
       !>           Renamed to ZZDSKSGR.
       !>
       !>        14-MAY-2010 (NJB)
-      module procedure zzdsksgr
+      module real(wp) function zzdsksgr ( ctx, dskdsc )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vnorm
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: dskdsc ( * )  !! is a DSK descriptor.
 
       real(wp) :: bds    ( 2, 3 )
       real(wp) :: f
@@ -25935,7 +26329,7 @@ contains
 
       end if
 
-      end procedure zzdsksgr
+      end function zzdsksgr
 
       !>## Abstract
       !>
@@ -26098,12 +26492,21 @@ contains
       !>        MAXANG and MINANG.
       !>
       !>-    SPICELIB Version 1.0.0, 03-FEB-2007 (NJB)
-      module procedure zzedterm
+      module subroutine zzedterm ( ctx, type, a, b, c, srcrad, srcpos, npts, trmpts )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, twopi
       use pepper_math, only: frame, latrec, mxv, pl2nvc, vdot, vnorm, vsep
       use pepper_strings, only: ucase_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: type  !! Terminator type.
+      real(wp), intent(in) :: a  !! Length of ellipsoid semi-axis lying on the x-axis.
+      real(wp), intent(in) :: b  !! Length of ellipsoid semi-axis lying on the y-axis.
+      real(wp), intent(in) :: c  !! Length of ellipsoid semi-axis lying on the z-axis.
+      real(wp), intent(in) :: srcrad  !! Radius of light source.
+      real(wp), intent(in) :: srcpos ( 3 )  !! Position of center of light source.
+      integer(ip), intent(in) :: npts  !! Number of points in terminator point set.
+      real(wp), intent(out) :: trmpts ( 3, npts )  !! Terminator point set.
 
 
 
@@ -26455,7 +26858,7 @@ contains
       end do
 
       return
-      end procedure zzedterm
+      end subroutine zzedterm
 
       !>## Abstract
       !>
@@ -26582,11 +26985,20 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 2.0.0, 30-JUN-2016 (NJB)
-      module procedure zzedtmpt
+      module subroutine zzedtmpt ( ctx, umbral, a, b, c, r, axis, plnvec, point )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
       use pepper_math, only: mxv, vcrss, vdist, vdot, vhat, vnorm, vperp, vrotv
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(in) :: umbral  !! Flag indicating whether terminator is umbral.
+      real(wp), intent(in) :: a  !! Semi-axis length in the X direction.
+      real(wp), intent(in) :: b  !! Semi-axis length in the Y direction.
+      real(wp), intent(in) :: c  !! Semi-axis length in the Z direction.
+      real(wp), intent(in) :: r  !! Radius of illumination source.
+      real(wp), intent(in) :: axis   ( 3 )  !! Axis vector from target to source.
+      real(wp), intent(in) :: plnvec ( 3 )  !! Vector in cutting half-plane.
+      real(wp), intent(out) :: point  ( 3 )  !! Terminator point.
 
 !     Tolerance used for arcsine arguments:
 !
@@ -26899,7 +27311,7 @@ contains
       point(3) = c * targpt(3)
 
       return
-      end procedure zzedtmpt
+      end subroutine zzedtmpt
 
       !>## Abstract
       !>
@@ -27177,9 +27589,18 @@ contains
       !>        comments.
       !>
       !>     Original version 27-NOV-2012 (NJB)
-      module procedure zzellbds
+      module subroutine zzellbds ( ctx, a, b, hmax, hmin, amax, bmax, amin, bmin )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: a  !! Input spheroid's semi-major axis length.
+      real(wp), intent(in) :: b  !! Input spheroid's semi-minor axis length.
+      real(wp), intent(in) :: hmax  !! Maximum height relative to input spheroid.
+      real(wp), intent(in) :: hmin  !! Minimum height relative to input spheroid.
+      real(wp), intent(out) :: amax  !! Outer spheroid's semi-major axis length.
+      real(wp), intent(out) :: bmax  !! Outer spheroid's semi-minor axis length.
+      real(wp), intent(out) :: amin  !! Inner spheroid's semi-major axis length.
+      real(wp), intent(out) :: bmin  !! Inner spheroid's semi-minor axis length.
       if ( b <= 0.0_wp ) then
 
          call ctx%setmsg ( 'This routine requires B > 0, but B = #.' )
@@ -27332,7 +27753,7 @@ contains
 
       end if
 
-      end procedure zzellbds
+      end subroutine zzellbds
 
       !>## Abstract
       !>
@@ -27486,9 +27907,15 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 09-MAR-2016 (NJB)
-      module procedure zzelnaxx
+      module subroutine zzelnaxx ( ctx, a, b, lat, xxpt, yxpt )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: a  !! Ellipse's semi-axis length in the X direction.
+      real(wp), intent(in) :: b  !! Ellipse's semi-axis length in the Y direction.
+      real(wp), intent(in) :: lat  !! Planetodetic latitude in radians.
+      real(wp), intent(out) :: xxpt  !! Normal line intercept on the X-axis.
+      real(wp), intent(out) :: yxpt  !! Normal line intercept on the Y-axis.
 
       real(wp) :: ept    ( 3 )
       real(wp) :: normal ( 3 )
@@ -27531,7 +27958,7 @@ contains
       yxpt = (  1.0_wp - ( (a/b)**2 )  ) * ept(2)
 
       return
-      end procedure zzelnaxx
+      end subroutine zzelnaxx
 
       !>## Detailed Input
       !>
@@ -27626,10 +28053,13 @@ contains
       !>## Version
       !>
       !>-    Beta Version 1.0.0, 24-SEP-1996 (NJB)
-      module procedure zzeprcss
+      module subroutine zzeprcss ( ctx, et, precm )
       use pepper_kinds, only: wp
       use pepper_constants, only: jyear, rpd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris time, in seconds past J2000.
+      real(wp), intent(out) :: precm ( 3, 3 )  !! Precession matrix at ET.
       real(wp), parameter :: zeta1 = 2306.2181_wp
 
       real(wp), parameter :: zeta2 = 0.30188_wp
@@ -27675,7 +28105,7 @@ contains
 !
       call eul2m  ( ctx, -z, theta, -zeta, 3, 2, 3, precm )
 
-      end procedure zzeprcss
+      end subroutine zzeprcss
 
       !>## Detailed Input
       !>
@@ -27941,11 +28371,18 @@ contains
       !>        flag and error string to the calling program.
       !>
       !>        Routine named ZZGETELM from GETELM.
-      module procedure zzgetelm
+      module subroutine zzgetelm ( ctx, frstyr, lines, epoch, elems, ok, error )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: rpd, twopi
       use pepper_strings, only: nparsd, nparsi, repmc_inplace, repmd_inplace, repmi_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: frstyr  !! year of earliest representable two-line elements
+      character(*), intent(in) :: lines ( 2 )  !! a pair of "lines" containing two-line elements
+      real(wp), intent(out) :: epoch  !! The epoch of the elements in seconds past J2000
+      real(wp), intent(out) :: elems ( * )  !! The elements converted to SPICE units.
+      logical, intent(out) :: ok  !! Boolean indicating error state.
+      character(*), intent(out) :: error  !! String describing error.
       integer(ip), parameter :: start = 0
       integer(ip), parameter :: kndt20 = start  + 1
       integer(ip), parameter :: kndd60 = kndt20 + 1
@@ -28368,7 +28805,7 @@ contains
 
       return
       end associate
-      end procedure zzgetelm
+      end subroutine zzgetelm
 
       !>## Detailed Input
       !>
@@ -28445,10 +28882,12 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0 22-JUL-2014 (EDW)
-      module procedure zzgrav
+      module subroutine zzgrav ( ctx, grav )
       use pepper_kinds, only: wp
       use pepper_inc_zzsgp4
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(out) :: grav( ngravs, ngravc )  !! Array of geophysical constants.
 
 !
 !     The definition of the MU constant is to allow calculation of
@@ -28520,7 +28959,7 @@ contains
 
       grav( wgs84, p_j3j2) =  grav(wgs84, p_j3) / grav(wgs84, p_j2)
 
-      end procedure zzgrav
+      end subroutine zzgrav
 
       !>## Abstract
       !>
@@ -28718,10 +29157,15 @@ contains
       !>       Added RETURN() check.
       !>
       !>-   SPICELIB Version 1.0.0  16-FEB-2010 (EDW)
-      module procedure zzholdd
+      module subroutine zzholdd ( ctx, op, id, ok, value )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzholdd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: op  !! Key for operation to execute.
+      integer(ip), intent(in) :: id  !! The ID for the item to apply OP.
+      logical, intent(out) :: ok  !! Boolean indicating success of get operation.
+      real(wp), intent(inout) :: value  !! Double precision value returned or to store.
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzholdd_state ) ) allocate ( ctx%zzholdd_state )
       associate ( svalue => ctx%zzholdd_state%svalue, &
@@ -28833,7 +29277,7 @@ contains
 
       end if
       end associate
-      end procedure zzholdd
+      end subroutine zzholdd
 
       !>## Abstract
       !>
@@ -29064,11 +29508,16 @@ contains
       !>        Removed IK from Required Reading list.
       !>
       !>-    SPICELIB 1.0.0, 05-MAR-2009 (NJB)
-      module procedure zzhullax
+      module subroutine zzhullax ( ctx, inst, n, bounds, axis )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, pi
       use pepper_math, only: mxv, reclat, ucrss, vcrss, vhat, vhatip, vrotv, vsep
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: inst  !! Instrument name.
+      integer(ip), intent(in) :: n  !! Number of FOV boundary vectors.
+      real(wp), intent(in) :: bounds ( 3, n )  !! FOV boundary vectors.
+      real(wp), intent(out) :: axis   ( 3 )  !! Instrument FOV axis vector.
 
 
       real(wp) :: cp     ( 3 )
@@ -29548,7 +29997,7 @@ contains
       end do
 
       return
-      end procedure zzhullax
+      end subroutine zzhullax
 
        !>## Abstract
        !>
@@ -29610,9 +30059,12 @@ contains
        !>        Renamed routine.
        !>
        !>        Based on DSKLIB Version 1.0.0, 03-FEB-1999 (JAB)
-       module procedure zzingrd
+       module logical function zzingrd ( ctx, nvox, voxel )
        use pepper_kinds, only: ip
       implicit              none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nvox  ( 3 )  !! Dimensions of voxel grid.
+      integer(ip), intent(in) :: voxel ( 3 )  !! Coordinates of voxel in voxel grid units.
 
       integer(ip) :: i
 
@@ -29631,7 +30083,7 @@ contains
       zzingrd = .true.
 
       return
-      end procedure zzingrd
+      end function zzingrd
 
       !>## Abstract
       !>
@@ -29751,9 +30203,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 16-MAY-2016 (NJB)
       !>
       !>        Original version 03-OCT-2014 (NJB)
-      module procedure zzinrec
+      module subroutine zzinrec ( ctx, p, bounds, margin, exclud, inside )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: p      ( 3 )  !! Input point.
+      real(wp), intent(in) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
+      real(wp), intent(in) :: margin  !! Element expansion margin.
+      integer(ip), intent(in) :: exclud  !! Index of coordinate to exclude from test.
+      logical, intent(out) :: inside  !! Flag indicating whether point is in element.
 
       integer(ip), parameter :: none = 0
 
@@ -29860,7 +30318,7 @@ contains
       inside = .true.
 
       return
-      end procedure zzinrec
+      end subroutine zzinrec
 
       !>## Abstract
       !>
@@ -29965,10 +30423,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-JAN-2016 (NJB)
-      module procedure zzinrypl
+      module subroutine zzinrypl ( ctx, vertex, udir, uplnml, const, maxd, nxpts, xpt )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vdot
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: vertex ( 3 )  !! Vertex and unit length direction vector of ray.
+      real(wp), intent(in) :: udir   ( 3 )  !! Vertex and unit length direction vector of ray.
+      real(wp), intent(in) :: uplnml ( 3 )  !! Unit plane normal vector.
+      real(wp), intent(in) :: const  !! Plane constant.
+      real(wp), intent(in) :: maxd  !! Maximum distance of intersection from vertex.
+      integer(ip), intent(out) :: nxpts  !! Number of intersection points of ray and plane.
+      real(wp), intent(out) :: xpt    ( 3 )  !! Intersection point, if NXPTS = 1.
       real(wp) :: dircon
       real(wp) :: h
       real(wp) :: lpar
@@ -30063,7 +30529,7 @@ contains
 
       nxpts  = 1
 
-      end procedure zzinrypl
+      end subroutine zzinrypl
 
       !>## Abstract
       !>
@@ -30153,11 +30619,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 03-FEB-2015 (NJB)
-      module procedure zzlatbox
+      module subroutine zzlatbox ( ctx, bounds, center, lr, lt, lz, radius )
       use pepper_kinds, only: wp
       use pepper_constants, only: halfpi, twopi
       use pepper_math, only: cylrec, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: bounds ( 2, 3 )  !! Array of coordinate bounds for segment.
+      real(wp), intent(out) :: center ( 3 )  !! Center of bounding box.
+      real(wp), intent(out) :: lr  !! Extent of box in the cylindrical radial direction.
+      real(wp), intent(out) :: lt  !! Extent of box in the tangential direction.
+      real(wp), intent(out) :: lz  !! Extent of box in the Z direction.
+      real(wp), intent(out) :: radius  !! Radius of box.
 
 
       real(wp) :: diag   ( 3 )
@@ -30359,7 +30832,7 @@ contains
       radius = vnorm( diag )
 
       return
-      end procedure zzlatbox
+      end subroutine zzlatbox
 
       !>## Abstract
       !>
@@ -30484,10 +30957,16 @@ contains
       !>-    SPICELIB Version 1.0.0, 02-FEB-2016 (NJB)
       !>
       !>        Based on first version 13-JAN-2015 (NJB)
-      module procedure zzlexmet
+      module subroutine zzlexmet ( ctx, method, maxn, n, begs, ends )
       use pepper_kinds, only: ip
       use pepper_strings, only: cpos, ltrim, lxqstr, rtrim
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Method string.
+      integer(ip), intent(in) :: maxn  !! Maximum number of tokens that can be returned.
+      integer(ip), intent(out) :: n  !! Number of tokens found.
+      integer(ip), intent(out) :: begs   ( * )  !! Beginning indices of tokens.
+      integer(ip), intent(out) :: ends   ( * )  !! Ending indices of tokens.
 
 !     Note the leading blank in DELIM below; this
 !     indicates that the blank character is a delimiter.
@@ -30683,7 +31162,7 @@ contains
       end do
 
       return
-      end procedure zzlexmet
+      end subroutine zzlexmet
 
       !>## Detailed Input
       !>
@@ -30889,10 +31368,13 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-2014 (EDW)
-      module procedure zzmult
+      module real(wp) function zzmult ( ctx, a, b )
       use pepper_kinds, only: wp
       use pepper_constants, only: dpmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: a  !! Multiplier.
+      real(wp), intent(in) :: b  !! Multiplicand.
       real(wp) :: loga
       real(wp) :: logb
       if ( .not. allocated ( ctx%zzmult_state ) ) allocate ( ctx%zzmult_state )
@@ -30978,7 +31460,7 @@ contains
 
       return
       end associate
-      end procedure zzmult
+      end function zzmult
 
       !>## Abstract
       !>
@@ -31083,11 +31565,17 @@ contains
       !>-    SPICELIB Version 1.0.0, 11-OCT-2016 (NJB)
       !>
       !>        Original version 16-MAY-2016 (NJB)
-      module procedure zznrmlon
+      module subroutine zznrmlon ( ctx, inmin, inmax, tol, outmin, outmax )
       use pepper_kinds, only: wp
       use pepper_constants, only: twopi
       use pepper_constants, only: dpr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: inmin  !! Longitude interval lower bound.
+      real(wp), intent(in) :: inmax  !! Longitude interval upper bound.
+      real(wp), intent(in) :: tol  !! Round-off tolerance.
+      real(wp), intent(out) :: outmin  !! Adjusted longitude interval lower bound.
+      real(wp), intent(out) :: outmax  !! Adjusted longitude interval upper bound.
 
       real(wp) :: delta
 
@@ -31250,7 +31738,7 @@ contains
 
       end if
 
-      end procedure zznrmlon
+      end subroutine zznrmlon
 
       !>## Abstract
       !>
@@ -31331,10 +31819,17 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-JUN-2016 (NJB)
-      module procedure zzrecbox
+      module subroutine zzrecbox ( ctx, bounds, center, lx, ly, lz, radius )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: bounds ( 2, 3 )  !! Array of coordinate bounds for segment.
+      real(wp), intent(out) :: center ( 3 )  !! Center of bounding box.
+      real(wp), intent(out) :: lx  !! Extent of box in the X direction.
+      real(wp), intent(out) :: ly  !! Extent of box in the Y direction.
+      real(wp), intent(out) :: lz  !! Extent of box in the Z direction.
+      real(wp), intent(out) :: radius  !! Radius of box.
 
 !     Element boundary indices:
 !
@@ -31401,7 +31896,7 @@ contains
       radius = vnorm( diag )
 
       return
-      end procedure zzrecbox
+      end subroutine zzrecbox
 
       !>## Detailed Input
       !>
@@ -31503,10 +31998,13 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-      module procedure zzrtnmat
+      module subroutine zzrtnmat ( ctx, v, m )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ucrss, vhat
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: v ( 3 )  !! A 3-dimensional vector.
+      real(wp), intent(out) :: m ( 3, 3 )  !! Base frame to RTN frame rotation matrix.
       real(wp) :: east   ( 3 )
       real(wp) :: lon
       real(wp) :: north  ( 3 )
@@ -31570,7 +32068,7 @@ contains
 
       end if
       end associate
-      end procedure zzrtnmat
+      end subroutine zzrtnmat
 
       !>## Abstract
       !>
@@ -31648,10 +32146,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-JAN-2016 (NJB)
-      module procedure zzryxsph
+      module subroutine zzryxsph ( ctx, vertex, udir, r, xpt, found )
       use pepper_kinds, only: wp
       use pepper_math, only: vdot
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: vertex ( 3 )  !! Vertex and unit length direction vector of ray.
+      real(wp), intent(in) :: udir   ( 3 )  !! Vertex and unit length direction vector of ray.
+      real(wp), intent(in) :: r  !! Radius of sphere.
+      real(wp), intent(out) :: xpt    ( 3 )  !! Intersection point, if NXPTS = 1.
+      logical, intent(out) :: found  !! Flag indicating whether intersection exists.
 
       real(wp) :: cpar
       real(wp) :: perp   ( 3 )
@@ -31726,7 +32230,7 @@ contains
 
       found = .true.
 
-      end procedure zzryxsph
+      end subroutine zzryxsph
 
       !>## Detailed Input
       !>
@@ -31812,9 +32316,22 @@ contains
       !>       routines.
       !>
       !>-   SPICELIB Version 1.0.0, MAY-19-1997 (EDW)
-      module procedure zzsecprt
+      module subroutine zzsecprt ( ctx, isynfl, dg, del, xni, omegao, atime, omgdot, xli, xfact, xldot, xndot, xnddt )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: isynfl  !! Resonance flag
+      real(wp), intent(in) :: omegao  !! Original argument of perigee
+      real(wp), intent(in) :: atime  !! An intermediate time term passed from the calling routine
+      real(wp), intent(in) :: omgdot  !! Time rate of change of argument of perigee
+      real(wp), intent(in) :: xli  !! An intermediate angular term passed from the calling routine
+      real(wp), intent(in) :: dg     ( 10 )  !! Parameter array
+      real(wp), intent(in) :: xfact  !! The value BFACT - XNQ
+      real(wp), intent(out) :: xldot  !! Time rate of change of XL
+      real(wp), intent(in) :: xni  !! An intermediate linear term passed from the calling routine
+      real(wp), intent(in) :: del    (  3 )  !! Parameter array of delta values
+      real(wp), intent(out) :: xnddt  !! Time rate of change of XNDOT
+      real(wp), intent(out) :: xndot  !! Time rate of change of XN
 
 !
 !     Local variables.
@@ -31900,7 +32417,7 @@ contains
 !
 
       return
-      end procedure zzsecprt
+      end subroutine zzsecprt
 
       !>## Detailed Input
       !>
@@ -32055,10 +32572,19 @@ contains
       !>        the error message output.
       !>
       !>-    SPICELIB Version 1.0.0, 03-MAR-2009 (EDW) (LSE) (WLT)
-      module procedure zzsepq
+      module real(wp) function zzsepq ( ctx, et, bod1, bod2, r1, r2, obs, abcorr, ref )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vnorm, vsep
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB
+      integer(ip), intent(in) :: bod1  !! NAIF ID for first target
+      integer(ip), intent(in) :: bod2  !! NAIF ID for second target
+      real(wp), intent(in) :: r1  !! Radius of a spherical model for BOD1
+      real(wp), intent(in) :: r2  !! Radius of a spherical model for BOD2
+      integer(ip), intent(in) :: obs  !! NAIF ID of observer
+      character(*), intent(in) :: abcorr  !! Aberration correction flag
+      character(*), intent(in) :: ref  !! Reference frame of the angular separation
 
 !
 !     SPICELIB functions.
@@ -32177,7 +32703,7 @@ contains
       zzsepq = theta - ang1 - ang2
 
       return
-      end procedure zzsepq
+      end function zzsepq
 
       !>## Abstract
       !>
@@ -33494,10 +34020,17 @@ contains
       !>-    SPICELIB Version 1.0.0, 29-SEP-2016 (NJB)
       !>
       !>        Original version 06-DEC-2012 (NJB)
-      module procedure zzsglatx
+      module subroutine zzsglatx ( ctx, p1, p2, minlat, minp, maxlat, maxp )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: opsgnd, reclat, vcrss, vdot, vhatip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: p1     ( 3 )  !! First line segment endpoint.
+      real(wp), intent(in) :: p2     ( 3 )  !! Second line segment endpoint.
+      real(wp), intent(out) :: minlat  !! Minimum latitude on segment.
+      real(wp), intent(out) :: minp   ( 3 )  !! Point where minimum latitude is attained.
+      real(wp), intent(out) :: maxlat  !! Maximum latitude on segment.
+      real(wp), intent(out) :: maxp   ( 3 )  !! Point where maximum latitude is attained.
       real(wp) :: crease ( 3 )
       real(wp) :: dir    ( 3 )
       real(wp) :: dp1
@@ -33697,7 +34230,7 @@ contains
 !
       return
       end associate
-      end procedure zzsglatx
+      end subroutine zzsglatx
 
       !>## Detailed Input
       !>
@@ -33884,11 +34417,24 @@ contains
       !>-    SPICELIB Version 1.0.0, 16-JAN-2021 (EDW) (JDR)
       !>
       !>        Based on code originally in zzgfspu.f.
-      module procedure zzspin
+      module subroutine zzspin ( ctx, targ1, shape1, frame1, targ2, shape2, frame2, obsrvr, abcorr, bods, frames, mxrad, obs )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ljucrs
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: targ1  !! Name for first target
+      character(*), intent(in) :: shape1  !! Shape corresponding to TARG1
+      character(*), intent(in) :: frame1  !! Body fixed frame for TARG1
+      character(*), intent(in) :: targ2  !! Name for second target
+      character(*), intent(in) :: shape2  !! Shape corresponding to TARG2
+      character(*), intent(in) :: frame2  !! Body fixed frame for TARG2
+      character(*), intent(in) :: obsrvr  !! Name for observer body
+      character(*), intent(in) :: abcorr  !! Aberration correction flag
+      integer(ip), intent(out) :: bods   (2)  !! Array(2) of body/SPK IDs for TARG1 and TARG2
+      integer(ip), intent(out) :: frames (2)  !! Array(2) of frame IDs for TARG1 and TARG2
+      real(wp), intent(out) :: mxrad  (2)  !! Array(2) of max radii values for TARG1 and TARG2
+      integer(ip), intent(out) :: obs  !! Body/SPK IDs of OBSRVR
       logical :: found
       integer(ip), parameter :: shapln = 6
       character(shapln) :: shap1
@@ -34155,7 +34701,7 @@ contains
 
       return
       end associate
-      end procedure zzspin
+      end subroutine zzspin
 
       !>## Abstract
       !>
@@ -35169,9 +35715,14 @@ contains
        !>        03-FEB-1999 (JAB)
        !>
        !>           Original version.
-       module procedure zztogrid
+       module subroutine zztogrid ( ctx, modxyz, voxori, voxsiz, grdxyz )
        use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: voxsiz  !! Voxel size in model coordinates.
+      real(wp), intent(in) :: modxyz  ( 3 )  !! Coordinates of point in model coordinates.
+      real(wp), intent(in) :: voxori  ( 3 )  !! Origin of voxel grid in model coordinates.
+      real(wp), intent(out) :: grdxyz  ( 3 )  !! Coordinates of point in voxel grid coordinates.
 
       integer(ip) :: i
 
@@ -35195,7 +35746,7 @@ contains
       end do
 
       return
-      end procedure zztogrid
+      end subroutine zztogrid
 
       !>## Abstract
       !>
@@ -35374,11 +35925,17 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 11-AUG-2005 (NJB)
-      module procedure zzwind
+      module integer(ip) function zzwind ( ctx, plane, n, vertcs, point )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_math, only: pl2nvc, ucrss, vdot, vperp, vsep
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubpl = 4
+      real(wp), intent(in) :: plane  ( ubpl )  !! A SPICELIB plane.
+      integer(ip), intent(in) :: n  !! Number of vertices of polygon.
+      real(wp), intent(in) :: vertcs ( 3, * )  !! Vertices of polygon.
+      real(wp), intent(in) :: point  ( 3 )  !! Point in PLANE.
 
       real(wp) :: atotal
       real(wp) :: cons
@@ -35508,7 +36065,7 @@ contains
       zzwind = nint ( atotal / twopi )
 
       return
-      end procedure zzwind
+      end function zzwind
 
       !>## Abstract
       !>
@@ -35668,11 +36225,15 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 08-JUL-2008 (NJB)
-      module procedure zzwind2d
+      module integer(ip) function zzwind2d ( ctx, n, vertcs, point )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_math, only: vdotg, vsepg
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of vertices of polygon.
+      real(wp), intent(in) :: vertcs ( 2, n )  !! Vertices of polygon.
+      real(wp), intent(in) :: point  ( 2 )  !! Point in PLANE.
       real(wp) :: atotal
       real(wp) :: rnext  ( 2 )
       real(wp) :: rperp  ( 2 )
@@ -35758,7 +36319,7 @@ contains
       zzwind2d = nint ( atotal / twopi )
 
       return
-      end procedure zzwind2d
+      end function zzwind2d
 
       !>## Detailed Input
       !>
@@ -36202,11 +36763,19 @@ contains
       !>        Updated to call LJUCRS instead of CMPRSS/UCASE.
       !>
       !>-    SPICELIB Version 1.0.0, 26-DEC-2004 (NJB) (WLT)
-      module procedure dpgrdr
+      module subroutine dpgrdr ( ctx, body, x, y, z, re, f, jacobi )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ljucrs
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: body  !! Body with which coordinate system is associated.
+      real(wp), intent(in) :: x  !! X-coordinate of point.
+      real(wp), intent(in) :: y  !! Y-coordinate of point.
+      real(wp), intent(in) :: z  !! Z-coordinate of point.
+      real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+      real(wp), intent(in) :: f  !! Flattening coefficient.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
       character(lnsize) :: kvalue
       character(kvnmln) :: pmkvar
       character(sensln) :: pgrlon
@@ -36397,7 +36966,7 @@ contains
 
       return
       end associate
-      end procedure dpgrdr
+      end subroutine dpgrdr
 
       !>## Detailed Input
       !>
@@ -36861,11 +37430,19 @@ contains
       !>        Updated to call LJUCRS instead of CMPRSS/UCASE.
       !>
       !>-    SPICELIB Version 1.0.0, 26-DEC-2004 (NJB) (WLT)
-      module procedure drdpgr
+      module subroutine drdpgr ( ctx, body, lon, lat, alt, re, f, jacobi )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ljucrs
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: body  !! Name of body with which coordinates are associated.
+      real(wp), intent(in) :: lon  !! Planetographic longitude of a point (radians).
+      real(wp), intent(in) :: lat  !! Planetographic latitude of a point (radians).
+      real(wp), intent(in) :: alt  !! Altitude of a point above reference spheroid.
+      real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+      real(wp), intent(in) :: f  !! Flattening coefficient.
+      real(wp), intent(out) :: jacobi ( 3, 3 )  !! Matrix of partial derivatives.
       character(lnsize) :: kvalue
       character(kvnmln) :: pmkvar
       character(sensln) :: pgrlon
@@ -37059,7 +37636,7 @@ contains
 
       return
       end associate
-      end procedure drdpgr
+      end subroutine drdpgr
 
       !>## Detailed Input
       !>
@@ -37318,10 +37895,13 @@ contains
       !>        Trivial header format clean-up.
       !>
       !>-    SPICELIB Version 1.0.0, 31-MAR-2009 (EDW)
-      module procedure dvsep
+      module real(wp) function dvsep ( ctx, s1, s2 )
       use pepper_kinds, only: wp
       use pepper_math, only: dvhat, vcrss, vdot, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: s1 (6)  !! State vector of the first body.
+      real(wp), intent(in) :: s2 (6)  !! State vector of the second body.
 
       real(wp) :: denom
       real(wp) :: numr
@@ -37381,7 +37961,7 @@ contains
 !
 
       return
-      end procedure dvsep
+      end function dvsep
 
       !>## Detailed Input
       !>
@@ -38065,10 +38645,22 @@ contains
       !>        changed.
       !>
       !>-    SPICELIB Version 1.0.0, 03-FEB-2007 (NJB)
-      module procedure edterm
+      module subroutine edterm ( ctx, trmtyp, source, target, et, fixref, abcorr, obsrvr, npts, trgepc, obspos, trmpts )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: trmtyp  !! Terminator type.
+      character(*), intent(in) :: source  !! Light source.
+      character(*), intent(in) :: target  !! Target body.
+      real(wp), intent(in) :: et  !! Observation epoch.
+      character(*), intent(in) :: fixref  !! Body-fixed frame associated with target.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      character(*), intent(in) :: obsrvr  !! Observer.
+      integer(ip), intent(in) :: npts  !! Number of points in terminator set.
+      real(wp), intent(out) :: trgepc  !! Epoch associated with target center.
+      real(wp), intent(out) :: obspos ( 3 )  !! Position of observer in body-fixed frame.
+      real(wp), intent(out) :: trmpts ( 3, npts )  !! Terminator point set.
       real(wp) :: ltsrc
       real(wp) :: lttarg
       real(wp) :: r
@@ -38246,7 +38838,7 @@ contains
 
       return
       end associate
-      end procedure edterm
+      end subroutine edterm
 
       !>## Detailed Input
       !>
@@ -38905,9 +39497,14 @@ contains
       !>        in the two-line element set are parsed correctly.
       !>
       !>-    SPICELIB Version 1.0.0, 26-JUN-1997 (WLT)
-      module procedure getelm
+      module subroutine getelm ( ctx, frstyr, lines, epoch, elems )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: frstyr  !! Year of earliest representable two-line elements.
+      character(*), intent(in) :: lines ( 2  )  !! A pair of "lines" containing two-line elements.
+      real(wp), intent(out) :: epoch  !! The epoch of the elements in seconds past J2000.
+      real(wp), intent(out) :: elems ( 10 )  !! The elements converted to SPICE units.
 
       logical :: ok
       character(256) :: error
@@ -38936,7 +39533,7 @@ contains
       end if
 
       return
-      end procedure getelm
+      end subroutine getelm
 
       !>## Detailed Input
       !>
@@ -39528,10 +40125,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 17-DEC-2021 (JDR) (BVS) (ML)
-      module procedure getfvn
+      module subroutine getfvn ( ctx, inst, room, shape, frame, bsight, n, bounds )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: inst  !! Name of an instrument.
+      integer(ip), intent(in) :: room  !! Maximum number of vectors that can be returned.
+      character(*), intent(out) :: shape  !! Instrument FOV shape.
+      character(*), intent(out) :: frame  !! Name of the frame in which FOV vectors are defined.
+      real(wp), intent(out) :: bsight ( 3    )  !! Boresight vector.
+      integer(ip), intent(out) :: n  !! Number of boundary vectors returned.
+      real(wp), intent(out) :: bounds ( 3, * )  !! FOV boundary vectors.
 !     PEPPER: an integer (SPICELIB declared it DOUBLE PRECISION and passed it
 !     to integer arguments).
       integer(ip) :: instid
@@ -39580,14 +40185,20 @@ contains
 
       return
       end associate
-      end procedure getfvn
+      end subroutine getfvn
 
       !> The field of view of an instrument given by its ID code, with all
       !> its boundary vectors and a frame name of any length (PEPPER).
-      module procedure fov_by_code
+      module subroutine fov_by_code ( ctx, instid, shape, frame, bsight, bounds )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: intstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: instid  !! the NAIF ID code of the instrument
+      character(:), allocatable, intent(out) :: shape  !! the FOV shape: CIRCLE, ELLIPSE, POLYGON or RECTANGLE
+      character(:), allocatable, intent(out) :: frame  !! the frame of the vectors
+      real(wp), intent(out) :: bsight(3)  !! the boresight vector
+      real(wp), allocatable, intent(out) :: bounds(:,:)  !! the boundary vectors, shape (3, n) (n = 0 after an error)
       character(16) :: id
       character(:), allocatable :: frmnam
       character(1) :: type
@@ -39623,13 +40234,19 @@ contains
          frame  = trim ( f )
          bounds = b(:,1:n)
       end block
-      end procedure fov_by_code
+      end subroutine fov_by_code
 
       !> The field of view of an instrument given by name, with all its
       !> boundary vectors and a frame name of any length (PEPPER).
-      module procedure fov_by_name
+      module subroutine fov_by_name ( ctx, inst, shape, frame, bsight, bounds )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: inst  !! the name of the instrument
+      character(:), allocatable, intent(out) :: shape  !! the FOV shape: CIRCLE, ELLIPSE, POLYGON or RECTANGLE
+      character(:), allocatable, intent(out) :: frame  !! the frame of the vectors
+      real(wp), intent(out) :: bsight(3)  !! the boresight vector
+      real(wp), allocatable, intent(out) :: bounds(:,:)  !! the boundary vectors, shape (3, n) (n = 0 after an error)
       integer(ip) :: instid
       logical :: found
       bsight = 0.0_wp
@@ -39650,7 +40267,7 @@ contains
          return
       end if
       call fov_by_code ( ctx, instid, shape, frame, bsight, bounds )
-      end procedure fov_by_name
+      end subroutine fov_by_name
 
       !>## Detailed Input
       !>
@@ -39774,10 +40391,15 @@ contains
       !>        strings before.
       !>
       !>-    SPICELIB Version 1.0.0, 12-JUL-1994 (WLT)
-      module procedure lx4dec
+      module subroutine lx4dec ( ctx, string, first, last, nchar )
       use pepper_kinds, only: ip
       use pepper_strings, only: lx4uns
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! any character string
+      integer(ip), intent(in) :: first  !! first character to scan from in STRING
+      integer(ip), intent(out) :: last  !! last character that is part of a decimal number
+      integer(ip), intent(out) :: nchar  !! number of characters in the decimal number.
 
       integer(ip) :: f
       integer(ip) :: i
@@ -39893,7 +40515,7 @@ contains
       end if
 
       return
-      end procedure lx4dec
+      end subroutine lx4dec
 
       !>## Detailed Input
       !>
@@ -40357,13 +40979,18 @@ contains
       !>
       !>           Original version. Based on OSCELT version 1.3.1,
       !>           28-FEB-2008
-      module procedure oscltx
+      module subroutine oscltx ( ctx, state, et, mu, elts )
       use pepper_kinds, only: wp
       use pepper_constants, only: dpmax
       use pepper_constants, only: twopi
       use pepper_math, only: exact, mxv, recrad, ucrss, unorm, vdot, vnorm
       use pepper_inc_oscltx
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: state  ( 6 )  !! State of body at epoch of elements.
+      real(wp), intent(in) :: et  !! Epoch of elements.
+      real(wp), intent(in) :: mu  !! Gravitational parameter (GM) of primary body.
+      real(wp), intent(out) :: elts   ( *  )  !! Extended set of classical conic elements.
 
       real(wp), parameter :: small = 1.0e-10_wp
 
@@ -40625,7 +41252,7 @@ contains
       elts( 11 ) = tau
 
       return
-      end procedure oscltx
+      end subroutine oscltx
 
       !>## Detailed Input
       !>
@@ -41020,11 +41647,19 @@ contains
       !>        Updated to call LJUCRS instead of CMPRSS/UCASE.
       !>
       !>-    SPICELIB Version 1.0.0, 26-DEC-2004 (CHA) (NJB) (HAN) (BVS) (WLT)
-      module procedure pgrrec
+      module subroutine pgrrec ( ctx, body, lon, lat, alt, re, f, rectan )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ljucrs
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: body  !! Body with which coordinate system is associated.
+      real(wp), intent(in) :: lon  !! Planetographic longitude of a point (radians).
+      real(wp), intent(in) :: lat  !! Planetographic latitude of a point (radians).
+      real(wp), intent(in) :: alt  !! Altitude of a point above reference spheroid.
+      real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+      real(wp), intent(in) :: f  !! Flattening coefficient.
+      real(wp), intent(out) :: rectan ( 3 )  !! Rectangular coordinates of the point.
       character(lnsize) :: kvalue
       character(kvnmln) :: pmkvar
       character(sensln) :: pgrlon
@@ -41187,7 +41822,7 @@ contains
 
       return
       end associate
-      end procedure pgrrec
+      end subroutine pgrrec
 
       !>## Detailed Input
       !>
@@ -41601,12 +42236,20 @@ contains
       !>                          -       -
       !>
       !>-    SPICELIB Version 1.0.0, 26-DEC-2004 (CHA) (NJB) (HAN) (BVS) (WLT)
-      module procedure recpgr
+      module subroutine recpgr ( ctx, body, rectan, re, f, lon, lat, alt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_strings, only: ljucrs
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: body  !! Body with which coordinate system is associated.
+      real(wp), intent(in) :: rectan ( 3 )  !! Rectangular coordinates of a point.
+      real(wp), intent(in) :: re  !! Equatorial radius of the reference spheroid.
+      real(wp), intent(in) :: f  !! Flattening coefficient.
+      real(wp), intent(out) :: lon  !! Planetographic longitude of the point (radians).
+      real(wp), intent(out) :: lat  !! Planetographic latitude of the point (radians).
+      real(wp), intent(out) :: alt  !! Altitude of the point above reference spheroid.
       character(lnsize) :: kvalue
       character(kvnmln) :: pmkvar
       character(sensln) :: pgrlon
@@ -41780,7 +42423,7 @@ contains
 
       return
       end associate
-      end procedure recpgr
+      end subroutine recpgr
 
       !>## Detailed Input
       !>
@@ -41940,10 +42583,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 02-NOV-1990 (NJB) (WLT)
-      module procedure saelgv
+      module subroutine saelgv ( ctx, vec1, vec2, smajor, sminor )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vdot, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: vec1   ( 3 )  !! Two vectors used to generate an ellipse.
+      real(wp), intent(in) :: vec2   ( 3 )  !! Two vectors used to generate an ellipse.
+      real(wp), intent(out) :: smajor ( 3 )  !! Semi-major axis of ellipse.
+      real(wp), intent(out) :: sminor ( 3 )  !! Semi-minor axis of ellipse.
 
       real(wp) :: c      ( 2, 2 )
       real(wp) :: eigval ( 2, 2 )
@@ -42171,7 +42819,7 @@ contains
       sminor = scale*sminor
 
       return
-      end procedure saelgv
+      end subroutine saelgv
 
       !>## Detailed Input
       !>
@@ -42544,11 +43192,17 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1990 (JML) (RET)
-      module procedure scpars
+      module subroutine scpars ( ctx, sc, sclkch, error, msg, sclkdp )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: cpos, nparsi, repmc_inplace, repmi_inplace
       use pepper_inc_sclk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: sc  !! NAIF spacecraft identification code.
+      character(*), intent(in) :: sclkch  !! Character representation of a spacecraft clock.
+      logical, intent(out) :: error  !! Flag to indicate if string parsed correctly.
+      character(*), intent(out) :: msg  !! Error message if string did not parse.
+      real(wp), intent(out) :: sclkdp  !! Encoded representation of the clock count.
       real(wp), allocatable :: pstart(:), pstop(:), ptotls(:)
       integer(ip) :: npmax
 
@@ -42836,7 +43490,7 @@ contains
 
       return
 
-      end procedure scpars
+      end subroutine scpars
 
       !>## Abstract
       !>
@@ -43250,12 +43904,20 @@ contains
       !>        shown.
       !>
       !>-    SPICELIB Version 1.0.0, 03-SEP-1999 (NJB) (JEM)
-      module procedure subpt
+      module subroutine subpt ( ctx, method, target, et, abcorr, obsrvr, spoint, alt )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vdist
       use pepper_strings, only: eqstr
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Name of target body.
+      real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      character(*), intent(in) :: obsrvr  !! Name of observing body.
+      real(wp), intent(out) :: spoint ( 3 )  !! Sub-observer point on the target body.
+      real(wp), intent(out) :: alt  !! Altitude of the observer above the target body.
       character(:), allocatable :: frname
       real(wp) :: lt
       real(wp) :: pos    ( 3 )
@@ -43456,7 +44118,7 @@ contains
 
       return
       end associate
-      end procedure subpt
+      end subroutine subpt
 
       !>## Abstract
       !>
@@ -43874,11 +44536,18 @@ contains
       !>     Initial values.
       !>
       !>     Standard SPICE error handling.
-      module procedure subsol
+      module subroutine subsol ( ctx, method, target, et, abcorr, obsrvr, spoint )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Name of target body.
+      real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      character(*), intent(in) :: obsrvr  !! Name of observing body.
+      real(wp), intent(out) :: spoint ( 3 )  !! Sub-solar point on the target body.
       character(:), allocatable :: frname
       real(wp) :: alt
       real(wp) :: ettarg
@@ -44066,7 +44735,7 @@ contains
 
       return
       end associate
-      end procedure subsol
+      end subroutine subsol
 
       !>## Detailed Input
       !>
@@ -44459,11 +45128,19 @@ contains
       !>        length for header comments.
       !>
       !>-    SPICELIB Version 1.0.0, 31-MAR-2009 (NJB) (JEM) (WLT)
-      module procedure surfpv
+      module subroutine surfpv ( ctx, stvrtx, stdir, a, b, c, stx, found )
       use pepper_kinds, only: wp
       use pepper_constants, only: dpmax
       use pepper_math, only: dvhat, vdot, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: stvrtx ( 6 )  !! State of ray's vertex.
+      real(wp), intent(in) :: stdir  ( 6 )  !! State of ray's direction vector.
+      real(wp), intent(in) :: a  !! Length of ellipsoid semi-axis along the x-axis.
+      real(wp), intent(in) :: b  !! Length of ellipsoid semi-axis along the y-axis.
+      real(wp), intent(in) :: c  !! Length of ellipsoid semi-axis along the z-axis.
+      real(wp), intent(out) :: stx    ( 6 )  !! State of surface intercept.
+      logical, intent(out) :: found  !! Flag indicating whether intercept state was found.
 
       real(wp), parameter :: margin = 10.0_wp
 
@@ -44645,7 +45322,7 @@ contains
       found = .true.
 
       return
-      end procedure surfpv
+      end subroutine surfpv
 
       !>## Detailed Input
       !>
@@ -44710,11 +45387,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 18-SEP-1996 (WLT)
-      module procedure tostdo
+      module subroutine tostdo ( ctx, line )
       use, intrinsic :: iso_fortran_env, only: output_unit
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: line  !! is a line of text to be written to standard output
       call writln ( ctx, line, output_unit )
-      end procedure tostdo
+      end subroutine tostdo
 
       !>## Detailed Input
       !>
@@ -45081,11 +45760,21 @@ contains
       !>-    SPICELIB Version 1.0.0, 07-AUG-2021 (EDW) (JDR) (MCS)
       !>
       !>        Based on code originally found in zzgfspu.f.
-      module procedure trgsep
+      module real(wp) function trgsep ( ctx, et, targ1, shape1, frame1, targ2, shape2, frame2, obsrvr, abcorr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzabcorr
       use pepper_inc_zzdyn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris seconds past J2000 TDB.
+      character(*), intent(in) :: targ1  !! First target body name.
+      character(*), intent(in) :: shape1  !! First target body shape.
+      character(*), intent(in) :: frame1  !! Reference frame of first target.
+      character(*), intent(in) :: targ2  !! Second target body name.
+      character(*), intent(in) :: shape2  !! First target body shape.
+      character(*), intent(in) :: frame2  !! Reference frame of second target.
+      character(*), intent(in) :: obsrvr  !! Observing body name.
+      character(*), intent(in) :: abcorr  !! Aberration corrections flag.
 
 !
 !     SPICELIB functions.
@@ -45137,7 +45826,7 @@ contains
       end if
 
       return
-      end procedure trgsep
+      end function trgsep
 
       !>## Detailed Input
       !>
@@ -45380,10 +46069,18 @@ contains
       !>
       !>        Call to IOERR changed to be consistent with new calling
       !>        protocol. SETMSG call deleted, since IOERR now calls SETMSG.
-      module procedure wrkvar
+      module subroutine wrkvar ( ctx, unit, name, dirctv, tabsym, tabptr, tabval )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rjust
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      integer(ip), intent(in) :: unit  !! Output logical unit.
+      character(*), intent(in) :: name  !! Name of the variable.
+      character(*), intent(in) :: dirctv  !! Kernel directive: '=' or '+='.
+      character(*), intent(in) :: tabsym     ( lbcell:* )  !! Double precision symbol table.
+      integer(ip), intent(in) :: tabptr     ( lbcell:* )  !! Double precision symbol table.
+      real(wp), intent(in) :: tabval     ( lbcell:* )  !! Double precision symbol table.
 
 
 
@@ -45472,7 +46169,7 @@ contains
       end if
 
       return
-      end procedure wrkvar
+      end subroutine wrkvar
 
       !>## Detailed Input
       !>
@@ -45650,10 +46347,17 @@ contains
       !>           Replaced WRITE with normal error reporting calls.
       !>
       !>        DSKLIB Version 1.0.0, 03-FEB-1999 (JAB)
-      module procedure xdda
+      module subroutine xdda ( ctx, vertex, raydir, grdext, maxnvx, nvx, voxlst )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: vertex ( 3 )  !! Voxel grid coordinates of ray's vertex.
+      real(wp), intent(in) :: raydir ( 3 )  !! Direction vector of ray.
+      integer(ip), intent(in) :: grdext ( 3 )  !! Dimensions of grid in voxel units.
+      integer(ip), intent(in) :: maxnvx  !! Maximum value of VOXLST.
+      integer(ip), intent(out) :: nvx  !! Number of voxels in the VOXLST list.
+      integer(ip), intent(out) :: voxlst ( 3, * )  !! List of voxels intersected by ray.
 
       real(wp), parameter :: grdtol = 1.0e-12_wp
 
@@ -46161,7 +46865,7 @@ contains
       nvx = nvx - 1
 
       return
-      end procedure xdda
+      end subroutine xdda
 
       !>## Abstract
       !>
@@ -46262,10 +46966,18 @@ contains
       !>-    SPICELIB Version 1.0.0, 23-JAN-2017 (NJB)
       !>
       !>        Previous version 22-JUN-2016 (NJB)
-      module procedure zzcnquad
+      module subroutine zzcnquad ( ctx, a, b, c, ub, n, r1, r2 )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: a  !! Coefficients of quadratic equation.
+      real(wp), intent(in) :: b  !! Coefficients of quadratic equation.
+      real(wp), intent(in) :: c  !! Coefficients of quadratic equation.
+      real(wp), intent(in) :: ub  !! Upper bound on magnitude of roots.
+      integer(ip), intent(out) :: n  !! Number of real roots within bound.
+      real(wp), intent(out) :: r1  !! Root of smaller absolute value.
+      real(wp), intent(out) :: r2  !! Root of larger absolute value.
       real(wp), parameter :: small = 1.0e-8_wp
       real(wp) :: coeffs ( 3 )
       real(wp) :: inv1
@@ -46569,7 +47281,7 @@ contains
 
       return
       end associate
-      end procedure zzcnquad
+      end subroutine zzcnquad
 
       !>## Abstract
       !>
@@ -46715,7 +47427,7 @@ contains
       !>           coincide with the target.
       !>
       !>        14-JAN-2015 (NJB)
-      module procedure zzdsksph
+      module subroutine zzdsksph ( ctx, bodyid, nsurf, srflst, minrad, maxrad )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
@@ -46726,6 +47438,12 @@ contains
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! ID code of target body.
+      integer(ip), intent(in) :: nsurf  !! Number of IDs in surface list.
+      integer(ip), intent(in) :: srflst ( * )  !! List of surface IDs.
+      real(wp), intent(out) :: minrad  !! Radius of inner bounding sphere for body.
+      real(wp), intent(out) :: maxrad  !! Radius of outer bounding sphere for body.
       character(lmsgln) :: errmsg
       character(:), allocatable :: frname
       logical :: namfnd
@@ -47151,7 +47869,7 @@ contains
 
       return
       end associate
-      end procedure zzdsksph
+      end subroutine zzdsksph
 
       !>## Abstract
       !>
@@ -47323,11 +48041,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-MAR-2009 (NJB)
-      module procedure zzfovaxi
+      module subroutine zzfovaxi ( ctx, inst, n, bounds, axis )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
       use pepper_math, only: vcrss, vhat, vhatip, vsep
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: inst  !! Instrument name.
+      integer(ip), intent(in) :: n  !! Number of FOV boundary vectors.
+      real(wp), intent(in) :: bounds ( 3, n )  !! FOV boundary vectors.
+      real(wp), intent(out) :: axis   ( 3 )  !! Instrument FOV axis vector.
 
 
       real(wp) :: cp     ( 3 )
@@ -47458,7 +48181,7 @@ contains
       call vhatip ( axis )
 
       return
-      end procedure zzfovaxi
+      end subroutine zzfovaxi
 
       !>## Abstract
       !>
@@ -47612,11 +48335,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 07-AUG-2016 (NJB)
-      module procedure zzinlat0
+      module subroutine zzinlat0 ( ctx, r, lon, lat, bounds, exclud, inside )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_inc_dsktol
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: r  !! Radius of point.
+      real(wp), intent(in) :: lon  !! Planetocentric longitude of point.
+      real(wp), intent(in) :: lat  !! Planetocentric latitude of point.
+      real(wp), intent(in) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
+      integer(ip), intent(in) :: exclud  !! Index of coordinate to exclude from test.
+      logical, intent(out) :: inside  !! Flag indicating whether point is in element.
 
       integer(ip), parameter :: none = 0
 
@@ -47753,7 +48483,7 @@ contains
       inside = .true.
 
       return
-      end procedure zzinlat0
+      end subroutine zzinlat0
 
       !>## Detailed Input
       !>
@@ -47882,10 +48612,17 @@ contains
       !>        deep space two line element routines.
       !>
       !>-    SPICELIB Version 1.0.0, APR-30-1997 (EDW)
-      module procedure zzdpinit
+      module subroutine zzdpinit ( ctx, ao, xlldot, omgdot, xnodot, xnodp, elems )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: j1950, j2000, pi, spd, twopi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: ao  !! Original semimajor axis
+      real(wp), intent(in) :: elems ( 10 )  !! Array of orbit elements
+      real(wp), intent(in) :: omgdot  !! Time rate of change of argument of perigee
+      real(wp), intent(in) :: xlldot  !! Time rate of change of XLL
+      real(wp), intent(in) :: xnodot  !! Time rate of change of mean motion
+      real(wp), intent(in) :: xnodp  !! Original mean motion
       real(wp), parameter :: c1ss = 2.9864797e-6_wp
       real(wp), parameter :: c1l = 4.7968065e-7_wp
       real(wp), parameter :: zcosis = 0.91744867_wp
@@ -48541,7 +49278,7 @@ contains
 
       return
       end associate
-      end procedure zzdpinit
+      end subroutine zzdpinit
 
       !>## Detailed Input
       !>
@@ -48668,9 +49405,19 @@ contains
       !>        deep space two line element routines.
       !>
       !>-    SPICELIB Version 1.0.0, MAY-2-1997 (EDW)
-      module procedure zzdpsec
+      module subroutine zzdpsec ( ctx, xll, omgasm, xnodes, em, xinc, xn, t, elems, omgdot )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: elems ( 10 )  !! The two line elements array
+      real(wp), intent(out) :: em  !! Perturbed eccentricity of the orbit at time T
+      real(wp), intent(inout) :: omgasm  !! Perturbed argument of perigee
+      real(wp), intent(in) :: omgdot  !! Time derivative of the argument of perigee
+      real(wp), intent(in) :: t  !! Time to calculate perturbation
+      real(wp), intent(out) :: xinc  !! Perturbed inclination of the orbit plane at time T
+      real(wp), intent(inout) :: xll  !! Long-period periodic term
+      real(wp), intent(out) :: xn  !! Perturbed mean motion of the orbit at time T
+      real(wp), intent(inout) :: xnodes  !! Perturbed argument of ascending node
       real(wp), parameter :: step2 = 259200.0_wp
       real(wp) :: xnddt
       real(wp) :: xndot
@@ -48812,7 +49559,7 @@ contains
 
       return
       end associate
-      end procedure zzdpsec
+      end subroutine zzdpsec
 
       !>## Detailed Input
       !>
@@ -48922,9 +49669,16 @@ contains
       !>        deep space two line element routines.
       !>
       !>-    SPICELIB Version 1.0.0, MAY-17-1997 (EDW)
-      module procedure zzdpper
+      module subroutine zzdpper ( ctx, t, em, xinc, omgasm, xnodes, xll )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(inout) :: em  !! Perturbed eccentricity of the orbit at time T
+      real(wp), intent(inout) :: omgasm  !! Perturbed argument of perigee
+      real(wp), intent(in) :: t  !! Time to calculate perturbations
+      real(wp), intent(inout) :: xinc  !! Perturbed inclination of the orbit plane at time T
+      real(wp), intent(inout) :: xll  !! Long-period periodic term
+      real(wp), intent(inout) :: xnodes  !! Perturbed argument of ascending node
       real(wp) :: sghs
       real(wp) :: f2
       real(wp) :: pl
@@ -49124,7 +49878,7 @@ contains
 
       return
       end associate
-      end procedure zzdpper
+      end subroutine zzdpper
 
       !>## Abstract
       !>
@@ -49224,11 +49978,17 @@ contains
       !>-    SPICELIB Version 1.0.0, 19-JAN-2017 (NJB)
       !>
       !>       Original version 22-AUG-2015 (NJB)
-      module procedure zzpdcmpl
+      module subroutine zzpdcmpl ( ctx, re, f, p, lat, rel )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
       use pepper_math, only: reclat
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: re  !! Equatorial radius.
+      real(wp), intent(in) :: f  !! Flattening coefficient.
+      real(wp), intent(in) :: p   ( 3 )  !! Three-dimensional point.
+      real(wp), intent(in) :: lat  !! Planetodetic latitude.
+      integer(ip), intent(out) :: rel  !! Relation code.
       integer(ip), parameter :: eq = 0
       real(wp) :: lon
       real(wp) :: offpcl
@@ -49444,7 +50204,7 @@ contains
 
       return
       end associate
-      end procedure zzpdcmpl
+      end subroutine zzpdcmpl
 
       !>## Abstract
       !>
@@ -49569,9 +50329,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 13-JAN-2017 (NJB)
-      module procedure zzpdpltc
+      module logical function zzpdpltc ( ctx, re, f, p, lat )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: re  !! Equatorial radius.
+      real(wp), intent(in) :: f  !! Flattening coefficient.
+      real(wp), intent(in) :: p   ( 3 )  !! Three-dimensional point.
+      real(wp), intent(in) :: lat  !! Planetodetic latitude.
 
       real(wp), parameter :: limit = 1.0e-2_wp
 
@@ -49718,7 +50483,7 @@ contains
       end if
 
       return
-      end procedure zzpdpltc
+      end function zzpdpltc
 
       !>## Abstract
       !>
@@ -49824,13 +50589,21 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 02-MAR-2015 (NJB)
-      module procedure zzpdtbox
+      module subroutine zzpdtbox ( ctx, bounds, corpar, center, lr, lt, lz, radius )
       use pepper_kinds, only: wp
       use pepper_constants, only: halfpi, twopi
       use pepper_math, only: cylrec, vnorm
       use pepper_inc_dskdsc
       use pepper_inc_dsktol
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: bounds ( 2, 3 )  !! Array of coordinate bounds for segment.
+      real(wp), intent(in) :: corpar ( * )  !! Array containing coordinate parameters.
+      real(wp), intent(out) :: center ( 3 )  !! Center of bounding box.
+      real(wp), intent(out) :: lr  !! Extent of box in the cylindrical radial direction.
+      real(wp), intent(out) :: lt  !! Extent of box in the tangential direction.
+      real(wp), intent(out) :: lz  !! Extent of box in the Z direction.
+      real(wp), intent(out) :: radius  !! Radius of box.
 
       real(wp) :: botv   ( 3 )
       real(wp) :: diag   ( 3 )
@@ -50092,7 +50865,7 @@ contains
       radius = vnorm( diag )
 
       return
-      end procedure zzpdtbox
+      end subroutine zzpdtbox
 
       !>## Abstract
       !>
@@ -50172,10 +50945,17 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 06-JUN-2014 (NJB)
-      module procedure zzraybox
+      module subroutine zzraybox ( ctx, vertex, raydir, boxori, extent, xpt, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vhat, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: vertex ( 3 )  !! Vertex of ray.
+      real(wp), intent(in) :: raydir ( 3 )  !! Direction vector of ray.
+      real(wp), intent(in) :: boxori ( 3 )  !! Box origin: corner having minimum coordinates.
+      real(wp), intent(in) :: extent ( 3 )  !! Box extents in X, Y, Z directions.
+      real(wp), intent(out) :: xpt    ( 3 )  !! Ray-box intercept.
+      logical, intent(out) :: found  !! Flag indicating whether intercept was found.
 
       integer(ip), parameter :: left = 1
 
@@ -50500,7 +51280,7 @@ contains
       found = .true.
 
       return
-      end procedure zzraybox
+      end subroutine zzraybox
 
       !>## Abstract
       !>
@@ -50664,11 +51444,13 @@ contains
       !>     Saved variables
       !>
       !>     Initial values
-      module procedure zzsrfker
+      module subroutine zzsrfker ( ctx, srf )
       use pepper_kinds, only: ip
       use pepper_strings, only: ljucrs
       use pepper_inc_srftrn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      type(surface_names), intent(inout) :: srf  !! the surface names from the kernel pool
       integer(ip), parameter :: nnames = 3
       character(*), parameter :: kvsfnm = 'NAIF_SURFACE_NAME'
       character(*), parameter :: kvsfcd = 'NAIF_SURFACE_CODE'
@@ -50799,7 +51581,7 @@ contains
             call ljucrs ( 1, name, buf )
             nor = trim ( buf )
          end subroutine normalize
-      end procedure zzsrfker
+      end subroutine zzsrfker
 
       !>## Detailed Input
       !>
@@ -51036,9 +51818,15 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 02-NOV-1990 (NJB)
-      module procedure cgv2el
+      module subroutine cgv2el ( ctx, center, vec1, vec2, ellips )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubel = 9
+      real(wp), intent(in) :: center (    3 )  !! Center and two generating vectors for an ellipse.
+      real(wp), intent(in) :: vec1   (    3 )  !! Center and two generating vectors for an ellipse.
+      real(wp), intent(in) :: vec2   (    3 )  !! Center and two generating vectors for an ellipse.
+      real(wp), intent(out) :: ellips ( ubel )  !! The SPICE ellipse defined by the input vectors.
 
 
 !
@@ -51074,7 +51862,7 @@ contains
       call saelgv ( ctx, vec1, vec2, ellips(majpos), ellips(minpos) )
 
       return
-      end procedure cgv2el
+      end subroutine cgv2el
 
       !>## Abstract
       !>
@@ -51530,11 +52318,16 @@ contains
       !>        Corrected error in header describing GEOPHS array.
       !>
       !>-    SPICELIB Version 1.0.0, 11-NOV-1998 (EDW)
-      module procedure dpspce
+      module subroutine dpspce ( ctx, et, geophs, elems, state )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, twopi
       use pepper_math, only: latrec
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Time for state evaluation in seconds past ephemeris epoch J2000.
+      real(wp), intent(in) :: geophs ( 8  )  !! The array of geophysical constants.
+      real(wp), intent(in) :: elems  ( 10 )  !! Array of orbit elements.
+      real(wp), intent(out) :: state  ( 6  )  !! State vector at ET.
       real(wp), parameter :: tol = 1.0e-6_wp
       integer(ip), parameter :: numgeo = 8
       integer(ip), parameter :: numelm = 10
@@ -52078,7 +52871,7 @@ contains
 
       return
       end associate
-      end procedure dpspce
+      end subroutine dpspce
 
       !>## Detailed Input
       !>
@@ -52440,12 +53233,22 @@ contains
       !>        the proper value of 10.
       !>
       !>-    SPICELIB Version 1.0.0, 09-JUL-1997 (WLT)
-      module procedure et2lst
+      module subroutine et2lst ( ctx, et, body, lon, type, hr, mn, sc, time, ampm )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi, twopi
       use pepper_math, only: reclat
       use pepper_strings, only: intstr, repmi_inplace, ucase_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Epoch in seconds past J2000 epoch
+      integer(ip), intent(in) :: body  !! ID-code of the body of interest
+      real(wp), intent(in) :: lon  !! Longitude of surface point (RADIANS)
+      character(*), intent(in) :: type  !! Type of longitude 'PLANETOCENTRIC', etc.
+      integer(ip), intent(out) :: hr  !! Local hour on a "24 hour" clock
+      integer(ip), intent(out) :: mn  !! Minutes past the hour
+      integer(ip), intent(out) :: sc  !! Seconds past the minute
+      character(*), intent(out) :: time  !! String giving local time on 24 hour clock
+      character(*), intent(out) :: ampm  !! String giving time on A.M./ P.M. scale
       real(wp) :: rate_1(1)  !! one-element copy of rate (array argument)
 
 
@@ -52704,7 +53507,7 @@ contains
       ampm = h // ':' // m // ':' // s //  ' ' // amorpm
 
       return
-      end procedure et2lst
+      end subroutine et2lst
 
       !>## Detailed Input
       !>
@@ -52902,11 +53705,20 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 26-OCT-2016 (NJB)
-      module procedure incnsg
+      module subroutine incnsg ( ctx, apex, axis, angle, endpt1, endpt2, nxpts, xpt1, xpt2 )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, pi
       use pepper_math, only: frame, mtxv, mxv, unorm, vdist, vdot, vhat
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: apex   ( 3 )  !! Apex of cone.
+      real(wp), intent(in) :: axis   ( 3 )  !! Axis of cone.
+      real(wp), intent(in) :: angle  !! Angle of cone.
+      real(wp), intent(in) :: endpt1 ( 3 )  !! Endpoints of line segment.
+      real(wp), intent(in) :: endpt2 ( 3 )  !! Endpoints of line segment.
+      integer(ip), intent(out) :: nxpts  !! Number of intersection points.
+      real(wp), intent(out) :: xpt1   ( 3 )  !! First intersection point, if it exists.
+      real(wp), intent(out) :: xpt2   ( 3 )  !! Second intersection point, if it exists.
       real(wp), parameter :: costol = 1.0e-10_wp
       real(wp), parameter :: hsptol = 1.0e-14_wp
       real(wp) :: a
@@ -53497,7 +54309,7 @@ contains
 
       return
       end associate
-      end procedure incnsg
+      end subroutine incnsg
 
       !>## Detailed Input
       !>
@@ -53606,9 +54418,14 @@ contains
       !>        Fixed return value for LAST in $Exceptions section entry #1.
       !>
       !>-    SPICELIB Version 1.0.0, 12-JUL-1994 (WLT)
-      module procedure lx4num
+      module subroutine lx4num ( ctx, string, first, last, nchar )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! any character string
+      integer(ip), intent(in) :: first  !! first character to scan from in STRING
+      integer(ip), intent(out) :: last  !! last character that is part of a number
+      integer(ip), intent(out) :: nchar  !! number of characters in the number.
 
       integer(ip) :: f
       integer(ip) :: i
@@ -53667,7 +54484,7 @@ contains
       end if
 
       return
-      end procedure lx4num
+      end subroutine lx4num
 
       !>## Detailed Input
       !>
@@ -53828,10 +54645,17 @@ contains
       !>        have two parameters, which could get out of synch, RDKVAR
       !>        now assumes that a variable name can be as long as an input
       !>        line.
-      module procedure rdkvar
+      module subroutine rdkvar ( ctx, tabsym, tabptr, tabval, name, eof )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: nparsd, nextwd_inplace, replch_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(inout) :: tabsym     ( lbcell:* )  !! Symbol table.
+      integer(ip), intent(inout) :: tabptr     ( lbcell:* )  !! Symbol table.
+      real(wp), intent(inout) :: tabval     ( lbcell:* )  !! Symbol table.
+      character(*), intent(out) :: name  !! Name of the variable.
+      logical, intent(out) :: eof  !! End of file indicator.
 
 
       integer(ip), parameter :: linlen = 80
@@ -53986,7 +54810,7 @@ contains
       name = varnam
 
       return
-      end procedure rdkvar
+      end subroutine rdkvar
 
       !>## Detailed Input
       !>
@@ -54489,13 +55313,19 @@ contains
       !>        coefficient.
       !>
       !>-    SPICELIB Version 1.0.0, 22-APR-2014 (SCK) (BVS)
-      module procedure xfmsta
+      module subroutine xfmsta ( ctx, istate, icosys, ocosys, body, ostate )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_math, only: cylrec, drdcyl, drdlat, drdsph, latrec, mxv, reccyl, reclat, recsph, sphrec
       use pepper_strings, only: ljucrs
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: istate(6)  !! Input state.
+      character(*), intent(in) :: icosys  !! Current (input) coordinate system.
+      character(*), intent(in) :: ocosys  !! Desired (output) coordinate system.
+      character(*), intent(in) :: body  !! Name or NAIF ID of body with which coordinates are associated (if applicable).
+      real(wp), intent(out) :: ostate(6)  !! Converted output state.
       real(wp), parameter :: margin = 1.0e2_wp
       integer(ip), parameter :: chsiz = 40
       integer(ip), parameter :: ncosys = 6
@@ -55100,7 +55930,7 @@ contains
 
       return
       end associate
-      end procedure xfmsta
+      end subroutine xfmsta
 
       !>## Abstract
       !>
@@ -55230,13 +56060,26 @@ contains
       !>-    SPICELIB Version 1.0.0, 02-APR-2012 (NJB)
       !>
       !>       Previous version was dated 21-MAR-2012
-      module procedure zzilusta
+      module subroutine zzilusta ( ctx, method, target, illum, et, fixref, abcorr, obsrvr, spoint, normal, phssta, incsta, emista )
       use pepper_kinds, only: wp
       use pepper_constants, only: clight
       use pepper_math, only: mxvg, vdot, vhat, vsep
       use pepper_strings, only: eqstr
       use pepper_inc_zzabcorr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Name of target body associated with surface point.
+      character(*), intent(in) :: illum  !! Name of illumination source.
+      real(wp), intent(in) :: et  !! Observation epoch (TDB).
+      character(*), intent(in) :: fixref  !! Body-fixed reference frame.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      character(*), intent(in) :: obsrvr  !! Name of observer.
+      real(wp), intent(in) :: spoint ( 3 )  !! Surface point.
+      real(wp), intent(in) :: normal ( 3 )  !! Outward normal vector at surface point.
+      real(wp), intent(out) :: phssta ( 2 )  !! Phase angle state.
+      real(wp), intent(out) :: incsta ( 2 )  !! Solar incidence angle state.
+      real(wp), intent(out) :: emista ( 2 )  !! Emission angle state.
 
 
       real(wp) :: dlt
@@ -55415,7 +56258,7 @@ contains
       emista( 2 ) =  dvsep ( ctx, nrmsta, obssta )
 
       return
-      end procedure zzilusta
+      end subroutine zzilusta
 
       !>## Abstract
       !>
@@ -55602,12 +56445,18 @@ contains
       !>-    SPICELIB Version 1.0.0, 03-JUN-2016 (NJB)
       !>
       !>        Original version 03-OCT-2014 (NJB)
-      module procedure zzinlat
+      module subroutine zzinlat ( ctx, p, bounds, margin, exclud, inside )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, twopi
       use pepper_math, only: reclat
       use pepper_inc_dsktol
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: p      ( 3 )  !! Input point.
+      real(wp), intent(in) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
+      real(wp), intent(in) :: margin  !! Margin used for inclusion testing.
+      integer(ip), intent(in) :: exclud  !! Index of coordinate to exclude from test.
+      logical, intent(out) :: inside  !! Flag indicating whether point is in element.
 
       integer(ip), parameter :: none = 0
 
@@ -55881,7 +56730,7 @@ contains
 !
       inside = .true.
 
-      end procedure zzinlat
+      end subroutine zzinlat
 
       !>## Abstract
       !>
@@ -56060,12 +56909,19 @@ contains
       !>        25-MAY-2016 (NJB)
       !>
       !>           Original version.
-      module procedure zzinpdt0
+      module subroutine zzinpdt0 ( ctx, p, lon, bounds, corpar, exclud, inside )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: twopi
       use pepper_constants, only: halfpi
       use pepper_inc_dsktol
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: p      ( 3 )  !! Cartesian coordinates of point.
+      real(wp), intent(in) :: lon  !! Planetocentric longitude of point.
+      real(wp), intent(in) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
+      real(wp), intent(in) :: corpar ( * )  !! Coordinate parameters.
+      integer(ip), intent(in) :: exclud  !! Index of coordinate to exclude from test.
+      logical, intent(out) :: inside  !! Flag indicating whether point is in element.
 
       integer(ip), parameter :: none = 0
 
@@ -56267,7 +57123,7 @@ contains
       inside = .true.
 
       return
-      end procedure zzinpdt0
+      end subroutine zzinpdt0
 
       !>## Abstract
       !>
@@ -56372,9 +57228,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 01-MAR-2016 (NJB)
-      module procedure zzrytrec
+      module subroutine zzrytrec ( ctx, vertex, raydir, bounds, margin, nxpts, xpt )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      real(wp), intent(in) :: bounds ( 2, 3 )  !! Bounds of rectangular volume element.
+      real(wp), intent(in) :: margin  !! Margin used for element expansion.
+      integer(ip), intent(out) :: nxpts  !! Number of intercept points.
+      real(wp), intent(out) :: xpt    ( 3 )  !! Intercept.
 
       integer(ip), parameter :: none = 0
 
@@ -56465,7 +57328,7 @@ contains
       end if
 
       return
-      end procedure zzrytrec
+      end subroutine zzrytrec
 
       !>## Detailed Input
       !>
@@ -56538,9 +57401,13 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 17-JUN-2016 (NJB)
-      module procedure zzsegbox
+      module subroutine zzsegbox ( ctx, dskdsc, boxctr, maxr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dskdsc
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: dskdsc ( * )  !! DSK segment descriptor.
+      real(wp), intent(out) :: boxctr ( 3 )  !! Center of bounding box.
+      real(wp), intent(out) :: maxr  !! Radius of box.
       real(wp) :: l1
       real(wp) :: l2
       real(wp) :: l3
@@ -56577,7 +57444,7 @@ contains
       end if
 
       return
-      end procedure zzsegbox
+      end subroutine zzsegbox
 
       !>## Abstract
       !>
@@ -56683,7 +57550,7 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 01-APR-2016 (NJB) (EDW) (BVS)
-      module procedure zzsrfn2c
+      module subroutine zzsrfn2c ( ctx, srfnam, bodyid, surfid, found )
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
       use pepper_strings, only: cmprss, ljucrs
@@ -56691,6 +57558,11 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzsrftrn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! Body ID code.
+      character(*), intent(in) :: srfnam  !! Surface name.
+      integer(ip), intent(out) :: surfid  !! Surface ID code.
+      logical, intent(out) :: found  !! Found flag.
       integer(ip) :: idx
       integer(ip) :: nkvar
       integer(ip) :: node
@@ -56777,7 +57649,7 @@ contains
 
       return
       end associate
-      end procedure zzsrfn2c
+      end subroutine zzsrfn2c
 
       !>## Abstract
       !>
@@ -56888,9 +57760,14 @@ contains
       !>        sections of the header.
       !>
       !>-    SPICELIB Version 1.0.0, 01-APR-2016 (NJB) (EDW) (BVS)
-      module procedure zzsrfc2n
+      module subroutine zzsrfc2n ( ctx, surfid, bodyid, srfnam, found )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! Body ID code.
+      character(*), intent(out) :: srfnam  !! Surface name.
+      integer(ip), intent(in) :: surfid  !! Surface ID code.
+      logical, intent(out) :: found  !! Found flag.
       character(:), allocatable :: name
 !
 !     PEPPER: the work is done by SURFACE_NAME, which returns the name
@@ -56898,17 +57775,22 @@ contains
 !
       call surface_name ( ctx, surfid, bodyid, name, found )
       if ( found ) srfnam = name
-      end procedure zzsrfc2n
+      end subroutine zzsrfc2n
 
       !> The name of a surface from its ID code and body, of any length
       !> (PEPPER).
-      module procedure surface_name
+      module subroutine surface_name ( ctx, code, body, name, found )
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
       use pepper_inc_srftrn
       use pepper_inc_zzctr
       use pepper_inc_zzsrftrn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: code  !! the surface ID code
+      integer(ip), intent(in) :: body  !! the ID code of the body of the surface
+      character(:), allocatable, intent(out) :: name  !! the surface name (empty if not found)
+      logical, intent(out) :: found  !! the surface has a name
       integer(ip) :: idx
       integer(ip) :: nkvar
       integer(ip) :: node
@@ -56993,7 +57875,7 @@ contains
 
       return
       end associate
-      end procedure surface_name
+      end subroutine surface_name
 
       !>## Abstract
       !>
@@ -57098,13 +57980,16 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 01-APR-2016 (NJB) (EDW) (BVS)
-      module procedure zzsrftrk
+      module subroutine zzsrftrk ( ctx, usrctr, update )
       use pepper_kinds, only: ip
       use pepper_hash, only: name_hash
       use pepper_inc_srftrn
       use pepper_inc_zzctr
       use pepper_inc_zzsrftrn
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: usrctr ( 2 )  !! User counter.
+      logical, intent(out) :: update  !! Update flag.
       integer(ip) :: nkvar
       logical :: lupdte
       if ( .not. allocated ( ctx%zzsrftrn_state ) ) allocate ( ctx%zzsrftrn_state )
@@ -57181,7 +58066,7 @@ contains
 
       return
       end associate
-      end procedure zzsrftrk
+      end subroutine zzsrftrk
 
       !>## Detailed Input
       !>
@@ -57530,10 +58415,19 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 02-NOV-1990 (NJB)
-      module procedure inedpl
+      module subroutine inedpl ( ctx, a, b, c, plane, ellips, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: pl2nvc, pl2psv, vnorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubel = 9
+      integer(ip), parameter :: ubpl = 4
+      real(wp), intent(in) :: a  !! Length of ellipsoid semi-axis lying on the x-axis.
+      real(wp), intent(in) :: b  !! Length of ellipsoid semi-axis lying on the y-axis.
+      real(wp), intent(in) :: c  !! Length of ellipsoid semi-axis lying on the z-axis.
+      real(wp), intent(in) :: plane  ( ubpl )  !! Plane that intersects ellipsoid.
+      real(wp), intent(out) :: ellips ( ubel )  !! Intersection ellipse, when FOUND is .TRUE.
+      logical, intent(out) :: found  !! Flag indicating whether ellipse was found.
 
 
 
@@ -57736,7 +58630,7 @@ contains
       found  = .true.
 
       return
-      end procedure inedpl
+      end subroutine inedpl
 
       !>## Detailed Input
       !>
@@ -57940,10 +58834,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 02-NOV-1990 (NJB)
-      module procedure pjelpl
+      module subroutine pjelpl ( ctx, elin, plane, elout )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: el2cgv, pl2nvc, vperp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubel = 9
+      integer(ip), parameter :: ubpl = 4
+      real(wp), intent(in) :: elin  ( ubel )  !! A SPICE ellipse to be projected.
+      real(wp), intent(in) :: plane ( ubpl )  !! A plane onto which ELIN is to be projected.
+      real(wp), intent(out) :: elout ( ubel )  !! A SPICE ellipse resulting from the projection.
 
 
 
@@ -58036,7 +58936,7 @@ contains
       call cgv2el ( ctx, prjctr, prjvc1, prjvc2, elout )
 
       return
-      end procedure pjelpl
+      end subroutine pjelpl
 
       !>## Detailed Input
       !>
@@ -58289,10 +59189,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 14-JAN-2016 (NJB) (EDW) (BVS)
-      module procedure srfc2s
+      module subroutine srfc2s ( ctx, code, bodyid, srfstr, isname )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: code  !! Integer surface ID code to translate to a string.
+      integer(ip), intent(in) :: bodyid  !! ID code of body associated with surface.
+      character(*), intent(out) :: srfstr  !! String corresponding to surface ID code.
+      logical, intent(out) :: isname  !! Logical flag indicating output is a surface name.
 
       if ( ctx%failed() ) return
 
@@ -58314,7 +59219,7 @@ contains
       end if
 
       return
-      end procedure srfc2s
+      end subroutine srfc2s
 
       !>## Detailed Input
       !>
@@ -58598,10 +59503,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 14-JAN-2016 (NJB) (EDW) (BVS)
-      module procedure srfcss
+      module subroutine srfcss ( ctx, code, bodstr, srfstr, isname )
       use pepper_kinds, only: ip
       use pepper_strings, only: intstr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: code  !! Integer surface ID code to translate to a string.
+      character(*), intent(in) :: bodstr  !! Name or ID of body associated with surface.
+      character(*), intent(out) :: srfstr  !! String corresponding to surface ID code.
+      logical, intent(out) :: isname  !! Flag indicating whether output is a surface name.
 
       integer(ip) :: bodyid
 
@@ -58642,7 +59552,7 @@ contains
       end if
 
       return
-      end procedure srfcss
+      end subroutine srfcss
 
       !>## Detailed Input
       !>
@@ -58945,10 +59855,15 @@ contains
       !>        surface name alias may be used.
       !>
       !>-    SPICELIB Version 1.0.0, 14-JAN-2016 (NJB) (EDW) (BVS)
-      module procedure srfs2c
+      module subroutine srfs2c ( ctx, srfstr, bodstr, code, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: nparsi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: srfstr  !! Surface name or ID string.
+      character(*), intent(in) :: bodstr  !! Body name or ID string.
+      integer(ip), intent(out) :: code  !! Integer surface ID code.
+      logical, intent(out) :: found  !! Flag indicating whether surface ID was found.
 
 
       character(msglen) :: errmsg
@@ -59002,7 +59917,7 @@ contains
 !     CODE and FOUND are set.
 !
       return
-      end procedure srfs2c
+      end subroutine srfs2c
 
       !>## Detailed Input
       !>
@@ -59281,10 +60196,15 @@ contains
       !>        surface name alias may be used.
       !>
       !>-    SPICELIB Version 1.0.0, 14-JAN-2016 (NJB) (EDW) (BVS)
-      module procedure srfscc
+      module subroutine srfscc ( ctx, srfstr, bodyid, code, found )
       use pepper_kinds, only: ip
       use pepper_strings, only: nparsi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: srfstr  !! Surface name or ID string.
+      integer(ip), intent(in) :: bodyid  !! Body ID code.
+      integer(ip), intent(out) :: code  !! Integer surface ID code.
+      logical, intent(out) :: found  !! Flag indicating whether surface ID was found.
 
 
       character(msglen) :: errmsg
@@ -59326,7 +60246,7 @@ contains
 !     CODE and FOUND are set.
 !
       return
-      end procedure srfscc
+      end subroutine srfscc
 
       !>## Abstract
       !>
@@ -59567,11 +60487,26 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 13-JUL-2016 (NJB)
-      module procedure zzdsksba
+      module subroutine zzdsksba ( ctx, bodyid, maxbod, stsize, btbody, btnbod, btsegp, btstsz, sthan, stdscr, stdlad, stfree, stoff, stctr, strad )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! Body ID code.
+      integer(ip), intent(in) :: maxbod  !! Maximum size of body table.
+      integer(ip), intent(in) :: stsize  !! Maximum size of segment table.
+      integer(ip), intent(inout) :: btbody ( * )  !! Body table's body ID array.
+      integer(ip), intent(inout) :: btnbod  !! Number of entries in body table.
+      integer(ip), intent(inout) :: btsegp ( * )  !! Array of pointers from bodies to segment table.
+      integer(ip), intent(inout) :: btstsz ( * )  !! Array of sizes of body segment lists.
+      integer(ip), intent(inout) :: sthan  ( * )  !! Array of handles of segments.
+      real(wp), intent(inout) :: stdscr ( dskdsz, * )  !! Array of DSK descriptors of segments.
+      integer(ip), intent(inout) :: stdlad ( dladsz, * )  !! Array of DLA descriptors of segments.
+      integer(ip), intent(inout) :: stfree  !! Index of first free entry in segment table.
+      real(wp), intent(inout) :: stoff  ( 3, * )  !! Offsets of segment frame centers from body.
+      real(wp), intent(inout) :: stctr  ( 3, * )  !! Centers of bounding spheres for segments.
+      real(wp), intent(inout) :: strad  ( * )  !! Radii of bounding spheres for segments.
 
 !
 !     External routines
@@ -59796,7 +60731,7 @@ contains
       end do
 
       return
-      end procedure zzdsksba
+      end subroutine zzdsksba
 
       !>## Detailed Input
       !>
@@ -60008,13 +60943,21 @@ contains
       !>        Corrected the contents of the Required_Reading section.
       !>
       !>-    SPICELIB Version 1.0.0, 10-AUG-2005 (NJB)
-      module procedure zzelvupy
+      module subroutine zzelvupy ( ctx, ellips, vertex, axis, n, bounds, found )
       use pepper_kinds, only: ip, wp
       use pepper_containers, only: grow
       use pepper_constants, only: pi
       use pepper_math, only: el2cgv, ucrss, vdist, vdot, vhat, vnorm, vsep
       use pepper_inc_errhnd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubel = 9
+      real(wp), intent(in) :: ellips ( ubel )  !! A SPICELIB ellipse.
+      real(wp), intent(in) :: vertex ( 3 )  !! Vertex of a pyramid.
+      real(wp), intent(in) :: axis   ( 3 )  !! Axis of a pyramid.
+      integer(ip), intent(in) :: n  !! Number of boundary vectors of the pyramid.
+      real(wp), intent(in) :: bounds ( 3, n )  !! Boundary vectors of the pyramid.
+      logical, intent(out) :: found  !! Flag indicating whether intersection was found.
       character(lmsgln) :: errmsg
       real(wp) :: a
       real(wp) :: apex   ( 3 )
@@ -60604,7 +61547,7 @@ contains
 
       return
       end associate
-      end procedure zzelvupy
+      end subroutine zzelvupy
 
       !>## Abstract
       !>
@@ -60800,12 +61743,19 @@ contains
       !>        05-MAR-2016 (NJB)
       !>
       !>           Original version 03-OCT-2014 (NJB)
-      module procedure zzinpdt
+      module subroutine zzinpdt ( ctx, p, bounds, corpar, margin, exclud, inside )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, pi, twopi
       use pepper_math, only: reclat
       use pepper_inc_dsktol
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: p      ( 3 )  !! Input point.
+      real(wp), intent(in) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
+      real(wp), intent(in) :: corpar ( * )  !! Coordinate system parameters.
+      real(wp), intent(in) :: margin  !! Margin used for inclusion testing.
+      integer(ip), intent(in) :: exclud  !! Index of coordinate to exclude from test.
+      logical, intent(out) :: inside  !! Flag indicating whether point is in element.
       integer(ip), parameter :: none = 0
       integer(ip), parameter :: lower = 1
       integer(ip), parameter :: upper = 2
@@ -61129,7 +62079,7 @@ contains
 
       return
       end associate
-      end procedure zzinpdt
+      end subroutine zzinpdt
 
       !>## Abstract
       !>
@@ -61253,12 +62203,19 @@ contains
       !>        Based on ZZRYXLAT 20-MAR-2015 (NJB)
       !>
       !>        Original 01-OCT-2014 (NJB)
-      module procedure zzrytlat
+      module subroutine zzrytlat ( ctx, vertex, raydir, bounds, margin, nxpts, xpt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, halfpi
       use pepper_math, only: reclat, ucrss, vdist, vdot, vhat, vnorm
       use pepper_inc_dsktol
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      real(wp), intent(in) :: bounds ( 2, 3 )  !! Bounds of latitudinal volume element.
+      real(wp), intent(in) :: margin  !! Margin used for element expansion.
+      integer(ip), intent(out) :: nxpts  !! Number of intercept points.
+      real(wp), intent(out) :: xpt    ( 3 )  !! Intercept.
       real(wp) :: angle
       real(wp) :: dist
       real(wp) :: eastb  ( 3 )
@@ -61796,7 +62753,7 @@ contains
 !     NXPTS and XPT are set.
 !
       end associate
-      end procedure zzrytlat
+      end subroutine zzrytlat
 
       !>## Detailed Input
       !>
@@ -62144,9 +63101,16 @@ contains
       !>        axis length error. The former message and description did
       !>        not match, and the description was incorrect: it described
       !>        `zero-length', rather than `non-positive' axes as invalid.
-      module procedure edlimb
+      module subroutine edlimb ( ctx, a, b, c, viewpt, limb )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: ubel = 9
+      real(wp), intent(in) :: a  !! Length of ellipsoid semi-axis lying on the x-axis.
+      real(wp), intent(in) :: b  !! Length of ellipsoid semi-axis lying on the y-axis.
+      real(wp), intent(in) :: c  !! Length of ellipsoid semi-axis lying on the z-axis.
+      real(wp), intent(in) :: viewpt (    3 )  !! Location of viewing point.
+      real(wp), intent(out) :: limb   ( ubel )  !! Limb of ellipsoid as seen from viewing point.
 
 
 
@@ -62315,7 +63279,7 @@ contains
       limb = tmpel
 
       return
-      end procedure edlimb
+      end subroutine edlimb
 
       !>## Detailed Input
       !>
@@ -62552,10 +63516,18 @@ contains
       !>        axis length error. The former message and description did
       !>        not match, and the description was incorrect: it described
       !>        `zero-length', rather than `non-positive' axes as invalid.
-      module procedure npedln
+      module subroutine npedln ( ctx, a, b, c, linept, linedr, pnear, dist )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: unorm
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: a  !! Length of ellipsoid's semi-axis in the x direction
+      real(wp), intent(in) :: b  !! Length of ellipsoid's semi-axis in the y direction
+      real(wp), intent(in) :: c  !! Length of ellipsoid's semi-axis in the z direction
+      real(wp), intent(in) :: linept ( 3 )  !! Point on line
+      real(wp), intent(in) :: linedr ( 3 )  !! Direction vector of line
+      real(wp), intent(out) :: pnear  ( 3 )  !! Nearest point on ellipsoid to line
+      real(wp), intent(out) :: dist  !! Distance of ellipsoid from line
 
 
 
@@ -62814,7 +63786,7 @@ contains
       dist = scale * dist
 
       return
-      end procedure npedln
+      end subroutine npedln
 
       !>## Abstract
       !>
@@ -62992,11 +63964,19 @@ contains
       !>     03-JUN-2016 (NJB)
       !>
       !>        Original version.
-      module procedure zzinvelt
+      module subroutine zzinvelt ( ctx, p, corsys, corpar, bounds, margin, exclud, inside )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dsktol
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: p      ( 3 )  !! Input point.
+      integer(ip), intent(in) :: corsys  !! Coordinate system code.
+      real(wp), intent(in) :: corpar ( * )  !! Coordinate system parameters.
+      real(wp), intent(in) :: bounds ( 2, 3 )  !! Coordinate bounds of element.
+      real(wp), intent(in) :: margin  !! Margin used for inclusion testing.
+      integer(ip), intent(in) :: exclud  !! Index of coordinate to exclude from test.
+      logical, intent(out) :: inside  !! Flag indicating whether point is in element.
 
 !
 !     Standard SPICE error handling.
@@ -63038,7 +64018,7 @@ contains
       end if
 
       return
-      end procedure zzinvelt
+      end subroutine zzinvelt
 
       !>## Abstract
       !>
@@ -63286,10 +64266,21 @@ contains
       !>
       !>        Based on version  4.0.0 12-NOV-2015 (NJB)
       !>        First version was 1.0.0 14-JAN-2015 (NJB)
-      module procedure zzprsmet
+      module subroutine zzprsmet ( ctx, bodyid, method, mxnsrf, shape, subtyp, pri, nsurf, srflst, pntdef, trmtyp )
       use pepper_kinds, only: ip
       use pepper_strings, only: eqstr, ljucrs
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! Body ID code.
+      character(*), intent(in) :: method  !! Method string.
+      integer(ip), intent(in) :: mxnsrf  !! Maximum number of surface IDs that can be returned.
+      character(*), intent(out) :: shape  !! Target shape.
+      character(*), intent(out) :: subtyp  !! Sub-point type.
+      logical, intent(out) :: pri  !! Prioritization flag.
+      integer(ip), intent(out) :: nsurf  !! Number of surface IDs in list.
+      integer(ip), intent(out) :: srflst ( * )  !! Surface ID list.
+      character(*), intent(out) :: pntdef  !! Limb or terminator point definition.
+      character(*), intent(out) :: trmtyp  !! Terminator type.
 
       character(*), parameter :: comma = ','
 
@@ -63972,7 +64963,7 @@ contains
       end if
 
       return
-      end procedure zzprsmet
+      end subroutine zzprsmet
 
       !>## Abstract
       !>
@@ -64111,12 +65102,20 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 19-JAN-2017 (NJB)
-      module procedure zzrytpdt
+      module subroutine zzrytpdt ( ctx, vertex, raydir, bounds, corpar, margin, nxpts, xpt )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax, halfpi
       use pepper_math, only: ucrss, vdist, vdot, vhat, vnorm, vsep
       use pepper_inc_dsktol
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      real(wp), intent(in) :: bounds ( 2, 3 )  !! Bounds of planetodetic volume element.
+      real(wp), intent(in) :: corpar ( * )  !! Coordinate parameters.
+      real(wp), intent(in) :: margin  !! Margin used for element expansion.
+      integer(ip), intent(out) :: nxpts  !! Number of intercept points.
+      real(wp), intent(out) :: xpt    ( 3 )  !! Intercept.
       integer(ip), parameter :: lower = 1
       integer(ip), parameter :: upper = 2
       integer(ip), parameter :: none = 0
@@ -64929,7 +65928,7 @@ contains
 !
       return
       end associate
-      end procedure zzrytpdt
+      end subroutine zzrytpdt
 
       !>## Detailed Input
       !>
@@ -65716,7 +66715,7 @@ contains
       !>     Statement functions
       !>
       !>     Standard SPICE error handling.
-      module procedure dskx02
+      module subroutine dskx02 ( ctx, handle, dladsc, vertex, raydir, plid, xpt, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_arrays, only: orderi
@@ -65727,6 +66726,14 @@ contains
       use pepper_inc_dsk02
       use pepper_inc_dsktol
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of DSK kernel containing plate model.
+      integer(ip), intent(in) :: dladsc   ( * )  !! DLA descriptor of plate model segment.
+      real(wp), intent(in) :: vertex   ( 3 )  !! Ray's vertex in the  body fixed frame.
+      real(wp), intent(in) :: raydir   ( 3 )  !! Ray direction in the body fixed frame.
+      integer(ip), intent(out) :: plid  !! ID code of the plate intersected by the ray.
+      real(wp), intent(out) :: xpt      ( 3 )  !! Intercept.
+      logical, intent(out) :: found  !! Flag indicating whether intercept exists.
       integer(ip) :: nplate_1(1)  !! one-element copy of nplate (array argument)
       integer(ip) :: voxptr_1(1)  !! one-element copy of voxptr (array argument)
       integer(ip) :: vox2id
@@ -66580,7 +67587,7 @@ contains
       return
       end associate
       end associate
-      end procedure dskx02
+      end subroutine dskx02
 
       !>## Abstract
       !>
@@ -67501,7 +68508,7 @@ contains
       !>        Updated to use BODS2C.
       !>
       !>-    SPICELIB Version 1.0.0, 27-FEB-2004 (NJB)
-      module procedure srfxpt
+      module subroutine srfxpt ( ctx, method, target, et, abcorr, obsrvr, dref, dvec, spoint, dist, trgepc, obspos, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: mxv, vdist, vnorm, vsep
@@ -67509,6 +68516,19 @@ contains
       use pepper_inc_frmtyp, frmtyp_all => all  ! PEPPER: ALL (unused) would hide the intrinsic
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Name of target body.
+      real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      character(*), intent(in) :: obsrvr  !! Name of observing body.
+      character(*), intent(in) :: dref  !! Reference frame of input direction vector.
+      real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+      real(wp), intent(out) :: spoint ( 3 )  !! Surface intercept point on the target body.
+      real(wp), intent(out) :: dist  !! Distance from the observer to the intercept point.
+      real(wp), intent(out) :: trgepc  !! Intercept epoch.
+      real(wp), intent(out) :: obspos ( 3 )  !! Observer position relative to target center.
+      logical, intent(out) :: found  !! Flag indicating whether intercept was found.
       real(wp), parameter :: margin = 1.001_wp
       integer(ip), parameter :: abclen = 15
       character(:), allocatable :: frname
@@ -68247,7 +69267,7 @@ contains
 !
       return
       end associate
-      end procedure srfxpt
+      end subroutine srfxpt
 
       !>## Abstract
       !>
@@ -70071,7 +71091,7 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 20-OCT-2021 (NJB) (MCS)
-      module procedure tangpt
+      module subroutine tangpt ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, dref, dvec, tanpt, alt, range, srfpt, trgepc, srfvec )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: mtxv, mxv, vdist, vdot, vnorm, vrel
@@ -70080,6 +71100,22 @@ contains
       use pepper_inc_zzabcorr
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Name of target body.
+      real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      character(*), intent(in) :: corloc  !! Aberration correction locus: 'TANGENT POINT' or 'SURFACE POINT'.
+      character(*), intent(in) :: obsrvr  !! Name of observing body.
+      character(*), intent(in) :: dref  !! Reference frame of ray direction vector.
+      real(wp), intent(in) :: dvec   ( 3 )  !! Ray direction vector.
+      real(wp), intent(out) :: tanpt  ( 3 )  !! "Tangent point": point on ray nearest to surface.
+      real(wp), intent(out) :: alt  !! Altitude of tangent point above surface.
+      real(wp), intent(out) :: range  !! Distance of tangent point from observer.
+      real(wp), intent(out) :: srfpt  ( 3 )  !! Point on surface nearest to tangent point.
+      real(wp), intent(out) :: trgepc  !! Epoch associated with correction locus.
+      real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to surface point SRFPT.
       real(wp), parameter :: cnvlim = 1.0e-16_wp
       integer(ip), parameter :: mxcvit = 10
       integer(ip), parameter :: mxncit = 3
@@ -71038,7 +72074,7 @@ contains
 
       return
       end associate
-      end procedure tangpt
+      end subroutine tangpt
 
       !>## Detailed Input
       !>
@@ -71263,12 +72299,18 @@ contains
       !>             of the targets.  This computation has been corrected.
       !>
       !>-    SPICELIB Version 1.0.0, 17-AUG-2005 (NJB)
-      module procedure zzocced
+      module integer(ip) function zzocced ( ctx, viewpt, centr1, semax1, centr2, semax2 )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi, pi
       use pepper_math, only: det, el2cgv, mtxv, mxm, mxv, ucrss, unorm, vdist, vnorm, vsep
       use pepper_inc_zzocced
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: viewpt ( 3 )  !! Observation location.
+      real(wp), intent(in) :: centr1 ( 3 )  !! Center of first ellipsoid.
+      real(wp), intent(in) :: semax1 ( 3, 3 )  !! Semi-major axis matrix for first ellipsoid.
+      real(wp), intent(in) :: centr2 ( 3 )  !! Center of second ellipsoid.
+      real(wp), intent(in) :: semax2 ( 3, 3 )  !! Semi-major axis matrix for second ellipsoid.
 
 
 
@@ -72387,7 +73429,7 @@ contains
 !
 
       return
-      end procedure zzocced
+      end function zzocced
 
       !>## Abstract
       !>
@@ -72560,7 +73602,7 @@ contains
       !>           distance.
       !>
       !>        15-DEC-2014 (NJB)
-      module procedure zzptpl02
+      module subroutine zzptpl02 ( ctx, handle, dladsc, dskdsc, point, plid, plate, verts, found )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpmax
       use pepper_math, only: pltexp, pltnrm, vdot, vhatip
@@ -72569,6 +73611,15 @@ contains
       use pepper_inc_dsk02
       use pepper_inc_dsktol
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment.
+      real(wp), intent(in) :: dskdsc ( * )  !! DSK descriptor of segment.
+      real(wp), intent(in) :: point  ( 3 )  !! Input point.
+      integer(ip), intent(out) :: plid  !! Plate ID.
+      integer(ip), intent(out) :: plate  ( 3 )  !! Plate, expressed as an array of three vertex IDs.
+      real(wp), intent(out) :: verts  ( 3, 3 )  !! Vertices of plate.
+      logical, intent(out) :: found  !! Found flag.
       integer(ip) :: nplate_1(1)  !! one-element copy of nplate (array argument)
       integer(ip) :: pltptr_1(1)  !! one-element copy of pltptr (array argument)
       integer(ip) :: cgrptr_1(1)  !! one-element copy of cgrptr (array argument)
@@ -72893,7 +73944,7 @@ contains
 
       return
       end associate
-      end procedure zzptpl02
+      end subroutine zzptpl02
 
       !>## Abstract
       !>
@@ -72987,10 +74038,17 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 19-JUL-2016 (NJB)
-      module procedure zzrytelt
+      module subroutine zzrytelt ( ctx, vertex, raydir, dskdsc, margin, nxpts, xpt )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dskdsc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      real(wp), intent(in) :: dskdsc ( dskdsz )  !! DSK descriptor of segment.
+      real(wp), intent(in) :: margin  !! Margin used for element expansion.
+      integer(ip), intent(out) :: nxpts  !! Number of intercept points.
+      real(wp), intent(out) :: xpt    ( 3 )  !! Intercept.
 
       integer(ip) :: corsys
 
@@ -73023,7 +74081,7 @@ contains
       end if
 
       return
-      end procedure zzrytelt
+      end subroutine zzrytelt
 
       !>## Abstract
       !>
@@ -73178,7 +74236,7 @@ contains
       !>        07-APR-2016 (NJB)
       !>
       !>        Based on first version 17-DEC-2014 (NJB)
-      module procedure zzdskbun
+      module subroutine zzdskbun ( ctx, bodyid, nsurf, srflst, et, fixfid, nseg, hanbuf, dlabuf, dskbuf, offbuf, ctrbuf, radbuf, point, normal )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mtxv, mxv, pltnrm, vdist, vhatip
       use pepper_inc_dla
@@ -73186,6 +74244,21 @@ contains
       use pepper_inc_dsktol
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! ID code of target body.
+      integer(ip), intent(in) :: nsurf  !! Number of IDs in surface list.
+      integer(ip), intent(in) :: srflst ( * )  !! List of surface IDs.
+      real(wp), intent(in) :: et  !! Lookup epoch, expressed as seconds past J2000 TDB.
+      integer(ip), intent(in) :: fixfid  !! Frame ID of body-fixed frame for output vectors.
+      integer(ip), intent(in) :: nseg  !! Number of segments in buffers.
+      integer(ip), intent(in) :: hanbuf ( * )  !! DSK handle buffer.
+      integer(ip), intent(in) :: dlabuf ( dladsz, * )  !! DLA segment descriptor buffer.
+      real(wp), intent(in) :: dskbuf ( dskdsz, * )  !! DSK segment descriptor buffer.
+      real(wp), intent(in) :: offbuf ( 3,      * )  !! Frame center offset buffer.
+      real(wp), intent(in) :: ctrbuf ( 3,      * )  !! Bounding sphere center buffer.
+      real(wp), intent(in) :: radbuf ( * )  !! Bounding sphere radius buffer.
+      real(wp), intent(in) :: point  ( 3 )  !! Surface point.
+      real(wp), intent(out) :: normal ( 3 )  !! Outward unit normal vector at surface point.
 
       real(wp) :: dist
       real(wp) :: segpt  ( 3 )
@@ -73608,7 +74681,7 @@ contains
       end if
 
       return
-      end procedure zzdskbun
+      end subroutine zzdskbun
 
       !>## Abstract
       !>
@@ -73724,9 +74797,20 @@ contains
       !>-    SPICELIB Version 1.0.0, 18-FEB-2016 (NJB)
       !>
       !>        Based on first version 20-JAN-2015 (NJB)
-      module procedure zzdsksgx
+      module subroutine zzdsksgx ( ctx, handle, dladsc, dtype, et, vertex, raydir, xpt, dc, ic, found )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! DSK file handle.
+      integer(ip), intent(in) :: dladsc ( * )  !! DLA descriptor of segment.
+      integer(ip), intent(in) :: dtype  !! Data type code.
+      real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
+      real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      real(wp), intent(out) :: xpt    ( 3 )  !! Surface intercept, if found.
+      real(wp), intent(out) :: dc     ( * )  !! D.p. component of source info.
+      integer(ip), intent(out) :: ic     ( * )  !! Integer component of source info.
+      logical, intent(out) :: found  !! Found flag.
 
       real(wp) :: retval
 
@@ -73764,7 +74848,7 @@ contains
       end if
 
       return
-      end procedure zzdsksgx
+      end subroutine zzdsksgx
 
       !>## Abstract
       !>
@@ -73972,7 +75056,7 @@ contains
       !>        10-OCT-2014 (NJB)
       !>
       !>        First version.
-      module procedure zzdskbux
+      module subroutine zzdskbux ( ctx, bodyid, nsurf, srflst, et, fixfid, nseg, hanbuf, dlabuf, dskbuf, offbuf, ctrbuf, radbuf, vertex, raydir, xpt, segidx, dc, ic, found )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: orderd
       use pepper_math, only: mtxv, mxv, vdist, vnorm
@@ -73981,6 +75065,26 @@ contains
       use pepper_inc_dsktol
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! ID code of target body.
+      integer(ip), intent(in) :: nsurf  !! Number of IDs in surface list.
+      integer(ip), intent(in) :: srflst ( * )  !! List of surface IDs.
+      real(wp), intent(in) :: et  !! Lookup epoch, expressed as seconds past J2000 TDB.
+      integer(ip), intent(in) :: fixfid  !! Frame ID of body-fixed frame for output vectors.
+      integer(ip), intent(in) :: nseg  !! Number of segments in buffers.
+      integer(ip), intent(in) :: hanbuf ( * )  !! DSK handle buffer.
+      integer(ip), intent(in) :: dlabuf ( dladsz, * )  !! DLA segment descriptor buffer.
+      real(wp), intent(in) :: dskbuf ( dskdsz, * )  !! DSK segment descriptor buffer.
+      real(wp), intent(in) :: offbuf ( 3,      * )  !! Frame center offset buffer.
+      real(wp), intent(in) :: ctrbuf ( 3,      * )  !! Bounding sphere center buffer.
+      real(wp), intent(in) :: radbuf ( * )  !! Bounding sphere radius buffer.
+      real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      real(wp), intent(out) :: xpt    ( 3 )  !! Intercept point.
+      integer(ip), intent(out) :: segidx  !! Index of segment in input buffers.
+      real(wp), intent(out) :: dc     ( * )  !! D.p. component of source info.
+      integer(ip), intent(out) :: ic     ( * )  !! Integer component of source info.
+      logical, intent(out) :: found  !! Found flag. True if and only if intercept exists.
 
       real(wp), parameter :: radscl = 1.01_wp
 
@@ -74488,7 +75592,7 @@ contains
 !     FOUND and XPT are set.
 !
       return
-      end procedure zzdskbux
+      end subroutine zzdskbux
 
       !>## Abstract
       !>
@@ -74586,12 +75690,22 @@ contains
       !>        Added FAILED calls.
       !>
       !>        12-MAY-2016 (NJB)
-      module procedure zzsbfxr
+      module subroutine zzsbfxr ( ctx, bodyid, nsurf, srflst, et, fixfid, vertex, raydir, xpt, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! ID code of target body.
+      integer(ip), intent(in) :: nsurf  !! Number of surface IDs in list.
+      integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+      real(wp), intent(in) :: et  !! Evaluation epoch, seconds past J2000 TDB.
+      integer(ip), intent(in) :: fixfid  !! Frame ID of ray and intercept.
+      real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      real(wp), intent(out) :: xpt    ( 3 )  !! Surface intercept point.
+      logical, intent(out) :: found  !! Found flag. True if intercept exists.
       integer(ip) :: stsize
       real(wp) :: locdc  ( maxdc )
       integer(ip) :: bix
@@ -74694,7 +75808,7 @@ contains
 
       return
       end associate
-      end procedure zzsbfxr
+      end subroutine zzsbfxr
 
       !>## Abstract
       !>
@@ -74813,12 +75927,27 @@ contains
       !>        Added FAILED calls.
       !>
       !>        12-MAY-2016 (NJB)
-      module procedure zzsbfxri
+      module subroutine zzsbfxri ( ctx, bodyid, nsurf, srflst, et, fixfid, vertex, raydir, xpt, handle, dladsc, dskdsc, dc, ic, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! ID code of target body.
+      integer(ip), intent(in) :: nsurf  !! Number of surface IDs in list.
+      integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+      real(wp), intent(in) :: et  !! Evaluation epoch, seconds past J2000 TDB.
+      integer(ip), intent(in) :: fixfid  !! Frame ID of ray and intercept.
+      real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      real(wp), intent(out) :: xpt    ( 3 )  !! Surface intercept point.
+      integer(ip), intent(out) :: handle  !! Handle of DSK file.
+      integer(ip), intent(out) :: dladsc ( * )  !! DLA descriptor of segment.
+      real(wp), intent(out) :: dskdsc ( * )  !! DSK descriptor of segment.
+      real(wp), intent(out) :: dc     ( * )  !! Double precision component of source info.
+      integer(ip), intent(out) :: ic     ( * )  !! Integer component of source info.
+      logical, intent(out) :: found  !! Found flag. True if intercept exists.
       integer(ip) :: stsize
       real(wp) :: locdc  ( maxdc )
       integer(ip) :: bix
@@ -74937,7 +76066,7 @@ contains
 
       return
       end associate
-      end procedure zzsbfxri
+      end subroutine zzsbfxri
 
       !>## Abstract
       !>
@@ -75034,12 +76163,20 @@ contains
       !>        Added FAILED calls.
       !>
       !>        12-MAY-2016 (NJB)
-      module procedure zzsbfnrm
+      module subroutine zzsbfnrm ( ctx, bodyid, nsurf, srflst, et, fixfid, point, normal )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dla
       use pepper_inc_dskdsc
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: bodyid  !! ID code of target body.
+      integer(ip), intent(in) :: nsurf  !! Number of surface IDs in list.
+      integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+      real(wp), intent(in) :: et  !! Evaluation epoch, seconds past J2000 TDB.
+      integer(ip), intent(in) :: fixfid  !! Frame ID of surface point and normal vector.
+      real(wp), intent(in) :: point  ( 3 )  !! Surface point.
+      real(wp), intent(out) :: normal ( 3 )  !! Unit length outward normal at input point.
       integer(ip) :: stsize
       real(wp) :: locdc  ( maxdc )
       integer(ip) :: bix
@@ -75146,7 +76283,7 @@ contains
 
       return
       end associate
-      end procedure zzsbfnrm
+      end subroutine zzsbfnrm
 
       !>## Detailed Input
       !>
@@ -75863,13 +77000,31 @@ contains
       !>-    SPICELIB Version 1.0.0, 04-APR-2017 (NJB)
       !>
       !>        Original 26-FEB-2016 (NJB)
-      module procedure dskxsi
+      module subroutine dskxsi ( ctx, pri, target, nsurf, srflst, et, fixref, vertex, raydir, maxd, maxi, xpt, handle, dladsc, dskdsc, dc, ic, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dsktol
       use pepper_inc_dsksrc
       use pepper_inc_srftrn
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(in) :: pri  !! Data prioritization flag.
+      character(*), intent(in) :: target  !! Target body name.
+      integer(ip), intent(in) :: nsurf  !! Number of surface IDs in list.
+      integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+      real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
+      character(*), intent(in) :: fixref  !! Name of target body-fixed reference frame.
+      real(wp), intent(in) :: vertex ( 3 )  !! Vertex of ray.
+      real(wp), intent(in) :: raydir ( 3 )  !! Direction vector of ray.
+      integer(ip), intent(in) :: maxd  !! Size of DC array.
+      integer(ip), intent(in) :: maxi  !! Size of IC array.
+      real(wp), intent(out) :: xpt    ( 3 )  !! Intercept point.
+      integer(ip), intent(out) :: handle  !! Handle of segment contributing surface data.
+      integer(ip), intent(out) :: dladsc ( * )  !! DLA descriptor of segment.
+      real(wp), intent(out) :: dskdsc ( * )  !! DSK descriptor of segment.
+      real(wp), intent(out) :: dc     ( * )  !! Double precision component of source info.
+      integer(ip), intent(out) :: ic     ( * )  !! Integer component of source info.
+      logical, intent(out) :: found  !! Found flag.
       integer(ip) :: fxcent
       integer(ip) :: fxclss
       integer(ip) :: fxtpid
@@ -76056,7 +77211,7 @@ contains
 
       return
       end associate
-      end procedure dskxsi
+      end subroutine dskxsi
 
       !>## Detailed Input
       !>
@@ -76782,11 +77937,23 @@ contains
       !>-    SPICELIB Version 1.0.0, 21-FEB-2017 (NJB)
       !>
       !>        Original 25-FEB-2016 (NJB)
-      module procedure dskxv
+      module subroutine dskxv ( ctx, pri, target, nsurf, srflst, et, fixref, nrays, vtxarr, dirarr, xptarr, fndarr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_dsktol
       use pepper_inc_zzctr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(in) :: pri  !! Data prioritization flag.
+      character(*), intent(in) :: target  !! Target body name.
+      integer(ip), intent(in) :: nsurf  !! Number of surface IDs in list.
+      integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+      real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
+      character(*), intent(in) :: fixref  !! Name of target body-fixed reference frame.
+      integer(ip), intent(in) :: nrays  !! Number of rays.
+      real(wp), intent(in) :: vtxarr ( 3, * )  !! Array of vertices of rays.
+      real(wp), intent(in) :: dirarr ( 3, * )  !! Array of direction vectors of rays.
+      real(wp), intent(out) :: xptarr ( 3, * )  !! Intercept point array.
+      logical, intent(out) :: fndarr ( * )  !! Found flag array.
       integer(ip) :: fxcent
       integer(ip) :: fxclss
       integer(ip) :: fxtpid
@@ -76976,7 +78143,7 @@ contains
 
       return
       end associate
-      end procedure dskxv
+      end subroutine dskxv
 
       !>## Abstract
       !>
@@ -78028,7 +79195,7 @@ contains
       !>        Upgraded to support surfaces represented by DSKs.
       !>
       !>-    SPICELIB Version 1.0.0, 31-MAR-2014 (NJB) (BVS)
-      module procedure illumg
+      module subroutine illumg ( ctx, method, target, ilusrc, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vsep
@@ -78038,6 +79205,20 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Name of target body.
+      character(*), intent(in) :: ilusrc  !! Name of illumination source.
+      real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      character(*), intent(in) :: abcorr  !! Desired aberration correction.
+      character(*), intent(in) :: obsrvr  !! Name of observing body.
+      real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
+      real(wp), intent(out) :: trgepc  !! Target surface point epoch.
+      real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to target surface point.
+      real(wp), intent(out) :: phase  !! Phase angle at the surface point.
+      real(wp), intent(out) :: incdnc  !! Source incidence angle at the surface point.
+      real(wp), intent(out) :: emissn  !! Emission angle at the surface point.
       character(cvtlen) :: pntdef
       character(shplen) :: shpstr
       character(sublen) :: subtyp
@@ -78429,7 +79610,7 @@ contains
 !
       return
       end associate
-      end procedure illumg
+      end subroutine illumg
 
       !>## Abstract
       !>
@@ -79162,7 +80343,7 @@ contains
       !>        Added FAILED call.
       !>
       !>        01-JUL-2016 (NJB)
-      module procedure srfnrm
+      module subroutine srfnrm ( ctx, method, target, et, fixref, npts, srfpts, normls )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vhatip
@@ -79172,6 +80353,14 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Name of target body.
+      real(wp), intent(in) :: et  !! Epoch in TDB seconds past J2000 TDB.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      integer(ip), intent(in) :: npts  !! Number of surface points in input array.
+      real(wp), intent(in) :: srfpts ( 3, * )  !! Array of surface points.
+      real(wp), intent(out) :: normls ( 3, * )  !! Array of outward, unit length normal vectors.
       character(cvtlen) :: lmbtyp
       character(shplen) :: shpstr
       character(sublen) :: subtyp
@@ -79489,7 +80678,7 @@ contains
 
       return
       end associate
-      end procedure srfnrm
+      end subroutine srfnrm
 
       !>## Abstract
       !>
@@ -79585,9 +80774,11 @@ contains
       !>        Updated comments.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUN-2016 (NJB)
-      module procedure zzsuelin
+      module subroutine zzsuelin ( ctx, trgcde )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: trgcde  !! Target body ID code.
       if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
       associate ( savmnr => ctx%zzsinutl_state%savmnr, &
                   savmxr => ctx%zzsinutl_state%savmxr, &
@@ -79606,7 +80797,7 @@ contains
 
       return
       end associate
-      end procedure zzsuelin
+      end subroutine zzsuelin
 
       !>## Abstract
       !>
@@ -79723,10 +80914,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUN-2016 (NJB)
-      module procedure zzsudski
+      module subroutine zzsudski ( ctx, trgcde, nsurf, srflst, fixfid )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: trgcde  !! Target body ID code.
+      integer(ip), intent(in) :: nsurf  !! Number of surface IDs in surface list.
+      integer(ip), intent(in) :: srflst ( * )  !! Surface list.
+      integer(ip), intent(in) :: fixfid  !! Target body-fixed frame ID.
       if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
 !
 !     PEPPER: the surface list has room for any number of surfaces (it
@@ -79775,7 +80971,7 @@ contains
 
       return
       end associate
-      end procedure zzsudski
+      end subroutine zzsudski
 
       !>## Abstract
       !>
@@ -79888,10 +81084,16 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUN-2016 (NJB)
-      module procedure zzraysfx
+      module subroutine zzraysfx ( ctx, vertex, raydir, et, spoint, found )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Evaluation epoch, seconds past J2000 TDB.
+      real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      real(wp), intent(out) :: spoint ( 3 )  !! Surface intercept point.
+      logical, intent(out) :: found  !! Found flag. .TRUE. if intercept exists.
       if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
 !
 !     PEPPER: the surface list has room for any number of surfaces (it
@@ -79929,7 +81131,7 @@ contains
 
       return
       end associate
-      end procedure zzraysfx
+      end subroutine zzraysfx
 
       !>## Abstract
       !>
@@ -80033,9 +81235,11 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUN-2016 (NJB)
-      module procedure zzmaxrad
+      module subroutine zzmaxrad ( ctx, maxrad )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(out) :: maxrad  !! Radius of outer bounding sphere for target body.
       logical :: return
       if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
       associate ( savmxr => ctx%zzsinutl_state%savmxr )
@@ -80043,7 +81247,7 @@ contains
 
       return
       end associate
-      end procedure zzmaxrad
+      end subroutine zzmaxrad
 
       !>## Abstract
       !>
@@ -80147,9 +81351,11 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUN-2016 (NJB)
-      module procedure zzminrad
+      module subroutine zzminrad ( ctx, minrad )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(out) :: minrad  !! Radius of inner bounding sphere for target body.
       logical :: return
       if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
       associate ( savmnr => ctx%zzsinutl_state%savmnr )
@@ -80157,7 +81363,7 @@ contains
 
       return
       end associate
-      end procedure zzminrad
+      end subroutine zzminrad
 
       !>## Abstract
       !>
@@ -80277,9 +81483,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 01-JUN-2016 (NJB)
-      module procedure zzraynp
+      module subroutine zzraynp ( ctx, vertex, raydir, et, pnear, dist )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Evaluation epoch, seconds past J2000 TDB.
+      real(wp), intent(in) :: vertex ( 3 )  !! Ray's vertex.
+      real(wp), intent(in) :: raydir ( 3 )  !! Ray's direction vector.
+      real(wp), intent(out) :: pnear  ( 3 )  !! Near point to ray on surface.
+      real(wp), intent(out) :: dist  !! Distance between near point and ray.
       if ( .not. allocated ( ctx%zzsinutl_state ) ) allocate ( ctx%zzsinutl_state )
       associate ( savmxr => ctx%zzsinutl_state%savmxr, &
                   savrad => ctx%zzsinutl_state%savrad, &
@@ -80315,7 +81527,7 @@ contains
 
       return
       end associate
-      end procedure zzraynp
+      end subroutine zzraynp
 
       !>## Abstract
       !>
@@ -81418,7 +82630,7 @@ contains
       !>        case. Now imports SHPLEN parameter from gf.inc.
       !>
       !>        Original version 09-FEB-2015 (NJB) (BVS)
-      module procedure illumf
+      module subroutine illumf ( ctx, method, target, ilusrc, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn, visibl, lit )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: halfpi
@@ -81429,6 +82641,22 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Name of target body.
+      character(*), intent(in) :: ilusrc  !! Name of illumination source.
+      real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      character(*), intent(in) :: abcorr  !! Desired aberration correction.
+      character(*), intent(in) :: obsrvr  !! Name of observing body.
+      real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
+      real(wp), intent(out) :: trgepc  !! Target surface point epoch.
+      real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to target surface point.
+      real(wp), intent(out) :: phase  !! Phase angle at the surface point.
+      real(wp), intent(out) :: incdnc  !! Source incidence angle at the surface point.
+      real(wp), intent(out) :: emissn  !! Emission angle at the surface point.
+      logical, intent(out) :: visibl  !! Visibility flag (.TRUE. = visible).
+      logical, intent(out) :: lit  !! Illumination flag (.TRUE. = illuminated).
       real(wp), parameter :: tolscl = 1.0e-10_wp
       character(cvtlen) :: pntdef
       character(shplen) :: shpstr
@@ -81906,7 +83134,7 @@ contains
 !
       return
       end associate
-      end procedure illumf
+      end subroutine illumf
 
       !>## Abstract
       !>
@@ -82962,9 +84190,22 @@ contains
       !>        ".tm" in header code example.
       !>
       !>-    SPICELIB Version 1.0.0, 02-MAR-2008 (NJB)
-      module procedure ilumin
+      module subroutine ilumin ( ctx, method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec, phase, incdnc, emissn )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Name of target body.
+      real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      character(*), intent(in) :: abcorr  !! Desired aberration correction.
+      character(*), intent(in) :: obsrvr  !! Name of observing body.
+      real(wp), intent(in) :: spoint ( 3 )  !! Body-fixed coordinates of a target surface point.
+      real(wp), intent(out) :: trgepc  !! Target surface point epoch.
+      real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to target surface point.
+      real(wp), intent(out) :: phase  !! Phase angle at the surface point.
+      real(wp), intent(out) :: incdnc  !! Solar incidence angle at the surface point.
+      real(wp), intent(out) :: emissn  !! Emission angle at the surface point.
 
 !
 !     Standard SPICE error handling.
@@ -82976,7 +84217,7 @@ contains
                     trgepc,  srfvec,  phase,   incdnc,  emissn )
 
       return
-      end procedure ilumin
+      end subroutine ilumin
 
       !>## Abstract
       !>
@@ -83684,7 +84925,7 @@ contains
       !>-    SPICELIB Version 1.0.0, 21-FEB-2017 (NJB)
       !>
       !>        Original version 01-JUL-2016 (NJB)
-      module procedure latsrf
+      module subroutine latsrf ( ctx, method, target, et, fixref, npts, lonlat, srfpts )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr
@@ -83694,6 +84935,14 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Name of target body.
+      real(wp), intent(in) :: et  !! Epoch in TDB seconds past J2000 TDB.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      integer(ip), intent(in) :: npts  !! Number of coordinate pairs in input array.
+      real(wp), intent(in) :: lonlat ( 2, * )  !! Array of longitude/latitude coordinate pairs.
+      real(wp), intent(out) :: srfpts ( 3, * )  !! Array of surface points.
       character(cvtlen) :: lmbtyp
       character(shplen) :: shpstr
       character(sublen) :: subtyp
@@ -84039,7 +85288,7 @@ contains
 
       return
       end associate
-      end procedure latsrf
+      end subroutine latsrf
 
       !>## Abstract
       !>
@@ -85712,7 +86961,7 @@ contains
       !>     Initial values
       !>
       !>     Standard SPICE error handling.
-      module procedure sincpt
+      module subroutine sincpt ( ctx, method, target, et, fixref, abcorr, obsrvr, dref, dvec, spoint, trgepc, srfvec, found )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
@@ -85722,6 +86971,19 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Name of target body.
+      real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      character(*), intent(in) :: obsrvr  !! Name of observing body.
+      character(*), intent(in) :: dref  !! Reference frame of ray's direction vector.
+      real(wp), intent(in) :: dvec   ( 3 )  !! Ray's direction vector.
+      real(wp), intent(out) :: spoint ( 3 )  !! Surface intercept point on the target body.
+      real(wp), intent(out) :: trgepc  !! Intercept epoch.
+      real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to intercept point.
+      logical, intent(out) :: found  !! Flag indicating whether intercept was found.
       character(cvtlen) :: pntdef
       character(shplen) :: shpstr
       character(sublen) :: subtyp
@@ -86074,7 +87336,7 @@ contains
 
       return
       end associate
-      end procedure sincpt
+      end subroutine sincpt
 
       !>## Abstract
       !>
@@ -87556,7 +88818,7 @@ contains
       !>        ".tm" in header code example.
       !>
       !>-    SPICELIB Version 1.0.0, 02-MAR-2008 (NJB)
-      module procedure subpnt
+      module subroutine subpnt ( ctx, method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
@@ -87568,6 +88830,16 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Name of target body.
+      real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      character(*), intent(in) :: obsrvr  !! Name of observing body.
+      real(wp), intent(out) :: spoint ( 3 )  !! Sub-observer point on the target body.
+      real(wp), intent(out) :: trgepc  !! Sub-observer point epoch.
+      real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to sub-observer point.
       integer(ip), parameter :: maxitr = 5
       character(cvtlen) :: pntdef
       character(shplen) :: shpstr
@@ -88417,7 +89689,7 @@ contains
 
       return
       end associate
-      end procedure subpnt
+      end subroutine subpnt
 
       !>## Abstract
       !>
@@ -89483,7 +90755,7 @@ contains
       !>        FRAME to FRAMES.
       !>
       !>-    SPICELIB Version 1.0.0, 02-MAR-2008 (NJB)
-      module procedure subslr
+      module subroutine subslr ( ctx, method, target, et, fixref, abcorr, obsrvr, spoint, trgepc, srfvec )
       use pepper_containers, only: grow
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
@@ -89495,6 +90767,16 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Name of target body.
+      real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      character(*), intent(in) :: obsrvr  !! Name of observing body.
+      real(wp), intent(out) :: spoint ( 3 )  !! Sub-solar point on the target body.
+      real(wp), intent(out) :: trgepc  !! Sub-solar point epoch.
+      real(wp), intent(out) :: srfvec ( 3 )  !! Vector from observer to sub-solar point.
       character(cvtlen) :: pntdef
       character(shplen) :: shpstr
       character(sublen) :: subtyp
@@ -90327,7 +91609,7 @@ contains
 
       return
       end associate
-      end procedure subslr
+      end subroutine subslr
 
       !>## Abstract
       !>
@@ -90506,11 +91788,22 @@ contains
       !>-     SPICELIB Version 1.0.0 11-FEB-2016 (NJB)
       !>
       !>        Original version 26-OCT-2015 (NJB)
-      module procedure zztanini
+      module subroutine zztanini ( ctx, curve, srcrad, shape, trgcde, nsurf, srflst, fixfid, et, plnvec, axis )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: vcrss, vhat, vhatip
       use pepper_inc_zzdsk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: curve  !! Type of curve: limb or terminator type.
+      real(wp), intent(in) :: srcrad  !! Radius of illumination source.
+      integer(ip), intent(in) :: shape  !! Target shape.
+      integer(ip), intent(in) :: trgcde  !! Target body ID code.
+      integer(ip), intent(in) :: nsurf  !! Number of surfaces in list.
+      integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+      integer(ip), intent(in) :: fixfid  !! Frame ID of target body-fixed frame.
+      real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
+      real(wp), intent(in) :: plnvec ( 3 )  !! Reference vector contained in cutting half-plane.
+      real(wp), intent(in) :: axis   ( 3 )  !! Axis vector: edge of cutting half-plane.
       real(wp) :: apex   ( 3 )
       real(wp) :: raydir ( 3 )
       real(wp) :: vrtoff ( 3 )
@@ -90637,7 +91930,7 @@ contains
 
       return
       end associate
-      end procedure zztanini
+      end subroutine zztanini
 
       !>## Abstract
       !>
@@ -90757,12 +92050,16 @@ contains
       !>-     SPICELIB Version 1.0.0 11-FEB-2016 (NJB)
       !>
       !>        Original version 26-OCT-2015 (NJB)
-      module procedure zztansta
+      module subroutine zztansta ( ctx, angle, ocultd, point )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
       use pepper_math, only: vrotv
       use pepper_inc_zzdsk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: angle  !! Angle of ray.
+      logical, intent(out) :: ocultd  !! Occultation state flag. True if ray is occulted.
+      real(wp), intent(out) :: point  ( 3 )  !! Tangent point on target.
       real(wp) :: apex   ( 3 )
       real(wp) :: raydir ( 3 )
       real(wp) :: vrtoff ( 3 )
@@ -90844,7 +92141,7 @@ contains
 
       return
       end associate
-      end procedure zztansta
+      end subroutine zztansta
 
       !>## Abstract
       !>
@@ -91078,12 +92375,27 @@ contains
       !>           Removed VERTEX from argument list.
       !>
       !>           Original version 26-OCT-2015 (NJB)
-      module procedure zztangnt
+      module subroutine zztangnt ( ctx, curve, srcrad, shape, trgcde, nsurf, srflst, fixfid, et, plnvec, axis, schstp, soltol, result, points )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi
       use pepper_math, only: vnorm, vrotv
       use pepper_inc_zzdsk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: curve  !! Type of curve: limb or terminator type.
+      real(wp), intent(in) :: srcrad  !! Radius of illumination source.
+      integer(ip), intent(in) :: shape  !! Target shape.
+      integer(ip), intent(in) :: trgcde  !! Target body ID code.
+      integer(ip), intent(in) :: nsurf  !! Number of surfaces in list.
+      integer(ip), intent(in) :: srflst ( * )  !! Surface ID list.
+      integer(ip), intent(in) :: fixfid  !! Frame ID of target body-fixed frame.
+      real(wp), intent(in) :: et  !! Epoch, expressed as seconds past J2000 TDB.
+      real(wp), intent(in) :: plnvec ( 3 )  !! Reference vector contained in cutting half-plane.
+      real(wp), intent(in) :: axis   ( 3 )  !! Axis vector: edge of cutting half-plane.
+      real(wp), intent(in) :: schstp  !! Angular step size for searching.
+      real(wp), intent(in) :: soltol  !! Solution convergence tolerance.
+      real(wp), allocatable, intent(inout) :: result ( : )  !! Cell (not window) containing transition angles. Lower bound LBCELL; grows (PEPPER).
+      real(wp), allocatable, intent(inout) :: points ( :, : )  !! Array of tangent points. Grows (PEPPER).
 
 
 !
@@ -91349,7 +92661,7 @@ contains
       end if
 
       return
-      end procedure zztangnt
+      end subroutine zztangnt
 
       !>## Abstract
       !>
@@ -93316,9 +94628,27 @@ contains
       !>-    SPICELIB Version 1.0.0, 08-MAR-2017 (NJB)
       !>
       !>        Based on original version 14-NOV-2015 (NJB)
-      module procedure limbpt
+      module subroutine limbpt ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, tangts )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: target  !! Name of target body.
+      real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      character(*), intent(in) :: corloc  !! Aberration correction locus.
+      character(*), intent(in) :: obsrvr  !! Name of observing body.
+      real(wp), intent(in) :: refvec ( 3 )  !! Reference vector for cutting half-planes.
+      real(wp), intent(in) :: rolstp  !! Roll angular step for cutting half-planes.
+      integer(ip), intent(in) :: ncuts  !! Number of cutting half-planes.
+      real(wp), intent(in) :: schstp  !! Angular step size for searching.
+      real(wp), intent(in) :: soltol  !! Solution convergence tolerance.
+      integer(ip), intent(in) :: maxn  !! Maximum number of entries in output arrays.
+      integer(ip), intent(out) :: npts   ( * )  !! Counts of limb points corresponding to cuts.
+      real(wp), intent(out) :: points ( 3, * )  !! Limb points.
+      real(wp), intent(out) :: epochs ( * )  !! Times associated with limb points.
+      real(wp), intent(out) :: tangts ( 3, * )  !! Tangent vectors emanating from the observer.
       integer(ip), allocatable :: np(:)
       real(wp), allocatable :: p(:,:)
       real(wp), allocatable :: e(:)
@@ -93372,13 +94702,30 @@ contains
       points(:,1:n) = p
       epochs(1:n)   = e
       tangts(:,1:n)  = v
-      end procedure limbpt
+      end subroutine limbpt
 
       !> Limb points on a target body, without a limit on their number
       !> (PEPPER).
-      module procedure limb_points
+      module subroutine limb_points ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, tangts )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! the computation method, as for [[limbpt]]
+      character(*), intent(in) :: target  !! the name of the target body
+      real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+      character(*), intent(in) :: fixref  !! the body-fixed, body-centered target body frame
+      character(*), intent(in) :: abcorr  !! the aberration correction
+      character(*), intent(in) :: corloc  !! the aberration correction locus
+      character(*), intent(in) :: obsrvr  !! the name of the observing body
+      real(wp), intent(in) :: refvec ( 3 )  !! the reference vector for the cutting half-planes
+      real(wp), intent(in) :: rolstp  !! the roll angular step between the cutting half-planes
+      integer(ip), intent(in) :: ncuts  !! the number of cutting half-planes
+      real(wp), intent(in) :: schstp  !! the angular step size for searching (DSK shapes)
+      real(wp), intent(in) :: soltol  !! the solution convergence tolerance (DSK shapes)
+      integer(ip), allocatable, intent(out) :: npts(:)  !! the number of points of each cut (size 0 after an error)
+      real(wp), allocatable, intent(out) :: points(:,:)  !! the limb points, shape (3, n) (n = 0 after an error)
+      real(wp), allocatable, intent(out) :: epochs(:)  !! the epochs of the points
+      real(wp), allocatable, intent(out) :: tangts(:,:)  !! the tangent vectors from the observer to the points, shape (3, n)
       integer(ip) :: n
       call limb_points_body ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, tangts, n )
       if ( ctx%failed() ) then
@@ -93392,9 +94739,9 @@ contains
       points = points(:,1:n)
       epochs = epochs(1:n)
       tangts = tangts(:,1:n)
-      end procedure limb_points
+      end subroutine limb_points
 
-      module procedure limb_points_body
+      module subroutine limb_points_body ( ctx, method, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, tangts, nout )
        use pepper_containers, only: grow, grow_cell
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
@@ -93406,6 +94753,24 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! the computation method, as for [[limbpt]]
+      character(*), intent(in) :: target  !! the name of the target body
+      real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+      character(*), intent(in) :: fixref  !! the body-fixed, body-centered target body frame
+      character(*), intent(in) :: abcorr  !! the aberration correction
+      character(*), intent(in) :: corloc  !! the aberration correction locus
+      character(*), intent(in) :: obsrvr  !! the name of the observing body
+      real(wp), intent(in) :: refvec ( 3 )  !! the reference vector for the cutting half-planes
+      real(wp), intent(in) :: rolstp  !! the roll angular step between the cutting half-planes
+      integer(ip), intent(in) :: ncuts  !! the number of cutting half-planes
+      real(wp), intent(in) :: schstp  !! the angular step size for searching (DSK shapes)
+      real(wp), intent(in) :: soltol  !! the solution convergence tolerance (DSK shapes)
+      integer(ip), allocatable, intent(out) :: npts(:)  !! the number of points of each cut (size 0 after an error)
+      real(wp), allocatable, intent(out) :: points(:,:)  !! the limb points, shape (3, n) (n = 0 after an error)
+      real(wp), allocatable, intent(out) :: epochs(:)  !! the epochs of the points
+      real(wp), allocatable, intent(out) :: tangts(:,:)  !! the tangent vectors from the observer to the points, shape (3, n)
+      integer(ip), intent(out) :: nout  !! the number of points stored in the outputs (their size may be larger)
       real(wp), parameter :: cnvlim = 1.0e-18_wp
       integer(ip), parameter :: maxitr = 5
       character(cvtlen) :: lmbstr
@@ -94687,7 +96052,7 @@ contains
       nout = to - 1
       return
       end associate
-      end procedure limb_points_body
+      end subroutine limb_points_body
 
       !>## Abstract
       !>
@@ -96461,9 +97826,28 @@ contains
       !>        various header corrections.
       !>
       !>        Original version 18-NOV-2015 (NJB)
-      module procedure termpt
+      module subroutine termpt ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, maxn, npts, points, epochs, trmvcs )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! Computation method.
+      character(*), intent(in) :: ilusrc  !! Illumination source.
+      character(*), intent(in) :: target  !! Name of target body.
+      real(wp), intent(in) :: et  !! Epoch in ephemeris seconds past J2000 TDB.
+      character(*), intent(in) :: fixref  !! Body-fixed, body-centered target body frame.
+      character(*), intent(in) :: abcorr  !! Aberration correction.
+      character(*), intent(in) :: corloc  !! Aberration correction locus.
+      character(*), intent(in) :: obsrvr  !! Name of observing body.
+      real(wp), intent(in) :: refvec ( 3 )  !! Reference vector for cutting half-planes.
+      real(wp), intent(in) :: rolstp  !! Roll angular step for cutting half-planes.
+      integer(ip), intent(in) :: ncuts  !! Number of cutting half-planes.
+      real(wp), intent(in) :: schstp  !! Angular step size for searching.
+      real(wp), intent(in) :: soltol  !! Solution convergence tolerance.
+      integer(ip), intent(in) :: maxn  !! Maximum number of entries in output arrays.
+      integer(ip), intent(out) :: npts   ( * )  !! Counts of terminator points corresponding to cuts.
+      real(wp), intent(out) :: points ( 3, * )  !! Terminator points.
+      real(wp), intent(out) :: epochs ( * )  !! Times associated with terminator points.
+      real(wp), intent(out) :: trmvcs ( 3, * )  !! Terminator vectors emanating from the observer.
       integer(ip), allocatable :: np(:)
       real(wp), allocatable :: p(:,:)
       real(wp), allocatable :: e(:)
@@ -96517,13 +97901,31 @@ contains
       points(:,1:n) = p
       epochs(1:n)   = e
       trmvcs(:,1:n)  = v
-      end procedure termpt
+      end subroutine termpt
 
       !> Terminator points on a target body, without a limit on their number
       !> (PEPPER).
-      module procedure terminator_points
+      module subroutine terminator_points ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, trmvcs )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! the computation method, as for [[termpt]]
+      character(*), intent(in) :: ilusrc  !! the illumination source
+      character(*), intent(in) :: target  !! the name of the target body
+      real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+      character(*), intent(in) :: fixref  !! the body-fixed, body-centered target body frame
+      character(*), intent(in) :: abcorr  !! the aberration correction
+      character(*), intent(in) :: corloc  !! the aberration correction locus
+      character(*), intent(in) :: obsrvr  !! the name of the observing body
+      real(wp), intent(in) :: refvec ( 3 )  !! the reference vector for the cutting half-planes
+      real(wp), intent(in) :: rolstp  !! the roll angular step between the cutting half-planes
+      integer(ip), intent(in) :: ncuts  !! the number of cutting half-planes
+      real(wp), intent(in) :: schstp  !! the angular step size for searching (DSK shapes)
+      real(wp), intent(in) :: soltol  !! the solution convergence tolerance (DSK shapes)
+      integer(ip), allocatable, intent(out) :: npts(:)  !! the number of points of each cut (size 0 after an error)
+      real(wp), allocatable, intent(out) :: points(:,:)  !! the terminator points, shape (3, n) (n = 0 after an error)
+      real(wp), allocatable, intent(out) :: epochs(:)  !! the epochs of the points
+      real(wp), allocatable, intent(out) :: trmvcs(:,:)  !! the vectors from the observer to the points, shape (3, n)
       integer(ip) :: n
       call terminator_points_body ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, trmvcs, n )
       if ( ctx%failed() ) then
@@ -96537,9 +97939,9 @@ contains
       points = points(:,1:n)
       epochs = epochs(1:n)
       trmvcs = trmvcs(:,1:n)
-      end procedure terminator_points
+      end subroutine terminator_points
 
-      module procedure terminator_points_body
+      module subroutine terminator_points_body ( ctx, method, ilusrc, target, et, fixref, abcorr, corloc, obsrvr, refvec, rolstp, ncuts, schstp, soltol, npts, points, epochs, trmvcs, nout )
        use pepper_containers, only: grow, grow_cell
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
@@ -96551,6 +97953,25 @@ contains
       use pepper_inc_zzctr
       use pepper_inc_zzdsk
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: method  !! the computation method, as for [[termpt]]
+      character(*), intent(in) :: ilusrc  !! the illumination source
+      character(*), intent(in) :: target  !! the name of the target body
+      real(wp), intent(in) :: et  !! the epoch (TDB seconds past J2000)
+      character(*), intent(in) :: fixref  !! the body-fixed, body-centered target body frame
+      character(*), intent(in) :: abcorr  !! the aberration correction
+      character(*), intent(in) :: corloc  !! the aberration correction locus
+      character(*), intent(in) :: obsrvr  !! the name of the observing body
+      real(wp), intent(in) :: refvec ( 3 )  !! the reference vector for the cutting half-planes
+      real(wp), intent(in) :: rolstp  !! the roll angular step between the cutting half-planes
+      integer(ip), intent(in) :: ncuts  !! the number of cutting half-planes
+      real(wp), intent(in) :: schstp  !! the angular step size for searching (DSK shapes)
+      real(wp), intent(in) :: soltol  !! the solution convergence tolerance (DSK shapes)
+      integer(ip), allocatable, intent(out) :: npts(:)  !! the number of points of each cut (size 0 after an error)
+      real(wp), allocatable, intent(out) :: points(:,:)  !! the terminator points, shape (3, n) (n = 0 after an error)
+      real(wp), allocatable, intent(out) :: epochs(:)  !! the epochs of the points
+      real(wp), allocatable, intent(out) :: trmvcs(:,:)  !! the vectors from the observer to the points, shape (3, n)
+      integer(ip), intent(out) :: nout  !! the number of points stored in the outputs (their size may be larger)
       integer(ip), parameter :: maxitr = 5
       character(cvtlen) :: pntdef
       character(acllen) :: nrmloc
@@ -97697,7 +99118,7 @@ contains
       nout = to - 1
       return
       end associate
-      end procedure terminator_points_body
+      end subroutine terminator_points_body
 
       !> Make room for at least N points in the outputs of
       !> [[limb_points_body]] and [[terminator_points_body]] (PEPPER): the

@@ -415,11 +415,14 @@ contains
       !>        offering from Lahey.
       !>
       !>-    SPICELIB Version 1.0.0, 22-FEB-1999 (FST)
-      module procedure zzplatfm
+      module subroutine zzplatfm ( ctx, key, value )
       use, intrinsic :: iso_fortran_env, only: compiler_version
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: key  !! String indicating what information to return.
+      character(*), intent(out) :: value  !! String containing the requested information.
       integer(ip), parameter :: idxsys = 1
       integer(ip), parameter :: idxos = idxsys + 1
       integer(ip), parameter :: idxcmp = idxos  + 1
@@ -489,7 +492,7 @@ contains
 
       return
       end associate
-      end procedure zzplatfm
+      end subroutine zzplatfm
 
       !> The system, the operating system and the line terminator of text
       !> files of the platform the program runs on (PEPPER; for
@@ -591,10 +594,12 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 07-AUG-2002 (FST)
-      module procedure zzpltchk
+      module subroutine zzpltchk ( ctx, ok )
       use pepper_kinds, only: ip
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(out) :: ok  !! Logical indicating the runtime environment is ok.
 
 
       character(wdsize) :: strbff
@@ -662,7 +667,7 @@ contains
 
       return
 
-      end procedure zzpltchk
+      end subroutine zzpltchk
 
       !>## Detailed Input
       !>
@@ -859,11 +864,16 @@ contains
       !>     compatibility.
       !>
       !>     On the first invocation initialize the string values.
-      module procedure zzftpstr
+      module subroutine zzftpstr ( ctx, tstcom, lend, rend, delim )
       use pepper_kinds, only: ip
       use pepper_strings, only: suffix
       use pepper_inc_zzftprms
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: tstcom  !! The FTP test component string.
+      character(*), intent(out) :: lend  !! String that brackets TSTCOM on the left in a file.
+      character(*), intent(out) :: rend  !! String that brackets TSTCOM on the right in a file.
+      character(*), intent(out) :: delim  !! Delimiter that separates the pieces of TSTCOM.
       integer(ip), parameter :: siztsq = 5
       integer(ip), parameter :: int000 = 0
       integer(ip), parameter :: int010 = 10
@@ -976,7 +986,7 @@ contains
 
       return
       end associate
-      end procedure zzftpstr
+      end subroutine zzftpstr
 
       !>## Detailed Input
       !>
@@ -1155,11 +1165,14 @@ contains
       !>
       !>     On the first pass through, fetch a copy of the current FTP
       !>     validation string.
-      module procedure zzftpchk
+      module subroutine zzftpchk ( ctx, string, ftperr )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos, rtrim
       use pepper_inc_zzftprms
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! String that may contain the FTP validation string.
+      logical, intent(out) :: ftperr  !! Logical indicating if FTP corruption occurred.
       character(sizdlm) :: delim
       character(sizexp) :: filstr
       integer(ip) :: fsmidx
@@ -1264,7 +1277,7 @@ contains
 
       return
       end associate
-      end procedure zzftpchk
+      end subroutine zzftpchk
 
       !>## Detailed Input
       !>
@@ -1367,10 +1380,17 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 22-MAR-1999 (FST)
-      module procedure zzrbrkst
+      module subroutine zzrbrkst ( ctx, string, lftend, rgtend, substr, length, bkpres )
       use pepper_kinds, only: ip
       use pepper_strings, only: posr
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: string  !! A string from which to extract SUBSTR.
+      character(*), intent(in) :: lftend  !! A string that brackets SUBSTR on the left.
+      character(*), intent(in) :: rgtend  !! A string that brackets SUBSTR on the right.
+      character(*), intent(out) :: substr  !! The extracted substring.
+      integer(ip), intent(out) :: length  !! The length of the extracted substring.
+      logical, intent(out) :: bkpres  !! Logical indicating if either bracket is present.
 
       integer(ip) :: bsize
       integer(ip) :: lindex
@@ -1449,7 +1469,7 @@ contains
       end if
 
       return
-      end procedure zzrbrkst
+      end subroutine zzrbrkst
 
       !>## Abstract
       !>
@@ -1537,11 +1557,19 @@ contains
       !>        sections.
       !>
       !>-    SPICELIB Version 1.0.0, 13-AUGUST-2001 (FST)
-      module procedure zzddhini
+      module subroutine zzddhini ( ctx, natbff, supbff, numsup, stramh, strarc, strbff )
       use pepper_kinds, only: ip
       use pepper_strings, only: nextwd_inplace, ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: natbff  !! Native binary file format.
+      integer(ip), intent(out) :: supbff ( * )  !! List of supported binary file formats for
+                                                !! reading.
+      integer(ip), intent(out) :: numsup  !! Number of entries returned in SUPBFF.
+      character(*), intent(out) :: stramh ( * )  !! List of labels for METHOD ID codes
+      character(*), intent(out) :: strarc ( * )  !! List of labels for ARCH ID codes
+      character(*), intent(out) :: strbff ( * )  !! List of labels for BFF ID codes
 
 !
 !     Local Variables.
@@ -1653,7 +1681,7 @@ contains
       numsup = i - 1
 
       return
-      end procedure zzddhini
+      end subroutine zzddhini
 
       !>## Abstract
       !>
@@ -1771,11 +1799,13 @@ contains
       !>     Local Parameters
       !>
       !>     Local Variables
-      module procedure zzgetbff
+      module subroutine zzgetbff ( ctx, bffid )
       use pepper_kinds, only: ip, wp
       use pepper_packing, only: unpack_integers
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: bffid  !! Binary file format code for this system.
       real(wp), parameter :: dpvalu = 7.0_wp
       integer(ip) :: i
       integer(ip) :: iequiv ( 2 )
@@ -1813,7 +1843,7 @@ contains
       end do
 
       return
-      end procedure zzgetbff
+      end subroutine zzgetbff
 
       !>## Abstract
       !>
@@ -1905,11 +1935,15 @@ contains
       !>     Data Statements
       !>
       !>     Left justify and convert the input to upper case.
-      module procedure zzddhgsd
+      module subroutine zzddhgsd ( ctx, class, id, label )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: class  !! String indicating the class of label requested.
+      integer(ip), intent(in) :: id  !! Integer ID desired for the decoding.
+      character(*), intent(out) :: label  !! Corresponding label for the CLASS/ID pair.
       integer(ip), parameter :: locsiz = 8
       integer(ip), parameter :: method = 1
       integer(ip), parameter :: arch = method + 1
@@ -1957,7 +1991,7 @@ contains
 
       return
       end associate
-      end procedure zzddhgsd
+      end subroutine zzddhgsd
 
       !>## Abstract
       !>
@@ -2081,10 +2115,12 @@ contains
       !>     Data statements.
       !>
       !>     Set default output value to zero.
-      module procedure zzddhmnm
+      module real(wp) function zzddhmnm ( ctx, unit )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Logical unit attached to a file.
       integer(ip), parameter :: idlen = 8
       integer(ip), parameter :: nints = 20
       integer(ip), parameter :: nchars = nints * 4
@@ -2260,7 +2296,7 @@ contains
 
       return
       end associate
-      end procedure zzddhmnm
+      end function zzddhmnm
 
       !>## Abstract
       !>
@@ -2589,12 +2625,16 @@ contains
       !>     on any version of g77 for x86 Linux.
       !>
       !>     Standard SPICE error handling.
-      module procedure zzddhppf
+      module subroutine zzddhppf ( ctx, unit, arch, bff )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos, ucase_inplace
       use pepper_inc_zzddhman
       use pepper_inc_zzftprms
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: unit  !! Logical unit attached to the binary file.
+      integer(ip), intent(in) :: arch  !! Integer code indicating the file architecture.
+      integer(ip), intent(out) :: bff  !! Integer code indicating the binary file format.
       integer(ip), parameter :: numchr = 1000
       integer(ip), parameter :: ftpstr = 500
       integer(ip), parameter :: ftpend = 1000
@@ -3005,7 +3045,7 @@ contains
 
       return
       end associate
-      end procedure zzddhppf
+      end subroutine zzddhppf
 
       !>## Detailed Input
       !>
@@ -3167,10 +3207,14 @@ contains
       !>         Changed the response foe the ID word 'NAIF/DAS' to be
       !>         consistent with GETFAT. It now sets the architecture to 'DAS'
       !>         and the type to 'PRE', for pre-release version.
-      module procedure idw2at
+      module subroutine idw2at ( ctx, idword, arch, type )
       use pepper_kinds, only: ip
       use pepper_strings, only: pos
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: idword  !! The IDWORD to be examined.
+      character(*), intent(out) :: arch  !! The file architecture DAS or DAF.
+      character(*), intent(out) :: type  !! The type of the file.
 
 !
 !     Spicelib Routines
@@ -3337,7 +3381,7 @@ contains
 
       return
 
-      end procedure idw2at
+      end subroutine idw2at
 
       !>## Abstract
       !>
@@ -3586,12 +3630,17 @@ contains
       !>     on any version of g77 for x86 Linux.
       !>
       !>     Standard SPICE error handling.
-      module procedure zzxlatei
+      module subroutine zzxlatei ( ctx, inbff, input, space, output )
       use pepper_kinds, only: ip
       use pepper_constants, only: intmin
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: inbff  !! Binary file format code for integers in INPUT.
+      character(*), intent(in) :: input  !! String containing integers read as characters.
+      integer(ip), intent(in) :: space  !! Number of integers that can be placed in OUTPUT.
+      integer(ip), intent(out) :: output ( * )  !! Translated integer values.
       integer(ip), parameter :: shft8 = 2**8
       integer(ip), parameter :: shft16 = 2**16
       integer(ip), parameter :: shft24 = 2**24
@@ -4065,7 +4114,7 @@ contains
 
       return
       end associate
-      end procedure zzxlatei
+      end subroutine zzxlatei
 
       !>## Abstract
       !>
@@ -4260,10 +4309,14 @@ contains
       !>        Added MAC-OSX environments.
       !>
       !>-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
-      module procedure zzddhivf
+      module subroutine zzddhivf ( ctx, nsum, bff, found )
       use pepper_kinds, only: ip
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: nsum  !! String storing the 8 bytes of the FDREC NSUM DP.
+      integer(ip), intent(out) :: bff  !! Integer code indicating the binary file format.
+      logical, intent(out) :: found  !! Logical indicating that BFF was determined.
 
       character(1) :: carg
 
@@ -4451,7 +4504,7 @@ contains
       end if
 
       return
-      end procedure zzddhivf
+      end subroutine zzddhivf
 
       !>## Abstract
       !>
@@ -4639,11 +4692,25 @@ contains
       !>
       !>        This file was promoted from a standard portable module
       !>        to a master file.
-      module procedure zzddhf2h
+      module subroutine zzddhf2h ( ctx, fname, ft, utcst, uthan, utlck, utlun, nut, exists, opened, handle, found, mnm, tabsiz )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: rtrim
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of the file to convert to a handle.
+      type(zzddhman_state), intent(inout) :: ft  !! File table. (PEPPER: inout, for the result kept during a load)
+      integer(ip), intent(inout) :: utcst ( * )  !! Unit table.
+      integer(ip), intent(inout) :: uthan ( * )  !! Unit table.
+      logical, intent(inout) :: utlck ( * )  !! Unit table.
+      integer(ip), intent(inout) :: utlun ( * )  !! Unit table.
+      integer(ip), intent(inout) :: nut  !! Number of entries in the unit table.
+      logical, intent(out) :: exists  !! Logical indicating if FNAME exists.
+      logical, intent(out) :: opened  !! Logical indicating if FNAME is opened.
+      integer(ip), intent(out) :: handle  !! Handle associated with FNAME.
+      logical, intent(out) :: found  !! Logical indicating if FNAME's HANDLE was found.
+      real(wp), intent(out) :: mnm  !! Unique DP (Magic NuMber) associated with FNAME.
+      integer(ip), intent(in), optional :: tabsiz  !! PEPPER: size of the unit table (default UTSIZE, 23)
 
       integer(ip) :: i
       integer(ip) :: iostat
@@ -4954,7 +5021,7 @@ contains
 
       return
 
-      end procedure zzddhf2h
+      end subroutine zzddhf2h
 
       !>## Abstract
       !>
@@ -5039,10 +5106,14 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
-      module procedure zzddhrcm
+      module subroutine zzddhrcm ( ctx, nut, utcst, reqcnt )
       use pepper_kinds, only: ip
       use pepper_constants, only: intmax
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nut  !! Number of entries in the unit table.
+      integer(ip), intent(inout) :: utcst  ( * )  !! Cost column of the unit table.
+      integer(ip), intent(inout) :: reqcnt  !! Value of the HLU request counter.
 
       integer(ip) :: i
 
@@ -5065,7 +5136,7 @@ contains
       end if
 
       return
-      end procedure zzddhrcm
+      end subroutine zzddhrcm
 
       !>## Abstract
       !>
@@ -5149,11 +5220,19 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 29-MAY-2001 (FST)
-      module procedure zzddhgtu
+      module subroutine zzddhgtu ( ctx, utcst, uthan, utlck, utlun, nut, uindex, tabsiz )
       use pepper_kinds, only: ip
       use pepper_arrays, only: orderi
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(inout) :: utcst  ( * )  !! Unit table.
+      integer(ip), intent(inout) :: uthan  ( * )  !! Unit table.
+      logical, intent(inout) :: utlck  ( * )  !! Unit table.
+      integer(ip), intent(inout) :: utlun  ( * )  !! Unit table.
+      integer(ip), intent(inout) :: nut  !! Number of entries in the unit table.
+      integer(ip), intent(out) :: uindex  !! Row in the unit table that can be replaced.
+      integer(ip), intent(in), optional :: tabsiz  !! PEPPER: size of the unit table (default UTSIZE, 23)
 
       integer(ip) :: i
       integer(ip), allocatable :: orderv ( : )
@@ -5319,7 +5398,7 @@ contains
             n = utsize
             if ( present ( tabsiz ) ) n = tabsiz
          end function size_of_table
-      end procedure zzddhgtu
+      end subroutine zzddhgtu
 
       !>## Abstract
       !>
@@ -5426,10 +5505,18 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-NOV-2001 (FST)
-      module procedure zzddhrmu
+      module subroutine zzddhrmu ( ctx, uindex, nft, utcst, uthan, utlck, utlun, nut )
       use pepper_kinds, only: ip
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: uindex  !! Row index to remove from the unit table.
+      integer(ip), intent(in) :: nft  !! Number of entries in the file table.
+      integer(ip), intent(inout) :: utcst ( * )  !! Unit table.
+      integer(ip), intent(inout) :: uthan ( * )  !! Unit table.
+      logical, intent(inout) :: utlck ( * )  !! Unit table.
+      integer(ip), intent(inout) :: utlun ( * )  !! Unit table.
+      integer(ip), intent(inout) :: nut  !! Number of entries in the unit table.
 
       integer(ip) :: i
 
@@ -5498,7 +5585,7 @@ contains
       nut = nut - 1
 
       return
-      end procedure zzddhrmu
+      end subroutine zzddhrmu
 
       !>## Abstract
       !>
@@ -5556,9 +5643,12 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 04-OCT-2001 (FST)
-      module procedure zzddhclu
+      module integer(ip) function zzddhclu ( ctx, utlck, nut )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(in) :: utlck ( * )  !! Lock column of the unit table.
+      integer(ip), intent(in) :: nut  !! Number of entries in the unit table.
 
       integer(ip) :: i
 
@@ -5576,7 +5666,7 @@ contains
       end do
 
       return
-      end procedure zzddhclu
+      end function zzddhclu
 
       !>## Abstract
       !>
@@ -5638,11 +5728,13 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 05-FEB-2015 (NJB)
-      module procedure zzddhnfc
+      module subroutine zzddhnfc ( ctx, natbff )
       use pepper_kinds, only: ip
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: natbff  !! Native binary file format code.
       character(strsiz) :: tmpstr
       integer(ip) :: i
       if ( .not. allocated ( ctx%zzddhnfc ) ) allocate ( ctx%zzddhnfc )
@@ -5692,7 +5784,7 @@ contains
 
       return
       end associate
-      end procedure zzddhnfc
+      end subroutine zzddhnfc
 
       !>## Abstract
       !>
@@ -5857,12 +5949,17 @@ contains
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
       !>
       !>     Standard SPICE error handling.
-      module procedure zzddhopn
+      module subroutine zzddhopn ( ctx, fname, method, arch, handle )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_strings, only: rtrim, ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: arch  !! Expected architecture of the file to load.
+      character(*), intent(in) :: fname  !! Name of file to be loaded.
+      character(*), intent(in) :: method  !! Access method used to load the file.
+      integer(ip), intent(out) :: handle  !! Handle assigned to file.
       integer(ip), parameter :: scrlen = 4096  !! PEPPER: room for the OS's name of a scratch file
       character(:), allocatable :: locfnm
       character(scrlen) :: scrnam
@@ -6635,7 +6732,7 @@ contains
 
       return
       end associate
-      end procedure zzddhopn
+      end subroutine zzddhopn
 
       !>## Abstract
       !>
@@ -6751,12 +6848,16 @@ contains
       !>        present in the unit table when KILL is set.
       !>
       !>     Standard SPICE error handling.
-      module procedure zzddhcls
+      module subroutine zzddhcls ( ctx, handle, arch, kill )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: arch  !! Expected architecture of the handle to close.
+      integer(ip), intent(in) :: handle  !! File handle associated with the file to close.
+      logical, intent(in) :: kill  !! Logical indicating whether to delete the file.
       character(strsiz) :: tmpstr
       real(wp) :: mnm
       integer(ip) :: accmet
@@ -6972,7 +7073,7 @@ contains
 
       return
       end associate
-      end procedure zzddhcls
+      end subroutine zzddhcls
 
       !>## Abstract
       !>
@@ -7067,12 +7168,17 @@ contains
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
       !>
       !>     Standard SPICE error handling.
-      module procedure zzddhhlu
+      module subroutine zzddhhlu ( ctx, handle, arch, lock, unit )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(in) :: lock  !! Logical indicating to lock UNIT to HANDLE.
+      character(*), intent(in) :: arch  !! Expected file architecture.
+      integer(ip), intent(in) :: handle  !! Handle associated with the file of interest.
+      integer(ip), intent(out) :: unit  !! Corresponding logical unit.
       character(strsiz) :: tmpstr
       real(wp) :: mnm
       integer(ip) :: accmet
@@ -7344,7 +7450,7 @@ contains
 
       return
       end associate
-      end procedure zzddhhlu
+      end subroutine zzddhhlu
 
       !>## Abstract
       !>
@@ -7425,12 +7531,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
       !>
       !>     Standard SPICE discovery error handling.
-      module procedure zzddhunl
+      module subroutine zzddhunl ( ctx, handle, arch )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_strings, only: ucase_inplace
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: arch  !! Expected architecture of the handle to unlock.
+      integer(ip), intent(in) :: handle  !! File handle assigned to the file to unlock.
       character(strsiz) :: tmpstr
       real(wp) :: mnm
       integer(ip) :: accmet
@@ -7571,7 +7680,7 @@ contains
 
       return
       end associate
-      end procedure zzddhunl
+      end subroutine zzddhunl
 
       !>## Abstract
       !>
@@ -7666,11 +7775,18 @@ contains
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
       !>
       !>     Do the initialization tasks.
-      module procedure zzddhnfo
+      module subroutine zzddhnfo ( ctx, handle, fname, intarc, intbff, intamh, found )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: fname  !! Name of the file associated with HANDLE.
+      integer(ip), intent(in) :: handle  !! File handle assigned to file of interest.
+      integer(ip), intent(out) :: intamh  !! Integer code for FNAME's access method.
+      integer(ip), intent(out) :: intarc  !! Integer code for FNAME's file architecture.
+      integer(ip), intent(out) :: intbff  !! Integer code for FNAME's binary file format.
+      logical, intent(out) :: found  !! Logical that indicates if HANDLE was found.
       logical :: return
       character(strsiz) :: tmpstr
       real(wp) :: mnm
@@ -7754,7 +7870,7 @@ contains
 
       return
       end associate
-      end procedure zzddhnfo
+      end subroutine zzddhnfo
 
       !>## Abstract
       !>
@@ -7827,11 +7943,15 @@ contains
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
       !>
       !>     Do the initialization tasks.
-      module procedure zzddhisn
+      module subroutine zzddhisn ( ctx, handle, native, found )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: bsrchi
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle assigned to file to determine format.
+      logical, intent(out) :: native  !! Indicates if the file format is native.
+      logical, intent(out) :: found  !! Indicates if HANDLE is currently attached to file.
       logical :: return
       character(strsiz) :: tmpstr
       real(wp) :: mnm
@@ -7908,7 +8028,7 @@ contains
 
       return
       end associate
-      end procedure zzddhisn
+      end subroutine zzddhisn
 
       !>## Abstract
       !>
@@ -7976,10 +8096,14 @@ contains
       !>        Updated for the new "magic number" column in the file table.
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
-      module procedure zzddhfnh
+      module subroutine zzddhfnh ( ctx, fname, handle, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of a file previously loaded with [[zzddhopn]].
+      integer(ip), intent(out) :: handle  !! Corresponding file handle.
+      logical, intent(out) :: found  !! Logical indicating whether HANDLE was located.
       character(:), allocatable :: locfnm
       character(strsiz) :: tmpstr
       real(wp) :: mnm
@@ -8067,7 +8191,7 @@ contains
 
       return
       end associate
-      end procedure zzddhfnh
+      end subroutine zzddhfnh
 
       !>## Abstract
       !>
@@ -8136,10 +8260,14 @@ contains
       !>-    SPICELIB Version 1.0.0, 06-NOV-2001 (FST)
       !>
       !>     Do the initialization tasks.
-      module procedure zzddhluh
+      module subroutine zzddhluh ( ctx, unit, handle, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_zzddhman
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: handle  !! Corresponding handle.
+      integer(ip), intent(in) :: unit  !! Logical unit connected to a file.
+      logical, intent(out) :: found  !! Logical indicating the handle was located.
       logical :: return
       character(strsiz) :: tmpstr
       real(wp) :: mnm
@@ -8218,7 +8346,7 @@ contains
 
       return
       end associate
-      end procedure zzddhluh
+      end subroutine zzddhluh
 
    !> PEPPER: allocate the unit table of a context, with the instance's
    !> [[max_open_files]] entries (SPICELIB: UTSIZE).

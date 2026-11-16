@@ -1130,7 +1130,7 @@ contains
       !>        Previous version line was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 06-NOV-1995 (NJB)
-      module procedure ekbseg
+      module subroutine ekbseg ( ctx, handle, tabnam, ncols, cnames, decls, segno )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -1144,6 +1144,13 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      character(*), intent(in) :: tabnam  !! Table name.
+      integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
+      character(*), intent(in) :: cnames ( * )  !! Names of columns.
+      character(*), intent(in) :: decls  ( * )  !! Declarations of columns.
+      integer(ip), intent(out) :: segno  !! Segment number.
       integer(ip), parameter :: mxspec = 512
       integer(ip), parameter :: namlim = 32
       integer(ip) :: cdscrs ( cdscsz, mxclsg )
@@ -1281,7 +1288,7 @@ contains
 
       return
       end associate
-      end procedure ekbseg
+      end subroutine ekbseg
 
       !>## Detailed Input
       !>
@@ -1496,7 +1503,7 @@ contains
       !>        were replaced with "fast write."
       !>
       !>-    Beta Version 1.0.0, 19-DEC-1995 (NJB)
-      module procedure ekinsr
+      module subroutine ekinsr ( ctx, handle, segno, recno )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekdatpag
@@ -1505,6 +1512,10 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segno  !! Segment number.
+      integer(ip), intent(in) :: recno  !! Record number.
       integer(ip) :: nlinks_1(1)  !! one-element copy of nlinks (array argument)
 
       integer(ip) :: base
@@ -1695,7 +1706,7 @@ contains
       call dasudi ( ctx, handle,  mbase+1,  mbase+sdscsz,  segdsc )
 
       return
-      end procedure ekinsr
+      end subroutine ekinsr
 
       !>## Detailed Input
       !>
@@ -1808,13 +1819,18 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 15-MAY-1996 (BVS)
-      module procedure stcc01
+      module subroutine stcc01 ( ctx, catfnm, tabnam, istyp1, errmsg )
       use pepper_kinds, only: ip
       use pepper_strings, only: nblen
       use pepper_inc_ekcnamsz
       use pepper_inc_ektnamsz
       use pepper_inc_ekglimit
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: catfnm  !! Catalog file name.
+      character(*), intent(out) :: tabnam  !! Catalog table name.
+      logical, intent(out) :: istyp1  !! .TRUE. when file is type 1 star catalog.
+      character(*), intent(out) :: errmsg  !! Error message.
       integer(ip), parameter :: cat1nc = 7
       character(4), parameter :: cat1dt ( cat1nc ) = &
          [ character(4) :: 'INT', 'DP', 'DP', 'DP', 'DP', 'DP', 'CHR' ]
@@ -1940,7 +1956,7 @@ contains
 
       return
       end associate
-      end procedure stcc01
+      end subroutine stcc01
 
       !>## Detailed Input
       !>
@@ -2071,7 +2087,7 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local parameters
-      module procedure zzekac01
+      module subroutine zzekac01 ( ctx, handle, segdsc, coldsc, ivals, nlflgs, rcptrs, wkindx )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -2081,6 +2097,14 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(in) :: rcptrs ( * )  !! Array of record pointers for segment.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
       integer(ip), parameter :: bufsiz = ipsize
 
       character(cnamsz) :: column
@@ -2324,7 +2348,7 @@ contains
       end if
 
       return
-      end procedure zzekac01
+      end subroutine zzekac01
 
       !>## Detailed Input
       !>
@@ -2455,7 +2479,7 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local parameters
-      module procedure zzekac02
+      module subroutine zzekac02 ( ctx, handle, segdsc, coldsc, dvals, nlflgs, rcptrs, wkindx )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -2465,6 +2489,14 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      real(wp), intent(in) :: dvals  ( * )  !! D.p. values to add to column.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(in) :: rcptrs ( * )  !! Array of record pointers for segment.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
       integer(ip), parameter :: bufsiz = dpsize
 
       character(cnamsz) :: column
@@ -2709,7 +2741,7 @@ contains
       end if
 
       return
-      end procedure zzekac02
+      end subroutine zzekac02
 
       !>## Detailed Input
       !>
@@ -2823,7 +2855,7 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local parameters
-      module procedure zzekac03
+      module subroutine zzekac03 ( ctx, handle, segdsc, coldsc, cvals, nlflgs, rcptrs, wkindx )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       use pepper_inc_ekbool
@@ -2834,6 +2866,14 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(in) :: rcptrs ( * )  !! Array of record pointers for segment.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
       integer(ip), parameter :: bufsiz = cpsize
 
       character(cnamsz) :: column
@@ -3193,7 +3233,7 @@ contains
       end if
 
       return
-      end procedure zzekac03
+      end subroutine zzekac03
 
       !>## Detailed Input
       !>
@@ -3343,7 +3383,7 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local parameters
-      module procedure zzekac04
+      module subroutine zzekac04 ( ctx, handle, segdsc, coldsc, ivals, entszs, nlflgs )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -3353,6 +3393,13 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+      integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
       integer(ip), parameter :: bufsiz = ipsize
 
       character(cnamsz) :: column
@@ -3658,7 +3705,7 @@ contains
 !
 
       return
-      end procedure zzekac04
+      end subroutine zzekac04
 
       !>## Detailed Input
       !>
@@ -3808,7 +3855,7 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local parameters
-      module procedure zzekac05
+      module subroutine zzekac05 ( ctx, handle, segdsc, coldsc, dvals, entszs, nlflgs )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -3818,6 +3865,13 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      real(wp), intent(in) :: dvals  ( * )  !! D.p. values to add to column.
+      integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
       integer(ip), parameter :: bufsiz = dpsize
 
       character(cnamsz) :: column
@@ -4123,7 +4177,7 @@ contains
 !
 
       return
-      end procedure zzekac05
+      end subroutine zzekac05
 
       !>## Detailed Input
       !>
@@ -4272,7 +4326,7 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local parameters
-      module procedure zzekac06
+      module subroutine zzekac06 ( ctx, handle, segdsc, coldsc, cvals, entszs, nlflgs )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -4282,6 +4336,13 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+      integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
       integer(ip), parameter :: bufsiz = cpsize
 
       character(cnamsz) :: column
@@ -4715,7 +4776,7 @@ contains
 !
 
       return
-      end procedure zzekac06
+      end subroutine zzekac06
 
       !>## Detailed Input
       !>
@@ -4832,7 +4893,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekad04
+      module subroutine zzekad04 ( ctx, handle, segdsc, coldsc, recptr, nvals, ivals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -4840,6 +4901,14 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
       integer(ip) :: colidx
       integer(ip) :: datptr
       integer(ip) :: lastw
@@ -5053,7 +5122,7 @@ contains
 !
 
       return
-      end procedure zzekad04
+      end subroutine zzekad04
 
       !>## Detailed Input
       !>
@@ -5172,7 +5241,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekad05
+      module subroutine zzekad05 ( ctx, handle, segdsc, coldsc, recptr, nvals, dvals, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -5180,6 +5249,14 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Pointer to the record to which data is to be added.
+      integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+      real(wp), intent(in) :: dvals  ( * )  !! Double precision values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
       integer(ip) :: colidx
       integer(ip) :: datptr
       integer(ip) :: lastw
@@ -5394,7 +5471,7 @@ contains
 !
 
       return
-      end procedure zzekad05
+      end subroutine zzekad05
 
       !>## Detailed Input
       !>
@@ -5522,7 +5599,7 @@ contains
       !>     Saved variables
       !>
       !>     Initial values
-      module procedure zzekad06
+      module subroutine zzekad06 ( ctx, handle, segdsc, coldsc, recptr, nvals, cvals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -5530,6 +5607,14 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Pointer to the record to which data is to be added.
+      integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+      character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
       integer(ip), parameter :: maxpad = 100
       integer(ip) :: mbase
       integer(ip) :: nwrite
@@ -5872,7 +5957,7 @@ contains
 
       return
       end associate
-      end procedure zzekad06
+      end subroutine zzekad06
 
       !>## Detailed Input
       !>
@@ -5960,7 +6045,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekde05
+      module subroutine zzekde05 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -5968,6 +6053,11 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
       real(wp) :: dpnelt_1(1)  !! one-element copy of dpnelt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
       real(wp) :: dpnelt
@@ -6121,7 +6211,7 @@ contains
       call dasudi ( ctx, handle, recptr+staidx, recptr+staidx, [ update ] )
 
       return
-      end procedure zzekde05
+      end subroutine zzekde05
 
       !>## Detailed Input
       !>
@@ -6203,7 +6293,7 @@ contains
       !>        Deleted unneeded declarations and code.
       !>
       !>-    Beta Version 1.0.0, 28-SEP-1995 (NJB)
-      module procedure zzekde06
+      module subroutine zzekde06 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -6212,6 +6302,11 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
       integer(ip) :: base
@@ -6364,7 +6459,7 @@ contains
       call dasudi ( ctx, handle, recptr+staidx, recptr+staidx, [ update ] )
 
       return
-      end procedure zzekde06
+      end subroutine zzekde06
 
       !>## Detailed Input
       !>
@@ -6436,11 +6531,16 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekesiz
+      module integer(ip) function zzekesiz ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekcnamsz
       use pepper_inc_eksegdsc
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
       character(cnamsz) :: column
 
       integer(ip) :: class
@@ -6518,7 +6618,7 @@ contains
       end if
 
       return
-      end procedure zzekesiz
+      end function zzekesiz
 
       !>## Detailed Input
       !>
@@ -6595,12 +6695,18 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekgcdp
+      module subroutine zzekgcdp ( ctx, handle, segdsc, coldsc, recptr, datptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ekrecptr
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(out) :: datptr  !! Data pointer of column entry.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
       integer(ip) :: colidx
       integer(ip) :: ncols
@@ -6638,7 +6744,7 @@ contains
       datptr = datptr_1(1)
 
       return
-      end procedure zzekgcdp
+      end subroutine zzekgcdp
 
       !>## Detailed Input
       !>
@@ -6716,12 +6822,16 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekif01
+      module subroutine zzekif01 ( ctx, handle, segno, rcptrs )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segno  !! Segment number.
+      integer(ip), intent(out) :: rcptrs ( * )  !! Array of record pointers.
       integer(ip) :: base
       integer(ip) :: i
       integer(ip) :: j
@@ -6813,7 +6923,7 @@ contains
       end do
 
       return
-      end procedure zzekif01
+      end subroutine zzekif01
 
       !>## Detailed Input
       !>
@@ -6884,7 +6994,7 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekif02
+      module subroutine zzekif02 ( ctx, handle, segno )
       use pepper_kinds, only: ip
       use pepper_inc_ekclas07
       use pepper_inc_ekclas08
@@ -6893,6 +7003,9 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segno  !! Segment number.
       integer(ip) :: class_1(1)  !! one-element copy of class (array argument)
       integer(ip) :: base
       integer(ip) :: class
@@ -6974,7 +7087,7 @@ contains
       end do
 
       return
-      end procedure zzekif02
+      end subroutine zzekif02
 
       !>## Detailed Input
       !>
@@ -7051,7 +7164,7 @@ contains
       !>        message from NREC to NCOLS.
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      module procedure zzekrd01
+      module subroutine zzekrd01 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -7060,6 +7173,13 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(out) :: ival  !! Integer value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       integer(ip) :: ival_1(1)  !! one-element copy of ival (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
@@ -7148,7 +7268,7 @@ contains
       end if
 
       return
-      end procedure zzekrd01
+      end subroutine zzekrd01
 
       !>## Detailed Input
       !>
@@ -7225,7 +7345,7 @@ contains
       !>        message from NREC to NCOLS.
       !>
       !>-    Beta Version 1.0.0, 18-OCT-1995 (NJB)
-      module procedure zzekrd02
+      module subroutine zzekrd02 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -7234,6 +7354,13 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      real(wp), intent(out) :: dval  !! Double precision value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       real(wp) :: dval_1(1)  !! one-element copy of dval (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
@@ -7314,7 +7441,7 @@ contains
       end if
 
       return
-      end procedure zzekrd02
+      end subroutine zzekrd02
 
       !>## Detailed Input
       !>
@@ -7455,7 +7582,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekrd03
+      module subroutine zzekrd03 ( ctx, handle, segdsc, coldsc, recptr, cvlen, cval, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -7466,6 +7593,14 @@ contains
       use pepper_inc_ektype
 
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(out) :: cvlen  !! Length of returned character value.
+      character(*), intent(out) :: cval  !! Character value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
       character(cnamsz) :: column
 
@@ -7630,7 +7765,7 @@ contains
       end if
 
       return
-      end procedure zzekrd03
+      end subroutine zzekrd03
 
       !>## Detailed Input
       !>
@@ -7746,7 +7881,7 @@ contains
       !>
       !>        Updated to remove non-standard use of duplicate arguments
       !>        in ZZEKGFWD call.
-      module procedure zzekrd04
+      module subroutine zzekrd04 ( ctx, handle, segdsc, coldsc, recptr, beg, end, ivals, isnull, found )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -7755,6 +7890,16 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: beg  !! Start element index.
+      integer(ip), intent(in) :: end  !! End element index.
+      integer(ip), intent(out) :: ivals  ( * )  !! Integer values in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      logical, intent(out) :: found  !! Flag indicating whether elements were found.
       integer(ip) :: p_1(1)  !! one-element copy of p (array argument)
       integer(ip) :: nelt_1(1)  !! one-element copy of nelt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
@@ -7940,7 +8085,7 @@ contains
       end if
 
       return
-      end procedure zzekrd04
+      end subroutine zzekrd04
 
       !>## Detailed Input
       !>
@@ -8062,13 +8207,23 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekrd05
+      module subroutine zzekrd05 ( ctx, handle, segdsc, coldsc, recptr, beg, end, dvals, isnull, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_ekdatpag
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: beg  !! Start element index.
+      integer(ip), intent(in) :: end  !! End element index.
+      real(wp), intent(out) :: dvals  ( * )  !! Double precision values in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      logical, intent(out) :: found  !! Flag indicating whether elements were found.
       real(wp) :: dpnelt_1(1)  !! one-element copy of dpnelt (array argument)
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
       real(wp) :: dpnelt
@@ -8258,7 +8413,7 @@ contains
       end if
 
       return
-      end procedure zzekrd05
+      end subroutine zzekrd05
 
       !>## Detailed Input
       !>
@@ -8393,7 +8548,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekrd06
+      module subroutine zzekrd06 ( ctx, handle, segdsc, coldsc, recptr, beg, end, cvals, isnull, found )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -8404,6 +8559,16 @@ contains
       use pepper_inc_ektype
 
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: beg  !! Start element index.
+      integer(ip), intent(in) :: end  !! End element index.
+      character(*), intent(out) :: cvals  ( * )  !! Character values in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      logical, intent(out) :: found  !! Flag indicating whether elements were found.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
       character(cnamsz) :: column
 
@@ -8716,7 +8881,7 @@ contains
       end if
 
       return
-      end procedure zzekrd06
+      end subroutine zzekrd06
 
       !>## Detailed Input
       !>
@@ -8795,7 +8960,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekrd07
+      module subroutine zzekrd07 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekclas07
@@ -8804,6 +8969,13 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(out) :: ival  !! Integer value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       integer(ip) :: ival_1(1)  !! one-element copy of ival (array argument)
       character(1) :: cflag
 
@@ -8898,7 +9070,7 @@ contains
       ival = ival_1(1)
 
       return
-      end procedure zzekrd07
+      end subroutine zzekrd07
 
       !>## Detailed Input
       !>
@@ -8977,7 +9149,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekrd08
+      module subroutine zzekrd08 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekclas08
@@ -8986,6 +9158,13 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      real(wp), intent(out) :: dval  !! Double precision value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
       real(wp) :: dval_1(1)  !! one-element copy of dval (array argument)
       character(1) :: cflag
 
@@ -9080,7 +9259,7 @@ contains
       dval = dval_1(1)
 
       return
-      end procedure zzekrd08
+      end subroutine zzekrd08
 
       !>## Detailed Input
       !>
@@ -9167,11 +9346,17 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekscdp
+      module subroutine zzekscdp ( ctx, handle, segdsc, coldsc, recptr, datptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ekrecptr
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: datptr  !! Data pointer of column entry.
       integer(ip) :: colidx
       integer(ip) :: ncols
       integer(ip) :: ptrloc
@@ -9215,7 +9400,7 @@ contains
       call dasudi ( ctx, handle, ptrloc, ptrloc, [ datptr ] )
 
       return
-      end procedure zzekscdp
+      end subroutine zzekscdp
 
       !>## Detailed Input
       !>
@@ -9322,12 +9507,20 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekwpac
+      module subroutine zzekwpac ( ctx, handle, segdsc, nvals, l, cvals, p, base )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Descriptor of segment that owns the array.
+      integer(ip), intent(in) :: nvals  !! Number of values to write.
+      integer(ip), intent(in) :: l  !! String length.
+      character(*), intent(in) :: cvals  ( * )  !! Character values.
+      integer(ip), intent(out) :: p  !! Number of first page containing array.
+      integer(ip), intent(out) :: base  !! Base address of first page.
       character(pgsizc) :: page
 
       integer(ip) :: from
@@ -9407,7 +9600,7 @@ contains
       end do
 
       return
-      end procedure zzekwpac
+      end subroutine zzekwpac
 
       !>## Detailed Input
       !>
@@ -9491,12 +9684,19 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekwpai
+      module subroutine zzekwpai ( ctx, handle, segdsc, nvals, ivals, p, base )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Descriptor of segment that owns the array.
+      integer(ip), intent(in) :: nvals  !! Number of values to write.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values.
+      integer(ip), intent(out) :: p  !! Number of first page containing array.
+      integer(ip), intent(out) :: base  !! Base address of first page.
       integer(ip) :: from
       integer(ip) :: npage
       integer(ip) :: page   ( pgsizi )
@@ -9554,7 +9754,7 @@ contains
       end do
 
       return
-      end procedure zzekwpai
+      end subroutine zzekwpai
 
       !>## Detailed Input
       !>
@@ -9639,13 +9839,20 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekwpal
+      module subroutine zzekwpal ( ctx, handle, segdsc, nvals, lvals, p, base )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekdatpag
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Descriptor of segment that owns the array.
+      integer(ip), intent(in) :: nvals  !! Number of values to write.
+      logical, intent(in) :: lvals  ( * )  !! Logical values.
+      integer(ip), intent(out) :: p  !! Number of first page containing array.
+      integer(ip), intent(out) :: base  !! Base address of first page.
       character(pgsizc) :: page
 
       integer(ip) :: from
@@ -9714,7 +9921,7 @@ contains
       end do
 
       return
-      end procedure zzekwpal
+      end subroutine zzekwpal
 
       !>## Detailed Input
       !>
@@ -10066,7 +10273,7 @@ contains
       !>        were replaced with "fast write."
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB)
-      module procedure ekappr
+      module subroutine ekappr ( ctx, handle, segno, recno )
       use pepper_kinds, only: ip
       use pepper_inc_ekdatpag
       use pepper_inc_ekpage
@@ -10074,6 +10281,10 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segno  !! Segment number.
+      integer(ip), intent(out) :: recno  !! Number of appended record.
 
       integer(ip) :: mbase
       integer(ip) :: mp
@@ -10120,7 +10331,7 @@ contains
       call ekinsr ( ctx, handle, segno, recno )
 
       return
-      end procedure ekappr
+      end subroutine ekappr
 
       !>## Detailed Input
       !>
@@ -10614,11 +10825,20 @@ contains
       !>        Balanced CHKIN/CHKOUT calls.
       !>
       !>-    SPICELIB Version 1.0.0, 25-OCT-1995 (NJB)
-      module procedure ekifld
+      module subroutine ekifld ( ctx, handle, tabnam, ncols, nrows, cnames, decls, segno, rcptrs )
       use pepper_kinds, only: ip
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      character(*), intent(in) :: tabnam  !! Table name.
+      integer(ip), intent(in) :: ncols  !! Number of columns in the segment.
+      integer(ip), intent(in) :: nrows  !! Number of rows in the segment.
+      character(*), intent(in) :: cnames ( * )  !! Names of columns.
+      character(*), intent(in) :: decls  ( * )  !! Declarations of columns.
+      integer(ip), intent(out) :: segno  !! Segment number.
+      integer(ip), intent(out) :: rcptrs ( * )  !! Array of record pointers.
 
       integer(ip) :: mbase
       integer(ip) :: p
@@ -10684,7 +10904,7 @@ contains
       end if
 
       return
-      end procedure ekifld
+      end subroutine ekifld
 
       !>## Detailed Input
       !>
@@ -11045,12 +11265,20 @@ contains
       !>
       !>        now check for string truncation on output and signal errors
       !>        if truncation occurs.
-      module procedure ekrcec
+      module subroutine ekrcec ( ctx, handle, segno, recno, column, nvals, cvals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record from which data is to be read.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(out) :: nvals  !! Number of values in column entry.
+      character(*), intent(out) :: cvals  ( * )  !! Character values in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -11145,7 +11373,7 @@ contains
       end if
 
       return
-      end procedure ekrcec
+      end subroutine ekrcec
 
       !>## Detailed Input
       !>
@@ -11277,12 +11505,20 @@ contains
       !>        numbers; no indirection is used.
       !>
       !>        Miscellaneous header changes were made as well.
-      module procedure ekrced
+      module subroutine ekrced ( ctx, handle, segno, recno, column, nvals, dvals, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record from which data is to be read.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(out) :: nvals  !! Number of values in column entry.
+      real(wp), intent(out) :: dvals  ( * )  !! D.p. values in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -11374,7 +11610,7 @@ contains
       end if
 
       return
-      end procedure ekrced
+      end subroutine ekrced
 
       !>## Detailed Input
       !>
@@ -11506,12 +11742,20 @@ contains
       !>        numbers; no indirection is used.
       !>
       !>        Miscellaneous header changes were made as well.
-      module procedure ekrcei
+      module subroutine ekrcei ( ctx, handle, segno, recno, column, nvals, ivals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record from which data is to be read.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(out) :: nvals  !! Number of values in column entry.
+      integer(ip), intent(out) :: ivals  ( * )  !! Integer values in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -11603,13 +11847,20 @@ contains
       end if
 
       return
-      end procedure ekrcei
+      end subroutine ekrcei
 
       !> All the values of a double precision or time column entry of an EK
       !> record (PEPPER).
-      module procedure ek_values_real
+      module subroutine ek_values_real ( ctx, handle, segno, recno, column, values, isnull )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of the EK file
+      integer(ip), intent(in) :: segno  !! the segment number
+      integer(ip), intent(in) :: recno  !! the record number
+      character(*), intent(in) :: column  !! the column name
+      real(wp), allocatable, intent(out) :: values(:)  !! the values (size 0 if null, or after an error)
+      logical, intent(out) :: isnull  !! the entry is null
       integer(ip) :: n
       integer(ip) :: nvals
       integer(ip) :: seg
@@ -11628,12 +11879,19 @@ contains
       else
          values = values(1:nvals)
       end if
-      end procedure ek_values_real
+      end subroutine ek_values_real
 
       !> All the values of an integer column entry of an EK record (PEPPER).
-      module procedure ek_values_int
+      module subroutine ek_values_int ( ctx, handle, segno, recno, column, values, isnull )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of the EK file
+      integer(ip), intent(in) :: segno  !! the segment number
+      integer(ip), intent(in) :: recno  !! the record number
+      character(*), intent(in) :: column  !! the column name
+      integer(ip), allocatable, intent(out) :: values(:)  !! the values (size 0 if null, or after an error)
+      logical, intent(out) :: isnull  !! the entry is null
       integer(ip) :: n
       integer(ip) :: nvals
       integer(ip) :: seg
@@ -11652,16 +11910,23 @@ contains
       else
          values = values(1:nvals)
       end if
-      end procedure ek_values_int
+      end subroutine ek_values_int
 
       !> All the values of a character column entry of an EK record, each
       !> of its full length (PEPPER).
-      module procedure ek_values_str
+      module subroutine ek_values_str ( ctx, handle, segno, recno, column, values, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! the handle of the EK file
+      integer(ip), intent(in) :: segno  !! the segment number
+      integer(ip), intent(in) :: recno  !! the record number
+      character(*), intent(in) :: column  !! the column name
+      type(string), allocatable, intent(out) :: values(:)  !! the values (size 0 if null, or after an error)
+      logical, intent(out) :: isnull  !! the entry is null
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: segdsc ( sdscsz )
       integer(ip) :: class
@@ -11719,7 +11984,7 @@ contains
             end do
          end block
       end if
-      end procedure ek_values_str
+      end subroutine ek_values_str
 
       !> The number of values of a column entry of an EK record: 1 for the
       !> scalar column classes, the size of the entry for the array classes
@@ -11856,7 +12121,7 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekac07
+      module subroutine zzekac07 ( ctx, handle, segdsc, coldsc, ivals, nlflgs, wkindx )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekclas07
@@ -11866,6 +12131,13 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
       character(cnamsz) :: column
 
       integer(ip) :: class
@@ -12031,7 +12303,7 @@ contains
       end if
 
       return
-      end procedure zzekac07
+      end subroutine zzekac07
 
       !>## Detailed Input
       !>
@@ -12140,7 +12412,7 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekac08
+      module subroutine zzekac08 ( ctx, handle, segdsc, coldsc, dvals, nlflgs, wkindx )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekclas08
@@ -12150,6 +12422,13 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      real(wp), intent(in) :: dvals  ( * )  !! D.p. values to add to column.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
       character(cnamsz) :: column
 
       real(wp) :: page   ( pgsizd )
@@ -12316,7 +12595,7 @@ contains
       end if
 
       return
-      end procedure zzekac08
+      end subroutine zzekac08
 
       !>## Detailed Input
       !>
@@ -12425,7 +12704,7 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekac09
+      module subroutine zzekac09 ( ctx, handle, segdsc, coldsc, cvals, nlflgs, wkindx )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekclas09
@@ -12435,6 +12714,13 @@ contains
       use pepper_inc_ekpage
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to new EK file.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
       character(cnamsz) :: column
       character(pgsizc) :: page
 
@@ -12638,7 +12924,7 @@ contains
       end if
 
       return
-      end procedure zzekac09
+      end subroutine zzekac09
 
       !>## Detailed Input
       !>
@@ -12750,12 +13036,22 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekrsc
+      module subroutine zzekrsc ( ctx, handle, segdsc, coldsc, recptr, eltidx, cvlen, cval, isnull, found )
       use pepper_kinds, only: ip
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Pointer to record from which data is to be read.
+      integer(ip), intent(in) :: eltidx  !! Index of column entry element to be read.
+      integer(ip), intent(out) :: cvlen  !! Length of stored string.
+      character(*), intent(out) :: cval  !! Character value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      logical, intent(out) :: found  !! Flag indicting whether entry element was found.
       character(cnamsz) :: column
 
       integer(ip) :: class
@@ -12849,7 +13145,7 @@ contains
       end if
 
       return
-      end procedure zzekrsc
+      end subroutine zzekrsc
 
       !>## Detailed Input
       !>
@@ -12950,13 +13246,22 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 06-NOV-1995 (NJB)
-      module procedure zzekrsd
+      module subroutine zzekrsd ( ctx, handle, segdsc, coldsc, recptr, eltidx, dval, isnull, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Pointer to record from which data is to be read.
+      integer(ip), intent(in) :: eltidx  !! Index of column entry element to be read.
+      real(wp), intent(out) :: dval  !! D.p. value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      logical, intent(out) :: found  !! Flag indicting whether entry element was found.
       real(wp) :: dval_1(1)  !! one-element copy of dval (array argument)
 
       character(cnamsz) :: column
@@ -13045,7 +13350,7 @@ contains
       end if
 
       return
-      end procedure zzekrsd
+      end subroutine zzekrsd
 
       !>## Detailed Input
       !>
@@ -13146,13 +13451,22 @@ contains
       !>        long error messages.
       !>
       !>-    Beta Version 1.0.0, 06-NOV-1995 (NJB)
-      module procedure zzekrsi
+      module subroutine zzekrsi ( ctx, handle, segdsc, coldsc, recptr, eltidx, ival, isnull, found )
       use pepper_kinds, only: ip
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Pointer to record from which data is to be read.
+      integer(ip), intent(in) :: eltidx  !! Index of column entry element to be read.
+      integer(ip), intent(out) :: ival  !! Integer value in column entry.
+      logical, intent(out) :: isnull  !! Flag indicating whether column entry is null.
+      logical, intent(out) :: found  !! Flag indicting whether entry element was found.
       integer(ip) :: ival_1(1)  !! one-element copy of ival (array argument)
 
       character(cnamsz) :: column
@@ -13246,7 +13560,7 @@ contains
       end if
 
       return
-      end procedure zzekrsi
+      end subroutine zzekrsi
 
       !>## Detailed Input
       !>
@@ -13328,11 +13642,19 @@ contains
       !>     SPICELIB functions
       !>
       !>     Standard SPICE error handling.
-      module procedure zzekue04
+      module subroutine zzekue04 ( ctx, handle, segdsc, coldsc, recptr, nvals, ivals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: nvals  !! Number of values.
+      integer(ip), intent(in) :: ivals ( * )  !! Integer values.
+      logical, intent(in) :: isnull  !! Null flag.
       if ( ctx%failed() ) return
 
 !
@@ -13349,7 +13671,7 @@ contains
       call zzekad04 ( ctx, handle, segdsc, coldsc, recptr, nvals, ivals, isnull )
 
       return
-      end procedure zzekue04
+      end subroutine zzekue04
 
       !>## Detailed Input
       !>
@@ -13431,11 +13753,19 @@ contains
       !>     SPICELIB functions
       !>
       !>     Standard SPICE error handling.
-      module procedure zzekue05
+      module subroutine zzekue05 ( ctx, handle, segdsc, coldsc, recptr, nvals, dvals, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: nvals  !! Number of values.
+      real(wp), intent(in) :: dvals ( * )  !! Double precision values.
+      logical, intent(in) :: isnull  !! Null flag.
       if ( ctx%failed() ) return
 
 !
@@ -13452,7 +13782,7 @@ contains
       call zzekad05 ( ctx, handle, segdsc, coldsc, recptr, nvals, dvals, isnull )
 
       return
-      end procedure zzekue05
+      end subroutine zzekue05
 
       !>## Detailed Input
       !>
@@ -13534,7 +13864,7 @@ contains
       !>     SPICELIB functions
       !>
       !>     Standard SPICE error handling.
-      module procedure zzekue06
+      module subroutine zzekue06 ( ctx, handle, segdsc, coldsc, recptr, nvals, cvals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -13542,6 +13872,14 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: nvals  !! Number of values.
+      character(*), intent(in) :: cvals ( * )  !! Character string values.
+      logical, intent(in) :: isnull  !! Null flag.
       if ( ctx%failed() ) return
 
 !
@@ -13559,7 +13897,7 @@ contains
                        recptr,  nvals,   cvals,  isnull )
 
       return
-      end procedure zzekue06
+      end subroutine zzekue06
 
       !>## Detailed Input
       !>
@@ -13959,12 +14297,21 @@ contains
       !>        were replaced with "fast write."
       !>
       !>     Beta Version 1.0.0, 08-NOV-1995 (NJB)
-      module procedure ekaclc
+      module subroutine ekaclc ( ctx, handle, segno, column, cvals, entszs, nlflgs, rcptrs, wkindx )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(in) :: segno  !! Number of segment to add column to.
+      character(*), intent(in) :: column  !! Column name.
+      character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+      integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(in) :: rcptrs ( * )  !! Record pointers for segment.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
 
       integer(ip) :: class
       integer(ip) :: coldsc ( cdscsz )
@@ -14038,7 +14385,7 @@ contains
       end if
 
       return
-      end procedure ekaclc
+      end subroutine ekaclc
 
       !>## Detailed Input
       !>
@@ -14438,12 +14785,21 @@ contains
       !>        were replaced with "fast write."
       !>
       !>     Beta Version 1.0.0, 08-NOV-1995 (NJB)
-      module procedure ekacld
+      module subroutine ekacld ( ctx, handle, segno, column, dvals, entszs, nlflgs, rcptrs, wkindx )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(in) :: segno  !! Number of segment to add column to.
+      character(*), intent(in) :: column  !! Column name.
+      real(wp), intent(in) :: dvals  ( * )  !! Double precision values to add to column.
+      integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(in) :: rcptrs ( * )  !! Record pointers for segment.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
 
       integer(ip) :: class
       integer(ip) :: coldsc ( cdscsz )
@@ -14516,7 +14872,7 @@ contains
       end if
 
       return
-      end procedure ekacld
+      end subroutine ekacld
 
       !>## Detailed Input
       !>
@@ -14915,12 +15271,21 @@ contains
       !>        were replaced with "fast write."
       !>
       !>     Beta Version 1.0.0, 08-NOV-1995 (NJB)
-      module procedure ekacli
+      module subroutine ekacli ( ctx, handle, segno, column, ivals, entszs, nlflgs, rcptrs, wkindx )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(in) :: segno  !! Number of segment to add column to.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+      integer(ip), intent(in) :: entszs ( * )  !! Array of sizes of column entries.
+      logical, intent(in) :: nlflgs ( * )  !! Array of null flags for column entries.
+      integer(ip), intent(in) :: rcptrs ( * )  !! Record pointers for segment.
+      integer(ip), intent(inout) :: wkindx ( * )  !! Work space for column index.
 
       integer(ip) :: class
       integer(ip) :: coldsc ( cdscsz )
@@ -14993,7 +15358,7 @@ contains
       end if
 
       return
-      end procedure ekacli
+      end subroutine ekacli
 
       !>## Detailed Input
       !>
@@ -15104,12 +15469,18 @@ contains
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
       !>
       !>     Local variables
-      module procedure zzekecmp
+      module integer(ip) function zzekecmp ( ctx, hans, sgdscs, cldscs, rows, elts )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: hans   ( * )  !! EK handles.
+      integer(ip), intent(in) :: sgdscs ( sdscsz, * )  !! Segment descriptors.
+      integer(ip), intent(in) :: cldscs ( cdscsz, * )  !! Column descriptors.
+      integer(ip), intent(in) :: rows   ( * )  !! Row numbers.
+      integer(ip), intent(in) :: elts   ( * )  !! Element indices.
       character(:), allocatable :: cval1  !! the left-hand string (PEPPER: SPICELIB's CHARACTER*(MAXSTR) CVAL(2))
       character(:), allocatable :: cval2  !! the right-hand string
 
@@ -15493,7 +15864,7 @@ contains
       end if
 
       return
-      end procedure zzekecmp
+      end function zzekecmp
 
       !>## Detailed Input
       !>
@@ -15673,7 +16044,7 @@ contains
       !>        is LIKE or UNLIKE and column entry is null.
       !>
       !>-    SPICELIB Version 1.0.0, 17-OCT-1995 (NJB)
-      module procedure zzekscmp
+      module logical function zzekscmp ( ctx, op, handle, segdsc, coldsc, row, eltidx, dtype, cval, dval, ival, null )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: matchi
       use pepper_inc_ekcoldsc
@@ -15682,6 +16053,18 @@ contains
       use pepper_inc_ektype
       use pepper_inc_ekwild
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: op  !! Relational operator code.
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: row  !! ID of row containing column entry to compare.
+      integer(ip), intent(in) :: eltidx  !! Index of element in array-valued column entry.
+      integer(ip), intent(in) :: dtype  !! Data type of input value.
+      character(*), intent(in) :: cval  !! Character string to compare with column entry.
+      real(wp), intent(in) :: dval  !! D.p. value to compare with column entry.
+      integer(ip), intent(in) :: ival  !! Integer value to compare with column entry.
+      logical, intent(in) :: null  !! Flag indicating whether scalar is null.
 
       character(:), allocatable :: eltc  !! the column entry (PEPPER: SPICELIB's CHARACTER*(MAXSTR))
 
@@ -15981,7 +16364,7 @@ contains
       end if
 
       return
-      end procedure zzekscmp
+      end function zzekscmp
 
       !>## Detailed Input
       !>
@@ -16101,12 +16484,21 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekerc1
+      module subroutine zzekerc1 ( ctx, handle, segdsc, coldsc, ckey, recptr, null, prvidx, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      character(*), intent(in) :: ckey  !! Character key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
+      integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of CKEY.
+      integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of CKEY.
       integer(ip) :: begin
       integer(ip) :: begptr
       integer(ip) :: end
@@ -16301,7 +16693,7 @@ contains
       call zzektrdp ( ctx, handle, tree, prvidx, prvptr )
 
       return
-      end procedure zzekerc1
+      end subroutine zzekerc1
 
       !>## Detailed Input
       !>
@@ -16421,12 +16813,21 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekerd1
+      module subroutine zzekerd1 ( ctx, handle, segdsc, coldsc, dkey, recptr, null, prvidx, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      real(wp), intent(in) :: dkey  !! Double precision key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
+      integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of DKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of DKEY.
       integer(ip) :: begin
       integer(ip) :: begptr
       integer(ip) :: end
@@ -16621,7 +17022,7 @@ contains
       call zzektrdp ( ctx, handle, tree, prvidx, prvptr )
 
       return
-      end procedure zzekerd1
+      end subroutine zzekerd1
 
       !>## Detailed Input
       !>
@@ -16741,12 +17142,21 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekeri1
+      module subroutine zzekeri1 ( ctx, handle, segdsc, coldsc, ikey, recptr, null, prvidx, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: ikey  !! Integer key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
+      integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of IKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of IKEY.
       integer(ip) :: begin
       integer(ip) :: begptr
       integer(ip) :: end
@@ -16941,7 +17351,7 @@ contains
       call zzektrdp ( ctx, handle, tree, prvidx, prvptr )
 
       return
-      end procedure zzekeri1
+      end subroutine zzekeri1
 
       !>## Detailed Input
       !>
@@ -17043,7 +17453,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekllec
+      module subroutine zzekllec ( ctx, handle, segdsc, coldsc, ckey, prvloc, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -17051,6 +17461,13 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      character(*), intent(in) :: ckey  !! Character key.
+      integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of CKEY.
+      integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of CKEY.
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -17185,7 +17602,7 @@ contains
       end if
 
       return
-      end procedure zzekllec
+      end subroutine zzekllec
 
       !>## Detailed Input
       !>
@@ -17287,7 +17704,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzeklled
+      module subroutine zzeklled ( ctx, handle, segdsc, coldsc, dkey, prvloc, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -17295,6 +17712,13 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      real(wp), intent(in) :: dkey  !! Double precision key.
+      integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of DKEY.
+      integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of DKEY.
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -17429,7 +17853,7 @@ contains
       end if
 
       return
-      end procedure zzeklled
+      end subroutine zzeklled
 
       !>## Detailed Input
       !>
@@ -17531,7 +17955,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekllei
+      module subroutine zzekllei ( ctx, handle, segdsc, coldsc, ikey, prvloc, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -17539,6 +17963,13 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: ikey  !! Integer key.
+      integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of IKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to a record containing predecessor of IKEY.
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -17673,7 +18104,7 @@ contains
       end if
 
       return
-      end procedure zzekllei
+      end subroutine zzekllei
 
       !>## Detailed Input
       !>
@@ -17771,7 +18202,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzeklltc
+      module subroutine zzeklltc ( ctx, handle, segdsc, coldsc, ckey, prvloc, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -17779,6 +18210,13 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      character(*), intent(in) :: ckey  !! Character key.
+      integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of CKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of CKEY.
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -17914,7 +18352,7 @@ contains
       end if
 
       return
-      end procedure zzeklltc
+      end subroutine zzeklltc
 
       !>## Detailed Input
       !>
@@ -18011,7 +18449,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzeklltd
+      module subroutine zzeklltd ( ctx, handle, segdsc, coldsc, dkey, prvloc, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -18019,6 +18457,13 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      real(wp), intent(in) :: dkey  !! Double precision key.
+      integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of DKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to a record containing predecessor of DKEY.
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -18154,7 +18599,7 @@ contains
       end if
 
       return
-      end procedure zzeklltd
+      end subroutine zzeklltd
 
       !>## Detailed Input
       !>
@@ -18252,7 +18697,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekllti
+      module subroutine zzekllti ( ctx, handle, segdsc, coldsc, ikey, prvloc, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -18260,6 +18705,13 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: ikey  !! Integer key.
+      integer(ip), intent(out) :: prvloc  !! Ordinal position of predecessor of IKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of IKEY.
       character(cnamsz) :: column
 
       integer(ip) :: begin
@@ -18395,7 +18847,7 @@ contains
       end if
 
       return
-      end procedure zzekllti
+      end subroutine zzekllti
 
       !>## Detailed Input
       !>
@@ -18574,13 +19026,26 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekrcmp
+      module logical function zzekrcmp ( ctx, op, ncols, han1, sgdsc1, cdlst1, row1, elts1, han2, sgdsc2, cdlst2, row2, elts2 )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_ekqlimit
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: op  !! Code for relational operator.
+      integer(ip), intent(in) :: ncols  !! Number of columns used to define order relation.
+      integer(ip), intent(in) :: han1  !! Handle of EK containing first row to compare.
+      integer(ip), intent(in) :: sgdsc1 ( sdscsz )  !! Descriptor of segment containing first row.
+      integer(ip), intent(in) :: cdlst1 ( cdscsz, * )  !! List of column descriptors for first row.
+      integer(ip), intent(in) :: row1  !! Number of first row (relative to segment).
+      integer(ip), intent(in) :: elts1  ( * )  !! List of element indices for first row.
+      integer(ip), intent(in) :: han2  !! Handle of EK containing second row to compare.
+      integer(ip), intent(in) :: sgdsc2 ( sdscsz )  !! Descriptor of segment containing second row.
+      integer(ip), intent(in) :: cdlst2 ( cdscsz, * )  !! List of column descriptors for second row.
+      integer(ip), intent(in) :: row2  !! Number of second row (relative to segment).
+      integer(ip), intent(in) :: elts2  ( * )  !! List of element indices for second row.
       integer(ip) :: cldscs ( cdscsz, 2 )
       integer(ip) :: col
       integer(ip) :: elts   ( 2 )
@@ -18678,7 +19143,7 @@ contains
       end if
 
       return
-      end procedure zzekrcmp
+      end function zzekrcmp
 
       !>## Detailed Input
       !>
@@ -18832,7 +19297,7 @@ contains
       !>        Corrected typo in comments.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      module procedure zzekrmch
+      module logical function zzekrmch ( ctx, ncnstr, active, handle, segdsc, cdscrs, row, elts, ops, vtypes, chrbuf, cbegs, cends, dvals, ivals )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
@@ -18840,6 +19305,21 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_ekwild
       use pepper_inc_ekqlimit
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ncnstr  !! Number of constraints present in query.
+      logical, intent(in) :: active ( * )  !! Array of flags indicating applicable constraints.
+      integer(ip), intent(in) :: handle  !! Handle of EK file containing row.
+      integer(ip), intent(in) :: segdsc ( * )  !! Segment descriptor.
+      integer(ip), intent(in) :: cdscrs ( cdscsz, * )  !! Descriptors of columns referenced in query.
+      integer(ip), intent(in) :: row  !! Index of row to match.
+      integer(ip), intent(in) :: elts   ( * )  !! Indices of column entry elements to match.
+      integer(ip), intent(in) :: ops    ( * )  !! Operators used in query constraints.
+      integer(ip), intent(in) :: vtypes ( * )  !! Data types of values on RHS of constraints.
+      character(*), intent(in) :: chrbuf  !! Buffer containing query tokens.
+      integer(ip), intent(in) :: cbegs  ( * )  !! Begin indices of character query tokens.
+      integer(ip), intent(in) :: cends  ( * )  !! End indices of character query tokens.
+      real(wp), intent(in) :: dvals  ( * )  !! D.p. values used in query constraints.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values used in query constraints.
 
       integer(ip) :: i
 
@@ -18882,7 +19362,7 @@ contains
 !     It's a match if we got this far.
 !
       return
-      end procedure zzekrmch
+      end function zzekrmch
 
       !>## Detailed Input
       !>
@@ -19069,7 +19549,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 19-OCT-1995 (NJB)
-      module procedure zzekvcmp
+      module logical function zzekvcmp ( ctx, op, ncols, tabs, cols, elts, senses, sthan, stsdsc, stdtpt, dtpool, dtdscs, sgvec1, rwvec1, sgvec2, rwvec2 )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
@@ -19077,6 +19557,23 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: op  !! Code for relational operator.
+      integer(ip), intent(in) :: ncols  !! Number of columns used to define order relation.
+      integer(ip), intent(in) :: tabs   ( * )  !! Indices of tables containing order-by columns.
+      integer(ip), intent(in) :: cols   ( * )  !! Indices of order-by columns within parent tables.
+      integer(ip), intent(in) :: elts   ( * )  !! Element indices.
+      integer(ip), intent(in) :: senses ( * )  !! Order senses.
+      integer(ip), intent(in) :: sthan  ( * )  !! Array of handles of loaded EKs.
+      integer(ip), intent(in) :: stsdsc ( sdscsz, * )  !! Array of segment descriptors.
+      integer(ip), intent(in) :: stdtpt ( * )  !! Array of pointers to column descriptors.
+      integer(ip), intent(in) :: dtpool ( 2, lbpool : * )  !! Column descriptor index pool.
+      integer(ip), intent(in) :: dtdscs ( cdscsz, * )  !! Array of column descriptors.
+      integer(ip), intent(in) :: sgvec1 ( * )  !! First segment vector.
+      integer(ip), intent(in) :: rwvec1 ( * )  !! First row vector.
+      integer(ip), intent(in) :: sgvec2 ( * )  !! Second segment vector.
+      integer(ip), intent(in) :: rwvec2 ( * )  !! Second row vector.
 
       integer(ip) :: cldscs ( cdscsz, 2 )
       integer(ip) :: col
@@ -19226,7 +19723,7 @@ contains
       end if
 
       return
-      end procedure zzekvcmp
+      end function zzekvcmp
 
       !>## Detailed Input
       !>
@@ -19422,7 +19919,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekvmch
+      module logical function zzekvmch ( ctx, ncnstr, active, lhans, lsdscs, lcdscs, lrows, lelts, ops, rhans, rsdscs, rcdscs, rrows, relts )
       use pepper_kinds, only: ip
       use pepper_strings, only: matchi
       use pepper_inc_ekbool
@@ -19431,6 +19928,20 @@ contains
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ekwild
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ncnstr  !! Number of join constraints.
+      logical, intent(in) :: active ( * )  !! Array of flags indicating applicable constraints.
+      integer(ip), intent(in) :: lhans  ( * )  !! Handles of EKs for columns on LHS's of constraints.
+      integer(ip), intent(in) :: lsdscs ( sdscsz, * )  !! Descriptors of segments on LHS's of constraints.
+      integer(ip), intent(in) :: lcdscs ( cdscsz, * )  !! Column descriptors for LHS's of constraints.
+      integer(ip), intent(in) :: lrows  ( * )  !! Row numbers for LHS's of constraints.
+      integer(ip), intent(in) :: lelts  ( * )  !! Column element indices for LHS's of constraints.
+      integer(ip), intent(in) :: ops    ( * )  !! Code for relational operator in constraints.
+      integer(ip), intent(in) :: rhans  ( * )  !! Handles of EKs for columns on RHS's of constraints.
+      integer(ip), intent(in) :: rsdscs ( sdscsz, * )  !! Descriptors of segments on RHS's of constraints.
+      integer(ip), intent(in) :: rcdscs ( cdscsz, * )  !! Column descriptors for RHS's of constraints.
+      integer(ip), intent(in) :: rrows  ( * )  !! Row numbers for RHS's of constraints.
+      integer(ip), intent(in) :: relts  ( * )  !! Column element indices for RHS's of constraints.
       character(:), allocatable :: cval1  !! the left-hand string (PEPPER: SPICELIB's CHARACTER*(MAXSTR) CVAL(2))
       character(:), allocatable :: cval2  !! the right-hand string
 
@@ -19633,7 +20144,7 @@ contains
       end do
 
       return
-      end procedure zzekvmch
+      end function zzekvmch
 
       !>## Detailed Input
       !>
@@ -19726,12 +20237,21 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekille
+      module integer(ip) function zzekille ( ctx, handle, segdsc, coldsc, nrows, dtype, cval, dval, ival )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! HANDLE of EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Descriptor of column to be searched.
+      integer(ip), intent(in) :: nrows  !! Number of rows in column.
+      integer(ip), intent(in) :: dtype  !! Data type of input value.
+      character(*), intent(in) :: cval  !! Character string value.
+      real(wp), intent(in) :: dval  !! Double precision value.
+      integer(ip), intent(in) :: ival  !! Integer value.
       real(wp) :: dnum
 
       integer(ip) :: coltyp
@@ -19806,7 +20326,7 @@ contains
       end if
 
       return
-      end procedure zzekille
+      end function zzekille
 
       !>## Detailed Input
       !>
@@ -19898,12 +20418,21 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekillt
+      module integer(ip) function zzekillt ( ctx, handle, segdsc, coldsc, nrows, dtype, cval, dval, ival )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! HANDLE of EK file.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Descriptor of column to be searched.
+      integer(ip), intent(in) :: nrows  !! Number of rows in column.
+      integer(ip), intent(in) :: dtype  !! Data type of input value.
+      character(*), intent(in) :: cval  !! Character string value.
+      real(wp), intent(in) :: dval  !! Double precision value.
+      integer(ip), intent(in) :: ival  !! Integer value.
       real(wp) :: dnum
 
       integer(ip) :: coltyp
@@ -19978,7 +20507,7 @@ contains
       end if
 
       return
-      end procedure zzekillt
+      end function zzekillt
 
       !>## Detailed Input
       !>
@@ -20204,7 +20733,7 @@ contains
       !>     second entry.
       !>
       !>     Standard SPICE error handling.
-      module procedure zzekjsrt
+      module subroutine zzekjsrt ( ctx, njrs, ubases, norder, otabs, ocols, oelts, senses, sthan, stsdsc, stdtpt, dtpool, dtdscs, ordbas )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: swapi
       use pepper_inc_ekbool
@@ -20216,6 +20745,21 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: njrs  !! Number of join row sets in union.
+      integer(ip), intent(in) :: ubases ( * )  !! Base addresses of join row sets of union.
+      integer(ip), intent(in) :: norder  !! Number of order-by columns.
+      integer(ip), intent(in) :: otabs  ( * )  !! Order-by table indices relative to FROM clause.
+      integer(ip), intent(in) :: ocols  ( * )  !! Order-by column indices.
+      integer(ip), intent(in) :: oelts  ( * )  !! Order-by element indices.
+      integer(ip), intent(in) :: senses ( * )  !! Order directions.
+      integer(ip), intent(in) :: sthan  ( * )  !! Handles of loaded files from segment table.
+      integer(ip), intent(in) :: stsdsc ( sdscsz, * )  !! Array of descriptors of loaded segments.
+      integer(ip), intent(in) :: stdtpt ( * )  !! Array of pointers to column descriptors.
+      integer(ip), intent(in) :: dtpool ( 2,      lbpool : * )  !! Column descriptor table pool.
+      integer(ip), intent(in) :: dtdscs ( cdscsz,          * )  !! Column descriptor table.
+      integer(ip), intent(out) :: ordbas  !! Scratch area base address for order vector.
       integer(ip) :: rjg_1(1)  !! one-element copy of rjg (array argument)
       integer(ip) :: rj_1(1)  !! one-element copy of rj (array argument)
       integer(ip) :: ntab_1(1)  !! one-element copy of ntab (array argument)
@@ -20900,7 +21444,7 @@ contains
 !
 
       return
-      end procedure zzekjsrt
+      end subroutine zzekjsrt
 
       !>## Detailed Input
       !>
@@ -21014,13 +21558,22 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzeklerc
+      module subroutine zzeklerc ( ctx, handle, segdsc, coldsc, ckey, recptr, null, prvidx, prvptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      character(*), intent(in) :: ckey  !! Double precision key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
+      integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of CKEY.
+      integer(ip), intent(out) :: prvptr  !! Record pointer for predecessor of CKEY.
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -21087,7 +21640,7 @@ contains
       end if
 
       return
-      end procedure zzeklerc
+      end subroutine zzeklerc
 
       !>## Detailed Input
       !>
@@ -21202,13 +21755,22 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzeklerd
+      module subroutine zzeklerd ( ctx, handle, segdsc, coldsc, dkey, recptr, null, prvidx, prvptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      real(wp), intent(in) :: dkey  !! Double precision key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
+      integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of DKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of DKEY.
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -21275,7 +21837,7 @@ contains
       end if
 
       return
-      end procedure zzeklerd
+      end subroutine zzeklerd
 
       !>## Detailed Input
       !>
@@ -21390,13 +21952,22 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekleri
+      module subroutine zzekleri ( ctx, handle, segdsc, coldsc, ikey, recptr, null, prvidx, prvptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: ikey  !! Integer key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
+      integer(ip), intent(out) :: prvidx  !! Ordinal position of predecessor of IKEY.
+      integer(ip), intent(out) :: prvptr  !! Pointer to record containing predecessor of IKEY.
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -21463,7 +22034,7 @@ contains
       end if
 
       return
-      end procedure zzekleri
+      end subroutine zzekleri
 
       !>## Detailed Input
       !>
@@ -21549,11 +22120,17 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekfrx
+      module subroutine zzekfrx ( ctx, handle, segdsc, coldsc, recptr, pos )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Pointer to record to locate.
+      integer(ip), intent(out) :: pos  !! Ordinal position of record.
       character(:), allocatable :: cval  !! the column entry (PEPPER: SPICELIB's CHARACTER*(MAXSTR))
 
       real(wp) :: dval
@@ -21684,7 +22261,7 @@ contains
       end if
 
       return
-      end procedure zzekfrx
+      end subroutine zzekfrx
 
       !>## Detailed Input
       !>
@@ -21784,7 +22361,7 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekiic1
+      module subroutine zzekiic1 ( ctx, handle, segdsc, coldsc, ckey, recptr, null )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -21792,6 +22369,13 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      character(*), intent(in) :: ckey  !! Character key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -21869,7 +22453,7 @@ contains
       end if
 
       return
-      end procedure zzekiic1
+      end subroutine zzekiic1
 
       !>## Detailed Input
       !>
@@ -21969,7 +22553,7 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekiid1
+      module subroutine zzekiid1 ( ctx, handle, segdsc, coldsc, dkey, recptr, null )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -21977,6 +22561,13 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      real(wp), intent(in) :: dkey  !! Double precision key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -22054,7 +22645,7 @@ contains
       end if
 
       return
-      end procedure zzekiid1
+      end subroutine zzekiid1
 
       !>## Detailed Input
       !>
@@ -22150,7 +22741,7 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekiii1
+      module subroutine zzekiii1 ( ctx, handle, segdsc, coldsc, ikey, recptr, null )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcnamsz
@@ -22158,6 +22749,13 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: ikey  !! Integer key.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      logical, intent(in) :: null  !! Null flag.
       character(cnamsz) :: column
 
       integer(ip) :: dtype
@@ -22235,7 +22833,7 @@ contains
       end if
 
       return
-      end procedure zzekiii1
+      end subroutine zzekiii1
 
       !>## Abstract
       !>
@@ -22437,7 +23035,7 @@ contains
       !>        input row count is zero.
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      module procedure zzekjprp
+      module subroutine zzekjprp ( ctx, segvec, jbase1, nt1, rb1, nr1, jbase2, nt2, rb2, nr2, njcnst, active, cpidx1, clidx1, elts1, ops, cpidx2, clidx2, elts2, sthan, stsdsc, stdtpt, dtpool, dtdscs )
       use pepper_kinds, only: ip
       use pepper_containers, only: grow
       use pepper_inc_ekcoldsc
@@ -22446,6 +23044,31 @@ contains
       use pepper_inc_ekqlimit
       use pepper_inc_ekquery
       use pepper_inc_eksegdsc
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: segvec ( * )  !! Composite segment vector for joined table.
+      integer(ip), intent(in) :: jbase1  !! Scratch area base address of first join row set.
+      integer(ip), intent(in) :: nt1  !! Width of first table.
+      integer(ip), intent(in) :: rb1  !! Row vector base address from first join row set.
+      integer(ip), intent(in) :: nr1  !! Number of row vectors from first join row set.
+      integer(ip), intent(in) :: jbase2  !! Scratch area base address of second join row set.
+      integer(ip), intent(in) :: nt2  !! Width of second table.
+      integer(ip), intent(in) :: rb2  !! Row vector base address from second join row set.
+      integer(ip), intent(in) :: nr2  !! Number of row vectors from second join row set.
+      integer(ip), intent(in) :: njcnst  !! Number of join constraints.
+      logical, intent(in) :: active ( * )  !! Array of flags indicating applicable constraints.
+      integer(ip), intent(in) :: cpidx1 ( * )  !! Cross product indices for LHS's of constraints.
+      integer(ip), intent(in) :: clidx1 ( * )  !! Column indices for LHS's of constraints.
+      integer(ip), intent(in) :: elts1  ( * )  !! Column element indices for LHS's of constraints.
+      integer(ip), intent(in) :: ops    ( * )  !! Operator codes for constraints.
+      integer(ip), intent(in) :: cpidx2 ( * )  !! Cross product indices for RHS's of constraints.
+      integer(ip), intent(in) :: clidx2 ( * )  !! Column indices for RHS's of constraints.
+      integer(ip), intent(in) :: elts2  ( * )  !! Column element indices for RHS's of constraints.
+      integer(ip), intent(in) :: sthan  ( * )  !! Array of EK handles corresponding to segments.
+      integer(ip), intent(in) :: stsdsc ( sdscsz,          * )  !! Array of segment descriptors.
+      integer(ip), intent(in) :: stdtpt ( * )  !! Array of set table column descriptor pointers.
+      integer(ip), intent(in) :: dtpool ( 2,      lbpool : * )  !! Linked list pool for column descriptors.
+      integer(ip), intent(in) :: dtdscs ( cdscsz,          * )  !! Array of column descriptors.
       integer(ip), parameter :: noluck = 3
       integer(ip) :: tab
       integer(ip) :: n
@@ -22896,7 +23519,7 @@ contains
 
       return
       end associate
-      end procedure zzekjprp
+      end subroutine zzekjprp
 
       !>## Abstract
       !>
@@ -22987,7 +23610,7 @@ contains
       !>-    Beta Version 1.0.0, 08-AUG-1995 (NJB)
       !>
       !>     No row vector found to start with.
-      module procedure zzekjnxt
+      module subroutine zzekjnxt ( ctx, found, rowvec )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekjrs
@@ -22995,6 +23618,9 @@ contains
       use pepper_inc_ekqlimit
       use pepper_inc_ekquery
       use pepper_inc_eksegdsc
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(out) :: found  !! Flag indicating whether a row vector was found.
+      integer(ip), intent(out) :: rowvec ( * )  !! Row vector matching join constraints.
       integer(ip) :: rrow_1(1)  !! one-element copy of rrow (array argument)
       integer(ip) :: lrow_1(1)  !! one-element copy of lrow (array argument)
       integer(ip) :: rrvidx_1(1)  !! one-element copy of rrvidx (array argument)
@@ -23479,7 +24105,7 @@ contains
 
       return
       end associate
-      end procedure zzekjnxt
+      end subroutine zzekjnxt
 
       !>## Detailed Input
       !>
@@ -23705,7 +24331,7 @@ contains
       !>     Other functions
       !>
       !>     Local parameters
-      module procedure zzekkey
+      module subroutine zzekkey ( ctx, handle, segdsc, nrows, ncnstr, clidxs, dsclst, ops, dtypes, chrbuf, cbegs, cends, dvals, ivals, active, key, keydsc, begidx, endidx, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -23713,6 +24339,26 @@ contains
       use pepper_inc_ekqlimit
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of EK file containing segment.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: nrows  !! Number of rows in segment.
+      integer(ip), intent(in) :: ncnstr  !! Number of relational constraints in query.
+      integer(ip), intent(in) :: clidxs ( * )  !! Column attribute table indices for columns.
+      integer(ip), intent(in) :: dsclst ( cdscsz, * )  !! Array of column descriptors for constraints.
+      integer(ip), intent(in) :: ops    ( * )  !! Operations used in query constraints.
+      integer(ip), intent(in) :: dtypes ( * )  !! Data types of scalar values used in constraints.
+      character(*), intent(in) :: chrbuf  !! Buffer containing query tokens.
+      integer(ip), intent(in) :: cbegs  ( * )  !! Begin indices of character query tokens.
+      integer(ip), intent(in) :: cends  ( * )  !! End indices of character query tokens.
+      real(wp), intent(in) :: dvals  ( * )  !! D.p. values used in query constraints.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values used in query constraints.
+      logical, intent(inout) :: active ( * )  !! Array of flags indicating applicable constraints.
+      integer(ip), intent(out) :: key  !! Index of key column.
+      integer(ip), intent(out) :: keydsc ( * )  !! Descriptor of key column.
+      integer(ip), intent(out) :: begidx  !! Begin index of candidate row set.
+      integer(ip), intent(out) :: endidx  !! End index of candidate row set.
+      logical, intent(out) :: found  !! Flag indicating whether a key column was found.
 
       integer(ip) :: b
       integer(ip) :: best
@@ -24070,7 +24716,7 @@ contains
       found = .true.
 
       return
-      end procedure zzekkey
+      end subroutine zzekkey
 
       !>## Detailed Input
       !>
@@ -24172,7 +24818,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekad01
+      module subroutine zzekad01 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -24180,6 +24826,13 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: ival  !! Integer value.
+      logical, intent(in) :: isnull  !! Null flag.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
       integer(ip) :: colidx
       integer(ip) :: datptr
@@ -24361,7 +25014,7 @@ contains
       end if
 
       return
-      end procedure zzekad01
+      end subroutine zzekad01
 
       !>## Detailed Input
       !>
@@ -24463,7 +25116,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekad02
+      module subroutine zzekad02 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -24471,6 +25124,13 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      real(wp), intent(in) :: dval  !! Double precision value.
+      logical, intent(in) :: isnull  !! Null flag.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
       integer(ip) :: colidx
       integer(ip) :: datptr
@@ -24646,7 +25306,7 @@ contains
       end if
 
       return
-      end procedure zzekad02
+      end subroutine zzekad02
 
       !>## Detailed Input
       !>
@@ -24750,7 +25410,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekad03
+      module subroutine zzekad03 ( ctx, handle, segdsc, coldsc, recptr, cval, isnull )
       use pepper_kinds, only: ip
       use pepper_strings, only: rtrim
       use pepper_inc_ekbool
@@ -24759,6 +25419,13 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( * )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( * )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      character(*), intent(in) :: cval  !! Character string value.
+      logical, intent(in) :: isnull  !! Null flag.
       integer(ip) :: colidx
       integer(ip) :: datptr
       integer(ip) :: itype
@@ -25002,7 +25669,7 @@ contains
       end if
 
       return
-      end procedure zzekad03
+      end subroutine zzekad03
 
       !>## Detailed Input
       !>
@@ -25075,12 +25742,17 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekixdl
+      module subroutine zzekixdl ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(in) :: segdsc ( sdscsz )  !! Segment descriptor.
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer to locate.
       integer(ip) :: idx
       integer(ip) :: idxtyp
       integer(ip) :: recno
@@ -25140,7 +25812,7 @@ contains
       end if
 
       return
-      end procedure zzekixdl
+      end subroutine zzekixdl
 
       !>## Detailed Input
       !>
@@ -25344,12 +26016,32 @@ contains
       !>        a call to ZZEKJSQZ.
       !>
       !>-    Beta Version 1.0.0, 10-OCT-1995 (NJB)
-      module procedure zzekjoin
+      module subroutine zzekjoin ( ctx, jbase1, jbase2, njcnst, active, cpidx1, clidx1, elts1, ops, cpidx2, clidx2, elts2, sthan, stsdsc, stdtpt, dtpool, dtdscs, jbase3, nrows )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_ekjrs
       use pepper_inc_ekqlimit
       use pepper_inc_eksegdsc
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5
+      integer(ip), intent(in) :: jbase1  !! Scratch area base address of first join row set.
+      integer(ip), intent(in) :: jbase2  !! Scratch area base address of second join row set.
+      integer(ip), intent(in) :: njcnst  !! Number of join constraints.
+      logical, intent(in) :: active ( * )  !! Array of flags indicating applicable constraints.
+      integer(ip), intent(in) :: cpidx1 ( * )  !! Cross product indices for LHS's of constraints.
+      integer(ip), intent(in) :: clidx1 ( * )  !! Column indices for LHS's of constraints.
+      integer(ip), intent(in) :: elts1  ( * )  !! Column entry elt. indices for LHS'of constraints.
+      integer(ip), intent(in) :: ops    ( * )  !! Operator codes for constraints.
+      integer(ip), intent(in) :: cpidx2 ( * )  !! Cross product indices for RHS's of constraints.
+      integer(ip), intent(in) :: clidx2 ( * )  !! Column indices for RHS's of constraints.
+      integer(ip), intent(in) :: elts2  ( * )  !! Column entry elt. indices for RHS'of constraints.
+      integer(ip), intent(in) :: sthan  ( * )  !! Array of EK handles corresponding to segments.
+      integer(ip), intent(in) :: stsdsc ( sdscsz, * )  !! Array of segment descriptors.
+      integer(ip), intent(in) :: stdtpt ( * )  !! Array of set table column descriptor pointers.
+      integer(ip), intent(in) :: dtpool ( 2,      lbpool : * )  !! Linked list pool for column descriptors.
+      integer(ip), intent(in) :: dtdscs ( cdscsz,          * )  !! Array of column descriptors.
+      integer(ip), intent(out) :: jbase3  !! Scratch area base address of output join row set.
+      integer(ip), intent(out) :: nrows  !! Number of rows in output join row set.
       integer(ip) :: nr2_1(1)  !! one-element copy of nr2 (array argument)
       integer(ip) :: rb2_1(1)  !! one-element copy of rb2 (array argument)
       integer(ip) :: nr1_1(1)  !! one-element copy of nr1 (array argument)
@@ -25668,7 +26360,7 @@ contains
 !
 
       return
-      end procedure zzekjoin
+      end subroutine zzekjoin
 
       !>## Detailed Input
       !>
@@ -26365,12 +27057,20 @@ contains
       !>        Updated to use ERRHAN.
       !>
       !>-    Beta Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekacec
+      module subroutine ekacec ( ctx, handle, segno, recno, column, nvals, cvals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(in) :: segno  !! Index of segment containing record.
+      integer(ip), intent(in) :: recno  !! Record to which data is to be added.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+      character(*), intent(in) :: cvals  ( * )  !! Character values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -26449,7 +27149,7 @@ contains
       end if
 
       return
-      end procedure ekacec
+      end subroutine ekacec
 
       !>## Detailed Input
       !>
@@ -27085,12 +27785,20 @@ contains
       !>        Removed an unbalanced call to CHKOUT
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekaced
+      module subroutine ekaced ( ctx, handle, segno, recno, column, nvals, dvals, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record to which data is to be added.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+      real(wp), intent(in) :: dvals  ( * )  !! Double precision values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -27171,7 +27879,7 @@ contains
       end if
 
       return
-      end procedure ekaced
+      end subroutine ekaced
 
       !>## Detailed Input
       !>
@@ -27811,12 +28519,20 @@ contains
       !>        Removed an unbalanced call to CHKOUT.
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekacei
+      module subroutine ekacei ( ctx, handle, segno, recno, column, nvals, ivals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! EK file handle.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record to which data is to be added.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(in) :: nvals  !! Number of values to add to column.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -27895,7 +28611,7 @@ contains
       end if
 
       return
-      end procedure ekacei
+      end subroutine ekacei
 
       !>## Detailed Input
       !>
@@ -28237,7 +28953,7 @@ contains
       !>        Previous version line was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure eklef
+      module subroutine eklef ( ctx, fname, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -28251,6 +28967,9 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: fname  !! Name of EK file to load.
+      integer(ip), intent(out) :: handle  !! File handle of loaded EK file.
       integer(ip), parameter :: mxclld = 500
       integer(ip), parameter :: short = 80
       character(typlen), parameter :: chtype ( ntypes ) = &
@@ -29280,7 +29999,7 @@ contains
 
       return
       end associate
-      end procedure eklef
+      end subroutine eklef
 
       !>## Detailed Input
       !>
@@ -29479,7 +30198,7 @@ contains
       !>        Previous version line was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ekuef
+      module subroutine ekuef ( ctx, handle )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -29493,6 +30212,8 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle of EK file.
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: j
@@ -29771,7 +30492,7 @@ contains
 
       return
       end associate
-      end procedure ekuef
+      end subroutine ekuef
 
       !>## Detailed Input
       !>
@@ -29904,7 +30625,7 @@ contains
       !>        Previous version line was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ekntab
+      module subroutine ekntab ( ctx, n )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -29918,6 +30639,8 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(out) :: n  !! Number of loaded tables.
       logical :: return
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
@@ -29943,7 +30666,7 @@ contains
       n  =   ubound ( tbpool, 2, kind=ip ) - lnknfn( ctx, tbpool )
       return
       end associate
-      end procedure ekntab
+      end subroutine ekntab
 
       !>## Detailed Input
       !>
@@ -30125,7 +30848,7 @@ contains
       !>        Previous version line was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ektnam
+      module subroutine ektnam ( ctx, n, table )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -30139,6 +30862,9 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Index of table.
+      character(*), intent(out) :: table  !! Name of table.
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: i
@@ -30205,7 +30931,7 @@ contains
 
       return
       end associate
-      end procedure ektnam
+      end subroutine ektnam
 
       !>## Detailed Input
       !>
@@ -30525,7 +31251,7 @@ contains
       !>        Misspelling of "conjunction" was fixed.
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ekccnt
+      module subroutine ekccnt ( ctx, table, ccount )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       use pepper_inc_ekattdsc
@@ -30540,6 +31266,9 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: table  !! Name of table.
+      integer(ip), intent(out) :: ccount  !! Count of distinct, currently loaded columns.
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: col
@@ -30613,7 +31342,7 @@ contains
 
       return
       end associate
-      end procedure ekccnt
+      end subroutine ekccnt
 
       !>## Detailed Input
       !>
@@ -30961,7 +31690,7 @@ contains
       !>        Previous version line was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ekcii
+      module subroutine ekcii ( ctx, table, cindex, column, attdsc )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr
       use pepper_inc_ekattdsc
@@ -30976,6 +31705,11 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: cindex  !! Index of column whose attributes are to be found.
+      character(*), intent(out) :: column  !! Name of column.
+      character(*), intent(in) :: table  !! Name of table containing column.
+      integer(ip), intent(out) :: attdsc ( adscsz )  !! Column attribute descriptor.
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
       integer(ip) :: col
@@ -31098,7 +31832,7 @@ contains
 
       return
       end associate
-      end procedure ekcii
+      end subroutine ekcii
 
       !>## Detailed Input
       !>
@@ -31207,7 +31941,7 @@ contains
       !>        Previous version line was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure eksrch
+      module subroutine eksrch ( ctx, eqryi, eqryc, eqryd, nmrows, semerr, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -31221,6 +31955,14 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: eqryc  !! Character component of encoded query.
+      real(wp), intent(in) :: eqryd  ( * )  !! D.p. component of encoded query.
+      integer(ip), intent(in) :: eqryi  ( lbcell : * )  !! Integer component of encoded query.
+      integer(ip), intent(out) :: nmrows  !! Number of rows matching query constraints.
+      logical, intent(out) :: semerr  !! Flag indicating whether semantic error occurred.
+      character(*), intent(out) :: errmsg  !! Message describing semantic error, if any.
       integer(ip) :: cjrows_1(1)  !! one-element copy of cjrows (array argument)
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
@@ -32055,7 +32797,7 @@ contains
 
       return
       end associate
-      end procedure eksrch
+      end subroutine eksrch
 
       !>## Detailed Input
       !>
@@ -32510,7 +33252,7 @@ contains
       !>        changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure eknelt
+      module subroutine eknelt ( ctx, selidx, row, nelt )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -32524,6 +33266,10 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: row  !! Row containing element.
+      integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
+      integer(ip), intent(out) :: nelt  !! Number of elements in entry in current row.
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
@@ -32655,7 +33401,7 @@ contains
 
       return
       end associate
-      end procedure eknelt
+      end subroutine eknelt
 
       !>## Detailed Input
       !>
@@ -33264,7 +34010,7 @@ contains
       !>        was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ekgc
+      module subroutine ekgc ( ctx, selidx, row, elment, cdata, null, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -33278,6 +34024,13 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: elment  !! Index of element, within column entry, to fetch.
+      integer(ip), intent(in) :: row  !! Row to fetch from.
+      integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
+      logical, intent(out) :: found  !! Flag indicating whether column was present in row.
+      character(*), intent(out) :: cdata  !! Character string element of column entry.
+      logical, intent(out) :: null  !! Flag indicating whether column entry was null.
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
@@ -33463,7 +34216,7 @@ contains
 
       return
       end associate
-      end procedure ekgc
+      end subroutine ekgc
 
       !>## Detailed Input
       !>
@@ -34232,7 +34985,7 @@ contains
       !>        was changed from "Beta" to "SPICELIB."
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ekgd
+      module subroutine ekgd ( ctx, selidx, row, elment, ddata, null, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -34246,6 +34999,13 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: elment  !! Index of element, within column entry, to fetch.
+      integer(ip), intent(in) :: row  !! Row to fetch from.
+      integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
+      logical, intent(out) :: found  !! Flag indicating whether column was present in row.
+      real(wp), intent(out) :: ddata  !! D.p. element of column entry.
+      logical, intent(out) :: null  !! Flag indicating whether column entry was null.
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
@@ -34430,7 +35190,7 @@ contains
 
       return
       end associate
-      end procedure ekgd
+      end subroutine ekgd
 
       !>## Detailed Input
       !>
@@ -35028,7 +35788,7 @@ contains
       !>        line was corrected to indicate integer data type.
       !>
       !>-    SPICELIB Version 1.0.0, 23-OCT-1995 (NJB)
-      module procedure ekgi
+      module subroutine ekgi ( ctx, selidx, row, elment, idata, null, found )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -35042,6 +35802,13 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: elment  !! Index of element, within column entry, to fetch.
+      integer(ip), intent(in) :: row  !! Row to fetch from.
+      integer(ip), intent(in) :: selidx  !! Index of parent column in SELECT clause.
+      logical, intent(out) :: found  !! Flag indicating whether column was present in row.
+      integer(ip), intent(out) :: idata  !! Integer element of column entry.
+      logical, intent(out) :: null  !! Flag indicating whether column entry was null.
       integer(ip) :: i_1(1)  !! one-element copy of i (array argument)
       character(typlen), parameter :: chtype ( ntypes ) = &
          [ character(typlen) :: 'CHR', 'DP', 'INT', 'TIME' ]
@@ -35225,7 +35992,7 @@ contains
 
       return
       end associate
-      end procedure ekgi
+      end subroutine ekgi
 
       !>## Detailed Input
       !>
@@ -35307,7 +36074,7 @@ contains
       !>        Deleted unneeded declarations and code.
       !>
       !>-    Beta Version 1.0.0, 28-SEP-1995 (NJB)
-      module procedure zzekde01
+      module subroutine zzekde01 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -35316,6 +36083,11 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
       integer(ip) :: base
@@ -35439,7 +36211,7 @@ contains
       end if
 
       return
-      end procedure zzekde01
+      end subroutine zzekde01
 
       !>## Detailed Input
       !>
@@ -35522,7 +36294,7 @@ contains
       !>        Deleted unneeded declarations and code.
       !>
       !>-    Beta Version 1.0.0, 28-SEP-1995 (NJB)
-      module procedure zzekde02
+      module subroutine zzekde02 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -35531,6 +36303,11 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
       integer(ip) :: base
@@ -35654,7 +36431,7 @@ contains
       end if
 
       return
-      end procedure zzekde02
+      end subroutine zzekde02
 
       !>## Detailed Input
       !>
@@ -35746,7 +36523,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekde03
+      module subroutine zzekde03 ( ctx, handle, segdsc, coldsc, recptr )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -35754,6 +36531,11 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
       integer(ip) :: base
       integer(ip) :: datptr
@@ -35925,7 +36707,7 @@ contains
       end if
 
       return
-      end procedure zzekde03
+      end subroutine zzekde03
 
       !>## Detailed Input
       !>
@@ -36016,7 +36798,7 @@ contains
       !>        Removed redundant calls to CHKIN.
       !>
       !>-    Beta Version 1.0.0, 27-SEP-1995 (NJB)
-      module procedure zzekue01
+      module subroutine zzekue01 ( ctx, handle, segdsc, coldsc, recptr, ival, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -36025,6 +36807,13 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      integer(ip), intent(in) :: ival  !! Integer value.
+      logical, intent(in) :: isnull  !! Null flag.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
 
       integer(ip) :: datptr
@@ -36179,7 +36968,7 @@ contains
       end if
 
       return
-      end procedure zzekue01
+      end subroutine zzekue01
 
       !>## Detailed Input
       !>
@@ -36276,7 +37065,7 @@ contains
       !>     Non-SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzekue02
+      module subroutine zzekue02 ( ctx, handle, segdsc, coldsc, recptr, dval, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -36284,6 +37073,13 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      real(wp), intent(in) :: dval  !! Double precision value.
+      logical, intent(in) :: isnull  !! Null flag.
       integer(ip) :: datptr_1(1)  !! one-element copy of datptr (array argument)
       integer(ip) :: datptr
       integer(ip) :: idxtyp
@@ -36437,7 +37233,7 @@ contains
       end if
 
       return
-      end procedure zzekue02
+      end subroutine zzekue02
 
       !>## Detailed Input
       !>
@@ -36559,7 +37355,7 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB)
-      module procedure ekdelr
+      module subroutine ekdelr ( ctx, handle, segno, recno )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -36567,6 +37363,10 @@ contains
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(in) :: segno  !! Segment number.
+      integer(ip), intent(inout) :: recno  !! Record number. (PEPPER: changed by the routine, an input in SPICELIB's table)
 
       character(cnamsz) :: column
 
@@ -36752,7 +37552,7 @@ contains
       call dasudi ( ctx, handle,  mbase+1,  mbase+sdscsz,  segdsc )
 
       return
-      end procedure ekdelr
+      end subroutine ekdelr
 
       !>## Detailed Input
       !>
@@ -36911,12 +37711,20 @@ contains
       !>        Removed unbalanced call to CHKOUT.
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekuced
+      module subroutine ekuced ( ctx, handle, segno, recno, column, nvals, dvals, isnull )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record in which entry is to be updated.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(in) :: nvals  !! Number of values in new column entry.
+      real(wp), intent(in) :: dvals  ( * )  !! Double precision values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -37012,7 +37820,7 @@ contains
       end if
 
       return
-      end procedure ekuced
+      end subroutine ekuced
 
       !>## Detailed Input
       !>
@@ -37167,12 +37975,20 @@ contains
       !>        Removed unbalanced call to CHKOUT.
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekucei
+      module subroutine ekucei ( ctx, handle, segno, recno, column, nvals, ivals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record in which entry is to be updated.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(in) :: nvals  !! Number of values in new column entry.
+      integer(ip), intent(in) :: ivals  ( * )  !! Integer values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -37268,7 +38084,7 @@ contains
       end if
 
       return
-      end procedure ekucei
+      end subroutine ekucei
 
       !>## Detailed Input
       !>
@@ -37412,10 +38228,19 @@ contains
       !>        Updated entry #3 in $Exceptions section.
       !>
       !>-    SPICELIB Version 1.0.0, 15-MAY-1996 (BVS)
-      module procedure stcg01
+      module subroutine stcg01 ( ctx, index, ra, dec, rasig, decsig, catnum, sptype, vmag )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: rpd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: index  !! Star index.
+      real(wp), intent(out) :: ra  !! Right ascension in radians.
+      real(wp), intent(out) :: dec  !! Declination in radians.
+      real(wp), intent(out) :: rasig  !! Right ascension uncertainty in radians.
+      real(wp), intent(out) :: decsig  !! Declination uncertainty in radians.
+      integer(ip), intent(out) :: catnum  !! Catalog number.
+      character(*), intent(out) :: sptype  !! Spectral type.
+      real(wp), intent(out) :: vmag  !! Visual magnitude.
 
 !
 !     Local variables.
@@ -37505,7 +38330,7 @@ contains
       decsig = decsig * rpd
 
       return
-      end procedure stcg01
+      end subroutine stcg01
 
       !>## Detailed Input
       !>
@@ -37634,9 +38459,13 @@ contains
       !>        Balanced calls to CHKIN/CHKOUT.
       !>
       !>-    SPICELIB Version 1.0.0, 15-MAY-1996 (BVS)
-      module procedure stcl01
+      module subroutine stcl01 ( ctx, catfnm, tabnam, handle )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: catfnm  !! Catalog file name.
+      character(*), intent(out) :: tabnam  !! Catalog table name.
+      integer(ip), intent(out) :: handle  !! Catalog file handle.
 
       logical :: istyp1
       character(256) :: errmsg
@@ -37666,7 +38495,7 @@ contains
       call eklef  ( ctx, catfnm, handle )
 
       return
-      end procedure stcl01
+      end subroutine stcl01
 
       !>## Abstract
       !>
@@ -37806,7 +38635,7 @@ contains
       !>        bounds should never be out of range, but if they are, the
       !>        error diagnosis should be more graceful than a memory
       !>        violation.
-      module procedure zzekcchk
+      module subroutine zzekcchk ( ctx, query, eqryi, eqryc, ntab, tablst, alslst, base, error, errmsg, errptr )
       use pepper_kinds, only: ip
       use pepper_strings, only: repmc_inplace
       use pepper_inc_ekattdsc
@@ -37814,6 +38643,18 @@ contains
       use pepper_inc_ekcnamsz
       use pepper_inc_ekqlimit
       use pepper_inc_ekquery
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: query  !! Original query string.
+      integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
+      character(*), intent(inout) :: eqryc  !! Character component of query.
+      integer(ip), intent(in) :: ntab  !! Number of tables in FROM clause.
+      character(*), intent(in) :: tablst ( * )  !! List of table names.
+      character(*), intent(in) :: alslst ( * )  !! List of table aliases.
+      integer(ip), intent(in) :: base  !! Base address of table/column descriptor pair.
+      logical, intent(out) :: error  !! Error flag.
+      character(*), intent(out) :: errmsg  !! Error message.
+      integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
 
       character(cnamsz) :: column
       character(1) :: ctouch
@@ -38008,7 +38849,7 @@ contains
       eqryi ( base + eqvdsz + eqcidx )  =  colidx
 
       return
-      end procedure zzekcchk
+      end subroutine zzekcchk
 
       !>## Abstract
       !>
@@ -38144,7 +38985,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      module procedure zzekpcol
+      module subroutine zzekpcol ( ctx, qcol, eqryi, eqryc, table, alias, tabidx, column, colidx, error, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: ucase, repmc_inplace
       use pepper_inc_ekattdsc
@@ -38154,6 +38995,18 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_ektnamsz
       use pepper_inc_ektokn
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: qcol  !! Column name, possibly qualified.
+      integer(ip), intent(in) :: eqryi ( lbcell : * )  !! Integer component of query.
+      character(*), intent(in) :: eqryc  !! Character component of query.
+      character(*), intent(out) :: table  !! Name of table qualifying column.
+      character(*), intent(out) :: alias  !! Alias of table, if present.
+      integer(ip), intent(out) :: tabidx  !! Index of TABLE in FROM clause, if known.
+      character(*), intent(out) :: column  !! Name of QCOL, unqualified.
+      integer(ip), intent(out) :: colidx  !! Index of QCOL within its parent virtual table.
+      logical, intent(out) :: error  !! Error flag.
+      character(*), intent(out) :: errmsg  !! Parse error message.
 
       integer(ip), parameter :: long = 160
 
@@ -38415,7 +39268,7 @@ contains
       alias  =  alslst ( tabidx )
 
       return
-      end procedure zzekpcol
+      end subroutine zzekpcol
 
       !>## Abstract
       !>
@@ -38554,7 +39407,7 @@ contains
       !>     Saved variables
       !>
       !>     Initial values
-      module procedure zzeksemc
+      module subroutine zzeksemc ( ctx, query, eqryi, eqryc, error, errmsg, errptr )
       use pepper_kinds, only: ip
       use pepper_strings, only: repmc_inplace, repmi_inplace
       use pepper_inc_ekattdsc
@@ -38564,6 +39417,14 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: query  !! Original query.
+      integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
+      character(*), intent(inout) :: eqryc  !! Character component of query.
+      logical, intent(out) :: error  !! Error flag.
+      character(*), intent(out) :: errmsg  !! Semantic error message.
+      integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
       character(tnamsz) :: alias
       character(cnamsz) :: colnam
       character(tnamsz) :: lhstab
@@ -38870,7 +39731,7 @@ contains
 
       return
       end associate
-      end procedure zzeksemc
+      end subroutine zzeksemc
 
       !>## Abstract
       !>
@@ -38989,7 +39850,7 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 11-OCT-1995 (NJB)
-      module procedure zzektres
+      module subroutine zzektres ( ctx, query, eqryi, eqryc, eqryd, error, errmsg, errptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekbool
@@ -38999,6 +39860,15 @@ contains
       use pepper_inc_ekquery
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: query  !! Original query string.
+      integer(ip), intent(inout) :: eqryi  ( lbcell : * )  !! Integer component of query.
+      character(*), intent(inout) :: eqryc  !! Character component of query.
+      real(wp), intent(inout) :: eqryd  ( * )  !! Numeric component of query.
+      logical, intent(out) :: error  !! Error flag.
+      character(*), intent(out) :: errmsg  !! Error message.
+      integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
 
       integer(ip), parameter :: short = 32
 
@@ -39139,7 +40009,7 @@ contains
       call zzekweqi ( ctx,  'TIMES_RESOLVED',  itrue,  eqryi  )
 
       return
-      end procedure zzektres
+      end subroutine zzektres
 
       !>## Detailed Input
       !>
@@ -39230,7 +40100,7 @@ contains
       !>     SPICELIB functions
       !>
       !>     Standard SPICE error handling.
-      module procedure zzekue03
+      module subroutine zzekue03 ( ctx, handle, segdsc, coldsc, recptr, cval, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekbool
       use pepper_inc_ekcoldsc
@@ -39238,6 +40108,13 @@ contains
       use pepper_inc_ekrecptr
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! File handle.
+      integer(ip), intent(inout) :: segdsc ( sdscsz )  !! Segment descriptor. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: coldsc ( cdscsz )  !! Column descriptor.
+      integer(ip), intent(in) :: recptr  !! Record pointer.
+      character(*), intent(in) :: cval  !! Character string value.
+      logical, intent(in) :: isnull  !! Null flag.
       if ( ctx%failed() ) return
 
 !
@@ -39254,7 +40131,7 @@ contains
       call zzekad03 ( ctx, handle, segdsc, coldsc, recptr, cval, isnull )
 
       return
-      end procedure zzekue03
+      end subroutine zzekue03
 
       !>## Detailed Input
       !>
@@ -39648,12 +40525,20 @@ contains
       !>        Removed unbalanced call to CHKOUT.
       !>
       !>-    SPICELIB Version 1.0.0, 26-SEP-1995 (NJB)
-      module procedure ekucec
+      module subroutine ekucec ( ctx, handle, segno, recno, column, nvals, cvals, isnull )
       use pepper_kinds, only: ip
       use pepper_inc_ekcoldsc
       use pepper_inc_eksegdsc
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: handle  !! Handle attached to EK file.
+      integer(ip), intent(inout) :: segno  !! Index of segment containing record. (PEPPER: changed by the routine, an input in SPICELIB's table)
+      integer(ip), intent(in) :: recno  !! Record in which entry is to be updated.
+      character(*), intent(in) :: column  !! Column name.
+      integer(ip), intent(in) :: nvals  !! Number of values in new column entry.
+      character(*), intent(in) :: cvals  ( * )  !! Character string values to add to column.
+      logical, intent(in) :: isnull  !! Flag indicating whether column entry is null.
 
       integer(ip) :: coldsc ( cdscsz )
       integer(ip) :: class
@@ -39749,7 +40634,7 @@ contains
       end if
 
       return
-      end procedure ekucec
+      end subroutine ekucec
 
       !>## Abstract
       !>
@@ -39864,13 +40749,21 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 1.0.0, 17-OCT-1995 (NJB)
-      module procedure zzeknres
+      module subroutine zzeknres ( ctx, query, eqryi, eqryc, error, errmsg, errptr )
       use pepper_kinds, only: ip
       use pepper_strings, only: repmc_inplace
       use pepper_inc_ekbool
       use pepper_inc_ekqlimit
       use pepper_inc_ekquery
       use pepper_inc_ektnamsz
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbcell = -5
+      character(*), intent(in) :: query  !! Original query string.
+      integer(ip), intent(inout) :: eqryi ( lbcell : * )  !! Integer component of query.
+      character(*), intent(inout) :: eqryc  !! Character component of query.
+      logical, intent(out) :: error  !! Error flag.
+      character(*), intent(out) :: errmsg  !! Error message.
+      integer(ip), intent(out) :: errptr  !! Position in query where error was detected.
 
 
       character(tnamsz), allocatable :: alias ( : )
@@ -40145,7 +41038,7 @@ contains
 !
       call zzekweqi ( ctx, 'NAMES_RESOLVED',  itrue,  eqryi  )
 
-      end procedure zzeknres
+      end subroutine zzeknres
 
       !>## Detailed Input
       !>
@@ -40780,7 +41673,7 @@ contains
       !>        corrected to 1.0.0.
       !>
       !>-    SPICELIB Version 1.0.0, 24-OCT-1995 (NJB)
-      module procedure ekfind
+      module subroutine ekfind ( ctx, query, nmrows, error, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekquery
       use pepper_inc_ekqlimit
@@ -40788,6 +41681,11 @@ contains
       use pepper_inc_ekopcd
       use pepper_inc_ekcnamsz
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: query  !! Query specifying data to be found.
+      integer(ip), intent(out) :: nmrows  !! Number of matching rows.
+      logical, intent(out) :: error  !! Flag indicating whether query parsed correctly.
+      character(*), intent(out) :: errmsg  !! Parse error description.
 
       integer(ip) :: room
 
@@ -40885,7 +41783,7 @@ contains
       call eksrch ( ctx, eqryi, eqryc, eqryd, nmrows, error, errmsg )
 
       return
-      end procedure ekfind
+      end subroutine ekfind
 
       !>## Detailed Input
       !>
@@ -40962,12 +41860,20 @@ contains
       !>        Corrected typos in comments.
       !>
       !>-    Beta Version 4.0.0, 10-OCT-1995 (NJB)
-      module procedure zzekencd
+      module subroutine zzekencd ( ctx, query, eqryi, eqryc, eqryd, error, errmsg, errptr )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekopcd
       use pepper_inc_ekqlimit
       use pepper_inc_ekquery
       use pepper_inc_ektype
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: query  !! Query specifying events to be found.
+      integer(ip), allocatable, intent(inout) :: eqryi ( : )  !! Integer component of encoded query. PEPPER: allocatable, lower bound LBCELL; grows as the query is encoded.
+      character(*), intent(out) :: eqryc  !! Character component of encoded query.
+      real(wp), intent(out) :: eqryd  ( * )  !! Numeric component of encoded query.
+      logical, intent(out) :: error  !! Flag indicating whether query parsed correctly.
+      character(*), intent(out) :: errmsg  !! Parse error description.
+      integer(ip), intent(out) :: errptr  !! Error pointer.
       integer(ip) :: room
       integer(ip) :: dsize
 
@@ -41059,7 +41965,7 @@ contains
       if ( error ) return
 
       return
-      end procedure zzekencd
+      end subroutine zzekencd
 
       !>## Detailed Input
       !>
@@ -41547,7 +42453,7 @@ contains
       !>        code example based on existing fragment.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB)
-      module procedure ekpsel
+      module subroutine ekpsel ( ctx, query, n, xbegs, xends, xtypes, xclass, tabs, cols, error, errmsg )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ekattdsc
       use pepper_inc_ekcnamsz
@@ -41556,6 +42462,17 @@ contains
       use pepper_inc_ektnamsz
       use pepper_inc_ektype
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: query  !! EK query.
+      integer(ip), intent(out) :: n  !! Number of items in SELECT clause of QUERY.
+      integer(ip), intent(out) :: xbegs  ( * )  !! Begin positions of expressions in SELECT clause.
+      integer(ip), intent(out) :: xends  ( * )  !! End positions of expressions in SELECT clause.
+      character(*), intent(out) :: xtypes ( * )  !! Data types of expressions.
+      character(*), intent(out) :: xclass ( * )  !! Classes of expressions.
+      character(*), intent(out) :: tabs   ( * )  !! Names of tables qualifying SELECT columns.
+      character(*), intent(out) :: cols   ( * )  !! Names of columns in SELECT clause of QUERY.
+      logical, intent(out) :: error  !! Error flag.
+      character(*), intent(out) :: errmsg  !! Parse error message.
 
       integer(ip) :: room
 
@@ -41639,7 +42556,7 @@ contains
       end do
 
       return
-      end procedure ekpsel
+      end subroutine ekpsel
 
       !>## Detailed Input
       !>
@@ -41815,11 +42732,18 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 15-MAY-1996 (BVS)
-      module procedure stcf01
+      module subroutine stcf01 ( ctx, catnam, westra, eastra, sthdec, nthdec, nstars )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: dpr
       use pepper_strings, only: repmc_inplace, repmd_inplace
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: catnam  !! Catalog table name.
+      real(wp), intent(in) :: westra  !! Western most right ascension in radians.
+      real(wp), intent(in) :: eastra  !! Eastern most right ascension in radians.
+      real(wp), intent(in) :: sthdec  !! Southern most declination in radians.
+      real(wp), intent(in) :: nthdec  !! Northern most declination in radians.
+      integer(ip), intent(out) :: nstars  !! Number of stars found.
 
 !
 !     Local parameters.
@@ -41908,7 +42832,7 @@ contains
       end if
 
       return
-      end procedure stcf01
+      end subroutine stcf01
 
    !> PEPPER: initialize EKQMGR's five linked list pools (the file table,
    !> segment table, column descriptor table, column attribute table and

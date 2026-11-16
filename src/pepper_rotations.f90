@@ -513,9 +513,13 @@ contains
       !>     care of the funky way the indices (other than the input) were
       !>     obtained via the MOD function. It works but isn't as clear
       !>     (or fast) as just reading the axes from data.
-      module procedure rotate
+      module subroutine rotate ( ctx, angle, iaxis, mout )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: angle  !! Angle of rotation (radians).
+      integer(ip), intent(in) :: iaxis  !! Axis of rotation (X=1, Y=2, Z=3).
+      real(wp), intent(out) :: mout  ( 3,3 )  !! Resulting rotation matrix [ANGLE] IAXIS
 
       real(wp) :: s
       real(wp) :: c
@@ -556,7 +560,7 @@ contains
       mout(i2,i3) = s
       mout(i3,i3) = c
       return
-      end procedure rotate
+      end subroutine rotate
 
       !>## Detailed Input
       !>
@@ -668,9 +672,14 @@ contains
       !>     care of the funky way the indices (other than the input) were
       !>     obtained via the MOD function. It works but isn't as clear
       !>     (or fast) as just reading the axes from data.
-      module procedure rotmat
+      module subroutine rotmat ( ctx, m1, angle, iaxis, mout )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: m1    ( 3,3 )  !! Matrix to be rotated.
+      real(wp), intent(in) :: angle  !! Angle of rotation (radians).
+      integer(ip), intent(in) :: iaxis  !! Axis of rotation (X=1, Y=2, Z=3).
+      real(wp), intent(out) :: mout  ( 3,3 )  !! Resulting rotated matrix [ANGLE]      * M1 IAXIS
 
       real(wp) :: s
       real(wp) :: c
@@ -714,7 +723,7 @@ contains
 !
       mout = prodm
       return
-      end procedure rotmat
+      end subroutine rotmat
 
       !>## Detailed Input
       !>
@@ -1287,10 +1296,18 @@ contains
       !>       The phrase `first and third' was changed to `first or third'
       !>       in the $Particulars section, where the criterion for the
       !>       existence of an Euler angle factorization is stated.
-      module procedure m2eul
+      module subroutine m2eul ( ctx, r, axis3, axis2, axis1, angle3, angle2, angle1 )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mtxm, mxm, vhat
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: r      ( 3, 3 )  !! A rotation matrix to be factored.
+      integer(ip), intent(in) :: axis3  !! Numbers of third, second, and first rotation axes.
+      integer(ip), intent(in) :: axis2  !! Numbers of third, second, and first rotation axes.
+      integer(ip), intent(in) :: axis1  !! Numbers of third, second, and first rotation axes.
+      real(wp), intent(out) :: angle3  !! Third, second, and first Euler angles, in radians.
+      real(wp), intent(out) :: angle2  !! Third, second, and first Euler angles, in radians.
+      real(wp), intent(out) :: angle1  !! Third, second, and first Euler angles, in radians.
 
 !
 !     NTOL and DETOL are used to determine whether R is a rotation
@@ -1671,7 +1688,7 @@ contains
       end if
 
       return
-      end procedure m2eul
+      end subroutine m2eul
 
       !>## Detailed Input
       !>
@@ -2031,9 +2048,17 @@ contains
       !>        is explained at mind-numbing length. An example was
       !>        added that shows a specific set of inputs and the
       !>        resulting output matrix.
-      module procedure eul2m
+      module subroutine eul2m ( ctx, angle3, angle2, angle1, axis3, axis2, axis1, r )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: angle3  !! Rotation angles about third, second, and first rotation axes (radians).
+      real(wp), intent(in) :: angle2  !! Rotation angles about third, second, and first rotation axes (radians).
+      real(wp), intent(in) :: angle1  !! Rotation angles about third, second, and first rotation axes (radians).
+      integer(ip), intent(in) :: axis3  !! Axis numbers of third, second, and first rotation axes.
+      integer(ip), intent(in) :: axis2  !! Axis numbers of third, second, and first rotation axes.
+      integer(ip), intent(in) :: axis1  !! Axis numbers of third, second, and first rotation axes.
+      real(wp), intent(out) :: r ( 3, 3 )  !! Product of the 3 rotations.
 
       real(wp) :: r1    ( 3, 3 )
       logical :: badax
@@ -2070,7 +2095,7 @@ contains
       call rotmat ( ctx, r1,  angle3,  axis3,  r  )
 
       return
-      end procedure eul2m
+      end subroutine eul2m
 
       !>## Detailed Input
       !>
@@ -2488,10 +2513,17 @@ contains
       !>        or third.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JUL-1995 (WLT)
-      module procedure xf2eul
+      module subroutine xf2eul ( ctx, xform, axisa, axisb, axisc, eulang, unique )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxmt, mxv
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: xform  ( 6, 6 )  !! A state transformation matrix.
+      integer(ip), intent(in) :: axisa  !! Axis A of the Euler angle factorization.
+      integer(ip), intent(in) :: axisb  !! Axis B of the Euler angle factorization.
+      integer(ip), intent(in) :: axisc  !! Axis C of the Euler angle factorization.
+      real(wp), intent(out) :: eulang ( 6 )  !! An array of Euler angles and their derivatives.
+      logical, intent(out) :: unique  !! Indicates if EULANG is a unique representation.
       integer(ip), parameter :: dalpha = 4
       integer(ip), parameter :: dbeta = 5
       integer(ip), parameter :: dgamma = 6
@@ -2672,7 +2704,7 @@ contains
       call mxv ( solutn, omega, eulang(4) )
 
       return
-      end procedure xf2eul
+      end subroutine xf2eul
 
       !>## Detailed Input
       !>
@@ -2979,10 +3011,16 @@ contains
       !>        and third axes was removed.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JUL-1995 (WLT)
-      module procedure eul2xf
+      module subroutine eul2xf ( ctx, eulang, axisa, axisb, axisc, xform )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxm, mxv
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(out) :: xform  ( 6, 6 )  !! A state transformation matrix.
+      integer(ip), intent(in) :: axisa  !! Axis A of the Euler angle factorization.
+      integer(ip), intent(in) :: axisb  !! Axis B of the Euler angle factorization.
+      integer(ip), intent(in) :: axisc  !! Axis C of the Euler angle factorization.
+      real(wp), intent(in) :: eulang ( 6 )  !! An array of Euler angles and their derivatives.
       real(wp) :: ca
       real(wp) :: d
       real(wp), parameter :: delta  ( 3, 3 ) = reshape ( &
@@ -3178,7 +3216,7 @@ contains
       end do
 
       return
-      end procedure eul2xf
+      end subroutine eul2xf
 
       !>## Detailed Input
       !>
@@ -3300,10 +3338,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WMO) (WLT)
-      module procedure twovec
+      module subroutine twovec ( ctx, axdef, indexa, plndef, indexp, mout )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ucrss, vhat
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: axdef  (   3 )  !! Vector defining a principal axis.
+      integer(ip), intent(in) :: indexa  !! Principal axis number of AXDEF (X=1, Y=2, Z=3).
+      real(wp), intent(in) :: plndef (   3 )  !! Vector defining (with AXDEF) a principal plane.
+      integer(ip), intent(in) :: indexp  !! Second axis number (with INDEXA) of principal plane.
+      real(wp), intent(out) :: mout   ( 3,3 )  !! Output rotation matrix.
 
       real(wp) :: mtemp  ( 3, 3 )
 
@@ -3400,7 +3444,7 @@ contains
       mout = mtemp
 
       return
-      end procedure twovec
+      end subroutine twovec
 
       !>## Abstract
       !>
@@ -3649,9 +3693,15 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local Variables
-      module procedure zztwovxf
+      module subroutine zztwovxf ( ctx, axdef, indexa, plndef, indexp, xform )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: ducrss, dvhat
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: axdef  ( 6 )  !! State defining a principal axis.
+      integer(ip), intent(in) :: indexa  !! Principal axis number of AXDEF (X=1, Y=2, Z=3).
+      real(wp), intent(in) :: plndef ( 6 )  !! State defining (with AXDEF) a principal plane.
+      integer(ip), intent(in) :: indexp  !! Second axis number (with INDEXA) of principal plane.
+      real(wp), intent(out) :: xform  ( 6, 6 )  !! Output state transformation matrix.
       real(wp) :: tmpsta ( 6 )
 
       integer(ip) :: i
@@ -3773,7 +3823,7 @@ contains
       end if
 
       return
-      end procedure zztwovxf
+      end subroutine zztwovxf
 
       !>## Detailed Input
       !>
@@ -3978,12 +4028,16 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-      module procedure irfrot
+      module subroutine irfrot ( ctx, refa, refb, rotab )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxm, mxmt
       use pepper_strings, only: nparsd, nparsi, nthwd, wdcnt
       use pepper_inc_ninert
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: refa  !! Indices of target reference frames (A,B).
+      integer(ip), intent(in) :: refb  !! Indices of target reference frames (A,B).
+      real(wp), intent(out) :: rotab    ( 3,3 )  !! Rotation from frame A to frame B.
       integer(ip), parameter :: maxf = ninert
       character(16), parameter :: bases ( maxf ) = [ character(16) :: &
          'J2000',&
@@ -4162,7 +4216,7 @@ contains
 
       return
       end associate
-      end procedure irfrot
+      end subroutine irfrot
 
       !>## Detailed Input
       !>
@@ -4313,11 +4367,14 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-      module procedure irfnum
+      module subroutine irfnum ( ctx, name, index )
       use pepper_kinds, only: ip, wp
       use pepper_strings, only: eqstr, esrchc
       use pepper_inc_ninert
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: name  !! Name of standard inertial reference frame.
+      integer(ip), intent(out) :: index  !! Index of frame.
       integer(ip), parameter :: maxf = ninert
       character(16), parameter :: bases ( maxf ) = [ character(16) :: &
          'J2000',&
@@ -4435,7 +4492,7 @@ contains
 
       return
       end associate
-      end procedure irfnum
+      end subroutine irfnum
 
       !>## Detailed Input
       !>
@@ -4577,10 +4634,13 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-      module procedure irfnam
+      module subroutine irfnam ( ctx, index, name )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ninert
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(out) :: name  !! Name of frame.
+      integer(ip), intent(in) :: index  !! Index of standard inertial reference frame.
       integer(ip), parameter :: maxf = ninert
       character(16), parameter :: bases ( maxf ) = [ character(16) :: &
          'J2000',&
@@ -4669,7 +4729,7 @@ contains
       end if
 
       return
-      end procedure irfnam
+      end subroutine irfnam
 
       !>## Detailed Input
       !>
@@ -4822,10 +4882,12 @@ contains
       !>        following the header.
       !>
       !>-    SPICELIB Version 1.0.0, 31-JAN-1990 (WLT) (IMU)
-      module procedure irfdef
+      module subroutine irfdef ( ctx, index )
       use pepper_kinds, only: ip, wp
       use pepper_inc_ninert
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: index  !! Index of default frame.
       integer(ip), parameter :: maxf = ninert
       character(16), parameter :: bases ( maxf ) = [ character(16) :: &
          'J2000',&
@@ -4925,7 +4987,7 @@ contains
 
       return
       end associate
-      end procedure irfdef
+      end subroutine irfdef
 
       !>## Abstract
       !>
@@ -5013,10 +5075,14 @@ contains
       !>        rate be radians/sec.
       !>
       !>-    Beta Version 1.0.0, 29-SEP-1996 (NJB)
-      module procedure zzmobliq
+      module subroutine zzmobliq ( ctx, et, mob, dmob )
       use pepper_kinds, only: wp
       use pepper_constants, only: jyear, rpd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris time, in seconds past J2000.
+      real(wp), intent(out) :: mob  !! Mean obliquity of the ecliptic at ET.
+      real(wp), intent(out) :: dmob  !! Time derivative of the mean obliquity.
       real(wp), parameter :: c0 = 84381.448_wp
       real(wp), parameter :: c1 = -46.8150_wp
       real(wp), parameter :: c2 = -0.00059_wp
@@ -5049,7 +5115,7 @@ contains
 
       dmob = ( rad / 3.6e3_wp ) * (  c1 + t*( 2*c2 + t*3*c3 )  ) * persec
       end associate
-      end procedure zzmobliq
+      end subroutine zzmobliq
 
       !>## Detailed Input
       !>
@@ -5201,10 +5267,13 @@ contains
       !>
       !>     Periods: 35.0, 13.6, 25.4, 14.2, 9.5, 14.2, 34.7, 32.8, 7.1, 4.8,
       !>              27.3
-      module procedure zzwahr
+      module subroutine zzwahr ( ctx, et, dvnut )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: pi, spd, twopi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris Time for which nutations are sought
+      real(wp), intent(out) :: dvnut(4)  !! Nutation angles and their rates.
       integer(ip), parameter :: nterm = 106
       real(wp), parameter :: zero = 0.0_wp
       real(wp), parameter :: rev = 360.0_wp
@@ -5566,7 +5635,7 @@ contains
 
       return
       end associate
-      end procedure zzwahr
+      end subroutine zzwahr
 
       !>## Abstract
       !>
@@ -5642,9 +5711,12 @@ contains
       !>     SPICELIB functions
       !>
       !>     Local variables
-      module procedure zzenut80
+      module subroutine zzenut80 ( ctx, et, nutxf )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris time, seconds past J2000.
+      real(wp), intent(out) :: nutxf  ( 6, 6 )  !! Nutation transformation matrix.
       real(wp) :: dmob
       real(wp) :: dvnut  ( 4 )
       real(wp) :: eulang ( 6 )
@@ -5710,7 +5782,7 @@ contains
       call eul2xf ( ctx, eulang, 1, 3, 1, nutxf )
 
       return
-      end procedure zzenut80
+      end subroutine zzenut80
 
       !>## Abstract
       !>
@@ -5818,10 +5890,13 @@ contains
       !>        to "1976."
       !>
       !>-    SPICELIB Version 2.0.0, 18-DEC-2004 (NJB)
-      module procedure zzeprc76
+      module subroutine zzeprc76 ( ctx, et, precxf )
       use pepper_kinds, only: wp
       use pepper_constants, only: jyear, rpd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: et  !! Ephemeris time, in seconds past J2000 TDB.
+      real(wp), intent(out) :: precxf ( 6, 6 )  !! Precession state transformation matrix at ET.
       real(wp), parameter :: zeta1 = 2306.2181_wp
 
       real(wp), parameter :: zeta2 = 0.30188_wp
@@ -5886,7 +5961,7 @@ contains
 
       call eul2xf  ( ctx, eulang, 3, 2, 3, precxf )
 
-      end procedure zzeprc76
+      end subroutine zzeprc76
 
       !>## Detailed Input
       !>
@@ -6000,10 +6075,19 @@ contains
       !>## Version
       !>
       !>-    SPICELIB Version 1.0.0, 30-SEP-2021 (EDW)
-      module procedure zzdnpt
+      module subroutine zzdnpt ( ctx, state, nearp, a, b, c, dnear, dalt, found )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: mxv, unorm, vdot, vtmv
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: state ( 6 )  !! State of an object in body-fixed coordinates.
+      real(wp), intent(in) :: nearp ( 3 )  !! Near point on ellipsoid.
+      real(wp), intent(in) :: a  !! Length of semi-axis parallel to x-axis.
+      real(wp), intent(in) :: b  !! Length of semi-axis parallel to y-axis.
+      real(wp), intent(in) :: c  !! Length on semi-axis parallel to z-axis.
+      real(wp), intent(out) :: dnear ( 3 )  !! Derivative of the nearest point on the ellipsoid.
+      real(wp), intent(out) :: dalt  !! Derivative of altitude.
+      logical, intent(out) :: found  !! Tells whether DNEAR is degenerate.
       real(wp) :: denom
       real(wp) :: dterm  ( 3 )
       real(wp) :: grad   ( 3 )
@@ -6217,7 +6301,7 @@ contains
 
       return
       end associate
-      end procedure zzdnpt
+      end subroutine zzdnpt
 
       !>## Detailed Input
       !>
@@ -6605,9 +6689,17 @@ contains
       !>        could be determined. This error has been corrected.
       !>
       !>-    SPICELIB Version 1.0.0, 15-JUN-1995 (WLT)
-      module procedure dnearp
+      module subroutine dnearp ( ctx, state, a, b, c, dnear, dalt, found )
       use pepper_kinds, only: wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: state ( 6 )  !! State of an object in body-fixed coordinates.
+      real(wp), intent(in) :: a  !! Length of semi-axis parallel to X-axis.
+      real(wp), intent(in) :: b  !! Length of semi-axis parallel to Y-axis.
+      real(wp), intent(in) :: c  !! Length on semi-axis parallel to Z-axis.
+      real(wp), intent(out) :: dnear ( 6 )  !! State of the nearest point on the ellipsoid.
+      real(wp), intent(out) :: dalt  ( 2 )  !! Altitude and derivative of altitude.
+      logical, intent(out) :: found  !! Flag that indicates whether DNEAR is degenerate.
 
 !
 !     Standard SPICE error handling.
@@ -6648,7 +6740,7 @@ contains
       end if
 
       return
-      end procedure dnearp
+      end subroutine dnearp
 
       !>## Abstract
       !>
@@ -6777,11 +6869,18 @@ contains
       !>        Minor updates were made to the inline documentation.
       !>
       !>-    SPICELIB Version 1.0.0, 17-JAN-2008 (NJB)
-      module procedure zzstelab
+      module subroutine zzstelab ( ctx, xmit, accobs, vobs, starg, scorr, dscorr )
       use pepper_kinds, only: ip, wp
       use pepper_constants, only: clight
       use pepper_math, only: dvhat, vdot, vhat, vnorm, vperp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      logical, intent(in) :: xmit  !! Reception/transmission flag.
+      real(wp), intent(in) :: accobs ( 3 )  !! Observer acceleration relative to SSB.
+      real(wp), intent(in) :: vobs   ( 3 )  !! Observer velocity relative to to SSB.
+      real(wp), intent(in) :: starg  ( 6 )  !! State of target relative to observer.
+      real(wp), intent(out) :: scorr  ( 3 )  !! Stellar aberration correction for position.
+      real(wp), intent(out) :: dscorr ( 3 )  !! Stellar aberration correction for velocity.
 
 !
 !     Note for the maintenance programmer
@@ -7162,6 +7261,6 @@ contains
 !     At this point the correction offset SCORR and its derivative
 !     with respect to time DSCORR are both set.
 !
-      end procedure zzstelab
+      end subroutine zzstelab
 
 end submodule pepper_rotations

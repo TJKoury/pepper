@@ -123,10 +123,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 09-SEP-2005 (NJB) (HAN) (WLT) (IMU)
-      module procedure cyacip
+      module subroutine cyacip ( ctx, nelt, dir, ncycle, array )
       use pepper_kinds, only: ip
       use pepper_math, only: gcd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nelt  !! Number of elements.
+      character(1), intent(in) :: dir  !! Direction to cycle: 'F' or 'B'.
+      integer(ip), intent(in) :: ncycle  !! Number of times to cycle.
+      character(*), intent(inout) :: array    ( * )  !! Array to be cycled/cycled array.
 
       integer(ip) :: outlen
       integer(ip) :: widest
@@ -254,7 +259,7 @@ contains
       end if
 
       return
-      end procedure cyacip
+      end subroutine cyacip
 
       !>## Detailed Input
       !>
@@ -354,10 +359,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 09-SEP-2005 (NJB) (HAN) (WLT) (IMU)
-      module procedure cyadip
+      module subroutine cyadip ( ctx, nelt, dir, ncycle, array )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: gcd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nelt  !! Number of elements.
+      character(1), intent(in) :: dir  !! Direction to cycle: 'F' or 'B'.
+      integer(ip), intent(in) :: ncycle  !! Number of times to cycle.
+      real(wp), intent(inout) :: array    ( * )  !! Array to be cycled/cycled array.
 
       real(wp) :: last
       real(wp) :: temp
@@ -444,7 +454,7 @@ contains
       end do
 
       return
-      end procedure cyadip
+      end subroutine cyadip
 
       !>## Detailed Input
       !>
@@ -544,10 +554,15 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 09-SEP-2005 (NJB) (HAN) (WLT) (IMU)
-      module procedure cyaiip
+      module subroutine cyaiip ( ctx, nelt, dir, ncycle, array )
       use pepper_kinds, only: ip
       use pepper_math, only: gcd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: nelt  !! Number of elements.
+      character(1), intent(in) :: dir  !! Direction to cycle: 'F' or 'B'.
+      integer(ip), intent(in) :: ncycle  !! Number of times to cycle.
+      integer(ip), intent(inout) :: array    ( * )  !! Array to be cycled/cycled array.
 
       integer(ip) :: last
       integer(ip) :: temp
@@ -634,7 +649,7 @@ contains
       end do
 
       return
-      end procedure cyaiip
+      end subroutine cyaiip
 
       !>## Detailed Input
       !>
@@ -765,10 +780,16 @@ contains
       !>         recognized.)
       !>
       !>         The "Exceptions" section was filled out in more detail.
-      module procedure cyclac
+      module subroutine cyclac ( ctx, array, nelt, dir, ncycle, out )
       use pepper_kinds, only: ip
       use pepper_math, only: gcd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: array    ( * )  !! Input array.
+      integer(ip), intent(in) :: nelt  !! Number of elements.
+      character(1), intent(in) :: dir  !! Direction to cycle: 'F' or 'B'.
+      integer(ip), intent(in) :: ncycle  !! Number of times to cycle.
+      character(*), intent(out) :: out      ( * )  !! Cycled array.
 
       integer(ip) :: outlen
       integer(ip) :: widest
@@ -901,7 +922,7 @@ contains
       end if
 
       return
-      end procedure cyclac
+      end subroutine cyclac
 
       !>## Detailed Input
       !>
@@ -1027,10 +1048,16 @@ contains
       !>         recognized.)
       !>
       !>         The "Exceptions" section was filled out in more detail.
-      module procedure cyclad
+      module subroutine cyclad ( ctx, array, nelt, dir, ncycle, out )
       use pepper_kinds, only: ip, wp
       use pepper_math, only: gcd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: array    ( * )  !! Input array.
+      integer(ip), intent(in) :: nelt  !! Number of elements.
+      character(1), intent(in) :: dir  !! Direction to cycle: 'F' or 'B'.
+      integer(ip), intent(in) :: ncycle  !! Number of times to cycle.
+      real(wp), intent(out) :: out      ( * )  !! Cycled array.
 
       real(wp) :: last
       real(wp) :: temp
@@ -1117,7 +1144,7 @@ contains
       end do
 
       return
-      end procedure cyclad
+      end subroutine cyclad
 
       !>## Detailed Input
       !>
@@ -1243,10 +1270,16 @@ contains
       !>         recognized.)
       !>
       !>         The "Exceptions" section was filled out in more detail.
-      module procedure cyclai
+      module subroutine cyclai ( ctx, array, nelt, dir, ncycle, out )
       use pepper_kinds, only: ip
       use pepper_math, only: gcd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: array    ( * )  !! Input array.
+      integer(ip), intent(in) :: nelt  !! Number of elements.
+      character(1), intent(in) :: dir  !! Direction to cycle: 'F' or 'B'.
+      integer(ip), intent(in) :: ncycle  !! Number of times to cycle.
+      integer(ip), intent(out) :: out      ( * )  !! Cycled array.
 
       integer(ip) :: last
       integer(ip) :: temp
@@ -1333,7 +1366,7 @@ contains
       end do
 
       return
-      end procedure cyclai
+      end subroutine cyclai
 
       !>## Detailed Input
       !>
@@ -1465,9 +1498,15 @@ contains
       !>         the routine. In this case, the only valid location at which
       !>         to insert is 1. If it is not 1, an error is signaled
       !>         when the location is checked.
-      module procedure inslac
+      module subroutine inslac ( ctx, elts, ne, loc, array, na )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: elts  ( * )  !! Elements to be inserted.
+      integer(ip), intent(in) :: ne  !! Number of elements to be inserted.
+      integer(ip), intent(in) :: loc  !! Location of the first inserted element.
+      character(*), intent(inout) :: array ( * )  !! Input/output array.
+      integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
 
 !
 !     Other functions
@@ -1529,7 +1568,7 @@ contains
       end if
 
       return
-      end procedure inslac
+      end subroutine inslac
 
       !>## Detailed Input
       !>
@@ -1659,9 +1698,15 @@ contains
       !>         the routine. In this case, the only valid location at which
       !>         to insert is 1. If it is not 1, an error is signaled
       !>         when the location is checked.
-      module procedure inslad
+      module subroutine inslad ( ctx, elts, ne, loc, array, na )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: elts  ( * )  !! Elements to be inserted.
+      integer(ip), intent(in) :: ne  !! Number of elements to be inserted.
+      integer(ip), intent(in) :: loc  !! Location of the first inserted element.
+      real(wp), intent(inout) :: array ( * )  !! Input/output array.
+      integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
 
 !
 !     Other functions
@@ -1723,7 +1768,7 @@ contains
       end if
 
       return
-      end procedure inslad
+      end subroutine inslad
 
       !>## Detailed Input
       !>
@@ -1853,9 +1898,15 @@ contains
       !>         the routine. In this case, the only valid location at which
       !>         to insert is 1. If it is not 1, an error is signaled
       !>         when the location is checked.
-      module procedure inslai
+      module subroutine inslai ( ctx, elts, ne, loc, array, na )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: elts  ( * )  !! Elements to be inserted.
+      integer(ip), intent(in) :: ne  !! Number of elements to be inserted.
+      integer(ip), intent(in) :: loc  !! Location of the first inserted element.
+      integer(ip), intent(inout) :: array ( * )  !! Input/output array.
+      integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
 
 !
 !     Other functions
@@ -1917,7 +1968,7 @@ contains
       end if
 
       return
-      end procedure inslai
+      end subroutine inslai
 
       !>## Detailed Input
       !>
@@ -2045,9 +2096,14 @@ contains
       !>         number of elements can be removed, an error is signaled.
       !>         In the old version, only those elements that could be
       !>         removed were removed, and no error was signaled.
-      module procedure remlac
+      module subroutine remlac ( ctx, ne, loc, array, na )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ne  !! Number of elements to be removed.
+      integer(ip), intent(in) :: loc  !! Location of the first removed element.
+      character(*), intent(inout) :: array ( * )  !! Input/output array.
+      integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
 
       integer(ip) :: i
 
@@ -2101,7 +2157,7 @@ contains
       end if
 
       return
-      end procedure remlac
+      end subroutine remlac
 
       !>## Detailed Input
       !>
@@ -2230,9 +2286,14 @@ contains
       !>         number of elements can be removed, an error is signaled.
       !>         In the old version, only those elements that could be
       !>         removed were removed, and no error was signaled.
-      module procedure remlad
+      module subroutine remlad ( ctx, ne, loc, array, na )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ne  !! Number of elements to be removed.
+      integer(ip), intent(in) :: loc  !! Location of the first removed element.
+      real(wp), intent(inout) :: array ( * )  !! Input/output array.
+      integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
 
       integer(ip) :: i
 
@@ -2286,7 +2347,7 @@ contains
       end if
 
       return
-      end procedure remlad
+      end subroutine remlad
 
       !>## Detailed Input
       !>
@@ -2415,9 +2476,14 @@ contains
       !>         number of elements can be removed, an error is signaled.
       !>         In the old version, only those elements that could be
       !>         removed were removed, and no error was signaled.
-      module procedure remlai
+      module subroutine remlai ( ctx, ne, loc, array, na )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: ne  !! Number of elements to be removed.
+      integer(ip), intent(in) :: loc  !! Location of the first removed element.
+      integer(ip), intent(inout) :: array ( * )  !! Input/output array.
+      integer(ip), intent(inout) :: na  !! Number of elements in the input/output array.
 
       integer(ip) :: i
 
@@ -2471,7 +2537,7 @@ contains
       end if
 
       return
-      end procedure remlai
+      end subroutine remlai
 
       !>## Detailed Input
       !>
@@ -2654,10 +2720,16 @@ contains
       !>
       !>        More examples were added to the "Examples" section, and
       !>        the long error messages were revised.
-      module procedure swapac
+      module subroutine swapac ( ctx, n, locn, m, locm, array )
       use pepper_kinds, only: ip
       use pepper_arrays, only: swapc
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of elements in the first group.
+      integer(ip), intent(in) :: locn  !! Location of the first group.
+      integer(ip), intent(in) :: m  !! Number of elements in the second group.
+      integer(ip), intent(in) :: locm  !! Location of the second group.
+      character(*), intent(inout) :: array  ( * )  !! The array.
 
       integer(ip) :: nn
       integer(ip) :: ln
@@ -2856,7 +2928,7 @@ contains
       end if
 
       return
-      end procedure swapac
+      end subroutine swapac
 
       !>## Detailed Input
       !>
@@ -3040,10 +3112,16 @@ contains
       !>
       !>        More examples were added to the "Examples" section, and
       !>        the long error messages were revised.
-      module procedure swapad
+      module subroutine swapad ( ctx, n, locn, m, locm, array )
       use pepper_kinds, only: ip, wp
       use pepper_arrays, only: swapd
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of elements in the first group.
+      integer(ip), intent(in) :: locn  !! Location of the first group.
+      integer(ip), intent(in) :: m  !! Number of elements in the second group.
+      integer(ip), intent(in) :: locm  !! Location of the second group.
+      real(wp), intent(inout) :: array  ( * )  !! The array.
 
       integer(ip) :: nn
       integer(ip) :: ln
@@ -3243,7 +3321,7 @@ contains
       end if
 
       return
-      end procedure swapad
+      end subroutine swapad
 
       !>## Detailed Input
       !>
@@ -3427,10 +3505,16 @@ contains
       !>
       !>        More examples were added to the "Examples" section, and
       !>        the long error messages were revised.
-      module procedure swapai
+      module subroutine swapai ( ctx, n, locn, m, locm, array )
       use pepper_kinds, only: ip
       use pepper_arrays, only: swapi
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: n  !! Number of elements in the first group.
+      integer(ip), intent(in) :: locn  !! Location of the first group.
+      integer(ip), intent(in) :: m  !! Number of elements in the second group.
+      integer(ip), intent(in) :: locm  !! Location of the second group.
+      integer(ip), intent(inout) :: array  ( * )  !! The array.
 
       integer(ip) :: nn
       integer(ip) :: ln
@@ -3629,7 +3713,7 @@ contains
       end if
 
       return
-      end procedure swapai
+      end subroutine swapai
 
       !>## Detailed Input
       !>
@@ -3763,9 +3847,16 @@ contains
       !>         out of bound. If any element contained in the PACK array is
       !>         less than one, an error is signaled, and the output array is
       !>         not packed.
-      module procedure packac
+      module subroutine packac ( ctx, in, pack, npack, maxout, nout, out )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      character(*), intent(in) :: in      ( * )  !! Input array.
+      integer(ip), intent(in) :: pack    ( * )  !! Indices of elements to be packed.
+      integer(ip), intent(in) :: npack  !! Number of indices.
+      integer(ip), intent(in) :: maxout  !! Maximum number of elements in the output array.
+      integer(ip), intent(out) :: nout  !! Number of elements in the output array.
+      character(*), intent(out) :: out     ( * )  !! Output array.
 
       integer(ip) :: i
 
@@ -3802,7 +3893,7 @@ contains
       end do
 
       return
-      end procedure packac
+      end subroutine packac
 
       !>## Detailed Input
       !>
@@ -3936,9 +4027,16 @@ contains
       !>         out of bound. If any element contained in the PACK array is
       !>         less than one, an error is signaled, and the output array is
       !>         not packed.
-      module procedure packad
+      module subroutine packad ( ctx, in, pack, npack, maxout, nout, out )
       use pepper_kinds, only: ip, wp
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      real(wp), intent(in) :: in      ( * )  !! Input array.
+      integer(ip), intent(in) :: pack    ( * )  !! Indices of elements to be packed.
+      integer(ip), intent(in) :: npack  !! Number of indices.
+      integer(ip), intent(in) :: maxout  !! Maximum number of elements in the output array.
+      integer(ip), intent(out) :: nout  !! Number of elements in the output array.
+      real(wp), intent(out) :: out     ( * )  !! Output array.
 
       integer(ip) :: i
 
@@ -3975,7 +4073,7 @@ contains
       end do
 
       return
-      end procedure packad
+      end subroutine packad
 
       !>## Detailed Input
       !>
@@ -4109,9 +4207,16 @@ contains
       !>         out of bound. If any element contained in the PACK array is
       !>         less than one, an error is signaled, and the output array is
       !>         not packed.
-      module procedure packai
+      module subroutine packai ( ctx, in, pack, npack, maxout, nout, out )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), intent(in) :: in      ( * )  !! Input array.
+      integer(ip), intent(in) :: pack    ( * )  !! Indices of elements to be packed.
+      integer(ip), intent(in) :: npack  !! Number of indices.
+      integer(ip), intent(in) :: maxout  !! Maximum number of elements in the output array.
+      integer(ip), intent(out) :: nout  !! Number of elements in the output array.
+      integer(ip), intent(out) :: out     ( * )  !! Output array.
 
       integer(ip) :: i
 
@@ -4148,7 +4253,7 @@ contains
       end do
 
       return
-      end procedure packai
+      end subroutine packai
 
       !>## Detailed Input
       !>
@@ -4259,9 +4364,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkan
+      module subroutine lnkan ( ctx, pool, new )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
+      integer(ip), intent(out) :: new  !! Number of new node that was allocated.
 
 
 !
@@ -4338,7 +4447,7 @@ contains
       pool( bckwrd, new )   =   -new
 
       return
-      end procedure lnkan
+      end subroutine lnkan
 
       !>## Detailed Input
       !>
@@ -4450,9 +4559,14 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkfsl
+      module subroutine lnkfsl ( ctx, head, tail, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: head  !! Head and tail nodes of a sublist to be freed.
+      integer(ip), intent(in) :: tail  !! Head and tail nodes of a sublist to be freed.
+      integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
 
 !
@@ -4676,7 +4790,7 @@ contains
       pool ( nfrrow, nfrcol )  =  pool ( nfrrow, nfrcol )  +  count
 
       return
-      end procedure lnkfsl
+      end subroutine lnkfsl
 
       !>## Detailed Input
       !>
@@ -4770,9 +4884,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkhl
+      module integer(ip) function lnkhl ( ctx, node, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: node  !! Number of a node.
+      integer(ip), intent(in) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
 
 !
@@ -4873,7 +4991,7 @@ contains
 !     LNKHL is now the head of the list.
 !
       return
-      end procedure lnkhl
+      end function lnkhl
 
       !>## Detailed Input
       !>
@@ -5010,9 +5128,14 @@ contains
       !>        Added note about efficiency in $Restrictions section.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkila
+      module subroutine lnkila ( ctx, prev, list, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: prev  !! Node after which a new list is to be inserted.
+      integer(ip), intent(in) :: list  !! Node in the list to be inserted.
+      integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
 
 !
@@ -5140,7 +5263,7 @@ contains
       pool( forwrd, tail )  =  next
 
       return
-      end procedure lnkila
+      end subroutine lnkila
 
       !>## Detailed Input
       !>
@@ -5280,9 +5403,14 @@ contains
       !>        Added note about efficiency in $Restrictions section.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkilb
+      module subroutine lnkilb ( ctx, list, next, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: list  !! Node in the list to be inserted.
+      integer(ip), intent(in) :: next  !! Node before which a new list is to be inserted.
+      integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
 
 !
@@ -5410,7 +5538,7 @@ contains
       pool( bckwrd, head )  =  prev
 
       return
-      end procedure lnkilb
+      end subroutine lnkilb
 
       !>## Detailed Input
       !>
@@ -5500,9 +5628,14 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkini
+      module subroutine lnkini ( ctx, size, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: size  !! Number of nodes in the pool.
+      integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! An array that is a linked pool on
+                                                             !! output.
 
 
 !
@@ -5594,7 +5727,7 @@ contains
       pool ( bckwrd, size )   =  free
 
       return
-      end procedure lnkini
+      end subroutine lnkini
 
       !>## Detailed Input
       !>
@@ -5667,9 +5800,12 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnknfn
+      module integer(ip) function lnknfn ( ctx, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
 
 !
@@ -5718,7 +5854,7 @@ contains
       lnknfn  =  pool ( nfrrow, nfrcol )
 
       return
-      end procedure lnknfn
+      end function lnknfn
 
       !>## Detailed Input
       !>
@@ -5829,9 +5965,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnknxt
+      module integer(ip) function lnknxt ( ctx, node, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: pool ( 2,  lbpool :  *  )  !! A doubly linked list pool.
+      integer(ip), intent(in) :: node  !! Number of an allocated node.
 
 
 !     The control area contains 3 elements.  They are:
@@ -5911,7 +6051,7 @@ contains
       lnknxt = pool ( forwrd, node )
 
       return
-      end procedure lnknxt
+      end function lnknxt
 
       !>## Detailed Input
       !>
@@ -6022,9 +6162,13 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkprv
+      module integer(ip) function lnkprv ( ctx, node, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
+      integer(ip), intent(in) :: node  !! Number of an allocated node.
 
 
 !
@@ -6105,7 +6249,7 @@ contains
       lnkprv = pool ( bckwrd, node )
 
       return
-      end procedure lnkprv
+      end function lnkprv
 
       !>## Detailed Input
       !>
@@ -6172,9 +6316,12 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnksiz
+      module integer(ip) function lnksiz ( ctx, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
 
 !
@@ -6223,7 +6370,7 @@ contains
       lnksiz  =  pool ( sizrow, sizcol )
 
       return
-      end procedure lnksiz
+      end function lnksiz
 
       !>## Detailed Input
       !>
@@ -6329,9 +6476,13 @@ contains
       !>        Corrected module name in one pair of CHKIN/CHKOUT calls. The
       !>        affected error case was the check for a node number being out
       !>        of range.
-      module procedure lnktl
+      module integer(ip) function lnktl ( ctx, node, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: node  !! Number of a node.
+      integer(ip), intent(in) :: pool (  2,  lbpool : *  )  !! A doubly linked list pool.
 
 
 !
@@ -6432,7 +6583,7 @@ contains
 !     LNKTL is now the tail of the list.
 !
       return
-      end procedure lnktl
+      end function lnktl
 
       !>## Detailed Input
       !>
@@ -6550,9 +6701,14 @@ contains
       !>        Edited the header to comply with NAIF standard.
       !>
       !>-    SPICELIB Version 1.0.0, 19-DEC-1995 (NJB) (WLT)
-      module procedure lnkxsl
+      module subroutine lnkxsl ( ctx, head, tail, pool )
       use pepper_kinds, only: ip
       implicit none
+      class(pepper_context), intent(inout) :: ctx  !! the context
+      integer(ip), parameter :: lbpool = -5  !! lower bound of a linked-list pool (its control area)
+      integer(ip), intent(in) :: head  !! Head and tail nodes of a sublist to be extracted.
+      integer(ip), intent(in) :: tail  !! Head and tail nodes of a sublist to be extracted.
+      integer(ip), intent(inout) :: pool ( 2,  lbpool : * )  !! A doubly linked list pool.
 
 
 !
@@ -6760,6 +6916,6 @@ contains
       pool ( forwrd, tail )  =  -head
 
       return
-      end procedure lnkxsl
+      end subroutine lnkxsl
 
 end submodule pepper_array_ops
